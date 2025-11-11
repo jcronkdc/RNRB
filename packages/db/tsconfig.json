@@ -1,0 +1,10 @@
+{
+  "extends": "@songforge/config/tsconfig/base",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
+}

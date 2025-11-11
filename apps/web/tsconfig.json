@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/typescript-config/nextjs.json",
+  "extends": "@songforge/config/tsconfig/next",
   "compilerOptions": {
     "plugins": [
       {
@@ -11,8 +11,10 @@
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    "next.config.js",
-    ".next/types/**/*.ts"
+    "next.config.ts",
+    ".next/types/**/*.ts",
+    "tailwind.config.ts",
+    "postcss.config.mjs"
   ],
   "exclude": [
     "node_modules"

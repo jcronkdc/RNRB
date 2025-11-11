@@ -1,0 +1,138 @@
+'use client';
+
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  Input,
+  useToast
+} from '@songforge/ui';
+
+const swatches = [
+  { name: 'Background', className: 'bg-background text-muted-foreground', description: 'Warm parchment base' },
+  { name: 'Surface', className: 'bg-surface text-muted-foreground', description: 'Cards & panels' },
+  { name: 'Accent', className: 'bg-accent text-accent-foreground', description: 'Highlights & links' },
+  { name: 'Brand', className: 'bg-brand-primary text-brand-primary-foreground', description: 'Primary actions' },
+  { name: 'Muted', className: 'bg-brand-muted text-brand-muted-foreground', description: 'Background blends' }
+] as const;
+
+const typeScale = [
+  { tag: 'Display', className: 'text-4xl lg:text-5xl font-serif font-semibold', blurb: 'Hero headings' },
+  { tag: 'Heading', className: 'text-2xl font-semibold', blurb: 'Section titles' },
+  { tag: 'Body', className: 'text-base text-muted-foreground', blurb: 'Narrative copy' },
+  { tag: 'Caption', className: 'text-xs uppercase tracking-[0.38em] text-muted-foreground/80', blurb: 'UI labels' }
+] as const;
+
+export default function StyleGuidePage() {
+  const { notify } = useToast();
+
+  return (
+    <div className="space-y-12">
+      <section className="rounded-3xl border border-border/60 bg-surface p-8 shadow-soft">
+        <h2 className="text-2xl font-semibold text-brand-foreground">Palette</h2>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Hues are stored as CSS variables in <code className="text-xs text-brand-secondary">packages/ui</code> and resolved through
+          Tailwind. Each tint keeps the interface calm while letting art take centre stage.
+        </p>
+        <div className="mt-8 grid gap-6 md:grid-cols-5">
+          {swatches.map((swatch) => (
+            <div
+              key={swatch.name}
+              className={`flex flex-col justify-between gap-6 rounded-3xl border border-border/40 p-6 text-sm shadow-soft ${swatch.className}`}
+            >
+              <div>
+                <p className="text-xs uppercase tracking-[0.35em]">{swatch.name}</p>
+                <p className="mt-3 font-medium">{swatch.description}</p>
+              </div>
+              <span className="text-xs text-muted-foreground/70">Token • --sf-color-{swatch.name.toLowerCase()}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-border/60 bg-surface p-8 shadow-soft">
+        <h2 className="text-2xl font-semibold text-brand-foreground">Typography</h2>
+        <p className="mt-3 text-sm text-muted-foreground">
+          A serif headline paired with a soft geometric sans keeps copy musical and legible.
+        </p>
+        <div className="mt-10 grid gap-6">
+          {typeScale.map((item) => (
+            <div key={item.tag} className="rounded-2xl border border-border/50 bg-surface-muted/60 p-6 shadow-outline">
+              <div className="text-xs uppercase tracking-[0.35em] text-muted-foreground">{item.tag}</div>
+              <p className={`${item.className} mt-3 text-brand-foreground`}>SongForge celebrates intentional sound.</p>
+              <p className="mt-2 text-xs text-muted-foreground">{item.blurb}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-6 rounded-3xl border border-border/60 bg-surface p-8 shadow-soft lg:grid-cols-[1.1fr,0.9fr]">
+        <div className="space-y-6">
+          <h2 className="text-2xl font-semibold text-brand-foreground">Components</h2>
+          <div className="flex flex-wrap gap-4">
+            <Button>Primary</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+          </div>
+          <div className="grid gap-3 text-sm text-muted-foreground">
+            <label className="flex flex-col gap-2 text-brand-foreground">
+              Email
+              <Input placeholder="crew@songforge.dev" className="bg-surface-elevated" />
+            </label>
+            <label className="flex flex-col gap-2 text-brand-foreground">
+              Invite message
+              <textarea
+                placeholder="We would love to collaborate on the new festival set."
+                className="min-h-[120px] rounded-xl border border-border/60 bg-surface-elevated px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-background"
+              />
+            </label>
+          </div>
+        </div>
+        <div className="space-y-6">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="w-full">Preview dialog</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create backstage link</DialogTitle>
+                <DialogDescription>Share the latest mix and split draft with your collaborators.</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p className="rounded-2xl border border-border/60 bg-surface px-4 py-3 font-mono text-xs">
+                  songforge.dev/backstage/cedar-rust?token=9A5-LUME
+                </p>
+                <p>Links expire after 7 days. Regenerate anytime to keep control over who hears the next draft.</p>
+              </div>
+              <DialogFooter>
+                <Button variant="ghost">Close</Button>
+                <Button>Copy link</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <button
+            type="button"
+            className="w-full rounded-2xl border border-dashed border-border/70 bg-surface-muted/60 px-5 py-4 text-sm text-brand-primary transition hover:border-brand-primary hover:shadow-outline"
+            onClick={() =>
+              notify({
+                title: 'Toast example',
+                description: 'Design primitives can trigger feedback across the app surface.',
+                variant: 'default'
+              })
+            }
+          >
+            Trigger toast
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
+

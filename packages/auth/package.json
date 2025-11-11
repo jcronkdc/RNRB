@@ -1,0 +1,40 @@
+{
+  "name": "@songforge/auth",
+  "version": "0.1.0",
+  "type": "module",
+  "private": false,
+  "files": [
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./session": {
+      "types": "./src/session.ts",
+      "import": "./src/session.ts"
+    },
+    "./env": {
+      "types": "./src/env.ts",
+      "import": "./src/env.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^1.2.3",
+    "@songforge/db": "workspace:*",
+    "next-auth": "^5.0.0",
+    "nodemailer": "^6.9.15",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@songforge/config": "workspace:*",
+    "@types/nodemailer": "^6.4.12",
+    "eslint": "^9.12.0",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 16" role="img">
+  <title>Song Forge wordmark</title>
+  <g fill="currentColor" fill-rule="evenodd" transform="translate(0 2)">
+    <path d="M8 0H2C0.9 0 0 0.9 0 2v2h4c1.1 0 2 .9 2 2v1c0 1.1-.9 2-2 2H0v3c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2v-2H6c-1.1 0-2-.9-2-2V8c0-1.1.9-2 2-2h4V2c0-1.1-.9-2-2-2Z"/>
+    <path d="M0 0h8v12H0V0Zm2 2v8h4V2H2Z" transform="translate(16)"/>
+    <path d="M0 0h2l6 8V0h2v12h-2l-6-8v8H0Z" transform="translate(32)"/>
+    <path d="M0 0h8v2H2v8h6V8H6V6h4v6c0 1.1-.9 2-2 2H0V0Z" transform="translate(48)"/>
+    <circle cx="60" cy="6" r="1.5"/>
+    <path d="M0 0h10v2H2v3h6v2H2v5H0Z" transform="translate(68)"/>
+    <path d="M0 0h8v12H0V0Zm2 2v8h4V2H2Z" transform="translate(84)"/>
+    <path d="M0 0h8c1.1 0 2 .9 2 2v3c0 1.1-.9 2-2 2H4l4 5H5.3L2 7v5H0V0Zm2 2v3h6V2H2Z" transform="translate(100)"/>
+    <path d="M0 0h8v2H2v8h6V8H6V6h4v6c0 1.1-.9 2-2 2H0V0Z" transform="translate(116)"/>
+    <path d="M0 0h10v2H2v3h6v2H2v3h8v2H0Z" transform="translate(132)"/>
+  </g>
+</svg>
+

@@ -1,135 +1,202 @@
-# Turborepo starter
+# SongForge
 
-This Turborepo starter is maintained by the Turborepo core team.
+A premium music ecosystem platform for collaborative songwriting, recording, and community management.
 
-## Using this example
+## 🎯 Overview
 
-Run the following command:
+SongForge is a comprehensive web application designed for musicians, bands, and music organizations. It provides:
 
-```sh
-npx create-turbo@latest
+- **Project Management**: Organize songs, assets, and collaborations
+- **Split Sheets**: Track revenue splits with PRO/IPI integration
+- **Licensing**: Manage collaboration agreements and licenses
+- **Events**: Festival and concert management
+- **Podcasts**: Episode management and publishing
+- **Foundation Tools**: Donations and subscription management
+
+## 🏗️ Architecture
+
+- **Monorepo**: Turborepo + pnpm workspaces
+- **Frontend**: Next.js 16 (App Router), React 19, TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **Storage**: S3/R2 compatible (Cloudflare R2 recommended)
+- **Auth**: NextAuth.js with organization-aware sessions
+- **UI**: Tailwind CSS + Radix UI + custom design tokens
+- **Validation**: Zod schemas throughout
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 20+
+- pnpm 9+
+- PostgreSQL 14+
+- Docker (optional, for local database)
+
+### Installation
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd song-forge
+
+# Install dependencies
+pnpm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your configuration
+
+# Start database (Docker)
+pnpm -F @songforge/db db:up
+
+# Run migrations
+pnpm db:migrate
+
+# Generate Prisma client
+pnpm -F @songforge/db prisma:generate
+
+# Start development server
+pnpm dev
 ```
 
-## What's inside?
+Visit `http://localhost:3000`
 
-This Turborepo includes the following packages/apps:
+## 📦 Packages
 
-### Apps and Packages
+- `@songforge/db`: Database schema, Prisma client, helper functions
+- `@songforge/auth`: Authentication and session management
+- `@songforge/ui`: Shared UI components and design tokens
+- `@songforge/config`: Shared ESLint, TypeScript, Prettier configs
+- `@songforge/trpc`: tRPC setup (for future API)
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## 🗄️ Database
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Setup
 
-### Utilities
+```bash
+# Start PostgreSQL
+pnpm -F @songforge/db db:up
 
-This Turborepo has some additional tools already setup for you:
+# Create migration
+pnpm -F @songforge/db prisma:migrate:dev
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+# Generate Prisma client
+pnpm -F @songforge/db prisma:generate
 
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+# Seed database (optional)
+pnpm db:seed
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Schema
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+See `packages/db/prisma/schema.prisma` for complete schema documentation.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+Key models:
+- `User`: User accounts with PRO affiliation
+- `Org`: Organizations (foundation/studio/band)
+- `Project`: Song projects with visibility controls
+- `Song`: Individual songs with ISWC support
+- `Asset`: Audio, lyrics, images, PDFs
+- `SplitSheet`: Revenue split tracking
+- `License`: Collaboration agreements
+- `Event`: Festivals and concerts
+- `PodcastEpisode`: Podcast content
 
-### Develop
+## 🔐 Environment Variables
 
-To develop all apps and packages, run the following command:
+See `.env.example` for all required variables. Key ones:
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```bash
+DATABASE_URL="postgresql://..."
+NEXTAUTH_SECRET="..."
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+STORAGE_ENDPOINT="https://..."
+STORAGE_ACCESS_KEY_ID="..."
+STORAGE_SECRET_ACCESS_KEY="..."
+STORAGE_BUCKET="..."
 ```
 
-### Remote Caching
+## 🧪 Testing
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+```bash
+# Type check
+pnpm typecheck
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+# Lint
+pnpm lint
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+# E2E tests (requires dev server running)
+pnpm test:e2e
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+# E2E tests with UI
+pnpm test:e2e:ui
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## 🏭 Building
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+```bash
+# Build all packages
+pnpm build
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+# Build specific package
+pnpm -F @songforge/db build
+pnpm -F apps/web build
 ```
 
-## Useful Links
+## 🐳 Docker
 
-Learn more about the power of Turborepo:
+```bash
+# Build image
+docker build -t songforge .
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+# Run container
+docker run -p 3000:3000 --env-file .env songforge
+```
+
+## 📚 Documentation
+
+- **Deployment**: See [DEPLOYMENT.md](./DEPLOYMENT.md)
+- **Database Helpers**: `packages/db/src/helpers/`
+- **Server Actions**: `apps/web/lib/actions/`
+- **Components**: `apps/web/components/`
+
+## 🎨 Design System
+
+The application uses a comprehensive design token system with three themes:
+- **Light**: Clean, bright interface
+- **Dark**: Low-light optimized
+- **Warm**: Warm studio aesthetic
+
+All components respect `prefers-reduced-motion` and are fully accessible.
+
+## 🔒 Security
+
+- Security headers configured in middleware
+- Input validation with Zod
+- DEMO_BYPASS guard for production
+- Rate limiting infrastructure ready
+- Content Security Policy
+- Secure session management
+
+## 📈 Performance
+
+- Code splitting enabled
+- Image optimization configured
+- Bundle size optimization
+- Lazy loading for heavy components
+- Database query optimization
+
+## 🤝 Contributing
+
+1. Create feature branch
+2. Make changes
+3. Run tests and linting
+4. Submit pull request
+
+## 📄 License
+
+[Your License Here]
+
+## 🙏 Acknowledgments
+
+Built for musicians, by musicians.

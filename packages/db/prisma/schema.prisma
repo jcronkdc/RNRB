@@ -1,0 +1,357 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String?
+  image             String?
+  pro               String?  // ASCAP, BMI, SESAC, None
+  mlcMember         Boolean  @default(false)
+  soundExchangeRegistered Boolean @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  memberships       Membership[]
+  subscriptions    Subscription[]
+
+  @@index([email])
+}
+
+model Org {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  type        OrgType
+  brandColor  String?       // Hex color
+  description String?
+  website     String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  memberships Membership[]
+  projects    Project[]     @relation(name: "OrgProjects")
+  events      Event[]
+  episodes    PodcastEpisode[]
+
+  @@index([slug])
+  @@index([type])
+}
+
+model Membership {
+  userId    String
+  orgId     String
+  role      OrgRole
+  user      User @relation(fields: [userId], references: [id])
+  org       Org  @relation(fields: [orgId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@id([userId, orgId])
+  @@index([orgId])
+}
+
+enum OrgType {
+  foundation
+  studio
+  band
+}
+
+enum OrgRole {
+  owner
+  admin
+  member
+}
+
+model Project {
+  id          String             @id @default(cuid())
+  orgId       String
+  name        String
+  slug        String             @unique
+  description String?
+  tagline     String?
+  coverImage  String?
+  visibility  ProjectVisibility  @default(private)
+  status      ProjectStatus      @default(active)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  org         Org                @relation(fields: [orgId], references: [id], name: "OrgProjects")
+  songs       Song[]
+  assets      Asset[]
+  splitSheets SplitSheet[]
+  licenses    License[]
+  events      Event[]
+
+  @@index([orgId])
+  @@index([slug])
+  @@index([visibility, status])
+}
+
+enum ProjectVisibility {
+  private
+  org
+  public
+}
+
+enum ProjectStatus {
+  active
+  archived
+  draft
+}
+
+model Song {
+  id          String   @id @default(cuid())
+  projectId   String
+  title       String
+  key         String?
+  tempo       Int?
+  timeSignature String? // e.g., "4/4", "3/4"
+  iswc        String?  @unique // International Standard Musical Work Code
+  description String?
+  lyrics      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([iswc])
+}
+
+model Asset {
+  id            String      @id @default(cuid())
+  projectId     String?
+  name          String
+  mimeType      String
+  bytes         BigInt      // File size in bytes
+  storageKey    String      @unique // S3/R2 key
+  storageBucket String?
+  checksum      String      // SHA-256
+  duration      Float?      // For audio/video, in seconds
+  sampleRate    Int?        // For audio, in Hz
+  width         Int?        // For images/video
+  height        Int?        // For images/video
+  metadata      Json?       // Additional extracted metadata
+  assetType     AssetType
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  project       Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+  @@index([assetType])
+  @@index([storageKey])
+  @@index([checksum])
+}
+
+enum AssetType {
+  audio
+  lyric
+  image
+  pdf
+  chart
+  video
+  other
+}
+
+model SplitSheet {
+  id          String            @id @default(cuid())
+  projectId   String
+  title       String
+  finalized   Boolean          @default(false)
+  finalizedAt DateTime?
+  pdfKey      String?          // Storage key for generated PDF
+  notes       String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  project     Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contributors SplitContributor[]
+
+  @@index([projectId])
+  @@index([finalized])
+}
+
+model SplitContributor {
+  id          String     @id @default(cuid())
+  splitSheetId String
+  name        String
+  role        String?    // e.g., "Writer", "Producer", "Publisher"
+  percentage  Float      // 0-100
+  pro         String?    // ASCAP, BMI, SESAC, etc.
+  ipi         String?    // International Performer Identification
+  publisher   String?
+  email       String?
+  finalized   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  splitSheet  SplitSheet @relation(fields: [splitSheetId], references: [id], onDelete: Cascade)
+
+  @@index([splitSheetId])
+}
+
+model License {
+  id            String        @id @default(cuid())
+  projectId     String
+  template      LicenseTemplate
+  title         String
+  terms         String?       // Custom terms override
+  notes         String?
+  status        LicenseStatus @default(draft)
+  signedAt      DateTime?
+  countersignedAt DateTime?
+  pdfKey        String?       // Storage key for signed PDF
+  signerEmail   String?
+  signerName    String?
+  countersignerEmail String?
+  countersignerName String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  project       Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([status])
+  @@index([template])
+}
+
+enum LicenseTemplate {
+  COLLAB_NDA
+  WORK_FOR_HIRE
+  NON_EXCLUSIVE_COLLAB
+  PODCAST_MUSIC_LICENSE
+  EXCLUSIVE_LICENSE
+  MASTER_USE
+  SYNCHRONIZATION
+}
+
+enum LicenseStatus {
+  draft
+  pending_signature
+  pending_countersignature
+  executed
+  expired
+  cancelled
+}
+
+model Event {
+  id          String      @id @default(cuid())
+  projectId   String?
+  orgId       String?
+  name        String
+  slug        String      @unique
+  description String?
+  eventType   EventType
+  startDate   DateTime
+  endDate     DateTime?
+  venue       String?
+  venueAddress String?
+  city        String?
+  state       String?
+  country     String?
+  lineup      Json?       // Array of artist/band names
+  ticketUrl   String?
+  coverImage  String?
+  public      Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  project     Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  org         Org?        @relation(fields: [orgId], references: [id], onDelete: SetNull)
+
+  @@index([orgId])
+  @@index([projectId])
+  @@index([eventType])
+  @@index([startDate])
+  @@index([slug])
+}
+
+enum EventType {
+  festival
+  concert
+  showcase
+  workshop
+  other
+}
+
+model PodcastEpisode {
+  id          String   @id @default(cuid())
+  orgId       String
+  title       String
+  slug        String   @unique
+  description String?
+  showNotes   String?  // Markdown
+  audioKey    String?  // Storage key for audio file
+  duration    Float?   // In seconds
+  publishedAt DateTime?
+  guests      Json?    // Array of { name, role, bio }
+  tags        String[] // Array of tags
+  public      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  org         Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([publishedAt])
+  @@index([slug])
+  @@index([public])
+}
+
+model Donation {
+  id            String         @id @default(cuid())
+  amount        Decimal        // In dollars
+  currency      String         @default("USD")
+  donorName     String?
+  donorEmail    String?
+  donorAnonymous Boolean       @default(false)
+  message       String?
+  paymentId     String?       // Give Lively/Stripe payment ID
+  status        DonationStatus @default(pending)
+  processedAt   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([paymentId])
+}
+
+enum DonationStatus {
+  pending
+  completed
+  failed
+  refunded
+}
+
+model Subscription {
+  id            String           @id @default(cuid())
+  userId        String?
+  email         String
+  tier          SubscriptionTier
+  amount        Decimal          // Monthly amount
+  currency      String           @default("USD")
+  stripeId      String?         @unique // Stripe subscription ID
+  status        SubscriptionStatus @default(active)
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean     @default(false)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([email])
+  @@index([status])
+  @@index([stripeId])
+}
+
+enum SubscriptionTier {
+  sustaining
+  patron
+  benefactor
+}
+
+enum SubscriptionStatus {
+  active
+  cancelled
+  past_due
+  trialing
+  incomplete
+}

@@ -1,0 +1,27 @@
+import * as React from 'react';
+import { cn } from '../lib/utils';
+
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  maxRows?: number;
+}
+
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, maxRows, rows = 4, ...props }, ref) => (
+    <textarea
+      ref={ref}
+      rows={rows}
+      className={cn(
+        'flex w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm motion-safe:transition-all motion-safe:duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ring-offset-background',
+        maxRows && 'resize-y',
+        className
+      )}
+      {...(maxRows ? { style: { maxHeight: `${maxRows * 1.5}rem` } } : {})}
+      {...props}
+    />
+  )
+);
+Textarea.displayName = 'Textarea';
+
+export { Textarea };
+export type { TextareaProps };
+

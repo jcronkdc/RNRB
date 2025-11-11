@@ -1,0 +1,15 @@
+{
+  "extends": "@songforge/config/tsconfig/base",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@songforge/ui": ["packages/ui/src/index"],
+      "@songforge/ui/*": ["packages/ui/src/*"],
+      "@songforge/db": ["packages/db/src/index"],
+      "@songforge/auth": ["packages/auth/src/index"],
+      "@songforge/trpc": ["packages/trpc/src/index"],
+      "@songforge/trpc/*": ["packages/trpc/src/*"]
+    }
+  },
+  "include": ["packages", "apps", "turbo.json"]
+}

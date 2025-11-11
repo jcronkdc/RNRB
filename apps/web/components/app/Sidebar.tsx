@@ -1,0 +1,89 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useMemo } from 'react';
+import { cn } from '@songforge/ui';
+
+export const APP_NAV_ITEMS = [
+  { name: 'Projects', href: '/app/projects' },
+  { name: 'Sessions', href: '/app/sessions' },
+  { name: 'Assets', href: '/app/assets' },
+  { name: 'Splits', href: '/app/splits' },
+  { name: 'Licenses', href: '/app/licenses' },
+  { name: 'Settings', href: '/app/settings' }
+] as const;
+
+interface SidebarProps {
+  userName?: string | null;
+  userEmail?: string | null;
+}
+
+export default function Sidebar({ userName, userEmail, ...props }: SidebarProps & { [key: string]: unknown }) {
+  const pathname = usePathname();
+
+  const initials = useMemo(() => {
+    if (!userName) {
+      return 'SF';
+    }
+
+    const parts = userName
+      .split(' ')
+      .filter(Boolean)
+      .map((part) => part[0]?.toUpperCase())
+      .slice(0, 2)
+      .join('');
+
+    return parts || 'SF';
+  }, [userName]);
+
+  return (
+    <aside {...props} className="hidden h-screen w-72 border-r border-border/60 bg-surface/80 pb-10 pt-8 shadow-soft/40 backdrop-blur md:flex md:flex-col">
+      <div className="px-6 pb-8">
+        <Link
+          href="/app/projects"
+          className="inline-flex items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-primary"
+        >
+          <img src="/brand-wordmark.svg" alt="SongForge" className="h-6 w-auto" />
+        </Link>
+      </div>
+
+      <nav className="flex-1 space-y-1 px-4" aria-label="Main app navigation">
+        <ul className="flex flex-col gap-1">
+          {APP_NAV_ITEMS.map((item) => {
+            const isActive = pathname.startsWith(item.href);
+
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={cn(
+                    'flex items-center justify-between rounded-xl px-3 py-2 text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-primary',
+                    isActive
+                      ? 'bg-brand-primary/15 text-brand-foreground shadow-soft'
+                      : 'text-muted-foreground hover:text-brand-foreground'
+                  )}
+                >
+                  <span>{item.name}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <div className="mt-auto px-4">
+        <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-surface px-4 py-3 shadow-soft">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-brand-primary">
+            {initials}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-brand-foreground">{userName ?? 'SongForge Member'}</p>
+            <p className="truncate text-xs text-muted-foreground">{userEmail ?? 'demo@example.com'}</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}

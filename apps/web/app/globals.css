@@ -1,50 +1,122 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import '@songforge/ui/styles.css';
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--sf-font-sans);
+    font-feature-settings: 'liga' 1, 'calt' 1, 'kern' 1;
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    @apply text-4xl sm:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl sm:text-4xl lg:text-5xl;
+  }
+
+  h3 {
+    @apply text-2xl sm:text-3xl;
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--sf-ring) / 0.4);
+  }
+
+  main {
+    @apply scroll-m-20;
+  }
+
+  section {
+    @apply scroll-m-24;
+  }
+
+  @keyframes sf-gradient-drift {
+    0% {
+      transform: translate3d(0%, 0%, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(2%, -1%, 0) scale(1.05);
+    }
+    100% {
+      transform: translate3d(-1%, 2%, 0) scale(1.08);
+    }
+  }
+
+  @keyframes sf-grain-shift {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    25% {
+      transform: translate3d(-4%, -6%, 0);
+    }
+    50% {
+      transform: translate3d(5%, 3%, 0);
+    }
+    75% {
+      transform: translate3d(-3%, 4%, 0);
+    }
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.imgDark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+@layer utilities {
+  .sf-bg-gradient {
+    position: absolute;
+    inset: -12%;
+    pointer-events: none;
+    opacity: 0.82;
+    background:
+      radial-gradient(circle at 18% 22%, hsl(var(--sf-color-brand-muted) / 0.4) 0%, transparent 58%),
+      radial-gradient(circle at 82% 12%, hsl(var(--sf-color-accent-subtle) / 0.45) 0%, transparent 55%),
+      radial-gradient(circle at 48% 92%, hsl(var(--sf-color-brand-primary) / 0.2) 0%, transparent 62%);
+    animation: sf-gradient-drift 28s ease-in-out infinite alternate;
+    will-change: transform;
   }
 
-  .imgLight {
-    display: none;
+  .sf-film-grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABgklEQVR4nO2ZsUoDQRBF30r4lU0Go0b9gE7QEBoNBiNfQA1gYhA9g5gYgNBoNNoNE0Yv7u7M7Mzs7Ozu9W+u9M2T3ekYZg6wAVKgCfAH2AG2A+O2y4xA/AXYAP6W2ssHoCazTAZwAvYAPLPgAvAPG+gAL8B8X6k1HnAEcAceAB6cJXgF+AL0Ds+wHELt97XOBnAGj+FceA60At8ANcArR6j1OXAPfaQW3GCeaBfxzJr0RAuAV0hk+K7Gm3GKRW2DJ9W6YgV9gQF3jxaE+KM1AblQ8yelGthCKXZRn2YT7UNtgaJcbxrzA7rRs1kC+b66c4P8Ap6g5vC/4C1oA+MANoAPDNgCcCDxfoLBra9Y0bYNVMuSW38Bt9qkQ8NNZ3lplrsJDFiZ2n7vEoyPTr+4Bo6M9WBO+bsIP6JMH6abt7NA9uIGxSJT4GAGGZBWryTsqNWKuK+dYbY8vzu7mex+CFu9kDiYO5xd6UsBq9a9XQUw7p+6iYB/E6p7k9lUtCUoAH+AEYgl7P4Y5SgAAAABJRU5ErkJggg==");
+    background-size: 300px 300px;
+    animation: sf-grain-shift 1.4s steps(6) infinite;
+    will-change: transform;
   }
-  .imgDark {
-    display: unset;
+
+  .sf-btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-brand-primary px-6 py-3 text-sm font-bold text-brand-primary-foreground shadow-soft transition-all hover:bg-brand-primary/90 hover:shadow-glow hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-brand-primary;
+  }
+
+  .sf-btn-outline {
+    @apply inline-flex items-center justify-center rounded-full border-2 border-border/60 px-6 py-3 text-sm font-bold text-brand-foreground transition-all hover:border-brand-primary/40 hover:bg-surface hover:shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-brand-primary;
+  }
+
+  .sf-btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition-all hover:bg-surface/80 hover:text-brand-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-brand-primary;
+  }
+
+  .sf-badge {
+    @apply inline-flex items-center rounded-full border border-border/80 bg-surface px-3 py-1 text-xs uppercase tracking-[0.28em] text-muted-foreground;
+  }
+
+  [data-active-hash="#values"] a[href="#values"],
+  [data-active-hash="#what-we-make"] a[href="#what-we-make"] {
+    @apply underline text-brand-primary hover:text-brand-primary;
   }
 }

@@ -1,8 +1,10 @@
 {
-  "extends": "@repo/typescript-config/react-library.json",
+  "extends": "@songforge/config/tsconfig/react",
   "compilerOptions": {
+    "baseUrl": ".",
+    "types": ["node", "vite/client"],
     "outDir": "dist"
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "stories"],
+  "exclude": ["dist", "node_modules"]
 }
