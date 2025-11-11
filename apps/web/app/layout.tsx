@@ -13,6 +13,7 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 import { cn } from '@songforge/ui';
 import './globals.css';
 import { ThemeProvider } from '../components/theme/ThemeProvider';
+import { ServiceWorkerRegistration } from './sw-register';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -107,6 +108,7 @@ export default function RootLayout({
         <Script id="songforge-theme" strategy="beforeInteractive">
           {themeInitializer}
         </Script>
+        <ServiceWorkerRegistration />
         <div id="a11y-announcer" aria-live="polite" aria-atomic="true" className="sr-only" />
         <ErrorBoundary>
           <Providers>

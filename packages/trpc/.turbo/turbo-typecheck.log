@@ -1,5 +1,4 @@
 
-
 > @songforge/trpc@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/trpc
 > tsc --noEmit
 

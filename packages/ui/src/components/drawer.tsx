@@ -6,11 +6,8 @@ const Drawer = DrawerPrimitive.Root;
 const DrawerTrigger = DrawerPrimitive.Trigger;
 const DrawerClose = DrawerPrimitive.Close;
 
-const DrawerPortal = ({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Portal>) => (
-  <DrawerPrimitive.Portal className={cn(className)} {...props} />
+const DrawerPortal = (props: React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Portal>) => (
+  <DrawerPrimitive.Portal {...props} />
 );
 DrawerPortal.displayName = DrawerPrimitive.Portal.displayName;
 

@@ -1,14 +1,4 @@
 
-
 > @songforge/db@0.1.0 lint /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/db
-> eslint 'src/**/*.{ts}'
+> eslint 'src/**/*.{ts,tsx}'
 
-
-Oops! Something went wrong! :(
-
-ESLint: 9.39.1
-
-No files matching the pattern "src/**/*.{ts}" were found.
-Please check for typing mistakes in the pattern.
-
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

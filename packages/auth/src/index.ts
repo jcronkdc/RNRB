@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 
 export { authConfig, handlers, auth, signIn, signOut } from './auth';
 export { env } from './env';
+export type { OrgAwareSession } from './session';
 
 export type AppUser = {
   id: string;
@@ -48,7 +49,7 @@ export async function getOrgSession(): Promise<OrgSession> {
     throw new Error('UNAUTHENTICATED');
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const cookieOrgId = cookieStore.get('sf_org')?.value ?? null;
   const orgId = session.orgId ?? cookieOrgId ?? null;
 
@@ -72,8 +73,8 @@ export async function getOrgSession(): Promise<OrgSession> {
 /**
  * Sets the active organization cookie. Safe to invoke from server actions.
  */
-export function setActiveOrgCookie(orgId: string | null): void {
-  const store = cookies();
+export async function setActiveOrgCookie(orgId: string | null): Promise<void> {
+  const store = await cookies();
 
   if (!orgId) {
     store.delete('sf_org');

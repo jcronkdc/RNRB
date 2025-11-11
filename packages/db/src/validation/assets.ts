@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { AssetType } from '@prisma/client';
+import { z } from 'zod';
 
 const ALLOWED_AUDIO_TYPES = ['audio/wav', 'audio/mpeg', 'audio/mp3', 'audio/aiff', 'audio/flac', 'audio/ogg'];
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];

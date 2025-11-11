@@ -36,7 +36,7 @@ const buttonVariants = cva(
   }
 );
 
-export interface ButtonProps
+interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
@@ -74,21 +74,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref as React.Ref<HTMLButtonElement>}
         {...props}
       >
-        {showLeading && (
+        {showLeading && LeadingIcon && (
           <span
             className={cn('inline-flex items-center justify-center', size === 'icon' ? 'mx-auto' : '')}
             aria-hidden="true"
           >
-            <LeadingIcon className={cn('h-4 w-4', iconClassName)} />
+            {React.createElement(LeadingIcon as React.ComponentType<{ className?: string }>, { className: cn('h-4 w-4', iconClassName) })}
           </span>
         )}
         {children && <span className="whitespace-nowrap">{children}</span>}
-        {showTrailing && (
+        {showTrailing && TrailingIcon && (
           <span
             className={cn('inline-flex items-center justify-center', size === 'icon' ? 'mx-auto' : '')}
             aria-hidden="true"
           >
-            <TrailingIcon className={cn('h-4 w-4', iconClassName)} />
+            {React.createElement(TrailingIcon as React.ComponentType<{ className?: string }>, { className: cn('h-4 w-4', iconClassName) })}
           </span>
         )}
       </Comp>
@@ -97,7 +97,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = 'Button';
 
-export interface IconButtonProps
+interface IconButtonProps
   extends Omit<ButtonProps, 'children' | 'size' | 'leadingIcon' | 'trailingIcon'> {
   icon: LucideIcon;
   srLabel: string;

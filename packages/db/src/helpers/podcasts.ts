@@ -1,5 +1,7 @@
-import { prisma } from '../index';
+import { Prisma } from '@prisma/client';
 import type { PodcastEpisode } from '@prisma/client';
+
+import { prisma } from '../index';
 
 export interface Guest {
   name: string;
@@ -61,7 +63,7 @@ export async function createPodcastEpisode(
   return prisma.podcastEpisode.create({
     data: {
       ...input,
-      guests: input.guests ? input.guests : Prisma.DbNull,
+      guests: input.guests ? (input.guests as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
       tags: input.tags ?? [],
       public: input.public ?? false
     }
@@ -98,7 +100,9 @@ export async function updatePodcastEpisode(
     where: { id: episodeId },
     data: {
       ...input,
-      guests: input.guests ? (input.guests as unknown as object) : input.guests,
+      guests: input.guests !== undefined
+        ? (input.guests ? (input.guests as unknown as Prisma.InputJsonValue) : Prisma.JsonNull)
+        : undefined,
       updatedAt: new Date()
     }
   });

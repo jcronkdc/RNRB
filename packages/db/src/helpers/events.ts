@@ -1,5 +1,7 @@
-import { prisma } from '../index';
+import { Prisma } from '@prisma/client';
 import type { Event, EventType } from '@prisma/client';
+
+import { prisma } from '../index';
 
 export interface CreateEventInput {
   projectId?: string;
@@ -82,7 +84,7 @@ export async function createEvent(input: CreateEventInput): Promise<Event> {
   return prisma.event.create({
     data: {
       ...input,
-      lineup: input.lineup ? input.lineup : Prisma.DbNull,
+      lineup: input.lineup ? (input.lineup as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
       public: input.public ?? false
     }
   });
@@ -115,7 +117,9 @@ export async function updateEvent(eventId: string, input: UpdateEventInput): Pro
     where: { id: eventId },
     data: {
       ...input,
-      lineup: input.lineup ? (input.lineup as unknown as object) : input.lineup,
+      lineup: input.lineup !== undefined 
+        ? (input.lineup ? (input.lineup as unknown as Prisma.InputJsonValue) : Prisma.JsonNull)
+        : undefined,
       updatedAt: new Date()
     }
   });

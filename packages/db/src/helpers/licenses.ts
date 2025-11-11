@@ -1,5 +1,6 @@
-import { prisma } from '../index';
 import type { License, LicenseTemplate, LicenseStatus } from '@prisma/client';
+
+import { prisma } from '../index';
 
 export interface CreateLicenseInput {
   projectId: string;

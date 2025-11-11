@@ -1,5 +1,7 @@
-import { prisma } from '../index';
+import { Prisma } from '@prisma/client';
 import type { Asset, AssetType } from '@prisma/client';
+
+import { prisma } from '../index';
 
 export interface CreateAssetInput {
   projectId?: string;
@@ -112,7 +114,7 @@ export async function createAsset(input: CreateAssetInput): Promise<Asset> {
     return tx.asset.create({
       data: {
         ...input,
-        metadata: sanitizedMetadata ? sanitizedMetadata : Prisma.DbNull
+        metadata: sanitizedMetadata ? (sanitizedMetadata as Prisma.InputJsonValue) : Prisma.JsonNull
       }
     });
   });
@@ -154,7 +156,7 @@ export async function updateAsset(
     where: { id: assetId },
     data: {
       ...input,
-      metadata: sanitizedMetadata ? sanitizedMetadata : Prisma.DbNull,
+      metadata: sanitizedMetadata ? (sanitizedMetadata as Prisma.InputJsonValue) : Prisma.JsonNull,
       updatedAt: new Date()
     }
   });

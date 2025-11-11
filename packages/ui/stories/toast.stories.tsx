@@ -17,7 +17,7 @@ function DemoToasts() {
         Show success toast
       </Button>
       <Button
-        variant="secondary"
+        variant="subtle"
         onClick={() =>
           notify({
             title: 'Invite sent',

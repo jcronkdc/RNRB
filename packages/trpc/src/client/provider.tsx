@@ -2,14 +2,14 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink, loggerLink } from '@trpc/client';
-import { useState, type ReactNode } from 'react';
+import React, { useState, type ReactNode } from 'react';
 import superjson from 'superjson';
+
 import { trpc } from './react';
 import { getBaseUrl } from './utils';
 
 export function createTrpcClient() {
   return trpc.createClient({
-    transformer: superjson,
     links: [
       loggerLink({
         enabled: (opts) =>
@@ -17,7 +17,8 @@ export function createTrpcClient() {
           (opts.direction === 'down' && opts.result instanceof Error)
       }),
       httpBatchLink({
-        url: `${getBaseUrl()}/api/trpc`
+        url: `${getBaseUrl()}/api/trpc`,
+        transformer: superjson
       })
     ]
   });

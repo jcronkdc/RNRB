@@ -1,5 +1,55 @@
 
-
 > @songforge/ui@0.1.0 lint /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui
 > eslint 'src/**/*.{ts,tsx}'
 
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/badge.tsx
+  2:1  warning  There should be at least one empty line between import groups            import/order
+  2:1  warning  `class-variance-authority` import should occur before import of `react`  import/order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/button.tsx
+  4:1  warning  There should be at least one empty line between import groups                        import/order
+  4:1  warning  `class-variance-authority` import should occur before type import of `lucide-react`  import/order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/card.tsx
+   1:1   warning  There should be at least one empty line between import groups                     import/order
+   8:18  warning  Invalid Tailwind CSS classnames order                                             tailwindcss/classnames-order
+  31:5   error    Headings must have content and the content must be accessible by a screen reader  jsx-a11y/heading-has-content
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/dialog.tsx
+  2:1  warning  There should be at least one empty line between import groups          import/order
+  2:1  warning  `@radix-ui/react-dialog` import should occur before import of `react`  import/order
+  4:1  warning  `./button` import should occur before import of `../lib/utils`         import/order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/drawer.tsx
+   2:1   warning  There should be at least one empty line between import groups  import/order
+  20:16  warning  Invalid Tailwind CSS classnames order                          tailwindcss/classnames-order
+  38:20  warning  Invalid Tailwind CSS classnames order                          tailwindcss/classnames-order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/input.tsx
+   2:1   warning  There should be at least one empty line between import groups  import/order
+  18:20  warning  Invalid Tailwind CSS classnames order                          tailwindcss/classnames-order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/label.tsx
+  2:1  warning  There should be at least one empty line between import groups  import/order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/loading-spinner.tsx
+  1:1  warning  There should be at least one empty line between import groups  import/order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/separator.tsx
+  2:1   warning  There should be at least one empty line between import groups     import/order
+  5:18  error    An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/skeleton.tsx
+  13:18  warning  Invalid Tailwind CSS classnames order  tailwindcss/classnames-order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/textarea.tsx
+  14:18  warning  Invalid Tailwind CSS classnames order  tailwindcss/classnames-order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/toast.tsx
+  95:18  warning  Invalid Tailwind CSS classnames order  tailwindcss/classnames-order
+
+✖ 22 problems (2 errors, 20 warnings)
+  0 errors and 20 warnings potentially fixable with the `--fix` option.
+
+ ELIFECYCLE  Command failed with exit code 1.

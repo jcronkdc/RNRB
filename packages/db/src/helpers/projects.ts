@@ -1,5 +1,6 @@
-import { prisma } from '../index';
 import type { Project, ProjectVisibility, ProjectStatus } from '@prisma/client';
+
+import { prisma } from '../index';
 
 export interface CreateProjectInput {
   orgId: string;

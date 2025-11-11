@@ -1,5 +1,96 @@
 
-
 > web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
+app/(app)/audience/[sessionId]/page.tsx(5,30): error TS2307: Cannot find module '../../../lib/supabase/client' or its corresponding type declarations.
+app/(app)/dashboard/distribute/page.tsx(4,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+app/(app)/dashboard/distribute/page.tsx(46,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/(app)/dashboard/distribute/page.tsx(222,36): error TS2322: Type '"default" | "outline"' is not assignable to type '"subtle" | "success" | "warning" | "danger" | "outline" | "solid" | null | undefined'.
+  Type '"default"' is not assignable to type '"subtle" | "success" | "warning" | "danger" | "outline" | "solid" | null | undefined'.
+app/(app)/dashboard/LeaseDialog.tsx(168,39): error TS2322: Type '"xs"' is not assignable to type '"sm" | "md" | "lg" | "icon" | null | undefined'.
+app/(app)/dashboard/page.tsx(4,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+app/(app)/dashboard/page.tsx(36,30): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/(app)/dashboard/page.tsx(40,76): error TS2339: Property 'set' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/(app)/dashboard/page.tsx(96,59): error TS7006: Parameter 'project' implicitly has an 'any' type.
+app/(app)/dashboard/page.tsx(99,55): error TS7006: Parameter 'project' implicitly has an 'any' type.
+app/(app)/dashboard/page.tsx(110,21): error TS7006: Parameter 'song' implicitly has an 'any' type.
+app/(app)/dashboard/page.tsx(116,7): error TS2322: Type '{}' is not assignable to type 'string'.
+app/(app)/dashboard/sessions/page.tsx(34,27): error TS2322: Type '"secondary"' is not assignable to type '"default" | "link" | "subtle" | "outline" | "solid" | "ghost" | "destructive" | null | undefined'.
+app/(app)/dashboard/style-guide/page.tsx(79,21): error TS2322: Type '"secondary"' is not assignable to type '"default" | "link" | "subtle" | "outline" | "solid" | "ghost" | "destructive" | null | undefined'.
+app/(app)/layout.tsx(18,35): error TS2339: Property 'get' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/(app)/layout.tsx(38,35): error TS2339: Property 'get' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/(app)/projects/[slug]/page.tsx(4,88): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+app/(app)/projects/[slug]/page.tsx(112,48): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/projects/[slug]/page.tsx(119,51): error TS7006: Parameter 'a' implicitly has an 'any' type.
+app/(app)/projects/[slug]/page.tsx(126,51): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/projects/[slug]/page.tsx(129,38): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+app/(app)/projects/[slug]/page.tsx(129,43): error TS7006: Parameter 'c' implicitly has an 'any' type.
+app/(app)/projects/[slug]/page.tsx(130,39): error TS7006: Parameter 'c' implicitly has an 'any' type.
+app/(app)/projects/[slug]/page.tsx(136,57): error TS7006: Parameter 'l' implicitly has an 'any' type.
+app/(app)/search/SearchResults.tsx(107,26): error TS2304: Cannot find name 'cn'.
+app/(marketing)/p/[slug]/page.tsx(97,25): error TS2322: Type 'readonly [{ readonly name: "SongForge Collective"; readonly role: "Writers"; readonly pct: 60; }, { readonly name: "Mae Rivera"; readonly role: "Producer"; readonly pct: 40; }, { readonly name: "Atlas Mastering"; readonly role: "Mastering Engineer"; }] | readonly [...] | readonly [...]' is not assignable to type 'CreditListItem[]'.
+  The type 'readonly [{ readonly name: "SongForge Collective"; readonly role: "Writers"; readonly pct: 60; }, { readonly name: "Mae Rivera"; readonly role: "Producer"; readonly pct: 40; }, { readonly name: "Atlas Mastering"; readonly role: "Mastering Engineer"; }]' is 'readonly' and cannot be assigned to the mutable type 'CreditListItem[]'.
+app/(marketing)/page.tsx(5,28): error TS2307: Cannot find module '../components/Background' or its corresponding type declarations.
+app/actions/createLease.ts(6,42): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+app/actions/createLease.ts(30,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/actions/createLease.ts(33,76): error TS2339: Property 'set' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/actions/createSong.ts(7,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+app/actions/createSong.ts(42,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/actions/createSong.ts(45,76): error TS2339: Property 'set' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/actions/requestPayout.ts(6,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+app/actions/requestPayout.ts(20,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/actions/requestPayout.ts(23,76): error TS2339: Property 'set' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/api/auth/callback/route.ts(1,30): error TS2307: Cannot find module '../../../lib/supabase/server' or its corresponding type declarations.
+app/api/trpc/[trpc]/route.ts(13,9): error TS2322: Type 'OrgSession' is not assignable to type 'OrgAwareSession'.
+  Types of property 'session' are incompatible.
+    Property 'expires' is missing in type 'AppSession' but required in type 'Session'.
+app/providers.tsx(107,22): error TS2322: Type 'React.ReactNode' is not assignable to type 'import("/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/@types+react@18.3.26/node_modules/@types/react/index").ReactNode'.
+  Type 'bigint' is not assignable to type 'ReactNode'.
+app/remix/[roomId]/page.tsx(4,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+app/remix/[roomId]/page.tsx(15,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
+app/remix/[roomId]/RemixRoomClient.tsx(6,74): error TS2305: Module '"@songforge/ui"' has no exported member 'Slider'.
+app/remix/[roomId]/RemixRoomClient.tsx(114,33): error TS7006: Parameter 'value' implicitly has an 'any' type.
+app/style-guide/page.tsx(39,21): error TS2322: Type '"secondary"' is not assignable to type '"default" | "link" | "subtle" | "outline" | "solid" | "ghost" | "destructive" | null | undefined'.
+components/app/ProjectBadge.tsx(23,7): error TS2322: Type '"default" | "outline"' is not assignable to type '"subtle" | "success" | "warning" | "danger" | "outline" | "solid" | null | undefined'.
+  Type '"default"' is not assignable to type '"subtle" | "success" | "warning" | "danger" | "outline" | "solid" | null | undefined'.
+components/app/SongList.tsx(226,22): error TS2345: Argument of type '(prev: SongListItem[]) => { title: string; key?: string | undefined; tempo?: number | undefined; }[]' is not assignable to parameter of type 'SetStateAction<SongListItem[]>'.
+  Type '(prev: SongListItem[]) => { title: string; key?: string | undefined; tempo?: number | undefined; }[]' is not assignable to type '(prevState: SongListItem[]) => SongListItem[]'.
+    Type '{ title: string; key?: string | undefined; tempo?: number | undefined; }[]' is not assignable to type 'SongListItem[]'.
+      Property 'id' is missing in type '{ title: string; key?: string | undefined; tempo?: number | undefined; }' but required in type 'SongListItem'.
+components/audio/WaveformPreview.tsx(31,7): error TS2353: Object literal may only specify known properties, and 'responsive' does not exist in type 'WaveSurferOptions'.
+components/ui/Tooltip.tsx(21,22): error TS2554: Expected 1 arguments, but got 0.
+lib/actions/assets.ts(4,76): error TS2307: Cannot find module '@songforge/db/validation/assets' or its corresponding type declarations.
+lib/actions/assets.ts(5,81): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/assets.ts(6,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
+lib/actions/assets.ts(96,49): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/assets.ts(264,47): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/assets.ts(278,25): error TS7006: Parameter 'a' implicitly has an 'any' type.
+lib/actions/licenses.ts(4,45): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/licenses.ts(5,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
+lib/actions/licenses.ts(6,34): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/licenses.ts(7,38): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
+lib/actions/licenses.ts(77,27): error TS7006: Parameter 'l' implicitly has an 'any' type.
+lib/actions/projects.ts(4,58): error TS2307: Cannot find module '@songforge/db/validation/projects' or its corresponding type declarations.
+lib/actions/projects.ts(5,93): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/projects.ts(7,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
+lib/actions/royalties.ts(4,73): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/royalties.ts(5,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
+lib/actions/search.ts(3,53): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/search.ts(4,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
+lib/actions/search.ts(29,10): error TS7006: Parameter 'p' implicitly has an 'any' type.
+lib/actions/search.ts(32,34): error TS7006: Parameter 'p' implicitly has an 'any' type.
+lib/actions/search.ts(50,14): error TS7006: Parameter 's' implicitly has an 'any' type.
+lib/actions/search.ts(53,35): error TS7006: Parameter 's' implicitly has an 'any' type.
+lib/actions/search.ts(73,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
+lib/actions/search.ts(75,36): error TS7006: Parameter 'a' implicitly has an 'any' type.
+lib/actions/songs.ts(4,52): error TS2307: Cannot find module '@songforge/db/validation/songs' or its corresponding type declarations.
+lib/actions/songs.ts(5,63): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/songs.ts(6,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
+lib/actions/songs.ts(7,34): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/splits.ts(4,64): error TS2307: Cannot find module '@songforge/db/validation/splits' or its corresponding type declarations.
+lib/actions/splits.ts(5,143): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/splits.ts(6,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
+lib/actions/splits.ts(7,34): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
+lib/actions/splits.ts(88,53): error TS2307: Cannot find module '@songforge/db/validation' or its corresponding type declarations.
+lib/actions/splits.ts(116,53): error TS2307: Cannot find module '@songforge/db/validation' or its corresponding type declarations.
+ ELIFECYCLE  Command failed with exit code 2.

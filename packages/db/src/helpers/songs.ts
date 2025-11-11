@@ -1,5 +1,6 @@
-import { prisma } from '../index';
 import type { Song } from '@prisma/client';
+
+import { prisma } from '../index';
 
 export interface CreateSongInput {
   projectId: string;

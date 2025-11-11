@@ -183,3 +183,6 @@ test('complete flow', async ({ page }) => {
 - OpenAI API key required for lyric generation
 - ElevenLabs optional but recommended for voice preview
 
+
+
+

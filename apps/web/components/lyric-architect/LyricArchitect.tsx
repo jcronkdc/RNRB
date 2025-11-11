@@ -140,3 +140,6 @@ export function LyricArchitect({ projectId, songId, onComplete }: LyricArchitect
   );
 }
 
+
+
+

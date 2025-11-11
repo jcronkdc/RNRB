@@ -7,6 +7,7 @@ export interface CreateContextOptions {
 }
 
 export async function createContext({ session, headers }: CreateContextOptions) {
+  const sessionUser = session?.session?.user as { id?: string } | undefined;
   return {
     prisma,
     headers,
@@ -14,7 +15,7 @@ export async function createContext({ session, headers }: CreateContextOptions) 
     memberships: session?.memberships ?? [],
     activeMembership: session?.activeMembership ?? null,
     session: session?.session ?? null,
-    viewerId: session?.session.user.id ?? null
+    viewerId: sessionUser?.id ?? null
   };
 }
 

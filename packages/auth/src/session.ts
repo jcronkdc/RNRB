@@ -1,13 +1,15 @@
+import { cookies } from 'next/headers';
+import type { Session } from 'next-auth';
+
 import type { Membership, Organization } from '@songforge/db';
 import { prisma } from '@songforge/db';
-import type { Session } from 'next-auth';
-import { cookies } from 'next/headers';
+
 import { auth } from './auth';
 
 export interface OrgAwareSession {
   session: Session;
-  memberships: Array<Membership & { organization: Organization }>;
-  activeMembership: (Membership & { organization: Organization }) | null;
+  memberships: Array<Membership & { org: Organization }>;
+  activeMembership: (Membership & { org: Organization }) | null;
 }
 
 export async function getOrgSession(target?: {
@@ -22,7 +24,7 @@ export async function getOrgSession(target?: {
 
   const memberships = await prisma.membership.findMany({
     where: { userId: session.user.id },
-    include: { organization: true }
+    include: { org: true }
   });
 
   const activeMembership = resolveActiveMembership(session, memberships, target);
@@ -53,7 +55,7 @@ export async function requireOrgSession(target?: {
 
 function resolveActiveMembership(
   session: Session,
-  memberships: Array<Membership & { organization: Organization }>,
+  memberships: Array<Membership & { org: Organization }>,
   target?: { organizationId?: string; slug?: string }
 ) {
   if (!memberships.length) {
@@ -61,16 +63,17 @@ function resolveActiveMembership(
   }
 
   if (target?.organizationId) {
-    return memberships.find((membership) => membership.organizationId === target.organizationId) ?? null;
+    return memberships.find((membership) => membership.orgId === target.organizationId) ?? null;
   }
 
   if (target?.slug) {
-    return memberships.find((membership) => membership.organization.slug === target.slug) ?? null;
+    return memberships.find((membership) => membership.org.slug === target.slug) ?? null;
   }
 
-  if (session.user.activeOrganizationId) {
+  const userWithOrg = session.user as Session['user'] & { activeOrganizationId?: string };
+  if (userWithOrg?.activeOrganizationId) {
     return (
-      memberships.find((membership) => membership.organizationId === session.user.activeOrganizationId) ??
+      memberships.find((membership) => membership.orgId === userWithOrg.activeOrganizationId) ??
       memberships[0] ??
       null
     );
@@ -82,8 +85,8 @@ function resolveActiveMembership(
 /**
  * Sets the active organization cookie for the current user. Safe to use inside server actions.
  */
-export function setActiveOrgCookie(orgId: string | null): void {
-  const store = cookies();
+export async function setActiveOrgCookie(orgId: string | null): Promise<void> {
+  const store = await cookies();
 
   if (!orgId) {
     store.delete('sf_org');

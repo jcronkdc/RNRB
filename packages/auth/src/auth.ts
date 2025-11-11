@@ -1,15 +1,19 @@
-import NextAuth, { type NextAuthConfig } from 'next-auth';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import nodemailer from 'nodemailer';
+import NextAuth, { type NextAuthOptions } from 'next-auth';
+import type { Session } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
+import AppleProvider from 'next-auth/providers/apple';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
-import AppleProvider from 'next-auth/providers/apple';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import nodemailer from 'nodemailer';
+
 import { prisma } from '@songforge/db';
+
 import { env } from './env';
 
 const transporter = nodemailer.createTransport(env.EMAIL_SERVER_URL);
 
-export const authConfig: NextAuthConfig = {
+export const authConfig: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: 'jwt'
@@ -39,38 +43,43 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.userId = user.id;
+        (token as JWT & { userId?: string }).userId = user.id;
       }
 
       if (trigger === 'update') {
         if (session?.activeOrganizationId) {
-          token.activeOrganizationId = session.activeOrganizationId;
+          (token as JWT & { activeOrganizationId?: string }).activeOrganizationId = session.activeOrganizationId;
         }
       }
 
-      if (token.userId && (!token.organizationIds || trigger === 'update')) {
+      const tokenWithExtras = token as JWT & { userId?: string; organizationIds?: string[]; activeOrganizationId?: string };
+      
+      if (tokenWithExtras.userId && (!tokenWithExtras.organizationIds || trigger === 'update')) {
         const memberships = await prisma.membership.findMany({
-          where: { userId: token.userId as string },
-          include: { organization: true }
+          where: { userId: tokenWithExtras.userId as string },
+          include: { org: true }
         });
 
-        token.organizationIds = memberships.map((membership) => membership.organizationId);
-        token.activeOrganizationId =
+        tokenWithExtras.organizationIds = memberships.map((membership) => membership.orgId);
+        tokenWithExtras.activeOrganizationId =
           (session?.activeOrganizationId as string | undefined) ||
-          (token.activeOrganizationId as string | undefined) ||
-          memberships[0]?.organizationId;
+          (tokenWithExtras.activeOrganizationId as string | undefined) ||
+          memberships[0]?.orgId;
       }
 
-      return token;
+      return tokenWithExtras;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.userId as string;
-        session.user.organizationIds = (token.organizationIds as string[]) ?? [];
-        session.user.activeOrganizationId = token.activeOrganizationId as string | undefined;
+      const tokenWithExtras = token as JWT & { userId?: string; organizationIds?: string[]; activeOrganizationId?: string };
+      const sessionWithExtras = session as Session & { user?: { id?: string; organizationIds?: string[]; activeOrganizationId?: string } };
+      
+      if (sessionWithExtras.user) {
+        sessionWithExtras.user.id = tokenWithExtras.userId as string;
+        sessionWithExtras.user.organizationIds = (tokenWithExtras.organizationIds as string[]) ?? [];
+        sessionWithExtras.user.activeOrganizationId = tokenWithExtras.activeOrganizationId as string | undefined;
       }
 
-      return session;
+      return sessionWithExtras;
     }
   }
 };

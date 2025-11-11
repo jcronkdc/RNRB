@@ -1,5 +1,6 @@
-import { prisma } from '../index';
 import type { SplitSheet, SplitContributor } from '@prisma/client';
+
+import { prisma } from '../index';
 
 export interface CreateSplitContributorInput {
   name: string;

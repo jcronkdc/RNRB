@@ -1,11 +1,12 @@
 import { z } from 'zod';
+
 import { protectedProcedure, router } from '../trpc';
 
 export const organizationRouter = router({
   list: protectedProcedure.query(async ({ ctx }) => {
     return ctx.prisma.membership.findMany({
       where: { userId: ctx.viewerId! },
-      include: { organization: true },
+      include: { org: true },
       orderBy: { createdAt: 'asc' }
     });
   }),
@@ -13,7 +14,7 @@ export const organizationRouter = router({
   bySlug: protectedProcedure
     .input(z.object({ slug: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
-      return ctx.prisma.organization.findUnique({
+      return ctx.prisma.org.findUnique({
         where: { slug: input.slug }
       });
     })

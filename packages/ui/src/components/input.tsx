@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '../lib/utils';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   leadingIcon?: LucideIcon;
   trailingIcon?: LucideIcon;
   containerClassName?: string;
@@ -22,9 +22,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         aria-disabled={disabled ? 'true' : undefined}
       >
-        {LeadingIcon ? (
-          <LeadingIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary" aria-hidden="true" />
-        ) : null}
+        {LeadingIcon && React.createElement(LeadingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>, {
+          className: "h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary",
+          'aria-hidden': "true"
+        })}
         <input
           ref={innerRef}
           type={type}
@@ -35,9 +36,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         {...props}
       />
-        {TrailingIcon ? (
-          <TrailingIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary" aria-hidden="true" />
-        ) : null}
+        {TrailingIcon && React.createElement(TrailingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>, {
+          className: "h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary",
+          'aria-hidden': "true"
+        })}
       </div>
     );
   }
@@ -45,3 +47,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = 'Input';
 
 export { Input };
+export type { InputProps };

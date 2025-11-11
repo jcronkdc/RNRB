@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { ProjectVisibility, ProjectStatus } from '@prisma/client';
+import { z } from 'zod';
 
 export const createProjectSchema = z.object({
   name: z.string().min(1, 'Name is required').max(200, 'Name must be less than 200 characters'),
