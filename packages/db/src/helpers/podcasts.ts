@@ -61,7 +61,7 @@ export async function createPodcastEpisode(
   return prisma.podcastEpisode.create({
     data: {
       ...input,
-      guests: input.guests ? (input.guests as unknown as object) : null,
+      guests: input.guests ? input.guests : Prisma.DbNull,
       tags: input.tags ?? [],
       public: input.public ?? false
     }

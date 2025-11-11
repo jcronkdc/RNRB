@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { getOrgSession } from '@songforge/auth';
 import { getProjectBySlug, listSongs, listAssets, listSplitSheets, listLicenses } from '@songforge/db';
 import type { SongListItem } from '../../../../components/app/SongList';
@@ -6,6 +7,72 @@ import type { AssetListItem } from '../../../../components/app/AssetList';
 import type { SplitListItem } from '../../../../components/app/SplitList';
 import type { LicenseListItem } from '../../../../components/app/LicenseList';
 import { ProjectDetailWrapper } from './ProjectDetailWrapper';
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const enableBypass = process.env.DEMO_BYPASS === '1';
+  let orgId: string | null = null;
+
+  try {
+    const session = await getOrgSession();
+    orgId = session.orgId;
+  } catch (error) {
+    if (enableBypass) {
+      orgId = 'demo-org';
+    } else {
+      return {
+        title: 'Project Not Found',
+        description: 'The requested project could not be found.'
+      };
+    }
+  }
+
+  if (!orgId) {
+    return {
+      title: 'Project Not Found',
+      description: 'The requested project could not be found.'
+    };
+  }
+
+  const project = await getProjectBySlug(params.slug, orgId);
+
+  if (!project) {
+    return {
+      title: 'Project Not Found',
+      description: 'The requested project could not be found.'
+    };
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const description = project.description || `Project: ${project.name}`;
+  const ogImage = project.coverImage 
+    ? `${baseUrl}${project.coverImage}`
+    : `${baseUrl}/og-default.jpg`;
+
+  return {
+    title: `${project.name} • Song Forge`,
+    description,
+    openGraph: {
+      title: project.name,
+      description,
+      type: 'website',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: project.name
+        }
+      ],
+      siteName: 'Song Forge'
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: project.name,
+      description,
+      images: [ogImage]
+    }
+  };
+}
 
 export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
   const enableBypass = process.env.DEMO_BYPASS === '1';

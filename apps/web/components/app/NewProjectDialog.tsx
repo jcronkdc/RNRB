@@ -1,105 +1,52 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label } from '@songforge/ui';
-import { ProjectTemplates } from './ProjectTemplates';
-
-export type ProjectVisibility = 'private' | 'org' | 'public';
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@songforge/ui';
+import { Button, Input } from '@songforge/ui';
 
 interface NewProjectDialogProps {
   open: boolean;
-  onOpenChange: (next: boolean) => void;
-  onCreate?: (payload: { name: string; visibility: ProjectVisibility }) => void;
-  showTemplates?: boolean;
+  onOpenChange: (open: boolean) => void;
+  onCreate: (name: string) => void;
 }
 
-export default function NewProjectDialog({ open, onOpenChange, onCreate, showTemplates = true }: NewProjectDialogProps) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
-  const [showTemplateSelection, setShowTemplateSelection] = useState(showTemplates);
+export function NewProjectDialog({ open, onOpenChange, onCreate }: NewProjectDialogProps) {
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      setShowTemplateSelection(showTemplates);
-      nameRef.current?.focus();
-    } else {
-      formRef.current?.reset();
-      setShowTemplateSelection(showTemplates);
-    }
-  }, [open, showTemplates]);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) return;
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const name = (data.get('name') as string)?.trim();
-    if (!name) {
-      nameRef.current?.focus();
-      return;
-    }
-    onCreate?.({ name, visibility: (data.get('visibility') as ProjectVisibility) ?? 'private' });
-    onOpenChange(false);
+    setLoading(true);
+    await onCreate(name.trim());
+    setName('');
+    setLoading(false);
   };
-
-  if (showTemplateSelection && open) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-2xl border-border/60 bg-surface shadow-soft">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-semibold text-brand-foreground">New project</DialogTitle>
-            <DialogDescription className="text-sm text-muted-foreground">
-              Choose a template to get started faster, or create a blank project.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-6">
-            <ProjectTemplates
-              onSelect={(template) => {
-                setShowTemplateSelection(false);
-                // Pre-fill form with template defaults
-                if (nameRef.current) {
-                  nameRef.current.value = template.name;
-                }
-              }}
-              onCancel={() => {
-                setShowTemplateSelection(false);
-              }}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md border-border/60 bg-surface shadow-soft">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-brand-foreground">New project</DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">Spin up a fresh canvas for your next release, session, or event.</DialogDescription>
+          <DialogTitle>Create New Project</DialogTitle>
         </DialogHeader>
-        <form ref={formRef} onSubmit={handleSubmit} className="mt-6 space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="project-name">Name</Label>
-            <Input id="project-name" name="name" placeholder="Working title" autoComplete="off" required ref={nameRef} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="project-visibility">Visibility</Label>
-            <select
-              id="project-visibility"
-              name="visibility"
-              defaultValue="private"
-              className="h-11 w-full rounded-lg border border-border/60 bg-surface px-3 text-sm text-brand-foreground shadow-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-            >
-              <option value="private">Private (just you)</option>
-              <option value="org">Organization members</option>
-              <option value="public">Public showcase</option>
-            </select>
-          </div>
-          <DialogFooter className="gap-2 sm:gap-3">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Project name"
+            required
+            disabled={loading}
+            autoFocus
+          />
+          <div className="flex justify-end gap-2">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">Create project</Button>
-          </DialogFooter>
+            <Button type="submit" disabled={loading || !name.trim()}>
+              Create
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

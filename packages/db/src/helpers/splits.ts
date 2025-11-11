@@ -37,16 +37,31 @@ export interface UpdateContributorInput {
  * Validate that contributors total 100%
  */
 function validateContributors(contributors: CreateSplitContributorInput[]): void {
-  const total = contributors.reduce((sum, c) => sum + c.percentage, 0);
-  if (Math.abs(total - 100) > 0.01) {
-    throw new Error(`Contributors must total 100%. Current total: ${total}%`);
+  if (contributors.length === 0) {
+    throw new Error('At least one contributor is required');
   }
 
-  // Validate all percentages are positive
+  // Validate all percentages are positive and within range
   for (const contributor of contributors) {
-    if (contributor.percentage < 0 || contributor.percentage > 100) {
-      throw new Error(`Invalid percentage: ${contributor.percentage}%`);
+    if (contributor.percentage <= 0) {
+      throw new Error(`Percentage must be greater than 0. Got: ${contributor.percentage}%`);
     }
+    if (contributor.percentage > 100) {
+      throw new Error(`Percentage cannot exceed 100%. Got: ${contributor.percentage}%`);
+    }
+  }
+
+  // Use tighter tolerance for financial calculations
+  const total = contributors.reduce((sum, c) => sum + c.percentage, 0);
+  if (Math.abs(total - 100) > 0.001) {
+    throw new Error(`Contributors must total exactly 100%. Current total: ${total.toFixed(2)}%`);
+  }
+
+  // Check for duplicate names
+  const names = contributors.map(c => c.name.toLowerCase().trim());
+  const uniqueNames = new Set(names);
+  if (uniqueNames.size !== names.length) {
+    throw new Error('Contributor names must be unique');
   }
 }
 
@@ -141,12 +156,26 @@ export async function addContributor(
     throw new Error('Cannot add contributors to finalized split sheet');
   }
 
+  // Validate percentage
+  if (input.percentage <= 0) {
+    throw new Error(`Percentage must be greater than 0. Got: ${input.percentage}%`);
+  }
+  if (input.percentage > 100) {
+    throw new Error(`Percentage cannot exceed 100%. Got: ${input.percentage}%`);
+  }
+
   // Check new total
   const currentTotal = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
   const newTotal = currentTotal + input.percentage;
 
-  if (newTotal > 100.01) {
-    throw new Error(`Adding this contributor would exceed 100%. Current: ${currentTotal}%, Adding: ${input.percentage}%`);
+  if (newTotal > 100.001) {
+    throw new Error(`Adding this contributor would exceed 100%. Current: ${currentTotal.toFixed(2)}%, Adding: ${input.percentage}%`);
+  }
+
+  // Check for duplicate names
+  const existingNames = splitSheet.contributors.map(c => c.name.toLowerCase().trim());
+  if (existingNames.includes(input.name.toLowerCase().trim())) {
+    throw new Error(`Contributor with name "${input.name}" already exists`);
   }
 
   return prisma.splitContributor.create({
@@ -179,12 +208,19 @@ export async function updateContributor(
 
   // If percentage is changing, validate new total
   if (input.percentage !== undefined) {
+    if (input.percentage <= 0) {
+      throw new Error(`Percentage must be greater than 0. Got: ${input.percentage}%`);
+    }
+    if (input.percentage > 100) {
+      throw new Error(`Percentage cannot exceed 100%. Got: ${input.percentage}%`);
+    }
+
     const otherContributors = contributor.splitSheet.contributors.filter((c) => c.id !== contributorId);
     const otherTotal = otherContributors.reduce((sum, c) => sum + c.percentage, 0);
     const newTotal = otherTotal + input.percentage;
 
-    if (newTotal > 100.01) {
-      throw new Error(`Updating percentage would exceed 100%. Current others: ${otherTotal}%, New: ${input.percentage}%`);
+    if (newTotal > 100.001) {
+      throw new Error(`Updating percentage would exceed 100%. Current others: ${otherTotal.toFixed(2)}%, New: ${input.percentage}%`);
     }
   }
 
@@ -239,10 +275,17 @@ export async function finalizeSplitSheet(
     throw new Error('Split sheet is already finalized');
   }
 
-  // Validate contributors total 100%
+  // Validate contributors total exactly 100% with tight tolerance
   const total = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
-  if (Math.abs(total - 100) > 0.01) {
-    throw new Error(`Cannot finalize: Contributors total ${total}%, must be exactly 100%`);
+  if (Math.abs(total - 100) > 0.001) {
+    throw new Error(`Cannot finalize: Contributors total ${total.toFixed(2)}%, must be exactly 100%`);
+  }
+
+  // Ensure all contributors have valid percentages
+  for (const contributor of splitSheet.contributors) {
+    if (contributor.percentage <= 0 || contributor.percentage > 100) {
+      throw new Error(`Cannot finalize: Invalid percentage ${contributor.percentage}% for contributor ${contributor.name}`);
+    }
   }
 
   // Mark all contributors as finalized

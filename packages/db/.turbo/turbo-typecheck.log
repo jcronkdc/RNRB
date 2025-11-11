@@ -1,0 +1,194 @@
+
+
+> @songforge/db@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/db
+> tsc --noEmit
+
+[96msrc/helpers/assets.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../index"' has no exported member 'prisma'.
+
+[7m1[0m import { prisma } from '../index';
+[7m [0m [91m         ~~~~~~[0m
+
+[96msrc/helpers/assets.ts[0m:[93m76[0m:[93m37[0m - [91merror[0m[90m TS7006: [0mParameter 'tx' implicitly has an 'any' type.
+
+[7m76[0m   return prisma.$transaction(async (tx) => {
+[7m  [0m [91m                                    ~~[0m
+
+[96msrc/helpers/assets.ts[0m:[93m115[0m:[93m59[0m - [91merror[0m[90m TS2552: [0mCannot find name 'Prisma'. Did you mean 'prisma'?
+
+[7m115[0m         metadata: sanitizedMetadata ? sanitizedMetadata : Prisma.DbNull
+[7m   [0m [91m                                                          ~~~~~~[0m
+
+[96msrc/helpers/assets.ts[0m:[93m157[0m:[93m57[0m - [91merror[0m[90m TS2552: [0mCannot find name 'Prisma'. Did you mean 'prisma'?
+
+[7m157[0m       metadata: sanitizedMetadata ? sanitizedMetadata : Prisma.DbNull,
+[7m   [0m [91m                                                        ~~~~~~[0m
+
+[96msrc/helpers/events.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../index"' has no exported member 'prisma'.
+
+[7m1[0m import { prisma } from '../index';
+[7m [0m [91m         ~~~~~~[0m
+
+[96msrc/helpers/events.ts[0m:[93m85[0m:[93m45[0m - [91merror[0m[90m TS2552: [0mCannot find name 'Prisma'. Did you mean 'prisma'?
+
+[7m85[0m       lineup: input.lineup ? input.lineup : Prisma.DbNull,
+[7m  [0m [91m                                            ~~~~~~[0m
+
+[96msrc/helpers/licenses.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../index"' has no exported member 'prisma'.
+
+[7m1[0m import { prisma } from '../index';
+[7m [0m [91m         ~~~~~~[0m
+
+[96msrc/helpers/podcasts.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../index"' has no exported member 'prisma'.
+
+[7m1[0m import { prisma } from '../index';
+[7m [0m [91m         ~~~~~~[0m
+
+[96msrc/helpers/podcasts.ts[0m:[93m64[0m:[93m45[0m - [91merror[0m[90m TS2552: [0mCannot find name 'Prisma'. Did you mean 'prisma'?
+
+[7m64[0m       guests: input.guests ? input.guests : Prisma.DbNull,
+[7m  [0m [91m                                            ~~~~~~[0m
+
+[96msrc/helpers/projects.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../index"' has no exported member 'prisma'.
+
+[7m1[0m import { prisma } from '../index';
+[7m [0m [91m         ~~~~~~[0m
+
+[96msrc/helpers/royalties.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../index"' has no exported member 'prisma'.
+
+[7m1[0m import { prisma } from '../index';
+[7m [0m [91m         ~~~~~~[0m
+
+[96msrc/helpers/royalties.ts[0m:[93m58[0m:[93m59[0m - [91merror[0m[90m TS7006: [0mParameter 'sum' implicitly has an 'any' type.
+
+[7m58[0m   const totalPercentage = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
+[7m  [0m [91m                                                          ~~~[0m
+
+[96msrc/helpers/royalties.ts[0m:[93m58[0m:[93m64[0m - [91merror[0m[90m TS7006: [0mParameter 'c' implicitly has an 'any' type.
+
+[7m58[0m   const totalPercentage = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
+[7m  [0m [91m                                                               ~[0m
+
+[96msrc/helpers/royalties.ts[0m:[93m64[0m:[93m72[0m - [91merror[0m[90m TS7006: [0mParameter 'contributor' implicitly has an 'any' type.
+
+[7m64[0m   const royalties: RoyaltyCalculation[] = splitSheet.contributors.map((contributor) => {
+[7m  [0m [91m                                                                       ~~~~~~~~~~~[0m
+
+[96msrc/helpers/songs.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../index"' has no exported member 'prisma'.
+
+[7m1[0m import { prisma } from '../index';
+[7m [0m [91m         ~~~~~~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../index"' has no exported member 'prisma'.
+
+[7m1[0m import { prisma } from '../index';
+[7m [0m [91m         ~~~~~~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m85[0m:[93m37[0m - [91merror[0m[90m TS7006: [0mParameter 'tx' implicitly has an 'any' type.
+
+[7m85[0m   return prisma.$transaction(async (tx) => {
+[7m  [0m [91m                                    ~~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m168[0m:[93m56[0m - [91merror[0m[90m TS7006: [0mParameter 'sum' implicitly has an 'any' type.
+
+[7m168[0m   const currentTotal = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
+[7m   [0m [91m                                                       ~~~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m168[0m:[93m61[0m - [91merror[0m[90m TS7006: [0mParameter 'c' implicitly has an 'any' type.
+
+[7m168[0m   const currentTotal = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
+[7m   [0m [91m                                                            ~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m176[0m:[93m53[0m - [91merror[0m[90m TS7006: [0mParameter 'c' implicitly has an 'any' type.
+
+[7m176[0m   const existingNames = splitSheet.contributors.map(c => c.name.toLowerCase().trim());
+[7m   [0m [91m                                                    ~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m218[0m:[93m75[0m - [91merror[0m[90m TS7006: [0mParameter 'c' implicitly has an 'any' type.
+
+[7m218[0m     const otherContributors = contributor.splitSheet.contributors.filter((c) => c.id !== contributorId);
+[7m   [0m [91m                                                                          ~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m219[0m:[93m50[0m - [91merror[0m[90m TS7006: [0mParameter 'sum' implicitly has an 'any' type.
+
+[7m219[0m     const otherTotal = otherContributors.reduce((sum, c) => sum + c.percentage, 0);
+[7m   [0m [91m                                                 ~~~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m219[0m:[93m55[0m - [91merror[0m[90m TS7006: [0mParameter 'c' implicitly has an 'any' type.
+
+[7m219[0m     const otherTotal = otherContributors.reduce((sum, c) => sum + c.percentage, 0);
+[7m   [0m [91m                                                      ~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m279[0m:[93m49[0m - [91merror[0m[90m TS7006: [0mParameter 'sum' implicitly has an 'any' type.
+
+[7m279[0m   const total = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
+[7m   [0m [91m                                                ~~~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m279[0m:[93m54[0m - [91merror[0m[90m TS7006: [0mParameter 'c' implicitly has an 'any' type.
+
+[7m279[0m   const total = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
+[7m   [0m [91m                                                     ~[0m
+
+[96msrc/helpers/splits.ts[0m:[93m292[0m:[93m36[0m - [91merror[0m[90m TS7006: [0mParameter 'tx' implicitly has an 'any' type.
+
+[7m292[0m   await prisma.$transaction(async (tx) => {
+[7m   [0m [91m                                   ~~[0m
+
+[96msrc/index.ts[0m:[93m3[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'CreateAssetInput'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m3[0m export * from "./helpers/assets";
+[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/index.ts[0m:[93m3[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'UpdateAssetInput'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m3[0m export * from "./helpers/assets";
+[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/index.ts[0m:[93m3[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'getAssetTypeFromMime'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m3[0m export * from "./helpers/assets";
+[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/index.ts[0m:[93m7[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'CreateProjectInput'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m7[0m export * from "./helpers/projects";
+[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/index.ts[0m:[93m7[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'UpdateProjectInput'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m7[0m export * from "./helpers/projects";
+[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/index.ts[0m:[93m9[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'CreateSongInput'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m9[0m export * from "./helpers/songs";
+[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/index.ts[0m:[93m9[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'UpdateSongInput'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m9[0m export * from "./helpers/songs";
+[7m [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/index.ts[0m:[93m10[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'CreateSplitSheetInput'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m10[0m export * from "./helpers/splits";
+[7m  [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/index.ts[0m:[93m10[0m:[93m1[0m - [91merror[0m[90m TS2308: [0mModule "./validation" has already exported a member named 'UpdateSplitSheetInput'. Consider explicitly re-exporting to resolve the ambiguity.
+
+[7m10[0m export * from "./helpers/splits";
+[7m  [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+Found 35 errors in 9 files.
+
+Errors  Files
+     4  src/helpers/assets.ts[90m:1[0m
+     2  src/helpers/events.ts[90m:1[0m
+     1  src/helpers/licenses.ts[90m:1[0m
+     2  src/helpers/podcasts.ts[90m:1[0m
+     1  src/helpers/projects.ts[90m:1[0m
+     4  src/helpers/royalties.ts[90m:1[0m
+     1  src/helpers/songs.ts[90m:1[0m
+    11  src/helpers/splits.ts[90m:1[0m
+     9  src/index.ts[90m:3[0m
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

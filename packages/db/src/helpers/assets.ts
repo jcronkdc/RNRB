@@ -37,36 +37,87 @@ export function getAssetTypeFromMime(mimeType: string): AssetType {
 }
 
 /**
- * Create a new asset with validation
+ * Sanitize metadata to remove sensitive information
+ */
+function sanitizeMetadata(metadata?: Record<string, unknown>): Record<string, unknown> | null {
+  if (!metadata) return null;
+
+  const sensitiveKeys = [
+    'internalPath',
+    'apiKey',
+    'secret',
+    'password',
+    'token',
+    'WATERMARK_SECRET',
+    'INTERNAL_KEY',
+    'privateKey',
+    'accessKey'
+  ];
+
+  const sanitized: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(metadata)) {
+    const lowerKey = key.toLowerCase();
+    const isSensitive = sensitiveKeys.some(sk => lowerKey.includes(sk.toLowerCase()));
+    
+    if (!isSensitive) {
+      sanitized[key] = value;
+    }
+  }
+
+  return Object.keys(sanitized).length > 0 ? sanitized : null;
+}
+
+/**
+ * Create a new asset with validation and deduplication
+ * BUG FIX: Uses transaction to prevent race conditions
  */
 export async function createAsset(input: CreateAssetInput): Promise<Asset> {
-  // Validate storage key uniqueness
-  const existing = await prisma.asset.findUnique({
-    where: { storageKey: input.storageKey }
-  });
+  // BUG FIX: Use transaction to prevent race conditions on concurrent uploads
+  return prisma.$transaction(async (tx) => {
+    // Check for existing asset by checksum first (deduplication)
+    if (input.checksum) {
+      const existingByChecksum = await tx.asset.findFirst({
+        where: { checksum: input.checksum }
+      });
 
-  if (existing) {
-    throw new Error(`Asset with storage key "${input.storageKey}" already exists`);
-  }
+      if (existingByChecksum) {
+        // Return existing asset instead of creating duplicate
+        return existingByChecksum;
+      }
+    }
 
-  // If projectId provided, validate project exists
-  if (input.projectId) {
-    const project = await prisma.project.findUnique({
-      where: { id: input.projectId }
+    // Validate storage key uniqueness within transaction
+    const existing = await tx.asset.findUnique({
+      where: { storageKey: input.storageKey }
     });
 
-    if (!project) {
-      throw new Error(`Project with id "${input.projectId}" not found`);
+    if (existing) {
+      throw new Error(`Asset with storage key "${input.storageKey}" already exists`);
     }
-  }
 
-  return prisma.asset.create({
-    data: {
-      ...input,
-      metadata: input.metadata ? (input.metadata as object) : null
+    // If projectId provided, validate project exists
+    if (input.projectId) {
+      const project = await tx.project.findUnique({
+        where: { id: input.projectId }
+      });
+
+      if (!project) {
+        throw new Error(`Project with id "${input.projectId}" not found`);
+      }
     }
+
+    // BUG FIX: Sanitize metadata to remove sensitive information
+    const sanitizedMetadata = sanitizeMetadata(input.metadata);
+
+    return tx.asset.create({
+      data: {
+        ...input,
+        metadata: sanitizedMetadata ? sanitizedMetadata : Prisma.DbNull
+      }
+    });
   });
 }
+
 
 /**
  * Update asset
@@ -94,11 +145,16 @@ export async function updateAsset(
     }
   }
 
+  // BUG FIX: Sanitize metadata if being updated
+  const sanitizedMetadata = input.metadata 
+    ? sanitizeMetadata(input.metadata as Record<string, unknown>)
+    : existing.metadata;
+
   return prisma.asset.update({
     where: { id: assetId },
     data: {
       ...input,
-      metadata: input.metadata ? (input.metadata as object) : existing.metadata,
+      metadata: sanitizedMetadata ? sanitizedMetadata : Prisma.DbNull,
       updatedAt: new Date()
     }
   });

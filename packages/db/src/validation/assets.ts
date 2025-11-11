@@ -6,6 +6,16 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif
 const ALLOWED_DOCUMENT_TYPES = ['application/pdf', 'text/plain', 'text/markdown'];
 const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
 
+// BUG FIX: Block malicious file types
+const BLOCKED_TYPES = [
+  'application/x-msdownload', // .exe
+  'application/x-sh', // .sh
+  'application/x-executable',
+  'application/x-msdos-program',
+  'application/x-elf',
+  'application/x-mach-binary'
+];
+
 export const createAssetSchema = z.object({
   name: z.string().min(1, 'Name is required').max(500),
   mimeType: z.string().min(1),
@@ -21,6 +31,18 @@ export const createAssetSchema = z.object({
   assetType: z.nativeEnum(AssetType)
 }).refine(
   (data) => {
+    // BUG FIX: Block malicious file types
+    if (BLOCKED_TYPES.includes(data.mimeType)) {
+      return false;
+    }
+    
+    // Check file extension matches MIME type
+    const extension = data.name.split('.').pop()?.toLowerCase();
+    const dangerousExtensions = ['.exe', '.sh', '.bat', '.cmd', '.com', '.scr', '.vbs', '.js', '.jar'];
+    if (extension && dangerousExtensions.includes(`.${extension}`)) {
+      return false;
+    }
+    
     if (data.assetType === 'audio' && !ALLOWED_AUDIO_TYPES.includes(data.mimeType)) {
       return false;
     }
@@ -33,7 +55,7 @@ export const createAssetSchema = z.object({
     return true;
   },
   {
-    message: 'MIME type does not match asset type',
+    message: 'Invalid file type. Executable files and malicious file types are not allowed.',
     path: ['mimeType']
   }
 );

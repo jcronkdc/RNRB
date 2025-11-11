@@ -321,6 +321,21 @@ enum DonationStatus {
   refunded
 }
 
+
+enum SubscriptionTier {
+  sustaining
+  patron
+  benefactor
+}
+
+enum SubscriptionStatus {
+  active
+  cancelled
+  past_due
+  trialing
+  incomplete
+}
+
 model Subscription {
   id            String           @id @default(cuid())
   userId        String?
@@ -335,23 +350,10 @@ model Subscription {
   cancelAtPeriodEnd  Boolean     @default(false)
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
+  user          User?            @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([email])
   @@index([status])
   @@index([stripeId])
-}
-
-enum SubscriptionTier {
-  sustaining
-  patron
-  benefactor
-}
-
-enum SubscriptionStatus {
-  active
-  cancelled
-  past_due
-  trialing
-  incomplete
 }

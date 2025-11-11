@@ -1,41 +1,21 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
-type GlobalWithPrisma = typeof globalThis & {
-  __songforgePrisma?: PrismaClient;
-};
+export { prisma } from './prisma';
 
-const globalForPrisma = globalThis as GlobalWithPrisma;
+export * from './validation';
 
-const prisma =
-  globalForPrisma.__songforgePrisma ??
-  new PrismaClient();
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.__songforgePrisma = prisma;
-}
-
-if (process.env.NODE_ENV === 'development') {
-  (async () => {
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-      console.log('✅ Database connected');
-    } catch (error) {
-      console.warn('⚠️ Database connection failed', error);
-    }
-  })();
-}
-
-export { prisma };
-export * from '@prisma/client';
-
-// Helper functions
-export * from './helpers/projects';
-export * from './helpers/songs';
 export * from './helpers/assets';
-export * from './helpers/splits';
-export * from './helpers/licenses';
+
 export * from './helpers/events';
+
+export * from './helpers/licenses';
+
 export * from './helpers/podcasts';
 
-// Validation schemas
-export * from './validation';
+export * from './helpers/projects';
+
+export * from './helpers/royalties';
+
+export * from './helpers/songs';
+
+export * from './helpers/splits';

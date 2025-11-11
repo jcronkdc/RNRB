@@ -32,7 +32,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
           activeMembership: null
         };
       } else {
-        redirect('/signin');
+        redirect('/auth');
       }
     } else if (enableBypass && message === 'NO_ACTIVE_ORG') {
       const cookieOrg = cookies().get('sf_org')?.value ?? null;
@@ -55,7 +55,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         redirect('/onboarding/organization');
       }
     } else if (message === 'UNAUTHENTICATED') {
-      redirect('/signin');
+      redirect('/auth');
     } else if (message === 'NO_ACTIVE_ORG') {
       redirect('/onboarding/organization');
     } else {
@@ -64,7 +64,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   }
 
   if (!orgSession) {
-    redirect('/signin');
+    redirect('/auth');
   }
 
   const userName = orgSession.session.user?.name ?? 'SongForge Member';

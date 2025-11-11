@@ -82,7 +82,7 @@ export async function createEvent(input: CreateEventInput): Promise<Event> {
   return prisma.event.create({
     data: {
       ...input,
-      lineup: input.lineup ? (input.lineup as unknown as object) : null,
+      lineup: input.lineup ? input.lineup : Prisma.DbNull,
       public: input.public ?? false
     }
   });

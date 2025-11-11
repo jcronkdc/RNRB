@@ -6,6 +6,7 @@ import { createAsset, updateAsset, deleteAsset, listAssets, getAssetById } from 
 import { requireOrgSession } from '@songforge/auth';
 import { getUploadUrl, getDownloadUrl, deleteObject } from '../storage/s3';
 import { getEnv, isStorageConfigured } from '../env';
+import { createWatermarkMetadata } from '../watermarking';
 
 export interface ActionResult<T> {
   success: boolean;
@@ -40,15 +41,30 @@ export async function getUploadUrlAction(
 
     const assetType = getAssetTypeFromMime(contentType);
 
+    // BUG FIX: Add watermark for audio files
+    const uploadMetadata: Record<string, string> = {
+      originalFilename: filename,
+      assetType
+    };
+
+    // Add watermark for audio assets
+    if (assetType === 'audio') {
+      const session = await requireOrgSession();
+      const watermarkMeta = createWatermarkMetadata(
+        session.userId,
+        undefined, // projectId not available at upload time
+        undefined // assetId not created yet
+      );
+      uploadMetadata.watermark = watermarkMeta.watermark;
+      uploadMetadata.watermarkTimestamp = watermarkMeta.timestamp.toString();
+    }
+
     const result = await getUploadUrl({
       key,
       contentType,
       contentLength,
       checksum,
-      metadata: {
-        originalFilename: filename,
-        assetType
-      }
+      metadata: uploadMetadata
     });
 
     return {
@@ -88,10 +104,27 @@ export async function createAssetAction(
       projectId = project.id;
     }
 
+    // BUG FIX: Add watermark metadata for audio files
+    let assetMetadata = validated.metadata;
+    if (validated.assetType === 'audio' && !assetMetadata?.watermark) {
+      const session = await requireOrgSession();
+      const watermarkMeta = createWatermarkMetadata(
+        session.userId,
+        projectId,
+        undefined // assetId not created yet
+      );
+      assetMetadata = {
+        ...(assetMetadata || {}),
+        watermark: watermarkMeta.watermark,
+        watermarkTimestamp: watermarkMeta.timestamp
+      };
+    }
+
     const asset = await createAsset({
       ...validated,
       projectId,
-      bytes: BigInt(validated.bytes)
+      bytes: BigInt(validated.bytes),
+      metadata: assetMetadata
     });
 
     if (projectSlug) {

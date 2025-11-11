@@ -2,7 +2,7 @@
   "extends": "@songforge/config/tsconfig/react",
   "compilerOptions": {
     "baseUrl": ".",
-    "rootDir": "src",
+    "rootDir": ".",
     "types": ["node", "vite/client"],
     "outDir": "dist"
   },

@@ -1,94 +1,217 @@
-import { Button } from '@songforge/ui';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { createServerClient } from '@supabase/ssr';
+import { prisma } from '@songforge/db';
+import { Badge, Card, CardContent, CardHeader, CardTitle } from '@songforge/ui';
+import { NewSongDialog } from './NewSongDialog';
+import { LeaseDialog } from './LeaseDialog';
+import crypto from 'node:crypto';
+import { RemixQrModal } from './RemixQrModal';
 
-const projects = [
-  {
-    name: 'Cedar & Rust',
-    status: 'In arrangement',
-    progress: 72,
-    members: ['Ava', 'Marlow', 'Jules']
-  },
-  {
-    name: 'Glass Rivers',
-    status: 'Mix review',
-    progress: 54,
-    members: ['Jun', 'Devon']
-  },
-  {
-    name: 'Honey Bloom',
-    status: 'Final approvals',
-    progress: 92,
-    members: ['Cleo', 'Imani', 'Theo']
+type SongMetadata = {
+  status?: string;
+  prompt?: string;
+  mood?: string | null;
+  vocalUrl?: string | null;
+  stems?: Array<{ type: string; url: string }>;
+};
+
+type SongSummary = {
+  id: string;
+  title: string;
+  createdAt: Date;
+  projectName: string;
+  status: string;
+  stems: Array<{ type: string; url: string }>;
+};
+
+function createServerSupabaseClient() {
+  const cookieStore = cookies();
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+          } catch {
+            // setAll can be ignored during SSR
+          }
+        }
+      }
+    }
+  );
+}
+
+function parseMetadata(raw: string | null | undefined): SongMetadata {
+  if (!raw) return {};
+  try {
+    const decoded = JSON.parse(raw) as SongMetadata;
+    return decoded ?? {};
+  } catch {
+    return {};
   }
-] as const;
+}
 
-const highlights = [
-  { label: 'Sessions this week', value: '8', tone: 'text-brand-primary' },
-  { label: 'Assets uploaded', value: '142', tone: 'text-brand-secondary' },
-  { label: 'Splits signed', value: '12', tone: 'text-success' }
-] as const;
+function formatStemLabel(value: string) {
+  return value
+    .split(/[-_\s]/)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(' ');
+}
 
-export default function DashboardPage() {
+function createRoomId(songId: string) {
+  return `${songId}-${crypto.randomUUID().slice(0, 8)}`;
+}
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  }).format(date);
+}
+
+async function loadSongs(userId: string): Promise<SongSummary[]> {
+  const accessibleProjects = await prisma.project.findMany({
+    where: {
+      org: {
+        memberships: {
+          some: { userId }
+        }
+      }
+    },
+    select: { id: true, name: true }
+  });
+
+  if (!accessibleProjects.length) {
+    return [];
+  }
+
+  const projectIdToName = new Map(accessibleProjects.map((project) => [project.id, project.name] as const));
+
+  const songs = await prisma.song.findMany({
+    where: { projectId: { in: accessibleProjects.map((project) => project.id) } },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      description: true,
+      projectId: true
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+
+  return songs.map((song) => {
+    const metadata = parseMetadata(song.description);
+    return {
+      id: song.id,
+      title: song.title,
+      createdAt: song.createdAt,
+      projectName: projectIdToName.get(song.projectId) ?? 'Untitled Project',
+      status: metadata.status ?? 'ready',
+      stems: metadata.stems ?? []
+    } satisfies SongSummary;
+  });
+}
+
+export default async function DashboardPage() {
+  const supabase = createServerSupabaseClient();
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  if (!session?.user) {
+    redirect('/login');
+  }
+
+  const songs = await loadSongs(session.user.id);
+
   return (
-    <div className="space-y-12">
-      <section className="grid gap-4 sm:grid-cols-3">
-        {highlights.map((item) => (
-          <article
-            key={item.label}
-            className="rounded-3xl border border-border/60 bg-surface p-6 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
-          >
-            <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground">{item.label}</p>
-            <p className={`mt-4 text-3xl font-semibold ${item.tone}`}>{item.value}</p>
-          </article>
-        ))}
-      </section>
+    <section className="space-y-10">
+      <header className="flex flex-col gap-4 border-b border-border/50 pb-6 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h2 className="text-3xl font-semibold text-brand-foreground">Your songs</h2>
+          <p className="mt-1 max-w-xl text-sm text-muted-foreground">
+            Every composition you have access to lives here. Open a project, continue a stem, or drop a new idea with the prompt-first SongForge flow.
+          </p>
+        </div>
+        <NewSongDialog />
+      </header>
 
-      <section className="rounded-3xl border border-border/60 bg-surface p-8 shadow-soft">
-        <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold text-brand-foreground">Active projects</h2>
-            <p className="text-sm text-muted-foreground">
-              Track creative status, collaborator alignment, and legal handshakes in one place.
-            </p>
-          </div>
-          <Button size="sm" className="shadow-soft hover:shadow-elevated">
-            New session
-          </Button>
-        </header>
-        <div className="mt-8 grid gap-4">
-          {projects.map((project) => (
-            <article
-              key={project.name}
-              className="flex flex-col gap-4 rounded-2xl border border-border/50 bg-surface-muted/60 p-5 transition hover:shadow-outline sm:flex-row sm:items-center sm:justify-between"
+      {songs.length === 0 ? (
+        <Card className="rounded-3xl border-dashed border-border/60 bg-surface/70">
+          <CardHeader>
+            <CardTitle className="text-xl text-brand-foreground">No songs yet</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <p>Kick off your first track by launching the New Song prompt modal.</p>
+            <p>Invite collaborators and keep every stem and split aligned from the start.</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4">
+          {songs.map((song) => (
+            <details
+              key={song.id}
+              className="group rounded-3xl border border-border/60 bg-surface p-6 shadow-soft transition hover:-translate-y-0.5 hover:shadow-elevated"
             >
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold text-brand-foreground">{project.name}</h3>
-                <p className="text-sm text-muted-foreground">{project.status}</p>
-                <div className="flex flex-wrap gap-2 text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                  {project.members.map((member) => (
-                    <span key={member} className="rounded-full bg-surface px-3 py-1 shadow-outline">
-                      {member}
-                    </span>
-                  ))}
+              <summary className="flex cursor-pointer list-none flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-brand-foreground">{song.title}</h3>
+                  <p className="text-sm text-muted-foreground">Project · {song.projectName}</p>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <div className="flex flex-col items-start gap-2 lg:items-end">
+                    <Badge variant="outline">{song.status}</Badge>
+                    <span>{formatDate(song.createdAt)}</span>
+                  </div>
+                  <span className="text-xs uppercase tracking-[0.35em] text-muted-foreground transition-transform duration-200 group-open:-rotate-180">
+                    ▼
+                  </span>
+                </div>
+              </summary>
+              <div className="mt-6 space-y-4 border-t border-border/30 pt-6">
+                {song.stems.length > 0 ? (
+                  song.stems.map((stem) => (
+                    <div
+                      key={`${song.id}-${stem.type}`}
+                      className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-surface/70 p-4 sm:flex-row sm:items-center sm:gap-5"
+                    >
+                      <div className="text-sm font-semibold uppercase tracking-[0.25em] text-muted-foreground sm:w-32">
+                        {formatStemLabel(stem.type)}
+                      </div>
+                      <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+                        <div className="relative hidden h-12 flex-1 overflow-hidden rounded-xl border border-border/40 bg-surface/80 sm:block" aria-hidden="true">
+                          <div className="absolute inset-0 animate-pulse bg-[repeating-linear-gradient(90deg,rgba(139,92,246,0.18)_0,rgba(139,92,246,0.18)_6px,transparent_6px,transparent_12px)]" />
+                        </div>
+                        <audio controls preload="metadata" className="w-full max-w-xs rounded-xl">
+                          <source src={stem.url} type="audio/mpeg" />
+                          Your browser does not support audio playback.
+                        </audio>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="rounded-2xl border border-dashed border-border/50 bg-surface/60 p-4 text-sm text-muted-foreground">
+                    Stems are processing. You will see preview players here once generation finishes.
+                  </p>
+                )}
+                <div className="flex flex-wrap items-center justify-end gap-3">
+                  <RemixQrModal roomId={createRoomId(song.id)} songTitle={song.title} />
+                  <LeaseDialog songId={song.id} songTitle={song.title} />
                 </div>
               </div>
-              <div className="sm:w-40">
-                <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                  <span>Progress</span>
-                  <span>{project.progress}%</span>
-                </div>
-                <div className="mt-2 h-2 w-full rounded-full bg-surface">
-                  <div
-                    className="h-2 rounded-full bg-brand-primary transition-all"
-                    style={{ width: `${project.progress}%` }}
-                    aria-hidden
-                  />
-                </div>
-              </div>
-            </article>
+            </details>
           ))}
         </div>
-      </section>
-    </div>
+      )}
+    </section>
   );
 }
 

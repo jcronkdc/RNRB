@@ -6,12 +6,10 @@ import { usePathname } from 'next/navigation';
 import { Button, cn } from '@songforge/ui';
 
 const NAV_ITEMS = [
-  { label: 'Projects', href: '/dashboard' },
-  { label: 'Sessions', href: '/dashboard/sessions' },
-  { label: 'Assets', href: '/dashboard/assets' },
+  { label: 'Songs', href: '/dashboard' },
+  { label: 'Stems', href: '/dashboard/stems' },
   { label: 'Splits', href: '/dashboard/splits' },
-  { label: 'Licenses', href: '/dashboard/licenses' },
-  { label: 'Settings', href: '/dashboard/settings' }
+  { label: 'Distribute', href: '/dashboard/distribute' }
 ] as const;
 
 interface DashboardLayoutProps {
