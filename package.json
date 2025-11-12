@@ -23,7 +23,7 @@
     "db:migrate": "pnpm --filter @cronkwaters/db run db:migrate",
     "db:seed": "pnpm --filter @cronkwaters/db run db:seed",
     "db:migrate:all": "turbo run db:migrate --no-cache",
-    "prepare": "husky install",
+    "prepare": "npx husky install || true",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
