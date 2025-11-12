@@ -1,0 +1,11 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "unused-imports/no-unused-imports": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "import/order": "off",
+    "tailwindcss/classnames-order": "off",
+    "jsx-a11y/label-has-associated-control": "warn",
+    "react/no-unescaped-entities": "warn"
+  }
+}
