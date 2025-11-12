@@ -43,7 +43,7 @@ export function verifySignedToken(signedToken: string, secret: string): boolean 
 
 // Get or create CSRF token for current session
 export async function getCSRFToken(): Promise<string> {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const existingToken = cookieStore.get(CSRF_TOKEN_NAME);
   const existingSecret = cookieStore.get(CSRF_SECRET_NAME);
   
@@ -79,8 +79,8 @@ export async function getCSRFToken(): Promise<string> {
 // Validate CSRF token from request
 export async function validateCSRFToken(): Promise<boolean> {
   try {
-    const cookieStore = cookies();
-    const headersList = headers();
+    const cookieStore = await cookies();
+    const headersList = await headers();
     
     // Get token from header
     const headerToken = headersList.get(CSRF_HEADER_NAME);

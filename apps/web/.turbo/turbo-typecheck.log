@@ -2,8 +2,6 @@
 > @cronkwaters/web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
-app/api/projects/[slug]/export/pdf/route.ts(17,82): error TS2339: Property 'org' does not exist on type 'never'.
-app/api/projects/[slug]/export/pdf/route.ts(45,68): error TS2339: Property 'org' does not exist on type 'never'.
-lib/actions/comments.ts(103,38): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
-lib/actions/comments.ts(108,36): error TS2339: Property 'id' does not exist on type '{ name?: string | null | undefined; email?: string | null | undefined; image?: string | null | undefined; }'.
+app/api/projects/[slug]/export/pdf/route.ts(22,36): error TS2339: Property 'org' does not exist on type 'never'.
+app/api/projects/[slug]/export/pdf/route.ts(51,60): error TS2339: Property 'org' does not exist on type 'never'.
  ELIFECYCLE  Command failed with exit code 2.

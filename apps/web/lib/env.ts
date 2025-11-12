@@ -29,6 +29,7 @@ const serverEnvSchema = z.object({
   STORAGE_SECRET_ACCESS_KEY: z.string().optional(),
   STORAGE_BUCKET: z.string().optional(),
   STORAGE_REGION: z.string().optional(),
+  STORAGE_PUBLIC_URL: z.string().url().optional(),
 
   // Payments - Server only!
   STRIPE_SECRET_KEY: z.string().optional(),
@@ -110,6 +111,7 @@ export function getEnv(): Env {
       STORAGE_SECRET_ACCESS_KEY: process.env.STORAGE_SECRET_ACCESS_KEY,
       STORAGE_BUCKET: process.env.STORAGE_BUCKET,
       STORAGE_REGION: process.env.STORAGE_REGION,
+      STORAGE_PUBLIC_URL: process.env.STORAGE_PUBLIC_URL,
       STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
       GIVE_LIVELY_API_KEY: process.env.GIVE_LIVELY_API_KEY,
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,

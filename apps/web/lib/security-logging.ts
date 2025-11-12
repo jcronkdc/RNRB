@@ -200,13 +200,13 @@ export const SecurityLogger = {
   },
 
   // General suspicious activity
-  async logSuspiciousActivity(description: string, userId?: string, ip?: string, details?: unknown) {
+  async logSuspiciousActivity(description: string, userId?: string, ip?: string, details?: Record<string, unknown>) {
     await logSecurityEvent({
       type: SecurityEventType.SUSPICIOUS_ACTIVITY,
       severity: SecurityEventSeverity.MEDIUM,
       userId,
       ip,
-      details: { description, ...details }
+      details: { description, ...(details || {}) }
     });
   }
 };

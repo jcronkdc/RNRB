@@ -2,14 +2,11 @@ import DOMPurify from 'dompurify';
 
 // Configure DOMPurify for different contexts
 // Import JSDOM for server-side usage
-interface JSDOMConstructor {
-  new (html: string): { window: Window };
-}
-let JSDOM: JSDOMConstructor | undefined;
+let JSDOM: any;
 if (typeof window === 'undefined') {
   // Dynamic import for server-side only
   import('jsdom').then(mod => {
-    JSDOM = mod.JSDOM as JSDOMConstructor;
+    JSDOM = mod.JSDOM;
   }).catch(() => {
     // Ignore error if jsdom not available
   });
@@ -18,8 +15,9 @@ if (typeof window === 'undefined') {
 export const sanitizeHtml = (dirty: string): string => {
   if (typeof window === 'undefined' && JSDOM) {
     // Server-side sanitization using JSDOM
-    const window = new JSDOM('').window;
-    const purify = DOMPurify(window);
+    const dom = new JSDOM('');
+    const window = dom.window as unknown as Window;
+    const purify = DOMPurify(window as any);
     return purify.sanitize(dirty, {
       ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li'],
       ALLOWED_ATTR: ['href', 'target', 'rel'],
@@ -31,7 +29,7 @@ export const sanitizeHtml = (dirty: string): string => {
   return DOMPurify.sanitize(dirty, {
     ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li'],
     ALLOWED_ATTR: ['href', 'target', 'rel'],
-    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.\-]+(?:[^a-z+.:]+|$))/i
+    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.:]+|$))/i
   });
 };
 

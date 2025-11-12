@@ -1,21 +1,26 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getOrgSession } from '@cronkwaters/auth';
+import { getOrgSessionFromSession, type OrgAwareSession } from '@cronkwaters/auth';
 import { getProjectBySlug } from '@cronkwaters/db';
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    // Await params in Next.js 15
+    const { slug } = await params;
+    
     // Authenticate user
-    const session = await getOrgSession();
+    const session = await getOrgSessionFromSession();
     if (!session || !session.activeMembership) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
     // Get project
-    const project = await getProjectBySlug(params.slug, session.activeMembership.org.id);
+    const activeMembership = session.activeMembership as NonNullable<typeof session.activeMembership>;
+    const orgId = activeMembership.org.id;
+    const project = await getProjectBySlug(slug, orgId);
     if (!project) {
       return new NextResponse('Project not found', { status: 404 });
     }
@@ -43,7 +48,7 @@ export async function GET(
       <body>
         <h1>${project.name}</h1>
         <div class="project-info">
-          <p class="meta">Organization: ${session.activeMembership.org.name}</p>
+          <p class="meta">Organization: ${activeMembership.org.name}</p>
           <p class="meta">Created: ${new Date(project.createdAt).toLocaleDateString()}</p>
           <p class="meta">Status: ${project.status || 'Active'}</p>
         </div>
@@ -62,8 +67,8 @@ export async function GET(
               ${project.songs.map((song) => `
                 <li>
                   <strong>${song.title}</strong>
-                  ${song.artist ? ` by ${song.artist}` : ''}
-                  ${song.genre ? ` (${song.genre})` : ''}
+                  ${song.key ? ` - Key: ${song.key}` : ''}
+                  ${song.tempo ? ` - ${song.tempo} BPM` : ''}
                 </li>
               `).join('')}
             </ul>
@@ -77,8 +82,8 @@ export async function GET(
               ${project.assets.map((asset) => `
                 <li>
                   <strong>${asset.name}</strong>
-                  - ${asset.type}
-                  ${asset.version ? ` v${asset.version}` : ''}
+                  - ${asset.mimeType}
+                  ${asset.bytes ? ` (${(Number(asset.bytes) / 1024 / 1024).toFixed(2)} MB)` : ''}
                 </li>
               `).join('')}
             </ul>

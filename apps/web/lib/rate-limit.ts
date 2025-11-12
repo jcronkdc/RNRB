@@ -47,7 +47,7 @@ export const rateLimiters = {
 
 // Get client identifier (IP address or user ID)
 export async function getClientId(): Promise<string> {
-  const headersList = headers();
+  const headersList = await headers();
   
   // Try to get IP from various headers
   const forwardedFor = headersList.get('x-forwarded-for');
