@@ -97,7 +97,7 @@ export async function createCommentAction(
 
     // TODO: Implement comment model in database schema
     // For now, return a mock response
-    const userId = 'id' in (session.session?.user || {}) ? (session.session.user as any).id : 'unknown';
+    const userId = 'id' in (session.session?.user || {}) ? (session.session.user as { id: string }).id : 'unknown';
     const mockComment = {
       id: Math.random().toString(36).substr(2, 9),
       text: validated.text,

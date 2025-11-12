@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getOrgSession } from '@cronkwaters/auth';
 import { getProjectBySlug } from '@cronkwaters/db';
 
@@ -58,7 +59,7 @@ export async function GET(
           <h2>Songs</h2>
           ${project.songs && project.songs.length > 0 ? `
             <ul>
-              ${project.songs.map((song: any) => `
+              ${project.songs.map((song) => `
                 <li>
                   <strong>${song.title}</strong>
                   ${song.artist ? ` by ${song.artist}` : ''}
@@ -73,7 +74,7 @@ export async function GET(
           <h2>Assets</h2>
           ${project.assets && project.assets.length > 0 ? `
             <ul>
-              ${project.assets.map((asset: any) => `
+              ${project.assets.map((asset) => `
                 <li>
                   <strong>${asset.name}</strong>
                   - ${asset.type}

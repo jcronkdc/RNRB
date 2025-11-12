@@ -1,16 +1,29 @@
 import DOMPurify from 'dompurify';
 
 // Configure DOMPurify for different contexts
+// Import JSDOM for server-side usage
+interface JSDOMConstructor {
+  new (html: string): { window: Window };
+}
+let JSDOM: JSDOMConstructor | undefined;
+if (typeof window === 'undefined') {
+  // Dynamic import for server-side only
+  import('jsdom').then(mod => {
+    JSDOM = mod.JSDOM as JSDOMConstructor;
+  }).catch(() => {
+    // Ignore error if jsdom not available
+  });
+}
+
 export const sanitizeHtml = (dirty: string): string => {
-  if (typeof window === 'undefined') {
+  if (typeof window === 'undefined' && JSDOM) {
     // Server-side sanitization using JSDOM
-    const { JSDOM } = require('jsdom');
     const window = new JSDOM('').window;
     const purify = DOMPurify(window);
     return purify.sanitize(dirty, {
       ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li'],
       ALLOWED_ATTR: ['href', 'target', 'rel'],
-      ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i
+      ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.:]+|$))/i
     });
   }
   
@@ -18,7 +31,7 @@ export const sanitizeHtml = (dirty: string): string => {
   return DOMPurify.sanitize(dirty, {
     ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li'],
     ALLOWED_ATTR: ['href', 'target', 'rel'],
-    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i
+    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.\-]+(?:[^a-z+.:]+|$))/i
   });
 };
 
@@ -76,15 +89,15 @@ export const sanitizeUrl = (url: string): string => {
   }
 };
 
-// Sanitize file names
+  // Sanitize file names
 export const sanitizeFileName = (fileName: string): string => {
   if (!fileName) return '';
   
   // Remove any path traversal attempts
   return fileName
     .replace(/\.\./g, '')
-    .replace(/[\/\\]/g, '_')
-    .replace(/[^a-zA-Z0-9._\- ]/g, '');
+    .replace(/[/\\]/g, '_')
+    .replace(/[^a-zA-Z0-9._ -]/g, '');
 };
 
 // Content Security Policy header generator

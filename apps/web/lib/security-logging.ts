@@ -1,5 +1,3 @@
-import { prisma } from '@cronkwaters/db';
-
 // Security event types
 export enum SecurityEventType {
   LOGIN_ATTEMPT = 'LOGIN_ATTEMPT',
@@ -35,7 +33,7 @@ export interface SecurityEvent {
   userAgent?: string;
   path?: string;
   method?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   timestamp: Date;
 }
 
@@ -202,7 +200,7 @@ export const SecurityLogger = {
   },
 
   // General suspicious activity
-  async logSuspiciousActivity(description: string, userId?: string, ip?: string, details?: any) {
+  async logSuspiciousActivity(description: string, userId?: string, ip?: string, details?: unknown) {
     await logSecurityEvent({
       type: SecurityEventType.SUSPICIOUS_ACTIVITY,
       severity: SecurityEventSeverity.MEDIUM,
@@ -219,7 +217,7 @@ export async function auditLog(
   action: string,
   resource: string,
   resourceId: string,
-  details?: Record<string, any>
+  details?: Record<string, unknown>
 ): Promise<void> {
   try {
     const auditEntry = {
@@ -248,7 +246,7 @@ export function detectAttackPatterns(input: string): {
   isSQLInjection: boolean;
   isPathTraversal: boolean;
 } {
-  const lowerInput = input.toLowerCase();
+  const _lowerInput = input.toLowerCase();
   
   // XSS patterns
   const xssPatterns = [

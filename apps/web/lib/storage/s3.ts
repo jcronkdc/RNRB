@@ -8,7 +8,6 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 import type { StorageConfig, UploadOptions, SignedUrlOptions } from './index';
 import { getEnv } from '../env';
-import { sanitizeFileName } from '../sanitization';
 import { SecurityLogger, detectAttackPatterns } from '../security-logging';
 
 let s3Client: S3Client | null = null;

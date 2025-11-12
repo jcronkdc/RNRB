@@ -106,8 +106,8 @@ export async function csrfProtection() {
   }
 }
 
-// Hook for client-side CSRF token
-export function useCSRFToken(): string | null {
+// Get CSRF token from cookie (client-side)
+export function getCSRFTokenFromCookie(): string | null {
   if (typeof window === 'undefined') return null;
   
   // Get token from cookie
@@ -124,7 +124,7 @@ export function useCSRFToken(): string | null {
 
 // Helper to add CSRF token to fetch requests
 export function fetchWithCSRF(url: string, options: RequestInit = {}): Promise<Response> {
-  const csrfToken = useCSRFToken();
+  const csrfToken = getCSRFTokenFromCookie();
   
   if (csrfToken) {
     options.headers = {

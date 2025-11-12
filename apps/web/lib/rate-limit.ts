@@ -160,13 +160,13 @@ export function addRateLimitHeaders(
 // Decorator for server actions with rate limiting
 export function withRateLimit(limiterType: keyof typeof rateLimiters) {
   return function (
-    target: any,
+    target: object,
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
     const originalMethod = descriptor.value;
     
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: unknown, ...args: unknown[]) {
       await rateLimitMiddleware(limiterType);
       return originalMethod.apply(this, args);
     };
