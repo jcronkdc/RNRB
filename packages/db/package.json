@@ -15,7 +15,7 @@
     "./prisma": "./prisma/schema.prisma"
   },
   "scripts": {
-    "postinstall": "prisma generate",
+    "postinstall": "npx prisma generate",
     "db:up": "docker compose up -d postgres",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev --name init_schema",
