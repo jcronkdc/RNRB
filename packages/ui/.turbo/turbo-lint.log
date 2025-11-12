@@ -2,3 +2,18 @@
 > @songforge/ui@0.1.0 lint /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui
 > eslint 'src/**/*.{ts,tsx}'
 
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/progress.tsx
+   2:1   warning  There should be at least one empty line between import groups            import/order
+   2:1   warning  `@radix-ui/react-progress` import should occur before import of `react`  import/order
+  11:16  warning  Invalid Tailwind CSS classnames order                                    tailwindcss/classnames-order
+  18:7   warning  Invalid Tailwind CSS classnames order                                    tailwindcss/classnames-order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui/src/components/switch.tsx
+   2:1   warning  There should be at least one empty line between import groups          import/order
+   2:1   warning  `@radix-ui/react-switch` import should occur before import of `react`  import/order
+  10:16  warning  Invalid Tailwind CSS classnames order                                  tailwindcss/classnames-order
+
+✖ 7 problems (0 errors, 7 warnings)
+  0 errors and 7 warnings potentially fixable with the `--fix` option.
+
