@@ -22,9 +22,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@songforge/db': path.resolve(__dirname, './packages/db/src'),
-      '@songforge/auth': path.resolve(__dirname, './packages/auth/src'),
-      '@songforge/ui': path.resolve(__dirname, './packages/ui/src')
+      '@cronkwater/db': path.resolve(__dirname, './packages/db/src'),
+      '@cronkwater/auth': path.resolve(__dirname, './packages/auth/src'),
+      '@cronkwater/ui': path.resolve(__dirname, './packages/ui/src')
     }
   }
 });

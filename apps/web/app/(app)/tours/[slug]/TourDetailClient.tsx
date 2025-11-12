@@ -14,9 +14,9 @@ import {
   Clock,
   DollarSign
 } from 'lucide-react';
-import { Button } from '@songforge/ui';
-import { Badge } from '@songforge/ui';
-import { Card } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
+import { Badge } from '@cronkwater/ui';
+import { Card } from '@cronkwater/ui';
 import { PageHeader } from '@/components/app/PageHeader';
 import { EmptyState } from '@/components/app/EmptyState';
 import type { Tour, Show, Venue } from '@prisma/client';

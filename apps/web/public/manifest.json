@@ -1,6 +1,6 @@
 {
-  "name": "SongForge",
-  "short_name": "SongForge",
+  "name": "CronkWater",
+  "short_name": "CronkWater",
   "description": "AI-powered music creation platform",
   "start_url": "/",
   "display": "standalone",

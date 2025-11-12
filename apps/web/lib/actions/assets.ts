@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@songforge/auth';
-import { createAssetSchema, updateAssetSchema, getAssetTypeFromMime , createAsset, updateAsset, deleteAsset, listAssets, getAssetById } from '@songforge/db';
+import { requireOrgSession } from '@cronkwater/auth';
+import { createAssetSchema, updateAssetSchema, getAssetTypeFromMime , createAsset, updateAsset, deleteAsset, listAssets, getAssetById } from '@cronkwater/db';
 import { revalidatePath } from 'next/cache';
 
 import { isStorageConfigured } from '../env';
@@ -103,7 +103,7 @@ export async function createAssetAction(
           error: 'Active organization not found'
         };
       }
-      const { getProjectBySlug } = await import('@songforge/db');
+      const { getProjectBySlug } = await import('@cronkwater/db');
       const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
       if (!project) {
         return {
@@ -281,7 +281,7 @@ export async function listAssetsAction(projectSlug: string) {
       };
     }
 
-    const { getProjectBySlug } = await import('@songforge/db');
+    const { getProjectBySlug } = await import('@cronkwater/db');
     const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {

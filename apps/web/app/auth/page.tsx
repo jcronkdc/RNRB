@@ -1,4 +1,4 @@
-import { auth } from '@songforge/auth';
+import { auth } from '@cronkwater/auth';
 import { motion } from 'framer-motion';
 import { redirect } from 'next/navigation';
 
@@ -27,7 +27,7 @@ export default async function AuthPage() {
           transition={{ duration: 0.4, ease: 'easeOut', delay: 0.15 }}
         >
           <div className="space-y-3 text-center">
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Welcome back to SongForge</h1>
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Welcome back to CronkWater</h1>
             <p className="text-sm text-muted-foreground">
               Sign in to access your collaborative studio, AI co-creators, and release pipeline — all powered by Supabase Auth.
             </p>
@@ -42,7 +42,7 @@ export default async function AuthPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.45, duration: 0.4 }}
         >
-          By continuing you agree to the SongForge Terms and acknowledge the use of Supabase for secure authentication.
+          By continuing you agree to the CronkWater Terms and acknowledge the use of Supabase for secure authentication.
         </motion.p>
       </motion.section>
     </main>

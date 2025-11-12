@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge, Button, cn } from '@songforge/ui';
+import { Badge, Button, cn } from '@cronkwater/ui';
 import { Inbox, X, Hash } from 'lucide-react';
 import {
   useCallback,

@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { Calendar, MapPin, Users, ExternalLink } from 'lucide-react';
-import { Card } from '@songforge/ui';
-import { Badge } from '@songforge/ui';
+import { Card } from '@cronkwater/ui';
+import { Badge } from '@cronkwater/ui';
 import type { Tour } from '@prisma/client';
 
 interface TourCardProps {

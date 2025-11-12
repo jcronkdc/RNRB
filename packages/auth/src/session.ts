@@ -1,5 +1,5 @@
-import type { Membership, Organization } from '@songforge/db';
-import { prisma } from '@songforge/db';
+import type { Membership, Organization } from '@cronkwater/db';
+import { prisma } from '@cronkwater/db';
 import { cookies } from 'next/headers';
 import type { Session } from 'next-auth';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@songforge/ui';
+import { cn } from '@cronkwater/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

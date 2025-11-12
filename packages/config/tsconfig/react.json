@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "SongForge React",
+  "display": "CronkWater React",
   "extends": "./base.json",
   "compilerOptions": {
     "jsx": "react-jsx",

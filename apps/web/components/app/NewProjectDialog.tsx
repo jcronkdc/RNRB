@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle , Button, Input } from '@songforge/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle , Button, Input } from '@cronkwater/ui';
 import { useState } from 'react';
 
 interface NewProjectDialogProps {

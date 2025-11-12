@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 import { Music, Plus } from 'lucide-react';
 import Link from 'next/link';
 

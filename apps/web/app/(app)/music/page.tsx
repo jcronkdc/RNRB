@@ -1,7 +1,7 @@
-import { getOrgSession } from '@songforge/auth';
+import { getOrgSession } from '@cronkwater/auth';
 import { redirect } from 'next/navigation';
 import { MusicPageClient } from './MusicPageClient';
-import { prisma } from '@songforge/db';
+import { prisma } from '@cronkwater/db';
 
 export const dynamic = 'force-dynamic';
 

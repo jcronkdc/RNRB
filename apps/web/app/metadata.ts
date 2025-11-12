@@ -6,19 +6,19 @@ const ogImage = '/og-default.jpg';
 
 const metadata: Metadata = {
   title: {
-    default: 'Song Forge',
-    template: '%s • Song Forge',
+    default: 'CronkWater',
+    template: '%s • CronkWater',
   },
   description: 'A beautiful, collaborative ecosystem for songwriting, recording, and community.',
   metadataBase: new URL(base),
   openGraph: {
     type: 'website',
-    siteName: 'Song Forge',
+    siteName: 'CronkWater',
     images: [ogImage],
   },
   twitter: {
     card: 'summary_large_image',
-    creator: '@songforge',
+    creator: '@cronkwater',
     images: [ogImage],
   },
   icons: {

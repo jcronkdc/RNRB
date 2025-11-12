@@ -1,5 +1,5 @@
 {
-  "name": "@songforge/trpc",
+  "name": "@cronkwater/trpc",
   "version": "0.1.0",
   "type": "module",
   "private": false,
@@ -26,8 +26,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@songforge/auth": "workspace:*",
-    "@songforge/db": "workspace:*",
+    "@cronkwater/auth": "workspace:*",
+    "@cronkwater/db": "workspace:*",
     "@tanstack/react-query": "^5.62.7",
     "@trpc/client": "^11.0.0-rc.502",
     "@trpc/react-query": "^11.0.0-rc.502",
@@ -36,7 +36,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@songforge/config": "workspace:*",
+    "@cronkwater/config": "workspace:*",
     "@types/node": "^22.5.4",
     "@types/react": "^18.3.10",
     "eslint": "^9.12.0",

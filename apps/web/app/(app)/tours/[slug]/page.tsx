@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
-import { getOrgSession } from '@songforge/auth';
-import { prisma } from '@songforge/db';
+import { getOrgSession } from '@cronkwater/auth';
+import { prisma } from '@cronkwater/db';
 import { TourDetailClient } from './TourDetailClient';
 
 export const dynamic = 'force-dynamic';

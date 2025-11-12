@@ -13,10 +13,10 @@ import {
   HandHeart,
   Building
 } from 'lucide-react';
-import { Button } from '@songforge/ui';
-import { Card } from '@songforge/ui';
-import { Badge } from '@songforge/ui';
-import { Progress } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
+import { Card } from '@cronkwater/ui';
+import { Badge } from '@cronkwater/ui';
+import { Progress } from '@cronkwater/ui';
 import { PageHeader } from '@/components/app/PageHeader';
 
 export function FoundationPageClient() {
@@ -55,7 +55,7 @@ export function FoundationPageClient() {
       name: 'Sarah\'s Music School',
       location: 'Detroit, MI',
       impact: 'Provided instruments and lessons to 150 students',
-      quote: 'SongForge Foundation gave our kids the chance to discover their musical talents.',
+      quote: 'CronkWater Foundation gave our kids the chance to discover their musical talents.',
     },
     {
       name: 'Hurricane Relief for Musicians',
@@ -75,7 +75,7 @@ export function FoundationPageClient() {
   return (
     <div className="space-y-8">
       <PageHeader
-        title="SongForge Foundation"
+        title="CronkWater Foundation"
         description="Supporting musicians and music education worldwide through community-driven initiatives"
         actions={
           <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600">
@@ -91,7 +91,7 @@ export function FoundationPageClient() {
           <Sparkles className="mx-auto mb-4 h-12 w-12 text-primary" />
           <h2 className="mb-4 text-2xl font-bold">Our Mission</h2>
           <p className="text-lg leading-relaxed text-muted-foreground">
-            The SongForge Foundation is a nonprofit organization dedicated to empowering musicians, 
+            The CronkWater Foundation is a nonprofit organization dedicated to empowering musicians, 
             fostering music education, and building a sustainable ecosystem where artists can thrive. 
             We believe music has the power to transform lives and communities.
           </p>
@@ -297,7 +297,7 @@ export function FoundationPageClient() {
         <h2 className="mb-4 text-2xl font-bold">Join Our Mission</h2>
         <p className="mx-auto mb-6 max-w-2xl text-muted-foreground">
           Whether through donations, volunteering, or spreading the word, there are many ways to support 
-          the SongForge Foundation and help us build a better future for musicians everywhere.
+          the CronkWater Foundation and help us build a better future for musicians everywhere.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
           <Button size="lg">Become a Monthly Donor</Button>

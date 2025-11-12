@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@songforge/ui';
+import { cn } from '@cronkwater/ui';
 import { useRouter } from 'next/navigation';
 import {
   useCallback,

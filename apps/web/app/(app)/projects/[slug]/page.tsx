@@ -1,5 +1,5 @@
-import { getOrgSession } from '@songforge/auth';
-import { getProjectBySlug, listSongs, listAssets, listSplitSheets, listLicenses } from '@songforge/db';
+import { getOrgSession } from '@cronkwater/auth';
+import { getProjectBySlug, listSongs, listAssets, listSplitSheets, listLicenses } from '@cronkwater/db';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 

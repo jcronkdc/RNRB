@@ -1,7 +1,7 @@
 'use client';
 
-import { TrpcProvider } from '@songforge/trpc';
-import { ThemeProvider, ToastProvider } from '@songforge/ui';
+import { TrpcProvider } from '@cronkwater/trpc';
+import { ThemeProvider, ToastProvider } from '@cronkwater/ui';
 import {
   createContext,
   useCallback,

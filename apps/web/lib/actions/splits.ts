@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@songforge/auth';
-import { createSplitSheetSchema, updateSplitSheetSchema , createSplitSheet, updateSplitSheet, addContributor, updateContributor, removeContributor, finalizeSplitSheet, listSplitSheets , getProjectBySlug } from '@songforge/db';
+import { requireOrgSession } from '@cronkwater/auth';
+import { createSplitSheetSchema, updateSplitSheetSchema , createSplitSheet, updateSplitSheet, addContributor, updateContributor, removeContributor, finalizeSplitSheet, listSplitSheets , getProjectBySlug } from '@cronkwater/db';
 import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {
@@ -89,7 +89,7 @@ export async function addContributorAction(
 ): Promise<ActionResult<{ id: string }>> {
   try {
     await requireOrgSession();
-    const { splitContributorSchema } = await import('@songforge/db');
+    const { splitContributorSchema } = await import('@cronkwater/db');
     const validated = splitContributorSchema.parse(input);
 
     const contributor = await addContributor(splitSheetId, validated);
@@ -117,7 +117,7 @@ export async function updateContributorAction(
 ): Promise<ActionResult<void>> {
   try {
     await requireOrgSession();
-    const { splitContributorSchema } = await import('@songforge/db');
+    const { splitContributorSchema } = await import('@cronkwater/db');
     const validated = splitContributorSchema.partial().parse(input);
 
     await updateContributor(contributorId, validated);

@@ -1,5 +1,5 @@
 {
-  "extends": "@songforge/config/tsconfig/next",
+  "extends": "@cronkwater/config/tsconfig/next",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

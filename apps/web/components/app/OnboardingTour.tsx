@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X, ArrowRight, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ interface TourStep {
 const TOUR_STEPS: TourStep[] = [
   {
     id: 'welcome',
-    title: 'Welcome to SongForge',
+    title: 'Welcome to CronkWater',
     description: 'Your creative workspace for organizing songs, tracking splits, and collaborating with your team. Let\'s take a quick tour.',
     action: {
       label: 'Start Tour',

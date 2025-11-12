@@ -1,4 +1,4 @@
--- SongForge MVP Database Schema
+-- CronkWater MVP Database Schema
 
 -- Projects table
 CREATE TABLE IF NOT EXISTS projects (

@@ -3,7 +3,7 @@
 **Status:** ✅ **APPROVED - READY TO MERGE**
 
 ## Objective
-Validate the SongForge v1.0 MVP end-to-end before launch. This pass focuses on repository hygiene, automated checks, and documenting any gaps that still require manual follow-up.
+Validate the CronkWater v1.0 MVP end-to-end before launch. This pass focuses on repository hygiene, automated checks, and documenting any gaps that still require manual follow-up.
 
 ## ✅ Verification Results
 

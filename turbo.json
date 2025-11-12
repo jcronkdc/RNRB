@@ -18,7 +18,7 @@
       "dependsOn": ["^dev"]
     },
     "build": {
-      "dependsOn": ["^build", "@songforge/db#prisma:generate"],
+      "dependsOn": ["^build", "@cronkwater/db#prisma:generate"],
       "outputs": [
         "dist/**",
         ".next/**",
@@ -33,7 +33,7 @@
       "outputs": []
     },
     "typecheck": {
-      "dependsOn": ["@songforge/db#prisma:generate"],
+      "dependsOn": ["@cronkwater/db#prisma:generate"],
       "outputs": []
     },
     "test": {

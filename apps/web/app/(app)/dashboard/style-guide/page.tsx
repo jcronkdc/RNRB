@@ -13,7 +13,7 @@ import {
   DialogTrigger,
   Input,
   useToast
-} from '@songforge/ui';
+} from '@cronkwater/ui';
 
 const swatches = [
   { name: 'Background', className: 'bg-background text-muted-foreground', description: 'Warm parchment base' },
@@ -29,8 +29,6 @@ const typeScale = [
   { tag: 'Body', className: 'text-base text-muted-foreground', blurb: 'Narrative copy' },
   { tag: 'Caption', className: 'text-xs uppercase tracking-[0.38em] text-muted-foreground/80', blurb: 'UI labels' }
 ] as const;
-
-export const dynamic = 'force-dynamic';
 
 export default function StyleGuidePage() {
   const { notify } = useToast();
@@ -68,7 +66,7 @@ export default function StyleGuidePage() {
           {typeScale.map((item) => (
             <div key={item.tag} className="rounded-2xl border border-border/50 bg-surface-muted/60 p-6 shadow-outline">
               <div className="text-xs uppercase tracking-[0.35em] text-muted-foreground">{item.tag}</div>
-              <p className={`${item.className} mt-3 text-brand-foreground`}>SongForge celebrates intentional sound.</p>
+              <p className={`${item.className} mt-3 text-brand-foreground`}>CronkWater celebrates intentional sound.</p>
               <p className="mt-2 text-xs text-muted-foreground">{item.blurb}</p>
             </div>
           ))}

@@ -14,7 +14,7 @@ export interface ThemeProviderProps {
 }
 
 /**
- * Injects SongForge design tokens on the `documentElement` and toggles
+ * Injects CronkWater design tokens on the `documentElement` and toggles
  * between light/dark palettes using the configured data attribute.
  */
 export function ThemeProvider({

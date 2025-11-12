@@ -1,5 +1,5 @@
 
-> @songforge/ui@0.1.0 build /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui
+> @cronkwater/ui@0.1.0 build /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui
 > tsup src/index.ts --format esm --dts --clean
 
 CLI Building entry: src/index.ts
@@ -9,7 +9,7 @@ CLI Target: es2022
 CLI Cleaning output folder
 ESM Build start
 ESM dist/index.js 29.52 KB
-ESM ⚡️ Build success in 371ms
+ESM ⚡️ Build success in 449ms
 DTS Build start
-DTS ⚡️ Build success in 3636ms
+DTS ⚡️ Build success in 11943ms
 DTS dist/index.d.ts 14.97 KB

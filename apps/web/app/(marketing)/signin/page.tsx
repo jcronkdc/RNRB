@@ -1,10 +1,8 @@
 'use client';
 
-import { Button, Input } from '@songforge/ui';
+import { Button, Input } from '@cronkwater/ui';
 import { Mail, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-
-export const dynamic = 'force-dynamic';
 
 import { createClient } from '../../../lib/supabase/client';
 
@@ -54,7 +52,7 @@ export default function SignInPage() {
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8 rounded-2xl border border-border/60 bg-surface/80 p-8 shadow-soft">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Sign in to SongForge</h1>
+          <h1 className="text-2xl font-bold">Sign in to CronkWater</h1>
           <p className="mt-2 text-sm text-muted-foreground">Start creating music</p>
         </div>
 

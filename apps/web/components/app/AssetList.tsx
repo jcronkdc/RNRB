@@ -1,4 +1,4 @@
-import { Badge, Button, cn } from '@songforge/ui';
+import { Badge, Button, cn } from '@cronkwater/ui';
 import { FileAudio, FileDigit, FileImage, FileText, FileType, Upload, Plus } from 'lucide-react';
 import Link from 'next/link';
 

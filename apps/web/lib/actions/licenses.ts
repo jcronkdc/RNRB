@@ -1,8 +1,8 @@
 'use server';
 
 import type { LicenseTemplate } from '@prisma/client';
-import { requireOrgSession } from '@songforge/auth';
-import { createLicense, listLicenses, getProjectBySlug } from '@songforge/db';
+import { requireOrgSession } from '@cronkwater/auth';
+import { createLicense, listLicenses, getProjectBySlug } from '@cronkwater/db';
 import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {

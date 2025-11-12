@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input, Label } from '@songforge/ui';
+import { Button, Input, Label } from '@cronkwater/ui';
 import { motion } from 'framer-motion';
 import { Loader2, Mail, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 import { signIn } from 'next-auth/react';
@@ -39,7 +39,7 @@ export default function LoginForm() {
 
       setFeedback({
         variant: 'success',
-        message: 'Check your inbox for a secure magic link from SongForge.'
+        message: 'Check your inbox for a secure magic link from CronkWater.'
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'We could not send the magic link right now.';

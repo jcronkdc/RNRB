@@ -7,7 +7,7 @@ const MOCK_PROJECTS: Record<string, { name: string; tagline: string; credits: Ar
     name: 'Aurora Lines',
     tagline: 'A shimmering electro-pop journey inspired by arctic light.',
     credits: [
-      { name: 'SongForge Collective' },
+      { name: 'CronkWater Collective' },
       { name: 'Mae Rivera' },
       { name: 'Atlas Mastering' }
     ]
@@ -24,7 +24,7 @@ const MOCK_PROJECTS: Record<string, { name: string; tagline: string; credits: Ar
     name: 'Public Reel 2025',
     tagline: 'A curated sampler of live takes and collaborations.',
     credits: [
-      { name: 'SongForge House Band' },
+      { name: 'CronkWater House Band' },
       { name: 'Open Scores Initiative' }
     ]
   }

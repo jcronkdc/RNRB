@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 import { Play, Pause, Volume2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';

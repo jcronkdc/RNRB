@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
@@ -117,7 +117,7 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
                 href="/app/projects"
                 className="text-sm font-semibold uppercase tracking-[0.32em] text-brand-muted-foreground"
               >
-                SongForge
+                CronkWater
               </Link>
               <div className="flex flex-1 items-center gap-2 overflow-x-auto text-xs font-medium">
                 {APP_NAV_ITEMS.map((item) => (
@@ -164,7 +164,7 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
                   </Button>
                   <span className="hidden md:inline">Signed in as</span>
                   <span className="rounded-full border border-border/60 px-3 py-1 text-brand-foreground">
-                    {userName ?? 'SongForge Member'}
+                    {userName ?? 'CronkWater Member'}
                   </span>
                   <Button variant="ghost" size="sm" className="hidden md:inline-flex">
                     Share

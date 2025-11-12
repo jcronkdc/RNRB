@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Input, Label, Textarea } from '@songforge/ui';
+import { Button, Input, Label, Textarea } from '@cronkwater/ui';
 import { useEffect, useRef, useState } from 'react';
 
 import AvatarStub from './AvatarStub';
@@ -12,7 +12,7 @@ interface ProfileFormProps {
 
 const PRO_OPTIONS = ['None', 'ASCAP', 'BMI', 'SESAC'] as const;
 
-export default function ProfileForm({ name = 'SongForge Member', email = 'demo@example.com' }: ProfileFormProps) {
+export default function ProfileForm({ name = 'CronkWater Member', email = 'demo@example.com' }: ProfileFormProps) {
   const [displayName, setDisplayName] = useState(name);
   const [proAffiliation, setProAffiliation] = useState<(typeof PRO_OPTIONS)[number]>('None');
   const [mlcMember, setMlcMember] = useState(true);

@@ -11,7 +11,7 @@ import {
   DialogTrigger,
   Input,
   Label
-} from '@songforge/ui';
+} from '@cronkwater/ui';
 import { motion } from 'framer-motion';
 import { Plus, Trash2 } from 'lucide-react';
 import { Fragment, useMemo, useState, useTransition } from 'react';

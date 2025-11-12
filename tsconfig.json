@@ -1,14 +1,14 @@
 {
-  "extends": "@songforge/config/tsconfig/base",
+  "extends": "@cronkwater/config/tsconfig/base",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@songforge/ui": ["packages/ui/src/index"],
-      "@songforge/ui/*": ["packages/ui/src/*"],
-      "@songforge/db": ["packages/db/src/index"],
-      "@songforge/auth": ["packages/auth/src/index"],
-      "@songforge/trpc": ["packages/trpc/src/index"],
-      "@songforge/trpc/*": ["packages/trpc/src/*"]
+      "@cronkwater/ui": ["packages/ui/src/index"],
+      "@cronkwater/ui/*": ["packages/ui/src/*"],
+      "@cronkwater/db": ["packages/db/src/index"],
+      "@cronkwater/auth": ["packages/auth/src/index"],
+      "@cronkwater/trpc": ["packages/trpc/src/index"],
+      "@cronkwater/trpc/*": ["packages/trpc/src/*"]
     }
   },
   "include": ["packages", "apps", "turbo.json"]

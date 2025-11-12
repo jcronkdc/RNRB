@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@songforge/auth';
-import { calculateRoyaltyWaterfall, calculateAggregatedRoyalties } from '@songforge/db';
+import { requireOrgSession } from '@cronkwater/auth';
+import { calculateRoyaltyWaterfall, calculateAggregatedRoyalties } from '@cronkwater/db';
 import { z } from 'zod';
 
 export interface ActionResult<T> {

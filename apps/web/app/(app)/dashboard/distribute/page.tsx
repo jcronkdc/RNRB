@@ -1,5 +1,5 @@
-import { prisma } from '@songforge/db';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@songforge/ui';
+import { prisma } from '@cronkwater/db';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@cronkwater/ui';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';

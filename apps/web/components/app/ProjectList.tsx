@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@songforge/ui';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@cronkwater/ui';
 import { Music, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 

@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma } from '@songforge/db';
+import { prisma } from '@cronkwater/db';
 import { createServerClient } from '@supabase/ssr';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -91,7 +91,7 @@ async function streamOpenAiLyrics(input: LyricsInput, push: (message: StreamMess
         {
           role: 'system',
           content:
-            'You are SongForge Lyric Architect, crafting structured pop lyrics with clear sections. Output sections labeled Verse, Chorus, and Bridge, and include rhyme hints when possible.'
+            'You are CronkWater Lyric Architect, crafting structured pop lyrics with clear sections. Output sections labeled Verse, Chorus, and Bridge, and include rhyme hints when possible.'
         },
         {
           role: 'user',

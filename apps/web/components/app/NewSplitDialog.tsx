@@ -10,7 +10,7 @@ import {
   DialogTitle,
   Input,
   Label
-} from '@songforge/ui';
+} from '@cronkwater/ui';
 import {
   useEffect,
   useMemo,

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, cn } from '@songforge/ui';
+import { Button, cn } from '@cronkwater/ui';
 
 import { useTheme } from './ThemeProvider';
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, ToastProvider, useToast } from '@songforge/ui';
+import { Button, ToastProvider, useToast } from '@cronkwater/ui';
 
 function DemoToasts() {
   const { notify } = useToast();

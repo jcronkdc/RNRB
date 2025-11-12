@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@songforge/ui';
+import { cn } from '@cronkwater/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
@@ -50,7 +50,7 @@ export default function Sidebar({ userName, userEmail, ...props }: SidebarProps 
           href="/projects"
           className="inline-flex items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-primary"
         >
-          <img src="/brand-wordmark.svg" alt="SongForge" className="h-6 w-auto" />
+          <img src="/brand-wordmark.svg" alt="CronkWater" className="h-6 w-auto" />
         </Link>
       </div>
 
@@ -85,7 +85,7 @@ export default function Sidebar({ userName, userEmail, ...props }: SidebarProps 
             {initials}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-brand-foreground">{userName ?? 'SongForge Member'}</p>
+            <p className="truncate text-sm font-medium text-brand-foreground">{userName ?? 'CronkWater Member'}</p>
             <p className="truncate text-xs text-muted-foreground">{userEmail ?? 'demo@example.com'}</p>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import nextConfig from '@songforge/config/eslint/next';
+import nextConfig from '@cronkwater/config/eslint/next';
 
 export default [
   ...nextConfig,

@@ -1,5 +1,5 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { prisma } from '@songforge/db';
+import { prisma } from '@cronkwater/db';
 import NextAuth, { type NextAuthOptions , type Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import AppleProvider from 'next-auth/providers/apple';
@@ -32,9 +32,9 @@ function getAuthConfig(): NextAuthOptions {
             await transporter.sendMail({
               to: identifier,
               from: env.EMAIL_FROM,
-              subject: 'Sign in to SongForge',
-              text: `Sign in to SongForge by clicking the following link: ${url}`,
-              html: `<p>Sign in to SongForge by clicking the link below:</p><p><a href="${url}">${url}</a></p>`
+              subject: 'Sign in to CronkWater',
+              text: `Sign in to CronkWater by clicking the following link: ${url}`,
+              html: `<p>Sign in to CronkWater by clicking the link below:</p><p><a href="${url}">${url}</a></p>`
             });
           }
         }

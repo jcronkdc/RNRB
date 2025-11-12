@@ -2,7 +2,7 @@
 
 ## Summary
 
-All TypeScript and linting errors have been resolved in the SongForge codebase.
+All TypeScript and linting errors have been resolved in the CronkWater codebase.
 
 ## Fixed Issues
 

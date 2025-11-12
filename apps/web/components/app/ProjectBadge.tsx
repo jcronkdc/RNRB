@@ -1,6 +1,6 @@
 'use client';
 
-import { Badge, cn } from '@songforge/ui';
+import { Badge, cn } from '@cronkwater/ui';
 import { Globe2, Lock, Users } from 'lucide-react';
 
 export type ProjectVisibility = 'private' | 'org' | 'public';

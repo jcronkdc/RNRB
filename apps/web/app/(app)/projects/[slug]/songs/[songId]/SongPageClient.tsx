@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 import { ArrowLeft, Music, Edit } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

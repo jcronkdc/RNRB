@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
   Button
-} from '@songforge/ui';
+} from '@cronkwater/ui';
 import { useState } from 'react';
 
 const meta: Meta = {
@@ -40,7 +40,7 @@ export const Basic: Story = {
             </DialogDescription>
           </DialogHeader>
           <p className="text-sm text-brand-muted-foreground">
-            We will send an invitation email with guidance on how to join the SongForge
+            We will send an invitation email with guidance on how to join the CronkWater
             organization.
           </p>
           <DialogFooter>

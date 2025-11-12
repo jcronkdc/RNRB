@@ -1,4 +1,4 @@
-import { getOrgSession } from '@songforge/auth';
+import { getOrgSession } from '@cronkwater/auth';
 import { redirect } from 'next/navigation';
 import { PracticePageClient } from './PracticePageClient';
 

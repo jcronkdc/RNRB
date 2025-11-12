@@ -1,5 +1,5 @@
 import { beforeAll } from 'vitest';
-import { prisma } from '@songforge/db';
+import { prisma } from '@cronkwater/db';
 
 beforeAll(async () => {
   if (!process.env.DATABASE_URL) {

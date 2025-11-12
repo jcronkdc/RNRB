@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, cn } from '@songforge/ui';
+import { Button, cn } from '@cronkwater/ui';
 import { Music, FileAudio, FolderOpen, Search as SearchIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

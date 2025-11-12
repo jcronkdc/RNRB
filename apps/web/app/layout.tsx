@@ -1,4 +1,4 @@
-import { cn } from '@songforge/ui';
+import { cn } from '@cronkwater/ui';
 import type { Metadata } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -34,9 +34,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'SongForge',
+  title: 'CronkWater',
   description:
-    'SongForge is an end-to-end workspace for collaborative songwriting powered by modern web tooling.',
+    'CronkWater is an end-to-end workspace for collaborative songwriting powered by modern web tooling.',
   icons: {
     icon: '/icon.svg'
   }

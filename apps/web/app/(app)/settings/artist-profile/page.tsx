@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { requireOrgSession } from '@songforge/auth';
-import { prisma } from '@songforge/db';
+import { requireOrgSession } from '@cronkwater/auth';
+import { prisma } from '@cronkwater/db';
 import { ArtistProfileForm } from './ArtistProfileForm';
 
 export const dynamic = 'force-dynamic';

@@ -1,5 +1,5 @@
-import type { OrgAwareSession } from '@songforge/auth';
-import { prisma } from '@songforge/db';
+import type { OrgAwareSession } from '@cronkwater/auth';
+import { prisma } from '@cronkwater/db';
 
 export interface CreateContextOptions {
   session: OrgAwareSession | null;

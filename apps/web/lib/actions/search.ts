@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@songforge/auth';
-import { listProjects, listSongs, listAssets } from '@songforge/db';
+import { requireOrgSession } from '@cronkwater/auth';
+import { listProjects, listSongs, listAssets } from '@cronkwater/db';
 
 export interface SearchResult {
   id: string;

@@ -1,4 +1,4 @@
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -10,7 +10,7 @@ const MOCK_PROJECTS = {
     tagline: 'A shimmering electro-pop journey inspired by arctic light.',
     coverImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
     credits: [
-      { name: 'SongForge Collective', role: 'Writers', pct: 60 },
+      { name: 'CronkWater Collective', role: 'Writers', pct: 60 },
       { name: 'Mae Rivera', role: 'Producer', pct: 40 },
       { name: 'Atlas Mastering', role: 'Mastering Engineer' }
     ]
@@ -29,7 +29,7 @@ const MOCK_PROJECTS = {
     tagline: 'A curated sampler of live takes and community collaborations.',
     coverImage: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1200&q=80',
     credits: [
-      { name: 'SongForge House Band', role: 'Performers' },
+      { name: 'CronkWater House Band', role: 'Performers' },
       { name: 'Open Scores Initiative', role: 'Arrangements' }
     ]
   }
@@ -73,7 +73,7 @@ export default async function PublicProjectPage({ params }: { params: Promise<{ 
           </div>
           <div className="space-y-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.32em] text-brand-muted-foreground">SongForge Project</p>
+              <p className="text-xs uppercase tracking-[0.32em] text-brand-muted-foreground">CronkWater Project</p>
               <h1 className="mt-3 text-4xl font-semibold text-brand-foreground">{project.name}</h1>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground">{project.tagline}</p>
             </div>

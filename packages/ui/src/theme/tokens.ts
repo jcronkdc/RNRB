@@ -127,4 +127,4 @@ export const songForgeTheme = {
   cssVariables
 };
 
-export type SongForgeTheme = typeof songForgeTheme;
+export type CronkWaterTheme = typeof songForgeTheme;

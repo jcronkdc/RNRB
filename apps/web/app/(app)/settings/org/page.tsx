@@ -1,4 +1,4 @@
-import { setActiveOrgCookie } from '@songforge/auth';
+import { setActiveOrgCookie } from '@cronkwater/auth';
 import { redirect } from 'next/navigation';
 
 import OrgSettingsForm from '../../../../components/app/OrgSettingsForm';
@@ -27,7 +27,7 @@ export default function OrgSettingsPage() {
       <PageHeader title="Organization" subtitle="Manage your organization." />
       <OrgSettingsForm
         orgId={ORG_ID}
-        name="SongForge Foundation"
+        name="CronkWater Foundation"
         slug="songforge-foundation"
         orgType="Foundation"
         brandColor="#6c5ce7"

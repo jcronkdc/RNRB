@@ -1,5 +1,5 @@
-import { setActiveOrgCookie } from '@songforge/auth';
-import { Button } from '@songforge/ui';
+import { setActiveOrgCookie } from '@cronkwater/auth';
+import { Button } from '@cronkwater/ui';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';

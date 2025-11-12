@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { createSplitSheet, updateContributor, finalizeSplitSheet } from '@songforge/db';
-import { prisma } from '@songforge/db';
+import { createSplitSheet, updateContributor, finalizeSplitSheet } from '@cronkwater/db';
+import { prisma } from '@cronkwater/db';
 import { randomUUID } from 'crypto';
 
 /**

@@ -1,4 +1,4 @@
-import { cn } from '@songforge/ui';
+import { cn } from '@cronkwater/ui';
 
 interface PageHeaderProps {
   title: string;

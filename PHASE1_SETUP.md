@@ -1,4 +1,4 @@
-# SongForge Phase 1 MVP - Setup Guide
+# CronkWater Phase 1 MVP - Setup Guide
 
 ## 🚀 Quick Start
 

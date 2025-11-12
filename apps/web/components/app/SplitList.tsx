@@ -1,4 +1,4 @@
-import { cn, Button } from '@songforge/ui';
+import { cn, Button } from '@cronkwater/ui';
 import { Users, Plus } from 'lucide-react';
 
 import { EmptyState } from './EmptyState';

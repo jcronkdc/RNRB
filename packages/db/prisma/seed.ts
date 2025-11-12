@@ -10,14 +10,14 @@ async function main() {
   const user = await prisma.user.create({
     data: {
       email: 'demo@songforge.dev',
-      name: 'SongForge Demo',
+      name: 'CronkWater Demo',
       emailVerified: new Date()
     }
   });
 
   const organization = await prisma.organization.create({
     data: {
-      name: 'SongForge Collective',
+      name: 'CronkWater Collective',
       slug: 'songforge-collective'
     }
   });

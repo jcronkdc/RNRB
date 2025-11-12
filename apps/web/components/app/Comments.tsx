@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, cn } from '@songforge/ui';
+import { Button, cn } from '@cronkwater/ui';
 import { Send, MessageSquare, User } from 'lucide-react';
 import { useState, useRef } from 'react';
 

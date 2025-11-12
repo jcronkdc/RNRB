@@ -1,4 +1,4 @@
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 import Link from 'next/link';
 
 const WHY_POINTS = [
@@ -30,14 +30,14 @@ export default function DonatePage() {
     <main id="main-content" className="bg-background">
       <section className="motion-safe:animate-fade-in mx-auto flex min-h-[60vh] w-full max-w-5xl flex-col gap-10 px-6 py-20">
         <header className="text-center">
-          <p className="text-xs uppercase tracking-[0.32em] text-brand-muted-foreground">SongForge Foundation</p>
+          <p className="text-xs uppercase tracking-[0.32em] text-brand-muted-foreground">CronkWater Foundation</p>
           <h1 className="mt-4 text-4xl font-semibold text-brand-foreground">Support the Foundation</h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
             Invest in the musicians, technologists, and storytellers who keep our creative future vibrant. Every
             contribution amplifies community-driven artistry.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button type="button" aria-label="Donate to SongForge Foundation">Donate now</Button>
+            <Button type="button" aria-label="Donate to CronkWater Foundation">Donate now</Button>
             <Button asChild variant="ghost">
               <Link href="/">Back to home</Link>
             </Button>
@@ -80,7 +80,7 @@ export default function DonatePage() {
             Donation widget coming soon
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            We’re partnering with the SongForge Foundation and Give Lively to embed a seamless donation flow. Stay
+            We’re partnering with the CronkWater Foundation and Give Lively to embed a seamless donation flow. Stay
             tuned—your generosity will be just a tap away.
           </p>
         </section>

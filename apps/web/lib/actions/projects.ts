@@ -1,7 +1,7 @@
 'use server';
 
-import { prisma } from '@songforge/db';
-import { getOrgSessionFromSession } from '@songforge/auth';
+import { prisma } from '@cronkwater/db';
+import { getOrgSessionFromSession } from '@cronkwater/auth';
 
 export async function getProjects() {
   const session = await getOrgSessionFromSession();

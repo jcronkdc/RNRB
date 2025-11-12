@@ -1,5 +1,5 @@
-import { getOrgSessionFromSession } from '@songforge/auth';
-import { appRouter, createContext } from '@songforge/trpc/server';
+import { getOrgSessionFromSession } from '@cronkwater/auth';
+import { appRouter, createContext } from '@cronkwater/trpc/server';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 
 export async function GET(request: Request) {

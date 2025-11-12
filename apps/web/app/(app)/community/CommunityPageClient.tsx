@@ -12,10 +12,10 @@ import {
   Heart,
   Filter
 } from 'lucide-react';
-import { Button } from '@songforge/ui';
-import { Card } from '@songforge/ui';
-import { Badge } from '@songforge/ui';
-import { Input } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
+import { Card } from '@cronkwater/ui';
+import { Badge } from '@cronkwater/ui';
+import { Input } from '@cronkwater/ui';
 import { PageHeader } from '@/components/app/PageHeader';
 
 export function CommunityPageClient() {

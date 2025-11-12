@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@songforge/ui';
+import { cn } from '@cronkwater/ui';
 import { motion, useReducedMotion } from 'framer-motion';
 import { HeartHandshake, LogIn } from 'lucide-react';
 import Link from 'next/link';
@@ -20,8 +20,8 @@ const LINKS: NavLink[] = [
   { label: 'Home', href: '/' },
   { label: 'What We Make', href: '#what-we-make' },
   { label: 'Values', href: '#values' },
-  { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Donate to SongForge' },
-  { label: 'Sign in', href: '/signin', icon: LogIn, ariaLabel: 'Sign in to SongForge' }
+  { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Donate to CronkWater' },
+  { label: 'Sign in', href: '/signin', icon: LogIn, ariaLabel: 'Sign in to CronkWater' }
 ];
 
 const motionConfig = {
@@ -100,11 +100,11 @@ export function NavBar() {
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
           <Link
             href="/"
-            aria-label="SongForge home"
+            aria-label="CronkWater home"
             className="flex items-center text-brand-foreground transition-colors hover:text-brand-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <Wordmark className="h-6 w-auto" />
-            <span className="sr-only">SongForge</span>
+            <span className="sr-only">CronkWater</span>
           </Link>
           <ul className={listClass}>
             {LINKS.map(({ label, href, icon: Icon, ariaLabel }) => {

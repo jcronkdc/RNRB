@@ -1,10 +1,10 @@
-# SongForge
+# CronkWater
 
 A premium music ecosystem platform for collaborative songwriting, recording, and community management.
 
 ## 🎯 Overview
 
-SongForge is a comprehensive web application designed for musicians, bands, and music organizations. It provides:
+CronkWater is a comprehensive web application designed for musicians, bands, and music organizations. It provides:
 
 - **Project Management**: Organize songs, assets, and collaborations
 - **Split Sheets**: Track revenue splits with PRO/IPI integration

@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="border-t border-border/40 bg-surface/70 backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs uppercase tracking-[0.28em] text-muted-foreground/80">
-          © {year} SongForge Studios
+          © {year} CronkWater Studios
         </p>
         <nav aria-label="Footer">
           <ul className="flex items-center gap-4">

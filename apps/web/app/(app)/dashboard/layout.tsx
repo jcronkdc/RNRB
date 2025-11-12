@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, cn } from '@songforge/ui';
+import { Button, cn } from '@cronkwater/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { type ReactNode, useMemo } from 'react';
@@ -31,7 +31,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="flex min-h-screen bg-background text-foreground">
       <aside className="hidden w-72 flex-col border-r border-border/50 bg-surface/80 px-6 py-10 shadow-soft md:flex">
         <Link href="/" className="mb-12 block">
-          <div className="text-xs uppercase tracking-[0.4em] text-muted-foreground">SongForge</div>
+          <div className="text-xs uppercase tracking-[0.4em] text-muted-foreground">CronkWater</div>
           <div className="mt-3 text-lg font-semibold text-brand-foreground">Creator Studio</div>
         </Link>
         <nav className="flex flex-1 flex-col gap-1">
@@ -69,7 +69,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="flex min-h-screen flex-1 flex-col">
         <header className="flex items-center justify-between border-b border-border/60 bg-surface/80 px-6 py-4 backdrop-blur">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">SongForge Studio</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">CronkWater Studio</p>
             <h1 className="mt-2 text-2xl font-semibold text-brand-foreground">{activeLabel}</h1>
           </div>
           <div className="flex items-center gap-3">

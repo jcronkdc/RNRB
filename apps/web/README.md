@@ -1,6 +1,6 @@
 # Web App (`apps/web`)
 
-Next.js 16 App Router experience for the SongForge platform.
+Next.js 16 App Router experience for the CronkWater platform.
 
 - TypeScript + TailwindCSS + Radix UI (via shadcn components from `@songforge/ui`)
 - Org-aware session helper + Auth.js handlers (`packages/auth`)

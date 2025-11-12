@@ -15,13 +15,13 @@ import {
   Link2,
   Award as AwardIcon
 } from 'lucide-react';
-import { Button } from '@songforge/ui';
-import { Input } from '@songforge/ui';
-import { Textarea } from '@songforge/ui';
-import { Label } from '@songforge/ui';
-import { Card } from '@songforge/ui';
-import { Badge } from '@songforge/ui';
-import { useToast } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
+import { Input } from '@cronkwater/ui';
+import { Textarea } from '@cronkwater/ui';
+import { Label } from '@cronkwater/ui';
+import { Card } from '@cronkwater/ui';
+import { Badge } from '@cronkwater/ui';
+import { useToast } from '@cronkwater/ui';
 import { updateOrgProfileAction } from '@/lib/actions/artistProfile';
 import type { Org, BandMember, Award } from '@prisma/client';
 

@@ -1,5 +1,5 @@
 {
-  "extends": "@songforge/config/tsconfig/base",
+  "extends": "@cronkwater/config/tsconfig/base",
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist"

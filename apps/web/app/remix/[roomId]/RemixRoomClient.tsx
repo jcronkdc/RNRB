@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Slider } from '@songforge/ui';
+import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Slider } from '@cronkwater/ui';
 import { Users, Volume2 } from 'lucide-react';
 import { useEffect, useMemo, useState, useTransition } from 'react';
 

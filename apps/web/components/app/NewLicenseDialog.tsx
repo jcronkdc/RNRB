@@ -11,7 +11,7 @@ import {
   Input,
   Label,
   Textarea
-} from '@songforge/ui';
+} from '@cronkwater/ui';
 import { useEffect, useRef, type FormEvent } from 'react';
 
 const TEMPLATES = ['Collab NDA', 'Work-for-Hire', 'Non-exclusive Collab', 'Podcast Music License'] as const;

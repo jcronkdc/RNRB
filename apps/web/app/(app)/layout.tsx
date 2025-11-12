@@ -1,5 +1,5 @@
-import type { OrgSession } from '@songforge/auth';
-import { getOrgSession } from '@songforge/auth';
+import type { OrgSession } from '@cronkwater/auth';
+import { getOrgSession } from '@cronkwater/auth';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
@@ -70,11 +70,11 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     redirect('/auth');
   }
 
-  const userName = orgSession.session.user?.name ?? 'SongForge Member';
+  const userName = orgSession.session.user?.name ?? 'CronkWater Member';
   const userEmail = orgSession.session.user?.email ?? undefined;
 
   return (
-    <AppChrome title="SongForge HQ" userName={userName} userEmail={userEmail}>
+    <AppChrome title="CronkWater HQ" userName={userName} userEmail={userEmail}>
       {children}
     </AppChrome>
   );

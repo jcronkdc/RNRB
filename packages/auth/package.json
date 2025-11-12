@@ -1,5 +1,5 @@
 {
-  "name": "@songforge/auth",
+  "name": "@cronkwater/auth",
   "version": "0.1.0",
   "type": "module",
   "private": false,
@@ -26,14 +26,14 @@
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
-    "@songforge/db": "workspace:*",
+    "@cronkwater/db": "workspace:*",
     "next": "^15.0.0",
     "next-auth": "4.24.7",
     "nodemailer": "^6.9.15",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@songforge/config": "workspace:*",
+    "@cronkwater/config": "workspace:*",
     "@types/nodemailer": "^6.4.12",
     "eslint": "^9.12.0",
     "typescript": "^5.6.3"

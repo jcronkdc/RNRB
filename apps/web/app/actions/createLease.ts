@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma, createSplitSheet } from '@songforge/db';
+import { prisma, createSplitSheet } from '@cronkwater/db';
 import { createServerClient } from '@supabase/ssr';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -69,7 +69,7 @@ async function ensureStripePayment(price: number, songTitle: string): Promise<{ 
   params.append('payment_method_types[]', 'card');
   params.append('confirm', 'true');
   params.append('payment_method', 'pm_card_visa');
-  params.append('description', `SongForge lease - ${songTitle}`);
+  params.append('description', `CronkWater lease - ${songTitle}`);
 
   const response = await fetch('https://api.stripe.com/v1/payment_intents', {
     method: 'POST',

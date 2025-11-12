@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { prisma } from '@songforge/db';
+import { prisma } from '@cronkwater/db';
 import { ArtistPageClient } from './ArtistPageClient';
 
 export const dynamic = 'force-dynamic';

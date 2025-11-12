@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@songforge/ui';
+import { cn } from '@cronkwater/ui';
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 const ToastContext = createContext<{ push: (msg: string, opts?: { tone?: Tone; ttlMs?: number }) => void } | undefined>(undefined);

@@ -1,4 +1,4 @@
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 
 export const dynamic = 'force-dynamic';
 

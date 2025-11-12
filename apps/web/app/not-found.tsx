@@ -1,4 +1,4 @@
-import { Button } from '@songforge/ui';
+import { Button } from '@cronkwater/ui';
 import { Compass } from 'lucide-react';
 import Link from 'next/link';
 

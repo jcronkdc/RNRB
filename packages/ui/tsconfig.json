@@ -1,5 +1,5 @@
 {
-  "extends": "@songforge/config/tsconfig/react",
+  "extends": "@cronkwater/config/tsconfig/react",
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": ".",
