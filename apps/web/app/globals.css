@@ -1,13 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import '@songforge/ui/styles.css';
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: var(--sf-font-sans);
     font-feature-settings: 'liga' 1, 'calt' 1, 'kern' 1;
     letter-spacing: -0.01em;
   }
@@ -74,6 +72,10 @@
 }
 
 @layer utilities {
+  .shadow-glow {
+    box-shadow: var(--sf-shadow-glow);
+  }
+
   .sf-bg-gradient {
     position: absolute;
     inset: -12%;

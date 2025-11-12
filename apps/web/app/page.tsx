@@ -1,7 +1,7 @@
+import { Button, Input } from '@songforge/ui';
 import { motion } from 'framer-motion';
 import { Compass, Disc3, Mail, Sparkles, Users, Waves } from 'lucide-react';
 import Link from 'next/link';
-import { Button, Input } from '@songforge/ui';
 
 const heroStats = [
   { label: 'songs arranged using SongForge beta', value: '312', tone: 'text-brand-primary' },
@@ -81,6 +81,8 @@ function EmailCaptureForm() {
     </form>
   );
 }
+
+export const dynamic = 'force-dynamic';
 
 export default function Page() {
   return (

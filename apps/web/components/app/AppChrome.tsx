@@ -1,17 +1,18 @@
 'use client';
 
-import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@songforge/ui';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+
+import { AppErrorBoundary } from './AppErrorBoundary';
 import CommandPalette from './CommandPalette';
 import HelpModal from './HelpModal';
-import { usePlatformKey } from './usePlatformKey';
-import Sidebar, { APP_NAV_ITEMS } from './Sidebar';
-import { AppErrorBoundary } from './AppErrorBoundary';
-import SearchInput from './SearchInput';
-import { ToastProvider } from '../ui/Toast';
 import { OnboardingTour } from './OnboardingTour';
+import SearchInput from './SearchInput';
+import Sidebar, { APP_NAV_ITEMS } from './Sidebar';
+import { usePlatformKey } from './usePlatformKey';
+import { ToastProvider } from '../ui/Toast';
 
 interface AppChromeProps {
   title: string;
@@ -111,7 +112,7 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
           <Sidebar userName={userName} userEmail={userEmail} data-tour="sidebar" />
 
           <div className="flex min-h-screen flex-1 flex-col">
-            <nav className="sticky top-0 z-30 flex items-center gap-4 border-b border-border/60 bg-surface/80 px-4 py-3 shadow-soft/30 backdrop-blur md:hidden">
+            <nav className="shadow-soft/30 sticky top-0 z-30 flex items-center gap-4 border-b border-border/60 bg-surface/80 px-4 py-3 backdrop-blur md:hidden">
               <Link
                 href="/app/projects"
                 className="text-sm font-semibold uppercase tracking-[0.32em] text-brand-muted-foreground"
@@ -131,12 +132,12 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
               </div>
             </nav>
 
-            <header className="relative border-b border-border/60 bg-gradient-to-br from-surface/90 to-surface-muted/50 px-6 py-8 shadow-soft/20 backdrop-blur-sm">
+            <header className="shadow-soft/20 relative border-b border-border/60 bg-gradient-to-br from-surface/90 to-surface-muted/50 px-6 py-8 backdrop-blur-sm">
               <div className="absolute inset-0 opacity-30">
                 <div className="sf-bg-gradient" />
               </div>
               <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex flex-col gap-3 xs:flex-row xs:items-center xs:gap-6">
+                <div className="xs:flex-row xs:items-center xs:gap-6 flex flex-col gap-3">
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.4em] text-brand-primary">Workspace</p>
                     <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-foreground">{title}</h1>
@@ -147,7 +148,7 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
                       </kbd>
                     </p>
                   </div>
-                  <div className="min-w-0 max-w-[13rem] flex-1 self-start xs:self-center" data-tour="search">
+                  <div className="xs:self-center min-w-0 max-w-[13rem] flex-1 self-start" data-tour="search">
                     <SearchInput placeholder="Search…" />
                   </div>
                 </div>

@@ -1,5 +1,6 @@
-import { createClient } from '../../../lib/supabase/server';
 import { NextResponse } from 'next/server';
+
+import { createClient } from '../../../lib/supabase/server';
 
 export async function POST(request: Request) {
   try {
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
-      const error = await response.text();
+      await response.text(); // Read error response but don't use it
       return NextResponse.json({ error: 'ElevenLabs API error' }, { status: 500 });
     }
 

@@ -1,17 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createClient } from '../../../lib/supabase/client';
+import { Button } from '@songforge/ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Loader2 } from 'lucide-react';
-import { Button } from '@songforge/ui';
+import { useState, useEffect } from 'react';
+
+import { createClient } from '../../../lib/supabase/client';
 
 interface Prompt {
   id: string;
   text: string;
   created_at: string;
   status: 'pending' | 'generating' | 'completed';
-  lyrics?: any;
+  lyrics?: Record<string, unknown>;
 }
 
 interface LiveHostClientProps {
@@ -35,20 +36,25 @@ export function LiveHostClient({ sessionId }: LiveHostClientProps) {
           table: 'audience_prompts',
           filter: `session_id=eq.${sessionId}`,
         },
-        (payload) => {
-          setPrompts((prev) => [payload.new as Prompt, ...prev]);
+        (payload: { new: Prompt }) => {
+          setPrompts((prev) => [payload.new, ...prev]);
         }
       )
       .subscribe();
 
     // Load existing prompts
-    supabase
+    void supabase
       .from('audience_prompts')
       .select('*')
       .eq('session_id', sessionId)
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          console.error('Failed to load prompts:', error);
+          return null;
+        }
         if (data) setPrompts(data as Prompt[]);
+        return null;
       });
 
     return () => {
@@ -85,9 +91,11 @@ export function LiveHostClient({ sessionId }: LiveHostClientProps) {
     }
   };
 
-  const generateVoicePreview = async (lyrics: any) => {
+  const generateVoicePreview = async (lyrics: Record<string, unknown>) => {
     // Call ElevenLabs API
-    const textToSpeak = lyrics.chorus?.lines?.join(' ') || lyrics.verses?.[0]?.lines?.join(' ') || '';
+    const chorus = lyrics.chorus as { lines?: string[] } | undefined;
+    const verses = lyrics.verses as Array<{ lines?: string[] }> | undefined;
+    const textToSpeak = chorus?.lines?.join(' ') || verses?.[0]?.lines?.join(' ') || '';
     
     if (!textToSpeak) return;
 
@@ -146,19 +154,22 @@ export function LiveHostClient({ sessionId }: LiveHostClientProps) {
                 )}
               </div>
 
-              {prompt.lyrics && (
-                <div className="mt-4 rounded-lg bg-background p-4">
-                  <h4 className="font-semibold">{prompt.lyrics.title}</h4>
-                  {prompt.lyrics.chorus?.lines && (
-                    <div className="mt-2">
-                      <p className="text-sm text-muted-foreground">Chorus:</p>
-                      {prompt.lyrics.chorus.lines.map((line: string, i: number) => (
-                        <p key={i} className="py-1">{line}</p>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+              {prompt.lyrics && (() => {
+                const lyrics = prompt.lyrics as { title?: string; chorus?: { lines?: string[] }; verses?: Array<{ lines?: string[] }> };
+                return (
+                  <div className="mt-4 rounded-lg bg-background p-4">
+                    {lyrics.title && <h4 className="font-semibold">{lyrics.title}</h4>}
+                    {lyrics.chorus?.lines && (
+                      <div className="mt-2">
+                        <p className="text-sm text-muted-foreground">Chorus:</p>
+                        {lyrics.chorus.lines.map((line: string, i: number) => (
+                          <p key={i} className="py-1">{line}</p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </motion.div>
           ))}
         </AnimatePresence>

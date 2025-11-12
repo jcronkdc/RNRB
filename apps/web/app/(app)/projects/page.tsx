@@ -1,11 +1,13 @@
-import { Suspense } from 'react';
-import { createClient } from '../../../lib/supabase/server';
 import { redirect } from 'next/navigation';
-import PageHeader from '../../../components/app/PageHeader';
-import ProjectList from '../../../components/app/ProjectList';
+import { Suspense } from 'react';
+
 import { ProjectsClient } from './ProjectsClient';
-import { CardGridSkeleton } from '../../../components/app/Skeletons';
 import { ProjectsDashboardTabs } from './ProjectsDashboardTabs';
+import PageHeader from '../../../components/app/PageHeader';
+import { CardGridSkeleton } from '../../../components/app/Skeletons';
+import { createClient } from '../../../lib/supabase/server';
+
+export const dynamic = 'force-dynamic';
 
 const SUBTITLE = 'Your works in progress. Start something new or continue where you left off.';
 

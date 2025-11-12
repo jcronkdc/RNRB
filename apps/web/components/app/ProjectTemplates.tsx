@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Music, Disc, Mic, Radio } from 'lucide-react';
 import { Button, cn } from '@songforge/ui';
+import { Music, Disc, Mic, Radio } from 'lucide-react';
+import { useState } from 'react';
 
 interface ProjectTemplate {
   id: string;

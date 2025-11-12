@@ -1,7 +1,7 @@
 'use server';
 
-import { listProjects, listSongs, listAssets } from '@songforge/db';
 import { requireOrgSession } from '@songforge/auth';
+import { listProjects, listSongs, listAssets } from '@songforge/db';
 
 export interface SearchResult {
   id: string;
@@ -22,14 +22,22 @@ export async function searchAction(query: string, type?: 'all' | 'project' | 'so
 
     const searchLower = query.toLowerCase();
 
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found',
+        data: []
+      };
+    }
+
     // Search projects
     if (!type || type === 'all' || type === 'project') {
-      const projects = await listProjects(session.orgId, { status: 'active' });
+      const projects = await listProjects(session.activeMembership.org.id, { status: 'active' });
       const matchingProjects = projects.projects.filter(
-        (p) => p.name.toLowerCase().includes(searchLower) || p.description?.toLowerCase().includes(searchLower)
+        (p: { name: string; description?: string | null }) => p.name.toLowerCase().includes(searchLower) || p.description?.toLowerCase().includes(searchLower)
       );
       results.push(
-        ...matchingProjects.map((p) => ({
+        ...matchingProjects.map((p: { id: string; name: string; description?: string | null; slug: string }) => ({
           id: p.id,
           type: 'project' as const,
           title: p.name,
@@ -41,16 +49,16 @@ export async function searchAction(query: string, type?: 'all' | 'project' | 'so
 
     // Search songs (across all projects)
     if (!type || type === 'all' || type === 'song') {
-      const projects = await listProjects(session.orgId, { status: 'active' });
+      const projects = await listProjects(session.activeMembership.org.id, { status: 'active' });
       for (const project of projects.projects.slice(0, 10)) {
         // Limit to avoid too many queries
         try {
           const songs = await listSongs(project.id);
           const matchingSongs = songs.filter(
-            (s) => s.title.toLowerCase().includes(searchLower) || s.key?.toLowerCase().includes(searchLower)
+            (s: { title: string; key?: string | null }) => s.title.toLowerCase().includes(searchLower) || s.key?.toLowerCase().includes(searchLower)
           );
           results.push(
-            ...matchingSongs.map((s) => ({
+            ...matchingSongs.map((s: { id: string; title: string }) => ({
               id: s.id,
               type: 'song' as const,
               title: s.title,
@@ -66,13 +74,13 @@ export async function searchAction(query: string, type?: 'all' | 'project' | 'so
 
     // Search assets
     if (!type || type === 'all' || type === 'asset') {
-      const projects = await listProjects(session.orgId, { status: 'active' });
+      const projects = await listProjects(session.activeMembership.org.id, { status: 'active' });
       for (const project of projects.projects.slice(0, 10)) {
         try {
           const assets = await listAssets(project.id);
-          const matchingAssets = assets.filter((a) => a.name.toLowerCase().includes(searchLower));
+          const matchingAssets = assets.filter((a: { name: string }) => a.name.toLowerCase().includes(searchLower));
           results.push(
-            ...matchingAssets.map((a) => ({
+            ...matchingAssets.map((a: { id: string; name: string }) => ({
               id: a.id,
               type: 'asset' as const,
               title: a.name,

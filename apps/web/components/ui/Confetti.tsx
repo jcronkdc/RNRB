@@ -1,8 +1,7 @@
 'use client';
 
+import { motion, AnimatePresence , useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useReducedMotion } from 'framer-motion';
 
 interface ConfettiProps {
   show: boolean;

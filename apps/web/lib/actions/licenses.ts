@@ -1,10 +1,9 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { createLicense, listLicenses } from '@songforge/db';
-import { requireOrgSession } from '@songforge/auth';
-import { getProjectBySlug } from '@songforge/db';
 import type { LicenseTemplate } from '@prisma/client';
+import { requireOrgSession } from '@songforge/auth';
+import { createLicense, listLicenses, getProjectBySlug } from '@songforge/db';
+import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {
   success: boolean;
@@ -26,8 +25,14 @@ export async function createLicenseAction(
 ): Promise<ActionResult<{ id: string }>> {
   try {
     const session = await requireOrgSession();
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
 
-    const project = await getProjectBySlug(projectSlug, session.orgId);
+    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {
         success: false,
@@ -61,7 +66,14 @@ export async function listLicensesAction(projectSlug: string) {
   try {
     const session = await requireOrgSession();
 
-    const project = await getProjectBySlug(projectSlug, session.orgId);
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found',
+        data: []
+      };
+    }
+    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {
         success: false,
@@ -74,7 +86,7 @@ export async function listLicensesAction(projectSlug: string) {
 
     return {
       success: true,
-      data: licenses.map((l) => ({
+      data: licenses.map((l: { id: string; template: string; title: string; status: string; createdAt: Date }) => ({
         id: l.id,
         template: l.template.replace(/_/g, ' '),
         title: l.title,

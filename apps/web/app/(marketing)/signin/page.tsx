@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient } from '../../../lib/supabase/client';
 import { Button, Input } from '@songforge/ui';
 import { Mail, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+
+import { createClient } from '../../../lib/supabase/client';
+
 
 export default function SignInPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');

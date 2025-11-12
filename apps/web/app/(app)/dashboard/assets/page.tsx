@@ -7,6 +7,8 @@ const assets = [
   { name: 'Splits – Midnight Drafts', type: 'Document', updated: 'Last week', size: '210 KB' }
 ] as const;
 
+export const dynamic = 'force-dynamic';
+
 export default function AssetsPage() {
   return (
     <div className="space-y-8">

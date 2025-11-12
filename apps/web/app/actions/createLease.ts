@@ -1,9 +1,9 @@
 'use server';
 
+import { prisma, createSplitSheet } from '@songforge/db';
+import { createServerClient } from '@supabase/ssr';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
-import { prisma, createSplitSheet } from '@songforge/db';
 import { z } from 'zod';
 
 const leaseSchema = z.object({
@@ -20,8 +20,8 @@ const leaseSchema = z.object({
     .min(1, 'At least one collaborator required')
 });
 
-function getSupabaseClient() {
-  const cookieStore = cookies();
+async function getSupabaseClient() {
+  const cookieStore = await cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -146,7 +146,7 @@ export async function createLeaseAction(formData: FormData) {
     return { success: false as const, error: 'Collaborator percentages must total 100%.' };
   }
 
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   const {
     data: { session }
   } = await supabase.auth.getSession();

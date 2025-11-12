@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from '@songforge/ui';
+import Link from 'next/link';
 import {
   useCallback,
   useEffect,
@@ -7,9 +9,7 @@ import {
   useRef,
   useState
 } from 'react';
-import Link from 'next/link';
-import { Button, cn } from '@songforge/ui';
-import { useRouter } from 'next/navigation';
+
 import { usePlatformKey } from './usePlatformKey';
 
 interface HelpModalProps {
@@ -38,7 +38,6 @@ const SHORTCUTS = [
 
 export default function HelpModal({ open: controlledOpen, onOpenChange }: HelpModalProps) {
   const modifier = usePlatformKey();
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -101,6 +100,15 @@ export default function HelpModal({ open: controlledOpen, onOpenChange }: HelpMo
     [setResolvedOpen]
   );
 
+  const handleOverlayKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === 'Escape') {
+        setResolvedOpen(false);
+      }
+    },
+    [setResolvedOpen]
+  );
+
   const items = useMemo(
     () => SHORTCUTS.map((shortcut) => ({
       label: shortcut.label,
@@ -112,12 +120,15 @@ export default function HelpModal({ open: controlledOpen, onOpenChange }: HelpMo
   if (!resolvedOpen) return null;
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 px-4 py-10 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="help-modal-title"
       onClick={handleOverlayClick}
+      onKeyDown={handleOverlayKeyDown}
+      tabIndex={-1}
     >
       <div
         ref={dialogRef}
@@ -151,7 +162,7 @@ export default function HelpModal({ open: controlledOpen, onOpenChange }: HelpMo
             {items.map((item) => (
               <li key={item.label} className="flex items-center justify-between rounded-2xl border border-border/40 bg-surface/80 px-4 py-3">
                 <span className="text-sm text-brand-foreground">{item.label}</span>
-                <span className="text-xs font-mono uppercase text-muted-foreground">{item.keys}</span>
+                <span className="font-mono text-xs uppercase text-muted-foreground">{item.keys}</span>
               </li>
             ))}
           </ul>

@@ -1,10 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { createProjectSchema, updateProjectSchema } from '@songforge/db/validation/projects';
-import { createProject, updateProject, deleteProject, getProjectBySlug, listProjects } from '@songforge/db';
-import type { OrgSession } from '@songforge/auth';
 import { requireOrgSession } from '@songforge/auth';
+import { createProjectSchema, updateProjectSchema , createProject, updateProject, deleteProject, getProjectBySlug, listProjects } from '@songforge/db';
+import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {
   success: boolean;
@@ -25,8 +23,14 @@ export async function createProjectAction(
     // Generate slug if not provided
     const slug = validated.slug || validated.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
     const project = await createProject({
-      orgId: session.orgId,
+      orgId: session.activeMembership.org.id,
       ...validated,
       slug
     });
@@ -57,9 +61,15 @@ export async function updateProjectAction(
     const session = await requireOrgSession();
     const validated = updateProjectSchema.parse(input);
 
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
     // Verify ownership
-    const project = await getProjectBySlug(projectId, session.orgId);
-    if (!project || project.orgId !== session.orgId) {
+    const project = await getProjectBySlug(projectId, session.activeMembership.org.id);
+    if (!project || project.orgId !== session.activeMembership.org.id) {
       return {
         success: false,
         error: 'Project not found or unauthorized'
@@ -89,8 +99,14 @@ export async function updateProjectAction(
 export async function deleteProjectAction(projectId: string): Promise<ActionResult<void>> {
   try {
     const session = await requireOrgSession();
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
 
-    await deleteProject(projectId, session.orgId);
+    await deleteProject(projectId, session.activeMembership.org.id);
 
     revalidatePath('/app/projects');
 
@@ -114,8 +130,15 @@ export async function listProjectsAction(options?: {
 }) {
   try {
     const session = await requireOrgSession();
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found',
+        data: { projects: [], total: 0, hasMore: false }
+      };
+    }
 
-    const result = await listProjects(session.orgId, options);
+    const result = await listProjects(session.activeMembership.org.id, options);
 
     return {
       success: true,

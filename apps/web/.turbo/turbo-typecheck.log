@@ -2,95 +2,137 @@
 > web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
-app/(app)/audience/[sessionId]/page.tsx(5,30): error TS2307: Cannot find module '../../../lib/supabase/client' or its corresponding type declarations.
-app/(app)/dashboard/distribute/page.tsx(4,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-app/(app)/dashboard/distribute/page.tsx(46,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/(app)/dashboard/distribute/page.tsx(222,36): error TS2322: Type '"default" | "outline"' is not assignable to type '"subtle" | "success" | "warning" | "danger" | "outline" | "solid" | null | undefined'.
-  Type '"default"' is not assignable to type '"subtle" | "success" | "warning" | "danger" | "outline" | "solid" | null | undefined'.
-app/(app)/dashboard/LeaseDialog.tsx(168,39): error TS2322: Type '"xs"' is not assignable to type '"sm" | "md" | "lg" | "icon" | null | undefined'.
-app/(app)/dashboard/page.tsx(4,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-app/(app)/dashboard/page.tsx(36,30): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/(app)/dashboard/page.tsx(40,76): error TS2339: Property 'set' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/(app)/dashboard/page.tsx(96,59): error TS7006: Parameter 'project' implicitly has an 'any' type.
-app/(app)/dashboard/page.tsx(99,55): error TS7006: Parameter 'project' implicitly has an 'any' type.
-app/(app)/dashboard/page.tsx(110,21): error TS7006: Parameter 'song' implicitly has an 'any' type.
-app/(app)/dashboard/page.tsx(116,7): error TS2322: Type '{}' is not assignable to type 'string'.
-app/(app)/dashboard/sessions/page.tsx(34,27): error TS2322: Type '"secondary"' is not assignable to type '"default" | "link" | "subtle" | "outline" | "solid" | "ghost" | "destructive" | null | undefined'.
-app/(app)/dashboard/style-guide/page.tsx(79,21): error TS2322: Type '"secondary"' is not assignable to type '"default" | "link" | "subtle" | "outline" | "solid" | "ghost" | "destructive" | null | undefined'.
-app/(app)/layout.tsx(18,35): error TS2339: Property 'get' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/(app)/layout.tsx(38,35): error TS2339: Property 'get' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/(app)/projects/[slug]/page.tsx(4,88): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-app/(app)/projects/[slug]/page.tsx(112,48): error TS7006: Parameter 's' implicitly has an 'any' type.
-app/(app)/projects/[slug]/page.tsx(119,51): error TS7006: Parameter 'a' implicitly has an 'any' type.
-app/(app)/projects/[slug]/page.tsx(126,51): error TS7006: Parameter 's' implicitly has an 'any' type.
-app/(app)/projects/[slug]/page.tsx(129,38): error TS7006: Parameter 'sum' implicitly has an 'any' type.
-app/(app)/projects/[slug]/page.tsx(129,43): error TS7006: Parameter 'c' implicitly has an 'any' type.
-app/(app)/projects/[slug]/page.tsx(130,39): error TS7006: Parameter 'c' implicitly has an 'any' type.
-app/(app)/projects/[slug]/page.tsx(136,57): error TS7006: Parameter 'l' implicitly has an 'any' type.
-app/(app)/search/SearchResults.tsx(107,26): error TS2304: Cannot find name 'cn'.
-app/(marketing)/p/[slug]/page.tsx(97,25): error TS2322: Type 'readonly [{ readonly name: "SongForge Collective"; readonly role: "Writers"; readonly pct: 60; }, { readonly name: "Mae Rivera"; readonly role: "Producer"; readonly pct: 40; }, { readonly name: "Atlas Mastering"; readonly role: "Mastering Engineer"; }] | readonly [...] | readonly [...]' is not assignable to type 'CreditListItem[]'.
-  The type 'readonly [{ readonly name: "SongForge Collective"; readonly role: "Writers"; readonly pct: 60; }, { readonly name: "Mae Rivera"; readonly role: "Producer"; readonly pct: 40; }, { readonly name: "Atlas Mastering"; readonly role: "Mastering Engineer"; }]' is 'readonly' and cannot be assigned to the mutable type 'CreditListItem[]'.
-app/(marketing)/page.tsx(5,28): error TS2307: Cannot find module '../components/Background' or its corresponding type declarations.
-app/actions/createLease.ts(6,42): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-app/actions/createLease.ts(30,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/actions/createLease.ts(33,76): error TS2339: Property 'set' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/actions/createSong.ts(7,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-app/actions/createSong.ts(42,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/actions/createSong.ts(45,76): error TS2339: Property 'set' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/actions/requestPayout.ts(6,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-app/actions/requestPayout.ts(20,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/actions/requestPayout.ts(23,76): error TS2339: Property 'set' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/api/auth/callback/route.ts(1,30): error TS2307: Cannot find module '../../../lib/supabase/server' or its corresponding type declarations.
-app/api/trpc/[trpc]/route.ts(13,9): error TS2322: Type 'OrgSession' is not assignable to type 'OrgAwareSession'.
-  Types of property 'session' are incompatible.
-    Property 'expires' is missing in type 'AppSession' but required in type 'Session'.
-app/providers.tsx(107,22): error TS2322: Type 'React.ReactNode' is not assignable to type 'import("/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/@types+react@18.3.26/node_modules/@types/react/index").ReactNode'.
-  Type 'bigint' is not assignable to type 'ReactNode'.
-app/remix/[roomId]/page.tsx(4,24): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-app/remix/[roomId]/page.tsx(15,35): error TS2339: Property 'getAll' does not exist on type 'Promise<ReadonlyRequestCookies>'.
-app/remix/[roomId]/RemixRoomClient.tsx(6,74): error TS2305: Module '"@songforge/ui"' has no exported member 'Slider'.
-app/remix/[roomId]/RemixRoomClient.tsx(114,33): error TS7006: Parameter 'value' implicitly has an 'any' type.
-app/style-guide/page.tsx(39,21): error TS2322: Type '"secondary"' is not assignable to type '"default" | "link" | "subtle" | "outline" | "solid" | "ghost" | "destructive" | null | undefined'.
-components/app/ProjectBadge.tsx(23,7): error TS2322: Type '"default" | "outline"' is not assignable to type '"subtle" | "success" | "warning" | "danger" | "outline" | "solid" | null | undefined'.
-  Type '"default"' is not assignable to type '"subtle" | "success" | "warning" | "danger" | "outline" | "solid" | null | undefined'.
-components/app/SongList.tsx(226,22): error TS2345: Argument of type '(prev: SongListItem[]) => { title: string; key?: string | undefined; tempo?: number | undefined; }[]' is not assignable to parameter of type 'SetStateAction<SongListItem[]>'.
-  Type '(prev: SongListItem[]) => { title: string; key?: string | undefined; tempo?: number | undefined; }[]' is not assignable to type '(prevState: SongListItem[]) => SongListItem[]'.
-    Type '{ title: string; key?: string | undefined; tempo?: number | undefined; }[]' is not assignable to type 'SongListItem[]'.
-      Property 'id' is missing in type '{ title: string; key?: string | undefined; tempo?: number | undefined; }' but required in type 'SongListItem'.
-components/audio/WaveformPreview.tsx(31,7): error TS2353: Object literal may only specify known properties, and 'responsive' does not exist in type 'WaveSurferOptions'.
-components/ui/Tooltip.tsx(21,22): error TS2554: Expected 1 arguments, but got 0.
-lib/actions/assets.ts(4,76): error TS2307: Cannot find module '@songforge/db/validation/assets' or its corresponding type declarations.
-lib/actions/assets.ts(5,81): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/assets.ts(6,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
-lib/actions/assets.ts(96,49): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/assets.ts(264,47): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/assets.ts(278,25): error TS7006: Parameter 'a' implicitly has an 'any' type.
-lib/actions/licenses.ts(4,45): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/licenses.ts(5,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
-lib/actions/licenses.ts(6,34): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/licenses.ts(7,38): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
-lib/actions/licenses.ts(77,27): error TS7006: Parameter 'l' implicitly has an 'any' type.
-lib/actions/projects.ts(4,58): error TS2307: Cannot find module '@songforge/db/validation/projects' or its corresponding type declarations.
-lib/actions/projects.ts(5,93): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/projects.ts(7,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
-lib/actions/royalties.ts(4,73): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/royalties.ts(5,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
-lib/actions/search.ts(3,53): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/search.ts(4,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
-lib/actions/search.ts(29,10): error TS7006: Parameter 'p' implicitly has an 'any' type.
-lib/actions/search.ts(32,34): error TS7006: Parameter 'p' implicitly has an 'any' type.
-lib/actions/search.ts(50,14): error TS7006: Parameter 's' implicitly has an 'any' type.
-lib/actions/search.ts(53,35): error TS7006: Parameter 's' implicitly has an 'any' type.
-lib/actions/search.ts(73,49): error TS7006: Parameter 'a' implicitly has an 'any' type.
-lib/actions/search.ts(75,36): error TS7006: Parameter 'a' implicitly has an 'any' type.
-lib/actions/songs.ts(4,52): error TS2307: Cannot find module '@songforge/db/validation/songs' or its corresponding type declarations.
-lib/actions/songs.ts(5,63): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/songs.ts(6,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
-lib/actions/songs.ts(7,34): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/splits.ts(4,64): error TS2307: Cannot find module '@songforge/db/validation/splits' or its corresponding type declarations.
-lib/actions/splits.ts(5,143): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/splits.ts(6,10): error TS2305: Module '"@songforge/auth"' has no exported member 'requireOrgSession'.
-lib/actions/splits.ts(7,34): error TS2307: Cannot find module '@songforge/db' or its corresponding type declarations.
-lib/actions/splits.ts(88,53): error TS2307: Cannot find module '@songforge/db/validation' or its corresponding type declarations.
-lib/actions/splits.ts(116,53): error TS2307: Cannot find module '@songforge/db/validation' or its corresponding type declarations.
+app/(app)/music/MusicPageClient.tsx(21,28): error TS2307: Cannot find module '@/components/app/PageHeader' or its corresponding type declarations.
+app/(app)/music/MusicPageClient.tsx(22,28): error TS2307: Cannot find module '@/components/app/EmptyState' or its corresponding type declarations.
+app/(app)/music/page.tsx(4,36): error TS2307: Cannot find module '@/lib/actions/projects' or its corresponding type declarations.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(11,3): error TS2300: Duplicate identifier 'Award'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(25,40): error TS2307: Cannot find module '@/lib/actions/artistProfile' or its corresponding type declarations.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(26,20): error TS2305: Module '"@prisma/client"' has no exported member 'BandMember'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(26,32): error TS2300: Duplicate identifier 'Award'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(26,32): error TS2305: Module '"@prisma/client"' has no exported member 'Award'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(31,13): error TS2749: 'Award' refers to a value, but is being used as a type here. Did you mean 'typeof Award'?
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(37,11): error TS2339: Property 'toast' does not exist on type 'ToastContextValue'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(41,14): error TS2339: Property 'bio' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(42,19): error TS2339: Property 'location' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(43,16): error TS2339: Property 'genre' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(44,21): error TS2339: Property 'influences' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(45,18): error TS2339: Property 'founded' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(46,23): error TS2339: Property 'contactEmail' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(47,23): error TS2339: Property 'bookingEmail' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(49,23): error TS2339: Property 'socialLinks' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(50,26): error TS2339: Property 'spotifyArtistId' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(51,23): error TS2339: Property 'appleMusicId' does not exist on type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(107,32): error TS7006: Parameter 'g' implicitly has an 'any' type.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(124,42): error TS7006: Parameter 'i' implicitly has an 'any' type.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(211,36): error TS7006: Parameter 'genre' implicitly has an 'any' type.
+app/(app)/settings/artist-profile/ArtistProfileForm.tsx(240,41): error TS7006: Parameter 'influence' implicitly has an 'any' type.
+app/(app)/settings/artist-profile/page.tsx(15,15): error TS2339: Property 'role' does not exist on type 'OrgSession'.
+app/(app)/settings/artist-profile/page.tsx(15,43): error TS2339: Property 'role' does not exist on type 'OrgSession'.
+app/(app)/settings/artist-profile/page.tsx(22,7): error TS2353: Object literal may only specify known properties, and 'bandMembers' does not exist in type 'OrgInclude<DefaultArgs>'.
+app/(app)/settings/artist-profile/page.tsx(44,26): error TS2322: Type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; }' is not assignable to type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+  Type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; }' is missing the following properties from type '{ bandMembers: BandMember[]; awards: Award[]; }': bandMembers, awards
+app/(app)/tours/[slug]/page.tsx(20,29): error TS2339: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/tours/[slug]/TourDetailClient.tsx(5,24): error TS2307: Cannot find module 'date-fns' or its corresponding type declarations.
+app/(app)/tours/[slug]/TourDetailClient.tsx(21,28): error TS2307: Cannot find module '@/components/app/PageHeader' or its corresponding type declarations.
+app/(app)/tours/[slug]/TourDetailClient.tsx(22,28): error TS2307: Cannot find module '@/components/app/EmptyState' or its corresponding type declarations.
+app/(app)/tours/[slug]/TourDetailClient.tsx(23,15): error TS2305: Module '"@prisma/client"' has no exported member 'Tour'.
+app/(app)/tours/[slug]/TourDetailClient.tsx(23,21): error TS2305: Module '"@prisma/client"' has no exported member 'Show'.
+app/(app)/tours/[slug]/TourDetailClient.tsx(23,27): error TS2305: Module '"@prisma/client"' has no exported member 'Venue'.
+app/(app)/tours/[slug]/TourDetailClient.tsx(43,5): error TS7006: Parameter 'show' implicitly has an 'any' type.
+app/(app)/tours/[slug]/TourDetailClient.tsx(46,5): error TS7006: Parameter 'show' implicitly has an 'any' type.
+app/(app)/tours/[slug]/TourDetailClient.tsx(122,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/tours/[slug]/TourDetailClient.tsx(130,29): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ readonly planning: "warning"; readonly announced: "info"; readonly ongoing: "success"; readonly completed: "subtle"; readonly cancelled: "danger"; }'.
+app/(app)/tours/[slug]/TourDetailClient.tsx(187,37): error TS7006: Parameter 'show' implicitly has an 'any' type.
+app/(app)/tours/[slug]/TourDetailClient.tsx(201,33): error TS7006: Parameter 'show' implicitly has an 'any' type.
+app/(app)/tours/[slug]/TourDetailClient.tsx(275,29): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ readonly scheduled: "info"; readonly soldout: "success"; readonly cancelled: "danger"; readonly postponed: "warning"; readonly completed: "subtle"; }'.
+app/(app)/tours/NewTourDialog.tsx(19,34): error TS2307: Cannot find module '@/lib/actions/tours' or its corresponding type declarations.
+app/(app)/tours/NewTourDialog.tsx(20,10): error TS2305: Module '"@songforge/db"' has no exported member 'generateSlug'.
+app/(app)/tours/NewTourDialog.tsx(21,15): error TS2305: Module '"@prisma/client"' has no exported member 'Tour'.
+app/(app)/tours/NewTourDialog.tsx(35,11): error TS2339: Property 'toast' does not exist on type 'ToastContextValue'.
+app/(app)/tours/page.tsx(3,33): error TS2307: Cannot find module '@/lib/actions/tours' or its corresponding type declarations.
+app/(app)/tours/TourCard.tsx(4,24): error TS2307: Cannot find module 'date-fns' or its corresponding type declarations.
+app/(app)/tours/TourCard.tsx(8,15): error TS2305: Module '"@prisma/client"' has no exported member 'Tour'.
+app/(app)/tours/TourCard.tsx(50,29): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{ readonly planning: "warning"; readonly announced: "info"; readonly ongoing: "success"; readonly completed: "subtle"; readonly cancelled: "danger"; }'.
+app/(app)/tours/ToursPageClient.tsx(6,28): error TS2307: Cannot find module '@/components/app/PageHeader' or its corresponding type declarations.
+app/(app)/tours/ToursPageClient.tsx(7,28): error TS2307: Cannot find module '@/components/app/EmptyState' or its corresponding type declarations.
+app/(app)/tours/ToursPageClient.tsx(10,15): error TS2305: Module '"@prisma/client"' has no exported member 'Tour'.
+app/(marketing)/artist/[slug]/ArtistPageClient.tsx(5,24): error TS2307: Cannot find module 'date-fns' or its corresponding type declarations.
+app/(marketing)/artist/[slug]/ArtistPageClient.tsx(26,29): error TS2305: Module '"@prisma/client"' has no exported member 'Tour'.
+app/(marketing)/artist/[slug]/ArtistPageClient.tsx(26,35): error TS2305: Module '"@prisma/client"' has no exported member 'Show'.
+app/(marketing)/artist/[slug]/ArtistPageClient.tsx(26,41): error TS2305: Module '"@prisma/client"' has no exported member 'Venue'.
+app/(marketing)/artist/[slug]/page.tsx(34,7): error TS2353: Object literal may only specify known properties, and 'tours' does not exist in type 'OrgInclude<DefaultArgs>'.
+app/(marketing)/artist/[slug]/page.tsx(88,28): error TS2322: Type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; }' is not assignable to type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; } & { ...; }'.
+  Type '{ id: string; slug: string; name: string; type: OrgType; brandColor: string | null; description: string | null; website: string | null; createdAt: Date; updatedAt: Date; }' is missing the following properties from type '{ projects: ({ id: string; slug: string; name: string; description: string | null; createdAt: Date; updatedAt: Date; orgId: string; status: ProjectStatus; visibility: ProjectVisibility; tagline: string | null; coverImage: string | null; } & { ...; })[]; tours: any[]; }': projects, tours
+app/(marketing)/page.tsx(5,36): error TS2307: Cannot find module '@/components/animations/AnimatedBackground' or its corresponding type declarations.
+app/(marketing)/page.tsx(6,35): error TS2307: Cannot find module '@/components/animations/WaveformAnimation' or its corresponding type declarations.
+app/(marketing)/page.tsx(7,28): error TS2307: Cannot find module '@/components/animations/MusicNotes' or its corresponding type declarations.
+lib/actions/artistProfile.ts(4,18): error TS2305: Module '"@songforge/db"' has no exported member 'generateSlug'.
+lib/actions/artistProfile.ts(49,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(49,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(87,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(87,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(102,37): error TS2339: Property 'bandMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(108,35): error TS2339: Property 'bandMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(122,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(122,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(129,31): error TS2339: Property 'bandMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(146,38): error TS2339: Property 'bandMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(157,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(157,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(163,31): error TS2339: Property 'bandMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(172,16): error TS2339: Property 'bandMember' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(181,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(181,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(195,30): error TS2339: Property 'award' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(208,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(208,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(214,30): error TS2339: Property 'award' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(223,16): error TS2339: Property 'award' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(232,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(232,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(248,37): error TS2339: Property 'pressRelease' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(263,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(263,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(269,32): error TS2339: Property 'pressRelease' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(286,39): error TS2339: Property 'pressRelease' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(298,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(298,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/artistProfile.ts(304,32): error TS2339: Property 'pressRelease' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/artistProfile.ts(313,16): error TS2339: Property 'pressRelease' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(4,18): error TS2305: Module '"@songforge/db"' has no exported member 'validateSlug'.
+lib/actions/tours.ts(57,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(57,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(77,29): error TS2339: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(91,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(91,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(97,29): error TS2339: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(115,36): error TS2339: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(127,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(127,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(133,29): error TS2339: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(142,16): error TS2339: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(151,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(151,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(179,31): error TS2339: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(189,29): error TS2339: Property 'show' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(206,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(206,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(212,29): error TS2339: Property 'show' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(235,36): error TS2339: Property 'show' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(250,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(250,18): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(256,29): error TS2339: Property 'show' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(265,16): error TS2339: Property 'show' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(277,11): error TS2339: Property 'role' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(306,30): error TS2339: Property 'venue' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(317,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(323,30): error TS2339: Property 'tour' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(337,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(343,30): error TS2339: Property 'show' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(358,11): error TS2339: Property 'orgId' does not exist on type 'OrgAwareSession'.
+lib/actions/tours.ts(360,30): error TS2339: Property 'show' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(380,31): error TS2339: Property 'venue' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(409,33): error TS2339: Property 'fanEngagement' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(421,25): error TS2339: Property 'fanEngagement' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/tours.ts(428,23): error TS2339: Property 'fanEngagement' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
  ELIFECYCLE  Command failed with exit code 2.

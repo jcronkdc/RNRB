@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '../../../lib/supabase/client';
-import { Button } from '@songforge/ui';
+import { useState } from 'react';
+
 import { NewProjectDialog } from '../../../components/app/NewProjectDialog';
+import { createClient } from '../../../lib/supabase/client';
+
 
 export function ProjectsClient({ children }: { children: React.ReactNode }) {
   const router = useRouter();

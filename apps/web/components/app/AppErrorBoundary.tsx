@@ -1,8 +1,9 @@
 'use client';
 
-import { ErrorBoundary } from '../ErrorBoundary';
 import { Button } from '@songforge/ui';
 import Link from 'next/link';
+
+import { ErrorBoundary } from '../ErrorBoundary';
 
 /**
  * Error boundary specifically for the authenticated app area.

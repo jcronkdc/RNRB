@@ -1,12 +1,15 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { createServerClient } from '@supabase/ssr';
 import { prisma } from '@songforge/db';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@songforge/ui';
-import { NewSongDialog } from './NewSongDialog';
-import { LeaseDialog } from './LeaseDialog';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import crypto from 'node:crypto';
+
+import { LeaseDialog } from './LeaseDialog';
+import { NewSongDialog } from './NewSongDialog';
 import { RemixQrModal } from './RemixQrModal';
+
+export const dynamic = 'force-dynamic';
 
 type SongMetadata = {
   status?: string;
@@ -25,8 +28,8 @@ type SongSummary = {
   stems: Array<{ type: string; url: string }>;
 };
 
-function createServerSupabaseClient() {
-  const cookieStore = cookies();
+async function createServerSupabaseClient() {
+  const cookieStore = await cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -93,10 +96,10 @@ async function loadSongs(userId: string): Promise<SongSummary[]> {
     return [];
   }
 
-  const projectIdToName = new Map(accessibleProjects.map((project) => [project.id, project.name] as const));
+  const projectIdToName = new Map(accessibleProjects.map((project: { id: string; name: string }) => [project.id, project.name] as const));
 
   const songs = await prisma.song.findMany({
-    where: { projectId: { in: accessibleProjects.map((project) => project.id) } },
+    where: { projectId: { in: accessibleProjects.map((project: { id: string }) => project.id) } },
     select: {
       id: true,
       title: true,
@@ -107,21 +110,21 @@ async function loadSongs(userId: string): Promise<SongSummary[]> {
     orderBy: { createdAt: 'desc' }
   });
 
-  return songs.map((song) => {
+  return songs.map((song: { id: string; title: string; createdAt: Date; description: string | null; projectId: string }) => {
     const metadata = parseMetadata(song.description);
     return {
       id: song.id,
       title: song.title,
       createdAt: song.createdAt,
       projectName: projectIdToName.get(song.projectId) ?? 'Untitled Project',
-      status: metadata.status ?? 'ready',
-      stems: metadata.stems ?? []
+      status: (typeof metadata.status === 'string' ? metadata.status : undefined) ?? 'ready',
+      stems: (metadata.stems as Array<{ type: string; url: string }> | undefined) ?? []
     } satisfies SongSummary;
   });
 }
 
 export default async function DashboardPage() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const {
     data: { session }
   } = await supabase.auth.getSession();
@@ -191,6 +194,7 @@ export default async function DashboardPage() {
                           <div className="absolute inset-0 animate-pulse bg-[repeating-linear-gradient(90deg,rgba(139,92,246,0.18)_0,rgba(139,92,246,0.18)_6px,transparent_6px,transparent_12px)]" />
                         </div>
                         <audio controls preload="metadata" className="w-full max-w-xs rounded-xl">
+                          <track kind="captions" />
                           <source src={stem.url} type="audio/mpeg" />
                           Your browser does not support audio playback.
                         </audio>

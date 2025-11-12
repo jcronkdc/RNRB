@@ -40,7 +40,10 @@ export default function WaveformMini({ file }: WaveformMiniProps) {
       try {
         setError(null);
         setPeaks(null);
-        const AudioCtor = (window.AudioContext || (window as any).webkitAudioContext) as
+        interface WebkitWindow extends Window {
+          webkitAudioContext?: typeof AudioContext;
+        }
+        const AudioCtor = (window.AudioContext || (window as WebkitWindow).webkitAudioContext) as
           | (new () => AudioContext)
           | undefined;
         if (!AudioCtor) {
@@ -162,7 +165,9 @@ export default function WaveformMini({ file }: WaveformMiniProps) {
           src={audioUrl}
           className="w-full"
           aria-label={`Audio preview for ${file.name}`}
-        />
+        >
+          <track kind="captions" />
+        </audio>
       ) : null}
       <p className="text-xs text-muted-foreground">Preview length: {durationLabel}</p>
     </div>

@@ -1,10 +1,10 @@
 'use server';
 
-import OpenAI from 'openai';
+import { prisma } from '@songforge/db';
+import { createServerClient } from '@supabase/ssr';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
-import { prisma } from '@songforge/db';
+import OpenAI from 'openai';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -32,8 +32,8 @@ function streamFromMessage(message: StreamMessage) {
   });
 }
 
-function getSupabaseClient() {
-  const cookieStore = cookies();
+async function getSupabaseClient() {
+  const cookieStore = await cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -153,27 +153,55 @@ function collectStemCandidates(payload: unknown): StemResult[] {
     return [];
   };
 
+  type PayloadItem = Record<string, unknown> & {
+    stem_type?: string;
+    type?: string;
+    name?: string;
+    stem_url?: string;
+    url?: string;
+    audio_url?: string;
+    audioUrl?: string;
+    href?: string;
+  };
+
+  type PayloadStructure = Record<string, unknown> & {
+    stems?: unknown;
+    outputs?: { stems?: unknown };
+    result?: { stems?: unknown };
+    tracks?: unknown;
+    clips?: unknown;
+    audio?: unknown;
+    sources?: unknown;
+    parts?: unknown;
+    audio_url?: string;
+    audioUrl?: string;
+    track_url?: string;
+    url?: string;
+  };
+
+  const typedPayload = payload as PayloadStructure;
   const maybeArrays = [
-    (payload as any).stems,
-    (payload as any).outputs?.stems,
-    (payload as any).result?.stems,
-    (payload as any).tracks,
-    (payload as any).clips,
-    (payload as any).audio,
-    (payload as any).sources,
-    (payload as any).parts
+    typedPayload.stems,
+    typedPayload.outputs?.stems,
+    typedPayload.result?.stems,
+    typedPayload.tracks,
+    typedPayload.clips,
+    typedPayload.audio,
+    typedPayload.sources,
+    typedPayload.parts
   ];
 
   for (const candidate of maybeArrays) {
     for (const item of extractArray(candidate)) {
       if (!item || typeof item !== 'object') continue;
-      const type = ((item as any).stem_type ?? (item as any).type ?? (item as any).name ?? '').toString().toLowerCase();
+      const typedItem = item as PayloadItem;
+      const type = (typedItem.stem_type ?? typedItem.type ?? typedItem.name ?? '').toString().toLowerCase();
       const url =
-        (item as any).stem_url ??
-        (item as any).url ??
-        (item as any).audio_url ??
-        (item as any).audioUrl ??
-        (item as any).href ??
+        typedItem.stem_url ??
+        typedItem.url ??
+        typedItem.audio_url ??
+        typedItem.audioUrl ??
+        typedItem.href ??
         null;
       if (typeof url === 'string' && url) {
         results.push({ type, url });
@@ -182,10 +210,10 @@ function collectStemCandidates(payload: unknown): StemResult[] {
   }
 
   const directUrls = [
-    (payload as any).audio_url,
-    (payload as any).audioUrl,
-    (payload as any).track_url,
-    (payload as any).url
+    typedPayload.audio_url,
+    typedPayload.audioUrl,
+    typedPayload.track_url,
+    typedPayload.url
   ];
 
   for (const directUrl of directUrls) {
@@ -275,7 +303,7 @@ async function generateSunoStems(
 
     const createPayload = await createResponse.json();
     let stems = ensureCanonicalStems(songId, collectStemCandidates(createPayload));
-    let jobId = createPayload?.job_id ?? createPayload?.jobId ?? createPayload?.id ?? createPayload?.taskId ?? null;
+    const jobId = createPayload?.job_id ?? createPayload?.jobId ?? createPayload?.id ?? createPayload?.taskId ?? null;
 
     if ((!stems || stems.length === 0) && jobId) {
       for (let attempt = 0; attempt < 12; attempt += 1) {
@@ -347,7 +375,7 @@ export async function createSongAction(formData: FormData) {
 
   const { title, mood, prompt } = parsed.data;
 
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   const {
     data: { session }
   } = await supabase.auth.getSession();

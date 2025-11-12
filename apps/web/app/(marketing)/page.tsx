@@ -1,8 +1,12 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowRight, Music, Users, HeartHandshake, Sparkles, Mic, FileText, TrendingUp } from 'lucide-react';
 import { Button } from '@songforge/ui';
-import { Background } from '../components/Background';
+import { ArrowRight, Music, Users, HeartHandshake, Sparkles, Mic, FileText, TrendingUp } from 'lucide-react';
+import { type Metadata } from 'next';
+import Link from 'next/link';
+import { AnimatedBackground } from '@/components/animations/AnimatedBackground';
+import { WaveformAnimation } from '@/components/animations/WaveformAnimation';
+import { MusicNotes } from '@/components/animations/MusicNotes';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Home',
@@ -15,9 +19,11 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 py-24 sm:px-10 sm:py-32 lg:py-40">
         <div className="absolute inset-0 -z-10">
+          <AnimatedBackground variant="gradient" intensity="medium" />
           <div className="sf-bg-gradient" />
           <div className="sf-film-grain" />
         </div>
+        <MusicNotes />
         
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-brand-primary/20 bg-brand-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-brand-primary backdrop-blur-sm">
@@ -47,6 +53,14 @@ export default function HomePage() {
             <Button asChild variant="outline" size="lg" className="min-w-[12rem] text-base">
               <Link href="#what-we-make">See How It Works</Link>
             </Button>
+          </div>
+          
+          <div className="mt-16 flex justify-center">
+            <WaveformAnimation 
+              className="h-32 w-full max-w-2xl" 
+              color="rgb(248 113 113 / 0.3)"
+              bars={80}
+            />
           </div>
         </div>
       </section>

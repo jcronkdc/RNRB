@@ -1,5 +1,7 @@
 import { Button } from '@songforge/ui';
 
+export const dynamic = 'force-dynamic';
+
 const placements = [
   {
     placement: 'Cedar & Rust — indie film trailer',

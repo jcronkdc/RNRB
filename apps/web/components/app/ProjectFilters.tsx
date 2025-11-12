@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Filter, X } from 'lucide-react';
 import { Button, cn } from '@songforge/ui';
+import { Filter } from 'lucide-react';
+import { useState } from 'react';
 
 type VisibilityFilter = 'all' | 'private' | 'org' | 'public';
 type SortOption = 'newest' | 'oldest' | 'name-asc' | 'name-desc';
@@ -68,7 +68,7 @@ export function ProjectFilters({
 
             <div className="space-y-4">
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.32em] text-brand-muted-foreground">
+                <label htmlFor="visibility-filter" className="mb-2 block text-xs font-semibold uppercase tracking-[0.32em] text-brand-muted-foreground">
                   Visibility
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -90,10 +90,11 @@ export function ProjectFilters({
               </div>
 
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.32em] text-brand-muted-foreground">
+                <label htmlFor="sort-filter" className="mb-2 block text-xs font-semibold uppercase tracking-[0.32em] text-brand-muted-foreground">
                   Sort By
                 </label>
                 <select
+                  id="sort-filter"
                   value={sort}
                   onChange={(e) => onSortChange(e.target.value as SortOption)}
                   className="w-full rounded-lg border border-border/60 bg-surface px-3 py-2 text-sm text-brand-foreground focus-visible:outline focus-visible:ring-2 focus-visible:ring-brand-primary"

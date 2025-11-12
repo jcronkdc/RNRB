@@ -2,24 +2,3 @@
 > @songforge/auth@0.1.0 lint /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/auth
 > eslint 'src/**/*.{ts,tsx}'
 
-
-/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/auth/src/auth.ts
-   3:1   warning  `next-auth` import should occur before import of `nodemailer`                                                                                                                                                                                                        import/order
-   3:48  warning  '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next-auth@4.24.7_next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19._v43pa445egkg7biafagfvtxqxy/node_modules/next-auth/index.d.ts' imported multiple times  import/no-duplicates
-   4:1   warning  `next-auth` type import should occur before import of `nodemailer`                                                                                                                                                                                                   import/order
-   4:30  warning  '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next-auth@4.24.7_next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19._v43pa445egkg7biafagfvtxqxy/node_modules/next-auth/index.d.ts' imported multiple times  import/no-duplicates
-   5:1   warning  `next-auth/jwt` type import should occur before import of `nodemailer`                                                                                                                                                                                               import/order
-   6:1   warning  `next-auth/providers/apple` import should occur before import of `nodemailer`                                                                                                                                                                                        import/order
-   7:1   warning  `next-auth/providers/email` import should occur before import of `nodemailer`                                                                                                                                                                                        import/order
-   8:1   warning  There should be no empty line within import group                                                                                                                                                                                                                    import/order
-   8:1   warning  `next-auth/providers/google` import should occur before import of `nodemailer`                                                                                                                                                                                       import/order
-  10:1   warning  `@songforge/db` import should occur before import of `nodemailer`                                                                                                                                                                                                    import/order
-
-/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/auth/src/session.ts
-  2:1  warning  There should be no empty line within import group                         import/order
-  4:1  warning  `@songforge/db` type import should occur before import of `next/headers`  import/order
-  5:1  warning  `@songforge/db` import should occur before import of `next/headers`       import/order
-
-✖ 13 problems (0 errors, 13 warnings)
-  0 errors and 12 warnings potentially fixable with the `--fix` option.
-

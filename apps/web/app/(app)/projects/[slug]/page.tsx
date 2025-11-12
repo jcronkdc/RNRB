@@ -1,21 +1,23 @@
-import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
 import { getOrgSession } from '@songforge/auth';
 import { getProjectBySlug, listSongs, listAssets, listSplitSheets, listLicenses } from '@songforge/db';
-import type { SongListItem } from '../../../../components/app/SongList';
-import type { AssetListItem } from '../../../../components/app/AssetList';
-import type { SplitListItem } from '../../../../components/app/SplitList';
-import type { LicenseListItem } from '../../../../components/app/LicenseList';
-import { ProjectDetailWrapper } from './ProjectDetailWrapper';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+import { ProjectDetailWrapper } from './ProjectDetailWrapper';
+import type { AssetListItem } from '../../../../components/app/AssetList';
+import type { LicenseListItem } from '../../../../components/app/LicenseList';
+import type { SongListItem } from '../../../../components/app/SongList';
+import type { SplitListItem } from '../../../../components/app/SplitList';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   const enableBypass = process.env.DEMO_BYPASS === '1';
   let orgId: string | null = null;
 
   try {
     const session = await getOrgSession();
     orgId = session.orgId;
-  } catch (error) {
+  } catch {
     if (enableBypass) {
       orgId = 'demo-org';
     } else {
@@ -33,7 +35,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     };
   }
 
-  const project = await getProjectBySlug(params.slug, orgId);
+  const project = await getProjectBySlug(slug, orgId);
 
   if (!project) {
     return {
@@ -74,14 +76,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const enableBypass = process.env.DEMO_BYPASS === '1';
   let orgId: string | null = null;
 
   try {
     const session = await getOrgSession();
     orgId = session.orgId;
-  } catch (error) {
+  } catch {
     if (enableBypass) {
       orgId = 'demo-org';
     } else {
@@ -94,7 +97,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
   }
 
   // Fetch project from database
-  const project = await getProjectBySlug(params.slug, orgId);
+  const project = await getProjectBySlug(slug, orgId);
 
   if (!project) {
     notFound();
@@ -109,31 +112,31 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
   ]);
 
   // Transform to UI types
-  const songsData: SongListItem[] = songs.map((s) => ({
+  const songsData: SongListItem[] = songs.map((s: { id: string; title: string; key: string | null; tempo: number | null }) => ({
     id: s.id,
     title: s.title,
     key: s.key ?? undefined,
     tempo: s.tempo ?? undefined
   }));
 
-  const assetsData: AssetListItem[] = assets.map((a) => ({
+  const assetsData: AssetListItem[] = assets.map((a: { id: string; name: string; assetType: string; bytes: bigint }) => ({
     id: a.id,
     name: a.name,
-    type: a.assetType,
+    type: a.assetType as 'audio' | 'image' | 'lyric' | 'pdf' | 'chart',
     bytes: Number(a.bytes)
   }));
 
-  const splitsData: SplitListItem[] = splits.map((s) => ({
+  const splitsData: SplitListItem[] = splits.map((s: { id: string; title: string; contributors: Array<{ name: string; percentage: number }> }) => ({
     id: s.id,
     title: s.title,
-    totalPct: s.contributors.reduce((sum, c) => sum + c.percentage, 0),
-    contributors: s.contributors.map((c) => ({
+    totalPct: s.contributors.reduce((sum: number, c: { percentage: number }) => sum + c.percentage, 0),
+    contributors: s.contributors.map((c: { name: string; percentage: number }) => ({
       name: c.name,
       pct: c.percentage
     }))
   }));
 
-  const licensesData: LicenseListItem[] = licenses.map((l) => ({
+  const licensesData: LicenseListItem[] = licenses.map((l: { id: string; template: string; title: string; createdAt: Date }) => ({
     id: l.id,
     template: l.template.replace(/_/g, ' '),
     title: l.title,
@@ -142,10 +145,10 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
 
   return (
     <ProjectDetailWrapper
-      projectSlug={params.slug}
+      projectSlug={slug}
       project={{
         name: project.name,
-        visibility: project.visibility.toLowerCase() as 'private' | 'org' | 'public',
+        visibility: project.visibility as 'private' | 'org' | 'public',
         createdAt: project.createdAt.toISOString(),
         description: project.description || 'No description yet.'
       }}

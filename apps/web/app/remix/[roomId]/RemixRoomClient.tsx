@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
-import { motion } from 'framer-motion';
-import { Users, Volume2 } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label, Slider } from '@songforge/ui';
+import { Users, Volume2 } from 'lucide-react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
+
 import { useToast } from '../../../components/ui/Toast';
 
 interface RemixRoomClientProps {

@@ -1,6 +1,5 @@
-import { ReactNode } from 'react';
-import { Button } from '@songforge/ui';
-import { cn } from '@songforge/ui';
+import { Button , cn } from '@songforge/ui';
+import { type ReactNode } from 'react';
 
 interface EmptyStateProps {
   icon: ReactNode;

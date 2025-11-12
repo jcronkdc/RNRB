@@ -1,9 +1,10 @@
-'use server';
-
-import PageHeader from '../../../../components/app/PageHeader';
-import OrgSettingsForm from '../../../../components/app/OrgSettingsForm';
 import { setActiveOrgCookie } from '@songforge/auth';
 import { redirect } from 'next/navigation';
+
+import OrgSettingsForm from '../../../../components/app/OrgSettingsForm';
+import PageHeader from '../../../../components/app/PageHeader';
+
+export const dynamic = 'force-dynamic';
 
 const ORG_ID = 'org-songforge-foundation';
 

@@ -1,9 +1,9 @@
 'use client';
 
-import { ReactNode, useMemo } from 'react';
+import { Button, cn } from '@songforge/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button, cn } from '@songforge/ui';
+import { type ReactNode, useMemo } from 'react';
 
 const NAV_ITEMS = [
   { label: 'Songs', href: '/dashboard' },

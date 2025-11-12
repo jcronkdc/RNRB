@@ -1,11 +1,11 @@
 'use client';
 
+import { Music, FolderOpen } from 'lucide-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Button } from '@songforge/ui';
-import { Music, FolderOpen } from 'lucide-react';
-import ProjectList from '../../../components/app/ProjectList';
+
 import { SongList } from './SongList';
+import ProjectList from '../../../components/app/ProjectList';
 
 const TABS = [
   { id: 'overview', label: 'Overview', icon: FolderOpen },
@@ -83,6 +83,16 @@ export function ProjectsDashboardTabs({ projects, songs }: ProjectsDashboardTabs
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

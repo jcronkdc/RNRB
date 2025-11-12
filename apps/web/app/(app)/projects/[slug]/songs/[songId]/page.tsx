@@ -1,6 +1,7 @@
-import { createClient } from '../../../../../../lib/supabase/server';
 import { notFound } from 'next/navigation';
+
 import { SongPageClient } from './SongPageClient';
+import { createClient } from '../../../../../../lib/supabase/server';
 
 async function getSong(songId: string) {
   const supabase = await createClient();
@@ -22,8 +23,9 @@ async function getSong(songId: string) {
   return song;
 }
 
-export default async function SongPage({ params }: { params: { songId: string } }) {
-  const song = await getSong(params.songId);
+export default async function SongPage({ params }: { params: Promise<{ songId: string }> }) {
+  const { songId } = await params;
+  const song = await getSong(songId);
 
   if (!song) {
     notFound();

@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import { Button } from '@songforge/ui';
+import Link from 'next/link';
 
 const WHY_POINTS = [
   {
@@ -22,6 +22,8 @@ const FUND_USAGE = [
   '10%: Open-source platform maintenance',
   '5%: Operational reserves & compliance'
 ];
+
+export const dynamic = 'force-dynamic';
 
 export default function DonatePage() {
   return (

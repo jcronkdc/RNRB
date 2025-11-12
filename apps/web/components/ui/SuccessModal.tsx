@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Button } from '@songforge/ui';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
-import { Button } from '@songforge/ui';
+import { useEffect, useRef, useState } from 'react';
+
 import { Confetti } from './Confetti';
 
 interface SuccessModalProps {

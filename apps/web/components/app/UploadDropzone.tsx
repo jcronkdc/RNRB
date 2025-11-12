@@ -1,5 +1,7 @@
 'use client';
 
+import { Badge, Button, cn } from '@songforge/ui';
+import { Inbox, X, Hash } from 'lucide-react';
 import {
   useCallback,
   useMemo,
@@ -8,8 +10,7 @@ import {
   type ChangeEvent,
   type DragEvent
 } from 'react';
-import { Badge, Button, cn } from '@songforge/ui';
-import { Inbox, X, Hash } from 'lucide-react';
+
 import WaveformMini from './WaveformMini';
 
 const ACCEPT_EXTENSIONS = ['.wav', '.aiff', '.mp3', '.flac', '.txt'];

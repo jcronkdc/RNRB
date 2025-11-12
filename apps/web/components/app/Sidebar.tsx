@@ -1,17 +1,19 @@
 'use client';
 
+import { cn } from '@songforge/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
-import { cn } from '@songforge/ui';
 
 export const APP_NAV_ITEMS = [
-  { name: 'Projects', href: '/app/projects' },
-  { name: 'Sessions', href: '/app/sessions' },
-  { name: 'Assets', href: '/app/assets' },
-  { name: 'Splits', href: '/app/splits' },
-  { name: 'Licenses', href: '/app/licenses' },
-  { name: 'Settings', href: '/app/settings' }
+  { name: 'Projects', href: '/projects' },
+  { name: 'Music', href: '/music' },
+  { name: 'Tours', href: '/tours' },
+  { name: 'Sessions', href: '/sessions' },
+  { name: 'Assets', href: '/assets' },
+  { name: 'Splits', href: '/splits' },
+  { name: 'Licenses', href: '/licenses' },
+  { name: 'Settings', href: '/settings' }
 ] as const;
 
 interface SidebarProps {
@@ -38,10 +40,10 @@ export default function Sidebar({ userName, userEmail, ...props }: SidebarProps 
   }, [userName]);
 
   return (
-    <aside {...props} className="hidden h-screen w-72 border-r border-border/60 bg-surface/80 pb-10 pt-8 shadow-soft/40 backdrop-blur md:flex md:flex-col">
+    <aside {...props} className="shadow-soft/40 hidden h-screen w-72 border-r border-border/60 bg-surface/80 pb-10 pt-8 backdrop-blur md:flex md:flex-col">
       <div className="px-6 pb-8">
         <Link
-          href="/app/projects"
+          href="/projects"
           className="inline-flex items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-primary"
         >
           <img src="/brand-wordmark.svg" alt="SongForge" className="h-6 w-auto" />

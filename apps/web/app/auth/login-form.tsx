@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from 'react';
-import { signIn } from 'next-auth/react';
+import { Button, Input, Label } from '@songforge/ui';
 import { motion } from 'framer-motion';
 import { Loader2, Mail, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
-import { Button, Input, Label } from '@songforge/ui';
+import { signIn } from 'next-auth/react';
+import { useState, type FormEvent } from 'react';
 
 const callbackUrl = '/projects';
 

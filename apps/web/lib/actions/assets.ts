@@ -1,11 +1,11 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { createAssetSchema, updateAssetSchema, getAssetTypeFromMime } from '@songforge/db/validation/assets';
-import { createAsset, updateAsset, deleteAsset, listAssets, getAssetById } from '@songforge/db';
 import { requireOrgSession } from '@songforge/auth';
+import { createAssetSchema, updateAssetSchema, getAssetTypeFromMime , createAsset, updateAsset, deleteAsset, listAssets, getAssetById } from '@songforge/db';
+import { revalidatePath } from 'next/cache';
+
+import { isStorageConfigured } from '../env';
 import { getUploadUrl, getDownloadUrl, deleteObject } from '../storage/s3';
-import { getEnv, isStorageConfigured } from '../env';
 import { createWatermarkMetadata } from '../watermarking';
 
 export interface ActionResult<T> {
@@ -50,8 +50,12 @@ export async function getUploadUrlAction(
     // Add watermark for audio assets
     if (assetType === 'audio') {
       const session = await requireOrgSession();
+      const userId = (session.session.user as { id?: string })?.id;
+      if (!userId) {
+        throw new Error('User ID not found in session');
+      }
       const watermarkMeta = createWatermarkMetadata(
-        session.userId,
+        userId,
         undefined, // projectId not available at upload time
         undefined // assetId not created yet
       );
@@ -93,8 +97,14 @@ export async function createAssetAction(
     // If projectSlug provided, verify it exists and belongs to org
     let projectId: string | undefined;
     if (projectSlug) {
+      if (!session.activeMembership) {
+        return {
+          success: false,
+          error: 'Active organization not found'
+        };
+      }
       const { getProjectBySlug } = await import('@songforge/db');
-      const project = await getProjectBySlug(projectSlug, session.orgId);
+      const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
       if (!project) {
         return {
           success: false,
@@ -107,9 +117,12 @@ export async function createAssetAction(
     // BUG FIX: Add watermark metadata for audio files
     let assetMetadata = validated.metadata;
     if (validated.assetType === 'audio' && !assetMetadata?.watermark) {
-      const session = await requireOrgSession();
+      const userId = (session.session.user as { id?: string })?.id;
+      if (!userId) {
+        throw new Error('User ID not found in session');
+      }
       const watermarkMeta = createWatermarkMetadata(
-        session.userId,
+        userId,
         projectId,
         undefined // assetId not created yet
       );
@@ -260,9 +273,16 @@ export async function deleteAssetAction(assetId: string): Promise<ActionResult<v
 export async function listAssetsAction(projectSlug: string) {
   try {
     const session = await requireOrgSession();
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found',
+        data: []
+      };
+    }
 
     const { getProjectBySlug } = await import('@songforge/db');
-    const project = await getProjectBySlug(projectSlug, session.orgId);
+    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {
         success: false,
@@ -275,7 +295,7 @@ export async function listAssetsAction(projectSlug: string) {
 
     return {
       success: true,
-      data: assets.map((a) => ({
+      data: assets.map((a: { id: string; name: string; assetType: string; bytes: bigint; mimeType: string; createdAt: Date }) => ({
         id: a.id,
         name: a.name,
         type: a.assetType,

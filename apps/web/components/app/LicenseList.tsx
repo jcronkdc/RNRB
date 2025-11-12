@@ -1,5 +1,6 @@
 import { cn } from '@songforge/ui';
 import { FileText } from 'lucide-react';
+
 import { EmptyState } from './EmptyState';
 
 export interface LicenseListItem {

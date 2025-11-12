@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Send, MessageSquare, User } from 'lucide-react';
 import { Button, cn } from '@songforge/ui';
+import { Send, MessageSquare, User } from 'lucide-react';
+import { useState, useRef } from 'react';
+
 import { EmptyState } from './EmptyState';
 
 interface Comment {
@@ -21,7 +22,7 @@ interface CommentsProps {
   className?: string;
 }
 
-export function Comments({ entityId, entityType, comments: initialComments = [], onCreate, className }: CommentsProps) {
+export function Comments({ entityId: _entityId, entityType: _entityType, comments: initialComments = [], onCreate, className }: CommentsProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [text, setText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);

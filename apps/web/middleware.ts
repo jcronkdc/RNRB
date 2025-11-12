@@ -1,6 +1,6 @@
-import { updateSession } from './lib/supabase/middleware';
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+
+import { updateSession } from './lib/supabase/middleware';
 
 export async function middleware(req: NextRequest) {
   // Update Supabase session
@@ -32,5 +32,14 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|favicon\.|icon\.|robots\.txt|sitemap\.xml|opengraph-image|.*\.(svg|jpg|png)).*)'],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next (Next.js internals)
+     * - favicon, icon, robots.txt, sitemap.xml (static files)
+     * - opengraph-image (Next.js metadata)
+     * - files with extensions: svg, jpg, png
+     */
+    '/((?!_next|favicon|icon|robots\\.txt|sitemap\\.xml|opengraph-image|.*\\.(?:svg|jpg|png)).*)',
+  ],
 };

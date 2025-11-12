@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { Button } from '@songforge/ui';
+import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };

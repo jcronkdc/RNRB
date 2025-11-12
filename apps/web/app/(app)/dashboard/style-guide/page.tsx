@@ -28,6 +28,8 @@ const typeScale = [
   { tag: 'Caption', className: 'text-xs uppercase tracking-[0.38em] text-muted-foreground/80', blurb: 'UI labels' }
 ] as const;
 
+export const dynamic = 'force-dynamic';
+
 export default function StyleGuidePage() {
   const { notify } = useToast();
 
@@ -76,16 +78,16 @@ export default function StyleGuidePage() {
           <h2 className="text-2xl font-semibold text-brand-foreground">Components</h2>
           <div className="flex flex-wrap gap-4">
             <Button>Primary</Button>
-            <Button variant="secondary">Secondary</Button>
+            <Button variant="subtle">Secondary</Button>
             <Button variant="outline">Outline</Button>
             <Button variant="ghost">Ghost</Button>
           </div>
           <div className="grid gap-3 text-sm text-muted-foreground">
-            <label className="flex flex-col gap-2 text-brand-foreground">
+            <label htmlFor="style-email" className="flex flex-col gap-2 text-brand-foreground">
               Email
-              <Input placeholder="crew@songforge.dev" className="bg-surface-elevated" />
+              <Input id="style-email" placeholder="crew@songforge.dev" className="bg-surface-elevated" />
             </label>
-            <label className="flex flex-col gap-2 text-brand-foreground">
+            <label htmlFor="style-invite" className="flex flex-col gap-2 text-brand-foreground">
               Invite message
               <textarea
                 placeholder="We would love to collaborate on the new festival set."

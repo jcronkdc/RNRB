@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { Button, cn } from '@songforge/ui';
 import { Music, FileAudio, FolderOpen, Search as SearchIcon } from 'lucide-react';
-import { Button } from '@songforge/ui';
-import { EmptyState } from '../../../components/app/EmptyState';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState, useTransition } from 'react';
+
+import { EmptyState } from '../../../components/app/EmptyState';
 import { searchAction } from '../../../lib/actions/search';
 import type { SearchResult } from '../../../lib/actions/search';
 

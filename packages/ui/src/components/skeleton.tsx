@@ -13,7 +13,7 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
       className={cn(
         'relative h-4 w-full overflow-hidden rounded-full bg-surface-muted/80',
         shimmer &&
-          "after:content-[''] after:absolute after:inset-0 after:-translate-x-full after:bg-gradient-to-r after:from-transparent after:via-white/40 after:to-transparent after:motion-safe:animate-[shimmer_1.8s_infinite]",
+          "after:absolute after:inset-0 after:-translate-x-full after:bg-gradient-to-r after:from-transparent after:via-white/40 after:to-transparent after:content-[''] after:motion-safe:animate-[shimmer_1.8s_infinite]",
         className
       )}
       {...props}

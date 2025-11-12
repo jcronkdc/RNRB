@@ -1,8 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
-import { Music, FileText, Users, FileAudio, Clock } from 'lucide-react';
 import { cn } from '@songforge/ui';
+import { Music, FileText, Users, FileAudio, Clock } from 'lucide-react';
+import { useMemo } from 'react';
 
 interface ActivityItem {
   id: string;

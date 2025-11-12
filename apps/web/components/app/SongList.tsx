@@ -1,18 +1,19 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { Button, cn } from '@songforge/ui';
 import { Music } from 'lucide-react';
-import PageHeader from './PageHeader';
-import ProjectBadge, { type ProjectVisibility } from './ProjectBadge';
-import NewSongDialog from './NewSongDialog';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+
 import AssetList, { type AssetListItem } from './AssetList';
-import SplitList, { type SplitListItem } from './SplitList';
-import NewSplitDialog from './NewSplitDialog';
+import { EmptyState } from './EmptyState';
 import LicenseList, { type LicenseListItem } from './LicenseList';
 import NewLicenseDialog from './NewLicenseDialog';
-import { EmptyState } from './EmptyState';
+import NewSongDialog from './NewSongDialog';
+import NewSplitDialog from './NewSplitDialog';
+import PageHeader from './PageHeader';
+import ProjectBadge, { type ProjectVisibility } from './ProjectBadge';
+import SplitList, { type SplitListItem } from './SplitList';
 
 export interface SongListItem {
   id: string;
@@ -170,7 +171,7 @@ export function ProjectDetailClient({ project, initialSongs, initialAssets, init
         })()}
       />
 
-      <nav aria-label="Project sections" className="flex flex-wrap gap-2" role="tablist">
+      <nav aria-label="Project sections" className="flex flex-wrap gap-2">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -223,7 +224,7 @@ export function ProjectDetailClient({ project, initialSongs, initialAssets, init
             await onCreateSong(song);
             router.refresh();
           } else {
-            setSongs((prev) => [...prev, song]);
+            setSongs((prev) => [...prev, { ...song, id: `temp-${Date.now()}` }]);
           }
         }}
       />

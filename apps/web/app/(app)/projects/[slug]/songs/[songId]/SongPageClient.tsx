@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@songforge/ui';
 import { ArrowLeft, Music, Edit } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
 import PageHeader from '../../../../../../components/app/PageHeader';
 import { LyricArchitect } from '../../../../../../components/lyric-architect/LyricArchitect';
 
@@ -14,7 +15,7 @@ interface SongPageClientProps {
     bpm?: number;
     key?: string;
     mood_tags?: string[];
-    lyrics?: any;
+    lyrics?: Record<string, unknown>;
     project_id: string;
   };
 }
@@ -84,6 +85,16 @@ export function SongPageClient({ song }: SongPageClientProps) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

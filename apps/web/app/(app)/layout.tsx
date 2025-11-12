@@ -1,8 +1,9 @@
-import type { ReactNode } from 'react';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import type { OrgSession } from '@songforge/auth';
 import { getOrgSession } from '@songforge/auth';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import type { ReactNode } from 'react';
+
 import AppChrome from '../../components/app/AppChrome';
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
@@ -15,7 +16,8 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     const message = error instanceof Error ? error.message : '';
 
     if (enableBypass && message === 'UNAUTHENTICATED') {
-      const cookieOrg = cookies().get('sf_org')?.value ?? null;
+      const cookieStore = await cookies();
+      const cookieOrg = cookieStore.get('sf_org')?.value ?? null;
       if (cookieOrg) {
         orgSession = {
           session: {
@@ -35,7 +37,8 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
         redirect('/auth');
       }
     } else if (enableBypass && message === 'NO_ACTIVE_ORG') {
-      const cookieOrg = cookies().get('sf_org')?.value ?? null;
+      const cookieStore = await cookies();
+      const cookieOrg = cookieStore.get('sf_org')?.value ?? null;
       if (cookieOrg) {
         orgSession = {
           session: {

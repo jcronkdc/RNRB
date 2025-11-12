@@ -1,31 +1,33 @@
-import { Suspense } from 'react';
 import { getOrgSession } from '@songforge/auth';
 import { redirect } from 'next/navigation';
-import PageHeader from '../../../components/app/PageHeader';
+import { Suspense } from 'react';
+
 import { SearchResults } from './SearchResults';
+import PageHeader from '../../../components/app/PageHeader';
 import { CardGridSkeleton } from '../../../components/app/Skeletons';
 
 export default async function SearchPage({
   searchParams
 }: {
-  searchParams: { q?: string; type?: string }
+  searchParams: Promise<{ q?: string; type?: string }>
 }) {
+  const { q, type: typeParam } = await searchParams;
   const enableBypass = process.env.DEMO_BYPASS === '1';
-  let orgId: string | null = null;
+  let _orgId: string | null = null;
 
   try {
     const session = await getOrgSession();
-    orgId = session.orgId;
-  } catch (error) {
+    _orgId = session.orgId;
+  } catch {
     if (enableBypass) {
-      orgId = 'demo-org';
+      _orgId = 'demo-org';
     } else {
       redirect('/signin');
     }
   }
 
-  const query = searchParams.q || '';
-  const type = searchParams.type || 'all';
+  const query = q || '';
+  const type = typeParam || 'all';
 
   return (
     <div className="space-y-10">

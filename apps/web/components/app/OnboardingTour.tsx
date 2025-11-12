@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Button } from '@songforge/ui';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X, ArrowRight, Sparkles } from 'lucide-react';
-import { Button } from '@songforge/ui';
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface TourStep {
   id: string;
@@ -130,7 +129,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
           {/* Spotlight */}
           {step.target && (
             <div
-              className="fixed z-[201] rounded-lg border-2 border-brand-primary shadow-glow"
+              className="shadow-glow fixed z-[201] rounded-lg border-2 border-brand-primary"
               style={{
                 // Position will be calculated by JS
                 pointerEvents: 'none'

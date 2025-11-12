@@ -1,10 +1,15 @@
-import { createClient } from '../../../lib/supabase/server';
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { createClient } from '../../../lib/supabase/server';
+
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+  return new OpenAI({ apiKey });
+}
 
 export async function POST(request: Request) {
   try {
@@ -21,6 +26,11 @@ export async function POST(request: Request) {
 
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt required' }, { status: 400 });
+    }
+
+    const openai = getOpenAIClient();
+    if (!openai) {
+      return NextResponse.json({ error: 'OpenAI not configured' }, { status: 500 });
     }
 
     const completion = await openai.chat.completions.create({

@@ -1,6 +1,8 @@
 import PageHeader from '../../../components/app/PageHeader';
 import UploadDropzone from '../../../components/app/UploadDropzone';
 
+export const dynamic = 'force-dynamic';
+
 export default function AssetsPage() {
   return (
     <div className="space-y-10">

@@ -1,9 +1,8 @@
 'use client';
 
+import { Button , cn } from '@songforge/ui';
+import { FileText, Share2, Copy } from 'lucide-react';
 import { useState } from 'react';
-import { Download, FileText, Share2, Copy } from 'lucide-react';
-import { Button } from '@songforge/ui';
-import { cn } from '@songforge/ui';
 
 interface ExportMenuProps {
   projectSlug: string;
@@ -16,7 +15,7 @@ export function ExportMenu({ projectSlug, projectName, className }: ExportMenuPr
 
   const handleExportPDF = async () => {
     // TODO: Implement PDF export
-    console.log('Export PDF for', projectSlug);
+    // PDF export functionality will be implemented in a future update
     setIsOpen(false);
   };
 

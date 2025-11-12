@@ -1,7 +1,8 @@
-import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { cn } from '../lib/utils';
+import * as React from 'react';
+
 import { Button } from './button';
+import { cn } from '../lib/utils';
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;

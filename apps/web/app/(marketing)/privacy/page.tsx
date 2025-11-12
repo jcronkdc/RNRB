@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 export default function PrivacyPage() {
   return (
     <main className="mx-auto max-w-2xl space-y-8 px-6 py-16">
@@ -18,8 +20,9 @@ export default function PrivacyPage() {
       <section>
         <h2 className="mb-2 text-xl font-semibold text-brand-foreground">Contact</h2>
         <p className="text-base text-muted-foreground">
-          To learn more or request deletion of your data, email us at <a href="mailto:support@example.com" className="underline text-brand-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-primary">support@example.com</a>.
+          To learn more or request deletion of your data, email us at <a href="mailto:support@example.com" className="text-brand-primary underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-primary">support@example.com</a>.
         </p>
       </section>
-    </main>);
+    </main>
+  );
 }

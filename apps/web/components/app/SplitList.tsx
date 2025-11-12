@@ -1,5 +1,6 @@
 import { cn } from '@songforge/ui';
 import { Users } from 'lucide-react';
+
 import { EmptyState } from './EmptyState';
 
 export interface SplitListItem {

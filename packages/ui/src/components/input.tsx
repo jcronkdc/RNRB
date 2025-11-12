@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import * as React from 'react';
+
 import { cn } from '../lib/utils';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -16,7 +17,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          'group relative flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 shadow-sm ring-offset-background motion-safe:transition-all motion-safe:duration-200 focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2',
+          'group relative flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 shadow-sm ring-offset-background focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2 motion-safe:transition-all motion-safe:duration-200',
           disabled && 'opacity-60',
           containerClassName
         )}

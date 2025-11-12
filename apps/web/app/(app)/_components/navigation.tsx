@@ -1,8 +1,8 @@
 'use client';
 
+import { cn } from '@songforge/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { cn } from '@songforge/ui';
 
 export interface NavItem {
   name: string;

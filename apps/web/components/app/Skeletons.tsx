@@ -1,8 +1,7 @@
-import { cn } from '@songforge/ui';
 
 export function PageHeaderSkeleton() {
   return (
-    <div className="mb-5 w-full animate-sf-skeleton space-y-3" aria-hidden="true">
+    <div className="animate-sf-skeleton mb-5 w-full space-y-3" aria-hidden="true">
       <div className="h-8 w-2/5 rounded-md bg-border/60" />
       <div className="h-5 w-3/6 rounded-md bg-border/40" />
       <div className="h-10 w-28 rounded-xl bg-border/30" />
@@ -16,7 +15,7 @@ export function CardGridSkeleton({ count = 6 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="h-36 rounded-3xl bg-border/20 shadow-soft animate-sf-skeleton"
+          className="animate-sf-skeleton h-36 rounded-3xl bg-border/20 shadow-soft"
         />
       ))}
     </div>

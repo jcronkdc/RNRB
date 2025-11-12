@@ -1,9 +1,8 @@
 'use client';
 
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { cn } from '@songforge/ui';
 
 interface TooltipProps {
   content: string;
@@ -18,44 +17,57 @@ export function Tooltip({ content, children, side = 'top', delay = 300 }: Toolti
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     if (!isOpen || !triggerRef.current || !tooltipRef.current) return;
 
-    const trigger = triggerRef.current;
-    const tooltip = tooltipRef.current;
-    const rect = trigger.getBoundingClientRect();
-    const tooltipRect = tooltip.getBoundingClientRect();
+    const updatePosition = () => {
+      const trigger = triggerRef.current;
+      const tooltip = tooltipRef.current;
+      if (!trigger || !tooltip) return;
 
-    let top = 0;
-    let left = 0;
+      const rect = trigger.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
 
-    switch (side) {
-      case 'top':
-        top = rect.top - tooltipRect.height - 8;
-        left = rect.left + rect.width / 2 - tooltipRect.width / 2;
-        break;
-      case 'bottom':
-        top = rect.bottom + 8;
-        left = rect.left + rect.width / 2 - tooltipRect.width / 2;
-        break;
-      case 'left':
-        top = rect.top + rect.height / 2 - tooltipRect.height / 2;
-        left = rect.left - tooltipRect.width - 8;
-        break;
-      case 'right':
-        top = rect.top + rect.height / 2 - tooltipRect.height / 2;
-        left = rect.right + 8;
-        break;
-    }
+      let top = 0;
+      let left = 0;
 
-    // Keep tooltip in viewport
-    const padding = 8;
-    top = Math.max(padding, Math.min(top, window.innerHeight - tooltipRect.height - padding));
-    left = Math.max(padding, Math.min(left, window.innerWidth - tooltipRect.width - padding));
+      switch (side) {
+        case 'top':
+          top = rect.top - tooltipRect.height - 8;
+          left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+          break;
+        case 'bottom':
+          top = rect.bottom + 8;
+          left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+          break;
+        case 'left':
+          top = rect.top + rect.height / 2 - tooltipRect.height / 2;
+          left = rect.left - tooltipRect.width - 8;
+          break;
+        case 'right':
+          top = rect.top + rect.height / 2 - tooltipRect.height / 2;
+          left = rect.right + 8;
+          break;
+      }
 
-    setPosition({ top, left });
+      // Keep tooltip in viewport
+      const padding = 8;
+      top = Math.max(padding, Math.min(top, window.innerHeight - tooltipRect.height - padding));
+      left = Math.max(padding, Math.min(left, window.innerWidth - tooltipRect.width - padding));
+
+      setPosition({ top, left });
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
   }, [isOpen, side]);
 
   const handleMouseEnter = () => {

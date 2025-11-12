@@ -20,7 +20,7 @@ export default function ProjectBadge({ visibility, className }: ProjectBadgeProp
   const meta = META[visibility] ?? META.private;
   return (
     <Badge
-      variant={visibility === 'private' ? 'outline' : 'default'}
+      variant={visibility === 'private' ? 'outline' : 'solid'}
       className={cn('flex items-center gap-1', className)}
       aria-label={`${meta.label} visibility`}
     >

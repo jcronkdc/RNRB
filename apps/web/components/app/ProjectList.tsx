@@ -1,14 +1,8 @@
-import Link from 'next/link';
-import { Lock, Users, Globe2, Music, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@songforge/ui';
-import ProjectBadge from './ProjectBadge';
-import type { ProjectVisibility } from './ProjectBadge';
+import { Music, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
-const VISIBILITY_META: Record<ProjectVisibility, { label: string; icon: JSX.Element; tone?: 'outline' }> = {
-  private: { label: 'Private', icon: <Lock className="h-4 w-4" aria-hidden="true" />, tone: 'outline' },
-  org: { label: 'Organization', icon: <Users className="h-4 w-4" aria-hidden="true" /> },
-  public: { label: 'Public', icon: <Globe2 className="h-4 w-4" aria-hidden="true" /> }
-};
+import ProjectBadge, { type ProjectVisibility } from './ProjectBadge';
 
 export interface ProjectListItem {
   id: string;
@@ -41,7 +35,6 @@ export default function ProjectList({ items }: { items: ProjectListItem[] }) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
       {items.map((project) => {
-        const meta = VISIBILITY_META[project.visibility];
         return (
           <Card key={project.id} role="article" className="group relative flex flex-col justify-between overflow-hidden border-border/60 bg-surface/80 shadow-soft transition-all hover:border-brand-primary/40 hover:shadow-lg hover:shadow-brand-primary/5">
             <div className="absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100">

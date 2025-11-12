@@ -1,6 +1,8 @@
-import { Button } from '@songforge/ui';
 import { setActiveOrgCookie } from '@songforge/auth';
+import { Button } from '@songforge/ui';
 import { redirect } from 'next/navigation';
+
+export const dynamic = 'force-dynamic';
 
 async function setDemoOrg() {
   'use server';

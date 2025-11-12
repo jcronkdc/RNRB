@@ -1,18 +1,20 @@
 'use client';
 
-import { useTransition } from 'react';
+import type { LicenseTemplate } from '@prisma/client';
 import { useRouter } from 'next/navigation';
-import { ProjectDetailClient, type SongListItem } from '../../../../components/app/SongList';
+import { useTransition } from 'react';
+
 import type { AssetListItem } from '../../../../components/app/AssetList';
-import type { SplitListItem } from '../../../../components/app/SplitList';
+import { Comments } from '../../../../components/app/Comments';
+import { ExportMenu } from '../../../../components/app/ExportMenu';
 import type { LicenseListItem } from '../../../../components/app/LicenseList';
+import { ProjectDetailClient, type SongListItem } from '../../../../components/app/SongList';
+import type { SplitListItem } from '../../../../components/app/SplitList';
+import { useToast } from '../../../../components/ui/Toast';
+import { createLicenseAction } from '../../../../lib/actions/licenses';
 import { createSongAction } from '../../../../lib/actions/songs';
 import { createSplitSheetAction } from '../../../../lib/actions/splits';
-import { createLicenseAction } from '../../../../lib/actions/licenses';
-import { useToast } from '../../../../components/ui/Toast';
 import { announce } from '../../../../lib/announce';
-import { ExportMenu } from '../../../../components/app/ExportMenu';
-import { Comments } from '../../../../components/app/Comments';
 
 interface ProjectDetailWrapperProps {
   projectSlug: string;
@@ -37,7 +39,7 @@ export function ProjectDetailWrapper({
   initialLicenses
 }: ProjectDetailWrapperProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const toast = useToast();
 
   const handleCreateSong = async (song: { title: string; key?: string; tempo?: number }) => {
@@ -86,8 +88,9 @@ export function ProjectDetailWrapper({
     notes?: string;
   }) => {
     startTransition(async () => {
+      const templateKey = license.template.replace(/\s+/g, '_').toUpperCase() as LicenseTemplate;
       const result = await createLicenseAction(projectSlug, {
-        template: license.template.replace(/\s+/g, '_').toUpperCase() as any,
+        template: templateKey,
         title: license.title,
         notes: license.notes
       });
@@ -121,7 +124,7 @@ export function ProjectDetailWrapper({
           <Comments
             entityId={projectSlug}
             entityType="project"
-            onCreate={async (text) => {
+            onCreate={async (_text) => {
               // TODO: Implement comment creation
               toast.push('Comment feature coming soon', { tone: 'info' });
             }}

@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
+
 import { announce } from '../../lib/announce';
 
 interface SearchInputProps {
@@ -13,7 +14,7 @@ export default function SearchInput({ placeholder = 'Search projects, songs…' 
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [value, setValue] = useState('');
-  const [noResults, setNoResults] = useState(false);
+  const [, setNoResults] = useState(false);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && value.trim()) {

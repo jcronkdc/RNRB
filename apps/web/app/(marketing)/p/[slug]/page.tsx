@@ -1,7 +1,7 @@
-import type { Metadata } from 'next';
+import { Button } from '@songforge/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Button } from '@songforge/ui';
+
 import CreditList from '../../../../components/marketing/CreditList';
 
 const MOCK_PROJECTS = {
@@ -37,9 +37,10 @@ const MOCK_PROJECTS = {
 
 type ProjectSlug = keyof typeof MOCK_PROJECTS;
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const url = `/p/${params.slug}/opengraph-image`;
-  const project = MOCK_PROJECTS[params.slug as keyof typeof MOCK_PROJECTS];
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const url = `/p/${slug}/opengraph-image`;
+  const project = MOCK_PROJECTS[slug as keyof typeof MOCK_PROJECTS];
   return {
     openGraph: {
       images: [url],
@@ -49,8 +50,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function PublicProjectPage({ params }: { params: { slug: string } }) {
-  const project = MOCK_PROJECTS[params.slug as ProjectSlug];
+export default async function PublicProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = MOCK_PROJECTS[slug as ProjectSlug];
 
   if (!project) {
     notFound();

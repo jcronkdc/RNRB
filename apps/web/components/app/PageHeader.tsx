@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { cn } from '@songforge/ui';
+import type { ReactNode } from 'react';
 
 interface PageHeaderProps {
   title: string;
@@ -12,7 +12,7 @@ export default function PageHeader({ title, subtitle, actions, className }: Page
   return (
     <header
       className={cn(
-        'relative flex flex-col gap-6 border-b border-border/60 pb-8 motion-safe:animate-fade-in md:flex-row md:items-end md:justify-between',
+        'motion-safe:animate-fade-in relative flex flex-col gap-6 border-b border-border/60 pb-8 md:flex-row md:items-end md:justify-between',
         className
       )}
     >

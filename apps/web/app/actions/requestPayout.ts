@@ -1,17 +1,17 @@
 'use server';
 
+import { prisma } from '@songforge/db';
+import { createServerClient } from '@supabase/ssr';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { createServerClient } from '@supabase/ssr';
-import { prisma } from '@songforge/db';
 import { z } from 'zod';
 
 const payoutSchema = z.object({
   songId: z.string().min(1)
 });
 
-function getSupabaseClient() {
-  const cookieStore = cookies();
+async function getSupabaseClient() {
+  const cookieStore = await cookies();
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -59,7 +59,7 @@ export async function requestPayoutAction(formData: FormData) {
     };
   }
 
-  const supabase = getSupabaseClient();
+  const supabase = await getSupabaseClient();
   const {
     data: { session }
   } = await supabase.auth.getSession();

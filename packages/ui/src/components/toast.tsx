@@ -1,5 +1,6 @@
 import * as ToastPrimitive from '@radix-ui/react-toast';
 import * as React from 'react';
+import type { ReactNode } from 'react';
 
 import { Button } from './button';
 import { cn } from '../lib/utils';
@@ -23,7 +24,7 @@ interface ToastContextValue {
 
 const ToastContext = React.createContext<ToastContextValue | undefined>(undefined);
 
-const ToastProvider: React.FC<React.PropsWithChildren<{ duration?: number }>> = ({
+const ToastProvider: React.FC<{ children: ReactNode; duration?: number }> = ({
   children,
   duration = 4000
 }) => {
@@ -93,7 +94,7 @@ const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitive.Root>, Toa
     <ToastPrimitive.Root
       ref={ref}
       className={cn(
-        'group pointer-events-auto relative flex w-full min-w-[320px] max-w-sm items-center justify-between gap-4 overflow-hidden rounded-md border border-border bg-background p-4 text-foreground shadow-md transition-all data-[swipe=end]:translate-x-[100%] data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:animate-in data-[state=open]:fade-in-80',
+        'group pointer-events-auto relative flex w-full min-w-[320px] max-w-sm items-center justify-between gap-4 overflow-hidden rounded-md border border-border bg-background p-4 text-foreground shadow-md transition-all data-[swipe=end]:translate-x-[100%] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:fade-in-80',
         variant === 'destructive' && 'border-red-400 bg-red-100 text-red-900',
         className
       )}

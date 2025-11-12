@@ -1,21 +1,25 @@
 import { describe, it, expect } from 'vitest';
 import { createSplitSheet, updateContributor, finalizeSplitSheet } from '@songforge/db';
 import { prisma } from '@songforge/db';
+import { randomUUID } from 'crypto';
 
 /**
  * Unit tests for split validation bugs
  */
 
 describe('Split Validation Bugs', () => {
-  let testProjectId: string;
-  let testSplitSheetId: string;
+  let testOrgId: string | undefined;
+  let testProjectId: string | undefined;
+  let testSplitSheetId: string | undefined;
 
   beforeEach(async () => {
-    // Create test project
-    const org = await prisma.org.findFirst() || await prisma.org.create({
+    testSplitSheetId = undefined;
+    const suffix = randomUUID();
+
+    const org = await prisma.org.create({
       data: {
-        name: 'Test Org',
-        slug: 'test-org',
+        name: `Test Org ${suffix}`,
+        slug: `test-org-${suffix}`,
         type: 'studio'
       }
     });
@@ -23,44 +27,52 @@ describe('Split Validation Bugs', () => {
     const project = await prisma.project.create({
       data: {
         orgId: org.id,
-        name: 'Test Project',
-        slug: 'test-project'
+        name: `Test Project ${suffix}`,
+        slug: `test-project-${suffix}`
       }
     });
+
+    testOrgId = org.id;
     testProjectId = project.id;
   });
 
   afterEach(async () => {
-    // Cleanup
     if (testSplitSheetId) {
       await prisma.splitContributor.deleteMany({ where: { splitSheetId: testSplitSheetId } });
-      await prisma.splitSheet.delete({ where: { id: testSplitSheetId } });
+      await prisma.splitSheet.deleteMany({ where: { id: testSplitSheetId } });
+      testSplitSheetId = undefined;
     }
-    await prisma.project.deleteMany({ where: { id: testProjectId } });
+
+    if (testProjectId) {
+      await prisma.project.deleteMany({ where: { id: testProjectId } });
+      testProjectId = undefined;
+    }
+
+    if (testOrgId) {
+      await prisma.org.deleteMany({ where: { id: testOrgId } });
+      testOrgId = undefined;
+    }
   });
 
   it('BUG 1: Split validation allows percentages > 100%', async () => {
-    // BUG: Should reject but validation is too lenient
     await expect(
       createSplitSheet({
-        projectId: testProjectId,
+        projectId: testProjectId!,
         title: 'Test Split',
         contributors: [
           { name: 'Artist 1', percentage: 60 },
-          { name: 'Artist 2', percentage: 50 } // Total 110%
+          { name: 'Artist 2', percentage: 50 }
         ]
       })
-    ).rejects.toThrow(/must.*total.*100|exceeds.*100/i);
+    ).rejects.toThrow(/must.*total.*100|exceed.*100/i);
   });
 
   it('BUG 2: Split validation allows negative percentages', async () => {
     await expect(
       createSplitSheet({
-        projectId: testProjectId,
+        projectId: testProjectId!,
         title: 'Test Split',
-        contributors: [
-          { name: 'Artist 1', percentage: -10 }
-        ]
+        contributors: [{ name: 'Artist 1', percentage: -10 }]
       })
     ).rejects.toThrow(/must.*be.*positive|greater.*than.*0|invalid.*percentage/i);
   });
@@ -68,7 +80,7 @@ describe('Split Validation Bugs', () => {
   it('BUG 3: Split validation allows zero contributors', async () => {
     await expect(
       createSplitSheet({
-        projectId: testProjectId,
+        projectId: testProjectId!,
         title: 'Test Split',
         contributors: []
       })
@@ -77,7 +89,7 @@ describe('Split Validation Bugs', () => {
 
   it('BUG 4: Update contributor allows exceeding 100%', async () => {
     const splitSheet = await createSplitSheet({
-      projectId: testProjectId,
+      projectId: testProjectId!,
       title: 'Test Split',
       contributors: [
         { name: 'Artist 1', percentage: 50 },
@@ -91,64 +103,54 @@ describe('Split Validation Bugs', () => {
     });
 
     if (contributor) {
-      // Try to update to 60%, which would make total 110%
       await expect(
         updateContributor(contributor.id, { percentage: 60 })
-      ).rejects.toThrow(/exceeds.*100|must.*total.*100/i);
+      ).rejects.toThrow(/exceed.*100|must.*total.*100/i);
     }
   });
 
   it('BUG 5: Finalization allows non-100% totals', async () => {
-    const splitSheet = await createSplitSheet({
-      projectId: testProjectId,
-      title: 'Test Split',
-      contributors: [
-        { name: 'Artist 1', percentage: 95 } // Only 95%
-      ]
-    });
-    testSplitSheetId = splitSheet.id;
-
-    // BUG: Should reject finalization
     await expect(
-      finalizeSplitSheet(splitSheet.id, 'test-pdf-key.pdf')
+      createSplitSheet({
+        projectId: testProjectId!,
+        title: 'Test Split',
+        contributors: [{ name: 'Artist 1', percentage: 95 }]
+      })
     ).rejects.toThrow(/must.*total.*100.*percent|exactly.*100/i);
   });
 
   it('BUG 6: Floating point precision errors in percentage calculations', async () => {
-    // Test with values that sum to exactly 100 but have floating point issues
     const splitSheet = await createSplitSheet({
-      projectId: testProjectId,
+      projectId: testProjectId!,
       title: 'Test Split',
       contributors: [
         { name: 'Artist 1', percentage: 33.333333 },
         { name: 'Artist 2', percentage: 33.333333 },
-        { name: 'Artist 3', percentage: 33.333334 } // Should total 100
+        { name: 'Artist 3', percentage: 33.333334 }
       ]
     });
     testSplitSheetId = splitSheet.id;
 
-    // Should be able to finalize
     await expect(
       finalizeSplitSheet(splitSheet.id, 'test-pdf-key.pdf')
     ).resolves.toBeDefined();
   });
 
-  it('BUG 7: Split validation doesn\'t check for duplicate contributor names', async () => {
-    // BUG: Should warn or prevent duplicate names
-    const splitSheet = await createSplitSheet({
-      projectId: testProjectId,
-      title: 'Test Split',
-      contributors: [
-        { name: 'John Doe', percentage: 50 },
-        { name: 'John Doe', percentage: 50 } // Duplicate name
-      ]
-    });
-    testSplitSheetId = splitSheet.id;
-
-    // Should still work but might want to warn
-    expect(splitSheet).toBeDefined();
+  it("BUG 7: Split validation doesn't check for duplicate contributor names", async () => {
+    await expect(
+      createSplitSheet({
+        projectId: testProjectId!,
+        title: 'Test Split',
+        contributors: [
+          { name: 'John Doe', percentage: 50 },
+          { name: 'John Doe', percentage: 50 }
+        ]
+      })
+    ).rejects.toThrow(/contributor names must be unique/i);
   });
 });
+
+
 
 
 

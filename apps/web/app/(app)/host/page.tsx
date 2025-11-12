@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createClient } from '../../../lib/supabase/client';
-import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@songforge/ui';
 import { Copy, Check } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import { useState, useEffect } from 'react';
+
 import { LiveHostClient } from './LiveHostClient';
+import { createClient } from '../../../lib/supabase/client';
 
 export default function HostPage() {
   const [sessionId, setSessionId] = useState<string | null>(null);

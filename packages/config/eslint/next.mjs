@@ -33,7 +33,23 @@ export default [
       ...reactRecommendedRules,
       ...reactHooksRecommendedRules,
       'react/react-in-jsx-scope': 'off',
-      'react/jsx-uses-react': 'off'
+      'react/jsx-uses-react': 'off',
+      // Allow default exports for Next.js pages, layouts, and route handlers
+      'import/no-default-export': 'off'
+    }
+  },
+  {
+    name: 'songforge/next-pages',
+    files: ['**/app/**/*.{ts,tsx}', '**/pages/**/*.{ts,tsx}', '**/*page.{ts,tsx}', '**/*layout.{ts,tsx}', '**/*route.{ts,tsx}', '**/*loading.{ts,tsx}', '**/*error.{ts,tsx}', '**/*not-found.{ts,tsx}', '**/*template.{ts,tsx}', '**/*default.{ts,tsx}'],
+    rules: {
+      'import/no-default-export': 'off'
+    }
+  },
+  {
+    name: 'songforge/next-config',
+    files: ['**/next.config.{ts,js}', '**/tailwind.config.{ts,js}', '**/postcss.config.{mjs,js}', '**/eslint.config.{mjs,js}'],
+    rules: {
+      'import/no-default-export': 'off'
     }
   }
 ];

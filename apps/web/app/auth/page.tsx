@@ -1,6 +1,7 @@
 import { auth } from '@songforge/auth';
 import { motion } from 'framer-motion';
 import { redirect } from 'next/navigation';
+
 import LoginForm from './login-form';
 
 export default async function AuthPage() {

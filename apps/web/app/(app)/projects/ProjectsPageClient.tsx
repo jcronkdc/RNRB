@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ProjectFilters } from '../../../components/app/ProjectFilters';
+
 import { ActivityFeed } from '../../../components/app/ActivityFeed';
+import { ProjectFilters } from '../../../components/app/ProjectFilters';
 import type { ProjectListItem } from '../../../components/app/ProjectList';
 
 interface ProjectsPageClientProps {

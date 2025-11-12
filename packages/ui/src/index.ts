@@ -42,6 +42,8 @@ export { Badge, type BadgeProps, badgeVariants } from './components/badge';
 export { Separator, type SeparatorProps } from './components/separator';
 export { Skeleton, type SkeletonProps } from './components/skeleton';
 export { LoadingSpinner, type LoadingSpinnerProps } from './components/loading-spinner';
+export { Slider, type SliderProps } from './components/slider';
+export { Switch, type SwitchProps } from './components/switch';
 export {
   brandColors,
   radii,

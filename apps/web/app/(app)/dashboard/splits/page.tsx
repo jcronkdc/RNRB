@@ -21,6 +21,8 @@ const splits = [
   }
 ] as const;
 
+export const dynamic = 'force-dynamic';
+
 export default function SplitsPage() {
   return (
     <div className="space-y-8">

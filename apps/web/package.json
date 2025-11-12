@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@songforge/auth": "workspace:*",
+    "@songforge/db": "workspace:*",
     "@songforge/trpc": "workspace:*",
     "@songforge/ui": "workspace:*",
     "@supabase/supabase-js": "^2.39.3",
@@ -20,6 +21,7 @@
     "@trpc/client": "^11.0.0-rc.502",
     "@trpc/react-query": "^11.0.0-rc.502",
     "@trpc/server": "^11.0.0-rc.502",
+    "date-fns": "^3.6.0",
     "framer-motion": "^11.0.5",
     "lucide-react": "^0.344.0",
     "next": "^15.0.0",
@@ -33,7 +35,8 @@
     "wavesurfer.js": "^7.6.4",
     "zod": "^3.23.8",
     "@aws-sdk/client-s3": "^3.700.0",
-    "@aws-sdk/s3-request-presigner": "^3.700.0"
+    "@aws-sdk/s3-request-presigner": "^3.700.0",
+    "@prisma/client": "^5.20.0"
   },
   "devDependencies": {
     "@songforge/config": "workspace:*",

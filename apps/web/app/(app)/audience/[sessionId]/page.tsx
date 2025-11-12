@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { useParams } from 'next/navigation';
-import { createClient } from '../../../lib/supabase/client';
 import { Button } from '@songforge/ui';
 import { Send } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
+
+import { createClient } from '../../../../lib/supabase/client';
+
 
 export default function AudiencePage() {
   const params = useParams();

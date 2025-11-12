@@ -1,14 +1,6 @@
 'use client';
 
 import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-  type MutableRefObject
-} from 'react';
-import {
   Button,
   Dialog,
   DialogContent,
@@ -19,6 +11,14 @@ import {
   Input,
   Label
 } from '@songforge/ui';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type MutableRefObject
+} from 'react';
 
 interface ContributorInput {
   name: string;

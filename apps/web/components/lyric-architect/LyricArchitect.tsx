@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@songforge/ui';
-import { Sparkles, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface LyricArchitectProps {
   projectId: string;
@@ -11,10 +11,17 @@ interface LyricArchitectProps {
   onComplete?: () => void;
 }
 
-export function LyricArchitect({ projectId, songId, onComplete }: LyricArchitectProps) {
+interface LyricsStructure {
+  title?: string;
+  chorus?: { lines?: string[]; rhymeScheme?: string };
+  verses?: Array<{ lines?: string[]; rhymeScheme?: string }>;
+  stressMap?: Record<string, unknown>;
+}
+
+export function LyricArchitect({ projectId, songId: _songId, onComplete }: LyricArchitectProps) {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
-  const [lyrics, setLyrics] = useState<any>(null);
+  const [lyrics, setLyrics] = useState<LyricsStructure | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const generateLyrics = async () => {
@@ -94,15 +101,15 @@ export function LyricArchitect({ projectId, songId, onComplete }: LyricArchitect
               animate={{ opacity: 1, y: 0 }}
               className="mt-6 space-y-4 rounded-lg border border-border/60 bg-background p-6"
             >
-              <h4 className="font-semibold">{lyrics.title}</h4>
+              {lyrics.title && <h4 className="font-semibold">{lyrics.title}</h4>}
 
               {lyrics.verses && (
                 <div>
                   <h5 className="mb-2 text-sm font-medium text-muted-foreground">Verses</h5>
-                  {lyrics.verses.map((verse: any, i: number) => (
+                  {lyrics.verses.map((verse, i: number) => (
                     <div key={i} className="mb-4">
-                      <p className="text-xs text-muted-foreground">Rhyme: {verse.rhymeScheme}</p>
-                      {verse.lines.map((line: string, j: number) => (
+                      {verse.rhymeScheme && <p className="text-xs text-muted-foreground">Rhyme: {verse.rhymeScheme}</p>}
+                      {verse.lines?.map((line: string, j: number) => (
                         <p key={j} className="py-1">
                           {line}
                         </p>
@@ -115,8 +122,8 @@ export function LyricArchitect({ projectId, songId, onComplete }: LyricArchitect
               {lyrics.chorus && (
                 <div>
                   <h5 className="mb-2 text-sm font-medium text-muted-foreground">Chorus</h5>
-                  <p className="text-xs text-muted-foreground">Rhyme: {lyrics.chorus.rhymeScheme}</p>
-                  {lyrics.chorus.lines.map((line: string, i: number) => (
+                  {lyrics.chorus.rhymeScheme && <p className="text-xs text-muted-foreground">Rhyme: {lyrics.chorus.rhymeScheme}</p>}
+                  {lyrics.chorus.lines?.map((line: string, i: number) => (
                     <p key={i} className="py-1 font-medium">
                       {line}
                     </p>
@@ -139,6 +146,16 @@ export function LyricArchitect({ projectId, songId, onComplete }: LyricArchitect
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

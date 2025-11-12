@@ -1,8 +1,8 @@
+import type { Membership, Organization } from '@songforge/db';
+import { prisma } from '@songforge/db';
 import { cookies } from 'next/headers';
 import type { Session } from 'next-auth';
 
-import type { Membership, Organization } from '@songforge/db';
-import { prisma } from '@songforge/db';
 
 import { auth } from './auth';
 
@@ -16,7 +16,13 @@ export async function getOrgSession(target?: {
   organizationId?: string;
   slug?: string;
 }): Promise<OrgAwareSession | null> {
-  const session = await auth();
+  let session;
+  try {
+    session = await auth();
+  } catch {
+    // During build time or when auth is not available, return null
+    return null;
+  }
 
   if (!session?.user?.id) {
     return null;

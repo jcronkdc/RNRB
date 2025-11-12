@@ -1,8 +1,7 @@
 'use client';
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle , Button, Input } from '@songforge/ui';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@songforge/ui';
-import { Button, Input } from '@songforge/ui';
 
 interface NewProjectDialogProps {
   open: boolean;
@@ -37,6 +36,7 @@ export function NewProjectDialog({ open, onOpenChange, onCreate }: NewProjectDia
             placeholder="Project name"
             required
             disabled={loading}
+            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
           />
           <div className="flex justify-end gap-2">

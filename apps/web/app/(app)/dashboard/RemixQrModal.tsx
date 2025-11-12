@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Label } from '@songforge/ui';
 import { motion } from 'framer-motion';
 import QRCode from 'qrcode.react';
-import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Label } from '@songforge/ui';
+import { useMemo, useState } from 'react';
+
 import { useToast } from '../../../components/ui/Toast';
 
 interface RemixQrModalProps {

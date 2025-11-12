@@ -54,7 +54,7 @@ export default function ThemePreview() {
               <p className="mt-2 text-sm text-muted-foreground">
                 Verify background, border, and text contrast in the selected theme.
               </p>
-              <button type="button" className="mt-4 sf-btn-outline">
+              <button type="button" className="sf-btn-outline mt-4">
                 Action
               </button>
             </div>
@@ -65,27 +65,28 @@ export default function ThemePreview() {
       <section className="space-y-4">
         <h4 className="text-sm font-semibold uppercase tracking-[0.32em] text-brand-muted-foreground">Form controls</h4>
         <div className="grid gap-4 md:grid-cols-2">
-          <label className="space-y-2">
+          <label htmlFor="qa-name" className="space-y-2">
             <Label htmlFor="qa-name">Display name</Label>
             <Input id="qa-name" placeholder="Riley Songwriter" />
           </label>
-          <label className="space-y-2">
+          <label htmlFor="qa-org-type" className="space-y-2">
             <span className="text-sm font-medium text-brand-foreground">Organization type</span>
-            <select className="w-full rounded-xl border border-border/60 bg-surface px-3 py-2 text-sm text-brand-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary">
+            <select id="qa-org-type" className="w-full rounded-xl border border-border/60 bg-surface px-3 py-2 text-sm text-brand-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary">
               <option>Foundation</option>
               <option>Studio</option>
               <option>Band</option>
             </select>
           </label>
-          <label className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-surface/70 px-4 py-3">
+          <label htmlFor="qa-notifications" className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-surface/70 px-4 py-3">
             <span className="text-sm text-brand-foreground">Enable notifications</span>
             <input
+              id="qa-notifications"
               type="checkbox"
               className="h-4 w-4 rounded border-border/60 text-brand-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
               defaultChecked
             />
           </label>
-          <label className="space-y-2">
+          <label htmlFor="qa-notes" className="space-y-2">
             <Label htmlFor="qa-notes">Notes</Label>
             <Textarea id="qa-notes" rows={3} placeholder="Leave yourself a note." />
           </label>
@@ -95,9 +96,9 @@ export default function ThemePreview() {
       <section className="space-y-3">
         <h4 className="text-sm font-semibold uppercase tracking-[0.32em] text-brand-muted-foreground">Focus states</h4>
         <div className="flex flex-wrap items-center gap-3">
-          <a href="#" className="sf-btn-outline">
+          <button type="button" className="sf-btn-outline">
             Focusable link
-          </a>
+          </button>
           <button type="button" className="sf-btn-primary">
             Focusable button
           </button>

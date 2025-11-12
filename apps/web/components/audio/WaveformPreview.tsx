@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import WaveSurfer from 'wavesurfer.js';
-import { Play, Pause, Volume2 } from 'lucide-react';
 import { Button } from '@songforge/ui';
+import { Play, Pause, Volume2 } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import WaveSurfer from 'wavesurfer.js';
 
 interface WaveformPreviewProps {
   audioUrl: string;
@@ -18,40 +18,7 @@ export function WaveformPreview({ audioUrl, onLUFS }: WaveformPreviewProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [lufs, setLufs] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (!waveformRef.current) return;
-
-    const wavesurfer = WaveSurfer.create({
-      container: waveformRef.current,
-      waveColor: 'rgb(139, 92, 246)',
-      progressColor: 'rgb(99, 102, 241)',
-      cursorColor: 'rgb(99, 102, 241)',
-      barWidth: 2,
-      barRadius: 3,
-      responsive: true,
-      height: 100,
-      normalize: true,
-    });
-
-    wavesurfer.load(audioUrl);
-
-    wavesurfer.on('play', () => setIsPlaying(true));
-    wavesurfer.on('pause', () => setIsPlaying(false));
-    wavesurfer.on('ready', () => {
-      setDuration(wavesurfer.getDuration());
-      // Calculate LUFS (simplified - in production use loudness.js or similar)
-      calculateLUFS(wavesurfer);
-    });
-    wavesurfer.on('timeupdate', (time) => setCurrentTime(time));
-
-    wavesurferRef.current = wavesurfer;
-
-    return () => {
-      wavesurfer.destroy();
-    };
-  }, [audioUrl]);
-
-  const calculateLUFS = async (wavesurfer: WaveSurfer) => {
+  const calculateLUFS = useCallback(async (wavesurfer: WaveSurfer) => {
     // Simplified LUFS calculation
     // In production, use a proper loudness meter library
     const peaks = wavesurfer.getDecodedData();
@@ -77,7 +44,39 @@ export function WaveformPreview({ audioUrl, onLUFS }: WaveformPreviewProps) {
     if (onLUFS) {
       onLUFS(estimatedLUFS);
     }
-  };
+  }, [onLUFS]);
+
+  useEffect(() => {
+    if (!waveformRef.current) return;
+
+    const wavesurfer = WaveSurfer.create({
+      container: waveformRef.current,
+      waveColor: 'rgb(139, 92, 246)',
+      progressColor: 'rgb(99, 102, 241)',
+      cursorColor: 'rgb(99, 102, 241)',
+      barWidth: 2,
+      barRadius: 3,
+      height: 100,
+      normalize: true,
+    });
+
+    wavesurfer.load(audioUrl);
+
+    wavesurfer.on('play', () => setIsPlaying(true));
+    wavesurfer.on('pause', () => setIsPlaying(false));
+    wavesurfer.on('ready', () => {
+      setDuration(wavesurfer.getDuration());
+      // Calculate LUFS (simplified - in production use loudness.js or similar)
+      calculateLUFS(wavesurfer);
+    });
+    wavesurfer.on('timeupdate', (time) => setCurrentTime(time));
+
+    wavesurferRef.current = wavesurfer;
+
+    return () => {
+      wavesurfer.destroy();
+    };
+  }, [audioUrl, onLUFS, calculateLUFS]);
 
   const togglePlay = () => {
     if (wavesurferRef.current) {
@@ -115,6 +114,16 @@ export function WaveformPreview({ audioUrl, onLUFS }: WaveformPreviewProps) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -5,7 +5,7 @@ interface CreditListItem {
 }
 
 interface CreditListProps {
-  items: CreditListItem[];
+  items: readonly CreditListItem[];
 }
 
 export default function CreditList({ items }: CreditListProps) {

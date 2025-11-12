@@ -2,3 +2,4 @@
 > web@0.1.0 lint /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > eslint --max-warnings 0
 
+Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .

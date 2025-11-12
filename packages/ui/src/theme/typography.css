@@ -1,5 +1,4 @@
-@layer base {
-  :root {
+:root {
     --sf-font-sans: var(--font-geist-sans, "Manrope", "Inter", "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif);
     --sf-font-serif: "Fraunces", "Playfair Display", "Georgia", serif;
     --sf-font-mono: var(--font-geist-mono, "JetBrains Mono", "IBM Plex Mono", monospace);
@@ -63,4 +62,3 @@
     letter-spacing: var(--sf-letter-spacing-wide);
     text-transform: uppercase;
   }
-}

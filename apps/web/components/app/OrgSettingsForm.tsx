@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { Button, Input, Label } from '@songforge/ui';
+import { useEffect, useRef, useState } from 'react';
+
 import OrgMembersStub from './OrgMembersStub';
 
 const ORG_TYPES = ['Foundation', 'Studio', 'Band'] as const;
@@ -81,7 +82,7 @@ export default function OrgSettingsForm({
             </div>
           </label>
 
-          <label className="space-y-2">
+          <label htmlFor="org-color" className="space-y-2">
             <span className="text-sm font-medium text-brand-foreground">Brand color</span>
             <div className="flex items-center gap-3 rounded-2xl border border-border/60 bg-surface/60 px-4 py-3">
               <Input

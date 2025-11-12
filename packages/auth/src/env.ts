@@ -11,13 +11,31 @@ const envSchema = z.object({
   APPLE_CLIENT_SECRET: z.string().optional()
 });
 
-export const env = envSchema.parse({
-  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-  EMAIL_SERVER_URL: process.env.EMAIL_SERVER_URL,
-  EMAIL_FROM: process.env.EMAIL_FROM,
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  APPLE_CLIENT_ID: process.env.APPLE_CLIENT_ID,
-  APPLE_CLIENT_SECRET: process.env.APPLE_CLIENT_SECRET
-});
+function getEnv() {
+  try {
+    return envSchema.parse({
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+      NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+      EMAIL_SERVER_URL: process.env.EMAIL_SERVER_URL,
+      EMAIL_FROM: process.env.EMAIL_FROM,
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+      APPLE_CLIENT_ID: process.env.APPLE_CLIENT_ID,
+      APPLE_CLIENT_SECRET: process.env.APPLE_CLIENT_SECRET
+    });
+  } catch {
+    // During build time, return a safe default
+    return {
+      NEXTAUTH_SECRET: '',
+      NEXTAUTH_URL: undefined,
+      EMAIL_SERVER_URL: '',
+      EMAIL_FROM: '',
+      GOOGLE_CLIENT_ID: undefined,
+      GOOGLE_CLIENT_SECRET: undefined,
+      APPLE_CLIENT_ID: undefined,
+      APPLE_CLIENT_SECRET: undefined
+    };
+  }
+}
+
+export const env = getEnv();

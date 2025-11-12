@@ -1,5 +1,6 @@
 import * as DrawerPrimitive from '@radix-ui/react-dialog';
 import * as React from 'react';
+
 import { cn } from '../lib/utils';
 
 const Drawer = DrawerPrimitive.Root;
@@ -18,7 +19,7 @@ const DrawerOverlay = React.forwardRef<
   <DrawerPrimitive.Overlay
     ref={ref}
     className={cn(
-      'fixed inset-0 z-50 bg-overlay/50 backdrop-blur-sm motion-safe:transition-opacity motion-safe:duration-200 data-[state=open]:opacity-100 data-[state=closed]:opacity-0',
+      'bg-overlay/50 fixed inset-0 z-50 backdrop-blur-sm data-[state=closed]:opacity-0 data-[state=open]:opacity-100 motion-safe:transition-opacity motion-safe:duration-200',
       className
     )}
     {...props}
@@ -36,7 +37,7 @@ const DrawerContent = React.forwardRef<
       <DrawerPrimitive.Content
         ref={ref}
         className={cn(
-          'mx-auto w-full max-w-lg rounded-t-3xl border border-border/60 bg-surface p-6 shadow-elevated motion-safe:transition-transform motion-safe:duration-300 data-[state=open]:translate-y-0 data-[state=closed]:translate-y-full',
+          'mx-auto w-full max-w-lg rounded-t-3xl border border-border/60 bg-surface p-6 shadow-elevated data-[state=closed]:translate-y-full data-[state=open]:translate-y-0 motion-safe:transition-transform motion-safe:duration-300',
           className
         )}
         {...props}

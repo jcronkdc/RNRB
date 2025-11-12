@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { Button, Input, Label, Textarea } from '@songforge/ui';
+import { useEffect, useRef, useState } from 'react';
+
 import AvatarStub from './AvatarStub';
 
 interface ProfileFormProps {

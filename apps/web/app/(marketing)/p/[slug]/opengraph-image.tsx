@@ -34,8 +34,9 @@ function textClip(txt: string, max: number) {
   return txt.length > max ? txt.slice(0, max - 1) + '…' : txt;
 }
 
-export default async function OpengraphImage({ params }: { params: { slug: string } }) {
-  const project = MOCK_PROJECTS[params.slug as keyof typeof MOCK_PROJECTS];
+export default async function OpengraphImage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = MOCK_PROJECTS[slug as keyof typeof MOCK_PROJECTS];
 
   // Warm theme gradient
   const GRADIENT = 'linear-gradient(120deg, hsl(16,92%,54%) 0%, hsl(32,60%,96%) 100%)';
@@ -49,7 +50,9 @@ export default async function OpengraphImage({ params }: { params: { slug: strin
     credits = project.credits.slice(0, 2).map((c) => c.name).join(' • ');
     if (project.credits.length > 2) credits += ` +${project.credits.length - 2} more`;
   }
-  return new (require('next/server').ImageResponse)(
+  const { ImageResponse } = await import('next/server');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return new (ImageResponse as any)(
     (
       <div
         style={{

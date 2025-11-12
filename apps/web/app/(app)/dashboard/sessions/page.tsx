@@ -21,6 +21,8 @@ const sessions = [
   }
 ] as const;
 
+export const dynamic = 'force-dynamic';
+
 export default function SessionsPage() {
   return (
     <div className="space-y-10">
@@ -31,7 +33,7 @@ export default function SessionsPage() {
             Hold space for creative flow with agendas, references, and a running log of takes.
           </p>
         </div>
-        <Button size="sm" variant="secondary">
+        <Button size="sm" variant="subtle">
           Schedule session
         </Button>
       </header>

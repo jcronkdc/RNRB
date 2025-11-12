@@ -31,15 +31,37 @@ model Org {
   brandColor  String?       // Hex color
   description String?
   website     String?
+  bio         String?       // Extended biography
+  location    String?       // City, State/Country
+  genre       String[]      // Musical genres
+  influences  String[]      // Musical influences
+  founded     Int?          // Year founded
+  socialLinks Json?         // { twitter, instagram, facebook, youtube, tiktok, etc }
+  contactEmail String?
+  bookingEmail String?
+  pressKitUrl String?       // Link to downloadable press kit
+  epkData     Json?         // Electronic Press Kit data
+  achievements Json?        // Notable achievements/milestones
+  spotifyArtistId String?
+  appleMusicId String?
+  images      Json?         // { hero, profile, gallery: [...] }
+  verified    Boolean      @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   memberships Membership[]
   projects    Project[]     @relation(name: "OrgProjects")
   events      Event[]
   episodes    PodcastEpisode[]
+  tours       Tour[]
+  shows       Show[]
+  bandMembers BandMember[]
+  pressReleases PressRelease[]
+  awards      Award[]
 
   @@index([slug])
   @@index([type])
+  @@index([genre])
+  @@index([location])
 }
 
 model Membership {
@@ -84,6 +106,7 @@ model Project {
   splitSheets SplitSheet[]
   licenses    License[]
   events      Event[]
+  shows       Show[]
 
   @@index([orgId])
   @@index([slug])
@@ -115,6 +138,7 @@ model Song {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  setlistItems SetlistItem[]
 
   @@index([projectId])
   @@index([iswc])
@@ -356,4 +380,232 @@ model Subscription {
   @@index([email])
   @@index([status])
   @@index([stripeId])
+}
+
+// Tour Management Models
+
+model Tour {
+  id            String     @id @default(cuid())
+  orgId         String
+  name          String
+  slug          String     @unique
+  description   String?
+  startDate     DateTime
+  endDate       DateTime?
+  status        TourStatus @default(planning)
+  posterImage   String?
+  sponsorLogos  Json?      // Array of { name, logoUrl, website }
+  merch         Json?      // Array of { name, price, image, url }
+  public        Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  org           Org        @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  shows         Show[]
+  fanEngagements FanEngagement[]
+
+  @@index([orgId])
+  @@index([status])
+  @@index([startDate])
+}
+
+enum TourStatus {
+  planning
+  announced
+  ongoing
+  completed
+  cancelled
+}
+
+model Venue {
+  id                String    @id @default(cuid())
+  name              String
+  slug              String    @unique
+  type              VenueType @default(club)
+  capacity          Int?
+  address           String?
+  city              String?
+  state             String?
+  country           String?
+  postalCode        String?
+  latitude          Float?
+  longitude         Float?
+  phone             String?
+  email             String?
+  website           String?
+  parkingInfo       String?
+  accessibilityInfo String?
+  images            Json?     // Array of image URLs
+  socialLinks       Json?     // { twitter, instagram, facebook, etc }
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  shows             Show[]
+
+  @@index([city])
+  @@index([type])
+}
+
+enum VenueType {
+  club
+  theater
+  arena
+  stadium
+  festival
+  other
+}
+
+model Show {
+  id              String      @id @default(cuid())
+  tourId          String?
+  orgId           String
+  projectId       String?
+  venueId         String?
+  name            String
+  slug            String      @unique
+  description     String?
+  date            DateTime
+  doorsTime       DateTime?
+  soundcheckTime  DateTime?
+  setLength       Int?        // In minutes
+  status          ShowStatus  @default(scheduled)
+  ticketUrl       String?
+  ticketPrice     Json?       // { general: 25, vip: 50, etc }
+  ageRestriction  String?
+  supportingActs  Json?       // Array of { name, website, setTime }
+  notes           String?     // Internal notes
+  posterImage     String?
+  livestreamUrl   String?
+  recordingUrl    String?
+  attendance      Int?
+  grossRevenue    Decimal?
+  public          Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  tour            Tour?       @relation(fields: [tourId], references: [id], onDelete: SetNull)
+  org             Org         @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  project         Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  venue           Venue?      @relation(fields: [venueId], references: [id], onDelete: SetNull)
+  setlist         Setlist?
+  fanEngagements  FanEngagement[]
+
+  @@index([tourId])
+  @@index([orgId])
+  @@index([venueId])
+  @@index([date])
+  @@index([status])
+}
+
+enum ShowStatus {
+  scheduled
+  soldout
+  cancelled
+  postponed
+  completed
+}
+
+model Setlist {
+  id          String         @id @default(cuid())
+  showId      String         @unique
+  name        String?
+  notes       String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  show        Show           @relation(fields: [showId], references: [id], onDelete: Cascade)
+  items       SetlistItem[]
+}
+
+model SetlistItem {
+  id          String    @id @default(cuid())
+  setlistId   String
+  songId      String?
+  position    Int
+  notes       String?
+  duration    Int?      // In seconds
+  isEncore    Boolean   @default(false)
+  customTitle String?   // For covers or unreleased songs
+  
+  setlist     Setlist   @relation(fields: [setlistId], references: [id], onDelete: Cascade)
+  song        Song?     @relation(fields: [songId], references: [id], onDelete: SetNull)
+
+  @@index([setlistId])
+  @@index([songId])
+}
+
+model FanEngagement {
+  id           String    @id @default(cuid())
+  showId       String?
+  tourId       String?
+  email        String
+  name         String?
+  notifyShows  Boolean   @default(true)
+  notifyMerch  Boolean   @default(false)
+  location     String?   // City/State for tour routing
+  createdAt    DateTime  @default(now())
+  
+  show         Show?     @relation(fields: [showId], references: [id], onDelete: SetNull)
+  tour         Tour?     @relation(fields: [tourId], references: [id], onDelete: SetNull)
+
+  @@index([email])
+  @@index([showId])
+  @@index([tourId])
+}
+
+model BandMember {
+  id          String    @id @default(cuid())
+  orgId       String
+  name        String
+  role        String    // e.g., "Lead Vocals", "Guitar", "Drums"
+  bio         String?
+  image       String?
+  instruments String[]
+  socialLinks Json?     // { twitter, instagram, etc }
+  joinedAt    DateTime?
+  active      Boolean   @default(true)
+  order       Int       @default(0) // Display order
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  org         Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+}
+
+model PressRelease {
+  id          String    @id @default(cuid())
+  orgId       String
+  title       String
+  slug        String    @unique
+  content     String    // Markdown content
+  excerpt     String?
+  publishedAt DateTime?
+  attachments Json?     // Array of { name, url, type }
+  public      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  org         Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([publishedAt])
+}
+
+model Award {
+  id              String    @id @default(cuid())
+  orgId           String
+  name            String    // e.g., "Grammy Award"
+  organization    String    // e.g., "The Recording Academy"
+  year            Int
+  category        String?   // e.g., "Best New Artist"
+  description     String?
+  image           String?
+  verificationUrl String?
+  createdAt       DateTime  @default(now())
+  
+  org             Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([year])
 }

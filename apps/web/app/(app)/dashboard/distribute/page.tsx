@@ -1,8 +1,9 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { createServerClient } from '@supabase/ssr';
 import { prisma } from '@songforge/db';
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@songforge/ui';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
 import { requestPayoutAction } from '../../../actions/requestPayout';
 
 interface LeaseMetadata {
@@ -37,7 +38,7 @@ function parseMetadata(raw: string | null | undefined): LeaseMetadata | null {
 }
 
 async function getSupabaseSession() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -132,6 +133,8 @@ async function handlePayout(formData: FormData) {
   await requestPayoutAction(payload);
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function DistributePage() {
   const session = await getSupabaseSession();
 
@@ -183,7 +186,6 @@ export default async function DistributePage() {
           songs.map((song) => {
             const lease = song.lease;
             const payouts = lease?.payouts ?? [];
-            const pending = payouts.filter((payout) => payout.status === 'pending');
             return (
               <Card key={song.id} className="rounded-3xl border border-border/60 bg-surface">
                 <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -219,7 +221,7 @@ export default async function DistributePage() {
                           <li key={`${song.id}-payout-${index}`} className="flex items-center justify-between rounded-xl border border-border/40 bg-surface/70 px-3 py-2">
                             <span>{formatDate(payout.requestedAt)}</span>
                             <span>{formatCurrency(payout.amount ?? lease?.amount ?? 0)}</span>
-                            <Badge variant={payout.status === 'pending' ? 'outline' : 'default'}>{payout.status}</Badge>
+                            <Badge variant={payout.status === 'pending' ? 'outline' : 'solid'}>{payout.status}</Badge>
                           </li>
                         ))}
                       </ul>

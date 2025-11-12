@@ -1,8 +1,5 @@
 'use client';
 
-import { Fragment, useMemo, useState, useTransition } from 'react';
-import { motion } from 'framer-motion';
-import { Plus, Trash2 } from 'lucide-react';
 import {
   Button,
   Dialog,
@@ -15,6 +12,10 @@ import {
   Input,
   Label
 } from '@songforge/ui';
+import { motion } from 'framer-motion';
+import { Plus, Trash2 } from 'lucide-react';
+import { Fragment, useMemo, useState, useTransition } from 'react';
+
 import { useToast } from '../../../components/ui/Toast';
 import { createLeaseAction } from '../../actions/createLease';
 
@@ -165,7 +166,7 @@ export function LeaseDialog({ songId, songTitle }: LeaseDialogProps) {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label>Collaborator splits</Label>
-                <Button type="button" size="xs" variant="ghost" onClick={addCollaborator} disabled={isPending}>
+                <Button type="button" size="sm" variant="ghost" onClick={addCollaborator} disabled={isPending}>
                   <Plus className="h-4 w-4" aria-hidden="true" /> Add
                 </Button>
               </div>

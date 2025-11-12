@@ -1,19 +1,19 @@
+import { cn } from '@songforge/ui';
 import type { Metadata } from 'next';
-import Script from 'next/script';
-import dynamic from 'next/dynamic';
 import { Fraunces, Inter } from 'next/font/google';
 import localFont from 'next/font/local';
-import type { ComponentType } from 'react';
+import Script from 'next/script';
+
 import { Providers } from './providers';
+import { ServiceWorkerRegistration } from './sw-register';
+import { AxeInitializer } from '../components/AxeInitializer';
 import { Background } from '../components/background';
-import { PageShell } from '../components/page-shell';
-import { NavBar } from '../components/NavBar';
-import { Footer } from '../components/Footer';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-import { cn } from '@songforge/ui';
+import { Footer } from '../components/Footer';
+import { NavBar } from '../components/NavBar';
+import { PageShell } from '../components/page-shell';
 import './globals.css';
 import { ThemeProvider } from '../components/theme/ThemeProvider';
-import { ServiceWorkerRegistration } from './sw-register';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -32,28 +32,6 @@ const geistMono = localFont({
   variable: '--sf-font-mono',
   display: 'swap'
 });
-
-const AxeInitializer =
-  process.env.NODE_ENV === 'production'
-    ? (() => null) as ComponentType
-    : (dynamic(async () => {
-        const { default: React } = await import('react');
-        const { default: ReactDOM } = await import('react-dom');
-        const axe = (await import('@axe-core/react')).default;
-        const { useEffect } = React;
-
-        const AxeComponent: ComponentType = () => {
-          useEffect(() => {
-            const timeout = setTimeout(() => {
-              axe(React, ReactDOM, 1500);
-            }, 500);
-            return () => clearTimeout(timeout);
-          }, []);
-          return null;
-        };
-
-        return AxeComponent;
-      }, { ssr: false }) as unknown as ComponentType);
 
 export const metadata: Metadata = {
   title: 'SongForge',
@@ -113,7 +91,7 @@ export default function RootLayout({
         <ErrorBoundary>
           <Providers>
             <ThemeProvider>
-              <AxeInitializer />
+              {process.env.NODE_ENV !== 'production' && <AxeInitializer />}
               <Background
                 className="flex min-h-screen flex-col"
                 contentClassName="flex min-h-screen flex-col"

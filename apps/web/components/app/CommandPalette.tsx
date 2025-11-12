@@ -1,5 +1,7 @@
 'use client';
 
+import { cn } from '@songforge/ui';
+import { useRouter } from 'next/navigation';
 import {
   useCallback,
   useEffect,
@@ -8,8 +10,6 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent
 } from 'react';
-import { cn } from '@songforge/ui';
-import { useRouter } from 'next/navigation';
 
 export interface CommandItem {
   id: string;
@@ -134,8 +134,10 @@ export default function CommandPalette({ commands = [], register }: CommandPalet
   }, [filtered, activeIndex, runCommand]);
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-background/60 px-4 py-20 backdrop-blur-sm" role="dialog" aria-modal="true" onClick={() => setOpen(false)}>
-      <div ref={panelRef} className="w-full max-w-lg rounded-3xl border border-border/60 bg-surface/95 shadow-soft" onKeyDown={handleKeyNavigation} onClick={(event) => event.stopPropagation()}>
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-background/60 px-4 py-20 backdrop-blur-sm" role="dialog" aria-modal="true" onClick={() => setOpen(false)} onKeyDown={(e) => { if (e.key === 'Escape') setOpen(false); }} tabIndex={-1} aria-label="Command palette">
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+      <div ref={panelRef} className="w-full max-w-lg rounded-3xl border border-border/60 bg-surface/95 shadow-soft" onKeyDown={handleKeyNavigation} onClick={(event) => event.stopPropagation()} role="application" aria-label="Command palette panel">
         <div className="border-b border-border/50 px-5 py-4">
           <input ref={inputRef} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search commands" className="h-11 w-full rounded-xl border border-border/60 bg-surface px-4 text-sm text-brand-foreground shadow-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary" aria-label="Search commands" />
         </div>
@@ -143,7 +145,7 @@ export default function CommandPalette({ commands = [], register }: CommandPalet
           {filtered.length === 0 ? (
             <p className="px-3 py-6 text-sm text-muted-foreground">No matching commands yet.</p>
           ) : (
-            <ul role="listbox" aria-activedescendant={filtered[activeIndex]?.id ?? undefined} className="space-y-1">
+            <ul role="listbox" aria-activedescendant={filtered[activeIndex]?.id ?? undefined} tabIndex={0} className="space-y-1">
               {filtered.map((command, index) => (
                 <li key={command.id}>
                   <button type="button" id={command.id} onClick={() => runCommand(command)} onMouseEnter={() => setActiveIndex(index)} className={cn('flex w-full items-center justify-between rounded-2xl px-4 py-3 text-left text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary', index === activeIndex ? 'bg-brand-primary/15 text-brand-foreground shadow-soft' : 'text-muted-foreground hover:bg-brand-primary/10 hover:text-brand-foreground')} role="option" aria-selected={index === activeIndex}>

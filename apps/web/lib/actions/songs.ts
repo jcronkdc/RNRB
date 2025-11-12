@@ -1,10 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { createSongSchema, updateSongSchema } from '@songforge/db/validation/songs';
-import { createSong, updateSong, deleteSong, listSongs } from '@songforge/db';
 import { requireOrgSession } from '@songforge/auth';
-import { getProjectBySlug } from '@songforge/db';
+import { createSongSchema, updateSongSchema , createSong, updateSong, deleteSong, listSongs , getProjectBySlug } from '@songforge/db';
+import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {
   success: boolean;
@@ -23,8 +21,14 @@ export async function createSongAction(
     const session = await requireOrgSession();
     const validated = createSongSchema.parse(input);
 
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
     // Verify project exists and belongs to org
-    const project = await getProjectBySlug(projectSlug, session.orgId);
+    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {
         success: false,
@@ -105,8 +109,15 @@ export async function deleteSongAction(songId: string): Promise<ActionResult<voi
 export async function listSongsAction(projectSlug: string) {
   try {
     const session = await requireOrgSession();
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found',
+        data: []
+      };
+    }
 
-    const project = await getProjectBySlug(projectSlug, session.orgId);
+    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {
         success: false,

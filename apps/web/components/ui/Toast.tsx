@@ -1,7 +1,7 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { cn } from '@songforge/ui';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 const ToastContext = createContext<{ push: (msg: string, opts?: { tone?: Tone; ttlMs?: number }) => void } | undefined>(undefined);
 type Tone = 'info' | 'success' | 'warn' | 'error';
@@ -47,7 +47,7 @@ export function ToastHost({ toasts, onDismiss }: ToastHostProps) {
           key={t.id}
           role="status"
           className={cn(
-            'pointer-events-auto mb-2 min-w-[200px] max-w-xs rounded-2xl border bg-surface px-4 py-3 text-sm shadow-soft transition motion-safe:opacity-100 motion-safe:translate-y-0 motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:translate-y-0',
+            'pointer-events-auto mb-2 min-w-[200px] max-w-xs rounded-2xl border bg-surface px-4 py-3 text-sm shadow-soft transition motion-safe:translate-y-0 motion-safe:opacity-100 motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none',
             toneToClass[t.tone] ?? toneToClass.info,
             'motion-safe:fade-in-enter',
           )}

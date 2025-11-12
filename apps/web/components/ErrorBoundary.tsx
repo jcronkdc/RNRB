@@ -1,8 +1,8 @@
 'use client';
 
-import { Component, type ReactNode } from 'react';
 import { Button } from '@songforge/ui';
 import Link from 'next/link';
+import { Component, type ReactNode } from 'react';
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -55,7 +55,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               Something went wrong
             </h1>
             <p className="mb-6 text-base text-muted-foreground">
-              We encountered an unexpected error. This has been logged and we'll look into it.
+              We encountered an unexpected error. This has been logged and we&apos;ll look into it.
             </p>
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="mb-6 rounded-xl border border-border/60 bg-surface-muted p-4 text-left">

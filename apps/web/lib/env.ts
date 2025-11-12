@@ -43,7 +43,12 @@ const envSchema = z.object({
   // Payments (optional)
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_PUBLISHABLE_KEY: z.string().optional(),
-  GIVE_LIVELY_API_KEY: z.string().optional()
+  GIVE_LIVELY_API_KEY: z.string().optional(),
+
+  // AI Services (optional)
+  OPENAI_API_KEY: z.string().optional(),
+  ELEVENLABS_API_KEY: z.string().optional(),
+  ELEVENLABS_VOICE_ID: z.string().optional()
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -78,7 +83,10 @@ export function getEnv(): Env {
       ANALYTICS_ID: process.env.ANALYTICS_ID,
       STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
       STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
-      GIVE_LIVELY_API_KEY: process.env.GIVE_LIVELY_API_KEY
+      GIVE_LIVELY_API_KEY: process.env.GIVE_LIVELY_API_KEY,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      ELEVENLABS_API_KEY: process.env.ELEVENLABS_API_KEY,
+      ELEVENLABS_VOICE_ID: process.env.ELEVENLABS_VOICE_ID
     });
   }
 

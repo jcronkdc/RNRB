@@ -1,20 +1,34 @@
-import { getOrgSession } from '@songforge/auth';
+import { getOrgSessionFromSession } from '@songforge/auth';
 import { appRouter, createContext } from '@songforge/trpc/server';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 
-const handler = (request: Request) =>
-  fetchRequestHandler({
+export async function GET(request: Request) {
+  return fetchRequestHandler({
     endpoint: '/api/trpc',
     router: appRouter,
     req: request,
     createContext: async () => {
-      const session = await getOrgSession();
+      const session = await getOrgSessionFromSession().catch(() => null);
       return createContext({
         session,
         headers: request.headers
       });
     }
   });
+}
 
-export { handler as GET, handler as POST };
+export async function POST(request: Request) {
+  return fetchRequestHandler({
+    endpoint: '/api/trpc',
+    router: appRouter,
+    req: request,
+    createContext: async () => {
+      const session = await getOrgSessionFromSession().catch(() => null);
+      return createContext({
+        session,
+        headers: request.headers
+      });
+    }
+  });
+}
 

@@ -1,10 +1,8 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { createSplitSheetSchema, updateSplitSheetSchema } from '@songforge/db/validation/splits';
-import { createSplitSheet, updateSplitSheet, addContributor, updateContributor, removeContributor, finalizeSplitSheet, listSplitSheets } from '@songforge/db';
 import { requireOrgSession } from '@songforge/auth';
-import { getProjectBySlug } from '@songforge/db';
+import { createSplitSheetSchema, updateSplitSheetSchema , createSplitSheet, updateSplitSheet, addContributor, updateContributor, removeContributor, finalizeSplitSheet, listSplitSheets , getProjectBySlug } from '@songforge/db';
+import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {
   success: boolean;
@@ -23,7 +21,13 @@ export async function createSplitSheetAction(
     const session = await requireOrgSession();
     const validated = createSplitSheetSchema.parse(input);
 
-    const project = await getProjectBySlug(projectSlug, session.orgId);
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
+    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {
         success: false,
@@ -85,7 +89,7 @@ export async function addContributorAction(
 ): Promise<ActionResult<{ id: string }>> {
   try {
     await requireOrgSession();
-    const { splitContributorSchema } = await import('@songforge/db/validation');
+    const { splitContributorSchema } = await import('@songforge/db');
     const validated = splitContributorSchema.parse(input);
 
     const contributor = await addContributor(splitSheetId, validated);
@@ -113,7 +117,7 @@ export async function updateContributorAction(
 ): Promise<ActionResult<void>> {
   try {
     await requireOrgSession();
-    const { splitContributorSchema } = await import('@songforge/db/validation');
+    const { splitContributorSchema } = await import('@songforge/db');
     const validated = splitContributorSchema.partial().parse(input);
 
     await updateContributor(contributorId, validated);
@@ -186,8 +190,15 @@ export async function finalizeSplitSheetAction(
 export async function listSplitSheetsAction(projectSlug: string) {
   try {
     const session = await requireOrgSession();
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found',
+        data: []
+      };
+    }
 
-    const project = await getProjectBySlug(projectSlug, session.orgId);
+    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {
         success: false,

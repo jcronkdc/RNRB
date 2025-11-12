@@ -1,12 +1,13 @@
+import { prisma } from '@songforge/db';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { createServerClient } from '@supabase/ssr';
-import { prisma } from '@songforge/db';
 import { Suspense } from 'react';
+
 import { RemixRoomClient } from './RemixRoomClient';
 
 async function getSession() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -50,7 +51,7 @@ async function loadSong(roomId: string) {
 }
 
 interface RemixPageProps {
-  params: { roomId: string };
+  params: Promise<{ roomId: string }>;
 }
 
 export default async function RemixPage({ params }: RemixPageProps) {
@@ -60,7 +61,8 @@ export default async function RemixPage({ params }: RemixPageProps) {
     redirect('/login');
   }
 
-  const song = await loadSong(params.roomId);
+  const { roomId } = await params;
+  const song = await loadSong(roomId);
 
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col gap-8 py-10">
@@ -72,7 +74,7 @@ export default async function RemixPage({ params }: RemixPageProps) {
       </header>
 
       <Suspense fallback={<p className="text-center text-sm text-muted-foreground">Loading mixer…</p>}>
-        <RemixRoomClient roomId={params.roomId} song={song} />
+        <RemixRoomClient roomId={roomId} song={song} />
       </Suspense>
     </section>
   );

@@ -36,7 +36,7 @@ export default function StyleGuidePage() {
           <h2 className="text-sm uppercase tracking-[0.28em] text-brand-muted-foreground">Buttons</h2>
           <div className="mt-4 flex flex-wrap gap-4">
             <Button>Primary</Button>
-            <Button variant="secondary">Secondary</Button>
+            <Button variant="subtle">Secondary</Button>
             <Button variant="outline">Outline</Button>
             <Button variant="ghost">Ghost</Button>
             <Button variant="link">Link</Button>

@@ -1,5 +1,4 @@
-@layer base {
-  :root {
+:root {
     /* Light theme - Warm, inviting, creative */
     --sf-color-background: 28 40% 98%;
     --sf-color-surface: 27 32% 96%;
@@ -148,4 +147,3 @@
 
     --sf-shadow-glow: 0 0 40px -8px hsl(var(--sf-color-brand-primary) / 0.35);
   }
-}

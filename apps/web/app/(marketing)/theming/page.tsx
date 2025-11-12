@@ -1,5 +1,7 @@
 import ThemePreview from '../../../components/theme/ThemePreview';
 
+export const dynamic = 'force-dynamic';
+
 export default function ThemeQaPage() {
   return (
     <div className="space-y-10">

@@ -8,9 +8,10 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
-  type ReactNode
+  useState
 } from 'react';
+import type { ReactNode } from 'react';
+
 import { MotionProvider } from '../components/motion-provider';
 
 type ThemeMode = 'light' | 'dark';

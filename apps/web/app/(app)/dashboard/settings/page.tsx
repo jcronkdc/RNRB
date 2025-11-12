@@ -1,5 +1,7 @@
 import { Button, Input } from '@songforge/ui';
 
+export const dynamic = 'force-dynamic';
+
 export default function SettingsPage() {
   return (
     <div className="grid gap-10">
@@ -11,22 +13,23 @@ export default function SettingsPage() {
           </p>
         </header>
         <form className="grid gap-5 md:grid-cols-2">
-          <label className="flex flex-col gap-2 text-sm font-medium text-brand-foreground">
+          <label htmlFor="display-name" className="flex flex-col gap-2 text-sm font-medium text-brand-foreground">
             Display name
-            <Input defaultValue="Aurora Collective" className="bg-surface-elevated" />
+            <Input id="display-name" defaultValue="Aurora Collective" className="bg-surface-elevated" />
           </label>
-          <label className="flex flex-col gap-2 text-sm font-medium text-brand-foreground">
+          <label htmlFor="primary-email" className="flex flex-col gap-2 text-sm font-medium text-brand-foreground">
             Primary email
-            <Input defaultValue="studio@songforge.dev" className="bg-surface-elevated" />
+            <Input id="primary-email" defaultValue="studio@songforge.dev" className="bg-surface-elevated" />
           </label>
-          <label className="md:col-span-2 flex flex-col gap-2 text-sm font-medium text-brand-foreground">
+          <label htmlFor="bio" className="flex flex-col gap-2 text-sm font-medium text-brand-foreground md:col-span-2">
             Bio
             <textarea
+              id="bio"
               defaultValue="SongForge curates modern songwriting experiences, from remote sessions to cinematic showcases."
               className="min-h-[120px] rounded-xl border border-border/60 bg-surface-elevated px-4 py-3 text-sm text-brand-foreground outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-background"
             />
           </label>
-          <div className="md:col-span-2 flex items-center justify-end gap-3">
+          <div className="flex items-center justify-end gap-3 md:col-span-2">
             <Button variant="ghost">Discard</Button>
             <Button>Save changes</Button>
           </div>

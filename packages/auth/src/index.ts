@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 export { authConfig, handlers, auth, signIn, signOut } from './auth';
 export { env } from './env';
 export type { OrgAwareSession } from './session';
+export { getOrgSession as getOrgSessionFromSession, requireOrgSession } from './session';
 
 export type AppUser = {
   id: string;
