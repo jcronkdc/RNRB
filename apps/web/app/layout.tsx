@@ -13,7 +13,6 @@ import { Footer } from '../components/Footer';
 import { NavBar } from '../components/NavBar';
 import { PageShell } from '../components/page-shell';
 import './globals.css';
-import { ThemeProvider } from '../components/theme/ThemeProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -92,24 +91,22 @@ export default function RootLayout({
         <div id="a11y-announcer" aria-live="polite" aria-atomic="true" className="sr-only" />
         <ErrorBoundary>
           <Providers>
-            <ThemeProvider>
-              {process.env.NODE_ENV === 'development' ? <AxeInitializer /> : null}
-              <Background
-                className="flex min-h-screen flex-col"
-                contentClassName="flex min-h-screen flex-col"
-              >
-                <NavBar />
-                <PageShell>
-                  <main
-                    id="main-content"
-                    className="relative flex-1 px-6 pb-12 pt-6 sm:px-10"
-                  >
-                    {children}
-                  </main>
-                </PageShell>
-                <Footer />
-              </Background>
-            </ThemeProvider>
+            {process.env.NODE_ENV === 'development' ? <AxeInitializer /> : null}
+            <Background
+              className="flex min-h-screen flex-col"
+              contentClassName="flex min-h-screen flex-col"
+            >
+              <NavBar />
+              <PageShell>
+                <main
+                  id="main-content"
+                  className="relative flex-1 px-6 pb-12 pt-6 sm:px-10"
+                >
+                  {children}
+                </main>
+              </PageShell>
+              <Footer />
+            </Background>
           </Providers>
         </ErrorBoundary>
       </body>
