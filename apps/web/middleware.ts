@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 import { getCSRFToken } from "./lib/csrf";
 import { checkRateLimit, RateLimitError } from "./lib/rate-limit";
-import { verifyAuthToken, getSessionToken } from "./lib/auth/edge-jwt";
+import { verifyAuthToken, getSessionToken } from "./lib/auth/edge-jwt-secure";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
