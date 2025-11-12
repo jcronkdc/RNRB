@@ -11,19 +11,19 @@ const heroStats = [
 
 const offerings = [
   {
-    title: 'Song Forge',
+    title: 'CronkWaters',
     description:
       'A collaborative studio for chart-ready lyrics, stems, and split agreements—kept in sync across every org.',
     icon: Sparkles
   },
   {
-    title: 'Song Forge Podcast',
+    title: 'CronkWaters Podcast',
     description:
       'Weekly tapes with producers, composers, and poets sharing the rituals, risks, and rights behind the mix.',
     icon: Disc3
   },
   {
-    title: 'Song Forge Festival',
+    title: 'CronkWaters Festival',
     description:
       'Three evenings of immersive listening rooms, community dinners, and multi-sensory performances at dusk.',
     icon: Waves

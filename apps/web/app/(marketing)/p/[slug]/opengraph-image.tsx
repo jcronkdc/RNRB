@@ -44,8 +44,8 @@ export default async function OpengraphImage({ params }: { params: Promise<{ slu
   const DEFAULT_GRAD = 'linear-gradient(120deg, #6245b7 0%, #ece9f7 100%)';
 
   const title = project?.name || 'Project';
-  const tagline = project?.tagline || 'A Song Forge release.';
-  let credits = 'Song Forge';
+  const tagline = project?.tagline || 'A CronkWaters release.';
+  let credits = 'CronkWaters';
   if (project?.credits) {
     credits = project.credits.slice(0, 2).map((c) => c.name).join(' • ');
     if (project.credits.length > 2) credits += ` +${project.credits.length - 2} more`;
@@ -98,7 +98,7 @@ export default async function OpengraphImage({ params }: { params: Promise<{ slu
           marginBottom: 40,
         }}>{credits}</div>
         <div style={{ position: 'absolute', right: 54, bottom: 40, fontSize: 24, color: '#48290b', letterSpacing: '.16em', opacity: 0.7 }}>
-          Song Forge
+          CronkWaters
         </div>
       </div>
     ),

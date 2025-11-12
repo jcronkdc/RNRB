@@ -8,7 +8,7 @@ export default function BlockedPage() {
       <div className="w-full max-w-xl rounded-3xl border border-border/60 bg-surface/95 p-10 text-center shadow-soft">
         <h1 className="mb-4 text-3xl font-bold text-brand-foreground">Access temporarily restricted</h1>
         <p className="mb-6 text-base text-muted-foreground">
-          This Song Forge demo environment is temporarily disabled. DEMO_BYPASS is enabled, which is only intended for local development.
+          This CronkWaters demo environment is temporarily disabled. DEMO_BYPASS is enabled, which is only intended for local development.
         </p>
         <p className="mb-6 text-sm text-muted-foreground">
           If you believe this is an error, please return to the home page or contact support for assistance.

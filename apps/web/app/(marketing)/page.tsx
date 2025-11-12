@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Home',
-  description: 'Song Forge — craft, community, stewardship.'
+  description: 'CronkWaters — craft, community, stewardship.'
 };
 
 export default function HomePage() {

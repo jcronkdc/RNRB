@@ -6,7 +6,7 @@ export default function PrivacyPage() {
       <header>
         <h1 className="mb-4 text-3xl font-bold text-brand-foreground">Privacy Policy (Placeholder)</h1>
         <p className="text-sm text-muted-foreground">
-          This is a placeholder Privacy Policy for Song Forge. It is not legal advice and will be replaced before launch.
+          This is a placeholder Privacy Policy for CronkWaters. It is not legal advice and will be replaced before launch.
         </p>
       </header>
       <section>

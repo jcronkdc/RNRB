@@ -65,16 +65,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const showLeading = Boolean(LeadingIcon);
     const showTrailing = Boolean(TrailingIcon);
 
-    return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size }),
-          size === 'icon' && 'gap-0',
-          className
-        )}
-        ref={ref as React.Ref<HTMLButtonElement>}
-        {...props}
-      >
+    const content = (
+      <>
         {showLeading && LeadingIcon && (
           <span
             className={cn('inline-flex items-center justify-center', size === 'icon' ? 'mx-auto' : '')}
@@ -92,6 +84,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {React.createElement(TrailingIcon as React.ComponentType<{ className?: string }>, { className: cn('h-4 w-4', iconClassName) })}
           </span>
         )}
+      </>
+    );
+
+    return (
+      <Comp
+        className={cn(
+          buttonVariants({ variant, size }),
+          size === 'icon' && 'gap-0',
+          className
+        )}
+        ref={ref as React.Ref<HTMLButtonElement>}
+        {...props}
+      >
+        {asChild ? children : content}
       </Comp>
     );
   }

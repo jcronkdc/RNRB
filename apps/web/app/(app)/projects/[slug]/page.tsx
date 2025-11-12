@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : `${baseUrl}/og-default.jpg`;
 
   return {
-    title: `${project.name} • Song Forge`,
+    title: `${project.name} • CronkWaters`,
     description,
     openGraph: {
       title: project.name,
@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           alt: project.name
         }
       ],
-      siteName: 'Song Forge'
+      siteName: 'CronkWaters'
     },
     twitter: {
       card: 'summary_large_image',

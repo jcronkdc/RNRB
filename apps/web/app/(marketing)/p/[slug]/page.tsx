@@ -46,8 +46,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     openGraph: {
       images: [url],
-      title: project?.name || 'Song Forge Project',
-      description: project?.tagline || 'A Song Forge release.'
+      title: project?.name || 'CronkWaters Project',
+      description: project?.tagline || 'A CronkWaters release.'
     }
   };
 }
