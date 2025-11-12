@@ -8,8 +8,48 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 import type { StorageConfig, UploadOptions, SignedUrlOptions } from './index';
 import { getEnv } from '../env';
+import { sanitizeFileName } from '../sanitization';
+import { SecurityLogger, detectAttackPatterns } from '../security-logging';
 
 let s3Client: S3Client | null = null;
+
+/**
+ * Validate and sanitize S3 key to prevent directory traversal
+ */
+function validateS3Key(key: string, ip?: string): string {
+  // Check for attack patterns
+  const attacks = detectAttackPatterns(key);
+  if (attacks.isPathTraversal) {
+    SecurityLogger.logPathTraversalAttempt('/storage', key, ip);
+    throw new Error('Invalid file path');
+  }
+  
+  // Remove any path traversal attempts
+  if (key.includes('..') || key.includes('//') || key.includes('\\')) {
+    SecurityLogger.logPathTraversalAttempt('/storage', key, ip);
+    throw new Error('Invalid file path');
+  }
+  
+  // Ensure key doesn't start with /
+  if (key.startsWith('/')) {
+    key = key.substring(1);
+  }
+  
+  // Validate key components
+  const parts = key.split('/');
+  for (const part of parts) {
+    if (!part || part === '.' || part === '..' || part.includes('\0')) {
+      throw new Error('Invalid file path component');
+    }
+  }
+  
+  // Limit key length
+  if (key.length > 255) {
+    throw new Error('File path too long');
+  }
+  
+  return key;
+}
 
 /**
  * Initialize S3 client
@@ -63,20 +103,28 @@ export async function getUploadUrl(options: UploadOptions): Promise<{
   const env = getEnv();
   const bucket = env.STORAGE_BUCKET!;
 
+  // Validate and sanitize the key
+  const sanitizedKey = validateS3Key(options.key);
+
   const command = new PutObjectCommand({
     Bucket: bucket,
-    Key: options.key,
+    Key: sanitizedKey,
     ContentType: options.contentType,
     ContentLength: options.contentLength,
     ...(options.checksum ? { ChecksumSHA256: options.checksum } : {}),
-    Metadata: options.metadata
+    Metadata: options.metadata,
+    // Set server-side encryption
+    ServerSideEncryption: 'AES256',
+    // Set ACL to private by default
+    ACL: 'private'
   });
 
-  const url = await getSignedUrl(client, command, { expiresIn: 3600 }); // 1 hour
+  // Shorter expiration time for security
+  const url = await getSignedUrl(client, command, { expiresIn: 900 }); // 15 minutes
 
   return {
     url,
-    key: options.key
+    key: sanitizedKey
   };
 }
 

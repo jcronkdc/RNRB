@@ -10,12 +10,19 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
+    // In production, log to error reporting service without exposing details
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Application error:', error.digest || 'Unknown error');
+      // TODO: Send to error monitoring service (e.g., Sentry)
+    } else {
+      // Only log full error in development
+      console.error(error);
+    }
   }, [error]);
 
-  // Check if this is an environment variable error
-  const isEnvError = error.message?.includes('environment variable');
+  // Never expose error details in production
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isEnvError = isDevelopment && error.message?.includes('environment variable');
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
@@ -42,8 +49,15 @@ export default function Error({
             <p className="text-lg text-muted-foreground">
               An unexpected error occurred. Please try again.
             </p>
-            {error.message && (
+            {/* Only show error details in development */}
+            {isDevelopment && error.message && (
               <p className="text-sm text-muted-foreground">{error.message}</p>
+            )}
+            {/* Show error ID in production for support reference */}
+            {!isDevelopment && error.digest && (
+              <p className="text-xs text-muted-foreground">
+                Error ID: {error.digest}
+              </p>
             )}
           </div>
         )}

@@ -6,6 +6,7 @@ import AppleProvider from 'next-auth/providers/apple';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 import { env } from './env';
 
@@ -51,18 +52,42 @@ function getAuthConfig(): NextAuthOptions {
       })
     ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
-      if (user) {
+    async jwt({ token, user, trigger, session, account }) {
+      // Session fixation protection: Regenerate token ID on sign in
+      if (user && account) {
+        // Generate new session token ID to prevent session fixation
+        token.jti = crypto.randomBytes(32).toString('hex');
+        token.iat = Math.floor(Date.now() / 1000);
         (token as JWT & { userId?: string }).userId = user.id;
+        
+        // Store session rotation timestamp
+        (token as JWT & { rotatedAt?: number }).rotatedAt = Date.now();
+      }
+
+      // Session rotation: Regenerate token periodically
+      const tokenWithExtras = token as JWT & { 
+        userId?: string; 
+        organizationIds?: string[]; 
+        activeOrganizationId?: string;
+        rotatedAt?: number;
+        jti?: string;
+      };
+      
+      // Rotate session token every 60 minutes
+      const ROTATION_INTERVAL = 60 * 60 * 1000; // 1 hour
+      if (tokenWithExtras.rotatedAt && Date.now() - tokenWithExtras.rotatedAt > ROTATION_INTERVAL) {
+        tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
+        tokenWithExtras.rotatedAt = Date.now();
       }
 
       if (trigger === 'update') {
         if (session?.activeOrganizationId) {
-          (token as JWT & { activeOrganizationId?: string }).activeOrganizationId = session.activeOrganizationId;
+          tokenWithExtras.activeOrganizationId = session.activeOrganizationId;
         }
+        // Regenerate token on manual update
+        tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
+        tokenWithExtras.rotatedAt = Date.now();
       }
-
-      const tokenWithExtras = token as JWT & { userId?: string; organizationIds?: string[]; activeOrganizationId?: string };
       
       if (tokenWithExtras.userId && (!tokenWithExtras.organizationIds || trigger === 'update')) {
         const memberships = await prisma.membership.findMany({

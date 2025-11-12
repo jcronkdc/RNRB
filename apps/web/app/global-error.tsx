@@ -7,6 +7,17 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  // Log error securely without exposing details
+  if (typeof window !== 'undefined') {
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Critical application error:', error.digest || 'Unknown');
+    } else {
+      console.error('Global error:', error);
+    }
+  }
+
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
   return (
     <html lang="en">
       <body>
@@ -16,8 +27,15 @@ export default function GlobalError({
             <p className="mb-4 text-lg">
               The application encountered a critical error.
             </p>
-            {error.message && (
+            {/* Only show error details in development */}
+            {isDevelopment && error.message && (
               <p className="mb-4 text-sm text-gray-600">{error.message}</p>
+            )}
+            {/* Show error ID in production for support */}
+            {!isDevelopment && error.digest && (
+              <p className="mb-4 text-xs text-gray-500">
+                Reference: {error.digest}
+              </p>
             )}
             <button
               onClick={reset}
