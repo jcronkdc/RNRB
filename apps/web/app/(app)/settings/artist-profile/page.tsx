@@ -1,24 +1,20 @@
 import { redirect } from 'next/navigation';
-import { getOrgSession } from '@songforge/auth';
+import { requireOrgSession } from '@songforge/auth';
 import { prisma } from '@songforge/db';
 import { ArtistProfileForm } from './ArtistProfileForm';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ArtistProfilePage() {
-  const session = await getOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
   
-  if (!session) {
-    redirect('/auth');
-  }
-
-  const membership = session.activeMembership;
-  if (!membership || (membership.role !== 'owner' && membership.role !== 'admin')) {
+  if (role !== 'owner' && role !== 'admin') {
     redirect('/settings');
   }
 
   const org = await prisma.org.findUnique({
-    where: { id: membership.orgId },
+    where: { id: orgId },
     include: {
       bandMembers: {
         orderBy: { order: 'asc' },

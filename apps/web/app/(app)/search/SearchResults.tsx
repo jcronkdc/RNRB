@@ -34,7 +34,7 @@ export function SearchResults({ query, type }: { query: string; type: string }) 
   if (!query.trim()) {
     return (
       <EmptyState
-        icon={<SearchIcon className="h-6 w-6" aria-hidden="true" />}
+        icon={SearchIcon}
         title="Search Everything"
         description="Search across your projects, songs, assets, and more. Start typing to see results."
       />
@@ -54,7 +54,7 @@ export function SearchResults({ query, type }: { query: string; type: string }) 
   if (results.length === 0) {
     return (
       <EmptyState
-        icon={<SearchIcon className="h-6 w-6" aria-hidden="true" />}
+        icon={SearchIcon}
         title="No Results Found"
         description={`We couldn't find anything matching "${query}". Try different keywords or check your spelling.`}
       />

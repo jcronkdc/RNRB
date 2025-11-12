@@ -1,7 +1,7 @@
 'use server';
 
 import { requireOrgSession } from '@songforge/auth';
-import { prisma, generateSlug } from '@songforge/db';
+import { prisma } from '@songforge/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 

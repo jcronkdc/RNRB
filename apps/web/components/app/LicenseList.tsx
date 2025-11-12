@@ -1,5 +1,5 @@
-import { cn } from '@songforge/ui';
-import { FileText } from 'lucide-react';
+import { cn, Button } from '@songforge/ui';
+import { FileText, Plus } from 'lucide-react';
 
 import { EmptyState } from './EmptyState';
 
@@ -25,10 +25,15 @@ export default function LicenseList({ items, onCreate }: LicenseListProps & { on
   if (!items.length) {
     return (
       <EmptyState
-        icon={<FileText className="h-6 w-6" aria-hidden="true" />}
+        icon={FileText}
         title="Protect Your Work"
         description="Draft collaboration agreements, NDAs, and licenses to keep everyone aligned and protected. Start with a template or create your own."
-        action={onCreate ? { label: 'Create License', onClick: onCreate } : undefined}
+        action={onCreate ? (
+          <Button onClick={onCreate}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create License
+          </Button>
+        ) : undefined}
       />
     );
   }

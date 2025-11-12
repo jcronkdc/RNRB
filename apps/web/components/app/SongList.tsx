@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, cn } from '@songforge/ui';
-import { Music } from 'lucide-react';
+import { Music, Plus } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -26,10 +26,15 @@ export default function SongList({ items, onCreate }: { items: SongListItem[]; o
   if (!items.length) {
     return (
       <EmptyState
-        icon={<Music className="h-6 w-6" aria-hidden="true" />}
+        icon={Music}
         title="Start Your First Song"
         description="Every great project begins with a single track. Log your first song to begin tracking progress, collaborators, and the journey from idea to release."
-        action={onCreate ? { label: 'Add Song', onClick: onCreate } : undefined}
+        action={onCreate ? (
+          <Button onClick={onCreate}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Song
+          </Button>
+        ) : undefined}
       />
     );
   }

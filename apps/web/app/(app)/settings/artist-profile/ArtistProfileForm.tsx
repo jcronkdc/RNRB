@@ -8,12 +8,12 @@ import {
   X, 
   Music, 
   Users, 
-  Award as AwardIcon, 
   Globe,
   Instagram,
   Twitter,
   Youtube,
-  Link2
+  Link2,
+  Award as AwardIcon
 } from 'lucide-react';
 import { Button } from '@songforge/ui';
 import { Input } from '@songforge/ui';
@@ -34,7 +34,7 @@ interface ArtistProfileFormProps {
 
 export function ArtistProfileForm({ org }: ArtistProfileFormProps) {
   const router = useRouter();
-  const toast = useToast();
+  const { notify } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -74,14 +74,14 @@ export function ArtistProfileForm({ org }: ArtistProfileFormProps) {
 
       await updateOrgProfileAction(formDataObj);
       
-      toast({
+      notify({
         title: 'Profile updated!',
         description: 'Your artist profile has been saved.',
       });
 
       router.refresh();
     } catch (error) {
-      toast({
+      notify({
         title: 'Error updating profile',
         description: error instanceof Error ? error.message : 'Something went wrong',
         variant: 'destructive',
@@ -433,7 +433,7 @@ export function ArtistProfileForm({ org }: ArtistProfileFormProps) {
       <Card className="p-6">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-xl font-semibold">
-            <Award className="h-5 w-5" />
+            <AwardIcon className="h-5 w-5" />
             Awards & Recognition
           </h2>
           <Button type="button" variant="outline" size="sm">

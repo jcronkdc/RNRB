@@ -1,5 +1,5 @@
-import { cn } from '@songforge/ui';
-import { Users } from 'lucide-react';
+import { cn, Button } from '@songforge/ui';
+import { Users, Plus } from 'lucide-react';
 
 import { EmptyState } from './EmptyState';
 
@@ -18,10 +18,15 @@ export default function SplitList({ items, onCreate }: SplitListProps & { onCrea
   if (!items.length) {
     return (
       <EmptyState
-        icon={<Users className="h-6 w-6" aria-hidden="true" />}
+        icon={Users}
         title="Document Your Splits"
         description="Track revenue splits with precision. Add your first split sheet to ensure everyone gets credited fairly and transparently."
-        action={onCreate ? { label: 'Create Split Sheet', onClick: onCreate } : undefined}
+        action={onCreate ? (
+          <Button onClick={onCreate}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Split Sheet
+          </Button>
+        ) : undefined}
       />
     );
   }

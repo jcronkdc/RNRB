@@ -1,5 +1,5 @@
-import { Badge, cn } from '@songforge/ui';
-import { FileAudio, FileDigit, FileImage, FileText, FileType, Upload } from 'lucide-react';
+import { Badge, Button, cn } from '@songforge/ui';
+import { FileAudio, FileDigit, FileImage, FileText, FileType, Upload, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 import { EmptyState } from './EmptyState';
@@ -38,10 +38,15 @@ export default function AssetList({ items, onCreate }: AssetListProps & { onCrea
   if (!items.length) {
     return (
       <EmptyState
-        icon={<Upload className="h-6 w-6" aria-hidden="true" />}
+        icon={Upload}
         title="No Assets Yet"
         description="Upload audio files, lyrics, charts, and more to keep everything organized in one place. Your collaborators will thank you."
-        action={onCreate ? { label: 'Upload Assets', onClick: onCreate } : undefined}
+        action={onCreate ? (
+          <Button onClick={onCreate}>
+            <Plus className="mr-2 h-4 w-4" />
+            Upload Assets
+          </Button>
+        ) : undefined}
       />
     );
   }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Calendar, MapPin, Music } from 'lucide-react';
+import { Plus, Calendar } from 'lucide-react';
 import { Button } from '@songforge/ui';
 import { PageHeader } from '@/components/app/PageHeader';
 import { EmptyState } from '@/components/app/EmptyState';
@@ -64,7 +64,7 @@ export function ToursPageClient({ initialTours }: ToursPageClientProps) {
         {/* Tours Grid */}
         {displayedTours.length === 0 ? (
           <EmptyState
-            icon={<Calendar className="h-12 w-12" />}
+            icon={Calendar}
             title={showCompleted ? "No Completed Tours" : "Plan Your First Tour"}
             description={showCompleted 
               ? "Tours you've completed will appear here" 

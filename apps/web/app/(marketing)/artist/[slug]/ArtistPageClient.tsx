@@ -9,12 +9,7 @@ import {
   Calendar,
   MapPin,
   Music,
-  Users,
   Globe,
-  Instagram,
-  Twitter,
-  Youtube,
-  Facebook,
   Heart,
   Share2,
   ExternalLink,
@@ -22,7 +17,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@songforge/ui';
 import { Card } from '@songforge/ui';
-import { Badge } from '@songforge/ui';
 import type { Org, Project, Tour, Show, Venue, Song } from '@prisma/client';
 
 interface ArtistPageClientProps {
@@ -104,11 +98,11 @@ export function ArtistPageClient({ org, latestSongs }: ArtistPageClientProps) {
           <section className="mb-16">
             <h2 className="mb-8 text-3xl font-bold tracking-tight">Latest Tracks</h2>
             <div className="rounded-xl bg-card p-2">
-              {latestSongs.map((song, index) => (
+              {latestSongs.map((song, _index) => (
                 <TrackRow
                   key={song.id}
                   song={song}
-                  index={index + 1}
+                  index={_index + 1}
                   isPlaying={currentTrack?.id === song.id && isPlaying}
                   onPlay={() => {
                     setCurrentTrack(song);
@@ -226,7 +220,7 @@ export function ArtistPageClient({ org, latestSongs }: ArtistPageClientProps) {
 
 function TrackRow({ 
   song, 
-  index, 
+  index: _index, 
   isPlaying,
   onPlay 
 }: { 

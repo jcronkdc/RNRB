@@ -9,7 +9,6 @@ import {
   Users, 
   Plus, 
   Edit,
-  ExternalLink,
   Ticket,
   Music,
   Clock,
@@ -36,7 +35,7 @@ interface TourDetailClientProps {
 }
 
 export function TourDetailClient({ tour }: TourDetailClientProps) {
-  const router = useRouter();
+  const _router = useRouter();
   const [selectedTab, setSelectedTab] = useState<'shows' | 'analytics' | 'fans'>('shows');
 
   const upcomingShows = tour.shows.filter(
@@ -54,7 +53,7 @@ export function TourDetailClient({ tour }: TourDetailClientProps) {
     cancelled: 'danger',
   } as const;
 
-  const showStatusColors = {
+  const _showStatusColors = {
     scheduled: 'info',
     soldout: 'success',
     cancelled: 'danger',
@@ -66,11 +65,7 @@ export function TourDetailClient({ tour }: TourDetailClientProps) {
     <div className="space-y-8">
       <PageHeader
         title={tour.name}
-        description={tour.description}
-        breadcrumbs={[
-          { label: 'Tours', href: '/tours' },
-          { label: tour.name }
-        ]}
+        description={tour.description || undefined}
         actions={
           <div className="flex gap-3">
             <Button variant="outline" size="sm">
@@ -172,7 +167,7 @@ export function TourDetailClient({ tour }: TourDetailClientProps) {
             </h3>
             {upcomingShows.length === 0 ? (
               <EmptyState
-                icon={<Calendar className="h-12 w-12" />}
+                icon={Calendar}
                 title="No upcoming shows"
                 description="Add shows to your tour to get started"
                 action={
@@ -244,7 +239,7 @@ function ShowCard({
   }; 
   isPast?: boolean;
 }) {
-  const showStatusColors = {
+  const _showStatusColors = {
     scheduled: 'info',
     soldout: 'success',
     cancelled: 'danger',
@@ -272,7 +267,7 @@ function ShowCard({
                 )}
               </div>
             </div>
-            <Badge variant={showStatusColors[show.status]}>
+            <Badge variant={_showStatusColors[show.status]}>
               {show.status}
             </Badge>
           </div>

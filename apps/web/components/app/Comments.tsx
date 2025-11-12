@@ -81,7 +81,7 @@ export function Comments({ entityId: _entityId, entityType: _entityType, comment
 
       {comments.length === 0 && !onCreate ? (
         <EmptyState
-          icon={<MessageSquare className="h-6 w-6" aria-hidden="true" />}
+          icon={MessageSquare}
           title="No Comments Yet"
           description="Start the conversation. Comments help keep collaborators aligned and track decisions."
         />

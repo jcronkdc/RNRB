@@ -7,7 +7,6 @@ import {
   Search,
   Music,
   Briefcase,
-  Calendar,
   Plus,
   TrendingUp,
   Heart,

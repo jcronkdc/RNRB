@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { 
   Heart, 
   Users, 
-  TrendingUp,
   DollarSign,
   Shield,
   Award,
@@ -12,7 +11,6 @@ import {
   Globe,
   Sparkles,
   HandHeart,
-  Target,
   Building
 } from 'lucide-react';
 import { Button } from '@songforge/ui';

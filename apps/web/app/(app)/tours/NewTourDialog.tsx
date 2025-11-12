@@ -31,8 +31,8 @@ export function NewTourDialog({
   onOpenChange,
   onTourCreated,
 }: NewTourDialogProps) {
-  const router = useRouter();
-    const toast = useToast();
+  const _router = useRouter();
+    const { notify } = useToast();
   const [isCreating, setIsCreating] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -56,7 +56,7 @@ export function NewTourDialog({
 
       const tour = await createTourAction(formDataObj);
       
-      toast({
+      notify({
         title: 'Tour created!',
         description: `${tour.name} has been created successfully.`,
       });
@@ -71,7 +71,7 @@ export function NewTourDialog({
         public: false,
       });
     } catch (error) {
-      toast({
+      notify({
         title: 'Error creating tour',
         description: error instanceof Error ? error.message : 'Something went wrong',
         variant: 'destructive',

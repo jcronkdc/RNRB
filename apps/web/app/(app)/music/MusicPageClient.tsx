@@ -28,7 +28,7 @@ interface MusicPageClientProps {
   audioAssets: (Asset & { project: { name: string; slug: string } | null })[];
 }
 
-export function MusicPageClient({ songs, projects, audioAssets }: MusicPageClientProps) {
+export function MusicPageClient({ songs, projects, audioAssets: _audioAssets }: MusicPageClientProps) {
   const [selectedTab, setSelectedTab] = useState<'releases' | 'tracks' | 'playlists'>('releases');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState<typeof songs[0] | null>(null);
@@ -166,7 +166,7 @@ export function MusicPageClient({ songs, projects, audioAssets }: MusicPageClien
         <div>
           {projects.length === 0 ? (
             <EmptyState
-              icon={<Disc className="h-12 w-12" />}
+              icon={Disc}
               title="No Public Releases"
               description="Make your projects public to share them with fans"
             />
@@ -184,7 +184,7 @@ export function MusicPageClient({ songs, projects, audioAssets }: MusicPageClien
         <div>
           {songs.length === 0 ? (
             <EmptyState
-              icon={<Music className="h-12 w-12" />}
+              icon={Music}
               title="No Public Tracks"
               description="Upload and share your music with the world"
             />

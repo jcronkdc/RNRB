@@ -2,23 +2,18 @@
 
 import { useState } from 'react';
 import { 
-  Music,
-  Clock,
   Calendar,
   ListMusic,
   Play,
   Pause,
-  SkipForward,
   RotateCcw,
   Volume2,
   FileText,
   Guitar,
-  Mic,
   Piano,
   Drum,
   Plus,
   Edit,
-  Trash2,
   ChevronUp,
   ChevronDown,
   Copy,

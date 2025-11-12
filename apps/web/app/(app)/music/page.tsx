@@ -1,7 +1,6 @@
 import { getOrgSession } from '@songforge/auth';
 import { redirect } from 'next/navigation';
 import { MusicPageClient } from './MusicPageClient';
-import { listProjectsAction } from '@/lib/actions/projects';
 import { prisma } from '@songforge/db';
 
 export const dynamic = 'force-dynamic';

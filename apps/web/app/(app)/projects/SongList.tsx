@@ -28,15 +28,15 @@ export function SongList({ songs, projects }: SongListProps) {
   if (!songs.length) {
     return (
       <EmptyState
-        icon={<Music className="h-6 w-6" aria-hidden="true" />}
+        icon={Music}
         title="No Songs Yet"
         description="Create your first song or use AI Lyric Architect to generate lyrics."
-        action={{
-          label: 'Create Song',
-          onClick: () => {
-            // Will be handled by parent
-          },
-        }}
+        action={
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Song
+          </Button>
+        }
       />
     );
   }

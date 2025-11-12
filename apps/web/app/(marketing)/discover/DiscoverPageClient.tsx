@@ -12,11 +12,8 @@ import {
   Share2,
   Calendar,
   Sparkles,
-  Filter,
   ChevronRight,
-  Star,
-  Radio,
-  Disc3
+  Radio
 } from 'lucide-react';
 import { Button } from '@songforge/ui';
 import { Card } from '@songforge/ui';
@@ -28,7 +25,7 @@ import { WaveformAnimation } from '@/components/animations/WaveformAnimation';
 export function DiscoverPageClient() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [_selectedLocation, setSelectedLocation] = useState<string | null>(null);
 
   // Mock data for artists
   const featuredArtists = [
