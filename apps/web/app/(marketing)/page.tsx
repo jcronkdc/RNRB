@@ -46,8 +46,10 @@ export default function HomePage() {
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild size="lg" className="group min-w-[12rem] text-base">
               <Link href="/signin">
-                Start Creating
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                <span className="inline-flex items-center gap-2">
+                  Start Creating
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </span>
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="min-w-[12rem] text-base">
@@ -151,7 +153,7 @@ export default function HomePage() {
               },
               {
                 title: 'Community',
-                description: 'Built for collaboration, designed for connection. Whether you\'re working solo or with a team, CronkWater brings people together around the music.'
+                description: 'Built for collaboration, designed for connection. Whether you\'re working solo or with a team, CronkWaters brings people together around the music.'
               },
               {
                 title: 'Stewardship',
@@ -175,7 +177,7 @@ export default function HomePage() {
             Ready to Build Something Beautiful?
           </h2>
           <p className="mb-10 text-lg text-muted-foreground">
-            Join musicians who are already using CronkWater to organize their work, collaborate better, and focus on what matters: the music.
+            Join musicians who are already using CronkWaters to organize their work, collaborate better, and focus on what matters: the music.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild variant="outline" size="lg" className="min-w-[12rem] text-base">
@@ -183,8 +185,10 @@ export default function HomePage() {
             </Button>
             <Button asChild size="lg" className="group min-w-[12rem] text-base">
               <Link href="/signin">
-                Get Started
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                <span className="inline-flex items-center gap-2">
+                  Get Started
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </span>
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="min-w-[12rem] text-base">
