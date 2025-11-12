@@ -7,16 +7,13 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 5.9s
+ ✓ Compiled successfully in 4.6s
    Linting and checking validity of types ...
 Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
    Generating static pages (0/10) ...
    Generating static pages (2/10) 
-   Generating static pages (4/10) 
-   Generating static pages (7/10) 
- ✓ Generating static pages (10/10)
 Failed to fetch public projects for sitemap: Error [PrismaClientInitializationError]: 
 Invalid `prisma.project.findMany()` invocation:
 
@@ -53,6 +50,9 @@ Validation Error Count: 1
   clientVersion: '5.22.0',
   errorCode: undefined
 }
+   Generating static pages (4/10) 
+   Generating static pages (7/10) 
+ ✓ Generating static pages (10/10)
    Finalizing page optimization ...
    Collecting build traces ...
 
