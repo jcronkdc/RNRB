@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { Button } from '@cronkwater/ui';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

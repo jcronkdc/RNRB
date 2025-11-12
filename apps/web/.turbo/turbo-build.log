@@ -7,20 +7,82 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 66s
+ ✓ Compiled successfully in 23.9s
    Linting and checking validity of types ...
-Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/10) ...
-   Generating static pages (2/10) 
-   Generating static pages (4/10) 
-   Generating static pages (7/10) 
-Error occurred prerendering page "/search". Read more: https://nextjs.org/docs/messages/prerender-error
-Error: Minified React error #143; visit https://react.dev/errors/143 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
-    at <unknown> (.next/server/chunks/2523.js:21:48778) {
-  digest: '627637792'
+   Generating static pages (0/9) ...
+   Generating static pages (2/9) 
+   Generating static pages (4/9) 
+   Generating static pages (6/9) 
+ ✓ Generating static pages (9/9)
+   Finalizing page optimization ...
+   Collecting build traces ...
+ ⚠ Failed to copy traced files for /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/server/app/(marketing)/page.js [Error: ENOENT: no such file or directory, copyfile '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/server/app/(marketing)/page_client-reference-manifest.js' -> '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/standalone/apps/web/.next/server/app/(marketing)/page_client-reference-manifest.js'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'copyfile',
+  path: '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/server/app/(marketing)/page_client-reference-manifest.js',
+  dest: '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/standalone/apps/web/.next/server/app/(marketing)/page_client-reference-manifest.js'
 }
-Export encountered an error on /(app)/search/page: /search, exiting the build.
- ⨯ Next.js build worker exited with code: 1 and signal: null
- ELIFECYCLE  Command failed with exit code 1.
+
+Route (app)                                 Size  First Load JS
+┌ ƒ /                                      232 B         144 kB
+├ ƒ /_not-found                            193 B         103 kB
+├ ƒ /api/ai-lyrics                         193 B         103 kB
+├ ƒ /api/auth/[...nextauth]                193 B         103 kB
+├ ƒ /api/auth/callback                     193 B         103 kB
+├ ƒ /api/elevenlabs-voice                  193 B         103 kB
+├ ƒ /api/trpc/[trpc]                       193 B         103 kB
+├ ƒ /api/upload-audio                      193 B         103 kB
+├ ƒ /artist/[slug]                       4.17 kB         124 kB
+├ ƒ /assets                               4.8 kB         115 kB
+├ ƒ /audience/[sessionId]                6.26 kB         167 kB
+├ ƒ /auth                                13.2 kB         162 kB
+├ ƒ /blocked                               176 B         106 kB
+├ ƒ /community                            5.1 kB         115 kB
+├ ƒ /dashboard                           12.9 kB         177 kB
+├ ƒ /dashboard/assets                      193 B         103 kB
+├ ƒ /dashboard/distribute                  193 B         103 kB
+├ ƒ /dashboard/licenses                    193 B         103 kB
+├ ƒ /dashboard/sessions                    193 B         103 kB
+├ ƒ /dashboard/settings                    193 B         103 kB
+├ ƒ /dashboard/splits                      193 B         103 kB
+├ ƒ /discover                            7.05 kB         159 kB
+├ ƒ /donate                                176 B         106 kB
+├ ƒ /foundation                          3.94 kB         118 kB
+├ ƒ /learn                               3.27 kB         117 kB
+├ ƒ /licenses                              193 B         103 kB
+├ ƒ /music                               5.14 kB         115 kB
+├ ƒ /onboarding/organization               193 B         103 kB
+├ ƒ /p/[slug]                              176 B         106 kB
+├ ƒ /p/[slug]/opengraph-image-4mgimg       193 B         103 kB
+├ ƒ /practice                            9.74 kB         120 kB
+├ ƒ /privacy                               193 B         103 kB
+├ ƒ /projects                            5.55 kB         185 kB
+├ ƒ /projects/[slug]                     11.6 kB         141 kB
+├ ƒ /projects/[slug]/songs/[songId]      4.92 kB         154 kB
+├ ƒ /remix/[roomId]                       4.8 kB         115 kB
+├ ○ /robots.txt                            193 B         103 kB
+├ ƒ /search                              3.22 kB         117 kB
+├ ƒ /sessions                              193 B         103 kB
+├ ƒ /settings                            3.41 kB         114 kB
+├ ƒ /settings/artist-profile             6.67 kB         127 kB
+├ ƒ /settings/org                        3.15 kB         113 kB
+├ ○ /sitemap.xml                           193 B         103 kB
+├ ƒ /splits                                193 B         103 kB
+├ ƒ /terms                                 193 B         103 kB
+├ ƒ /theming                             1.46 kB         104 kB
+├ ƒ /tours                               39.7 kB         181 kB
+└ ƒ /tours/[slug]                        4.55 kB         121 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
+  ├ chunks/5542-123c5d89f3d04e21.js      46.1 kB
+  └ other shared chunks (total)          2.07 kB
+
+
+ƒ Middleware                             81.9 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getOrgSession } from '@cronkwater/auth';
 import { getProjectBySlug, listSongs, listAssets, listSplitSheets, listLicenses } from '@cronkwater/db';
 import type { Metadata } from 'next';

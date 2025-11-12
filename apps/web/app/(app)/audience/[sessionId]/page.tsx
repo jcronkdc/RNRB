@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Button } from '@cronkwater/ui';
 import { Send } from 'lucide-react';
 import { useParams } from 'next/navigation';
