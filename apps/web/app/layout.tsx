@@ -83,15 +83,17 @@ export default function RootLayout({
           'min-h-screen bg-background text-foreground antialiased transition-colors'
         )}
       >
-        <Script id="cronkwater-theme" strategy="beforeInteractive">
-          {themeInitializer}
-        </Script>
+        <Script 
+          id="cronkwater-theme" 
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeInitializer }}
+        />
         <ServiceWorkerRegistration />
         <div id="a11y-announcer" aria-live="polite" aria-atomic="true" className="sr-only" />
         <ErrorBoundary>
           <Providers>
             <ThemeProvider>
-              {process.env.NODE_ENV !== 'production' && <AxeInitializer />}
+              {process.env.NODE_ENV === 'development' ? <AxeInitializer /> : null}
               <Background
                 className="flex min-h-screen flex-col"
                 contentClassName="flex min-h-screen flex-col"
