@@ -19,6 +19,16 @@ model User {
   updatedAt         DateTime @updatedAt
   memberships       Membership[]
   subscriptions    Subscription[]
+  collaborationRequests CollaborationRequest[]
+  collaborationResponses CollaborationResponse[]
+  musicianProfile  MusicianProfile?
+  skills          Skill[]
+  forumPosts      ForumPost[]
+  forumReplies    ForumReply[]
+  sentMessages    Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  connections     Connection[] @relation("UserConnections")
+  connectedTo     Connection[] @relation("ConnectedToUser")
 
   @@index([email])
 }
@@ -608,4 +618,201 @@ model Award {
 
   @@index([orgId])
   @@index([year])
+}
+
+// Community Features
+
+model CollaborationRequest {
+  id          String               @id @default(cuid())
+  userId      String
+  title       String
+  slug        String               @unique
+  description String
+  projectType String
+  genre       String[]
+  skillsNeeded String[]
+  location    String?
+  isRemote    Boolean              @default(true)
+  isPaid      Boolean              @default(false)
+  compensation String?
+  deadline    DateTime?
+  status      CollaborationStatus  @default(open)
+  viewCount   Int                  @default(0)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+  
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  responses   CollaborationResponse[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([genre])
+  @@index([skillsNeeded])
+}
+
+enum CollaborationStatus {
+  open
+  in_progress
+  completed
+  cancelled
+}
+
+model CollaborationResponse {
+  id          String    @id @default(cuid())
+  requestId   String
+  userId      String
+  message     String
+  portfolio   String?
+  accepted    Boolean?
+  createdAt   DateTime  @default(now())
+  
+  request     CollaborationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([requestId])
+  @@index([userId])
+}
+
+model MusicianProfile {
+  id                       String    @id @default(cuid())
+  userId                   String    @unique
+  instruments              String[]
+  genres                   String[]
+  skills                   String[]
+  experience               String?
+  availableForCollaboration Boolean  @default(true)
+  availableForGigs         Boolean  @default(false)
+  hourlyRate               Decimal?
+  location                 String?
+  willingToTravel          Boolean  @default(false)
+  travelRadius             Int?     // In miles/km
+  portfolio                Json?    // Links to work samples
+  socialLinks              Json?
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+  
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([genres])
+  @@index([instruments])
+  @@index([availableForCollaboration])
+}
+
+model Skill {
+  id              String      @id @default(cuid())
+  userId          String
+  category        String      // e.g., "Instrument", "Production", "Songwriting"
+  name            String      // e.g., "Guitar", "Mixing", "Lyrics"
+  level           SkillLevel
+  yearsExperience Int?
+  description     String?
+  verified        Boolean     @default(false)
+  verifiedBy      String?
+  verifiedAt      DateTime?
+  
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+  @@index([level])
+}
+
+enum SkillLevel {
+  beginner
+  intermediate
+  advanced
+  professional
+}
+
+model ForumPost {
+  id          String         @id @default(cuid())
+  userId      String
+  title       String
+  slug        String         @unique
+  content     String         // Markdown
+  category    ForumCategory
+  tags        String[]
+  isPinned    Boolean        @default(false)
+  isLocked    Boolean        @default(false)
+  viewCount   Int            @default(0)
+  upvotes     Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies     ForumReply[]
+
+  @@index([userId])
+  @@index([category])
+  @@index([tags])
+}
+
+enum ForumCategory {
+  general
+  collaboration
+  feedback
+  showcase
+  technical
+  business
+  events
+}
+
+model ForumReply {
+  id               String       @id @default(cuid())
+  postId           String
+  userId           String
+  parentId         String?
+  content          String       // Markdown
+  upvotes          Int          @default(0)
+  isAcceptedAnswer Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  
+  post             ForumPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent           ForumReply?  @relation("ReplyToReply", fields: [parentId], references: [id], onDelete: SetNull)
+  children         ForumReply[] @relation("ReplyToReply")
+
+  @@index([postId])
+  @@index([userId])
+  @@index([parentId])
+}
+
+model Message {
+  id           String    @id @default(cuid())
+  senderId     String
+  recipientId  String
+  subject      String?
+  content      String
+  isRead       Boolean   @default(false)
+  readAt       DateTime?
+  threadId     String?   // For grouping conversations
+  attachments  Json?     // Array of { name, url, type }
+  createdAt    DateTime  @default(now())
+  
+  sender       User      @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient    User      @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([threadId])
+  @@index([isRead])
+}
+
+model Connection {
+  id              String    @id @default(cuid())
+  userId          String
+  connectedUserId String
+  status          String    @default("pending") // pending, accepted, blocked
+  message         String?   // Connection request message
+  createdAt       DateTime  @default(now())
+  acceptedAt      DateTime?
+  
+  user            User      @relation("UserConnections", fields: [userId], references: [id], onDelete: Cascade)
+  connectedUser   User      @relation("ConnectedToUser", fields: [connectedUserId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, connectedUserId])
+  @@index([userId])
+  @@index([connectedUserId])
+  @@index([status])
 }

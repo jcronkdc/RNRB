@@ -178,6 +178,9 @@ export default function HomePage() {
             Join musicians who are already using SongForge to organize their work, collaborate better, and focus on what matters: the music.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button asChild variant="outline" size="lg" className="min-w-[12rem] text-base">
+              <Link href="/discover">Discover Artists</Link>
+            </Button>
             <Button asChild size="lg" className="group min-w-[12rem] text-base">
               <Link href="/signin">
                 Get Started

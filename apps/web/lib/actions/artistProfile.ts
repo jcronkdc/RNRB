@@ -46,7 +46,8 @@ const createPressReleaseSchema = z.object({
 
 // Update Org Profile
 export async function updateOrgProfileAction(formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -84,7 +85,8 @@ export async function updateOrgProfileAction(formData: FormData) {
 
 // Band Member Actions
 export async function createBandMemberAction(formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -119,7 +121,8 @@ export async function createBandMemberAction(formData: FormData) {
 }
 
 export async function updateBandMemberAction(memberId: string, formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -154,7 +157,8 @@ export async function updateBandMemberAction(memberId: string, formData: FormDat
 }
 
 export async function deleteBandMemberAction(memberId: string) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -178,7 +182,8 @@ export async function deleteBandMemberAction(memberId: string) {
 
 // Award Actions
 export async function createAwardAction(formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -205,7 +210,8 @@ export async function createAwardAction(formData: FormData) {
 }
 
 export async function deleteAwardAction(awardId: string) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -229,7 +235,8 @@ export async function deleteAwardAction(awardId: string) {
 
 // Press Release Actions
 export async function createPressReleaseAction(formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -260,7 +267,8 @@ export async function createPressReleaseAction(formData: FormData) {
 }
 
 export async function updatePressReleaseAction(releaseId: string, formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -295,7 +303,8 @@ export async function updatePressReleaseAction(releaseId: string, formData: Form
 }
 
 export async function deletePressReleaseAction(releaseId: string) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -317,3 +326,4 @@ export async function deletePressReleaseAction(releaseId: string) {
   revalidatePath('/settings/artist-profile');
   revalidatePath(`/artist/${orgId}/press`);
 }
+

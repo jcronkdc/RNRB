@@ -94,3 +94,4 @@ export function ToursPageClient({ initialTours }: ToursPageClientProps) {
     </>
   );
 }
+

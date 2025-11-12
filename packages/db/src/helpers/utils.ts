@@ -9,3 +9,4 @@ export function generateSlug(name: string): string {
 export function validateSlug(slug: string): boolean {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
 }
+

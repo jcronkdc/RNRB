@@ -1,7 +1,7 @@
 'use server';
 
 import { requireOrgSession } from '@songforge/auth';
-import { prisma, validateSlug } from '@songforge/db';
+import { prisma, generateSlug } from '@songforge/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -54,7 +54,8 @@ const createVenueSchema = z.object({
 
 // Tour Actions
 export async function createTourAction(formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -88,7 +89,8 @@ export async function createTourAction(formData: FormData) {
 }
 
 export async function updateTourAction(tourId: string, formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -124,7 +126,8 @@ export async function updateTourAction(tourId: string, formData: FormData) {
 }
 
 export async function deleteTourAction(tourId: string) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -148,7 +151,8 @@ export async function deleteTourAction(tourId: string) {
 
 // Show Actions
 export async function createShowAction(formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -203,7 +207,8 @@ export async function createShowAction(formData: FormData) {
 }
 
 export async function updateShowAction(showId: string, formData: FormData) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -247,7 +252,8 @@ export async function updateShowAction(showId: string, formData: FormData) {
 }
 
 export async function deleteShowAction(showId: string) {
-  const { orgId, role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId, role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -274,7 +280,8 @@ export async function deleteShowAction(showId: string) {
 
 // Venue Actions
 export async function createVenueAction(formData: FormData) {
-  const { role } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { role } = session.activeMembership!;
 
   if (role !== 'owner' && role !== 'admin') {
     throw new Error('Insufficient permissions');
@@ -314,11 +321,12 @@ export async function createVenueAction(formData: FormData) {
 
 // List Actions
 export async function listToursAction(includeCompleted = false) {
-  const { orgId } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId } = session.activeMembership!;
 
   const where = includeCompleted 
     ? { orgId } 
-    : { orgId, status: { not: 'completed' } };
+    : { orgId, status: { not: 'completed' as const } };
 
   const tours = await prisma.tour.findMany({
     where,
@@ -334,7 +342,8 @@ export async function listToursAction(includeCompleted = false) {
 }
 
 export async function listShowsAction(tourId?: string) {
-  const { orgId } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId } = session.activeMembership!;
 
   const where = tourId 
     ? { orgId, tourId } 
@@ -355,7 +364,8 @@ export async function listShowsAction(tourId?: string) {
 }
 
 export async function listUpcomingShowsAction(limit = 10) {
-  const { orgId } = await requireOrgSession();
+  const session = await requireOrgSession();
+  const { orgId } = session.activeMembership!;
 
   const shows = await prisma.show.findMany({
     where: {
@@ -437,3 +447,4 @@ export async function registerFanEngagementAction(formData: FormData) {
     },
   });
 }
+

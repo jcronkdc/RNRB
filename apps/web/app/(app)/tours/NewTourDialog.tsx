@@ -32,7 +32,7 @@ export function NewTourDialog({
   onTourCreated,
 }: NewTourDialogProps) {
   const router = useRouter();
-  const { toast } = useToast();
+    const toast = useToast();
   const [isCreating, setIsCreating] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -186,3 +186,4 @@ export function NewTourDialog({
     </Dialog>
   );
 }
+

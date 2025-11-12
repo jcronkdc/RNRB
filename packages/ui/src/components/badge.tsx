@@ -13,7 +13,8 @@ const badgeVariants = cva(
         outline: 'border-border text-brand-foreground',
         success: 'bg-success text-success-foreground',
         warning: 'bg-warning text-warning-foreground',
-        danger: 'bg-danger text-danger-foreground'
+        danger: 'bg-danger text-danger-foreground',
+        info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
       }
     },
     defaultVariants: {

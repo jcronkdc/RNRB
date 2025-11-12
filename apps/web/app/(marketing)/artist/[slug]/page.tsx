@@ -87,3 +87,4 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
   return <ArtistPageClient org={org} latestSongs={latestSongs} />;
 }
+

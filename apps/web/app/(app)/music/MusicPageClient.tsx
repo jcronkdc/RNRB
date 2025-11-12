@@ -341,3 +341,4 @@ if (typeof document !== 'undefined') {
   style.textContent = animationStyles;
   document.head.appendChild(style);
 }
+

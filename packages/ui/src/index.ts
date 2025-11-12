@@ -44,6 +44,7 @@ export { Skeleton, type SkeletonProps } from './components/skeleton';
 export { LoadingSpinner, type LoadingSpinnerProps } from './components/loading-spinner';
 export { Slider, type SliderProps } from './components/slider';
 export { Switch, type SwitchProps } from './components/switch';
+export { Progress } from './components/progress';
 export {
   brandColors,
   radii,

@@ -10,7 +10,11 @@
     },
     "./styles.css": "./src/styles.css"
   },
-  "files": ["src", "tailwind.config.ts", "postcss.config.cjs"],
+  "files": [
+    "src",
+    "tailwind.config.ts",
+    "postcss.config.cjs"
+  ],
   "scripts": {
     "dev": "storybook dev -p 6006",
     "build": "tsup src/index.ts --format esm --dts --clean",
@@ -26,6 +30,7 @@
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-progress": "^1.1.8",
     "@radix-ui/react-separator": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-switch": "^1.1.0",

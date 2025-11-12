@@ -12,12 +12,13 @@ export default async function ArtistProfilePage() {
     redirect('/auth');
   }
 
-  if (session.role !== 'owner' && session.role !== 'admin') {
+  const membership = session.activeMembership;
+  if (!membership || (membership.role !== 'owner' && membership.role !== 'admin')) {
     redirect('/settings');
   }
 
   const org = await prisma.org.findUnique({
-    where: { id: session.orgId },
+    where: { id: membership.orgId },
     include: {
       bandMembers: {
         orderBy: { order: 'asc' },
@@ -45,3 +46,4 @@ export default async function ArtistProfilePage() {
     </div>
   );
 }
+

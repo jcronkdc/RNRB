@@ -78,3 +78,4 @@ export function TourCard({ tour }: TourCardProps) {
     </Link>
   );
 }
+

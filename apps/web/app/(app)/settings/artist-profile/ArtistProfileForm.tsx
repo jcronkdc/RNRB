@@ -8,7 +8,7 @@ import {
   X, 
   Music, 
   Users, 
-  Award, 
+  Award as AwardIcon, 
   Globe,
   Instagram,
   Twitter,
@@ -34,7 +34,7 @@ interface ArtistProfileFormProps {
 
 export function ArtistProfileForm({ org }: ArtistProfileFormProps) {
   const router = useRouter();
-  const { toast } = useToast();
+  const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -481,3 +481,4 @@ export function ArtistProfileForm({ org }: ArtistProfileFormProps) {
     </form>
   );
 }
+

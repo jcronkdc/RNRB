@@ -2,3 +2,6 @@
 > @songforge/ui@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui
 > tsc --noEmit
 
+src/components/progress.tsx(2,36): error TS2307: Cannot find module '@radix-ui/react-progress' or its corresponding type declarations.
+src/components/progress.tsx(3,20): error TS2307: Cannot find module '../lib/cn' or its corresponding type declarations.
+ ELIFECYCLE  Command failed with exit code 2.
