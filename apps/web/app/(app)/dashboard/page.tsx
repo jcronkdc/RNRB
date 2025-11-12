@@ -1,7 +1,6 @@
 import { prisma } from '@cronkwaters/db';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@cronkwaters/ui';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { auth } from '@cronkwaters/auth';
 import { redirect } from 'next/navigation';
 import crypto from 'node:crypto';
 
@@ -28,27 +27,7 @@ type SongSummary = {
   stems: Array<{ type: string; url: string }>;
 };
 
-async function createServerSupabaseClient() {
-  const cookieStore = await cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-          } catch {
-            // setAll can be ignored during SSR
-          }
-        }
-      }
-    }
-  );
-}
+// Removed createServerSupabaseClient - using NextAuth for authentication
 
 function parseMetadata(raw: string | null | undefined): SongMetadata {
   if (!raw) return {};
@@ -124,13 +103,11 @@ async function loadSongs(userId: string): Promise<SongSummary[]> {
 }
 
 export default async function DashboardPage() {
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
+  // Use NextAuth for authentication
+  const session = await auth();
 
-  if (!session?.user) {
-    redirect('/login');
+  if (!session?.user?.id) {
+    redirect('/auth');
   }
 
   const songs = await loadSongs(session.user.id);

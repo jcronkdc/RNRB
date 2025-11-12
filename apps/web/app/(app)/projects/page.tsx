@@ -1,53 +1,65 @@
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
+import { auth } from '@cronkwaters/auth';
+import { prisma } from '@cronkwaters/db';
 
 import { ProjectsClient } from './ProjectsClient';
 import { ProjectsDashboardTabs } from './ProjectsDashboardTabs';
 import PageHeader from '../../../components/app/PageHeader';
 import { CardGridSkeleton } from '../../../components/app/Skeletons';
-import { createClient } from '../../../lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
 const SUBTITLE = 'Your works in progress. Start something new or continue where you left off.';
 
 async function ProjectsData() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Use NextAuth for authentication
+  const session = await auth();
 
-  if (!user) {
-    redirect('/signin');
+  if (!session?.user?.id) {
+    redirect('/auth');
   }
 
-  const { data: projects, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+  const userId = session.user.id;
 
-  if (error) {
-    console.error('Failed to load projects:', error);
-    return { projects: [], songs: [] };
-  }
+  try {
+    // Use Prisma for data fetching
+    const projects = await prisma.project.findMany({
+      where: {
+        org: {
+          memberships: {
+            some: { userId }
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
 
-  const { data: songs } = await supabase
-    .from('songs')
-    .select('*')
-    .in('project_id', projects?.map((p: { id: string }) => p.id) || []);
+    const projectIds = projects.map(p => p.id);
+    const songs = await prisma.song.findMany({
+      where: {
+        projectId: {
+          in: projectIds
+        }
+      }
+    });
 
-  return {
-    projects:
-      projects?.map((p: { id: string; name: string; slug: string; created_at: string }) => ({
+    return {
+      projects: projects.map((p) => ({
         id: p.id,
         name: p.name,
         slug: p.slug || p.id,
         visibility: 'private' as const,
-        createdAt: p.created_at,
-      })) || [],
-    songs: songs || [],
-  };
+        createdAt: p.createdAt.toISOString(),
+      })),
+      songs: songs || [],
+    };
+  } catch (error) {
+    console.error('Failed to load projects:', error);
+    return { projects: [], songs: [] };
+  }
 }
 
 export default async function ProjectsPage() {

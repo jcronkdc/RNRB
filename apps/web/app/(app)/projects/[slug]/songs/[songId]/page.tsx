@@ -1,26 +1,37 @@
 export const dynamic = 'force-dynamic';
 
 import { notFound } from 'next/navigation';
+import { auth } from '@cronkwaters/auth';
+import { prisma } from '@cronkwaters/db';
 
 import { SongPageClient } from './SongPageClient';
-import { createClient } from '../../../../../../lib/supabase/server';
 
 async function getSong(songId: string) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Use NextAuth for authentication
+  const session = await auth();
 
-  if (!user) {
+  if (!session?.user?.id) {
     return null;
   }
 
-  const { data: song } = await supabase
-    .from('songs')
-    .select('*, projects(*)')
-    .eq('id', songId)
-    .eq('created_by', user.id)
-    .single();
+  const userId = session.user.id;
+
+  // Use Prisma for data fetching
+  const song = await prisma.song.findFirst({
+    where: {
+      id: songId,
+      project: {
+        org: {
+          memberships: {
+            some: { userId }
+          }
+        }
+      }
+    },
+    include: {
+      project: true
+    }
+  });
 
   return song;
 }
@@ -40,9 +51,9 @@ export default async function SongPage({ params }: { params: Promise<{ songId: s
         title: song.title || 'Untitled',
         bpm: song.bpm,
         key: song.key,
-        mood_tags: song.mood_tags || [],
+        mood_tags: [],  // TODO: Add mood tags to Prisma schema if needed
         lyrics: song.lyrics,
-        project_id: song.project_id,
+        project_id: song.projectId,
       }}
     />
   );

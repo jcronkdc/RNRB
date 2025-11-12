@@ -1,7 +1,6 @@
 import { prisma } from '@cronkwaters/db';
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@cronkwaters/ui';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { auth } from '@cronkwaters/auth';
 import { redirect } from 'next/navigation';
 
 import { requestPayoutAction } from '../../../actions/requestPayout';
@@ -37,27 +36,7 @@ function parseMetadata(raw: string | null | undefined): LeaseMetadata | null {
   }
 }
 
-async function getSupabaseSession() {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: () => {
-          // no-op in RSC
-        }
-      }
-    }
-  );
-
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
-
-  return session;
-}
+// Removed getSupabaseSession - using NextAuth for authentication
 
 async function loadLeasedSongs(userId: string): Promise<SongLeaseSummary[]> {
   const projects = await prisma.project.findMany({
@@ -136,10 +115,11 @@ async function handlePayout(formData: FormData) {
 export const dynamic = 'force-dynamic';
 
 export default async function DistributePage() {
-  const session = await getSupabaseSession();
+  // Use NextAuth for authentication
+  const session = await auth();
 
-  if (!session?.user) {
-    redirect('/login');
+  if (!session?.user?.id) {
+    redirect('/auth');
   }
 
   const songs = await loadLeasedSongs(session.user.id);

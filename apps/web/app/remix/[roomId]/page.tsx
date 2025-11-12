@@ -1,34 +1,13 @@
 export const dynamic = 'force-dynamic';
 
 import { prisma } from '@cronkwaters/db';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { auth } from '@cronkwaters/auth';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { RemixRoomClient } from './RemixRoomClient';
 
-async function getSession() {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll: () => {
-          // no-op for RSC
-        }
-      }
-    }
-  );
-
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
-
-  return session;
-}
+// Removed getSession - using NextAuth directly
 
 async function loadSong(roomId: string) {
   const [songId] = roomId.split('-');
@@ -57,10 +36,11 @@ interface RemixPageProps {
 }
 
 export default async function RemixPage({ params }: RemixPageProps) {
-  const session = await getSession();
+  // Use NextAuth for authentication
+  const session = await auth();
 
   if (!session?.user) {
-    redirect('/login');
+    redirect('/auth');
   }
 
   const { roomId } = await params;

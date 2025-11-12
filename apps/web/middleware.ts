@@ -32,11 +32,23 @@ export async function middleware(req: NextRequest) {
   const isStaticFile = pathname.includes('.');
   
   if (!isPublicRoute && !isStaticFile) {
-    // TODO: Add NextAuth session check here
-    // const session = await auth();
-    // if (!session) {
-    //   return NextResponse.redirect(new URL('/auth', req.url));
-    // }
+    // Check authentication using NextAuth
+    try {
+      // Import auth dynamically to avoid edge runtime issues
+      const { auth } = await import('@cronkwaters/auth');
+      const session = await auth();
+      
+      if (!session) {
+        // No session - redirect to auth page
+        const url = new URL('/auth', req.url);
+        url.searchParams.set('callbackUrl', pathname);
+        return NextResponse.redirect(url);
+      }
+    } catch (error) {
+      // If auth check fails, redirect to auth page for safety
+      console.error('Auth check failed in middleware:', error);
+      return NextResponse.redirect(new URL('/auth', req.url));
+    }
   }
   
   const response = NextResponse.next();
