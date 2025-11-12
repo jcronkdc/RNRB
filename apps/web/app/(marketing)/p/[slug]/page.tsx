@@ -107,10 +107,12 @@ export default async function PublicProjectPage({ params }: { params: Promise<{ 
             <div>
               <h2 className="text-2xl font-semibold text-brand-foreground">Support this project</h2>
               <p className="text-sm text-muted-foreground">
-                Exclusive previews, live session invites, and behind-the-scenes drops are coming soon.
+                Get exclusive access to studio sessions, early demos, and behind-the-scenes content.
               </p>
             </div>
-            <Button type="button">Support this project</Button>
+            <Button asChild>
+              <Link href="/donate">Support this project</Link>
+            </Button>
           </div>
         </section>
       </section>

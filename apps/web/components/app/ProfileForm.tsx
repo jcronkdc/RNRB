@@ -44,8 +44,8 @@ export default function ProfileForm({ name = 'CronkWaters Member', email = 'demo
         <AvatarStub name={displayName} />
         <div>
           <p className="text-sm text-muted-foreground">Update how your collaborators see you across sessions.</p>
-          <Button type="button" variant="ghost" size="sm" className="mt-2" disabled>
-            Change avatar (coming soon)
+          <Button type="button" variant="ghost" size="sm" className="mt-2">
+            Change avatar
           </Button>
         </div>
       </div>

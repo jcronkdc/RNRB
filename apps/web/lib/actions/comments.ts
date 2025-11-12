@@ -95,26 +95,28 @@ export async function createCommentAction(
       };
     }
 
-    // TODO: Implement comment model in database schema
-    // For now, return a mock response
-    const userId = 'id' in (session.session?.user || {}) ? (session.session.user as { id: string }).id : 'unknown';
-    const mockComment = {
-      id: Math.random().toString(36).substr(2, 9),
-      text: validated.text,
-      userId,
-      entityId: validated.entityId,
-      entityType: validated.entityType,
-      createdAt: new Date(),
-      user: {
-        id: userId,
-        name: session.session?.user?.name || 'Unknown User',
-        image: session.session?.user?.image
+    // Create the comment
+    const comment = await prisma.comment.create({
+      data: {
+        text: validated.text,
+        userId: (session as any).user?.id || '',
+        entityId: validated.entityId,
+        entityType: validated.entityType
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        }
       }
-    };
+    });
 
     return {
       success: true,
-      data: mockComment
+      data: comment
     };
   } catch (error) {
     console.error('Failed to create comment:', error);
@@ -155,9 +157,27 @@ export async function getCommentsForEntity(
       return [];
     }
 
-    // TODO: Implement comment model in database schema
-    // For now, return empty array
-    return [];
+    // Fetch comments for the entity
+    const comments = await prisma.comment.findMany({
+      where: {
+        entityId,
+        entityType
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return comments;
   } catch (error) {
     console.error('Failed to fetch comments:', error);
     return [];

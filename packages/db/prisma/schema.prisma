@@ -35,6 +35,7 @@ model User {
   orgInvites      OrgInvite[]
   assetShares     AssetShare[]
   songSplits      SongSplit[]
+  comments        Comment[]
 
   @@index([email])
 }
@@ -978,4 +979,21 @@ enum TransactionStatus {
   completed
   failed
   cancelled
+}
+
+// Comment System
+model Comment {
+  id         String   @id @default(cuid())
+  text       String   @db.Text
+  userId     String
+  entityId   String
+  entityType String   // 'project' | 'song' | 'asset' | 'license' | 'split'
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([entityId, entityType])
+  @@index([createdAt])
 }
