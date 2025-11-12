@@ -4,6 +4,8 @@ import { Button, Input } from '@songforge/ui';
 import { Mail, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 import { createClient } from '../../../lib/supabase/client';
 
 

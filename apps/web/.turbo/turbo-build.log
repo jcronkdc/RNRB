@@ -7,20 +7,19 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 2.0min
+ ✓ Compiled successfully in 28.1s
    Linting and checking validity of types ...
 Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
-Failed to compile.
-
-./lib/actions/projects.ts:14:22
-Type error: Property 'org' does not exist on type 'OrgAwareSession'.
-
-[0m [90m 12 |[39m   [36mconst[39m projects [33m=[39m [36mawait[39m prisma[33m.[39mproject[33m.[39mfindMany({
- [90m 13 |[39m     where[33m:[39m {
-[31m[1m>[22m[39m[90m 14 |[39m       orgId[33m:[39m session[33m.[39morg[33m.[39mid[33m,[39m
- [90m    |[39m                      [31m[1m^[22m[39m
- [90m 15 |[39m     }[33m,[39m
- [90m 16 |[39m     include[33m:[39m {
- [90m 17 |[39m       songs[33m:[39m {[0m
-Next.js build worker exited with code: 1 and signal: null
+   Collecting page data ...
+ ⚠ Using edge runtime on a page currently disables static generation for that page
+   Generating static pages (0/15) ...
+   Generating static pages (3/15) 
+   Generating static pages (7/15) 
+Error occurred prerendering page "/dashboard/style-guide". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: Minified React error #143; visit https://react.dev/errors/143 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+    at <unknown> (.next/server/chunks/2523.js:21:48778) {
+  digest: '627637792'
+}
+Export encountered an error on /(app)/dashboard/style-guide/page: /dashboard/style-guide, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null
  ELIFECYCLE  Command failed with exit code 1.
