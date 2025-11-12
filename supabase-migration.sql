@@ -1,4 +1,4 @@
--- CronkWater MVP Database Schema
+-- CronkWaters MVP Database Schema
 
 -- Projects table
 CREATE TABLE IF NOT EXISTS projects (

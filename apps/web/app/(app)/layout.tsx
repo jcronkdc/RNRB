@@ -1,6 +1,5 @@
 import type { OrgSession } from '@cronkwaters/auth';
 import { getOrgSession } from '@cronkwaters/auth';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 

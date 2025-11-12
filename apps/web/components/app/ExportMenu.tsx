@@ -14,9 +14,24 @@ export function ExportMenu({ projectSlug, projectName, className }: ExportMenuPr
   const [isOpen, setIsOpen] = useState(false);
 
   const handleExportPDF = async () => {
-    // TODO: Implement PDF export
-    // PDF export functionality will be implemented in a future update
-    setIsOpen(false);
+    try {
+      // Generate PDF URL
+      const pdfUrl = `/api/projects/${projectSlug}/export/pdf`;
+      
+      // Create a temporary link element to trigger download
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = `${projectName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_export.pdf`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Failed to export PDF:', error);
+      // TODO: Add toast notification for error
+    }
   };
 
   const handleShare = async () => {

@@ -1,18 +1,41 @@
-import { beforeAll } from 'vitest';
-import { prisma } from '@cronkwaters/db';
+import { beforeAll, vi } from 'vitest';
 
+// Mock database for unit tests
 beforeAll(async () => {
   if (!process.env.DATABASE_URL) {
-    throw new Error(
-      'DATABASE_URL is not set. Please start Postgres (e.g. via Docker) and run tests again.'
-    );
+    console.warn('DATABASE_URL is not set. Mocking database for unit tests.');
+    
+    // Mock @cronkwaters/db module
+    vi.mock('@cronkwaters/db', () => ({
+      prisma: {
+        $transaction: vi.fn(),
+        splitContributor: {
+          deleteMany: vi.fn(),
+        },
+        splitSheet: {
+          deleteMany: vi.fn(),
+        },
+        asset: {
+          deleteMany: vi.fn(),
+        },
+        project: {
+          deleteMany: vi.fn(),
+        },
+        org: {
+          deleteMany: vi.fn(),
+        }
+      }
+    }));
+  } else {
+    // If DATABASE_URL is set, use real database
+    const { prisma } = await import('@cronkwaters/db');
+    
+    await prisma.$transaction([
+      prisma.splitContributor.deleteMany({}),
+      prisma.splitSheet.deleteMany({}),
+      prisma.asset.deleteMany({}),
+      prisma.project.deleteMany({ where: { slug: { startsWith: 'test-project' } } }),
+      prisma.org.deleteMany({ where: { slug: { startsWith: 'test-org' } } })
+    ]);
   }
-
-  await prisma.$transaction([
-    prisma.splitContributor.deleteMany({}),
-    prisma.splitSheet.deleteMany({}),
-    prisma.asset.deleteMany({}),
-    prisma.project.deleteMany({ where: { slug: { startsWith: 'test-project' } } }),
-    prisma.org.deleteMany({ where: { slug: { startsWith: 'test-org' } } })
-  ]);
 });

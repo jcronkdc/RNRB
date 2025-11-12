@@ -1,5 +1,5 @@
 
-> @cronkwater/web@0.1.0 build /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
+> @cronkwaters/web@0.1.0 build /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > next build
 
    ▲ Next.js 15.5.6
@@ -7,84 +7,50 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (126kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ✓ Compiled successfully in 8.6s
-   Linting and checking validity of types ...
-Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
+Failed to compile.
 
-./app/(app)/layout.tsx
-3:10  Warning: 'cookies' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+./app/globals.css
+Module not found: Can't resolve '@cronkwater/ui/styles.css'
 
-info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-   Collecting page data ...
- ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/10) ...
-   Generating static pages (2/10) 
-   Generating static pages (4/10) 
-   Generating static pages (7/10) 
- ✓ Generating static pages (10/10)
-   Finalizing page optimization ...
-   Collecting build traces ...
+https://nextjs.org/docs/messages/module-not-found
 
-Route (app)                                 Size  First Load JS
-┌ ƒ /                                      232 B         144 kB
-├ ƒ /_not-found                            198 B         102 kB
-├ ƒ /api/ai-lyrics                         198 B         102 kB
-├ ƒ /api/auth/[...nextauth]                198 B         102 kB
-├ ƒ /api/auth/callback                     198 B         102 kB
-├ ƒ /api/elevenlabs-voice                  198 B         102 kB
-├ ƒ /api/health                            198 B         102 kB
-├ ƒ /api/trpc/[trpc]                       198 B         102 kB
-├ ƒ /api/upload-audio                      198 B         102 kB
-├ ƒ /artist/[slug]                       4.19 kB         124 kB
-├ ƒ /assets                              4.82 kB         115 kB
-├ ƒ /audience/[sessionId]                6.34 kB         167 kB
-├ ƒ /auth                                13.2 kB         162 kB
-├ ƒ /blocked                               176 B         106 kB
-├ ƒ /community                           5.12 kB         115 kB
-├ ƒ /dashboard                           12.9 kB         177 kB
-├ ƒ /dashboard/assets                      198 B         102 kB
-├ ƒ /dashboard/distribute                  198 B         102 kB
-├ ƒ /dashboard/licenses                    198 B         102 kB
-├ ƒ /dashboard/sessions                    198 B         102 kB
-├ ƒ /dashboard/settings                    198 B         102 kB
-├ ƒ /dashboard/splits                      198 B         102 kB
-├ ƒ /discover                            7.07 kB         159 kB
-├ ƒ /donate                                176 B         106 kB
-├ ƒ /foundation                          3.94 kB         118 kB
-├ ƒ /learn                               3.27 kB         117 kB
-├ ƒ /licenses                              198 B         102 kB
-├ ƒ /music                               5.17 kB         115 kB
-├ ƒ /onboarding/organization               198 B         102 kB
-├ ƒ /p/[slug]                              176 B         106 kB
-├ ƒ /p/[slug]/opengraph-image-4mgimg       198 B         102 kB
-├ ƒ /practice                            9.77 kB         120 kB
-├ ƒ /privacy                               198 B         102 kB
-├ ƒ /projects                            5.63 kB         185 kB
-├ ƒ /projects/[slug]                     11.6 kB         141 kB
-├ ƒ /projects/[slug]/songs/[songId]      4.93 kB         153 kB
-├ ƒ /remix/[roomId]                      4.83 kB         115 kB
-├ ○ /robots.txt                            198 B         102 kB
-├ ƒ /search                              3.24 kB         117 kB
-├ ƒ /sessions                              198 B         102 kB
-├ ƒ /settings                            3.43 kB         114 kB
-├ ƒ /settings/artist-profile             6.69 kB         127 kB
-├ ƒ /settings/org                        3.18 kB         113 kB
-├ ○ /sitemap.xml                           198 B         102 kB
-├ ƒ /splits                                198 B         102 kB
-├ ƒ /terms                                 198 B         102 kB
-├ ƒ /test                                  198 B         102 kB
-├ ƒ /theming                             1.46 kB         104 kB
-├ ƒ /tours                               39.7 kB         181 kB
-└ ƒ /tours/[slug]                        4.57 kB         121 kB
-+ First Load JS shared by all             102 kB
-  ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
-  ├ chunks/5542-123c5d89f3d04e21.js      46.1 kB
-  └ other shared chunks (total)          1.94 kB
+Import trace for requested module:
+./app/globals.css
+
+./app/globals.css
+Error: Can't resolve '@cronkwater/ui/styles.css'
+    at finishWithoutResolve (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:191837)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:192737
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:193370
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:16:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:193370
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:27:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:175252
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:193370
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:16:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:208998
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:165692
+    at next (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:208939)
+    at forEachBail (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:209076)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:164876
+    at _next1 (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:8:1)
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:31:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:193370
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:16:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:193370
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:57:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:174262
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:193370
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:16:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:193370
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:15:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:193370
+    at eval (eval at create (/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:14:9224), <anonymous>:16:1)
+    at /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/node_modules/.pnpm/next@15.5.6_@playwright+test@1.56.1_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/webpack/bundle5.js:1:177226
+    at process.processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+https://nextjs.org/docs/messages/module-not-found
 
 
-ƒ Middleware                             34.4 kB
-
-○  (Static)   prerendered as static content
-ƒ  (Dynamic)  server-rendered on demand
-
+> Build failed because of webpack errors
+ ELIFECYCLE  Command failed with exit code 1.

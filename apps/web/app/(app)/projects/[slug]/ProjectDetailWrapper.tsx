@@ -11,6 +11,7 @@ import type { LicenseListItem } from '../../../../components/app/LicenseList';
 import { ProjectDetailClient, type SongListItem } from '../../../../components/app/SongList';
 import type { SplitListItem } from '../../../../components/app/SplitList';
 import { useToast } from '../../../../components/ui/Toast';
+import { createCommentAction } from '../../../../lib/actions/comments';
 import { createLicenseAction } from '../../../../lib/actions/licenses';
 import { createSongAction } from '../../../../lib/actions/songs';
 import { createSplitSheetAction } from '../../../../lib/actions/splits';
@@ -124,9 +125,19 @@ export function ProjectDetailWrapper({
           <Comments
             entityId={projectSlug}
             entityType="project"
-            onCreate={async (_text) => {
-              // TODO: Implement comment creation
-              toast.push('Comment feature coming soon', { tone: 'info' });
+            onCreate={async (text) => {
+              startTransition(async () => {
+                const result = await createCommentAction(projectSlug, 'project', text);
+                
+                if (result.success) {
+                  announce('Comment posted');
+                  toast.push('Comment posted', { tone: 'success' });
+                  router.refresh();
+                } else {
+                  toast.push(result.error || 'Failed to post comment', { tone: 'error' });
+                  announce(`Failed to post comment: ${result.error || 'Unknown error'}`);
+                }
+              });
             }}
           />
         </div>
