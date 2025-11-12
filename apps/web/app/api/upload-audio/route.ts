@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const projectId = formData.get('projectId') as string;
+    const _projectId = formData.get('projectId') as string; // TODO: Use for asset tracking
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });

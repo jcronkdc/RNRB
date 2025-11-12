@@ -54,7 +54,14 @@ async function ProjectsData() {
         visibility: 'private' as const,
         createdAt: p.createdAt.toISOString(),
       })),
-      songs: songs || [],
+      songs: songs.map(s => ({
+        id: s.id,
+        project_id: s.projectId,
+        title: s.title,
+        bpm: s.tempo ?? undefined,
+        key: s.key ?? undefined,
+        mood_tags: [],
+      })),
     };
   } catch (error) {
     console.error('Failed to load projects:', error);

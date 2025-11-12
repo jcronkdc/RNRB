@@ -49,10 +49,10 @@ export default async function SongPage({ params }: { params: Promise<{ songId: s
       song={{
         id: song.id,
         title: song.title || 'Untitled',
-        bpm: song.bpm,
-        key: song.key,
+        bpm: song.tempo ?? undefined,
+        key: song.key ?? undefined,
         mood_tags: [],  // TODO: Add mood tags to Prisma schema if needed
-        lyrics: song.lyrics,
+        lyrics: song.lyrics ? { content: song.lyrics } : undefined,
         project_id: song.projectId,
       }}
     />

@@ -21,9 +21,9 @@ export async function createProjectAction(name: string) {
 
   try {
     // First get user's organization
-    const membership = await prisma.organizationMembership.findFirst({
+    const membership = await prisma.membership.findFirst({
       where: { userId },
-      include: { organization: true }
+      include: { org: true }
     });
 
     if (!membership) {
@@ -35,7 +35,7 @@ export async function createProjectAction(name: string) {
       data: {
         name,
         slug,
-        orgId: membership.organizationId
+        orgId: membership.orgId
       }
     });
 

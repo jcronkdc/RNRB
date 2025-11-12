@@ -2,3 +2,13 @@
 > @cronkwaters/auth@0.1.0 lint /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/auth
 > eslint 'src/**/*.{ts,tsx}'
 
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/auth/src/auth.ts
+  9:1  warning  `crypto` import should occur before import of `next-auth`  import/order
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/auth/src/session.ts
+  5:1  warning  `crypto` import should occur before import of `next/headers`  import/order
+
+✖ 2 problems (0 errors, 2 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+

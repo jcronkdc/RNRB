@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
-    const user = session.user;
+    const _user = session.user; // TODO: Use for tracking
 
     const { prompt, projectId } = await request.json();
 

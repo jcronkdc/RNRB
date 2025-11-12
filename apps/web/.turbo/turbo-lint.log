@@ -3,3 +3,27 @@
 > eslint --max-warnings 0
 
 Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/app/api/ai-lyrics/route.ts
+  22:11  warning  'user' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  22:11  warning  'user' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/app/api/upload-audio/route.ts
+  22:11  warning  'projectId' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  22:11  warning  'projectId' is assigned a value but never used. Allowed unused vars must match /^_/u  unused-imports/no-unused-vars
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/app/isolated/layout.tsx
+  7:5  error  <html> elements must have the lang prop  jsx-a11y/html-has-lang
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/lib/supabase/client.ts
+  23:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/lib/supabase/server.ts
+  21:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/next.config.ts
+  61:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+✖ 8 problems (4 errors, 4 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

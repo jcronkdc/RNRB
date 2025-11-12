@@ -18,7 +18,8 @@ export async function createClient() {
         getUser: () => Promise.resolve({ data: { user: null }, error: null }),
         getSession: () => Promise.resolve({ data: { session: null }, error: null })
       }
-    } as any;
+      // Type assertion to match expected Supabase client interface
+    } as unknown as Awaited<ReturnType<typeof createServerClient>>;
   }
 
   return createServerClient(

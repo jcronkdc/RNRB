@@ -35,7 +35,7 @@ const nextConfig: NextConfig = {
   },
 
   // Security-focused webpack configuration
-  webpack: (config, { isServer, dev }) => {
+  webpack: (config, { isServer, dev, webpack }) => {
     // Disable source maps in production
     if (!dev && !isServer) {
       config.devtool = false;
@@ -58,7 +58,7 @@ const nextConfig: NextConfig = {
 
     // Security plugins
     config.plugins.push(
-      new (require('webpack').DefinePlugin)({
+      new webpack.DefinePlugin({
         '__SENTRY_DEBUG__': false,
         '__SENTRY_TRACING__': false
       })

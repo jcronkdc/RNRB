@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 
+import { createClient } from '../../../lib/supabase/server';
+
 export async function POST(request: Request) {
   try {
     // Use NextAuth for authentication
@@ -9,6 +11,9 @@ export async function POST(request: Request) {
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const user = session.user;
+    const supabase = await createClient();
 
     const { text } = await request.json();
 
@@ -47,7 +52,7 @@ export async function POST(request: Request) {
 
     const audioBuffer = await response.arrayBuffer();
     const fileName = `voice-${Date.now()}.mp3`;
-    const filePath = `voice/${user.id}/${fileName}`;
+    const filePath = `voice/${user.id || 'anonymous'}/${fileName}`;
 
     // Upload to Supabase Storage
     const { error: uploadError } = await supabase.storage

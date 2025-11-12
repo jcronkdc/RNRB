@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 import { getCSRFToken } from "./lib/csrf";
 import { checkRateLimit, RateLimitError } from "./lib/rate-limit";
+import { verifyAuthToken, getSessionToken } from "./lib/auth/edge-jwt";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -16,11 +17,7 @@ export async function middleware(req: NextRequest) {
     '/privacy',
     '/terms',
     '/donate',
-    '/discover',
-    '/test-page',
-    '/simple-test',
-    '/minimal-test',
-    '/isolated'
+    '/discover'
   ];
   
   // Check if route requires authentication
@@ -32,22 +29,16 @@ export async function middleware(req: NextRequest) {
   const isStaticFile = pathname.includes('.');
   
   if (!isPublicRoute && !isStaticFile) {
-    // Check authentication using NextAuth
-    try {
-      // Import auth dynamically to avoid edge runtime issues
-      const { auth } = await import('@cronkwaters/auth');
-      const session = await auth();
-      
-      if (!session) {
-        // No session - redirect to auth page
-        const url = new URL('/auth', req.url);
-        url.searchParams.set('callbackUrl', pathname);
-        return NextResponse.redirect(url);
-      }
-    } catch (error) {
-      // If auth check fails, redirect to auth page for safety
-      console.error('Auth check failed in middleware:', error);
-      return NextResponse.redirect(new URL('/auth', req.url));
+    // Check authentication using Edge-compatible method
+    const cookieHeader = req.headers.get('cookie');
+    const sessionToken = getSessionToken(cookieHeader);
+    const isAuthenticated = await verifyAuthToken(sessionToken);
+    
+    if (!isAuthenticated) {
+      // No valid session - redirect to auth page
+      const url = new URL('/auth', req.url);
+      url.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(url);
     }
   }
   

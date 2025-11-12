@@ -20,7 +20,8 @@ export function createClient() {
         getSession: () => Promise.resolve({ data: { session: null }, error: null }),
         onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
       }
-    } as any;
+      // Type assertion to match expected Supabase client interface  
+    } as unknown as ReturnType<typeof createBrowserClient>;
   }
 
   return createBrowserClient(supabaseUrl, supabaseAnonKey);

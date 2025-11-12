@@ -7,13 +7,15 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 9.6s
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (129kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ✓ Compiled successfully in 16.2s
    Linting and checking validity of types ...
-Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/10) ...
-   Generating static pages (2/10) 
+   Generating static pages (0/9) ...
+   Generating static pages (2/9) 
+   Generating static pages (4/9) 
+   Generating static pages (6/9) 
 Failed to fetch public projects for sitemap: Error [PrismaClientInitializationError]: 
 Invalid `prisma.project.findMany()` invocation:
 
@@ -50,72 +52,68 @@ Validation Error Count: 1
   clientVersion: '5.22.0',
   errorCode: undefined
 }
-   Generating static pages (4/10) 
-   Generating static pages (7/10) 
- ✓ Generating static pages (10/10)
+ ✓ Generating static pages (9/9)
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                                 Size  First Load JS
-┌ ƒ /                                    3.97 kB         148 kB
-├ ƒ /_not-found                            203 B         102 kB
-├ ƒ /api/ai-lyrics                         203 B         102 kB
-├ ƒ /api/auth/[...nextauth]                203 B         102 kB
-├ ƒ /api/auth/callback                     203 B         102 kB
-├ ƒ /api/elevenlabs-voice                  203 B         102 kB
-├ ƒ /api/health                            203 B         102 kB
-├ ƒ /api/projects/[slug]/export/pdf        203 B         102 kB
-├ ƒ /api/trpc/[trpc]                       203 B         102 kB
-├ ƒ /api/upload-audio                      203 B         102 kB
-├ ƒ /artist/[slug]                       4.19 kB         124 kB
+┌ ƒ /                                      201 B         102 kB
+├ ƒ /_not-found                            201 B         102 kB
+├ ƒ /api/ai-lyrics                         201 B         102 kB
+├ ƒ /api/auth/[...nextauth]                201 B         102 kB
+├ ƒ /api/elevenlabs-voice                  201 B         102 kB
+├ ƒ /api/health                            201 B         102 kB
+├ ƒ /api/projects/[slug]/export/pdf        201 B         102 kB
+├ ƒ /api/trpc/[trpc]                       201 B         102 kB
+├ ƒ /api/upload-audio                      201 B         102 kB
+├ ƒ /artist/[slug]                       3.86 kB         124 kB
 ├ ƒ /assets                              4.82 kB         115 kB
-├ ƒ /audience/[sessionId]                6.34 kB         167 kB
-├ ƒ /auth                                13.2 kB         162 kB
+├ ƒ /audience/[sessionId]                56.5 kB         167 kB
+├ ƒ /auth                                12.9 kB         162 kB
 ├ ƒ /blocked                               176 B         106 kB
 ├ ƒ /community                           5.12 kB         115 kB
-├ ƒ /dashboard                           12.9 kB         177 kB
-├ ƒ /dashboard/assets                      203 B         102 kB
-├ ƒ /dashboard/distribute                  203 B         102 kB
-├ ƒ /dashboard/licenses                    203 B         102 kB
-├ ƒ /dashboard/sessions                    203 B         102 kB
-├ ƒ /dashboard/settings                    203 B         102 kB
-├ ƒ /dashboard/splits                      203 B         102 kB
-├ ƒ /discover                            7.09 kB         159 kB
+├ ƒ /dashboard                           12.8 kB         177 kB
+├ ƒ /dashboard/assets                      201 B         102 kB
+├ ƒ /dashboard/distribute                  201 B         102 kB
+├ ƒ /dashboard/licenses                    201 B         102 kB
+├ ƒ /dashboard/sessions                    201 B         102 kB
+├ ƒ /dashboard/settings                    201 B         102 kB
+├ ƒ /dashboard/splits                      201 B         102 kB
+├ ƒ /discover                            6.75 kB         159 kB
 ├ ƒ /donate                                176 B         106 kB
 ├ ƒ /foundation                          3.94 kB         118 kB
 ├ ƒ /learn                               3.27 kB         117 kB
-├ ƒ /licenses                              203 B         102 kB
+├ ƒ /licenses                              201 B         102 kB
 ├ ƒ /music                               5.17 kB         115 kB
-├ ƒ /onboarding/organization               203 B         102 kB
+├ ƒ /onboarding/organization               201 B         102 kB
 ├ ƒ /p/[slug]                              176 B         106 kB
-├ ƒ /p/[slug]/opengraph-image-4mgimg       203 B         102 kB
+├ ƒ /p/[slug]/opengraph-image-4mgimg       201 B         102 kB
 ├ ƒ /practice                            9.77 kB         120 kB
-├ ƒ /privacy                               203 B         102 kB
-├ ƒ /projects                            5.63 kB         185 kB
-├ ƒ /projects/[slug]                     11.7 kB         141 kB
-├ ƒ /projects/[slug]/songs/[songId]      4.93 kB         153 kB
+├ ƒ /privacy                               201 B         102 kB
+├ ƒ /projects                            5.78 kB         135 kB
+├ ƒ /projects/[slug]                     11.8 kB         141 kB
+├ ƒ /projects/[slug]/songs/[songId]      4.61 kB         153 kB
 ├ ƒ /remix/[roomId]                      4.83 kB         115 kB
-├ ○ /robots.txt                            203 B         102 kB
+├ ○ /robots.txt                            201 B         102 kB
 ├ ƒ /search                              3.24 kB         117 kB
-├ ƒ /sessions                              203 B         102 kB
+├ ƒ /sessions                              201 B         102 kB
 ├ ƒ /settings                            3.44 kB         114 kB
-├ ƒ /settings/artist-profile             6.69 kB         127 kB
+├ ƒ /settings/artist-profile             7.02 kB         127 kB
 ├ ƒ /settings/org                        3.18 kB         113 kB
-├ ○ /sitemap.xml                           203 B         102 kB
-├ ƒ /splits                                203 B         102 kB
-├ ƒ /terms                                 203 B         102 kB
-├ ƒ /test                                  203 B         102 kB
-├ ƒ /test-page                             203 B         102 kB
+├ ○ /sitemap.xml                           201 B         102 kB
+├ ƒ /splits                                201 B         102 kB
+├ ƒ /terms                                 201 B         102 kB
+├ ƒ /test                                  201 B         102 kB
 ├ ƒ /theming                             1.46 kB         104 kB
-├ ƒ /tours                               39.7 kB         181 kB
-└ ƒ /tours/[slug]                        4.57 kB         121 kB
+├ ƒ /tours                               39.6 kB         181 kB
+└ ƒ /tours/[slug]                        4.23 kB         121 kB
 + First Load JS shared by all             102 kB
   ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
   ├ chunks/5542-123c5d89f3d04e21.js      46.1 kB
   └ other shared chunks (total)          1.94 kB
 
 
-ƒ Middleware                             60.8 kB
+ƒ Middleware                               61 kB
 
 ○  (Static)   prerendered as static content
 ƒ  (Dynamic)  server-rendered on demand
