@@ -2,9 +2,3 @@
 > @cronkwaters/web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
-lib/actions/assets.ts(151,14): error TS1005: ';' expected.
-lib/actions/assets.ts(152,8): error TS1472: 'catch' or 'finally' expected.
-lib/actions/assets.ts(210,3): error TS1128: Declaration or statement expected.
-lib/actions/assets.ts(210,5): error TS1005: 'try' expected.
-lib/actions/assets.ts(216,1): error TS1128: Declaration or statement expected.
- ELIFECYCLE  Command failed with exit code 2.

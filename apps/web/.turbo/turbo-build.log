@@ -7,21 +7,13 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (129kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ✓ Compiled successfully in 6.7s
+ ✓ Compiled successfully in 6.0s
    Linting and checking validity of types ...
-Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
+
 Failed to compile.
 
-./lib/actions/assets.ts:29:29
-Type error: Cannot find name 'validateCSRFToken'.
+./lib/actions/assets.ts
+208:4  Error: Parsing error: 'try' expected.
 
-[0m [90m 27 |[39m   [36mtry[39m {
- [90m 28 |[39m     [90m// SECURITY: CSRF Protection[39m
-[31m[1m>[22m[39m[90m 29 |[39m     [36mconst[39m csrfValid [33m=[39m [36mawait[39m validateCSRFToken()[33m;[39m
- [90m    |[39m                             [31m[1m^[22m[39m
- [90m 30 |[39m     [36mif[39m ([33m![39mcsrfValid) {
- [90m 31 |[39m       [36mreturn[39m {
- [90m 32 |[39m         success[33m:[39m [36mfalse[39m[33m,[39m[0m
-Next.js build worker exited with code: 1 and signal: null
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
  ELIFECYCLE  Command failed with exit code 1.
