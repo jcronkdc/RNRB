@@ -9,12 +9,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@cronkwaters/ui/dialog";
-import { Button } from "@cronkwaters/ui/button";
-import { Input } from "@cronkwaters/ui/input";
-import { Label } from "@cronkwaters/ui/label";
-import { Switch } from "@cronkwaters/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@cronkwaters/ui/select";
+  Button,
+  Input,
+  Label,
+  Switch,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@cronkwaters/ui";
 import { Copy, CheckCircle, Link2, Globe, Lock, Clock } from "lucide-react";
 import { generateShareLink } from "./actions";
 

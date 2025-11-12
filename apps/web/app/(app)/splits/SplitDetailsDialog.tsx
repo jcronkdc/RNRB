@@ -8,10 +8,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@cronkwaters/ui/dialog";
-import { Badge } from "@cronkwaters/ui/badge";
-import { Button } from "@cronkwaters/ui/button";
-import { Progress } from "@cronkwaters/ui/progress";
+  Badge,
+  Button,
+  Progress,
+} from "@cronkwaters/ui";
 import { CheckCircle2, Clock, AlertCircle, FileText, Download, Send } from "lucide-react";
 import { format } from "date-fns";
 

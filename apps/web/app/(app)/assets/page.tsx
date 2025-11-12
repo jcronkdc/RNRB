@@ -8,11 +8,20 @@ import UploadDropzone from '../../../components/app/UploadDropzone';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
 import { redirect } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@cronkwaters/ui/card';
-import { Button } from '@cronkwaters/ui/button';
-import { Badge } from '@cronkwaters/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@cronkwaters/ui/tabs';
-import { Input } from '@cronkwaters/ui/input';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle,
+  Button,
+  Badge,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Input
+} from '@cronkwaters/ui';
 import { FileAudio, FileText, Image, Download, Share2, Trash2, Clock, Music, Search, Filter } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';

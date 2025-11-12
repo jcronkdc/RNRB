@@ -8,9 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@cronkwaters/ui/dialog";
-import { Button } from "@cronkwaters/ui/button";
-import { Badge } from "@cronkwaters/ui/badge";
+  Button,
+  Badge,
+} from "@cronkwaters/ui";
 import { FileAudio, FileText, Image, Music, Download, Share2, Clock, User, Hash } from "lucide-react";
 import { format } from "date-fns";
 

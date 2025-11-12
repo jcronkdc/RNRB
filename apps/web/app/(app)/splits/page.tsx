@@ -6,11 +6,20 @@
 import { auth } from "@cronkwaters/auth";
 import { prisma } from "@cronkwaters/db";
 import { redirect } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@cronkwaters/ui/card";
-import { Button } from "@cronkwaters/ui/button";
-import { Badge } from "@cronkwaters/ui/badge";
-import { Progress } from "@cronkwaters/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@cronkwaters/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Button,
+  Badge,
+  Progress,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@cronkwaters/ui";
 import { Plus, Users, Music, DollarSign, FileText, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 import { NewSplitDialog } from "./NewSplitDialog";
 import { SplitDetailsDialog } from "./SplitDetailsDialog";

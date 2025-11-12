@@ -2,3 +2,117 @@
 > @cronkwaters/web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
+app/(app)/analytics/page.tsx(24,40): error TS2353: Object literal may only specify known properties, and 'organizationId' does not exist in type 'MembershipWhereInput'.
+app/(app)/analytics/page.tsx(42,9): error TS2353: Object literal may only specify known properties, and 'uploadedAt' does not exist in type 'AssetWhereInput'.
+app/(app)/analytics/page.tsx(71,16): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'MembershipInclude<DefaultArgs>'.
+app/(app)/analytics/page.tsx(78,51): error TS2339: Property 'organizationId' does not exist on type '{ orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+app/(app)/assets/actions.ts(68,36): error TS2339: Property 'assetShare' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/assets/actions.ts(103,36): error TS2339: Property 'assetShare' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/assets/actions.ts(114,18): error TS2339: Property 'assetShare' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/assets/actions.ts(154,33): error TS2339: Property 'assetShare' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/assets/AssetDetailsDialog.tsx(162,36): error TS2322: Type '"secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+app/(app)/assets/page.tsx(19,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'Tabs'.
+app/(app)/assets/page.tsx(20,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'TabsContent'.
+app/(app)/assets/page.tsx(21,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'TabsList'.
+app/(app)/assets/page.tsx(22,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'TabsTrigger'.
+app/(app)/assets/page.tsx(42,7): error TS2353: Object literal may only specify known properties, and 'uploadedBy' does not exist in type 'AssetInclude<DefaultArgs>'.
+app/(app)/assets/page.tsx(51,33): error TS2339: Property 'fileType' does not exist on type '{ name: string; height: number | null; width: number | null; id: string; createdAt: Date; updatedAt: Date; projectId: string | null; mimeType: string; bytes: bigint; storageKey: string; ... 5 more ...; assetType: AssetType; }'.
+app/(app)/assets/page.tsx(52,34): error TS2339: Property 'fileType' does not exist on type '{ name: string; height: number | null; width: number | null; id: string; createdAt: Date; updatedAt: Date; projectId: string | null; mimeType: string; bytes: bigint; storageKey: string; ... 5 more ...; assetType: AssetType; }'.
+app/(app)/assets/page.tsx(53,34): error TS2339: Property 'fileType' does not exist on type '{ name: string; height: number | null; width: number | null; id: string; createdAt: Date; updatedAt: Date; projectId: string | null; mimeType: string; bytes: bigint; storageKey: string; ... 5 more ...; assetType: AssetType; }'.
+app/(app)/assets/page.tsx(55,10): error TS2339: Property 'fileType' does not exist on type '{ name: string; height: number | null; width: number | null; id: string; createdAt: Date; updatedAt: Date; projectId: string | null; mimeType: string; bytes: bigint; storageKey: string; ... 5 more ...; assetType: AssetType; }'.
+app/(app)/assets/page.tsx(56,10): error TS2339: Property 'fileType' does not exist on type '{ name: string; height: number | null; width: number | null; id: string; createdAt: Date; updatedAt: Date; projectId: string | null; mimeType: string; bytes: bigint; storageKey: string; ... 5 more ...; assetType: AssetType; }'.
+app/(app)/assets/page.tsx(57,9): error TS2339: Property 'fileType' does not exist on type '{ name: string; height: number | null; width: number | null; id: string; createdAt: Date; updatedAt: Date; projectId: string | null; mimeType: string; bytes: bigint; storageKey: string; ... 5 more ...; assetType: AssetType; }'.
+app/(app)/assets/page.tsx(217,24): error TS2322: Type '"secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+app/(app)/assets/ShareAssetDialog.tsx(16,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'Select'.
+app/(app)/assets/ShareAssetDialog.tsx(17,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectContent'.
+app/(app)/assets/ShareAssetDialog.tsx(18,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectItem'.
+app/(app)/assets/ShareAssetDialog.tsx(19,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectTrigger'.
+app/(app)/assets/ShareAssetDialog.tsx(20,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectValue'.
+app/(app)/onboarding/organization/actions.ts(38,13): error TS2353: Object literal may only specify known properties, and 'status' does not exist in type '(Without<MembershipCreateWithoutOrgInput, MembershipUncheckedCreateWithoutOrgInput> & MembershipUncheckedCreateWithoutOrgInput) | MembershipCreateWithoutOrgInput[] | MembershipUncheckedCreateWithoutOrgInput[]'.
+app/(app)/onboarding/organization/actions.ts(49,18): error TS2339: Property 'orgInvite' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/onboarding/organization/actions.ts(79,33): error TS2339: Property 'orgInvite' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/onboarding/organization/actions.ts(87,32): error TS2339: Property 'orgInvite' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/onboarding/organization/actions.ts(121,11): error TS2353: Object literal may only specify known properties, and 'status' does not exist in type 'Without<MembershipCreateInput, MembershipUncheckedCreateInput> & MembershipUncheckedCreateInput'.
+app/(app)/onboarding/organization/actions.ts(126,16): error TS2339: Property 'orgInvite' does not exist on type 'Omit<PrismaClient<PrismaClientOptions, never, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">'.
+app/(app)/sessions/CreateSessionDialog.tsx(17,10): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'Select'.
+app/(app)/sessions/CreateSessionDialog.tsx(17,18): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectContent'.
+app/(app)/sessions/CreateSessionDialog.tsx(17,33): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectItem'.
+app/(app)/sessions/CreateSessionDialog.tsx(17,45): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectTrigger'.
+app/(app)/sessions/CreateSessionDialog.tsx(17,60): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectValue'.
+app/(app)/sessions/CreateSessionDialog.tsx(117,52): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(12,33): error TS2339: Property 'studioSession' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/sessions/page.tsx(34,36): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(35,32): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(36,35): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(82,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(117,26): error TS7006: Parameter 'session' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(155,28): error TS2322: Type '"secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+app/(app)/sessions/page.tsx(159,36): error TS7006: Parameter 'session' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(202,39): error TS7006: Parameter 'session' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(237,65): error TS7006: Parameter 'attendee' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(237,75): error TS7006: Parameter 'i' implicitly has an 'any' type.
+app/(app)/sessions/page.tsx(255,30): error TS2322: Type '"default" | "secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+  Type '"default"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+app/(app)/sessions/page.tsx(275,35): error TS7006: Parameter 'session' implicitly has an 'any' type.
+app/(app)/splits/actions.ts(71,21): error TS2339: Property 'songSplit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/splits/actions.ts(103,32): error TS2339: Property 'songSplit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/splits/actions.ts(116,18): error TS2339: Property 'songSplit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/splits/actions.ts(138,32): error TS2339: Property 'songSplit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/splits/actions.ts(168,50): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/splits/actions.ts(169,42): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+app/(app)/splits/actions.ts(169,47): error TS7006: Parameter 's' implicitly has an 'any' type.
+app/(app)/splits/actions.ts(176,18): error TS2339: Property 'songSplit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/splits/actions.ts(201,32): error TS2339: Property 'songSplit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/splits/actions.ts(224,18): error TS2339: Property 'songSplit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/splits/NewSplitDialog.tsx(16,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'Select'.
+app/(app)/splits/NewSplitDialog.tsx(17,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectContent'.
+app/(app)/splits/NewSplitDialog.tsx(18,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectItem'.
+app/(app)/splits/NewSplitDialog.tsx(19,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectTrigger'.
+app/(app)/splits/NewSplitDialog.tsx(20,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectValue'.
+app/(app)/splits/NewSplitDialog.tsx(158,39): error TS7006: Parameter 'value' implicitly has an 'any' type.
+app/(app)/splits/page.tsx(18,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'Tabs'.
+app/(app)/splits/page.tsx(19,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'TabsContent'.
+app/(app)/splits/page.tsx(20,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'TabsList'.
+app/(app)/splits/page.tsx(21,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'TabsTrigger'.
+app/(app)/splits/page.tsx(30,31): error TS2339: Property 'songSplit' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+app/(app)/splits/page.tsx(52,39): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+app/(app)/splits/page.tsx(52,44): error TS7006: Parameter 'split' implicitly has an 'any' type.
+app/(app)/splits/page.tsx(83,37): error TS2551: Property 'transaction' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'. Did you mean '$transaction'?
+app/(app)/splits/page.tsx(227,25): error TS2322: Type '"success" | "secondary" | "warning"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+  Type '"secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+app/(app)/splits/SplitDetailsDialog.tsx(47,15): error TS2322: Type '"success" | "secondary" | "warning"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+  Type '"secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+app/(marketing)/donate/actions.ts(44,9): error TS2353: Object literal may only specify known properties, and 'frequency' does not exist in type '(Without<DonationCreateInput, DonationUncheckedCreateInput> & DonationUncheckedCreateInput) | (Without<...> & DonationCreateInput)'.
+app/(marketing)/donate/actions.ts(84,9): error TS2353: Object literal may only specify known properties, and 'anonymous' does not exist in type 'DonationWhereInput'.
+app/(marketing)/donate/actions.ts(102,15): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+app/(marketing)/donate/actions.ts(108,18): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+app/(marketing)/donate/DonationWidget.tsx(9,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'RadioGroup'.
+app/(marketing)/donate/DonationWidget.tsx(10,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'RadioGroupItem'.
+app/(marketing)/donate/DonationWidget.tsx(11,3): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'Checkbox'.
+app/(marketing)/donate/DonationWidget.tsx(96,55): error TS7006: Parameter 'v' implicitly has an 'any' type.
+app/(marketing)/donate/DonationWidget.tsx(162,29): error TS7006: Parameter 'checked' implicitly has an 'any' type.
+app/(marketing)/donate/DonationWidget.tsx(203,31): error TS7006: Parameter 'checked' implicitly has an 'any' type.
+components/splits/CreateSplitDialog.tsx(16,10): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'Select'.
+components/splits/CreateSplitDialog.tsx(16,18): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectContent'.
+components/splits/CreateSplitDialog.tsx(16,33): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectItem'.
+components/splits/CreateSplitDialog.tsx(16,45): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectTrigger'.
+components/splits/CreateSplitDialog.tsx(16,60): error TS2305: Module '"@cronkwaters/ui"' has no exported member 'SelectValue'.
+components/splits/CreateSplitDialog.tsx(34,28): error TS2554: Expected 2 arguments, but got 1.
+components/splits/CreateSplitDialog.tsx(41,24): error TS2339: Property 'splitSheet' does not exist on type '{ id: string; }'.
+components/splits/CreateSplitDialog.tsx(96,50): error TS7006: Parameter 'v' implicitly has an 'any' type.
+lib/actions/projects.ts(10,24): error TS2307: Cannot find module '../actions/safe-action' or its corresponding type declarations.
+lib/actions/projects.ts(11,35): error TS2307: Cannot find module '../session' or its corresponding type declarations.
+lib/actions/projects.ts(45,10): error TS7006: Parameter 'input' implicitly has an 'any' type.
+lib/actions/projects.ts(59,45): error TS2345: Argument of type '{ name: string; description: string | undefined; orgId: any; }' is not assignable to parameter of type 'CreateProjectInput'.
+  Property 'slug' is missing in type '{ name: string; description: string | undefined; orgId: any; }' but required in type 'CreateProjectInput'.
+lib/actions/sessions.ts(3,24): error TS2307: Cannot find module '../actions/safe-action' or its corresponding type declarations.
+lib/actions/sessions.ts(6,35): error TS2307: Cannot find module '../session' or its corresponding type declarations.
+lib/actions/sessions.ts(23,10): error TS7006: Parameter 'input' implicitly has an 'any' type.
+lib/actions/sessions.ts(51,42): error TS2339: Property 'studioSession' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/sessions.ts(101,10): error TS7006: Parameter 'input' implicitly has an 'any' type.
+lib/actions/sessions.ts(113,42): error TS2339: Property 'studioSession' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/sessions.ts(141,36): error TS2339: Property 'studioSession' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/sessions.ts(156,10): error TS7006: Parameter 'input' implicitly has an 'any' type.
+lib/actions/sessions.ts(168,42): error TS2339: Property 'studioSession' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+lib/actions/sessions.ts(182,20): error TS2339: Property 'studioSession' does not exist on type 'PrismaClient<PrismaClientOptions, never, DefaultArgs>'.
+ ELIFECYCLE  Command failed with exit code 2.

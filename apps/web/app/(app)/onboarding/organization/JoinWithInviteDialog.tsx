@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@cronkwaters/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -11,9 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@cronkwaters/ui/dialog";
-import { Input } from "@cronkwaters/ui/input";
-import { Label } from "@cronkwaters/ui/label";
+  Input,
+  Label,
+} from "@cronkwaters/ui";
 import { AlertCircle } from "lucide-react";
 import { joinOrganizationAction } from "./actions";
 

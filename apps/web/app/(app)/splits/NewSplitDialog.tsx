@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@cronkwaters/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -11,11 +11,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@cronkwaters/ui/dialog";
-import { Label } from "@cronkwaters/ui/label";
-import { Input } from "@cronkwaters/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@cronkwaters/ui/select";
-import { Textarea } from "@cronkwaters/ui/textarea";
+  Label,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Textarea,
+} from "@cronkwaters/ui";
 import { Plus, Trash2 } from "lucide-react";
 import { createSplitAction } from "./actions";
 

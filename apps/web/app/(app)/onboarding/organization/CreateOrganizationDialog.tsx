@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@cronkwaters/ui/button";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -11,10 +11,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@cronkwaters/ui/dialog";
-import { Input } from "@cronkwaters/ui/input";
-import { Label } from "@cronkwaters/ui/label";
-import { Textarea } from "@cronkwaters/ui/textarea";
+  Input,
+  Label,
+  Textarea,
+} from "@cronkwaters/ui";
 import { AlertCircle, Copy, CheckCircle } from "lucide-react";
 import { createOrganizationAction } from "./actions";
 

@@ -39,7 +39,7 @@ export async function verifyAuthToken(token: string | undefined): Promise<boolea
     // But we keep it simple and REAL
     
     return true;
-  } catch {
+  } catch (_error) {
     // Token verification failed
     return false;
   }
