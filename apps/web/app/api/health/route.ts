@@ -39,7 +39,7 @@ export async function GET() {
 
   // Check auth configuration
   try {
-    const session = await auth();
+    await auth();
     diagnostics.checks.auth.configured = true;
   } catch (error) {
     diagnostics.checks.auth.configured = false;

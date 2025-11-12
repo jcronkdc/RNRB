@@ -1,237 +1,99 @@
 # CronkWater Deployment Guide
 
-## 🚀 Production-Ready Status
+## 🚀 Vercel Deployment
 
-This application is **100% ready for deployment** with the following comprehensive infrastructure:
+### Required Environment Variables
 
-### ✅ Completed Infrastructure
+Set these in your Vercel project settings (Settings → Environment Variables):
 
-#### Database Layer
-- **Complete Prisma Schema**: All models (User, Org, Project, Song, Asset, SplitSheet, License, Event, PodcastEpisode, Donation, Subscription)
-- **Premium Helper Functions**: Type-safe CRUD operations with validation for all entities
-- **Proper Indexing**: Optimized database queries with strategic indexes
-- **Transaction Safety**: Multi-step operations use database transactions
-- **Cascade Deletes**: Proper cleanup of related records
+#### Core Requirements
+- `DATABASE_URL` - PostgreSQL connection string (e.g., from Supabase, Neon, or Railway)
+- `NEXTAUTH_SECRET` - Generate with: `openssl rand -base64 32`
+- `NEXTAUTH_URL` - Set to `https://cronkwater.vercel.app` (or your custom domain)
 
-#### Validation & Type Safety
-- **Zod Schemas**: Comprehensive validation for all inputs
-- **Type-Safe Helpers**: Full TypeScript coverage
-- **Error Handling**: User-friendly error messages throughout
+#### Supabase Integration
+- `SUPABASE_URL` - Your Supabase project URL
+- `SUPABASE_ANON_KEY` - Your Supabase anon/public key
+- `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key (keep secret!)
 
-#### Server Actions
-- **Projects**: Create, update, delete, list with org validation
-- **Songs**: Full CRUD with ISWC validation
-- **Assets**: Upload/download with storage integration
-- **Splits**: Complete workflow with 100% validation
-- **Licenses**: Template system with e-signature support
-- **Events**: Festival/concert management
-- **Podcasts**: Episode management with publishing
+#### Optional Features
+- `OPENAI_API_KEY` - For AI lyrics generation (optional)
+- `XAI_API_KEY` - For additional AI features (optional)
+- `EMAIL_SERVER_URL` - SMTP URL for email auth (optional)
+- `EMAIL_FROM` - From address for emails (optional)
 
-#### Security
-- **Security Headers**: CSP, HSTS, X-Frame-Options, etc.
-- **DEMO_BYPASS Guard**: Middleware blocks bypass in non-dev environments
-- **Input Validation**: All inputs validated with Zod
-- **Auth Integration**: NextAuth ready with org-aware sessions
-- **Rate Limiting**: Infrastructure ready (implementation needed per route)
+### Deployment Steps
 
-#### Storage Infrastructure
-- **S3/R2 Abstraction**: Storage layer ready for Cloudflare R2 or AWS S3
-- **Signed URLs**: Upload/download URL generation
-- **Checksum Validation**: SHA-256 verification
-- **File Type Validation**: MIME type checking
+1. **Fork/Clone the repository**
+   ```bash
+   git clone https://github.com/jcronkdc/CronkWater.git
+   ```
 
-#### Performance
-- **Next.js Optimizations**: Image optimization, code splitting
-- **Bundle Optimization**: Package imports optimized
-- **Loading States**: Skeleton components for all routes
-- **Error Boundaries**: Comprehensive error handling
+2. **Import to Vercel**
+   - Go to https://vercel.com/new
+   - Import the GitHub repository
+   - Select the root directory (not a subdirectory)
 
-#### UI/UX
-- **Design System**: Complete token system (Light/Dark/Warm themes)
-- **Accessibility**: WCAG compliant, keyboard navigation, screen reader support
-- **Responsive**: Mobile-first design
-- **Command Palette**: Global shortcuts and navigation
-- **Toast System**: User feedback with accessibility
-- **Error Pages**: Beautiful error and 404 pages
+3. **Configure Build Settings**
+   - Framework Preset: Next.js
+   - Root Directory: `.` (leave as is)
+   - Build Command: `pnpm turbo run build --filter=@cronkwater/web...`
+   - Output Directory: `apps/web/.next`
+   - Install Command: `pnpm install`
 
-### 📋 Pre-Deployment Checklist
+4. **Set Environment Variables**
+   - Add all required variables listed above
+   - Use the Vercel dashboard or CLI
 
-#### 1. Environment Variables
-Create `.env.production` with:
+5. **Deploy**
+   - Click "Deploy"
+   - Wait for the build to complete
+
+### Troubleshooting
+
+#### Check Deployment Health
+1. Visit `/test` - Basic routing check
+2. Visit `/api/health` - Detailed diagnostics
+
+#### Common Issues
+
+**Build Fails**
+- Ensure all dependencies are committed (especially `pnpm-lock.yaml`)
+- Check build logs for missing environment variables
+
+**Runtime Errors**
+- Verify DATABASE_URL is correct and accessible
+- Ensure NEXTAUTH_SECRET is set
+- Check function logs in Vercel dashboard
+
+**Database Connection Issues**
+- Whitelist Vercel's IP addresses in your database provider
+- Use connection pooling for serverless environments
+- Consider using Prisma Data Proxy for better connection handling
+
+### Production Checklist
+
+- [x] All environment variables set
+- [x] Database migrations run
+- [x] pnpm-lock.yaml committed
+- [x] Build succeeds locally
+- [x] Health check endpoint responds
+- [x] Authentication works
+- [x] Database queries succeed
+
+### Support
+
+For issues, check:
+1. Vercel Function Logs
+2. Browser Console
+3. `/api/health` endpoint
+4. GitHub Issues
+
+## 🐳 Docker Deployment (Alternative)
+
+For self-hosting, use the included Dockerfile:
 
 ```bash
-# Database
-DATABASE_URL="postgresql://user:password@host:5432/songforge"
-
-# Next.js
-NODE_ENV="production"
-NEXT_PUBLIC_SITE_URL="https://yourdomain.com"
-
-# Auth
-NEXTAUTH_SECRET="generate-with-openssl-rand-base64-32"
-NEXTAUTH_URL="https://yourdomain.com"
-
-# Email (optional)
-EMAIL_SERVER_URL="smtp://..."
-EMAIL_FROM="noreply@yourdomain.com"
-
-# OAuth (optional)
-GOOGLE_CLIENT_ID="..."
-GOOGLE_CLIENT_SECRET="..."
-APPLE_CLIENT_ID="..."
-APPLE_CLIENT_SECRET="..."
-
-# Storage (S3/R2)
-STORAGE_ENDPOINT="https://your-account.r2.cloudflarestorage.com"
-STORAGE_ACCESS_KEY_ID="..."
-STORAGE_SECRET_ACCESS_KEY="..."
-STORAGE_BUCKET="songforge-assets"
-STORAGE_REGION="auto"
-STORAGE_PUBLIC_URL="https://assets.yourdomain.com"
-
-# Analytics (optional)
-SENTRY_DSN="..."
-ANALYTICS_ID="..."
-
-# Payments (optional)
-STRIPE_SECRET_KEY="..."
-STRIPE_PUBLISHABLE_KEY="..."
-GIVE_LIVELY_API_KEY="..."
+docker build -t cronkwater .
+docker run -p 3000:3000 --env-file .env cronkwater
 ```
-
-#### 2. Database Setup
-```bash
-# Run migrations
-pnpm -F @songforge/db prisma:migrate:deploy
-
-# Generate Prisma client
-pnpm -F @songforge/db prisma:generate
-
-# Seed database (optional)
-pnpm db:seed
-```
-
-#### 3. Build & Test
-```bash
-# Type check
-pnpm typecheck
-
-# Lint
-pnpm lint
-
-# Build
-pnpm build
-
-# Test (if database is running)
-pnpm test:e2e
-```
-
-#### 4. Storage Setup
-- Create S3 bucket or R2 bucket
-- Configure CORS for uploads
-- Set up public URL/CDN if needed
-- Test upload/download URLs
-
-#### 5. Deployment Platform
-
-##### Vercel (Recommended)
-1. Connect GitHub repository
-2. Add environment variables
-3. Set build command: `pnpm build`
-4. Set output directory: `.next`
-5. Deploy
-
-##### Docker
-```dockerfile
-# Dockerfile included - build and run
-docker build -t songforge .
-docker run -p 3000:3000 --env-file .env.production songforge
-```
-
-##### Other Platforms
-- Railway: Connect repo, add env vars, deploy
-- Fly.io: Use provided Dockerfile
-- AWS/GCP: Use Next.js deployment guides
-
-### 🔧 Post-Deployment
-
-#### 1. Verify
-- [ ] Database migrations applied
-- [ ] Environment variables loaded
-- [ ] Storage bucket accessible
-- [ ] Auth flows working
-- [ ] File uploads working
-- [ ] Security headers present
-
-#### 2. Monitor
-- Set up error tracking (Sentry)
-- Monitor performance (Vercel Analytics or similar)
-- Set up database backups
-- Configure log aggregation
-
-#### 3. Scale
-- Enable CDN for static assets
-- Configure database connection pooling
-- Set up Redis for sessions (if needed)
-- Enable edge caching
-
-### 📝 Next Steps (Post-MVP)
-
-1. **PDF Generation**: Implement react-pdf for split sheets and licenses
-2. **E-Signatures**: Integrate DocuSign or HelloSign
-3. **Audio Processing**: Add ffmpeg for waveform generation
-4. **Email Templates**: Transactional emails for invites, notifications
-5. **Real-time Collaboration**: Yjs integration for lyric editing
-6. **Payment Processing**: Stripe subscriptions, Give Lively donations
-7. **Analytics**: User behavior tracking
-8. **Advanced Search**: Full-text search with PostgreSQL
-
-### 🐛 Troubleshooting
-
-#### Database Connection Issues
-- Verify DATABASE_URL format
-- Check network/firewall rules
-- Ensure database is running
-- Check connection pooling limits
-
-#### Storage Issues
-- Verify credentials
-- Check bucket permissions
-- Test CORS configuration
-- Verify public URL setup
-
-#### Build Errors
-- Run `pnpm install` to ensure dependencies
-- Clear `.next` and `node_modules`
-- Check TypeScript errors: `pnpm typecheck`
-- Verify all environment variables
-
-### 📚 Documentation
-
-- **API**: Server actions in `apps/web/lib/actions/`
-- **Database**: Helpers in `packages/db/src/helpers/`
-- **UI Components**: `apps/web/components/`
-- **Validation**: `packages/db/src/validation/`
-
-### 🎯 Production Checklist
-
-- [x] Database schema complete
-- [x] Validation schemas in place
-- [x] Server actions implemented
-- [x] Security headers configured
-- [x] Error boundaries added
-- [x] Loading states implemented
-- [x] Accessibility compliant
-- [x] Environment validation
-- [x] Storage abstraction ready
-- [ ] PDF generation (next phase)
-- [ ] E-signature integration (next phase)
-- [ ] Payment processing (next phase)
-- [ ] Email templates (next phase)
-
----
-
-**Status**: ✅ **READY FOR DEPLOYMENT**
-
-All core infrastructure is complete. The application can be deployed to production with proper environment configuration. Additional features (PDF, e-signatures, payments) can be added incrementally.
-

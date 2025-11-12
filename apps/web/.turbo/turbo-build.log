@@ -1,5 +1,5 @@
 
-> web@0.1.0 build /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
+> @cronkwater/web@0.1.0 build /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > next build
 
    ▲ Next.js 15.5.6
@@ -7,35 +7,29 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 22.5s
+ ✓ Compiled successfully in 19.4s
    Linting and checking validity of types ...
 Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/9) ...
-   Generating static pages (2/9) 
-   Generating static pages (4/9) 
-   Generating static pages (6/9) 
- ✓ Generating static pages (9/9)
+   Generating static pages (0/10) ...
+   Generating static pages (2/10) 
+   Generating static pages (4/10) 
+   Generating static pages (7/10) 
+ ✓ Generating static pages (10/10)
    Finalizing page optimization ...
    Collecting build traces ...
- ⚠ Failed to copy traced files for /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/server/app/(marketing)/page.js [Error: ENOENT: no such file or directory, copyfile '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/server/app/(marketing)/page_client-reference-manifest.js' -> '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/standalone/apps/web/.next/server/app/(marketing)/page_client-reference-manifest.js'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'copyfile',
-  path: '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/server/app/(marketing)/page_client-reference-manifest.js',
-  dest: '/Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web/.next/standalone/apps/web/.next/server/app/(marketing)/page_client-reference-manifest.js'
-}
 
 Route (app)                                 Size  First Load JS
 ┌ ƒ /                                      232 B         144 kB
-├ ƒ /_not-found                            193 B         103 kB
-├ ƒ /api/ai-lyrics                         193 B         103 kB
-├ ƒ /api/auth/[...nextauth]                193 B         103 kB
-├ ƒ /api/auth/callback                     193 B         103 kB
-├ ƒ /api/elevenlabs-voice                  193 B         103 kB
-├ ƒ /api/trpc/[trpc]                       193 B         103 kB
-├ ƒ /api/upload-audio                      193 B         103 kB
+├ ƒ /_not-found                            198 B         103 kB
+├ ƒ /api/ai-lyrics                         198 B         103 kB
+├ ƒ /api/auth/[...nextauth]                198 B         103 kB
+├ ƒ /api/auth/callback                     198 B         103 kB
+├ ƒ /api/elevenlabs-voice                  198 B         103 kB
+├ ƒ /api/health                            198 B         103 kB
+├ ƒ /api/trpc/[trpc]                       198 B         103 kB
+├ ƒ /api/upload-audio                      198 B         103 kB
 ├ ƒ /artist/[slug]                       4.17 kB         124 kB
 ├ ƒ /assets                               4.8 kB         115 kB
 ├ ƒ /audience/[sessionId]                6.26 kB         167 kB
@@ -43,36 +37,37 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /blocked                               176 B         106 kB
 ├ ƒ /community                            5.1 kB         115 kB
 ├ ƒ /dashboard                           12.9 kB         177 kB
-├ ƒ /dashboard/assets                      193 B         103 kB
-├ ƒ /dashboard/distribute                  193 B         103 kB
-├ ƒ /dashboard/licenses                    193 B         103 kB
-├ ƒ /dashboard/sessions                    193 B         103 kB
-├ ƒ /dashboard/settings                    193 B         103 kB
-├ ƒ /dashboard/splits                      193 B         103 kB
+├ ƒ /dashboard/assets                      198 B         103 kB
+├ ƒ /dashboard/distribute                  198 B         103 kB
+├ ƒ /dashboard/licenses                    198 B         103 kB
+├ ƒ /dashboard/sessions                    198 B         103 kB
+├ ƒ /dashboard/settings                    198 B         103 kB
+├ ƒ /dashboard/splits                      198 B         103 kB
 ├ ƒ /discover                            7.05 kB         159 kB
 ├ ƒ /donate                                176 B         106 kB
 ├ ƒ /foundation                          3.94 kB         118 kB
 ├ ƒ /learn                               3.27 kB         117 kB
-├ ƒ /licenses                              193 B         103 kB
+├ ƒ /licenses                              198 B         103 kB
 ├ ƒ /music                               5.14 kB         115 kB
-├ ƒ /onboarding/organization               193 B         103 kB
+├ ƒ /onboarding/organization               198 B         103 kB
 ├ ƒ /p/[slug]                              176 B         106 kB
-├ ƒ /p/[slug]/opengraph-image-4mgimg       193 B         103 kB
+├ ƒ /p/[slug]/opengraph-image-4mgimg       198 B         103 kB
 ├ ƒ /practice                            9.74 kB         120 kB
-├ ƒ /privacy                               193 B         103 kB
+├ ƒ /privacy                               198 B         103 kB
 ├ ƒ /projects                            5.55 kB         185 kB
 ├ ƒ /projects/[slug]                     11.6 kB         141 kB
 ├ ƒ /projects/[slug]/songs/[songId]      4.92 kB         154 kB
 ├ ƒ /remix/[roomId]                       4.8 kB         115 kB
-├ ○ /robots.txt                            193 B         103 kB
+├ ○ /robots.txt                            198 B         103 kB
 ├ ƒ /search                              3.22 kB         117 kB
-├ ƒ /sessions                              193 B         103 kB
+├ ƒ /sessions                              198 B         103 kB
 ├ ƒ /settings                            3.41 kB         114 kB
 ├ ƒ /settings/artist-profile             6.67 kB         127 kB
 ├ ƒ /settings/org                        3.15 kB         113 kB
-├ ○ /sitemap.xml                           193 B         103 kB
-├ ƒ /splits                                193 B         103 kB
-├ ƒ /terms                                 193 B         103 kB
+├ ○ /sitemap.xml                           198 B         103 kB
+├ ƒ /splits                                198 B         103 kB
+├ ƒ /terms                                 198 B         103 kB
+├ ƒ /test                                  198 B         103 kB
 ├ ƒ /theming                             1.46 kB         104 kB
 ├ ƒ /tours                               39.7 kB         181 kB
 └ ƒ /tours/[slug]                        4.55 kB         121 kB

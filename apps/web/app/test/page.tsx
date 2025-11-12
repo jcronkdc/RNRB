@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 export default function TestPage() {
   return (
     <div style={{ padding: '2rem', fontFamily: 'system-ui' }}>
