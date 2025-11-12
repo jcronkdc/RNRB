@@ -8,6 +8,9 @@ import { isStorageConfigured } from '../env';
 import { getUploadUrl, getDownloadUrl, deleteObject } from '../storage/s3';
 import { createWatermarkMetadata } from '../watermarking';
 import { validateFileUpload, sanitizeFilePath } from '../validation/file-upload';
+import { validateCSRFToken } from '../csrf';
+import { rateLimitMiddleware } from '../rate-limit';
+import { sanitizeUserInput } from '../sanitization';
 
 export interface ActionResult<T> {
   success: boolean;
@@ -25,6 +28,18 @@ export async function getUploadUrlAction(
   checksum?: string
 ): Promise<ActionResult<{ url: string; key: string }>> {
   try {
+    // SECURITY: CSRF Protection
+    const csrfValid = await validateCSRFToken();
+    if (!csrfValid) {
+      return {
+        success: false,
+        error: 'Invalid CSRF token'
+      };
+    }
+
+    // SECURITY: Rate Limiting
+    await rateLimitMiddleware('upload');
+
     await requireOrgSession();
 
     if (!isStorageConfigured()) {
@@ -111,18 +126,27 @@ export async function createAssetAction(
   input: unknown
 ): Promise<ActionResult<{ id: string }>> {
   try {
+    // SECURITY: CSRF Protection
+    const csrfValid = await validateCSRFToken();
+    if (!csrfValid) {
+      return {
+        success: false,
+        error: 'Invalid CSRF token'
+      };
+    }
+
+    // SECURITY: Rate Limiting
+    await rateLimitMiddleware('serverAction');
+
     const session = await requireOrgSession();
     const validated = createAssetSchema.parse(input);
 
-    // SECURITY: Validate file upload (filename, size, content type)
-    const uploadValidation = validateFileUpload(
-      validated.name,
-      validated.mimeType,
-      Number(validated.bytes),
-      validated.assetType
-    );
-    if (!uploadValidation.valid) {
-      return {
+    // SECURITY: Sanitize user inputs
+    if (validated.name) {
+      validated.name = sanitizeUserInput(validated.name);
+    }
+
+    // If projectSlug provided, verify it exists and belongs to org
         success: false,
         error: uploadValidation.error || 'File validation failed'
       };
@@ -271,6 +295,18 @@ export async function updateAssetAction(
  */
 export async function deleteAssetAction(assetId: string): Promise<ActionResult<void>> {
   try {
+    // SECURITY: CSRF Protection
+    const csrfValid = await validateCSRFToken();
+    if (!csrfValid) {
+      return {
+        success: false,
+        error: 'Invalid CSRF token'
+      };
+    }
+
+    // SECURITY: Rate Limiting
+    await rateLimitMiddleware('serverAction');
+
     const session = await requireOrgSession();
 
     if (!session.activeMembership) {
