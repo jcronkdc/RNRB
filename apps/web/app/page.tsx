@@ -111,7 +111,7 @@ export default function Page() {
               <Link href="/dashboard">Enter the studio</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <Link href="https://github.com/songforge" target="_blank" rel="noreferrer">
+              <Link href="https://github.com/jcronkdc/CronkWater" target="_blank" rel="noreferrer">
                 View the monorepo
               </Link>
             </Button>

@@ -21,7 +21,7 @@ function DemoToasts() {
         onClick={() =>
           notify({
             title: 'Invite sent',
-            description: 'An invitation email was sent to alex@songforge.dev.',
+            description: 'An invitation email was sent to alex@cronkwater.dev.',
             duration: 6000
           })
         }

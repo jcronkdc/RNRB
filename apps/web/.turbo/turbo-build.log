@@ -7,16 +7,20 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 46s
+ ✓ Compiled successfully in 28.9s
    Linting and checking validity of types ...
+Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/14) ...
-Error occurred prerendering page "/style-guide". Read more: https://nextjs.org/docs/messages/prerender-error
+   Generating static pages (0/13) ...
+   Generating static pages (3/13) 
+   Generating static pages (6/13) 
+   Generating static pages (9/13) 
+Error occurred prerendering page "/signin". Read more: https://nextjs.org/docs/messages/prerender-error
 Error: Minified React error #143; visit https://react.dev/errors/143 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
     at <unknown> (.next/server/chunks/2523.js:21:48778) {
   digest: '627637792'
 }
-Export encountered an error on /style-guide/page: /style-guide, exiting the build.
+Export encountered an error on /(marketing)/signin/page: /signin, exiting the build.
  ⨯ Next.js build worker exited with code: 1 and signal: null
  ELIFECYCLE  Command failed with exit code 1.

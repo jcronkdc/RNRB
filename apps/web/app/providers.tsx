@@ -22,7 +22,7 @@ interface ThemeContextValue {
   toggleTheme: () => void;
 }
 
-const STORAGE_KEY = 'songforge-theme';
+const STORAGE_KEY = 'cronkwater-theme';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 

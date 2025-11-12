@@ -19,7 +19,7 @@ export default function SettingsPage() {
           </label>
           <label htmlFor="primary-email" className="flex flex-col gap-2 text-sm font-medium text-brand-foreground">
             Primary email
-            <Input id="primary-email" defaultValue="studio@songforge.dev" className="bg-surface-elevated" />
+            <Input id="primary-email" defaultValue="studio@cronkwater.dev" className="bg-surface-elevated" />
           </label>
           <label htmlFor="bio" className="flex flex-col gap-2 text-sm font-medium text-brand-foreground md:col-span-2">
             Bio

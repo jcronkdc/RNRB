@@ -44,7 +44,7 @@ export const metadata: Metadata = {
 
 const themeInitializer = `
 (function() {
-  const storageKey = 'songforge-theme';
+  const storageKey = 'cronkwater-theme';
   const validThemes = ['light', 'dark', 'warm'];
   try {
     const root = document.documentElement;
@@ -83,7 +83,7 @@ export default function RootLayout({
           'min-h-screen bg-background text-foreground antialiased transition-colors'
         )}
       >
-        <Script id="songforge-theme" strategy="beforeInteractive">
+        <Script id="cronkwater-theme" strategy="beforeInteractive">
           {themeInitializer}
         </Script>
         <ServiceWorkerRegistration />

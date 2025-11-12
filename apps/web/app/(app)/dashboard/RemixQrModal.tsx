@@ -15,7 +15,7 @@ interface RemixQrModalProps {
 export function RemixQrModal({ roomId, songTitle }: RemixQrModalProps) {
   const toast = useToast();
   const [open, setOpen] = useState(false);
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://songforge.example';
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cronkwater.example';
   const remixUrl = useMemo(() => `${origin}/remix/${roomId}`, [origin, roomId]);
 
   const handleCopy = async () => {

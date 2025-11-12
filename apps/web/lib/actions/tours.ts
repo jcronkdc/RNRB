@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@songforge/auth';
-import { prisma, validateSlug } from '@songforge/db';
+import { requireOrgSession } from '@cronkwater/auth';
+import { prisma, validateSlug } from '@cronkwater/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 

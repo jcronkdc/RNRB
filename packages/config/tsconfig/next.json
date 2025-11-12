@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "SongForge Next.js",
+  "display": "CronkWater Next.js",
   "extends": "./react.json",
   "compilerOptions": {
     "allowJs": true,

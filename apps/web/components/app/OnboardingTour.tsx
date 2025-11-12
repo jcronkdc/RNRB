@@ -86,7 +86,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
 
   useEffect(() => {
     // Check if user has completed tour
-    const hasCompletedTour = localStorage.getItem('songforge-tour-completed');
+    const hasCompletedTour = localStorage.getItem('cronkwater-tour-completed');
     if (!hasCompletedTour) {
       setIsOpen(true);
     }
@@ -97,7 +97,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
 
   const handleNext = () => {
     if (isLastStep) {
-      localStorage.setItem('songforge-tour-completed', 'true');
+      localStorage.setItem('cronkwater-tour-completed', 'true');
       setIsOpen(false);
       onComplete?.();
     } else {
@@ -106,7 +106,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
   };
 
   const handleSkip = () => {
-    localStorage.setItem('songforge-tour-completed', 'true');
+    localStorage.setItem('cronkwater-tour-completed', 'true');
     setIsOpen(false);
     onComplete?.();
   };

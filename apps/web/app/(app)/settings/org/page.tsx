@@ -6,7 +6,7 @@ import PageHeader from '../../../../components/app/PageHeader';
 
 export const dynamic = 'force-dynamic';
 
-const ORG_ID = 'org-songforge-foundation';
+const ORG_ID = 'org-cronkwater-foundation';
 
 async function setActiveOrg(formData: FormData) {
   'use server';
@@ -28,7 +28,7 @@ export default function OrgSettingsPage() {
       <OrgSettingsForm
         orgId={ORG_ID}
         name="CronkWater Foundation"
-        slug="songforge-foundation"
+        slug="cronkwater-foundation"
         orgType="Foundation"
         brandColor="#6c5ce7"
         members={[

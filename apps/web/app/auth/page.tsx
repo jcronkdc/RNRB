@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation';
 
 import LoginForm from './login-form';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AuthPage() {
   const session = await auth();
 
