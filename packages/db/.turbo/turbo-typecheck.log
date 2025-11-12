@@ -1,4 +1,4 @@
 
-> @songforge/db@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/db
+> @cronkwater/db@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/db
 > tsc --noEmit
 
