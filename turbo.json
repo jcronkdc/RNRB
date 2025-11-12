@@ -23,6 +23,21 @@
         "dist/**",
         ".next/**",
         "storybook-static/**"
+      ],
+      "env": [
+        "DATABASE_URL",
+        "NEXTAUTH_SECRET",
+        "NEXTAUTH_URL",
+        "SUPABASE_URL",
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "OPENAI_API_KEY",
+        "XAI_API_KEY",
+        "XAI_RATE_LIMIT_RPM",
+        "XAI_RATE_LIMIT_TPM",
+        "NEXT_PUBLIC_SITE_URL",
+        "EMAIL_SERVER_URL",
+        "EMAIL_FROM"
       ]
     },
     "prisma:generate": {

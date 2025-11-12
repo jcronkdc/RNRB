@@ -24,21 +24,23 @@ function getAuthConfig(): NextAuthOptions {
       strategy: 'jwt'
     },
     providers: [
-      EmailProvider({
-        from: env.EMAIL_FROM,
-        sendVerificationRequest: async ({ identifier, url }) => {
-          const transporter = getTransporter();
-          if (transporter) {
-            await transporter.sendMail({
-              to: identifier,
-              from: env.EMAIL_FROM,
-              subject: 'Sign in to CronkWater',
-              text: `Sign in to CronkWater by clicking the following link: ${url}`,
-              html: `<p>Sign in to CronkWater by clicking the link below:</p><p><a href="${url}">${url}</a></p>`
-            });
+      ...(env.EMAIL_FROM && env.EMAIL_SERVER_URL ? [
+        EmailProvider({
+          from: env.EMAIL_FROM,
+          sendVerificationRequest: async ({ identifier, url }) => {
+            const transporter = getTransporter();
+            if (transporter) {
+              await transporter.sendMail({
+                to: identifier,
+                from: env.EMAIL_FROM,
+                subject: 'Sign in to CronkWater',
+                text: `Sign in to CronkWater by clicking the following link: ${url}`,
+                html: `<p>Sign in to CronkWater by clicking the link below:</p><p><a href="${url}">${url}</a></p>`
+              });
+            }
           }
-        }
-      }),
+        })
+      ] : []),
       GoogleProvider({
         clientId: env.GOOGLE_CLIENT_ID ?? '',
         clientSecret: env.GOOGLE_CLIENT_SECRET ?? ''

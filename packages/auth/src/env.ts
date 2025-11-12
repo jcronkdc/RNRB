@@ -3,8 +3,8 @@ import { z } from 'zod';
 const envSchema = z.object({
   NEXTAUTH_SECRET: z.string().min(1, 'NEXTAUTH_SECRET is required'),
   NEXTAUTH_URL: z.string().url().optional(),
-  EMAIL_SERVER_URL: z.string().min(1, 'EMAIL_SERVER_URL is required'),
-  EMAIL_FROM: z.string().min(1, 'EMAIL_FROM is required'),
+  EMAIL_SERVER_URL: z.string().optional(),
+  EMAIL_FROM: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   APPLE_CLIENT_ID: z.string().optional(),

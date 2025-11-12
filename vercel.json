@@ -1,0 +1,18 @@
+{
+  "buildCommand": "pnpm turbo run build --filter=@cronkwater/web...",
+  "outputDirectory": "apps/web/.next",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "apps/web/app/api/ai-lyrics/route.ts": {
+      "maxDuration": 60
+    },
+    "apps/web/app/api/trpc/[trpc]/route.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  }
+}
