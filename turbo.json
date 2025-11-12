@@ -37,7 +37,8 @@
         "XAI_RATE_LIMIT_TPM",
         "NEXT_PUBLIC_SITE_URL",
         "EMAIL_SERVER_URL",
-        "EMAIL_FROM"
+        "EMAIL_FROM",
+        "NEXT_TELEMETRY_DISABLED"
       ]
     },
     "prisma:generate": {

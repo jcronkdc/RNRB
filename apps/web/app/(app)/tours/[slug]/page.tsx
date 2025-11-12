@@ -48,3 +48,4 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
   return <TourDetailClient tour={tour} />;
 }
 
+

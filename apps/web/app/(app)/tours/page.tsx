@@ -16,3 +16,4 @@ export default async function ToursPage() {
   return <ToursPageClient initialTours={tours} />;
 }
 
+
