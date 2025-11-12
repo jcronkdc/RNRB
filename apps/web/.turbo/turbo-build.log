@@ -7,20 +7,116 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 9.3s
+ ✓ Compiled successfully in 9.6s
    Linting and checking validity of types ...
+Warning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/11) ...
-   Generating static pages (2/11) 
-   Generating static pages (5/11) 
-   Generating static pages (8/11) 
-Error occurred prerendering page "/test-page". Read more: https://nextjs.org/docs/messages/prerender-error
-Error: useTheme must be used within ThemeProvider
-    at <unknown> (.next/server/chunks/6092.js:17:18637)
-    at q (.next/server/chunks/6092.js:17:18698) {
-  digest: '3937799100'
+   Generating static pages (0/10) ...
+   Generating static pages (2/10) 
+Failed to fetch public projects for sitemap: Error [PrismaClientInitializationError]: 
+Invalid `prisma.project.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:7
+   | 
+ 6 |   provider = "postgresql"
+ 7 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at <unknown> (-->  schema.prisma:7)
+    at async z (.next/server/app/sitemap.xml/route.js:1:1350)
+    at async C (.next/server/app/sitemap.xml/route.js:1:2394) {
+  clientVersion: '5.22.0',
+  errorCode: undefined
 }
-Export encountered an error on /test-page/page: /test-page, exiting the build.
- ⨯ Next.js build worker exited with code: 1 and signal: null
- ELIFECYCLE  Command failed with exit code 1.
+Failed to fetch public artists for sitemap: Error [PrismaClientInitializationError]: 
+Invalid `prisma.org.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:7
+   | 
+ 6 |   provider = "postgresql"
+ 7 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+    at <unknown> (-->  schema.prisma:7)
+    at async z (.next/server/app/sitemap.xml/route.js:1:1677)
+    at async C (.next/server/app/sitemap.xml/route.js:1:2394) {
+  clientVersion: '5.22.0',
+  errorCode: undefined
+}
+   Generating static pages (4/10) 
+   Generating static pages (7/10) 
+ ✓ Generating static pages (10/10)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ƒ /                                    3.97 kB         148 kB
+├ ƒ /_not-found                            203 B         102 kB
+├ ƒ /api/ai-lyrics                         203 B         102 kB
+├ ƒ /api/auth/[...nextauth]                203 B         102 kB
+├ ƒ /api/auth/callback                     203 B         102 kB
+├ ƒ /api/elevenlabs-voice                  203 B         102 kB
+├ ƒ /api/health                            203 B         102 kB
+├ ƒ /api/projects/[slug]/export/pdf        203 B         102 kB
+├ ƒ /api/trpc/[trpc]                       203 B         102 kB
+├ ƒ /api/upload-audio                      203 B         102 kB
+├ ƒ /artist/[slug]                       4.19 kB         124 kB
+├ ƒ /assets                              4.82 kB         115 kB
+├ ƒ /audience/[sessionId]                6.34 kB         167 kB
+├ ƒ /auth                                13.2 kB         162 kB
+├ ƒ /blocked                               176 B         106 kB
+├ ƒ /community                           5.12 kB         115 kB
+├ ƒ /dashboard                           12.9 kB         177 kB
+├ ƒ /dashboard/assets                      203 B         102 kB
+├ ƒ /dashboard/distribute                  203 B         102 kB
+├ ƒ /dashboard/licenses                    203 B         102 kB
+├ ƒ /dashboard/sessions                    203 B         102 kB
+├ ƒ /dashboard/settings                    203 B         102 kB
+├ ƒ /dashboard/splits                      203 B         102 kB
+├ ƒ /discover                            7.09 kB         159 kB
+├ ƒ /donate                                176 B         106 kB
+├ ƒ /foundation                          3.94 kB         118 kB
+├ ƒ /learn                               3.27 kB         117 kB
+├ ƒ /licenses                              203 B         102 kB
+├ ƒ /music                               5.17 kB         115 kB
+├ ƒ /onboarding/organization               203 B         102 kB
+├ ƒ /p/[slug]                              176 B         106 kB
+├ ƒ /p/[slug]/opengraph-image-4mgimg       203 B         102 kB
+├ ƒ /practice                            9.77 kB         120 kB
+├ ƒ /privacy                               203 B         102 kB
+├ ƒ /projects                            5.63 kB         185 kB
+├ ƒ /projects/[slug]                     11.7 kB         141 kB
+├ ƒ /projects/[slug]/songs/[songId]      4.93 kB         153 kB
+├ ƒ /remix/[roomId]                      4.83 kB         115 kB
+├ ○ /robots.txt                            203 B         102 kB
+├ ƒ /search                              3.24 kB         117 kB
+├ ƒ /sessions                              203 B         102 kB
+├ ƒ /settings                            3.44 kB         114 kB
+├ ƒ /settings/artist-profile             6.69 kB         127 kB
+├ ƒ /settings/org                        3.18 kB         113 kB
+├ ○ /sitemap.xml                           203 B         102 kB
+├ ƒ /splits                                203 B         102 kB
+├ ƒ /terms                                 203 B         102 kB
+├ ƒ /test                                  203 B         102 kB
+├ ƒ /test-page                             203 B         102 kB
+├ ƒ /theming                             1.46 kB         104 kB
+├ ƒ /tours                               39.7 kB         181 kB
+└ ƒ /tours/[slug]                        4.57 kB         121 kB
++ First Load JS shared by all             102 kB
+  ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
+  ├ chunks/5542-123c5d89f3d04e21.js      46.1 kB
+  └ other shared chunks (total)          1.94 kB
+
+
+ƒ Middleware                             60.8 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
