@@ -45,7 +45,7 @@ export default function HomePage() {
           
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild size="lg" className="group min-w-[12rem] text-base">
-              <Link href="/signin">
+              <Link href="/auth">
                 <span className="inline-flex items-center gap-2">
                   Start Creating
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
@@ -184,7 +184,7 @@ export default function HomePage() {
               <Link href="/discover">Discover Artists</Link>
             </Button>
             <Button asChild size="lg" className="group min-w-[12rem] text-base">
-              <Link href="/signin">
+              <Link href="/auth">
                 <span className="inline-flex items-center gap-2">
                   Get Started
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />

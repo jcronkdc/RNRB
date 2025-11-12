@@ -21,7 +21,7 @@ const LINKS: NavLink[] = [
   { label: 'What We Make', href: '#what-we-make' },
   { label: 'Values', href: '#values' },
   { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Donate to CronkWaters' },
-  { label: 'Sign in', href: '/signin', icon: LogIn, ariaLabel: 'Sign in to CronkWaters' }
+  { label: 'Sign in', href: '/auth', icon: LogIn, ariaLabel: 'Sign in to CronkWaters' }
 ];
 
 const motionConfig = {
