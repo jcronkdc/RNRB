@@ -1,49 +1,60 @@
 'use client';
 
-import { Button } from '@cronkwater/ui';
-import Link from 'next/link';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
-interface GlobalErrorProps {
+export default function Error({
+  error,
+  reset,
+}: {
   error: Error & { digest?: string };
   reset: () => void;
-}
-
-export default function GlobalError({ error, reset }: GlobalErrorProps) {
-  const headingRef = useRef<HTMLHeadingElement>(null);
-
+}) {
   useEffect(() => {
-    headingRef.current?.focus();
+    // Log the error to an error reporting service
     console.error(error);
   }, [error]);
 
+  // Check if this is an environment variable error
+  const isEnvError = error.message?.includes('environment variable');
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-6 py-16">
-      <section
-        role="alert"
-        className="motion-safe:animate-fade-in w-full max-w-xl rounded-3xl border border-border/60 bg-surface/95 p-10 text-center shadow-soft"
-      >
-        <h1
-          ref={headingRef}
-          tabIndex={-1}
-          className="text-2xl font-semibold text-brand-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-        >
-          Something went sideways.
+    <div className="flex min-h-screen flex-col items-center justify-center p-4">
+      <div className="mx-auto max-w-md text-center">
+        <h1 className="mb-4 text-4xl font-bold">
+          {isEnvError ? '⚠️ Configuration Error' : '❌ Something went wrong'}
         </h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          We hit an unexpected snag while loading this page. You can try again, head back home, or open your
-          projects.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Button onClick={reset}>Try again</Button>
-          <Button asChild variant="ghost">
-            <Link href="/">Go Home</Link>
-          </Button>
-          <Button asChild variant="ghost">
-            <Link href="/app/projects">Open Projects</Link>
-          </Button>
-        </div>
-      </section>
+        
+        {isEnvError ? (
+          <div className="space-y-4">
+            <p className="text-lg text-muted-foreground">
+              The application is missing required environment variables.
+            </p>
+            <div className="rounded-lg bg-destructive/10 p-4 text-left">
+              <p className="font-mono text-sm">{error.message}</p>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              If you're the site owner, please check the VERCEL_ENV_VARS.md file
+              for setup instructions.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <p className="text-lg text-muted-foreground">
+              An unexpected error occurred. Please try again.
+            </p>
+            {error.message && (
+              <p className="text-sm text-muted-foreground">{error.message}</p>
+            )}
+          </div>
+        )}
+
+        <button
+          onClick={reset}
+          className="mt-6 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          Try again
+        </button>
+      </div>
     </div>
   );
 }
