@@ -5,13 +5,13 @@ import { getOrgSessionFromSession } from '@songforge/auth';
 
 export async function getProjects() {
   const session = await getOrgSessionFromSession();
-  if (!session) {
+  if (!session || !session.activeMembership) {
     throw new Error('Unauthorized');
   }
 
   const projects = await prisma.project.findMany({
     where: {
-      orgId: session.org.id,
+      orgId: session.activeMembership.orgId,
     },
     include: {
       songs: {
