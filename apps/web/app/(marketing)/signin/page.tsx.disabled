@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { Button, Input } from '@cronkwater/ui';
 import { Mail, Loader2 } from 'lucide-react';
 import { useState } from 'react';
@@ -7,7 +9,7 @@ import { useState } from 'react';
 import { createClient } from '../../../lib/supabase/client';
 
 
-export default function SignInPage() {
+function SignInContent() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -137,5 +139,14 @@ export default function SignInPage() {
       </div>
     </div>
   );
+}
+
+export default function SignInPage() {
+  // Ensure this runs only on client side
+  if (typeof window === 'undefined') {
+    return <div>Loading...</div>;
+  }
+  
+  return <SignInContent />;
 }
 
