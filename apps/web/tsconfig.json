@@ -1,6 +1,10 @@
 {
   "extends": "@songforge/config/tsconfig/next",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "plugins": [
       {
         "name": "next"
