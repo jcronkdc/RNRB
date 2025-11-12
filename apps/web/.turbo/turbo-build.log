@@ -7,13 +7,20 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 6.0s
+ ✓ Compiled successfully in 9.3s
    Linting and checking validity of types ...
-
-Failed to compile.
-
-./lib/actions/assets.ts
-208:4  Error: Parsing error: 'try' expected.
-
-info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+ ⚠ Using edge runtime on a page currently disables static generation for that page
+   Generating static pages (0/11) ...
+   Generating static pages (2/11) 
+   Generating static pages (5/11) 
+   Generating static pages (8/11) 
+Error occurred prerendering page "/test-page". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: useTheme must be used within ThemeProvider
+    at <unknown> (.next/server/chunks/6092.js:17:18637)
+    at q (.next/server/chunks/6092.js:17:18698) {
+  digest: '3937799100'
+}
+Export encountered an error on /test-page/page: /test-page, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null
  ELIFECYCLE  Command failed with exit code 1.
