@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@cronkwater/ui';
+import { cn } from '@cronkwaters/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

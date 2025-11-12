@@ -1,12 +1,13 @@
 'use server';
 
-import { requireOrgSession } from '@cronkwater/auth';
-import { createAssetSchema, updateAssetSchema, getAssetTypeFromMime , createAsset, updateAsset, deleteAsset, listAssets, getAssetById } from '@cronkwater/db';
+import { requireOrgSession } from '@cronkwaters/auth';
+import { createAssetSchema, updateAssetSchema, getAssetTypeFromMime , createAsset, updateAsset, deleteAsset, listAssets, getAssetById } from '@cronkwaters/db';
 import { revalidatePath } from 'next/cache';
 
 import { isStorageConfigured } from '../env';
 import { getUploadUrl, getDownloadUrl, deleteObject } from '../storage/s3';
 import { createWatermarkMetadata } from '../watermarking';
+import { validateFileUpload, sanitizeFilePath } from '../validation/file-upload';
 
 export interface ActionResult<T> {
   success: boolean;
@@ -33,13 +34,32 @@ export async function getUploadUrlAction(
       };
     }
 
-    // Generate storage key
+    // SECURITY: Validate filename
+    const filenameValidation = validateFileUpload(filename, contentType, contentLength, 'other');
+    if (!filenameValidation.valid) {
+      return {
+        success: false,
+        error: filenameValidation.error || 'Invalid file'
+      };
+    }
+
+    // SECURITY: Sanitize filename and generate safe storage key
+    const sanitizedFilename = sanitizeFilePath(filename);
     const timestamp = Date.now();
     const random = Math.random().toString(36).slice(2, 8);
-    const extension = filename.split('.').pop() || '';
+    const extension = sanitizedFilename.split('.').pop() || '';
     const key = `uploads/${timestamp}-${random}.${extension}`;
 
     const assetType = getAssetTypeFromMime(contentType);
+
+    // SECURITY: Validate file size for asset type
+    const sizeValidation = validateFileUpload(sanitizedFilename, contentType, contentLength, assetType);
+    if (!sizeValidation.valid) {
+      return {
+        success: false,
+        error: sizeValidation.error || 'File validation failed'
+      };
+    }
 
     // BUG FIX: Add watermark for audio files
     const uploadMetadata: Record<string, string> = {
@@ -94,6 +114,20 @@ export async function createAssetAction(
     const session = await requireOrgSession();
     const validated = createAssetSchema.parse(input);
 
+    // SECURITY: Validate file upload (filename, size, content type)
+    const uploadValidation = validateFileUpload(
+      validated.name,
+      validated.mimeType,
+      Number(validated.bytes),
+      validated.assetType
+    );
+    if (!uploadValidation.valid) {
+      return {
+        success: false,
+        error: uploadValidation.error || 'File validation failed'
+      };
+    }
+
     // If projectSlug provided, verify it exists and belongs to org
     let projectId: string | undefined;
     if (projectSlug) {
@@ -103,7 +137,7 @@ export async function createAssetAction(
           error: 'Active organization not found'
         };
       }
-      const { getProjectBySlug } = await import('@cronkwater/db');
+      const { getProjectBySlug } = await import('@cronkwaters/db');
       const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
       if (!project) {
         return {
@@ -206,10 +240,17 @@ export async function updateAssetAction(
   input: unknown
 ): Promise<ActionResult<void>> {
   try {
-    await requireOrgSession();
+    const session = await requireOrgSession();
     const validated = updateAssetSchema.parse(input);
 
-    await updateAsset(assetId, validated);
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
+
+    await updateAsset(assetId, validated, session.activeMembership.org.id);
 
     revalidatePath('/app/assets');
     revalidatePath('/app/projects');
@@ -230,7 +271,14 @@ export async function updateAssetAction(
  */
 export async function deleteAssetAction(assetId: string): Promise<ActionResult<void>> {
   try {
-    await requireOrgSession();
+    const session = await requireOrgSession();
+
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
 
     const asset = await getAssetById(assetId);
     if (!asset) {
@@ -250,8 +298,8 @@ export async function deleteAssetAction(assetId: string): Promise<ActionResult<v
       }
     }
 
-    // Delete from database
-    await deleteAsset(assetId);
+    // Delete from database with org validation
+    await deleteAsset(assetId, session.activeMembership.org.id);
 
     revalidatePath('/app/assets');
     revalidatePath('/app/projects');
@@ -281,7 +329,7 @@ export async function listAssetsAction(projectSlug: string) {
       };
     }
 
-    const { getProjectBySlug } = await import('@cronkwater/db');
+    const { getProjectBySlug } = await import('@cronkwaters/db');
     const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
     if (!project) {
       return {

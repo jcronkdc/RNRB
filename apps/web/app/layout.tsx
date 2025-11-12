@@ -1,4 +1,4 @@
-import { cn } from '@cronkwater/ui';
+import { cn } from '@cronkwaters/ui';
 import type { Metadata } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -33,9 +33,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'CronkWater',
+  title: 'CronkWaters',
   description:
-    'CronkWater is an end-to-end workspace for collaborative songwriting powered by modern web tooling.',
+    'CronkWaters is an end-to-end workspace for collaborative songwriting powered by modern web tooling.',
   icons: {
     icon: '/icon.svg'
   }
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 
 const themeInitializer = `
 (function() {
-  const storageKey = 'cronkwater-theme';
+  const storageKey = 'cronkwaters-theme';
   const validThemes = ['light', 'dark', 'warm'];
   try {
     const root = document.documentElement;
@@ -83,7 +83,7 @@ export default function RootLayout({
         )}
       >
         <Script 
-          id="cronkwater-theme" 
+          id="cronkwaters-theme" 
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitializer }}
         />

@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@cronkwater/auth';
-import { createSplitSheetSchema, updateSplitSheetSchema , createSplitSheet, updateSplitSheet, addContributor, updateContributor, removeContributor, finalizeSplitSheet, listSplitSheets , getProjectBySlug } from '@cronkwater/db';
+import { requireOrgSession } from '@cronkwaters/auth';
+import { createSplitSheetSchema, updateSplitSheetSchema , createSplitSheet, updateSplitSheet, addContributor, updateContributor, removeContributor, finalizeSplitSheet, listSplitSheets , getProjectBySlug } from '@cronkwaters/db';
 import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {
@@ -62,10 +62,17 @@ export async function updateSplitSheetAction(
   input: unknown
 ): Promise<ActionResult<void>> {
   try {
-    await requireOrgSession();
+    const session = await requireOrgSession();
     const validated = updateSplitSheetSchema.parse(input);
 
-    await updateSplitSheet(splitSheetId, validated);
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
+
+    await updateSplitSheet(splitSheetId, validated, session.activeMembership.org.id);
 
     revalidatePath('/app/projects');
 
@@ -89,7 +96,7 @@ export async function addContributorAction(
 ): Promise<ActionResult<{ id: string }>> {
   try {
     await requireOrgSession();
-    const { splitContributorSchema } = await import('@cronkwater/db');
+    const { splitContributorSchema } = await import('@cronkwaters/db');
     const validated = splitContributorSchema.parse(input);
 
     const contributor = await addContributor(splitSheetId, validated);
@@ -117,7 +124,7 @@ export async function updateContributorAction(
 ): Promise<ActionResult<void>> {
   try {
     await requireOrgSession();
-    const { splitContributorSchema } = await import('@cronkwater/db');
+    const { splitContributorSchema } = await import('@cronkwaters/db');
     const validated = splitContributorSchema.partial().parse(input);
 
     await updateContributor(contributorId, validated);

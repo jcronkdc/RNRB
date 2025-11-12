@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Plus, Calendar } from 'lucide-react';
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 import { PageHeader } from '@/components/app/PageHeader';
 import { EmptyState } from '@/components/app/EmptyState';
 import { TourCard } from './TourCard';

@@ -1,7 +1,7 @@
 import { prisma } from '../src/index';
 
 async function main() {
-  const existing = await prisma.user.findFirst({ where: { email: 'demo@cronkwater.dev' } });
+  const existing = await prisma.user.findFirst({ where: { email: 'demo@cronkwaters.dev' } });
   if (existing) {
     console.log('Seed data already present. Skipping.');
     return;
@@ -9,16 +9,16 @@ async function main() {
 
   const user = await prisma.user.create({
     data: {
-      email: 'demo@cronkwater.dev',
-      name: 'CronkWater Demo',
+      email: 'demo@cronkwaters.dev',
+      name: 'CronkWaters Demo',
       emailVerified: new Date()
     }
   });
 
   const organization = await prisma.organization.create({
     data: {
-      name: 'CronkWater Collective',
-      slug: 'songforge-collective'
+      name: 'CronkWaters Collective',
+      slug: 'cronkwaters-collective'
     }
   });
 

@@ -1,6 +1,6 @@
-# 📋 Reviewer Master Document - CronkWater v1.0
+# 📋 Reviewer Master Document - CronkWaters v1.0
 
-**You are the Reviewer Agent for CronkWater v1.0.**  
+**You are the Reviewer Agent for CronkWaters v1.0.**  
 **Last Updated:** Current Session  
 **Status:** ✅ Z21 Approved - Ready for Next Review
 
@@ -42,7 +42,7 @@ You are responsible for reviewing all code changes, verifying bug fixes, assessi
 **Note:** 
 - Z21 has been fully approved, merged, and pushed to main
 - Code integrity check completed and pushed (20 files modified, critical packages fixed)
-- All critical packages (@songforge/auth, @songforge/db) building and typechecking successfully
+- All critical packages (@cronkwaters/auth, @cronkwaters/db) building and typechecking successfully
 - Waiting for Planner to assign next task
 
 ### What Was Completed (Z21)
@@ -59,14 +59,14 @@ You are responsible for reviewing all code changes, verifying bug fixes, assessi
 11. 📋 Fixes summary created (Z21_FIXES_APPLIED.md)
 
 ### Critical Issues Fixed ✅
-1. ✅ **@songforge/auth:** All TypeScript errors fixed (NextAuth compatibility, schema fields, cookies API)
-2. ✅ **@songforge/db:** All TypeScript errors fixed (Prisma JSON types, import order)
-3. ✅ **@songforge/trpc:** Organization router fixed (model name mismatches)
+1. ✅ **@cronkwaters/auth:** All TypeScript errors fixed (NextAuth compatibility, schema fields, cookies API)
+2. ✅ **@cronkwaters/db:** All TypeScript errors fixed (Prisma JSON types, import order)
+3. ✅ **@cronkwaters/trpc:** Organization router fixed (model name mismatches)
 4. ✅ **Import Order:** All ESLint warnings fixed
 5. ✅ **Reviewer Kickbacks:** Z21-KB1 (events JSON handling), Z21-KB2 (podcasts JSON handling)
 
 ### Remaining (Non-Critical)
-- ⚠️ **@songforge/ui:** Some component-level type errors (non-blocking)
+- ⚠️ **@cronkwaters/ui:** Some component-level type errors (non-blocking)
 - ⚠️ **Uncommitted Changes:** 40+ files not committed (needs decision)
 
 ---
@@ -74,7 +74,7 @@ You are responsible for reviewing all code changes, verifying bug fixes, assessi
 ## ✅ Z21 Review Checklist (COMPLETED)
 
 ### Critical Items (Verified ✅)
-- [x] All TypeScript errors in critical packages are fixed (@songforge/auth, @songforge/db)
+- [x] All TypeScript errors in critical packages are fixed (@cronkwaters/auth, @cronkwaters/db)
 - [x] Critical packages build successfully
 - [x] Critical packages typecheck successfully
 - [x] Import order warnings fixed
@@ -211,8 +211,8 @@ _Will be populated when next task is assigned by Planner._
 
 ### Codebase Status (Z21 + Code Integrity Check)
 - **Critical TypeScript Errors:** All fixed ✅
-  - @songforge/auth: 13 errors → 0 errors ✅
-  - @songforge/db: 3 errors → 0 errors ✅
+  - @cronkwaters/auth: 13 errors → 0 errors ✅
+  - @cronkwaters/db: 3 errors → 0 errors ✅
 - **Build Status:** Critical packages passing ✅
 - **Typecheck Status:** Critical packages passing ✅
 - **Lint Status:** Warnings only (import order, non-critical) ✅

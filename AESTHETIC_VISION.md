@@ -1,8 +1,8 @@
-# 🎨 CronkWater Aesthetic Vision
+# 🎨 CronkWaters Aesthetic Vision
 
 ## The Vision
 
-CronkWater isn't just a tool—it's an **ecosystem for musicians**. Every pixel should communicate craft, creativity, and community. When a musician lands on the site, they should immediately feel:
+CronkWaters isn't just a tool—it's an **ecosystem for musicians**. Every pixel should communicate craft, creativity, and community. When a musician lands on the site, they should immediately feel:
 
 - **"This gets me"** - Built by people who understand the creative process
 - **"This is beautiful"** - Visual design that inspires, not just functions
@@ -200,7 +200,7 @@ CronkWater isn't just a tool—it's an **ecosystem for musicians**. Every pixel 
 
 ## 💡 Key Takeaways
 
-**This isn't just a tool—it's a creative space.** Every design decision should reinforce that CronkWater is:
+**This isn't just a tool—it's a creative space.** Every design decision should reinforce that CronkWaters is:
 - Built **for** musicians
 - Built **by** people who understand music
 - Built **with** craft and intention

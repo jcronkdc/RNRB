@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
   Button
-} from '@cronkwater/ui';
+} from '@cronkwaters/ui';
 import { useState } from 'react';
 
 const meta: Meta = {
@@ -40,7 +40,7 @@ export const Basic: Story = {
             </DialogDescription>
           </DialogHeader>
           <p className="text-sm text-brand-muted-foreground">
-            We will send an invitation email with guidance on how to join the CronkWater
+            We will send an invitation email with guidance on how to join the CronkWaters
             organization.
           </p>
           <DialogFooter>

@@ -1,4 +1,4 @@
-import { getOrgSession } from '@cronkwater/auth';
+import { getOrgSession } from '@cronkwaters/auth';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -14,18 +14,14 @@ export default async function SearchPage({
   searchParams: Promise<{ q?: string; type?: string }>
 }) {
   const { q, type: typeParam } = await searchParams;
-  const enableBypass = process.env.DEMO_BYPASS === '1';
   let _orgId: string | null = null;
 
   try {
     const session = await getOrgSession();
     _orgId = session.orgId;
   } catch {
-    if (enableBypass) {
-      _orgId = 'demo-org';
-    } else {
-      redirect('/signin');
-    }
+    // No authentication bypass - require proper authentication
+    redirect('/auth');
   }
 
   const query = q || '';

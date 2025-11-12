@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { useState } from 'react';
@@ -146,6 +146,7 @@ export function LyricArchitect({ projectId, songId: _songId, onComplete }: Lyric
     </div>
   );
 }
+
 
 
 

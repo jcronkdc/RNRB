@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 import { Send } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';

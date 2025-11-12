@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma } from '@cronkwater/db';
+import { prisma } from '@cronkwaters/db';
 import { createServerClient } from '@supabase/ssr';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -58,7 +58,7 @@ async function mockLyrics(input: { title: string; prompt: string; mood?: string 
 }
 
 function mockStemUrl(songId: string, stemType: string) {
-  return `https://songforge.example/stems/${songId}/${stemType}.mp3`;
+  return `https://cronkwaters.example/stems/${songId}/${stemType}.mp3`;
 }
 
 function encodeMetadata(meta: Record<string, unknown>) {
@@ -91,7 +91,7 @@ async function streamOpenAiLyrics(input: LyricsInput, push: (message: StreamMess
         {
           role: 'system',
           content:
-            'You are CronkWater Lyric Architect, crafting structured pop lyrics with clear sections. Output sections labeled Verse, Chorus, and Bridge, and include rhyme hints when possible.'
+            'You are CronkWaters Lyric Architect, crafting structured pop lyrics with clear sections. Output sections labeled Verse, Chorus, and Bridge, and include rhyme hints when possible.'
         },
         {
           role: 'user',

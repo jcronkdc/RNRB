@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
-import { getOrgSession } from '@cronkwater/auth';
-import { getProjectBySlug, listSongs, listAssets, listSplitSheets, listLicenses } from '@cronkwater/db';
+import { getOrgSession } from '@cronkwaters/auth';
+import { getProjectBySlug, listSongs, listAssets, listSplitSheets, listLicenses } from '@cronkwaters/db';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -13,21 +13,17 @@ import type { SplitListItem } from '../../../../components/app/SplitList';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const enableBypass = process.env.DEMO_BYPASS === '1';
   let orgId: string | null = null;
 
   try {
     const session = await getOrgSession();
     orgId = session.orgId;
   } catch {
-    if (enableBypass) {
-      orgId = 'demo-org';
-    } else {
-      return {
-        title: 'Project Not Found',
-        description: 'The requested project could not be found.'
-      };
-    }
+    // No authentication bypass - return not found if not authenticated
+    return {
+      title: 'Project Not Found',
+      description: 'The requested project could not be found.'
+    };
   }
 
   if (!orgId) {
@@ -53,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     : `${baseUrl}/og-default.jpg`;
 
   return {
-    title: `${project.name} • CronkWaters`,
+    title: `${project.name} • CronkWaterss`,
     description,
     openGraph: {
       title: project.name,
@@ -67,7 +63,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
           alt: project.name
         }
       ],
-      siteName: 'CronkWaters'
+      siteName: 'CronkWaterss'
     },
     twitter: {
       card: 'summary_large_image',
@@ -80,18 +76,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const enableBypass = process.env.DEMO_BYPASS === '1';
   let orgId: string | null = null;
 
   try {
     const session = await getOrgSession();
     orgId = session.orgId;
   } catch {
-    if (enableBypass) {
-      orgId = 'demo-org';
-    } else {
-      notFound();
-    }
+    // No authentication bypass - require proper authentication
+    notFound();
   }
 
   if (!orgId) {

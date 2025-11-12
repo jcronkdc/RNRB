@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { requireOrgSession } from '@cronkwater/auth';
-import { prisma } from '@cronkwater/db';
+import { requireOrgSession } from '@cronkwaters/auth';
+import { prisma } from '@cronkwaters/db';
 import { ArtistProfileForm } from './ArtistProfileForm';
 
 export const dynamic = 'force-dynamic';

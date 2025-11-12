@@ -1,4 +1,4 @@
-import { cn } from '@cronkwater/ui';
+import { cn } from '@cronkwaters/ui';
 
 interface PageHeaderProps {
   title: string;

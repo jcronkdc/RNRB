@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
-import { getOrgSession } from '@cronkwater/auth';
-import { prisma } from '@cronkwater/db';
+import { getOrgSession } from '@cronkwaters/auth';
+import { prisma } from '@cronkwaters/db';
 import { TourDetailClient } from './TourDetailClient';
 
 export const dynamic = 'force-dynamic';

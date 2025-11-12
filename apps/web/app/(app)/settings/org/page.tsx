@@ -1,4 +1,4 @@
-import { setActiveOrgCookie } from '@cronkwater/auth';
+import { setActiveOrgCookie } from '@cronkwaters/auth';
 import { redirect } from 'next/navigation';
 
 import OrgSettingsForm from '../../../../components/app/OrgSettingsForm';
@@ -6,7 +6,7 @@ import PageHeader from '../../../../components/app/PageHeader';
 
 export const dynamic = 'force-dynamic';
 
-const ORG_ID = 'org-cronkwater-foundation';
+const ORG_ID = 'org-cronkwaters-foundation';
 
 async function setActiveOrg(formData: FormData) {
   'use server';
@@ -27,8 +27,8 @@ export default function OrgSettingsPage() {
       <PageHeader title="Organization" subtitle="Manage your organization." />
       <OrgSettingsForm
         orgId={ORG_ID}
-        name="CronkWater Foundation"
-        slug="cronkwater-foundation"
+        name="CronkWaters Foundation"
+        slug="cronkwaters-foundation"
         orgType="Foundation"
         brandColor="#6c5ce7"
         members={[

@@ -14,10 +14,10 @@ import {
   Radio,
   Headphones
 } from 'lucide-react';
-import { Button } from '@cronkwater/ui';
-import { Card } from '@cronkwater/ui';
-import { Badge } from '@cronkwater/ui';
-import { Slider } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
+import { Card } from '@cronkwaters/ui';
+import { Badge } from '@cronkwaters/ui';
+import { Slider } from '@cronkwaters/ui';
 import { PageHeader } from '@/components/app/PageHeader';
 import { EmptyState } from '@/components/app/EmptyState';
 import type { Song, Project, Asset } from '@prisma/client';

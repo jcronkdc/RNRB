@@ -18,7 +18,7 @@ const config: StorybookConfig = {
     const merged = baseConfig;
     merged.resolve ??= {};
     merged.resolve.alias ??= {};
-    merged.resolve.alias['@cronkwater/ui'] = resolve(__dirname, '../src');
+    merged.resolve.alias['@cronkwaters/ui'] = resolve(__dirname, '../src');
     return merged;
   }
 };

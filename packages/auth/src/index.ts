@@ -25,22 +25,27 @@ export interface OrgSession {
 }
 
 /**
- * TODO: Replace demo bypass with real Auth.js session retrieval.
+ * Get server session using Auth.js (NextAuth).
+ * This function retrieves the authenticated user session.
  */
 export async function getServerSession(): Promise<AppSession | null> {
-  if (process.env.DEMO_BYPASS === '1') {
-    return {
-      user: {
-        id: 'demo-user',
-        name: 'Demo User',
-        email: 'demo@example.com',
-        image: null
-      },
-      orgId: null
-    };
+  // Import auth function dynamically to avoid build-time issues
+  const { auth } = await import('./auth');
+  const session = await auth();
+  
+  if (!session?.user) {
+    return null;
   }
 
-  return null;
+  return {
+    user: {
+      id: session.user.id ?? '',
+      name: session.user.name ?? null,
+      email: session.user.email ?? null,
+      image: session.user.image ?? null
+    },
+    orgId: (session.user as { activeOrganizationId?: string }).activeOrganizationId ?? null
+  };
 }
 
 export async function getOrgSession(): Promise<OrgSession> {

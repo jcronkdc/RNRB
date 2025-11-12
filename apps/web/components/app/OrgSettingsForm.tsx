@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Input, Label } from '@cronkwater/ui';
+import { Button, Input, Label } from '@cronkwaters/ui';
 import { useEffect, useRef, useState } from 'react';
 
 import OrgMembersStub from './OrgMembersStub';

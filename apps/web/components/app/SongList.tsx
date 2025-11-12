@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, cn } from '@cronkwater/ui';
+import { Button, cn } from '@cronkwaters/ui';
 import { Music, Plus } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';

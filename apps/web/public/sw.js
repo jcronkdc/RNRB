@@ -1,4 +1,4 @@
-const CACHE_NAME = 'songforge-v1';
+const CACHE_NAME = 'cronkwaters-v1';
 const urlsToCache = [
   '/',
   '/projects',
@@ -27,6 +27,7 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
 
 
 

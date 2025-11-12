@@ -1,5 +1,5 @@
 {
-  "name": "@cronkwater/trpc",
+  "name": "@cronkwaters/trpc",
   "version": "0.1.0",
   "type": "module",
   "private": false,
@@ -26,8 +26,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@cronkwater/auth": "workspace:*",
-    "@cronkwater/db": "workspace:*",
+    "@cronkwaters/auth": "workspace:*",
+    "@cronkwaters/db": "workspace:*",
     "@tanstack/react-query": "^5.62.7",
     "@trpc/client": "^11.0.0-rc.502",
     "@trpc/react-query": "^11.0.0-rc.502",
@@ -36,7 +36,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@cronkwater/config": "workspace:*",
+    "@cronkwaters/config": "workspace:*",
     "@types/node": "^22.5.4",
     "@types/react": "^18.3.10",
     "eslint": "^9.12.0",

@@ -52,7 +52,7 @@ export {
   shadows,
   transitions,
   songForgeTheme,
-  type CronkWaterTheme
+  type CronkWatersTheme
 } from './theme/tokens';
 export { cn } from './lib/utils';
 export type { ToastItem, ToastVariant } from './components/toast';

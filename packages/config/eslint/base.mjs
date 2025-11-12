@@ -13,7 +13,7 @@ const promiseRecommendedRules = pluginPromise.configs?.recommended?.rules ?? {};
 
 export default tseslint.config(
   {
-    name: 'songforge/ignores',
+    name: 'cronkwaters/ignores',
     ignores: [
       '**/dist/**',
       '**/.next/**',
@@ -27,7 +27,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    name: 'songforge/base',
+    name: 'cronkwaters/base',
     languageOptions: {
       parserOptions: {
         ecmaVersion: 'latest',

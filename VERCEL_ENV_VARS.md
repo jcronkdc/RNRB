@@ -12,7 +12,7 @@ DATABASE_URL=your_postgres_connection_string
 ### Authentication
 ```
 NEXTAUTH_SECRET=generate_a_random_secret_at_least_32_chars
-NEXTAUTH_URL=https://cronkwater.vercel.app
+NEXTAUTH_URL=https://cronkwaters.vercel.app
 ```
 
 ### Supabase (Required)
@@ -24,7 +24,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
 ### Site Configuration
 ```
-NEXT_PUBLIC_SITE_URL=https://cronkwater.vercel.app
+NEXT_PUBLIC_SITE_URL=https://cronkwaters.vercel.app
 ```
 
 ## Optional Variables
@@ -32,7 +32,7 @@ NEXT_PUBLIC_SITE_URL=https://cronkwater.vercel.app
 ### Email (Optional - will work without these)
 ```
 EMAIL_SERVER_URL=smtp://username:password@smtp.example.com:587
-EMAIL_FROM=noreply@cronkwater.com
+EMAIL_FROM=noreply@cronkwaters.com
 ```
 
 ### OAuth Providers (Optional)

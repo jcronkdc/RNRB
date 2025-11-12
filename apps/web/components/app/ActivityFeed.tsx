@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@cronkwater/ui';
+import { cn } from '@cronkwaters/ui';
 import { Music, FileText, Users, FileAudio, Clock } from 'lucide-react';
 import { useMemo } from 'react';
 

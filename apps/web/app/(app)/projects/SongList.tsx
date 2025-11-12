@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 import { Music, Plus } from 'lucide-react';
 import Link from 'next/link';
 
@@ -80,6 +80,7 @@ export function SongList({ songs, projects }: SongListProps) {
     </div>
   );
 }
+
 
 
 

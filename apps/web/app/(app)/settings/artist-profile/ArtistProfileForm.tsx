@@ -15,13 +15,13 @@ import {
   Link2,
   Award as AwardIcon
 } from 'lucide-react';
-import { Button } from '@cronkwater/ui';
-import { Input } from '@cronkwater/ui';
-import { Textarea } from '@cronkwater/ui';
-import { Label } from '@cronkwater/ui';
-import { Card } from '@cronkwater/ui';
-import { Badge } from '@cronkwater/ui';
-import { useToast } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
+import { Input } from '@cronkwaters/ui';
+import { Textarea } from '@cronkwaters/ui';
+import { Label } from '@cronkwaters/ui';
+import { Card } from '@cronkwaters/ui';
+import { Badge } from '@cronkwaters/ui';
+import { useToast } from '@cronkwaters/ui';
 import { updateOrgProfileAction } from '@/lib/actions/artistProfile';
 import type { Org, BandMember, Award } from '@prisma/client';
 

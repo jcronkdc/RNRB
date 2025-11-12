@@ -13,10 +13,10 @@ import {
   Download,
   Lock
 } from 'lucide-react';
-import { Button } from '@cronkwater/ui';
-import { Card } from '@cronkwater/ui';
-import { Badge } from '@cronkwater/ui';
-import { Progress } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
+import { Card } from '@cronkwaters/ui';
+import { Badge } from '@cronkwaters/ui';
+import { Progress } from '@cronkwaters/ui';
 import { PageHeader } from '@/components/app/PageHeader';
 
 export function LearnPageClient() {

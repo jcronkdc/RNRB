@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@cronkwater/auth';
-import { createSongSchema, updateSongSchema , createSong, updateSong, deleteSong, listSongs , getProjectBySlug } from '@cronkwater/db';
+import { requireOrgSession } from '@cronkwaters/auth';
+import { createSongSchema, updateSongSchema , createSong, updateSong, deleteSong, listSongs , getProjectBySlug } from '@cronkwaters/db';
 import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {
@@ -63,10 +63,19 @@ export async function updateSongAction(
   input: unknown
 ): Promise<ActionResult<void>> {
   try {
-    await requireOrgSession();
+    const session = await requireOrgSession();
+    
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
+
     const validated = updateSongSchema.parse(input);
 
-    await updateSong(songId, validated);
+    // SECURITY: Pass orgId to verify ownership
+    await updateSong(songId, validated, session.activeMembership.org.id);
 
     revalidatePath('/app/projects');
 
@@ -86,9 +95,17 @@ export async function updateSongAction(
  */
 export async function deleteSongAction(songId: string): Promise<ActionResult<void>> {
   try {
-    await requireOrgSession();
+    const session = await requireOrgSession();
 
-    await deleteSong(songId);
+    if (!session.activeMembership) {
+      return {
+        success: false,
+        error: 'Active organization not found'
+      };
+    }
+
+    // SECURITY: Pass orgId to verify ownership
+    await deleteSong(songId, session.activeMembership.org.id);
 
     revalidatePath('/app/projects');
 

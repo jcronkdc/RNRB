@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "CronkWater React",
+  "display": "CronkWaters React",
   "extends": "./base.json",
   "compilerOptions": {
     "jsx": "react-jsx",

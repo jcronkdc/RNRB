@@ -33,8 +33,7 @@ const envSchema = z.object({
   STORAGE_REGION: z.string().optional(),
   STORAGE_PUBLIC_URL: z.string().url().optional(),
 
-  // Development
-  DEMO_BYPASS: z.string().optional(),
+  // Development (removed DEMO_BYPASS - security vulnerability)
 
   // Analytics (optional)
   SENTRY_DSN: z.string().url().optional(),
@@ -78,7 +77,6 @@ export function getEnv(): Env {
       STORAGE_BUCKET: process.env.STORAGE_BUCKET,
       STORAGE_REGION: process.env.STORAGE_REGION,
       STORAGE_PUBLIC_URL: process.env.STORAGE_PUBLIC_URL,
-      DEMO_BYPASS: process.env.DEMO_BYPASS,
       SENTRY_DSN: process.env.SENTRY_DSN,
       ANALYTICS_ID: process.env.ANALYTICS_ID,
       STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,

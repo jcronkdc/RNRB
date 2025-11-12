@@ -1,5 +1,5 @@
-import type { OrgAwareSession } from '@cronkwater/auth';
-import { prisma } from '@cronkwater/db';
+import type { OrgAwareSession } from '@cronkwaters/auth';
+import { prisma } from '@cronkwaters/db';
 
 export interface CreateContextOptions {
   session: OrgAwareSession | null;

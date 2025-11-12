@@ -1,7 +1,7 @@
 'use server';
 
-import { prisma } from '@cronkwater/db';
-import { getOrgSessionFromSession } from '@cronkwater/auth';
+import { prisma } from '@cronkwaters/db';
+import { getOrgSessionFromSession } from '@cronkwaters/auth';
 
 export async function getProjects() {
   const session = await getOrgSessionFromSession();

@@ -1,4 +1,4 @@
-# CronkWater Phase 1 MVP - Setup Guide
+# CronkWaters Phase 1 MVP - Setup Guide
 
 ## 🚀 Quick Start
 
@@ -182,6 +182,7 @@ test('complete flow', async ({ page }) => {
 - Storage bucket "audio" must be created and made public
 - OpenAI API key required for lyric generation
 - ElevenLabs optional but recommended for voice preview
+
 
 
 

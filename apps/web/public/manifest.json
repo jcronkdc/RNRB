@@ -1,6 +1,6 @@
 {
-  "name": "CronkWater",
-  "short_name": "CronkWater",
+  "name": "CronkWaters",
+  "short_name": "CronkWaters",
   "description": "AI-powered music creation platform",
   "start_url": "/",
   "display": "standalone",
@@ -16,6 +16,7 @@
     }
   ]
 }
+
 
 
 

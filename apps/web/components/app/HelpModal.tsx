@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 import Link from 'next/link';
 import {
   useCallback,

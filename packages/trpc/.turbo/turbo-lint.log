@@ -1,4 +1,4 @@
 
-> @cronkwater/trpc@0.1.0 lint /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/trpc
+> @cronkwaters/trpc@0.1.0 lint /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/trpc
 > eslint 'src/**/*.{ts,tsx}'
 

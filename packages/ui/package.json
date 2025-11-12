@@ -1,5 +1,5 @@
 {
-  "name": "@cronkwater/ui",
+  "name": "@cronkwaters/ui",
   "version": "0.1.0",
   "type": "module",
   "private": false,
@@ -41,7 +41,7 @@
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
-    "@cronkwater/config": "workspace:*",
+    "@cronkwaters/config": "workspace:*",
     "@storybook/addon-essentials": "^8.1.0",
     "@storybook/addon-interactions": "^8.1.0",
     "@storybook/react": "^8.1.0",

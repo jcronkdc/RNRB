@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@cronkwater/db';
-import { auth } from '@cronkwater/auth';
+import { prisma } from '@cronkwaters/db';
+import { auth } from '@cronkwaters/auth';
 
 export async function GET() {
   const diagnostics = {

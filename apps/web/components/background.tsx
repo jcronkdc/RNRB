@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@cronkwater/ui';
+import { cn } from '@cronkwaters/ui';
 import { useEffect, type ReactNode } from 'react';
 
 type BackgroundProps = {
@@ -83,7 +83,7 @@ export function Background({
     const ratio = contrastRatio(foregroundColor, backgroundColor);
     if (ratio !== null && ratio < 4.5) {
       console.warn(
-        `[CronkWater] Background contrast ratio ${ratio.toFixed(
+        `[CronkWaters] Background contrast ratio ${ratio.toFixed(
           2
         )} is below 4.5:1. Consider adjusting token values for improved readability.`
       );

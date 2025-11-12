@@ -1,5 +1,5 @@
-import { setActiveOrgCookie } from '@cronkwater/auth';
-import { Button } from '@cronkwater/ui';
+import { setActiveOrgCookie } from '@cronkwaters/auth';
+import { Button } from '@cronkwaters/ui';
 import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';

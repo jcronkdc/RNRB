@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X, ArrowRight, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ interface TourStep {
 const TOUR_STEPS: TourStep[] = [
   {
     id: 'welcome',
-    title: 'Welcome to CronkWater',
+    title: 'Welcome to CronkWaters',
     description: 'Your creative workspace for organizing songs, tracking splits, and collaborating with your team. Let\'s take a quick tour.',
     action: {
       label: 'Start Tour',
@@ -86,7 +86,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
 
   useEffect(() => {
     // Check if user has completed tour
-    const hasCompletedTour = localStorage.getItem('cronkwater-tour-completed');
+    const hasCompletedTour = localStorage.getItem('cronkwaters-tour-completed');
     if (!hasCompletedTour) {
       setIsOpen(true);
     }
@@ -97,7 +97,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
 
   const handleNext = () => {
     if (isLastStep) {
-      localStorage.setItem('cronkwater-tour-completed', 'true');
+      localStorage.setItem('cronkwaters-tour-completed', 'true');
       setIsOpen(false);
       onComplete?.();
     } else {
@@ -106,7 +106,7 @@ export function OnboardingTour({ onComplete }: OnboardingTourProps) {
   };
 
   const handleSkip = () => {
-    localStorage.setItem('cronkwater-tour-completed', 'true');
+    localStorage.setItem('cronkwaters-tour-completed', 'true');
     setIsOpen(false);
     onComplete?.();
   };

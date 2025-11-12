@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@cronkwater/auth';
-import { listProjects, listSongs, listAssets } from '@cronkwater/db';
+import { requireOrgSession } from '@cronkwaters/auth';
+import { listProjects, listSongs, listAssets } from '@cronkwaters/db';
 
 export interface SearchResult {
   id: string;

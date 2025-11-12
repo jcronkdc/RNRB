@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Label } from '@cronkwater/ui';
+import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Label } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import QRCode from 'qrcode.react';
 import { useMemo, useState } from 'react';
@@ -15,7 +15,7 @@ interface RemixQrModalProps {
 export function RemixQrModal({ roomId, songTitle }: RemixQrModalProps) {
   const toast = useToast();
   const [open, setOpen] = useState(false);
-  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cronkwater.example';
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cronkwaters.example';
   const remixUrl = useMemo(() => `${origin}/remix/${roomId}`, [origin, roomId]);
 
   const handleCopy = async () => {

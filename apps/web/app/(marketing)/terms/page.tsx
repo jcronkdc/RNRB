@@ -11,7 +11,7 @@ export default function TermsPage() {
       </header>
       <section>
         <h2 className="mb-2 text-xl font-semibold text-brand-foreground">Introduction</h2>
-        <p className="text-base text-muted-foreground">Using CronkWaters implies acceptance of these terms. You must be 13 or older.</p>
+        <p className="text-base text-muted-foreground">Using CronkWaterss implies acceptance of these terms. You must be 13 or older.</p>
       </section>
       <section>
         <h2 className="mb-2 text-xl font-semibold text-brand-foreground">Use of Service</h2>
@@ -19,11 +19,11 @@ export default function TermsPage() {
       </section>
       <section>
         <h2 className="mb-2 text-xl font-semibold text-brand-foreground">Intellectual Property</h2>
-        <p className="text-base text-muted-foreground">You retain ownership of your original content. CronkWaters reserves rights to platform branding and provided tools.</p>
+        <p className="text-base text-muted-foreground">You retain ownership of your original content. CronkWaterss reserves rights to platform branding and provided tools.</p>
       </section>
       <section>
         <h2 className="mb-2 text-xl font-semibold text-brand-foreground">Limitation of Liability</h2>
-        <p className="text-base text-muted-foreground">CronkWaters is provided as-is, without warranties. We are not liable for data loss, outages, or business interruption.</p>
+        <p className="text-base text-muted-foreground">CronkWaterss is provided as-is, without warranties. We are not liable for data loss, outages, or business interruption.</p>
       </section>
       <section>
         <h2 className="mb-2 text-xl font-semibold text-brand-foreground">Changes</h2>

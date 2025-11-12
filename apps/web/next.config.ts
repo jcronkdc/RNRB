@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
 
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['@cronkwater/ui', 'lucide-react']
+    optimizePackageImports: ['@cronkwaters/ui', 'lucide-react']
   },
 
   // Headers

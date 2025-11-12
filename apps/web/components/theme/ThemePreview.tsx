@@ -1,4 +1,4 @@
-import { Button, Input, Label, Textarea } from '@cronkwater/ui';
+import { Button, Input, Label, Textarea } from '@cronkwaters/ui';
 
 const pills = ['Draft', 'In review', 'Published'];
 

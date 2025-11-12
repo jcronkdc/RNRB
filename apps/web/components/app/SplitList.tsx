@@ -1,4 +1,4 @@
-import { cn, Button } from '@cronkwater/ui';
+import { cn, Button } from '@cronkwaters/ui';
 import { Users, Plus } from 'lucide-react';
 
 import { EmptyState } from './EmptyState';

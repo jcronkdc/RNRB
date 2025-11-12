@@ -14,7 +14,7 @@ export interface ThemeProviderProps {
 }
 
 /**
- * Injects CronkWater design tokens on the `documentElement` and toggles
+ * Injects CronkWaters design tokens on the `documentElement` and toggles
  * between light/dark palettes using the configured data attribute.
  */
 export function ThemeProvider({

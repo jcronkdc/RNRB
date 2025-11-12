@@ -1,4 +1,4 @@
-import { cn } from '@cronkwater/ui';
+import { cn } from '@cronkwaters/ui';
 
 interface EmptyStateProps {
   icon?: React.ComponentType<{ className?: string }>;

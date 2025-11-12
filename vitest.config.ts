@@ -37,10 +37,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@cronkwater/db': path.resolve(__dirname, './packages/db/src'),
-      '@cronkwater/auth': path.resolve(__dirname, './packages/auth/src'),
-      '@cronkwater/ui': path.resolve(__dirname, './packages/ui/src'),
-      '@cronkwater/trpc': path.resolve(__dirname, './packages/trpc/src')
+      '@cronkwaters/db': path.resolve(__dirname, './packages/db/src'),
+      '@cronkwaters/auth': path.resolve(__dirname, './packages/auth/src'),
+      '@cronkwaters/ui': path.resolve(__dirname, './packages/ui/src'),
+      '@cronkwaters/trpc': path.resolve(__dirname, './packages/trpc/src')
     }
   }
 });

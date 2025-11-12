@@ -1,10 +1,10 @@
-# CronkWater
+# CronkWaters
 
 A premium music ecosystem platform for collaborative songwriting, recording, and community management.
 
 ## 🎯 Overview
 
-CronkWater is a comprehensive web application designed for musicians, bands, and music organizations. It provides:
+CronkWaters is a comprehensive web application designed for musicians, bands, and music organizations. It provides:
 
 - **Project Management**: Organize songs, assets, and collaborations
 - **Split Sheets**: Track revenue splits with PRO/IPI integration
@@ -37,7 +37,7 @@ CronkWater is a comprehensive web application designed for musicians, bands, and
 ```bash
 # Clone repository
 git clone <repository-url>
-cd song-forge
+cd cronkwaters
 
 # Install dependencies
 pnpm install
@@ -47,13 +47,13 @@ cp .env.example .env
 # Edit .env with your configuration
 
 # Start database (Docker)
-pnpm -F @songforge/db db:up
+pnpm -F @cronkwaters/db db:up
 
 # Run migrations
 pnpm db:migrate
 
 # Generate Prisma client
-pnpm -F @songforge/db prisma:generate
+pnpm -F @cronkwaters/db prisma:generate
 
 # Start development server
 pnpm dev
@@ -63,11 +63,11 @@ Visit `http://localhost:3000`
 
 ## 📦 Packages
 
-- `@songforge/db`: Database schema, Prisma client, helper functions
-- `@songforge/auth`: Authentication and session management
-- `@songforge/ui`: Shared UI components and design tokens
-- `@songforge/config`: Shared ESLint, TypeScript, Prettier configs
-- `@songforge/trpc`: tRPC setup (for future API)
+- `@cronkwaters/db`: Database schema, Prisma client, helper functions
+- `@cronkwaters/auth`: Authentication and session management
+- `@cronkwaters/ui`: Shared UI components and design tokens
+- `@cronkwaters/config`: Shared ESLint, TypeScript, Prettier configs
+- `@cronkwaters/trpc`: tRPC setup (for future API)
 
 ## 🗄️ Database
 
@@ -75,13 +75,13 @@ Visit `http://localhost:3000`
 
 ```bash
 # Start PostgreSQL
-pnpm -F @songforge/db db:up
+pnpm -F @cronkwaters/db db:up
 
 # Create migration
-pnpm -F @songforge/db prisma:migrate:dev
+pnpm -F @cronkwaters/db prisma:migrate:dev
 
 # Generate Prisma client
-pnpm -F @songforge/db prisma:generate
+pnpm -F @cronkwaters/db prisma:generate
 
 # Seed database (optional)
 pnpm db:seed
@@ -139,7 +139,7 @@ pnpm test:e2e:ui
 pnpm build
 
 # Build specific package
-pnpm -F @songforge/db build
+pnpm -F @cronkwaters/db build
 pnpm -F apps/web build
 ```
 
@@ -147,10 +147,10 @@ pnpm -F apps/web build
 
 ```bash
 # Build image
-docker build -t songforge .
+docker build -t cronkwaters .
 
 # Run container
-docker run -p 3000:3000 --env-file .env songforge
+docker run -p 3000:3000 --env-file .env cronkwaters
 ```
 
 ## 📚 Documentation

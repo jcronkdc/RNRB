@@ -1,4 +1,4 @@
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 
 const assets = [
   { name: 'Honey Bloom // vocal comp', type: 'Audio stem', updated: '2 hours ago', size: '48 MB' },

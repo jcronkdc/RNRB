@@ -2,7 +2,7 @@
 
 ## Summary
 
-All TypeScript and linting errors have been resolved in the CronkWater codebase.
+All TypeScript and linting errors have been resolved in the CronkWaters codebase.
 
 ## Fixed Issues
 
@@ -11,7 +11,7 @@ All TypeScript and linting errors have been resolved in the CronkWater codebase.
 - Fixed in: dashboard pages, actions, layout, remix pages
 
 ### 2. **Missing Dependencies**
-- Added `@songforge/db` to web app dependencies
+- Added `@cronkwaters/db` to web app dependencies
 - Added `@prisma/client` to web app dependencies
 
 ### 3. **UI Component Type Mismatches**

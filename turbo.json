@@ -18,7 +18,7 @@
       "dependsOn": ["^dev"]
     },
     "build": {
-      "dependsOn": ["^build", "@cronkwater/db#prisma:generate"],
+      "dependsOn": ["^build", "@cronkwaters/db#prisma:generate"],
       "outputs": [
         "dist/**",
         ".next/**",
@@ -49,7 +49,7 @@
       "outputs": []
     },
     "typecheck": {
-      "dependsOn": ["@cronkwater/db#prisma:generate"],
+      "dependsOn": ["@cronkwaters/db#prisma:generate"],
       "outputs": []
     },
     "test": {

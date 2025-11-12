@@ -11,7 +11,7 @@ export default function SplitsPage() {
         </p>
       </header>
       <div className="rounded-3xl border border-border/60 bg-surface p-8 text-sm text-muted-foreground shadow-soft">
-        Automated consensus tracking and legal export formats are coming soon. Contact CronkWater Support to join the pilot.
+        Automated consensus tracking and legal export formats are coming soon. Contact CronkWaters Support to join the pilot.
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { Button, Input } from '@cronkwater/ui';
+import { Button, Input } from '@cronkwaters/ui';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +9,7 @@ export default function SettingsPage() {
         <header className="mb-6 space-y-2">
           <h2 className="text-xl font-semibold text-brand-foreground">Profile</h2>
           <p className="text-sm text-muted-foreground">
-            Update how CronkWater introduces you to collaborators and partners.
+            Update how CronkWaters introduces you to collaborators and partners.
           </p>
         </header>
         <form className="grid gap-5 md:grid-cols-2">
@@ -19,13 +19,13 @@ export default function SettingsPage() {
           </label>
           <label htmlFor="primary-email" className="flex flex-col gap-2 text-sm font-medium text-brand-foreground">
             Primary email
-            <Input id="primary-email" defaultValue="studio@cronkwater.dev" className="bg-surface-elevated" />
+            <Input id="primary-email" defaultValue="studio@cronkwaters.dev" className="bg-surface-elevated" />
           </label>
           <label htmlFor="bio" className="flex flex-col gap-2 text-sm font-medium text-brand-foreground md:col-span-2">
             Bio
             <textarea
               id="bio"
-              defaultValue="CronkWater curates modern songwriting experiences, from remote sessions to cinematic showcases."
+              defaultValue="CronkWaters curates modern songwriting experiences, from remote sessions to cinematic showcases."
               className="min-h-[120px] rounded-xl border border-border/60 bg-surface-elevated px-4 py-3 text-sm text-brand-foreground outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 focus:ring-offset-background"
             />
           </label>
@@ -40,7 +40,7 @@ export default function SettingsPage() {
         <header className="mb-6 space-y-2">
           <h2 className="text-xl font-semibold text-brand-foreground">Notifications</h2>
           <p className="text-sm text-muted-foreground">
-            Fine-tune when CronkWater nudges you about sessions, splits, and new releases.
+            Fine-tune when CronkWaters nudges you about sessions, splits, and new releases.
           </p>
         </header>
         <div className="space-y-4 text-sm text-brand-foreground">

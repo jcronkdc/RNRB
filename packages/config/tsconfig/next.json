@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "CronkWater Next.js",
+  "display": "CronkWaters Next.js",
   "extends": "./react.json",
   "compilerOptions": {
     "allowJs": true,

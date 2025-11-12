@@ -1,5 +1,5 @@
-import type { Membership, Organization } from '@cronkwater/db';
-import { prisma } from '@cronkwater/db';
+import type { Membership, Organization } from '@cronkwaters/db';
+import { prisma } from '@cronkwaters/db';
 import { cookies } from 'next/headers';
 import type { Session } from 'next-auth';
 

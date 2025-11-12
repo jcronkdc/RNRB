@@ -10,7 +10,7 @@ import {
   type ReactNode
 } from 'react';
 
-const STORAGE_KEY = 'cronkwater-theme';
+const STORAGE_KEY = 'cronkwaters-theme';
 const THEMES = ['light', 'dark', 'warm'] as const;
 type ThemeName = (typeof THEMES)[number];
 

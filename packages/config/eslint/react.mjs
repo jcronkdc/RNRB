@@ -9,7 +9,7 @@ const reactHooksRecommendedRules =
 export default [
   ...baseConfig,
   {
-    name: 'songforge/react',
+    name: 'cronkwaters/react',
     plugins: {
       react: reactPlugin,
       'react-hooks': reactHooksPlugin

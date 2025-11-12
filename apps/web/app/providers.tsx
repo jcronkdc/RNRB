@@ -1,7 +1,7 @@
 'use client';
 
-import { TrpcProvider } from '@cronkwater/trpc';
-import { ThemeProvider, ToastProvider } from '@cronkwater/ui';
+import { TrpcProvider } from '@cronkwaters/trpc';
+import { ThemeProvider, ToastProvider } from '@cronkwaters/ui';
 import {
   createContext,
   useCallback,
@@ -22,7 +22,7 @@ interface ThemeContextValue {
   toggleTheme: () => void;
 }
 
-const STORAGE_KEY = 'cronkwater-theme';
+const STORAGE_KEY = 'cronkwaters-theme';
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 

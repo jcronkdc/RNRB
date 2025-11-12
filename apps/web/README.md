@@ -1,8 +1,8 @@
 # Web App (`apps/web`)
 
-Next.js 16 App Router experience for the CronkWater platform.
+Next.js 16 App Router experience for the CronkWaters platform.
 
-- TypeScript + TailwindCSS + Radix UI (via shadcn components from `@songforge/ui`)
+- TypeScript + TailwindCSS + Radix UI (via shadcn components from `@cronkwaters/ui`)
 - Org-aware session helper + Auth.js handlers (`packages/auth`)
 - tRPC v11 client powered by React Query (`packages/trpc`)
 
@@ -32,4 +32,4 @@ NEXTAUTH_URL=http://localhost:3000
 - `app/` – Next.js route handlers and layouts.
 - `app/api/` – tRPC + Auth.js API routes.
 - `app/providers.tsx` – Registers React Query, tRPC, and toast providers.
-- `tailwind.config.ts` – Tailwind config with `@songforge/ui` tokens.
+- `tailwind.config.ts` – Tailwind config with `@cronkwaters/ui` tokens.

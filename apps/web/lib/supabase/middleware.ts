@@ -1,6 +1,28 @@
+/**
+ * ⚠️ DEPRECATED - NOT USED FOR AUTHENTICATION
+ * 
+ * This file contains Supabase auth middleware that is NOT actively used.
+ * The application uses NextAuth.js (Auth.js) as the PRIMARY authentication system.
+ * 
+ * Supabase is used for:
+ * - Storage (S3-compatible)
+ * - Client-side features
+ * 
+ * Supabase is NOT used for:
+ * - Authentication (NextAuth.js handles this)
+ * - Session management (NextAuth.js handles this)
+ * 
+ * This middleware is kept for reference but should not be called from main middleware.ts
+ * 
+ * TODO: Remove this file or clearly mark as deprecated/unused
+ */
+
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+/**
+ * @deprecated This function is not used. NextAuth.js handles authentication.
+ */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -61,6 +83,7 @@ export async function updateSession(request: NextRequest) {
 
   return supabaseResponse;
 }
+
 
 
 

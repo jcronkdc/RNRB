@@ -14,7 +14,7 @@ importers:
       '@axe-core/react':
         specifier: ^4.7.0
         version: 4.11.0
-      '@cronkwater/config':
+      '@cronkwaters/config':
         specifier: workspace:^
         version: link:packages/config
       '@playwright/test':
@@ -77,16 +77,16 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.700.0
         version: 3.928.0
-      '@cronkwater/auth':
+      '@cronkwaters/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@cronkwater/db':
+      '@cronkwaters/db':
         specifier: workspace:*
         version: link:../../packages/db
-      '@cronkwater/trpc':
+      '@cronkwaters/trpc':
         specifier: workspace:*
         version: link:../../packages/trpc
-      '@cronkwater/ui':
+      '@cronkwaters/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@prisma/client':
@@ -150,7 +150,7 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@cronkwater/config':
+      '@cronkwaters/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@types/node':
@@ -183,7 +183,7 @@ importers:
 
   packages/auth:
     dependencies:
-      '@cronkwater/db':
+      '@cronkwaters/db':
         specifier: workspace:*
         version: link:../db
       '@next-auth/prisma-adapter':
@@ -202,7 +202,7 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@cronkwater/config':
+      '@cronkwaters/config':
         specifier: workspace:*
         version: link:../config
       '@types/nodemailer':
@@ -260,7 +260,7 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@cronkwater/config':
+      '@cronkwaters/config':
         specifier: workspace:*
         version: link:../config
       eslint:
@@ -275,10 +275,10 @@ importers:
 
   packages/trpc:
     dependencies:
-      '@cronkwater/auth':
+      '@cronkwaters/auth':
         specifier: workspace:*
         version: link:../auth
-      '@cronkwater/db':
+      '@cronkwaters/db':
         specifier: workspace:*
         version: link:../db
       '@tanstack/react-query':
@@ -303,7 +303,7 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@cronkwater/config':
+      '@cronkwaters/config':
         specifier: workspace:*
         version: link:../config
       '@types/node':
@@ -364,7 +364,7 @@ importers:
         specifier: ^2.3.0
         version: 2.6.0
     devDependencies:
-      '@cronkwater/config':
+      '@cronkwaters/config':
         specifier: workspace:*
         version: link:../config
       '@storybook/addon-essentials':

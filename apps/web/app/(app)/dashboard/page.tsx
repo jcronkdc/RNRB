@@ -1,5 +1,5 @@
-import { prisma } from '@cronkwater/db';
-import { Badge, Card, CardContent, CardHeader, CardTitle } from '@cronkwater/ui';
+import { prisma } from '@cronkwaters/db';
+import { Badge, Card, CardContent, CardHeader, CardTitle } from '@cronkwaters/ui';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
         <div>
           <h2 className="text-3xl font-semibold text-brand-foreground">Your songs</h2>
           <p className="mt-1 max-w-xl text-sm text-muted-foreground">
-            Every composition you have access to lives here. Open a project, continue a stem, or drop a new idea with the prompt-first CronkWater flow.
+            Every composition you have access to lives here. Open a project, continue a stem, or drop a new idea with the prompt-first CronkWaters flow.
           </p>
         </div>
         <NewSongDialog />

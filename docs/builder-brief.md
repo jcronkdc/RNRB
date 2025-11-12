@@ -3,7 +3,7 @@
 **Status:** ✅ **APPROVED - READY TO MERGE**
 
 ## Objective
-Validate the CronkWater v1.0 MVP end-to-end before launch. This pass focuses on repository hygiene, automated checks, and documenting any gaps that still require manual follow-up.
+Validate the CronkWaters v1.0 MVP end-to-end before launch. This pass focuses on repository hygiene, automated checks, and documenting any gaps that still require manual follow-up.
 
 ## ✅ Verification Results
 
@@ -41,14 +41,14 @@ Validate the CronkWater v1.0 MVP end-to-end before launch. This pass focuses on 
 ## ✅ Critical Issues Fixed
 
 ### Fixed Issues:
-1. ✅ **TypeScript Errors in @songforge/auth** - FIXED
+1. ✅ **TypeScript Errors in @cronkwaters/auth** - FIXED
    - Fixed NextAuth compatibility with Next.js 15/16
    - Fixed workspace dependency resolution
    - Added explicit types, fixed schema field names
    - Changed adapter to `@next-auth/prisma-adapter` (v4 compatible)
    - Fixed Next.js 15 async `cookies()` API
 
-2. ✅ **TypeScript Errors in @songforge/db** - FIXED
+2. ✅ **TypeScript Errors in @cronkwaters/db** - FIXED
    - Fixed Prisma JSON type handling (JsonNull vs DbNull)
    - Fixed type casting for metadata/JSON fields
    - Enabled declaration file generation

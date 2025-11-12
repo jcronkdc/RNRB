@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@cronkwater/auth';
-import { calculateRoyaltyWaterfall, calculateAggregatedRoyalties } from '@cronkwater/db';
+import { requireOrgSession } from '@cronkwaters/auth';
+import { calculateRoyaltyWaterfall, calculateAggregatedRoyalties } from '@cronkwaters/db';
 import { z } from 'zod';
 
 export interface ActionResult<T> {

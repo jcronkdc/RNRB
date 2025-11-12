@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, cn } from '@cronkwater/ui';
+import { Button, cn } from '@cronkwaters/ui';
 import { Filter } from 'lucide-react';
 import { useState } from 'react';
 

@@ -1,4 +1,4 @@
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 
 const splits = [
   {

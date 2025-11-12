@@ -10,7 +10,7 @@ import {
   DialogTitle,
   Input,
   Label
-} from '@cronkwater/ui';
+} from '@cronkwaters/ui';
 import {
   useEffect,
   useMemo,

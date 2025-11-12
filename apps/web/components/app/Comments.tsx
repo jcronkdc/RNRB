@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, cn } from '@cronkwater/ui';
+import { Button, cn } from '@cronkwaters/ui';
 import { Send, MessageSquare, User } from 'lucide-react';
 import { useState, useRef } from 'react';
 

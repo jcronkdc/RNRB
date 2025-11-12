@@ -1,14 +1,14 @@
 {
-  "extends": "@cronkwater/config/tsconfig/base",
+  "extends": "@cronkwaters/config/tsconfig/base",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@cronkwater/ui": ["packages/ui/src/index"],
-      "@cronkwater/ui/*": ["packages/ui/src/*"],
-      "@cronkwater/db": ["packages/db/src/index"],
-      "@cronkwater/auth": ["packages/auth/src/index"],
-      "@cronkwater/trpc": ["packages/trpc/src/index"],
-      "@cronkwater/trpc/*": ["packages/trpc/src/*"]
+      "@cronkwaters/ui": ["packages/ui/src/index"],
+      "@cronkwaters/ui/*": ["packages/ui/src/*"],
+      "@cronkwaters/db": ["packages/db/src/index"],
+      "@cronkwaters/auth": ["packages/auth/src/index"],
+      "@cronkwaters/trpc": ["packages/trpc/src/index"],
+      "@cronkwaters/trpc/*": ["packages/trpc/src/*"]
     }
   },
   "include": ["packages", "apps", "turbo.json"]

@@ -1,29 +1,29 @@
-import { Button, Input } from '@cronkwater/ui';
+import { Button, Input } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import { Compass, Disc3, Mail, Sparkles, Users, Waves } from 'lucide-react';
 import Link from 'next/link';
 
 const heroStats = [
-  { label: 'songs arranged using CronkWater beta', value: '312', tone: 'text-brand-primary' },
+  { label: 'songs arranged using CronkWaters beta', value: '312', tone: 'text-brand-primary' },
   { label: 'artists in residence this season', value: '48', tone: 'text-brand-secondary' },
   { label: 'global showcases announced for 2025', value: '6', tone: 'text-accent' }
 ] as const;
 
 const offerings = [
   {
-    title: 'CronkWaters',
+    title: 'CronkWaterss',
     description:
       'A collaborative studio for chart-ready lyrics, stems, and split agreements—kept in sync across every org.',
     icon: Sparkles
   },
   {
-    title: 'CronkWaters Podcast',
+    title: 'CronkWaterss Podcast',
     description:
       'Weekly tapes with producers, composers, and poets sharing the rituals, risks, and rights behind the mix.',
     icon: Disc3
   },
   {
-    title: 'CronkWaters Festival',
+    title: 'CronkWaterss Festival',
     description:
       'Three evenings of immersive listening rooms, community dinners, and multi-sensory performances at dusk.',
     icon: Waves
@@ -95,7 +95,7 @@ export default function Page() {
       >
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface px-5 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-muted-foreground shadow-outline">
-            CronkWater Studios
+            CronkWaters Studios
           </span>
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-balance font-serif text-4xl font-semibold leading-tight text-brand-foreground sm:text-5xl lg:text-6xl">
@@ -111,7 +111,7 @@ export default function Page() {
               <Link href="/dashboard">Enter the studio</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <Link href="https://github.com/jcronkdc/CronkWater" target="_blank" rel="noreferrer">
+              <Link href="https://github.com/jcronkdc/CronkWaters" target="_blank" rel="noreferrer">
                 View the monorepo
               </Link>
             </Button>
@@ -193,7 +193,7 @@ export default function Page() {
           <div className="relative flex flex-col gap-3 text-left">
             <span className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Email capture</span>
             <h2 className="text-3xl font-semibold text-brand-foreground sm:text-4xl">
-              Keep a pulse on CronkWater releases, gatherings, and field notes.
+              Keep a pulse on CronkWaters releases, gatherings, and field notes.
             </h2>
             <p className="max-w-2xl text-sm text-muted-foreground">
               Subscribe for monthly stories, early feature previews, and invitations to the next festival wave.

@@ -110,18 +110,31 @@ export async function createSplitSheet(input: CreateSplitSheetInput): Promise<Sp
 }
 
 /**
- * Update split sheet
+ * Update split sheet with org ownership validation
  */
 export async function updateSplitSheet(
   splitSheetId: string,
-  input: UpdateSplitSheetInput
+  input: UpdateSplitSheetInput,
+  orgId?: string
 ): Promise<SplitSheet> {
   const existing = await prisma.splitSheet.findUnique({
-    where: { id: splitSheetId }
+    where: { id: splitSheetId },
+    include: {
+      project: {
+        select: {
+          orgId: true
+        }
+      }
+    }
   });
 
   if (!existing) {
     throw new Error(`Split sheet with id "${splitSheetId}" not found`);
+  }
+
+  // SECURITY: Verify organization ownership if orgId provided
+  if (orgId && existing.project.orgId !== orgId) {
+    throw new Error('Unauthorized: Split sheet does not belong to this organization');
   }
 
   if (existing.finalized) {

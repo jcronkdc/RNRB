@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 import { Play, Pause, Volume2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
@@ -114,6 +114,7 @@ export function WaveformPreview({ audioUrl, onLUFS }: WaveformPreviewProps) {
     </div>
   );
 }
+
 
 
 

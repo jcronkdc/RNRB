@@ -1,4 +1,4 @@
-# CronkWater Deployment Guide
+# CronkWaters Deployment Guide
 
 ## 🚀 Vercel Deployment
 
@@ -9,7 +9,7 @@ Set these in your Vercel project settings (Settings → Environment Variables):
 #### Core Requirements
 - `DATABASE_URL` - PostgreSQL connection string (e.g., from Supabase, Neon, or Railway)
 - `NEXTAUTH_SECRET` - Generate with: `openssl rand -base64 32`
-- `NEXTAUTH_URL` - Set to `https://cronkwater.vercel.app` (or your custom domain)
+- `NEXTAUTH_URL` - Set to `https://cronkwaters.vercel.app` (or your custom domain)
 
 #### Supabase Integration
 - `SUPABASE_URL` - Your Supabase project URL
@@ -26,7 +26,7 @@ Set these in your Vercel project settings (Settings → Environment Variables):
 
 1. **Fork/Clone the repository**
    ```bash
-   git clone https://github.com/jcronkdc/CronkWater.git
+   git clone https://github.com/jcronkdc/CronkWaters.git
    ```
 
 2. **Import to Vercel**
@@ -37,7 +37,7 @@ Set these in your Vercel project settings (Settings → Environment Variables):
 3. **Configure Build Settings**
    - Framework Preset: Next.js
    - Root Directory: `.` (leave as is)
-   - Build Command: `pnpm turbo run build --filter=@cronkwater/web...`
+   - Build Command: `pnpm turbo run build --filter=@cronkwaters/web...`
    - Output Directory: `apps/web/.next`
    - Install Command: `pnpm install`
 
@@ -94,6 +94,6 @@ For issues, check:
 For self-hosting, use the included Dockerfile:
 
 ```bash
-docker build -t cronkwater .
-docker run -p 3000:3000 --env-file .env cronkwater
+docker build -t cronkwaters .
+docker run -p 3000:3000 --env-file .env cronkwaters
 ```

@@ -1,7 +1,7 @@
 'use server';
 
-import { requireOrgSession } from '@cronkwater/auth';
-import { prisma, validateSlug } from '@cronkwater/db';
+import { requireOrgSession } from '@cronkwaters/auth';
+import { prisma, validateSlug } from '@cronkwaters/db';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 

@@ -1,8 +1,8 @@
 'use server';
 
 import type { LicenseTemplate } from '@prisma/client';
-import { requireOrgSession } from '@cronkwater/auth';
-import { createLicense, listLicenses, getProjectBySlug } from '@cronkwater/db';
+import { requireOrgSession } from '@cronkwaters/auth';
+import { createLicense, listLicenses, getProjectBySlug } from '@cronkwaters/db';
 import { revalidatePath } from 'next/cache';
 
 export interface ActionResult<T> {

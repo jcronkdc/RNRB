@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "CronkWater Base",
+  "display": "CronkWaters Base",
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",

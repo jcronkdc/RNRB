@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label } from '@cronkwater/ui';
+import { Button, Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, Input, Label } from '@cronkwaters/ui';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 
 interface NewSongDialogProps {

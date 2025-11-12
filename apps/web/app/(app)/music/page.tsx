@@ -1,7 +1,7 @@
-import { getOrgSession } from '@cronkwater/auth';
+import { getOrgSession } from '@cronkwaters/auth';
 import { redirect } from 'next/navigation';
 import { MusicPageClient } from './MusicPageClient';
-import { prisma } from '@cronkwater/db';
+import { prisma } from '@cronkwaters/db';
 
 export const dynamic = 'force-dynamic';
 

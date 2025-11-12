@@ -1,5 +1,5 @@
 {
-  "extends": "@cronkwater/config/tsconfig/base",
+  "extends": "@cronkwaters/config/tsconfig/base",
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "dist"

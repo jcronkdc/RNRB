@@ -1,8 +1,8 @@
-# 🎯 CronkWater Platform - Complete Reviewer Summary
+# 🎯 CronkWaters Platform - Complete Reviewer Summary
 
 ## Executive Summary
 
-This document provides a comprehensive overview of the CronkWater music industry platform audit and bug fixes completed in this session. **15 critical bugs were identified and fixed**, along with implementation of missing features including royalty calculations, watermarking, and comprehensive test coverage.
+This document provides a comprehensive overview of the CronkWaters music industry platform audit and bug fixes completed in this session. **15 critical bugs were identified and fixed**, along with implementation of missing features including royalty calculations, watermarking, and comprehensive test coverage.
 
 **Session Date:** November 2024  
 **Audit Type:** Hostile Music Industry Auditor  
@@ -266,7 +266,7 @@ Ensure these are set in `.env`:
 
 ```bash
 # Database
-DATABASE_URL="postgresql://user:password@localhost:5432/songforge"
+DATABASE_URL="postgresql://user:password@localhost:5432/cronkwaters"
 
 # Storage (S3/R2)
 STORAGE_ENDPOINT="https://..."
@@ -280,7 +280,7 @@ STORAGE_PUBLIC_URL="https://..." # Optional
 NEXTAUTH_SECRET="..."
 NEXTAUTH_URL="http://localhost:3000"
 EMAIL_SERVER_URL="smtp://..."
-EMAIL_FROM="noreply@songforge.dev"
+EMAIL_FROM="noreply@cronkwaters.dev"
 
 # Site
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
@@ -290,7 +290,7 @@ NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 
 ```bash
 # Start PostgreSQL (Docker)
-pnpm -F @songforge/db db:up
+pnpm -F @cronkwaters/db db:up
 
 # Run migrations
 pnpm db:migrate

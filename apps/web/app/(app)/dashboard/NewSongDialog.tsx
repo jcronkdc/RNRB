@@ -12,7 +12,7 @@ import {
   Input,
   Label,
   Textarea
-} from '@cronkwater/ui';
+} from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';

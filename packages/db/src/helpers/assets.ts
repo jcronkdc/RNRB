@@ -122,21 +122,37 @@ export async function createAsset(input: CreateAssetInput): Promise<Asset> {
 
 
 /**
- * Update asset
+ * Update asset with org ownership validation
  */
 export async function updateAsset(
   assetId: string,
-  input: UpdateAssetInput
+  input: UpdateAssetInput,
+  orgId?: string
 ): Promise<Asset> {
   const existing = await prisma.asset.findUnique({
-    where: { id: assetId }
+    where: { id: assetId },
+    include: {
+      project: {
+        select: {
+          orgId: true
+        }
+      }
+    }
   });
 
   if (!existing) {
     throw new Error(`Asset with id "${assetId}" not found`);
   }
 
-  // If projectId is being changed, validate new project exists
+  // SECURITY: Verify organization ownership if orgId provided
+  if (orgId) {
+    const assetOrgId = existing.project?.orgId;
+    if (assetOrgId !== orgId) {
+      throw new Error('Unauthorized: Asset does not belong to this organization');
+    }
+  }
+
+  // If projectId is being changed, validate new project exists and belongs to same org
   if (input.projectId !== undefined && input.projectId !== null) {
     const project = await prisma.project.findUnique({
       where: { id: input.projectId }
@@ -144,6 +160,11 @@ export async function updateAsset(
 
     if (!project) {
       throw new Error(`Project with id "${input.projectId}" not found`);
+    }
+
+    // SECURITY: Ensure new project belongs to same organization
+    if (orgId && project.orgId !== orgId) {
+      throw new Error('Unauthorized: Cannot move asset to project in different organization');
     }
   }
 
@@ -223,9 +244,32 @@ export async function listAllAssets(options?: { assetType?: AssetType; limit?: n
 }
 
 /**
- * Delete asset
+ * Delete asset with org ownership validation
  */
-export async function deleteAsset(assetId: string): Promise<void> {
+export async function deleteAsset(assetId: string, orgId?: string): Promise<void> {
+  // SECURITY: Verify organization ownership if orgId provided
+  if (orgId) {
+    const existing = await prisma.asset.findUnique({
+      where: { id: assetId },
+      include: {
+        project: {
+          select: {
+            orgId: true
+          }
+        }
+      }
+    });
+
+    if (!existing) {
+      throw new Error(`Asset with id "${assetId}" not found`);
+    }
+
+    const assetOrgId = existing.project?.orgId;
+    if (assetOrgId !== orgId) {
+      throw new Error('Unauthorized: Asset does not belong to this organization');
+    }
+  }
+
   await prisma.asset.delete({
     where: { id: assetId }
   });

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { createSplitSheet, updateContributor, finalizeSplitSheet } from '@cronkwater/db';
-import { prisma } from '@cronkwater/db';
+import { createSplitSheet, updateContributor, finalizeSplitSheet } from '@cronkwaters/db';
+import { prisma } from '@cronkwaters/db';
 import { randomUUID } from 'crypto';
 
 /**

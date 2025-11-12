@@ -12,7 +12,7 @@ const reactHooksRecommendedRules =
 export default [
   ...baseConfig,
   {
-    name: 'songforge/next',
+    name: 'cronkwaters/next',
     plugins: {
       '@next/next': nextPlugin,
       react: reactPlugin,
@@ -39,14 +39,14 @@ export default [
     }
   },
   {
-    name: 'songforge/next-pages',
+    name: 'cronkwaters/next-pages',
     files: ['**/app/**/*.{ts,tsx}', '**/pages/**/*.{ts,tsx}', '**/*page.{ts,tsx}', '**/*layout.{ts,tsx}', '**/*route.{ts,tsx}', '**/*loading.{ts,tsx}', '**/*error.{ts,tsx}', '**/*not-found.{ts,tsx}', '**/*template.{ts,tsx}', '**/*default.{ts,tsx}'],
     rules: {
       'import/no-default-export': 'off'
     }
   },
   {
-    name: 'songforge/next-config',
+    name: 'cronkwaters/next-config',
     files: ['**/next.config.{ts,js}', '**/tailwind.config.{ts,js}', '**/postcss.config.{mjs,js}', '**/eslint.config.{mjs,js}'],
     rules: {
       'import/no-default-export': 'off'

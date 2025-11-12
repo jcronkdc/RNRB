@@ -15,10 +15,10 @@ import {
   ChevronRight,
   Radio
 } from 'lucide-react';
-import { Button } from '@cronkwater/ui';
-import { Card } from '@cronkwater/ui';
-import { Badge } from '@cronkwater/ui';
-import { Input } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
+import { Card } from '@cronkwaters/ui';
+import { Badge } from '@cronkwaters/ui';
+import { Input } from '@cronkwaters/ui';
 import Link from 'next/link';
 import { WaveformAnimation } from '@/components/animations/WaveformAnimation';
 
@@ -347,7 +347,7 @@ export function DiscoverPageClient() {
         {/* Call to Action */}
         <Card className="mt-12 bg-gradient-to-r from-primary/10 to-purple-500/10 p-8 text-center">
           <Radio className="mx-auto mb-4 h-12 w-12 text-primary" />
-          <h2 className="mb-4 text-3xl font-bold">Join the CronkWater Community</h2>
+          <h2 className="mb-4 text-3xl font-bold">Join the CronkWaters Community</h2>
           <p className="mx-auto mb-6 max-w-2xl text-muted-foreground">
             Are you a musician? Share your music with thousands of fans and connect 
             with fellow artists from around the world.

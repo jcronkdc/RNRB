@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { createAsset } from '@cronkwater/db';
-import { prisma } from '@cronkwater/db';
+import { createAsset } from '@cronkwaters/db';
+import { prisma } from '@cronkwaters/db';
 import { randomUUID } from 'crypto';
 
 /**

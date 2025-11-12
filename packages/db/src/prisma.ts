@@ -1,17 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 
 type GlobalWithPrisma = typeof globalThis & {
-  __songforgePrisma?: PrismaClient;
+  __cronkwatersPrisma?: PrismaClient;
 };
 
 const globalForPrisma = globalThis as GlobalWithPrisma;
 
 const prisma =
-  globalForPrisma.__songforgePrisma ??
+  globalForPrisma.__cronkwatersPrisma ??
   new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.__songforgePrisma = prisma;
+  globalForPrisma.__cronkwatersPrisma = prisma;
 }
 
 if (process.env.NODE_ENV === 'development') {
@@ -26,6 +26,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export { prisma };
+
 
 
 

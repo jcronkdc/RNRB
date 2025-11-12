@@ -15,7 +15,7 @@
   - `app/remix/[roomId]/page.tsx`
 
 ### 2. Missing Dependencies
-- **Issue**: `@songforge/db` not in web app dependencies
+- **Issue**: `@cronkwaters/db` not in web app dependencies
 - **Fixed**: Added to `apps/web/package.json`
 
 ### 3. UI Component Type Mismatches
@@ -83,7 +83,7 @@
 
 ## 🎯 Files Modified
 
-- `apps/web/package.json` - Added @songforge/db dependency
+- `apps/web/package.json` - Added @cronkwaters/db dependency
 - `packages/auth/src/index.ts` - Added exports
 - `packages/ui/src/index.ts` - Added Slider export
 - `packages/ui/src/components/slider.tsx` - Created new component

@@ -15,8 +15,8 @@ import {
   ExternalLink,
   Disc
 } from 'lucide-react';
-import { Button } from '@cronkwater/ui';
-import { Card } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
+import { Card } from '@cronkwaters/ui';
 import type { Org, Project, Tour, Show, Venue, Song } from '@prisma/client';
 
 interface ArtistPageClientProps {

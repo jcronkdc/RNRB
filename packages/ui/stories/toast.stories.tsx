@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, ToastProvider, useToast } from '@cronkwater/ui';
+import { Button, ToastProvider, useToast } from '@cronkwaters/ui';
 
 function DemoToasts() {
   const { notify } = useToast();
@@ -21,7 +21,7 @@ function DemoToasts() {
         onClick={() =>
           notify({
             title: 'Invite sent',
-            description: 'An invitation email was sent to alex@cronkwater.dev.',
+            description: 'An invitation email was sent to alex@cronkwaters.dev.',
             duration: 6000
           })
         }

@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma } from '@cronkwater/db';
+import { prisma } from '@cronkwaters/db';
 import { createServerClient } from '@supabase/ssr';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';

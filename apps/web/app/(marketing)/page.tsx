@@ -1,4 +1,4 @@
-import { Button } from '@cronkwater/ui';
+import { Button } from '@cronkwaters/ui';
 import { ArrowRight, Music, Users, HeartHandshake, Sparkles, Mic, FileText, TrendingUp } from 'lucide-react';
 import { type Metadata } from 'next';
 import Link from 'next/link';
@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Home',
-  description: 'CronkWaters — craft, community, stewardship.'
+  description: 'CronkWaterss — craft, community, stewardship.'
 };
 
 export default function HomePage() {
@@ -153,7 +153,7 @@ export default function HomePage() {
               },
               {
                 title: 'Community',
-                description: 'Built for collaboration, designed for connection. Whether you\'re working solo or with a team, CronkWaters brings people together around the music.'
+                description: 'Built for collaboration, designed for connection. Whether you\'re working solo or with a team, CronkWaterss brings people together around the music.'
               },
               {
                 title: 'Stewardship',
@@ -177,7 +177,7 @@ export default function HomePage() {
             Ready to Build Something Beautiful?
           </h2>
           <p className="mb-10 text-lg text-muted-foreground">
-            Join musicians who are already using CronkWaters to organize their work, collaborate better, and focus on what matters: the music.
+            Join musicians who are already using CronkWaterss to organize their work, collaborate better, and focus on what matters: the music.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild variant="outline" size="lg" className="min-w-[12rem] text-base">

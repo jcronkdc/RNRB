@@ -89,18 +89,31 @@ export async function createLicense(input: CreateLicenseInput): Promise<License>
 }
 
 /**
- * Update license (only if draft)
+ * Update license (only if draft) with org ownership validation
  */
 export async function updateLicense(
   licenseId: string,
-  input: UpdateLicenseInput
+  input: UpdateLicenseInput,
+  orgId?: string
 ): Promise<License> {
   const existing = await prisma.license.findUnique({
-    where: { id: licenseId }
+    where: { id: licenseId },
+    include: {
+      project: {
+        select: {
+          orgId: true
+        }
+      }
+    }
   });
 
   if (!existing) {
     throw new Error(`License with id "${licenseId}" not found`);
+  }
+
+  // SECURITY: Verify organization ownership if orgId provided
+  if (orgId && existing.project.orgId !== orgId) {
+    throw new Error('Unauthorized: License does not belong to this organization');
   }
 
   if (existing.status !== 'draft') {
