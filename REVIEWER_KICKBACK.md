@@ -1225,3 +1225,102 @@ Always trace from the bottom up:
 - Check EVERY initialization that could fail
 - Never throw errors in initialization code
 - Always provide graceful fallbacks
+
+---
+
+## 🌱 **BUILDER RESPONSE: ADDRESSING THE ROOT SYSTEM** 🌱
+
+**Builder:** AI Security Engineer  
+**Status:** 🔧 **BEGINNING ECOSYSTEM RESTORATION**
+
+### **ACKNOWLEDGMENT: The Tree is Sick at its Roots**
+
+You're absolutely right. I've been pruning leaves while ignoring the rotting roots. The dual authentication system is destroying the entire ecosystem.
+
+### **ROOT CAUSE ANALYSIS (From Soil Up):**
+
+**THE SOIL (What I Found):**
+```
+Current Authentication Chaos:
+- NextAuth: packages/auth → Used by tRPC, server actions
+- Supabase: lib/supabase → Used by APIs, some client components
+- Result: Two trees fighting in same hole
+```
+
+### **IMMEDIATE ACTION PLAN: Unified Root System**
+
+**Choice: NextAuth as Primary Root (Option 1)**
+
+Starting from the soil up:
+
+1. **SOIL PREPARATION** (Remove Supabase Auth):
+   - Delete ALL Supabase auth code
+   - Keep Supabase ONLY for storage (if needed)
+   - Update environment documentation
+
+2. **PLANT SINGLE ROOT** (NextAuth Everywhere):
+   - Convert /api/upload-audio to use NextAuth
+   - Convert /api/ai-lyrics to use NextAuth
+   - Remove all supabase.auth.getUser() calls
+
+3. **STRENGTHEN TRUNK** (Middleware Auth):
+   - Add auth enforcement in middleware.ts
+   - Block unauthenticated requests at trunk level
+   - Nutrients (session) flow to ALL branches
+
+4. **HEALTHY BRANCHES** (Consistent Routes):
+   - Every route gets auth from same root
+   - Security features applied uniformly
+   - No competing systems
+
+### **BEGINNING WORK NOW:**
+
+Starting with the soil - removing Supabase authentication entirely...
+
+---
+
+## 🌳 **BUILDER PROGRESS: UPROOTING COMPETING ROOT SYSTEM** 🌳
+
+**Builder:** AI Security Engineer  
+**Status:** 🔨 **IN PROGRESS - REMOVING SUPABASE AUTH**
+
+### **ROOTS REMOVED SO FAR:**
+
+**API Routes (Main Roots):**
+✅ `/api/upload-audio` - Converted to NextAuth
+✅ `/api/ai-lyrics` - Converted to NextAuth  
+✅ `/api/auth/callback` - DELETED (Supabase OAuth callback)
+
+**Middleware (Trunk):**
+✅ Added auth route definitions (public vs protected)
+⚠️ Auth enforcement TODO (need to import auth() from NextAuth)
+
+**Deprecated Files:**
+✅ `lib/supabase/middleware.ts` - DELETED
+
+**Server Actions (Branch Roots):**
+✅ `createSong.ts` - Converted to NextAuth
+⏳ `createLease.ts` - Pending
+⏳ `requestPayout.ts` - Pending
+
+### **WHAT'S HAPPENING:**
+
+1. **Removed Supabase Auth from APIs**
+   - Now using `auth()` from `@cronkwaters/auth`
+   - Supabase only used for storage (as intended)
+
+2. **Cleaning Up Database Calls**
+   - Removed Supabase database operations
+   - Added TODOs for Prisma replacements
+
+3. **Strengthening the Trunk**
+   - Middleware now has route definitions
+   - Ready to add auth enforcement
+
+### **REMAINING ROOTS TO PULL:**
+- Client components using Supabase
+- Dashboard pages with Supabase auth
+- Remix room functionality
+- Project pages with mixed auth
+
+**Next: Converting remaining server actions and client components...**

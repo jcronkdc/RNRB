@@ -1,9 +1,8 @@
 'use server';
 
 import { prisma, createSplitSheet } from '@cronkwaters/db';
-import { createServerClient } from '@supabase/ssr';
+import { auth } from '@cronkwaters/auth';
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 import { z } from 'zod';
 
 const leaseSchema = z.object({
@@ -20,25 +19,7 @@ const leaseSchema = z.object({
     .min(1, 'At least one collaborator required')
 });
 
-async function getSupabaseClient() {
-  const cookieStore = await cookies();
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => cookieStore.getAll(),
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
-          } catch {
-            // ignored on RSC
-          }
-        }
-      }
-    }
-  );
-}
+// Removed getSupabaseClient - using NextAuth for authentication
 
 function parseMetadata(raw: string | null | undefined): Record<string, unknown> {
   if (!raw) return {};
@@ -146,12 +127,10 @@ export async function createLeaseAction(formData: FormData) {
     return { success: false as const, error: 'Collaborator percentages must total 100%.' };
   }
 
-  const supabase = await getSupabaseClient();
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
+  // Use NextAuth for authentication
+  const session = await auth();
 
-  if (!session?.user) {
+  if (!session?.user?.id) {
     return { success: false as const, error: 'You must be signed in to lease a song.' };
   }
 

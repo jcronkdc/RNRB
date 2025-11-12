@@ -5,8 +5,41 @@ import { getCSRFToken } from "./lib/csrf";
 import { checkRateLimit, RateLimitError } from "./lib/rate-limit";
 
 export async function middleware(req: NextRequest) {
-  const response = NextResponse.next();
   const { pathname } = req.nextUrl;
+  
+  // Define public routes that don't require authentication
+  const publicRoutes = [
+    '/',
+    '/auth',
+    '/signin',
+    '/api/auth',
+    '/privacy',
+    '/terms',
+    '/donate',
+    '/discover',
+    '/test-page',
+    '/simple-test',
+    '/minimal-test',
+    '/isolated'
+  ];
+  
+  // Check if route requires authentication
+  const isPublicRoute = publicRoutes.some(route => 
+    pathname === route || pathname.startsWith(route + '/')
+  );
+  
+  // Skip auth check for static files
+  const isStaticFile = pathname.includes('.');
+  
+  if (!isPublicRoute && !isStaticFile) {
+    // TODO: Add NextAuth session check here
+    // const session = await auth();
+    // if (!session) {
+    //   return NextResponse.redirect(new URL('/auth', req.url));
+    // }
+  }
+  
+  const response = NextResponse.next();
 
   // Rate limiting for auth endpoints (only if configured)
   if (pathname.startsWith("/api/auth/") || pathname.startsWith("/auth/")) {

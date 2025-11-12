@@ -1,17 +1,21 @@
 import { NextResponse } from 'next/server';
+import { auth } from '@cronkwaters/auth';
 
 import { createClient } from '../../../lib/supabase/server';
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    // Use NextAuth for authentication
+    const session = await auth();
+    
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
+    
+    // Use Supabase ONLY for storage
+    const supabase = await createClient();
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -22,7 +26,7 @@ export async function POST(request: Request) {
     }
 
     const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+    const fileName = `${user.id || 'anonymous'}/${Date.now()}.${fileExt}`;
     const filePath = `audio/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
@@ -40,25 +44,20 @@ export async function POST(request: Request) {
       data: { publicUrl },
     } = supabase.storage.from('audio').getPublicUrl(filePath);
 
-    // Save asset record
-    const { data: asset, error: assetError } = await supabase
-      .from('assets')
-      .insert({
-        project_id: projectId,
-        name: file.name,
-        storage_path: filePath,
-        mime_type: file.type,
-        bytes: file.size,
-        created_by: user.id,
-      })
-      .select()
-      .single();
+    // Save asset record using Prisma (through NextAuth's unified system)
+    // TODO: Replace with Prisma client call
+    // const asset = await prisma.asset.create({
+    //   data: {
+    //     projectId,
+    //     name: file.name,
+    //     storagePath: filePath,
+    //     mimeType: file.type,
+    //     bytes: file.size,
+    //     createdById: user.id || '',
+    //   }
+    // });
 
-    if (assetError) {
-      console.error('Failed to save asset:', assetError);
-    }
-
-    return NextResponse.json({ url: publicUrl, assetId: asset?.id });
+    return NextResponse.json({ url: publicUrl });
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 });

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
-
-import { createClient } from '../../../lib/supabase/server';
+import { auth } from '@cronkwaters/auth';
 
 function getOpenAIClient() {
   const apiKey = process.env.OPENAI_API_KEY;
@@ -13,14 +12,14 @@ function getOpenAIClient() {
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    // Use NextAuth for authentication
+    const session = await auth();
+    
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
 
     const { prompt, projectId } = await request.json();
 
@@ -66,16 +65,15 @@ Format as JSON:
 
     // Save to database if projectId provided
     if (projectId) {
-      const { error } = await supabase.from('songs').insert({
-        project_id: projectId,
-        title: lyrics.title || 'Untitled',
-        lyrics: JSON.stringify(lyrics),
-        created_by: user.id,
-      });
-
-      if (error) {
-        console.error('Failed to save lyrics:', error);
-      }
+      // TODO: Replace with Prisma client call
+      // await prisma.song.create({
+      //   data: {
+      //     projectId,
+      //     title: lyrics.title || 'Untitled',
+      //     lyrics: JSON.stringify(lyrics),
+      //     createdById: user.id || '',
+      //   }
+      // });
     }
 
     return NextResponse.json({ lyrics });
