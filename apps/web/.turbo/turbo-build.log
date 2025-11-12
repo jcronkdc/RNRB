@@ -7,8 +7,7 @@
      · optimizePackageImports
 
    Creating an optimized production build ...
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (129kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ⚠ Compiled with warnings in 6.0s
+ ⚠ Compiled with warnings in 7.1s
 
 ./lib/csrf.ts
 A Node.js module is loaded ('crypto' at line 1) which is not supported in the Edge Runtime.
@@ -22,12 +21,13 @@ Warning: React version not specified in eslint-plugin-react settings. See https:
 
 Failed to compile.
 
+./app/api/projects/[slug]/export/pdf/route.ts
+3:41  Warning: 'OrgAwareSession' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+
 ./lib/sanitization.ts
 5:12  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-8:3  Error: Expected catch() or return  promise/catch-or-return
 8:24  Error: Each then() should return a value or throw  promise/always-return
-21:64  Error: Unnecessary escape character: \-.  no-useless-escape
-29:62  Error: Unnecessary escape character: \-.  no-useless-escape
+20:40  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
 
 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
  ELIFECYCLE  Command failed with exit code 1.

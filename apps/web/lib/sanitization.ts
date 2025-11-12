@@ -2,11 +2,13 @@ import DOMPurify from 'dompurify';
 
 // Configure DOMPurify for different contexts
 // Import JSDOM for server-side usage
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let JSDOM: any;
 if (typeof window === 'undefined') {
   // Dynamic import for server-side only
   import('jsdom').then(mod => {
     JSDOM = mod.JSDOM;
+    return undefined;
   }).catch(() => {
     // Ignore error if jsdom not available
   });
@@ -17,6 +19,7 @@ export const sanitizeHtml = (dirty: string): string => {
     // Server-side sanitization using JSDOM
     const dom = new JSDOM('');
     const window = dom.window as unknown as Window;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const purify = DOMPurify(window as any);
     return purify.sanitize(dirty, {
       ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br', 'ul', 'ol', 'li'],

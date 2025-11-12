@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getOrgSessionFromSession, type OrgAwareSession } from '@cronkwaters/auth';
+import { getOrgSessionFromSession } from '@cronkwaters/auth';
 import { getProjectBySlug } from '@cronkwaters/db';
 
 export async function GET(
