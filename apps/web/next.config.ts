@@ -2,7 +2,8 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  output: 'standalone', // For Docker deployment
+  // Remove standalone output for Vercel deployment
+  // output: 'standalone', // For Docker deployment
   
   // Image optimization
   images: {
