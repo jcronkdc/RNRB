@@ -153,3 +153,4 @@ test.describe('CRITICAL SECURITY VULNERABILITIES', () => {
     expect(envLeak?.NEXTAUTH_SECRET, 'Auth secret should not be exposed to client').toBeUndefined();
   });
 });
+

@@ -46,6 +46,26 @@ export { Slider, type SliderProps } from './components/slider';
 export { Switch, type SwitchProps } from './components/switch';
 export { Progress } from './components/progress';
 export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton
+} from './components/select';
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent
+} from './components/tabs';
+export { RadioGroup, RadioGroupItem } from './components/radio-group';
+export { Checkbox } from './components/checkbox';
+export {
   brandColors,
   radii,
   fonts,

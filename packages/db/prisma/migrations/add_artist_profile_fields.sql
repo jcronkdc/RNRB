@@ -85,3 +85,6 @@ ALTER TABLE "PressRelease" ADD CONSTRAINT "PressRelease_orgId_fkey" FOREIGN KEY 
 ALTER TABLE "Award" ADD CONSTRAINT "Award_orgId_fkey" FOREIGN KEY ("orgId") REFERENCES "Org"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 
+
+
+

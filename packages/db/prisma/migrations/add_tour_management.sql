@@ -189,3 +189,6 @@ ALTER TABLE "FanEngagement" ADD CONSTRAINT "FanEngagement_showId_fkey" FOREIGN K
 ALTER TABLE "FanEngagement" ADD CONSTRAINT "FanEngagement_tourId_fkey" FOREIGN KEY ("tourId") REFERENCES "Tour"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 
+
+
+

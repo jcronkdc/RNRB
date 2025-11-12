@@ -40,14 +40,13 @@ export async function processDonation(input: ProcessDonationInput) {
     // Create donation record
     const donation = await prisma.donation.create({
       data: {
-        amount,
-        frequency,
-        anonymous,
+        amount: amount / 100, // Convert from cents to dollars
+        donorAnonymous: anonymous,
         message,
         status: 'completed', // In real app, would start as 'pending'
-        userId: user?.id,
         donorEmail: email,
         donorName: name,
+        processedAt: new Date(),
       }
     });
 
@@ -81,7 +80,7 @@ export async function getDonationStats() {
     const recentDonations = await prisma.donation.findMany({
       where: { 
         status: 'completed',
-        anonymous: false 
+        donorAnonymous: false 
       },
       orderBy: { createdAt: 'desc' },
       take: 6,
@@ -99,13 +98,13 @@ export async function getDonationStats() {
     const daysLeft = Math.max(0, Math.ceil((campaignEndDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
 
     return {
-      raised: (totalRaised._sum.amount || 0) / 100, // Convert to dollars
+      raised: totalRaised._sum.amount ? Number(totalRaised._sum.amount) / 100 : 0, // Convert to dollars
       goal: campaignGoal / 100,
       donors: donorCount.length,
       daysLeft,
       recentDonors: recentDonations.map(d => ({
         name: d.donorName || 'Anonymous',
-        amount: (d.amount / 100).toFixed(0),
+        amount: (Number(d.amount) / 100).toFixed(0),
         timeAgo: getTimeAgo(d.createdAt),
         message: d.message
       }))

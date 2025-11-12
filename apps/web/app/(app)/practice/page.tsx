@@ -13,3 +13,6 @@ export default async function PracticePage() {
   return <PracticePageClient />;
 }
 
+
+
+

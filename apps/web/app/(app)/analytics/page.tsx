@@ -21,7 +21,7 @@ async function getAnalytics(orgId: string) {
     prisma.project.count({ where: { orgId } }),
     prisma.song.count({ where: { project: { orgId } } }),
     prisma.asset.count({ where: { project: { orgId } } }),
-    prisma.membership.count({ where: { organizationId: orgId } }),
+    prisma.membership.count({ where: { orgId } }),
     prisma.song.findMany({
       where: { project: { orgId } },
       orderBy: { createdAt: 'desc' },
@@ -39,7 +39,7 @@ async function getAnalytics(orgId: string) {
     prisma.asset.count({
       where: {
         project: { orgId },
-        uploadedAt: {
+        createdAt: {
           gte: new Date(new Date().setDate(new Date().getDate() - 30))
         }
       }
@@ -68,14 +68,14 @@ export default async function AnalyticsPage() {
   // Get user's active organization
   const membership = await prisma.membership.findFirst({
     where: { userId: session.user.id },
-    include: { organization: true }
+    include: { org: true }
   });
 
   if (!membership) {
     redirect('/onboarding/organization');
   }
 
-  const analytics = await getAnalytics(membership.organizationId);
+  const analytics = await getAnalytics(membership.orgId);
   const growthRate = analytics.songCount > 0 ? Math.round((analytics.monthlyUploads / analytics.songCount) * 100) : 0;
 
   return (

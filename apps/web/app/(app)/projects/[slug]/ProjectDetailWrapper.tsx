@@ -45,7 +45,8 @@ export function ProjectDetailWrapper({
 
   const handleCreateSong = async (song: { title: string; key?: string; tempo?: number }) => {
     startTransition(async () => {
-      const result = await createSongAction(projectSlug, {
+      const result = await createSongAction({
+        projectSlug: projectSlug,
         title: song.title,
         key: song.key,
         tempo: song.tempo
@@ -67,7 +68,8 @@ export function ProjectDetailWrapper({
     contributors: Array<{ name: string; pct: number; role?: string }>;
   }) => {
     startTransition(async () => {
-      const result = await createSplitSheetAction(projectSlug, {
+      const result = await createSplitSheetAction({
+        projectSlug: projectSlug,
         title: split.title,
         contributors: split.contributors
       });

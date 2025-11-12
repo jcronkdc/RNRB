@@ -49,7 +49,7 @@ export function SplitDetailsDialog({
                   ? 'success' 
                   : split.status === 'pending' 
                   ? 'warning' 
-                  : 'secondary'
+                  : 'subtle'
               }
             >
               {split.status === 'confirmed' && <CheckCircle2 className="w-3 h-3 mr-1" />}

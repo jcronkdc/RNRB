@@ -30,6 +30,7 @@ export async function createOrganizationAction(input: CreateOrganizationInput) {
       data: {
         name,
         slug,
+        type: 'studio', // Default to studio type
         description,
         memberships: {
           create: {

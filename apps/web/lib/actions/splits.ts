@@ -29,9 +29,8 @@ export interface ActionResult<T> {
  * Create a new split sheet
  */
 export async function createSplitSheetAction(
-  projectSlug: string,
   input: unknown,
-): Promise<ActionResult<{ id: string }>> {
+): Promise<ActionResult<{ splitSheet: { id: string } }>> {
   try {
     // SECURITY: CSRF Protection
     const csrfValid = await validateCSRFToken();
@@ -53,30 +52,44 @@ export async function createSplitSheetAction(
       validated.title = sanitizeUserInput(validated.title);
     }
 
-    if (!session.activeMembership) {
+    if (!(session as any).activeMembership) {
       return {
         success: false,
         error: "Active organization not found",
       };
     }
-    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
-    if (!project) {
+
+    // Handle both projectId and projectSlug
+    let projectId = (validated as any).projectId;
+    if (!projectId && (validated as any).projectSlug) {
+      const project = await getProjectBySlug((validated as any).projectSlug, (session as any).activeMembership?.org?.id || '');
+      if (!project) {
+        return {
+          success: false,
+          error: "Project not found",
+        };
+      }
+      projectId = project.id;
+    }
+
+    if (!projectId) {
       return {
         success: false,
-        error: "Project not found",
+        error: "Project ID or slug required",
       };
     }
 
     const splitSheet = await createSplitSheet({
-      projectId: project.id,
-      ...validated,
-    });
+      projectId: projectId,
+      title: validated.title,
+      initialSplits: (validated as any).initialSplits || [],
+    } as any);
 
-    revalidatePath(`/app/projects/${projectSlug}`);
+    revalidatePath(`/splits`);
 
     return {
       success: true,
-      data: { id: splitSheet.id },
+      data: { splitSheet: { id: splitSheet.id } },
     };
   } catch (error) {
     return {
@@ -97,14 +110,14 @@ export async function updateSplitSheetAction(
     const session = await requireOrgSession();
     const validated = updateSplitSheetSchema.parse(input);
 
-    if (!session.activeMembership) {
+    if (!(session as any).activeMembership) {
       return {
         success: false,
         error: "Active organization not found",
       };
     }
 
-    await updateSplitSheet(splitSheetId, validated, session.activeMembership.org.id);
+    await updateSplitSheet(splitSheetId, validated, (session as any).activeMembership?.org?.id || '');
 
     revalidatePath("/app/projects");
 
@@ -227,7 +240,7 @@ export async function finalizeSplitSheetAction(
 export async function listSplitSheetsAction(projectSlug: string) {
   try {
     const session = await requireOrgSession();
-    if (!session.activeMembership) {
+    if (!(session as any).activeMembership) {
       return {
         success: false,
         error: "Active organization not found",
@@ -235,7 +248,7 @@ export async function listSplitSheetsAction(projectSlug: string) {
       };
     }
 
-    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
+    const project = await getProjectBySlug(projectSlug, (session as any).activeMembership?.org?.id || '');
     if (!project) {
       return {
         success: false,

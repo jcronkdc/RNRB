@@ -31,7 +31,8 @@ const nextConfig: NextConfig = {
 
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['@cronkwaters/ui', 'lucide-react']
+    // Temporarily disabled due to new component exports
+    // optimizePackageImports: ['@cronkwaters/ui', 'lucide-react']
   },
 
   // Security-focused webpack configuration

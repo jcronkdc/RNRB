@@ -96,7 +96,7 @@ async function getSplitsData(orgId: string) {
 
   return {
     splitsBySong: Object.values(splitsBySong),
-    totalRevenue: transactions._sum.amount || 0,
+    totalRevenue: transactions._sum.amount ? Number(transactions._sum.amount) : 0,
     transactionCount: transactions._count
   };
 }
@@ -108,11 +108,17 @@ export default async function SplitsPage() {
     redirect("/auth");
   }
 
-  if (!session.activeMembership?.orgId) {
-    redirect("/organizations");
+  // Get user's active organization
+  const membership = await prisma.membership.findFirst({
+    where: { userId: session.user.id },
+    include: { org: true }
+  });
+
+  if (!membership) {
+    redirect('/onboarding/organization');
   }
 
-  const { splitsBySong, totalRevenue, transactionCount } = await getSplitsData(session.activeMembership.orgId);
+  const { splitsBySong, totalRevenue, transactionCount } = await getSplitsData(membership.orgId);
 
   return (
     <div className="space-y-8">
@@ -229,7 +235,7 @@ export default async function SplitsPage() {
                             ? 'success' 
                             : songSplit.status === 'pending' 
                             ? 'warning' 
-                            : 'secondary'
+                            : 'subtle'
                         }
                       >
                         {songSplit.status === 'confirmed' && <CheckCircle2 className="w-3 h-3 mr-1" />}

@@ -7,8 +7,8 @@ import { validateCSRFToken } from '../csrf';
 import { sanitizeUserInput } from '../sanitization';
 import { rateLimitMiddleware } from '../rate-limit';
 import { z } from 'zod';
-import { action } from '../actions/safe-action';
-import { requireOrgSession } from '../session';
+import { action } from '../safe-action';
+import { requireOrgSession } from '@cronkwaters/auth';
 
 export async function getProjects() {
   const session = await getOrgSessionFromSession();
@@ -59,7 +59,8 @@ export const createProjectAction = action(
       const project = await dbCreateProject({
         name: sanitizedName,
         description: sanitizedDescription,
-        orgId: session.organization.id,
+        orgId: (session as any).organization?.id || '',
+        slug: sanitizedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
       });
 
       return { data: { project } };

@@ -48,13 +48,13 @@ async function getOrgAssets(orgId: string) {
 
   // Group assets by type
   const assetsByType = {
-    audio: assets.filter(a => a.fileType?.startsWith('audio/')),
-    lyrics: assets.filter(a => a.fileType === 'text/plain' || a.name.endsWith('.txt')),
-    images: assets.filter(a => a.fileType?.startsWith('image/')),
+    audio: assets.filter(a => a.mimeType?.startsWith('audio/')),
+    lyrics: assets.filter(a => a.mimeType === 'text/plain' || a.name.endsWith('.txt')),
+    images: assets.filter(a => a.mimeType?.startsWith('image/')),
     other: assets.filter(a => 
-      !a.fileType?.startsWith('audio/') && 
-      !a.fileType?.startsWith('image/') && 
-      a.fileType !== 'text/plain' && 
+      !a.mimeType?.startsWith('audio/') && 
+      !a.mimeType?.startsWith('image/') && 
+      a.mimeType !== 'text/plain' && 
       !a.name.endsWith('.txt')
     )
   };
@@ -72,14 +72,14 @@ function formatFileSize(bytes: number): string {
   return gb.toFixed(1) + ' GB';
 }
 
-function getFileIcon(fileType?: string, fileName?: string) {
-  if (fileType?.startsWith('audio/') || fileName?.match(/\.(mp3|wav|ogg|m4a)$/i)) {
+function getFileIcon(mimeType?: string, fileName?: string) {
+  if (mimeType?.startsWith('audio/') || fileName?.match(/\.(mp3|wav|ogg|m4a)$/i)) {
     return FileAudio;
   }
-  if (fileType?.startsWith('image/') || fileName?.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+  if (mimeType?.startsWith('image/') || fileName?.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
     return Image;
   }
-  if (fileType === 'text/plain' || fileName?.match(/\.(txt|lyrics)$/i)) {
+  if (mimeType === 'text/plain' || fileName?.match(/\.(txt|lyrics)$/i)) {
     return FileText;
   }
   return Music;
@@ -195,7 +195,7 @@ function AssetGrid({ assets }: { assets: any[] }) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {assets.map((asset) => {
-        const Icon = getFileIcon(asset.fileType, asset.name);
+        const Icon = getFileIcon(asset.mimeType, asset.name);
         
         return (
           <Card key={asset.id} className="group hover:shadow-md transition-shadow">
@@ -214,7 +214,7 @@ function AssetGrid({ assets }: { assets: any[] }) {
                     </CardDescription>
                   </div>
                 </div>
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="subtle" className="text-xs">
                   v{asset.version || 1}
                 </Badge>
               </div>

@@ -152,7 +152,7 @@ export default async function SessionsPage() {
                   {format(date, 'EEE')}
                   <span className="text-muted-foreground ml-1">{format(date, 'd')}</span>
                   {isToday(date) && (
-                    <Badge variant="secondary" className="ml-2 text-xs">Today</Badge>
+                    <Badge variant="subtle" className="ml-2 text-xs">Today</Badge>
                   )}
                 </div>
                 <div className="space-y-1">
@@ -252,7 +252,7 @@ export default async function SessionsPage() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Badge variant={session.status === 'confirmed' ? 'default' : 'secondary'}>
+                      <Badge variant={session.status === 'confirmed' ? 'success' : 'subtle'}>
                         {session.status}
                       </Badge>
                       <Button size="sm" variant="outline">

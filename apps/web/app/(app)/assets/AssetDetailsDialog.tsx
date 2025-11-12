@@ -159,7 +159,7 @@ export function AssetDetailsDialog({
               <h4 className="font-medium mb-2">Tags</h4>
               <div className="flex flex-wrap gap-2">
                 {asset.tags.map((tag: string) => (
-                  <Badge key={tag} variant="secondary">
+                  <Badge key={tag} variant="subtle">
                     {tag}
                   </Badge>
                 ))}

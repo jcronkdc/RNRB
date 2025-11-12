@@ -68,9 +68,8 @@ export async function generateShareLink(input: GenerateShareLinkInput) {
     const shareLink = await prisma.assetShare.create({
       data: {
         assetId,
-        shareToken,
-        isPublic,
-        allowDownload,
+        shareCode: shareToken,
+        accessType: allowDownload ? 'download' : 'view',
         expiresAt,
         createdById: session.user.id
       }

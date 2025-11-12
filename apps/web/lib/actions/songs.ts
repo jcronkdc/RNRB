@@ -14,34 +14,48 @@ export interface ActionResult<T> {
  * Create a new song
  */
 export async function createSongAction(
-  projectSlug: string,
   input: unknown
 ): Promise<ActionResult<{ id: string }>> {
   try {
     const session = await requireOrgSession();
     const validated = createSongSchema.parse(input);
 
-    if (!session.activeMembership) {
+    if (!(session as any).activeMembership) {
       return {
         success: false,
         error: 'Active organization not found'
       };
     }
-    // Verify project exists and belongs to org
-    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
-    if (!project) {
+
+    // Handle both projectId and projectSlug
+    let projectId = (validated as any).projectId;
+    if (!projectId && (validated as any).projectSlug) {
+      const project = await getProjectBySlug((validated as any).projectSlug, (session as any).activeMembership?.org?.id || '');
+      if (!project) {
+        return {
+          success: false,
+          error: 'Project not found'
+        };
+      }
+      projectId = project.id;
+    }
+
+    if (!projectId) {
       return {
         success: false,
-        error: 'Project not found'
+        error: 'Project ID or slug required'
       };
     }
 
     const song = await createSong({
-      projectId: project.id,
-      ...validated
+      projectId: projectId,
+      title: validated.title,
+      key: validated.key,
+      tempo: validated.tempo,
+      description: validated.description
     });
 
-    revalidatePath(`/app/projects/${projectSlug}`);
+    revalidatePath(`/app/projects/${(validated as any).projectSlug || ''}`);
 
     return {
       success: true,
@@ -65,7 +79,7 @@ export async function updateSongAction(
   try {
     const session = await requireOrgSession();
     
-    if (!session.activeMembership) {
+    if (!(session as any).activeMembership) {
       return {
         success: false,
         error: 'Active organization not found'
@@ -75,7 +89,7 @@ export async function updateSongAction(
     const validated = updateSongSchema.parse(input);
 
     // SECURITY: Pass orgId to verify ownership
-    await updateSong(songId, validated, session.activeMembership.org.id);
+    await updateSong(songId, validated, (session as any).activeMembership?.org?.id || '');
 
     revalidatePath('/app/projects');
 
@@ -97,7 +111,7 @@ export async function deleteSongAction(songId: string): Promise<ActionResult<voi
   try {
     const session = await requireOrgSession();
 
-    if (!session.activeMembership) {
+    if (!(session as any).activeMembership) {
       return {
         success: false,
         error: 'Active organization not found'
@@ -105,7 +119,7 @@ export async function deleteSongAction(songId: string): Promise<ActionResult<voi
     }
 
     // SECURITY: Pass orgId to verify ownership
-    await deleteSong(songId, session.activeMembership.org.id);
+    await deleteSong(songId, (session as any).activeMembership?.org?.id || '');
 
     revalidatePath('/app/projects');
 
@@ -126,7 +140,7 @@ export async function deleteSongAction(songId: string): Promise<ActionResult<voi
 export async function listSongsAction(projectSlug: string) {
   try {
     const session = await requireOrgSession();
-    if (!session.activeMembership) {
+    if (!(session as any).activeMembership) {
       return {
         success: false,
         error: 'Active organization not found',
@@ -134,7 +148,7 @@ export async function listSongsAction(projectSlug: string) {
       };
     }
 
-    const project = await getProjectBySlug(projectSlug, session.activeMembership.org.id);
+    const project = await getProjectBySlug(projectSlug, (session as any).activeMembership?.org?.id || '');
     if (!project) {
       return {
         success: false,

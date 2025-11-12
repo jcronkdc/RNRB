@@ -154,7 +154,7 @@ export async function updateSplitAction(splitId: string, percentage: number) {
       include: {
         song: {
           include: {
-            splits: true
+            songSplits: true
           }
         }
       }
@@ -165,7 +165,7 @@ export async function updateSplitAction(splitId: string, percentage: number) {
     }
 
     // Calculate new total
-    const otherSplits = split.song.splits.filter(s => s.id !== splitId);
+    const otherSplits = split.song.songSplits.filter(s => s.id !== splitId);
     const newTotal = otherSplits.reduce((sum, s) => sum + s.percentage, 0) + percentage;
 
     if (newTotal > 100) {

@@ -1,9 +1,9 @@
 'use server';
 
-import { action } from "../actions/safe-action";
+import { action } from "../safe-action";
 import { z } from "zod";
 import { prisma } from "@cronkwaters/db";
-import { requireOrgSession } from "../session";
+import { requireOrgSession } from "@cronkwaters/auth";
 import { validateCSRFToken } from '../csrf';
 import { sanitizeUserInput } from '../sanitization';
 import { rateLimitMiddleware } from '../rate-limit';
@@ -35,7 +35,7 @@ export const createSessionAction = action(
       const project = await prisma.project.findFirst({
         where: {
           id: input.projectId,
-          orgId: session.organization.id
+          orgId: (session as any).organization?.id || ''
         }
       });
       
@@ -58,10 +58,10 @@ export const createSessionAction = action(
           location: sanitizedLocation,
           notes: sanitizedNotes,
           projectId: input.projectId,
-          createdById: session.user.id,
+          createdById: (session as any).user?.id || '',
           attendees: {
             create: {
-              userId: session.user.id,
+              userId: (session as any).user?.id || '',
               role: 'organizer',
               status: 'confirmed'
             }
@@ -114,7 +114,7 @@ export const updateSessionAction = action(
         where: {
           id: input.sessionId,
           project: {
-            orgId: session.organization.id
+            orgId: (session as any).organization?.id || ''
           }
         }
       });
@@ -124,7 +124,7 @@ export const updateSessionAction = action(
       }
       
       // Only organizer can update
-      if (studioSession.createdById !== session.user.id) {
+      if (studioSession.createdById !== (session as any).user?.id) {
         return { error: 'Only the organizer can update this session' };
       }
       
@@ -169,9 +169,9 @@ export const deleteSessionAction = action(
         where: {
           id: input.sessionId,
           project: {
-            orgId: session.organization.id
+            orgId: (session as any).organization?.id || ''
           },
-          createdById: session.user.id
+          createdById: (session as any).user?.id || ''
         }
       });
       

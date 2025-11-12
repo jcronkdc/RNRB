@@ -29,6 +29,12 @@ model User {
   receivedMessages Message[] @relation("ReceivedMessages")
   connections     Connection[] @relation("UserConnections")
   connectedTo     Connection[] @relation("ConnectedToUser")
+  uploadedAssets  Asset[]
+  studioSessions  StudioSession[]
+  sessionAttendances SessionAttendee[]
+  orgInvites      OrgInvite[]
+  assetShares     AssetShare[]
+  songSplits      SongSplit[]
 
   @@index([email])
 }
@@ -67,6 +73,7 @@ model Org {
   bandMembers BandMember[]
   pressReleases PressRelease[]
   awards      Award[]
+  orgInvites  OrgInvite[]
 
   @@index([slug])
   @@index([type])
@@ -78,6 +85,7 @@ model Membership {
   userId    String
   orgId     String
   role      OrgRole
+  status    String    @default("active") // active, inactive, suspended
   user      User @relation(fields: [userId], references: [id])
   org       Org  @relation(fields: [orgId], references: [id])
   createdAt DateTime @default(now())
@@ -117,6 +125,8 @@ model Project {
   licenses    License[]
   events      Event[]
   shows       Show[]
+  studioSessions StudioSession[]
+  transactions Transaction[]
 
   @@index([orgId])
   @@index([slug])
@@ -149,6 +159,8 @@ model Song {
   updatedAt   DateTime @updatedAt
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   setlistItems SetlistItem[]
+  songSplits   SongSplit[]
+  transactions Transaction[]
 
   @@index([projectId])
   @@index([iswc])
@@ -159,7 +171,10 @@ model Asset {
   projectId     String?
   name          String
   mimeType      String
+  fileType      String?     // Additional file type field
   bytes         BigInt      // File size in bytes
+  size          Int?        // Size in bytes as Int
+  version       Int         @default(1)
   storageKey    String      @unique // S3/R2 key
   storageBucket String?
   checksum      String      // SHA-256
@@ -169,14 +184,19 @@ model Asset {
   height        Int?        // For images/video
   metadata      Json?       // Additional extracted metadata
   assetType     AssetType
+  uploadedAt    DateTime    @default(now()) // Upload timestamp
+  uploadedById  String?     // User who uploaded
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   project       Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  uploadedBy    User?       @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  assetShares   AssetShare[]
 
   @@index([projectId])
   @@index([assetType])
   @@index([storageKey])
   @@index([checksum])
+  @@index([uploadedById])
 }
 
 enum AssetType {
@@ -815,4 +835,147 @@ model Connection {
   @@index([userId])
   @@index([connectedUserId])
   @@index([status])
+}
+
+// Studio Session Management
+model StudioSession {
+  id              String      @id @default(cuid())
+  projectId       String
+  title           String
+  type            String      // writing, recording, meeting, rehearsal
+  status          String      @default("scheduled") // scheduled, in_progress, completed, cancelled
+  startTime       DateTime
+  endTime         DateTime
+  location        String?
+  notes           String?
+  createdById     String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  project         Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy       User        @relation(fields: [createdById], references: [id])
+  attendees       SessionAttendee[]
+
+  @@index([projectId])
+  @@index([startTime])
+  @@index([createdById])
+}
+
+model SessionAttendee {
+  id              String          @id @default(cuid())
+  sessionId       String
+  userId          String
+  role            String          @default("participant") // organizer, participant
+  status          String          @default("invited") // invited, confirmed, declined
+  createdAt       DateTime        @default(now())
+  
+  session         StudioSession   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user            User            @relation(fields: [userId], references: [id])
+
+  @@unique([sessionId, userId])
+  @@index([sessionId])
+  @@index([userId])
+}
+
+// Organization Invites
+model OrgInvite {
+  id              String      @id @default(cuid())
+  orgId           String
+  code            String      @unique
+  maxUses         Int?
+  uses            Int         @default(0)
+  expiresAt       DateTime
+  createdById     String
+  createdAt       DateTime    @default(now())
+  
+  org             Org         @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  createdBy       User        @relation(fields: [createdById], references: [id])
+
+  @@index([orgId])
+  @@index([code])
+  @@index([expiresAt])
+}
+
+// Asset Sharing
+model AssetShare {
+  id              String      @id @default(cuid())
+  assetId         String
+  shareCode       String      @unique
+  expiresAt       DateTime?
+  password        String?
+  maxDownloads    Int?
+  downloads       Int         @default(0)
+  accessType      String      @default("view") // view, download
+  createdById     String
+  createdAt       DateTime    @default(now())
+  
+  asset           Asset       @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  createdBy       User        @relation(fields: [createdById], references: [id])
+
+  @@index([assetId])
+  @@index([shareCode])
+  @@index([expiresAt])
+}
+
+// Song Splits for Revenue
+model SongSplit {
+  id              String      @id @default(cuid())
+  songId          String
+  userId          String
+  percentage      Float       // 0-100
+  role            String      // writer, producer, performer
+  confirmed       Boolean     @default(false)
+  confirmedAt     DateTime?
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  song            Song        @relation(fields: [songId], references: [id], onDelete: Cascade)
+  user            User        @relation(fields: [userId], references: [id])
+
+  @@unique([songId, userId])
+  @@index([songId])
+  @@index([userId])
+}
+
+// Financial Transactions
+model Transaction {
+  id              String              @id @default(cuid())
+  songId          String?
+  projectId       String?
+  amount          Decimal             @db.Decimal(10, 2)
+  currency        String              @default("USD")
+  type            TransactionType
+  status          TransactionStatus   @default(pending)
+  description     String?
+  metadata        Json?
+  processedAt     DateTime?
+  createdAt       DateTime            @default(now())
+  
+  song            Song?               @relation(fields: [songId], references: [id], onDelete: SetNull)
+  project         Project?            @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([songId])
+  @@index([projectId])
+  @@index([type])
+  @@index([status])
+}
+
+enum TransactionType {
+  streaming_royalty
+  performance_royalty
+  mechanical_royalty
+  sync_license
+  merchandise
+  ticket_sales
+  donation
+  other
+}
+
+enum TransactionStatus {
+  pending
+  processing
+  completed
+  failed
+  cancelled
 }

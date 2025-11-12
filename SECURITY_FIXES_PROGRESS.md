@@ -78,3 +78,4 @@
 - SQL queries are safe (using Prisma's parameterized queries)
 - Need to continue with authorization and file upload security reviews
 
+
