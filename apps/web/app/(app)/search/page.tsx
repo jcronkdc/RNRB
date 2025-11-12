@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { SearchResults } from './SearchResults';
+
+export const dynamic = 'force-dynamic';
 import PageHeader from '../../../components/app/PageHeader';
 import { CardGridSkeleton } from '../../../components/app/Skeletons';
 
