@@ -118,34 +118,6 @@ export default function HomePage() {
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000" />
       </div>
 
-      {/* Navigation */}
-      <nav className="relative z-10 px-6 py-6 flex items-center justify-between max-w-7xl mx-auto">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
-            <Music className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-            CronkWaters
-          </span>
-        </div>
-        <div className="flex items-center gap-6">
-          <Link href="/vision" className="text-muted-foreground hover:text-foreground transition-colors">
-            Our Vision
-          </Link>
-          <Link href="/membership" className="text-muted-foreground hover:text-foreground transition-colors">
-            Membership
-          </Link>
-          <Link href="/community" className="text-muted-foreground hover:text-foreground transition-colors">
-            Community
-          </Link>
-          <Link 
-            href="/auth" 
-            className="px-5 py-2.5 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-xl font-medium hover:shadow-lg transition-all"
-          >
-            Get Started
-          </Link>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section className="relative z-10 px-6 pt-20 pb-32 max-w-7xl mx-auto">
@@ -165,17 +137,17 @@ export default function HomePage() {
           
           <div className="flex items-center justify-center gap-4">
             <Link 
-              href="/auth"
+              href="#features"
               className="group px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all flex items-center gap-2"
             >
-              Start Creating
+              Explore Features
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
-              href="/tours"
+              href="/vision"
               className="px-8 py-4 border-2 border-border hover:border-brand-primary bg-surface/50 backdrop-blur rounded-2xl font-semibold text-lg transition-all"
             >
-              Take a Tour
+              Learn Our Story
             </Link>
           </div>
 
@@ -283,7 +255,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Grid */}
-      <section className="relative z-10 px-6 py-24 max-w-7xl mx-auto">
+      <section id="features" className="relative z-10 px-6 py-24 max-w-7xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -406,15 +378,23 @@ export default function HomePage() {
             </h2>
             <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
               Join thousands of creators who are building the future of music together.
-              Start your journey today with our free demo.
+              Explore all our features - no sign-in required.
             </p>
-            <Link 
-              href="/auth"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-brand-primary rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all"
-            >
-              Start Free Demo
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+            <div className="flex items-center justify-center gap-4">
+              <Link 
+                href="/membership"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-brand-primary rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all"
+              >
+                View Membership Options
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link 
+                href="/vision"
+                className="px-8 py-4 bg-white/20 text-white border-2 border-white/30 rounded-2xl font-semibold text-lg hover:bg-white/30 transition-all"
+              >
+                Learn More
+              </Link>
+            </div>
           </div>
         </motion.div>
       </section>
@@ -528,19 +508,6 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="relative z-10 px-6 py-12 border-t border-border/50">
-        <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 CronkWaters. Built with passion for music creators.</p>
-          <div className="mt-4 flex items-center justify-center gap-6">
-            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-            <Link href="/learn" className="hover:text-foreground transition-colors">Documentation</Link>
-            <Link href="/community" className="hover:text-foreground transition-colors">Support</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -18,11 +18,10 @@ type NavLink = {
 
 const LINKS: NavLink[] = [
   { label: 'Home', href: '/' },
-  { label: 'What We Make', href: '#what-we-make' },
-  { label: 'Values', href: '#values' },
-  { label: 'Guide', href: '/guide', ariaLabel: 'Complete guide to using CronkWaters' },
-  { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Donate to CronkWaters' },
-  { label: 'Sign in', href: '/auth', icon: LogIn, ariaLabel: 'Sign in to CronkWaters' }
+  { label: 'Our Vision', href: '/vision', ariaLabel: 'Learn about CronkWaters vision and founders' },
+  { label: 'Membership', href: '/membership', ariaLabel: 'View membership options' },
+  { label: 'Features', href: '#features', ariaLabel: 'Explore CronkWaters features' },
+  { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Support CronkWaters mission' }
 ];
 
 const motionConfig = {
@@ -148,7 +147,7 @@ function Wordmark({ className }: { className?: string }) {
       aria-hidden="true"
       focusable="false"
     >
-      <title>Song Forge wordmark</title>
+      <title>CronkWaters wordmark</title>
       <g fill="currentColor" transform="translate(0 2)" fillRule="evenodd">
         <path d="M8 0H2C0.9 0 0 0.9 0 2v2h4c1.1 0 2 .9 2 2v1c0 1.1-.9 2-2 2H0v3c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2v-2H6c-1.1 0-2-.9-2-2V8c0-1.1.9-2 2-2h4V2c0-1.1-.9-2-2-2Z" />
         <path d="M0 0h8v12H0V0Zm2 2v8h4V2H2Z" transform="translate(16)" />
