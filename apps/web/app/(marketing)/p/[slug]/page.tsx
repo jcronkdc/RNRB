@@ -1,86 +1,96 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-import { Button } from '@cronkwaters/ui';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { auth } from "@cronkwaters/auth";
+import { prisma } from "@cronkwaters/db";
+import { Button } from "@cronkwaters/ui";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-import CreditList from '../../../../components/marketing/CreditList';
-
-const MOCK_PROJECTS = {
-  aurora: {
-    name: 'Aurora Lines',
-    tagline: 'A shimmering electro-pop journey inspired by arctic light.',
-    coverImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
-    credits: [
-      { name: 'CronkWaters Collective', role: 'Writers', pct: 60 },
-      { name: 'Mae Rivera', role: 'Producer', pct: 40 },
-      { name: 'Atlas Mastering', role: 'Mastering Engineer' }
-    ]
-  },
-  midnight: {
-    name: 'Midnight Demo Sessions',
-    tagline: 'Late-night sketches, raw vocals, and ambient experiments.',
-    coverImage: 'https://images.unsplash.com/photo-1498059542312-f47dc8e52a47?auto=format&fit=crop&w=1200&q=80',
-    credits: [
-      { name: 'Nocturne', role: 'Writer/Producer', pct: 70 },
-      { name: 'Celia Harper', role: 'Vocalist', pct: 30 }
-    ]
-  },
-  publicreel: {
-    name: 'Public Reel 2025',
-    tagline: 'A curated sampler of live takes and community collaborations.',
-    coverImage: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1200&q=80',
-    credits: [
-      { name: 'CronkWaters House Band', role: 'Performers' },
-      { name: 'Open Scores Initiative', role: 'Arrangements' }
-    ]
-  }
-} as const;
-
-type ProjectSlug = keyof typeof MOCK_PROJECTS;
+import { RequestAccessButton } from "./RequestAccessButton";
+import CreditList from "../../../../components/marketing/CreditList";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const url = `/p/${slug}/opengraph-image`;
-  const project = MOCK_PROJECTS[slug as keyof typeof MOCK_PROJECTS];
+
+  // Fetch real project data
+  const project = await prisma.project.findFirst({
+    where: {
+      slug,
+      visibility: "public",
+    },
+  });
+
   return {
     openGraph: {
-      images: [url],
-      title: project?.name || 'CronkWaterss Project',
-      description: project?.tagline || 'A CronkWaterss release.'
-    }
+      images: [`/p/${slug}/opengraph-image`],
+      title: project?.name || "CronkWaters Project",
+      description: project?.description || "A CronkWaters release.",
+    },
   };
 }
 
+// eslint-disable-next-line import/no-default-export
 export default async function PublicProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = MOCK_PROJECTS[slug as ProjectSlug];
+  const session = await auth();
+
+  // Fetch real project with songs data
+  const project = await prisma.project.findFirst({
+    where: {
+      slug,
+      visibility: "public",
+    },
+    include: {
+      org: true,
+    },
+  });
 
   if (!project) {
     notFound();
   }
 
+  // For now, show project org as main credit
+  // In the future, we could fetch song splits separately if needed
+  const credits = [
+    {
+      name: project.org.name,
+      role: "Organization",
+      pct: 100,
+    },
+  ];
+
   return (
     <main id="main-content" className="bg-background">
       <section className="motion-safe:animate-fade-in mx-auto flex min-h-[70vh] w-full max-w-5xl flex-col gap-12 px-6 py-20">
         <header className="grid gap-8 md:grid-cols-[280px,1fr] md:items-center">
-          <div className="relative h-64 w-full overflow-hidden rounded-3xl border border-border/60 bg-surface shadow-soft">
+          <div className="border-border/60 bg-surface shadow-soft relative h-64 w-full overflow-hidden rounded-3xl border">
             <div
               role="img"
-              aria-label={`${project.name} cover art placeholder`}
+              aria-label={`${project.name} cover art`}
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${project.coverImage})` }}
+              style={{
+                backgroundImage: project.coverImage
+                  ? `url(${project.coverImage})`
+                  : "linear-gradient(to br, rgb(var(--brand-primary) / 0.1), rgb(var(--brand-secondary) / 0.1))",
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-background/60 to-transparent" aria-hidden="true" />
+            <div
+              className="from-background/60 absolute inset-0 bg-gradient-to-br to-transparent"
+              aria-hidden="true"
+            />
           </div>
           <div className="space-y-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.32em] text-brand-muted-foreground">CronkWaters Project</p>
-              <h1 className="mt-3 text-4xl font-semibold text-brand-foreground">{project.name}</h1>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">{project.tagline}</p>
+              <p className="text-brand-muted-foreground text-xs uppercase tracking-[0.32em]">
+                {project.org.name} Project
+              </p>
+              <h1 className="text-brand-foreground mt-3 text-4xl font-semibold">{project.name}</h1>
+              <p className="text-muted-foreground mt-4 text-base leading-relaxed">
+                {project.description || "A collaborative music project."}
+              </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Button type="button">Request Access</Button>
+              <RequestAccessButton projectId={project.id} userId={session?.user?.id} />
               <Button variant="ghost" asChild>
                 <Link href="/">Back to home</Link>
               </Button>
@@ -88,25 +98,30 @@ export default async function PublicProjectPage({ params }: { params: Promise<{ 
           </div>
         </header>
 
-        <section aria-labelledby="project-credits" className="rounded-3xl border border-border/60 bg-surface/80 px-6 py-10 shadow-soft">
+        <section
+          aria-labelledby="project-credits"
+          className="border-border/60 bg-surface/80 shadow-soft rounded-3xl border px-6 py-10"
+        >
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 id="project-credits" className="text-2xl font-semibold text-brand-foreground">
+              <h2 id="project-credits" className="text-brand-foreground text-2xl font-semibold">
                 Credits
               </h2>
-              <p className="text-sm text-muted-foreground">Key collaborators across writing, production, and performance.</p>
+              <p className="text-muted-foreground text-sm">
+                Key collaborators across writing, production, and performance.
+              </p>
             </div>
           </div>
           <div className="mt-6">
-            <CreditList items={project.credits} />
+            <CreditList items={credits} />
           </div>
         </section>
 
-        <section className="rounded-3xl border border-border/60 bg-surface/80 px-6 py-10 shadow-soft">
+        <section className="border-border/60 bg-surface/80 shadow-soft rounded-3xl border px-6 py-10">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-2xl font-semibold text-brand-foreground">Support this project</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="text-brand-foreground text-2xl font-semibold">Support this project</h2>
+              <p className="text-muted-foreground text-sm">
                 Get exclusive access to studio sessions, early demos, and behind-the-scenes content.
               </p>
             </div>

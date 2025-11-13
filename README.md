@@ -92,6 +92,7 @@ pnpm db:seed
 See `packages/db/prisma/schema.prisma` for complete schema documentation.
 
 Key models:
+
 - `User`: User accounts with PRO affiliation
 - `Org`: Organizations (foundation/studio/band)
 - `Project`: Song projects with visibility controls
@@ -163,6 +164,7 @@ docker run -p 3000:3000 --env-file .env cronkwaters
 ## 🎨 Design System
 
 The application uses a comprehensive design token system with three themes:
+
 - **Light**: Clean, bright interface
 - **Dark**: Low-light optimized
 - **Warm**: Warm studio aesthetic
@@ -200,3 +202,5 @@ All components respect `prefers-reduced-motion` and are fully accessible.
 ## 🙏 Acknowledgments
 
 Built for musicians, by musicians.
+
+# Force rebuild Wed Nov 12 19:42:56 CST 2025
