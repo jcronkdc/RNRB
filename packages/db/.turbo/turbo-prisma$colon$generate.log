@@ -6,9 +6,9 @@
 [2mEnvironment variables loaded from .env[22m
 [2mPrisma schema loaded from prisma/schema.prisma[22m
 
-✔ Generated [1mPrisma Client[22m (v5.22.0)[2m to ./../../node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/@prisma/client[22m in 173ms
+✔ Generated [1mPrisma Client[22m (v5.22.0)[2m to ./../../node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/@prisma/client[22m in 185ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
-Tip: Want to react to database changes in your app as they happen? Discover how with Pulse: https://pris.ly/tip-1-pulse
+Tip: Easily identify and fix slow SQL queries in your app. Optimize helps you enhance your visibility: https://pris.ly/--optimize
 
