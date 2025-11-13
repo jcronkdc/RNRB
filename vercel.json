@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pnpm build --filter=@cronkwaters/web",
+  "installCommand": "corepack enable && pnpm install",
+  "framework": "nextjs",
+  "outputDirectory": "apps/web/.next",
+  "rootDirectory": "./"
+}
