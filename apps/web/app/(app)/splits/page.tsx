@@ -419,10 +419,49 @@ export default async function SplitsPage() {
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => {
+                          // Generate CSV for this song's splits
+                          const headers = ['Song', 'Writer', 'Email', 'Role', 'Percentage', 'Status'];
+                          const rows = songSplit.splits.map((s: any) => [
+                            songSplit.song.title,
+                            s.user.name || 'N/A',
+                            s.user.email,
+                            s.role,
+                            `${s.percentage}%`,
+                            s.confirmed ? 'Confirmed' : 'Pending'
+                          ]);
+                          
+                          const csvContent = [
+                            headers.join(','),
+                            ...rows.map((row: string[]) => row.map((cell: string) => `"${cell}"`).join(','))
+                          ].join('\n');
+                          
+                          const blob = new Blob([csvContent], { type: 'text/csv' });
+                          const url = window.URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `${songSplit.song.title.replace(/[^a-z0-9]/gi, '_')}_splits.csv`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                          window.URL.revokeObjectURL(url);
+                        }}
+                      >
                         Export CSV
                       </Button>
-                      <Button size="sm" variant="outline">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => {
+                          const projectSlug = songSplit.song.project?.slug;
+                          if (projectSlug) {
+                            window.open(`/api/projects/${projectSlug}/export/pdf?songId=${songSplit.song.id}`, '_blank');
+                          }
+                        }}
+                      >
                         Export PDF
                       </Button>
                     </div>

@@ -20,13 +20,51 @@ export function SplitDetailsDialog({
   split 
 }: { 
   children: React.ReactNode;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   split: any;
 }) {
   const [open, setOpen] = useState(false);
 
-  const handleExport = (format: 'csv' | 'pdf') => {
-    // TODO: Implement export functionality
-    console.log(`Exporting split as ${format}`);
+  const handleExport = (exportFormat: 'csv' | 'pdf') => {
+    if (exportFormat === 'csv') {
+      // Generate CSV content
+      const headers = ['Writer Name', 'Email', 'Role', 'Percentage', 'Status', 'Confirmed Date'];
+      const rows = split.splits.map((s: any) => [
+        s.user.name || 'N/A',
+        s.user.email,
+        s.role,
+        `${s.percentage}%`,
+        s.confirmed ? 'Confirmed' : 'Pending',
+        s.confirmed ? format(new Date(s.updatedAt), 'yyyy-MM-dd') : 'N/A'
+      ]);
+      
+      const csvContent = [
+        `Song: ${split.song.title}`,
+        `Project: ${split.song.project?.name || 'N/A'}`,
+        `Total Writers: ${split.splits.length}`,
+        `Status: ${split.status}`,
+        '',
+        headers.join(','),
+        ...rows.map((row: string[]) => row.join(','))
+      ].join('\n');
+      
+      // Download CSV
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${split.song.title.replace(/[^a-z0-9]/gi, '_')}_splits.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } else {
+      // For PDF, redirect to the project export endpoint
+      const projectSlug = split.song.project?.slug;
+      if (projectSlug) {
+        window.open(`/api/projects/${projectSlug}/export/pdf?songId=${split.song.id}`, '_blank');
+      }
+    }
   };
 
   return (
