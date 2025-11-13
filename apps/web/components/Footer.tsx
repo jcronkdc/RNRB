@@ -27,6 +27,14 @@ export function Footer() {
                 Terms
               </Link>
             </li>
+            <li>
+              <Link
+                href="/guide"
+                className="transition-colors hover:text-brand-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                Guide
+              </Link>
+            </li>
             <li className="flex items-center gap-2 text-xs uppercase tracking-[0.32em] text-muted-foreground/80">
               <span aria-hidden="true">Social</span>
               <span className="h-1 w-1 rounded-full bg-muted-foreground/60" aria-hidden="true" />

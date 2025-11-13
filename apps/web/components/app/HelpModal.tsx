@@ -180,6 +180,9 @@ export default function HelpModal({ open: controlledOpen, onOpenChange }: HelpMo
               <Link href="/app/projects">Projects</Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
+              <Link href="/guide">Guide</Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
               <Link href="/donate">Donate</Link>
             </Button>
           </div>

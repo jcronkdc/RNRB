@@ -20,6 +20,7 @@ const LINKS: NavLink[] = [
   { label: 'Home', href: '/' },
   { label: 'What We Make', href: '#what-we-make' },
   { label: 'Values', href: '#values' },
+  { label: 'Guide', href: '/guide', ariaLabel: 'Complete guide to using CronkWaters' },
   { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Donate to CronkWaters' },
   { label: 'Sign in', href: '/auth', icon: LogIn, ariaLabel: 'Sign in to CronkWaters' }
 ];
