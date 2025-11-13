@@ -1,6 +1,0 @@
-{
-  "framework": "nextjs",
-  "buildCommand": "pnpm build --filter=@cronkwaters/web",
-  "installCommand": "pnpm install --prod=false",
-  "outputDirectory": "apps/web/.next"
-}
