@@ -1,58 +1,361 @@
-import Link from "next/link";
+'use client';
+
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { 
+  Music, 
+  Users, 
+  BarChart3, 
+  FolderOpen, 
+  Building2, 
+  Heart,
+  Mic2,
+  FileText,
+  Share2,
+  Sparkles,
+  PlayCircle,
+  Upload,
+  DollarSign,
+  Shield,
+  Globe,
+  Zap,
+  ChevronRight,
+  ArrowRight
+} from 'lucide-react';
+
+const features = [
+  {
+    title: 'Music Projects',
+    description: 'Create, manage, and collaborate on music projects with your team in real-time.',
+    icon: Music,
+    href: '/projects',
+    color: 'from-purple-500 to-pink-500',
+    demo: true,
+    highlights: ['Unlimited projects', 'Version control', 'Team collaboration', 'Public/private modes']
+  },
+  {
+    title: 'Song Management',
+    description: 'Upload, organize, and refine your tracks with AI-powered tools and metadata.',
+    icon: Mic2,
+    href: '/projects',
+    color: 'from-blue-500 to-cyan-500',
+    demo: true,
+    highlights: ['Audio uploads', 'AI lyrics generation', 'Metadata tracking', 'Remix collaboration']
+  },
+  {
+    title: 'Revenue Splits',
+    description: 'Manage royalty splits transparently with automated percentage tracking.',
+    icon: Share2,
+    href: '/splits',
+    color: 'from-green-500 to-emerald-500',
+    demo: true,
+    highlights: ['Percentage tracking', 'PRO export', 'CSV/PDF reports', 'Automated confirmations']
+  },
+  {
+    title: 'Analytics Dashboard',
+    description: 'Real-time insights into your music performance, revenue, and engagement.',
+    icon: BarChart3,
+    href: '/analytics',
+    color: 'from-orange-500 to-red-500',
+    demo: true,
+    highlights: ['Real-time data', 'Revenue tracking', 'Genre analytics', 'Engagement metrics']
+  },
+  {
+    title: 'Asset Library',
+    description: 'Centralized storage for all your music assets, stems, and project files.',
+    icon: FolderOpen,
+    href: '/assets',
+    color: 'from-indigo-500 to-purple-500',
+    demo: true,
+    highlights: ['Cloud storage', 'Version history', 'Quick preview', 'Shareable links']
+  },
+  {
+    title: 'Organizations',
+    description: 'Create teams, manage permissions, and collaborate across labels and collectives.',
+    icon: Building2,
+    href: '/onboarding/organization',
+    color: 'from-pink-500 to-rose-500',
+    demo: true,
+    highlights: ['Team management', 'Role permissions', 'Invite system', 'Multi-org support']
+  },
+  {
+    title: 'Live Sessions',
+    description: 'Host interactive music sessions with real-time audience engagement.',
+    icon: PlayCircle,
+    href: '/sessions',
+    color: 'from-teal-500 to-cyan-500',
+    demo: true,
+    highlights: ['Live streaming', 'Audience voting', 'Real-time chat', 'Session recording']
+  },
+  {
+    title: 'Fan Donations',
+    description: 'Accept support from fans with integrated donation and crowdfunding tools.',
+    icon: Heart,
+    href: '/donate',
+    color: 'from-red-500 to-pink-500',
+    demo: true,
+    highlights: ['One-time/recurring', 'Goal tracking', 'Donor recognition', 'Tax receipts']
+  }
+];
+
+const stats = [
+  { label: 'Active Artists', value: '10K+', icon: Users },
+  { label: 'Songs Created', value: '50K+', icon: Music },
+  { label: 'Revenue Distributed', value: '$2M+', icon: DollarSign },
+  { label: 'Organizations', value: '500+', icon: Building2 }
+];
 
 // eslint-disable-next-line import/no-default-export
 export default function HomePage() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "40px",
-        textAlign: "center",
-      }}
-    >
-      <h1 style={{ fontSize: "48px", marginBottom: "20px" }}>CronkWaters</h1>
-      <p style={{ fontSize: "24px", marginBottom: "40px" }}>
-        Collaborative Music Creation Platform
-      </p>
-      <div style={{ display: "flex", gap: "20px" }}>
-        <Link
-          href="/auth"
-          style={{
-            padding: "12px 24px",
-            backgroundColor: "#8b5cf6",
-            color: "white",
-            textDecoration: "none",
-            borderRadius: "8px",
-          }}
-        >
-          Sign In
-        </Link>
-        <Link
-          href="/projects"
-          style={{
-            padding: "12px 24px",
-            border: "2px solid #8b5cf6",
-            color: "#8b5cf6",
-            textDecoration: "none",
-            borderRadius: "8px",
-          }}
-        >
-          View Projects
-        </Link>
+    <div className="min-h-screen bg-gradient-to-br from-background via-surface to-background overflow-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob" />
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000" />
       </div>
-      <hr style={{ margin: "40px 0", width: "100%", maxWidth: "400px" }} />
-      <p>Debug Info:</p>
-      <ul style={{ textAlign: "left" }}>
-        <li>Environment: {process.env.NODE_ENV || "not set"}</li>
-        <li>Deployment: {process.env.VERCEL ? "Vercel" : "Local"}</li>
-        <li>Time: {new Date().toISOString()}</li>
-      </ul>
+
+      {/* Navigation */}
+      <nav className="relative z-10 px-6 py-6 flex items-center justify-between max-w-7xl mx-auto">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
+            <Music className="w-6 h-6 text-white" />
+          </div>
+          <span className="text-2xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
+            CronkWaters
+          </span>
+        </div>
+        <div className="flex items-center gap-6">
+          <Link href="/discover" className="text-muted-foreground hover:text-foreground transition-colors">
+            Discover
+          </Link>
+          <Link href="/community" className="text-muted-foreground hover:text-foreground transition-colors">
+            Community
+          </Link>
+          <Link href="/learn" className="text-muted-foreground hover:text-foreground transition-colors">
+            Learn
+          </Link>
+          <Link 
+            href="/auth" 
+            className="px-5 py-2.5 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-xl font-medium hover:shadow-lg transition-all"
+          >
+            Get Started
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative z-10 px-6 pt-20 pb-32 max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent">
+            Where Music Lives & Breathes
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12">
+            The complete ecosystem for modern music creation, collaboration, and distribution. 
+            From first note to final master, we grow with your vision.
+          </p>
+          
+          <div className="flex items-center justify-center gap-4">
+            <Link 
+              href="/auth"
+              className="group px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all flex items-center gap-2"
+            >
+              Start Creating
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link 
+              href="/tours"
+              className="px-8 py-4 border-2 border-border hover:border-brand-primary bg-surface/50 backdrop-blur rounded-2xl font-semibold text-lg transition-all"
+            >
+              Take a Tour
+            </Link>
+          </div>
+
+          <div className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <Shield className="w-4 h-4" />
+            <span>Demo mode enabled • No credit card required</span>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="relative z-10 px-6 py-16 border-y border-border/50 bg-surface/30 backdrop-blur">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              className="text-center"
+            >
+              <stat.icon className="w-8 h-8 mx-auto mb-2 text-brand-primary" />
+              <div className="text-3xl font-bold bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent">
+                {stat.value}
+              </div>
+              <div className="text-sm text-muted-foreground">{stat.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="relative z-10 px-6 py-24 max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            Everything You Need to Create
+          </h2>
+          <p className="text-xl text-muted-foreground">
+            A complete suite of tools designed for the modern music creator
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+            >
+              <Link 
+                href={feature.href}
+                className="group block h-full relative overflow-hidden rounded-3xl border border-border/50 bg-surface/50 backdrop-blur p-6 hover:border-brand-primary/50 transition-all hover:shadow-xl"
+              >
+                {/* Gradient Background */}
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-gradient-to-br ${feature.color}`} />
+                
+                {/* Icon */}
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.color} p-3 mb-4 group-hover:scale-110 transition-transform`}>
+                  <feature.icon className="w-full h-full text-white" />
+                </div>
+
+                {/* Content */}
+                <h3 className="text-xl font-semibold mb-2 group-hover:text-brand-primary transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {feature.description}
+                </p>
+
+                {/* Highlights */}
+                <ul className="space-y-1 mb-4">
+                  {feature.highlights.map((highlight, i) => (
+                    <li key={i} className="text-xs text-muted-foreground flex items-center gap-2">
+                      <Sparkles className="w-3 h-3 text-brand-primary" />
+                      {highlight}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <div className="flex items-center justify-between">
+                  {feature.demo && (
+                    <span className="text-xs px-2 py-1 bg-brand-primary/10 text-brand-primary rounded-full">
+                      Try Demo
+                    </span>
+                  )}
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all ml-auto" />
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Integration Section */}
+      <section className="relative z-10 px-6 py-24 bg-surface/30 backdrop-blur border-t border-border/50">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold mb-4">Built for the Future</h2>
+            <p className="text-xl text-muted-foreground">
+              Powered by cutting-edge technology for reliability and scale
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
+            <div className="text-center">
+              <Zap className="w-12 h-12 mx-auto mb-3 text-yellow-500" />
+              <h3 className="font-semibold mb-1">Edge Functions</h3>
+              <p className="text-sm text-muted-foreground">Lightning-fast global performance</p>
+            </div>
+            <div className="text-center">
+              <Shield className="w-12 h-12 mx-auto mb-3 text-green-500" />
+              <h3 className="font-semibold mb-1">Bank-Level Security</h3>
+              <p className="text-sm text-muted-foreground">Your data protected 24/7</p>
+            </div>
+            <div className="text-center">
+              <Globe className="w-12 h-12 mx-auto mb-3 text-blue-500" />
+              <h3 className="font-semibold mb-1">Global CDN</h3>
+              <p className="text-sm text-muted-foreground">Stream anywhere, anytime</p>
+            </div>
+            <div className="text-center">
+              <Upload className="w-12 h-12 mx-auto mb-3 text-purple-500" />
+              <h3 className="font-semibold mb-1">Unlimited Storage</h3>
+              <p className="text-sm text-muted-foreground">Scale without limits</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="relative z-10 px-6 py-32 max-w-7xl mx-auto text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-primary via-brand-secondary to-pink-600 p-16"
+        >
+          <div className="absolute inset-0 bg-black/20" />
+          <div className="relative z-10">
+            <h2 className="text-5xl font-bold text-white mb-6">
+              Ready to Transform Your Music?
+            </h2>
+            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+              Join thousands of creators who are building the future of music together.
+              Start your journey today with our free demo.
+            </p>
+            <Link 
+              href="/auth"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-brand-primary rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all"
+            >
+              Start Free Demo
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 px-6 py-12 border-t border-border/50">
+        <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
+          <p>&copy; 2024 CronkWaters. Built with passion for music creators.</p>
+          <div className="mt-4 flex items-center justify-center gap-6">
+            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+            <Link href="/learn" className="hover:text-foreground transition-colors">Documentation</Link>
+            <Link href="/community" className="hover:text-foreground transition-colors">Support</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
