@@ -9,5 +9,5 @@ dist
 turbo
 .husky/_
 .DS_Store
-.turbo/cache/
+.turbo/
 .vercel
