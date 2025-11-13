@@ -1,0 +1,6 @@
+{
+  "installCommand": "NODE_ENV=development pnpm install --frozen-lockfile",
+  "buildCommand": "cd apps/web && NODE_ENV=production pnpm build",
+  "outputDirectory": "apps/web/.next",
+  "framework": null
+}
