@@ -2,6 +2,7 @@
 
 import { prisma } from "@cronkwaters/db";
 import { revalidatePath } from "next/cache";
+import { processPayment } from "@/lib/stripe";
 
 interface ProcessDonationInput {
   amount: number; // in cents
@@ -15,11 +16,38 @@ interface ProcessDonationInput {
 }
 
 export async function processDonation(input: ProcessDonationInput) {
-  const { amount, frequency, email, name, anonymous, message, userId } = input;
+  const { amount, frequency, email, name, anonymous, message, userId, coverFees } = input;
 
   try {
-    // In a real implementation, this would integrate with Stripe/PayPal
-    // For now, we'll simulate a successful payment and record it
+    // Calculate final amount including fees if user opted to cover them
+    let finalAmount = amount;
+    if (coverFees) {
+      // Stripe fee is 2.9% + 30¢ per transaction
+      // Calculate fee and add to donation amount
+      const stripeFee = Math.ceil(amount * 0.029 + 30);
+      finalAmount = amount + stripeFee;
+    }
+
+    // Process payment through Stripe
+    const paymentResult = await processPayment(
+      finalAmount,
+      'usd',
+      `CronkWaters Foundation Donation${frequency === 'monthly' ? ' (Monthly)' : ''}`,
+      {
+        email,
+        name,
+        frequency,
+        originalAmount: amount.toString(),
+        coveredFees: coverFees.toString()
+      }
+    );
+
+    if (!paymentResult.success) {
+      return { 
+        success: false as const, 
+        error: paymentResult.error || "Payment processing failed" 
+      };
+    }
 
     // Create or find user
     let user = userId ? await prisma.user.findUnique({ where: { id: userId } }) : null;
@@ -37,25 +65,36 @@ export async function processDonation(input: ProcessDonationInput) {
       }
     }
 
-    // Create donation record
+    // Create donation record with payment info
     const donation = await prisma.donation.create({
       data: {
-        amount: amount / 100, // Convert from cents to dollars
+        amount: finalAmount / 100, // Convert from cents to dollars
         donorAnonymous: anonymous,
         message,
-        status: 'completed', // In real app, would start as 'pending'
+        status: 'completed',
         donorEmail: email,
         donorName: name,
         processedAt: new Date(),
       }
     });
 
-    // TODO: Process payment with payment provider
-    // TODO: Send confirmation email
-    // TODO: Set up recurring payment if monthly
+    // Send confirmation email (implementation can be added later)
+    // For now, the email confirmation is simulated
+    console.log(`Donation confirmation email would be sent to ${email}`);
+
+    // Set up recurring payment if monthly
+    if (frequency === 'monthly') {
+      // This would create a subscription in Stripe
+      // For now, we'll just log it
+      console.log(`Monthly subscription would be set up for ${email}`);
+    }
 
     revalidatePath('/donate');
-    return { success: true as const, donationId: donation.id };
+    return { 
+      success: true as const, 
+      donationId: donation.id,
+      paymentId: paymentResult.paymentId 
+    };
   } catch (error) {
     console.error('Error processing donation:', error);
     return { success: false as const, error: "Failed to process donation" };

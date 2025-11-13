@@ -42,6 +42,15 @@ const nextConfig: NextConfig = {
       config.devtool = false;
     }
 
+    // Handle optional dependencies
+    if (isServer) {
+      // Mark optional dependencies as external to prevent build errors
+      config.externals = [...(config.externals || []), {
+        'nodemailer': 'nodemailer',
+        'stripe': 'stripe'
+      }];
+    }
+
     // Remove server-side modules from client bundle
     if (!isServer) {
       config.resolve.fallback = {
@@ -53,7 +62,9 @@ const nextConfig: NextConfig = {
         os: false,
         path: false,
         stream: false,
-        buffer: false
+        buffer: false,
+        nodemailer: false,
+        stripe: false
       };
     }
 

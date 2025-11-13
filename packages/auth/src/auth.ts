@@ -5,18 +5,9 @@ import type { JWT } from 'next-auth/jwt';
 import AppleProvider from 'next-auth/providers/apple';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 
 import { env } from './env';
-
-function getTransporter() {
-  try {
-    return nodemailer.createTransport(env.EMAIL_SERVER_URL);
-  } catch {
-    return null;
-  }
-}
 
 function getAuthConfig(): NextAuthOptions {
   return {
@@ -27,19 +18,8 @@ function getAuthConfig(): NextAuthOptions {
     providers: [
       ...(env.EMAIL_FROM && env.EMAIL_SERVER_URL ? [
         EmailProvider({
-          from: env.EMAIL_FROM,
-          sendVerificationRequest: async ({ identifier, url }) => {
-            const transporter = getTransporter();
-            if (transporter) {
-              await transporter.sendMail({
-                to: identifier,
-                from: env.EMAIL_FROM,
-                subject: 'Sign in to CronkWaters',
-                text: `Sign in to CronkWaters by clicking the following link: ${url}`,
-                html: `<p>Sign in to CronkWaters by clicking the link below:</p><p><a href="${url}">${url}</a></p>`
-              });
-            }
-          }
+          server: env.EMAIL_SERVER_URL,
+          from: env.EMAIL_FROM
         })
       ] : []),
       GoogleProvider({

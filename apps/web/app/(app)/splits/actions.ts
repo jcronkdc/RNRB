@@ -3,6 +3,7 @@
 import { auth } from "@cronkwaters/auth";
 import { prisma } from "@cronkwaters/db";
 import { revalidatePath } from "next/cache";
+import { sendSplitNotification } from "@/lib/email";
 
 interface CreateSplitInput {
   songId: string;
@@ -21,7 +22,7 @@ export async function createSplitAction(input: CreateSplitInput) {
     return { success: false as const, error: "Not authenticated" };
   }
 
-  const { songId, contributors, notes } = input;
+  const { songId, contributors } = input;
 
   // Validate percentages total 100
   const totalPercentage = contributors.reduce((sum, c) => sum + c.percentage, 0);
@@ -79,9 +80,38 @@ export async function createSplitAction(input: CreateSplitInput) {
       });
     });
 
-    await Promise.all(splitPromises);
+    const splits = await Promise.all(splitPromises);
 
-    // TODO: Send email notifications to contributors
+    // Send email notifications to contributors
+    const emailPromises = splits.map(async (split) => {
+      // Skip if it's the creator
+      if (split.userId === session.user.id) return;
+
+      // Find the contributor data
+      const user = await prisma.user.findUnique({
+        where: { id: split.userId }
+      });
+
+      if (user?.email) {
+        // Find the original contributor input for this user
+        const contributorInput = contributors.find(c => c.email === user.email);
+        
+        if (contributorInput) {
+          await sendSplitNotification(
+            user.email,
+            user.name || user.email,
+            song.title,
+            contributorInput.percentage,
+            contributorInput.role
+          );
+        }
+      }
+    });
+
+    // Send emails in parallel but don't wait for them
+    Promise.all(emailPromises).catch(error => {
+      console.error('Failed to send some split notifications:', error);
+    });
 
     revalidatePath('/splits');
     return { success: true as const };
