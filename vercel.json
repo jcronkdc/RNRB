@@ -1,6 +1,0 @@
-{
-  "buildCommand": "pnpm build --filter=@cronkwaters/web",
-  "installCommand": "corepack enable && pnpm install --prod=false",
-  "outputDirectory": "apps/web/.next",
-  "framework": null
-}
