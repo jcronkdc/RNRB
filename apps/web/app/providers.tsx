@@ -1,20 +1,13 @@
-'use client';
+"use client";
 
-import { TrpcProvider } from '@cronkwaters/trpc';
-import { ThemeProvider, ToastProvider } from '@cronkwaters/ui';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
-import type { ReactNode } from 'react';
+import { TrpcProvider } from "@cronkwaters/trpc";
+import { ThemeProvider, ToastProvider } from "@cronkwaters/ui";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 
-import { MotionProvider } from '../components/motion-provider';
+import { MotionProvider } from "../components/motion-provider";
 
-type ThemeMode = 'light' | 'dark';
+type ThemeMode = "light" | "dark" | "warm";
 
 interface ThemeContextValue {
   theme: ThemeMode;
@@ -22,14 +15,14 @@ interface ThemeContextValue {
   toggleTheme: () => void;
 }
 
-const STORAGE_KEY = 'cronkwaters-theme';
+const STORAGE_KEY = "cronkwaters-theme";
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within Providers');
+    throw new Error("useTheme must be used within Providers");
   }
   return context;
 }
@@ -40,42 +33,42 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   const [theme, setThemeState] = useState<ThemeMode>(() => {
-    if (typeof window === 'undefined') {
-      return 'light';
+    if (typeof window === "undefined") {
+      return "light";
     }
 
-    const attr = document.documentElement.getAttribute('data-theme');
-    if (attr === 'dark' || attr === 'light') {
-      return attr;
+    const attr = document.documentElement.getAttribute("data-theme");
+    if (attr === "dark" || attr === "light" || attr === "warm") {
+      return attr as ThemeMode;
     }
 
     const stored = window.localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
-    if (stored === 'dark' || stored === 'light') {
+    if (stored === "dark" || stored === "light" || stored === "warm") {
       return stored;
     }
 
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return;
     }
 
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
     const stored = window.localStorage.getItem(STORAGE_KEY) as ThemeMode | null;
     if (!stored) {
-      setThemeState(media.matches ? 'dark' : 'light');
+      setThemeState(media.matches ? "dark" : "light");
     }
 
     const handleChange = (event: MediaQueryListEvent) => {
       if (!window.localStorage.getItem(STORAGE_KEY)) {
-        setThemeState(event.matches ? 'dark' : 'light');
+        setThemeState(event.matches ? "dark" : "light");
       }
     };
 
-    media.addEventListener('change', handleChange);
-    return () => media.removeEventListener('change', handleChange);
+    media.addEventListener("change", handleChange);
+    return () => media.removeEventListener("change", handleChange);
   }, []);
 
   const setTheme = useCallback((value: ThemeMode) => {
@@ -85,7 +78,7 @@ export function Providers({ children }: ProvidersProps) {
 
   const toggleTheme = useCallback(() => {
     setThemeState((prev) => {
-      const next = prev === 'dark' ? 'light' : 'dark';
+      const next = prev === "dark" ? "light" : prev === "light" ? "warm" : "dark";
       window.localStorage.setItem(STORAGE_KEY, next);
       return next;
     });
@@ -95,18 +88,18 @@ export function Providers({ children }: ProvidersProps) {
     () => ({
       theme,
       setTheme,
-      toggleTheme
+      toggleTheme,
     }),
-    [theme, setTheme, toggleTheme]
+    [theme, setTheme, toggleTheme],
   );
 
   return (
     <ThemeContext.Provider value={value}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme === "warm" ? "light" : theme}>
         <MotionProvider>
-    <TrpcProvider>
-      <ToastProvider>{children}</ToastProvider>
-    </TrpcProvider>
+          <TrpcProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </TrpcProvider>
         </MotionProvider>
       </ThemeProvider>
     </ThemeContext.Provider>

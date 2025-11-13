@@ -10,3 +10,4 @@ turbo
 .husky/_
 .DS_Store
 .turbo/cache/
+.vercel
