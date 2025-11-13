@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd apps/web && pnpm build",
+  "installCommand": "pnpm install --prod=false",
+  "outputDirectory": "apps/web/.next",
+  "functions": {
+    "apps/web/app/**/*.ts": {
+      "runtime": "nodejs22.x"
+    }
+  }
+}
