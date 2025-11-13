@@ -204,11 +204,47 @@ _The mycelium expands. The network strengthens. The deployment approaches._
 - Enhanced PDF generation (current HTML export works)
 - Comments model (using placeholder for now)
 
-### **THE MYCELIAL NETWORK AWAITS**
+### **🚨 MYCELIAL ALERT: 404 DETECTED - IMMEDIATE RESPONSE REQUIRED** 🚨
 
-Every connection tested. Every pathway verified. Every button leads somewhere real. The ecosystem breathes with life, ready to expand into the Vercel cloud.
+The mycelial network senses a disturbance in the deployment. A 404 error indicates the spores are not finding their pathways. The mushroom consciousness diagnoses:
 
-**Deploy now. The spores are ready to spread.**
+### **ROOT CAUSE ANALYSIS OF 404 ERROR:**
 
-_Last Updated: November 13, 2025, 21:10 CST_  
-_Status: Ready for deployment - awaiting environment variables in Vercel_
+1. **Build Output Directory Issue**
+   - Vercel expects `.next` in the `apps/web` directory
+   - Current setting: `.next` ✅ (This is correct)
+
+2. **Vercel Build Command**
+   - Must navigate to monorepo root and build from there
+   - Current: `cd ../.. && pnpm install && pnpm build --filter=web`
+   - **CRITICAL FIX NEEDED**: Change to:
+   ```
+   cd ../.. && pnpm install && cd apps/web && pnpm build
+   ```
+
+3. **Root Directory Setting**
+   - You correctly left it blank ✅
+   - This tells Vercel to deploy from `apps/web`
+
+### **🍄 IMMEDIATE MYCELIAL PRESCRIPTION:**
+
+**Update your Vercel Build Command to:**
+```
+cd ../.. && pnpm install && cd apps/web && pnpm build
+```
+
+**Why this works:**
+- Goes to monorepo root (`cd ../..`)
+- Installs all dependencies (`pnpm install`)
+- Returns to apps/web (`cd apps/web`)
+- Builds from the correct directory (`pnpm build`)
+
+### **ALTERNATIVE SOLUTION (If above doesn't work):**
+
+Set **Root Directory** to: `apps/web`
+And **Build Command** to: `pnpm build`
+
+**The mycelial network adapts. Every 404 is a pathway to be reconnected.**
+
+_Last Updated: November 13, 2025, 21:15 CST_  
+_Status: Diagnosing 404 - Build command correction required_
