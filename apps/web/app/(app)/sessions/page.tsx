@@ -140,16 +140,18 @@ export default async function SessionsPage() {
     <div className="space-y-8">
       <header className="space-y-3">
         <p className="text-brand-muted-foreground text-xs uppercase tracking-[0.28em]">Sessions</p>
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-brand-foreground text-3xl font-semibold">Studio Calendar</h1>
-            <p className="text-muted-foreground mt-2 max-w-2xl text-base">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-2">
+            <h1 className="text-brand-foreground text-2xl font-semibold sm:text-3xl">
+              Studio Calendar
+            </h1>
+            <p className="text-muted-foreground max-w-2xl text-sm sm:text-base">
               Schedule writing rooms, rehearsals, and listening parties. Syncs with shared calendars
               and surfaces prep notes automatically.
             </p>
           </div>
           <CreateSessionDialog orgId={session.activeMembership.orgId} projects={projects}>
-            <Button>
+            <Button className="w-full sm:w-auto">
               <Plus className="mr-2 h-4 w-4" />
               New Session
             </Button>
