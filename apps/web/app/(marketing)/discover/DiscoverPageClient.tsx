@@ -27,48 +27,8 @@ export function DiscoverPageClient() {
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const [_selectedLocation, setSelectedLocation] = useState<string | null>(null);
 
-  // Mock data for artists
-  const featuredArtists = [
-    {
-      id: '1',
-      name: 'The Midnight Echoes',
-      genre: ['Indie Rock', 'Alternative'],
-      location: 'Los Angeles, CA',
-      bio: 'Blending dreamy soundscapes with powerful lyrics',
-      followers: 12453,
-      monthlyListeners: 34567,
-      verified: true,
-      image: null,
-      latestRelease: 'Neon Dreams',
-      upcomingShow: { date: new Date('2024-02-15'), venue: 'The Roxy Theatre' },
-    },
-    {
-      id: '2',
-      name: 'Sarah Chen',
-      genre: ['Jazz', 'Soul'],
-      location: 'New York, NY',
-      bio: 'Grammy-nominated vocalist bringing modern soul to classic jazz',
-      followers: 8932,
-      monthlyListeners: 21345,
-      verified: true,
-      image: null,
-      latestRelease: 'Blue Hour',
-      upcomingShow: { date: new Date('2024-02-20'), venue: 'Blue Note' },
-    },
-    {
-      id: '3',
-      name: 'Electric Pulse',
-      genre: ['Electronic', 'House'],
-      location: 'Miami, FL',
-      bio: 'High-energy electronic music for the dance floor',
-      followers: 15678,
-      monthlyListeners: 45678,
-      verified: false,
-      image: null,
-      latestRelease: 'Frequency',
-      upcomingShow: null,
-    },
-  ];
+  // No artists yet - platform is new
+  const featuredArtists: any[] = [];
 
   const genres = [
     'Rock', 'Pop', 'Hip Hop', 'Electronic', 'Jazz', 'Classical', 
@@ -80,33 +40,9 @@ export function DiscoverPageClient() {
     'Seattle', 'Chicago', 'Miami', 'Atlanta'
   ];
 
-  const trendingTracks = [
-    { title: 'Midnight Drive', artist: 'The Midnight Echoes', plays: 45678 },
-    { title: 'Blue Hour', artist: 'Sarah Chen', plays: 34567 },
-    { title: 'Frequency', artist: 'Electric Pulse', plays: 56789 },
-    { title: 'Summer Nights', artist: 'Coastal Dreams', plays: 23456 },
-  ];
+  const trendingTracks: any[] = [];
 
-  const upcomingShows = [
-    {
-      artist: 'The Midnight Echoes',
-      date: new Date('2024-02-15'),
-      venue: 'The Roxy Theatre',
-      city: 'Los Angeles, CA',
-    },
-    {
-      artist: 'Sarah Chen',
-      date: new Date('2024-02-20'),
-      venue: 'Blue Note',
-      city: 'New York, NY',
-    },
-    {
-      artist: 'Desert Winds',
-      date: new Date('2024-02-25'),
-      venue: 'Red Rocks',
-      city: 'Denver, CO',
-    },
-  ];
+  const upcomingShows: any[] = [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -144,10 +80,10 @@ export function DiscoverPageClient() {
         {/* Quick Stats */}
         <div className="mb-12 grid gap-6 md:grid-cols-4">
           {[
-            { label: 'Active Artists', value: '2,847', icon: Users, color: 'text-blue-500' },
-            { label: 'Songs Available', value: '14,523', icon: Music, color: 'text-green-500' },
-            { label: 'Upcoming Shows', value: '342', icon: Calendar, color: 'text-purple-500' },
-            { label: 'Cities Represented', value: '156', icon: MapPin, color: 'text-orange-500' },
+            { label: 'Active Artists', value: '0', icon: Users, color: 'text-blue-500' },
+            { label: 'Songs Available', value: '0', icon: Music, color: 'text-green-500' },
+            { label: 'Upcoming Shows', value: '0', icon: Calendar, color: 'text-purple-500' },
+            { label: 'Cities Ready', value: '8', icon: MapPin, color: 'text-orange-500' },
           ].map((stat) => {
             const Icon = stat.icon;
             return (
@@ -185,14 +121,19 @@ export function DiscoverPageClient() {
         <div className="mb-12">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-bold">Featured Artists</h2>
-            <Button variant="ghost" size="sm">
-              View All
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
           </div>
           
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {featuredArtists.map((artist) => (
+            {featuredArtists.length === 0 ? (
+              <div className="col-span-3 text-center py-12">
+                <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-lg text-muted-foreground">No artists have joined yet</p>
+                <p className="text-sm text-muted-foreground mt-2">Be among the first to join our platform!</p>
+                <Link href="/membership" className="mt-4 inline-block">
+                  <Button>Learn About Membership</Button>
+                </Link>
+              </div>
+            ) : featuredArtists.map((artist) => (
               <Card key={artist.id} className="overflow-hidden transition-all hover:shadow-lg">
                 <div className="aspect-square bg-gradient-to-br from-primary/20 to-purple-500/20" />
                 <div className="p-6">
@@ -254,7 +195,7 @@ export function DiscoverPageClient() {
                   </div>
                 </div>
               </Card>
-            ))}
+            )) : null}
           </div>
         </div>
 
@@ -267,7 +208,13 @@ export function DiscoverPageClient() {
               <TrendingUp className="h-6 w-6 text-muted-foreground" />
             </div>
             <Card className="divide-y">
-              {trendingTracks.map((track, index) => (
+              {trendingTracks.length === 0 ? (
+                <div className="text-center py-12">
+                  <Music className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-lg text-muted-foreground">No tracks yet</p>
+                  <p className="text-sm text-muted-foreground mt-2">Upload your music to be featured here</p>
+                </div>
+              ) : trendingTracks.map((track, index) => (
                 <div key={index} className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-4">
                     <span className="text-2xl font-bold text-muted-foreground">
@@ -298,7 +245,13 @@ export function DiscoverPageClient() {
               <Calendar className="h-6 w-6 text-muted-foreground" />
             </div>
             <div className="space-y-4">
-              {upcomingShows.map((show, index) => (
+              {upcomingShows.length === 0 ? (
+                <Card className="text-center py-12">
+                  <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-lg text-muted-foreground">No shows scheduled</p>
+                  <p className="text-sm text-muted-foreground mt-2">Check back soon for live performances</p>
+                </Card>
+              ) : upcomingShows.map((show, index) => (
                 <Card key={index} className="p-4">
                   <div className="flex items-start justify-between">
                     <div>
