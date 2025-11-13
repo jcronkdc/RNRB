@@ -3,3 +3,77 @@
 > @cronkwaters/web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
+[96mapp/(app)/assets/page.tsx[0m:[93m160[0m:[93m26[0m - [91merror[0m[90m TS2322: [0mType '({ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; })[]' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }[]'.
+  Type '{ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; }' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }'.
+    Types of property 'project' are incompatible.
+      Type '{ id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null' is not assignable to type '{ name: string; }'.
+        Type 'null' is not assignable to type '{ name: string; }'.
+
+[7m160[0m               <AssetGrid assets={assets} />
+[7m   [0m [91m                         ~~~~~~[0m
+
+  [96mapp/(app)/assets/page.tsx[0m:[93m185[0m:[93m34[0m
+    [7m185[0m function AssetGrid({ assets }: { assets: Array<{
+    [7m   [0m [96m                                 ~~~~~~[0m
+    The expected type comes from property 'assets' which is declared here on type 'IntrinsicAttributes & { assets: { id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { ...; }; }[]; }'
+
+[96mapp/(app)/assets/page.tsx[0m:[93m164[0m:[93m26[0m - [91merror[0m[90m TS2322: [0mType '({ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; })[]' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }[]'.
+  Type '{ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; }' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }'.
+    Types of property 'project' are incompatible.
+      Type '{ id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null' is not assignable to type '{ name: string; }'.
+        Type 'null' is not assignable to type '{ name: string; }'.
+
+[7m164[0m               <AssetGrid assets={assetsByType.audio} />
+[7m   [0m [91m                         ~~~~~~[0m
+
+  [96mapp/(app)/assets/page.tsx[0m:[93m185[0m:[93m34[0m
+    [7m185[0m function AssetGrid({ assets }: { assets: Array<{
+    [7m   [0m [96m                                 ~~~~~~[0m
+    The expected type comes from property 'assets' which is declared here on type 'IntrinsicAttributes & { assets: { id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { ...; }; }[]; }'
+
+[96mapp/(app)/assets/page.tsx[0m:[93m168[0m:[93m26[0m - [91merror[0m[90m TS2322: [0mType '({ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; })[]' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }[]'.
+  Type '{ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; }' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }'.
+    Types of property 'project' are incompatible.
+      Type '{ id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null' is not assignable to type '{ name: string; }'.
+        Type 'null' is not assignable to type '{ name: string; }'.
+
+[7m168[0m               <AssetGrid assets={assetsByType.lyrics} />
+[7m   [0m [91m                         ~~~~~~[0m
+
+  [96mapp/(app)/assets/page.tsx[0m:[93m185[0m:[93m34[0m
+    [7m185[0m function AssetGrid({ assets }: { assets: Array<{
+    [7m   [0m [96m                                 ~~~~~~[0m
+    The expected type comes from property 'assets' which is declared here on type 'IntrinsicAttributes & { assets: { id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { ...; }; }[]; }'
+
+[96mapp/(app)/assets/page.tsx[0m:[93m172[0m:[93m26[0m - [91merror[0m[90m TS2322: [0mType '({ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; })[]' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }[]'.
+  Type '{ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; }' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }'.
+    Types of property 'project' are incompatible.
+      Type '{ id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null' is not assignable to type '{ name: string; }'.
+        Type 'null' is not assignable to type '{ name: string; }'.
+
+[7m172[0m               <AssetGrid assets={assetsByType.images} />
+[7m   [0m [91m                         ~~~~~~[0m
+
+  [96mapp/(app)/assets/page.tsx[0m:[93m185[0m:[93m34[0m
+    [7m185[0m function AssetGrid({ assets }: { assets: Array<{
+    [7m   [0m [96m                                 ~~~~~~[0m
+    The expected type comes from property 'assets' which is declared here on type 'IntrinsicAttributes & { assets: { id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { ...; }; }[]; }'
+
+[96mapp/(app)/assets/page.tsx[0m:[93m176[0m:[93m26[0m - [91merror[0m[90m TS2322: [0mType '({ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; })[]' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }[]'.
+  Type '{ project: { id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null; uploadedBy: { ...; } | null; } & { ...; }' is not assignable to type '{ id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { name: string; }; }'.
+    Types of property 'project' are incompatible.
+      Type '{ id: string; name: string; createdAt: Date; updatedAt: Date; orgId: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; } | null' is not assignable to type '{ name: string; }'.
+        Type 'null' is not assignable to type '{ name: string; }'.
+
+[7m176[0m               <AssetGrid assets={assetsByType.other} />
+[7m   [0m [91m                         ~~~~~~[0m
+
+  [96mapp/(app)/assets/page.tsx[0m:[93m185[0m:[93m34[0m
+    [7m185[0m function AssetGrid({ assets }: { assets: Array<{
+    [7m   [0m [96m                                 ~~~~~~[0m
+    The expected type comes from property 'assets' which is declared here on type 'IntrinsicAttributes & { assets: { id: string; name: string; mimeType: string; size: number | null; version: number; createdAt: Date; uploadedBy: { name: string | null; email: string; } | null; project: { ...; }; }[]; }'
+
+
+Found 5 errors in the same file, starting at: app/(app)/assets/page.tsx[90m:160[0m
+
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m
