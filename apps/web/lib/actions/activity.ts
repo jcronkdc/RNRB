@@ -41,9 +41,6 @@ export async function getOrganizationActivity(limit = 20) {
       include: {
         project: {
           select: { name: true }
-        },
-        createdBy: {
-          select: { name: true, email: true }
         }
       }
     });
@@ -96,25 +93,15 @@ export async function getOrganizationActivity(limit = 20) {
     // Fetch recent licenses
     const licenses = await prisma.license.findMany({
       where: {
-        song: {
-          project: {
-            orgId
-          }
+        project: {
+          orgId
         }
       },
       orderBy: { createdAt: 'desc' },
       take: limit,
       include: {
-        song: {
-          select: { 
-            title: true,
-            project: {
-              select: { name: true }
-            }
-          }
-        },
-        createdBy: {
-          select: { name: true, email: true }
+        project: {
+          select: { name: true }
         }
       }
     });
@@ -142,7 +129,7 @@ export async function getOrganizationActivity(limit = 20) {
         title: `New song added`,
         description: `"${song.title}" was added to ${song.project.name}`,
         timestamp: song.createdAt,
-        user: song.createdBy?.name || song.createdBy?.email || 'Unknown'
+        user: 'Team' // Songs don't have a createdBy field
       });
     });
 
@@ -176,9 +163,9 @@ export async function getOrganizationActivity(limit = 20) {
         id: `license_${license.id}`,
         type: 'license_created',
         title: `License created`,
-        description: `${license.type} license for "${license.song.title}" in ${license.song.project.name}`,
+        description: `${license.template} license for project ${license.project.name}`,
         timestamp: license.createdAt,
-        user: license.createdBy?.name || license.createdBy?.email || 'Unknown'
+        user: 'Team' // Licenses don't have a createdBy field
       });
     });
 
@@ -220,12 +207,7 @@ export async function getProjectActivity(projectId: string, limit = 10) {
     const songs = await prisma.song.findMany({
       where: { projectId },
       orderBy: { createdAt: 'desc' },
-      take: limit,
-      include: {
-        createdBy: {
-          select: { name: true, email: true }
-        }
-      }
+      take: limit
     });
 
     // Fetch recent assets for this project
@@ -260,7 +242,7 @@ export async function getProjectActivity(projectId: string, limit = 10) {
         title: `Song added`,
         description: `"${song.title}" was added`,
         timestamp: song.createdAt,
-        user: song.createdBy?.name || song.createdBy?.email || 'Unknown'
+        user: 'Team' // Songs don't have a createdBy field
       });
     });
 
