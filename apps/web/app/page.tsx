@@ -20,7 +20,9 @@ import {
   Globe,
   Zap,
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  Crown,
+  Check
 } from 'lucide-react';
 
 const features = [
@@ -127,14 +129,14 @@ export default function HomePage() {
           </span>
         </div>
         <div className="flex items-center gap-6">
-          <Link href="/discover" className="text-muted-foreground hover:text-foreground transition-colors">
-            Discover
+          <Link href="/vision" className="text-muted-foreground hover:text-foreground transition-colors">
+            Our Vision
+          </Link>
+          <Link href="/membership" className="text-muted-foreground hover:text-foreground transition-colors">
+            Membership
           </Link>
           <Link href="/community" className="text-muted-foreground hover:text-foreground transition-colors">
             Community
-          </Link>
-          <Link href="/learn" className="text-muted-foreground hover:text-foreground transition-colors">
-            Learn
           </Link>
           <Link 
             href="/auth" 
@@ -203,6 +205,81 @@ export default function HomePage() {
             </motion.div>
           ))}
         </div>
+      </section>
+
+      {/* Vision Section */}
+      <section className="relative z-10 px-6 py-24 max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="rounded-3xl bg-gradient-to-br from-surface/80 to-surface/60 backdrop-blur border border-border/50 p-12"
+        >
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Built by Musicians, <span className="bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">For Musicians</span>
+              </h2>
+              <p className="text-lg text-muted-foreground mb-6">
+                CronkWaters is the vision of Josh Waters and Justin Cronk — two friends with over 20 years 
+                of friendship and a shared passion for democratizing music creation.
+              </p>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-start gap-3">
+                  <Music className="w-6 h-6 text-brand-primary mt-1 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold">Josh Waters</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Grand Ole Opry performer, touring musician with Chris Janson, and dedicated mentor
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Heart className="w-6 h-6 text-brand-primary mt-1 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold">Justin Cronk</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Lifelong songwriter and visionary for accessible music creation tools
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <Link 
+                href="/vision"
+                className="inline-flex items-center gap-2 text-brand-primary font-semibold hover:gap-3 transition-all"
+              >
+                Read Our Full Story
+                <ChevronRight className="w-5 h-5" />
+              </Link>
+            </div>
+            <div className="relative">
+              <div className="rounded-3xl bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 p-8">
+                <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
+                <p className="text-muted-foreground mb-6">
+                  We&apos;re pursuing 501(c) nonprofit status to formalize our commitment to:
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-brand-primary" />
+                    <span className="text-sm">Supporting independent musicians</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-brand-primary" />
+                    <span className="text-sm">Providing free & low-cost creative tools</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-brand-primary" />
+                    <span className="text-sm">Promoting arts education</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-brand-primary" />
+                    <span className="text-sm">Offering grants for emerging artists</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* Features Grid */}
@@ -340,6 +417,116 @@ export default function HomePage() {
             </Link>
           </div>
         </motion.div>
+      </section>
+
+      {/* Membership Preview Section */}
+      <section className="relative z-10 px-6 py-24 max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl font-bold mb-4">Flexible Membership Options</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Start free, grow at your pace. Every plan supports our nonprofit mission.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="rounded-2xl border border-border/50 bg-surface/80 backdrop-blur p-8 text-center"
+          >
+            <Music className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-2">Explorer</h3>
+            <p className="text-3xl font-bold mb-2">Free</p>
+            <p className="text-sm text-muted-foreground mb-4">Perfect for trying out CronkWaters</p>
+            <ul className="text-sm space-y-2 text-left mb-6">
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>1 Active Project</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Basic Features</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>10 AI Credits/month</span>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="rounded-2xl border-2 border-brand-primary bg-surface/80 backdrop-blur p-8 text-center shadow-xl scale-105"
+          >
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="px-4 py-1 bg-gradient-to-r from-brand-primary to-brand-secondary text-white text-sm rounded-full font-medium">
+                Most Popular
+              </span>
+            </div>
+            <Zap className="w-12 h-12 text-brand-primary mx-auto mb-4 mt-2" />
+            <h3 className="text-xl font-bold mb-2">Creator</h3>
+            <p className="text-3xl font-bold mb-2">$9.99<span className="text-base font-normal">/mo</span></p>
+            <p className="text-sm text-muted-foreground mb-4">For serious musicians</p>
+            <ul className="text-sm space-y-2 text-left mb-6">
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Unlimited Projects</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Revenue Splits</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>500 AI Credits/month</span>
+              </li>
+            </ul>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            className="rounded-2xl border border-border/50 bg-surface/80 backdrop-blur p-8 text-center"
+          >
+            <Crown className="w-12 h-12 text-purple-500 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-2">Studio</h3>
+            <p className="text-3xl font-bold mb-2">$29.99<span className="text-base font-normal">/mo</span></p>
+            <p className="text-sm text-muted-foreground mb-4">For labels & power users</p>
+            <ul className="text-sm space-y-2 text-left mb-6">
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Everything in Creator</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>White-label Options</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Unlimited AI Credits</span>
+              </li>
+            </ul>
+          </motion.div>
+        </div>
+
+        <div className="text-center">
+          <Link 
+            href="/membership"
+            className="inline-flex items-center gap-2 text-brand-primary font-semibold hover:gap-3 transition-all"
+          >
+            View All Membership Details
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
       </section>
 
       {/* Footer */}
