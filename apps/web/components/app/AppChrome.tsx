@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { Button } from '@cronkwaters/ui';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Button } from "@cronkwaters/ui";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 
-import { AppErrorBoundary } from './AppErrorBoundary';
-import CommandPalette from './CommandPalette';
-import HelpModal from './HelpModal';
-import { OnboardingTour } from './OnboardingTour';
-import SearchInput from './SearchInput';
-import Sidebar, { APP_NAV_ITEMS } from './Sidebar';
-import { usePlatformKey } from './usePlatformKey';
-import { ToastProvider } from '../ui/Toast';
+import { AppErrorBoundary } from "./AppErrorBoundary";
+import CommandPalette from "./CommandPalette";
+import HelpModal from "./HelpModal";
+import { OnboardingTour } from "./OnboardingTour";
+import { SearchInput } from "./SearchInput";
+import Sidebar, { APP_NAV_ITEMS } from "./Sidebar";
+import { usePlatformKey } from "./usePlatformKey";
+import { ToastProvider } from "../ui/Toast";
 
 interface AppChromeProps {
   title: string;
@@ -24,28 +24,28 @@ interface AppChromeProps {
 const findNewProjectButton = () => {
   return (
     document.querySelector<HTMLButtonElement>('button[data-command="new-project"]') ??
-    Array.from(document.querySelectorAll<HTMLButtonElement>('button')).find(
-      (btn) => btn.textContent?.trim().toLowerCase() === 'new project'
+    Array.from(document.querySelectorAll<HTMLButtonElement>("button")).find(
+      (btn) => btn.textContent?.trim().toLowerCase() === "new project",
     ) ??
     null
   );
 };
 
-export default function AppChrome({ title, userName, userEmail, children }: AppChromeProps) {
+export function AppChrome({ title, userName, userEmail, children }: AppChromeProps) {
   const router = useRouter();
   const platformKey = usePlatformKey();
   const [helpOpen, setHelpOpen] = useState(false);
-  const [keySequence, setKeySequence] = useState<string>('');
+  const [keySequence, setKeySequence] = useState<string>("");
 
   useEffect(() => {
     if (!keySequence) return;
-    const timeout = setTimeout(() => setKeySequence(''), 600);
+    const timeout = setTimeout(() => setKeySequence(""), 600);
     return () => clearTimeout(timeout);
   }, [keySequence]);
 
   useEffect(() => {
     const handleKeydown = (event: KeyboardEvent) => {
-      if (event.key === '/') {
+      if (event.key === "/") {
         const searchInput = document.querySelector<HTMLInputElement>('[data-search="true"]');
         if (searchInput) {
           event.preventDefault();
@@ -54,52 +54,52 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
         }
       }
 
-      if (event.key.toLowerCase() === 'g') {
-        setKeySequence('g');
+      if (event.key.toLowerCase() === "g") {
+        setKeySequence("g");
         return;
       }
 
-      if (keySequence === 'g' && event.key.toLowerCase() === 'p') {
+      if (keySequence === "g" && event.key.toLowerCase() === "p") {
         event.preventDefault();
-        setKeySequence('');
-        router.push('/app/projects');
+        setKeySequence("");
+        router.push("/app/projects");
       }
     };
 
-    window.addEventListener('keydown', handleKeydown);
-    return () => window.removeEventListener('keydown', handleKeydown);
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
   }, [keySequence, router]);
 
   const focusNewProject = useCallback(() => {
     const button = findNewProjectButton();
     if (button) {
       button.focus();
-      button.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      button.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    router.push('/app/projects');
+    router.push("/app/projects");
   }, [router]);
 
   const commands = useMemo(
     () => [
       {
-        id: 'command-new-project',
-        label: 'New Project',
-        hint: 'Focus button',
-        action: focusNewProject
+        id: "command-new-project",
+        label: "New Project",
+        hint: "Focus button",
+        action: focusNewProject,
       },
       {
-        id: 'command-go-projects',
-        label: 'Go to Projects',
-        action: () => router.push('/app/projects')
+        id: "command-go-projects",
+        label: "Go to Projects",
+        action: () => router.push("/app/projects"),
       },
       {
-        id: 'command-go-home',
-        label: 'Go to Home',
-        action: () => router.push('/')
-      }
+        id: "command-go-home",
+        label: "Go to Home",
+        action: () => router.push("/"),
+      },
     ],
-    [focusNewProject, router]
+    [focusNewProject, router],
   );
 
   return (
@@ -139,8 +139,12 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
               <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="xs:flex-row xs:items-center xs:gap-6 flex flex-col gap-3">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.4em] text-brand-primary">Workspace</p>
-                    <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-foreground">{title}</h1>
+                    <p className="text-xs font-bold uppercase tracking-[0.4em] text-brand-primary">
+                      Workspace
+                    </p>
+                    <h1 className="mt-2 text-3xl font-bold tracking-tight text-brand-foreground">
+                      {title}
+                    </h1>
                     <p className="mt-4 flex items-center gap-2 text-xs font-medium text-muted-foreground">
                       Quick actions
                       <kbd className="rounded-lg border-2 border-border/60 bg-surface px-2.5 py-1 font-bold text-brand-foreground shadow-soft">
@@ -148,7 +152,10 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
                       </kbd>
                     </p>
                   </div>
-                  <div className="xs:self-center min-w-0 max-w-[13rem] flex-1 self-start" data-tour="search">
+                  <div
+                    className="xs:self-center min-w-0 max-w-[13rem] flex-1 self-start"
+                    data-tour="search"
+                  >
                     <SearchInput placeholder="Search…" />
                   </div>
                 </div>
@@ -164,7 +171,7 @@ export default function AppChrome({ title, userName, userEmail, children }: AppC
                   </Button>
                   <span className="hidden md:inline">Signed in as</span>
                   <span className="rounded-full border border-border/60 px-3 py-1 text-brand-foreground">
-                    {userName ?? 'CronkWaters Member'}
+                    {userName ?? "CronkWaters Member"}
                   </span>
                   <Button variant="ghost" size="sm" className="hidden md:inline-flex">
                     Share

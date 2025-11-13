@@ -3,13 +3,3 @@
 > @cronkwaters/web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
-[96m../../packages/auth/src/auth.ts[0m:[93m15[0m:[93m39[0m - [91merror[0m[90m TS2345: [0mArgument of type 'string | undefined' is not assignable to parameter of type 'TransportOptions'.
-  Type 'undefined' is not assignable to type 'TransportOptions'.
-
-[7m15[0m     return nodemailer.createTransport(env.EMAIL_SERVER_URL);
-[7m  [0m [91m                                      ~~~~~~~~~~~~~~~~~~~~[0m
-
-
-Found 1 error in ../../packages/auth/src/auth.ts[90m:15[0m
-
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

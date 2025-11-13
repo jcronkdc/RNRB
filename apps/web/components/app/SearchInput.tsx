@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import { Search } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 
-import { announce } from '../../lib/announce';
+import { announce } from "../../lib/announce";
 
 interface SearchInputProps {
   placeholder?: string;
 }
 
-export default function SearchInput({ placeholder = 'Search projects, songs…' }: SearchInputProps) {
+export function SearchInput({ placeholder = "Search projects, songs…" }: SearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [, setNoResults] = useState(false);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && value.trim()) {
+    if (event.key === "Enter" && value.trim()) {
       event.preventDefault();
-      router.push(`/app/search?q=${encodeURIComponent(value.trim())}`);
+      router.push(`/search?q=${encodeURIComponent(value.trim())}`);
       announce(`Searching for: "${value}"`);
     }
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       event.preventDefault();
-      setValue('');
+      setValue("");
       setNoResults(false);
-      announce('Search cleared');
+      announce("Search cleared");
       inputRef.current?.blur();
     }
   };
@@ -34,7 +34,10 @@ export default function SearchInput({ placeholder = 'Search projects, songs…' 
   return (
     <div className="relative flex min-w-0 flex-col">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+        <Search
+          className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+          aria-hidden="true"
+        />
         <input
           ref={inputRef}
           data-search="true"
@@ -47,7 +50,7 @@ export default function SearchInput({ placeholder = 'Search projects, songs…' 
             setNoResults(false);
           }}
           onKeyDown={handleKeyDown}
-          className="h-10 w-full min-w-0 max-w-xs truncate rounded-full border border-border/60 bg-surface pl-10 pr-4 text-sm text-brand-foreground shadow-soft transition-all focus-visible:border-brand-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+          className="h-10 w-full min-w-0 max-w-xs truncate rounded-full border border-border/60 bg-surface pl-10 pr-4 text-sm text-brand-foreground shadow-soft transition-all focus-visible:border-brand-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary sm:max-w-xs"
           autoComplete="off"
         />
       </div>

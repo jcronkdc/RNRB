@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Button, cn } from '@cronkwaters/ui';
-import { Music, FileAudio, FolderOpen, Search as SearchIcon } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
+import { Button, cn } from "@cronkwaters/ui";
+import { Music, FileAudio, FolderOpen, Search as SearchIcon } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 
-import { EmptyState } from '../../../components/app/EmptyState';
-import { searchAction } from '../../../lib/actions/search';
-import type { SearchResult } from '../../../lib/actions/search';
+import { EmptyState } from "../../../components/app/EmptyState";
+import { searchAction } from "../../../lib/actions/search";
+import type { SearchResult } from "../../../lib/actions/search";
 
 export function SearchResults({ query, type }: { query: string; type: string }) {
   const router = useRouter();
@@ -22,7 +22,7 @@ export function SearchResults({ query, type }: { query: string; type: string }) 
     }
 
     startTransition(async () => {
-      const result = await searchAction(query, type as 'all' | 'project' | 'song' | 'asset');
+      const result = await searchAction(query, type as "all" | "project" | "song" | "asset");
       if (result.success && result.data) {
         setResults(result.data);
       } else {
@@ -64,36 +64,43 @@ export function SearchResults({ query, type }: { query: string; type: string }) 
   const iconMap = {
     project: FolderOpen,
     song: Music,
-    asset: FileAudio
+    asset: FileAudio,
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Found {results.length} {results.length === 1 ? 'result' : 'results'}
+          Found {results.length} {results.length === 1 ? "result" : "results"}
         </p>
         <div className="flex gap-2">
           <Button
-            variant={type === 'all' ? 'solid' : 'ghost'}
+            variant={type === "all" ? "solid" : "ghost"}
             size="sm"
-            onClick={() => router.push(`/app/search?q=${encodeURIComponent(query)}&type=all`)}
+            onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&type=all`)}
           >
             All
           </Button>
           <Button
-            variant={type === 'project' ? 'solid' : 'ghost'}
+            variant={type === "project" ? "solid" : "ghost"}
             size="sm"
-            onClick={() => router.push(`/app/search?q=${encodeURIComponent(query)}&type=project`)}
+            onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&type=project`)}
           >
             Projects
           </Button>
           <Button
-            variant={type === 'song' ? 'solid' : 'ghost'}
+            variant={type === "song" ? "solid" : "ghost"}
             size="sm"
-            onClick={() => router.push(`/app/search?q=${encodeURIComponent(query)}&type=song`)}
+            onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&type=song`)}
           >
             Songs
+          </Button>
+          <Button
+            variant={type === "asset" ? "solid" : "ghost"}
+            size="sm"
+            onClick={() => router.push(`/search?q=${encodeURIComponent(query)}&type=asset`)}
+          >
+            Assets
           </Button>
         </div>
       </div>
@@ -106,7 +113,7 @@ export function SearchResults({ query, type }: { query: string; type: string }) 
               key={result.id}
               href={result.href}
               className={cn(
-                'group flex items-center gap-4 rounded-2xl border border-border/60 bg-surface/80 p-5 shadow-soft transition-all hover:border-brand-primary/40 hover:shadow-lg'
+                "group flex items-center gap-4 rounded-2xl border border-border/60 bg-surface/80 p-5 shadow-soft transition-all hover:border-brand-primary/40 hover:shadow-lg",
               )}
             >
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-primary/10 text-brand-primary">
@@ -127,4 +134,3 @@ export function SearchResults({ query, type }: { query: string; type: string }) 
     </div>
   );
 }
-
