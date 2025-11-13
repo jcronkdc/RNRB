@@ -51,6 +51,8 @@ NODE_ENV=production
 | Mobile UI     | ✅ Live       | Responsive design working               |
 | Analytics     | ⏳ Needs Auth | Dashboard ready                         |
 | Donate        | ⏳ Needs Auth | Payment forms ready                     |
+| Search        | ✅ Live*      | Full-text search with filters (needs auth for results) |
+| Activity Feed | ✅ Live*      | Real-time org activity (needs auth for data) |
 
 ### 🚀 Next Steps
 
@@ -81,6 +83,9 @@ NODE_ENV=production
 - **UI**: Consistent design system
 - **Performance**: Optimized builds
 - **Security**: CSP and security headers configured
+- **Search**: Full-text search with type filtering
+- **Activity Feed**: Real-time organization activity tracking
+- **Mobile First**: Responsive design throughout
 
 ### 🔍 Technical Details
 
