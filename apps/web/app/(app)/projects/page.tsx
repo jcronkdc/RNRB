@@ -7,6 +7,8 @@ import { ProjectsClient } from './ProjectsClient';
 import { ProjectsDashboardTabs } from './ProjectsDashboardTabs';
 import PageHeader from '../../../components/app/PageHeader';
 import { CardGridSkeleton } from '../../../components/app/Skeletons';
+import { ActivityFeed } from '../../../components/app/ActivityFeed';
+import { getOrganizationActivity } from '../../../lib/actions/activity';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,7 +48,12 @@ async function ProjectsData() {
       }
     });
 
+    // Fetch activity data
+    const activityResult = await getOrganizationActivity(15);
+    const activities = activityResult.success ? activityResult.data : [];
+
     return {
+      activities,
       projects: projects.map((p) => ({
         id: p.id,
         name: p.name,
@@ -65,7 +72,7 @@ async function ProjectsData() {
     };
   } catch (error) {
     console.error('Failed to load projects:', error);
-    return { projects: [], songs: [] };
+    return { projects: [], songs: [], activities: [] };
   }
 }
 
@@ -91,7 +98,14 @@ export default async function ProjectsPage() {
 }
 
 async function ProjectsContent() {
-  const { projects, songs } = await ProjectsData();
+  const { projects, songs, activities } = await ProjectsData();
 
-  return <ProjectsDashboardTabs projects={projects} songs={songs} />;
+  return (
+    <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
+      <ProjectsDashboardTabs projects={projects} songs={songs} />
+      <aside className="hidden lg:block">
+        <ActivityFeed items={activities} />
+      </aside>
+    </div>
+  );
 }

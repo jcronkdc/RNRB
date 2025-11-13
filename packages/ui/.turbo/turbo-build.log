@@ -10,7 +10,7 @@
 [34mCLI[39m Cleaning output folder
 [34mESM[39m Build start
 [32mESM[39m [1mdist/index.js [22m[32m38.24 KB[39m
-[32mESM[39m ⚡️ Build success in 5924ms
+[32mESM[39m ⚡️ Build success in 2005ms
 DTS Build start
-DTS ⚡️ Build success in 54926ms
+DTS ⚡️ Build success in 45921ms
 DTS dist/index.d.ts 18.27 KB
