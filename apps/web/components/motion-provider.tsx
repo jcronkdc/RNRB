@@ -1,13 +1,9 @@
 "use client";
 
 import { MotionConfig } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, type PropsWithChildren } from "react";
 
-interface MotionProviderProps {
-  children: React.ReactNode;
-}
-
-export function MotionProvider({ children }: MotionProviderProps) {
+export function MotionProvider({ children }: PropsWithChildren) {
   const [shouldReduceMotion, setShouldReduceMotion] = useState(false);
 
   useEffect(() => {
@@ -25,6 +21,8 @@ export function MotionProvider({ children }: MotionProviderProps) {
   }, []);
 
   return (
-    <MotionConfig reducedMotion={shouldReduceMotion ? "always" : "never"}>{children}</MotionConfig>
+    <MotionConfig reducedMotion={shouldReduceMotion ? "always" : "never"}>
+      <React.Fragment>{children}</React.Fragment>
+    </MotionConfig>
   );
 }
