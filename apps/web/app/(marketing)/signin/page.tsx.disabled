@@ -141,6 +141,7 @@ function SignInContent() {
   );
 }
 
+// eslint-disable-next-line import/no-default-export
 export default function SignInPage() {
   // Ensure this runs only on client side
   if (typeof window === 'undefined') {

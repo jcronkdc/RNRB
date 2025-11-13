@@ -21,14 +21,14 @@ export default function HomePage() {
         }}>
           Sign In
         </a>
-        <a href="/test-page" style={{ 
+        <a href="/projects" style={{ 
           padding: '12px 24px', 
           border: '2px solid #8b5cf6', 
           color: '#8b5cf6', 
           textDecoration: 'none',
           borderRadius: '8px'
         }}>
-          Test Page
+          View Projects
         </a>
       </div>
       <hr style={{ margin: '40px 0', width: '100%', maxWidth: '400px' }} />
