@@ -1,7 +1,5 @@
 {
-  "buildCommand": "pnpm turbo run build",
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet ."
+  "buildCommand": "DATABASE_URL=$DATABASE_URL pnpm run build",
+  "installCommand": "pnpm install",
+  "framework": "nextjs"
 }
-
-
-

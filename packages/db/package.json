@@ -15,8 +15,9 @@
     "./prisma": "./prisma/schema.prisma"
   },
   "scripts": {
+    "postinstall": "prisma generate || true",
     "db:up": "docker compose up -d postgres",
-    "prisma:generate": "npx prisma generate",
+    "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "npx prisma migrate dev --name init_schema",
     "build": "pnpm prisma:generate && tsc -b",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
