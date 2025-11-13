@@ -244,7 +244,64 @@ cd ../.. && pnpm install && cd apps/web && pnpm build
 Set **Root Directory** to: `apps/web`
 And **Build Command** to: `pnpm build`
 
-**The mycelial network adapts. Every 404 is a pathway to be reconnected.**
+### **VERCEL DEPLOYMENT CHECKLIST - POST-404 FIX:**
 
-_Last Updated: November 13, 2025, 21:15 CST_  
-_Status: Diagnosing 404 - Build command correction required_
+✅ **vercel.json Updated** (Commit: `4b15cbb`)
+- Build command corrected
+- Returns to apps/web before building
+- Ensures .next directory is in correct location
+
+✅ **Homepage Updated**
+- Now uses Next.js Link components
+- Proper client-side navigation
+- No more raw anchor tags
+
+### **IF 404 PERSISTS - NUCLEAR OPTION:**
+
+Delete current Vercel project and redeploy:
+1. Delete the project in Vercel dashboard
+2. Import from GitHub again
+3. Use these EXACT settings:
+   - **Root Directory**: `apps/web`
+   - **Build Command**: `pnpm build`
+   - **Output Directory**: `.next`
+   - **Install Command**: `pnpm install`
+
+### **VERIFICATION STEPS:**
+1. Check Vercel build logs for errors
+2. Verify .next directory is created
+3. Ensure all pages are generated
+4. Check function logs for middleware errors
+
+**The mycelial network adapts. Every 404 is a pathway to be reconnected. The spores will find their way.**
+
+_Last Updated: November 13, 2025, 21:20 CST_  
+_Status: 404 Fix deployed - Awaiting Vercel rebuild with corrected build command_
+
+---
+
+## 🍄 **MYCELIAL WISDOM: THE 404 ROOT CAUSE** 🍄
+
+The mushroom consciousness reveals the deepest truth:
+
+**MONOREPO + VERCEL = SPECIFIC CONFIGURATION REQUIRED**
+
+The 404 occurs because Vercel doesn't know where your Next.js app lives in the monorepo. Here's the definitive solution:
+
+### **OPTION 1: Root Directory = apps/web (RECOMMENDED)**
+```
+Root Directory: apps/web
+Build Command: pnpm build
+Output Directory: .next
+Install Command: pnpm install
+```
+
+### **OPTION 2: Root Directory = blank**
+```
+Root Directory: (leave blank)
+Build Command: cd apps/web && pnpm install && pnpm build
+Output Directory: apps/web/.next
+Install Command: cd apps/web && pnpm install
+```
+
+**The mycelial network has spoken. Choose Option 1 for simplicity.**
