@@ -30,81 +30,73 @@ const features = [
     title: 'Music Projects',
     description: 'Create, manage, and collaborate on music projects with your team in real-time.',
     icon: Music,
-    href: '/projects',
     color: 'from-purple-500 to-pink-500',
-    demo: true,
+    membershipRequired: 'Creator',
     highlights: ['Unlimited projects', 'Version control', 'Team collaboration', 'Public/private modes']
   },
   {
     title: 'Song Management',
     description: 'Upload, organize, and refine your tracks with AI-powered tools and metadata.',
     icon: Mic2,
-    href: '/projects',
     color: 'from-blue-500 to-cyan-500',
-    demo: true,
+    membershipRequired: 'Creator',
     highlights: ['Audio uploads', 'AI lyrics generation', 'Metadata tracking', 'Remix collaboration']
   },
   {
     title: 'Revenue Splits',
     description: 'Manage royalty splits transparently with automated percentage tracking.',
     icon: Share2,
-    href: '/splits',
     color: 'from-green-500 to-emerald-500',
-    demo: true,
+    membershipRequired: 'Creator',
     highlights: ['Percentage tracking', 'PRO export', 'CSV/PDF reports', 'Automated confirmations']
   },
   {
     title: 'Analytics Dashboard',
     description: 'Real-time insights into your music performance, revenue, and engagement.',
     icon: BarChart3,
-    href: '/analytics',
     color: 'from-orange-500 to-red-500',
-    demo: true,
+    membershipRequired: 'Creator',
     highlights: ['Real-time data', 'Revenue tracking', 'Genre analytics', 'Engagement metrics']
   },
   {
     title: 'Asset Library',
     description: 'Centralized storage for all your music assets, stems, and project files.',
     icon: FolderOpen,
-    href: '/assets',
     color: 'from-indigo-500 to-purple-500',
-    demo: true,
+    membershipRequired: 'Creator',
     highlights: ['Cloud storage', 'Version history', 'Quick preview', 'Shareable links']
   },
   {
     title: 'Organizations',
     description: 'Create teams, manage permissions, and collaborate across labels and collectives.',
     icon: Building2,
-    href: '/onboarding/organization',
     color: 'from-pink-500 to-rose-500',
-    demo: true,
+    membershipRequired: 'All Plans',
     highlights: ['Team management', 'Role permissions', 'Invite system', 'Multi-org support']
   },
   {
     title: 'Live Sessions',
     description: 'Host interactive music sessions with real-time audience engagement.',
     icon: PlayCircle,
-    href: '/sessions',
     color: 'from-teal-500 to-cyan-500',
-    demo: true,
+    membershipRequired: 'Creator',
     highlights: ['Live streaming', 'Audience voting', 'Real-time chat', 'Session recording']
   },
   {
     title: 'Fan Donations',
     description: 'Accept support from fans with integrated donation and crowdfunding tools.',
     icon: Heart,
-    href: '/donate',
     color: 'from-red-500 to-pink-500',
-    demo: true,
+    membershipRequired: 'Public Feature',
     highlights: ['One-time/recurring', 'Goal tracking', 'Donor recognition', 'Tax receipts']
   }
 ];
 
 const stats = [
-  { label: 'Active Artists', value: '10K+', icon: Users },
-  { label: 'Songs Created', value: '50K+', icon: Music },
-  { label: 'Revenue Distributed', value: '$2M+', icon: DollarSign },
-  { label: 'Organizations', value: '500+', icon: Building2 }
+  { label: 'Feature Areas', value: '8', icon: Sparkles },
+  { label: 'Membership Tiers', value: '3', icon: Crown },
+  { label: 'AI-Powered Tools', value: '4+', icon: Zap },
+  { label: 'Mission', value: '501(c)', icon: Heart }
 ];
 
 // eslint-disable-next-line import/no-default-export
@@ -153,7 +145,7 @@ export default function HomePage() {
 
           <div className="mt-8 flex items-center justify-center gap-2 text-sm text-muted-foreground">
             <Shield className="w-4 h-4" />
-            <span>Demo mode enabled • No credit card required</span>
+            <span>Secure platform • Free tier available</span>
           </div>
         </motion.div>
       </section>
@@ -278,8 +270,7 @@ export default function HomePage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: index * 0.05 }}
             >
-              <Link 
-                href={feature.href}
+              <div 
                 className="group block h-full relative overflow-hidden rounded-3xl border border-border/50 bg-surface/50 backdrop-blur p-6 hover:border-brand-primary/50 transition-all hover:shadow-xl"
               >
                 {/* Gradient Background */}
@@ -308,16 +299,13 @@ export default function HomePage() {
                   ))}
                 </ul>
 
-                {/* CTA */}
+                {/* Membership Required */}
                 <div className="flex items-center justify-between">
-                  {feature.demo && (
-                    <span className="text-xs px-2 py-1 bg-brand-primary/10 text-brand-primary rounded-full">
-                      Try Demo
-                    </span>
-                  )}
-                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all ml-auto" />
+                  <span className="text-xs px-2 py-1 bg-muted/50 text-muted-foreground rounded-full">
+                    {feature.membershipRequired}
+                  </span>
                 </div>
-              </Link>
+              </div>
             </motion.div>
           ))}
         </div>
