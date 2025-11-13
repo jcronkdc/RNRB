@@ -1,11 +1,10 @@
 "use client";
 
 import { MotionConfig } from "framer-motion";
-import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import React, { useEffect, useState } from "react";
 
 interface MotionProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export function MotionProvider({ children }: MotionProviderProps) {
