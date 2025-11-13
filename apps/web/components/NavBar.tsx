@@ -2,7 +2,7 @@
 
 import { cn } from '@cronkwaters/ui';
 import { motion, useReducedMotion } from 'framer-motion';
-import { HeartHandshake, LogIn } from 'lucide-react';
+import { HeartHandshake } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';

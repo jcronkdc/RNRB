@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react';
 import { 
   ChevronRight, 
   Home, 
-  LogIn, 
   FolderOpen, 
   Music, 
   FileAudio, 
@@ -15,7 +14,6 @@ import {
   Settings,
   Search,
   MessageSquare,
-  Upload,
   Download,
   Share2,
   Lock,
@@ -1355,9 +1353,15 @@ export function GuideContent() {
 
         {/* Mobile overlay */}
         {mobileMenuOpen && (
-          <div 
+          <button
             className="fixed inset-0 bg-black/50 z-30 lg:hidden"
             onClick={() => setMobileMenuOpen(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape' || e.key === 'Enter') {
+                setMobileMenuOpen(false);
+              }
+            }}
+            aria-label="Close navigation menu"
           />
         )}
 
