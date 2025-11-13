@@ -26,12 +26,7 @@ export async function getOrganizationActivity(limit = 20) {
     const projects = await prisma.project.findMany({
       where: { orgId },
       orderBy: { createdAt: 'desc' },
-      take: limit,
-      include: {
-        createdBy: {
-          select: { name: true, email: true }
-        }
-      }
+      take: limit
     });
 
     // Fetch recent songs
@@ -135,7 +130,7 @@ export async function getOrganizationActivity(limit = 20) {
         title: `New project created`,
         description: `"${project.name}" was created`,
         timestamp: project.createdAt,
-        user: project.createdBy?.name || project.createdBy?.email || 'Unknown'
+        user: 'Team' // Projects don't have a createdBy field
       });
     });
 
@@ -254,7 +249,7 @@ export async function getProjectActivity(projectId: string, limit = 10) {
       title: `Project created`,
       description: `"${project.name}" was created`,
       timestamp: project.createdAt,
-      user: 'Unknown' // We don't have createdBy on project currently
+      user: 'Team' // Projects don't have a createdBy field
     });
 
     // Add songs
