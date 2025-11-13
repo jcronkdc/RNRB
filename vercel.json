@@ -1,7 +1,9 @@
 {
   "buildCommand": "cd apps/web && pnpm build",
-  "installCommand": "corepack enable && pnpm install",
+  "installCommand": "corepack enable && pnpm install --prod=false",
   "outputDirectory": "apps/web/.next",
   "framework": null,
-  "ignoreCommand": "exit 1"
+  "env": {
+    "NODE_ENV": "development"
+  }
 }
