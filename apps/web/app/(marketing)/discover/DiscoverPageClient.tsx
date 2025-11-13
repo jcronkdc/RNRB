@@ -28,7 +28,20 @@ export function DiscoverPageClient() {
   const [_selectedLocation, setSelectedLocation] = useState<string | null>(null);
 
   // No artists yet - platform is new
-  const featuredArtists: any[] = [];
+  interface Artist {
+    id: string;
+    name: string;
+    genre: string[];
+    location: string;
+    bio: string;
+    followers: number;
+    monthlyListeners: number;
+    verified: boolean;
+    image: string | null;
+    latestRelease: string;
+    upcomingShow: { date: Date; venue: string } | null;
+  }
+  const featuredArtists: Artist[] = [];
 
   const genres = [
     'Rock', 'Pop', 'Hip Hop', 'Electronic', 'Jazz', 'Classical', 
@@ -40,9 +53,20 @@ export function DiscoverPageClient() {
     'Seattle', 'Chicago', 'Miami', 'Atlanta'
   ];
 
-  const trendingTracks: any[] = [];
+  interface Track {
+    title: string;
+    artist: string;
+    plays: number;
+  }
+  const trendingTracks: Track[] = [];
 
-  const upcomingShows: any[] = [];
+  interface Show {
+    artist: string;
+    date: Date;
+    venue: string;
+    city: string;
+  }
+  const upcomingShows: Show[] = [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -195,7 +219,7 @@ export function DiscoverPageClient() {
                   </div>
                 </div>
               </Card>
-            )) : null}
+            ))}
           </div>
         </div>
 
