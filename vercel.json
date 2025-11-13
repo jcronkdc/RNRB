@@ -1,5 +1,0 @@
-{
-  "buildCommand": "DATABASE_URL=$DATABASE_URL pnpm run build",
-  "installCommand": "pnpm install",
-  "framework": "nextjs"
-}
