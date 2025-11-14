@@ -34,7 +34,7 @@ export function PracticePageClient() {
   const [isMetronomeOn, setIsMetronomeOn] = useState(false);
   const [tempo, setTempo] = useState(120);
 
-  // Mock data
+  // Sample setlist templates
   const setlists = [
     {
       id: '1',

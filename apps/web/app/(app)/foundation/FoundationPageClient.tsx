@@ -23,53 +23,43 @@ export function FoundationPageClient() {
   const [selectedDonationAmount, setSelectedDonationAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState('');
 
-  // Mock data for foundation stats
+  // Real foundation data (starting fresh)
   const stats = {
-    totalRaised: 125000,
-    monthlyDonors: 342,
-    artistsSupported: 1247,
-    grantsAwarded: 23,
+    totalRaised: 0,
+    monthlyDonors: 0,
+    artistsSupported: 0,
+    grantsAwarded: 0,
   };
 
   const currentCampaigns = [
     {
-      title: 'Music Education for Underserved Communities',
+      title: 'Music Education Initiative',
       goal: 50000,
-      raised: 32500,
-      supporters: 156,
-      daysLeft: 22,
-      description: 'Bringing music education and instruments to schools in need.',
+      raised: 0,
+      supporters: 0,
+      daysLeft: 90,
+      description: 'Help us launch our music education program for underserved communities.',
     },
     {
-      title: 'Artist Emergency Relief Fund',
-      goal: 100000,
-      raised: 78000,
-      supporters: 423,
-      daysLeft: 45,
-      description: 'Supporting musicians facing financial hardship due to unexpected circumstances.',
+      title: 'Artist Support Fund',
+      goal: 25000,
+      raised: 0,
+      supporters: 0,
+      daysLeft: 60,
+      description: 'Supporting independent musicians with grants and resources.',
     },
   ];
 
-  const impactStories = [
-    {
-      name: 'Sarah\'s Music School',
-      location: 'Detroit, MI',
-      impact: 'Provided instruments and lessons to 150 students',
-      quote: 'CronkWaters Foundation gave our kids the chance to discover their musical talents.',
-    },
-    {
-      name: 'Hurricane Relief for Musicians',
-      location: 'New Orleans, LA',
-      impact: 'Helped 45 musicians replace lost instruments',
-      quote: 'When we lost everything, the foundation helped us get back to making music.',
-    },
-  ];
+  const impactStories: Array<{
+    name: string;
+    location: string;
+    impact: string;
+    quote: string;
+  }> = [];
 
   const governanceMembers = [
-    { name: 'Maya Patel', role: 'Board Chair', background: 'Grammy-winning producer' },
-    { name: 'James Wilson', role: 'Treasurer', background: 'Former CFO, Music Industry' },
-    { name: 'Lisa Chen', role: 'Secretary', background: 'Music Education Advocate' },
-    { name: 'Marcus Davis', role: 'Board Member', background: 'Independent Artist' },
+    { name: 'Josh Waters', role: 'Co-Founder', background: 'Grand Ole Opry performer' },
+    { name: 'Justin Cronk', role: 'Co-Founder', background: 'Songwriter and visionary' },
   ];
 
   return (

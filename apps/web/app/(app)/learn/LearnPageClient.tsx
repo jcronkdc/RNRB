@@ -23,7 +23,7 @@ export function LearnPageClient() {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'songwriting' | 'production' | 'instruments' | 'business'>('all');
   const [selectedLevel, setSelectedLevel] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all');
 
-  // Mock data for courses and tutorials
+  // Available courses
   const courses = [
     {
       id: '1',

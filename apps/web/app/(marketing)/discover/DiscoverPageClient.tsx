@@ -107,7 +107,7 @@ export function DiscoverPageClient() {
             { label: 'Active Artists', value: '0', icon: Users, color: 'text-blue-500' },
             { label: 'Songs Available', value: '0', icon: Music, color: 'text-green-500' },
             { label: 'Upcoming Shows', value: '0', icon: Calendar, color: 'text-purple-500' },
-            { label: 'Cities Ready', value: '8', icon: MapPin, color: 'text-orange-500' },
+            { label: 'Genres Supported', value: '12+', icon: MapPin, color: 'text-orange-500' },
           ].map((stat) => {
             const Icon = stat.icon;
             return (

@@ -22,7 +22,7 @@ export function CommunityPageClient() {
   const [selectedTab, setSelectedTab] = useState<'collaborations' | 'forum' | 'musicians'>('collaborations');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Mock data for now
+  // Sample collaboration templates
   const collaborationRequests = [
     {
       id: '1',
