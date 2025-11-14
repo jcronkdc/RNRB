@@ -116,14 +116,20 @@ The mycelial network has achieved phases 1-3, but the organism continues to evol
 **2. Authentication Configuration**
 - Environment variables needed in Vercel
 - This blocks access to authenticated pages
-- Guide page currently throws 500 error due to auth redirect
+- ~~Guide page currently throws 500 error due to auth redirect~~
+- **UPDATE**: Fixed public routes in middleware, but Vercel deployments failing
 
-**3. Performance Optimization**
+**3. Vercel Deployment Issues**
+- Recent deployments showing errors (30s timeouts)
+- Last successful deployment: 1 hour ago
+- Need to investigate deployment configuration
+
+**4. Performance Optimization**
 - Monitor and improve load times
 - Optimize bundle sizes
 - Implement lazy loading where beneficial
 
-**4. Stress Testing**
+**5. Stress Testing**
 - Once auth is configured, test all user flows
 - Verify data persistence
 - Test concurrent operations
