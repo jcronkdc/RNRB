@@ -1,1 +1,2 @@
-export { db } from '@cronkwaters/db';
+import { prisma } from '@cronkwaters/db';
+export const db = prisma;
