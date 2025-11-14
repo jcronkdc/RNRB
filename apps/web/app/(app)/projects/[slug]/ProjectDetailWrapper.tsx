@@ -29,6 +29,13 @@ interface ProjectDetailWrapperProps {
   initialAssets: AssetListItem[];
   initialSplits: SplitListItem[];
   initialLicenses: LicenseListItem[];
+  initialComments?: Array<{
+    id: string;
+    text: string;
+    author: string;
+    authorAvatar?: string;
+    timestamp: Date;
+  }>;
 }
 
 export function ProjectDetailWrapper({
@@ -37,7 +44,8 @@ export function ProjectDetailWrapper({
   initialSongs,
   initialAssets,
   initialSplits,
-  initialLicenses
+  initialLicenses,
+  initialComments = []
 }: ProjectDetailWrapperProps) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -127,6 +135,7 @@ export function ProjectDetailWrapper({
           <Comments
             entityId={projectSlug}
             entityType="project"
+            comments={initialComments}
             onCreate={async (text) => {
               startTransition(async () => {
                 const result = await createCommentAction(projectSlug, 'project', text);

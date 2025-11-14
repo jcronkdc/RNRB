@@ -77,7 +77,7 @@ export default function LoginForm() {
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <Sparkles className="h-4 w-4 text-brand-primary" aria-hidden="true" />
-        <span>Supabase-secured access</span>
+        <span>NextAuth-secured access</span>
       </motion.div>
 
       <motion.form

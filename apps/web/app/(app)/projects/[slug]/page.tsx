@@ -10,6 +10,7 @@ import type { AssetListItem } from '../../../../components/app/AssetList';
 import type { LicenseListItem } from '../../../../components/app/LicenseList';
 import type { SongListItem } from '../../../../components/app/SongList';
 import type { SplitListItem } from '../../../../components/app/SplitList';
+import { getCommentsForEntity } from '../../../../lib/actions/comments';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -98,11 +99,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   }
 
   // Fetch related data
-  const [songs, assets, splits, licenses] = await Promise.all([
+  const [songs, assets, splits, licenses, comments] = await Promise.all([
     listSongs(project.id),
     listAssets(project.id),
     listSplitSheets(project.id),
-    listLicenses(project.id)
+    listLicenses(project.id),
+    getCommentsForEntity(slug, 'project')
   ]);
 
   // Transform to UI types
@@ -137,6 +139,15 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     createdAt: l.createdAt.toISOString()
   }));
 
+  // Transform comments to UI types
+  const commentsData = comments.map((c: { id: string; text: string; createdAt: Date; user: { name: string | null; image: string | null } }) => ({
+    id: c.id,
+    text: c.text,
+    author: c.user.name || 'Anonymous',
+    authorAvatar: c.user.image || undefined,
+    timestamp: new Date(c.createdAt)
+  }));
+
   return (
     <ProjectDetailWrapper
       projectSlug={slug}
@@ -150,6 +161,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       initialAssets={assetsData}
       initialSplits={splitsData}
       initialLicenses={licensesData}
+      initialComments={commentsData}
     />
   );
 }

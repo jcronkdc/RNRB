@@ -21,12 +21,12 @@ export default function StyleGuidePage() {
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-6 py-24 sm:px-12">
       <header className="flex flex-col gap-4 text-center sm:text-left">
-        <span className="text-xs font-semibold uppercase tracking-[0.32em] text-muted-foreground">CronkWater</span>
+        <span className="text-xs font-semibold uppercase tracking-[0.32em] text-muted-foreground">CronkWaters</span>
         <h1 className="text-balance font-serif text-4xl font-semibold text-brand-foreground sm:text-5xl">
           Design primitives
         </h1>
         <p className="text-pretty text-base text-muted-foreground sm:text-lg">
-          Tokens and components that anchor the CronkWater visual language—warm neutrals, tactile typography, and soft
+          Tokens and components that anchor the CronkWaters visual language—warm neutrals, tactile typography, and soft
           shadows.
         </p>
       </header>

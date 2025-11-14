@@ -6,151 +6,79 @@
    [1m[38;2;173;127;168m▲ Next.js 15.5.6[39m[22m
 
  [37m[1m [22m[39m Creating an optimized production build ...
- [32m[1m✓[22m[39m Compiled successfully in 17.5s
-[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39mWarning: React version not specified in eslint-plugin-react settings. See https://github.com/jsx-eslint/eslint-plugin-react#configuration .
-[2K[1G[1A[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[1A[2K[1G[?25h
-./app/(app)/analytics/page.tsx
-5:76  Warning: 'DollarSign' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
+ [32m[1m✓[22m[39m Compiled successfully in 26.8s
+ [37m[1m [22m[39m Skipping validation of types
+ [37m[1m [22m[39m Skipping linting
+[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G[?25h [33m[1m⚠[22m[39m Using edge runtime on a page currently disables static generation for that page
+[?25l [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G[?25h    [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/13)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/13)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/13)  [36m[====][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/13)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/13)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/13)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/13)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/13)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/13)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/13)  [36m[=== ][39m[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (13/13)
+[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
 
-./app/(app)/assets/AssetDetailsDialog.tsx
-45:10  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-90:15  Warning: Media elements such as <audio> and <video> must have a <track> for captions.  jsx-a11y/media-has-caption
+[4mRoute (app)[24m                                 [4mSize[24m  [4mFirst Load JS[24m  [4m[24m  [4m[24m
+┌ ○ /                                     5.3 kB         [37m[1m150 kB[22m[39m
+├ ƒ /_not-found                            172 B         [37m[1m102 kB[22m[39m
+├ ƒ /analytics                           2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /api/ai-lyrics                         172 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/auth/[...nextauth]                172 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/elevenlabs-voice                  172 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/health                            172 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/projects/[slug]/export/pdf        172 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/trpc/[trpc]                       172 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/upload-audio                      172 B         [37m[1m102 kB[22m[39m
+├ ƒ /artist/[slug]                       2.86 kB         [37m[1m170 kB[22m[39m
+├ ƒ /assets                              7.73 kB         [37m[1m171 kB[22m[39m
+├ ƒ /audience/[sessionId]                52.4 kB         [37m[1m210 kB[22m[39m
+├ ƒ /auth                                11.8 kB         [37m[1m208 kB[22m[39m
+├ ƒ /blocked                               166 B         [37m[1m106 kB[22m[39m
+├ ƒ /community                           3.99 kB         [37m[1m161 kB[22m[39m
+├ ƒ /dashboard                           11.3 kB         [37m[1m207 kB[22m[39m
+├ ƒ /dashboard/assets                    2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /dashboard/distribute                2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /dashboard/licenses                  2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /dashboard/sessions                  2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /dashboard/settings                  2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /dashboard/splits                    2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /discover                            5.26 kB         [37m[1m204 kB[22m[39m
+├ ƒ /donate                              3.62 kB         [37m[1m164 kB[22m[39m
+├ ƒ /foundation                          4.78 kB         [37m[1m162 kB[22m[39m
+├ ○ /guide                               12.3 kB         [37m[1m173 kB[22m[39m
+├ ƒ /learn                                4.4 kB         [37m[1m162 kB[22m[39m
+├ ƒ /licenses                              172 B         [37m[1m102 kB[22m[39m
+├ ○ /membership                          4.47 kB         [37m[1m149 kB[22m[39m
+├ ƒ /music                               4.17 kB         [37m[1m161 kB[22m[39m
+├ ƒ /onboarding/organization             3.52 kB         [37m[1m161 kB[22m[39m
+├ ƒ /p/[slug]                            1.34 kB         [37m[1m162 kB[22m[39m
+├ ƒ /p/[slug]/opengraph-image-4mgimg       172 B         [37m[1m102 kB[22m[39m
+├ ƒ /practice                            5.49 kB         [37m[1m163 kB[22m[39m
+├ ƒ /privacy                             2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /projects                            5.37 kB         [37m[1m166 kB[22m[39m
+├ ƒ /projects/[slug]                     10.3 kB         [37m[1m171 kB[22m[39m
+├ ƒ /projects/[slug]/songs/[songId]      4.52 kB         [37m[1m200 kB[22m[39m
+├ ƒ /remix/[roomId]                      3.35 kB         [37m[1m161 kB[22m[39m
+├ ○ /robots.txt                            172 B         [37m[1m102 kB[22m[39m
+├ ƒ /search                              2.97 kB         [37m[1m164 kB[22m[39m
+├ ƒ /sessions                            3.67 kB         [37m[1m167 kB[22m[39m
+├ ƒ /settings                            2.28 kB         [37m[1m160 kB[22m[39m
+├ ƒ /settings/artist-profile             4.52 kB         [37m[1m162 kB[22m[39m
+├ ƒ /settings/org                        2.14 kB         [37m[1m159 kB[22m[39m
+├ ○ /sitemap.xml                           172 B         [37m[1m102 kB[22m[39m
+├ ƒ /splits                              3.76 kB         [37m[1m167 kB[22m[39m
+├ ƒ /terms                               2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /test                                  172 B         [37m[1m102 kB[22m[39m
+├ ƒ /theming                             2.15 kB         [37m[1m153 kB[22m[39m
+├ ƒ /tours                               35.5 kB         [37m[1m203 kB[22m[39m
+├ ƒ /tours/[slug]                        3.02 kB         [37m[1m167 kB[22m[39m
+└ ○ /vision                              4.01 kB         [37m[1m148 kB[22m[39m
++ First Load JS shared by all             [37m[1m102 kB[22m[39m
+  ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
+  ├ chunks/5542-123c5d89f3d04e21.js      46.1 kB
+  └ other shared chunks (total)          1.94 kB
 
-./app/(app)/assets/ShareAssetDialog.tsx
-8:3  Warning: 'DialogFooter' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
-30:10  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-58:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
-58:14  Warning: 'error' is defined but never used.  unused-imports/no-unused-vars
 
-./app/(app)/assets/actions.ts
-21:20  Warning: 'isPublic' is assigned a value but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
-21:20  Warning: 'isPublic' is assigned a value but never used. Allowed unused vars must match /^_/u.  unused-imports/no-unused-vars
+ƒ Middleware                             [37m[1m66.5 kB[22m[39m
 
-./app/(app)/assets/page.tsx
-99:1  Warning: Unused eslint-disable directive (no problems were reported from 'import/no-default-export').
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
 
-./app/(app)/dashboard/page.tsx
-117:1  Warning: Unused eslint-disable directive (no problems were reported from 'import/no-default-export').
-
-./app/(app)/layout.tsx
-8:1  Warning: Unused eslint-disable directive (no problems were reported from 'import/no-default-export').
-
-./app/(app)/onboarding/organization/CreateOrganizationDialog.tsx
-77:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
-77:14  Warning: 'error' is defined but never used.  unused-imports/no-unused-vars
-
-./app/(app)/onboarding/organization/JoinWithInviteDialog.tsx
-53:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
-53:14  Warning: 'error' is defined but never used.  unused-imports/no-unused-vars
-
-./app/(app)/sessions/page.tsx
-111:1  Warning: Unused eslint-disable directive (no problems were reported from 'import/no-default-export').
-
-./app/(app)/splits/NewSplitDialog.tsx
-34:3  Warning: 'orgId' is defined but never used. Allowed unused args must match /^_/u.  @typescript-eslint/no-unused-vars
-34:3  Warning: 'orgId' is defined but never used. Allowed unused args must match /^_/u.  unused-imports/no-unused-vars
-89:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
-89:14  Warning: 'error' is defined but never used.  unused-imports/no-unused-vars
-
-./app/(app)/splits/SplitDetailsDialog.tsx
-32:41  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-120:37  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-160:40  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-160:69  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-197:41  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-
-./app/(app)/splits/page.tsx
-118:1  Warning: Unused eslint-disable directive (no problems were reported from 'import/no-default-export').
-
-./app/(marketing)/donate/DonationWidget.tsx
-14:10  Warning: 'CreditCard' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
-72:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
-72:14  Warning: 'error' is defined but never used.  unused-imports/no-unused-vars
-
-./app/(marketing)/donate/page.tsx
-11:32  Warning: 'TrendingUp' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
-
-./app/(marketing)/p/[slug]/page.tsx
-32:1  Warning: Unused eslint-disable directive (no problems were reported from 'import/no-default-export').
-
-./app/layout.tsx
-62:1  Warning: Unused eslint-disable directive (no problems were reported from 'import/no-default-export').
-
-./app/page.tsx
-13:3  Warning: 'FileText' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
-108:1  Warning: Unused eslint-disable directive (no problems were reported from 'import/no-default-export').
-
-./components/projects/CreateProjectDialog.tsx
-71:15  Warning: The autoFocus prop should not be used, as it can reduce usability and accessibility for users.  jsx-a11y/no-autofocus
-
-./components/splits/CreateSplitDialog.tsx
-78:15  Warning: The autoFocus prop should not be used, as it can reduce usability and accessibility for users.  jsx-a11y/no-autofocus
-
-./lib/actions/comments.ts
-102:29  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-
-./lib/actions/projects.ts
-5:36  Warning: 'auth' is defined but never used. Allowed unused vars must match /^_/u.  @typescript-eslint/no-unused-vars
-62:28  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-
-./lib/actions/sessions.ts
-38:30  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-61:36  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-64:35  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-117:32  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-127:53  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-131:25  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-172:32  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-174:36  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-
-./lib/actions/songs.ts
-23:22  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-31:35  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-32:37  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-33:60  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-33:90  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-58:51  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-82:22  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-92:53  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-114:22  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-122:42  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-143:22  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-151:69  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-
-./lib/actions/splits.ts
-55:22  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-63:35  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-64:37  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-65:60  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-65:90  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-85:36  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-86:10  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-113:22  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-120:65  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-243:22  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-251:69  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-
-./lib/auth/edge-jwt-secure.ts
-42:12  Warning: '_error' is defined but never used.  @typescript-eslint/no-unused-vars
-42:12  Warning: '_error' is defined but never used.  unused-imports/no-unused-vars
-
-./lib/email-types.d.ts
-43:22  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-48:24  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-53:84  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-
-info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-[?25l [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m Failed to compile.
-
-./lib/actions/activity.ts:45:9
-Type error: Object literal may only specify known properties, and 'createdBy' does not exist in type 'SongInclude<DefaultArgs>'.
-
-[0m [90m 43 |[39m           select[33m:[39m { name[33m:[39m [36mtrue[39m }
- [90m 44 |[39m         }[33m,[39m
-[31m[1m>[22m[39m[90m 45 |[39m         createdBy[33m:[39m {
- [90m    |[39m         [31m[1m^[22m[39m
- [90m 46 |[39m           select[33m:[39m { name[33m:[39m [36mtrue[39m[33m,[39m email[33m:[39m [36mtrue[39m }
- [90m 47 |[39m         }
- [90m 48 |[39m       }[0m
-[2K[1G [36m.[39m [2K[1G[?25hNext.js build worker exited with code: 1 and signal: null
-[?25l [36m.[39m [?25h[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m
+[?25h

@@ -1,7 +1,10 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getOrgSessionFromSession } from '@cronkwaters/auth';
-import { getProjectBySlug } from '@cronkwaters/db';
+import { getProjectBySlug, listSongs, listAssets, listSplitSheets, prisma } from '@cronkwaters/db';
+import { renderToBuffer } from '@react-pdf/renderer';
+import React from 'react';
+import { ProjectExportPDF } from '@/lib/pdf/project-export';
 
 export async function GET(
   _req: NextRequest,
@@ -25,84 +28,58 @@ export async function GET(
       return new NextResponse('Project not found', { status: 404 });
     }
 
-    // Generate PDF content (simplified HTML for now)
-    const html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>${project.name} - Export</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            line-height: 1.6;
-          }
-          h1 { color: #333; }
-          h2 { color: #666; margin-top: 30px; }
-          .project-info { margin-bottom: 30px; }
-          .section { margin-bottom: 20px; }
-          .meta { color: #666; font-size: 14px; }
-        </style>
-      </head>
-      <body>
-        <h1>${project.name}</h1>
-        <div class="project-info">
-          <p class="meta">Organization: ${activeMembership.org.name}</p>
-          <p class="meta">Created: ${new Date(project.createdAt).toLocaleDateString()}</p>
-          <p class="meta">Status: ${project.status || 'Active'}</p>
-        </div>
+    // Fetch related data
+    const [songs, assets, splits] = await Promise.all([
+      listSongs(project.id),
+      listAssets(project.id),
+      // Get splits with contributors
+      prisma.splitSheet.findMany({
+        where: { projectId: project.id },
+        include: {
+          contributors: true
+        }
+      })
+    ]);
 
-        ${project.description ? `
-        <div class="section">
-          <h2>Description</h2>
-          <p>${project.description}</p>
-        </div>
-        ` : ''}
+    // Prepare data for PDF
+    const pdfData = {
+      project: {
+        name: project.name,
+        orgName: activeMembership.org.name,
+        description: project.description || undefined,
+        status: project.status,
+        visibility: project.visibility,
+        createdAt: project.createdAt
+      },
+      songs: songs.map(song => ({
+        title: song.title,
+        key: song.key || undefined,
+        tempo: song.tempo || undefined
+      })),
+      assets: assets.map(asset => ({
+        name: asset.name,
+        type: asset.assetType,
+        size: Number(asset.bytes)
+      })),
+      splits: splits.map(split => ({
+        title: split.title,
+        contributors: split.contributors.map(contrib => ({
+          name: contrib.name,
+          percentage: contrib.percentage,
+          role: contrib.role || undefined
+        }))
+      }))
+    };
 
-        <div class="section">
-          <h2>Songs</h2>
-          ${project.songs && project.songs.length > 0 ? `
-            <ul>
-              ${project.songs.map((song) => `
-                <li>
-                  <strong>${song.title}</strong>
-                  ${song.key ? ` - Key: ${song.key}` : ''}
-                  ${song.tempo ? ` - ${song.tempo} BPM` : ''}
-                </li>
-              `).join('')}
-            </ul>
-          ` : '<p>No songs in this project yet.</p>'}
-        </div>
+    // Generate PDF
+    const pdfBuffer = await renderToBuffer(
+      React.createElement(ProjectExportPDF, { data: pdfData })
+    );
 
-        <div class="section">
-          <h2>Assets</h2>
-          ${project.assets && project.assets.length > 0 ? `
-            <ul>
-              ${project.assets.map((asset) => `
-                <li>
-                  <strong>${asset.name}</strong>
-                  - ${asset.mimeType}
-                  ${asset.bytes ? ` (${(Number(asset.bytes) / 1024 / 1024).toFixed(2)} MB)` : ''}
-                </li>
-              `).join('')}
-            </ul>
-          ` : '<p>No assets in this project yet.</p>'}
-        </div>
-
-        <div class="meta" style="margin-top: 50px; text-align: center;">
-          <p>Generated on ${new Date().toLocaleString()}</p>
-          <p>© ${new Date().getFullYear()} CronkWaters</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    // Return HTML with PDF content-type headers
-    // Note: In production, you'd use a proper PDF generation library like puppeteer or pdfkit
-    return new NextResponse(html, {
+    // Return PDF
+    return new NextResponse(pdfBuffer, {
       headers: {
-        'Content-Type': 'text/html',
+        'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${project.slug}_export.pdf"`,
       },
     });

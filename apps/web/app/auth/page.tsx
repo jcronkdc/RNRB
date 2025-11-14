@@ -31,7 +31,7 @@ export default async function AuthPage() {
           <div className="space-y-3 text-center">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground">Welcome back to CronkWaters</h1>
             <p className="text-sm text-muted-foreground">
-              Sign in to access your collaborative studio, AI co-creators, and release pipeline — all powered by Supabase Auth.
+              Sign in to access your collaborative studio, AI co-creators, and release pipeline — all powered by NextAuth.
             </p>
           </div>
           <div className="mt-10">
@@ -44,7 +44,7 @@ export default async function AuthPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.45, duration: 0.4 }}
         >
-          By continuing you agree to the CronkWaters Terms and acknowledge the use of Supabase for secure authentication.
+          By continuing you agree to the CronkWaters Terms and acknowledge the use of NextAuth for secure authentication.
         </motion.p>
       </motion.section>
     </main>

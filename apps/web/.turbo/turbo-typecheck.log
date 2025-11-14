@@ -3,3 +3,20 @@
 > @cronkwaters/web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
+[96mapp/api/projects/[slug]/export/pdf/route.ts[0m:[93m76[0m:[93m7[0m - [91merror[0m[90m TS2345: [0mArgument of type 'FunctionComponentElement<{ data: ProjectExportData; }>' is not assignable to parameter of type 'ReactElement<DocumentProps, string | JSXElementConstructor<any>>'.
+  Types of property 'props' are incompatible.
+    Type '{ data: ProjectExportData; }' has no properties in common with type 'DocumentProps'.
+
+[7m76[0m       React.createElement(ProjectExportPDF, { data: pdfData })
+[7m  [0m [91m      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/api/projects/[slug]/export/pdf/route.ts[0m:[93m80[0m:[93m29[0m - [91merror[0m[90m TS2345: [0mArgument of type 'Buffer<ArrayBufferLike>' is not assignable to parameter of type 'BodyInit | null | undefined'.
+  Type 'Buffer<ArrayBufferLike>' is missing the following properties from type 'URLSearchParams': size, append, delete, get, and 2 more.
+
+[7m80[0m     return new NextResponse(pdfBuffer, {
+[7m  [0m [91m                            ~~~~~~~~~[0m
+
+
+Found 2 errors in the same file, starting at: app/api/projects/[slug]/export/pdf/route.ts[90m:76[0m
+
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m
