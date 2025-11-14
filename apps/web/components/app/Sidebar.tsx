@@ -4,6 +4,7 @@ import { cn } from '@cronkwaters/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
+import { Wordmark } from '../Wordmark';
 
 export const APP_NAV_ITEMS = [
   { name: 'Projects', href: '/projects' },
@@ -50,7 +51,7 @@ export default function Sidebar({ userName, userEmail, ...props }: SidebarProps 
           href="/projects"
           className="inline-flex items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-primary"
         >
-          <img src="/brand-wordmark.svg" alt="CronkWaters" className="h-6 w-auto" />
+          <Wordmark className="h-6 w-auto" />
         </Link>
       </div>
 

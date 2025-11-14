@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ThemeToggle } from './theme/ThemeToggle';
+import { Wordmark } from './Wordmark';
 
 type NavLink = {
   label: string;
@@ -223,11 +224,4 @@ export function NavBar() {
   );
 }
 
-function Wordmark({ className }: { className?: string }) {
-  return (
-    <div className={cn("font-bold text-xl tracking-tight", className)}>
-      CronkWaters
-    </div>
-  );
-}
 
