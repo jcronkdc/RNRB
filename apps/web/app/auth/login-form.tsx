@@ -179,7 +179,7 @@ export default function LoginForm() {
 
         <div className="flex items-center justify-center gap-2 rounded-2xl border border-border/60 bg-surface/50 px-4 py-3 text-xs text-muted-foreground">
           <ShieldCheck className="h-4 w-4 text-brand-primary" aria-hidden="true" />
-          <span>Authentication is powered by Supabase Auth with enterprise-grade encryption.</span>
+          <span>NextAuth-secured access</span>
         </div>
       </motion.div>
 

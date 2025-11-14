@@ -2,7 +2,7 @@
 
 import { cn } from '@cronkwaters/ui';
 import { motion, useReducedMotion } from 'framer-motion';
-import { HeartHandshake } from 'lucide-react';
+import { HeartHandshake, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -35,6 +35,7 @@ export function NavBar() {
   const prefersReducedMotion = useReducedMotion();
   const [currentHash, setCurrentHash] = useState<string>('');
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const updateHash = () => {
@@ -55,6 +56,23 @@ export function NavBar() {
       window.removeEventListener('scroll', onScroll);
     };
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   /* focus section heading on anchor-link click, for a11y */
   useEffect(() => {
@@ -97,7 +115,8 @@ export function NavBar() {
         {...(!prefersReducedMotion ? motionConfig : { initial: false })}
         aria-label="Primary navigation"
       >
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+          {/* Logo */}
           <Link
             href="/"
             aria-label="CronkWaters home"
@@ -106,7 +125,9 @@ export function NavBar() {
             <Wordmark className="h-6 w-auto" />
             <span className="sr-only">CronkWaters</span>
           </Link>
-          <ul className={listClass}>
+
+          {/* Desktop Navigation */}
+          <ul className={cn(listClass, 'hidden md:flex')}>
             {LINKS.map(({ label, href, icon: Icon, ariaLabel }) => {
               const isAnchor = href.startsWith('#');
               const isActive = isAnchor
@@ -131,8 +152,72 @@ export function NavBar() {
               );
             })}
           </ul>
-          <ThemeToggle />
+
+          {/* Desktop Theme Toggle and Mobile Menu Button */}
+          <div className="flex items-center gap-3">
+            <div className="hidden md:block">
+              <ThemeToggle />
+            </div>
+            
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden rounded-lg p-2 text-muted-foreground hover:text-brand-foreground hover:bg-surface-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden border-t border-border/40 bg-surface/95 backdrop-blur"
+          >
+            <div className="px-4 py-6 space-y-3">
+              {LINKS.map(({ label, href, icon: Icon, ariaLabel }) => {
+                const isAnchor = href.startsWith('#');
+                const isActive = isAnchor
+                  ? currentHash === href
+                  : pathname === href || (href === '/' && pathname === '/');
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    aria-label={ariaLabel ?? label}
+                    className={cn(
+                      'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary',
+                      isActive
+                        ? 'bg-brand-primary/15 text-brand-foreground font-medium'
+                        : 'text-muted-foreground hover:text-brand-foreground hover:bg-surface-muted'
+                    )}
+                  >
+                    {Icon ? <Icon className="h-5 w-5" aria-hidden="true" /> : null}
+                    <span className="text-base">{label}</span>
+                  </Link>
+                );
+              })}
+              
+              {/* Mobile Theme Toggle */}
+              <div className="pt-3 border-t border-border/40">
+                <div className="px-4">
+                  <ThemeToggle />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </motion.nav>
     </>
   );
