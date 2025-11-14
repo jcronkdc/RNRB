@@ -8,7 +8,7 @@ interface WordmarkProps {
 
 export function Wordmark({ className }: WordmarkProps) {
   return (
-    <div className={cn("font-bold text-xl tracking-tight", className)}>
+    <div className={cn("font-serif font-bold text-2xl tracking-tighter", className)}>
       CronkWaters
     </div>
   );
