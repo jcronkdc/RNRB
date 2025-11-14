@@ -77,3 +77,25 @@ export {
 export { cn } from './lib/utils';
 export type { ToastItem, ToastVariant } from './components/toast';
 export { ThemeProvider, type ThemeProviderProps } from './theme/provider';
+export {
+  Avatar,
+  AvatarImage,
+  AvatarFallback
+} from './components/avatar';
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup
+} from './components/dropdown-menu';
