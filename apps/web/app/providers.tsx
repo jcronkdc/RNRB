@@ -95,7 +95,7 @@ export function Providers({ children }: ProvidersProps) {
 
   return (
     <ThemeContext.Provider value={value}>
-      <ThemeProvider theme={theme === "warm" ? "light" : theme}>
+      <ThemeProvider theme={theme}>
         <MotionProvider>
           <TrpcProvider>
             <ToastProvider>{children}</ToastProvider>

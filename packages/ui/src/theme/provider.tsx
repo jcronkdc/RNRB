@@ -5,11 +5,11 @@ import type { ReactNode } from 'react';
 
 export interface ThemeProviderProps {
   /** Desired theme. Defaults to `light`. */
-  theme?: 'light' | 'dark';
+  theme?: 'light' | 'dark' | 'warm';
   /** Attribute applied to the root element for theming. */
   attribute?: string;
   /** Optional callback after theme is applied. */
-  onThemeChange?: (theme: 'light' | 'dark') => void;
+  onThemeChange?: (theme: 'light' | 'dark' | 'warm') => void;
   children: ReactNode;
 }
 

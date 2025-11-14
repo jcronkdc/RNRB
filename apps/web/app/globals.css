@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import '@cronkwaters/ui/styles.css';
+@import './theme-fixes.css';
 
 @layer base {
   body {
