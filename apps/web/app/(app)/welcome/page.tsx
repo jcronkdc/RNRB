@@ -7,6 +7,8 @@ import { Progress } from '@cronkwaters/ui'
 import { CheckCircle, Circle, Building2, User, Music, FileText, Users, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 interface WelcomeStep {
   id: string
   title: string

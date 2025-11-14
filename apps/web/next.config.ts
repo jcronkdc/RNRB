@@ -43,7 +43,11 @@ const nextConfig: NextConfig = {
   experimental: {
     // Temporarily disabled due to new component exports
     // optimizePackageImports: ['@cronkwaters/ui', 'lucide-react']
+    serverMinification: false,
   },
+  
+  // Disable SWC minification to speed up builds
+  swcMinify: false,
 
   // Security-focused webpack configuration
   webpack: (config, { isServer, dev, webpack }) => {
