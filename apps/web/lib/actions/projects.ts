@@ -8,13 +8,13 @@ import { z } from 'zod'
 const createProjectSchema = z.object({
   name: z.string().min(1, 'Project name is required').max(100),
   description: z.string().optional(),
-  organizationId: z.string()
+  orgId: z.string()
 })
 
 export async function createProject(data: {
   name: string
   description?: string
-  organizationId: string
+  orgId: string
 }) {
   const user = await currentUser()
   if (!user?.id) {
@@ -25,7 +25,7 @@ export async function createProject(data: {
   const membership = await db.membership.findFirst({
     where: {
       userId: user.id,
-      organizationId: data.organizationId
+      orgId: data.orgId
     }
   })
 
@@ -46,7 +46,7 @@ export async function createProject(data: {
   const existingProject = await db.project.findFirst({
     where: {
       slug: baseSlug,
-      organizationId: validated.organizationId
+      orgId: validated.orgId
     }
   })
 
@@ -60,7 +60,7 @@ export async function createProject(data: {
       name: validated.name,
       slug,
       description: validated.description,
-      organizationId: validated.organizationId,
+      orgId: validated.orgId,
       status: 'active'
     }
   })
@@ -76,7 +76,7 @@ export async function updateProject(
   data: {
     name?: string
     description?: string
-    status?: 'active' | 'archived' | 'completed'
+    status?: 'active' | 'archived' | 'draft'
   }
 ) {
   const user = await currentUser()
@@ -88,8 +88,8 @@ export async function updateProject(
   const project = await db.project.findFirst({
     where: {
       id: projectId,
-      organization: {
-        members: {
+      org: {
+        memberships: {
           some: {
             userId: user.id
           }
@@ -128,8 +128,8 @@ export async function deleteProject(projectId: string) {
   const project = await db.project.findFirst({
     where: {
       id: projectId,
-      organization: {
-        members: {
+      org: {
+        memberships: {
           some: {
             userId: user.id,
             role: { in: ['owner', 'admin'] }
@@ -154,7 +154,7 @@ export async function deleteProject(projectId: string) {
   return { success: true }
 }
 
-export async function getProjectStats(organizationId: string) {
+export async function getProjectStats(orgId: string) {
   const [
     totalProjects,
     activeProjects,
@@ -162,25 +162,25 @@ export async function getProjectStats(organizationId: string) {
     totalAssets
   ] = await Promise.all([
     db.project.count({
-      where: { organizationId }
+      where: { orgId }
     }),
     db.project.count({
       where: { 
-        organizationId,
+        orgId,
         status: 'active'
       }
     }),
     db.song.count({
       where: {
         project: {
-          organizationId
+          orgId
         }
       }
     }),
     db.asset.count({
       where: {
         project: {
-          organizationId
+          orgId
         }
       }
     })
