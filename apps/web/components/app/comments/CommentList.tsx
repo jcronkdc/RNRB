@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { MessageSquare, Reply, Edit, Trash2, Send } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
+import { Avatar, AvatarFallback, AvatarImage } from '@cronkwaters/ui'
+import { Button } from '@cronkwaters/ui'
+import { Textarea } from '@cronkwaters/ui'
 import { createComment, updateComment, deleteComment } from '@/lib/actions/comments'
-import { cn } from '@/lib/utils'
+import { cn } from '@cronkwaters/ui'
 import type { Comment } from '@prisma/client'
 
 interface CommentWithUser extends Comment {

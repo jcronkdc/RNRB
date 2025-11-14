@@ -6,13 +6,123 @@
    [1m[38;2;173;127;168m▲ Next.js 15.5.6[39m[22m
 
  [37m[1m [22m[39m Creating an optimized production build ...
- [32m[1m✓[22m[39m Compiled successfully in 15.2s
+ [33m[1m⚠[22m[39m Compiled with warnings in 27.7s
+
+./components/app/comments/CommentList.tsx
+Attempted import error: 'Avatar' is not exported from '@cronkwaters/ui' (imported as 'Avatar').
+
+Import trace for requested module:
+./components/app/comments/CommentList.tsx
+
+./components/app/comments/CommentList.tsx
+Attempted import error: 'AvatarImage' is not exported from '@cronkwaters/ui' (imported as 'AvatarImage').
+
+Import trace for requested module:
+./components/app/comments/CommentList.tsx
+
+./components/app/comments/CommentList.tsx
+Attempted import error: 'AvatarFallback' is not exported from '@cronkwaters/ui' (imported as 'AvatarFallback').
+
+Import trace for requested module:
+./components/app/comments/CommentList.tsx
+
+./components/app/comments/CommentList.tsx
+Attempted import error: 'Avatar' is not exported from '@cronkwaters/ui' (imported as 'Avatar').
+
+Import trace for requested module:
+./components/app/comments/CommentList.tsx
+
+./components/app/comments/CommentList.tsx
+Attempted import error: 'AvatarImage' is not exported from '@cronkwaters/ui' (imported as 'AvatarImage').
+
+Import trace for requested module:
+./components/app/comments/CommentList.tsx
+
+./components/app/comments/CommentList.tsx
+Attempted import error: 'AvatarFallback' is not exported from '@cronkwaters/ui' (imported as 'AvatarFallback').
+
+Import trace for requested module:
+./components/app/comments/CommentList.tsx
+
+./app/(app)/projects/[slug]/page.tsx
+Attempted import error: 'Avatar' is not exported from '@cronkwaters/ui' (imported as 'Avatar').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/page.tsx
+
+./app/(app)/projects/[slug]/page.tsx
+Attempted import error: 'AvatarImage' is not exported from '@cronkwaters/ui' (imported as 'AvatarImage').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/page.tsx
+
+./app/(app)/projects/[slug]/page.tsx
+Attempted import error: 'AvatarFallback' is not exported from '@cronkwaters/ui' (imported as 'AvatarFallback').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/page.tsx
+
+./app/(app)/projects/[slug]/page.tsx
+Attempted import error: 'Avatar' is not exported from '@cronkwaters/ui' (imported as 'Avatar').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/page.tsx
+
+./app/(app)/projects/[slug]/page.tsx
+Attempted import error: 'AvatarImage' is not exported from '@cronkwaters/ui' (imported as 'AvatarImage').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/page.tsx
+
+./app/(app)/projects/[slug]/page.tsx
+Attempted import error: 'AvatarFallback' is not exported from '@cronkwaters/ui' (imported as 'AvatarFallback').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/page.tsx
+
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+Attempted import error: 'Avatar' is not exported from '@cronkwaters/ui' (imported as 'Avatar').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+Attempted import error: 'AvatarFallback' is not exported from '@cronkwaters/ui' (imported as 'AvatarFallback').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+Attempted import error: 'Avatar' is not exported from '@cronkwaters/ui' (imported as 'Avatar').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+Attempted import error: 'AvatarImage' is not exported from '@cronkwaters/ui' (imported as 'AvatarImage').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+Attempted import error: 'AvatarFallback' is not exported from '@cronkwaters/ui' (imported as 'AvatarFallback').
+
+Import trace for requested module:
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+
+./lib/db.ts
+export 'db' (reexported as 'db') was not found in '@cronkwaters/db' (possible exports: LICENSE_TEMPLATES, Prisma, addContributor, calculateAggregatedRoyalties, calculateRoyaltyWaterfall, cancelLicense, countersignLicense, createAsset, createAssetSchema, createEvent, createLicense, createPodcastEpisode, createProject, createProjectSchema, createSong, createSongSchema, createSplitSheet, createSplitSheetSchema, deleteAsset, deleteEpisode, deleteEvent, deleteProject, deleteSong, finalizeSplitSheet, generateSlug, getAssetByChecksum, getAssetById, getAssetByStorageKey, getAssetTypeFromMime, getEpisodeBySlug, getEventBySlug, getLicenseById, getProjectBySlug, getSongById, getSplitSheetById, initiateSignature, listAllAssets, listAssets, listEpisodes, listEvents, listLicenses, listProjects, listSongs, listSplitSheets, prisma, publishEpisode, removeContributor, signLicense, splitContributorSchema, unpublishEpisode, updateAsset, updateAssetSchema, updateContributor, updateEvent, updateLicense, updatePodcastEpisode, updateProject, updateProjectSchema, updateSong, updateSongSchema, updateSplitSheet, updateSplitSheetSchema, validateSlug)
+
+Import trace for requested module:
+./lib/db.ts
+./app/(app)/projects/[slug]/songs/[songSlug]/page.tsx
+
  [37m[1m [22m[39m Skipping validation of types
  [37m[1m [22m[39m Skipping linting
-[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G[?25h [33m[1m⚠[22m[39m Using edge runtime on a page currently disables static generation for that page
-[?25l [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G[?25h    [32m[1m✓[22m[39m Collecting page data 
-[?25l [37m[1m [22m[39m Generating static pages (0/14)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/14)  [36m[====][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/14)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/14)  [36m[==  ][39m[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (14/14)
-[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G[?25h [33m[1m⚠[22m[39m Using edge runtime on a page currently disables static generation for that page
+[?25l [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G [36m...[39m [2K[1G [36m.[39m [2K[1G [36m..[39m [2K[1G[?25h    [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/14)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/14)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[====][39m[2K[1G [37m[1m [22m[39m Generating static pages (7/14)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/14)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/14)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (8/14)  [36m[    ][39m[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (14/14)
+[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
 [2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
 
 [4mRoute (app)[24m                                 [4mSize[24m  [4mFirst Load JS[24m  [4m[24m  [4m[24m
@@ -26,8 +136,8 @@
 ├ ƒ /api/projects/[slug]/export/pdf        175 B         [37m[1m102 kB[22m[39m
 ├ ƒ /api/trpc/[trpc]                       175 B         [37m[1m102 kB[22m[39m
 ├ ƒ /api/upload-audio                      175 B         [37m[1m102 kB[22m[39m
-├ ƒ /artist/[slug]                       2.86 kB         [37m[1m170 kB[22m[39m
-├ ƒ /assets                              7.73 kB         [37m[1m171 kB[22m[39m
+├ ƒ /artist/[slug]                       2.87 kB         [37m[1m171 kB[22m[39m
+├ ƒ /assets                              7.71 kB         [37m[1m172 kB[22m[39m
 ├ ƒ /audience/[sessionId]                52.4 kB         [37m[1m210 kB[22m[39m
 ├ ƒ /auth                                  12 kB         [37m[1m208 kB[22m[39m
 ├ ƒ /blocked                               166 B         [37m[1m106 kB[22m[39m
@@ -52,24 +162,25 @@
 ├ ƒ /p/[slug]/opengraph-image-4mgimg       175 B         [37m[1m102 kB[22m[39m
 ├ ƒ /practice                            5.49 kB         [37m[1m163 kB[22m[39m
 ├ ƒ /privacy                             2.15 kB         [37m[1m153 kB[22m[39m
-├ ƒ /projects                            5.37 kB         [37m[1m166 kB[22m[39m
-├ ƒ /projects/[slug]                     10.3 kB         [37m[1m171 kB[22m[39m
+├ ƒ /projects                            5.35 kB         [37m[1m166 kB[22m[39m
+├ ƒ /projects/[slug]                     1.89 kB         [37m[1m168 kB[22m[39m
 ├ ƒ /projects/[slug]/songs/[songId]      4.52 kB         [37m[1m200 kB[22m[39m
+├ ƒ /projects/[slug]/songs/[songSlug]    1.89 kB         [37m[1m168 kB[22m[39m
 ├ ƒ /remix/[roomId]                      3.35 kB         [37m[1m161 kB[22m[39m
 ├ ○ /robots.txt                            175 B         [37m[1m102 kB[22m[39m
 ├ ƒ /search                              2.97 kB         [37m[1m164 kB[22m[39m
-├ ƒ /sessions                            3.67 kB         [37m[1m167 kB[22m[39m
+├ ƒ /sessions                            3.67 kB         [37m[1m168 kB[22m[39m
 ├ ƒ /settings                            2.28 kB         [37m[1m160 kB[22m[39m
 ├ ƒ /settings/artist-profile             4.52 kB         [37m[1m162 kB[22m[39m
 ├ ƒ /settings/org                        2.14 kB         [37m[1m159 kB[22m[39m
 ├ ○ /signin                                175 B         [37m[1m102 kB[22m[39m
 ├ ○ /sitemap.xml                           175 B         [37m[1m102 kB[22m[39m
-├ ƒ /splits                              3.76 kB         [37m[1m167 kB[22m[39m
+├ ƒ /splits                              3.77 kB         [37m[1m168 kB[22m[39m
 ├ ƒ /terms                               2.15 kB         [37m[1m153 kB[22m[39m
 ├ ƒ /test                                  175 B         [37m[1m102 kB[22m[39m
 ├ ƒ /theming                             2.15 kB         [37m[1m153 kB[22m[39m
-├ ƒ /tours                               35.5 kB         [37m[1m203 kB[22m[39m
-├ ƒ /tours/[slug]                        3.02 kB         [37m[1m167 kB[22m[39m
+├ ƒ /tours                               35.6 kB         [37m[1m203 kB[22m[39m
+├ ƒ /tours/[slug]                        3.03 kB         [37m[1m167 kB[22m[39m
 └ ○ /vision                              4.01 kB         [37m[1m148 kB[22m[39m
 + First Load JS shared by all             [37m[1m102 kB[22m[39m
   ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB

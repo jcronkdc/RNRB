@@ -3,3 +3,192 @@
 > @cronkwaters/web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
+[96m.next/types/app/(app)/projects/[slug]/page.ts[0m:[93m34[0m:[93m29[0m - [91merror[0m[90m TS2344: [0mType 'ProjectPageProps' does not satisfy the constraint 'PageProps'.
+  Types of property 'params' are incompatible.
+    Type '{ slug: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+
+[7m34[0m checkFields<Diff<PageProps, FirstArg<TEntry['default']>, 'default'>>()
+[7m  [0m [91m                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m2[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@/lib/session"' has no exported member 'currentUser'.
+
+[7m2[0m import { currentUser } from '@/lib/session'
+[7m [0m [91m         ~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m3[0m:[93m20[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/lib/db' or its corresponding type declarations.
+
+[7m3[0m import { db } from '@/lib/db'
+[7m [0m [91m                   ~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m4[0m:[93m24[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/button' or its corresponding type declarations.
+
+[7m4[0m import { Button } from '@/components/ui/button'
+[7m [0m [91m                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m5[0m:[93m58[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/tabs' or its corresponding type declarations.
+
+[7m5[0m import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+[7m [0m [91m                                                         ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m6[0m:[93m75[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/card' or its corresponding type declarations.
+
+[7m6[0m import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+[7m [0m [91m                                                                          ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m7[0m:[93m23[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/badge' or its corresponding type declarations.
+
+[7m7[0m import { Badge } from '@/components/ui/badge'
+[7m [0m [91m                      ~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m8[0m:[93m53[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/avatar' or its corresponding type declarations.
+
+[7m8[0m import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+[7m [0m [91m                                                    ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m189[0m:[93m39[0m - [91merror[0m[90m TS7006: [0mParameter 'song' implicitly has an 'any' type.
+
+[7m189[0m                     {recentSongs.map((song) => (
+[7m   [0m [91m                                      ~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m219[0m:[93m37[0m - [91merror[0m[90m TS7006: [0mParameter 'member' implicitly has an 'any' type.
+
+[7m219[0m                   {teamMembers.map((member) => (
+[7m   [0m [91m                                    ~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m263[0m:[93m33[0m - [91merror[0m[90m TS7006: [0mParameter 'song' implicitly has an 'any' type.
+
+[7m263[0m               {recentSongs.map((song) => (
+[7m   [0m [91m                                ~~~~[0m
+
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m313[0m:[93m31[0m - [91merror[0m[90m TS7006: [0mParameter 'member' implicitly has an 'any' type.
+
+[7m313[0m             {teamMembers.map((member) => (
+[7m   [0m [91m                              ~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/ProjectDetailWrapper.tsx[0m:[93m14[0m:[93m10[0m - [91merror[0m[90m TS2724: [0m'"../../../../lib/actions/comments"' has no exported member named 'createCommentAction'. Did you mean 'createComment'?
+
+[7m14[0m import { createCommentAction } from '../../../../lib/actions/comments';
+[7m  [0m [91m         ~~~~~~~~~~~~~~~~~~~[0m
+
+  [96mlib/actions/comments.ts[0m:[93m50[0m:[93m23[0m
+    [7m50[0m export async function createComment(
+    [7m  [0m [96m                      ~~~~~~~~~~~~~[0m
+    'createComment' is declared here.
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m2[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@/lib/session"' has no exported member 'currentUser'.
+
+[7m2[0m import { currentUser } from '@/lib/session'
+[7m [0m [91m         ~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m3[0m:[93m20[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/lib/db' or its corresponding type declarations.
+
+[7m3[0m import { db } from '@/lib/db'
+[7m [0m [91m                   ~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m4[0m:[93m24[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/button' or its corresponding type declarations.
+
+[7m4[0m import { Button } from '@/components/ui/button'
+[7m [0m [91m                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m5[0m:[93m58[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/tabs' or its corresponding type declarations.
+
+[7m5[0m import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+[7m [0m [91m                                                         ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m6[0m:[93m75[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/card' or its corresponding type declarations.
+
+[7m6[0m import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+[7m [0m [91m                                                                          ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m7[0m:[93m23[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/badge' or its corresponding type declarations.
+
+[7m7[0m import { Badge } from '@/components/ui/badge'
+[7m [0m [91m                      ~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m8[0m:[93m53[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/avatar' or its corresponding type declarations.
+
+[7m8[0m import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+[7m [0m [91m                                                    ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m176[0m:[93m41[0m - [91merror[0m[90m TS7006: [0mParameter 'collaborator' implicitly has an 'any' type.
+
+[7m176[0m                     {collaborators.map((collaborator) => (
+[7m   [0m [91m                                        ~~~~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m233[0m:[93m33[0m - [91merror[0m[90m TS7006: [0mParameter 'asset' implicitly has an 'any' type.
+
+[7m233[0m               {song.assets.map((asset) => (
+[7m   [0m [91m                                ~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m288[0m:[93m41[0m - [91merror[0m[90m TS7006: [0mParameter 'recipient' implicitly has an 'any' type.
+
+[7m288[0m                     {collaborators.map((recipient) => (
+[7m   [0m [91m                                        ~~~~~~~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m311[0m:[93m46[0m - [91merror[0m[90m TS7006: [0mParameter 'sum' implicitly has an 'any' type.
+
+[7m311[0m                       {collaborators.reduce((sum, r) => sum + r.percentage, 0)}%
+[7m   [0m [91m                                             ~~~[0m
+
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m311[0m:[93m51[0m - [91merror[0m[90m TS7006: [0mParameter 'r' implicitly has an 'any' type.
+
+[7m311[0m                       {collaborators.reduce((sum, r) => sum + r.percentage, 0)}%
+[7m   [0m [91m                                                  ~[0m
+
+[96mcomponents/app/comments/CommentList.tsx[0m:[93m6[0m:[93m53[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/avatar' or its corresponding type declarations.
+
+[7m6[0m import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+[7m [0m [91m                                                    ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mcomponents/app/comments/CommentList.tsx[0m:[93m7[0m:[93m24[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/button' or its corresponding type declarations.
+
+[7m7[0m import { Button } from '@/components/ui/button'
+[7m [0m [91m                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mcomponents/app/comments/CommentList.tsx[0m:[93m8[0m:[93m26[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/components/ui/textarea' or its corresponding type declarations.
+
+[7m8[0m import { Textarea } from '@/components/ui/textarea'
+[7m [0m [91m                         ~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96mcomponents/app/comments/CommentList.tsx[0m:[93m10[0m:[93m20[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/lib/utils' or its corresponding type declarations.
+
+[7m10[0m import { cn } from '@/lib/utils'
+[7m  [0m [91m                   ~~~~~~~~~~~~~[0m
+
+[96mcomponents/app/comments/CommentList.tsx[0m:[93m105[0m:[93m20[0m - [91merror[0m[90m TS7006: [0mParameter 'e' implicitly has an 'any' type.
+
+[7m105[0m         onChange={(e) => setText(e.target.value)}
+[7m   [0m [91m                   ~[0m
+
+[96mcomponents/app/comments/CommentList.tsx[0m:[93m217[0m:[93m28[0m - [91merror[0m[90m TS7006: [0mParameter 'e' implicitly has an 'any' type.
+
+[7m217[0m                 onChange={(e) => setEditText(e.target.value)}
+[7m   [0m [91m                           ~[0m
+
+[96mcomponents/app/comments/CommentsSection.tsx[0m:[93m3[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@/lib/session"' has no exported member 'currentUser'.
+
+[7m3[0m import { currentUser } from '@/lib/session'
+[7m [0m [91m         ~~~~~~~~~~~[0m
+
+[96mlib/actions/comments.ts[0m:[93m3[0m:[93m20[0m - [91merror[0m[90m TS2307: [0mCannot find module '@/lib/db' or its corresponding type declarations.
+
+[7m3[0m import { db } from '@/lib/db'
+[7m [0m [91m                   ~~~~~~~~~~[0m
+
+[96mlib/actions/comments.ts[0m:[93m4[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@/lib/session"' has no exported member 'currentUser'.
+
+[7m4[0m import { currentUser } from '@/lib/session'
+[7m [0m [91m         ~~~~~~~~~~~[0m
+
+
+Found 34 errors in 7 files.
+
+Errors  Files
+     1  .next/types/app/(app)/projects/[slug]/page.ts[90m:34[0m
+    11  app/(app)/projects/[slug]/page.tsx[90m:2[0m
+     1  app/(app)/projects/[slug]/ProjectDetailWrapper.tsx[90m:14[0m
+    12  app/(app)/projects/[slug]/songs/[songSlug]/page.tsx[90m:2[0m
+     6  components/app/comments/CommentList.tsx[90m:6[0m
+     1  components/app/comments/CommentsSection.tsx[90m:3[0m
+     2  lib/actions/comments.ts[90m:3[0m
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m
