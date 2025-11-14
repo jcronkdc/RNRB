@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
-export default function Error({
+export default function GlobalError({
   error,
   reset,
 }: {
@@ -10,65 +12,49 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // In production, log to error reporting service without exposing details
-    if (process.env.NODE_ENV === 'production') {
-      console.error('Application error:', error.digest || 'Unknown error');
-      // TODO: Send to error monitoring service (e.g., Sentry)
-    } else {
-      // Only log full error in development
-      console.error(error);
-    }
+    // Log the error to an error reporting service
+    console.error('Global application error:', error);
   }, [error]);
 
-  // Never expose error details in production
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const isEnvError = isDevelopment && error.message?.includes('environment variable');
-
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="mx-auto max-w-md text-center">
-        <h1 className="mb-4 text-4xl font-bold">
-          {isEnvError ? '⚠️ Configuration Error' : '❌ Something went wrong'}
-        </h1>
-        
-        {isEnvError ? (
-          <div className="space-y-4">
-            <p className="text-lg text-muted-foreground">
-              The application is missing required environment variables.
-            </p>
-            <div className="rounded-lg bg-destructive/10 p-4 text-left">
-              <p className="font-mono text-sm">{error.message}</p>
+    <html lang="en">
+      <body>
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
+          <div className="text-center">
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-red-100">
+              <AlertTriangle className="h-12 w-12 text-red-600" />
             </div>
-            <p className="text-sm text-muted-foreground">
-              If you're the site owner, please check the VERCEL_ENV_VARS.md file
-              for setup instructions.
+            <h1 className="mb-2 text-3xl font-bold">
+              Something went wrong!
+            </h1>
+            <p className="mb-8 max-w-md text-gray-600">
+              We encountered an unexpected error. This might be a temporary issue.
+              Please try refreshing the page or contact support if the problem persists.
             </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-lg text-muted-foreground">
-              An unexpected error occurred. Please try again.
-            </p>
-            {/* Only show error details in development */}
-            {isDevelopment && error.message && (
-              <p className="text-sm text-muted-foreground">{error.message}</p>
-            )}
-            {/* Show error ID in production for support reference */}
-            {!isDevelopment && error.digest && (
-              <p className="text-xs text-muted-foreground">
+            {error.digest && (
+              <p className="mb-6 font-mono text-xs text-gray-500">
                 Error ID: {error.digest}
               </p>
             )}
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <button
+                onClick={() => reset()}
+                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Try again
+              </button>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 hover:bg-gray-50"
+              >
+                <Home className="h-4 w-4" />
+                Go to homepage
+              </Link>
+            </div>
           </div>
-        )}
-
-        <button
-          onClick={reset}
-          className="mt-6 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-        >
-          Try again
-        </button>
-      </div>
-    </div>
+        </div>
+      </body>
+    </html>
   );
 }

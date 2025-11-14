@@ -22,14 +22,18 @@ function getAuthConfig(): NextAuthOptions {
           from: env.EMAIL_FROM
         })
       ] : []),
-      GoogleProvider({
-        clientId: env.GOOGLE_CLIENT_ID ?? '',
-        clientSecret: env.GOOGLE_CLIENT_SECRET ?? ''
-      }),
-      AppleProvider({
-        clientId: env.APPLE_CLIENT_ID ?? '',
-        clientSecret: env.APPLE_CLIENT_SECRET ?? ''
-      })
+      ...(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET ? [
+        GoogleProvider({
+          clientId: env.GOOGLE_CLIENT_ID,
+          clientSecret: env.GOOGLE_CLIENT_SECRET
+        })
+      ] : []),
+      ...(env.APPLE_CLIENT_ID && env.APPLE_CLIENT_SECRET ? [
+        AppleProvider({
+          clientId: env.APPLE_CLIENT_ID,
+          clientSecret: env.APPLE_CLIENT_SECRET
+        })
+      ] : [])
     ],
   callbacks: {
     async jwt({ token, user, trigger, session, account }) {
@@ -104,7 +108,13 @@ let _authInstance: ReturnType<typeof NextAuth> | null = null;
 
 function getAuthInstance() {
   // Skip initialization during build time
-  if (process.env.NEXT_PHASE === 'phase-production-build' || !process.env.NEXTAUTH_SECRET) {
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return null;
+  }
+  
+  // Check for required environment variables at runtime
+  if (!process.env.NEXTAUTH_SECRET) {
+    console.error('NEXTAUTH_SECRET is not configured. Authentication will not work.');
     return null;
   }
   

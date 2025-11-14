@@ -20,8 +20,17 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     } else if (message === "NO_ACTIVE_ORG") {
       redirect("/onboarding/organization");
     } else {
-      // Re-throw unexpected errors
-      throw error;
+      // Log the error for debugging
+      console.error("Error in app layout:", error);
+      
+      // For database connection errors or other critical issues,
+      // redirect to a maintenance page or show a friendly error
+      if (message.includes("DATABASE_URL") || message.includes("PrismaClient")) {
+        throw new Error("Database connection error. Please try again later.");
+      }
+      
+      // Re-throw with a more user-friendly message
+      throw new Error("An unexpected error occurred. Please try refreshing the page.");
     }
   }
 

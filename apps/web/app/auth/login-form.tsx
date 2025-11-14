@@ -33,7 +33,14 @@ export default function LoginForm() {
       });
 
       if (response?.error) {
-        setFeedback({ variant: 'error', message: response.error });
+        // Provide more user-friendly error messages
+        let errorMessage = response.error;
+        if (errorMessage.includes('No provider') || errorMessage.includes('EMAIL_SERVER')) {
+          errorMessage = 'Email authentication is not configured. Please contact your administrator.';
+        } else if (errorMessage.includes('Configuration')) {
+          errorMessage = 'Authentication is not properly configured. Please try again later.';
+        }
+        setFeedback({ variant: 'error', message: errorMessage });
         return;
       }
 
@@ -54,7 +61,25 @@ export default function LoginForm() {
     setFeedback(null);
 
     try {
-      await signIn('google', { callbackUrl });
+      const response = await signIn('google', { 
+        callbackUrl,
+        redirect: false 
+      });
+      
+      if (response?.error) {
+        let errorMessage = response.error;
+        if (errorMessage.includes('OAuthAccountNotLinked')) {
+          errorMessage = 'This Google account is already linked to another user.';
+        } else if (errorMessage.includes('Configuration') || errorMessage.includes('CLIENT_ID')) {
+          errorMessage = 'Google authentication is not configured. Please contact your administrator.';
+        } else if (errorMessage.includes('No provider')) {
+          errorMessage = 'Google sign-in is not available at this time.';
+        }
+        setFeedback({ variant: 'error', message: errorMessage });
+      } else if (response?.url) {
+        // Redirect on success
+        window.location.href = response.url;
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Google sign-in is currently unavailable.';
       setFeedback({ variant: 'error', message });
