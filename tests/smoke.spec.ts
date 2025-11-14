@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test';
 // ———————————————————
 test('home renders', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: /song forge/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /cronkwaters/i })).toBeVisible();
   await expect(page.getByRole('link', { name: /donate/i })).toBeVisible();
 });
 

@@ -11,7 +11,7 @@ export default function TermsPage() {
       title: '1. Acceptance of Terms',
       icon: FileText,
       content: [
-        'By accessing or using SongForge, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.',
+        'By accessing or using CronkWaters, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.',
         'You must be at least 13 years old to use this service. If you are between 13 and 18, you must have parental consent.'
       ]
     },
@@ -20,7 +20,7 @@ export default function TermsPage() {
       title: '2. License & Usage',
       icon: Shield,
       content: [
-        'SongForge grants you a personal, non-exclusive license to use the platform for music production.',
+        'CronkWaters grants you a personal, non-exclusive license to use the platform for music production.',
         'You may use the service for both personal and commercial projects.',
         'You retain all rights to your original content.',
         'You may not reverse engineer, decompile, or attempt to extract source code.'
@@ -31,7 +31,7 @@ export default function TermsPage() {
       title: '3. User Content & Rights',
       icon: Users,
       content: [
-        'You retain ownership of all content you create or upload to SongForge.',
+        'You retain ownership of all content you create or upload to CronkWaters.',
         'By uploading content, you grant us a limited license to store, process, and display it solely for providing the service.',
         'You are responsible for securing necessary rights for any third-party content you use.',
         'We do not claim ownership of your music, lyrics, or creative works.'
@@ -89,7 +89,7 @@ export default function TermsPage() {
                   <li>All split agreements created on the platform are binding between parties</li>
                   <li>You must honor royalty arrangements and ownership percentages</li>
                   <li>Disputes between collaborators must be resolved independently</li>
-                  <li>SongForge is not responsible for enforcing split agreements</li>
+                  <li>CronkWaters is not responsible for enforcing split agreements</li>
                 </ul>
               </div>
             </section>
@@ -97,7 +97,7 @@ export default function TermsPage() {
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-brand-foreground">6. Privacy & Data</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Your use of SongForge is also governed by our Privacy Policy. We take data protection seriously
+                Your use of CronkWaters is also governed by our Privacy Policy. We take data protection seriously
                 and implement industry-standard security measures to protect your content and personal information.
               </p>
             </section>
@@ -105,7 +105,7 @@ export default function TermsPage() {
             <section className="space-y-4">
               <h2 className="text-2xl font-semibold text-brand-foreground">7. Limitation of Liability</h2>
               <p className="text-muted-foreground leading-relaxed">
-                SongForge is provided "as is" without warranties of any kind. We are not liable for:
+                CronkWaters is provided "as is" without warranties of any kind. We are not liable for:
               </p>
               <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li>Loss of data or content</li>
@@ -142,9 +142,9 @@ export default function TermsPage() {
               </p>
               <Card className="bg-muted/50">
                 <CardContent className="p-4">
-                  <p className="font-mono text-sm">legal@songforge.app</p>
+                  <p className="font-mono text-sm">legal@cronkwaters.com</p>
                   <p className="text-sm text-muted-foreground mt-2">
-                    SongForge Legal Department<br />
+                    CronkWaters Legal Department<br />
                     Response time: 1-3 business days
                   </p>
                 </CardContent>

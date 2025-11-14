@@ -36,7 +36,7 @@ export default function PrivacyPage() {
           Last Updated: {lastUpdated}
         </p>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          At SongForge, we take your privacy seriously. This policy explains how we collect, use, and protect your data.
+          At CronkWaters, we take your privacy seriously. This policy explains how we collect, use, and protect your data.
         </p>
       </header>
 
@@ -96,7 +96,7 @@ export default function PrivacyPage() {
         <CardContent className="space-y-4 text-muted-foreground">
           <div className="space-y-3">
             <h3 className="font-semibold text-brand-foreground">Service Delivery</h3>
-            <p>We use your data to provide core SongForge features including file storage, collaboration tools, and project management.</p>
+            <p>We use your data to provide core CronkWaters features including file storage, collaboration tools, and project management.</p>
           </div>
           
           <div className="space-y-3">
@@ -215,9 +215,9 @@ export default function PrivacyPage() {
             For privacy questions, data requests, or concerns:
           </p>
           <div className="bg-background rounded-lg p-4">
-            <p className="font-mono text-sm">privacy@songforge.app</p>
+            <p className="font-mono text-sm">privacy@cronkwaters.com</p>
             <p className="text-sm text-muted-foreground mt-2">
-              Privacy Team, SongForge<br />
+              Privacy Team, CronkWaters<br />
               Response time: 1-3 business days<br />
               GDPR/CCPA requests: Within 30 days
             </p>
@@ -227,7 +227,7 @@ export default function PrivacyPage() {
 
       <footer className="text-center text-sm text-muted-foreground">
         <p>This privacy policy is effective as of {lastUpdated} and will be updated as needed.</p>
-        <p className="mt-2">By using SongForge, you agree to this Privacy Policy.</p>
+        <p className="mt-2">By using CronkWaters, you agree to this Privacy Policy.</p>
       </footer>
     </main>
   );

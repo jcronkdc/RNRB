@@ -37,13 +37,13 @@
 [7m83[0m       organizationId: project.organizationId
 [7m  [0m [91m      ~~~~~~~~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m83[0m:[93m31[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ status: ProjectStatus; id: string; orgId: string; name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; createdAt: Date; updatedAt: Date; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m83[0m:[93m31[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ status: ProjectStatus; id: string; name: string; visibility: ProjectVisibility; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; }'.
 
 [7m83[0m       organizationId: project.organizationId
 [7m  [0m [91m                              ~~~~~~~~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m110[0m:[93m22[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
-  Type '"default"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m110[0m:[93m22[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"solid" | "outline" | "subtle" | "info" | "success" | "warning" | "danger" | null | undefined'.
+  Type '"default"' is not assignable to type '"solid" | "outline" | "subtle" | "info" | "success" | "warning" | "danger" | null | undefined'.
 
 [7m110[0m               <Badge variant={project.status === 'active' ? 'default' : 'secondary'}>
 [7m   [0m [91m                     ~~~~~~~[0m
@@ -60,43 +60,43 @@
     [7m   [0m [96m~~~~~~~[0m
     The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & BadgeProps & RefAttributes<HTMLSpanElement>'
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m136[0m:[93m29[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; orgId: string; name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; createdAt: Date; updatedAt: Date; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m136[0m:[93m29[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; visibility: ProjectVisibility; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; }'.
 
 [7m136[0m             Songs ({project._count.songs})
 [7m   [0m [91m                            ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m139[0m:[93m30[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; orgId: string; name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; createdAt: Date; updatedAt: Date; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m139[0m:[93m30[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; visibility: ProjectVisibility; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; }'.
 
 [7m139[0m             Assets ({project._count.assets})
 [7m   [0m [91m                             ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m155[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; orgId: string; name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; createdAt: Date; updatedAt: Date; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m155[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; visibility: ProjectVisibility; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; }'.
 
 [7m155[0m                 <div className="text-2xl font-bold">{project._count.songs}</div>
 [7m   [0m [91m                                                             ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m164[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; orgId: string; name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; createdAt: Date; updatedAt: Date; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m164[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; visibility: ProjectVisibility; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; }'.
 
 [7m164[0m                 <div className="text-2xl font-bold">{project._count.assets}</div>
 [7m   [0m [91m                                                             ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m173[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; orgId: string; name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; createdAt: Date; updatedAt: Date; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m173[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; visibility: ProjectVisibility; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; }'.
 
 [7m173[0m                 <div className="text-2xl font-bold">{project._count.splitSheets}</div>
 [7m   [0m [91m                                                             ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m182[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; orgId: string; name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; createdAt: Date; updatedAt: Date; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m182[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; visibility: ProjectVisibility; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; }'.
 
 [7m182[0m                 <div className="text-2xl font-bold">{project._count.licenses}</div>
 [7m   [0m [91m                                                             ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m201[0m:[93m72[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m201[0m:[93m72[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m201[0m                           href={`/projects/${params.slug}/songs/${song.slug}`}
 [7m   [0m [91m                                                                       ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m206[0m:[93m32[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
-  Type '"default"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m206[0m:[93m32[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"solid" | "outline" | "subtle" | "info" | "success" | "warning" | "danger" | null | undefined'.
+  Type '"default"' is not assignable to type '"solid" | "outline" | "subtle" | "info" | "success" | "warning" | "danger" | null | undefined'.
 
 [7m206[0m                         <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
 [7m   [0m [91m                               ~~~~~~~[0m
@@ -113,53 +113,53 @@
     [7m   [0m [96m~~~~~~~[0m
     The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & BadgeProps & RefAttributes<HTMLSpanElement>'
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m206[0m:[93m46[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m206[0m:[93m46[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m206[0m                         <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
 [7m   [0m [91m                                             ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m207[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m207[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m207[0m                           {song.status}
 [7m   [0m [91m                                ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m229[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'id' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m229[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'id' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m229[0m                     <div key={member.id} className="flex items-center gap-3">
 [7m   [0m [91m                                     ~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m231[0m:[93m50[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m231[0m:[93m50[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m231[0m                         <AvatarImage src={member.user.image || ''} />
 [7m   [0m [91m                                                 ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m233[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m233[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m233[0m                           {member.user.name?.[0] || member.user.email[0]}
 [7m   [0m [91m                                  ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m233[0m:[93m60[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m233[0m:[93m60[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m233[0m                           {member.user.name?.[0] || member.user.email[0]}
 [7m   [0m [91m                                                           ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m238[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m238[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m238[0m                           {member.user.name || member.user.email}
 [7m   [0m [91m                                  ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m238[0m:[93m55[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m238[0m:[93m55[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m238[0m                           {member.user.name || member.user.email}
 [7m   [0m [91m                                                      ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m277[0m:[93m70[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m277[0m:[93m70[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m277[0m                         href={`/projects/${params.slug}/songs/${song.slug}`}
 [7m   [0m [91m                                                                     ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m282[0m:[93m30[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
-  Type '"default"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m282[0m:[93m30[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"solid" | "outline" | "subtle" | "info" | "success" | "warning" | "danger" | null | undefined'.
+  Type '"default"' is not assignable to type '"solid" | "outline" | "subtle" | "info" | "success" | "warning" | "danger" | null | undefined'.
 
 [7m282[0m                       <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
 [7m   [0m [91m                             ~~~~~~~[0m
@@ -176,42 +176,42 @@
     [7m   [0m [96m~~~~~~~[0m
     The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & BadgeProps & RefAttributes<HTMLSpanElement>'
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m282[0m:[93m44[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m282[0m:[93m44[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m282[0m                       <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
 [7m   [0m [91m                                           ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m283[0m:[93m31[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m283[0m:[93m31[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m283[0m                         {song.status}
 [7m   [0m [91m                              ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m323[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'id' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m323[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'id' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m323[0m               <Card key={member.id}>
 [7m   [0m [91m                                ~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m327[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m327[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m327[0m                       <AvatarImage src={member.user.image || ''} />
 [7m   [0m [91m                                               ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m329[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m329[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m329[0m                         {member.user.name?.[0] || member.user.email[0]}
 [7m   [0m [91m                                ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m329[0m:[93m58[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m329[0m:[93m58[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m329[0m                         {member.user.name?.[0] || member.user.email[0]}
 [7m   [0m [91m                                                         ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m334[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m334[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m334[0m                         {member.user.name || member.user.email}
 [7m   [0m [91m                                ~~~~[0m
 
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m334[0m:[93m53[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m334[0m:[93m53[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m334[0m                         {member.user.name || member.user.email}
 [7m   [0m [91m                                                    ~~~~[0m
@@ -226,18 +226,18 @@
 [7m49[0m           organizationId: true
 [7m  [0m [91m          ~~~~~~~~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m81[0m:[93m30[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m81[0m:[93m30[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m81[0m   const collaborators = song.splitSheet?.recipients || []
 [7m  [0m [91m                             ~~~~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m89[0m:[93m85[0m - [91merror[0m[90m TS2551: [0mProperty 'project' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'. Did you mean 'projectId'?
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m89[0m:[93m85[0m - [91merror[0m[90m TS2551: [0mProperty 'project' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'. Did you mean 'projectId'?
 
 [7m89[0m           <Link href={`/projects/${params.slug}`} className="hover:underline">{song.project.name}</Link>
 [7m  [0m [91m                                                                                    ~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m104[0m:[93m22[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
-  Type '"default"' is not assignable to type '"success" | "subtle" | "warning" | "danger" | "outline" | "info" | "solid" | null | undefined'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m104[0m:[93m22[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"solid" | "outline" | "subtle" | "info" | "success" | "warning" | "danger" | null | undefined'.
+  Type '"default"' is not assignable to type '"solid" | "outline" | "subtle" | "info" | "success" | "warning" | "danger" | null | undefined'.
 
 [7m104[0m               <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
 [7m   [0m [91m                     ~~~~~~~[0m
@@ -254,62 +254,62 @@
     [7m   [0m [96m~~~~~~~[0m
     The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & BadgeProps & RefAttributes<HTMLSpanElement>'
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m104[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m104[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m104[0m               <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
 [7m   [0m [91m                                   ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m105[0m:[93m23[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m105[0m:[93m23[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m105[0m                 {song.status}
 [7m   [0m [91m                      ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m107[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m107[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m107[0m               {song.genre && (
 [7m   [0m [91m                    ~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m108[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m108[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m108[0m                 <Badge variant="outline">{song.genre}</Badge>
 [7m   [0m [91m                                               ~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m131[0m:[93m27[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m131[0m:[93m27[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m131[0m             Assets ({song.assets.length})
 [7m   [0m [91m                          ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m146[0m                   <p className="text-sm">{song.duration ? `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}` : 'Not set'}</p>
 [7m   [0m [91m                                               ~~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m78[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m78[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m146[0m                   <p className="text-sm">{song.duration ? `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}` : 'Not set'}</p>
 [7m   [0m [91m                                                                             ~~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m102[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m102[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m146[0m                   <p className="text-sm">{song.duration ? `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}` : 'Not set'}</p>
 [7m   [0m [91m                                                                                                     ~~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m150[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'bpm' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m150[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'bpm' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m150[0m                   <p className="text-sm">{song.bpm ? `${song.bpm} BPM` : 'Not set'}</p>
 [7m   [0m [91m                                               ~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m150[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty 'bpm' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m150[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty 'bpm' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m150[0m                   <p className="text-sm">{song.bpm ? `${song.bpm} BPM` : 'Not set'}</p>
 [7m   [0m [91m                                                             ~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m158[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m158[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m158[0m                   <p className="text-sm">{song.genre || 'Not set'}</p>
 [7m   [0m [91m                                               ~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m162[0m:[93m58[0m - [91merror[0m[90m TS2339: [0mProperty 'isrc' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m162[0m:[93m58[0m - [91merror[0m[90m TS2339: [0mProperty 'isrc' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m162[0m                   <p className="text-sm font-mono">{song.isrc || 'Not assigned'}</p>
 [7m   [0m [91m                                                         ~~~~[0m
@@ -319,12 +319,12 @@
 [7m177[0m                     {collaborators.map((collaborator) => (
 [7m   [0m [91m                                        ~~~~~~~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m224[0m:[93m17[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m224[0m:[93m17[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m224[0m           {song.assets.length === 0 ? (
 [7m   [0m [91m                ~~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m234[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m234[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m234[0m               {song.assets.map((asset) => (
 [7m   [0m [91m                    ~~~~~~[0m
@@ -334,7 +334,7 @@
 [7m234[0m               {song.assets.map((asset) => (
 [7m   [0m [91m                                ~~~~~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m278[0m:[93m22[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m278[0m:[93m22[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m278[0m               {!song.splitSheet || collaborators.length === 0 ? (
 [7m   [0m [91m                     ~~~~~~~~~~[0m
@@ -354,7 +354,7 @@
 [7m312[0m                       {collaborators.reduce((sum, r) => sum + r.percentage, 0)}%
 [7m   [0m [91m                                                  ~[0m
 
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m323[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ id: string; description: string | null; createdAt: Date; updatedAt: Date; key: string | null; projectId: string; title: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m323[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ title: string; id: string; key: string | null; createdAt: Date; updatedAt: Date; description: string | null; projectId: string; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
 
 [7m323[0m                       id={song.splitSheet.id}
 [7m   [0m [91m                               ~~~~~~~~~~[0m
@@ -379,7 +379,7 @@
 [7m56[0m         organizationId: membership.organizationId
 [7m  [0m [91m                        ~~~~~~~~~~[0m
 
-[96mapp/(app)/projects/new/page.tsx[0m:[93m56[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/new/page.tsx[0m:[93m56[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m56[0m         organizationId: membership.organizationId
 [7m  [0m [91m                                   ~~~~~~~~~~~~~~[0m
@@ -399,7 +399,7 @@
 [7m69[0m         organizationId: membership.organizationId,
 [7m  [0m [91m                        ~~~~~~~~~~[0m
 
-[96mapp/(app)/projects/new/page.tsx[0m:[93m69[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ status: string; orgId: string; createdAt: Date; userId: string; role: OrgRole; }'.
+[96mapp/(app)/projects/new/page.tsx[0m:[93m69[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ status: string; role: OrgRole; userId: string; orgId: string; createdAt: Date; }'.
 
 [7m69[0m         organizationId: membership.organizationId,
 [7m  [0m [91m                                   ~~~~~~~~~~~~~~[0m
@@ -409,7 +409,7 @@
 [7m31[0m         organization: {
 [7m  [0m [91m        ~~~~~~~~~~~~[0m
 
-[96mapp/(app)/welcome/page.tsx[0m:[93m41[0m:[93m45[0m - [91merror[0m[90m TS2339: [0mProperty 'bio' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; location: string | null; socialLinks: JsonValue; userId: string; skills: string[]; instruments: string[]; genres: string[]; ... 6 more ...; portfolio: JsonValue; }'.
+[96mapp/(app)/welcome/page.tsx[0m:[93m41[0m:[93m45[0m - [91merror[0m[90m TS2339: [0mProperty 'bio' does not exist on type '{ id: string; location: string | null; userId: string; createdAt: Date; instruments: string[]; genres: string[]; skills: string[]; experience: string | null; availableForCollaboration: boolean; ... 6 more ...; updatedAt: Date; }'.
 
 [7m41[0m   const hasProfile = !!profile && !!profile.bio
 [7m  [0m [91m                                            ~~~[0m
@@ -433,8 +433,8 @@
 [7m35[0m   const { toast } = useToast()
 [7m  [0m [91m          ~~~~~[0m
 
-[96mcomponents/app/ExportButton.tsx[0m:[93m90[0m:[93m17[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary" | "outline" | "ghost"' is not assignable to type '"default" | "link" | "subtle" | "outline" | "solid" | "ghost" | "destructive" | null | undefined'.
-  Type '"secondary"' is not assignable to type '"default" | "link" | "subtle" | "outline" | "solid" | "ghost" | "destructive" | null | undefined'.
+[96mcomponents/app/ExportButton.tsx[0m:[93m90[0m:[93m17[0m - [91merror[0m[90m TS2322: [0mType '"outline" | "ghost" | "default" | "secondary"' is not assignable to type '"link" | "solid" | "outline" | "ghost" | "subtle" | "destructive" | "default" | null | undefined'.
+  Type '"secondary"' is not assignable to type '"link" | "solid" | "outline" | "ghost" | "subtle" | "destructive" | "default" | null | undefined'.
 
 [7m90[0m         <Button variant={variant} size={size} disabled={isExporting}>
 [7m  [0m [91m                ~~~~~~~[0m
@@ -451,7 +451,7 @@
     [7m   [0m [96m~~~~~~~[0m
     The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'
 
-[96mcomponents/app/ExportButton.tsx[0m:[93m90[0m:[93m35[0m - [91merror[0m[90m TS2322: [0mType '"sm" | "lg" | "default" | "icon"' is not assignable to type '"sm" | "md" | "lg" | "icon" | null | undefined'.
+[96mcomponents/app/ExportButton.tsx[0m:[93m90[0m:[93m35[0m - [91merror[0m[90m TS2322: [0mType '"default" | "sm" | "lg" | "icon"' is not assignable to type '"sm" | "md" | "lg" | "icon" | null | undefined'.
   Type '"default"' is not assignable to type '"sm" | "md" | "lg" | "icon" | null | undefined'.
 
 [7m90[0m         <Button variant={variant} size={size} disabled={isExporting}>
@@ -479,7 +479,7 @@
 [7m29[0m           organization: {
 [7m  [0m [91m          ~~~~~~~~~~~~[0m
 
-[96mcomponents/app/OnboardingChecklistWrapper.tsx[0m:[93m40[0m:[93m45[0m - [91merror[0m[90m TS2339: [0mProperty 'bio' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; location: string | null; socialLinks: JsonValue; userId: string; skills: string[]; instruments: string[]; genres: string[]; ... 6 more ...; portfolio: JsonValue; }'.
+[96mcomponents/app/OnboardingChecklistWrapper.tsx[0m:[93m40[0m:[93m45[0m - [91merror[0m[90m TS2339: [0mProperty 'bio' does not exist on type '{ id: string; location: string | null; userId: string; createdAt: Date; instruments: string[]; genres: string[]; skills: string[]; experience: string | null; availableForCollaboration: boolean; ... 6 more ...; updatedAt: Date; }'.
 
 [7m40[0m   const hasProfile = !!profile && !!profile.bio
 [7m  [0m [91m                                            ~~~[0m

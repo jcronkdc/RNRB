@@ -82,7 +82,7 @@ async function ensureConnectAccount(email: string, name: string) {
     params.append('email', email);
     params.append('business_type', 'individual');
     params.append('individual[first_name]', name.split(' ')[0] ?? 'Creator');
-    params.append('individual[last_name]', name.split(' ').slice(1).join(' ') || 'Songforge');
+    params.append('individual[last_name]', name.split(' ').slice(1).join(' ') || 'CronkWaters');
 
     const response = await fetch('https://api.stripe.com/v1/accounts', {
       method: 'POST',
