@@ -17,7 +17,15 @@ export async function middleware(req: NextRequest) {
     '/privacy',
     '/terms',
     '/donate',
-    '/discover'
+    '/discover',
+    '/guide',
+    '/vision',
+    '/membership',
+    '/foundation',
+    '/learn',
+    '/practice',
+    '/community',
+    '/music'
   ];
   
   // Check if route requires authentication
