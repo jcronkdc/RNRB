@@ -3,7 +3,40 @@
 @tailwind utilities;
 
 @import '@cronkwaters/ui/styles.css';
-@import './theme-fixes.css';
+
+/* Theme Contrast Fixes for CronkWaters Project */
+
+/* Light Theme Contrast Fixes */
+[data-theme='light'] {
+  /* Ensure text is always readable */
+  --sf-color-foreground: 26 40% 15%; /* Darker for better contrast */
+  --sf-color-muted-foreground: 26 25% 30%; /* Darker muted text */
+  
+  /* Fix surfaces that might be too light */
+  --sf-color-surface: 27 20% 94%; /* Slightly darker surface */
+  --sf-color-surface-muted: 28 18% 88%; /* Darker muted surface */
+}
+
+/* Warm Theme Contrast Fixes */
+[data-theme='warm'] {
+  /* Much darker text for better contrast on warm backgrounds */
+  --sf-color-foreground: 24 40% 12%; /* Very dark for max contrast */
+  --sf-color-muted-foreground: 24 30% 25%; /* Darker muted text */
+  --sf-color-brand-foreground: 24 40% 12%; /* Match foreground */
+  --sf-color-brand-muted-foreground: 24 35% 20%; /* Darker brand muted */
+  
+  /* Adjust surfaces to ensure readability */
+  --sf-color-background: 32 40% 94%; /* Slightly less bright */
+  --sf-color-surface: 30 35% 90%; /* More contrast with background */
+  --sf-color-surface-muted: 28 30% 85%; /* Even more contrast */
+}
+
+/* Dark Theme - Generally good but ensure consistency */
+[data-theme='dark'] {
+  /* Ensure text is bright enough */
+  --sf-color-foreground: 38 70% 96%; /* Brighter text */
+  --sf-color-muted-foreground: 28 25% 85%; /* Brighter muted text */
+}
 
 @layer base {
   body {
@@ -150,4 +183,51 @@
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+  
+  /* Ensure minimum contrast ratios */
+  .text-muted-foreground {
+    opacity: 1 !important; /* Never reduce opacity on muted text */
+  }
+  
+  /* Fix any transparent text issues */
+  [class*="text-"] {
+    opacity: 1 !important;
+  }
+  
+  /* Ensure brand colors have proper contrast */
+  .text-brand-primary {
+    filter: brightness(0.85) saturate(1.2);
+  }
+  
+  /* Fix button text contrast */
+  .bg-brand-primary {
+    --sf-color-brand-primary-foreground: 0 0% 100%; /* Pure white text */
+  }
+  
+  /* Ensure links are visible in all themes */
+  a:not(.no-underline) {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+}
+
+/* Fix specific problem areas */
+[data-theme='warm'] .text-muted-foreground,
+[data-theme='light'] .text-muted-foreground {
+  color: hsl(var(--sf-color-muted-foreground)) !important;
+}
+
+/* Ensure form inputs have readable text */
+input, textarea, select {
+  color: hsl(var(--sf-color-foreground)) !important;
+  background-color: hsl(var(--sf-color-surface)) !important;
+}
+
+/* Fix any badge or chip text visibility */
+.sf-badge,
+[class*="badge"],
+[class*="chip"] {
+  background-color: hsl(var(--sf-color-surface-muted));
+  color: hsl(var(--sf-color-foreground));
+  border-color: hsl(var(--sf-color-border));
 }
