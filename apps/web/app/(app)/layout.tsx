@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { AppChrome } from "../../components/app/AppChrome";
+import { OnboardingChecklistWrapper } from "../../components/app/OnboardingChecklistWrapper";
 
 // eslint-disable-next-line import/no-default-export
 export default async function AppLayout({ children }: { children: ReactNode }) {
@@ -44,6 +45,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   return (
     <AppChrome title="CronkWaters HQ" userName={userName} userEmail={userEmail}>
       {children}
+      <OnboardingChecklistWrapper />
     </AppChrome>
   );
 }
