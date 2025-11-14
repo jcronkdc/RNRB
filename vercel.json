@@ -1,5 +1,4 @@
 {
-  "installCommand": "pnpm install --frozen-lockfile --prod=false",
-  "buildCommand": "cd apps/web && pnpm build",
-  "outputDirectory": "apps/web/.next"
+  "buildCommand": "turbo run build --filter=@cronkwaters/web",
+  "installCommand": "pnpm install"
 }

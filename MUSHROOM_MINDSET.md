@@ -119,10 +119,12 @@ The mycelial network has achieved phases 1-3, but the organism continues to evol
 - ~~Guide page currently throws 500 error due to auth redirect~~
 - **UPDATE**: Fixed public routes in middleware, but Vercel deployments failing
 
-**3. Vercel Deployment Issues**
+**3. Vercel Deployment Issues** (CRITICAL)
 - Recent deployments showing errors (30s timeouts)
-- Last successful deployment: 1 hour ago
-- Need to investigate deployment configuration
+- Last successful deployment: 2 hours ago
+- Fixed edge runtime issues, but deployments still failing
+- **POSSIBLE CAUSE**: Root directory configuration in Vercel dashboard
+- **ACTION NEEDED**: User may need to update Vercel project settings
 
 **4. Performance Optimization**
 - Monitor and improve load times
