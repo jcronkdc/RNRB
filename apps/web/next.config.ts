@@ -45,9 +45,6 @@ const nextConfig: NextConfig = {
     // optimizePackageImports: ['@cronkwaters/ui', 'lucide-react']
     serverMinification: false,
   },
-  
-  // Disable SWC minification to speed up builds
-  swcMinify: false,
 
   // Security-focused webpack configuration
   webpack: (config, { isServer, dev, webpack }) => {

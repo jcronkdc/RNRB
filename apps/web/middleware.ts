@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-import { getCSRFToken } from "./lib/csrf";
+// import { getCSRFToken } from "./lib/csrf"; // Temporarily disabled for edge runtime compatibility
 import { checkRateLimit, RateLimitError } from "./lib/rate-limit";
 import { verifyAuthToken, getSessionToken } from "./lib/auth/edge-jwt-secure";
 
@@ -79,13 +79,14 @@ export async function middleware(req: NextRequest) {
   }
 
   // Generate CSRF token for state-changing requests
-  if (req.method !== "GET" && req.method !== "HEAD") {
-    try {
-      await getCSRFToken();
-    } catch (error) {
-      console.error("CSRF token generation error:", error);
-    }
-  }
+  // Temporarily disabled for edge runtime compatibility
+  // if (req.method !== "GET" && req.method !== "HEAD") {
+  //   try {
+  //     await getCSRFToken();
+  //   } catch (error) {
+  //     console.error("CSRF token generation error:", error);
+  //   }
+  // }
 
   // Enhanced Content Security Policy
   // Note: Next.js requires 'unsafe-inline' and 'unsafe-eval' for development and hydration
