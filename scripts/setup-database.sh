@@ -30,3 +30,4 @@ echo "Next steps:"
 echo "1. Verify deployment at: https://song-forge.vercel.app"
 echo "2. Test authentication flow"
 echo "3. Check /api/health endpoint"
+

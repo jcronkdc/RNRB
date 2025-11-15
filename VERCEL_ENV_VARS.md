@@ -29,9 +29,28 @@ NEXT_PUBLIC_SITE_URL=https://cronkwaters.vercel.app
 
 ## Optional Variables
 
-### Email (Optional - will work without these)
+### Email with Resend (Recommended)
+To enable email authentication (magic links), configure Resend:
+
+1. Sign up at [resend.com](https://resend.com)
+2. Get your API key from the dashboard
+3. Verify a domain (or use `onboarding@resend.dev` for testing)
+4. Add these variables:
+
 ```
-EMAIL_SERVER_URL=smtp://username:password@smtp.example.com:587
+EMAIL_SERVER_URL=smtp://resend:YOUR_RESEND_API_KEY@smtp.resend.com:587
+EMAIL_FROM=noreply@yourdomain.com
+```
+
+**Important Notes:**
+- Replace `YOUR_RESEND_API_KEY` with your actual Resend API key
+- The `EMAIL_FROM` must use a verified domain in Resend
+- For testing without a domain, you can use `onboarding@resend.dev` temporarily
+- Use port 587 (TLS) or 465 (SSL) for SMTP
+
+**Example:**
+```
+EMAIL_SERVER_URL=smtp://resend:re_AbCdEf123456@smtp.resend.com:587
 EMAIL_FROM=noreply@cronkwaters.com
 ```
 

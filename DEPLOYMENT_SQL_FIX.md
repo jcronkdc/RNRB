@@ -29,14 +29,23 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ### 🟡 Important (For full functionality)
 
 ```bash
-# Email Magic Links
-EMAIL_SERVER_URL=smtp://user:pass@smtp.example.com:587
-EMAIL_FROM=noreply@cronkwaters.com
+# Email Magic Links with Resend (Recommended)
+EMAIL_SERVER_URL=smtp://resend:YOUR_RESEND_API_KEY@smtp.resend.com:587
+EMAIL_FROM=noreply@yourdomain.com
+
+# Note: EMAIL_FROM must use a verified domain in Resend
+# For testing, you can use: onboarding@resend.dev
 
 # Google OAuth
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
+
+**Quick Resend Setup:**
+1. Go to [resend.com](https://resend.com) and create an account
+2. Get your API key from the dashboard
+3. Verify your domain (or use `onboarding@resend.dev` for testing)
+4. Format: `smtp://resend:API_KEY@smtp.resend.com:587`
 
 ## Quick Database Setup Options
 
@@ -84,3 +93,4 @@ DATABASE_URL="file:./dev.db"
 - Clear error messages guide users
 
 The mycelial network now has entry points for new spores! 🍄
+

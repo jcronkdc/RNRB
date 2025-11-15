@@ -151,3 +151,4 @@ export function OnboardingChecklist({ items, onDismiss }: OnboardingChecklistPro
     </AnimatePresence>
   )
 }
+

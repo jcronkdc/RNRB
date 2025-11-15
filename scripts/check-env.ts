@@ -55,3 +55,4 @@ if (hasErrors) {
   console.log('\n✅ All required environment variables are set!');
   console.log('The mycelial network has the nutrients it needs.');
 }
+

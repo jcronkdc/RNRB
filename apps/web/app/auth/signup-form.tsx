@@ -37,8 +37,8 @@ export default function SignUpForm() {
 
       if (response?.error) {
         let errorMessage = response.error;
-        if (errorMessage.includes('No provider') || errorMessage.includes('EMAIL_SERVER')) {
-          errorMessage = 'Email service is not configured. Please use Google sign-in or contact support.';
+        if (errorMessage.includes('No provider') || errorMessage.includes('EMAIL_SERVER') || errorMessage.includes('email authentication is not configured')) {
+          errorMessage = 'Email authentication is not yet configured. Please use Google sign-in for now, or contact support to enable email authentication.';
         }
         setFeedback({ variant: 'error', message: errorMessage });
         return;
@@ -178,3 +178,4 @@ export default function SignUpForm() {
     </motion.div>
   );
 }
+

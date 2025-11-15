@@ -79,3 +79,4 @@ export async function OnboardingChecklistWrapper() {
 
   return <OnboardingChecklist items={items} />
 }
+

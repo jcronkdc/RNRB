@@ -30,3 +30,4 @@ echo "- EMAIL_SERVER_URL (for magic link login)"
 echo "- EMAIL_FROM=noreply@cronkwaters.com"
 echo ""
 echo "🍄 The mycelial network awaits these nutrients! 🍄"
+

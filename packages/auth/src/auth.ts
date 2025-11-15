@@ -135,14 +135,80 @@ export const handlers = {
     if (!instance) {
       return new Response('Auth not configured', { status: 500 });
     }
-    return instance.handlers.GET(req);
+    try {
+      return await instance.handlers.GET(req);
+    } catch (error) {
+      console.error('NextAuth GET error:', error);
+      // Check if it's a provider configuration error
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      if (errorMessage.includes('No provider') || errorMessage.includes('email') || errorMessage.includes('EMAIL_SERVER')) {
+        return new Response(
+          JSON.stringify({ error: 'Email authentication is not configured. Please set EMAIL_SERVER_URL.' }),
+          { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      // Handle SMTP/Resend connection errors gracefully
+      if (errorMessage.includes('SMTP') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('EHLO') || errorMessage.includes('resend')) {
+        return new Response(
+          JSON.stringify({ error: 'Email service connection failed. Please check your Resend API key and configuration.' }),
+          { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      // Return a user-friendly error instead of 500
+      return new Response(
+        JSON.stringify({ error: 'Authentication service error. Please try again or contact support.' }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
   },
   async POST(req: Request) {
     const instance = getAuthInstance();
     if (!instance) {
       return new Response('Auth not configured', { status: 500 });
     }
-    return instance.handlers.POST(req);
+    try {
+      return await instance.handlers.POST(req);
+    } catch (error) {
+      console.error('NextAuth POST error:', error);
+      // Check if it's a provider configuration error
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      if (errorMessage.includes('No provider') || errorMessage.includes('email') || errorMessage.includes('EMAIL_SERVER')) {
+        return new Response(
+          JSON.stringify({ error: 'Email authentication is not configured. Please set EMAIL_SERVER_URL.' }),
+          { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      // Handle SMTP/Resend connection errors gracefully
+      if (errorMessage.includes('SMTP') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('EHLO') || errorMessage.includes('resend')) {
+        return new Response(
+          JSON.stringify({ error: 'Email service connection failed. Please check your Resend API key and configuration.' }),
+          { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      // Return a user-friendly error instead of 500
+      return new Response(
+        JSON.stringify({ error: 'Authentication service error. Please try again or contact support.' }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
   }
 };
 
