@@ -2,16 +2,13 @@
 
 ## ACTIVE TASKS (MYCELIAL FOCUS)
 
-### 🔴 BUILD FAILURE - MODULE RESOLUTION BROKEN
-- **Critical Error**: `@cronkwaters/db` module not found
-- **Root Cause**: Package exports pointed to non-existent dist/ directory
-- **Fix Applied**: Changed exports to point to src/ files directly
-- **Files Affected**: 
-  - tours/NewTourDialog.tsx
-  - analytics/page.tsx
-  - assets/actions.ts
-  - trpc/server/context.ts
-- **Status**: Fix deployed, awaiting build verification
+### 🟡 Authentication Setup - FINAL STEPS
+- **Build Issues**: ✅ RESOLVED - Module resolution fixed
+- **Database**: ✅ Neon connected with all vars
+- **Required Action**: Add to Vercel Dashboard:
+  1. NEXTAUTH_SECRET: `JAs3SKhTPkoT++iTSxQQJhurzyhToGo1svyoabC4s3c=`
+  2. NEXTAUTH_URL: `https://song-forge.vercel.app`
+- **Status**: Site running, auth disabled until vars added
 
 ### 🟢 Performance & Stress Testing
 - **Status**: BLOCKED - awaiting auth configuration
