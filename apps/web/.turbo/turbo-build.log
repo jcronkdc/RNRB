@@ -8,7 +8,7 @@
 
    Creating an optimized production build ...
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (129kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ✓ Compiled successfully in 19.7s
+ ✓ Compiled successfully in 22.1s
    Skipping validation of types
    Skipping linting
    Collecting page data ...
@@ -85,14 +85,14 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /dashboard/settings                    251 B         159 kB
 ├ ƒ /dashboard/splits                      251 B         159 kB
 ├ ƒ /discover                            5.28 kB         211 kB
-├ ƒ /donate                              3.63 kB         171 kB
+├ ƒ /donate                              3.62 kB         171 kB
 ├ ƒ /foundation                           4.8 kB         169 kB
 ├ ○ /guide                               6.73 kB         151 kB
 ├ ƒ /learn                               4.39 kB         168 kB
 ├ ƒ /licenses                              184 B         102 kB
 ├ ○ /membership                          4.52 kB         149 kB
 ├ ƒ /music                               4.18 kB         168 kB
-├ ƒ /onboarding/organization             3.51 kB         168 kB
+├ ƒ /onboarding/organization              3.5 kB         168 kB
 ├ ƒ /p/[slug]                            1.35 kB         169 kB
 ├ ƒ /p/[slug]/opengraph-image-4mgimg       184 B         102 kB
 ├ ƒ /practice                            5.52 kB         170 kB
@@ -107,7 +107,7 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /search                              2.96 kB         170 kB
 ├ ○ /sessions                            3.25 kB         147 kB
 ├ ƒ /settings                            2.28 kB         166 kB
-├ ƒ /settings/artist-profile             4.52 kB         169 kB
+├ ƒ /settings/artist-profile              4.5 kB         169 kB
 ├ ƒ /settings/org                        2.15 kB         166 kB
 ├ ○ /signin                                184 B         102 kB
 ├ ○ /sitemap.xml                           184 B         102 kB
