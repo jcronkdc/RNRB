@@ -212,11 +212,11 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.6 }}
           >
             <Link 
-              href="/auth"
+              href="/guide"
               className="group relative px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-2xl font-semibold text-lg text-white overflow-hidden shadow-2xl shadow-brand-primary/25 hover:shadow-brand-primary/40 transition-all"
             >
               <span className="relative z-10 flex items-center gap-2">
-                Start Your Journey
+                Find Your Features
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
               <motion.div 
@@ -228,11 +228,11 @@ export default function HomePage() {
             </Link>
             
             <Link 
-              href="#features"
+              href="/auth"
               className="group px-8 py-4 border-2 border-border hover:border-brand-primary/50 bg-surface/80 backdrop-blur rounded-2xl font-semibold text-lg transition-all hover:shadow-xl hover:shadow-brand-primary/10"
             >
               <span className="flex items-center gap-2">
-                Explore Features
+                Start Creating
                 <Sparkles className="w-5 h-5 text-brand-primary group-hover:rotate-12 transition-transform" />
               </span>
             </Link>

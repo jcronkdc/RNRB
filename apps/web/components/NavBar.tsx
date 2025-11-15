@@ -19,10 +19,10 @@ type NavLink = {
 
 const LINKS: NavLink[] = [
   { label: 'Home', href: '/' },
+  { label: 'Feature Guide', href: '/guide', ariaLabel: 'Find the right features for you' },
   { label: 'Why', href: '/why', ariaLabel: 'Understand why CronkWaters exists' },
   { label: 'Our Vision', href: '/vision', ariaLabel: 'Learn about CronkWaters vision and founders' },
   { label: 'Membership', href: '/membership', ariaLabel: 'View membership options' },
-  { label: 'Features', href: '#features', ariaLabel: 'Explore CronkWaters features' },
   { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Support CronkWaters mission' }
 ];
 
