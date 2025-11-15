@@ -133,7 +133,12 @@ export const handlers = {
   async GET(req: Request) {
     const instance = getAuthInstance();
     if (!instance) {
-      return new Response('Auth not configured', { status: 500 });
+      // Redirect to error page instead of returning 500
+      const url = new URL(req.url);
+      const errorUrl = new URL('/api/auth/error', url.origin);
+      errorUrl.searchParams.set('error', 'Configuration');
+      errorUrl.searchParams.set('error_description', 'Authentication is not configured. Please set NEXTAUTH_SECRET.');
+      return Response.redirect(errorUrl.toString(), 302);
     }
     try {
       return await instance.handlers.GET(req);
@@ -173,7 +178,12 @@ export const handlers = {
   async POST(req: Request) {
     const instance = getAuthInstance();
     if (!instance) {
-      return new Response('Auth not configured', { status: 500 });
+      // Redirect to error page instead of returning 500
+      const url = new URL(req.url);
+      const errorUrl = new URL('/api/auth/error', url.origin);
+      errorUrl.searchParams.set('error', 'Configuration');
+      errorUrl.searchParams.set('error_description', 'Authentication is not configured. Please set NEXTAUTH_SECRET.');
+      return Response.redirect(errorUrl.toString(), 302);
     }
     try {
       return await instance.handlers.POST(req);
