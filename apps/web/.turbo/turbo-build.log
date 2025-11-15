@@ -8,7 +8,7 @@
 
    Creating an optimized production build ...
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (129kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ✓ Compiled successfully in 20.9s
+ ✓ Compiled successfully in 20.1s
    Skipping validation of types
    Skipping linting
    Collecting page data ...
@@ -104,10 +104,10 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /projects/new                          246 B         163 kB
 ├ ƒ /remix/[roomId]                      3.34 kB         167 kB
 ├ ○ /robots.txt                            184 B         102 kB
-├ ƒ /search                              2.96 kB         170 kB
+├ ƒ /search                              2.97 kB         170 kB
 ├ ○ /sessions                            3.25 kB         147 kB
 ├ ƒ /settings                            2.28 kB         166 kB
-├ ƒ /settings/artist-profile             4.51 kB         169 kB
+├ ƒ /settings/artist-profile             4.52 kB         169 kB
 ├ ƒ /settings/org                        2.15 kB         166 kB
 ├ ○ /signin                                184 B         102 kB
 ├ ○ /sitemap.xml                           184 B         102 kB
