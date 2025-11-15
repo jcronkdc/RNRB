@@ -11,9 +11,18 @@ export async function GET(req: NextRequest) {
 
   // User-friendly error messages
   const errorMessages: Record<string, string> = {
-    Configuration: 'Authentication is not properly configured. Please contact support.',
+    Configuration: 'Email authentication is not configured yet. Please set up Resend API key in Vercel environment variables, or use Google sign-in.',
     AccessDenied: 'Access denied. You do not have permission to sign in.',
-    Verification: 'The verification token has expired or has already been used.',
+    Verification: 'The verification token has expired or has already been used. Please request a new magic link.',
+    OAuthSignin: 'Error occurred during OAuth sign-in. Please try again.',
+    OAuthCallback: 'Error occurred during OAuth callback. Please try again.',
+    OAuthCreateAccount: 'Could not create OAuth account. Please try again.',
+    EmailCreateAccount: 'Could not create email account. Please try again.',
+    Callback: 'Error occurred during authentication callback. Please try again.',
+    OAuthAccountNotLinked: 'This email is already linked to another account. Please use a different sign-in method.',
+    EmailSignin: 'The email could not be sent. Please check your email configuration.',
+    CredentialsSignin: 'Invalid credentials provided. Please check and try again.',
+    SessionRequired: 'You must be signed in to access this page.',
     Default: errorDescription || 'An authentication error occurred. Please try again.',
   };
 
@@ -80,6 +89,22 @@ export async function GET(req: NextRequest) {
   <div class="error-container">
     <h1>Authentication Error</h1>
     <p>${userMessage}</p>
+    ${error === 'Configuration' || error === 'EmailSignin' ? `
+    <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 1rem; margin: 1rem 0; text-align: left;">
+      <strong>Setup Instructions:</strong>
+      <ol style="margin: 0.5rem 0; padding-left: 1.5rem; font-size: 0.9rem;">
+        <li>Go to <a href="https://resend.com" target="_blank" style="color: #667eea;">resend.com</a> and create a free account</li>
+        <li>Get your API key from the dashboard</li>
+        <li>Add these in Vercel → Settings → Environment Variables:</li>
+        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+          <li><code>EMAIL_SERVER_URL=smtp://resend:YOUR_API_KEY@smtp.resend.com:587</code></li>
+          <li><code>EMAIL_FROM=onboarding@resend.dev</code></li>
+        </ul>
+        <li>Redeploy your application</li>
+      </ol>
+      <p style="margin: 0.5rem 0 0 0; font-size: 0.85rem; color: #92400e;">Or use Google sign-in which works immediately!</p>
+    </div>
+    ` : ''}
     <div>
       <a href="/auth" class="button">Try Again</a>
       <a href="/" class="button button-secondary">Go Home</a>
