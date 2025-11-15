@@ -33,7 +33,6 @@ import {
   ArrowRight,
   Check
 } from 'lucide-react';
-import { NavBar } from '@/components/NavBar';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -42,7 +41,7 @@ const features = [
     title: 'Creative Studio',
     description: 'Your musical canvas awaits. Create, collaborate, and craft your sonic masterpieces.',
     icon: Palette,
-    href: '#creative-studio',
+    href: '/projects',
     color: 'from-violet-600 to-indigo-600',
     bgPattern: 'bg-gradient-to-br from-violet-500/20 to-indigo-500/20',
     highlights: ['Multi-track workspace', 'Real-time collaboration', 'Version control', 'Cloud sync']
@@ -51,7 +50,7 @@ const features = [
     title: 'Sonic Forge',
     description: 'Shape your sound with AI-powered tools that understand your artistic vision.',
     icon: Waves,
-    href: '#sonic-forge',
+    href: '/music',
     color: 'from-blue-600 to-cyan-600',
     bgPattern: 'bg-gradient-to-br from-blue-500/20 to-cyan-500/20',
     highlights: ['AI lyric generation', 'Voice synthesis', 'Stem separation', 'Audio mastering']
@@ -60,7 +59,7 @@ const features = [
     title: 'Revenue Symphony',
     description: 'Orchestrate your earnings with transparent split management and royalty tracking.',
     icon: Coins,
-    href: '#revenue',
+    href: '/splits',
     color: 'from-emerald-600 to-green-600',
     bgPattern: 'bg-gradient-to-br from-emerald-500/20 to-green-500/20',
     highlights: ['Automated splits', 'Real-time tracking', 'PRO integration', 'Smart contracts']
@@ -69,7 +68,7 @@ const features = [
     title: 'Performance Pulse',
     description: 'Feel the rhythm of your success with live analytics and audience insights.',
     icon: Activity,
-    href: '#analytics',
+    href: '/analytics',
     color: 'from-orange-600 to-red-600',
     bgPattern: 'bg-gradient-to-br from-orange-500/20 to-red-500/20',
     highlights: ['Live dashboards', 'Fan demographics', 'Revenue streams', 'Growth metrics']
@@ -78,7 +77,7 @@ const features = [
     title: 'Sound Vault',
     description: 'Your creative archive. Every stem, sample, and session preserved in crystal clarity.',
     icon: Archive,
-    href: '#vault',
+    href: '/assets',
     color: 'from-purple-600 to-pink-600',
     bgPattern: 'bg-gradient-to-br from-purple-500/20 to-pink-500/20',
     highlights: ['Unlimited storage', 'Instant preview', 'Smart organization', 'Secure backup']
@@ -87,7 +86,7 @@ const features = [
     title: 'Artist Collective',
     description: 'Unite with fellow creators. Build your label, manage your crew, grow together.',
     icon: Users2,
-    href: '#collective',
+    href: '/community',
     color: 'from-pink-600 to-rose-600',
     bgPattern: 'bg-gradient-to-br from-pink-500/20 to-rose-500/20',
     highlights: ['Team workspaces', 'Role management', 'Project sharing', 'Collective goals']
@@ -96,7 +95,7 @@ const features = [
     title: 'Live Stage',
     description: 'Connect with your audience in real-time. Stream, interact, and create moments.',
     icon: Mic,
-    href: '#stage',
+    href: '/sessions',
     color: 'from-cyan-600 to-teal-600',
     bgPattern: 'bg-gradient-to-br from-cyan-500/20 to-teal-500/20',
     highlights: ['HD streaming', 'Interactive polls', 'Live chat', 'Recording capture']
@@ -105,7 +104,7 @@ const features = [
     title: 'Fan Love',
     description: 'Transform listeners into supporters with integrated crowdfunding and donations.',
     icon: HeartHandshake,
-    href: '#fan-love',
+    href: '/foundation',
     color: 'from-red-600 to-pink-600',
     bgPattern: 'bg-gradient-to-br from-red-500/20 to-pink-500/20',
     highlights: ['Tip jar', 'Crowdfunding', 'Perks system', 'Thank you notes']
@@ -152,9 +151,6 @@ export default function HomePage() {
         {/* Particle Effect */}
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.02] mix-blend-soft-light" />
       </div>
-
-      {/* Navigation */}
-      <NavBar />
 
       {/* Hero Section */}
       <section className="relative z-10 px-6 pt-32 pb-20 max-w-7xl mx-auto">
@@ -313,20 +309,24 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
-            <motion.div
+            <Link
               key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-              onMouseEnter={() => setHoveredFeature(index)}
-              onMouseLeave={() => setHoveredFeature(null)}
-              className="group relative"
+              href={feature.href}
+              className="block"
             >
-              <div className={`
-                relative h-full overflow-hidden rounded-3xl border bg-surface/80 backdrop-blur
-                ${hoveredFeature === index ? 'border-brand-primary/50 shadow-2xl shadow-brand-primary/20' : 'border-border/50'}
-                transition-all duration-300
-              `}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                onMouseEnter={() => setHoveredFeature(index)}
+                onMouseLeave={() => setHoveredFeature(null)}
+                className="group relative h-full"
+              >
+                <div className={`
+                  relative h-full overflow-hidden rounded-3xl border bg-surface/80 backdrop-blur
+                  ${hoveredFeature === index ? 'border-brand-primary/50 shadow-2xl shadow-brand-primary/20' : 'border-border/50'}
+                  transition-all duration-300 cursor-pointer
+                `}>
                 {/* Background Pattern */}
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${feature.bgPattern}`} />
                 
@@ -402,6 +402,7 @@ export default function HomePage() {
                 </div>
               </div>
             </motion.div>
+            </Link>
           ))}
         </div>
       </section>

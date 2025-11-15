@@ -7,7 +7,7 @@ const MOCK_PROJECTS: Record<string, { name: string; tagline: string; credits: Ar
     name: 'Aurora Lines',
     tagline: 'A shimmering electro-pop journey inspired by arctic light.',
     credits: [
-      { name: 'CronkWaters Collective' },
+      { name: 'The CronkWaters Project Collective' },
       { name: 'Mae Rivera' },
       { name: 'Atlas Mastering' }
     ]
@@ -24,7 +24,7 @@ const MOCK_PROJECTS: Record<string, { name: string; tagline: string; credits: Ar
     name: 'Public Reel 2025',
     tagline: 'A curated sampler of live takes and collaborations.',
     credits: [
-      { name: 'CronkWaters House Band' },
+      { name: 'The CronkWaters Project House Band' },
       { name: 'Open Scores Initiative' }
     ]
   }
@@ -98,7 +98,7 @@ export default async function OpengraphImage({ params }: { params: Promise<{ slu
           marginBottom: 40,
         }}>{credits}</div>
         <div style={{ position: 'absolute', right: 54, bottom: 40, fontSize: 24, color: '#48290b', letterSpacing: '.16em', opacity: 0.7 }}>
-          CronkWaterss
+          The CronkWaters Project
         </div>
       </div>
     ),

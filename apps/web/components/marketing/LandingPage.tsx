@@ -192,7 +192,7 @@ export function LandingPage() {
                 Built by Musicians, <span className="bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">For Musicians</span>
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
-                CronkWaters is the vision of Josh Waters and Justin Cronk — two friends with over 20 years 
+                The CronkWaters Project is the vision of Josh Waters and Justin Cronk — two friends with over 20 years 
                 of friendship and a shared passion for democratizing music creation.
               </p>
               <div className="space-y-4 mb-8">

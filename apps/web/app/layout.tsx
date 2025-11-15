@@ -33,9 +33,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CronkWaters",
+  title: "The CronkWaters Project",
   description:
-    "CronkWaters is an end-to-end workspace for collaborative songwriting powered by modern web tooling.",
+    "The CronkWaters Project is an end-to-end workspace for collaborative songwriting powered by modern web tooling.",
   icons: {
     icon: "/icon.svg",
   },

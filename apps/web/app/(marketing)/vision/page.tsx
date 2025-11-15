@@ -35,7 +35,7 @@ const milestones = [
   },
   {
     year: "2024",
-    event: "CronkWaters is Born",
+    event: "The CronkWaters Project is Born",
     description: "A vision to democratize music creation becomes reality"
   }
 ];
@@ -76,7 +76,7 @@ export default function VisionPage() {
           className="text-center mb-16"
         >
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-            The Vision Behind CronkWaters
+            The Vision Behind The CronkWaters Project
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Two friends. One mission. Endless possibilities for independent musicians.
@@ -104,12 +104,12 @@ export default function VisionPage() {
             <div className="space-y-4 text-muted-foreground">
               <p>
                 A road warrior who&apos;s graced the Grand Ole Opry stage with Chris Janson and performed on 
-                the Today Show, Josh brings decades of professional music experience to CronkWaters.
+                the Today Show, Josh brings decades of professional music experience to The CronkWaters Project.
               </p>
               <p>
                 Beyond the spotlight, Josh dedicates himself to helping musicians realize their dreams 
                 through songwriting, production, and engineering mentorship. His journey from local 
-                stages to national television embodies the spirit of what CronkWaters stands for.
+                stages to national television embodies the spirit of what The CronkWaters Project stands for.
               </p>
               <div className="flex items-center gap-2 text-brand-primary">
                 <Star className="w-4 h-4" />
@@ -131,7 +131,7 @@ export default function VisionPage() {
             </div>
             <div className="space-y-4 text-muted-foreground">
               <p>
-                With a lifelong passion for songwriting, Justin brings the creative soul to CronkWaters. 
+                With a lifelong passion for songwriting, Justin brings the creative soul to The CronkWaters Project. 
                 Though his instruments may &ldquo;collect more dust than fingerprints&rdquo; these days, his 
                 love for music and vision for supporting artists burns brighter than ever.
               </p>
@@ -268,7 +268,7 @@ export default function VisionPage() {
           <h2 className="text-3xl font-bold mb-6">Join Our Vision</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Whether you&apos;re an artist, a supporter, or someone who believes in the power of music, 
-            there&apos;s a place for you in the CronkWaters community.
+            there&apos;s a place for you in The CronkWaters Project community.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link 

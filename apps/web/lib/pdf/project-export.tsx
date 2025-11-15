@@ -207,7 +207,7 @@ export function ProjectExportPDF({ data }: { data: ProjectExportData }) {
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text>© {new Date().getFullYear()} CronkWaters</Text>
+          <Text>© {new Date().getFullYear()} The CronkWaters Project</Text>
           <Text style={styles.timestamp}>
             Generated on {new Date().toLocaleString()}
           </Text>

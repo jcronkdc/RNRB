@@ -6,14 +6,14 @@ const ogImage = '/og-default.jpg';
 
 const metadata: Metadata = {
   title: {
-    default: 'CronkWaters',
-    template: '%s • CronkWaters',
+    default: 'The CronkWaters Project',
+    template: '%s • The CronkWaters Project',
   },
   description: 'A beautiful, collaborative ecosystem for songwriting, recording, and community.',
   metadataBase: new URL(base),
   openGraph: {
     type: 'website',
-    siteName: 'CronkWaters',
+    siteName: 'The CronkWaters Project',
     images: [ogImage],
   },
   twitter: {

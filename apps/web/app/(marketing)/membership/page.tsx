@@ -24,7 +24,7 @@ const plans = [
   {
     name: "Explorer",
     price: "Free",
-    description: "Perfect for trying out CronkWaters",
+    description: "Perfect for trying out The CronkWaters Project",
     icon: Music,
     color: "from-gray-500 to-gray-600",
     features: [
@@ -326,7 +326,7 @@ export default function MembershipPage() {
         >
           <h2 className="text-3xl font-bold mb-6">Ready to Start Creating?</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of musicians who are already using CronkWaters to bring their music to life.
+            Join thousands of musicians who are already using The CronkWaters Project to bring their music to life.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link 
