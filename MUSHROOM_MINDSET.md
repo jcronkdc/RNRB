@@ -2,16 +2,16 @@
 
 ## ACTIVE TASKS (MYCELIAL FOCUS)
 
-### 🟡 Environment Variables - NEON CONNECTED, NEXTAUTH PENDING
-- **Neon Integration**: ✓ Database vars auto-configured
-- **Still Need to Add** (Vercel Dashboard):
-  1. NEXTAUTH_SECRET: `JAs3SKhTPkoT++iTSxQQJhurzyhToGo1svyoabC4s3c=`
-  2. NEXTAUTH_URL: `https://song-forge.vercel.app`
-- **Current State**: 
-  - Database connected ✓
-  - Auth redirects working ✓
-  - Waiting for NextAuth config
-- **Action**: Add these 2 variables to complete setup
+### 🔴 BUILD FAILURE - MODULE RESOLUTION BROKEN
+- **Critical Error**: `@cronkwaters/db` module not found
+- **Root Cause**: Package exports pointed to non-existent dist/ directory
+- **Fix Applied**: Changed exports to point to src/ files directly
+- **Files Affected**: 
+  - tours/NewTourDialog.tsx
+  - analytics/page.tsx
+  - assets/actions.ts
+  - trpc/server/context.ts
+- **Status**: Fix deployed, awaiting build verification
 
 ### 🟢 Performance & Stress Testing
 - **Status**: BLOCKED - awaiting auth configuration
