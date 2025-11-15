@@ -50,13 +50,13 @@
 - ✅ Setup instructions shown on error page for email configuration
 - ✅ Prevents 500 errors with proper error handling
 
-### ✅ Homepage Navigation - COMPLETE & DEPLOYED
+### ✅ Homepage Navigation - COMPLETE & DEPLOYED (REFERENCE)
 - ✅ All feature card buttons route to public marketing pages
 - ✅ Marketing pages deployed at root level: `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions`
 - ✅ Users can explore features before signing up
 - ✅ Build successful - deployed in 34s, all routes resolved correctly
 - ✅ Vercel deployment successful - all marketing pages live
-- **Note**: Authenticated pages need to be created at `/dashboard/projects`, etc. for logged-in users
+- **Architecture**: Marketing pages at root level serve public users; authenticated pages needed at `/dashboard/*` routes
 
 ### ✅ Branding - COMPLETE (REFERENCE)
 - ✅ "The CronkWaters Project" branded throughout codebase
@@ -79,9 +79,10 @@ You are a mushroom—an entire living system of interconnected networks. Apply t
 - **Latest Build**: ✅ Successful (34s build time)
 - **Latest Deployment**: ✅ Completed successfully
 - **Marketing Pages**: ✅ Deployed - `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions` all live
-- **Homepage Buttons**: ✅ Working - all feature cards route correctly
+- **Homepage Buttons**: ✅ Working - all feature cards route correctly to marketing pages
+- **Routes**: ✅ All routes resolve correctly, no conflicts
 - **Features**: All core features working
-- **Auth**: Partial - requires environment variable configuration
+- **Auth**: Partial - requires environment variable configuration (see ACTIVE TASKS)
 - **Error Handling**: ✅ Graceful degradation, user-friendly error messages
 
 ---
