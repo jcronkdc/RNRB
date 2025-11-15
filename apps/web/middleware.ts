@@ -25,7 +25,13 @@ export async function middleware(req: NextRequest) {
     '/learn',
     '/practice',
     '/community',
-    '/music'
+    '/music',
+    // Add feature exploration routes for public access
+    '/projects',
+    '/splits',
+    '/analytics',
+    '/assets',
+    '/sessions'
   ];
   
   // Check if route requires authentication
