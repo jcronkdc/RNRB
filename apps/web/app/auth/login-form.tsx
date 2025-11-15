@@ -198,6 +198,17 @@ export default function LoginForm() {
           {feedback.message}
         </motion.div>
       )}
+
+      <div className="text-center text-sm text-muted-foreground">
+        Don't have an account?{' '}
+        <button
+          type="button"
+          className="text-brand-primary hover:underline"
+          onClick={() => window.dispatchEvent(new CustomEvent('switch-to-signup'))}
+        >
+          Sign up
+        </button>
+      </div>
     </motion.div>
   );
 }
