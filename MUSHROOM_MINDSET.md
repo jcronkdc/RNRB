@@ -52,11 +52,11 @@
 
 ### ✅ Homepage Navigation - COMPLETE & DEPLOYED (REFERENCE)
 - ✅ All feature card buttons route to public marketing pages
-- ✅ Marketing pages deployed at root level: `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions`
+- ✅ Marketing pages deployed in `(marketing)` route group, mapping to root-level URLs: `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions`
 - ✅ Users can explore features before signing up
 - ✅ Build successful - deployed in 34s, all routes resolved correctly
 - ✅ Vercel deployment successful - all marketing pages live
-- **Architecture**: Marketing pages at root level serve public users; authenticated pages needed at `/dashboard/*` routes
+- **Architecture**: Marketing pages in `(marketing)` route group serve public users at root URLs; authenticated pages needed at `/dashboard/*` routes
 
 ### ✅ Branding - COMPLETE (REFERENCE)
 - ✅ "The CronkWaters Project" branded throughout codebase
@@ -81,6 +81,7 @@ You are a mushroom—an entire living system of interconnected networks. Apply t
 - **Marketing Pages**: ✅ Deployed - `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions` all live
 - **Homepage Buttons**: ✅ Working - all feature cards route correctly to marketing pages
 - **Routes**: ✅ All routes resolve correctly, no conflicts
+- **File Structure**: Marketing pages organized in `(marketing)` route group (route groups don't affect URLs in Next.js)
 - **Features**: All core features working
 - **Auth**: Partial - requires environment variable configuration (see ACTIVE TASKS)
 - **Error Handling**: ✅ Graceful degradation, user-friendly error messages
