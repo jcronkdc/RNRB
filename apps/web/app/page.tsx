@@ -576,6 +576,7 @@ export default function HomePage() {
             <div className="flex items-center justify-center gap-6">
               <Link href="/privacy" className="hover:text-brand-primary transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-brand-primary transition-colors">Terms</Link>
+              <Link href="/why" className="hover:text-brand-primary transition-colors">Why</Link>
               <Link href="/vision" className="hover:text-brand-primary transition-colors">Our Vision</Link>
               <Link href="/community" className="hover:text-brand-primary transition-colors">Community</Link>
             </div>

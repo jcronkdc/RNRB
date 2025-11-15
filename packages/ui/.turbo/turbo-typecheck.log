@@ -1,4 +1,23 @@
 
-> @cronkwaters/ui@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/packages/ui
+> @cronkwaters/ui@0.1.0 typecheck /workspace/packages/ui
 > tsc --noEmit
 
+stories/button.stories.tsx(6,3): error TS2322: Type 'ForwardRefExoticComponent<ButtonProps & RefAttributes<HTMLButtonElement>>' is not assignable to type 'ComponentType<any> | undefined'.
+  Type 'ForwardRefExoticComponent<ButtonProps & RefAttributes<HTMLButtonElement>>' is not assignable to type 'FunctionComponent<any>'.
+    Type 'React.ReactNode' is not assignable to type 'import("/workspace/node_modules/.pnpm/@types+react@18.3.26/node_modules/@types/react/index").ReactNode'.
+      Type 'bigint' is not assignable to type 'ReactNode'.
+stories/button.stories.tsx(11,5): error TS2353: Object literal may only specify known properties, and 'children' does not exist in type 'Partial<ForwardRefExoticComponent<ButtonProps & RefAttributes<HTMLButtonElement>>>'.
+stories/button.stories.tsx(21,5): error TS2353: Object literal may only specify known properties, and 'variant' does not exist in type 'Partial<ForwardRefExoticComponent<ButtonProps & RefAttributes<HTMLButtonElement>>>'.
+stories/button.stories.tsx(27,5): error TS2353: Object literal may only specify known properties, and 'variant' does not exist in type 'Partial<ForwardRefExoticComponent<ButtonProps & RefAttributes<HTMLButtonElement>>>'.
+stories/button.stories.tsx(33,5): error TS2353: Object literal may only specify known properties, and 'variant' does not exist in type 'Partial<ForwardRefExoticComponent<ButtonProps & RefAttributes<HTMLButtonElement>>>'.
+stories/dialog.stories.tsx(16,3): error TS2322: Type 'ForwardRefExoticComponent<Omit<DialogContentProps & RefAttributes<HTMLDivElement>, "ref"> & RefAttributes<HTMLDivElement>>' is not assignable to type 'ComponentType<any> | undefined'.
+  Type 'ForwardRefExoticComponent<Omit<DialogContentProps & RefAttributes<HTMLDivElement>, "ref"> & RefAttributes<HTMLDivElement>>' is not assignable to type 'FunctionComponent<any>'.
+    Type 'React.ReactNode' is not assignable to type 'import("/workspace/node_modules/.pnpm/@types+react@18.3.26/node_modules/@types/react/index").ReactNode'.
+      Type 'bigint' is not assignable to type 'ReactNode'.
+stories/input.stories.tsx(6,3): error TS2322: Type 'ForwardRefExoticComponent<InputProps & RefAttributes<HTMLInputElement>>' is not assignable to type 'ComponentType<any> | undefined'.
+  Type 'ForwardRefExoticComponent<InputProps & RefAttributes<HTMLInputElement>>' is not assignable to type 'FunctionComponent<any>'.
+    Type 'React.ReactNode' is not assignable to type 'import("/workspace/node_modules/.pnpm/@types+react@18.3.26/node_modules/@types/react/index").ReactNode'.
+      Type 'bigint' is not assignable to type 'ReactNode'.
+stories/input.stories.tsx(8,5): error TS2353: Object literal may only specify known properties, and 'placeholder' does not exist in type 'Partial<ForwardRefExoticComponent<InputProps & RefAttributes<HTMLInputElement>>>'.
+stories/input.stories.tsx(23,5): error TS2353: Object literal may only specify known properties, and 'disabled' does not exist in type 'Partial<ForwardRefExoticComponent<InputProps & RefAttributes<HTMLInputElement>>>'.
+ ELIFECYCLE  Command failed with exit code 2.
