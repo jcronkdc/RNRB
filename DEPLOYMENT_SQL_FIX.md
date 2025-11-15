@@ -29,23 +29,28 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ### 🟡 Important (For full functionality)
 
 ```bash
-# Email Magic Links with Resend (Recommended)
+# Email Magic Links with Resend (Recommended - No Domain Required!)
 EMAIL_SERVER_URL=smtp://resend:YOUR_RESEND_API_KEY@smtp.resend.com:587
-EMAIL_FROM=noreply@yourdomain.com
+EMAIL_FROM=onboarding@resend.dev
 
-# Note: EMAIL_FROM must use a verified domain in Resend
-# For testing, you can use: onboarding@resend.dev
+# Note: onboarding@resend.dev works WITHOUT domain verification!
+# Perfect for testing and development. When you have a real domain later,
+# verify it in Resend and change EMAIL_FROM to your verified domain.
 
 # Google OAuth
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 ```
 
-**Quick Resend Setup:**
-1. Go to [resend.com](https://resend.com) and create an account
-2. Get your API key from the dashboard
-3. Verify your domain (or use `onboarding@resend.dev` for testing)
+**Quick Resend Setup (No Domain Needed!):**
+1. Go to [resend.com](https://resend.com) and create a free account
+2. Get your API key from the dashboard (under API Keys)
+3. Use `onboarding@resend.dev` for `EMAIL_FROM` - no verification needed!
 4. Format: `smtp://resend:API_KEY@smtp.resend.com:587`
+
+**Later, When You Have a Domain:**
+1. Add and verify your domain in Resend dashboard
+2. Update `EMAIL_FROM` to `noreply@yourdomain.com`
 
 ## Quick Database Setup Options
 
