@@ -1,609 +1,114 @@
 
-
 > @cronkwaters/web@0.1.0 typecheck /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > tsc --noEmit
 
-[96m.next/types/app/(app)/projects/[slug]/page.ts[0m:[93m34[0m:[93m29[0m - [91merror[0m[90m TS2344: [0mType 'ProjectPageProps' does not satisfy the constraint 'PageProps'.
+.next/types/app/(app)/projects/[slug]/page.ts(34,29): error TS2344: Type 'ProjectPageProps' does not satisfy the constraint 'PageProps'.
   Types of property 'params' are incompatible.
     Type '{ slug: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
-
-[7m34[0m checkFields<Diff<PageProps, FirstArg<TEntry['default']>, 'default'>>()
-[7m  [0m [91m                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-
-[96m.next/types/app/(app)/projects/[slug]/songs/[songSlug]/page.ts[0m:[93m34[0m:[93m29[0m - [91merror[0m[90m TS2344: [0mType 'SongPageProps' does not satisfy the constraint 'PageProps'.
+.next/types/app/(app)/projects/[slug]/songs/[songSlug]/page.ts(34,29): error TS2344: Type 'SongPageProps' does not satisfy the constraint 'PageProps'.
   Types of property 'params' are incompatible.
     Type '{ slug: string; songSlug: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
-
-[7m34[0m checkFields<Diff<PageProps, FirstArg<TEntry['default']>, 'default'>>()
-[7m  [0m [91m                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m31[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
-
-[7m31[0m       organization: {
-[7m  [0m [91m      ~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m40[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type 'ProjectInclude<DefaultArgs>'.
-
-[7m40[0m       organization: {
-[7m  [0m [91m      ~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m74[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'slug' does not exist in type 'SongSelect<DefaultArgs>'.
-
-[7m74[0m       slug: true,
-[7m  [0m [91m      ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m83[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organizationId' does not exist in type 'MembershipWhereInput'.
-
-[7m83[0m       organizationId: project.organizationId
-[7m  [0m [91m      ~~~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m83[0m:[93m31[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; id: string; createdAt: Date; updatedAt: Date; orgId: string; }'.
-
-[7m83[0m       organizationId: project.organizationId
-[7m  [0m [91m                              ~~~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m110[0m:[93m22[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"info" | "success" | "outline" | "solid" | "subtle" | "warning" | "danger" | null | undefined'.
-  Type '"default"' is not assignable to type '"info" | "success" | "outline" | "solid" | "subtle" | "warning" | "danger" | null | undefined'.
-
-[7m110[0m               <Badge variant={project.status === 'active' ? 'default' : 'secondary'}>
-[7m   [0m [91m                     ~~~~~~~[0m
-
-  [96m../../packages/ui/src/components/badge.tsx[0m:[93m10[0m:[93m7[0m
-    [7m 10[0m       variant: {
-    [7m   [0m [96m      ~~~~~~~~~~[0m
-    [7m 11[0m         solid: 'bg-brand-primary text-brand-primary-foreground shadow-soft',
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m...[0m 
-    [7m 17[0m         info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m 18[0m       }
-    [7m   [0m [96m~~~~~~~[0m
-    The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & BadgeProps & RefAttributes<HTMLSpanElement>'
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m136[0m:[93m29[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; id: string; createdAt: Date; updatedAt: Date; orgId: string; }'.
-
-[7m136[0m             Songs ({project._count.songs})
-[7m   [0m [91m                            ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m139[0m:[93m30[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; id: string; createdAt: Date; updatedAt: Date; orgId: string; }'.
-
-[7m139[0m             Assets ({project._count.assets})
-[7m   [0m [91m                             ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m155[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; id: string; createdAt: Date; updatedAt: Date; orgId: string; }'.
-
-[7m155[0m                 <div className="text-2xl font-bold">{project._count.songs}</div>
-[7m   [0m [91m                                                             ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m164[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; id: string; createdAt: Date; updatedAt: Date; orgId: string; }'.
-
-[7m164[0m                 <div className="text-2xl font-bold">{project._count.assets}</div>
-[7m   [0m [91m                                                             ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m173[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; id: string; createdAt: Date; updatedAt: Date; orgId: string; }'.
-
-[7m173[0m                 <div className="text-2xl font-bold">{project._count.splitSheets}</div>
-[7m   [0m [91m                                                             ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m182[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty '_count' does not exist on type '{ name: string; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; status: ProjectStatus; id: string; createdAt: Date; updatedAt: Date; orgId: string; }'.
-
-[7m182[0m                 <div className="text-2xl font-bold">{project._count.licenses}</div>
-[7m   [0m [91m                                                             ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m201[0m:[93m72[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m201[0m                           href={`/projects/${params.slug}/songs/${song.slug}`}
-[7m   [0m [91m                                                                       ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m206[0m:[93m32[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"info" | "success" | "outline" | "solid" | "subtle" | "warning" | "danger" | null | undefined'.
-  Type '"default"' is not assignable to type '"info" | "success" | "outline" | "solid" | "subtle" | "warning" | "danger" | null | undefined'.
-
-[7m206[0m                         <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
-[7m   [0m [91m                               ~~~~~~~[0m
-
-  [96m../../packages/ui/src/components/badge.tsx[0m:[93m10[0m:[93m7[0m
-    [7m 10[0m       variant: {
-    [7m   [0m [96m      ~~~~~~~~~~[0m
-    [7m 11[0m         solid: 'bg-brand-primary text-brand-primary-foreground shadow-soft',
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m...[0m 
-    [7m 17[0m         info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m 18[0m       }
-    [7m   [0m [96m~~~~~~~[0m
-    The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & BadgeProps & RefAttributes<HTMLSpanElement>'
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m206[0m:[93m46[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m206[0m                         <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
-[7m   [0m [91m                                             ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m207[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m207[0m                           {song.status}
-[7m   [0m [91m                                ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m229[0m:[93m38[0m - [91merror[0m[90m TS2339: [0mProperty 'id' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m229[0m                     <div key={member.id} className="flex items-center gap-3">
-[7m   [0m [91m                                     ~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m231[0m:[93m50[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m231[0m                         <AvatarImage src={member.user.image || ''} />
-[7m   [0m [91m                                                 ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m233[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m233[0m                           {member.user.name?.[0] || member.user.email[0]}
-[7m   [0m [91m                                  ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m233[0m:[93m60[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m233[0m                           {member.user.name?.[0] || member.user.email[0]}
-[7m   [0m [91m                                                           ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m238[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m238[0m                           {member.user.name || member.user.email}
-[7m   [0m [91m                                  ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m238[0m:[93m55[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m238[0m                           {member.user.name || member.user.email}
-[7m   [0m [91m                                                      ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m277[0m:[93m70[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m277[0m                         href={`/projects/${params.slug}/songs/${song.slug}`}
-[7m   [0m [91m                                                                     ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m282[0m:[93m30[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"info" | "success" | "outline" | "solid" | "subtle" | "warning" | "danger" | null | undefined'.
-  Type '"default"' is not assignable to type '"info" | "success" | "outline" | "solid" | "subtle" | "warning" | "danger" | null | undefined'.
-
-[7m282[0m                       <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
-[7m   [0m [91m                             ~~~~~~~[0m
-
-  [96m../../packages/ui/src/components/badge.tsx[0m:[93m10[0m:[93m7[0m
-    [7m 10[0m       variant: {
-    [7m   [0m [96m      ~~~~~~~~~~[0m
-    [7m 11[0m         solid: 'bg-brand-primary text-brand-primary-foreground shadow-soft',
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m...[0m 
-    [7m 17[0m         info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m 18[0m       }
-    [7m   [0m [96m~~~~~~~[0m
-    The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & BadgeProps & RefAttributes<HTMLSpanElement>'
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m282[0m:[93m44[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m282[0m                       <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
-[7m   [0m [91m                                           ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m283[0m:[93m31[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m283[0m                         {song.status}
-[7m   [0m [91m                              ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m323[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'id' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m323[0m               <Card key={member.id}>
-[7m   [0m [91m                                ~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m327[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m327[0m                       <AvatarImage src={member.user.image || ''} />
-[7m   [0m [91m                                               ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m329[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m329[0m                         {member.user.name?.[0] || member.user.email[0]}
-[7m   [0m [91m                                ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m329[0m:[93m58[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m329[0m                         {member.user.name?.[0] || member.user.email[0]}
-[7m   [0m [91m                                                         ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m334[0m:[93m33[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m334[0m                         {member.user.name || member.user.email}
-[7m   [0m [91m                                ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/page.tsx[0m:[93m334[0m:[93m53[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m334[0m                         {member.user.name || member.user.email}
-[7m   [0m [91m                                                    ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m34[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type 'Without<ProjectRelationFilter, ProjectWhereInput> & ProjectWhereInput'.
-
-[7m34[0m         organization: {
-[7m  [0m [91m        ~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m49[0m:[93m11[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organizationId' does not exist in type 'ProjectSelect<DefaultArgs>'.
-
-[7m49[0m           organizationId: true
-[7m  [0m [91m          ~~~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m81[0m:[93m30[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m81[0m   const collaborators = song.splitSheet?.recipients || []
-[7m  [0m [91m                             ~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m89[0m:[93m85[0m - [91merror[0m[90m TS2551: [0mProperty 'project' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'. Did you mean 'projectId'?
-
-[7m89[0m           <Link href={`/projects/${params.slug}`} className="hover:underline">{song.project.name}</Link>
-[7m  [0m [91m                                                                                    ~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m104[0m:[93m22[0m - [91merror[0m[90m TS2322: [0mType '"default" | "secondary"' is not assignable to type '"info" | "success" | "outline" | "solid" | "subtle" | "warning" | "danger" | null | undefined'.
-  Type '"default"' is not assignable to type '"info" | "success" | "outline" | "solid" | "subtle" | "warning" | "danger" | null | undefined'.
-
-[7m104[0m               <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
-[7m   [0m [91m                     ~~~~~~~[0m
-
-  [96m../../packages/ui/src/components/badge.tsx[0m:[93m10[0m:[93m7[0m
-    [7m 10[0m       variant: {
-    [7m   [0m [96m      ~~~~~~~~~~[0m
-    [7m 11[0m         solid: 'bg-brand-primary text-brand-primary-foreground shadow-soft',
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m...[0m 
-    [7m 17[0m         info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100'
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m 18[0m       }
-    [7m   [0m [96m~~~~~~~[0m
-    The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & BadgeProps & RefAttributes<HTMLSpanElement>'
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m104[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m104[0m               <Badge variant={song.status === 'published' ? 'default' : 'secondary'}>
-[7m   [0m [91m                                   ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m105[0m:[93m23[0m - [91merror[0m[90m TS2339: [0mProperty 'status' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m105[0m                 {song.status}
-[7m   [0m [91m                      ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m107[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m107[0m               {song.genre && (
-[7m   [0m [91m                    ~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m108[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m108[0m                 <Badge variant="outline">{song.genre}</Badge>
-[7m   [0m [91m                                               ~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m131[0m:[93m27[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m131[0m             Assets ({song.assets.length})
-[7m   [0m [91m                          ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m146[0m                   <p className="text-sm">{song.duration ? `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}` : 'Not set'}</p>
-[7m   [0m [91m                                               ~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m78[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m146[0m                   <p className="text-sm">{song.duration ? `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}` : 'Not set'}</p>
-[7m   [0m [91m                                                                             ~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m146[0m:[93m102[0m - [91merror[0m[90m TS2339: [0mProperty 'duration' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m146[0m                   <p className="text-sm">{song.duration ? `${Math.floor(song.duration / 60)}:${(song.duration % 60).toString().padStart(2, '0')}` : 'Not set'}</p>
-[7m   [0m [91m                                                                                                     ~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m150[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'bpm' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m150[0m                   <p className="text-sm">{song.bpm ? `${song.bpm} BPM` : 'Not set'}</p>
-[7m   [0m [91m                                               ~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m150[0m:[93m62[0m - [91merror[0m[90m TS2339: [0mProperty 'bpm' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m150[0m                   <p className="text-sm">{song.bpm ? `${song.bpm} BPM` : 'Not set'}</p>
-[7m   [0m [91m                                                             ~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m158[0m:[93m48[0m - [91merror[0m[90m TS2339: [0mProperty 'genre' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m158[0m                   <p className="text-sm">{song.genre || 'Not set'}</p>
-[7m   [0m [91m                                               ~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m162[0m:[93m58[0m - [91merror[0m[90m TS2339: [0mProperty 'isrc' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m162[0m                   <p className="text-sm font-mono">{song.isrc || 'Not assigned'}</p>
-[7m   [0m [91m                                                         ~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m177[0m:[93m41[0m - [91merror[0m[90m TS7006: [0mParameter 'collaborator' implicitly has an 'any' type.
-
-[7m177[0m                     {collaborators.map((collaborator) => (
-[7m   [0m [91m                                        ~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m224[0m:[93m17[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m224[0m           {song.assets.length === 0 ? (
-[7m   [0m [91m                ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m234[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'assets' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m234[0m               {song.assets.map((asset) => (
-[7m   [0m [91m                    ~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m234[0m:[93m33[0m - [91merror[0m[90m TS7006: [0mParameter 'asset' implicitly has an 'any' type.
-
-[7m234[0m               {song.assets.map((asset) => (
-[7m   [0m [91m                                ~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m278[0m:[93m22[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m278[0m               {!song.splitSheet || collaborators.length === 0 ? (
-[7m   [0m [91m                     ~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m289[0m:[93m41[0m - [91merror[0m[90m TS7006: [0mParameter 'recipient' implicitly has an 'any' type.
-
-[7m289[0m                     {collaborators.map((recipient) => (
-[7m   [0m [91m                                        ~~~~~~~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m312[0m:[93m46[0m - [91merror[0m[90m TS7006: [0mParameter 'sum' implicitly has an 'any' type.
-
-[7m312[0m                       {collaborators.reduce((sum, r) => sum + r.percentage, 0)}%
-[7m   [0m [91m                                             ~~~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m312[0m:[93m51[0m - [91merror[0m[90m TS7006: [0mParameter 'r' implicitly has an 'any' type.
-
-[7m312[0m                       {collaborators.reduce((sum, r) => sum + r.percentage, 0)}%
-[7m   [0m [91m                                                  ~[0m
-
-[96mapp/(app)/projects/[slug]/songs/[songSlug]/page.tsx[0m:[93m323[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'splitSheet' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m323[0m                       id={song.splitSheet.id}
-[7m   [0m [91m                               ~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/new/page.tsx[0m:[93m26[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organizationId' does not exist in type 'MembershipWhereInput'.
-
-[7m26[0m       organizationId: user.activeOrganizationId || undefined
-[7m  [0m [91m      ~~~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/new/page.tsx[0m:[93m29[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type 'MembershipInclude<DefaultArgs>'.
-
-[7m29[0m       organization: true
-[7m  [0m [91m      ~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/new/page.tsx[0m:[93m56[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organizationId' does not exist in type 'ProjectWhereInput'.
-
-[7m56[0m         organizationId: membership.organizationId
-[7m  [0m [91m        ~~~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/new/page.tsx[0m:[93m56[0m:[93m25[0m - [91merror[0m[90m TS18047: [0m'membership' is possibly 'null'.
-
-[7m56[0m         organizationId: membership.organizationId
-[7m  [0m [91m                        ~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/new/page.tsx[0m:[93m56[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m56[0m         organizationId: membership.organizationId
-[7m  [0m [91m                                   ~~~~~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/new/page.tsx[0m:[93m69[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organizationId' does not exist in type '(Without<ProjectCreateInput, ProjectUncheckedCreateInput> & ProjectUncheckedCreateInput) | (Without<...> & ProjectCreateInput)'.
-
-[7m69[0m         organizationId: membership.organizationId,
-[7m  [0m [91m        ~~~~~~~~~~~~~~[0m
-
-  [96m../../node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma/client/index.d.ts[0m:[93m9683[0m:[93m5[0m
-    [7m9683[0m     data: XOR<ProjectCreateInput, ProjectUncheckedCreateInput>
-    [7m    [0m [96m    ~~~~[0m
-    The expected type comes from property 'data' which is declared here on type '{ select?: ProjectSelect<DefaultArgs> | null | undefined; include?: ProjectInclude<DefaultArgs> | null | undefined; data: (Without<...> & ProjectUncheckedCreateInput) | (Without<...> & ProjectCreateInput); }'
-
-[96mapp/(app)/projects/new/page.tsx[0m:[93m69[0m:[93m25[0m - [91merror[0m[90m TS18047: [0m'membership' is possibly 'null'.
-
-[7m69[0m         organizationId: membership.organizationId,
-[7m  [0m [91m                        ~~~~~~~~~~[0m
-
-[96mapp/(app)/projects/new/page.tsx[0m:[93m69[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'organizationId' does not exist on type '{ status: string; role: OrgRole; createdAt: Date; orgId: string; userId: string; }'.
-
-[7m69[0m         organizationId: membership.organizationId,
-[7m  [0m [91m                                   ~~~~~~~~~~~~~~[0m
-
-[96mapp/(app)/welcome/page.tsx[0m:[93m31[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
-
-[7m31[0m         organization: {
-[7m  [0m [91m        ~~~~~~~~~~~~[0m
-
-[96mapp/(app)/welcome/page.tsx[0m:[93m41[0m:[93m45[0m - [91merror[0m[90m TS2339: [0mProperty 'bio' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; location: string | null; socialLinks: JsonValue; skills: string[]; userId: string; instruments: string[]; genres: string[]; ... 6 more ...; portfolio: JsonValue; }'.
-
-[7m41[0m   const hasProfile = !!profile && !!profile.bio
-[7m  [0m [91m                                            ~~~[0m
-
-[96mapp/api/export/project/route.ts[0m:[93m32[0m:[93m29[0m - [91merror[0m[90m TS2345: [0mArgument of type 'string | Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'BodyInit | null | undefined'.
+app/(app)/projects/[slug]/page.tsx(31,7): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
+app/(app)/projects/[slug]/page.tsx(40,7): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'ProjectInclude<DefaultArgs>'.
+app/(app)/projects/[slug]/page.tsx(74,7): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type 'SongSelect<DefaultArgs>'.
+app/(app)/projects/[slug]/page.tsx(83,7): error TS2353: Object literal may only specify known properties, and 'organizationId' does not exist in type 'MembershipWhereInput'.
+app/(app)/projects/[slug]/page.tsx(83,31): error TS2339: Property 'organizationId' does not exist on type '{ status: ProjectStatus; id: string; name: string; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; }'.
+app/(app)/projects/[slug]/page.tsx(110,22): error TS2322: Type '"default" | "secondary"' is not assignable to type '"info" | "outline" | "solid" | "subtle" | "success" | "warning" | "danger" | null | undefined'.
+  Type '"default"' is not assignable to type '"info" | "outline" | "solid" | "subtle" | "success" | "warning" | "danger" | null | undefined'.
+app/(app)/projects/[slug]/page.tsx(136,29): error TS2339: Property '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; }'.
+app/(app)/projects/[slug]/page.tsx(139,30): error TS2339: Property '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; }'.
+app/(app)/projects/[slug]/page.tsx(155,62): error TS2339: Property '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; }'.
+app/(app)/projects/[slug]/page.tsx(164,62): error TS2339: Property '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; }'.
+app/(app)/projects/[slug]/page.tsx(173,62): error TS2339: Property '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; }'.
+app/(app)/projects/[slug]/page.tsx(182,62): error TS2339: Property '_count' does not exist on type '{ status: ProjectStatus; id: string; name: string; orgId: string; createdAt: Date; updatedAt: Date; slug: string; description: string | null; tagline: string | null; coverImage: string | null; visibility: ProjectVisibility; }'.
+app/(app)/projects/[slug]/page.tsx(201,72): error TS2339: Property 'slug' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/page.tsx(206,32): error TS2322: Type '"default" | "secondary"' is not assignable to type '"info" | "outline" | "solid" | "subtle" | "success" | "warning" | "danger" | null | undefined'.
+  Type '"default"' is not assignable to type '"info" | "outline" | "solid" | "subtle" | "success" | "warning" | "danger" | null | undefined'.
+app/(app)/projects/[slug]/page.tsx(206,46): error TS2339: Property 'status' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/page.tsx(207,33): error TS2339: Property 'status' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/page.tsx(229,38): error TS2339: Property 'id' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(231,50): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(233,35): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(233,60): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(238,35): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(238,55): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(277,70): error TS2339: Property 'slug' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/page.tsx(282,30): error TS2322: Type '"default" | "secondary"' is not assignable to type '"info" | "outline" | "solid" | "subtle" | "success" | "warning" | "danger" | null | undefined'.
+  Type '"default"' is not assignable to type '"info" | "outline" | "solid" | "subtle" | "success" | "warning" | "danger" | null | undefined'.
+app/(app)/projects/[slug]/page.tsx(282,44): error TS2339: Property 'status' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/page.tsx(283,31): error TS2339: Property 'status' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/page.tsx(323,33): error TS2339: Property 'id' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(327,48): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(329,33): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(329,58): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(334,33): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/page.tsx(334,53): error TS2339: Property 'user' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(34,9): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'Without<ProjectRelationFilter, ProjectWhereInput> & ProjectWhereInput'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(49,11): error TS2353: Object literal may only specify known properties, and 'organizationId' does not exist in type 'ProjectSelect<DefaultArgs>'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(81,30): error TS2339: Property 'splitSheet' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(89,85): error TS2551: Property 'project' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'. Did you mean 'projectId'?
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(104,22): error TS2322: Type '"default" | "secondary"' is not assignable to type '"info" | "outline" | "solid" | "subtle" | "success" | "warning" | "danger" | null | undefined'.
+  Type '"default"' is not assignable to type '"info" | "outline" | "solid" | "subtle" | "success" | "warning" | "danger" | null | undefined'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(104,36): error TS2339: Property 'status' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(105,23): error TS2339: Property 'status' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(107,21): error TS2339: Property 'genre' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(108,48): error TS2339: Property 'genre' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(131,27): error TS2339: Property 'assets' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(146,48): error TS2339: Property 'duration' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(146,78): error TS2339: Property 'duration' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(146,102): error TS2339: Property 'duration' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(150,48): error TS2339: Property 'bpm' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(150,62): error TS2339: Property 'bpm' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(158,48): error TS2339: Property 'genre' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(162,58): error TS2339: Property 'isrc' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(177,41): error TS7006: Parameter 'collaborator' implicitly has an 'any' type.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(224,17): error TS2339: Property 'assets' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(234,21): error TS2339: Property 'assets' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(234,33): error TS7006: Parameter 'asset' implicitly has an 'any' type.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(278,22): error TS2339: Property 'splitSheet' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(289,41): error TS7006: Parameter 'recipient' implicitly has an 'any' type.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(312,46): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(312,51): error TS7006: Parameter 'r' implicitly has an 'any' type.
+app/(app)/projects/[slug]/songs/[songSlug]/page.tsx(323,32): error TS2339: Property 'splitSheet' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+app/(app)/projects/new/page.tsx(26,7): error TS2353: Object literal may only specify known properties, and 'organizationId' does not exist in type 'MembershipWhereInput'.
+app/(app)/projects/new/page.tsx(29,7): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'MembershipInclude<DefaultArgs>'.
+app/(app)/projects/new/page.tsx(56,9): error TS2353: Object literal may only specify known properties, and 'organizationId' does not exist in type 'ProjectWhereInput'.
+app/(app)/projects/new/page.tsx(56,25): error TS18047: 'membership' is possibly 'null'.
+app/(app)/projects/new/page.tsx(56,36): error TS2339: Property 'organizationId' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/projects/new/page.tsx(69,9): error TS2353: Object literal may only specify known properties, and 'organizationId' does not exist in type '(Without<ProjectCreateInput, ProjectUncheckedCreateInput> & ProjectUncheckedCreateInput) | (Without<...> & ProjectCreateInput)'.
+app/(app)/projects/new/page.tsx(69,25): error TS18047: 'membership' is possibly 'null'.
+app/(app)/projects/new/page.tsx(69,36): error TS2339: Property 'organizationId' does not exist on type '{ status: string; userId: string; orgId: string; role: OrgRole; createdAt: Date; }'.
+app/(app)/welcome/page.tsx(31,9): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
+app/(app)/welcome/page.tsx(41,45): error TS2339: Property 'bio' does not exist on type '{ id: string; userId: string; createdAt: Date; updatedAt: Date; location: string | null; instruments: string[]; genres: string[]; skills: string[]; experience: string | null; availableForCollaboration: boolean; ... 5 more ...; socialLinks: JsonValue; }'.
+app/api/export/project/route.ts(32,29): error TS2345: Argument of type 'string | Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'BodyInit | null | undefined'.
   Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BodyInit | null | undefined'.
     Type 'Uint8Array<ArrayBufferLike>' is missing the following properties from type 'URLSearchParams': size, append, delete, get, and 2 more.
-
-[7m32[0m     return new NextResponse(data, {
-[7m  [0m [91m                            ~~~~[0m
-
-[96mapp/api/export/split-sheet/route.ts[0m:[93m32[0m:[93m29[0m - [91merror[0m[90m TS2345: [0mArgument of type 'string | Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'BodyInit | null | undefined'.
+app/api/export/split-sheet/route.ts(32,29): error TS2345: Argument of type 'string | Uint8Array<ArrayBufferLike>' is not assignable to parameter of type 'BodyInit | null | undefined'.
   Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BodyInit | null | undefined'.
     Type 'Uint8Array<ArrayBufferLike>' is missing the following properties from type 'URLSearchParams': size, append, delete, get, and 2 more.
-
-[7m32[0m     return new NextResponse(data, {
-[7m  [0m [91m                            ~~~~[0m
-
-[96mcomponents/app/ExportButton.tsx[0m:[93m35[0m:[93m11[0m - [91merror[0m[90m TS2339: [0mProperty 'toast' does not exist on type 'ToastContextValue'.
-
-[7m35[0m   const { toast } = useToast()
-[7m  [0m [91m          ~~~~~[0m
-
-[96mcomponents/app/ExportButton.tsx[0m:[93m90[0m:[93m17[0m - [91merror[0m[90m TS2322: [0mType '"outline" | "ghost" | "default" | "secondary"' is not assignable to type '"link" | "solid" | "outline" | "ghost" | "subtle" | "destructive" | "default" | null | undefined'.
-  Type '"secondary"' is not assignable to type '"link" | "solid" | "outline" | "ghost" | "subtle" | "destructive" | "default" | null | undefined'.
-
-[7m90[0m         <Button variant={variant} size={size} disabled={isExporting}>
-[7m  [0m [91m                ~~~~~~~[0m
-
-  [96m../../packages/ui/src/components/button.tsx[0m:[93m12[0m:[93m7[0m
-    [7m 12[0m       variant: {
-    [7m   [0m [96m      ~~~~~~~~~~[0m
-    [7m 13[0m         solid: 'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]',
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m...[0m 
-    [7m 24[0m           'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]'
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m 25[0m       },
-    [7m   [0m [96m~~~~~~~[0m
-    The expected type comes from property 'variant' which is declared here on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'
-
-[96mcomponents/app/ExportButton.tsx[0m:[93m90[0m:[93m35[0m - [91merror[0m[90m TS2322: [0mType '"default" | "sm" | "lg" | "icon"' is not assignable to type '"sm" | "md" | "lg" | "icon" | null | undefined'.
+components/app/ExportButton.tsx(35,11): error TS2339: Property 'toast' does not exist on type 'ToastContextValue'.
+components/app/ExportButton.tsx(90,17): error TS2322: Type '"default" | "outline" | "ghost" | "secondary"' is not assignable to type '"link" | "default" | "outline" | "solid" | "ghost" | "subtle" | "destructive" | null | undefined'.
+  Type '"secondary"' is not assignable to type '"link" | "default" | "outline" | "solid" | "ghost" | "subtle" | "destructive" | null | undefined'.
+components/app/ExportButton.tsx(90,35): error TS2322: Type '"default" | "sm" | "lg" | "icon"' is not assignable to type '"sm" | "md" | "lg" | "icon" | null | undefined'.
   Type '"default"' is not assignable to type '"sm" | "md" | "lg" | "icon" | null | undefined'.
-
-[7m90[0m         <Button variant={variant} size={size} disabled={isExporting}>
-[7m  [0m [91m                                  ~~~~[0m
-
-  [96m../../packages/ui/src/components/button.tsx[0m:[93m26[0m:[93m7[0m
-    [7m 26[0m       size: {
-    [7m   [0m [96m      ~~~~~~~[0m
-    [7m 27[0m         sm: 'h-9 rounded-lg px-3',
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m...[0m 
-    [7m 30[0m         icon: 'h-10 w-10 rounded-full p-0'
-    [7m   [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
-    [7m 31[0m       }
-    [7m   [0m [96m~~~~~~~[0m
-    The expected type comes from property 'size' which is declared here on type 'IntrinsicAttributes & ButtonProps & RefAttributes<HTMLButtonElement>'
-
-[96mcomponents/app/OnboardingChecklistWrapper.tsx[0m:[93m19[0m:[93m9[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
-
-[7m19[0m         organization: {
-[7m  [0m [91m        ~~~~~~~~~~~~[0m
-
-[96mcomponents/app/OnboardingChecklistWrapper.tsx[0m:[93m29[0m:[93m11[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type '(Without<ProjectRelationFilter, ProjectWhereInput> & ProjectWhereInput) | (Without<ProjectWhereInput, ProjectRelationFilter> & ProjectRelationFilter)'.
-
-[7m29[0m           organization: {
-[7m  [0m [91m          ~~~~~~~~~~~~[0m
-
-[96mcomponents/app/OnboardingChecklistWrapper.tsx[0m:[93m40[0m:[93m45[0m - [91merror[0m[90m TS2339: [0mProperty 'bio' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; location: string | null; socialLinks: JsonValue; skills: string[]; userId: string; instruments: string[]; genres: string[]; ... 6 more ...; portfolio: JsonValue; }'.
-
-[7m40[0m   const hasProfile = !!profile && !!profile.bio
-[7m  [0m [91m                                            ~~~[0m
-
-[96mcomponents/projects/CreateProjectDialog.tsx[0m:[93m17[0m:[93m10[0m - [91merror[0m[90m TS2724: [0m'"@/lib/actions/projects"' has no exported member named 'createProjectAction'. Did you mean 'createProject'?
-
-[7m17[0m import { createProjectAction } from '@/lib/actions/projects';
-[7m  [0m [91m         ~~~~~~~~~~~~~~~~~~~[0m
-
-  [96mlib/actions/projects.ts[0m:[93m14[0m:[93m23[0m
-    [7m14[0m export async function createProject(data: {
-    [7m  [0m [96m                      ~~~~~~~~~~~~~[0m
-    'createProject' is declared here.
-
-[96mlib/actions/comments.ts[0m:[93m67[0m:[93m11[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
-
-[7m67[0m           organization: {
-[7m  [0m [91m          ~~~~~~~~~~~~[0m
-
-[96mlib/actions/comments.ts[0m:[93m85[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type '(Without<ProjectRelationFilter, ProjectWhereInput> & ProjectWhereInput) | (Without<ProjectWhereInput, ProjectRelationFilter> & ProjectRelationFilter)'.
-
-[7m85[0m             organization: {
-[7m  [0m [91m            ~~~~~~~~~~~~[0m
-
-[96mlib/actions/comments.ts[0m:[93m133[0m:[93m11[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'slug' does not exist in type 'SongSelect<DefaultArgs>'.
-
-[7m133[0m           slug: true,
-[7m   [0m [91m          ~~~~[0m
-
-  [96m../../node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma/client/index.d.ts[0m:[93m10713[0m:[93m5[0m
-    [7m10713[0m     select?: SongSelect<ExtArgs> | null
-    [7m     [0m [96m    ~~~~~~[0m
-    The expected type comes from property 'select' which is declared here on type '{ select?: SongSelect<DefaultArgs> | null | undefined; include?: SongInclude<DefaultArgs> | null | undefined; where: SongWhereUniqueInput; }'
-
-[96mlib/actions/comments.ts[0m:[93m140[0m:[93m42[0m - [91merror[0m[90m TS2551: [0mProperty 'project' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'. Did you mean 'projectId'?
-
-[7m140[0m         revalidatePath(`/projects/${song.project.slug}/songs/${song.slug}`)
-[7m   [0m [91m                                         ~~~~~~~[0m
-
-[96mlib/actions/comments.ts[0m:[93m140[0m:[93m69[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m140[0m         revalidatePath(`/projects/${song.project.slug}/songs/${song.slug}`)
-[7m   [0m [91m                                                                    ~~~~[0m
-
-[96mlib/actions/comments.ts[0m:[93m203[0m:[93m11[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'slug' does not exist in type 'SongSelect<DefaultArgs>'.
-
-[7m203[0m           slug: true,
-[7m   [0m [91m          ~~~~[0m
-
-  [96m../../node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma/client/index.d.ts[0m:[93m10713[0m:[93m5[0m
-    [7m10713[0m     select?: SongSelect<ExtArgs> | null
-    [7m     [0m [96m    ~~~~~~[0m
-    The expected type comes from property 'select' which is declared here on type '{ select?: SongSelect<DefaultArgs> | null | undefined; include?: SongInclude<DefaultArgs> | null | undefined; where: SongWhereUniqueInput; }'
-
-[96mlib/actions/comments.ts[0m:[93m210[0m:[93m42[0m - [91merror[0m[90m TS2551: [0mProperty 'project' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'. Did you mean 'projectId'?
-
-[7m210[0m         revalidatePath(`/projects/${song.project.slug}/songs/${song.slug}`)
-[7m   [0m [91m                                         ~~~~~~~[0m
-
-[96mlib/actions/comments.ts[0m:[93m210[0m:[93m69[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m210[0m         revalidatePath(`/projects/${song.project.slug}/songs/${song.slug}`)
-[7m   [0m [91m                                                                    ~~~~[0m
-
-[96mlib/actions/comments.ts[0m:[93m263[0m:[93m11[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'slug' does not exist in type 'SongSelect<DefaultArgs>'.
-
-[7m263[0m           slug: true,
-[7m   [0m [91m          ~~~~[0m
-
-  [96m../../node_modules/.pnpm/@prisma+client@5.22.0_prisma@5.22.0/node_modules/.prisma/client/index.d.ts[0m:[93m10713[0m:[93m5[0m
-    [7m10713[0m     select?: SongSelect<ExtArgs> | null
-    [7m     [0m [96m    ~~~~~~[0m
-    The expected type comes from property 'select' which is declared here on type '{ select?: SongSelect<DefaultArgs> | null | undefined; include?: SongInclude<DefaultArgs> | null | undefined; where: SongWhereUniqueInput; }'
-
-[96mlib/actions/comments.ts[0m:[93m270[0m:[93m42[0m - [91merror[0m[90m TS2551: [0mProperty 'project' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'. Did you mean 'projectId'?
-
-[7m270[0m         revalidatePath(`/projects/${song.project.slug}/songs/${song.slug}`)
-[7m   [0m [91m                                         ~~~~~~~[0m
-
-[96mlib/actions/comments.ts[0m:[93m270[0m:[93m69[0m - [91merror[0m[90m TS2339: [0mProperty 'slug' does not exist on type '{ description: string | null; title: string; key: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; projectId: string; id: string; createdAt: Date; updatedAt: Date; }'.
-
-[7m270[0m         revalidatePath(`/projects/${song.project.slug}/songs/${song.slug}`)
-[7m   [0m [91m                                                                    ~~~~[0m
-
-[96mlib/actions/export.ts[0m:[93m23[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'song' does not exist in type 'SplitSheetWhereInput'.
-
-[7m23[0m       song: {
-[7m  [0m [91m      ~~~~[0m
-
-[96mlib/actions/export.ts[0m:[93m36[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'song' does not exist in type 'SplitSheetInclude<DefaultArgs>'.
-
-[7m36[0m       song: {
-[7m  [0m [91m      ~~~~[0m
-
-[96mlib/actions/export.ts[0m:[93m338[0m:[93m7[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
-
-[7m338[0m       organization: {
-[7m   [0m [91m      ~~~~~~~~~~~~[0m
-
-[96mlib/actions/export.ts[0m:[93m354[0m:[93m11[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'splitSheet' does not exist in type 'SongInclude<DefaultArgs>'.
-
-[7m354[0m           splitSheet: {
-[7m   [0m [91m          ~~~~~~~~~~[0m
-
-[96mlib/actions/export.ts[0m:[93m375[0m:[93m11[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'fileSize' does not exist in type 'AssetSelect<DefaultArgs>'.
-
-[7m375[0m           fileSize: true,
-[7m   [0m [91m          ~~~~~~~~[0m
-
-
-Found 95 errors in 13 files.
-
-Errors  Files
-     1  .next/types/app/(app)/projects/[slug]/page.ts[90m:34[0m
-     1  .next/types/app/(app)/projects/[slug]/songs/[songSlug]/page.ts[90m:34[0m
-    32  app/(app)/projects/[slug]/page.tsx[90m:31[0m
-    26  app/(app)/projects/[slug]/songs/[songSlug]/page.tsx[90m:34[0m
-     8  app/(app)/projects/new/page.tsx[90m:26[0m
-     2  app/(app)/welcome/page.tsx[90m:31[0m
-     1  app/api/export/project/route.ts[90m:32[0m
-     1  app/api/export/split-sheet/route.ts[90m:32[0m
-     3  components/app/ExportButton.tsx[90m:35[0m
-     3  components/app/OnboardingChecklistWrapper.tsx[90m:19[0m
-     1  components/projects/CreateProjectDialog.tsx[90m:17[0m
-    11  lib/actions/comments.ts[90m:67[0m
-     5  lib/actions/export.ts[90m:23[0m
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m
+components/app/OnboardingChecklistWrapper.tsx(19,9): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
+components/app/OnboardingChecklistWrapper.tsx(29,11): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type '(Without<ProjectRelationFilter, ProjectWhereInput> & ProjectWhereInput) | (Without<ProjectWhereInput, ProjectRelationFilter> & ProjectRelationFilter)'.
+components/app/OnboardingChecklistWrapper.tsx(40,45): error TS2339: Property 'bio' does not exist on type '{ id: string; userId: string; createdAt: Date; updatedAt: Date; location: string | null; instruments: string[]; genres: string[]; skills: string[]; experience: string | null; availableForCollaboration: boolean; ... 5 more ...; socialLinks: JsonValue; }'.
+components/projects/CreateProjectDialog.tsx(17,10): error TS2724: '"@/lib/actions/projects"' has no exported member named 'createProjectAction'. Did you mean 'createProject'?
+lib/actions/comments.ts(67,11): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
+lib/actions/comments.ts(85,13): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type '(Without<ProjectRelationFilter, ProjectWhereInput> & ProjectWhereInput) | (Without<ProjectWhereInput, ProjectRelationFilter> & ProjectRelationFilter)'.
+lib/actions/comments.ts(133,11): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type 'SongSelect<DefaultArgs>'.
+lib/actions/comments.ts(140,42): error TS2551: Property 'project' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'. Did you mean 'projectId'?
+lib/actions/comments.ts(140,69): error TS2339: Property 'slug' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+lib/actions/comments.ts(203,11): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type 'SongSelect<DefaultArgs>'.
+lib/actions/comments.ts(210,42): error TS2551: Property 'project' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'. Did you mean 'projectId'?
+lib/actions/comments.ts(210,69): error TS2339: Property 'slug' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+lib/actions/comments.ts(263,11): error TS2353: Object literal may only specify known properties, and 'slug' does not exist in type 'SongSelect<DefaultArgs>'.
+lib/actions/comments.ts(270,42): error TS2551: Property 'project' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'. Did you mean 'projectId'?
+lib/actions/comments.ts(270,69): error TS2339: Property 'slug' does not exist on type '{ id: string; key: string | null; createdAt: Date; projectId: string; title: string; updatedAt: Date; description: string | null; tempo: number | null; timeSignature: string | null; iswc: string | null; lyrics: string | null; }'.
+lib/actions/export.ts(23,7): error TS2353: Object literal may only specify known properties, and 'song' does not exist in type 'SplitSheetWhereInput'.
+lib/actions/export.ts(36,7): error TS2353: Object literal may only specify known properties, and 'song' does not exist in type 'SplitSheetInclude<DefaultArgs>'.
+lib/actions/export.ts(338,7): error TS2353: Object literal may only specify known properties, and 'organization' does not exist in type 'ProjectWhereInput'.
+lib/actions/export.ts(354,11): error TS2353: Object literal may only specify known properties, and 'splitSheet' does not exist in type 'SongInclude<DefaultArgs>'.
+lib/actions/export.ts(375,11): error TS2353: Object literal may only specify known properties, and 'fileSize' does not exist in type 'AssetSelect<DefaultArgs>'.
+ ELIFECYCLE  Command failed with exit code 2.

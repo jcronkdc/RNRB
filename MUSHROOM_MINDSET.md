@@ -14,6 +14,13 @@
 - **Workaround**: Google sign-in works if GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set
 - **Error Page**: ✅ Fixed - now shows helpful setup instructions instead of 500 errors
 
+### 🟡 AUTHENTICATED PAGES - NEEDED
+- **Status**: Public marketing pages working at `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions`
+- **Issue**: Authenticated pages removed to resolve route conflicts with marketing pages
+- **Impact**: Authenticated users redirected to `/dashboard` but need feature-specific pages
+- **Action Needed**: Create authenticated pages at `/dashboard/projects`, `/dashboard/splits`, `/dashboard/analytics`, `/dashboard/assets`, `/dashboard/sessions`
+- **Build**: ✅ Successful - marketing pages deploy correctly
+
 ### 🟡 AUTHENTICATION CONFIGURATION (REQUIRED FOR FULL FUNCTIONALITY)
 - **Critical (Required)**:
   1. `NEXTAUTH_SECRET` (generate: `openssl rand -base64 32`)
@@ -45,8 +52,10 @@
 
 ### ✅ Homepage Navigation - COMPLETE
 - ✅ All feature card buttons route to public marketing pages
-- ✅ Marketing pages created for: Projects, Splits, Analytics, Assets, Sessions
+- ✅ Marketing pages created at root level: `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions`
 - ✅ Users can explore features before signing up
+- ✅ Build successful - routes resolved without conflicts
+- ⚠️ **Note**: Authenticated pages temporarily removed to resolve route conflicts. Need to create authenticated versions at `/dashboard/projects`, etc.
 
 ### ✅ Branding - COMPLETE
 - ✅ "The CronkWaters Project" branded throughout codebase

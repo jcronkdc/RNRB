@@ -1,92 +1,95 @@
 
-
 > @cronkwaters/web@0.1.0 build /Users/justincronk/Desktop/SongForge Stand-Alone/song-forge/apps/web
 > next build
 
-   [1m[38;2;173;127;168m▲ Next.js 15.5.6[39m[22m
+   ▲ Next.js 15.5.6
    - Experiments (use with caution):
-     [1m⨯[22m serverMinification
+     ⨯ serverMinification
 
- [37m[1m [22m[39m Creating an optimized production build ...
- [32m[1m✓[22m[39m Compiled successfully in 7.7s
- [37m[1m [22m[39m Skipping validation of types
- [37m[1m [22m[39m Skipping linting
-[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G[?25h [33m[1m⚠[22m[39m Using edge runtime on a page currently disables static generation for that page
-[?25l [36m.[39m [2K[1G[?25h    [32m[1m✓[22m[39m Collecting page data 
-[?25l [37m[1m [22m[39m Generating static pages (0/22)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/22)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/22)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (1/22)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/22)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (9/22)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (15/22)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (15/22)  [36m[    ][39m[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (22/22)
-[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
-[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 15.7s
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+ ⚠ Using edge runtime on a page currently disables static generation for that page
+   Generating static pages (0/23) ...
+   Generating static pages (5/23) 
+   Generating static pages (11/23) 
+   Generating static pages (17/23) 
+ ✓ Generating static pages (23/23)
+   Finalizing page optimization ...
+   Collecting build traces ...
 
-[4mRoute (app)[24m                                 [4mSize[24m  [4mFirst Load JS[24m  [4m[24m  [4m[24m
-┌ ○ /                                    7.36 kB         [37m[1m152 kB[22m[39m
-├ ƒ /_not-found                            180 B         [37m[1m102 kB[22m[39m
-├ ○ /analytics                            2.5 kB         [37m[1m147 kB[22m[39m
-├ ƒ /api/ai-lyrics                         180 B         [37m[1m102 kB[22m[39m
-├ ƒ /api/auth/[...nextauth]                180 B         [37m[1m102 kB[22m[39m
-├ ƒ /api/elevenlabs-voice                  180 B         [37m[1m102 kB[22m[39m
-├ ƒ /api/export/project                    180 B         [37m[1m102 kB[22m[39m
-├ ƒ /api/export/split-sheet                180 B         [37m[1m102 kB[22m[39m
-├ ƒ /api/health                            180 B         [37m[1m102 kB[22m[39m
-├ ƒ /api/projects/[slug]/export/pdf        180 B         [37m[1m102 kB[22m[39m
-├ ƒ /api/trpc/[trpc]                       180 B         [37m[1m102 kB[22m[39m
-├ ƒ /api/upload-audio                      180 B         [37m[1m102 kB[22m[39m
-├ ƒ /artist/[slug]                       2.74 kB         [37m[1m177 kB[22m[39m
-├ ○ /assets                              2.94 kB         [37m[1m147 kB[22m[39m
-├ ƒ /audience/[sessionId]                52.4 kB         [37m[1m216 kB[22m[39m
-├ ○ /auth                                14.7 kB         [37m[1m217 kB[22m[39m
-├ ƒ /blocked                               166 B         [37m[1m106 kB[22m[39m
-├ ƒ /community                           3.99 kB         [37m[1m168 kB[22m[39m
-├ ƒ /dashboard                           11.3 kB         [37m[1m214 kB[22m[39m
-├ ƒ /dashboard/assets                      252 B         [37m[1m159 kB[22m[39m
-├ ƒ /dashboard/distribute                  252 B         [37m[1m159 kB[22m[39m
-├ ƒ /dashboard/licenses                    252 B         [37m[1m159 kB[22m[39m
-├ ƒ /dashboard/sessions                    252 B         [37m[1m159 kB[22m[39m
-├ ƒ /dashboard/settings                    252 B         [37m[1m159 kB[22m[39m
-├ ƒ /dashboard/splits                      252 B         [37m[1m159 kB[22m[39m
-├ ƒ /discover                            5.27 kB         [37m[1m211 kB[22m[39m
-├ ƒ /donate                              3.63 kB         [37m[1m171 kB[22m[39m
-├ ƒ /foundation                          4.78 kB         [37m[1m169 kB[22m[39m
-├ ○ /guide                               12.3 kB         [37m[1m180 kB[22m[39m
-├ ƒ /learn                                4.4 kB         [37m[1m169 kB[22m[39m
-├ ƒ /licenses                              180 B         [37m[1m102 kB[22m[39m
-├ ○ /membership                          4.49 kB         [37m[1m149 kB[22m[39m
-├ ƒ /music                               4.18 kB         [37m[1m168 kB[22m[39m
-├ ƒ /onboarding/organization             3.51 kB         [37m[1m168 kB[22m[39m
-├ ƒ /p/[slug]                            1.35 kB         [37m[1m169 kB[22m[39m
-├ ƒ /p/[slug]/opengraph-image-4mgimg       180 B         [37m[1m102 kB[22m[39m
-├ ƒ /practice                             5.5 kB         [37m[1m170 kB[22m[39m
-├ ƒ /privacy                               252 B         [37m[1m159 kB[22m[39m
-├ ○ /projects                            2.77 kB         [37m[1m147 kB[22m[39m
-├ ƒ /projects/[slug]                       145 B         [37m[1m176 kB[22m[39m
-├ ƒ /projects/[slug]/songs/[songId]      4.51 kB         [37m[1m207 kB[22m[39m
-├ ƒ /projects/[slug]/songs/[songSlug]      144 B         [37m[1m176 kB[22m[39m
-├ ƒ /projects/new                          247 B         [37m[1m163 kB[22m[39m
-├ ƒ /remix/[roomId]                      3.35 kB         [37m[1m167 kB[22m[39m
-├ ○ /robots.txt                            180 B         [37m[1m102 kB[22m[39m
-├ ƒ /search                              2.97 kB         [37m[1m170 kB[22m[39m
-├ ○ /sessions                            3.22 kB         [37m[1m147 kB[22m[39m
-├ ƒ /settings                            2.29 kB         [37m[1m166 kB[22m[39m
-├ ƒ /settings/artist-profile              4.5 kB         [37m[1m169 kB[22m[39m
-├ ƒ /settings/org                        2.16 kB         [37m[1m166 kB[22m[39m
-├ ○ /signin                                180 B         [37m[1m102 kB[22m[39m
-├ ○ /sitemap.xml                           180 B         [37m[1m102 kB[22m[39m
-├ ○ /splits                              3.02 kB         [37m[1m147 kB[22m[39m
-├ ƒ /terms                                 252 B         [37m[1m159 kB[22m[39m
-├ ƒ /test                                  180 B         [37m[1m102 kB[22m[39m
-├ ƒ /theming                               252 B         [37m[1m159 kB[22m[39m
-├ ƒ /tours                               35.3 kB         [37m[1m210 kB[22m[39m
-├ ƒ /tours/[slug]                        2.86 kB         [37m[1m174 kB[22m[39m
-├ ○ /vision                              4.02 kB         [37m[1m148 kB[22m[39m
-└ ƒ /welcome                               247 B         [37m[1m163 kB[22m[39m
-+ First Load JS shared by all             [37m[1m102 kB[22m[39m
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    7.38 kB         152 kB
+├ ƒ /_not-found                            184 B         102 kB
+├ ○ /analytics                           2.51 kB         147 kB
+├ ƒ /api/ai-lyrics                         184 B         102 kB
+├ ƒ /api/auth/[...nextauth]                184 B         102 kB
+├ ƒ /api/auth/error                        184 B         102 kB
+├ ƒ /api/elevenlabs-voice                  184 B         102 kB
+├ ƒ /api/export/project                    184 B         102 kB
+├ ƒ /api/export/split-sheet                184 B         102 kB
+├ ƒ /api/health                            184 B         102 kB
+├ ƒ /api/projects/[slug]/export/pdf        184 B         102 kB
+├ ƒ /api/trpc/[trpc]                       184 B         102 kB
+├ ƒ /api/upload-audio                      184 B         102 kB
+├ ƒ /artist/[slug]                       2.76 kB         178 kB
+├ ○ /assets                              2.95 kB         147 kB
+├ ƒ /audience/[sessionId]                52.4 kB         217 kB
+├ ○ /auth                                14.8 kB         217 kB
+├ ƒ /blocked                               166 B         106 kB
+├ ƒ /community                           3.99 kB         168 kB
+├ ƒ /dashboard                           11.3 kB         214 kB
+├ ƒ /dashboard/assets                      251 B         159 kB
+├ ƒ /dashboard/distribute                  251 B         159 kB
+├ ƒ /dashboard/licenses                    251 B         159 kB
+├ ƒ /dashboard/sessions                    251 B         159 kB
+├ ƒ /dashboard/settings                    251 B         159 kB
+├ ƒ /dashboard/splits                      251 B         159 kB
+├ ƒ /discover                            5.28 kB         211 kB
+├ ƒ /donate                              3.63 kB         171 kB
+├ ƒ /foundation                           4.8 kB         169 kB
+├ ○ /guide                               12.3 kB         180 kB
+├ ƒ /learn                                4.4 kB         168 kB
+├ ƒ /licenses                              184 B         102 kB
+├ ○ /membership                          4.49 kB         149 kB
+├ ƒ /music                               4.18 kB         168 kB
+├ ƒ /onboarding/organization             3.51 kB         168 kB
+├ ƒ /p/[slug]                            1.35 kB         169 kB
+├ ƒ /p/[slug]/opengraph-image-4mgimg       184 B         102 kB
+├ ƒ /practice                            5.52 kB         170 kB
+├ ƒ /privacy                               251 B         159 kB
+├ ○ /projects                            2.79 kB         147 kB
+├ ƒ /projects/[slug]                       145 B         176 kB
+├ ƒ /projects/[slug]/songs/[songId]      4.52 kB         207 kB
+├ ƒ /projects/[slug]/songs/[songSlug]      144 B         176 kB
+├ ƒ /projects/new                          247 B         163 kB
+├ ƒ /remix/[roomId]                      3.34 kB         167 kB
+├ ○ /robots.txt                            184 B         102 kB
+├ ƒ /search                              2.96 kB         170 kB
+├ ○ /sessions                            3.24 kB         147 kB
+├ ƒ /settings                            2.28 kB         166 kB
+├ ƒ /settings/artist-profile             4.52 kB         169 kB
+├ ƒ /settings/org                        2.15 kB         166 kB
+├ ○ /signin                                184 B         102 kB
+├ ○ /sitemap.xml                           184 B         102 kB
+├ ○ /splits                              3.03 kB         147 kB
+├ ƒ /terms                                 251 B         159 kB
+├ ƒ /test                                  184 B         102 kB
+├ ƒ /theming                               251 B         159 kB
+├ ƒ /tours                               35.6 kB         210 kB
+├ ƒ /tours/[slug]                        2.88 kB         174 kB
+├ ○ /vision                              4.04 kB         148 kB
+└ ƒ /welcome                               247 B         163 kB
++ First Load JS shared by all             102 kB
   ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
   ├ chunks/5542-123c5d89f3d04e21.js      46.1 kB
   └ other shared chunks (total)          1.96 kB
 
 
-ƒ Middleware                             [37m[1m65.5 kB[22m[39m
+ƒ Middleware                             65.7 kB
 
 ○  (Static)   prerendered as static content
 ƒ  (Dynamic)  server-rendered on demand
 
-[?25h
