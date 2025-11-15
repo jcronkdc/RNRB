@@ -236,6 +236,208 @@ That's why we built this. That's why every feature exists. That's why we obsess 
 
 ---
 
+## 🔄 **Why This vs That: The Big Design Decisions**
+
+### Why NextAuth.js vs Supabase Auth?
+
+**The Situation:** We need authentication. Supabase has built-in auth. Why add another system?
+
+**Why NextAuth.js:**
+- **Organization-aware sessions** - Musicians work in bands, studios, foundations. NextAuth lets us bake org context into every session
+- **Flexibility** - We control the entire auth flow, error handling, and user experience
+- **Multi-provider** - Email, Google, Apple—all in one system without vendor lock-in
+
+**The personal why:** Because switching contexts between your solo work and your band shouldn't require logging out. You need to be YOU across all your organizations.
+
+---
+
+### Why PostgreSQL vs MongoDB?
+
+**The Situation:** NoSQL is trendy. MongoDB is flexible. Why traditional SQL?
+
+**Why PostgreSQL:**
+- **Relationships matter** - Songs have projects. Projects have collaborators. Splits have contributors. These aren't documents; they're **relationships**
+- **Data integrity** - When money's involved (splits, licenses), you need ACID transactions
+- **Mature ecosystem** - Prisma + PostgreSQL gives us type safety from database to frontend
+
+**The personal why:** Because when you're dealing with splits and licenses, "eventual consistency" isn't good enough. Your money needs to be **exactly right**, not "mostly right."
+
+---
+
+### Why Prisma vs Raw SQL or TypeORM?
+
+**The Situation:** We could write SQL directly, or use TypeORM. Why Prisma?
+
+**Why Prisma:**
+- **Type safety everywhere** - One schema defines database, TypeScript types, and migrations
+- **Developer experience** - Prisma Studio for debugging, amazing autocomplete, clear error messages
+- **Relationship handling** - Include/select syntax makes complex queries readable
+
+**The personal why:** Because 3 AM bug hunts are already hard enough. When your database schema, your types, and your queries all speak the same language, you catch bugs before they ship.
+
+---
+
+### Why Turborepo Monorepo vs Separate Repos?
+
+**The Situation:** We could have separate repos for web, mobile, API. Why one monorepo?
+
+**Why Turborepo:**
+- **Shared code, zero duplication** - Auth logic, database models, UI components—write once, use everywhere
+- **Atomic changes** - Update a type, and all packages using it get checked instantly
+- **Faster development** - No publishing packages, no version mismatches, no "it works on my branch"
+
+**The personal why:** Because when you fix a bug in the auth system, you shouldn't have to update 4 repos, publish 3 packages, and pray nothing breaks. One change, everywhere, instantly.
+
+---
+
+### Why tRPC vs REST API or GraphQL?
+
+**The Situation:** REST is standard. GraphQL is powerful. Why tRPC?
+
+**Why tRPC:**
+- **End-to-end type safety** - Backend types flow automatically to frontend with zero codegen
+- **No API documentation needed** - Types ARE the documentation
+- **Simplified architecture** - No controllers, no resolvers, just functions
+
+**The personal why:** Because writing API documentation that gets out of sync with code is busywork. When your types automatically tell you exactly what data you can request and what you'll get back, you move faster and break less.
+
+---
+
+### Why Tailwind vs Styled Components or CSS Modules?
+
+**The Situation:** CSS-in-JS is popular. CSS Modules are safe. Why Tailwind?
+
+**Why Tailwind:**
+- **Design system built-in** - Spacing, colors, typography scales defined once, used everywhere
+- **No context switching** - Write styles where you write markup
+- **Tiny production bundles** - Only the classes you use get shipped
+
+**The personal why:** Because when you're iterating on UI, jumping between files kills momentum. Having design tokens (text-lg, space-4, brand-primary) right there means you build faster and stay consistent.
+
+---
+
+### Why Next.js App Router vs Pages Router?
+
+**The Situation:** Pages Router is stable and proven. Why bet on the newer App Router?
+
+**Why App Router:**
+- **Server Components** - Fetch data on server, send only HTML—faster page loads
+- **Streaming** - Show UI instantly, stream in data as it loads
+- **Layouts** - Shared layouts that don't re-render on navigation
+- **Future-proof** - This is where Next.js is going
+
+**The personal why:** Because musicians on spotty tour WiFi deserve fast-loading pages. Server Components mean less JavaScript shipped to the browser, which means faster loads on slower connections.
+
+---
+
+### Why Vercel vs AWS or DigitalOcean?
+
+**The Situation:** AWS is powerful. DigitalOcean is cheaper. Why Vercel?
+
+**Why Vercel:**
+- **Zero-config deployment** - Git push → deployed in 30 seconds
+- **Edge network** - Fast everywhere, not just one region
+- **Preview deployments** - Every PR gets its own URL for testing
+- **Built for Next.js** - The people who make Next.js optimize the hosting
+
+**The personal why:** Because time spent configuring servers is time not spent building features. When deployment is automatic and previews are instant, you ship faster and iterate more confidently.
+
+---
+
+### Why Custom UI Components vs Ant Design or Material-UI?
+
+**The Situation:** Component libraries have everything ready. Why build custom?
+
+**Why Custom (Radix + Tailwind):**
+- **Brand identity** - CronkWaters looks like CronkWaters, not "generic SaaS #847"
+- **Accessibility built-in** - Radix handles keyboard nav, screen readers, ARIA
+- **Design control** - We decide every radius, every shadow, every transition
+- **Performance** - Only ship the components we use, styled exactly how we want
+
+**The personal why:** Because when every platform looks the same (blue buttons, gray cards, boring), users forget you exist. Custom UI means you look like **you**, and musicians remember tools that feel distinctive.
+
+---
+
+### Why Resend vs SendGrid or AWS SES for Email?
+
+**The Situation:** SendGrid is established. AWS SES is cheap. Why Resend?
+
+**Why Resend:**
+- **Developer experience** - Dead simple API, great error messages
+- **Modern design** - Beautiful transactional emails out of the box
+- **React Email templates** - Write emails in React, not HTML strings
+- **No domain verification for dev** - Use onboarding@resend.dev instantly for testing
+
+**The personal why:** Because email is critical (password resets, magic links, notifications) but also boring. Resend makes it easy to get right without becoming an email deliverability expert.
+
+---
+
+### Why Progressive Enhancement vs SPA-only?
+
+**The Situation:** Single-page apps are smooth. Why care about server rendering?
+
+**Why Progressive Enhancement:**
+- **Works without JavaScript** - Forms submit, pages load, even if JS fails
+- **Faster initial load** - Show content immediately, enhance with interactivity
+- **SEO-friendly** - Marketing pages are real HTML, not JavaScript-rendered
+
+**The personal why:** Because not everyone has a fast device or perfect internet. When your app works for the musician on a 3-year-old phone at a coffee shop, you're accessible to everyone.
+
+---
+
+### Why TypeScript vs JavaScript?
+
+**The Situation:** JavaScript is simpler. Less setup. Why TypeScript?
+
+**Why TypeScript:**
+- **Catch bugs before runtime** - Type errors show up in your editor, not in production
+- **Better autocomplete** - Your IDE knows exactly what properties exist
+- **Refactoring confidence** - Rename a field, and TypeScript shows every place that needs updating
+- **Documentation built-in** - Types explain what data looks like better than comments
+
+**The personal why:** Because shipping a bug that breaks split calculations or loses someone's music isn't acceptable. TypeScript catches those bugs before users see them.
+
+---
+
+### Why Optimistic Updates vs Wait-for-Server?
+
+**The Situation:** Wait for the server to confirm, or update UI immediately?
+
+**Why Optimistic Updates:**
+- **Feels instant** - Click "like" → it's liked immediately, not after 200ms
+- **Better perceived performance** - Users feel like the app is fast
+- **Rollback on error** - If server fails, undo the optimistic update
+
+**The personal why:** Because when you're in flow creating music, every delay breaks your focus. Optimistic updates make the app feel like it's keeping up with your thoughts, not lagging behind them.
+
+---
+
+### Why File-based Routing vs Config-based?
+
+**The Situation:** Config files give you control. Why let file structure dictate routes?
+
+**Why File-based (Next.js):**
+- **Obvious structure** - The folder tree IS the site map
+- **No configuration fatigue** - Create a file, it's a route—done
+- **Easy to navigate** - Looking for the dashboard page? Check `app/dashboard/page.tsx`
+
+**The personal why:** Because when you're working fast or onboarding a new developer, having to mentally map routes in a config file to pages slows you down. File structure that matches URLs is instantly understandable.
+
+---
+
+### Why Three Themes (Light/Dark/Warm) vs Just Light/Dark?
+
+**The Situation:** Most apps have light and dark. Why add warm?
+
+**Why Three Themes:**
+- **Mood matters** - Light for day work, dark for night sessions, warm for creative vibes
+- **Brand personality** - Warm theme is distinctly CronkWaters—amber, cozy, studio atmosphere
+- **User choice** - Let users match their environment and mood
+
+**The personal why:** Because late-night studio sessions don't need blinding white OR harsh black. They need warm, amber tones that feel like the golden hour—creative, focused, cozy. That's the warm theme.
+
+---
+
 ## 📝 How to Use This Document
 
 **For Users:** When you wonder "why does this feature exist?", come here. We'll tell you the real story.
