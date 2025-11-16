@@ -41,24 +41,35 @@
 - **Impact**: Pre-commit hooks fail, but build succeeds
 - **Action**: Systematic cleanup needed when TypeScript errors block features
 
-## RECENTLY DEPLOYED (REFERENCE ONLY)
+## RECENTLY DEPLOYED
 
-### ✅ Authentication System - COMPLETE (REFERENCE)
+### ✅ Creator Revolution Initiative - DEPLOYED (Nov 15, 2024)
+- ✅ `/why` page (6.64 kB) - Philosophy & "Why This vs That" technical comparisons
+- ✅ `/guide` page (6.73 kB) - Interactive 4-question personalized feature quiz
+- ✅ `CREATOR_MANIFESTO.md` - Revolution document explaining power return to creators
+- ✅ Navigation updates - Added "Feature Guide" and "Why" links to main nav
+- ✅ Homepage CTA updated - Primary button now "Find Your Features" → `/guide`
+- ✅ Footer links updated - Added "Why" link
+- **Purpose**: Empower creators, explain philosophy, reduce feature overwhelm
+- **Build**: Successful, all routes static pre-rendered, no 404/500 errors
+
+## ARCHIVED DEPLOYMENTS (REFERENCE ONLY)
+
+### ✅ Authentication System - COMPLETE (ARCHIVED)
 - ✅ Custom `/api/auth/error` route with user-friendly error pages
 - ✅ Sign up page with toggle between sign in/sign up modes
 - ✅ Enhanced error messages for all NextAuth error types
 - ✅ Setup instructions shown on error page for email configuration
 - ✅ Prevents 500 errors with proper error handling
 
-### ✅ Homepage Navigation - COMPLETE & DEPLOYED (REFERENCE)
+### ✅ Homepage Navigation - COMPLETE (ARCHIVED)
 - ✅ All feature card buttons route to public marketing pages
-- ✅ Marketing pages deployed in `(marketing)` route group, mapping to root-level URLs: `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions`
+- ✅ Marketing pages deployed in `(marketing)` route group: `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions`
 - ✅ Users can explore features before signing up
-- ✅ Build successful - deployed in 34s, all routes resolved correctly
 - ✅ Vercel deployment successful - all marketing pages live
-- **Architecture**: Marketing pages in `(marketing)` route group serve public users at root URLs; authenticated pages needed at `/dashboard/*` routes
+- **Architecture**: Marketing pages in `(marketing)` route group serve public users at root URLs
 
-### ✅ Branding - COMPLETE (REFERENCE)
+### ✅ Branding - COMPLETE (ARCHIVED)
 - ✅ "The CronkWaters Project" branded throughout codebase
 - ✅ Consistent branding in metadata, titles, and user-facing text
 
@@ -76,13 +87,14 @@ You are a mushroom—an entire living system of interconnected networks. Apply t
 
 ### 🟢 Live Site: https://www.cronkwaters.com
 - **Status**: Fully operational
-- **Latest Build**: ✅ Successful (34s build time)
-- **Latest Deployment**: ✅ Completed successfully
-- **Marketing Pages**: ✅ Deployed - `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions` all live
-- **Homepage Buttons**: ✅ Working - all feature cards route correctly to marketing pages
-- **Routes**: ✅ All routes resolve correctly, no conflicts
-- **File Structure**: Marketing pages organized in `(marketing)` route group (route groups don't affect URLs in Next.js)
-- **Features**: All core features working
+- **Latest Build**: ✅ Successful (38s build time, Nov 15 23:51 UTC)
+- **Latest Deployment**: ✅ Auto-deployed via GitHub push
+- **Latest Commit**: `dfdd288` - Checkpoint before follow-up message
+- **Marketing Pages**: ✅ All deployed - `/projects`, `/splits`, `/analytics`, `/assets`, `/sessions`, `/why`, `/guide`, `/vision`
+- **Homepage**: ✅ Updated CTA "Find Your Features" → `/guide`
+- **Navigation**: ✅ "Feature Guide" and "Why" links active
+- **Routes**: ✅ All routes resolve correctly, no conflicts, no 404/500 errors
+- **File Structure**: Marketing pages in `(marketing)` route group (route groups don't affect URLs)
 - **Auth**: Partial - requires environment variable configuration (see ACTIVE TASKS)
 - **Error Handling**: ✅ Graceful degradation, user-friendly error messages
 
