@@ -35,11 +35,22 @@ export default function LoginForm() {
       if (response?.error) {
         // Provide more user-friendly error messages
         let errorMessage = response.error;
-        if (errorMessage.includes('No provider') || errorMessage.includes('EMAIL_SERVER')) {
+        
+        // Handle NextAuth error codes
+        if (errorMessage === 'Configuration' || errorMessage.includes('Configuration')) {
+          errorMessage = 'Email authentication is not configured. Please set up Resend API key in Vercel environment variables, or use Google sign-in.';
+        } else if (errorMessage === 'EmailSignin' || errorMessage.includes('EmailSignin')) {
+          errorMessage = 'The email could not be sent. Please check your email configuration or try again later.';
+        } else if (errorMessage.includes('No provider') || errorMessage.includes('EMAIL_SERVER')) {
           errorMessage = 'Email authentication is not configured. Please contact your administrator.';
-        } else if (errorMessage.includes('Configuration')) {
-          errorMessage = 'Authentication is not properly configured. Please try again later.';
+        } else if (errorMessage.includes('SMTP') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('EHLO') || errorMessage.includes('resend')) {
+          errorMessage = 'Email service connection failed. Please check your Resend API key and configuration.';
+        } else if (errorMessage.includes('AuthenticationError')) {
+          // Extract the actual error description if available
+          const errorDesc = (response as any)?.error_description || errorMessage;
+          errorMessage = errorDesc;
         }
+        
         setFeedback({ variant: 'error', message: errorMessage });
         return;
       }
