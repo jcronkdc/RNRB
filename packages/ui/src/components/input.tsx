@@ -1,51 +1,29 @@
-import type { LucideIcon } from 'lucide-react';
-import * as React from 'react';
+import * as React from "react";
+import { cn } from "../lib/cn";
 
-import { cn } from '../lib/utils';
-
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  leadingIcon?: LucideIcon;
-  trailingIcon?: LucideIcon;
-  containerClassName?: string;
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  isInvalid?: boolean;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, containerClassName, leadingIcon: LeadingIcon, trailingIcon: TrailingIcon, type = 'text', disabled, ...props }, ref) => {
-    const innerRef = React.useRef<HTMLInputElement>(null);
-    React.useImperativeHandle(ref, () => innerRef.current as HTMLInputElement);
-
+  ({ className, isInvalid, type = "text", ...props }, ref) => {
     return (
-      <div
+      <input
+        type={type}
+        ref={ref}
+        data-invalid={isInvalid ? "" : undefined}
         className={cn(
-          'group relative flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 shadow-sm ring-offset-background focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2 motion-safe:transition-all motion-safe:duration-200',
-          disabled && 'opacity-60',
-          containerClassName
-        )}
-        aria-disabled={disabled ? 'true' : undefined}
-      >
-        {LeadingIcon && React.createElement(LeadingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>, {
-          className: "h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary",
-          'aria-hidden': "true"
-        })}
-        <input
-          ref={innerRef}
-          type={type}
-          disabled={disabled}
-          className={cn(
-            'flex h-6 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/80',
+          "flex h-10 w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 ring-offset-white placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-500",
+          "data-[invalid]:border-red-500 data-[invalid]:focus-visible:ring-red-500",
           className
         )}
         {...props}
       />
-        {TrailingIcon && React.createElement(TrailingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>, {
-          className: "h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary",
-          'aria-hidden': "true"
-        })}
-      </div>
     );
   }
 );
-Input.displayName = 'Input';
+
+Input.displayName = "Input";
 
 export { Input };
-export type { InputProps };
+

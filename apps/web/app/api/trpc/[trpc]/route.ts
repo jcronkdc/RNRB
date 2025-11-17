@@ -8,9 +8,9 @@ export async function GET(request: Request) {
     router: appRouter,
     req: request,
     createContext: async () => {
-      const session = await getOrgSessionFromSession().catch(() => null);
+      const orgSession = await getOrgSessionFromSession();
       return createContext({
-        session,
+        orgSession,
         headers: request.headers
       });
     }
@@ -23,9 +23,9 @@ export async function POST(request: Request) {
     router: appRouter,
     req: request,
     createContext: async () => {
-      const session = await getOrgSessionFromSession().catch(() => null);
+      const orgSession = await getOrgSessionFromSession();
       return createContext({
-        session,
+        orgSession,
         headers: request.headers
       });
     }

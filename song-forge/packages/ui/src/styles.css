@@ -1,0 +1,53 @@
+@import './theme/tokens.css';
+@import './theme/typography.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--sf-font-sans);
+    font-feature-settings: 'liga' 1, 'calt' 1;
+    background-image: radial-gradient(circle at top left, hsl(var(--sf-color-accent-subtle) / 0.35), transparent 55%),
+      radial-gradient(circle at bottom right, hsl(var(--sf-color-brand-muted) / 0.3), transparent 60%);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply tracking-tight text-brand-foreground;
+    font-family: var(--sf-font-serif, var(--sf-font-sans));
+  }
+
+  ::selection {
+    background: hsl(var(--sf-color-brand-primary) / 0.2);
+    color: hsl(var(--sf-color-brand-foreground));
+  }
+
+  a {
+    @apply text-brand-primary underline-offset-4 transition-colors duration-150;
+  }
+
+  a:hover {
+    @apply text-brand-secondary;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}

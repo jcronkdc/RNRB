@@ -1,12 +1,12 @@
 "use client";
 
-import { Button, Input, Label } from '@cronkwaters/ui';
+import { useState, type FormEvent } from 'react';
+import { signIn } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import { Loader2, Mail, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
-import { signIn } from 'next-auth/react';
-import { useState, type FormEvent } from 'react';
+import { Button, Input, Label } from '@cronkwaters/ui';
 
-const callbackUrl = '/projects';
+const callbackUrl = '/dashboard';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -33,33 +33,15 @@ export default function LoginForm() {
       });
 
       if (response?.error) {
-        // Provide more user-friendly error messages
-        let errorMessage = response.error;
-        
-        // Handle NextAuth error codes
-        if (errorMessage === 'Configuration' || errorMessage.includes('Configuration')) {
-          errorMessage = 'Email authentication is not configured. Please set up Resend API key in Vercel environment variables, or use Google sign-in.';
-        } else if (errorMessage === 'EmailSignin' || errorMessage.includes('EmailSignin')) {
-          errorMessage = 'The email could not be sent. Please check your email configuration or try again later.';
-        } else if (errorMessage.includes('No provider') || errorMessage.includes('EMAIL_SERVER')) {
-          errorMessage = 'Email authentication is not configured. Please contact your administrator.';
-        } else if (errorMessage.includes('SMTP') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('EHLO') || errorMessage.includes('resend')) {
-          errorMessage = 'Email service connection failed. Please check your Resend API key and configuration.';
-        } else if (errorMessage.includes('AuthenticationError')) {
-          // Extract the actual error description if available
-          const errorDesc = (response as any)?.error_description || errorMessage;
-          errorMessage = errorDesc;
-        }
-        
-        setFeedback({ variant: 'error', message: errorMessage });
+        setFeedback({ variant: 'error', message: response.error });
         return;
       }
 
       setFeedback({
         variant: 'success',
-        message: 'Check your inbox for a secure magic link from Rock N\' Roll Basement.'
+        message: 'Check your inbox for a secure magic link from Rock N’ Roll Basement.'
       });
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'We could not send the magic link right now.';
       setFeedback({ variant: 'error', message });
     } finally {
@@ -72,25 +54,7 @@ export default function LoginForm() {
     setFeedback(null);
 
     try {
-      const response = await signIn('google', { 
-        callbackUrl,
-        redirect: false 
-      });
-      
-      if (response?.error) {
-        let errorMessage = response.error;
-        if (errorMessage.includes('OAuthAccountNotLinked')) {
-          errorMessage = 'This Google account is already linked to another user.';
-        } else if (errorMessage.includes('Configuration') || errorMessage.includes('CLIENT_ID')) {
-          errorMessage = 'Google authentication is not configured. Please contact your administrator.';
-        } else if (errorMessage.includes('No provider')) {
-          errorMessage = 'Google sign-in is not available at this time.';
-        }
-        setFeedback({ variant: 'error', message: errorMessage });
-      } else if (response?.url) {
-        // Redirect on success
-        window.location.href = response.url;
-      }
+      await signIn('google', { callbackUrl });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Google sign-in is currently unavailable.';
       setFeedback({ variant: 'error', message });
@@ -113,7 +77,7 @@ export default function LoginForm() {
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
         <Sparkles className="h-4 w-4 text-brand-primary" aria-hidden="true" />
-        <span>NextAuth-secured access</span>
+        <span>Enterprise-grade secure access</span>
       </motion.div>
 
       <motion.form
@@ -190,7 +154,7 @@ export default function LoginForm() {
 
         <div className="flex items-center justify-center gap-2 rounded-2xl border border-border/60 bg-surface/50 px-4 py-3 text-xs text-muted-foreground">
           <ShieldCheck className="h-4 w-4 text-brand-primary" aria-hidden="true" />
-          <span>NextAuth-secured access</span>
+          <span>Authentication is powered by NextAuth with enterprise-grade encryption and Neon PostgreSQL.</span>
         </div>
       </motion.div>
 
@@ -209,17 +173,6 @@ export default function LoginForm() {
           {feedback.message}
         </motion.div>
       )}
-
-      <div className="text-center text-sm text-muted-foreground">
-        Don't have an account?{' '}
-        <button
-          type="button"
-          className="text-brand-primary hover:underline"
-          onClick={() => window.dispatchEvent(new CustomEvent('switch-to-signup'))}
-        >
-          Sign up
-        </button>
-      </div>
     </motion.div>
   );
 }

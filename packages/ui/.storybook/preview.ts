@@ -1,17 +1,23 @@
-import type { Preview } from '@storybook/react';
-import '../src/styles.css';
+import type { Preview } from "@storybook/react";
+import "../src/styles.css";
 
 const preview: Preview = {
   parameters: {
-    layout: 'centered',
+    backgrounds: {
+      default: "surface",
+      values: [
+        { name: "surface", value: "#0f172a" },
+        { name: "light", value: "#ffffff" }
+      ]
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/
+        date: /Date$/i
       }
-    },
-    actions: { argTypesRegex: '^on[A-Z].*' }
+    }
   }
 };
 
 export default preview;
+

@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss';
-import defaultTheme from 'tailwindcss/defaultTheme';
 import tailwindcssAnimate from 'tailwindcss-animate';
 
 const withAlpha = (variable: string) => `hsl(var(${variable}) / <alpha-value>)`;
@@ -9,7 +8,6 @@ const config: Config = {
   content: [
     './app/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
     '../../packages/ui/src/**/*.{ts,tsx}'
   ],
   theme: {
@@ -41,23 +39,7 @@ const config: Config = {
         muted: {
           DEFAULT: withAlpha('--sf-color-muted'),
           foreground: withAlpha('--sf-color-muted-foreground')
-        },
-        success: {
-          DEFAULT: withAlpha('--sf-color-success'),
-          foreground: withAlpha('--sf-color-success-foreground')
-        },
-        warning: {
-          DEFAULT: withAlpha('--sf-color-warning'),
-          foreground: withAlpha('--sf-color-warning-foreground')
-        },
-        danger: {
-          DEFAULT: withAlpha('--sf-color-danger'),
-          foreground: withAlpha('--sf-color-danger-foreground')
         }
-      },
-      fontFamily: {
-        sans: ['var(--sf-font-sans)', ...defaultTheme.fontFamily.sans],
-        mono: ['var(--sf-font-mono)', ...defaultTheme.fontFamily.mono]
       },
       borderRadius: {
         none: 'var(--sf-radius-none)',
@@ -72,28 +54,6 @@ const config: Config = {
         soft: 'var(--sf-shadow-soft)',
         elevated: 'var(--sf-shadow-elevated)',
         outline: 'var(--sf-shadow-outline)'
-      },
-      transitionDuration: {
-        base: 'var(--sf-transition-base-duration)',
-        emphasize: 'var(--sf-transition-emphasis-duration)'
-      },
-      transitionTimingFunction: {
-        base: 'var(--sf-transition-base-timing)',
-        emphasize: 'var(--sf-transition-emphasis-timing)'
-      },
-      keyframes: {
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' }
-        },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' }
-        }
-      },
-      animation: {
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out'
       }
     }
   },

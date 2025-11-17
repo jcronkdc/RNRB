@@ -6,21 +6,8 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     include: ['tests/unit/**/*.test.ts'],
-    exclude: [
-      'tests/e2e/**',
-      'tests/**/*.spec.ts',
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/.{idea,git,cache,output,temp}/**',
-      'tests/smoke.spec.ts'
-    ],
+    exclude: ['tests/e2e/**', '**/*.spec.ts'],
     setupFiles: ['tests/setup-vitest.ts'],
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true
-      }
-    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -37,10 +24,17 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@cronkwaters/db': path.resolve(__dirname, './packages/db/src'),
-      '@cronkwaters/auth': path.resolve(__dirname, './packages/auth/src'),
-      '@cronkwaters/ui': path.resolve(__dirname, './packages/ui/src'),
-      '@cronkwaters/trpc': path.resolve(__dirname, './packages/trpc/src')
+      '@songforge/db': path.resolve(__dirname, './packages/db/src'),
+      '@songforge/auth': path.resolve(__dirname, './packages/auth/src'),
+      '@songforge/ui': path.resolve(__dirname, './packages/ui/src')
     }
   }
 });
+
+
+
+
+
+
+
+

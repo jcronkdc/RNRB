@@ -1,21 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
+import { Button } from "../src/components/button";
 import {
   Dialog,
+  DialogTrigger,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  Button
-} from '@cronkwaters/ui';
-import { useState } from 'react';
+  DialogDescription,
+  DialogFooter
+} from "../src/components/dialog";
 
 const meta: Meta = {
-  title: 'Primitives/Dialog',
-  component: DialogContent,
+  title: "Components/Dialog",
   parameters: {
-    layout: 'centered'
+    layout: "centered"
   }
 };
 
@@ -23,35 +21,29 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Basic: Story = {
-  render: function Render() {
-    const [open, setOpen] = useState(false);
-
-    return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button>Open Dialog</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Invite collaborators</DialogTitle>
-            <DialogDescription>
-              Share your workspace with writers and producers to start collaborating.
-            </DialogDescription>
-          </DialogHeader>
-          <p className="text-sm text-brand-muted-foreground">
-            We will send an invitation email with guidance on how to join the CronkWaters
-            organization.
-          </p>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setOpen(false)}>Send invite</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
-  }
+export const Default: Story = {
+  render: () => (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Open dialog</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Boost release</DialogTitle>
+          <DialogDescription>
+            Amplify your song with AI powered mastering and targeted fan drops.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3 text-sm text-neutral-600">
+          <p>Select the mastering depth and we will queue the render in seconds.</p>
+          <p>You can monitor the progress from your dashboard.</p>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost">Cancel</Button>
+          <Button>Launch</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 };
 

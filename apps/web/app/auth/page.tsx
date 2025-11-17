@@ -1,76 +1,52 @@
-'use client';
-
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { auth } from '@/auth';
+import { motion } from 'framer-motion';
+import { redirect } from 'next/navigation';
 import LoginForm from './login-form';
-import SignUpForm from './signup-form';
-import { Music } from 'lucide-react';
 
-export default function AuthPage() {
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+export default async function AuthPage() {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect('/dashboard');
+  }
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-16">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(88,91,255,0.18),_transparent_55%)]" />
-      <section className="mx-auto w-full max-w-md">
-        <div className="rounded-3xl border border-border bg-surface/80 p-10 shadow-soft backdrop-blur-xl">
-          <div className="flex justify-center mb-6">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20">
-              <Music className="w-8 h-8 text-brand-primary" />
-            </div>
-          </div>
-          
-          <div className="space-y-3 text-center mb-8">
+      <motion.section
+        initial={{ opacity: 0, y: 32 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="mx-auto w-full max-w-md"
+      >
+        <motion.div
+          className="rounded-3xl border border-border bg-surface/80 p-10 shadow-soft backdrop-blur-xl"
+          initial={{ scale: 0.96, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut', delay: 0.15 }}
+        >
+          <div className="space-y-3 text-center">
             <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-              {mode === 'signin' ? 'Welcome back' : 'Join CronkWaters'}
+              Welcome back to Rock N’ Roll Basement
             </h1>
             <p className="text-sm text-muted-foreground">
-              {mode === 'signin' 
-                ? 'Sign in to access your creative studio and projects'
-                : 'Create your free account and start making music'}
+              Sign in to access your shared basement: projects, songs, tours, rights, and collaborators — secured by
+              NextAuth and Prisma.
             </p>
           </div>
-
-          <div className="flex bg-surface rounded-2xl p-1 mb-8">
-            <button
-              onClick={() => setMode('signin')}
-              className={`flex-1 py-2 px-4 rounded-xl font-medium transition-all ${
-                mode === 'signin'
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => setMode('signup')}
-              className={`flex-1 py-2 px-4 rounded-xl font-medium transition-all ${
-                mode === 'signup'
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Sign Up
-            </button>
+          <div className="mt-10">
+            <LoginForm />
           </div>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={mode}
-              initial={{ opacity: 0, x: mode === 'signin' ? -20 : 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: mode === 'signin' ? 20 : -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              {mode === 'signin' ? <LoginForm /> : <SignUpForm />}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-        
-        <p className="mt-8 text-center text-xs text-muted-foreground">
-          By continuing you agree to The CronkWaters Project Terms and acknowledge the use of NextAuth for secure authentication.
-        </p>
-      </section>
+        </motion.div>
+        <motion.p
+          className="mt-8 text-center text-xs text-muted-foreground"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.45, duration: 0.4 }}
+        >
+          By continuing you agree to the Rock N’ Roll Basement Terms and acknowledge the use of NextAuth for secure authentication.
+        </motion.p>
+      </motion.section>
     </main>
   );
 }

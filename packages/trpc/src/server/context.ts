@@ -1,20 +1,22 @@
 import type { OrgAwareSession } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
+import type { Session } from 'next-auth';
 
 export interface CreateContextOptions {
-  session: OrgAwareSession | null;
+  orgSession: OrgAwareSession | null;
   headers: Headers;
 }
 
-export async function createContext({ session, headers }: CreateContextOptions) {
-  const sessionUser = session?.session?.user as { id?: string } | undefined;
+export async function createContext({ orgSession, headers }: CreateContextOptions) {
+  const session = orgSession?.session ?? null;
+  const sessionUser = session?.user as { id?: string } | undefined;
   return {
     prisma,
     headers,
-    orgSession: session,
-    memberships: session?.memberships ?? [],
-    activeMembership: session?.activeMembership ?? null,
-    session: session?.session ?? null,
+    session,
+    orgSession,
+    memberships: orgSession?.memberships ?? [],
+    activeMembership: orgSession?.activeMembership ?? null,
     viewerId: sessionUser?.id ?? null
   };
 }

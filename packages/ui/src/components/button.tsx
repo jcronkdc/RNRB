@@ -1,133 +1,56 @@
-import { Slot } from '@radix-ui/react-slot';
-import { cva, type VariantProps } from 'class-variance-authority';
-import type { LucideIcon } from 'lucide-react';
-import * as React from 'react';
-
-import { cn } from '../lib/utils';
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "../lib/cn";
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60 ring-offset-background',
+  "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-60",
   {
     variants: {
       variant: {
-        solid: 'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]',
-        outline:
-          'border border-border bg-transparent text-brand-foreground shadow-outline hover:bg-brand-muted/70 hover:text-brand-primary motion-safe:active:scale-[0.99]',
+        primary:
+          "bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md hover:from-brand-400 hover:to-brand-500 focus-visible:outline-brand-500",
+        secondary:
+          "bg-surface-muted text-surface-foreground hover:bg-surface-muted/80 focus-visible:outline-brand-500",
         ghost:
-          'bg-transparent text-brand-foreground hover:bg-brand-muted/60 motion-safe:active:scale-[0.99]',
-        subtle:
-          'bg-brand-muted text-brand-muted-foreground shadow-soft hover:bg-brand-muted/90 hover:shadow-elevated motion-safe:active:scale-[0.99]',
-        destructive:
-          'bg-danger text-danger-foreground shadow-soft hover:bg-danger/90 hover:shadow-elevated motion-safe:active:scale-[0.99]',
-        link: 'text-brand-secondary underline-offset-4 hover:underline motion-safe:active:scale-100',
-        default:
-          'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]'
+          "text-brand-500 hover:bg-brand-500/10 focus-visible:outline-brand-500",
+        outline:
+          "border border-brand-500/60 text-brand-500 hover:bg-brand-500/10 focus-visible:outline-brand-500"
       },
       size: {
-        sm: 'h-9 rounded-lg px-3',
-        md: 'h-10 px-4',
-        lg: 'h-12 px-6 text-base',
-        icon: 'h-10 w-10 rounded-full p-0'
+        sm: "h-9 px-3 text-xs",
+        md: "h-10 px-4 text-sm",
+        lg: "h-11 px-6 text-base",
+        icon: "h-10 w-10"
       }
     },
     defaultVariants: {
-      variant: 'solid',
-      size: 'md'
+      variant: "primary",
+      size: "md"
     }
   }
 );
 
-interface ButtonProps
+export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  leadingIcon?: LucideIcon;
-  trailingIcon?: LucideIcon;
-  iconClassName?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant,
-      size,
-      asChild = false,
-      leadingIcon: LeadingIcon,
-      trailingIcon: TrailingIcon,
-      iconClassName,
-      children,
-      ...props
-    },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : 'button';
-    const showLeading = Boolean(LeadingIcon);
-    const showTrailing = Boolean(TrailingIcon);
-
-    const content = (
-      <>
-        {showLeading && LeadingIcon && (
-          <span
-            className={cn('inline-flex items-center justify-center', size === 'icon' ? 'mx-auto' : '')}
-            aria-hidden="true"
-          >
-            {React.createElement(LeadingIcon as React.ComponentType<{ className?: string }>, { className: cn('h-4 w-4', iconClassName) })}
-          </span>
-        )}
-        {children && <span className="whitespace-nowrap">{children}</span>}
-        {showTrailing && TrailingIcon && (
-          <span
-            className={cn('inline-flex items-center justify-center', size === 'icon' ? 'mx-auto' : '')}
-            aria-hidden="true"
-          >
-            {React.createElement(TrailingIcon as React.ComponentType<{ className?: string }>, { className: cn('h-4 w-4', iconClassName) })}
-          </span>
-        )}
-      </>
-    );
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Component = asChild ? Slot : "button";
 
     return (
-      <Comp
-        className={cn(
-          buttonVariants({ variant, size }),
-          size === 'icon' && 'gap-0',
-          className
-        )}
-        ref={ref as React.Ref<HTMLButtonElement>}
+      <Component
+        className={cn(buttonVariants({ variant, size }), className)}
+        ref={ref}
         {...props}
-      >
-        {asChild ? children : content}
-      </Comp>
+      />
     );
   }
 );
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
-interface IconButtonProps
-  extends Omit<ButtonProps, 'children' | 'size' | 'leadingIcon' | 'trailingIcon'> {
-  icon: LucideIcon;
-  srLabel: string;
-  asChild?: boolean;
-}
+export { Button, buttonVariants };
 
-const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ icon: Icon, srLabel, variant = 'ghost', iconClassName, className, ...props }, ref) => (
-    <Button
-      ref={ref}
-      variant={variant}
-      size="icon"
-      leadingIcon={Icon}
-      iconClassName={iconClassName}
-      className={cn('rounded-full', className)}
-      aria-label={srLabel}
-      {...props}
-    >
-      <span className="sr-only">{srLabel}</span>
-    </Button>
-  )
-);
-IconButton.displayName = 'IconButton';
-
-export { Button, IconButton, buttonVariants };
-export type { ButtonProps, IconButtonProps };

@@ -18,17 +18,14 @@
   },
   "scripts": {
     "postinstall": "prisma generate",
-    "db:up": "docker compose up -d postgres",
     "prisma:generate": "prisma generate",
-    "prisma:migrate:dev": "prisma migrate dev --name init_schema",
     "build": "pnpm prisma:generate && tsc -b",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
-    "prisma": "^5.20.0",
-    "zod": "^3.23.8"
+    "prisma": "^5.20.0"
   },
   "devDependencies": {
     "@cronkwaters/config": "workspace:*",
@@ -36,3 +33,4 @@
     "typescript": "^5.6.3"
   }
 }
+

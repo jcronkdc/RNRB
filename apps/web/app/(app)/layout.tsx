@@ -1,17 +1,22 @@
-import { auth } from '@cronkwaters/auth';
+import { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
-import { AppShell } from './app-shell';
+import { auth } from '@/auth';
 
-export default async function AppLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+interface ProtectedLayoutProps {
+  children: ReactNode;
+}
+
+export default async function ProtectedLayout({ children }: ProtectedLayoutProps) {
   const session = await auth();
 
-  if (!session) {
+  if (!session?.user?.id) {
     redirect('/auth');
   }
 
-  return <AppShell>{children}</AppShell>;
+  return (
+    <section className="mx-auto w-full max-w-5xl px-6 py-12 sm:px-10">
+      {children}
+    </section>
+  );
 }
+

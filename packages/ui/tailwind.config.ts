@@ -1,83 +1,37 @@
-import type { Config } from 'tailwindcss';
-import defaultTheme from 'tailwindcss/defaultTheme';
-import tailwindcssAnimate from 'tailwindcss-animate';
-
-const withAlpha = (variable: string) => `hsl(var(${variable}) / <alpha-value>)`;
+import type { Config } from "tailwindcss";
+import { brandColors, neutralColors, radii, shadows, surfaceColors, fontStack } from "./src/theme/tokens";
 
 const config: Config = {
-  content: ['./src/**/*.{ts,tsx}', './stories/**/*.{ts,tsx}'],
+  presets: [],
+  content: ["./src/**/*.{ts,tsx}", "./stories/**/*.{ts,tsx}"],
+  darkMode: ["class"],
   theme: {
     extend: {
       colors: {
-        background: withAlpha('--sf-color-background'),
-        foreground: withAlpha('--sf-color-foreground'),
-        border: withAlpha('--sf-color-border'),
-        surface: {
-          DEFAULT: withAlpha('--sf-color-surface'),
-          muted: withAlpha('--sf-color-surface-muted'),
-          elevated: withAlpha('--sf-color-surface-elevated')
-        },
-        brand: {
-          foreground: withAlpha('--sf-color-brand-foreground'),
-          primary: withAlpha('--sf-color-brand-primary'),
-          'primary-foreground': withAlpha('--sf-color-brand-primary-foreground'),
-          secondary: withAlpha('--sf-color-brand-secondary'),
-          'secondary-foreground': withAlpha('--sf-color-brand-secondary-foreground'),
-          muted: withAlpha('--sf-color-brand-muted'),
-          'muted-foreground': withAlpha('--sf-color-brand-muted-foreground')
-        },
-        accent: {
-          DEFAULT: withAlpha('--sf-color-accent'),
-          foreground: withAlpha('--sf-color-accent-foreground'),
-          subtle: withAlpha('--sf-color-accent-subtle')
-        },
-        muted: {
-          DEFAULT: withAlpha('--sf-color-muted'),
-          foreground: withAlpha('--sf-color-muted-foreground')
-        },
-        success: {
-          DEFAULT: withAlpha('--sf-color-success'),
-          foreground: withAlpha('--sf-color-success-foreground')
-        },
-        warning: {
-          DEFAULT: withAlpha('--sf-color-warning'),
-          foreground: withAlpha('--sf-color-warning-foreground')
-        },
-        danger: {
-          DEFAULT: withAlpha('--sf-color-danger'),
-          foreground: withAlpha('--sf-color-danger-foreground')
-        },
-        ring: withAlpha('--sf-color-brand-primary')
+        brand: brandColors,
+        neutral: neutralColors,
+        surface: surfaceColors
       },
       fontFamily: {
-        sans: ['var(--sf-font-sans)', ...defaultTheme.fontFamily.sans],
-        mono: ['var(--sf-font-mono)', ...defaultTheme.fontFamily.mono]
+        sans: fontStack.sans,
+        mono: fontStack.mono
       },
       borderRadius: {
-        none: 'var(--sf-radius-none)',
-        xs: 'var(--sf-radius-xs)',
-        sm: 'var(--sf-radius-sm)',
-        md: 'var(--sf-radius-md)',
-        lg: 'var(--sf-radius-lg)',
-        xl: 'var(--sf-radius-xl)',
-        full: 'var(--sf-radius-full)'
+        xs: radii.xs,
+        sm: radii.sm,
+        md: radii.md,
+        lg: radii.lg,
+        xl: radii.xl
       },
       boxShadow: {
-        soft: 'var(--sf-shadow-soft)',
-        elevated: 'var(--sf-shadow-elevated)',
-        outline: 'var(--sf-shadow-outline)'
-      },
-      transitionDuration: {
-        base: 'var(--sf-transition-base-duration)',
-        emphasize: 'var(--sf-transition-emphasis-duration)'
-      },
-      transitionTimingFunction: {
-        base: 'var(--sf-transition-base-timing)',
-        emphasize: 'var(--sf-transition-emphasis-timing)'
+        sm: shadows.sm,
+        md: shadows.md,
+        lg: shadows.lg
       }
     }
   },
-  plugins: [tailwindcssAnimate]
+  plugins: []
 };
 
 export default config;
+

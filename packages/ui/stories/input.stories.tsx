@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Input } from '@cronkwaters/ui';
+import type { Meta, StoryObj } from "@storybook/react";
+import { Input } from "../src/components/input";
 
 const meta: Meta<typeof Input> = {
-  title: 'Primitives/Input',
+  title: "Components/Input",
   component: Input,
-  args: {
-    placeholder: 'Search tracks...'
-  },
   parameters: {
-    layout: 'centered'
+    layout: "centered"
+  },
+  args: {
+    placeholder: "Search catalog..."
   }
 };
 
@@ -18,10 +18,10 @@ type Story = StoryObj<typeof Input>;
 
 export const Default: Story = {};
 
-export const Disabled: Story = {
+export const Invalid: Story = {
   args: {
-    disabled: true,
-    value: 'Read-only input'
+    isInvalid: true,
+    placeholder: "Email address"
   }
 };
 

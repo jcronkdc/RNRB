@@ -1,16 +1,15 @@
 import { notFound } from 'next/navigation'
 import { currentUser } from '@/lib/session'
 import { db } from '@/lib/db'
-import { Button } from '@cronkwaters/ui'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@cronkwaters/ui'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@cronkwaters/ui'
-import { Badge } from '@cronkwaters/ui'
-import { Avatar, AvatarFallback, AvatarImage } from '@cronkwaters/ui'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { CalendarIcon, Music, FileText, Users, MessageSquare, Settings, Play, Download, Edit } from 'lucide-react'
 import { format } from 'date-fns'
 import Link from 'next/link'
 import { CommentsSection } from '@/components/app/comments/CommentsSection'
-import { ExportButton } from '@/components/app/ExportButton'
 
 interface SongPageProps {
   params: {
@@ -312,19 +311,11 @@ export default async function SongPage({ params }: SongPageProps) {
                       {collaborators.reduce((sum, r) => sum + r.percentage, 0)}%
                     </p>
                   </div>
-                  <div className="flex gap-2 mt-6">
-                    <Link href={`/projects/${params.slug}/songs/${params.songSlug}/splits`} className="flex-1">
-                      <Button variant="outline" className="w-full">
-                        Edit Split Sheet
-                      </Button>
-                    </Link>
-                    <ExportButton
-                      type="splitSheet"
-                      id={song.splitSheet.id}
-                      title={`${song.title} Split Sheet`}
-                      variant="outline"
-                    />
-                  </div>
+                  <Link href={`/projects/${params.slug}/songs/${params.songSlug}/splits`}>
+                    <Button variant="outline" className="w-full mt-6">
+                      Edit Split Sheet
+                    </Button>
+                  </Link>
                 </div>
               )}
             </CardContent>
@@ -341,3 +332,5 @@ export default async function SongPage({ params }: SongPageProps) {
     </div>
   )
 }
+
+

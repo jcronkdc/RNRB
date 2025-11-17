@@ -1,16 +1,15 @@
 import { notFound } from 'next/navigation'
 import { currentUser } from '@/lib/session'
 import { db } from '@/lib/db'
-import { Button } from '@cronkwaters/ui'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@cronkwaters/ui'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@cronkwaters/ui'
-import { Badge } from '@cronkwaters/ui'
-import { Avatar, AvatarFallback, AvatarImage } from '@cronkwaters/ui'
-import { CalendarIcon, Music, FileText, Users, MessageSquare, Settings, Download } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { CalendarIcon, Music, FileText, Users, MessageSquare, Settings } from 'lucide-react'
 import { format } from 'date-fns'
 import Link from 'next/link'
 import { CommentsSection } from '@/components/app/comments/CommentsSection'
-import { ExportButton } from '@/components/app/ExportButton'
 
 interface ProjectPageProps {
   params: {
@@ -112,20 +111,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               </Badge>
             </div>
           </div>
-          <div className="flex gap-2">
-            <ExportButton
-              type="project"
-              id={project.id}
-              title={project.name}
-              variant="outline"
-            />
-            <Link href={`/projects/${params.slug}/settings`}>
-              <Button variant="outline">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Button>
-            </Link>
-          </div>
+          <Link href={`/projects/${params.slug}/settings`}>
+            <Button variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -352,3 +343,5 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     </div>
   )
 }
+
+

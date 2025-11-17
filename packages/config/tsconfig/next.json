@@ -1,14 +1,26 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "CronkWaters Next.js",
-  "extends": "./react.json",
+  "extends": "@cronkwaters/config/tsconfig/base",
   "compilerOptions": {
+    "jsx": "preserve",
     "allowJs": true,
-    "incremental": true,
+    "noEmit": true,
+    "types": ["node", "react"],
     "moduleResolution": "Bundler",
-    "module": "ESNext",
-    "plugins": [{
-      "name": "next"
-    }]
-  }
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs",
+    "**/*.mjs",
+    "**/*.js",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
 }
+

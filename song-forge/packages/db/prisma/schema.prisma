@@ -1,0 +1,970 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String                  @id @default(cuid())
+  email                   String                  @unique
+  name                    String?
+  image                   String?
+  pro                     String?
+  mlcMember               Boolean                 @default(false)
+  soundExchangeRegistered Boolean                 @default(false)
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  uploadedAssets          Asset[]
+  assetShares             AssetShare[]
+  collaborationRequests   CollaborationRequest[]
+  collaborationResponses  CollaborationResponse[]
+  comments                Comment[]
+  connectedTo             Connection[]            @relation("ConnectedToUser")
+  connections             Connection[]            @relation("UserConnections")
+  forumPosts              ForumPost[]
+  forumReplies            ForumReply[]
+  memberships             Membership[]
+  receivedMessages        Message[]               @relation("ReceivedMessages")
+  sentMessages            Message[]               @relation("SentMessages")
+  musicianProfile         MusicianProfile?
+  orgInvites              OrgInvite[]
+  sessionAttendances      SessionAttendee[]
+  skills                  Skill[]
+  songSplits              SongSplit[]
+  studioSessions          StudioSession[]
+  subscriptions           Subscription[]
+
+  @@index([email])
+}
+
+model Org {
+  id              String           @id @default(cuid())
+  name            String
+  slug            String           @unique
+  type            OrgType
+  brandColor      String?
+  description     String?
+  website         String?
+  bio             String?
+  location        String?
+  genre           String[]
+  influences      String[]
+  founded         Int?
+  socialLinks     Json?
+  contactEmail    String?
+  bookingEmail    String?
+  pressKitUrl     String?
+  epkData         Json?
+  achievements    Json?
+  spotifyArtistId String?
+  appleMusicId    String?
+  images          Json?
+  verified        Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  awards          Award[]
+  bandMembers     BandMember[]
+  events          Event[]
+  memberships     Membership[]
+  orgInvites      OrgInvite[]
+  episodes        PodcastEpisode[]
+  pressReleases   PressRelease[]
+  projects        Project[]        @relation("OrgProjects")
+  shows           Show[]
+  tours           Tour[]
+
+  @@index([slug])
+  @@index([type])
+  @@index([genre])
+  @@index([location])
+}
+
+model Membership {
+  userId    String
+  orgId     String
+  role      OrgRole
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  org       Org      @relation(fields: [orgId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@id([userId, orgId])
+  @@index([orgId])
+}
+
+model Project {
+  id             String            @id @default(cuid())
+  orgId          String
+  name           String
+  slug           String            @unique
+  description    String?
+  tagline        String?
+  coverImage     String?
+  visibility     ProjectVisibility @default(private)
+  status         ProjectStatus     @default(active)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  assets         Asset[]
+  events         Event[]
+  licenses       License[]
+  org            Org               @relation("OrgProjects", fields: [orgId], references: [id])
+  shows          Show[]
+  songs          Song[]
+  splitSheets    SplitSheet[]
+  studioSessions StudioSession[]
+  transactions   Transaction[]
+
+  @@index([orgId])
+  @@index([slug])
+  @@index([visibility, status])
+}
+
+model Song {
+  id            String        @id @default(cuid())
+  projectId     String
+  title         String
+  key           String?
+  tempo         Int?
+  timeSignature String?
+  iswc          String?       @unique
+  description   String?
+  lyrics        String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  setlistItems  SetlistItem[]
+  project       Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  songSplits    SongSplit[]
+  transactions  Transaction[]
+
+  @@index([projectId])
+  @@index([iswc])
+}
+
+model Asset {
+  id            String       @id @default(cuid())
+  projectId     String?
+  name          String
+  mimeType      String
+  fileType      String?
+  bytes         BigInt
+  size          Int?
+  version       Int          @default(1)
+  storageKey    String       @unique
+  storageBucket String?
+  checksum      String
+  duration      Float?
+  sampleRate    Int?
+  width         Int?
+  height        Int?
+  metadata      Json?
+  assetType     AssetType
+  uploadedAt    DateTime     @default(now())
+  uploadedById  String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  project       Project?     @relation(fields: [projectId], references: [id])
+  uploadedBy    User?        @relation(fields: [uploadedById], references: [id])
+  assetShares   AssetShare[]
+
+  @@index([projectId])
+  @@index([assetType])
+  @@index([storageKey])
+  @@index([checksum])
+  @@index([uploadedById])
+}
+
+model SplitSheet {
+  id           String             @id @default(cuid())
+  projectId    String
+  title        String
+  finalized    Boolean            @default(false)
+  finalizedAt  DateTime?
+  pdfKey       String?
+  notes        String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  contributors SplitContributor[]
+  project      Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([finalized])
+}
+
+model SplitContributor {
+  id           String     @id @default(cuid())
+  splitSheetId String
+  name         String
+  role         String?
+  percentage   Float
+  pro          String?
+  ipi          String?
+  publisher    String?
+  email        String?
+  finalized    Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  splitSheet   SplitSheet @relation(fields: [splitSheetId], references: [id], onDelete: Cascade)
+
+  @@index([splitSheetId])
+}
+
+model License {
+  id                 String          @id @default(cuid())
+  projectId          String
+  template           LicenseTemplate
+  title              String
+  terms              String?
+  notes              String?
+  status             LicenseStatus   @default(draft)
+  signedAt           DateTime?
+  countersignedAt    DateTime?
+  pdfKey             String?
+  signerEmail        String?
+  signerName         String?
+  countersignerEmail String?
+  countersignerName  String?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  project            Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([status])
+  @@index([template])
+}
+
+model Event {
+  id           String    @id @default(cuid())
+  projectId    String?
+  orgId        String?
+  name         String
+  slug         String    @unique
+  description  String?
+  eventType    EventType
+  startDate    DateTime
+  endDate      DateTime?
+  venue        String?
+  venueAddress String?
+  city         String?
+  state        String?
+  country      String?
+  lineup       Json?
+  ticketUrl    String?
+  coverImage   String?
+  public       Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  org          Org?      @relation(fields: [orgId], references: [id])
+  project      Project?  @relation(fields: [projectId], references: [id])
+
+  @@index([orgId])
+  @@index([projectId])
+  @@index([eventType])
+  @@index([startDate])
+  @@index([slug])
+}
+
+model PodcastEpisode {
+  id          String    @id @default(cuid())
+  orgId       String
+  title       String
+  slug        String    @unique
+  description String?
+  showNotes   String?
+  audioKey    String?
+  duration    Float?
+  publishedAt DateTime?
+  guests      Json?
+  tags        String[]
+  public      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  org         Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([publishedAt])
+  @@index([slug])
+  @@index([public])
+}
+
+model Donation {
+  id             String         @id @default(cuid())
+  amount         Decimal
+  currency       String         @default("USD")
+  donorName      String?
+  donorEmail     String?
+  donorAnonymous Boolean        @default(false)
+  message        String?
+  paymentId      String?
+  status         DonationStatus @default(pending)
+  processedAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([paymentId])
+}
+
+model Subscription {
+  id                 String             @id @default(cuid())
+  userId             String?
+  email              String
+  tier               SubscriptionTier
+  amount             Decimal
+  currency           String             @default("USD")
+  stripeId           String?            @unique
+  status             SubscriptionStatus @default(active)
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  user               User?              @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([email])
+  @@index([status])
+  @@index([stripeId])
+}
+
+model Tour {
+  id             String          @id @default(cuid())
+  orgId          String
+  name           String
+  slug           String          @unique
+  description    String?
+  startDate      DateTime
+  endDate        DateTime?
+  status         TourStatus      @default(planning)
+  posterImage    String?
+  sponsorLogos   Json?
+  merch          Json?
+  public         Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  fanEngagements FanEngagement[]
+  shows          Show[]
+  org            Org             @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([status])
+  @@index([startDate])
+}
+
+model Venue {
+  id                String    @id @default(cuid())
+  name              String
+  slug              String    @unique
+  type              VenueType @default(club)
+  capacity          Int?
+  address           String?
+  city              String?
+  state             String?
+  country           String?
+  postalCode        String?
+  latitude          Float?
+  longitude         Float?
+  phone             String?
+  email             String?
+  website           String?
+  parkingInfo       String?
+  accessibilityInfo String?
+  images            Json?
+  socialLinks       Json?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  shows             Show[]
+
+  @@index([city])
+  @@index([type])
+}
+
+model Show {
+  id             String          @id @default(cuid())
+  tourId         String?
+  orgId          String
+  projectId      String?
+  venueId        String?
+  name           String
+  slug           String          @unique
+  description    String?
+  date           DateTime
+  doorsTime      DateTime?
+  soundcheckTime DateTime?
+  setLength      Int?
+  status         ShowStatus      @default(scheduled)
+  ticketUrl      String?
+  ticketPrice    Json?
+  ageRestriction String?
+  supportingActs Json?
+  notes          String?
+  posterImage    String?
+  livestreamUrl  String?
+  recordingUrl   String?
+  attendance     Int?
+  grossRevenue   Decimal?
+  public         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  fanEngagements FanEngagement[]
+  setlist        Setlist?
+  org            Org             @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  project        Project?        @relation(fields: [projectId], references: [id])
+  tour           Tour?           @relation(fields: [tourId], references: [id])
+  venue          Venue?          @relation(fields: [venueId], references: [id])
+
+  @@index([tourId])
+  @@index([orgId])
+  @@index([venueId])
+  @@index([date])
+  @@index([status])
+}
+
+model Setlist {
+  id        String        @id @default(cuid())
+  showId    String        @unique
+  name      String?
+  notes     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  show      Show          @relation(fields: [showId], references: [id], onDelete: Cascade)
+  items     SetlistItem[]
+}
+
+model SetlistItem {
+  id          String  @id @default(cuid())
+  setlistId   String
+  songId      String?
+  position    Int
+  notes       String?
+  duration    Int?
+  isEncore    Boolean @default(false)
+  customTitle String?
+  setlist     Setlist @relation(fields: [setlistId], references: [id], onDelete: Cascade)
+  song        Song?   @relation(fields: [songId], references: [id])
+
+  @@index([setlistId])
+  @@index([songId])
+}
+
+model FanEngagement {
+  id          String   @id @default(cuid())
+  showId      String?
+  tourId      String?
+  email       String
+  name        String?
+  notifyShows Boolean  @default(true)
+  notifyMerch Boolean  @default(false)
+  location    String?
+  createdAt   DateTime @default(now())
+  show        Show?    @relation(fields: [showId], references: [id])
+  tour        Tour?    @relation(fields: [tourId], references: [id])
+
+  @@index([email])
+  @@index([showId])
+  @@index([tourId])
+}
+
+model BandMember {
+  id          String    @id @default(cuid())
+  orgId       String
+  name        String
+  role        String
+  bio         String?
+  image       String?
+  instruments String[]
+  socialLinks Json?
+  joinedAt    DateTime?
+  active      Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  org         Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+}
+
+model PressRelease {
+  id          String    @id @default(cuid())
+  orgId       String
+  title       String
+  slug        String    @unique
+  content     String
+  excerpt     String?
+  publishedAt DateTime?
+  attachments Json?
+  public      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  org         Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([publishedAt])
+}
+
+model Award {
+  id              String   @id @default(cuid())
+  orgId           String
+  name            String
+  organization    String
+  year            Int
+  category        String?
+  description     String?
+  image           String?
+  verificationUrl String?
+  createdAt       DateTime @default(now())
+  org             Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([year])
+}
+
+model CollaborationRequest {
+  id           String                  @id @default(cuid())
+  userId       String
+  title        String
+  slug         String                  @unique
+  description  String
+  projectType  String
+  genre        String[]
+  skillsNeeded String[]
+  location     String?
+  isRemote     Boolean                 @default(true)
+  isPaid       Boolean                 @default(false)
+  compensation String?
+  deadline     DateTime?
+  status       CollaborationStatus     @default(open)
+  viewCount    Int                     @default(0)
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  user         User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  responses    CollaborationResponse[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([genre])
+  @@index([skillsNeeded])
+}
+
+model CollaborationResponse {
+  id        String               @id @default(cuid())
+  requestId String
+  userId    String
+  message   String
+  portfolio String?
+  accepted  Boolean?
+  createdAt DateTime             @default(now())
+  request   CollaborationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([requestId])
+  @@index([userId])
+}
+
+model MusicianProfile {
+  id                        String   @id @default(cuid())
+  userId                    String   @unique
+  instruments               String[]
+  genres                    String[]
+  skills                    String[]
+  experience                String?
+  availableForCollaboration Boolean  @default(true)
+  availableForGigs          Boolean  @default(false)
+  hourlyRate                Decimal?
+  location                  String?
+  willingToTravel           Boolean  @default(false)
+  travelRadius              Int?
+  portfolio                 Json?
+  socialLinks               Json?
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([genres])
+  @@index([instruments])
+  @@index([availableForCollaboration])
+}
+
+model Skill {
+  id              String     @id @default(cuid())
+  userId          String
+  category        String
+  name            String
+  level           SkillLevel
+  yearsExperience Int?
+  description     String?
+  verified        Boolean    @default(false)
+  verifiedBy      String?
+  verifiedAt      DateTime?
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+  @@index([level])
+}
+
+model ForumPost {
+  id        String        @id @default(cuid())
+  userId    String
+  title     String
+  slug      String        @unique
+  content   String
+  category  ForumCategory
+  tags      String[]
+  isPinned  Boolean       @default(false)
+  isLocked  Boolean       @default(false)
+  viewCount Int           @default(0)
+  upvotes   Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies   ForumReply[]
+
+  @@index([userId])
+  @@index([category])
+  @@index([tags])
+}
+
+model ForumReply {
+  id               String       @id @default(cuid())
+  postId           String
+  userId           String
+  parentId         String?
+  content          String
+  upvotes          Int          @default(0)
+  isAcceptedAnswer Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  parent           ForumReply?  @relation("ReplyToReply", fields: [parentId], references: [id])
+  children         ForumReply[] @relation("ReplyToReply")
+  post             ForumPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([userId])
+  @@index([parentId])
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  senderId    String
+  recipientId String
+  subject     String?
+  content     String
+  isRead      Boolean   @default(false)
+  readAt      DateTime?
+  threadId    String?
+  attachments Json?
+  createdAt   DateTime  @default(now())
+  recipient   User      @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
+  sender      User      @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([threadId])
+  @@index([isRead])
+}
+
+model Connection {
+  id              String    @id @default(cuid())
+  userId          String
+  connectedUserId String
+  status          String    @default("pending")
+  message         String?
+  createdAt       DateTime  @default(now())
+  acceptedAt      DateTime?
+  connectedUser   User      @relation("ConnectedToUser", fields: [connectedUserId], references: [id], onDelete: Cascade)
+  user            User      @relation("UserConnections", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, connectedUserId])
+  @@index([userId])
+  @@index([connectedUserId])
+  @@index([status])
+}
+
+model StudioSession {
+  id          String            @id @default(cuid())
+  projectId   String
+  title       String
+  type        String
+  status      String            @default("scheduled")
+  startTime   DateTime
+  endTime     DateTime
+  location    String?
+  notes       String?
+  createdById String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  attendees   SessionAttendee[]
+  createdBy   User              @relation(fields: [createdById], references: [id])
+  project     Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([startTime])
+  @@index([createdById])
+}
+
+model SessionAttendee {
+  id        String        @id @default(cuid())
+  sessionId String
+  userId    String
+  role      String        @default("participant")
+  status    String        @default("invited")
+  createdAt DateTime      @default(now())
+  session   StudioSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user      User          @relation(fields: [userId], references: [id])
+
+  @@unique([sessionId, userId])
+  @@index([sessionId])
+  @@index([userId])
+}
+
+model OrgInvite {
+  id          String   @id @default(cuid())
+  orgId       String
+  code        String   @unique
+  maxUses     Int?
+  uses        Int      @default(0)
+  expiresAt   DateTime
+  createdById String
+  createdAt   DateTime @default(now())
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  org         Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([code])
+  @@index([expiresAt])
+}
+
+model AssetShare {
+  id           String    @id @default(cuid())
+  assetId      String
+  shareCode    String    @unique
+  expiresAt    DateTime?
+  password     String?
+  maxDownloads Int?
+  downloads    Int       @default(0)
+  accessType   String    @default("view")
+  createdById  String
+  createdAt    DateTime  @default(now())
+  asset        Asset     @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  createdBy    User      @relation(fields: [createdById], references: [id])
+
+  @@index([assetId])
+  @@index([shareCode])
+  @@index([expiresAt])
+}
+
+model SongSplit {
+  id          String    @id @default(cuid())
+  songId      String
+  userId      String
+  percentage  Float
+  role        String
+  confirmed   Boolean   @default(false)
+  confirmedAt DateTime?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  song        Song      @relation(fields: [songId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@unique([songId, userId])
+  @@index([songId])
+  @@index([userId])
+}
+
+model Transaction {
+  id          String            @id @default(cuid())
+  songId      String?
+  projectId   String?
+  amount      Decimal           @db.Decimal(10, 2)
+  currency    String            @default("USD")
+  type        TransactionType
+  status      TransactionStatus @default(pending)
+  description String?
+  metadata    Json?
+  processedAt DateTime?
+  createdAt   DateTime          @default(now())
+  project     Project?          @relation(fields: [projectId], references: [id])
+  song        Song?             @relation(fields: [songId], references: [id])
+
+  @@index([songId])
+  @@index([projectId])
+  @@index([type])
+  @@index([status])
+}
+
+model Comment {
+  id         String    @id @default(cuid())
+  text       String
+  userId     String
+  entityId   String
+  entityType String
+  parentId   String?
+  editedAt   DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent     Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    Comment[] @relation("CommentReplies")
+
+  @@index([userId])
+  @@index([entityId, entityType])
+  @@index([createdAt])
+  @@index([parentId])
+}
+
+enum OrgType {
+  foundation
+  studio
+  band
+}
+
+enum OrgRole {
+  owner
+  admin
+  member
+}
+
+enum ProjectVisibility {
+  private
+  org
+  public
+}
+
+enum ProjectStatus {
+  active
+  archived
+  draft
+}
+
+enum AssetType {
+  audio
+  lyric
+  image
+  pdf
+  chart
+  video
+  other
+}
+
+enum LicenseTemplate {
+  COLLAB_NDA
+  WORK_FOR_HIRE
+  NON_EXCLUSIVE_COLLAB
+  PODCAST_MUSIC_LICENSE
+  EXCLUSIVE_LICENSE
+  MASTER_USE
+  SYNCHRONIZATION
+}
+
+enum LicenseStatus {
+  draft
+  pending_signature
+  pending_countersignature
+  executed
+  expired
+  cancelled
+}
+
+enum EventType {
+  festival
+  concert
+  showcase
+  workshop
+  other
+}
+
+enum DonationStatus {
+  pending
+  completed
+  failed
+  refunded
+}
+
+enum SubscriptionTier {
+  sustaining
+  patron
+  benefactor
+}
+
+enum SubscriptionStatus {
+  active
+  cancelled
+  past_due
+  trialing
+  incomplete
+}
+
+enum TourStatus {
+  planning
+  announced
+  ongoing
+  completed
+  cancelled
+}
+
+enum VenueType {
+  club
+  theater
+  arena
+  stadium
+  festival
+  other
+}
+
+enum ShowStatus {
+  scheduled
+  soldout
+  cancelled
+  postponed
+  completed
+}
+
+enum CollaborationStatus {
+  open
+  in_progress
+  completed
+  cancelled
+}
+
+enum SkillLevel {
+  beginner
+  intermediate
+  advanced
+  professional
+}
+
+enum ForumCategory {
+  general
+  collaboration
+  feedback
+  showcase
+  technical
+  business
+  events
+}
+
+enum TransactionType {
+  streaming_royalty
+  performance_royalty
+  mechanical_royalty
+  sync_license
+  merchandise
+  ticket_sales
+  donation
+  other
+}
+
+enum TransactionStatus {
+  pending
+  processing
+  completed
+  failed
+  cancelled
+}
+
