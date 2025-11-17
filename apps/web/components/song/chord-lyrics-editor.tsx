@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Sparkles, Music2, Wand2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { transposeAllChords } from '@/lib/transpose-chords';
 
 /**
  * Chord + Lyrics Editor
  * Click above any line to add chords (A, Bb, C#m, etc.)
  * AI suggests chord progressions for sections
+ * Auto-transposes chords when key changes
+ * Mobile-friendly touch interface
  */
 
 interface ChordPosition {
@@ -37,6 +40,28 @@ export default function ChordLyricsEditor({
   const [chordInput, setChordInput] = useState('');
   const [aiSuggesting, setAiSuggesting] = useState(false);
   const [selectedSection, setSelectedSection] = useState<{ start: number; end: number } | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileActiveLine, setMobileActiveLine] = useState<number | null>(null);
+  const previousKey = useRef<string | undefined>(songKey);
+
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Auto-transpose chords when key changes
+  useEffect(() => {
+    if (songKey && previousKey.current && songKey !== previousKey.current && chords.length > 0) {
+      const transposed = transposeAllChords(chords, previousKey.current, songKey);
+      setChords(transposed);
+    }
+    previousKey.current = songKey;
+  }, [songKey]);
 
   const lines = lyrics.split('\n');
 
@@ -203,19 +228,33 @@ export default function ChordLyricsEditor({
                     </button>
                   ))}
                   
-                  {/* Add chord button - appears on hover */}
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => setEditingChord({ lineIndex, position: 0 })}
-                      className="absolute left-0 top-0 text-xs text-muted-foreground hover:text-brand-primary"
-                    >
-                      + Add Chord
-                    </button>
-                  </div>
+                  {/* Add chord button - mobile or desktop */}
+                  {isMobile ? (
+                    mobileActiveLine === lineIndex && (
+                      <button
+                        onClick={() => setEditingChord({ lineIndex, position: 0 })}
+                        className="absolute left-0 top-0 px-3 py-1 bg-brand-primary text-brand-primary-foreground rounded text-xs font-semibold"
+                      >
+                        + ADD CHORD
+                      </button>
+                    )
+                  ) : (
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => setEditingChord({ lineIndex, position: 0 })}
+                        className="absolute left-0 top-0 text-xs text-muted-foreground hover:text-brand-primary"
+                      >
+                        + Add Chord
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Lyrics Line */}
-                <div className="flex items-center gap-2">
+                <div 
+                  className="flex items-center gap-2"
+                  onClick={() => isMobile && setMobileActiveLine(mobileActiveLine === lineIndex ? null : lineIndex)}
+                >
                   <input
                     type="checkbox"
                     checked={selectedSection !== null && lineIndex >= selectedSection.start && lineIndex <= selectedSection.end}
@@ -233,7 +272,7 @@ export default function ChordLyricsEditor({
                         setSelectedSection(null);
                       }
                     }}
-                    className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className={isMobile ? 'w-4 h-4' : 'w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity'}
                   />
                   
                   <input
@@ -307,10 +346,11 @@ export default function ChordLyricsEditor({
 
       {/* Help Text */}
       <div className="text-sm text-muted-foreground space-y-1">
-        <p><strong>Add Chords:</strong> Hover over any line → Click "+ Add Chord"</p>
-        <p><strong>Edit Chords:</strong> Click any existing chord to change it</p>
-        <p><strong>AI Suggestions:</strong> Select lines (checkbox) → Click "Verse/Chorus/Bridge Chords"</p>
-        <p><strong>Examples:</strong> C, Am, G, Dm, F, Bb, C#m, Abmaj7, Dsus4</p>
+        <p><strong>Add Chords:</strong> {isMobile ? 'Tap any line → Tap "+ ADD CHORD"' : 'Hover over any line → Click "+ Add Chord"'}</p>
+        <p><strong>Edit Chords:</strong> {isMobile ? 'Tap' : 'Click'} any existing chord to change it</p>
+        <p><strong>AI Suggestions:</strong> Select lines (checkbox) → {isMobile ? 'Tap' : 'Click'} "Verse/Chorus/Bridge Chords"</p>
+        <p><strong>Auto-Transpose:</strong> Change song key in sidebar → All chords update automatically</p>
+        <p><strong>Examples:</strong> C, Am, G, Dm, F, Bb, C#m, Abmaj7, Dsus4, F#m7</p>
       </div>
     </div>
   );
