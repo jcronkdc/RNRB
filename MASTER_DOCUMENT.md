@@ -73,7 +73,16 @@ Studio:
 - "Need professional music creator's place" → Recording studio aesthetic ✅
 - "Cool font for headline" → Permanent Marker font ✅
 - "Boring Arial in navbar" → Permanent Marker font ✅
-- "Premium grade, no cheesy emojis/icons" → Pure typography design ✅  
+- "Premium grade, no cheesy emojis/icons" → Pure typography design ✅
+
+**Latest Fixes (Agent 31):**
+- ✅ Landing headline: Oswald font (not Arial, not Permanent Marker)
+- ✅ Dashboard visibility: Improved contrast (zinc-950 bg, better borders)
+- ✅ ALL FAKE CONTENT REMOVED:
+  - No fake stats (all zeros)
+  - No fake activity feed
+  - No fake projects or names
+  - "Real people testing this"  
 
 **Technical Stack:**
 - Supabase Auth (replaced NextAuth which failed for 1+ week)
