@@ -6,7 +6,9 @@
     "NEXTAUTH_URL",
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
-    "NODE_ENV"
+    "NODE_ENV",
+    "ABLY_API_KEY",
+    "DAILY_API_KEY"
   ],
   "tasks": {
     "dev": {
@@ -33,6 +35,7 @@
         "AUTH0_DOMAIN",
         "AUTH0_ISSUER_BASE_URL",
         "AUTH0_BASE_URL",
+        "AUTH0_SECRET",
         "OPENAI_API_KEY",
         "XAI_API_KEY",
         "XAI_RATE_LIMIT_RPM",
@@ -48,7 +51,26 @@
         "MXBAI_STORE_ID",
         "AUTH_TRUST_HOST",
         "NEON_PROJECT_ID",
-        "APP_BASE_URL"
+        "APP_BASE_URL",
+        "ABLY_API_KEY",
+        "DAILY_API_KEY",
+        "POSTGRES_URL",
+        "POSTGRES_PRISMA_URL",
+        "DATABASE_URL_UNPOOLED",
+        "POSTGRES_URL_NON_POOLING",
+        "POSTGRES_URL_NO_SSL",
+        "POSTGRES_USER",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_DATABASE",
+        "POSTGRES_HOST",
+        "PGHOST",
+        "PGHOST_UNPOOLED",
+        "PGUSER",
+        "PGPASSWORD",
+        "PGDATABASE",
+        "DEMO_BYPASS",
+        "VITE_STRIPE_PUBLISHABLE_KEY",
+        "STACK_SECRET_SERVER_KEY"
       ]
     },
     "typecheck": {
