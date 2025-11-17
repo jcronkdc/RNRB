@@ -129,21 +129,23 @@ export function NavBar() {
       <header className={cn("rnrb-header", scrolled && "scrolled")}>
         <nav className="rnrb-container h-full">
           <div className="flex items-center justify-between h-full">
-            {/* Logo */}
+            {/* Logo - Custom RNR Double R Logo */}
             <Link href="/" className="rnrb-logo flex items-center gap-3">
               <Image
                 src="/rnrdark.png"
                 alt="Rock N' Roll Basement"
-                width={40}
-                height={40}
+                width={50}
+                height={50}
                 className="dark:hidden"
+                priority
               />
               <Image
                 src="/rnrlight.png"
                 alt="Rock N' Roll Basement"
-                width={40}
-                height={40}
+                width={50}
+                height={50}
                 className="hidden dark:block"
+                priority
               />
               <span className="text-lg font-medium hidden sm:inline">
                 Rock N' Roll Basement

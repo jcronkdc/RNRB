@@ -120,7 +120,7 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             className="text-center max-w-5xl mx-auto"
           >
-            {/* Logo */}
+            {/* Logo - Custom RNR Double R Logo */}
             <motion.div 
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -129,17 +129,19 @@ export default function HomePage() {
             >
               <Image
                 src="/rnrdark.png"
-                alt="Rock N' Roll Basement"
-                width={120}
-                height={120}
-                className="dark:hidden"
+                alt="Rock N' Roll Basement - Custom Double R Logo"
+                width={180}
+                height={180}
+                className="dark:hidden drop-shadow-2xl"
+                priority
               />
               <Image
                 src="/rnrlight.png"
-                alt="Rock N' Roll Basement"
-                width={120}
-                height={120}
-                className="hidden dark:block"
+                alt="Rock N' Roll Basement - Custom Double R Logo"
+                width={180}
+                height={180}
+                className="hidden dark:block drop-shadow-2xl"
+                priority
               />
             </motion.div>
 
