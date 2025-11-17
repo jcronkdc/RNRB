@@ -14,10 +14,22 @@ const SongVideoSession = dynamic(() => import('@/components/song/song-video-sess
   loading: () => <div className="animate-pulse h-[600px] rounded-lg bg-white/5" />
 });
 
+const ChordLyricsEditor = dynamic(() => import('@/components/song/chord-lyrics-editor'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-[600px] rounded-lg bg-white/5" />
+});
+
+interface ChordPosition {
+  lineIndex: number;
+  position: number;
+  chord: string;
+}
+
 interface Song {
   id: string;
   title: string;
   lyrics: string;
+  chords?: ChordPosition[]; // Chord notation above lyrics
   writer?: string;
   coWriters?: string[];
   dateWritten?: string;
@@ -46,6 +58,7 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
   const [showVideo, setShowVideo] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [newTag, setNewTag] = useState('');
+  const [showChords, setShowChords] = useState(false);
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -263,18 +276,42 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
               className="rnrb-card p-6"
             >
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">Lyrics</h2>
-                <p className="text-xs text-muted-foreground font-mono">
-                  Auto-saves every 3 seconds
-                </p>
+                <h2 className="text-xl font-semibold">Lyrics {showChords && '& Chords'}</h2>
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setShowChords(!showChords)}
+                    className={`px-4 py-2 rounded-lg text-xs font-mono uppercase tracking-wider transition-all ${
+                      showChords 
+                        ? 'bg-brand-primary text-brand-primary-foreground' 
+                        : 'border border-border hover:border-brand-primary'
+                    }`}
+                  >
+                    {showChords ? 'CHORDS ON' : 'ADD CHORDS'}
+                  </button>
+                  <p className="text-xs text-muted-foreground font-mono">
+                    Auto-saves every 3 seconds
+                  </p>
+                </div>
               </div>
               
-              <textarea
-                value={song.lyrics}
-                onChange={(e) => setSong({ ...song, lyrics: e.target.value })}
-                className="w-full h-[600px] px-4 py-3 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 font-mono text-sm resize-none"
-                placeholder="Write your lyrics here..."
-              />
+              {showChords ? (
+                <ChordLyricsEditor
+                  songId={song.id}
+                  initialLyrics={song.lyrics}
+                  initialChords={song.chords || []}
+                  songKey={song.key}
+                  onSave={(newLyrics, newChords) => {
+                    setSong({ ...song, lyrics: newLyrics, chords: newChords });
+                  }}
+                />
+              ) : (
+                <textarea
+                  value={song.lyrics}
+                  onChange={(e) => setSong({ ...song, lyrics: e.target.value })}
+                  className="w-full h-[600px] px-4 py-3 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 font-mono text-sm resize-none"
+                  placeholder="Write your lyrics here..."
+                />
+              )}
             </motion.div>
           </div>
 
