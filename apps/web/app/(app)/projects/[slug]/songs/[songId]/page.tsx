@@ -19,7 +19,7 @@ import dynamic from 'next/dynamic';
 // Optimal pathway: Project → Songs → Song Detail (3 clicks to focused collaboration)
 
 // Dynamically import collaboration components
-const CollaborativeLyricsEditor = dynamic(() => import('@/components/song/collaborative-lyrics-editor'), {
+const CleanCollaborativeEditor = dynamic(() => import('@/components/song/clean-collaborative-editor'), {
   ssr: false,
   loading: () => <div className="animate-pulse h-96 rounded-lg bg-white/5" />
 });
@@ -133,16 +133,18 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
             {activeTab === 'lyrics' && (
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold">Collaborative Lyrics Editor</h2>
-                  <Button variant="secondary" size="sm">
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    AI Suggestions
-                  </Button>
+                  <h2 className="text-2xl font-semibold">Master Version</h2>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span>Auto-saved</span>
+                    <span>•</span>
+                    <span>{song.suggestions?.length || 0} pending changes</span>
+                  </div>
                 </div>
-                <CollaborativeLyricsEditor
+                <CleanCollaborativeEditor
                   songId={params.songId}
-                  lyrics={song.lyrics}
-                  suggestions={song.suggestions}
+                  initialLyrics={song.lyrics || ''}
+                  changes={[]} // Will be populated from tRPC
+                  currentUserName="You" // Will be replaced with real user
                 />
               </Card>
             )}

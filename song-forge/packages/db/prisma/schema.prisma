@@ -222,7 +222,7 @@ model Song {
   projectId     String
   title         String
   versions      SongVersion[]      // Version control for collaborative editing
-  suggestions   LyricSuggestion[]  // Collaborative suggestions
+  changes       LyricChange[]      // Collaborative word/sentence changes
   key           String?
   tempo         Int?
   timeSignature String?
@@ -257,17 +257,22 @@ model SongVersion {
   @@index([isCurrent])
 }
 
-// Collaboration Layer: Lyric Suggestions (Click Line → Suggest Alternative → Accept/Reject)
-model LyricSuggestion {
+// Collaboration Layer: Lyric Changes (Word/Sentence Level Editing)
+model LyricChange {
   id              String             @id @default(cuid())
   songId          String
-  lineNumber      Int // Which line in the lyrics (0-indexed)
-  originalText    String // The original lyric line
-  suggestedText   String // The suggested alternative
-  reason          String? // Why this change? Optional explanation
-  status          SuggestionStatus   @default(pending)
-  suggestedById   String // Who made the suggestion
+  lineNumber      Int // Which line (0-indexed)
+  changeType      ChangeType // word, sentence, or line
+  startPosition   Int? // For word-level: character position in line
+  endPosition     Int? // For word-level: end character position
+  originalText    String // What it was before
+  suggestedText   String // What they suggest it should be
+  reason          String? // Why this change?
+  status          ChangeStatus       @default(pending)
+  suggestedById   String // Who suggested
+  suggestedByName String? // Display name cached
   reviewedById    String? // Who accepted/rejected
+  reviewedByName  String?
   reviewedAt      DateTime?
   createdAt       DateTime           @default(now())
   song            Song               @relation(fields: [songId], references: [id], onDelete: Cascade)
@@ -278,11 +283,17 @@ model LyricSuggestion {
   @@index([lineNumber])
 }
 
-enum SuggestionStatus {
-  pending  // Waiting for review
-  accepted // Incorporated into lyrics
-  rejected // Declined
-  superseded // Replaced by newer suggestion
+enum ChangeType {
+  word     // Click a single word → suggest replacement
+  sentence // Click sentence → rewrite it
+  line     // Click line → rewrite whole line
+}
+
+enum ChangeStatus {
+  pending    // Awaiting review (highlighted in UI)
+  accepted   // Applied to master version
+  rejected   // Declined
+  revised    // Author revised based on feedback
 }
 
 model Asset {
