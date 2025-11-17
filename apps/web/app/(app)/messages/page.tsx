@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Users, Bell, Wifi } from 'lucide-react';
+import { MessageSquare, Users, Bell, Wifi, CheckCircle } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { Card } from '@cronkwaters/ui';
 
@@ -45,47 +45,213 @@ export default function MessagesPage() {
           </p>
         </div>
 
-        {/* Coming Soon Notice */}
-        <Card className="p-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-purple-500/10 rounded-lg">
-              <MessageSquare className="h-8 w-8 text-purple-500" />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-2xl font-semibold mb-2">Real-time Messaging Coming Soon</h2>
-              <p className="text-muted-foreground mb-4">
-                Professional real-time messaging and collaboration features are currently in development. Sign in to be notified when this feature launches.
+        {/* Comprehensive Messaging Overview */}
+        <Card className="p-8 mb-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
+          <h2 className="text-3xl font-bold mb-4">💬 Professional Real-Time Messaging</h2>
+          <p className="text-lg text-muted-foreground mb-6">
+            Rock N' Roll Basement provides enterprise-grade real-time communication built specifically for music collaboration. 
+            Keep your entire team connected - from band members to producers, managers to crew - with instant messaging, 
+            presence awareness, and organized conversation threads.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="p-4 bg-background/50 rounded-lg">
+              <MessageSquare className="h-8 w-8 text-purple-500 mb-3" />
+              <h4 className="font-semibold mb-2">Instant Messaging</h4>
+              <p className="text-sm text-muted-foreground">
+                Send text, images, audio clips, and files. Messages deliver in milliseconds with read receipts and typing indicators.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                <div className="flex items-start gap-3">
-                  <MessageSquare className="h-5 w-5 text-purple-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">Instant Chat</p>
-                    <p className="text-sm text-muted-foreground">Real-time messaging with band members</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Users className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">Presence Tracking</p>
-                    <p className="text-sm text-muted-foreground">See who's online and available</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Bell className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">Live Notifications</p>
-                    <p className="text-sm text-muted-foreground">Get updates as they happen</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Wifi className="h-5 w-5 text-orange-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">Auto-reconnection</p>
-                    <p className="text-sm text-muted-foreground">Seamless experience even with network issues</p>
-                  </div>
+            </div>
+            <div className="p-4 bg-background/50 rounded-lg">
+              <Users className="h-8 w-8 text-blue-500 mb-3" />
+              <h4 className="font-semibold mb-2">Presence Awareness</h4>
+              <p className="text-sm text-muted-foreground">
+                See who's online, in a session, or away. Know exactly when your collaborators are available to respond.
+              </p>
+            </div>
+            <div className="p-4 bg-background/50 rounded-lg">
+              <Bell className="h-8 w-8 text-green-500 mb-3" />
+              <h4 className="font-semibold mb-2">Smart Notifications</h4>
+              <p className="text-sm text-muted-foreground">
+                Get notified for @mentions, replies, and important updates. Customize notification rules per channel.
+              </p>
+            </div>
+            <div className="p-4 bg-background/50 rounded-lg">
+              <Wifi className="h-8 w-8 text-orange-500 mb-3" />
+              <h4 className="font-semibold mb-2">Offline Support</h4>
+              <p className="text-sm text-muted-foreground">
+                Messages queue when offline and auto-send when reconnected. Never lose a message due to network issues.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-background/30 rounded-lg p-6 border border-brand-primary/20">
+            <h3 className="text-xl font-semibold mb-4">Built for Music Collaboration</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="font-medium">Project-Based Channels</p>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically create chat channels for each project, album, or tour. Keep conversations organized 
+                    and searchable. Archive old projects without losing message history.
+                  </p>
                 </div>
               </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="font-medium">Audio Message Sharing</p>
+                  <p className="text-sm text-muted-foreground">
+                    Send voice memos, song ideas, or quick feedback as audio messages. Perfect for sharing melodic 
+                    ideas or explaining production notes that are hard to type.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="font-medium">File Sharing Integration</p>
+                  <p className="text-sm text-muted-foreground">
+                    Drag and drop audio files, PDFs, images, or videos directly into chat. All files automatically 
+                    stored in your project's asset library for easy retrieval later.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="font-medium">Thread Conversations</p>
+                  <p className="text-sm text-muted-foreground">
+                    Reply to specific messages to create threads. Keep multiple conversations organized without 
+                    cluttering the main channel - essential for busy project channels.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Detailed Features */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <Card className="p-6">
+            <h3 className="text-2xl font-semibold mb-6">💬 Advanced Chat Features</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
+                  <MessageSquare className="h-5 w-5 text-purple-500" />
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Rich Text Formatting</p>
+                  <p className="text-sm text-muted-foreground">
+                    Bold, italic, code blocks, bullet lists, and links. Format messages for clarity. 
+                    Use markdown shortcuts for fast formatting.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="p-2 bg-blue-500/10 rounded flex-shrink-0">
+                  <Users className="h-5 w-5 text-blue-500" />
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">@Mentions & Notifications</p>
+                  <p className="text-sm text-muted-foreground">
+                    Tag specific team members with @username to get their attention. Mention @everyone for 
+                    urgent announcements. Smart notifications only alert what's relevant to you.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="p-2 bg-green-500/10 rounded flex-shrink-0">
+                  <Bell className="h-5 w-5 text-green-500" />
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Pinned Messages</p>
+                  <p className="text-sm text-muted-foreground">
+                    Pin important info to the top of channels. Perfect for setlists, schedule changes, or 
+                    venue details that everyone needs quick access to.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </Card>
+
+          <Card className="p-6">
+            <h3 className="text-2xl font-semibold mb-6">🔔 Collaboration Tools</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <div className="p-2 bg-orange-500/10 rounded flex-shrink-0">
+                  <Wifi className="h-5 w-5 text-orange-500" />
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Always-On Connection</p>
+                  <p className="text-sm text-muted-foreground">
+                    WebSocket-based real-time updates. See new messages instantly without refreshing. 
+                    Automatic reconnection if internet drops - messages sync when you're back online.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
+                  <MessageSquare className="h-5 w-5 text-purple-500" />
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Message History Search</p>
+                  <p className="text-sm text-muted-foreground">
+                    Full-text search across all your conversations. Find that lyric idea from 3 months ago or 
+                    the venue contact info shared last tour.
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="p-2 bg-blue-500/10 rounded flex-shrink-0">
+                  <Users className="h-5 w-5 text-blue-500" />
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Direct Messages & Group Chats</p>
+                  <p className="text-sm text-muted-foreground">
+                    1-on-1 DMs for private conversations or create group chats for specific topics. Keep band 
+                    discussions separate from business meetings separate from creative sessions.
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </Card>
+        </div>
+
+        {/* Technical Details */}
+        <Card className="p-8">
+          <h3 className="text-2xl font-bold mb-6">Technical Specifications</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <h4 className="font-semibold mb-3 text-brand-primary">Real-Time Technology</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>• WebSocket connections (sub-100ms latency)</li>
+                <li>• Automatic reconnection with exponential backoff</li>
+                <li>• Message queuing for offline periods</li>
+                <li>• End-to-end encryption option</li>
+                <li>• Presence heartbeats every 15 seconds</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3 text-brand-primary">Message Features</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>• Markdown formatting support</li>
+                <li>• File attachments up to 100MB</li>
+                <li>• Image/video inline previews</li>
+                <li>• Message reactions (emoji responses)</li>
+                <li>• Edit & delete messages</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-3 text-brand-primary">Organization</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>• Unlimited channels per project</li>
+                <li>• Thread conversations</li>
+                <li>• Message pinning</li>
+                <li>• Full history search</li>
+                <li>• Archive old channels</li>
+              </ul>
             </div>
           </div>
         </Card>
