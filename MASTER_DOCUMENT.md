@@ -10,11 +10,16 @@
 ### ✅ AUTHENTICATION: FULLY OPERATIONAL
 
 **VERIFIED WORKING (User Confirmed):**
-✅ **Google OAuth** - "Enabled and working great" (user quote)  
-✅ **Email Magic Link** - Supabase + Resend integration  
+✅ **Google OAuth** - "Enabled and working great" (user quote) - PRIMARY AUTH METHOD  
+✅ **Email Magic Link** - Supabase + Resend integration - WORKING  
 ✅ **User Menu** - Avatar shows when signed in  
 ✅ **Dashboard** - Welcome page displays  
 ✅ **Sign Out** - Functional  
+
+**KNOWN ISSUES (Being Fixed):**
+⚠️ Theme toggle: Logo disappears when toggling  
+⚠️ Light mode: Some text hard to read (auth page fixed, others pending)  
+→ Auth page NOW readable in both modes (commit deployed)  
 
 **Technical Stack:**
 - Supabase Auth (replaced NextAuth which failed for 1+ week)
