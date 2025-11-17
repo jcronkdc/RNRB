@@ -55,8 +55,8 @@ export default function ProjectsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
-        <div className="text-white">Loading your projects...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-lg">Loading your projects...</div>
       </div>
     );
   }
@@ -91,7 +91,7 @@ export default function ProjectsPage() {
                 <Folder className="w-6 h-6 text-purple-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">{projects.length}</p>
+                <p className="text-2xl font-bold text-foreground">{projects.length}</p>
                 <p className="text-sm text-muted-foreground">Active Projects</p>
               </div>
             </div>
@@ -103,7 +103,7 @@ export default function ProjectsPage() {
                 <Music className="w-6 h-6 text-blue-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-2xl font-bold text-foreground">0</p>
                 <p className="text-sm text-muted-foreground">Total Songs</p>
               </div>
             </div>
@@ -115,7 +115,7 @@ export default function ProjectsPage() {
                 <Users className="w-6 h-6 text-green-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-2xl font-bold text-foreground">0</p>
                 <p className="text-sm text-muted-foreground">Collaborators</p>
               </div>
             </div>
@@ -127,7 +127,7 @@ export default function ProjectsPage() {
                 <Calendar className="w-6 h-6 text-orange-500" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-2xl font-bold text-foreground">0</p>
                 <p className="text-sm text-muted-foreground">Sessions</p>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function ProjectsPage() {
               <div className="w-24 h-24 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Music className="w-12 h-12 text-purple-400" />
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4">
+              <h2 className="text-3xl font-bold text-foreground mb-4">
                 Create Your First Project
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
@@ -150,19 +150,19 @@ export default function ProjectsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
                 <div className="p-4 bg-background/50 rounded-lg">
-                  <p className="font-semibold text-white mb-2">Organize Songs</p>
+                  <p className="font-semibold text-foreground mb-2">Organize Songs</p>
                   <p className="text-sm text-muted-foreground">
                     Group songs into albums, EPs, or singles
                   </p>
                 </div>
                 <div className="p-4 bg-background/50 rounded-lg">
-                  <p className="font-semibold text-white mb-2">Collaborate</p>
+                  <p className="font-semibold text-foreground mb-2">Collaborate</p>
                   <p className="text-sm text-muted-foreground">
                     Invite band members and track contributions
                   </p>
                 </div>
                 <div className="p-4 bg-background/50 rounded-lg">
-                  <p className="font-semibold text-white mb-2">Track Royalties</p>
+                  <p className="font-semibold text-foreground mb-2">Track Royalties</p>
                   <p className="text-sm text-muted-foreground">
                     Manage splits and revenue per project
                   </p>
@@ -187,13 +187,13 @@ export default function ProjectsPage() {
                     {project.cover_image ? (
                       <img src={project.cover_image} alt={project.name} className="w-full h-full object-cover" />
                     ) : (
-                      <Music className="w-16 h-16 text-white/50" />
+                      <Music className="w-16 h-16 text-foreground/50" />
                     )}
                   </div>
 
                   {/* Project Info */}
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-semibold text-white">{project.name}</h3>
+                    <h3 className="text-xl font-semibold text-foreground">{project.name}</h3>
                     {project.visibility === 'private' && <Lock className="w-4 h-4 text-muted-foreground" />}
                     {project.visibility === 'public' && <Globe className="w-4 h-4 text-green-500" />}
                   </div>

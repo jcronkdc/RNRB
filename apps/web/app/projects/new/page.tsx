@@ -97,8 +97,8 @@ export default function NewProjectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-lg">Loading...</div>
       </div>
     );
   }
@@ -133,11 +133,9 @@ export default function NewProjectPage() {
 
         {/* Project Form */}
         <Card className="p-8 mb-6">
-          <h2 className="text-2xl font-semibold text-white mb-6">Project Details</h2>
-          
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Project Name *
               </label>
               <input
@@ -145,7 +143,7 @@ export default function NewProjectPage() {
                 value={projectData.name}
                 onChange={(e) => setProjectData({ ...projectData, name: e.target.value })}
                 placeholder="My Debut Album"
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-lg focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-3 bg-surface border border-border rounded-lg text-foreground text-lg focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
               />
               <p className="text-xs text-muted-foreground mt-1">
                 {projectData.name && `URL: /projects/${generateSlug(projectData.name)}`}
@@ -153,7 +151,7 @@ export default function NewProjectPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Tagline
               </label>
               <input
@@ -161,12 +159,12 @@ export default function NewProjectPage() {
                 value={projectData.tagline}
                 onChange={(e) => setProjectData({ ...projectData, tagline: e.target.value })}
                 placeholder="The album that changed everything"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Description
               </label>
               <textarea
@@ -174,13 +172,13 @@ export default function NewProjectPage() {
                 onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
                 placeholder="Describe your project, its vision, the story behind it..."
                 rows={4}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none resize-none"
+                className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition resize-none"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   Genre
                 </label>
                 <input
@@ -188,19 +186,19 @@ export default function NewProjectPage() {
                   value={projectData.genre}
                   onChange={(e) => setProjectData({ ...projectData, genre: e.target.value })}
                   placeholder="Rock, Jazz, Hip-Hop..."
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   Target Release Date
                 </label>
                 <input
                   type="date"
                   value={projectData.target_release_date}
                   onChange={(e) => setProjectData({ ...projectData, target_release_date: e.target.value })}
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition focus:outline-none"
                 />
               </div>
             </div>
@@ -209,23 +207,23 @@ export default function NewProjectPage() {
 
         {/* Privacy Settings */}
         <Card className="p-8 mb-6">
-          <h2 className="text-2xl font-semibold text-white mb-6">Privacy & Access</h2>
+          <h2 className="text-2xl font-semibold mb-6">Privacy & Access</h2>
           
           <div className="space-y-4">
             <button
               onClick={() => setProjectData({ ...projectData, visibility: 'private' })}
               className={`w-full p-4 rounded-lg border-2 transition text-left ${
                 projectData.visibility === 'private'
-                  ? 'border-purple-500 bg-purple-500/10'
-                  : 'border-white/10 bg-white/5 hover:border-white/20'
+                  ? 'border-brand-primary bg-brand-primary/10'
+                  : 'border-border bg-surface hover:border-brand-primary/50'
               }`}
             >
               <div className="flex items-start gap-3">
                 <Lock className={`w-5 h-5 mt-1 ${
-                  projectData.visibility === 'private' ? 'text-purple-400' : 'text-muted-foreground'
+                  projectData.visibility === 'private' ? 'text-brand-primary' : 'text-muted-foreground'
                 }`} />
                 <div>
-                  <p className="font-semibold text-white mb-1">🔒 Private</p>
+                  <p className="font-semibold text-foreground mb-1">🔒 Private</p>
                   <p className="text-sm text-muted-foreground">
                     Only you can see this project. Perfect for works in progress.
                   </p>
@@ -246,7 +244,7 @@ export default function NewProjectPage() {
                   projectData.visibility === 'org' ? 'text-blue-400' : 'text-muted-foreground'
                 }`} />
                 <div>
-                  <p className="font-semibold text-white mb-1">👥 Band/Organization</p>
+                  <p className="font-semibold text-foreground mb-1">👥 Band/Organization</p>
                   <p className="text-sm text-muted-foreground">
                     Shared with your band or organization members only.
                   </p>
@@ -267,7 +265,7 @@ export default function NewProjectPage() {
                   projectData.visibility === 'public' ? 'text-green-400' : 'text-muted-foreground'
                 }`} />
                 <div>
-                  <p className="font-semibold text-white mb-1">🌍 Public</p>
+                  <p className="font-semibold text-foreground mb-1">🌍 Public</p>
                   <p className="text-sm text-muted-foreground">
                     Anyone can discover and listen. Great for released albums.
                   </p>

@@ -159,16 +159,15 @@ export default function ProfileSettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-lg">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-surface/20 to-background py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
-        <h1 className="text-4xl font-bold text-white mb-8">Profile Settings</h1>
+    <div className="min-h-screen bg-background py-12 px-4">
+      <div className="rnrb-container max-w-4xl">
 
         {message && (
           <div className={`mb-6 p-4 rounded-lg ${
@@ -182,9 +181,9 @@ export default function ProfileSettingsPage() {
 
         {/* Profile Picture */}
         <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Profile Picture</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-4">Profile Picture</h2>
           <div className="flex items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-3xl font-bold overflow-hidden">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-foreground text-3xl font-bold overflow-hidden">
               {profile.profile_picture_url ? (
                 <img src={profile.profile_picture_url} alt="Profile" className="w-full h-full object-cover" />
               ) : (
@@ -199,7 +198,7 @@ export default function ProfileSettingsPage() {
                   onChange={handleProfilePictureUpload}
                   className="hidden"
                 />
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-foreground rounded-lg hover:bg-purple-700 transition">
                   <Upload className="w-4 h-4" />
                   {uploadingPicture ? 'Uploading...' : 'Upload Photo'}
                 </div>
@@ -213,7 +212,7 @@ export default function ProfileSettingsPage() {
 
         {/* Basic Info */}
         <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Basic Information</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-4">Basic Information</h2>
           
           <div className="space-y-4">
             <div>
@@ -225,7 +224,7 @@ export default function ProfileSettingsPage() {
                 value={profile.username}
                 onChange={(e) => setProfile({ ...profile, username: e.target.value })}
                 placeholder="rockstar123"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
               />
               <p className="text-xs text-muted-foreground mt-1">
                 Your unique handle. Others can find you by this username.
@@ -241,7 +240,7 @@ export default function ProfileSettingsPage() {
                 value={profile.display_name}
                 onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
                 placeholder="John Doe"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -254,7 +253,7 @@ export default function ProfileSettingsPage() {
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                 placeholder="Tell the world about your music..."
                 rows={4}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none resize-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none resize-none"
               />
               <p className="text-xs text-muted-foreground mt-1">
                 Describe your music style, experience, what you're working on, etc.
@@ -265,7 +264,7 @@ export default function ProfileSettingsPage() {
 
         {/* Privacy Settings */}
         <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
             {profile.is_public ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
             Privacy Settings
           </h2>
@@ -273,7 +272,7 @@ export default function ProfileSettingsPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
               <div>
-                <p className="font-medium text-white">Public Profile</p>
+                <p className="font-medium text-foreground">Public Profile</p>
                 <p className="text-sm text-muted-foreground">
                   Allow others to find and view your profile
                 </p>
@@ -292,7 +291,7 @@ export default function ProfileSettingsPage() {
 
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
               <div>
-                <p className="font-medium text-white">Email Visibility</p>
+                <p className="font-medium text-foreground">Email Visibility</p>
                 <p className="text-sm text-muted-foreground">
                   Show email on public profile (searchable)
                 </p>
@@ -311,7 +310,7 @@ export default function ProfileSettingsPage() {
 
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
               <div>
-                <p className="font-medium text-white">Phone Number Visibility</p>
+                <p className="font-medium text-foreground">Phone Number Visibility</p>
                 <p className="text-sm text-muted-foreground">
                   Show phone on public profile (searchable)
                 </p>
@@ -332,7 +331,7 @@ export default function ProfileSettingsPage() {
 
         {/* Contact & Links */}
         <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Contact & Links</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-4">Contact & Links</h2>
           
           <div className="space-y-4">
             <div>
@@ -345,7 +344,7 @@ export default function ProfileSettingsPage() {
                 value={profile.phone}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 placeholder="+1 (555) 123-4567"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -359,7 +358,7 @@ export default function ProfileSettingsPage() {
                 value={profile.website}
                 onChange={(e) => setProfile({ ...profile, website: e.target.value })}
                 placeholder="https://yourwebsite.com"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -373,7 +372,7 @@ export default function ProfileSettingsPage() {
                 value={profile.instagram}
                 onChange={(e) => setProfile({ ...profile, instagram: e.target.value })}
                 placeholder="@yourhandle"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -387,7 +386,7 @@ export default function ProfileSettingsPage() {
                 value={profile.youtube}
                 onChange={(e) => setProfile({ ...profile, youtube: e.target.value })}
                 placeholder="@yourchannel or channel URL"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -401,7 +400,7 @@ export default function ProfileSettingsPage() {
                 value={profile.twitter}
                 onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}
                 placeholder="@yourhandle"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
           </div>
@@ -409,7 +408,7 @@ export default function ProfileSettingsPage() {
 
         {/* Music Samples (SoundCloud-style) */}
         <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
             <Music className="w-5 h-5" />
             Music Samples (Coming Soon)
           </h2>
@@ -434,7 +433,7 @@ export default function ProfileSettingsPage() {
           <Button
             onClick={handleSaveProfile}
             disabled={saving}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
+            className="bg-purple-600 hover:bg-purple-700 text-foreground px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Profile'}
