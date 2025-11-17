@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { Music, Radio, MessageSquare, Calendar, TrendingUp, Users } from 'lucide-react';
+import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardPage() {
@@ -32,200 +33,301 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
-      <div className="rnrb-container max-w-7xl">
-        {/* Welcome Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
-            Welcome back, {user?.user_metadata?.name || user?.email?.split('@')[0] || 'Musician'}!
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Your Rock N' Roll Basement command center
-          </p>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section with Gradient */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
         </div>
-
-        {/* Success Message */}
-        <div className="mb-8 p-6 rnrb-card bg-green-500/5 border-green-500/20">
-          <div className="flex items-start gap-4">
-            <div className="text-4xl">🎉</div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2">You're Successfully Signed In!</h3>
-              <p className="text-muted-foreground mb-3">
-                Email: <span className="text-brand-primary font-mono">{user?.email}</span>
-              </p>
-              <p className="text-sm text-muted-foreground">
-                You now have access to all platform features. Start by exploring the studio, creating your first project, or checking out the tour management tools below.
-              </p>
+        
+        <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Welcome to your workspace</p>
+                <h1 className="text-3xl md:text-4xl font-display font-bold">
+                  {user?.user_metadata?.name || user?.email?.split('@')[0] || 'Musician'}
+                </h1>
+              </div>
             </div>
-          </div>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Your central command hub for projects, collaborations, and creative work
+            </p>
+          </motion.div>
+
+          {/* Stats Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8"
+          >
+            <div className="rnrb-card p-4">
+              <p className="text-sm text-muted-foreground mb-1">Active Projects</p>
+              <p className="text-2xl font-bold">0</p>
+            </div>
+            <div className="rnrb-card p-4">
+              <p className="text-sm text-muted-foreground mb-1">Total Songs</p>
+              <p className="text-2xl font-bold">0</p>
+            </div>
+            <div className="rnrb-card p-4">
+              <p className="text-sm text-muted-foreground mb-1">Collaborators</p>
+              <p className="text-2xl font-bold">0</p>
+            </div>
+            <div className="rnrb-card p-4">
+              <p className="text-sm text-muted-foreground mb-1">Sessions</p>
+              <p className="text-2xl font-bold">0</p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="rnrb-container max-w-7xl py-12 px-4">
+
+        {/* Section Header */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-display font-bold mb-2">Quick Actions</h2>
+          <p className="text-muted-foreground">Jump into your workflow</p>
         </div>
 
         {/* Quick Actions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          <Link href="/projects/new">
-            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-brand-primary/10 rounded-lg">
-                  <Music className="h-8 w-8 text-brand-primary" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link href="/projects/new">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
+                    <Music className="w-6 h-6 text-brand-primary" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold">New Project</h3>
-                  <p className="text-sm text-brand-primary">Start here!</p>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">New Project</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Spawn a new mycelium network to organize songs, collaborators, and revenue
+                </p>
+                <div className="text-sm text-brand-primary font-medium">Get started →</div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Create the mycelium foundation - organize your songs, collaborators, and revenue
-              </p>
-            </div>
-          </Link>
+            </Link>
+          </motion.div>
 
-          <Link href="/studio">
-            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-brand-primary/10 rounded-lg">
-                  <Music className="h-8 w-8 text-brand-primary" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Link href="/studio">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
+                    <Music className="w-6 h-6 text-brand-primary" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold">Recording Studio</h3>
-                  <p className="text-sm text-muted-foreground">Start a session</p>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">Recording Studio</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Record HD video/audio, collaborate remotely, stream to platforms
+                </p>
+                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Start session →</div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Record HD video/audio, collaborate remotely, stream to multiple platforms
-              </p>
-            </div>
-          </Link>
+            </Link>
+          </motion.div>
 
-          <Link href="/tours">
-            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-brand-primary/10 rounded-lg">
-                  <Radio className="h-8 w-8 text-brand-primary" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Link href="/tours">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
+                    <Radio className="w-6 h-6 text-brand-primary" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold">Tours & Shows</h3>
-                  <p className="text-sm text-muted-foreground">Manage your tour</p>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">Tours & Shows</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Schedule shows, track tickets, stream virtual concerts
+                </p>
+                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Manage tour →</div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Schedule shows, track tickets, stream virtual concerts
-              </p>
-            </div>
-          </Link>
+            </Link>
+          </motion.div>
 
-          <Link href="/messages">
-            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-brand-primary/10 rounded-lg">
-                  <MessageSquare className="h-8 w-8 text-brand-primary" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <Link href="/messages">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
+                    <MessageSquare className="w-6 h-6 text-brand-primary" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold">Messaging</h3>
-                  <p className="text-sm text-muted-foreground">Chat with your team</p>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">Messaging</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Real-time chat, file sharing, presence awareness
+                </p>
+                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Start chatting →</div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Real-time messaging, file sharing, presence awareness
-              </p>
-            </div>
-          </Link>
+            </Link>
+          </motion.div>
 
-          <Link href="/projects">
-            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-brand-primary/10 rounded-lg">
-                  <Calendar className="h-8 w-8 text-brand-primary" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <Link href="/projects">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
+                    <Folder className="w-6 h-6 text-brand-primary" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold">My Projects</h3>
-                  <p className="text-sm text-muted-foreground">View all networks</p>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">My Projects</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  View all mycelium networks, songs, and collaborations
+                </p>
+                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">View all →</div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                See all your projects, songs, collaborators, and revenue
-              </p>
-            </div>
-          </Link>
+            </Link>
+          </motion.div>
 
-          <Link href="/analytics">
-            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-orange-500/10 rounded-lg">
-                  <TrendingUp className="h-8 w-8 text-orange-500" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Link href="/settings">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
+                    <Settings className="w-6 h-6 text-brand-primary" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white">Analytics</h3>
-                  <p className="text-sm text-muted-foreground">Track your growth</p>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">Settings</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Profile, billing, notifications, integrations
+                </p>
+                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Configure →</div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Revenue tracking, streaming stats, audience insights
-              </p>
-            </div>
-          </Link>
-
-          <Link href="/settings">
-            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-gray-500/10 rounded-lg">
-                  <Users className="h-8 w-8 text-gray-400" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white">Settings</h3>
-                  <p className="text-sm text-muted-foreground">Account & preferences</p>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Profile, billing, notifications, integrations
-              </p>
-            </div>
-          </Link>
+            </Link>
+          </motion.div>
         </div>
 
-        {/* Getting Started Guide */}
-        <div className="rnrb-card p-8">
-          <h2 className="text-2xl font-bold text-white mb-4">🚀 Getting Started</h2>
-          <p className="text-muted-foreground mb-6">
-            You're all set up! Here's what you can do now:
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">1️⃣</div>
+        {/* Getting Started Section */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-display font-bold mb-2">Get Started</h2>
+          <p className="text-muted-foreground">Build your creative workflow step by step</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="rnrb-card p-6"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="w-5 h-5 text-brand-primary" />
+              </div>
               <div>
-                <p className="font-semibold text-white mb-1">Start Recording</p>
-                <p className="text-sm text-muted-foreground">
-                  Go to Studio → Click "Start Recording" → Record HD video/audio or stream live
+                <h3 className="font-semibold mb-2">Create Your First Project</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Projects are your mycelium foundation - organize songs, collaborators, sessions, and revenue in one network
                 </p>
+                <Link href="/projects/new" className="text-sm text-brand-primary font-medium hover:underline">
+                  Create project →
+                </Link>
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">2️⃣</div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.7 }}
+            className="rnrb-card p-6"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="w-5 h-5 text-brand-primary" />
+              </div>
               <div>
-                <p className="font-semibold text-white mb-1">Create a Project</p>
-                <p className="text-sm text-muted-foreground">
-                  Organize your songs, demos, and collaborations in one place
+                <h3 className="font-semibold mb-2">Invite Collaborators</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Add band members and collaborators to projects for real-time chat, video sessions, and shared workflows
                 </p>
+                <Link href="/projects" className="text-sm text-brand-primary font-medium hover:underline">
+                  Manage collaborators →
+                </Link>
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">3️⃣</div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="rnrb-card p-6"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="w-5 h-5 text-brand-primary" />
+              </div>
               <div>
-                <p className="font-semibold text-white mb-1">Plan Your Tour</p>
-                <p className="text-sm text-muted-foreground">
-                  Add shows, manage setlists, track ticket sales
+                <h3 className="font-semibold mb-2">Start Recording</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Use the studio for HD video/audio recording, screen sharing, and live streaming to multiple platforms
                 </p>
+                <Link href="/studio" className="text-sm text-brand-primary font-medium hover:underline">
+                  Go to studio →
+                </Link>
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">4️⃣</div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.9 }}
+            className="rnrb-card p-6"
+          >
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="w-5 h-5 text-brand-primary" />
+              </div>
               <div>
-                <p className="font-semibold text-white mb-1">Invite Your Band</p>
-                <p className="text-sm text-muted-foreground">
-                  Collaborate in real-time with messaging and shared projects
+                <h3 className="font-semibold mb-2">Plan Tours & Shows</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Schedule venues, manage setlists, track ticket sales, and stream virtual concerts
                 </p>
+                <Link href="/tours" className="text-sm text-brand-primary font-medium hover:underline">
+                  Manage tours →
+                </Link>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
