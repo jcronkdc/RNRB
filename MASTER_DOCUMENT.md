@@ -82,7 +82,37 @@ Studio:
   - No fake stats (all zeros)
   - No fake activity feed
   - No fake projects or names
-  - "Real people testing this"  
+  - "Real people testing this"
+
+## 🔒 IMMUTABLE DESIGN SYSTEM CREATED
+
+**Design System Files:**
+- `DESIGN_SYSTEM.md` - Complete immutable rules and guidelines
+- `design-tokens.css` - Locked CSS variables
+
+**Key Design Principles (LOCKED):**
+1. **NO EMOJIS** in UI (documentation only)
+2. **NO ICONS** unless absolutely necessary
+3. **NO CHEESY ELEMENTS** - ever
+4. **NO FAKE CONTENT** - all data must be real or empty
+5. **TYPOGRAPHY FIRST** - text hierarchy solves everything
+
+**Color Palette (IMMUTABLE):**
+- Backgrounds: black, zinc-950, zinc-900, zinc-800
+- Text: white, zinc-300, zinc-400, zinc-500
+- Accents: red-500, blue-500, green-500, purple-500, gold
+
+**Typography (IMMUTABLE):**
+- Headlines: Oswald
+- Special text: Permanent Marker
+- Body: Inter
+- Technical: JetBrains Mono
+
+**ALL FUTURE AGENTS MUST:**
+1. Read DESIGN_SYSTEM.md first
+2. Never override these decisions
+3. No exceptions to these rules
+4. When in doubt - simpler, darker, more minimal  
 
 **Technical Stack:**
 - Supabase Auth (replaced NextAuth which failed for 1+ week)
