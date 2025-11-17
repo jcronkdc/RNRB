@@ -62,21 +62,21 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-surface/20 to-background py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
       <div className="container mx-auto max-w-7xl">
         
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">
               🍄 Your Projects
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-gray-400">
               The mycelium network - where all your music lives and grows
             </p>
           </div>
           <Link href="/projects/new">
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center gap-2">
+            <Button className="bg-[#c9a961] hover:bg-[#d4b76e] text-[#1a1a1a] px-6 py-3 rounded-lg font-semibold flex items-center gap-2 shadow-lg">
               <Plus className="w-5 h-5" />
               New Project
             </Button>

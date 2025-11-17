@@ -16,10 +16,15 @@
 ✅ **Dashboard** - Welcome page displays  
 ✅ **Sign Out** - Functional  
 
-**KNOWN ISSUES (Being Fixed):**
-⚠️ Theme toggle: Logo disappears when toggling  
-⚠️ Light mode: Some text hard to read (auth page fixed, others pending)  
-→ Auth page NOW readable in both modes (commit deployed)  
+**AESTHETIC FIX DEPLOYED:**
+✅ **Premium Dark Mode** - Forced across all authenticated pages
+- HTML locked to dark mode (matches homepage)
+- Body: Premium dark gradient (#0a0f1e → #0f172a → #050816)
+- Gold accent (#c9a961) on all primary buttons
+- Typography: Instrument Serif display font
+- Text: White headers, gray-400 subtext (like homepage)
+- Cards: Subtle borders, gradient backgrounds
+- No more light mode rendering issues  
 
 **Technical Stack:**
 - Supabase Auth (replaced NextAuth which failed for 1+ week)

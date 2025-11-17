@@ -69,8 +69,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className="dark">
+      <body className="bg-gradient-to-b from-[#0a0f1e] via-[#0f172a] to-[#050816]">
         <AblyProvider>
           {children}
         </AblyProvider>
