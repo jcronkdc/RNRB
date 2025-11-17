@@ -6,10 +6,13 @@ import { Send, Users, Music } from 'lucide-react';
 
 interface Message {
   id: string;
-  text: string;
+  text?: string;
+  audioUrl?: string;
+  audioDuration?: number;
   timestamp: number;
   clientId: string;
   userName?: string;
+  type: 'text' | 'voice';
 }
 
 interface SongChatProps {
@@ -21,6 +24,9 @@ interface SongChatProps {
 export default function SongChat({ channelName, songTitle, userName = 'Anonymous' }: SongChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [recordingTime, setRecordingTime] = useState(0);
 
   const { channel } = useChannel(channelName, (message) => {
     setMessages((prev) => [...prev, {
