@@ -221,6 +221,8 @@ All critical pathways verified:
 ## 📁 RECENT COMMITS (Main Branch):
 
 ```
+340595d - Agent 31: Corrected master doc (auth working, not blocked)
+17b5a71 - Songs system deployed (Phase 2 complete)
 02d02bf - Mycelium foundation (projects)
 734cf37 - Profile system
 589d102 - Authenticated UX
@@ -233,26 +235,79 @@ All critical pathways verified:
 
 ---
 
-## 🔥 FOR NEXT AGENT:
+## 🎯 OPTIMAL PATHWAY DESIGN (Ant Colony / Mycelial Efficiency)
+
+### User Journey - Minimal Clicks (Japanese Subway Model):
+
+```
+Sign In (0) → Dashboard (auto) → Projects (1 click) → Project Detail (1 click) 
+   ↓
+Songs (1 click) → New Song (1 click) → Song Created ✅
+   
+Total: 4 clicks from sign-in to creating song content
+```
+
+**Collaboration Pathways (NEXT PRIORITY):**
+```
+Project (hub) 
+   ├─ Songs (content)
+   ├─ Chat (within project) ← NEED TO BUILD
+   │    └─ Ably real-time messaging per project
+   ├─ Video Sessions (collaboration) ← NEED TO BUILD
+   │    └─ Daily.co with cursor control
+   ├─ Members (invite-only) ← NEED TO BUILD
+   │    └─ Project permissions system
+   └─ Assets (files)
+```
+
+---
+
+## 🔥 FOR NEXT AGENT - COLLABORATION LAYER:
 
 **Current State:**
-- User CAN sign in (Supabase + Resend working)
-- Projects working (mycelium foundation complete)
-- Design unified (light/dark theme)
-- NO fake content anywhere
-- All pages scrollable, clickable, functional
+- ✅ Auth working (Google + Email via Supabase)
+- ✅ Projects working (mycelium substrate)
+- ✅ Songs working (hyphae branching from projects)
+- ✅ Design unified (light/dark theme)
+- ✅ All pages functional
 
-**Next Logical Step:**
-Build **SONGS system** - the hyphae that branch from project mycelium.
+**Next Critical Features (Collaboration - The Network Effect):**
 
-Songs will:
-- Belong to projects
-- Have lyrics, chords, audio
-- Connect collaborators
-- Link to sessions
-- Feed into tours
+**1. Project-Based Chat (Ably):**
+- Channel per project: `rnrb:project:{projectSlug}`
+- Real-time messaging within project context
+- Member presence awareness
+- Notifications for @mentions
+- Integration: `/projects/[slug]/chat` page
 
-The substrate is ready. Time to grow the hyphae.
+**2. Video Collaboration (Daily.co):**
+- Session rooms per project
+- Screen sharing + cursor control
+- Multi-participant audio/video
+- Recording capabilities
+- Integration: `/projects/[slug]/session` page
+
+**3. Invite-Only Groups:**
+- Project members table (userId, projectId, role, permissions)
+- Invitation system (email invites with tokens)
+- Role-based access (owner, admin, member, viewer)
+- Permission checks on all project routes
+- Integration: `/projects/[slug]/members` page
+
+**Optimal Flow (Ant Colony Pattern):**
+```
+Create Project → Invite Members → Chat/Video in Context → Collaborate on Songs
+     ↓              ↓                  ↓                        ↓
+  1 click       1 click            1 click                 Content flows
+```
+
+**Database Schema Needed:**
+- `ProjectMember` - User-to-project relationships
+- `ProjectInvitation` - Pending invites
+- `ChatMessage` - Persisted chat history (Ably for real-time)
+- `VideoSession` - Recording metadata (Daily.co for streaming)
+
+The mycelium grows toward true collaboration.
 
 ---
 
