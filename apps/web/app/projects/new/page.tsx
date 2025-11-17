@@ -104,19 +104,19 @@ export default function NewProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-surface/20 to-background py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
       <div className="container mx-auto max-w-4xl">
         
         {/* Header */}
         <div className="mb-8">
-          <Link href="/projects" className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-4">
+          <Link href="/projects" className="inline-flex items-center gap-2 text-[#c9a961] hover:text-[#d4b76e] mb-4 transition">
             <ArrowLeft className="w-4 h-4" />
             Back to Projects
           </Link>
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-display font-bold text-white mb-2">
             🌱 Spawn New Mycelium Network
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-gray-400">
             Create a project - the substrate where your music will grow
           </p>
         </div>
@@ -284,11 +284,11 @@ export default function NewProjectPage() {
               Cancel
             </Button>
           </Link>
-          <Button
-            onClick={handleCreateProject}
-            disabled={creating || !projectData.name.trim()}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2 disabled:opacity-50"
-          >
+            <Button
+              onClick={handleCreateProject}
+              disabled={creating || !projectData.name.trim()}
+              className="bg-[#c9a961] hover:bg-[#d4b76e] text-[#1a1a1a] px-8 py-3 rounded-lg font-semibold flex items-center gap-2 disabled:opacity-50 shadow-lg"
+            >
             <Sparkles className="w-5 h-5" />
             {creating ? 'Creating...' : 'Create Project'}
           </Button>

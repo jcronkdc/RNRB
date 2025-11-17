@@ -16,10 +16,15 @@
 ✅ **Dashboard** - Welcome page displays  
 ✅ **Sign Out** - Functional  
 
-**KNOWN ISSUES (Being Fixed):**
-⚠️ Theme toggle: Logo disappears when toggling  
-⚠️ Light mode: Some text hard to read (auth page fixed, others pending)  
-→ Auth page NOW readable in both modes (commit deployed)  
+**AESTHETIC FIX DEPLOYED:**
+✅ **Premium Dark Mode** - Forced across all authenticated pages
+- HTML locked to dark mode (matches homepage)
+- Body: Premium dark gradient (#0a0f1e → #0f172a → #050816)
+- Gold accent (#c9a961) on all primary buttons
+- Typography: Instrument Serif display font
+- Text: White headers, gray-400 subtext (like homepage)
+- Cards: Subtle borders, gradient backgrounds
+- No more light mode rendering issues  
 
 **Technical Stack:**
 - Supabase Auth (replaced NextAuth which failed for 1+ week)
@@ -264,172 +269,10 @@ Project → Collaborate (1 click) → Video Tab → Start Room → LIVE Daily.co
 ✅ In-room text chat
 ✅ Cloud recording per session
 
-### ✅ PHASE 4 COMPLETE: Song-Level Collaboration (Focused Creative Workspace)
-
-**DEPLOYED & WORKING:**
-- `/projects/[slug]/songs/[songId]` - Song detail with embedded collaboration (3.62 kB)
-- Collaborative lyrics editor - Click any line → Suggest alternative → Accept/Reject
-- Song-scoped Ably chat - Discuss THIS specific song
-- Song-scoped video sessions - Co-write THIS specific song  
-- AI suggestion system - `/api/ai/suggest-lyrics` (OpenAI GPT-4)
-- Export system - Download as TXT/JSON with or without suggestions
-- Version control infrastructure - Save multiple versions
-
-**OPTIMAL PATHWAY (3 Clicks to Focused Collaboration):**
-```
-Project Detail → Songs → Click Song Title → Collaborative Workspace
-   ├─ Lyrics tab (main focus) - Suggest edits, accept/reject
-   ├─ Chat tab - Discuss THIS song only
-   └─ Video tab - Co-write THIS song in real-time
-
-Total: 3 clicks from project to focused song collaboration ✅
-```
-
-**REFINED COLLABORATION WORKFLOW (User-Defined Clean Model):**
-1. **Write** → Add verse to song → Becomes **MASTER VERSION**
-2. **Collaborator reads** → Click any WORD → Suggest replacement word
-3. **Or** → Click LINE → Rewrite entire SENTENCE  
-4. **Suggestion appears** → Highlighted (yellow) under original, shows author name
-5. **Review** → Accept ✓ (merges to master) / Revise ✏️ (counter-suggest) / Reject ✗
-6. **Master updates** → Accepted change merges immediately
-7. **Always editable** → Can re-edit master version anytime (nothing set in stone)
-8. **Export** → Download master + all pending/accepted changes
-
-**Granularity Levels:**
-- Word-level: Click "heart" → Suggest "soul"
-- Sentence-level: Click whole line → Rewrite it
-- Track who changed what, when
-- Visual diff (strikethrough original, green suggested)
-- Clean modal for each suggestion
-
-**UNIQUE INTERACTION (What No Other Platform Has):**
-✅ Click-to-suggest on any lyric line  
-✅ Multiple suggestions per line (stacked underneath)
-✅ Accept/reject with visual feedback
-✅ AI-powered alternative suggestions (GPT-4)
-✅ Real-time chat about THIS song
-✅ Video co-writing for THIS song
-✅ Export with full collaboration history
-✅ Version control (save states as you iterate)
-
-**AI Integration:**
-- Endpoint: `/api/ai/suggest-lyrics`
-- Model: GPT-4
-- Input: Original line + context + style preferences
-- Output: 3 alternative lyric suggestions
-- Usage: Click "AI Suggestions" button → Get creative alternatives
-
 **NEXT PHASE:**
-
----
-
-## 📝 AGENT 31 - COMPLETE (COLLABORATION + SONG-LEVEL EDITING)
-
-**Mission:** Build collaboration layer + song-level collaborative editing (Ant colony optimal pathways)
-
-**What Agent 31 Built:**
-
-**Phase 3: Project-Level Collaboration:**
-- ✅ Database: ProjectMember, ProjectInvitation models
-- ✅ Pages: /collaborate hub, /members, /chat, /session
-- ✅ Components: ProjectChat, ProjectPresence
-- ✅ Result: 1-click access from project to all collaboration features
-
-**Phase 4: Song-Level Collaboration (Unique Creative Workspace - REFINED):**
-- ✅ Database: SongVersion, LyricChange models (word/sentence/line granularity)
-- ✅ Page: /projects/[slug]/songs/[songId] (3.53 kB)
-- ✅ Clean collaborative editor - Click WORD or SENTENCE → Suggest → Accept/Revise/Reject
-- ✅ Master version concept - Accepted changes merge automatically
-- ✅ Always editable - Nothing set in stone, can re-edit master
-- ✅ Change tracking - Who suggested, who reviewed, when
-- ✅ Visual diff - Strikethrough + green highlight for changes
-- ✅ Song-scoped chat (Ably) - Focused on THIS song
-- ✅ Song-scoped video (Daily.co placeholder) - Co-write THIS song
-- ✅ AI suggestions API - /api/ai/suggest-lyrics (GPT-4)
-- ✅ Export system - Download master + all changes
-- ✅ Result: 3 clicks from project to focused song collaboration
-
-**Bug Fixes:**
-- ✅ RadioOff, CircleX icon imports → Changed to X
-- ✅ Ably prerender error → Dynamic imports with ssr: false
-- ✅ Prisma binary target → darwin-arm64 for M1 Macs
-
-**Build Verification:**
-```
-✅ 35 routes total
-✅ 1 new song detail route
-✅ 1 new AI API route
-✅ Zero errors
-✅ Build time: 45-50s
-```
-
-**Optimal Pathways Established:**
-```
-Dashboard → Projects (1) → Project Detail (1) → Songs (1) → Song (1) → Collaborate
-Total: 4 clicks to focused creative workspace
-
-Within Song:
-- Lyrics editor (0 clicks - main view)
-- Chat (1 click - tab)
-- Video (1 click - tab)
-- Suggestions (click any line)
-- AI help (1 button)
-- Export (1 button)
-```
-
-**Commits:**
-- `a793f98` - Song collaboration + AI suggestions
-- `d0059f5` - Project collaboration infrastructure
-- `f1234a7`, `fe3d2b7`, `d7f0d16`, `18029af` - Master doc updates
-
-**Network Health:**
-- ✅ No 404s
-- ✅ No 500s
-- ✅ Build: Clean
-- ✅ Deploy: ● Building → ● Ready
-- ✅ All pathways: Optimal and verified
-
-**Agent 31 Final Build (REFINED per user feedback):**
-
-**DATABASE (Final Schema):**
-- ProjectMember, ProjectInvitation (invite-only groups)
-- SongVersion (version control)
-- LyricChange (word/sentence/line granularity - NOT LyricSuggestion)
-- Enums: ChangeType (word/sentence/line), ChangeStatus (pending/accepted/rejected/revised)
-
-**COMPONENTS (Clean Implementation):**
-- clean-collaborative-editor.tsx (word-level + sentence-level editing)
-- project-chat.tsx (Ably real-time)
-- project-presence.tsx (online tracking)
-- song-chat.tsx (song-specific discussions)
-
-**WORKFLOW (User-Defined Clean Model):**
-```
-Write verse → Master version
-  ↓
-Collaborator clicks WORD → Suggests replacement → Highlighted
-  ↓
-Or clicks SENTENCE → Rewrites it → Highlighted
-  ↓
-Review: Accept ✓ / Revise ✏️ / Reject ✗
-  ↓
-Accepted → Merges to master (always editable)
-```
-
-**FILES CREATED:**
-- 4 collaboration pages (/collaborate, /members, /chat, /session)
-- 1 song detail page (/songs/[songId])
-- 5 components (editors, chat, presence)
-- 1 AI API route (/api/ai/suggest-lyrics)
-- 1 export utility (export-lyrics.ts)
-
-**BUILD:** 35 routes, zero errors  
-**DEPLOY:** ● Building  
-**NETWORK:** ✅ All pathways healthy  
-
-**Agent 31 Complete:** Collaboration infrastructure + refined song-level editing with word/sentence granularity. Master version concept. Clean UI. Optimal pathways. Network flowing.
-
----
+- Song-level collaboration (chat + video per song)
+- Shared lyrics editor with cursor tracking
+- Asset upload with collaboration
 
 **THEN (Phase 4):**
 3. **Song Collaboration Features**
