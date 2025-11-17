@@ -2771,3 +2771,66 @@ vs typing paragraphs of text
 Build: 40 routes, zero errors
 Pages redesigned, collaborative features visible, drag-and-drop working
 
+
+---
+
+## 🚨 AGENT 31 - CRITICAL GAP DISCOVERED (USER JOURNEY TEST)
+
+**Tested As Human:** First-time user creating project and song with chords
+
+### TOKYO SUBWAY TEST RESULTS:
+
+**✅ CLEAR (10/10):**
+- Dashboard → New Project
+- Project page → Collaborative features visible (Group Chat, Video Meeting, Invite)
+- Create First Song → Drag-and-drop builder intuitive
+
+**❌ DISCONNECTION FOUND:**
+
+**The Problem:**
+1. User creates song with drag-and-drop structure (Intro, Verse 1, Chorus, Verse 2, Bridge)
+2. Song saves with structure
+3. User clicks song to edit it
+4. Goes to `/projects/[slug]/songs/[songId]`
+5. **Structure is GONE** - shows flat lyrics textarea
+6. **Can't add chords** - chord editor not on this page
+7. **Section structure lost**
+
+**Root Cause:**
+- Project songs go to: `/projects/[slug]/songs/[songId]` (CleanCollaborativeEditor)
+- Standalone songs go to: `/songs/[id]` (ChordLyricsEditor)
+- **Two different editors, features not unified**
+
+**What User Expected (Tokyo Subway Clarity):**
+```
+Create song with sections → Edit song → Sections still there → Add chords per section
+```
+
+**What Actually Happens:**
+```
+Create song with sections → Edit song → Flat textarea → No chords → Structure lost
+```
+
+**CONFUSION SCORE: 7/10** - User would be confused why their structure disappeared
+
+---
+
+### FIX REQUIRED:
+
+**Unify the song editor:**
+1. Show section structure in edit mode (preserve drag-and-drop)
+2. Add chord editor per section
+3. Same editor for project songs AND standalone songs
+4. Maintain collaborative features (chat, video, presence)
+
+**File to Update:** `/app/(app)/projects/[slug]/songs/[songId]/page.tsx`
+- Add section structure display
+- Integrate ChordLyricsEditor per section
+- Keep collaborative tabs (Lyrics/Chat/Video)
+
+**Priority:** HIGH - This breaks the user's mental model
+
+---
+
+**ONE MASTER DOCUMENT - Gap identified during Tokyo subway clarity test**
+
