@@ -16,7 +16,8 @@ import {
   Volume2,
   Headphones,
   Mic,
-  MonitorSpeaker
+  MonitorSpeaker,
+  CheckCircle
 } from 'lucide-react';
 import { Card, Button } from '@cronkwaters/ui';
 import { DailyProvider } from '@daily-co/daily-react';
@@ -150,44 +151,51 @@ export default function StudioPage() {
             </div>
           ) : (
             <>
-              {/* Recent Sessions */}
-              <Card className="p-6 mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold">Recent Sessions</h2>
-                  <Button variant="secondary" size="sm">
-                    View All
-                  </Button>
+              {/* Getting Started */}
+              <Card className="p-6 mb-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
+                <div className="mb-4">
+                  <h2 className="text-xl font-semibold mb-2">🎸 Getting Started</h2>
+                  <p className="text-muted-foreground">
+                    Professional recording studio features are currently in development. Sign in and click "Start Recording" above to test the studio interface.
+                  </p>
                 </div>
                 
-                <div className="space-y-3">
-                  {[
-                    { name: 'Album Recording - Track 3', date: '2 hours ago', duration: '45 min', type: 'recording' },
-                    { name: 'Live Jam with Band', date: 'Yesterday', duration: '1h 30m', type: 'live' },
-                    { name: 'Acoustic Session', date: '3 days ago', duration: '25 min', type: 'recording' },
-                  ].map((session, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                      <div className="flex items-center gap-4">
-                        <div className={`p-2 rounded ${
-                          session.type === 'live' ? 'bg-red-500/10' : 'bg-blue-500/10'
-                        }`}>
-                          {session.type === 'live' ? (
-                            <Radio className="h-4 w-4 text-red-500" />
-                          ) : (
-                            <Disc className="h-4 w-4 text-blue-500" />
-                          )}
-                        </div>
-                        <div>
-                          <h4 className="font-medium">{session.name}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {session.date} • {session.duration}
-                          </p>
-                        </div>
-                      </div>
-                      <Button variant="ghost" size="sm">
-                        <Play className="h-4 w-4" />
-                      </Button>
+                <div className="space-y-3 mt-6">
+                  <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg">
+                    <div className="p-2 rounded bg-green-500/10">
+                      <CheckCircle className="h-5 w-5 text-green-500" />
                     </div>
-                  ))}
+                    <div>
+                      <h4 className="font-medium mb-1">Multi-track Recording</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Record multiple audio tracks simultaneously with professional quality
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg">
+                    <div className="p-2 rounded bg-blue-500/10">
+                      <Radio className="h-5 w-5 text-blue-500" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-1">Live Streaming</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Stream your sessions to YouTube, Twitch, or Facebook Live
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg">
+                    <div className="p-2 rounded bg-purple-500/10">
+                      <Users className="h-5 w-5 text-purple-500" />
+                    </div>
+                    <div>
+                      <h4 className="font-medium mb-1">Remote Collaboration</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Work with musicians anywhere in the world in real-time
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </Card>
 

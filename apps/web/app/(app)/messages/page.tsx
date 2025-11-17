@@ -43,12 +43,55 @@ export default function MessagesPage() {
           <p className="text-muted-foreground">
             Collaborate with your band members, producers, and team in real-time
           </p>
-          <div className="mt-4 flex items-center gap-2">
-            <Wifi className="w-4 h-4 text-green-500" />
-            <ConnectionStatus />
-          </div>
         </div>
 
+        {/* Coming Soon Notice */}
+        <Card className="p-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
+          <div className="flex items-start gap-4">
+            <div className="p-3 bg-purple-500/10 rounded-lg">
+              <MessageSquare className="h-8 w-8 text-purple-500" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-2xl font-semibold mb-2">Real-time Messaging Coming Soon</h2>
+              <p className="text-muted-foreground mb-4">
+                Professional real-time messaging and collaboration features are currently in development. Sign in to be notified when this feature launches.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div className="flex items-start gap-3">
+                  <MessageSquare className="h-5 w-5 text-purple-500 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Instant Chat</p>
+                    <p className="text-sm text-muted-foreground">Real-time messaging with band members</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Users className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Presence Tracking</p>
+                    <p className="text-sm text-muted-foreground">See who's online and available</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Bell className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Live Notifications</p>
+                    <p className="text-sm text-muted-foreground">Get updates as they happen</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Wifi className="h-5 w-5 text-orange-500 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Auto-reconnection</p>
+                    <p className="text-sm text-muted-foreground">Seamless experience even with network issues</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* REMOVED Tab Navigation - will be enabled when Ably is configured */}
+        <div style={{ display: 'none' }}>
         {/* Tab Navigation */}
         <div className="flex gap-4 mb-8">
           <button
@@ -181,6 +224,7 @@ export default function MessagesPage() {
             </Card>
           </div>
         </div>
+        </div> {/* End of hidden tab content */}
       </motion.div>
     </div>
   );

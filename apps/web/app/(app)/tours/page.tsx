@@ -18,58 +18,9 @@ import { DailyProvider } from '@daily-co/daily-react';
 import Daily from '@daily-co/daily-js';
 import { LivePerformance } from '@/components/daily/live-performance';
 
-// Mock tour data - in a real app, this would come from your database
-const upcomingShows = [
-  {
-    id: '1',
-    venue: 'The Roxy Theatre',
-    city: 'Los Angeles, CA',
-    date: new Date('2025-12-15T20:00:00'),
-    ticketUrl: 'https://tickets.example.com/roxy',
-    soldOut: false,
-    capacity: 500,
-    ticketsSold: 423,
-  },
-  {
-    id: '2',
-    venue: 'Fillmore',
-    city: 'San Francisco, CA',
-    date: new Date('2025-12-18T21:00:00'),
-    ticketUrl: 'https://tickets.example.com/fillmore',
-    soldOut: true,
-    capacity: 1200,
-    ticketsSold: 1200,
-  },
-  {
-    id: '3',
-    venue: 'House of Blues',
-    city: 'Chicago, IL',
-    date: new Date('2025-12-22T19:30:00'),
-    ticketUrl: 'https://tickets.example.com/hob',
-    soldOut: false,
-    capacity: 800,
-    ticketsSold: 567,
-  },
-];
-
-const pastStreams = [
-  {
-    id: '1',
-    title: 'Acoustic Sessions from Home',
-    date: new Date('2025-11-10'),
-    viewers: 15420,
-    duration: '1h 45m',
-    platform: 'YouTube',
-  },
-  {
-    id: '2',
-    title: 'Behind the Scenes - Studio Recording',
-    date: new Date('2025-11-05'),
-    viewers: 8930,
-    duration: '52m',
-    platform: 'Twitch',
-  },
-];
+// Tour management features - shows will appear here once you create them
+const upcomingShows: any[] = [];
+const pastStreams: any[] = [];
 
 export default function ToursPage() {
   const [showLiveStream, setShowLiveStream] = useState(false);
@@ -136,135 +87,48 @@ export default function ToursPage() {
         ) : (
           <>
             {/* Tour Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-500/10 rounded-lg">
-                    <Calendar className="h-6 w-6 text-blue-500" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold">{upcomingShows.length}</p>
-                    <p className="text-sm text-muted-foreground">Upcoming Shows</p>
-                  </div>
+            {/* Getting Started */}
+            <Card className="p-8 mb-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-blue-500/10 rounded-lg">
+                  <Calendar className="h-8 w-8 text-blue-500" />
                 </div>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-green-500/10 rounded-lg">
-                    <Ticket className="h-6 w-6 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold">2,190</p>
-                    <p className="text-sm text-muted-foreground">Tickets Sold</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-purple-500/10 rounded-lg">
-                    <Users className="h-6 w-6 text-purple-500" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold">24.3K</p>
-                    <p className="text-sm text-muted-foreground">Stream Viewers</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-orange-500/10 rounded-lg">
-                    <TrendingUp className="h-6 w-6 text-orange-500" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold">87%</p>
-                    <p className="text-sm text-muted-foreground">Avg. Capacity</p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            {/* Upcoming Shows */}
-            <Card className="p-6 mb-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Upcoming Shows</h2>
-                <Button variant="secondary" size="sm">
-                  Add Show
-                </Button>
-              </div>
-
-              <div className="space-y-4">
-                {upcomingShows.map((show) => (
-                  <div
-                    key={show.id}
-                    className="flex items-center justify-between p-4 bg-muted/50 rounded-lg"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold">
-                          {show.date.getDate()}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {show.date.toLocaleDateString('en-US', { month: 'short' })}
-                        </p>
-                      </div>
+                <div className="flex-1">
+                  <h2 className="text-2xl font-semibold mb-2">Tour Management Coming Soon</h2>
+                  <p className="text-muted-foreground mb-4">
+                    Professional tour management features are currently in development. Soon you'll be able to manage shows, track ticket sales, and stream virtual performances.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-5 w-5 text-blue-500 mt-1 flex-shrink-0" />
                       <div>
-                        <h4 className="font-semibold">{show.venue}</h4>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1">
-                            <MapPin className="h-3 w-3" />
-                            {show.city}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {show.date.toLocaleTimeString('en-US', { 
-                              hour: 'numeric', 
-                              minute: '2-digit' 
-                            })}
-                          </span>
-                        </div>
+                        <p className="font-medium">Venue Management</p>
+                        <p className="text-sm text-muted-foreground">Track shows, locations, and capacity</p>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        {show.soldOut ? (
-                          <p className="text-sm font-semibold text-red-500">SOLD OUT</p>
-                        ) : (
-                          <p className="text-sm">
-                            <span className="font-semibold">{show.ticketsSold}</span>
-                            <span className="text-muted-foreground">/{show.capacity}</span>
-                          </p>
-                        )}
-                        <div className="w-32 h-2 bg-muted rounded-full overflow-hidden mt-1">
-                          <div 
-                            className={`h-full ${show.soldOut ? 'bg-red-500' : 'bg-green-500'}`}
-                            style={{ width: `${(show.ticketsSold / show.capacity) * 100}%` }}
-                          />
-                        </div>
+                    <div className="flex items-start gap-3">
+                      <Ticket className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Ticket Tracking</p>
+                        <p className="text-sm text-muted-foreground">Monitor sales and revenue</p>
                       </div>
-                      
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => startVirtualShow(show)}
-                        >
-                          <Radio className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="default"
-                          size="sm"
-                          onClick={() => window.open(show.ticketUrl, '_blank')}
-                        >
-                          Tickets
-                        </Button>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Radio className="h-5 w-5 text-purple-500 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Live Streaming</p>
+                        <p className="text-sm text-muted-foreground">Virtual performances worldwide</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <TrendingUp className="h-5 w-5 text-orange-500 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Analytics</p>
+                        <p className="text-sm text-muted-foreground">Real-time tour insights</p>
                       </div>
                     </div>
                   </div>
-                ))}
+                </div>
               </div>
             </Card>
 
