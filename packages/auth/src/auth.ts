@@ -10,15 +10,15 @@ import crypto from 'crypto';
 import { env } from './env';
 
 function getAuthConfig(): NextAuthOptions {
-  // Log configuration status for debugging (only in development)
-  if (process.env.NODE_ENV === 'development') {
-    console.log('📧 Email Provider Configuration:', {
-      hasEmailServer: !!env.EMAIL_SERVER_URL,
-      hasEmailFrom: !!env.EMAIL_FROM,
-      emailFrom: env.EMAIL_FROM || 'not set',
-      emailServerPrefix: env.EMAIL_SERVER_URL?.substring(0, 20) || 'not set'
-    });
-  }
+  // Log configuration status for debugging
+  console.log('🔐 NextAuth Provider Configuration:', {
+    hasGoogleClientId: !!env.GOOGLE_CLIENT_ID,
+    hasGoogleClientSecret: !!env.GOOGLE_CLIENT_SECRET,
+    hasEmailServer: !!env.EMAIL_SERVER_URL,
+    hasEmailFrom: !!env.EMAIL_FROM,
+    googleClientIdPrefix: env.GOOGLE_CLIENT_ID?.substring(0, 20) || 'not set',
+    emailFrom: env.EMAIL_FROM || 'not set',
+  });
 
   return {
     adapter: PrismaAdapter(prisma),

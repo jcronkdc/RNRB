@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { UserMenu } from './UserMenu';
 
 // import { ThemeToggle } from './theme/ThemeToggle';
 
@@ -177,19 +178,7 @@ export function NavBar() {
                 
                 <div className="h-6 w-px bg-border" />
                 
-                <Link
-                  href="/auth"
-                  className="rnrb-button-ghost px-4 py-2 rounded-md text-sm"
-                >
-                  Sign In
-                </Link>
-                
-                <Link
-                  href="/auth"
-                  className="rnrb-button-primary px-4 py-2 rounded-md text-sm"
-                >
-                  Get Started
-                </Link>
+                <UserMenu />
               </div>
             </div>
 
