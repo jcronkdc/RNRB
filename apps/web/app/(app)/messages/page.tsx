@@ -3,11 +3,29 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MessageSquare, Users, Bell, Wifi } from 'lucide-react';
-import { ChatRoom, PresenceList, NotificationFeed, ConnectionStatus } from '@/components/ably';
+import dynamic from 'next/dynamic';
 import { Card } from '@cronkwaters/ui';
 
-// Force dynamic rendering to ensure Ably client is available
-export const dynamic = 'force-dynamic';
+// Dynamically import Ably components to prevent SSR issues
+const ChatRoom = dynamic(() => import('@/components/ably').then(m => m.ChatRoom), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-[600px] rounded-lg bg-white/5" />
+});
+
+const PresenceList = dynamic(() => import('@/components/ably').then(m => m.PresenceList), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-96 rounded-lg bg-white/5" />
+});
+
+const NotificationFeed = dynamic(() => import('@/components/ably').then(m => m.NotificationFeed), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-96 rounded-lg bg-white/5" />
+});
+
+const ConnectionStatus = dynamic(() => import('@/components/ably').then(m => m.ConnectionStatus), {
+  ssr: false,
+  loading: () => <span className="text-sm text-gray-500">Connecting...</span>
+});
 
 export default function MessagesPage() {
   const [activeTab, setActiveTab] = useState<'chat' | 'presence' | 'notifications'>('chat');
