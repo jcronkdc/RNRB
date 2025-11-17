@@ -159,21 +159,21 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary/10 border border-brand-primary/20 rounded-full mb-6"
             >
-              <Zap className="w-4 h-4 text-brand-primary" />
+              <Music className="w-4 h-4 text-brand-primary" />
               <span className="text-sm font-medium">
-                The Only Music Platform with AI-Powered Collaboration
+                Where Your Music Comes Alive
               </span>
             </motion.div>
 
             <p className="text-2xl md:text-3xl text-muted-foreground max-w-3xl mx-auto mb-4 leading-relaxed font-semibold">
-              AI That Enhances Creativity, Never Replaces It
+              Find the Magic You're Looking For
             </p>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              Chord suggestions in chat. Auto-transcribed sessions. Tour routing optimization. Fair royalty split suggestions.
-              <span className="text-brand-primary font-semibold"> Ethical AI built for musicians.</span>
+              Whether you're a songwriter needing better tools, new to the business and finding gigs, discovering your roots in gospel or Appalachian folk, inventing country metal, or following Dylan's path to say what you need to say—
+              <span className="text-brand-primary font-semibold"> this is where your music finds its voice.</span>
               <br />
-              <span className="font-semibold">AI collaboration assistant launching now.</span>
+              <span className="font-semibold">Collaborate with artists worldwide in ways rarely seen before.</span>
             </p>
             
             <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -216,7 +216,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* For Everyone Section */}
+      {/* For Everyone Section - THE HEART */}
       <section className="py-24 bg-surface/30">
         <div className="rnrb-container">
           <motion.div 
@@ -227,13 +227,19 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-display mb-6">
-              Built for Everyone
+              Enter the Basement - Find Your Magic
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-              From solo songwriters to full touring bands — Rock N' Roll Basement adapts to your journey
+            <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-6 leading-relaxed">
+              Are you a songwriter who needs better tools? New to the business and searching for gigs? 
+              Singing gospel or discovering Appalachian folk roots? Inventing "country metal" like Def Leppard meets George Jones? 
+              Chasing Rolling Stones anthems about dancing and sweet love? Following Bob Dylan's path to finally say what you need to say?
+            </p>
+            <p className="text-2xl text-brand-primary font-semibold max-w-3xl mx-auto mb-4">
+              This is where your music comes alive.
             </p>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              <span className="text-brand-primary font-semibold">Collaboration is at the heart of everything we do.</span>
+              <span className="font-semibold">We built tools that serve YOUR creative vision.</span> Collaborate with artists worldwide, 
+              find your sound, tell your story.
             </p>
           </motion.div>
 
