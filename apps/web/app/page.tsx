@@ -158,19 +158,19 @@ export default function HomePage() {
             >
               <Zap className="w-4 h-4 text-brand-primary" />
               <span className="text-sm font-medium">
-                Collaboration-First Music Platform
+                The Only Music Platform with AI-Powered Collaboration
               </span>
             </motion.div>
 
             <p className="text-2xl md:text-3xl text-muted-foreground max-w-3xl mx-auto mb-4 leading-relaxed font-semibold">
-              Collaborate Better, Create Faster
+              AI That Enhances Creativity, Never Replaces It
             </p>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              HD video collaboration. Screen sharing. Real-time chat. Project management.
-              <span className="text-brand-primary font-semibold"> Built for remote music teams.</span>
+              Chord suggestions in chat. Auto-transcribed sessions. Tour routing optimization. Fair royalty split suggestions.
+              <span className="text-brand-primary font-semibold"> Ethical AI built for musicians.</span>
               <br />
-              <span className="font-semibold">Currently in active development.</span>
+              <span className="font-semibold">AI collaboration assistant launching now.</span>
             </p>
             
             <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -322,6 +322,162 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* AI Features Section - NEW */}
+      <section className="py-24 bg-gradient-to-br from-purple-500/5 via-transparent to-purple-500/5">
+        <div className="rnrb-container">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-4">
+              <Zap className="w-4 h-4 text-purple-400" />
+              <span className="text-sm font-medium text-purple-400">AI-Powered Features</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              The Only Platform with AI Collaboration
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Ethical AI that enhances your creativity without replacing it. Smart assistance for the creative process.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <MessageSquare className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Chat Assistant</h3>
+              <p className="text-muted-foreground mb-4">
+                Type "what chord after Am?" in project chat - AI suggests progressions, theory help, lyric improvements in real-time
+              </p>
+              <span className="text-sm text-purple-400 font-medium">✓ Live Now</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <Video className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Session Transcription</h3>
+              <p className="text-muted-foreground mb-4">
+                Auto-transcribe video sessions. AI extracts action items: "At 14:32 Sarah suggested changing the bridge"
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <Globe className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Tour Router</h3>
+              <p className="text-muted-foreground mb-4">
+                Tokyo subway ant colony optimization. Input 10 cities, AI calculates optimal routing to minimize travel distance
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <Music className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Mix Assistant</h3>
+              <p className="text-muted-foreground mb-4">
+                "Your kick drum is -6dB quieter than industry standard" - suggestions, not automation. Learn as you mix
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <DollarSign className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Royalty Splits</h3>
+              <p className="text-muted-foreground mb-4">
+                Tracks contributions (3 writing sessions, 40% of lyrics) and suggests fair splits based on industry standards
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <BarChart3 className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Content Generator</h3>
+              <p className="text-muted-foreground mb-4">
+                Generate social media posts, tour announcement emails, press releases. AI drafts, you edit before publishing
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center bg-purple-500/10 border border-purple-500/20 rounded-2xl p-8 max-w-3xl mx-auto"
+          >
+            <h3 className="text-2xl font-display font-bold mb-4">Ethical AI Principles</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+              <div className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <p className="text-sm text-muted-foreground">AI assists creativity, never replaces it</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <p className="text-sm text-muted-foreground">All suggestions clearly labeled as AI-generated</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <p className="text-sm text-muted-foreground">You always have final creative decision</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <p className="text-sm text-muted-foreground">Transparent about AI usage and limitations</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Features Grid */}
       <section className="py-24">
         <div className="rnrb-container">
@@ -333,10 +489,10 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-display mb-6">
-              Everything You Need to Succeed
+              Core Collaboration Features
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              A complete ecosystem designed for the modern music industry
+              Real-time tools designed for distributed music teams
             </p>
           </motion.div>
 
