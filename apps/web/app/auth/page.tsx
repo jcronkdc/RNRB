@@ -69,10 +69,10 @@ export default function SignInPage() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background via-surface/20 to-background px-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-semibold tracking-tight text-white">
+          <h1 className="text-4xl font-semibold tracking-tight text-foreground">
             Sign in to Rock N' Roll Basement
           </h1>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-muted-foreground">
             Connect your account to start building your music empire
           </p>
         </div>
@@ -106,19 +106,19 @@ export default function SignInPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@example.com"
+                placeholder="email@example.com"
                 required
                 disabled={loading}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 disabled:opacity-50"
+                className="w-full px-4 py-3 bg-surface border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 focus:outline-none disabled:opacity-50 transition-all"
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-lg bg-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-purple-700 disabled:opacity-50"
+                className="w-full rounded-lg bg-brand-primary hover:bg-brand-primary/90 px-4 py-3 text-sm font-semibold text-brand-primary-foreground shadow-lg transition disabled:opacity-50"
               >
                 {loading ? 'Sending Magic Link...' : '✉️ Send Magic Link to My Email'}
               </button>
-              <p className="text-xs text-gray-400 text-center">
+              <p className="text-xs text-muted-foreground text-center">
                 Check your inbox after clicking above!
               </p>
             </div>
@@ -137,7 +137,7 @@ export default function SignInPage() {
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full rounded-lg bg-white px-4 py-3 text-sm font-semibold text-gray-900 shadow-lg transition hover:bg-gray-100 disabled:opacity-50"
+            className="w-full rounded-lg bg-white dark:bg-white px-4 py-3 text-sm font-semibold text-gray-900 shadow-lg transition hover:bg-gray-100 disabled:opacity-50"
           >
             <div className="flex items-center justify-center gap-3">
               <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -151,13 +151,13 @@ export default function SignInPage() {
           </button>
         </div>
 
-        <p className="text-center text-xs text-gray-500">
+        <p className="text-center text-xs text-muted-foreground">
           By continuing, you agree to our{' '}
-          <Link href="/terms" className="text-purple-400 hover:underline">
+          <Link href="/terms" className="text-brand-primary hover:underline">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link href="/privacy" className="text-purple-400 hover:underline">
+          <Link href="/privacy" className="text-brand-primary hover:underline">
             Privacy Policy
           </Link>
           .
