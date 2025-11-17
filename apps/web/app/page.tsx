@@ -36,58 +36,52 @@ const features = [
     title: 'Music Projects',
     description: 'Professional project management for your creative work',
     icon: Music,
-    stats: '∞ Songs'
+    stats: 'Organize Everything',
+    href: '/studio'
   },
   {
     title: 'Rights & Royalties',
     description: 'Transparent split sheets and automated revenue tracking',
     icon: DollarSign,
-    stats: '100% Transparent'
+    stats: '100% Transparent',
+    href: '/why-rnrb'
   },
   {
     title: 'Live Performance',
     description: 'Tour management, venues, and setlist organization',
     icon: Radio,
-    stats: '1000+ Venues'
+    stats: 'Full Tour Management',
+    href: '/tours'
   },
   {
     title: 'Analytics',
     description: 'Real-time insights into your music career',
     icon: BarChart3,
-    stats: 'Live Data'
+    stats: 'Live Data',
+    href: '/why-rnrb'
   },
   {
     title: 'Collaboration',
     description: 'Connect with musicians, producers, and industry pros',
     icon: Users,
-    stats: 'Global Network'
+    stats: 'Global Network',
+    href: '/messages'
   },
   {
     title: 'Asset Storage',
     description: 'Secure cloud storage for all your creative assets',
     icon: Database,
-    stats: 'Unlimited'
+    stats: 'Cloud Storage',
+    href: '/studio'
   }
 ];
 
 const testimonials = [
   {
-    quote: "The most comprehensive platform I've ever used for managing my music career.",
-    author: "Sarah Chen",
-    role: "Independent Artist",
-    rating: 5
-  },
-  {
-    quote: "Rock N' Roll Basement transformed how our label operates. It's a game-changer.",
-    author: "Marcus Thompson",
-    role: "Label Executive",
-    rating: 5
-  },
-  {
-    quote: "Finally, a platform that understands what musicians actually need.",
-    author: "Alex Rivera",
-    role: "Producer",
-    rating: 5
+    quote: "Currently in development - join our beta program to be among the first to experience the platform.",
+    author: "Beta Program",
+    role: "Early Access Available",
+    rating: 0
   }
 ];
 
@@ -354,21 +348,23 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="group"
               >
-                <div className="rnrb-card h-full p-8 rnrb-hover-lift rnrb-hover-glow">
-                  <div className="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-colors">
-                    <feature.icon className="w-7 h-7 text-brand-primary" />
+                <Link href={feature.href} className="block h-full">
+                  <div className="rnrb-card h-full p-8 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
+                    <div className="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-colors">
+                      <feature.icon className="w-7 h-7 text-brand-primary" />
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                    <p className="text-muted-foreground mb-4">{feature.description}</p>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-brand-primary">
+                        {feature.stats}
+                      </span>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary transition-colors" />
+                    </div>
                   </div>
-                  
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                  <p className="text-muted-foreground mb-4">{feature.description}</p>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-brand-primary">
-                      {feature.stats}
-                    </span>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary transition-colors" />
-                  </div>
-                </div>
+                </Link>
               </motion.div>
             ))}
           </div>
@@ -474,11 +470,13 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="rnrb-card p-8"
               >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-brand-primary text-brand-primary" />
-                  ))}
-                </div>
+                {testimonial.rating > 0 && (
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-brand-primary text-brand-primary" />
+                    ))}
+                  </div>
+                )}
                 
                 <p className="text-lg mb-6 leading-relaxed">"{testimonial.quote}"</p>
                 
