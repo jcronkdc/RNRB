@@ -46,13 +46,26 @@
 - Songs: Removed "hyphae", "mycelium", "substrate"
 - Replaced with professional language: "foundation", "projects", "creative threads"
 
-**ALL PAGES MODERNIZED:**
+**ALL PAGES MODERNIZED (FINAL UPDATE):**
 ✅ **Studio** - Premium hero, modern cards, Framer Motion animations
 ✅ **Tours** - Premium hero, Daily.co live streaming intact
 ✅ **Messages** - Premium hero, Ably collaboration preserved
 ✅ **Projects** - Modern design, all emojis removed (🎵🤝💰)
+✅ **Projects/New** - Theme-aware form fields, proper Card structure
 ✅ **Dashboard** - Hero with stats, modern cards, gradient backgrounds
-✅ **Settings/Profile** - Hero section added, modern aesthetic
+✅ **Settings/Profile** - Theme-aware colors, clean loading state
+
+**LOADING STATE FIX:**
+✅ Removed old dark gradient loading screens
+✅ All pages now use `bg-background` (theme-aware)
+✅ Consistent "Loading..." message across all pages
+✅ No more stuck/hanging pages
+
+**THEME-AWARE COLORS (ALL PAGES):**
+✅ Form fields: `bg-surface`, `border-border`, `text-foreground`
+✅ Focus states: `focus:border-brand-primary`, `focus:ring-brand-primary/20`
+✅ No more hardcoded: `text-white`, `bg-white/5`, `border-white/10`
+✅ Respects user's light/dark preference
 
 **COLLABORATION FEATURES INTACT:**
 ✅ Ably real-time chat in projects
@@ -311,70 +324,28 @@ Project → Collaborate (1 click) → Video Tab → Start Room → LIVE Daily.co
 ✅ In-room text chat
 ✅ Cloud recording per session
 
-### ✅ PHASE 4 COMPLETE: Bulk Song Import & Private Catalog
+**NEXT PHASE:**
+- Song-level collaboration (chat + video per song)
+- Shared lyrics editor with cursor tracking
+- Asset upload with collaboration
 
-**USER REQUEST:**
-"I have 30 songs, want to upload them all, edit them, keep them private, invite collaborators selectively"
+**THEN (Phase 4):**
+3. **Song Collaboration Features**
+   - Daily.co room per song (video co-writing)
+   - Shared lyrics editor (cursor control)
+   - Song-specific chat
+   - Collaborator credits
 
-**OPTIMAL PATHWAY (1 CLICK):**
-```
-Dashboard → Import Songs (1 click) → Paste/Upload → Songs Saved
-```
-Ant Colony Optimization: Direct path to bulk import ✅
+4. **Assets with Collaboration**
+   - Upload audio/files
+   - Version control (who changed what)
+   - Comments on assets
+   - Approval workflows
 
-**FEATURES DEPLOYED:**
-
-**1. Bulk Import (/songs/import)**
-- ✅ Copy/paste interface - Import 30+ songs at once
-- ✅ File upload (.txt files) - Upload from computer
-- ✅ Auto-parsing - Triple newline separates songs
-- ✅ Preview before import - See all parsed songs
-- ✅ Private by default - All songs start private
-- ✅ Secure storage - Supabase user metadata (will migrate to Neon)
-- ✅ Format guide - Clear instructions
-
-**2. Song Library (/songs)**
-- ✅ View all your songs in grid
-- ✅ Search by title or lyrics
-- ✅ Stats: Total songs, Private count, Collaborations
-- ✅ Visibility indicators (lock icon = private)
-- ✅ Click any song → Edit
-
-**3. Individual Song Edit (/songs/[id])**
-- ✅ Full lyrics editor
-- ✅ Edit key, tempo, details
-- ✅ Change visibility (private/org/public)
-- ✅ Invite collaborators by email (per-song selective)
-- ✅ Video co-writing (Daily.co per song)
-- ✅ Export lyrics as .txt
-- ✅ Auto-save functionality
-
-**PRIVACY & SECURITY:**
-✅ All songs PRIVATE by default
-✅ User controls who sees each song
-✅ Per-song collaboration invites (not all-or-nothing)
-✅ Email-based invite system
-✅ Three visibility levels: Private (you only), Team (org), Public (everyone)
-
-**COLLABORATION FEATURES PER SONG:**
-✅ Email invite system - Add collaborators to specific songs
-✅ Video co-writing - Daily.co session per song
-✅ Real-time chat - Ably messaging per song (from Phase 3)
-✅ Shared editing - Collaborative editor per song (from Phase 3)
-✅ Screen sharing - Show your work to collaborators
-✅ Cursor control - Everyone sees your edits
-
-**DASHBOARD INTEGRATION:**
-✅ "Import Your Songs" card - Prominent first position
-✅ Song count stat - Shows real number from user data
-✅ Professional modern design maintained
-
-**NEXT PHASE (5): Asset Management**
-- Audio file uploads (stems, bounces, final mixes)
-- File version control
-- Comments on audio files
-- Approval workflows
-- Recording session management
+**FINALLY (Phase 5+):**
+5. **Recording Sessions** - Already have Daily.co, connect to projects
+6. **Royalty Splits** - Transparent to all collaborators
+7. **Tours** - Connect to projects, collaborative setlist building
 
 ---
 
