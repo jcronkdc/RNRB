@@ -2124,3 +2124,127 @@ Chords become: [Bb7, Cm, F7, Gm]
 
 **ONE MASTER DOCUMENT - This is the complete truth.**
 
+
+---
+
+## 🤝 COLLABORATIVE EDITING ARCHITECTURE (CONTROLLED CHAOS)
+
+**User Question:** "2-4 people collaborating on same song - how will this work? How to ensure controlled chaos?"
+
+### THE SOLUTION: THREE-LAYER CONFLICT PREVENTION
+
+#### **LAYER 1: SUGGESTION WORKFLOW** ✅
+- Changes are SUGGESTIONS not direct edits
+- Master version only updates on ACCEPTANCE
+- No overwrites possible
+- Full attribution (who suggested what)
+- Reversible (reject bad changes)
+
+**Example:**
+```
+Sarah edits verse → Creates suggestion
+Mike sees suggestion highlighted in yellow
+Mike accepts → Master updates, shows in green
+Alex rejects different suggestion → Fades out in red
+```
+
+#### **LAYER 2: REAL-TIME PRESENCE** ✅
+- Ably presence shows who's online
+- Status: "viewing" vs "actively editing"
+- Color-coded per person
+- Updates in real-time
+- Automated mode switching
+
+**Visual:**
+```
+🟢 Sarah (editing)
+🟢 Mike (viewing)
+🟢 Alex (editing)
+🟢 You
+```
+
+#### **LAYER 3: VIDEO + VOICE** ✅
+- Daily.co video call while editing
+- Screen share to demonstrate ideas
+- Cursor control (everyone sees your edits)
+- Voice discussion for consensus
+- Up to 32 participants
+
+---
+
+### CONFLICT SCENARIOS HANDLED:
+
+**Scenario 1: Two people edit same line**
+- Sarah: Suggests "walking" → "strolling"
+- Mike: Suggests "walking" → "running"
+- Result: Both suggestions queue, owner reviews both, picks one or combines
+
+**Scenario 2: Multiple chord additions**
+- Sarah: Adds "C" above line 5
+- Mike: Adds "Am" above line 5 (same line)
+- Result: Both chords appear (different positions possible), or suggestions if conflict
+
+**Scenario 3: Metadata conflicts**
+- Sarah: Sets tempo to 120
+- Mike: Sets key to G (at same time)
+- Result: Auto-merge (different fields), both succeed
+
+**Scenario 4: Simultaneous saves**
+- All 4 people editing
+- All hit save within 3-second window
+- Result: Auto-save queues requests, last-write-wins for same field, suggestions prevent lyric conflicts
+
+---
+
+### WHY THIS WORKS:
+
+**NOT Google Docs:**
+- ❌ No simultaneous direct editing
+- ❌ No complex operational transform
+- ❌ No cursor conflicts
+
+**SUGGESTION-BASED + VIDEO:**
+- ✅ Propose changes (suggestions)
+- ✅ Review before applying
+- ✅ Discuss via video/chat
+- ✅ Clear attribution
+- ✅ Owner has final say
+
+**CONTROLLED CHAOS:**
+- Everyone can contribute (creative freedom)
+- Nothing directly changes master (prevents chaos)
+- Video + chat for coordination (communication)
+- Owner curates final version (organized)
+
+**RESULT:** Band practice vibes - everyone plays ideas, producer picks best takes
+
+---
+
+### TECHNICAL ARCHITECTURE:
+
+**Components:**
+- `CleanCollaborativeEditor` - Suggestion workflow
+- `CollaborativePresence` - Who's here (Ably presence)
+- `SongChat` - Real-time discussion (Ably messaging)
+- `SongVideoSession` - HD video (Daily.co)
+- `ChordLyricsEditor` - Chords with auto-transpose
+
+**Data Flow:**
+```
+User makes change → Creates LyricChange (pending) →
+Ably broadcasts → Others see suggestion →
+Video discussion → Consensus reached →
+Owner accepts → Master updates →
+Ably broadcasts update → Everyone sees new master →
+Auto-saves to Neon (3 seconds)
+```
+
+**Files:**
+- `COLLABORATIVE_ARCHITECTURE.md` - Complete documentation
+- `collaborative-presence.tsx` - Presence component
+- Integrated into `/songs/[id]` page
+
+---
+
+**Controlled chaos achieved. 2-4 people can collaborate without conflicts. Video + suggestions + presence = perfect flow.**
+
