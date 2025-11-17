@@ -1,29 +1,26 @@
 
+
 > @cronkwaters/web@0.1.0 build /Users/justincronk/Desktop/Rock & Roll Basement/song-forge/apps/web
 > next build
 
- ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ [33m[1m⚠[22m[39m Warning: Next.js inferred your workspace root, but it may not be correct.
  We detected multiple lockfiles and selected the directory of /Users/justincronk/Desktop/Rock & Roll Basement/package-lock.json as the root directory.
  To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
    See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
  Detected additional lockfiles: 
    * /Users/justincronk/Desktop/Rock & Roll Basement/song-forge/pnpm-lock.yaml
 
-   ▲ Next.js 15.5.6
+   [1m[38;2;173;127;168m▲ Next.js 15.5.6[39m[22m
    - Experiments (use with caution):
-     ⨯ serverMinification
+     [1m⨯[22m serverMinification
 
-   Creating an optimized production build ...
- ✓ Compiled successfully in 5.2s
-   Skipping validation of types
-   Skipping linting
-   Collecting page data ...
- ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/27) ...
-   Generating static pages (6/27) 
-   Generating static pages (13/27) 
-   Generating static pages (20/27) 
-Failed to fetch public projects for sitemap: Error [PrismaClientInitializationError]: 
+ [37m[1m [22m[39m Creating an optimized production build ...
+ [32m[1m✓[22m[39m Compiled successfully in 5.4s
+ [37m[1m [22m[39m Skipping validation of types
+ [37m[1m [22m[39m Skipping linting
+[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G[?25h [33m[1m⚠[22m[39m Using edge runtime on a page currently disables static generation for that page
+[?25l [36m.[39m [2K[1G[?25h    [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/27)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/27)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/27)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (21/27)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[   =][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[  ==][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[ ===][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[====][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[=== ][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Generating static pages (26/27)  [36m[=   ][39m[2K[1G[?25hFailed to fetch public projects for sitemap: Error [PrismaClientInitializationError]: 
 Invalid `prisma.project.findMany()` invocation:
 
 
@@ -43,83 +40,84 @@ Error querying the database: ERROR: password authentication failed for user 'neo
   clientVersion: '5.22.0',
   errorCode: undefined
 }
- ✓ Generating static pages (27/27)
-   Finalizing page optimization ...
-   Collecting build traces ...
+[?25h [32m[1m✓[22m[39m Generating static pages (27/27)
+[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
 
-Route (app)                                 Size  First Load JS
-┌ ○ /                                     7.1 kB         151 kB
-├ ƒ /_not-found                            189 B         102 kB
-├ ○ /analytics                            2.5 kB         147 kB
-├ ƒ /api/ai-lyrics                         189 B         102 kB
-├ ƒ /api/auth/[...nextauth]                189 B         102 kB
-├ ƒ /api/auth/debug                        189 B         102 kB
-├ ƒ /api/auth/error                        189 B         102 kB
-├ ƒ /api/auth/test                         189 B         102 kB
-├ ƒ /api/elevenlabs-voice                  189 B         102 kB
-├ ƒ /api/export/project                    189 B         102 kB
-├ ƒ /api/export/split-sheet                189 B         102 kB
-├ ƒ /api/health                            189 B         102 kB
-├ ƒ /api/projects/[slug]/export/pdf        189 B         102 kB
-├ ƒ /api/trpc/[trpc]                       189 B         102 kB
-├ ƒ /api/upload-audio                      189 B         102 kB
-├ ƒ /artist/[slug]                       2.75 kB         178 kB
-├ ○ /assets                              2.96 kB         147 kB
-├ ƒ /audience/[sessionId]                52.4 kB         217 kB
-├ ○ /auth                                5.01 kB         218 kB
-├ ƒ /blocked                               166 B         106 kB
-├ ƒ /community                           3.99 kB         168 kB
-├ ○ /dashboard                           3.47 kB         109 kB
-├ ƒ /dashboard/assets                      251 B         159 kB
-├ ƒ /dashboard/distribute                  251 B         159 kB
-├ ƒ /dashboard/licenses                    251 B         159 kB
-├ ƒ /dashboard/sessions                    251 B         159 kB
-├ ƒ /dashboard/settings                    251 B         159 kB
-├ ƒ /dashboard/splits                      251 B         159 kB
-├ ƒ /discover                            5.28 kB         211 kB
-├ ƒ /donate                              3.63 kB         171 kB
-├ ƒ /foundation                           4.8 kB         169 kB
-├ ○ /guide                               6.74 kB         151 kB
-├ ƒ /learn                               4.39 kB         168 kB
-├ ƒ /licenses                              189 B         102 kB
-├ ○ /membership                          4.52 kB         149 kB
-├ ƒ /music                               4.18 kB         168 kB
-├ ƒ /onboarding/organization             3.52 kB         168 kB
-├ ƒ /p/[slug]                            1.35 kB         169 kB
-├ ƒ /p/[slug]/opengraph-image-4mgimg       189 B         102 kB
-├ ƒ /practice                            5.52 kB         170 kB
-├ ƒ /privacy                               251 B         159 kB
-├ ○ /projects                             2.8 kB         147 kB
-├ ƒ /projects/[slug]                       145 B         176 kB
-├ ƒ /projects/[slug]/songs/[songId]      4.52 kB         207 kB
-├ ƒ /projects/[slug]/songs/[songSlug]      145 B         176 kB
-├ ƒ /projects/new                          247 B         163 kB
-├ ƒ /remix/[roomId]                      2.61 kB         167 kB
-├ ○ /robots.txt                            189 B         102 kB
-├ ƒ /search                              2.97 kB         170 kB
-├ ○ /sessions                            3.24 kB         147 kB
-├ ƒ /settings                            2.28 kB         166 kB
-├ ƒ /settings/artist-profile              4.5 kB         169 kB
-├ ƒ /settings/org                        2.15 kB         166 kB
-├ ○ /signin                                189 B         102 kB
-├ ○ /sitemap.xml                           189 B         102 kB
-├ ○ /splits                              3.02 kB         147 kB
-├ ƒ /terms                                 251 B         159 kB
-├ ƒ /test                                  189 B         102 kB
-├ ƒ /theming                               251 B         159 kB
-├ ƒ /tours                               35.6 kB         210 kB
-├ ƒ /tours/[slug]                        2.88 kB         174 kB
-├ ○ /vision                              4.04 kB         148 kB
-├ ƒ /welcome                               247 B         163 kB
-└ ○ /why                                 6.64 kB         151 kB
-+ First Load JS shared by all             102 kB
+[4mRoute (app)[24m                                 [4mSize[24m  [4mFirst Load JS[24m  [4m[24m  [4m[24m
+┌ ○ /                                     7.1 kB         [37m[1m151 kB[22m[39m
+├ ƒ /_not-found                            189 B         [37m[1m102 kB[22m[39m
+├ ○ /analytics                            2.5 kB         [37m[1m147 kB[22m[39m
+├ ƒ /api/ai-lyrics                         189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/auth/[...nextauth]                189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/auth/debug                        189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/auth/error                        189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/auth/test                         189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/elevenlabs-voice                  189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/export/project                    189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/export/split-sheet                189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/health                            189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/projects/[slug]/export/pdf        189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/trpc/[trpc]                       189 B         [37m[1m102 kB[22m[39m
+├ ƒ /api/upload-audio                      189 B         [37m[1m102 kB[22m[39m
+├ ƒ /artist/[slug]                       2.75 kB         [37m[1m178 kB[22m[39m
+├ ○ /assets                              2.96 kB         [37m[1m147 kB[22m[39m
+├ ƒ /audience/[sessionId]                52.4 kB         [37m[1m217 kB[22m[39m
+├ ○ /auth                                5.01 kB         [37m[1m218 kB[22m[39m
+├ ƒ /blocked                               166 B         [37m[1m106 kB[22m[39m
+├ ƒ /community                           3.99 kB         [37m[1m168 kB[22m[39m
+├ ○ /dashboard                           3.47 kB         [37m[1m109 kB[22m[39m
+├ ƒ /dashboard/assets                      251 B         [37m[1m159 kB[22m[39m
+├ ƒ /dashboard/distribute                  251 B         [37m[1m159 kB[22m[39m
+├ ƒ /dashboard/licenses                    251 B         [37m[1m159 kB[22m[39m
+├ ƒ /dashboard/sessions                    251 B         [37m[1m159 kB[22m[39m
+├ ƒ /dashboard/settings                    251 B         [37m[1m159 kB[22m[39m
+├ ƒ /dashboard/splits                      251 B         [37m[1m159 kB[22m[39m
+├ ƒ /discover                            5.28 kB         [37m[1m211 kB[22m[39m
+├ ƒ /donate                              3.63 kB         [37m[1m171 kB[22m[39m
+├ ƒ /foundation                           4.8 kB         [37m[1m169 kB[22m[39m
+├ ○ /guide                               6.74 kB         [37m[1m151 kB[22m[39m
+├ ƒ /learn                               4.39 kB         [37m[1m168 kB[22m[39m
+├ ƒ /licenses                              189 B         [37m[1m102 kB[22m[39m
+├ ○ /membership                          4.52 kB         [37m[1m149 kB[22m[39m
+├ ƒ /music                               4.18 kB         [37m[1m168 kB[22m[39m
+├ ƒ /onboarding/organization             3.52 kB         [37m[1m168 kB[22m[39m
+├ ƒ /p/[slug]                            1.35 kB         [37m[1m169 kB[22m[39m
+├ ƒ /p/[slug]/opengraph-image-4mgimg       189 B         [37m[1m102 kB[22m[39m
+├ ƒ /practice                            5.52 kB         [37m[1m170 kB[22m[39m
+├ ƒ /privacy                               251 B         [37m[1m159 kB[22m[39m
+├ ○ /projects                             2.8 kB         [37m[1m147 kB[22m[39m
+├ ƒ /projects/[slug]                       145 B         [37m[1m176 kB[22m[39m
+├ ƒ /projects/[slug]/songs/[songId]      4.52 kB         [37m[1m207 kB[22m[39m
+├ ƒ /projects/[slug]/songs/[songSlug]      145 B         [37m[1m176 kB[22m[39m
+├ ƒ /projects/new                          247 B         [37m[1m163 kB[22m[39m
+├ ƒ /remix/[roomId]                      2.61 kB         [37m[1m167 kB[22m[39m
+├ ○ /robots.txt                            189 B         [37m[1m102 kB[22m[39m
+├ ƒ /search                              2.97 kB         [37m[1m170 kB[22m[39m
+├ ○ /sessions                            3.24 kB         [37m[1m147 kB[22m[39m
+├ ƒ /settings                            2.28 kB         [37m[1m166 kB[22m[39m
+├ ƒ /settings/artist-profile              4.5 kB         [37m[1m169 kB[22m[39m
+├ ƒ /settings/org                        2.15 kB         [37m[1m166 kB[22m[39m
+├ ○ /signin                                189 B         [37m[1m102 kB[22m[39m
+├ ○ /sitemap.xml                           189 B         [37m[1m102 kB[22m[39m
+├ ○ /splits                              3.02 kB         [37m[1m147 kB[22m[39m
+├ ƒ /terms                                 251 B         [37m[1m159 kB[22m[39m
+├ ƒ /test                                  189 B         [37m[1m102 kB[22m[39m
+├ ƒ /theming                               251 B         [37m[1m159 kB[22m[39m
+├ ƒ /tours                               35.6 kB         [37m[1m210 kB[22m[39m
+├ ƒ /tours/[slug]                        2.88 kB         [37m[1m174 kB[22m[39m
+├ ○ /vision                              4.04 kB         [37m[1m148 kB[22m[39m
+├ ƒ /welcome                               247 B         [37m[1m163 kB[22m[39m
+└ ○ /why                                 6.64 kB         [37m[1m151 kB[22m[39m
++ First Load JS shared by all             [37m[1m102 kB[22m[39m
   ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
   ├ chunks/5542-123c5d89f3d04e21.js      46.1 kB
   └ other shared chunks (total)          1.97 kB
 
 
-ƒ Middleware                             65.5 kB
+ƒ Middleware                             [37m[1m65.5 kB[22m[39m
 
 ○  (Static)   prerendered as static content
 ƒ  (Dynamic)  server-rendered on demand
 
+[?25h
