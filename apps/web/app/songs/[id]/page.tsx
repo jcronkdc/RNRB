@@ -19,6 +19,11 @@ const ChordLyricsEditor = dynamic(() => import('@/components/song/chord-lyrics-e
   loading: () => <div className="animate-pulse h-[600px] rounded-lg bg-white/5" />
 });
 
+const CollaborativePresence = dynamic(() => import('@/components/song/collaborative-presence'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-32 rnrb-card" />
+});
+
 interface ChordPosition {
   lineIndex: number;
   position: number;
@@ -317,6 +322,13 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Collaborative Presence */}
+            <CollaborativePresence
+              songId={song.id}
+              currentUserName={user?.user_metadata?.name || user?.email?.split('@')[0] || 'Anonymous'}
+              onStartVideo={() => setShowVideo(true)}
+            />
+
             {/* Folders/Tags */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
