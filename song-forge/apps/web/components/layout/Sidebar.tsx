@@ -34,12 +34,12 @@ type NavItem = {
 };
 
 const navigation: NavItem[] = [
-  { 
+  {
     label: 'Dashboard', 
     href: '/dashboard', 
     icon: LayoutDashboard 
   },
-  { 
+  {
     label: 'Projects', 
     href: '/projects', 
     icon: FolderOpen,
@@ -54,7 +54,7 @@ const navigation: NavItem[] = [
       { label: 'Playlists', href: '/music/playlists', icon: Database }
     ]
   },
-  { 
+  {
     label: 'Revenue', 
     icon: DollarSign,
     children: [
@@ -63,13 +63,13 @@ const navigation: NavItem[] = [
       { label: 'Payouts', href: '/revenue/payouts', icon: Calendar }
     ]
   },
-  { 
+  {
     label: 'Live Shows', 
     href: '/shows', 
     icon: Mic,
     badge: '3' 
   },
-  { 
+  {
     label: 'Collaborators', 
     href: '/collaborators', 
     icon: Users 
@@ -216,20 +216,20 @@ export function Sidebar() {
 
       {/* Quick Action */}
       <div className="px-4 mb-4">
-        <Link 
+                      <Link
           href="/projects/new" 
           className="rnrb-button-primary w-full justify-center py-2.5 rounded-lg"
-        >
+                      >
           <Plus className="w-4 h-4 mr-2" />
           New Project
-        </Link>
+                      </Link>
       </div>
 
       {/* Main Navigation */}
       <nav className="flex-1 overflow-y-auto px-4">
         <div className="space-y-1">
           {navigation.map(item => renderNavItem(item))}
-        </div>
+          </div>
       </nav>
 
       {/* User Section */}

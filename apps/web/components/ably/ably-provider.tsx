@@ -17,7 +17,7 @@ export function AblyProvider({ children }: Props) {
       return;
     }
 
-    const ablyClient = new Ably.Realtime.Promise({
+    const ablyClient = new Ably.Realtime({
       authUrl: '/api/ably/token',
       authMethod: 'GET',
       clientId: process.env.NEXT_PUBLIC_ABLY_CLIENT_ID ?? 'rnrb-web',
@@ -26,7 +26,7 @@ export function AblyProvider({ children }: Props) {
       transportParams: {
         remainPresentFor: 60,
       },
-    });
+    }) as RealtimePromise;
 
     setClient(ablyClient);
 
