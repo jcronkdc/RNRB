@@ -20,10 +20,10 @@ type NavLink = {
 const LINKS: NavLink[] = [
   { label: 'Home', href: '/' },
   { label: 'Feature Guide', href: '/guide', ariaLabel: 'Find the right features for you' },
-  { label: 'Why', href: '/why', ariaLabel: 'Understand why CronkWaters exists' },
-  { label: 'Our Vision', href: '/vision', ariaLabel: 'Learn about CronkWaters vision and founders' },
+  { label: 'Why', href: '/why', ariaLabel: 'Understand why Rock N\' Roll Basement exists' },
+  { label: 'Our Vision', href: '/vision', ariaLabel: 'Learn about Rock N\' Roll Basement vision and founders' },
   { label: 'Membership', href: '/membership', ariaLabel: 'View membership options' },
-  { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Support CronkWaters mission' }
+  { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Support Rock N\' Roll Basement mission' }
 ];
 
 const motionConfig = {
@@ -121,11 +121,11 @@ export function NavBar() {
           {/* Logo */}
           <Link
             href="/"
-            aria-label="CronkWaters home"
+            aria-label="Rock N' Roll Basement home"
             className="flex items-center text-brand-foreground transition-colors hover:text-brand-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <Wordmark className="h-6 w-auto" />
-            <span className="sr-only">CronkWaters</span>
+            <span className="sr-only">Rock N' Roll Basement</span>
           </Link>
 
           {/* Desktop Navigation */}

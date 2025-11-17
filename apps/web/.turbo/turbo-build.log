@@ -1,35 +1,34 @@
 
-> @cronkwaters/web@0.1.0 build /workspace/apps/web
+> @cronkwaters/web@0.1.0 build /Users/justincronk/Desktop/Rock & Roll Basement/song-forge/apps/web
 > next build
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/justincronk/Desktop/Rock & Roll Basement/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /Users/justincronk/Desktop/Rock & Roll Basement/song-forge/pnpm-lock.yaml
 
    ▲ Next.js 15.5.6
    - Experiments (use with caution):
      ⨯ serverMinification
 
    Creating an optimized production build ...
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (129kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ✓ Compiled successfully in 20.2s
+ ✓ Compiled successfully in 5.5s
    Skipping validation of types
    Skipping linting
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/24) ...
-   Generating static pages (6/24) 
+   Generating static pages (0/25) ...
+   Generating static pages (6/25) 
+   Generating static pages (12/25) 
 Failed to fetch public projects for sitemap: Error [PrismaClientInitializationError]: 
 Invalid `prisma.project.findMany()` invocation:
 
 
-error: Environment variable not found: DATABASE_URL.
-  -->  schema.prisma:7
-   | 
- 6 |   provider = "postgresql"
- 7 |   url      = env("DATABASE_URL")
-   | 
-
-Validation Error Count: 1
-    at <unknown> (-->  schema.prisma:7)
-    at async sitemap (.next/server/app/sitemap.xml/route.js:135:32)
-    at async GET (.next/server/app/sitemap.xml/route.js:231:16) {
+Error querying the database: ERROR: password authentication failed for user 'neondb_owner'
+    at async sitemap (.next/server/app/sitemap.xml/route.js:158:32)
+    at async GET (.next/server/app/sitemap.xml/route.js:254:16) {
   clientVersion: '5.22.0',
   errorCode: undefined
 }
@@ -37,46 +36,38 @@ Failed to fetch public artists for sitemap: Error [PrismaClientInitializationErr
 Invalid `prisma.org.findMany()` invocation:
 
 
-error: Environment variable not found: DATABASE_URL.
-  -->  schema.prisma:7
-   | 
- 6 |   provider = "postgresql"
- 7 |   url      = env("DATABASE_URL")
-   | 
-
-Validation Error Count: 1
-    at <unknown> (-->  schema.prisma:7)
-    at async sitemap (.next/server/app/sitemap.xml/route.js:162:31)
-    at async GET (.next/server/app/sitemap.xml/route.js:231:16) {
+Error querying the database: ERROR: password authentication failed for user 'neondb_owner'
+    at async sitemap (.next/server/app/sitemap.xml/route.js:185:31)
+    at async GET (.next/server/app/sitemap.xml/route.js:254:16) {
   clientVersion: '5.22.0',
   errorCode: undefined
 }
-   Generating static pages (12/24) 
-   Generating static pages (18/24) 
- ✓ Generating static pages (24/24)
+   Generating static pages (18/25) 
+ ✓ Generating static pages (25/25)
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                                 Size  First Load JS
-┌ ○ /                                    7.39 kB         152 kB
-├ ƒ /_not-found                            184 B         102 kB
+┌ ○ /                                     7.4 kB         152 kB
+├ ƒ /_not-found                            187 B         102 kB
 ├ ○ /analytics                            2.5 kB         147 kB
-├ ƒ /api/ai-lyrics                         184 B         102 kB
-├ ƒ /api/auth/[...nextauth]                184 B         102 kB
-├ ƒ /api/auth/error                        184 B         102 kB
-├ ƒ /api/elevenlabs-voice                  184 B         102 kB
-├ ƒ /api/export/project                    184 B         102 kB
-├ ƒ /api/export/split-sheet                184 B         102 kB
-├ ƒ /api/health                            184 B         102 kB
-├ ƒ /api/projects/[slug]/export/pdf        184 B         102 kB
-├ ƒ /api/trpc/[trpc]                       184 B         102 kB
-├ ƒ /api/upload-audio                      184 B         102 kB
+├ ƒ /api/ai-lyrics                         187 B         102 kB
+├ ƒ /api/auth/[...nextauth]                187 B         102 kB
+├ ƒ /api/auth/debug                        187 B         102 kB
+├ ƒ /api/auth/error                        187 B         102 kB
+├ ƒ /api/elevenlabs-voice                  187 B         102 kB
+├ ƒ /api/export/project                    187 B         102 kB
+├ ƒ /api/export/split-sheet                187 B         102 kB
+├ ƒ /api/health                            187 B         102 kB
+├ ƒ /api/projects/[slug]/export/pdf        187 B         102 kB
+├ ƒ /api/trpc/[trpc]                       187 B         102 kB
+├ ƒ /api/upload-audio                      187 B         102 kB
 ├ ƒ /artist/[slug]                       2.75 kB         178 kB
 ├ ○ /assets                              2.96 kB         147 kB
-├ ƒ /audience/[sessionId]                52.4 kB         217 kB
-├ ○ /auth                                14.8 kB         217 kB
+├ ƒ /audience/[sessionId]                  53 kB         217 kB
+├ ○ /auth                                14.9 kB         218 kB
 ├ ƒ /blocked                               166 B         106 kB
-├ ƒ /community                           3.98 kB         168 kB
+├ ƒ /community                           3.99 kB         168 kB
 ├ ƒ /dashboard                           11.3 kB         214 kB
 ├ ƒ /dashboard/assets                      251 B         159 kB
 ├ ƒ /dashboard/distribute                  251 B         159 kB
@@ -85,40 +76,40 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /dashboard/settings                    251 B         159 kB
 ├ ƒ /dashboard/splits                      251 B         159 kB
 ├ ƒ /discover                            5.28 kB         211 kB
-├ ƒ /donate                              3.64 kB         171 kB
+├ ƒ /donate                              3.63 kB         171 kB
 ├ ƒ /foundation                           4.8 kB         169 kB
 ├ ○ /guide                               6.73 kB         151 kB
 ├ ƒ /learn                               4.39 kB         168 kB
-├ ƒ /licenses                              184 B         102 kB
+├ ƒ /licenses                              187 B         102 kB
 ├ ○ /membership                          4.52 kB         149 kB
 ├ ƒ /music                               4.18 kB         168 kB
 ├ ƒ /onboarding/organization             3.52 kB         168 kB
 ├ ƒ /p/[slug]                            1.35 kB         169 kB
-├ ƒ /p/[slug]/opengraph-image-4mgimg       184 B         102 kB
+├ ƒ /p/[slug]/opengraph-image-4mgimg       187 B         102 kB
 ├ ƒ /practice                            5.52 kB         170 kB
 ├ ƒ /privacy                               251 B         159 kB
 ├ ○ /projects                             2.8 kB         147 kB
 ├ ƒ /projects/[slug]                       145 B         176 kB
 ├ ƒ /projects/[slug]/songs/[songId]      4.52 kB         207 kB
 ├ ƒ /projects/[slug]/songs/[songSlug]      145 B         176 kB
-├ ƒ /projects/new                          246 B         163 kB
+├ ƒ /projects/new                          247 B         163 kB
 ├ ƒ /remix/[roomId]                      3.34 kB         167 kB
-├ ○ /robots.txt                            184 B         102 kB
-├ ƒ /search                              2.96 kB         170 kB
-├ ○ /sessions                            3.25 kB         147 kB
+├ ○ /robots.txt                            187 B         102 kB
+├ ƒ /search                              2.97 kB         170 kB
+├ ○ /sessions                            3.24 kB         147 kB
 ├ ƒ /settings                            2.28 kB         166 kB
-├ ƒ /settings/artist-profile             4.51 kB         169 kB
+├ ƒ /settings/artist-profile              4.5 kB         169 kB
 ├ ƒ /settings/org                        2.15 kB         166 kB
-├ ○ /signin                                184 B         102 kB
-├ ○ /sitemap.xml                           184 B         102 kB
+├ ○ /signin                                187 B         102 kB
+├ ○ /sitemap.xml                           187 B         102 kB
 ├ ○ /splits                              3.04 kB         147 kB
 ├ ƒ /terms                                 251 B         159 kB
-├ ƒ /test                                  184 B         102 kB
+├ ƒ /test                                  187 B         102 kB
 ├ ƒ /theming                               251 B         159 kB
 ├ ƒ /tours                               35.6 kB         210 kB
 ├ ƒ /tours/[slug]                        2.88 kB         174 kB
 ├ ○ /vision                              4.04 kB         148 kB
-├ ƒ /welcome                               246 B         163 kB
+├ ƒ /welcome                               247 B         163 kB
 └ ○ /why                                 6.64 kB         151 kB
 + First Load JS shared by all             102 kB
   ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
@@ -126,7 +117,7 @@ Route (app)                                 Size  First Load JS
   └ other shared chunks (total)          1.96 kB
 
 
-ƒ Middleware                             65.6 kB
+ƒ Middleware                             65.5 kB
 
 ○  (Static)   prerendered as static content
 ƒ  (Dynamic)  server-rendered on demand

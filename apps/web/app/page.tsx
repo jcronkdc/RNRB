@@ -419,7 +419,7 @@ export default function HomePage() {
               Built by Artists, for Artists
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              CronkWaters is the dream of Josh Waters and Justin Cronk — two friends united by 
+              Rock N' Roll Basement is the dream of Josh Waters and Justin Cronk — two friends united by 
               music and a vision to empower independent artists worldwide. We're building more 
               than software; we're creating a movement.
             </p>
@@ -568,11 +568,11 @@ export default function HomePage() {
           <div className="flex items-center justify-center gap-3 mb-8">
             <AudioLines className="w-8 h-8 text-brand-primary" />
             <span className="text-2xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-              CronkWaters
+              Rock N' Roll Basement
             </span>
           </div>
           <div className="text-center text-sm text-muted-foreground">
-            <p className="mb-4">&copy; 2024 CronkWaters. Crafted with ❤️ for the creative souls.</p>
+            <p className="mb-4">&copy; 2024 Rock N' Roll Basement. Crafted with ❤️ for the creative souls.</p>
             <div className="flex items-center justify-center gap-6">
               <Link href="/privacy" className="hover:text-brand-primary transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-brand-primary transition-colors">Terms</Link>

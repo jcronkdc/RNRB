@@ -33,9 +33,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "The CronkWaters Project",
+  title: "Rock N' Roll Basement",
   description:
-    "The CronkWaters Project is an end-to-end workspace for collaborative songwriting powered by modern web tooling.",
+    "Rock N' Roll Basement is an end-to-end workspace for collaborative songwriting powered by modern web tooling.",
   icons: {
     icon: "/icon.svg",
   },
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 
 const themeInitializer = `
 (function() {
-  const storageKey = 'cronkwaters-theme';
+  const storageKey = 'rnrb-theme';
   const validThemes = ['light', 'dark', 'warm'];
   try {
     const root = document.documentElement;
@@ -87,7 +87,7 @@ export default function RootLayout({
         )}
       >
         <Script
-          id="cronkwaters-theme"
+          id="rnrb-theme"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitializer }}
         />

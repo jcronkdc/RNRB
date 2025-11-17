@@ -57,7 +57,7 @@ export default function LoginForm() {
 
       setFeedback({
         variant: 'success',
-        message: 'Check your inbox for a secure magic link from The CronkWaters Project.'
+        message: 'Check your inbox for a secure magic link from Rock N\' Roll Basement.'
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'We could not send the magic link right now.';

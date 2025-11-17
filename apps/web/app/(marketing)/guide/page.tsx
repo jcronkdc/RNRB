@@ -328,7 +328,7 @@ export default function FeatureGuidePage() {
           </h1>
           
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Answer a few quick questions and we'll recommend the CronkWaters features 
+            Answer a few quick questions and we'll recommend the Rock N' Roll Basement features 
             that match your music journey.
           </p>
         </motion.div>
@@ -455,7 +455,7 @@ export default function FeatureGuidePage() {
                   Your Personalized Recommendations
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Based on your answers, here are the CronkWaters features that will help you most:
+                  Based on your answers, here are the Rock N' Roll Basement features that will help you most:
                 </p>
               </div>
 
@@ -513,7 +513,7 @@ export default function FeatureGuidePage() {
               {recommendations.length === 0 && (
                 <div className="text-center py-12">
                   <p className="text-muted-foreground mb-4">
-                    All CronkWaters features could be great for you!
+                    All Rock N' Roll Basement features could be great for you!
                   </p>
                   <Link 
                     href="/#features"
