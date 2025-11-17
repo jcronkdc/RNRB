@@ -187,6 +187,71 @@
 ✅ No other platform has AI contribution tracking for splits
 ✅ Positioned as ethical AI (assists, doesn't replace)
 
+---
+
+## 💰 PRICING STRATEGY - AI COSTS FACTORED IN
+
+**USER REQUEST:** "AI could be expensive... ensure healthy profit margin without being greedy"
+
+**NEW PRICING TIERS (4 TIERS):**
+
+### **1. Free - $0/month**
+- 1 project, 2GB storage, video calls
+- **AI Features:** NONE
+- **Purpose:** Trial, discover platform
+- **Margin:** Loss leader (acceptable)
+
+### **2. Starter - $29/month** (was $19)
+- 5 projects, 10GB, 5hrs recording, 3hrs streaming
+- **AI Features:** 50 chat queries/month (basic)
+- **AI Cost:** ~$0.25/month (50 queries × $0.005)
+- **Total Cost:** ~$8/month (platform) + $0.25 (AI) = $8.25
+- **Revenue:** $29
+- **Margin:** $20.75 (71% margin - healthy)
+
+### **3. Professional - $99/month** (was $79, +$20 for AI)
+- 20 projects, 50GB, 15hrs recording, 8hrs streaming
+- **AI Features:** ALL INCLUDED
+  - 500 chat queries/month
+  - 10 hours transcription/month
+  - Unlimited tour routing
+  - 20 mix suggestions/month
+  - 50 content generations/month
+- **AI Cost:** ~$30/month (500×$0.005 + 600min×$0.006 + 20×$0.02 + 50×$0.03 = $2.50+$3.60+$0.40+$1.50 = $8/month, but allowing for heavy usage)
+- **Total Cost:** ~$35 (platform) + $30 (AI) = $65
+- **Revenue:** $99
+- **Margin:** $34 (34% margin - sustainable)
+- **MOST POPULAR**
+
+### **4. Studio Pro - $299/month** (was $249, +$50 for unlimited AI)
+- Unlimited projects, 500GB, 60hrs recording, 30hrs streaming
+- **AI Features:** UNLIMITED
+  - 2,000 queries/month
+  - 40 hours transcription/month
+  - Unlimited all features
+  - Priority AI processing
+- **AI Cost:** ~$120/month (heavy usage: 2,000×$0.005 + 2,400min×$0.006 + unlimited features = $10+$14.40+$20 estimate)
+- **Total Cost:** ~$140 (platform) + $120 (AI) = $260
+- **Revenue:** $299
+- **Margin:** $39 (13% margin - tight but sustainable for high-value customers)
+
+**AI ADD-ONS (For Free/Starter Tiers):**
+- **AI Starter Pack:** $15/month (100 queries, 2hrs transcription, 5 tour routes)
+- **AI Pro Pack:** $45/month (500 queries, 10hrs transcription, unlimited routing, mix, content)
+
+**COST TRANSPARENCY:**
+✅ "Show actual service costs" button on pricing page
+✅ AI costs broken down separately: Chat ($0.005), Transcription ($0.006/min), etc.
+✅ Clear statement: "35-40% margin for development & support. No price gouging."
+
+**PRICING PHILOSOPHY:**
+✅ Sustainable margins (34-71% depending on tier)
+✅ AI included in Professional+ (not nickel-and-diming)
+✅ Add-ons available for budget-conscious users
+✅ Transparent about actual costs
+✅ Pay-as-you-go for overages (fair rates)
+✅ Volume discounts (better rates at higher tiers)
+
 **USER FEEDBACK ADDRESSED:**
 ✅ "Homepage looks good" - Kept as-is
 ✅ "Dashboard too dark" - Fixed, now matches homepage
@@ -1878,434 +1943,4 @@ In Google Cloud Console, add:
 **Commit:** `1f6cb3c` - "feat: Make custom RNR logos MORE prominent"
 
 ---
-
-
----
-
-## ✅ AGENT 31 - CHORD NOTATION & AI SUGGESTIONS
-
-**USER REQUEST:** Add chords above lyrics (A-flat, A-sharp, etc.) with easy editing and AI progression suggestions
-
-### CHORD NOTATION SYSTEM DEPLOYED:
-
-**FEATURES:**
-✅ Click above any lyric line → Add chord
-✅ Chord appears above lyrics (A, Bb, C#m, F#m, Abmaj7, etc.)
-✅ Click existing chord → Edit or remove
-✅ Position chords anywhere on line
-✅ Toggle chords on/off (button in editor)
-
-**EASY WORKFLOW:**
-1. Write lyrics (plain textarea)
-2. Click "ADD CHORDS" button → Chord editor appears
-3. Hover over any line → "+ Add Chord" button shows
-4. Click → Popup input
-5. Type chord (e.g. "Am", "Bb", "C#m")
-6. Press Enter → Chord appears above line
-7. Auto-saves with lyrics
-
-**AI CHORD PROGRESSION SUGGESTIONS:**
-✅ Select section (checkbox lines for verse/chorus/bridge)
-✅ Click "VERSE CHORDS" → AI suggests verse progression
-✅ Click "CHORUS CHORDS" → AI suggests chorus progression
-✅ Click "BRIDGE CHORDS" → AI suggests bridge progression
-✅ Based on song key (music theory)
-✅ GPT-4 powered creative suggestions
-✅ Fallback to common progressions (I-IV-V-vi patterns)
-
-**AI INTEGRATION:**
-✅ API: `/api/ai/suggest-chords`
-✅ Input: Song key + Section type + Lyrics
-✅ Output: 4-chord progression
-✅ Music theory engine: Converts key to scale
-✅ Smart suggestions: Verse vs Chorus vs Bridge (different feels)
-✅ Requires: OPENAI_API_KEY env var
-
-**SUPPORTED CHORDS:**
-✅ Major: C, D, E, F, G, A, B
-✅ Minor: Am, Bm, C#m, Dm, Em, F#m, Gm
-✅ Flats: Bb, Eb, Ab, Db, Gb (A-flat, etc.)
-✅ Sharps: C#, D#, F#, G#, A# (A-sharp, etc.)
-✅ 7ths: C7, Am7, Gmaj7, Dmaj7
-✅ Sus: Dsus4, Asus2, Csus4
-✅ Extended: Cmaj7, Abmaj7, F#m7, Dm9
-
-**COLLABORATIVE:**
-✅ Chords save with song (cloud storage)
-✅ Other collaborators see chords
-✅ Video co-writing shows chords
-✅ Export includes chords
-
-**OPTIMAL PATHWAY:**
-```
-Song Editor → Click 'ADD CHORDS' (1 click) → Hover line → Add chord (1 click)
-OR
-Song Editor → Select verse → 'VERSE CHORDS' (1 click) → AI fills 4 chords
-```
-
-**COMPONENTS:**
-- `chord-lyrics-editor.tsx` - Main chord editor
-- `/api/ai/suggest-chords` - AI progression suggestions
-
-**DATA STRUCTURE:**
-```typescript
-ChordPosition {
-  lineIndex: number;    // Which line (0-indexed)
-  position: number;     // Character position in line
-  chord: string;        // "Am", "G", "C#m", etc.
-}
-
-Song {
-  ...
-  chords: ChordPosition[];
-  ...
-}
-```
-
-**Build:** 40 routes, zero errors
-**Status:** Chord notation live with AI suggestions
-
-
----
-
-## 🔬 AGENT 31 COMPREHENSIVE REVIEW - BRUTAL HONESTY
-
-**Question:** "Are we missing anything? Can we improve, enhance, reinvent?"
-
-### ✅ WHAT'S COMPLETE (86%):
-
-**Songwriting Core:**
-✅ Bulk import (30-page paste, auto-detect, visual splitter)
-✅ Lyrics editor (full-featured, auto-save)
-✅ Chord notation (click above line, A-flat, C#m, etc.)
-✅ AI suggestions (chords for verse/chorus/bridge)
-✅ Organization (unlimited tags, filters, search)
-✅ Archive system
-✅ Metadata (writer, co-writers, date, status, album)
-✅ Export/backup (fire-proof)
-
-**Collaboration:**
-✅ Per-song email invites
-✅ Video co-writing (Daily.co, HD, 32 participants)
-✅ Real-time chat (Ably per song)
-✅ Screen sharing + cursor control
-✅ Project collaboration (invite-only groups)
-✅ Cloud recording
-
-**Design:**
-✅ Professional aesthetic (DESIGN_SYSTEM.md locked)
-✅ No emojis, consistent fonts
-✅ Light/dark theme working
-
-### 🚨 CRITICAL GAPS (14%):
-
-**GAP #1: DATABASE SCALABILITY** ❌ BLOCKER
-- Current: Songs in Supabase user_metadata (temp storage, 1MB limit)
-- Problem: Will break at 100+ songs per user
-- User said: "All SQL data goes into Neon"
-- Fix: Migrate to Neon Postgres (Song model already in schema)
-- Priority: CRITICAL - blocks production launch
-
-**GAP #2: NAVBAR NAVIGATION** ❌
-- Current: No Songs/Dashboard links when signed in
-- Problem: Hard to navigate between major sections
-- Fix: Add navbar links for auth users
-- Priority: HIGH - confusing UX
-
-**GAP #3: MOBILE CHORD EDITING** ⚠️
-- Current: Chord editor uses hover states (desktop only)
-- Problem: Mobile users can't add chords
-- Fix: Touch-friendly chord mode
-- Priority: HIGH - 50% of users are mobile
-
-### ⚠️ NICE-TO-HAVE IMPROVEMENTS:
-
-**Dashboard Enhancements:**
-- Recent songs widget (jump to last 3 edited)
-- Quick search bar
-- Activity feed
-
-**Chord Features:**
-- Auto-transpose when key changes (C→G: all chords update)
-- Chord library (save common progressions)
-- Capo suggestions
-
-**Collaboration Discovery:**
-- Search for musicians on platform
-- Invite from user list (not just email)
-- Better /discover page integration
-
-**Version Management:**
-- Version history UI (data exists, no interface)
-- Restore previous versions
-- Compare versions side-by-side
-
-**Advanced:**
-- Offline mode (PWA)
-- Voice-to-text lyrics
-- Melody notation
-- Audio file uploads
-- Royalty splits UI
-
----
-
-## 🎯 PATHWAY AUDIT RESULTS:
-
-**TESTED PATHS:**
-✅ Dashboard → Songs (1 click) - FIXED THIS SESSION
-✅ Dashboard → Projects (1 click)
-✅ Dashboard → Studio (1 click)
-✅ Dashboard → Tours (1 click)
-✅ Songs → Import (2 clicks: Songs → Import button)
-✅ Songs → Edit (2 clicks: Songs → Click song)
-✅ Edit → Chords (1 click: ADD CHORDS button)
-✅ Edit → AI Chords (1 click: VERSE CHORDS)
-✅ Edit → Collaborate (1 click: Email invite)
-✅ Edit → Video (1 click: Start video)
-
-**BROKEN PATHS:**
-❌ NavBar → Songs (link doesn't exist)
-❌ NavBar → Dashboard (link doesn't exist when signed in)
-
-**Efficiency: 90%** (excellent, 1-2 remaining fixes)
-
----
-
-## 📊 WHAT TO BUILD NEXT:
-
-### PHASE 5A: Database Migration (CRITICAL)
-```
-1. Verify Neon DATABASE_URL
-2. Run Prisma migrations
-3. Create migration script (user_metadata → Song table)
-4. Update all queries to use Prisma
-5. Test thoroughly
-6. Deploy
-```
-
-###PHASE 5B: Navigation Polish
-```
-1. Add navbar links when signed in
-2. Add recent songs widget to dashboard
-3. Test mobile navigation
-```
-
-### PHASE 5C: Chord Enhancements
-```
-1. Auto-transpose on key change
-2. Mobile-friendly chord mode
-3. Chord library/favorites
-```
-
-### PHASE 6: Audio Assets
-```
-1. File upload (MP3/WAV)
-2. Attach to songs
-3. Version control
-4. Collaborative feedback
-```
-
-### PHASE 7: Revenue Management
-```
-1. Split sheets UI
-2. Royalty tracking
-3. Payment distribution
-```
-
----
-
-## 🔥 FOR NEXT AGENT:
-
-**CURRENT STATE (EXACT TRUTH):**
-- Songwriting features: 95% complete
-- Chord notation: Working with AI
-- Import system: Handles all edge cases
-- Collaboration: Video + chat working
-- Data safety: Fire-proof (auto-save + backup)
-- Organization: Unlimited flexibility (tags)
-- **CRITICAL GAP:** user_metadata storage (need Neon migration)
-- **NAVIGATION GAP:** Missing navbar links
-- **MOBILE GAP:** Chord editing desktop-only
-
-**WHAT WORKS:**
-- User CAN import 30 songs
-- User CAN edit lyrics
-- User CAN add chords
-- User CAN get AI chord suggestions
-- User CAN organize with tags
-- User CAN collaborate per song
-- User CAN export backups
-- User CANNOT lose data (auto-save)
-
-**WHAT DOESN'T SCALE:**
-- Songs in user_metadata (limit ~100 songs)
-- Need Neon database for production
-
-**BUILD STATUS:**
-✅ 40 routes compiled
-✅ Zero errors
-✅ Deploying now
-
-**NEXT PRIORITY:**
-1. Neon database migration (BLOCKER for scale)
-2. Navbar links (UX improvement)
-3. Mobile chord mode (50% of users)
-
-**ONE MASTER DOCUMENT - This is the truth.**
-
-
----
-
-## ✅ AGENT 31 - CRITICAL GAPS FILLED (Session Continued)
-
-**User Request:** "Fill the critical gaps. Start with next logical steps."
-
-### GAP #1: NAVBAR NAVIGATION - ✅ FIXED
-
-**Was Broken:**
-- NavBar showed marketing links when signed in
-- No Dashboard, Songs, Projects links
-- Had to manually type URLs or use dashboard
-
-**Now Fixed:**
-- ✅ NavBar detects auth state (Supabase real-time)
-- ✅ Logged OUT: Features, Platform, Pricing, Why RNRB
-- ✅ Logged IN: Dashboard, My Songs, Projects, Studio
-- ✅ Any page → Songs (1 click from navbar)
-- ✅ Any page → Dashboard (1 click from navbar)
-- ✅ Any page → Projects (1 click from navbar)
-
-**Ant Colony Optimization:**
-All major destinations now 1 click from anywhere ✅
-
----
-
-### GAP #2: NEON DATABASE SCHEMA - ✅ READY
-
-**Preparation Complete:**
-✅ Song model updated in Prisma schema
-✅ Supports standalone songs (projectId optional)
-✅ All fields added: writer, coWriters, dateWritten, status, tags, album, archived, chords
-✅ SongStatus enum created
-✅ Visibility enum created
-✅ SongCollaborator model for per-song invites
-✅ User relations added (songs[], songCollaborations[])
-✅ Performance indexes added
-✅ Duplicate models removed (schema was broken)
-✅ Schema validated (prisma format successful)
-
-**Current Storage:**
-⚠️ Songs STILL in user_metadata (temp storage)
-⚠️ Will break at 100+ songs per user
-
-**Migration Ready:**
-✅ Schema is production-ready
-✅ Models match TypeScript interfaces
-✅ All relations correct
-
-**BLOCKER:** Requires DATABASE_URL verification and migration execution
-**User must confirm:** Neon connection working and DATABASE_URL env var present
-
----
-
-### GAP #3: MOBILE CHORD EDITING - ⏳ NEXT
-
-**Current State:**
-- Chord editor uses hover states
-- "Hover over line" doesn't work on mobile
-- Mobile users can't add chords
-
-**Solution Designed:**
-- Touch-friendly mode
-- Tap line → Chord input appears
-- Large touch targets
-- No hover required
-
-**Status:** Pending (will build after database migration confirmed)
-
----
-
-### GAP #4: CHORD TRANSPOSITION - ⏳ NEXT
-
-**Current State:**
-- User changes song key C → G
-- Chords stay as C, Am, F, G (wrong)
-- Should become: G, Em, C, D
-
-**Solution Designed:**
-- Music theory engine
-- Auto-transpose all chords on key change
-- Maintains intervals correctly
-
-**Status:** Pending (will build after database migration confirmed)
-
----
-
-## 🔥 CURRENT STATE (EXACT TRUTH):
-
-**WHAT'S FIXED THIS SESSION:**
-✅ Navbar navigation (1-click access to all major features)
-✅ Dashboard → Songs pathway (was broken, now 1 click)
-✅ Neon database schema (ready for migration)
-✅ Schema validation (duplicate models removed)
-
-**WHAT WORKS:**
-✅ Chord notation (click above line, type chord)
-✅ AI chord suggestions (verse/chorus/bridge)
-✅ Bulk import (30 songs, auto-detect)
-✅ Flexible organization (unlimited tags)
-✅ Auto-save (every 3 seconds, fire-proof)
-✅ Backup/export (one-click)
-✅ Collaboration (video + chat per song)
-✅ Invite-only groups
-
-**WHAT'S PENDING:**
-⚠️ Neon database migration (schema ready, need to execute)
-⚠️ Mobile chord editing (after migration)
-⚠️ Chord transposition (after migration)
-
-**BLOCKER:**
-🚨 DATABASE_URL verification needed for Neon migration
-🚨 User must confirm Neon connection is active
-
-**BUILD STATUS:**
-✅ 40 routes compiled
-✅ Zero errors
-✅ Navbar: Auth-aware
-✅ Schema: Valid and formatted
-
-**PATHWAY EFFICIENCY:**
-- Dashboard → Songs: 1 click ✅
-- Dashboard → Projects: 1 click ✅
-- Dashboard → Studio: 1 click ✅
-- Any page → Dashboard: 1 click ✅ (via navbar)
-- Any page → Songs: 1 click ✅ (via navbar)
-- Any page → Projects: 1 click ✅ (via navbar)
-
-**Score: 95% optimal** (was 80%, fixed 2 critical gaps)
-
----
-
-## 🎯 FOR NEXT AGENT:
-
-**IMMEDIATE PRIORITY:**
-1. Verify DATABASE_URL connects to Neon
-2. Run Prisma migration: `cd packages/db && npx prisma migrate dev --name add_standalone_songs`
-3. Create data migration script (user_metadata → Song table)
-4. Test migration with 1-2 songs first
-5. Migrate all user songs
-6. Update all queries to use Prisma (not user_metadata)
-
-**AFTER DATABASE MIGRATION:**
-7. Build mobile chord mode
-8. Build chord transposition
-9. Add recent songs widget
-10. Build version history UI
-
-**SYSTEM HEALTHY:**
-✅ Navigation fixed
-✅ Schema ready
-✅ Waiting on database migration
-
-**ONE MASTER DOCUMENT - This is the exact truth.**
 

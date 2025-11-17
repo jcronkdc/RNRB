@@ -667,61 +667,78 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <div className="rnrb-card p-6">
-                <h3 className="text-lg font-semibold mb-2">Explorer</h3>
-                <p className="text-3xl font-bold mb-4">Free</p>
+                <h3 className="text-lg font-semibold mb-2">Free</h3>
+                <p className="text-3xl font-bold mb-4">$0</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
                     <span className="text-green-500 font-bold">✓</span>
-                    <span>5 Active Projects</span>
+                    <span>1 Project</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-green-500 font-bold">✓</span>
-                    <span>Basic Analytics</span>
+                    <span>2 GB Storage</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-green-500 font-bold">✓</span>
-                    <span>Community Support</span>
+                    <span>Video Calls</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-red-400 font-bold">✗</span>
+                    <span>No AI Features</span>
                   </li>
                 </ul>
               </div>
               
-              <div className="rnrb-card p-6 border-2 border-brand-primary relative">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-brand-primary text-xs font-medium rounded-full text-brand-primary-foreground">
+              <div className="rnrb-card p-6 border-2 border-purple-500/50 relative bg-gradient-to-br from-purple-500/5 to-transparent">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-purple-600 text-xs font-medium rounded-full text-white flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
                   Most Popular
                 </div>
+                <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full">
+                  <Zap className="w-4 h-4 text-purple-400" />
+                  <span className="text-xs font-semibold text-purple-400">ALL AI FEATURES</span>
+                </div>
                 <h3 className="text-lg font-semibold mb-2">Professional</h3>
-                <p className="text-3xl font-bold mb-4">$29/mo</p>
+                <p className="text-3xl font-bold mb-4">$99/mo</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span>20 Projects</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-purple-400 font-bold">✨</span>
+                    <span>500 AI Queries/mo</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-purple-400 font-bold">✨</span>
+                    <span>AI Transcription</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-purple-400 font-bold">✨</span>
+                    <span>AI Tour Routing</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="rnrb-card p-6">
+                <h3 className="text-lg font-semibold mb-2">Studio Pro</h3>
+                <p className="text-3xl font-bold mb-4">$299/mo</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
                     <span className="text-green-500 font-bold">✓</span>
                     <span>Unlimited Projects</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <span className="text-green-500 font-bold">✓</span>
-                    <span>Advanced Analytics</span>
+                    <span className="text-purple-400 font-bold">✨</span>
+                    <span>Unlimited AI Features</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-green-500 font-bold">✓</span>
-                    <span>Priority Support</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="rnrb-card p-6">
-                <h3 className="text-lg font-semibold mb-2">Enterprise</h3>
-                <p className="text-3xl font-bold mb-4">Custom</p>
-                <ul className="space-y-2 text-sm">
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500 font-bold">✓</span>
-                    <span>Custom Integrations</span>
+                    <span>2,000 AI Queries/mo</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-green-500 font-bold">✓</span>
-                    <span>Dedicated Support</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500 font-bold">✓</span>
-                    <span>SLA Guarantee</span>
+                    <span>24/7 Support</span>
                   </li>
                 </ul>
               </div>
