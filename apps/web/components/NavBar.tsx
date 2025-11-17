@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { ThemeToggle } from './theme/ThemeToggle';
+// import { ThemeToggle } from './theme/ThemeToggle';
 
 type NavLink = {
   label: string;
@@ -17,20 +17,15 @@ type NavLink = {
 };
 
 const LINKS: NavLink[] = [
-  { label: 'Platform', href: '/guide' },
-  { label: 'Solutions', href: '/solutions', children: [
-    { label: 'For Artists', href: '/solutions/artists' },
-    { label: 'For Studios', href: '/solutions/studios' },
-    { label: 'For Labels', href: '/solutions/labels' },
+  { label: 'Features', href: '/why-rnrb' },
+  { label: 'Platform', href: '#', children: [
+    { label: 'Studio & Recording', href: '/studio' },
+    { label: 'Live Streaming & Tours', href: '/tours' },
+    { label: 'Real-Time Messaging', href: '/messages' },
+    { label: 'Recording Guide', href: '/studio/recording-guide' },
   ]},
-  { label: 'Enterprise', href: '/enterprise' },
   { label: 'Pricing', href: '/pricing' },
-  { label: 'About', href: '/about', children: [
-    { label: 'Company', href: '/about' },
-    { label: 'Mission', href: '/why' },
-    { label: 'Team', href: '/team' },
-    { label: 'Contact', href: '/contact' },
-  ]},
+  { label: 'Why RNRB', href: '/why-rnrb' },
 ];
 
 export function NavBar() {
@@ -176,19 +171,19 @@ export function NavBar() {
                   </kbd>
                 </button>
 
-                <ThemeToggle />
+                {/* <ThemeToggle /> */}
                 
                 <div className="h-6 w-px bg-border" />
                 
                 <Link
-                  href="/signin"
+                  href="/auth"
                   className="rnrb-button-ghost px-4 py-2 rounded-md text-sm"
                 >
                   Sign In
                 </Link>
                 
                 <Link
-                  href="/signup"
+                  href="/auth"
                   className="rnrb-button-primary px-4 py-2 rounded-md text-sm"
                 >
                   Get Started
@@ -259,22 +254,22 @@ export function NavBar() {
           
           <div className="pt-6 space-y-4 border-t border-border">
             <Link
-              href="/signin"
+              href="/auth"
               className="rnrb-button-secondary w-full py-3 rounded-md justify-center"
             >
               Sign In
             </Link>
             
             <Link
-              href="/signup"
+              href="/auth"
               className="rnrb-button-primary w-full py-3 rounded-md justify-center"
             >
               Get Started
             </Link>
             
-            <div className="flex justify-center pt-4">
+            {/* <div className="flex justify-center pt-4">
               <ThemeToggle />
-            </div>
+            </div> */}
           </div>
         </nav>
       </motion.div>

@@ -17,6 +17,9 @@ import {
   Radio,
   Award,
   Headphones,
+  Mic,
+  Video,
+  MessageSquare,
   
   // UI Icons
   ArrowRight,
@@ -26,6 +29,7 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRef } from 'react';
+import { NavBar } from '@/components/NavBar';
 
 const features = [
   {
@@ -99,6 +103,8 @@ export default function HomePage() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-background">
+      <NavBar />
+      
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Premium Background */}
@@ -130,25 +136,29 @@ export default function HomePage() {
               <Image
                 src="/rnrdark.png"
                 alt="Rock N' Roll Basement"
-                width={100}
-                height={100}
+                width={120}
+                height={120}
                 className="dark:hidden"
               />
               <Image
                 src="/rnrlight.png"
                 alt="Rock N' Roll Basement"
-                width={100}
-                height={100}
+                width={120}
+                height={120}
                 className="hidden dark:block"
               />
             </motion.div>
 
-            {/* New Badge */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6">
+              <span className="font-display font-bold">Rock N' Roll Basement</span>
+            </h1>
+
+            {/* Badge */}
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary/10 border border-brand-primary/20 rounded-full mb-8"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary/10 border border-brand-primary/20 rounded-full mb-6"
             >
               <Zap className="w-4 h-4 text-brand-primary" />
               <span className="text-sm font-medium">
@@ -156,19 +166,15 @@ export default function HomePage() {
               </span>
             </motion.div>
 
-            <h1 className="text-6xl md:text-7xl lg:text-8xl mb-6">
-              <span className="font-display font-normal">Stop Using</span>
-              <br />
-              <span className="font-display font-normal rnrb-gradient-text">
-                7 Different Apps
-              </span>
-            </h1>
+            <p className="text-2xl md:text-3xl text-muted-foreground max-w-3xl mx-auto mb-4 leading-relaxed font-semibold">
+              Stop Using 7 Different Apps
+            </p>
             
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
               Record HD video sessions. Stream live concerts. Manage tours. Track royalties. 
               <span className="text-brand-primary font-semibold"> All in one platform.</span>
               <br />
-              <span className="text-lg">No other platform in the world does this.</span>
+              <span className="font-semibold">No other platform in the world does this.</span>
             </p>
             
             <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -211,21 +217,112 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="py-20 border-y border-border/50">
+      {/* For Everyone Section */}
+      <section className="py-24 bg-surface/30">
         <div className="rnrb-container">
-          <div className="text-center mb-12">
-            <p className="text-sm uppercase tracking-wider text-muted-foreground mb-4">
-              Trusted by Industry Leaders
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              Built for Everyone
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+              From solo songwriters to full touring bands — Rock N' Roll Basement adapts to your journey
             </p>
-            <div className="flex items-center justify-center gap-12 opacity-50">
-              {/* Placeholder for partner logos */}
-              <div className="text-2xl font-bold text-muted-foreground">Sony Music</div>
-              <div className="text-2xl font-bold text-muted-foreground">Warner</div>
-              <div className="text-2xl font-bold text-muted-foreground">Universal</div>
-              <div className="text-2xl font-bold text-muted-foreground">BMG</div>
-            </div>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              <span className="text-brand-primary font-semibold">Collaboration is at the heart of everything we do.</span>
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Solo Songwriter */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8 text-center"
+            >
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <Mic className="w-8 h-8 text-brand-primary" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Solo Artists</h3>
+              <p className="text-muted-foreground text-sm">
+                Write, record demos, and manage your music career from one place
+              </p>
+            </motion.div>
+
+            {/* Duo/Collaboration */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8 text-center"
+            >
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <MessageSquare className="w-8 h-8 text-brand-primary" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Co-Writers</h3>
+              <p className="text-muted-foreground text-sm">
+                Real-time messaging, split sheets, and version control for collaborations
+              </p>
+            </motion.div>
+
+            {/* Full Band */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8 text-center"
+            >
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <Users className="w-8 h-8 text-brand-primary" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Bands</h3>
+              <p className="text-muted-foreground text-sm">
+                Manage rehearsals, setlists, tours, and revenue splits with your bandmates
+              </p>
+            </motion.div>
+
+            {/* Live Streaming */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8 text-center"
+            >
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <Video className="w-8 h-8 text-brand-primary" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Live Performers</h3>
+              <p className="text-muted-foreground text-sm">
+                Stream concerts to YouTube, Twitch, and Facebook with HD video recording
+              </p>
+            </motion.div>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link 
+              href="/why-rnrb"
+              className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-medium inline-flex items-center gap-2"
+            >
+              See All Features
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
