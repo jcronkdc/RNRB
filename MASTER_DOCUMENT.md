@@ -179,18 +179,45 @@
 
 ---
 
-## 🚨 BLOCKERS / TODO:
+## 🚨 NEW BLOCKER - AGENT 31 DISCOVERY (2025-11-17 11:30 AM)
 
-**NONE - System Operational**
+### ❌ AUTH NOW FAILING AGAIN:
 
-All critical pathways verified:
-✅ Auth works  
-✅ User can sign in  
-✅ Dashboard loads  
-✅ Projects can be created  
-✅ Design consistent  
-✅ Theme toggle works  
-✅ All pages build without errors  
+**User reported error when trying to sign in:**
+```json
+{"code":400,"error_code":"validation_failed","msg":"Unsupported provider: provider is not enabled"}
+```
+
+**Root Cause (Traced):**
+- `/auth` page uses Supabase Auth: `supabase.auth.signInWithOAuth({ provider: 'google' })`
+- Error from Supabase API means Google provider disabled in Supabase dashboard
+- Either: Was enabled, now disabled OR Never properly configured in Supabase
+
+**What Agent 31 Verified:**
+- ✅ All environment variables correct (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, etc.)
+- ✅ Google Cloud Console OAuth configured with correct redirect URIs
+- ✅ Domain working (cronkwaters.com → www.cronkwaters.com)
+- ✅ Build successful, deployment live
+- ❌ Supabase dashboard Google provider status unknown (cannot access)
+
+**BLOCKER:** User must enable Google provider in Supabase Dashboard → Authentication → Providers → Google
+
+**Status:** IN PROGRESS - awaiting user to check Supabase dashboard
+
+---
+
+## BLOCKERS / TODO (PREVIOUS STATUS):
+
+~~**NONE - System Operational**~~ ← **THIS WAS WRONG**
+
+**CURRENT:**
+- 🚨 **Auth failing** - Supabase Google provider needs enabling
+- ✅ Build works  
+- ✅ Dashboard loads (if user is signed in)  
+- ✅ Projects can be created (if user is signed in)  
+- ✅ Design consistent  
+- ✅ Theme toggle works  
+- ✅ All pages build without errors  
 
 ---
 
