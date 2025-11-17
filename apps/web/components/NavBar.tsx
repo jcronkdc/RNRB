@@ -9,6 +9,8 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { UserMenu } from './UserMenu';
 import { ThemeToggle } from './theme/ThemeToggle';
+import { supabase } from '@/lib/supabase';
+import { User } from '@supabase/supabase-js';
 
 type NavLink = {
   label: string;
@@ -16,7 +18,7 @@ type NavLink = {
   children?: NavLink[];
 };
 
-const LINKS: NavLink[] = [
+const MARKETING_LINKS: NavLink[] = [
   { label: 'Features', href: '/why-rnrb' },
   { label: 'Platform', href: '#', children: [
     { label: 'Studio & Recording', href: '/studio' },
@@ -28,12 +30,37 @@ const LINKS: NavLink[] = [
   { label: 'Why RNRB', href: '/why-rnrb' },
 ];
 
+const AUTHENTICATED_LINKS: NavLink[] = [
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'My Songs', href: '/songs' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Studio', href: '/studio' },
+];
+
 export function NavBar() {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Check auth state
+  useEffect(() => {
+    supabase?.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+      setAuthLoading(false);
+    });
+
+    const { data: { subscription } } = supabase?.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    }) ?? { data: { subscription: { unsubscribe: () => {} } } };
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const LINKS = user ? AUTHENTICATED_LINKS : MARKETING_LINKS;
 
   useEffect(() => {
     const handleScroll = () => {
