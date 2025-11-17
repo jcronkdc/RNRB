@@ -73,6 +73,45 @@
 ✅ Invite-only project groups
 ✅ Optimal pathways (max 3 clicks to any feature)
 
+**FULL CONTENT AUDIT - BRUTAL HONESTY:**
+
+**HOMEPAGE CLAIMS FIXED:**
+- DELETED: "World's First & Only All-in-One" (false - BandLab exists)
+- DELETED: "No other platform in the world does this" (false claim)
+- DELETED: "Track royalties" (not built yet)
+- REPLACED WITH: "Collaboration-First Music Platform", "Currently in active development"
+
+**TOURS PAGE HONESTY:**
+- Changed: "Complete Tour Management Platform" → "Tour Management - In Development"
+- CLEARLY LABELED: Only "Virtual Concerts" available now (Daily.co streaming)
+- ALL OTHER FEATURES: Marked "Coming Soon (not built yet)"
+  - Venue Database, Show Scheduling, Ticketing Integration
+- "Planned Features (Not Built Yet)" section added
+
+**MESSAGES PAGE HONESTY:**
+- Changed: Focus on what Ably ACTUALLY provides
+- WORKING NOW: Real-time text, project channels, basic presence
+- CLEARLY MARKED as coming soon: File sharing, read receipts, typing indicators, notifications, offline support, threads, search
+
+**STUDIO PAGE - BRUTAL HONESTY APPLIED:**
+✅ **Removed FALSE CLAIMS** - User: "Don't make crazy claims, be realistic"
+- DELETED: "Professional multi-track recording" (Daily.co can't do this)
+- DELETED: "Zero-latency monitoring" (physics limits: 50-200ms)
+- DELETED: "Individual headphone mixes" (not a Daily.co feature)
+- DELETED: "48kHz/24-bit recording" (misleading - it's compressed)
+
+✅ **ADDED HONEST SECTIONS:**
+- "What This Studio DOES" - HD video, screen share, feedback, streaming
+- "What This Studio DOESN'T Do" - Multi-track, audio interfaces, latency-free jamming
+- "The Real Professional Remote Workflow" - Local recording + Daily.co communication + file upload
+- "Technical Reality" - Opus codec compression, NOT recording quality, 50-200ms latency
+
+✅ **FACTUAL ONLY:**
+- Daily.co is for VIDEO COLLABORATION, not audio recording
+- Real workflow: Record locally → Communicate via Daily.co → Upload files → Mix offline
+- No false marketing language
+- Professional honesty about limitations
+
 **USER FEEDBACK ADDRESSED:**
 ✅ "Homepage looks good" - Kept as-is
 ✅ "Dashboard too dark" - Fixed, now matches homepage
@@ -324,64 +363,28 @@ Project → Collaborate (1 click) → Video Tab → Start Room → LIVE Daily.co
 ✅ In-room text chat
 ✅ Cloud recording per session
 
-### ✅ PHASE 4B COMPLETE: Enhanced Import with Organization
+**NEXT PHASE:**
+- Song-level collaboration (chat + video per song)
+- Shared lyrics editor with cursor tracking
+- Asset upload with collaboration
 
-**USER REQUEST:**
-"I have 30 songs - how do I upload, separate, add metadata, organize by album/status?"
+**THEN (Phase 4):**
+3. **Song Collaboration Features**
+   - Daily.co room per song (video co-writing)
+   - Shared lyrics editor (cursor control)
+   - Song-specific chat
+   - Collaborator credits
 
-**WHAT IF SONGS BLEND TOGETHER?**
-✅ FIXED: Robust parser uses triple newline separator
-✅ FIXED: Preview every song BEFORE importing
-✅ FIXED: Edit any song in preview (title, lyrics, metadata)
-✅ FIXED: Remove songs from batch before importing
+4. **Assets with Collaboration**
+   - Upload audio/files
+   - Version control (who changed what)
+   - Comments on assets
+   - Approval workflows
 
-**METADATA SYSTEM:**
-✅ Title - Editable before and after import
-✅ Writer - Your name (or co-writers)
-✅ Date Written - Approximate (optional, like "2024" or "Spring 2023")
-✅ Status - Draft / In Progress / Needs Review / Complete
-✅ Album/Group - Organize related songs together
-✅ Key - Musical key (C, Am, G, etc.)
-✅ Tempo - BPM
-✅ Visibility - Private / Team / Public
-
-**ORGANIZATION FEATURES:**
-✅ Filter by STATUS - See all drafts, in progress, needs review, complete
-✅ Filter by ALBUM - Group songs by album/collection
-✅ Search by title or lyrics
-✅ Stats: Total, Complete, In Progress, Private, Albums count
-✅ Status badges - Color-coded visualization
-
-**FLEXIBLE WORKFLOW:**
-✅ Songs can be STANDALONE (no project required)
-✅ Songs can be added to projects later (optional)
-✅ Single song is valid - Don't need project for every song
-✅ Organize by album WITHOUT projects
-✅ Full metadata on every song
-
-**IMPORT PROCESS (30 SONGS) - SIMPLE:**
-1. Dashboard → Click "Import Your Songs" (1 click)
-2. Paste ENTIRE 30-page document - ANY FORMAT (no formatting needed)
-3. Click "Auto-Detect Songs" → System finds all 30 automatically (1 click)
-4. Review list - edit metadata if desired (optional):
-   - Title, writer, date, status, album - all in one row
-   - Merge songs if wrongly split (click merge button)
-   - Remove any bad detections (click X)
-5. Click "Import X Songs" → All saved privately (1 click)
-
-**TOTAL: 3 CLICKS (paste → auto-detect → import)**
-
-NO MANUAL FORMATTING REQUIRED:
-❌ No triple newlines needed
-❌ No special separators
-❌ No formatting rules
-✅ Intelligent auto-detection handles everything
-
-**NEXT PHASE (5):**
-- Asset upload (audio files, stems, bounces)
-- File version control
-- Recording session management
-- Royalty splits
+**FINALLY (Phase 5+):**
+5. **Recording Sessions** - Already have Daily.co, connect to projects
+6. **Royalty Splits** - Transparent to all collaborators
+7. **Tours** - Connect to projects, collaborative setlist building
 
 ---
 

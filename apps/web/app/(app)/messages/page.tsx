@@ -68,43 +68,41 @@ export default function MessagesPage() {
         className="rnrb-container max-w-6xl py-12 px-4"
       >
 
-        {/* Comprehensive Messaging Overview */}
-        <Card className="p-8 mb-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
-          <h2 className="text-3xl font-bold mb-4">Professional Real-Time Messaging</h2>
+        {/* Honest Messaging Overview */}
+        <Card className="p-8 mb-8 rnrb-card">
+          <h2 className="text-3xl font-display font-bold mb-4">Real-Time Messaging with Ably</h2>
           <p className="text-lg text-muted-foreground mb-6">
-            Rock N' Roll Basement provides enterprise-grade real-time communication built specifically for music collaboration. 
-            Keep your entire team connected - from band members to producers, managers to crew - with instant messaging, 
-            presence awareness, and organized conversation threads.
+            Project-level real-time chat powered by Ably. Basic messaging is live, advanced features coming soon.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="p-4 bg-background/50 rounded-lg">
-              <MessageSquare className="h-8 w-8 text-purple-500 mb-3" />
-              <h4 className="font-semibold mb-2">Instant Messaging</h4>
-              <p className="text-sm text-muted-foreground">
-                Send text, images, audio clips, and files. Messages deliver in milliseconds with read receipts and typing indicators.
-              </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="rnrb-card p-6 bg-green-500/5 border-green-500/20">
+              <h4 className="font-semibold mb-3 text-brand-primary flex items-center gap-2">
+                <CheckCircle className="w-5 h-5" />
+                What's WORKING NOW
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>✓ Real-time text messaging (Ably integration)</li>
+                <li>✓ Project-based chat channels</li>
+                <li>✓ Basic presence awareness</li>
+                <li>✓ Message history in session</li>
+                <li>✓ Up to 32 participants per channel</li>
+              </ul>
             </div>
-            <div className="p-4 bg-background/50 rounded-lg">
-              <Users className="h-8 w-8 text-blue-500 mb-3" />
-              <h4 className="font-semibold mb-2">Presence Awareness</h4>
-              <p className="text-sm text-muted-foreground">
-                See who's online, in a session, or away. Know exactly when your collaborators are available to respond.
-              </p>
-            </div>
-            <div className="p-4 bg-background/50 rounded-lg">
-              <Bell className="h-8 w-8 text-green-500 mb-3" />
-              <h4 className="font-semibold mb-2">Smart Notifications</h4>
-              <p className="text-sm text-muted-foreground">
-                Get notified for @mentions, replies, and important updates. Customize notification rules per channel.
-              </p>
-            </div>
-            <div className="p-4 bg-background/50 rounded-lg">
-              <Wifi className="h-8 w-8 text-orange-500 mb-3" />
-              <h4 className="font-semibold mb-2">Offline Support</h4>
-              <p className="text-sm text-muted-foreground">
-                Messages queue when offline and auto-send when reconnected. Never lose a message due to network issues.
-              </p>
+            
+            <div className="rnrb-card p-6 bg-orange-500/5 border-orange-500/20">
+              <h4 className="font-semibold mb-3 text-muted-foreground flex items-center gap-2">
+                <CheckCircle className="w-5 h-5" />
+                Coming Soon (Not Built Yet)
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>• File attachments & image sharing</li>
+                <li>• Read receipts & typing indicators</li>
+                <li>• @mentions & smart notifications</li>
+                <li>• Offline message queuing</li>
+                <li>• Thread conversations</li>
+                <li>• Message search & archive</li>
+              </ul>
             </div>
           </div>
 
@@ -116,8 +114,7 @@ export default function MessagesPage() {
                 <div>
                   <p className="font-medium">Project-Based Channels</p>
                   <p className="text-sm text-muted-foreground">
-                    Automatically create chat channels for each project, album, or tour. Keep conversations organized 
-                    and searchable. Archive old projects without losing message history.
+                    Each project gets its own chat channel via Ably. Message history persists during active sessions only (archive feature coming soon).
                   </p>
                 </div>
               </div>

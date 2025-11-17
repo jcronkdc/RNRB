@@ -107,47 +107,46 @@ export default function ToursPage() {
         ) : (
           <>
             {/* Tour Stats */}
-            {/* Comprehensive Tour Management */}
-            <Card className="p-8 mb-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
-              <h2 className="text-3xl font-bold mb-4">Complete Tour Management Platform</h2>
+            {/* Tour Management - Coming Soon */}
+            <Card className="p-8 mb-8 rnrb-card bg-blue-500/5 border-blue-500/20">
+              <h2 className="text-3xl font-display font-bold mb-4">Tour Management - In Development</h2>
               <p className="text-lg text-muted-foreground mb-6">
-                Rock N' Roll Basement provides end-to-end tour management: from booking venues to streaming virtual concerts, 
-                managing setlists to tracking ticket sales - everything you need to run successful tours.
+                We're building comprehensive tour management tools. Here's what's planned (not built yet):
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="p-4 bg-background/50 rounded-lg">
-                  <MapPin className="h-8 w-8 text-blue-500 mb-3" />
-                  <h4 className="font-semibold mb-2">Venue Database</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                  <Radio className="h-8 w-8 text-brand-primary mb-3" />
+                  <h4 className="font-semibold mb-2 text-brand-primary">✓ AVAILABLE NOW: Virtual Concerts</h4>
                   <p className="text-sm text-muted-foreground">
-                    Store venue contacts, capacity, load-in times, and technical specs for every location on your tour.
+                    Use Daily.co integration to stream live performances to YouTube, Twitch, Facebook via RTMP. Up to 32 participants.
                   </p>
                 </div>
-                <div className="p-4 bg-background/50 rounded-lg">
-                  <Calendar className="h-8 w-8 text-green-500 mb-3" />
-                  <h4 className="font-semibold mb-2">Show Scheduling</h4>
+                <div className="p-4 bg-orange-500/5 border border-orange-500/20 rounded-lg">
+                  <MapPin className="h-8 w-8 text-muted-foreground mb-3" />
+                  <h4 className="font-semibold mb-2">Coming Soon: Venue Database</h4>
                   <p className="text-sm text-muted-foreground">
-                    Visual calendar with routing optimization, travel time calculations, and automatic conflict detection.
+                    Store venue contacts, capacity, load-in times (not built yet).
                   </p>
                 </div>
-                <div className="p-4 bg-background/50 rounded-lg">
-                  <Ticket className="h-8 w-8 text-purple-500 mb-3" />
-                  <h4 className="font-semibold mb-2">Ticketing Integration</h4>
+                <div className="p-4 bg-orange-500/5 border border-orange-500/20 rounded-lg">
+                  <Calendar className="h-8 w-8 text-muted-foreground mb-3" />
+                  <h4 className="font-semibold mb-2">Coming Soon: Show Scheduling</h4>
                   <p className="text-sm text-muted-foreground">
-                    Connect to major ticket platforms or embed your own. Track sales in real-time with revenue analytics.
+                    Visual calendar with routing optimization (not built yet).
                   </p>
                 </div>
-                <div className="p-4 bg-background/50 rounded-lg">
-                  <Radio className="h-8 w-8 text-red-500 mb-3" />
-                  <h4 className="font-semibold mb-2">Virtual Concerts</h4>
+                <div className="p-4 bg-orange-500/5 border border-orange-500/20 rounded-lg">
+                  <Ticket className="h-8 w-8 text-muted-foreground mb-3" />
+                  <h4 className="font-semibold mb-2">Coming Soon: Ticketing Integration</h4>
                   <p className="text-sm text-muted-foreground">
-                    Stream live performances to multiple platforms simultaneously with HD video and professional audio.
+                    Connect to ticket platforms, track sales (not built yet).
                   </p>
                 </div>
               </div>
 
               <div className="bg-background/30 rounded-lg p-6 border border-brand-primary/20">
-                <h3 className="text-xl font-semibold mb-4">Why Artists Choose Our Tour Management</h3>
+                <h3 className="text-xl font-semibold mb-4">Planned Features (Not Built Yet)</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />

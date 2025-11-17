@@ -18,7 +18,8 @@ import {
   Mic,
   MonitorSpeaker,
   CheckCircle,
-  Video
+  Video,
+  MessageSquare
 } from 'lucide-react';
 import { Card, Button } from '@cronkwaters/ui';
 import { DailyProvider } from '@daily-co/daily-react';
@@ -193,74 +194,82 @@ export default function StudioPage() {
             </div>
           ) : (
             <>
-              {/* Comprehensive Studio Overview */}
-              <Card className="p-8 mb-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
-                <h2 className="text-3xl font-bold mb-4">🎸 Professional Recording Studio</h2>
+              {/* Honest Studio Overview */}
+              <Card className="p-8 mb-8 rnrb-card">
+                <h2 className="text-3xl font-display font-bold mb-4">Remote Collaboration Studio</h2>
                 <p className="text-lg text-muted-foreground mb-6">
-                  Rock N' Roll Basement provides a complete cloud-based recording studio with HD video/audio recording, 
-                  real-time collaboration, and professional livestreaming capabilities - all accessible from your browser.
+                  Let's be honest: You can't record professional multi-track audio over the internet due to latency and compression. 
+                  But you CAN collaborate effectively while each person records locally.
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  <div className="p-4 bg-background/50 rounded-lg">
-                    <Disc className="h-8 w-8 text-red-500 mb-3" />
-                    <h4 className="font-semibold mb-2">HD Recording</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Record in 1080p video with 48kHz/24-bit audio. Professional quality for any project.
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="rnrb-card p-6 bg-green-500/5 border-green-500/20">
+                    <h4 className="font-semibold mb-3 text-brand-primary flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5" />
+                      What This Studio DOES
+                    </h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>✓ HD video calls with up to 32 musicians</li>
+                      <li>✓ Screen share your DAW (Pro Tools, Logic, Ableton)</li>
+                      <li>✓ Remote direction & real-time feedback</li>
+                      <li>✓ Record video performances for content</li>
+                      <li>✓ Live stream finished performances to YouTube/Twitch</li>
+                      <li>✓ Virtual rehearsals & songwriting sessions</li>
+                    </ul>
                   </div>
-                  <div className="p-4 bg-background/50 rounded-lg">
-                    <Radio className="h-8 w-8 text-blue-500 mb-3" />
-                    <h4 className="font-semibold mb-2">Multi-Platform Streaming</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Broadcast to YouTube, Twitch, Facebook Live, or custom RTMP destinations simultaneously.
-                    </p>
-                  </div>
-                  <div className="p-4 bg-background/50 rounded-lg">
-                    <Users className="h-8 w-8 text-green-500 mb-3" />
-                    <h4 className="font-semibold mb-2">Global Collaboration</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Connect with up to 32 participants for remote recording sessions and virtual band practice.
-                    </p>
+                  
+                  <div className="rnrb-card p-6 bg-red-500/5 border-red-500/20">
+                    <h4 className="font-semibold mb-3 text-red-400 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5" />
+                      What This Studio DOESN'T Do
+                    </h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>✗ Multi-track recording (use your local DAW)</li>
+                      <li>✗ Replace professional audio interfaces</li>
+                      <li>✗ Latency-free jamming (physics limits: 50-200ms)</li>
+                      <li>✗ Capture individual instrument tracks remotely</li>
+                      <li>✗ Professional mixing/mastering (use proper tools)</li>
+                      <li>✗ Replace in-person studio sessions</li>
+                    </ul>
                   </div>
                 </div>
 
-                <div className="bg-background/30 rounded-lg p-6 border border-brand-primary/20">
-                  <h3 className="text-xl font-semibold mb-4">What Makes Our Studio Different</h3>
+                <div className="bg-brand-primary/5 rounded-lg p-6 border border-brand-primary/20">
+                  <h3 className="text-xl font-semibold mb-4">The Real Professional Remote Workflow</h3>
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div className="w-6 h-6 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary text-sm font-bold flex-shrink-0">1</div>
                       <div>
-                        <p className="font-medium">No Software Installation Required</p>
+                        <p className="font-medium">Each Musician Records Locally</p>
                         <p className="text-sm text-muted-foreground">
-                          Works entirely in your browser - no DAW plugins, no complex setups. Just open the link and start recording.
+                          Use your own audio interface and DAW to record high-quality tracks (48kHz/24-bit minimum)
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div className="w-6 h-6 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary text-sm font-bold flex-shrink-0">2</div>
                       <div>
-                        <p className="font-medium">Automatic Cloud Backup</p>
+                        <p className="font-medium">Use Daily.co Video for Communication</p>
                         <p className="text-sm text-muted-foreground">
-                          Every take is automatically saved to cloud storage. Never lose a performance due to computer crashes.
+                          Producer in Nashville watches drummer's screen in LA, gives real-time direction: "One more take, stronger on the chorus"
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div className="w-6 h-6 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary text-sm font-bold flex-shrink-0">3</div>
                       <div>
-                        <p className="font-medium">Built-in Livestreaming</p>
+                        <p className="font-medium">Upload High-Quality Files</p>
                         <p className="text-sm text-muted-foreground">
-                          Record AND stream simultaneously. Engage your audience while creating content - no separate tools needed.
+                          Once recorded, upload your WAV/AIFF files to the project for mixing (file upload feature coming soon)
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div className="w-6 h-6 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary text-sm font-bold flex-shrink-0">4</div>
                       <div>
-                        <p className="font-medium">Real-Time Collaboration</p>
+                        <p className="font-medium">Mix Engineer Combines All Tracks</p>
                         <p className="text-sm text-muted-foreground">
-                          Band members join from anywhere. See everyone's video, hear everyone's audio, collaborate like you're in the same room.
+                          Download all musicians' files, mix in your DAW. This is how real distributed albums are made.
                         </p>
                       </div>
                     </div>
@@ -270,114 +279,95 @@ export default function StudioPage() {
 
               {/* Detailed Features Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <Card className="p-6">
+                <Card className="p-6 rnrb-card">
                   <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-                    <Mic className="h-6 w-6 text-red-500" />
-                    Advanced Recording Features
+                    <Video className="h-6 w-6 text-brand-primary" />
+                    Video Collaboration Features
                   </h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
-                      <div className="p-2 bg-red-500/10 rounded flex-shrink-0">
-                        <Disc className="h-5 w-5 text-red-500" />
+                      <div className="p-2 bg-brand-primary/10 rounded flex-shrink-0">
+                        <Video className="h-5 w-5 text-brand-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold mb-1">Multi-track Audio Recording</p>
+                        <p className="font-semibold mb-1">HD Video Calls</p>
                         <p className="text-sm text-muted-foreground">
-                          Record up to 32 separate audio tracks simultaneously. Perfect for full band recordings, 
-                          orchestras, or complex production setups. Each track is saved independently for post-production.
+                          1080p video at 30fps. See your collaborators clearly for feedback sessions, rehearsals, and songwriting.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
-                        <Video className="h-5 w-5 text-purple-500" />
+                      <div className="p-2 bg-brand-primary/10 rounded flex-shrink-0">
+                        <MonitorSpeaker className="h-5 w-5 text-brand-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold mb-1">HD Video Recording (1080p)</p>
+                        <p className="font-semibold mb-1">Screen Sharing</p>
                         <p className="text-sm text-muted-foreground">
-                          Crystal-clear 1080p video at 30fps. Capture performances, music videos, or behind-the-scenes 
-                          content with professional quality. Customizable layouts include grid view, active speaker, or picture-in-picture.
+                          Share your DAW screen so producers can watch you work. They can provide direction, suggest edits, and guide your recording process.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="p-2 bg-blue-500/10 rounded flex-shrink-0">
-                        <MonitorSpeaker className="h-5 w-5 text-blue-500" />
+                      <div className="p-2 bg-brand-primary/10 rounded flex-shrink-0">
+                        <Users className="h-5 w-5 text-brand-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold mb-1">Zero-Latency Monitoring</p>
+                        <p className="font-semibold mb-1">Up to 32 Participants</p>
                         <p className="text-sm text-muted-foreground">
-                          Hear yourself and other musicians in real-time with less than 50ms latency. Critical for 
-                          tight performances and staying in sync during remote sessions.
+                          Large group video calls for full band meetings, collaborative songwriting, or remote rehearsals.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="p-2 bg-green-500/10 rounded flex-shrink-0">
-                        <Headphones className="h-5 w-5 text-green-500" />
+                      <div className="p-2 bg-brand-primary/10 rounded flex-shrink-0">
+                        <Disc className="h-5 w-5 text-brand-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold mb-1">Individual Headphone Mixes</p>
+                        <p className="font-semibold mb-1">Cloud Recording</p>
                         <p className="text-sm text-muted-foreground">
-                          Each participant controls their own monitor mix. Drummers can boost the click track, 
-                          vocalists can adjust their reverb - everyone hears exactly what they need.
+                          Record video sessions to cloud storage. Great for video content, not for professional audio capture.
                         </p>
                       </div>
                     </li>
                   </ul>
                 </Card>
 
-                <Card className="p-6">
+                <Card className="p-6 rnrb-card">
                   <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-                    <Users className="h-6 w-6 text-green-500" />
-                    Collaboration & Streaming
+                    <Radio className="h-6 w-6 text-brand-primary" />
+                    Live Streaming Features
                   </h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
-                      <div className="p-2 bg-green-500/10 rounded flex-shrink-0">
-                        <Users className="h-5 w-5 text-green-500" />
+                      <div className="p-2 bg-brand-primary/10 rounded flex-shrink-0">
+                        <Radio className="h-5 w-5 text-brand-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold mb-1">Up to 32 Participants</p>
+                        <p className="font-semibold mb-1">Live Streaming to Fans</p>
                         <p className="text-sm text-muted-foreground">
-                          Host massive remote sessions. Perfect for orchestras, choirs, or multi-band collaborations. 
-                          Everyone sees and hears each other in real-time.
+                          Stream finished performances to YouTube, Twitch, Facebook Live via RTMP. Perfect for virtual concerts and live events.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="p-2 bg-blue-500/10 rounded flex-shrink-0">
-                        <Radio className="h-5 w-5 text-blue-500" />
+                      <div className="p-2 bg-brand-primary/10 rounded flex-shrink-0">
+                        <MessageSquare className="h-5 w-5 text-brand-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold mb-1">Multi-Destination Streaming</p>
+                        <p className="font-semibold mb-1">In-Session Chat</p>
                         <p className="text-sm text-muted-foreground">
-                          Stream to YouTube, Twitch, Facebook Live, and custom RTMP servers simultaneously. 
-                          Reach all your audiences at once without complex restreaming services.
+                          Text chat during video calls for sharing links, notes, or quick messages without interrupting the session.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
-                        <Volume2 className="h-5 w-5 text-purple-500" />
+                      <div className="p-2 bg-brand-primary/10 rounded flex-shrink-0">
+                        <Mic className="h-5 w-5 text-brand-primary" />
                       </div>
                       <div>
-                        <p className="font-semibold mb-1">Built-in Talkback System</p>
+                        <p className="font-semibold mb-1">Mute/Video Controls</p>
                         <p className="text-sm text-muted-foreground">
-                          Producer/engineer communicates with performers without the audience hearing. Essential for 
-                          directing sessions and giving feedback during livestreams.
-                        </p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="p-2 bg-orange-500/10 rounded flex-shrink-0">
-                        <Settings className="h-5 w-5 text-orange-500" />
-                      </div>
-                      <div>
-                        <p className="font-semibold mb-1">Session Templates</p>
-                        <p className="text-sm text-muted-foreground">
-                          Save your audio routing, video layouts, and stream settings. Load them instantly for 
-                          consistent quality across all your sessions.
+                          Individual audio/video controls. Participants can mute themselves or turn off cameras as needed.
                         </p>
                       </div>
                     </li>
@@ -385,38 +375,38 @@ export default function StudioPage() {
                 </Card>
               </div>
 
-              {/* Additional Features */}
-              <Card className="p-8 mb-8">
-                <h3 className="text-2xl font-bold mb-6">Technical Specifications</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Technical Reality */}
+              <Card className="p-8 mb-8 rnrb-card">
+                <h3 className="text-2xl font-display font-bold mb-6">Technical Reality (What You Actually Get)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-semibold mb-3 text-brand-primary">Audio Quality</h4>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Video Communication</h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>• 48kHz/24-bit audio recording</li>
-                      <li>• Opus codec for streaming (48kbps-510kbps)</li>
-                      <li>• Automatic gain control (AGC)</li>
-                      <li>• Noise suppression & echo cancellation</li>
-                      <li>• Stereo and mono input support</li>
+                      <li>• 1080p HD video at 30fps</li>
+                      <li>• H.264 codec (browser-compatible)</li>
+                      <li>• Grid, active speaker, or custom layouts</li>
+                      <li>• Screen sharing (up to 4K resolution)</li>
+                      <li>• Up to 32 participants</li>
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3 text-brand-primary">Video Quality</h4>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Audio Streaming</h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>• 1080p HD video (1920x1080)</li>
-                      <li>• 30fps smooth motion</li>
-                      <li>• H.264 codec for compatibility</li>
-                      <li>• Custom layouts (grid, speaker, PIP)</li>
-                      <li>• Screen sharing up to 4K</li>
+                      <li>• Opus codec (compressed for internet)</li>
+                      <li>• NOT professional recording quality</li>
+                      <li>• 50-200ms internet latency (varies)</li>
+                      <li>• Echo cancellation & noise suppression</li>
+                      <li>• Good for communication, not audio capture</li>
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3 text-brand-primary">Streaming</h4>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Live Streaming</h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
                       <li>• RTMP/RTMPS output</li>
-                      <li>• 1080p @ 6Mbps bitrate</li>
-                      <li>• Multi-platform simultaneous</li>
-                      <li>• Custom stream keys</li>
-                      <li>• DVR/replay capability</li>
+                      <li>• Stream to YouTube, Twitch, Facebook</li>
+                      <li>• Great for finished performances</li>
+                      <li>• Cloud recording available</li>
+                      <li>• Custom stream keys supported</li>
                     </ul>
                   </div>
                   <div>
@@ -430,23 +420,13 @@ export default function StudioPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3 text-brand-primary">Collaboration</h4>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Best Uses</h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>• Screen sharing & annotations</li>
-                      <li>• In-session text chat</li>
-                      <li>• Session recording permissions</li>
-                      <li>• Mute/unmute controls</li>
-                      <li>• Participant management</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-3 text-brand-primary">Use Cases</h4>
-                    <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>• Remote band rehearsals</li>
-                      <li>• Album recording sessions</li>
-                      <li>• Live concert streaming</li>
-                      <li>• Music lessons/coaching</li>
-                      <li>• Podcast recording</li>
+                      <li>• Remote collaboration & feedback</li>
+                      <li>• Screen sharing your DAW for direction</li>
+                      <li>• Live streaming finished performances</li>
+                      <li>• Virtual band meetings & rehearsals</li>
+                      <li>• Songwriting sessions (video only)</li>
                     </ul>
                   </div>
                 </div>

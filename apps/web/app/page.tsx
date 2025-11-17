@@ -158,19 +158,19 @@ export default function HomePage() {
             >
               <Zap className="w-4 h-4 text-brand-primary" />
               <span className="text-sm font-medium">
-                The World's First & Only All-in-One Music Platform
+                Collaboration-First Music Platform
               </span>
             </motion.div>
 
             <p className="text-2xl md:text-3xl text-muted-foreground max-w-3xl mx-auto mb-4 leading-relaxed font-semibold">
-              Stop Using 7 Different Apps
+              Collaborate Better, Create Faster
             </p>
             
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              Record HD video sessions. Stream live concerts. Manage tours. Track royalties. 
-              <span className="text-brand-primary font-semibold"> All in one platform.</span>
+              HD video collaboration. Screen sharing. Real-time chat. Project management.
+              <span className="text-brand-primary font-semibold"> Built for remote music teams.</span>
               <br />
-              <span className="font-semibold">No other platform in the world does this.</span>
+              <span className="font-semibold">Currently in active development.</span>
             </p>
             
             <div className="flex items-center justify-center gap-4 flex-wrap">
