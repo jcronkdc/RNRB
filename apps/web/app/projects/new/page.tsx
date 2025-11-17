@@ -104,7 +104,7 @@ export default function NewProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#050816] to-[#0f172a] py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-background via-surface/20 to-background py-12 px-4">
       <div className="container mx-auto max-w-4xl">
         
         {/* Header */}

@@ -8,8 +8,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { UserMenu } from './UserMenu';
-
-// import { ThemeToggle } from './theme/ThemeToggle';
+import { ThemeToggle } from './theme/ThemeToggle';
 
 type NavLink = {
   label: string;
@@ -174,7 +173,7 @@ export function NavBar() {
                   </kbd>
                 </button>
 
-                {/* <ThemeToggle /> */}
+                <ThemeToggle />
                 
                 <div className="h-6 w-px bg-border" />
                 

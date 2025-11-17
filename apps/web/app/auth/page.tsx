@@ -66,7 +66,7 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#050816] via-[#061125] to-[#0f172a] px-6">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background via-surface/20 to-background px-6">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-semibold tracking-tight text-white">

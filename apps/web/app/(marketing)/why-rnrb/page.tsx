@@ -402,7 +402,7 @@ export default function WhyRNRBPage() {
             No credit card required to start.
           </p>
           <div className="flex items-center justify-center gap-4">
-            <Link href="/auth">
+            <Link href="/auth/signup">
               <Button size="lg" className="gap-2">
                 Start Your Free Trial
                 <ArrowRight className="h-4 w-4" />
