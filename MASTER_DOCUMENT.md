@@ -1879,3 +1879,89 @@ In Google Cloud Console, add:
 
 ---
 
+
+---
+
+## ✅ AGENT 31 - CHORD NOTATION & AI SUGGESTIONS
+
+**USER REQUEST:** Add chords above lyrics (A-flat, A-sharp, etc.) with easy editing and AI progression suggestions
+
+### CHORD NOTATION SYSTEM DEPLOYED:
+
+**FEATURES:**
+✅ Click above any lyric line → Add chord
+✅ Chord appears above lyrics (A, Bb, C#m, F#m, Abmaj7, etc.)
+✅ Click existing chord → Edit or remove
+✅ Position chords anywhere on line
+✅ Toggle chords on/off (button in editor)
+
+**EASY WORKFLOW:**
+1. Write lyrics (plain textarea)
+2. Click "ADD CHORDS" button → Chord editor appears
+3. Hover over any line → "+ Add Chord" button shows
+4. Click → Popup input
+5. Type chord (e.g. "Am", "Bb", "C#m")
+6. Press Enter → Chord appears above line
+7. Auto-saves with lyrics
+
+**AI CHORD PROGRESSION SUGGESTIONS:**
+✅ Select section (checkbox lines for verse/chorus/bridge)
+✅ Click "VERSE CHORDS" → AI suggests verse progression
+✅ Click "CHORUS CHORDS" → AI suggests chorus progression
+✅ Click "BRIDGE CHORDS" → AI suggests bridge progression
+✅ Based on song key (music theory)
+✅ GPT-4 powered creative suggestions
+✅ Fallback to common progressions (I-IV-V-vi patterns)
+
+**AI INTEGRATION:**
+✅ API: `/api/ai/suggest-chords`
+✅ Input: Song key + Section type + Lyrics
+✅ Output: 4-chord progression
+✅ Music theory engine: Converts key to scale
+✅ Smart suggestions: Verse vs Chorus vs Bridge (different feels)
+✅ Requires: OPENAI_API_KEY env var
+
+**SUPPORTED CHORDS:**
+✅ Major: C, D, E, F, G, A, B
+✅ Minor: Am, Bm, C#m, Dm, Em, F#m, Gm
+✅ Flats: Bb, Eb, Ab, Db, Gb (A-flat, etc.)
+✅ Sharps: C#, D#, F#, G#, A# (A-sharp, etc.)
+✅ 7ths: C7, Am7, Gmaj7, Dmaj7
+✅ Sus: Dsus4, Asus2, Csus4
+✅ Extended: Cmaj7, Abmaj7, F#m7, Dm9
+
+**COLLABORATIVE:**
+✅ Chords save with song (cloud storage)
+✅ Other collaborators see chords
+✅ Video co-writing shows chords
+✅ Export includes chords
+
+**OPTIMAL PATHWAY:**
+```
+Song Editor → Click 'ADD CHORDS' (1 click) → Hover line → Add chord (1 click)
+OR
+Song Editor → Select verse → 'VERSE CHORDS' (1 click) → AI fills 4 chords
+```
+
+**COMPONENTS:**
+- `chord-lyrics-editor.tsx` - Main chord editor
+- `/api/ai/suggest-chords` - AI progression suggestions
+
+**DATA STRUCTURE:**
+```typescript
+ChordPosition {
+  lineIndex: number;    // Which line (0-indexed)
+  position: number;     // Character position in line
+  chord: string;        // "Am", "G", "C#m", etc.
+}
+
+Song {
+  ...
+  chords: ChordPosition[];
+  ...
+}
+```
+
+**Build:** 40 routes, zero errors
+**Status:** Chord notation live with AI suggestions
+
