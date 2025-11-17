@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Sparkles } from 'lucide-react';
 
 // Dynamically import Ably components
-const ChatRoom = dynamic(() => import('./ably').then(m => m.ChatRoom), {
+const ChatRoom = dynamic(() => import('./ably/chat-room').then(m => m.ChatRoom), {
   ssr: false,
   loading: () => (
     <div className="h-[500px] flex items-center justify-center bg-surface rounded-lg">
@@ -40,10 +40,13 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
         <ChatRoom channelName={channelName} />
       </div>
 
-      <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-        <p className="text-sm text-blue-400 font-medium mb-1">💬 Real-Time Collaboration</p>
+      <div className="p-4 rnrb-card bg-purple-500/5 border-purple-500/20">
+        <p className="text-sm text-brand-primary font-medium mb-1 flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-purple-400" />
+          Real-Time Collaboration with AI
+        </p>
         <p className="text-xs text-muted-foreground">
-          Messages sync instantly across all team members. Use @mentions to notify specific collaborators.
+          Messages sync instantly. AI assistant coming soon - get chord suggestions and theory help in chat.
         </p>
       </div>
     </div>

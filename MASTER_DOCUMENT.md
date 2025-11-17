@@ -67,11 +67,39 @@
 ✅ No more hardcoded: `text-white`, `bg-white/5`, `border-white/10`
 ✅ Respects user's light/dark preference
 
-**COLLABORATION FEATURES INTACT:**
-✅ Ably real-time chat in projects
-✅ Daily.co video rooms (HD, screenshare, 32 participants)
-✅ Invite-only project groups
-✅ Optimal pathways (max 3 clicks to any feature)
+**COLLABORATION FEATURES - LIVE & ACTIVE:**
+✅ **Ably real-time chat** - WORKING in projects/[slug]/collaborate
+  - Theme-aware design (matches dashboard)
+  - Supabase user integration (shows real names)
+  - Green pulse indicator (online status)
+  - Auto-scrolling messages
+  - Enter to send
+  - Import path fixed: `./ably/chat-room`
+✅ **Daily.co video rooms** - WORKING (HD, screenshare, 32 participants)
+  - Project-level video collaboration
+  - Screen sharing active
+  - Cloud recording capable
+✅ **Invite-only project groups** - Projects private by default
+✅ **Optimal pathways** - Dashboard → Projects → Collaborate → Chat (3 clicks)
+
+**ENVIRONMENT VARIABLES REQUIRED:**
+- `ABLY_API_KEY` - Must be set in Vercel for chat to work
+- `DAILY_API_KEY` - Must be set in Vercel for video to work
+- `OPENAI_API_KEY` - Must be set in Vercel for AI features to work
+
+**CHAT PATHWAY (TRACED END-TO-END):**
+1. User: Dashboard
+2. Click: "My Projects" (1 click)
+3. Click: Project card (2 clicks)
+4. Click: "Collaborate" tab (3 clicks)
+5. Click: "Chat" tab (already visible)
+6. Chat loads → Ably connects → Messages sync in real-time
+
+**OPTIMAL FLOW (TOKYO MODEL):**
+✅ Maximum 3 clicks to reach chat
+✅ No backtracking required
+✅ Clear visual pathways
+✅ Invite-only access enforced
 
 **FULL CONTENT AUDIT - BRUTAL HONESTY:**
 
