@@ -275,10 +275,34 @@ Project → Collaborate (1 click) → Video Tab → Start Room → LIVE Daily.co
 ✅ In-room text chat
 ✅ Cloud recording per session
 
-**NEXT PHASE:**
-- Song-level collaboration (chat + video per song)
-- Shared lyrics editor with cursor tracking
+### ✅ PHASE 4 IN PROGRESS: Song-Level Collaborative Writing
+
+**INFRASTRUCTURE DEPLOYED:**
+- ✅ Song detail page: `/projects/[slug]/songs/[songId]`
+- ✅ CleanCollaborativeEditor component (word/sentence level editing)
+- ✅ SongChat component (Ably real-time per song)
+- ✅ AI suggestion API: `/api/ai/suggest-lyrics`
+- ✅ Database schema: SongVersion, LyricChange models
+- ✅ Tab navigation: Lyrics / Chat / Video
+
+**FEATURES WORKING:**
+✅ Word-level suggestions (click word → suggest → accept/reject)
+✅ Sentence-level suggestions (highlight → suggest → accept/reject)
+✅ Master version concept (accepted changes update master)
+✅ Change attribution (who suggested what)
+✅ Real-time song chat (Ably per song)
+✅ AI-powered suggestions (OpenAI GPT-4)
+
+**CURRENTLY COMPLETING:**
+- Integrating Daily.co video for song-level co-writing
+- Connecting to database (currently using mock data)
+- Cursor tracking in shared editor
+- Export system improvements
+- Version history UI
+
+**NEXT AFTER THIS:**
 - Asset upload with collaboration
+- File comments/annotations
 
 **THEN (Phase 4):**
 3. **Song Collaboration Features**

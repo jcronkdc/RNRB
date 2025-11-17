@@ -135,7 +135,7 @@ export default function MessagesPage() {
         {/* Detailed Features */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <Card className="p-6">
-            <h3 className="text-2xl font-semibold mb-6">💬 Advanced Chat Features</h3>
+            <h3 className="text-2xl font-semibold mb-6">Advanced Chat Features</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">

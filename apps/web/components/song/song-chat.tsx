@@ -120,7 +120,7 @@ export default function SongChat({ channelName, songTitle, userName = 'Anonymous
           </button>
         </div>
         <p className="text-xs text-muted-foreground mt-2">
-          💡 Focused on "{songTitle}" - Discuss lyrics, structure, and creative decisions
+          Focused on "{songTitle}" - Discuss lyrics, structure, and creative decisions
         </p>
       </div>
     </div>

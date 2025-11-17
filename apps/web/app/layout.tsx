@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { AblyProvider } from '@/components/ably';
+import Script from 'next/script';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -70,6 +71,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          src="https://unpkg.com/@daily-co/daily-js"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body>
         <AblyProvider>
           {children}

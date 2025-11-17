@@ -29,6 +29,11 @@ const SongChat = dynamic(() => import('@/components/song/song-chat'), {
   loading: () => <div className="animate-pulse h-96 rounded-lg bg-white/5" />
 });
 
+const SongVideoSession = dynamic(() => import('@/components/song/song-video-session'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-[600px] rounded-lg bg-white/5" />
+});
+
 export default function SongDetailPage({ params }: { params: { slug: string; songId: string } }) {
   const [showVideo, setShowVideo] = useState(false);
   const [activeTab, setActiveTab] = useState<'lyrics' | 'chat' | 'video'>('lyrics');
@@ -62,11 +67,6 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
               <span>Key: {song.key || 'Not set'}</span>
               <span>•</span>
               <span>Tempo: {song.tempo || 'Not set'} BPM</span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                3 collaborators
-              </span>
             </div>
           </div>
 
@@ -157,22 +157,30 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
             
             {activeTab === 'video' && (
               <Card className="p-6">
-                <div className="text-center py-12 space-y-4">
-                  <Video className="w-16 h-16 mx-auto text-brand-primary opacity-50" />
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">Co-Writing Video Session</h3>
-                    <p className="text-muted-foreground mb-6">
-                      Start a video call with your collaborators to write this song together in real-time
+                {!showVideo ? (
+                  <div className="text-center py-12 space-y-4">
+                    <Video className="w-16 h-16 mx-auto text-brand-primary opacity-50" />
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2">Co-Writing Video Session</h3>
+                      <p className="text-muted-foreground mb-6">
+                        Start a video call with your collaborators to write this song together in real-time
+                      </p>
+                      <Button size="lg" onClick={() => setShowVideo(true)}>
+                        <Video className="w-5 h-5 mr-2" />
+                        Start Co-Writing Session
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      HD video / Screen sharing / Cursor control / Up to 32 participants
                     </p>
-                    <Button size="lg" onClick={() => setShowVideo(true)}>
-                      <Video className="w-5 h-5 mr-2" />
-                      Start Co-Writing Session
-                    </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    HD video • Screen sharing • Up to 32 participants • Cloud recording
-                  </p>
-                </div>
+                ) : (
+                  <SongVideoSession 
+                    songId={params.songId} 
+                    songTitle={song.title}
+                    onClose={() => setShowVideo(false)}
+                  />
+                )}
               </Card>
             )}
           </div>
