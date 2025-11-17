@@ -181,17 +181,18 @@ export default function HomePage() {
           </div>
 
           <motion.h1 
-            className="text-6xl md:text-8xl font-bold mb-6"
+            className="text-6xl md:text-8xl font-black mb-6 rock-logo"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
+            data-text="WHERE ROCK LIVES"
           >
-            <span className="bg-gradient-to-br from-brand-primary via-purple-500 to-brand-secondary bg-clip-text text-transparent">
-              Where Music
+            <span className="bg-gradient-to-br from-rnrb-neon-purple via-rnrb-neon-pink to-rnrb-neon-blue bg-clip-text text-transparent uppercase">
+              Where Rock
             </span>
             <br />
-            <span className="bg-gradient-to-br from-brand-secondary via-pink-500 to-red-500 bg-clip-text text-transparent">
-              Comes Alive
+            <span className="bg-gradient-to-br from-rnrb-neon-blue via-rnrb-neon-cyan to-rnrb-neon-purple bg-clip-text text-transparent uppercase">
+              Lives Forever
             </span>
           </motion.h1>
           
@@ -213,7 +214,7 @@ export default function HomePage() {
           >
             <Link 
               href="/guide"
-              className="group relative px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary rounded-2xl font-semibold text-lg text-white overflow-hidden shadow-2xl shadow-brand-primary/25 hover:shadow-brand-primary/40 transition-all"
+              className="rock-btn sf-btn-primary group relative px-8 py-4 rounded-2xl font-black text-lg text-white overflow-hidden"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Find Your Features
@@ -229,11 +230,11 @@ export default function HomePage() {
             
             <Link 
               href="/auth"
-              className="group px-8 py-4 border-2 border-border hover:border-brand-primary/50 bg-surface/80 backdrop-blur rounded-2xl font-semibold text-lg transition-all hover:shadow-xl hover:shadow-brand-primary/10"
+              className="group px-8 py-4 border-2 border-rnrb-neon-purple/50 hover:border-rnrb-neon-purple bg-rnrb-color-stage/80 backdrop-blur rounded-2xl font-black text-lg uppercase transition-all hover:shadow-xl hover:shadow-rnrb-neon-purple/30 rock-hover"
             >
               <span className="flex items-center gap-2">
-                Start Creating
-                <Sparkles className="w-5 h-5 text-brand-primary group-hover:rotate-12 transition-transform" />
+                Start Jamming
+                <Guitar className="w-5 h-5 text-rnrb-neon-purple group-hover:animate-string-vibrate transition-transform" />
               </span>
             </Link>
           </motion.div>
@@ -323,9 +324,9 @@ export default function HomePage() {
                 className="group relative h-full"
               >
                 <div className={`
-                  relative h-full overflow-hidden rounded-3xl border bg-surface/80 backdrop-blur
-                  ${hoveredFeature === index ? 'border-brand-primary/50 shadow-2xl shadow-brand-primary/20' : 'border-border/50'}
-                  transition-all duration-300 cursor-pointer
+                  relative h-full overflow-hidden rounded-xl border-2 bg-rnrb-color-stage/80 backdrop-blur amp-stack
+                  ${hoveredFeature === index ? 'border-rnrb-neon-purple/70 shadow-2xl shadow-rnrb-neon-purple/30' : 'border-rnrb-neon-purple/30'}
+                  transition-all duration-300 cursor-pointer rock-hover
                 `}>
                 {/* Background Pattern */}
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${feature.bgPattern}`} />
@@ -357,15 +358,13 @@ export default function HomePage() {
                 )}
                 
                 <div className="relative z-10 p-6">
-                  {/* Icon with animated background */}
+                  {/* Icon with rock style */}
                   <motion.div 
-                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.color} p-0.5 mb-4 group-hover:scale-110 transition-transform`}
+                    className="guitar-pick mb-4 group-hover:scale-110 transition-transform flex items-center justify-center"
                     whileHover={{ rotate: [0, -10, 10, 0] }}
                     transition={{ duration: 0.5 }}
                   >
-                    <div className="w-full h-full rounded-2xl bg-background/50 backdrop-blur flex items-center justify-center">
-                      <feature.icon className="w-8 h-8 text-white" />
-                    </div>
+                    <feature.icon className="w-8 h-8 text-white z-10" />
                   </motion.div>
 
                   {/* Content */}

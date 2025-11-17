@@ -1,0 +1,395 @@
+/* 🎸 ROCK N' ROLL BASEMENT THEME OVERRIDE 🎸 */
+/* Transform the aesthetic into a dark underground rock club */
+
+:root {
+  /* Dark Rock Club Theme - Deep purples, blues, blacks with neon accents */
+  --rnrb-color-void: 260 20% 8%;     /* Deep purple-black background */
+  --rnrb-color-stage: 260 18% 12%;   /* Slightly lighter stage floor */
+  --rnrb-color-wall: 260 16% 16%;    /* Club walls */
+  --rnrb-color-booth: 260 14% 20%;   /* VIP booth seating */
+  
+  /* Neon accent colors */
+  --rnrb-neon-purple: 270 100% 65%;  /* Electric purple neon */
+  --rnrb-neon-blue: 220 100% 60%;    /* Electric blue neon */
+  --rnrb-neon-pink: 330 100% 65%;    /* Hot pink neon */
+  --rnrb-neon-cyan: 180 100% 50%;    /* Cyan stage lights */
+  
+  /* Rock textures */
+  --rnrb-texture-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  --rnrb-texture-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.9' numOctaves='1' result='turbulence'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* Override all theme colors with rock aesthetic */
+[data-theme='light'],
+[data-theme='dark'],
+[data-theme='warm'],
+:root {
+  /* Background colors - Dark club atmosphere */
+  --sf-color-background: var(--rnrb-color-void);
+  --sf-color-surface: var(--rnrb-color-stage);
+  --sf-color-surface-muted: var(--rnrb-color-wall);
+  --sf-color-surface-elevated: var(--rnrb-color-booth);
+  
+  /* Text colors - High contrast for dark backgrounds */
+  --sf-color-foreground: 0 0% 95%;              /* Almost white text */
+  --sf-color-muted: 0 0% 65%;                   /* Muted gray text */
+  --sf-color-muted-foreground: 0 0% 75%;        /* Slightly brighter muted */
+  --sf-color-border: 260 15% 25%;               /* Dark purple borders */
+  --sf-color-overlay: 260 25% 6%;               /* Ultra dark overlay */
+  
+  /* Brand colors - Neon purple/blue theme */
+  --sf-color-brand-primary: var(--rnrb-neon-purple);
+  --sf-color-brand-primary-foreground: 0 0% 100%;
+  --sf-color-brand-secondary: var(--rnrb-neon-blue);
+  --sf-color-brand-secondary-foreground: 0 0% 100%;
+  --sf-color-brand-muted: 260 20% 30%;
+  --sf-color-brand-muted-foreground: 0 0% 85%;
+  --sf-color-brand-foreground: 0 0% 95%;
+  
+  /* Accent colors - Neon highlights */
+  --sf-color-accent: var(--rnrb-neon-pink);
+  --sf-color-accent-foreground: 0 0% 100%;
+  --sf-color-accent-subtle: 330 60% 30%;
+  
+  /* Semantic colors - Rock style */
+  --sf-color-success: var(--rnrb-neon-cyan);
+  --sf-color-success-foreground: 0 0% 10%;
+  --sf-color-warning: 45 100% 55%;  /* Gold stage lights */
+  --sf-color-warning-foreground: 0 0% 10%;
+  --sf-color-danger: 0 100% 60%;    /* Red alert lights */
+  --sf-color-danger-foreground: 0 0% 100%;
+  
+  /* Effects */
+  --sf-ring: var(--rnrb-neon-purple);
+  --sf-outline: 270 50% 40%;
+  --sf-ring-offset: var(--rnrb-color-void);
+  
+  /* Shadows - Neon glows */
+  --sf-shadow-soft: 0 0 30px -10px hsl(var(--rnrb-neon-purple) / 0.3);
+  --sf-shadow-elevated: 0 10px 40px -15px hsl(var(--rnrb-neon-purple) / 0.4);
+  --sf-shadow-outline: 0 0 0 2px hsl(var(--rnrb-neon-purple) / 0.3);
+  --sf-shadow-glow: 0 0 50px -5px hsl(var(--rnrb-neon-purple) / 0.6);
+}
+
+/* Rock N' Roll body styling */
+body {
+  position: relative;
+  background-color: hsl(var(--rnrb-color-void));
+  background-image: 
+    /* Spotlight effect */
+    radial-gradient(ellipse at top, hsl(var(--rnrb-neon-purple) / 0.15), transparent 50%),
+    radial-gradient(ellipse at bottom right, hsl(var(--rnrb-neon-blue) / 0.1), transparent 50%),
+    /* Stage lights */
+    conic-gradient(from 45deg at 20% 0%, transparent 0deg, hsl(var(--rnrb-neon-purple) / 0.08) 45deg, transparent 90deg),
+    conic-gradient(from 225deg at 80% 0%, transparent 0deg, hsl(var(--rnrb-neon-blue) / 0.08) 45deg, transparent 90deg);
+}
+
+/* Add texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--rnrb-texture-noise);
+  background-size: 256px 256px;
+  background-repeat: repeat;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Add grain animation */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--rnrb-texture-grain);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  animation: grain 8s steps(10) infinite;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -5%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 10%); }
+  80% { transform: translate(5%, 5%); }
+  90% { transform: translate(10%, 10%); }
+}
+
+/* Rock typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+  text-transform: uppercase;
+  background: linear-gradient(to right, 
+    hsl(var(--rnrb-neon-purple)), 
+    hsl(var(--rnrb-neon-blue))
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px hsl(var(--rnrb-neon-purple) / 0.5);
+  position: relative;
+}
+
+/* Neon glow effect for headings */
+h1::after, h2::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  background: none;
+  -webkit-text-fill-color: hsl(var(--rnrb-neon-purple));
+  text-shadow: 
+    0 0 20px hsl(var(--rnrb-neon-purple) / 0.8),
+    0 0 40px hsl(var(--rnrb-neon-purple) / 0.6),
+    0 0 60px hsl(var(--rnrb-neon-purple) / 0.4);
+  filter: blur(2px);
+  opacity: 0.7;
+}
+
+/* Rock button styles */
+.sf-btn-primary,
+button[class*="primary"],
+a[class*="primary"] {
+  position: relative;
+  background: linear-gradient(135deg, 
+    hsl(var(--rnrb-neon-purple)), 
+    hsl(var(--rnrb-neon-blue))
+  );
+  border: 2px solid hsl(var(--rnrb-neon-purple) / 0.5);
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  overflow: hidden;
+}
+
+.sf-btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, 
+    hsl(var(--rnrb-neon-purple)), 
+    hsl(var(--rnrb-neon-pink))
+  );
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: -1;
+}
+
+.sf-btn-primary:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 10px 40px -10px hsl(var(--rnrb-neon-purple) / 0.8),
+    0 0 80px -20px hsl(var(--rnrb-neon-purple) / 0.6);
+}
+
+.sf-btn-primary:hover::before {
+  opacity: 1;
+}
+
+/* Navigation bar rock style */
+nav, header {
+  background: hsl(var(--rnrb-color-void) / 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid hsl(var(--rnrb-neon-purple) / 0.3);
+  box-shadow: 0 4px 30px -5px hsl(var(--rnrb-neon-purple) / 0.3);
+}
+
+/* Card/Surface rock style */
+.sf-card,
+[class*="surface"],
+[class*="card"] {
+  background: hsl(var(--rnrb-color-stage) / 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid hsl(var(--rnrb-neon-purple) / 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.sf-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--rnrb-texture-noise);
+  background-size: 256px 256px;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* Input fields rock style */
+input, textarea, select {
+  background: hsl(var(--rnrb-color-void) / 0.5) !important;
+  border: 2px solid hsl(var(--rnrb-neon-purple) / 0.3) !important;
+  color: hsl(0 0% 95%) !important;
+  transition: all 0.3s;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: hsl(var(--rnrb-neon-purple) / 0.8) !important;
+  box-shadow: 
+    0 0 0 3px hsl(var(--rnrb-neon-purple) / 0.2),
+    0 0 30px -5px hsl(var(--rnrb-neon-purple) / 0.5) !important;
+}
+
+/* Links with neon underglow */
+a {
+  color: hsl(var(--rnrb-neon-cyan));
+  text-decoration: none;
+  position: relative;
+  transition: all 0.3s;
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent,
+    hsl(var(--rnrb-neon-cyan)),
+    transparent
+  );
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+a:hover {
+  color: hsl(var(--rnrb-neon-pink));
+  text-shadow: 0 0 10px hsl(var(--rnrb-neon-pink) / 0.5);
+}
+
+a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Scrollbar rock style */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--rnrb-color-void));
+  border: 1px solid hsl(var(--rnrb-neon-purple) / 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    hsl(var(--rnrb-neon-purple) / 0.5),
+    hsl(var(--rnrb-neon-blue) / 0.5)
+  );
+  border-radius: 6px;
+  border: 1px solid hsl(var(--rnrb-neon-purple) / 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    hsl(var(--rnrb-neon-purple) / 0.8),
+    hsl(var(--rnrb-neon-blue) / 0.8)
+  );
+  box-shadow: 0 0 10px hsl(var(--rnrb-neon-purple) / 0.5);
+}
+
+/* Selection color */
+::selection {
+  background: hsl(var(--rnrb-neon-purple) / 0.4);
+  color: white;
+  text-shadow: 0 0 5px hsl(var(--rnrb-neon-purple));
+}
+
+/* Ensure all content is above texture overlays */
+main, section, div, article {
+  position: relative;
+  z-index: 3;
+}
+
+/* Rock badge styles */
+.sf-badge {
+  background: hsl(var(--rnrb-color-booth) / 0.8);
+  border: 1px solid hsl(var(--rnrb-neon-purple) / 0.4);
+  color: hsl(var(--rnrb-neon-cyan));
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  box-shadow: inset 0 0 20px -5px hsl(var(--rnrb-neon-purple) / 0.3);
+}
+
+/* Rock Navigation Specific Styles */
+.rock-nav {
+  background: hsl(var(--rnrb-color-void) / 0.95);
+  border-bottom-color: hsl(var(--rnrb-neon-purple) / 0.3);
+  box-shadow: 
+    0 4px 30px -5px hsl(var(--rnrb-neon-purple) / 0.4),
+    inset 0 -1px 0 0 hsl(var(--rnrb-neon-purple) / 0.2);
+}
+
+.rock-nav-list {
+  background: hsl(var(--rnrb-color-stage) / 0.7);
+  border-color: hsl(var(--rnrb-neon-purple) / 0.3);
+  backdrop-filter: blur(10px) saturate(150%);
+}
+
+.rock-nav-list a {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.rock-nav-list a:hover {
+  color: hsl(var(--rnrb-neon-pink));
+  text-shadow: 0 0 15px hsl(var(--rnrb-neon-pink) / 0.8);
+}
+
+/* Active link with neon underglow */
+.rock-nav-list a.active-nav-link {
+  color: hsl(var(--rnrb-neon-cyan));
+  text-shadow: 0 0 20px hsl(var(--rnrb-neon-cyan) / 0.8);
+  position: relative;
+}
+
+.rock-nav-list a.active-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: hsl(var(--rnrb-neon-cyan));
+  box-shadow: 0 0 10px hsl(var(--rnrb-neon-cyan));
+}
+
+/* Mobile menu rock style */
+.mobile-menu-rock {
+  background: hsl(var(--rnrb-color-void) / 0.98);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid hsl(var(--rnrb-neon-purple) / 0.3);
+}
+
+/* Logo with rock animation */
+.rock-logo-nav {
+  filter: drop-shadow(0 0 10px hsl(var(--rnrb-neon-purple) / 0.5));
+  transition: all 0.3s;
+}
+
+.rock-logo-nav:hover {
+  filter: drop-shadow(0 0 20px hsl(var(--rnrb-neon-purple) / 0.8));
+  transform: scale(1.05);
+}

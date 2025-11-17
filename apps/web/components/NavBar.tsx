@@ -98,14 +98,15 @@ export function NavBar() {
   const navClass = useMemo(
     () =>
       cn(
-        'sticky top-0 z-40 w-full border-b border-border/40 backdrop-blur transition-all duration-300',
-        scrolled ? 'bg-surface/95 shadow-soft' : 'bg-surface/70'
+        'sticky top-0 z-40 w-full border-b backdrop-blur transition-all duration-300',
+        scrolled ? 'bg-surface/95 shadow-soft border-rnrb-neon-purple/40' : 'bg-surface/70 border-transparent',
+        'rock-nav' // Rock theme class
       ),
     [scrolled]
   );
 
   const listClass =
-    'flex items-center gap-1 rounded-full border border-border/60 bg-surface/70 px-2 py-1 text-sm shadow-soft';
+    'flex items-center gap-1 rounded-full border bg-surface/70 px-2 py-1 text-sm shadow-soft rock-nav-list';
 
   return (
     <>

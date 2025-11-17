@@ -1,0 +1,314 @@
+/* 🎸 ROCK N' ROLL ANIMATIONS & EFFECTS 🎸 */
+
+/* Neon flicker animation for logos and important elements */
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    filter: brightness(1) contrast(1);
+    text-shadow: 
+      0 0 10px currentColor,
+      0 0 20px currentColor,
+      0 0 40px currentColor,
+      0 0 80px currentColor;
+  }
+  20%, 24%, 55% {
+    filter: brightness(0.8) contrast(0.9);
+    text-shadow: 
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 20px currentColor;
+  }
+}
+
+/* Stage light sweep */
+@keyframes stage-light-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Vinyl record spin */
+@keyframes vinyl-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Rock pulse for CTAs */
+@keyframes rock-pulse {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--rnrb-neon-purple) / 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 20px hsl(var(--rnrb-neon-purple) / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--rnrb-neon-purple) / 0);
+  }
+}
+
+/* Guitar string vibration */
+@keyframes string-vibrate {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-1px);
+  }
+  75% {
+    transform: translateY(1px);
+  }
+}
+
+/* Amplifier feedback */
+@keyframes amp-feedback {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+  50% {
+    transform: scale(1.1) rotate(1deg);
+    filter: blur(1px);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+/* Rock logo animation */
+.rock-logo {
+  animation: neon-flicker 3s ease-in-out infinite alternate;
+}
+
+/* Stage light effect for headers */
+.stage-light {
+  position: relative;
+  overflow: hidden;
+}
+
+.stage-light::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -200%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--rnrb-neon-cyan) / 0.3) 50%,
+    transparent 100%
+  );
+  animation: stage-light-sweep 3s ease-in-out infinite;
+}
+
+/* Vinyl record decoration */
+.vinyl-record {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background: 
+    radial-gradient(circle at center, 
+      hsl(var(--rnrb-color-void)) 15%,
+      hsl(var(--rnrb-color-stage)) 15.5%,
+      hsl(var(--rnrb-color-stage)) 40%,
+      hsl(var(--rnrb-color-wall)) 40.5%,
+      hsl(var(--rnrb-color-wall)) 65%,
+      hsl(var(--rnrb-color-booth)) 65.5%
+    );
+  border-radius: 50%;
+  box-shadow: 
+    0 0 50px -10px hsl(var(--rnrb-neon-purple) / 0.5),
+    inset 0 0 30px -10px hsl(var(--rnrb-neon-blue) / 0.3);
+  animation: vinyl-spin 3s linear infinite;
+}
+
+.vinyl-record::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  transform: translate(-50%, -50%);
+  background: hsl(var(--rnrb-neon-pink));
+  border-radius: 50%;
+  box-shadow: 
+    0 0 20px hsl(var(--rnrb-neon-pink) / 0.8),
+    inset 0 0 10px hsl(var(--rnrb-color-void));
+}
+
+/* Rock button animations */
+.rock-btn {
+  position: relative;
+  overflow: hidden;
+  animation: rock-pulse 2s infinite;
+}
+
+.rock-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, 
+    hsl(var(--rnrb-neon-cyan) / 0.8),
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.rock-btn:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Guitar pick shape for decorative elements */
+.guitar-pick {
+  width: 60px;
+  height: 70px;
+  background: linear-gradient(135deg, 
+    hsl(var(--rnrb-neon-purple)),
+    hsl(var(--rnrb-neon-blue))
+  );
+  border-radius: 50% 50% 50% 10%;
+  transform: rotate(45deg);
+  box-shadow: 
+    0 0 30px -5px hsl(var(--rnrb-neon-purple) / 0.8),
+    inset 0 0 20px -5px hsl(var(--rnrb-color-void) / 0.5);
+  animation: string-vibrate 0.1s ease-in-out infinite;
+}
+
+/* Sound wave visualization */
+.sound-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 40px;
+}
+
+.sound-wave span {
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to top,
+    hsl(var(--rnrb-neon-purple)),
+    hsl(var(--rnrb-neon-cyan))
+  );
+  animation: sound-wave-pulse 1.2s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+.sound-wave span:nth-child(1) { animation-delay: 0s; }
+.sound-wave span:nth-child(2) { animation-delay: 0.1s; }
+.sound-wave span:nth-child(3) { animation-delay: 0.2s; }
+.sound-wave span:nth-child(4) { animation-delay: 0.3s; }
+.sound-wave span:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes sound-wave-pulse {
+  0%, 100% {
+    transform: scaleY(0.3);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* Amplifier stack decoration */
+.amp-stack {
+  position: relative;
+  background: linear-gradient(180deg,
+    hsl(var(--rnrb-color-booth)),
+    hsl(var(--rnrb-color-stage))
+  );
+  border: 2px solid hsl(var(--rnrb-neon-purple) / 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.amp-stack::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 8px,
+      hsl(var(--rnrb-color-void) / 0.3) 8px,
+      hsl(var(--rnrb-color-void) / 0.3) 10px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 8px,
+      hsl(var(--rnrb-color-void) / 0.2) 8px,
+      hsl(var(--rnrb-color-void) / 0.2) 10px
+    );
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* Marshall amp knobs */
+.amp-knob {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg,
+    hsl(var(--rnrb-color-wall)),
+    hsl(var(--rnrb-color-void))
+  );
+  border: 3px solid hsl(var(--rnrb-neon-purple) / 0.5);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 
+    0 2px 10px hsl(var(--rnrb-color-void) / 0.8),
+    inset 0 -2px 5px hsl(var(--rnrb-neon-purple) / 0.2);
+}
+
+.amp-knob::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 2px;
+  height: 12px;
+  background: hsl(var(--rnrb-neon-cyan));
+  transform: translateX(-50%);
+  box-shadow: 0 0 5px hsl(var(--rnrb-neon-cyan));
+}
+
+/* Hover effects for interactive elements */
+.rock-hover {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.rock-hover:hover {
+  transform: scale(1.05) rotate(-1deg);
+  filter: brightness(1.2) saturate(1.5);
+  animation: amp-feedback 0.5s ease-in-out;
+}
+
+/* Text with rock texture */
+.rock-text {
+  background-image: 
+    linear-gradient(180deg,
+      hsl(var(--rnrb-neon-purple)),
+      hsl(var(--rnrb-neon-pink))
+    ),
+    var(--rnrb-texture-noise);
+  background-size: 100% 100%, 200px 200px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px hsl(var(--rnrb-neon-purple) / 0.5));
+}

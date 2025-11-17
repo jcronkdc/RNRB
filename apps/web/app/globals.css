@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @import '@cronkwaters/ui/styles.css';
+@import './rock-theme.css'; /* 🎸 Rock N' Roll Basement Theme Override */
+@import './rock-animations.css'; /* 🎸 Rock N' Roll Animations */
 
 /* Theme Contrast Fixes for CronkWaters Project */
 
