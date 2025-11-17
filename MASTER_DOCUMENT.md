@@ -1,7 +1,266 @@
 # 🍄 Rock N' Roll Basement Master Document — Truth Only
 
-**Last Updated:** 2025-11-17 (Agent 31 - HOMEPAGE RESTORED + TESTING COMPLETE)
-**Status:** ✅ **FIXED** – Correct homepage restored, build successful, deployed
+**Last Updated:** 2025-11-17 (CURRENT AGENT - AUTH CRITICAL FIX)
+**Status:** 🚨 **AUTH BROKEN - ROOT CAUSE FOUND & FIXED** – Requires database migration + env setup
+
+---
+
+## 🔥 CURRENT AGENT - CRITICAL AUTH FIX: MISSING DATABASE TABLES
+
+### 📊 EXECUTIVE SUMMARY:
+
+**Problem:** Sign up and sign in COMPLETELY BROKEN - NextAuth requires specific database tables that were NEVER created
+
+**Root Cause:** Prisma schema missing `Account`, `Session`, and `VerificationToken` models required by PrismaAdapter
+
+**Solution:** Added all NextAuth models to schema - MUST apply migrations before auth will work
+
+**Status:** ✅ SCHEMA FIXED, ⚠️ REQUIRES MIGRATION + ENV VARS
+
+**Commit:** `26fecd7` - Added NextAuth Prisma models
+
+---
+
+### ❌ ROOT CAUSE ANALYSIS - THE BRUTAL TRUTH:
+
+**Previous agents claimed:** "Auth is broken, needs Google OAuth redirect URIs, env vars might be wrong"
+
+**ACTUAL TRUTH:** Auth could NEVER work because the database schema was fundamentally broken:
+
+1. **Missing Tables:**
+   - ❌ NO `Account` table (stores OAuth provider connections)
+   - ❌ NO `Session` table (stores user sessions)
+   - ❌ NO `VerificationToken` table (stores email magic links)
+   - ❌ User model missing `emailVerified` field
+
+2. **What This Means:**
+   - ANY attempt to sign in (Google, Email, Apple) would FAIL with database errors
+   - PrismaAdapter can't function without these tables
+   - No amount of env var configuration would fix this
+   - Previous "fixes" were treating symptoms, not the disease
+
+3. **How This Happened:**
+   - Schema was likely copied from another project without NextAuth support
+   - Or NextAuth was added later but migrations weren't created
+   - No one traced the full auth pathway from button click to database write
+
+### ✅ FIX APPLIED:
+
+**Added to `packages/db/prisma/schema.prisma`:**
+
+```prisma
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+```
+
+**Updated User model:**
+- Added `emailVerified DateTime?`
+- Added `accounts Account[]`
+- Added `sessions Session[]`
+
+**Files Modified:**
+- ✅ `packages/db/prisma/schema.prisma` - Added NextAuth models
+- ✅ `SETUP_AUTH.md` - Complete auth setup guide created
+
+---
+
+### 🚨 CRITICAL NEXT STEPS (IN ORDER):
+
+**BLOCKER 1: Database Migration Required**
+
+Before auth can work, you MUST run:
+
+```bash
+cd packages/db
+
+# Option A: Production database (requires DATABASE_URL)
+pnpm prisma migrate deploy
+
+# Option B: Development database
+pnpm prisma migrate dev --name add_nextauth_models
+```
+
+**BLOCKER 2: Environment Variables Required**
+
+Create `apps/web/.env.local` with:
+
+```bash
+# REQUIRED - Without these, app won't start
+DATABASE_URL="postgresql://user:pass@host:5432/db"
+NEXTAUTH_SECRET="generate with: openssl rand -base64 32"
+NEXTAUTH_URL="http://localhost:3000"
+
+# REQUIRED for Google Sign-In
+GOOGLE_CLIENT_ID="your-id.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="your-secret"
+
+# OPTIONAL but recommended for Email Sign-In
+EMAIL_SERVER_URL="smtp://resend:YOUR_API_KEY@smtp.resend.com:587"
+EMAIL_FROM="onboarding@resend.dev"
+```
+
+**BLOCKER 3: Google OAuth Configuration**
+
+In Google Cloud Console:
+1. Go to https://console.cloud.google.com/apis/credentials
+2. Add redirect URIs:
+   - `http://localhost:3000/api/auth/callback/google`
+   - `https://your-production-domain/api/auth/callback/google`
+
+---
+
+### 📊 CURRENT BUILD STATUS:
+
+**✅ BUILD SUCCESSFUL:**
+```
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    15.2 kB         214 kB
+├ ○ /auth                                  160 B         105 kB  ✅
+├ ○ /messages                            2.82 kB         199 kB
+├ ○ /pricing                             3.84 kB         200 kB
+├ ○ /studio                              4.64 kB         281 kB
+├ ○ /tours                               6.96 kB         283 kB
+└ ○ /why-rnrb                            3.76 kB         203 kB
+```
+
+**API Routes Present:**
+- ✅ `/api/auth/[...nextauth]` - NextAuth handler
+- ✅ `/api/ably/token` - Real-time messaging
+- ✅ `/api/daily/rooms` - Video/streaming
+- ✅ `/api/health` - Health check
+- ✅ `/api/trpc/[trpc]` - tRPC API
+
+---
+
+### 🎯 WHAT WORKS vs WHAT'S BROKEN:
+
+**✅ WORKS:**
+- Build compiles successfully (zero errors)
+- All pages render (homepage, studio, tours, messages, pricing, why-rnrb)
+- Auth page exists at `/auth`
+- NextAuth code properly configured
+- Prisma schema now correct
+
+**❌ BROKEN (Blocked by missing migrations/env):**
+- Sign up with Google (missing DB tables + env vars)
+- Sign in with Email (missing DB tables + env vars)
+- Any auth-protected pages (no auth working)
+- Real-time messaging (needs ABLY_API_KEY)
+- Video streaming (needs DAILY_API_KEY)
+
+**⚠️ UNTESTED:**
+- Database connectivity (need DATABASE_URL)
+- Google OAuth flow (need redirect URIs configured)
+- Email magic links (need EMAIL_SERVER_URL)
+- Session persistence
+- tRPC authenticated routes
+
+---
+
+### 🔍 FOR NEXT AGENT - ACTION PLAN:
+
+**Priority 1: Get Auth Working Locally**
+
+1. **Set up database:**
+   ```bash
+   # Get a PostgreSQL database (Neon, Supabase, Railway, or local)
+   # Copy connection string to .env.local as DATABASE_URL
+   ```
+
+2. **Run migrations:**
+   ```bash
+   cd packages/db
+   # Add DATABASE_URL to packages/db/.env if needed
+   pnpm prisma migrate deploy
+   ```
+
+3. **Generate secret:**
+   ```bash
+   openssl rand -base64 32
+   # Copy output to .env.local as NEXTAUTH_SECRET
+   ```
+
+4. **Set up Google OAuth:**
+   - Follow SETUP_AUTH.md instructions
+   - Add credentials to .env.local
+
+5. **Test locally:**
+   ```bash
+   cd apps/web
+   pnpm dev
+   # Visit http://localhost:3000/auth
+   # Try signing in with Google
+   ```
+
+**Priority 2: Deploy to Production**
+
+1. **Vercel environment variables:**
+   - Add all env vars from .env.local to Vercel dashboard
+   - Update NEXTAUTH_URL to production URL
+
+2. **Run migrations on production:**
+   ```bash
+   # Vercel will need DATABASE_URL pointing to production database
+   # Migrations will run automatically on deploy if configured
+   ```
+
+3. **Update Google OAuth:**
+   - Add production redirect URI to Google Console
+
+4. **Test on production:**
+   - Visit https://your-domain/auth
+   - Test Google sign-in
+   - Test Email sign-in
+   - Check Vercel function logs for errors
+
+**Priority 3: End-to-End Testing**
+
+Per user's mandate: "test every button, e2e test everything, click every link"
+
+- [ ] Homepage: Click all navigation links
+- [ ] Auth page: Try Google sign-in
+- [ ] Auth page: Try Email sign-in
+- [ ] Auth page: Test error states (wrong credentials)
+- [ ] Studio page: Click "Start Recording" button
+- [ ] Tours page: Check tour list, click tour details
+- [ ] Messages page: Test real-time chat (needs Ably)
+- [ ] Pricing page: Click all CTA buttons
+- [ ] Test sign-out flow
+- [ ] Test protected routes redirect to /auth
+- [ ] Test session persistence (refresh page)
+- [ ] Mobile responsive testing
+- [ ] Cross-browser testing (LibreFox priority)
 
 ---
 
