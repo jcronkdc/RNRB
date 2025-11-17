@@ -104,7 +104,7 @@ export default function ProjectSongsPage() {
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold text-foreground mb-2">{song.title}</h3>
                     <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                      {song.key && <span>🎵 Key: {song.key}</span>}
+                      {song.key && <span>Key: {song.key}</span>}
                       {song.tempo && <span>⏱️ {song.tempo} BPM</span>}
                       {song.duration && <span>⏱️ {Math.floor(song.duration / 60)}:{String(song.duration % 60).padStart(2, '0')}</span>}
                       <span className="flex items-center gap-1">

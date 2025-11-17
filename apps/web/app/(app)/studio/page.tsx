@@ -64,72 +64,113 @@ export default function StudioPage() {
 
   return (
     <DailyProvider callObject={callObject}>
-      <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-7xl mx-auto"
-        >
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">Studio Sessions</h1>
-            <p className="text-muted-foreground">
-              Professional recording, collaboration, and live streaming for musicians
-            </p>
+      <div className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden border-b border-border/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+          <div className="absolute inset-0">
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
           </div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <Card 
-              className="p-6 hover:shadow-lg transition-shadow cursor-pointer" 
-              onClick={startNewSession}
+          
+          <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
             >
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-red-500/10 rounded-lg">
-                  <Disc className="h-6 w-6 text-red-500" />
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                  <Video className="w-6 h-6 text-brand-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Start Recording</h3>
-                  <p className="text-sm text-muted-foreground">Record your session</p>
+                  <p className="text-sm text-muted-foreground">Professional Studio</p>
+                  <h1 className="text-3xl md:text-4xl font-display font-bold">Recording Sessions</h1>
                 </div>
               </div>
-            </Card>
+              <p className="text-lg text-muted-foreground max-w-2xl">
+                HD recording, real-time collaboration, and live streaming - all in one place
+              </p>
+            </motion.div>
+          </div>
+        </div>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-500/10 rounded-lg">
-                  <Radio className="h-6 w-6 text-blue-500" />
+        <div className="rnrb-container max-w-7xl py-12 px-4">
+
+          {/* Quick Actions */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-display font-bold mb-2">Quick Actions</h2>
+            <p className="text-muted-foreground">Start your creative session</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="rnrb-card p-6 rnrb-hover-lift cursor-pointer border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors" 
+              onClick={startNewSession}
+            >
+              <div className="flex flex-col gap-4">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+                  <Disc className="h-6 w-6 text-brand-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Go Live</h3>
+                  <h3 className="font-semibold mb-1">Start Recording</h3>
+                  <p className="text-sm text-muted-foreground">HD video/audio session</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="rnrb-card p-6 rnrb-hover-lift cursor-pointer hover:border-brand-primary/30 transition-colors"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+                  <Radio className="h-6 w-6 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Go Live</h3>
                   <p className="text-sm text-muted-foreground">Stream to fans</p>
                 </div>
               </div>
-            </Card>
+            </motion.div>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-500/10 rounded-lg">
-                  <Users className="h-6 w-6 text-green-500" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="rnrb-card p-6 rnrb-hover-lift cursor-pointer hover:border-brand-primary/30 transition-colors"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+                  <Users className="h-6 w-6 text-brand-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Collaborate</h3>
+                  <h3 className="font-semibold mb-1">Collaborate</h3>
                   <p className="text-sm text-muted-foreground">Invite musicians</p>
                 </div>
               </div>
-            </Card>
+            </motion.div>
 
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-purple-500/10 rounded-lg">
-                  <Calendar className="h-6 w-6 text-purple-500" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="rnrb-card p-6 rnrb-hover-lift cursor-pointer hover:border-brand-primary/30 transition-colors"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+                  <Calendar className="h-6 w-6 text-brand-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold">Schedule</h3>
+                  <h3 className="font-semibold mb-1">Schedule</h3>
                   <p className="text-sm text-muted-foreground">Plan sessions</p>
                 </div>
               </div>
-            </Card>
+            </motion.div>
           </div>
 
           {/* Active Session or Session List */}
@@ -413,7 +454,7 @@ export default function StudioPage() {
 
             </>
           )}
-        </motion.div>
+        </div>
       </div>
     </DailyProvider>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
@@ -18,7 +19,8 @@ import {
   Link as LinkIcon,
   Instagram,
   Youtube,
-  Twitter
+  Twitter,
+  Settings as SettingsIcon
 } from 'lucide-react';
 
 type ProfileData = {

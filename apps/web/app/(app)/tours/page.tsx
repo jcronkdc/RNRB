@@ -49,19 +49,37 @@ export default function ToursPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-7xl mx-auto"
-      >
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Tours & Live Performances</h1>
-          <p className="text-muted-foreground">
-            Connect with fans through live shows and virtual performances
-          </p>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
         </div>
+        
+        <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                <Radio className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Live Performance</p>
+                <h1 className="text-3xl md:text-4xl font-display font-bold">Tours & Shows</h1>
+              </div>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Manage your live shows, venues, and virtual performances
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="rnrb-container max-w-7xl py-12 px-4">
 
         {showLiveStream && callObject && selectedShow ? (
           <DailyProvider callObject={callObject}>
@@ -91,7 +109,7 @@ export default function ToursPage() {
             {/* Tour Stats */}
             {/* Comprehensive Tour Management */}
             <Card className="p-8 mb-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
-              <h2 className="text-3xl font-bold mb-4">🎤 Complete Tour Management Platform</h2>
+              <h2 className="text-3xl font-bold mb-4">Complete Tour Management Platform</h2>
               <p className="text-lg text-muted-foreground mb-6">
                 Rock N' Roll Basement provides end-to-end tour management: from booking venues to streaming virtual concerts, 
                 managing setlists to tracking ticket sales - everything you need to run successful tours.
@@ -362,7 +380,7 @@ export default function ToursPage() {
             </div>
           </>
         )}
-      </motion.div>
+      </div>
     </div>
   );
 }
