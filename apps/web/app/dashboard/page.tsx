@@ -116,7 +116,7 @@ export default function DashboardPage() {
                 </div>
                 <h3 className="text-xl font-semibold mb-2">New Project</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Spawn a new mycelium network to organize songs, collaborators, and revenue
+                  Create a new project to organize songs, collaborators, and revenue
                 </p>
                 <div className="text-sm text-brand-primary font-medium">Get started →</div>
               </div>
@@ -204,7 +204,7 @@ export default function DashboardPage() {
                 </div>
                 <h3 className="text-xl font-semibold mb-2">My Projects</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  View all mycelium networks, songs, and collaborations
+                  View all your projects, songs, and collaborations
                 </p>
                 <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">View all →</div>
               </div>
@@ -254,7 +254,7 @@ export default function DashboardPage() {
               <div>
                 <h3 className="font-semibold mb-2">Create Your First Project</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Projects are your mycelium foundation - organize songs, collaborators, sessions, and revenue in one network
+                  Projects are your foundation - organize songs, collaborators, sessions, and revenue in one place
                 </p>
                 <Link href="/projects/new" className="text-sm text-brand-primary font-medium hover:underline">
                   Create project →
