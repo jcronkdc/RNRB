@@ -131,25 +131,22 @@ export default function HomePage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background/95 to-surface overflow-hidden">
-      {/* Enhanced Animated Background */}
+    <div className="rnrb-venue min-h-screen overflow-hidden">
+      {/* Venue Atmosphere Background */}
       <div className="fixed inset-0 -z-10">
-        {/* Musical Wave Pattern */}
-        <svg className="absolute inset-0 w-full h-full opacity-5" viewBox="0 0 1000 1000">
-          <pattern id="wave-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-            <path d="M0,100 Q50,50 100,100 T200,100" stroke="currentColor" strokeWidth="2" fill="none" className="text-brand-primary" />
-            <path d="M0,150 Q50,100 100,150 T200,150" stroke="currentColor" strokeWidth="2" fill="none" className="text-brand-secondary" />
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#wave-pattern)" />
-        </svg>
+        {/* Stage Lighting Effects */}
+        <div className="rnrb-stage-light absolute inset-0"></div>
         
-        {/* Floating Orbs */}
-        <div className="absolute top-1/4 -left-4 w-96 h-96 bg-gradient-to-br from-violet-600/20 to-indigo-600/20 rounded-full mix-blend-screen filter blur-3xl animate-blob" />
-        <div className="absolute top-1/2 -right-4 w-96 h-96 bg-gradient-to-br from-cyan-600/20 to-blue-600/20 rounded-full mix-blend-screen filter blur-3xl animate-blob animation-delay-2000" />
-        <div className="absolute -bottom-1/4 left-1/3 w-96 h-96 bg-gradient-to-br from-pink-600/20 to-purple-600/20 rounded-full mix-blend-screen filter blur-3xl animate-blob animation-delay-4000" />
+        {/* Vinyl Records Floating */}
+        <div className="absolute top-1/4 -left-20 opacity-10">
+          <div className="rnrb-vinyl" style={{ transform: 'scale(4) rotate(15deg)' }}></div>
+        </div>
+        <div className="absolute top-3/4 -right-20 opacity-10">
+          <div className="rnrb-vinyl" style={{ transform: 'scale(5) rotate(-45deg)' }}></div>
+        </div>
         
-        {/* Particle Effect */}
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.02] mix-blend-soft-light" />
+        {/* Smoke Machine Effect */}
+        <div className="absolute inset-0 bg-gradient-to-t from-rnrb-smoke-haze/20 via-transparent to-transparent"></div>
       </div>
 
       {/* Hero Section */}

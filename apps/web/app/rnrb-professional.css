@@ -1,25 +1,26 @@
-/* Rock N' Roll Basement Professional Design System */
-/* A dark, professional music platform with subtle rock-bar inspiration */
+/* Rock N' Roll Basement - Where Music Lives */
+/* Industry-changing platform with underground rock bar soul */
 
 :root {
-  /* Professional Dark Base Colors */
-  --rnrb-base-900: 220 30% 8%;     /* Near-black with blue undertone */
-  --rnrb-base-800: 220 28% 12%;    /* Dark surface */
-  --rnrb-base-700: 220 25% 16%;    /* Elevated surface */
-  --rnrb-base-600: 220 22% 20%;    /* Card backgrounds */
-  --rnrb-base-500: 220 20% 30%;    /* Borders */
-  --rnrb-base-400: 220 15% 45%;    /* Muted text */
-  --rnrb-base-300: 220 10% 70%;    /* Secondary text */
-  --rnrb-base-200: 220 8% 85%;     /* Light text */
-  --rnrb-base-100: 220 5% 95%;     /* Primary text */
+  /* Venue Dark Colors - Like walking into a rock club */
+  --rnrb-void: 0 0% 5%;              /* Pitch black corners */
+  --rnrb-shadow: 220 40% 8%;         /* Deep shadows between posters */
+  --rnrb-venue-floor: 220 30% 11%;   /* Scuffed venue floor */
+  --rnrb-bar-surface: 220 25% 14%;   /* The actual bar top */
+  --rnrb-stage-dark: 220 20% 18%;    /* Back wall behind stage */
+  --rnrb-booth-leather: 15 15% 22%;  /* Worn leather booth seats */
+  --rnrb-smoke-haze: 220 15% 30%;    /* Atmosphere haze */
+  --rnrb-concrete: 220 10% 45%;      /* Raw concrete walls */
+  --rnrb-dust: 220 8% 70%;           /* Dust in spotlight */
+  --rnrb-spotlight: 45 5% 92%;       /* Stage spotlight */
   
-  /* Accent Colors - Restrained Palette */
-  --rnrb-accent-primary: 195 100% 50%;    /* Cyan/Blue primary */
-  --rnrb-accent-primary-dark: 195 100% 40%;
-  --rnrb-accent-primary-light: 195 90% 65%;
-  --rnrb-accent-secondary: 40 90% 55%;    /* Amber secondary */
-  --rnrb-accent-secondary-dark: 40 90% 45%;
-  --rnrb-accent-secondary-light: 40 85% 70%;
+  /* Neon & Stage Lights */
+  --rnrb-neon-cyan: 195 100% 50%;     /* Main neon sign */
+  --rnrb-neon-glow: 195 100% 60%;     /* Neon glow effect */
+  --rnrb-stage-amber: 40 95% 55%;     /* Warm stage lights */
+  --rnrb-stage-spot: 45 90% 65%;      /* Spotlight warm */
+  --rnrb-exit-sign: 355 85% 55%;      /* Exit sign red */
+  --rnrb-backstage: 140 60% 45%;      /* Backstage pass green */
   
   /* Semantic Colors */
   --rnrb-success: 140 60% 50%;
@@ -43,11 +44,81 @@
   --rnrb-radius-xl: 1rem;
 }
 
-/* Override theme system with professional colors */
+/* Map venue colors to theme system */
+[data-theme='dark'] {
+  /* Dark theme - Full rock bar experience */
+  --background: var(--rnrb-venue-floor);
+  --foreground: var(--rnrb-spotlight);
+  --card: var(--rnrb-bar-surface);
+  --card-foreground: var(--rnrb-spotlight);
+  --popover: var(--rnrb-stage-dark);
+  --popover-foreground: var(--rnrb-spotlight);
+  --primary: var(--rnrb-neon-cyan);
+  --primary-foreground: var(--rnrb-void);
+  --secondary: var(--rnrb-stage-amber);
+  --secondary-foreground: var(--rnrb-void);
+  --muted: var(--rnrb-booth-leather);
+  --muted-foreground: var(--rnrb-dust);
+  --accent: var(--rnrb-neon-cyan);
+  --accent-foreground: var(--rnrb-void);
+  --destructive: var(--rnrb-exit-sign);
+  --destructive-foreground: var(--rnrb-spotlight);
+  --border: var(--rnrb-smoke-haze);
+  --input: var(--rnrb-smoke-haze);
+  --ring: var(--rnrb-neon-cyan);
+}
+
+[data-theme='light'] {
+  /* Light theme - Afternoon rehearsal vibe */
+  --background: 0 0% 97%;
+  --foreground: var(--rnrb-void);
+  --card: 0 0% 100%;
+  --card-foreground: var(--rnrb-void);
+  --popover: 0 0% 100%;
+  --popover-foreground: var(--rnrb-void);
+  --primary: var(--rnrb-neon-cyan);
+  --primary-foreground: 0 0% 100%;
+  --secondary: var(--rnrb-stage-amber);
+  --secondary-foreground: var(--rnrb-void);
+  --muted: 0 0% 92%;
+  --muted-foreground: var(--rnrb-concrete);
+  --accent: var(--rnrb-stage-amber);
+  --accent-foreground: var(--rnrb-void);
+  --destructive: var(--rnrb-exit-sign);
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 85%;
+  --input: 0 0% 85%;
+  --ring: var(--rnrb-neon-cyan);
+}
+
+[data-theme='warm'] {
+  /* Warm theme - Recording studio vibe */
+  --background: 30 20% 10%;
+  --foreground: 30 10% 90%;
+  --card: 30 15% 13%;
+  --card-foreground: 30 10% 90%;
+  --popover: 30 15% 15%;
+  --popover-foreground: 30 10% 90%;
+  --primary: var(--rnrb-stage-amber);
+  --primary-foreground: var(--rnrb-void);
+  --secondary: var(--rnrb-backstage);
+  --secondary-foreground: 0 0% 100%;
+  --muted: 30 10% 20%;
+  --muted-foreground: 30 10% 65%;
+  --accent: var(--rnrb-stage-amber);
+  --accent-foreground: var(--rnrb-void);
+  --destructive: var(--rnrb-exit-sign);
+  --destructive-foreground: 0 0% 100%;
+  --border: 30 10% 25%;
+  --input: 30 10% 25%;
+  --ring: var(--rnrb-stage-amber);
+}
+
+/* Override remaining theme variables */
 [data-theme='dark'],
 [data-theme='light'],
 [data-theme='warm'] {
-  /* Base colors */
+  /* Keep existing overrides below */
   --sf-color-background: var(--rnrb-base-900);
   --sf-color-surface: var(--rnrb-base-800);
   --sf-color-surface-muted: var(--rnrb-base-700);

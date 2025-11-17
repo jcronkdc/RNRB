@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @import '@cronkwaters/ui/styles.css';
-@import './rnrb-professional.css'; /* RN'RB Professional Design System */
+@import './rnrb-professional.css'; /* RN'RB Core Design System */
+@import './rnrb-venue.css'; /* Rock Bar Atmosphere & Components */
 
 /* Theme Contrast Fixes for CronkWaters Project */
 

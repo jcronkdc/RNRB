@@ -49,71 +49,71 @@ type NavSection = {
 
 const navigation: NavSection[] = [
   {
-    title: '',
+    title: '🎸 MAIN STAGE',
     items: [
-      { label: 'Dashboard', href: '/dashboard', icon: Home }
+      { label: 'Command Center', href: '/dashboard', icon: Home }
     ]
   },
   {
-    title: 'Creative',
+    title: '🎵 RECORDING STUDIO',
     items: [
-      { label: 'Projects', href: '/projects', icon: FolderOpen },
-      { label: 'Songs', href: '/songs', icon: Music },
-      { label: 'Assets', href: '/assets', icon: FileAudio },
-      { label: 'Studio Sessions', href: '/sessions', icon: Calendar }
+      { label: 'Active Sessions', href: '/projects', icon: FolderOpen },
+      { label: 'Track Library', href: '/songs', icon: Music },
+      { label: 'Sound Bank', href: '/assets', icon: FileAudio },
+      { label: 'Live Recording', href: '/sessions', icon: Calendar }
     ]
   },
   {
-    title: 'Rights & Money',
+    title: '💰 BUSINESS OFFICE',
     items: [
-      { label: 'Split Sheets', href: '/splits', icon: FileText },
-      { label: 'Song Splits', href: '/song-splits', icon: Music },
-      { label: 'Licenses', href: '/licenses', icon: Shield },
-      { label: 'Transactions', href: '/transactions', icon: CreditCard },
-      { label: 'Donations', href: '/donations', icon: Gift }
+      { label: 'Split Deals', href: '/splits', icon: FileText },
+      { label: 'Song Rights', href: '/song-splits', icon: Music },
+      { label: 'License Vault', href: '/licenses', icon: Shield },
+      { label: 'Cash Flow', href: '/transactions', icon: CreditCard },
+      { label: 'Tip Jar', href: '/donations', icon: Gift }
     ]
   },
   {
-    title: 'Live & Touring',
+    title: '🚌 TOUR BUS',
     items: [
-      { label: 'Tours', href: '/tours', icon: Globe },
-      { label: 'Shows', href: '/shows', icon: Mic },
-      { label: 'Venues', href: '/venues', icon: Building },
-      { label: 'Setlists', href: '/setlists', icon: ListMusic },
-      { label: 'Fan Data', href: '/fans', icon: Users }
+      { label: 'Road Maps', href: '/tours', icon: Globe },
+      { label: 'Gig Calendar', href: '/shows', icon: Mic },
+      { label: 'Venue Guide', href: '/venues', icon: Building },
+      { label: 'Set Lists', href: '/setlists', icon: ListMusic },
+      { label: 'Fan Base', href: '/fans', icon: Users }
     ]
   },
   {
-    title: 'People & Orgs',
+    title: '🎤 GREEN ROOM',
     items: [
-      { label: 'Organizations', href: '/organizations', icon: Building },
-      { label: 'Members', href: '/members', icon: Users },
-      { label: 'Invites', href: '/invites', icon: UserPlus }
+      { label: 'Your Bands', href: '/organizations', icon: Building },
+      { label: 'Band Mates', href: '/members', icon: Users },
+      { label: 'Guest List', href: '/invites', icon: UserPlus }
     ]
   },
   {
-    title: 'Community',
+    title: '🍺 THE BAR',
     items: [
-      { label: 'Marketplace', href: '/marketplace', icon: Globe },
-      { label: 'Messages', href: '/messages', icon: Mail },
-      { label: 'Forums', href: '/forums', icon: MessageSquare }
+      { label: 'Talent Board', href: '/marketplace', icon: Globe },
+      { label: 'DMs', href: '/messages', icon: Mail },
+      { label: 'Open Mic', href: '/forums', icon: MessageSquare }
     ]
   },
   {
-    title: 'Media & Promotion',
+    title: '📰 PRESS ROOM',
     items: [
-      { label: 'Events', href: '/events', icon: Calendar },
-      { label: 'Press Releases', href: '/press', icon: Megaphone },
-      { label: 'Awards', href: '/awards', icon: Award },
-      { label: 'Podcasts', href: '/podcasts', icon: Podcast }
+      { label: 'Event Board', href: '/events', icon: Calendar },
+      { label: 'Press Kit', href: '/press', icon: Megaphone },
+      { label: 'Trophy Case', href: '/awards', icon: Award },
+      { label: 'Podcast Booth', href: '/podcasts', icon: Podcast }
     ]
   },
   {
-    title: 'Account',
+    title: '⚙️ MANAGER\'S OFFICE',
     items: [
-      { label: 'Profile', href: '/profile', icon: User },
-      { label: 'Settings', href: '/settings', icon: Settings },
-      { label: 'Billing', href: '/billing', icon: BillingIcon }
+      { label: 'Artist Profile', href: '/profile', icon: User },
+      { label: 'Venue Settings', href: '/settings', icon: Settings },
+      { label: 'Box Office', href: '/billing', icon: BillingIcon }
     ]
   }
 ];
@@ -132,16 +132,12 @@ export function Sidebar() {
 
   return (
     <aside className="rnrb-sidebar">
-      {/* Logo */}
-      <div className="p-6 border-b border-border">
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-primary to-accent flex items-center justify-center">
-            <span className="text-white font-bold text-xl">R</span>
-          </div>
-          <div>
-            <h1 className="text-lg font-bold leading-tight">Rock N' Roll</h1>
-            <p className="text-xs text-muted-foreground">Basement</p>
-          </div>
+      {/* Venue Sign - Logo */}
+      <div className="p-6 border-b border-rnrb-smoke-haze/50 bg-rnrb-shadow relative overflow-hidden">
+        <div className="rnrb-stage-light absolute inset-0 opacity-20"></div>
+        <Link href="/dashboard" className="relative z-10 block text-center">
+          <h1 className="rnrb-neon text-3xl font-black tracking-wider">RN'RB</h1>
+          <p className="text-xs text-rnrb-dust uppercase tracking-widest mt-1">Underground HQ</p>
         </Link>
       </div>
 
@@ -209,13 +205,10 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Bottom section */}
-      <div className="p-4 border-t border-border">
-        <div className="rnrb-card p-3 text-sm">
-          <p className="font-semibold mb-1">Pro Tip</p>
-          <p className="text-xs text-muted-foreground">
-            Press <kbd className="px-1 py-0.5 bg-surface-muted rounded text-xs">⌘K</kbd> to quickly search
-          </p>
+      {/* Exit Sign */}
+      <div className="p-4 border-t border-rnrb-smoke-haze/50">
+        <div className="rnrb-exit-sign text-center">
+          <span className="text-xs">QUICK SEARCH ⌘K</span>
         </div>
       </div>
     </aside>

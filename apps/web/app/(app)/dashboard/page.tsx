@@ -49,28 +49,40 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">
-          {greeting}, Rockstar
-        </h1>
-        <p className="text-muted-foreground">
-          Here's what's happening in your musical universe
-        </p>
+    <div className="rnrb-venue min-h-screen -m-6 p-6">
+      {/* Main Stage Header - Neon Sign */}
+      <div className="rnrb-stage-light relative mb-8 -m-6 p-12 bg-gradient-to-br from-rnrb-void via-rnrb-shadow to-rnrb-void overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="rnrb-vinyl absolute top-10 right-10" style={{ transform: 'rotate(15deg) scale(0.8)' }}></div>
+          <div className="rnrb-vinyl absolute bottom-10 left-10" style={{ transform: 'rotate(-20deg) scale(0.6)' }}></div>
+        </div>
+        <div className="relative z-10 text-center">
+          <h1 className="rnrb-neon rnrb-gig-poster-heading text-6xl mb-4">
+            {greeting.toUpperCase()}, ROCKSTAR
+          </h1>
+          <p className="text-2xl text-rnrb-dust uppercase tracking-widest">
+            Welcome to your Underground HQ
+          </p>
+        </div>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid - Concert Posters */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat) => (
-          <div key={stat.label} className="rnrb-card group hover:border-brand-primary/50 transition-all">
-            <div className="flex items-start justify-between mb-4">
-              <stat.icon className={`w-8 h-8 ${stat.color}`} />
-              <span className="text-xs text-muted-foreground">{stat.change}</span>
+        {stats.map((stat, index) => (
+          <div 
+            key={stat.label} 
+            className="rnrb-poster rnrb-card group"
+            style={{ '--rotation': `${index % 2 === 0 ? '-1' : '1'}deg` } as React.CSSProperties}
+          >
+            <div className="flex items-start justify-between mb-4 relative z-20">
+              <div className="rnrb-amp-stack p-3 rounded-lg">
+                <stat.icon className={`w-8 h-8 ${stat.color} relative z-10`} />
+              </div>
+              <span className="rnrb-backstage-pass text-xs">{stat.change}</span>
             </div>
-            <div>
-              <p className="text-2xl font-bold mb-1">{stat.value}</p>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
+            <div className="relative z-20">
+              <p className="rnrb-gig-poster-heading text-3xl mb-1">{stat.value}</p>
+              <p className="text-sm text-rnrb-dust uppercase tracking-wide">{stat.label}</p>
             </div>
           </div>
         ))}
@@ -78,25 +90,25 @@ export default function DashboardPage() {
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Activity */}
-        <div className="lg:col-span-2 rnrb-card">
+        {/* Recent Activity - Venue Bulletin Board */}
+        <div className="lg:col-span-2 rnrb-booth">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold">Recent Activity</h2>
-            <Link href="/activity" className="text-sm text-brand-primary hover:underline">
-              View all
+            <h2 className="rnrb-gig-poster-heading text-2xl">VENUE BULLETIN</h2>
+            <Link href="/activity" className="rnrb-exit-sign text-xs">
+              ALL ACTIVITY
             </Link>
           </div>
-          <div className="space-y-4">
+          <div className="rnrb-setlist">
             {recentActivity.map((activity, index) => (
-              <div key={index} className="flex items-center gap-4 p-3 hover:bg-surface-muted rounded-lg transition-colors">
-                <div className={`w-10 h-10 rounded-lg bg-surface-elevated flex items-center justify-center`}>
-                  <activity.icon size={20} className="text-muted-foreground" />
+              <div key={index} className="flex items-center gap-4 p-3 border-b border-rnrb-smoke-haze/20 last:border-0">
+                <div className="rnrb-bar-stool w-12 h-12 flex items-center justify-center">
+                  <activity.icon size={20} className="text-rnrb-neon-cyan relative z-10" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium">{activity.title}</p>
-                  <p className="text-sm text-muted-foreground">{activity.action}</p>
+                  <p className="font-bold uppercase tracking-wide">{activity.title}</p>
+                  <p className="text-sm text-rnrb-dust rnrb-graffiti">{activity.action}</p>
                 </div>
-                <span className="text-xs text-muted-foreground">{activity.time}</span>
+                <span className="rnrb-sticky-note text-xs p-1">{activity.time}</span>
               </div>
             ))}
           </div>

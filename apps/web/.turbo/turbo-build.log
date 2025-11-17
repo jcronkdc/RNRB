@@ -14,15 +14,15 @@
      ⨯ serverMinification
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 5.0s
+ ✓ Compiled successfully in 6.6s
    Skipping validation of types
    Skipping linting
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/26) ...
-   Generating static pages (6/26) 
-   Generating static pages (12/26) 
-   Generating static pages (19/26) 
+   Generating static pages (0/27) ...
+   Generating static pages (6/27) 
+   Generating static pages (13/27) 
+   Generating static pages (20/27) 
 Failed to fetch public projects for sitemap: Error [PrismaClientInitializationError]: 
 Invalid `prisma.project.findMany()` invocation:
 
@@ -43,32 +43,33 @@ Error querying the database: ERROR: password authentication failed for user 'neo
   clientVersion: '5.22.0',
   errorCode: undefined
 }
- ✓ Generating static pages (26/26)
+ ✓ Generating static pages (27/27)
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                                 Size  First Load JS
-┌ ○ /                                    7.33 kB         152 kB
-├ ƒ /_not-found                            187 B         102 kB
+┌ ○ /                                     7.1 kB         151 kB
+├ ƒ /_not-found                            189 B         102 kB
 ├ ○ /analytics                            2.5 kB         147 kB
-├ ƒ /api/ai-lyrics                         187 B         102 kB
-├ ƒ /api/auth/[...nextauth]                187 B         102 kB
-├ ƒ /api/auth/debug                        187 B         102 kB
-├ ƒ /api/auth/error                        187 B         102 kB
-├ ƒ /api/elevenlabs-voice                  187 B         102 kB
-├ ƒ /api/export/project                    187 B         102 kB
-├ ƒ /api/export/split-sheet                187 B         102 kB
-├ ƒ /api/health                            187 B         102 kB
-├ ƒ /api/projects/[slug]/export/pdf        187 B         102 kB
-├ ƒ /api/trpc/[trpc]                       187 B         102 kB
-├ ƒ /api/upload-audio                      187 B         102 kB
+├ ƒ /api/ai-lyrics                         189 B         102 kB
+├ ƒ /api/auth/[...nextauth]                189 B         102 kB
+├ ƒ /api/auth/debug                        189 B         102 kB
+├ ƒ /api/auth/error                        189 B         102 kB
+├ ƒ /api/auth/test                         189 B         102 kB
+├ ƒ /api/elevenlabs-voice                  189 B         102 kB
+├ ƒ /api/export/project                    189 B         102 kB
+├ ƒ /api/export/split-sheet                189 B         102 kB
+├ ƒ /api/health                            189 B         102 kB
+├ ƒ /api/projects/[slug]/export/pdf        189 B         102 kB
+├ ƒ /api/trpc/[trpc]                       189 B         102 kB
+├ ƒ /api/upload-audio                      189 B         102 kB
 ├ ƒ /artist/[slug]                       2.75 kB         178 kB
 ├ ○ /assets                              2.96 kB         147 kB
 ├ ƒ /audience/[sessionId]                52.4 kB         217 kB
 ├ ○ /auth                                5.01 kB         218 kB
 ├ ƒ /blocked                               166 B         106 kB
 ├ ƒ /community                           3.99 kB         168 kB
-├ ○ /dashboard                           3.14 kB         109 kB
+├ ○ /dashboard                           3.47 kB         109 kB
 ├ ƒ /dashboard/assets                      251 B         159 kB
 ├ ƒ /dashboard/distribute                  251 B         159 kB
 ├ ƒ /dashboard/licenses                    251 B         159 kB
@@ -80,12 +81,12 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /foundation                           4.8 kB         169 kB
 ├ ○ /guide                               6.74 kB         151 kB
 ├ ƒ /learn                               4.39 kB         168 kB
-├ ƒ /licenses                              187 B         102 kB
+├ ƒ /licenses                              189 B         102 kB
 ├ ○ /membership                          4.52 kB         149 kB
 ├ ƒ /music                               4.18 kB         168 kB
 ├ ƒ /onboarding/organization             3.52 kB         168 kB
 ├ ƒ /p/[slug]                            1.35 kB         169 kB
-├ ƒ /p/[slug]/opengraph-image-4mgimg       187 B         102 kB
+├ ƒ /p/[slug]/opengraph-image-4mgimg       189 B         102 kB
 ├ ƒ /practice                            5.52 kB         170 kB
 ├ ƒ /privacy                               251 B         159 kB
 ├ ○ /projects                             2.8 kB         147 kB
@@ -94,17 +95,17 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /projects/[slug]/songs/[songSlug]      145 B         176 kB
 ├ ƒ /projects/new                          247 B         163 kB
 ├ ƒ /remix/[roomId]                      2.61 kB         167 kB
-├ ○ /robots.txt                            187 B         102 kB
+├ ○ /robots.txt                            189 B         102 kB
 ├ ƒ /search                              2.97 kB         170 kB
 ├ ○ /sessions                            3.24 kB         147 kB
 ├ ƒ /settings                            2.28 kB         166 kB
 ├ ƒ /settings/artist-profile              4.5 kB         169 kB
 ├ ƒ /settings/org                        2.15 kB         166 kB
-├ ○ /signin                                187 B         102 kB
-├ ○ /sitemap.xml                           187 B         102 kB
+├ ○ /signin                                189 B         102 kB
+├ ○ /sitemap.xml                           189 B         102 kB
 ├ ○ /splits                              3.02 kB         147 kB
 ├ ƒ /terms                                 251 B         159 kB
-├ ƒ /test                                  187 B         102 kB
+├ ƒ /test                                  189 B         102 kB
 ├ ƒ /theming                               251 B         159 kB
 ├ ƒ /tours                               35.6 kB         210 kB
 ├ ƒ /tours/[slug]                        2.88 kB         174 kB
