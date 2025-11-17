@@ -237,7 +237,10 @@
     @apply after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5;
     @apply after:bg-brand-primary after:scale-x-0 after:transition-transform;
     @apply hover:after:scale-x-100;
-    @apply hover:text-shadow-sm;
+  }
+  
+  .rnrb-nav-item:hover {
+    text-shadow: 0 0 6px rgba(201, 169, 97, 0.3);
   }
   
   .rnrb-nav-item.active {
