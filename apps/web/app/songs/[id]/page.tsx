@@ -19,6 +19,7 @@ interface Song {
   title: string;
   lyrics: string;
   writer?: string;
+  coWriters?: string[];
   dateWritten?: string;
   status: 'draft' | 'in-progress' | 'needs-review' | 'complete';
   album?: string;
@@ -224,6 +225,22 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
                     placeholder="Your name"
                     className="w-full px-3 py-2 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none font-mono text-sm"
                   />
+                </div>
+
+                <div>
+                  <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
+                    CO-WRITERS
+                  </label>
+                  <input
+                    type="text"
+                    value={song.coWriters?.join(', ') || ''}
+                    onChange={(e) => setSong({ ...song, coWriters: e.target.value.split(',').map(w => w.trim()).filter(Boolean) })}
+                    placeholder="Sarah, John (comma separated)"
+                    className="w-full px-3 py-2 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none font-mono text-sm"
+                  />
+                  <p className="text-xs text-zinc-600 mt-1">
+                    Separate names with commas
+                  </p>
                 </div>
 
                 <div>

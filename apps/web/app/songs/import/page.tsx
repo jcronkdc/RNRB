@@ -6,18 +6,25 @@ import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Upload, FileText, Music, Check, AlertCircle, ArrowLeft, Scissors, Merge as MergeIcon, Edit2, Sparkles } from 'lucide-react';
+import { Upload, Music, Check, AlertTriangle, ArrowLeft, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const VisualSongSplitter = dynamic(() => import('@/components/song/visual-song-splitter'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-96 rnrb-card" />
+});
 
 interface ParsedSong {
   tempId: string;
   title: string;
   lyrics: string;
   writer?: string;
+  coWriters?: string[];
   dateWritten?: string;
   status: 'draft' | 'in-progress' | 'needs-review' | 'complete';
   album?: string;
-  startLine: number;
-  endLine: number;
+  key?: string;
+  tempo?: number;
 }
 
 export default function ImportSongsPage() {
@@ -25,12 +32,16 @@ export default function ImportSongsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
+  const [step, setStep] = useState<'paste' | 'split' | 'metadata' | 'confirm'>('paste');
   const [textInput, setTextInput] = useState('');
   const [parsedSongs, setParsedSongs] = useState<ParsedSong[]>([]);
-  const [importStatus, setImportStatus] = useState<{
-    total: number;
-    imported: number;
-  }>({ total: 0, imported: 0 });
+  const [bulkMetadata, setBulkMetadata] = useState({
+    album: '',
+    status: 'draft' as const,
+    writer: '',
+  });
+  const [selectedSongs, setSelectedSongs] = useState<Set<string>>(new Set());
+  const [expandedSong, setExpandedSong] = useState<string | null>(null);
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -38,136 +49,98 @@ export default function ImportSongsPage() {
         router.push('/auth');
       } else {
         setUser(user);
+        setBulkMetadata(prev => ({
+          ...prev,
+          writer: user.user_metadata?.name || user.email?.split('@')[0] || '',
+        }));
         setLoading(false);
       }
     });
   }, [router]);
 
-  const intelligentParse = () => {
-    if (!textInput.trim()) return;
+  const handleSongsDetected = (songs: Array<{ title: string; lyrics: string; startLine: number; endLine: number }>) => {
+    setParsedSongs(songs.map((s, i) => ({
+      tempId: `song_${i}`,
+      ...s,
+      writer: bulkMetadata.writer,
+      status: 'draft',
+    })));
+    setStep('metadata');
+  };
 
-    const songs: ParsedSong[] = [];
-    const lines = textInput.split('\n');
+  const applyBulkMetadata = () => {
+    const updated = parsedSongs.map(song => {
+      if (!selectedSongs.has(song.tempId)) return song;
+      
+      return {
+        ...song,
+        ...(bulkMetadata.album && { album: bulkMetadata.album }),
+        ...(bulkMetadata.status && { status: bulkMetadata.status }),
+        ...(bulkMetadata.writer && { writer: bulkMetadata.writer }),
+      };
+    });
     
-    // Smart detection: Look for song boundaries
-    const songBoundaries: number[] = [0]; // Start with first line
-    
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      const nextLine = i < lines.length - 1 ? lines[i + 1]?.trim() : '';
-      const prevLine = i > 0 ? lines[i - 1]?.trim() : '';
-      
-      // Detect song boundaries:
-      // 1. Two or more consecutive blank lines
-      // 2. Line that looks like a title (short, followed by blank line then content)
-      // 3. Common section markers (Verse 1, Chorus, etc.) after blank line
-      
-      const isBlank = line === '';
-      const prevBlank = prevLine === '';
-      const nextHasContent = nextLine !== '' && nextLine.length > 0;
-      const looksLikeTitle = line.length > 0 && line.length < 60 && !line.match(/^(Verse|Chorus|Bridge|Intro|Outro)/i);
-      const isStartOfNewSong = (isBlank && prevBlank && nextHasContent) ||
-                               (looksLikeTitle && prevBlank && nextBlank);
-      
-      if (isStartOfNewSong && i > 5) { // Don't split too early
-        songBoundaries.push(i);
-      }
+    setParsedSongs(updated);
+    setSelectedSongs(new Set());
+    setBulkMetadata({ album: '', status: 'draft', writer: bulkMetadata.writer });
+  };
+
+  const toggleSelectSong = (tempId: string) => {
+    const updated = new Set(selectedSongs);
+    if (updated.has(tempId)) {
+      updated.delete(tempId);
+    } else {
+      updated.add(tempId);
     }
+    setSelectedSongs(updated);
+  };
+
+  const selectAll = () => {
+    setSelectedSongs(new Set(parsedSongs.map(s => s.tempId)));
+  };
+
+  const deselectAll = () => {
+    setSelectedSongs(new Set());
+  };
+
+  const updateSong = (tempId: string, updates: Partial<ParsedSong>) => {
+    setParsedSongs(parsedSongs.map(s => s.tempId === tempId ? { ...s, ...updates } : s));
+  };
+
+  const removeSong = (tempId: string) => {
+    setParsedSongs(parsedSongs.filter(s => s.tempId !== tempId));
+  };
+
+  const validateSongs = (): { errors: string[]; warnings: string[] } => {
+    const errors: string[] = [];
+    const warnings: string[] = [];
     
-    songBoundaries.push(lines.length); // End boundary
-    
-    // Create songs from boundaries
-    for (let i = 0; i < songBoundaries.length - 1; i++) {
-      const startIdx = songBoundaries[i];
-      const endIdx = songBoundaries[i + 1];
-      const songLines = lines.slice(startIdx, endIdx).map(l => l.trim()).filter(l => l);
-      
-      if (songLines.length < 2) continue; // Skip if too short
-      
-      // First non-empty line is title
-      const title = songLines[0] || `Untitled Song ${i + 1}`;
-      const lyrics = songLines.slice(1).join('\n').trim();
-      
-      if (lyrics) {
-        songs.push({
-          tempId: `temp_${Date.now()}_${i}`,
-          title,
-          lyrics,
-          status: 'draft',
-          writer: user?.user_metadata?.name || user?.email?.split('@')[0] || '',
-          startLine: startIdx,
-          endLine: endIdx,
-        });
+    parsedSongs.forEach((song, index) => {
+      if (!song.title || song.title.trim() === '') {
+        errors.push(`Song ${index + 1}: Missing title`);
       }
-    }
+      if (!song.lyrics || song.lyrics.trim().length < 10) {
+        errors.push(`Song ${index + 1} (${song.title}): Lyrics too short (might be incomplete)`);
+      }
+      if (song.lyrics.length > 10000) {
+        warnings.push(`Song ${index + 1} (${song.title}): Very long (${song.lyrics.length} chars) - might be multiple songs`);
+      }
+      if (!song.writer) {
+        warnings.push(`Song ${index + 1} (${song.title}): No writer specified`);
+      }
+    });
     
-    setParsedSongs(songs);
-  };
-
-  const mergeSongs = (index1: number, index2: number) => {
-    if (index2 !== index1 + 1) return; // Only merge adjacent songs
-    
-    const updated = [...parsedSongs];
-    const merged = {
-      ...updated[index1],
-      lyrics: updated[index1].lyrics + '\n\n' + updated[index2].lyrics,
-      endLine: updated[index2].endLine,
-    };
-    
-    updated.splice(index1, 2, merged);
-    setParsedSongs(updated);
-  };
-
-  const splitSong = (index: number, splitText: string) => {
-    const song = parsedSongs[index];
-    const splitIndex = song.lyrics.indexOf(splitText);
-    if (splitIndex === -1) return;
-    
-    const updated = [...parsedSongs];
-    const firstHalf = {
-      ...song,
-      lyrics: song.lyrics.substring(0, splitIndex).trim(),
-      tempId: `temp_${Date.now()}_${index}_a`,
-    };
-    const secondHalf = {
-      ...song,
-      tempId: `temp_${Date.now()}_${index}_b`,
-      title: `${song.title} (Part 2)`,
-      lyrics: song.lyrics.substring(splitIndex).trim(),
-    };
-    
-    updated.splice(index, 1, firstHalf, secondHalf);
-    setParsedSongs(updated);
-  };
-
-  const updateSong = (index: number, updates: Partial<ParsedSong>) => {
-    const updated = [...parsedSongs];
-    updated[index] = { ...updated[index], ...updates };
-    setParsedSongs(updated);
-  };
-
-  const removeSong = (index: number) => {
-    setParsedSongs(parsedSongs.filter((_, i) => i !== index));
-  };
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
-      setTextInput(content);
-      setTimeout(() => intelligentParse(), 100);
-    };
-    reader.readAsText(file);
+    return { errors, warnings };
   };
 
   const handleImport = async () => {
-    if (parsedSongs.length === 0) return;
+    const validation = validateSongs();
+    if (validation.errors.length > 0) {
+      alert(`Please fix these issues:\n${validation.errors.join('\n')}`);
+      return;
+    }
 
     setImporting(true);
-    setImportStatus({ total: parsedSongs.length, imported: 0 });
 
     try {
       const existingSongs = user?.user_metadata?.songs || [];
@@ -175,10 +148,13 @@ export default function ImportSongsPage() {
         id: `song_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         title: song.title,
         lyrics: song.lyrics,
-        writer: song.writer || user?.user_metadata?.name || '',
+        writer: song.writer || '',
+        coWriters: song.coWriters || [],
         dateWritten: song.dateWritten || null,
         status: song.status,
         album: song.album || null,
+        key: song.key || null,
+        tempo: song.tempo || null,
         visibility: 'private' as const,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -195,17 +171,28 @@ export default function ImportSongsPage() {
 
       if (error) throw error;
 
-      setImportStatus({ total: parsedSongs.length, imported: parsedSongs.length });
-      
       setTimeout(() => {
         router.push('/songs');
       }, 1500);
 
     } catch (error: any) {
       console.error('Import error:', error);
+      alert(`Import failed: ${error.message}`);
     } finally {
       setImporting(false);
     }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setTextInput(content);
+    };
+    reader.readAsText(file);
   };
 
   if (loading) {
@@ -221,6 +208,8 @@ export default function ImportSongsPage() {
       </div>
     );
   }
+
+  const validation = validateSongs();
 
   return (
     <div className="min-h-screen bg-background pt-20">
@@ -242,247 +231,342 @@ export default function ImportSongsPage() {
             Import Your Songs
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl">
-            <strong className="text-brand-primary">Just paste everything</strong> - our smart system automatically detects each song. 
-            Private and secure by default.
+            <strong className="text-brand-primary">Paste everything at once</strong> - we'll handle the separation automatically. 
+            Adjust if needed, then import. Private & secure.
           </p>
         </motion.div>
 
-        {parsedSongs.length === 0 ? (
-          // Step 1: Initial Paste/Upload
+        {/* Progress Steps */}
+        <div className="flex items-center gap-4 mb-8">
+          {[
+            { key: 'paste', label: 'Paste' },
+            { key: 'split', label: 'Auto-Detect' },
+            { key: 'metadata', label: 'Review' },
+            { key: 'confirm', label: 'Import' },
+          ].map((s, i) => (
+            <div key={s.key} className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-mono text-sm ${
+                step === s.key ? 'bg-brand-primary text-brand-primary-foreground' :
+                ['paste', 'split', 'metadata'].indexOf(step) > ['paste', 'split', 'metadata'].indexOf(s.key) ? 'bg-green-500/20 text-green-500' :
+                'bg-muted text-muted-foreground'
+              }`}>
+                {['paste', 'split', 'metadata'].indexOf(step) > ['paste', 'split', 'metadata'].indexOf(s.key) ? '✓' : i + 1}
+              </div>
+              <span className={`text-sm font-mono uppercase tracking-wider ${
+                step === s.key ? 'text-foreground' : 'text-muted-foreground'
+              }`}>
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Step 1: Paste */}
+        {step === 'paste' && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="space-y-6"
           >
-            {/* Paste Area */}
             <div className="rnrb-card p-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-brand-primary" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold">Step 1: Paste Your Document</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Paste your entire 30-page document - no formatting required
-                  </p>
-                </div>
-              </div>
+              <h2 className="text-xl font-semibold mb-4">Paste Your Document</h2>
               
               <textarea
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
-                placeholder="Paste all your songs here - any format works. We'll automatically detect each song..."
-                rows={15}
+                placeholder="Paste your entire 30-page document here - any format works. We'll automatically separate each song..."
+                rows={20}
+                autoFocus
                 className="w-full px-4 py-3 bg-surface border border-border rounded-lg text-foreground placeholder-muted-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 font-mono text-sm"
               />
               
               <div className="flex items-center justify-between mt-4">
-                <div>
-                  <label className="rnrb-button-secondary px-6 py-3 rounded-lg cursor-pointer inline-block">
-                    <Upload className="w-4 h-4 inline mr-2" />
-                    OR UPLOAD FILE
-                    <input
-                      type="file"
-                      accept=".txt"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
+                <label className="rnrb-button-secondary px-6 py-2 rounded-lg cursor-pointer">
+                  <Upload className="w-4 h-4 inline mr-2" />
+                  UPLOAD .TXT FILE
+                  <input
+                    type="file"
+                    accept=".txt"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </label>
                 <button
-                  onClick={intelligentParse}
+                  onClick={() => setStep('split')}
                   disabled={!textInput.trim()}
                   className="rnrb-button-primary px-8 py-3 rounded-lg disabled:opacity-50"
                 >
-                  <Sparkles className="w-4 h-4 inline mr-2" />
-                  AUTO-DETECT SONGS
+                  NEXT: AUTO-DETECT
+                  <ArrowLeft className="w-4 h-4 inline ml-2 rotate-180" />
                 </button>
               </div>
             </div>
-
-            {/* How It Works */}
-            <div className="rnrb-card p-6 bg-muted/30">
-              <h3 className="font-semibold mb-3 flex items-center gap-2">
-                <Music className="w-5 h-5 text-brand-primary" />
-                How It Works
-              </h3>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <p>
-                  <strong className="text-foreground">1.</strong> Paste your entire document (any format)
-                </p>
-                <p>
-                  <strong className="text-foreground">2.</strong> Click "Auto-Detect" - we find each song automatically
-                </p>
-                <p>
-                  <strong className="text-foreground">3.</strong> Review the splits - merge or adjust if needed (rare)
-                </p>
-                <p>
-                  <strong className="text-foreground">4.</strong> Click "Import" - done! All songs saved privately
-                </p>
-              </div>
-            </div>
           </motion.div>
-        ) : (
-          // Step 2: Review & Adjust Detected Songs
+        )}
+
+        {/* Step 2: Visual Split */}
+        {step === 'split' && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <VisualSongSplitter
+              fullText={textInput}
+              onSongsDetected={handleSongsDetected}
+            />
+          </motion.div>
+        )}
+
+        {/* Step 3: Metadata & Review */}
+        {step === 'metadata' && parsedSongs.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             className="space-y-6"
           >
-            <div className="flex items-center justify-between p-6 rnrb-card bg-gradient-to-r from-green-500/10 to-transparent border-green-500/30">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-                  <Check className="w-5 h-5 text-green-500" />
-                </div>
-                <div>
-                  <p className="font-semibold">Detected {parsedSongs.length} Songs</p>
-                  <p className="text-sm text-muted-foreground">
-                    Review below - merge or split if needed
-                  </p>
+            {/* Validation Messages */}
+            {validation.errors.length > 0 && (
+              <div className="p-4 rnrb-card bg-red-500/10 border-red-500/30">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-red-500 mb-2">Issues Found:</p>
+                    <ul className="text-sm space-y-1">
+                      {validation.errors.map((err, i) => (
+                        <li key={i} className="text-red-400">{err}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
+            )}
+
+            {validation.warnings.length > 0 && (
+              <div className="p-4 rnrb-card bg-yellow-500/10 border-yellow-500/30">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-yellow-500 mb-2">Warnings:</p>
+                    <ul className="text-sm space-y-1">
+                      {validation.warnings.map((warn, i) => (
+                        <li key={i} className="text-yellow-400">{warn}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Bulk Edit */}
+            <div className="rnrb-card p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">Bulk Edit ({selectedSongs.size} selected)</h3>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={selectAll}
+                    className="text-xs text-brand-primary hover:underline"
+                  >
+                    Select All
+                  </button>
+                  <span className="text-muted-foreground">|</span>
+                  <button
+                    onClick={deselectAll}
+                    className="text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    Deselect All
+                  </button>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground block mb-1">
+                    SET ALBUM FOR SELECTED
+                  </label>
+                  <input
+                    type="text"
+                    value={bulkMetadata.album}
+                    onChange={(e) => setBulkMetadata({ ...bulkMetadata, album: e.target.value })}
+                    placeholder="Summer Sessions"
+                    className="w-full px-3 py-2 bg-surface border border-border rounded text-sm focus:border-brand-primary focus:outline-none"
+                  />
+                </div>
+                
+                <div>
+                  <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground block mb-1">
+                    SET STATUS FOR SELECTED
+                  </label>
+                  <select
+                    value={bulkMetadata.status}
+                    onChange={(e) => setBulkMetadata({ ...bulkMetadata, status: e.target.value as any })}
+                    className="w-full px-3 py-2 bg-surface border border-border rounded text-sm focus:border-brand-primary focus:outline-none"
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="needs-review">Needs Review</option>
+                    <option value="complete">Complete</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-mono uppercase tracking-wider text-muted-foreground block mb-1">
+                    SET WRITER FOR SELECTED
+                  </label>
+                  <input
+                    type="text"
+                    value={bulkMetadata.writer}
+                    onChange={(e) => setBulkMetadata({ ...bulkMetadata, writer: e.target.value })}
+                    placeholder="Your name"
+                    className="w-full px-3 py-2 bg-surface border border-border rounded text-sm focus:border-brand-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+              
               <button
-                onClick={() => {
-                  setParsedSongs([]);
-                  setTextInput('');
-                }}
-                className="text-sm text-muted-foreground hover:text-foreground"
+                onClick={applyBulkMetadata}
+                disabled={selectedSongs.size === 0}
+                className="mt-4 rnrb-button-secondary px-6 py-2 rounded-lg disabled:opacity-50"
               >
-                Start over
+                APPLY TO {selectedSongs.size} SONGS
               </button>
             </div>
 
-            {/* Songs List with Actions */}
-            <div className="space-y-4">
+            {/* Songs List */}
+            <div className="space-y-3">
               {parsedSongs.map((song, index) => (
-                <div key={song.tempId} className="rnrb-card p-6">
+                <div key={song.tempId} className="rnrb-card p-4">
                   <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center font-mono text-sm font-semibold text-brand-primary">
-                      {index + 1}
-                    </div>
+                    <input
+                      type="checkbox"
+                      checked={selectedSongs.has(song.tempId)}
+                      onChange={() => toggleSelectSong(song.tempId)}
+                      className="mt-1 w-4 h-4 rounded border-border"
+                    />
                     
-                    <div className="flex-1 min-w-0">
-                      {/* Title */}
-                      <input
-                        type="text"
-                        value={song.title}
-                        onChange={(e) => updateSong(index, { title: e.target.value })}
-                        className="w-full text-xl font-semibold mb-3 bg-transparent border-0 border-b border-transparent hover:border-border focus:border-brand-primary focus:outline-none px-0 py-1"
-                      />
-                      
-                      {/* Quick Metadata */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                        <input
-                          type="text"
-                          value={song.writer || ''}
-                          onChange={(e) => updateSong(index, { writer: e.target.value })}
-                          placeholder="Writer"
-                          className="px-2 py-1 text-xs bg-surface border border-border rounded focus:border-brand-primary focus:outline-none"
-                        />
-                        <input
-                          type="text"
-                          value={song.dateWritten || ''}
-                          onChange={(e) => updateSong(index, { dateWritten: e.target.value })}
-                          placeholder="Date (2024)"
-                          className="px-2 py-1 text-xs bg-surface border border-border rounded focus:border-brand-primary focus:outline-none"
-                        />
-                        <select
-                          value={song.status}
-                          onChange={(e) => updateSong(index, { status: e.target.value as any })}
-                          className="px-2 py-1 text-xs bg-surface border border-border rounded focus:border-brand-primary focus:outline-none"
-                        >
-                          <option value="draft">Draft</option>
-                          <option value="in-progress">In Progress</option>
-                          <option value="needs-review">Needs Review</option>
-                          <option value="complete">Complete</option>
-                        </select>
-                        <input
-                          type="text"
-                          value={song.album || ''}
-                          onChange={(e) => updateSong(index, { album: e.target.value })}
-                          placeholder="Album (optional)"
-                          className="px-2 py-1 text-xs bg-surface border border-border rounded focus:border-brand-primary focus:outline-none"
-                        />
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={song.title}
+                            onChange={(e) => updateSong(song.tempId, { title: e.target.value })}
+                            className="text-lg font-semibold bg-transparent border-0 border-b border-transparent hover:border-border focus:border-brand-primary focus:outline-none w-full px-0 py-1"
+                          />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setExpandedSong(expandedSong === song.tempId ? null : song.tempId)}
+                            className="text-muted-foreground hover:text-foreground"
+                          >
+                            {expandedSong === song.tempId ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          </button>
+                          <button
+                            onClick={() => removeSong(song.tempId)}
+                            className="text-red-500 hover:text-red-400 text-sm"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </div>
                       
-                      {/* Lyrics Preview */}
-                      <div className="bg-surface/50 rounded p-3 border border-border/50">
-                        <p className="text-xs text-muted-foreground mb-1 font-mono">
-                          {song.lyrics.split('\n').length} lines
-                        </p>
-                        <p className="text-sm font-mono text-foreground/70 line-clamp-2">
-                          {song.lyrics.substring(0, 150)}...
-                        </p>
+                      {/* Metadata */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                        <div className={song.writer ? '' : 'opacity-50'}>
+                          Writer: {song.writer || 'Not set'}
+                        </div>
+                        <div className={song.dateWritten ? '' : 'opacity-50'}>
+                          Date: {song.dateWritten || 'Not set'}
+                        </div>
+                        <div>
+                          <span className={`px-2 py-0.5 rounded ${
+                            song.status === 'complete' ? 'bg-green-500/20 text-green-500' :
+                            song.status === 'in-progress' ? 'bg-blue-500/20 text-blue-500' :
+                            song.status === 'needs-review' ? 'bg-yellow-500/20 text-yellow-500' :
+                            'bg-muted text-muted-foreground'
+                          }`}>
+                            {song.status}
+                          </span>
+                        </div>
+                        <div className={song.album ? '' : 'opacity-50'}>
+                          Album: {song.album || 'None'}
+                        </div>
                       </div>
-                    </div>
-                    
-                    {/* Actions */}
-                    <div className="flex flex-col gap-2">
-                      {index < parsedSongs.length - 1 && (
-                        <button
-                          onClick={() => mergeSongs(index, index + 1)}
-                          className="p-2 text-xs text-muted-foreground hover:text-foreground hover:bg-surface rounded transition-colors"
-                          title="Merge with next song"
-                        >
-                          <MergeIcon className="w-4 h-4" />
-                        </button>
+
+                      {/* Expanded View */}
+                      {expandedSong === song.tempId && (
+                        <div className="mt-4 space-y-3 border-t border-border pt-4">
+                          <div className="grid grid-cols-2 gap-3">
+                            <input
+                              type="text"
+                              value={song.writer || ''}
+                              onChange={(e) => updateSong(song.tempId, { writer: e.target.value })}
+                              placeholder="Writer"
+                              className="px-3 py-2 bg-surface border border-border rounded text-sm"
+                            />
+                            <input
+                              type="text"
+                              value={song.dateWritten || ''}
+                              onChange={(e) => updateSong(song.tempId, { dateWritten: e.target.value })}
+                              placeholder="Date (e.g. 2024, Spring 2023)"
+                              className="px-3 py-2 bg-surface border border-border rounded text-sm"
+                            />
+                            <input
+                              type="text"
+                              value={song.album || ''}
+                              onChange={(e) => updateSong(song.tempId, { album: e.target.value })}
+                              placeholder="Album/Collection"
+                              className="px-3 py-2 bg-surface border border-border rounded text-sm"
+                            />
+                            <select
+                              value={song.status}
+                              onChange={(e) => updateSong(song.tempId, { status: e.target.value as any })}
+                              className="px-3 py-2 bg-surface border border-border rounded text-sm"
+                            >
+                              <option value="draft">Draft</option>
+                              <option value="in-progress">In Progress</option>
+                              <option value="needs-review">Needs Review</option>
+                              <option value="complete">Complete</option>
+                            </select>
+                          </div>
+                          <textarea
+                            value={song.lyrics}
+                            onChange={(e) => updateSong(song.tempId, { lyrics: e.target.value })}
+                            rows={6}
+                            className="w-full px-3 py-2 bg-surface border border-border rounded text-sm font-mono"
+                          />
+                        </div>
                       )}
-                      <button
-                        onClick={() => removeSong(index)}
-                        className="p-2 text-xs text-red-500 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
-                        title="Remove this song"
-                      >
-                        ✕
-                      </button>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Import Button */}
-            {importing ? (
-              <div className="p-6 rnrb-card border-green-500/30 bg-green-500/5">
+            {/* Import Actions */}
+            <div className="flex items-center justify-between p-6 rnrb-card">
+              <button
+                onClick={() => setStep('split')}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                ← Back to split
+              </button>
+              
+              {importing ? (
                 <div className="flex items-center gap-3">
-                  <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-                  <p className="font-semibold text-green-500">
-                    Importing {importStatus.imported}/{importStatus.total}...
-                  </p>
+                  <div className="w-5 h-5 border-2 border-brand-primary border-t-transparent rounded-full animate-spin" />
+                  <span className="font-semibold">Importing...</span>
                 </div>
-              </div>
-            ) : importStatus.imported === importStatus.total && importStatus.total > 0 ? (
-              <div className="p-6 rnrb-card border-green-500/30 bg-green-500/5">
-                <div className="flex items-center gap-3">
-                  <Check className="w-6 h-6 text-green-500" />
-                  <div>
-                    <p className="font-semibold text-green-500">
-                      {importStatus.imported} songs imported successfully!
-                    </p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Redirecting to your library...
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between p-6 rnrb-card">
-                <div className="flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 text-brand-primary" />
-                  <div>
-                    <p className="font-semibold">Ready to import {parsedSongs.length} songs</p>
-                    <p className="text-sm text-muted-foreground">
-                      All songs will be PRIVATE and secure
-                    </p>
-                  </div>
-                </div>
+              ) : (
                 <button
                   onClick={handleImport}
-                  className="rnrb-button-primary px-8 py-4 rounded-xl font-semibold text-lg"
+                  disabled={validation.errors.length > 0}
+                  className="rnrb-button-primary px-8 py-3 rounded-xl font-semibold disabled:opacity-50"
                 >
-                  IMPORT {parsedSongs.length} SONGS
+                  <Music className="w-5 h-5 inline mr-2" />
+                  IMPORT {parsedSongs.length} SONGS (PRIVATE)
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </motion.div>
         )}
       </div>

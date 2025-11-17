@@ -13,6 +13,7 @@ interface Song {
   title: string;
   lyrics: string;
   writer?: string;
+  coWriters?: string[];
   dateWritten?: string;
   status: 'draft' | 'in-progress' | 'needs-review' | 'complete';
   album?: string;
