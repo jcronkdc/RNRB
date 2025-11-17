@@ -146,7 +146,7 @@ export default function HomePage() {
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6">
-              <span className="font-display font-bold bg-gradient-to-r from-[#c9a961] via-white to-[#c9a961] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(201,169,97,0.3)]">
+              <span className="font-[family-name:var(--rnrb-font-marker)] text-black uppercase tracking-tight">
                 Rock N' Roll Basement
               </span>
             </h1>

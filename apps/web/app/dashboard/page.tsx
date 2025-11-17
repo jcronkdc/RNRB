@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { Card } from '@cronkwaters/ui';
-import { Music, Radio, MessageSquare, FolderOpen, TrendingUp, Settings2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -27,135 +25,236 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a0f1e] via-[#0f172a] to-[#050816]">
-        <div className="text-gray-400">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <motion.div 
+          animate={{ opacity: [0.2, 1, 0.2] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-zinc-600 font-mono text-sm uppercase tracking-widest"
+        >
+          Loading Session
+        </motion.div>
       </div>
     );
   }
 
   const displayName = user?.user_metadata?.display_name || user?.user_metadata?.name || user?.email?.split('@')[0];
 
-  const quickActions = [
+  const navigationItems = [
     {
-      title: 'New Project',
-      description: 'Start a new album, EP, or single',
-      icon: FolderOpen,
-      href: '/projects/new',
-      color: 'from-[#c9a961]/20 to-[#c9a961]/5',
-      iconColor: 'text-[#c9a961]'
-    },
-    {
-      title: 'Recording Studio',
-      description: 'HD video sessions with collaborators',
-      icon: Music,
+      title: 'STUDIO',
+      subtitle: 'Record & Collaborate',
       href: '/studio',
-      color: 'from-red-500/10 to-red-500/5',
-      iconColor: 'text-red-400'
+      gradient: 'from-red-950/20 to-black',
+      border: 'border-red-900/20',
+      accent: 'red-600',
+      description: 'HD multi-track recording'
     },
     {
-      title: 'My Projects',
-      description: 'View and manage your work',
-      icon: FolderOpen,
+      title: 'PROJECTS',
+      subtitle: 'Manage Your Music',
       href: '/projects',
-      color: 'from-blue-500/10 to-blue-500/5',
-      iconColor: 'text-blue-400'
+      gradient: 'from-blue-950/20 to-black',
+      border: 'border-blue-900/20',
+      accent: 'blue-600',
+      description: 'Albums, EPs, Singles'
     },
     {
-      title: 'Tours & Shows',
-      description: 'Schedule and stream performances',
-      icon: Radio,
+      title: 'TOUR DATES',
+      subtitle: 'Shows & Streaming',
       href: '/tours',
-      color: 'from-purple-500/10 to-purple-500/5',
-      iconColor: 'text-purple-400'
+      gradient: 'from-purple-950/20 to-black',
+      border: 'border-purple-900/20',
+      accent: 'purple-600',
+      description: 'Live performances'
     },
     {
-      title: 'Messaging',
-      description: 'Real-time collaboration',
-      icon: MessageSquare,
+      title: 'NETWORK',
+      subtitle: 'Connect & Message',
       href: '/messages',
-      color: 'from-green-500/10 to-green-500/5',
-      iconColor: 'text-green-400'
-    },
-    {
-      title: 'Settings',
-      description: 'Profile and preferences',
-      icon: Settings2,
-      href: '/settings/profile',
-      color: 'from-gray-500/10 to-gray-500/5',
-      iconColor: 'text-gray-400'
+      gradient: 'from-green-950/20 to-black',
+      border: 'border-green-900/20',
+      accent: 'green-600',
+      description: 'Real-time collaboration'
     },
   ];
 
+  const stats = [
+    { label: 'ACTIVE PROJECTS', value: '03', unit: '' },
+    { label: 'TOTAL TRACKS', value: '48', unit: '' },
+    { label: 'COLLABORATORS', value: '12', unit: '' },
+    { label: 'THIS MONTH', value: '4.3', unit: 'K' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0f1e] via-[#0f172a] to-[#050816] py-12 px-4">
-      <div className="container mx-auto max-w-7xl">
-        {/* Welcome Header */}
+    <div className="min-h-screen bg-black text-white">
+      {/* Studio-style Header */}
+      <header className="border-b border-zinc-900">
+        <div className="container mx-auto px-6 py-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center justify-between"
+          >
+            <div>
+              <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500 mb-2">
+                DASHBOARD
+              </h1>
+              <p className="font-[family-name:var(--rnrb-font-marker)] text-3xl">
+                {displayName}
+              </p>
+            </div>
+            <Link 
+              href="/projects/new"
+              className="px-6 py-3 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors"
+            >
+              NEW PROJECT
+            </Link>
+          </motion.div>
+        </div>
+      </header>
+
+      {/* Main Grid */}
+      <main className="container mx-auto px-6 py-12">
+        {/* Navigation Grid */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-3">
-            Welcome back, {displayName}
-          </h1>
-          <p className="text-xl text-gray-400">
-            Your creative command center
-          </p>
-        </motion.div>
-
-        {/* Quick Actions Grid */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
-        >
-          {quickActions.map((action, index) => (
-            <Link key={action.href} href={action.href}>
+          {navigationItems.map((item, index) => (
+            <Link key={item.href} href={item.href}>
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className={`
+                  relative overflow-hidden h-48 
+                  bg-gradient-to-br ${item.gradient} 
+                  border ${item.border}
+                  hover:border-zinc-700 transition-all duration-500
+                  group cursor-pointer
+                `}
               >
-                <Card className={`p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer border border-white/5 bg-gradient-to-br ${action.color} group`}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`p-3 rounded-lg bg-black/20 group-hover:bg-black/30 transition-colors`}>
-                      <action.icon className={`h-6 w-6 ${action.iconColor}`} />
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-gray-600 group-hover:text-[#c9a961] transition-colors" />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+                
+                <div className="relative h-full p-8 flex flex-col justify-between">
+                  <div>
+                    <h2 className="font-mono text-2xl uppercase tracking-wider mb-1">
+                      {item.title}
+                    </h2>
+                    <p className="text-zinc-400 text-sm uppercase tracking-widest">
+                      {item.subtitle}
+                    </p>
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">
-                    {action.title}
-                  </h3>
-                  <p className="text-sm text-gray-400">
-                    {action.description}
-                  </p>
-                </Card>
+                  
+                  <div className="flex items-center justify-between">
+                    <p className="text-zinc-500 text-xs uppercase tracking-wider">
+                      {item.description}
+                    </p>
+                    <div className={`w-2 h-2 bg-${item.accent} rounded-full animate-pulse`} />
+                  </div>
+                </div>
+                
+                {/* Hover effect */}
+                <div className="absolute inset-0 border border-white/10 scale-105 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500" />
               </motion.div>
             </Link>
           ))}
         </motion.div>
 
-        {/* Recent Activity */}
+        {/* Stats Row */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"
         >
-          <Card className="p-8 border border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
-            <h2 className="text-2xl font-serif font-bold text-white mb-6">Recent Activity</h2>
-            <div className="text-center py-12">
-              <TrendingUp className="w-16 h-16 text-gray-700 mx-auto mb-4" />
-              <p className="text-gray-400 mb-2">
-                Your recent projects and collaborations will appear here
+          {stats.map((stat, index) => (
+            <div key={stat.label} className="border border-zinc-900 p-6 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <p className="text-zinc-500 text-xs uppercase tracking-widest mb-2 font-mono">
+                {stat.label}
               </p>
-              <p className="text-sm text-gray-500">
-                Start by creating your first project
+              <p className="font-[family-name:var(--rnrb-font-marker)] text-4xl">
+                {stat.value}
+                <span className="text-zinc-600 text-2xl">{stat.unit}</span>
               </p>
             </div>
-          </Card>
+          ))}
         </motion.div>
-      </div>
+
+        {/* Activity Feed */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="border border-zinc-900"
+        >
+          <div className="border-b border-zinc-900 p-6">
+            <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
+              RECENT ACTIVITY
+            </h3>
+          </div>
+          
+          <div className="p-6">
+            <div className="space-y-4">
+              {[
+                { time: '2 HOURS AGO', action: 'RECORDING SESSION', project: 'Summer Sessions', status: 'COMPLETED' },
+                { time: '5 HOURS AGO', action: 'NEW COLLABORATOR', project: 'Rock Anthem EP', status: 'JOHN SMITH JOINED' },
+                { time: '1 DAY AGO', action: 'ROYALTY PAYMENT', project: 'Streaming Revenue', status: '$125.00' },
+              ].map((activity, index) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 + index * 0.1 }}
+                  className="flex items-center justify-between py-3 border-b border-zinc-900/50 last:border-0"
+                >
+                  <div className="flex items-center gap-6">
+                    <span className="text-zinc-600 font-mono text-xs uppercase tracking-wider">
+                      {activity.time}
+                    </span>
+                    <div>
+                      <p className="text-sm uppercase tracking-wider">
+                        {activity.action}
+                      </p>
+                      <p className="text-zinc-500 text-xs uppercase tracking-wider">
+                        {activity.project}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-zinc-400 font-mono text-xs uppercase tracking-wider">
+                    {activity.status}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Quick Links */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mt-12 flex gap-6 justify-center"
+        >
+          {[
+            { label: 'SETTINGS', href: '/settings/profile' },
+            { label: 'DISCOVER', href: '/discover' },
+            { label: 'HELP', href: '/help' },
+            { label: 'LOGOUT', href: '/logout' },
+          ].map((link) => (
+            <Link 
+              key={link.label}
+              href={link.href}
+              className="text-zinc-600 hover:text-white font-mono text-xs uppercase tracking-[0.2em] transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </motion.div>
+      </main>
     </div>
   );
 }

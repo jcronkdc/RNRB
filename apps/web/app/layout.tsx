@@ -1,6 +1,53 @@
 import type { Metadata } from 'next';
 import { AblyProvider } from '@/components/ably';
+import { Bebas_Neue, Oswald, Inter, JetBrains_Mono, Rock_Salt, Permanent_Marker } from 'next/font/google';
 import './globals.css';
+
+// Bold display font for headlines - perfect for music/rock aesthetic
+const bebasNeue = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-bebas',
+});
+
+// Strong, impactful font for navigation and subtitles
+const oswald = Oswald({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-oswald',
+});
+
+// Clean sans-serif for body text
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+// Monospace for code/technical elements
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono',
+});
+
+// Handwritten rock style for main branding
+const rockSalt = Rock_Salt({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-rock',
+});
+
+// Bold marker style for headings
+const permanentMarker = Permanent_Marker({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-marker',
+});
 
 export const metadata: Metadata = {
   title: 'Rock N’ Roll Basement',
@@ -70,7 +117,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-gradient-to-b from-[#0a0f1e] via-[#0f172a] to-[#050816]">
+      <body className={`${bebasNeue.variable} ${oswald.variable} ${inter.variable} ${jetbrainsMono.variable} ${rockSalt.variable} ${permanentMarker.variable} font-sans bg-gradient-to-b from-[#0a0f1e] via-[#0f172a] to-[#050816]`}>
         <AblyProvider>
           {children}
         </AblyProvider>

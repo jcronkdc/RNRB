@@ -147,8 +147,8 @@ export function NavBar() {
                 className="hidden dark:block"
                 priority
               />
-              <span className="text-lg font-medium hidden sm:inline">
-                Rock N' Roll Basement
+              <span className="font-[family-name:var(--rnrb-font-marker)] text-xl tracking-tight hidden sm:inline uppercase">
+                ROCK N' ROLL BASEMENT
               </span>
             </Link>
 
