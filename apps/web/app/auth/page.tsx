@@ -1,21 +1,68 @@
 'use client';
 
 import Link from 'next/link';
-import { Suspense, useState } from 'react';
+import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 
-function SignInForm() {
+export default function SignInPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const handleGoogleSignIn = () => {
-    setLoading(true);
-    window.location.href = '/api/auth/signin/google?callbackUrl=/';
-  };
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    window.location.href = `/api/auth/signin/email?email=${encodeURIComponent(email)}`;
+    setMessage(null);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) throw error;
+
+      setMessage({
+        type: 'success',
+        text: 'Check your email! We sent you a magic link to sign in.'
+      });
+      setEmail('');
+    } catch (error: any) {
+      console.error('Email sign-in error:', error);
+      setMessage({
+        type: 'error',
+        text: error.message || 'Failed to send magic link. Please try again.'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) throw error;
+    } catch (error: any) {
+      console.error('Google sign-in error:', error);
+      setMessage({
+        type: 'error',
+        text: error.message || 'Google sign-in failed. Please try email instead.'
+      });
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,8 +77,63 @@ function SignInForm() {
           </p>
         </div>
 
+        {message && (
+          <div className={`p-4 rounded-lg border ${
+            message.type === 'success'
+              ? 'bg-green-500/10 border-green-500/20'
+              : 'bg-red-500/10 border-red-500/20'
+          }`}>
+            <p className={`text-sm ${
+              message.type === 'success' ? 'text-green-400' : 'text-red-400'
+            }`}>
+              {message.text}
+            </p>
+          </div>
+        )}
+
         <div className="space-y-4">
-          {/* Google OAuth */}
+          {/* Email Magic Link - PRIMARY METHOD */}
+          <form onSubmit={handleEmailSignIn}>
+            <div className="space-y-3">
+              <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg mb-3">
+                <p className="text-sm text-purple-400 font-medium">✨ Recommended: Email Magic Link</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Powered by Supabase + Resend. Just enter your email - no password needed!
+                </p>
+              </div>
+              
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your.email@example.com"
+                required
+                disabled={loading}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 disabled:opacity-50"
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-lg bg-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-purple-700 disabled:opacity-50"
+              >
+                {loading ? 'Sending Magic Link...' : '✉️ Send Magic Link to My Email'}
+              </button>
+              <p className="text-xs text-gray-400 text-center">
+                Check your inbox after clicking above!
+              </p>
+            </div>
+          </form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-[#061125] px-2 text-gray-400">or</span>
+            </div>
+          </div>
+
+          {/* Google OAuth - Secondary */}
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
@@ -47,48 +149,6 @@ function SignInForm() {
               {loading ? 'Loading...' : 'Continue with Google'}
             </div>
           </button>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/10" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-[#061125] px-2 text-gray-400">or use email (recommended)</span>
-            </div>
-          </div>
-
-          {/* Email Magic Link */}
-          <form onSubmit={handleEmailSignIn}>
-            <div className="space-y-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@example.com"
-                required
-                disabled={loading}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-lg bg-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-purple-700"
-              >
-                {loading ? 'Sending...' : '✉️ Send Magic Link to My Email'}
-              </button>
-              <p className="text-xs text-gray-400 text-center">
-                We'll email you a one-time sign-in link. Check your inbox!
-              </p>
-            </div>
-          </form>
-
-          <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <p className="text-sm text-blue-400 font-medium mb-1">💡 Email Magic Link</p>
-            <p className="text-xs text-gray-400">
-              Since Google has been unreliable, email magic link is the recommended sign-in method. 
-              Just enter your email above, and we'll send you an instant sign-in link. No password needed!
-            </p>
-          </div>
         </div>
 
         <p className="text-center text-xs text-gray-500">
@@ -104,17 +164,5 @@ function SignInForm() {
         </p>
       </div>
     </div>
-  );
-}
-
-export default function SignInPage() {
-  return (
-    <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#050816] via-[#061125] to-[#0f172a]">
-        <div className="text-white">Loading...</div>
-      </div>
-    }>
-      <SignInForm />
-    </Suspense>
   );
 }
