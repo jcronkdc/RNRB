@@ -169,37 +169,75 @@ Total: 4 clicks from sign-in to creating songs ✅
 4. Song appears in project's song list
 5. Click song → View/edit (next phase)
 
-### ⏳ NEXT TO BUILD:
+## 🕸️ OPTIMAL NETWORK ARCHITECTURE (Ant Colony + Tokyo Subway Model)
 
-**PHASE 3: Song Detail & Editing**
-- View individual song
-- Edit lyrics/metadata
-- Add collaborators to song
-- Upload audio files
-- Chord chart editor
+**COLLABORATION-FIRST DESIGN:**
 
-**PHASE 3: Assets (Nutrients)**
-- Upload audio files
-- Upload lyrics/charts
-- File organization
-- Cloud storage integration
+Every feature has collaboration BAKED IN at the core:
 
-**PHASE 4: Sessions (Growth Events)**
-- Schedule recording sessions
-- Link to projects/songs
-- Invite participants
-- Record HD video/audio
+```
+PROJECT (Mycelium Hub)
+  ├─ INVITE SYSTEM (Gate) ✅ Invite-only access control
+  │   └─ Email invites, accept/decline, role management
+  │
+  ├─ PROJECT CHAT (Communication Thread)
+  │   ├─ Ably real-time messaging
+  │   ├─ @mentions for collaborators
+  │   └─ File sharing in chat
+  │
+  ├─ SONGS (Creative Hyphae) ✅ Built
+  │   ├─ Chat per song (discuss lyrics, arrangement)
+  │   ├─ Daily.co video room per song (remote writing)
+  │   ├─ Cursor control (shared lyric editing)
+  │   └─ Collaborator credits & splits
+  │
+  ├─ RECORDING SESSIONS (Collaborative Events)
+  │   ├─ Daily.co HD video/audio
+  │   ├─ Multi-participant (up to 32)
+  │   ├─ Screen share for DAW
+  │   ├─ Talkback system
+  │   └─ Cloud recording per participant
+  │
+  └─ REVENUE (Transparent Flow)
+      ├─ Split sheets per song
+      ├─ Automatic calculations
+      └─ Transparent to all collaborators
+```
 
-**PHASE 5: Royalties & Splits (Flow)**
-- Revenue tracking
-- Split sheet automation
-- Payment distribution
+**PRINCIPLE:** No feature exists without collaboration pathway.
 
-**PHASE 6: Tours (Fruiting Body)**
-- Tour management (already info pages exist)
-- Connect to projects
-- Setlist builder
-- Ticket tracking
+### ⏳ BUILD ORDER (Optimal Dependencies):
+
+**NEXT IMMEDIATE (Phase 3):**
+1. **Project Invitations** - Gate control for collaboration
+   - Invite by email
+   - Accept/decline flow
+   - Role assignment (owner/admin/member)
+   - Permission system
+
+2. **Project-Level Chat** - Communication backbone
+   - Ably channel per project
+   - Real-time messaging
+   - File sharing
+   - @mentions
+
+**THEN (Phase 4):**
+3. **Song Collaboration Features**
+   - Daily.co room per song (video co-writing)
+   - Shared lyrics editor (cursor control)
+   - Song-specific chat
+   - Collaborator credits
+
+4. **Assets with Collaboration**
+   - Upload audio/files
+   - Version control (who changed what)
+   - Comments on assets
+   - Approval workflows
+
+**FINALLY (Phase 5+):**
+5. **Recording Sessions** - Already have Daily.co, connect to projects
+6. **Royalty Splits** - Transparent to all collaborators
+7. **Tours** - Connect to projects, collaborative setlist building
 
 ---
 
@@ -221,8 +259,6 @@ All critical pathways verified:
 ## 📁 RECENT COMMITS (Main Branch):
 
 ```
-340595d - Agent 31: Corrected master doc (auth working, not blocked)
-17b5a71 - Songs system deployed (Phase 2 complete)
 02d02bf - Mycelium foundation (projects)
 734cf37 - Profile system
 589d102 - Authenticated UX
@@ -235,79 +271,26 @@ All critical pathways verified:
 
 ---
 
-## 🎯 OPTIMAL PATHWAY DESIGN (Ant Colony / Mycelial Efficiency)
-
-### User Journey - Minimal Clicks (Japanese Subway Model):
-
-```
-Sign In (0) → Dashboard (auto) → Projects (1 click) → Project Detail (1 click) 
-   ↓
-Songs (1 click) → New Song (1 click) → Song Created ✅
-   
-Total: 4 clicks from sign-in to creating song content
-```
-
-**Collaboration Pathways (NEXT PRIORITY):**
-```
-Project (hub) 
-   ├─ Songs (content)
-   ├─ Chat (within project) ← NEED TO BUILD
-   │    └─ Ably real-time messaging per project
-   ├─ Video Sessions (collaboration) ← NEED TO BUILD
-   │    └─ Daily.co with cursor control
-   ├─ Members (invite-only) ← NEED TO BUILD
-   │    └─ Project permissions system
-   └─ Assets (files)
-```
-
----
-
-## 🔥 FOR NEXT AGENT - COLLABORATION LAYER:
+## 🔥 FOR NEXT AGENT:
 
 **Current State:**
-- ✅ Auth working (Google + Email via Supabase)
-- ✅ Projects working (mycelium substrate)
-- ✅ Songs working (hyphae branching from projects)
-- ✅ Design unified (light/dark theme)
-- ✅ All pages functional
+- User CAN sign in (Supabase + Resend working)
+- Projects working (mycelium foundation complete)
+- Design unified (light/dark theme)
+- NO fake content anywhere
+- All pages scrollable, clickable, functional
 
-**Next Critical Features (Collaboration - The Network Effect):**
+**Next Logical Step:**
+Build **SONGS system** - the hyphae that branch from project mycelium.
 
-**1. Project-Based Chat (Ably):**
-- Channel per project: `rnrb:project:{projectSlug}`
-- Real-time messaging within project context
-- Member presence awareness
-- Notifications for @mentions
-- Integration: `/projects/[slug]/chat` page
+Songs will:
+- Belong to projects
+- Have lyrics, chords, audio
+- Connect collaborators
+- Link to sessions
+- Feed into tours
 
-**2. Video Collaboration (Daily.co):**
-- Session rooms per project
-- Screen sharing + cursor control
-- Multi-participant audio/video
-- Recording capabilities
-- Integration: `/projects/[slug]/session` page
-
-**3. Invite-Only Groups:**
-- Project members table (userId, projectId, role, permissions)
-- Invitation system (email invites with tokens)
-- Role-based access (owner, admin, member, viewer)
-- Permission checks on all project routes
-- Integration: `/projects/[slug]/members` page
-
-**Optimal Flow (Ant Colony Pattern):**
-```
-Create Project → Invite Members → Chat/Video in Context → Collaborate on Songs
-     ↓              ↓                  ↓                        ↓
-  1 click       1 click            1 click                 Content flows
-```
-
-**Database Schema Needed:**
-- `ProjectMember` - User-to-project relationships
-- `ProjectInvitation` - Pending invites
-- `ChatMessage` - Persisted chat history (Ably for real-time)
-- `VideoSession` - Recording metadata (Daily.co for streaming)
-
-The mycelium grows toward true collaboration.
+The substrate is ready. Time to grow the hyphae.
 
 ---
 
