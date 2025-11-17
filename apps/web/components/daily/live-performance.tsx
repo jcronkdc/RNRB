@@ -11,7 +11,7 @@ import {
 } from '@daily-co/daily-react';
 import { 
   Radio, 
-  RadioOff,
+  CircleX,
   Users,
   Eye,
   MessageSquare,
@@ -377,7 +377,7 @@ export function LivePerformance({
                     onClick={handleStopStream}
                     className="gap-2"
                   >
-                    <RadioOff className="h-4 w-4" />
+                    <CircleX className="h-4 w-4" />
                     End Stream
                   </Button>
                   

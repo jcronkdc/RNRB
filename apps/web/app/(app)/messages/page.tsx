@@ -6,6 +6,9 @@ import { MessageSquare, Users, Bell, Wifi } from 'lucide-react';
 import { ChatRoom, PresenceList, NotificationFeed, ConnectionStatus } from '@/components/ably';
 import { Card } from '@cronkwaters/ui';
 
+// Force dynamic rendering to ensure Ably client is available
+export const dynamic = 'force-dynamic';
+
 export default function MessagesPage() {
   const [activeTab, setActiveTab] = useState<'chat' | 'presence' | 'notifications'>('chat');
 
