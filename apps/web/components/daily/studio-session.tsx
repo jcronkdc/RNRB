@@ -19,7 +19,7 @@ import {
   MonitorUp, 
   MonitorX,
   Radio,
-  CircleX,
+  X,
   Disc,
   Square,
   Users,
@@ -280,7 +280,7 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
               onClick={stopLiveStreaming}
               className="gap-2"
             >
-              <CircleX className="h-4 w-4" />
+              <X className="h-4 w-4" />
               Stop Streaming
             </Button>
           )}

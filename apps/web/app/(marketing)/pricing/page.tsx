@@ -8,87 +8,102 @@ import Link from 'next/link';
 
 const plans = [
   {
-    name: 'Solo Artist',
-    price: 29,
-    description: 'Perfect for independent musicians and small projects',
+    name: 'Starter',
+    price: 19,
+    description: 'Get started with core features and pay as you grow',
     features: [
-      '5 active projects',
-      '10 GB storage',
-      '50 hours recording/month',
-      '10 hours streaming/month',
+      '3 active projects',
+      '5 GB storage',
+      '5 hours recording/month',
+      '2 hours streaming/month',
       'Basic analytics',
       'Email support',
       'Mobile app access',
-      'Basic collaboration tools',
+      'Real-time messaging',
     ],
     limits: {
-      recording: '50 hours/month (~$40 value)',
-      streaming: '10 hours/month (~$9 value)',
+      recording: '5 hours included, then $0.99/hour',
+      streaming: '2 hours included, then $1.49/hour',
       messaging: '10,000 messages/month',
-      storage: '10 GB included, $5/10GB extra',
+      storage: '5 GB included, then $5/10GB',
+    },
+    costAnalysis: {
+      includedValue: 8,
+      platformCost: 11,
+      margin: '40%',
     },
     notIncluded: [
+      'Team collaboration',
       'Advanced analytics',
       'Priority support',
       'Custom branding',
       'API access',
-      'Team management',
     ],
     popular: false,
   },
   {
-    name: 'Band Pro',
-    price: 99,
-    description: 'Ideal for bands and collaborative music projects',
+    name: 'Professional',
+    price: 79,
+    description: 'For serious musicians and active collaborations',
     features: [
-      '25 active projects',
-      '100 GB storage',
-      '200 hours recording/month',
-      '50 hours streaming/month',
+      '20 active projects',
+      '50 GB storage',
+      '30 hours recording/month',
+      '10 hours streaming/month',
       'Advanced analytics',
-      'Priority email support',
-      'Team collaboration (10 members)',
+      'Priority support',
+      'Team collaboration (5 members)',
       'Project templates',
       'Version control',
-      'Guest collaborator access',
+      'Guest access (10/month)',
     ],
     limits: {
-      recording: '200 hours/month (~$162 value)',
-      streaming: '50 hours/month (~$45 value)',
+      recording: '30 hours included, then $0.89/hour',
+      streaming: '10 hours included, then $1.29/hour',
       messaging: '100,000 messages/month',
-      storage: '100 GB included, $3/10GB extra',
+      storage: '50 GB included, then $4/10GB',
+    },
+    costAnalysis: {
+      includedValue: 33,
+      platformCost: 46,
+      margin: '40%',
     },
     notIncluded: [
       'Phone support',
       'Custom domain',
       'White labeling',
-      'Advanced API access',
+      'Unlimited guests',
     ],
     popular: true,
   },
   {
-    name: 'Studio Business',
-    price: 299,
-    description: 'For professional studios and music organizations',
+    name: 'Studio',
+    price: 249,
+    description: 'For studios and labels with high-volume needs',
     features: [
       'Unlimited projects',
-      '500 GB storage',
-      '500 hours recording/month',
-      '200 hours streaming/month',
+      '200 GB storage',
+      '100 hours recording/month',
+      '40 hours streaming/month',
       'Premium analytics & insights',
-      '24/7 phone & email support',
+      '24/7 priority support',
       'Unlimited team members',
       'Advanced permissions',
       'Custom branding',
       'API access',
-      'Dedicated account manager',
-      'SLA guarantee',
+      'Bulk export tools',
+      'Priority processing',
     ],
     limits: {
-      recording: '500 hours/month (~$405 value)',
-      streaming: '200 hours/month (~$180 value)',
+      recording: '100 hours included, then $0.79/hour',
+      streaming: '40 hours included, then $1.19/hour',
       messaging: 'Unlimited',
-      storage: '500 GB included, $2/10GB extra',
+      storage: '200 GB included, then $3/10GB',
+    },
+    costAnalysis: {
+      includedValue: 117,
+      platformCost: 132,
+      margin: '47%',
     },
     notIncluded: [],
     popular: false,
@@ -182,6 +197,36 @@ export default function PricingPage() {
             </p>
           </Card>
         )}
+
+        {/* Value Proposition */}
+        <Card className="p-8 mb-12 bg-gradient-to-r from-green-500/10 to-blue-500/10">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold mb-4">Fair, Sustainable Pricing</h2>
+            <p className="text-lg mb-6">
+              Start small and scale as you grow. Our pricing is designed to be sustainable for both you and us.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+              <div>
+                <h3 className="font-semibold mb-2">💰 Pay for What You Use</h3>
+                <p className="text-muted-foreground">
+                  Reasonable included limits with transparent overage pricing
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">📈 Volume Discounts</h3>
+                <p className="text-muted-foreground">
+                  Better rates as you upgrade - grow with confidence
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">🎯 No Surprises</h3>
+                <p className="text-muted-foreground">
+                  Clear notifications before hitting limits
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -311,9 +356,9 @@ export default function PricingPage() {
             <Card className="p-6">
               <h3 className="font-semibold mb-2">What happens if I exceed my limits?</h3>
               <p className="text-muted-foreground">
-                You'll receive notifications at 80% and 100% usage. Overages are billed at: 
-                Recording $1/hour, Streaming $1.20/hour, Storage $5/10GB. 
-                You can upgrade anytime to avoid overages.
+                You'll receive notifications at 80% and 100% usage. Pay-as-you-go rates apply automatically - 
+                no service interruption. Rates vary by plan (better rates at higher tiers). 
+                Upgrade anytime to get more included hours and better overage rates.
               </p>
             </Card>
             

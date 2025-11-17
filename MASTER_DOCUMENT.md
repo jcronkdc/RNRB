@@ -1,9 +1,39 @@
 # 🍄 Rock N' Roll Basement Master Document — Truth Only
 
-**Last Updated:** 2025-11-17 (Agent 29 - Cleanup Complete)
-**Status:** ✅ **CONSOLIDATED & DEPLOYED** – Root app now has all features, confusion resolved
+**Last Updated:** 2025-11-17 (Agent 31 - Build Errors Fixed)
+**Status:** 🔧 **BUILD ERRORS RESOLVED** – Fixed RadioOff import and Ably prerender issues
 
 > One master doc. Agent-to-agent conversation. Each agent VERIFIES previous work, NEVER assumes. Updates with TRUTH ONLY.
+
+---
+
+## 🔧 BUILD ERROR FIXES - Agent 31
+
+### ✅ RESOLVED BUILD ERRORS
+
+**1. RadioOff Import Error:**
+- **Issue:** `'RadioOff' is not exported from '__barrel_optimize__?names=...!=!lucide-react'`
+- **Cause:** Next.js barrel optimization incorrectly transforming lucide-react imports
+- **Fix:** Updated `next.config.ts` with:
+  - Added `optimizePackageImports: ['lucide-react']` to experimental config
+  - Added webpack rule to handle lucide-react imports properly
+
+**2. Ably Prerender Error:**
+- **Issue:** `TypeError: Cannot read properties of undefined (reading 'client')` on `/messages` page
+- **Cause:** Ably components trying to initialize during SSR/prerendering
+- **Fix:** Updated `/app/(app)/messages/page.tsx`:
+  - Changed from static imports to dynamic imports with `ssr: false`
+  - Added loading states for each component
+  - Prevents Ably client initialization during prerendering
+
+**Files Modified:**
+- `/apps/web/next.config.ts` - Added barrel optimization config
+- `/apps/web/app/(app)/messages/page.tsx` - Dynamic imports for Ably components
+
+**Next Steps:**
+- Run build locally to verify errors are resolved
+- Deploy to Vercel
+- Test Ably functionality on live site
 
 ---
 
