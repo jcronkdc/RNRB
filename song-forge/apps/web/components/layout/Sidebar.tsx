@@ -1,36 +1,26 @@
 'use client';
 
 import { 
-  Home,
+  LayoutDashboard,
   Music,
   DollarSign,
   Mic,
   Users,
-  MessageSquare,
-  Megaphone,
+  BarChart3,
   Settings,
   ChevronDown,
-  ChevronRight,
   FolderOpen,
-  FileAudio,
-  Image,
   Calendar,
-  FileText,
-  CreditCard,
-  Gift,
-  MapPin,
-  Building,
-  ListMusic,
-  UserPlus,
-  Globe,
-  Mail,
+  Database,
   Award,
-  Podcast,
   User,
-  Shield,
-  CreditCard as BillingIcon
+  HelpCircle,
+  LogOut,
+  Search,
+  Plus
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { cn } from '@cronkwaters/ui';
@@ -39,176 +29,227 @@ type NavItem = {
   label: string;
   href?: string;
   icon: React.ElementType;
+  badge?: string;
   children?: NavItem[];
 };
 
-type NavSection = {
-  title: string;
-  items: NavItem[];
-};
-
-const navigation: NavSection[] = [
-  {
-    title: '🎸 MAIN STAGE',
-    items: [
-      { label: 'Command Center', href: '/dashboard', icon: Home }
+const navigation: NavItem[] = [
+  { 
+    label: 'Dashboard', 
+    href: '/dashboard', 
+    icon: LayoutDashboard 
+  },
+  { 
+    label: 'Projects', 
+    href: '/projects', 
+    icon: FolderOpen,
+    badge: '12' 
+  },
+  { 
+    label: 'Music Library', 
+    icon: Music,
+    children: [
+      { label: 'All Songs', href: '/music', icon: Music },
+      { label: 'Albums', href: '/music/albums', icon: FolderOpen },
+      { label: 'Playlists', href: '/music/playlists', icon: Database }
     ]
   },
-  {
-    title: '🎵 RECORDING STUDIO',
-    items: [
-      { label: 'Active Sessions', href: '/projects', icon: FolderOpen },
-      { label: 'Track Library', href: '/songs', icon: Music },
-      { label: 'Sound Bank', href: '/assets', icon: FileAudio },
-      { label: 'Live Recording', href: '/sessions', icon: Calendar }
+  { 
+    label: 'Revenue', 
+    icon: DollarSign,
+    children: [
+      { label: 'Overview', href: '/revenue', icon: BarChart3 },
+      { label: 'Royalties', href: '/revenue/royalties', icon: DollarSign },
+      { label: 'Payouts', href: '/revenue/payouts', icon: Calendar }
     ]
   },
-  {
-    title: '💰 BUSINESS OFFICE',
-    items: [
-      { label: 'Split Deals', href: '/splits', icon: FileText },
-      { label: 'Song Rights', href: '/song-splits', icon: Music },
-      { label: 'License Vault', href: '/licenses', icon: Shield },
-      { label: 'Cash Flow', href: '/transactions', icon: CreditCard },
-      { label: 'Tip Jar', href: '/donations', icon: Gift }
-    ]
+  { 
+    label: 'Live Shows', 
+    href: '/shows', 
+    icon: Mic,
+    badge: '3' 
   },
-  {
-    title: '🚌 TOUR BUS',
-    items: [
-      { label: 'Road Maps', href: '/tours', icon: Globe },
-      { label: 'Gig Calendar', href: '/shows', icon: Mic },
-      { label: 'Venue Guide', href: '/venues', icon: Building },
-      { label: 'Set Lists', href: '/setlists', icon: ListMusic },
-      { label: 'Fan Base', href: '/fans', icon: Users }
-    ]
+  { 
+    label: 'Collaborators', 
+    href: '/collaborators', 
+    icon: Users 
   },
-  {
-    title: '🎤 GREEN ROOM',
-    items: [
-      { label: 'Your Bands', href: '/organizations', icon: Building },
-      { label: 'Band Mates', href: '/members', icon: Users },
-      { label: 'Guest List', href: '/invites', icon: UserPlus }
-    ]
+  { 
+    label: 'Analytics', 
+    href: '/analytics', 
+    icon: BarChart3 
   },
-  {
-    title: '🍺 THE BAR',
-    items: [
-      { label: 'Talent Board', href: '/marketplace', icon: Globe },
-      { label: 'DMs', href: '/messages', icon: Mail },
-      { label: 'Open Mic', href: '/forums', icon: MessageSquare }
-    ]
-  },
-  {
-    title: '📰 PRESS ROOM',
-    items: [
-      { label: 'Event Board', href: '/events', icon: Calendar },
-      { label: 'Press Kit', href: '/press', icon: Megaphone },
-      { label: 'Trophy Case', href: '/awards', icon: Award },
-      { label: 'Podcast Booth', href: '/podcasts', icon: Podcast }
-    ]
-  },
-  {
-    title: '⚙️ MANAGER\'S OFFICE',
-    items: [
-      { label: 'Artist Profile', href: '/profile', icon: User },
-      { label: 'Venue Settings', href: '/settings', icon: Settings },
-      { label: 'Box Office', href: '/billing', icon: BillingIcon }
-    ]
+  { 
+    label: 'Assets', 
+    href: '/assets', 
+    icon: Database 
   }
+];
+
+const bottomNavigation: NavItem[] = [
+  { label: 'Profile', href: '/settings/profile', icon: User },
+  { label: 'Settings', href: '/settings', icon: Settings },
+  { label: 'Help', href: '/help', icon: HelpCircle }
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const toggleSection = (title: string) => {
-    setExpandedSections(prev =>
-      prev.includes(title)
-        ? prev.filter(t => t !== title)
-        : [...prev, title]
+  const toggleExpanded = (label: string) => {
+    setExpandedItems(prev => 
+      prev.includes(label) 
+        ? prev.filter(item => item !== label)
+        : [...prev, label]
+    );
+  };
+
+  const isActive = (href?: string) => {
+    if (!href) return false;
+    return pathname === href || pathname.startsWith(href + '/');
+  };
+
+  const renderNavItem = (item: NavItem, depth = 0) => {
+    const hasChildren = item.children && item.children.length > 0;
+    const isExpanded = expandedItems.includes(item.label);
+    const active = isActive(item.href);
+
+    if (hasChildren) {
+      return (
+        <div key={item.label}>
+          <button
+            onClick={() => toggleExpanded(item.label)}
+            className={cn(
+              "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+              "hover:bg-surface",
+              depth > 0 && "ml-6"
+            )}
+          >
+            <div className="flex items-center gap-3">
+              <item.icon className="w-5 h-5 text-muted-foreground" />
+              <span>{item.label}</span>
+            </div>
+            <ChevronDown 
+              className={cn(
+                "w-4 h-4 text-muted-foreground transition-transform",
+                isExpanded && "rotate-180"
+              )}
+            />
+          </button>
+          {isExpanded && (
+            <div className="mt-1">
+              {item.children.map(child => renderNavItem(child, depth + 1))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <Link
+        key={item.label}
+        href={item.href || '#'}
+        className={cn(
+          "flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+          "hover:bg-surface",
+          active && "bg-surface text-foreground",
+          !active && "text-muted-foreground hover:text-foreground",
+          depth > 0 && "ml-6"
+        )}
+      >
+        <div className="flex items-center gap-3">
+          <item.icon className={cn(
+            "w-5 h-5",
+            active && "text-brand-primary"
+          )} />
+          <span>{item.label}</span>
+        </div>
+        {item.badge && (
+          <span className="rnrb-badge text-xs">
+            {item.badge}
+          </span>
+        )}
+      </Link>
     );
   };
 
   return (
-    <aside className="rnrb-sidebar">
-      {/* Venue Sign - Logo */}
-      <div className="p-6 border-b border-rnrb-smoke-haze/50 bg-rnrb-shadow relative overflow-hidden">
-        <div className="rnrb-stage-light absolute inset-0 opacity-20"></div>
-        <Link href="/dashboard" className="relative z-10 block text-center">
-          <h1 className="rnrb-neon text-3xl font-black tracking-wider">RN'RB</h1>
-          <p className="text-xs text-rnrb-dust uppercase tracking-widest mt-1">Underground HQ</p>
+    <aside className="w-64 h-screen bg-surface/30 border-r border-border/50 flex flex-col">
+      {/* Logo Section */}
+      <div className="p-6 border-b border-border/50">
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src="/rnrdark.png"
+            alt="Rock N' Roll Basement"
+            width={40}
+            height={40}
+            className="dark:hidden"
+          />
+          <Image
+            src="/rnrlight.png"
+            alt="Rock N' Roll Basement"
+            width={40}
+            height={40}
+            className="hidden dark:block"
+          />
+          <div>
+            <h2 className="font-semibold">Rock N' Roll</h2>
+            <p className="text-xs text-muted-foreground">Basement</p>
+          </div>
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-4">
-        {navigation.map((section) => (
-          <div key={section.title} className="rnrb-nav-section">
-            {section.title && (
-              <h2 className="rnrb-nav-title">{section.title}</h2>
-            )}
-            <ul className="space-y-1">
-              {section.items.map((item) => {
-                const isActive = pathname === item.href;
-                const hasChildren = item.children && item.children.length > 0;
-                const isExpanded = expandedSections.includes(item.label);
+      {/* Search */}
+      <div className="p-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="rnrb-input pl-9 py-2"
+          />
+        </div>
+      </div>
 
-                return (
-                  <li key={item.label}>
-                    {item.href ? (
-                      <Link
-                        href={item.href}
-                        className={cn('rnrb-nav-item', {
-                          'active': isActive
-                        })}
-                      >
-                        <item.icon size={18} />
-                        <span>{item.label}</span>
-                      </Link>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => toggleSection(item.label)}
-                          className="rnrb-nav-item w-full"
-                        >
-                          <item.icon size={18} />
-                          <span className="flex-1 text-left">{item.label}</span>
-                          {hasChildren && (
-                            isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />
-                          )}
-                        </button>
-                        {hasChildren && isExpanded && (
-                          <ul className="ml-6 mt-1 space-y-1">
-                            {item.children.map((child) => (
-                              <li key={child.label}>
-                                <Link
-                                  href={child.href || '#'}
-                                  className={cn('rnrb-nav-item text-sm', {
-                                    'active': pathname === child.href
-                                  })}
-                                >
-                                  <child.icon size={16} />
-                                  <span>{child.label}</span>
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+      {/* Quick Action */}
+      <div className="px-4 mb-4">
+        <Link 
+          href="/projects/new" 
+          className="rnrb-button-primary w-full justify-center py-2.5 rounded-lg"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          New Project
+        </Link>
+      </div>
+
+      {/* Main Navigation */}
+      <nav className="flex-1 overflow-y-auto px-4">
+        <div className="space-y-1">
+          {navigation.map(item => renderNavItem(item))}
+        </div>
       </nav>
 
-      {/* Exit Sign */}
-      <div className="p-4 border-t border-rnrb-smoke-haze/50">
-        <div className="rnrb-exit-sign text-center">
-          <span className="text-xs">QUICK SEARCH ⌘K</span>
+      {/* User Section */}
+      <div className="p-4 border-t border-border/50">
+        <div className="space-y-1 mb-4">
+          {bottomNavigation.map(item => renderNavItem(item))}
+        </div>
+        
+        {/* User Profile */}
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-surface">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-primary to-brand-primary/50 flex items-center justify-center text-white font-medium">
+            JD
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium">John Doe</p>
+            <p className="text-xs text-muted-foreground">Pro Plan</p>
+          </div>
+          <button className="p-1 hover:bg-surface-muted rounded">
+            <LogOut className="w-4 h-4 text-muted-foreground" />
+          </button>
         </div>
       </div>
     </aside>

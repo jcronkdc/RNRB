@@ -3,233 +3,319 @@
 @tailwind utilities;
 
 @import '@cronkwaters/ui/styles.css';
-@import './rnrb-professional.css'; /* RN'RB Core Design System */
-@import './rnrb-venue.css'; /* Rock Bar Atmosphere & Components - Dark venue theme with neon colors */
+@import './premium-system.css';
 
-/* Theme Contrast Fixes for Rock N' Roll Basement */
+/* Rock N' Roll Basement - Premium Design System */
+/* Inspired by the geometric RR monogram - sophisticated, modern, timeless */
 
-/* Light Theme Contrast Fixes */
-[data-theme='light'] {
-  /* Ensure text is always readable */
-  --sf-color-foreground: 26 40% 15%; /* Darker for better contrast */
-  --sf-color-muted-foreground: 26 25% 30%; /* Darker muted text */
+:root {
+  /* Premium Color Palette - Monochrome with subtle warmth */
+  --rnrb-black: 0 0% 3%;              /* #080808 - Deep black */
+  --rnrb-charcoal: 0 0% 11%;          /* #1c1c1c - Primary background */
+  --rnrb-graphite: 0 0% 18%;          /* #2d2d2d - Card backgrounds */
+  --rnrb-steel: 0 0% 35%;             /* #595959 - Borders */
+  --rnrb-silver: 0 0% 75%;            /* #bfbfbf - Muted text */
+  --rnrb-platinum: 0 0% 92%;          /* #ebebeb - Light backgrounds */
+  --rnrb-white: 0 0% 100%;            /* #ffffff - Pure white */
   
-  /* Fix surfaces that might be too light */
-  --sf-color-surface: 27 20% 94%; /* Slightly darker surface */
-  --sf-color-surface-muted: 28 18% 88%; /* Darker muted surface */
+  /* Accent Colors - Minimal and sophisticated */
+  --rnrb-gold: 38 45% 60%;            /* #c9a961 - Premium accent */
+  --rnrb-success: 142 71% 45%;        /* #22c55e - Success states */
+  --rnrb-warning: 38 92% 50%;         /* #f59e0b - Warning states */
+  --rnrb-danger: 0 84% 60%;           /* #ef4444 - Error states */
+  
+  /* Typography Scale */
+  --rnrb-font-display: "Instrument Serif", "Playfair Display", serif;
+  --rnrb-font-sans: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --rnrb-font-mono: "JetBrains Mono", "SF Mono", monospace;
+  
+  /* Spacing */
+  --rnrb-space-xs: 0.25rem;
+  --rnrb-space-sm: 0.5rem;
+  --rnrb-space-md: 1rem;
+  --rnrb-space-lg: 1.5rem;
+  --rnrb-space-xl: 2rem;
+  --rnrb-space-2xl: 3rem;
+  --rnrb-space-3xl: 4rem;
+  --rnrb-space-4xl: 6rem;
+  
+  /* Border Radius */
+  --rnrb-radius-sm: 0.25rem;
+  --rnrb-radius-md: 0.5rem;
+  --rnrb-radius-lg: 0.75rem;
+  --rnrb-radius-xl: 1rem;
+  
+  /* Shadows - Subtle depth */
+  --rnrb-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --rnrb-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --rnrb-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --rnrb-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --rnrb-shadow-glow: 0 0 20px -5px hsl(var(--rnrb-gold) / 0.2);
 }
 
-/* Warm Theme Contrast Fixes */
-[data-theme='warm'] {
-  /* Much darker text for better contrast on warm backgrounds */
-  --sf-color-foreground: 24 40% 12%; /* Very dark for max contrast */
-  --sf-color-muted-foreground: 24 30% 25%; /* Darker muted text */
-  --sf-color-brand-foreground: 24 40% 12%; /* Match foreground */
-  --sf-color-brand-muted-foreground: 24 35% 20%; /* Darker brand muted */
-  
-  /* Adjust surfaces to ensure readability */
-  --sf-color-background: 32 40% 94%; /* Slightly less bright */
-  --sf-color-surface: 30 35% 90%; /* More contrast with background */
-  --sf-color-surface-muted: 28 30% 85%; /* Even more contrast */
-}
-
-/* Dark Theme - Generally good but ensure consistency */
+/* Dark Theme - Default premium experience */
 [data-theme='dark'] {
-  /* Ensure text is bright enough */
-  --sf-color-foreground: 38 70% 96%; /* Brighter text */
-  --sf-color-muted-foreground: 28 25% 85%; /* Brighter muted text */
+  --sf-color-background: var(--rnrb-charcoal);
+  --sf-color-foreground: var(--rnrb-white);
+  --sf-color-muted-foreground: var(--rnrb-silver);
+  --sf-color-surface: var(--rnrb-graphite);
+  --sf-color-surface-muted: var(--rnrb-black);
+  --sf-color-border: var(--rnrb-steel);
+  --sf-color-brand-primary: var(--rnrb-gold);
+  --sf-color-brand-primary-foreground: var(--rnrb-black);
+}
+
+/* Light Theme - Clean and sophisticated */
+[data-theme='light'] {
+  --sf-color-background: var(--rnrb-white);
+  --sf-color-foreground: var(--rnrb-black);
+  --sf-color-muted-foreground: var(--rnrb-steel);
+  --sf-color-surface: var(--rnrb-platinum);
+  --sf-color-surface-muted: 0 0% 97%;
+  --sf-color-border: 0 0% 90%;
+  --sf-color-brand-primary: var(--rnrb-gold);
+  --sf-color-brand-primary-foreground: var(--rnrb-black);
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+  
   body {
-    font-feature-settings: 'liga' 1, 'calt' 1, 'kern' 1;
-    letter-spacing: -0.01em;
+    @apply bg-background text-foreground;
+    font-family: var(--rnrb-font-sans);
+    font-feature-settings: 'liga' 1, 'calt' 1, 'kern' 1, 'ss01' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.011em;
+    line-height: 1.5;
   }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
+  
+  /* Premium Typography */
+  h1, h2, h3 {
+    font-family: var(--rnrb-font-display);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  
+  h4, h5, h6 {
+    font-family: var(--rnrb-font-sans);
+    font-weight: 600;
     letter-spacing: -0.02em;
+    line-height: 1.2;
   }
-
+  
   h1 {
-    @apply text-4xl sm:text-5xl lg:text-6xl;
+    @apply text-5xl sm:text-6xl lg:text-7xl;
   }
-
+  
   h2 {
     @apply text-3xl sm:text-4xl lg:text-5xl;
   }
-
+  
   h3 {
-    @apply text-2xl sm:text-3xl;
+    @apply text-2xl sm:text-3xl lg:text-4xl;
   }
-
+  
+  h4 {
+    @apply text-xl sm:text-2xl;
+  }
+  
+  h5 {
+    @apply text-lg sm:text-xl;
+  }
+  
+  h6 {
+    @apply text-base sm:text-lg;
+  }
+  
+  /* Premium Focus States */
   :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px hsl(var(--sf-ring) / 0.4);
+    box-shadow: 0 0 0 2px hsl(var(--rnrb-gold) / 0.3);
+    border-radius: var(--rnrb-radius-sm);
   }
-
-  main {
-    @apply scroll-m-20;
+  
+  /* Smooth Scrolling */
+  html {
+    scroll-behavior: smooth;
   }
-
-  section {
-    @apply scroll-m-24;
+  
+  /* Premium Selection */
+  ::selection {
+    background: hsl(var(--rnrb-gold) / 0.2);
+    color: hsl(var(--sf-color-foreground));
   }
+}
 
-  @keyframes sf-gradient-drift {
-    0% {
-      transform: translate3d(0%, 0%, 0) scale(1);
-    }
-    50% {
-      transform: translate3d(2%, -1%, 0) scale(1.05);
-    }
-    100% {
-      transform: translate3d(-1%, 2%, 0) scale(1.08);
-    }
+@layer components {
+  /* Premium Container */
+  .rnrb-container {
+    @apply mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-8;
   }
-
-  @keyframes sf-grain-shift {
-    0% {
-      transform: translate3d(0, 0, 0);
-    }
-    25% {
-      transform: translate3d(-4%, -6%, 0);
-    }
-    50% {
-      transform: translate3d(5%, 3%, 0);
-    }
-    75% {
-      transform: translate3d(-3%, 4%, 0);
-    }
-    100% {
-      transform: translate3d(0, 0, 0);
-    }
+  
+  /* Premium Card */
+  .rnrb-card {
+    @apply bg-surface rounded-lg border border-border/50 shadow-md;
+    background: linear-gradient(
+      to bottom,
+      hsl(var(--sf-color-surface)),
+      hsl(var(--sf-color-surface) / 0.95)
+    );
+  }
+  
+  /* Premium Button Base */
+  .rnrb-button {
+    @apply inline-flex items-center justify-center font-medium transition-all duration-200 ease-out;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply disabled:opacity-50 disabled:pointer-events-none;
+  }
+  
+  /* Button Variants */
+  .rnrb-button-primary {
+    @apply rnrb-button;
+    @apply bg-brand-primary text-brand-primary-foreground;
+    @apply hover:bg-brand-primary/90 hover:shadow-lg hover:-translate-y-0.5;
+    @apply active:translate-y-0 active:shadow-md;
+  }
+  
+  .rnrb-button-secondary {
+    @apply rnrb-button;
+    @apply bg-surface text-foreground border border-border;
+    @apply hover:bg-surface-muted hover:shadow-md hover:-translate-y-0.5;
+    @apply active:translate-y-0 active:shadow-sm;
+  }
+  
+  .rnrb-button-ghost {
+    @apply rnrb-button;
+    @apply text-muted-foreground hover:text-foreground hover:bg-surface/50;
+  }
+  
+  /* Premium Input */
+  .rnrb-input {
+    @apply w-full rounded-md bg-surface border border-border/50;
+    @apply px-3 py-2 text-sm;
+    @apply placeholder:text-muted-foreground;
+    @apply focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20;
+    @apply transition-colors duration-200;
+  }
+  
+  /* Premium Badge */
+  .rnrb-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5;
+    @apply text-xs font-medium;
+    @apply bg-surface-muted text-muted-foreground border border-border/30;
+  }
+  
+  /* Premium Navigation Item */
+  .rnrb-nav-item {
+    @apply relative px-3 py-2 text-sm font-medium;
+    @apply text-muted-foreground hover:text-foreground;
+    @apply transition-colors duration-200;
+    @apply after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5;
+    @apply after:bg-brand-primary after:scale-x-0 after:transition-transform;
+    @apply hover:after:scale-x-100;
+  }
+  
+  .rnrb-nav-item.active {
+    @apply text-foreground after:scale-x-100;
   }
 }
 
 @layer utilities {
-  .shadow-glow {
-    box-shadow: var(--sf-shadow-glow);
-  }
-
-  .sf-bg-gradient {
-    position: absolute;
-    inset: -12%;
-    pointer-events: none;
-    opacity: 0.82;
-    background:
-      radial-gradient(circle at 18% 22%, hsl(var(--sf-color-brand-muted) / 0.4) 0%, transparent 58%),
-      radial-gradient(circle at 82% 12%, hsl(var(--sf-color-accent-subtle) / 0.45) 0%, transparent 55%),
-      radial-gradient(circle at 48% 92%, hsl(var(--sf-color-brand-primary) / 0.2) 0%, transparent 62%);
-    animation: sf-gradient-drift 28s ease-in-out infinite alternate;
-    will-change: transform;
-  }
-
-  .sf-film-grain {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.18;
-    mix-blend-mode: soft-light;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABgklEQVR4nO2ZsUoDQRBF30r4lU0Go0b9gE7QEBoNBiNfQA1gYhA9g5gYgNBoNNoNE0Yv7u7M7Mzs7Ozu9W+u9M2T3ekYZg6wAVKgCfAH2AG2A+O2y4xA/AXYAP6W2ssHoCazTAZwAvYAPLPgAvAPG+gAL8B8X6k1HnAEcAceAB6cJXgF+AL0Ds+wHELt97XOBnAGj+FceA60At8ANcArR6j1OXAPfaQW3GCeaBfxzJr0RAuAV0hk+K7Gm3GKRW2DJ9W6YgV9gQF3jxaE+KM1AblQ8yelGthCKXZRn2YT7UNtgaJcbxrzA7rRs1kC+b66c4P8Ap6g5vC/4C1oA+MANoAPDNgCcCDxfoLBra9Y0bYNVMuSW38Bt9qkQ8NNZ3lplrsJDFiZ2n7vEoyPTr+4Bo6M9WBO+bsIP6JMH6abt7NA9uIGxSJT4GAGGZBWryTsqNWKuK+dYbY8vzu7mex+CFu9kDiYO5xd6UsBq9a9XQUw7p+6iYB/E6p7k9lUtCUoAH+AEYgl7P4Y5SgAAAABJRU5ErkJggg==");
-    background-size: 300px 300px;
-    animation: sf-grain-shift 1.4s steps(6) infinite;
-    will-change: transform;
-  }
-
-  .sf-btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-brand-primary px-6 py-3 text-sm font-bold text-brand-primary-foreground shadow-soft transition-all hover:bg-brand-primary/90 hover:shadow-glow hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-brand-primary;
-  }
-
-  .sf-btn-outline {
-    @apply inline-flex items-center justify-center rounded-full border-2 border-border/60 px-6 py-3 text-sm font-bold text-brand-foreground transition-all hover:border-brand-primary/40 hover:bg-surface hover:shadow-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-brand-primary;
-  }
-
-  .sf-btn-ghost {
-    @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-muted-foreground transition-all hover:bg-surface/80 hover:text-brand-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-brand-primary;
-  }
-
-  .sf-badge {
-    @apply inline-flex items-center rounded-full border border-border/80 bg-surface px-3 py-1 text-xs uppercase tracking-[0.28em] text-muted-foreground;
-  }
-
-  [data-active-hash="#values"] a[href="#values"],
-  [data-active-hash="#what-we-make"] a[href="#what-we-make"] {
-    @apply underline text-brand-primary hover:text-brand-primary;
-  }
-
-  /* Blob animation for landing page */
-  @keyframes blob {
-    0% {
-      transform: translate(0px, 0px) scale(1);
-    }
-    33% {
-      transform: translate(30px, -50px) scale(1.1);
-    }
-    66% {
-      transform: translate(-20px, 20px) scale(0.9);
-    }
-    100% {
-      transform: translate(0px, 0px) scale(1);
-    }
+  /* Premium Text Gradient */
+  .rnrb-gradient-text {
+    @apply bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent;
   }
   
-  .animate-blob {
-    animation: blob 7s infinite;
+  /* Premium Gold Accent Gradient */
+  .rnrb-gold-gradient {
+    @apply bg-gradient-to-br from-[#c9a961] to-[#a08550];
   }
   
-  .animation-delay-2000 {
-    animation-delay: 2s;
+  /* Premium Glass Effect */
+  .rnrb-glass {
+    @apply bg-surface/80 backdrop-blur-xl border-border/50;
   }
   
-  .animation-delay-4000 {
-    animation-delay: 4s;
+  /* Premium Glow */
+  .rnrb-glow {
+    box-shadow: var(--rnrb-shadow-glow);
   }
   
-  /* Ensure minimum contrast ratios */
-  .text-muted-foreground {
-    opacity: 1 !important; /* Never reduce opacity on muted text */
+  /* Subtle Animation */
+  @keyframes rnrb-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
   }
   
-  /* Fix any transparent text issues */
-  [class*="text-"] {
-    opacity: 1 !important;
+  .rnrb-float {
+    animation: rnrb-float 6s ease-in-out infinite;
   }
   
-  /* Ensure brand colors have proper contrast */
-  .text-brand-primary {
-    filter: brightness(0.85) saturate(1.2);
+  /* Premium Loading State */
+  @keyframes rnrb-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
   }
   
-  /* Fix button text contrast */
-  .bg-brand-primary {
-    --sf-color-brand-primary-foreground: 0 0% 100%; /* Pure white text */
+  .rnrb-shimmer {
+    @apply relative overflow-hidden;
   }
   
-  /* Ensure links are visible in all themes */
-  a:not(.no-underline) {
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
+  .rnrb-shimmer::after {
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--sf-color-surface-muted) / 0.5),
+      transparent
+    );
+    animation: rnrb-shimmer 2s ease-in-out infinite;
+    content: '';
+  }
+  
+  /* Premium Divider */
+  .rnrb-divider {
+    @apply relative h-px bg-gradient-to-r from-transparent via-border to-transparent;
+  }
+  
+  /* Premium Section */
+  .rnrb-section {
+    @apply py-16 sm:py-24 lg:py-32;
   }
 }
 
-/* Fix specific problem areas */
-[data-theme='warm'] .text-muted-foreground,
-[data-theme='light'] .text-muted-foreground {
-  color: hsl(var(--sf-color-muted-foreground)) !important;
+/* Premium Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
 }
 
-/* Ensure form inputs have readable text */
-input, textarea, select {
-  color: hsl(var(--sf-color-foreground)) !important;
-  background-color: hsl(var(--sf-color-surface)) !important;
+::-webkit-scrollbar-track {
+  background: hsl(var(--sf-color-background));
 }
 
-/* Fix any badge or chip text visibility */
-.sf-badge,
-[class*="badge"],
-[class*="chip"] {
-  background-color: hsl(var(--sf-color-surface-muted));
-  color: hsl(var(--sf-color-foreground));
-  border-color: hsl(var(--sf-color-border));
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--sf-color-border));
+  border-radius: 6px;
+  border: 3px solid hsl(var(--sf-color-background));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--sf-color-muted-foreground));
+}
+
+/* Premium Print Styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
 }

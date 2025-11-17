@@ -12,30 +12,180 @@ import {
   Award,
   MessageSquare,
   Play,
-  PlusCircle
+  PlusCircle,
+  ArrowUpRight,
+  ArrowDownRight,
+  MoreHorizontal,
+  Activity,
+  Folder,
+  ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
 
-// Mock data - in real app this would come from your database
-const stats = [
-  { label: 'Active Projects', value: '12', icon: Music, change: '+2 this week', color: 'text-brand-primary' },
-  { label: 'Upcoming Shows', value: '5', icon: Calendar, change: '3 this month', color: 'text-accent' },
-  { label: 'Revenue (30d)', value: '$4,827', icon: DollarSign, change: '+12.5%', color: 'text-success' },
-  { label: 'Collaborators', value: '24', icon: Users, change: '+3 new', color: 'text-warning' }
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+// Premium metric cards data
+const metrics = [
+  { 
+    label: 'Total Revenue', 
+    value: '$24,827', 
+    change: 12.5, 
+    period: 'vs last month',
+    icon: DollarSign,
+    color: 'brand-primary' 
+  },
+  { 
+    label: 'Active Projects', 
+    value: '12', 
+    change: 2, 
+    period: 'this week',
+    icon: Folder,
+    color: 'blue' 
+  },
+  { 
+    label: 'Total Plays', 
+    value: '1.2M', 
+    change: 8.3, 
+    period: 'vs last month',
+    icon: Play,
+    color: 'green' 
+  },
+  { 
+    label: 'Collaborators', 
+    value: '24', 
+    change: 3, 
+    period: 'new this month',
+    icon: Users,
+    color: 'purple' 
+  }
 ];
 
+// Chart data
+const revenueData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  datasets: [{
+    label: 'Revenue',
+    data: [12500, 15800, 14200, 18900, 22100, 24827],
+    borderColor: 'hsl(38 45% 60%)',
+    backgroundColor: 'hsl(38 45% 60% / 0.1)',
+    fill: true,
+    tension: 0.4
+  }]
+};
+
+const playsData = {
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  datasets: [{
+    label: 'Plays',
+    data: [145000, 162000, 158000, 189000, 195000, 178000, 182000],
+    backgroundColor: 'hsl(38 45% 60% / 0.8)',
+  }]
+};
+
+const chartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false
+    },
+    tooltip: {
+      backgroundColor: 'hsl(0 0% 11%)',
+      borderColor: 'hsl(0 0% 35%)',
+      borderWidth: 1,
+      titleFont: {
+        size: 12
+      },
+      bodyFont: {
+        size: 14,
+        weight: 'bold' as const
+      },
+      padding: 12,
+      cornerRadius: 8
+    }
+  },
+  scales: {
+    x: {
+      grid: {
+        display: false
+      },
+      ticks: {
+        color: 'hsl(0 0% 75%)'
+      }
+    },
+    y: {
+      grid: {
+        color: 'hsl(0 0% 18%)'
+      },
+      ticks: {
+        color: 'hsl(0 0% 75%)'
+      }
+    }
+  }
+};
+
+// Recent activity
 const recentActivity = [
-  { type: 'song', title: 'Midnight Blues', action: 'New mix uploaded', time: '2 hours ago', icon: Music },
-  { type: 'show', title: 'The Whiskey Bar', action: 'Tickets on sale', time: '5 hours ago', icon: Mic },
-  { type: 'collab', title: 'Sarah Chen', action: 'Joined "Summer EP"', time: '1 day ago', icon: Users },
-  { type: 'revenue', title: 'Spotify Royalties', action: '$127.43 received', time: '2 days ago', icon: DollarSign }
+  { 
+    type: 'revenue', 
+    title: 'Spotify Royalties', 
+    description: 'Q3 2024 payment received', 
+    amount: '+$2,847.32',
+    time: '2 hours ago', 
+    icon: DollarSign 
+  },
+  { 
+    type: 'project', 
+    title: 'Summer EP', 
+    description: 'New mix uploaded by Sarah Chen', 
+    time: '5 hours ago', 
+    icon: Music 
+  },
+  { 
+    type: 'collab', 
+    title: 'Marcus Thompson', 
+    description: 'Joined "Midnight Sessions"', 
+    time: '1 day ago', 
+    icon: Users 
+  },
+  { 
+    type: 'show', 
+    title: 'Blue Note Jazz Club', 
+    description: 'Tickets now on sale', 
+    time: '2 days ago', 
+    icon: Mic 
+  }
 ];
 
-const upcomingShows = [
-  { venue: 'The Basement', date: 'Nov 24', time: '9:00 PM', ticketsSold: 45, capacity: 100 },
-  { venue: 'Blue Note Jazz', date: 'Dec 2', time: '8:30 PM', ticketsSold: 78, capacity: 150 },
-  { venue: 'Rock Bottom', date: 'Dec 15', time: '10:00 PM', ticketsSold: 23, capacity: 80 }
+// Top projects
+const topProjects = [
+  { name: 'Summer EP', songs: 6, plays: 458000, revenue: '$8,234', trend: 12.5 },
+  { name: 'Midnight Sessions', songs: 12, plays: 892000, revenue: '$14,827', trend: -3.2 },
+  { name: 'Acoustic Collection', songs: 8, plays: 267000, revenue: '$4,921', trend: 8.7 }
 ];
 
 export default function DashboardPage() {
@@ -49,175 +199,255 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="rnrb-venue min-h-screen -m-6 p-6">
-      {/* Main Stage Header - Neon Sign */}
-      <div className="rnrb-stage-light relative mb-8 -m-6 p-12 bg-gradient-to-br from-rnrb-void via-rnrb-shadow to-rnrb-void overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <div className="rnrb-vinyl absolute top-10 right-10" style={{ transform: 'rotate(15deg) scale(0.8)' }}></div>
-          <div className="rnrb-vinyl absolute bottom-10 left-10" style={{ transform: 'rotate(-20deg) scale(0.6)' }}></div>
-        </div>
-        <div className="relative z-10 text-center">
-          <h1 className="rnrb-neon rnrb-gig-poster-heading text-6xl mb-4">
-            {greeting.toUpperCase()}, ROCKSTAR
-          </h1>
-          <p className="text-2xl text-rnrb-dust uppercase tracking-widest">
-            Welcome to your Underground HQ
-          </p>
-        </div>
+    <div className="min-h-screen">
+      {/* Premium Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-display mb-2">{greeting}</h1>
+        <p className="text-muted-foreground">
+          Here's your music business at a glance
+        </p>
       </div>
 
-      {/* Stats Grid - Concert Posters */}
+      {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat, index) => (
-          <div 
-            key={stat.label} 
-            className="rnrb-poster rnrb-card group"
-            style={{ '--rotation': `${index % 2 === 0 ? '-1' : '1'}deg` } as React.CSSProperties}
+        {metrics.map((metric, index) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <div className="flex items-start justify-between mb-4 relative z-20">
-              <div className="rnrb-amp-stack p-3 rounded-lg">
-                <stat.icon className={`w-8 h-8 ${stat.color} relative z-10`} />
+            <div className="rnrb-metric-card">
+              <div className="flex items-start justify-between mb-4">
+                <div className={`
+                  w-12 h-12 rounded-lg flex items-center justify-center
+                  bg-${metric.color}-500/10
+                `}>
+                  <metric.icon className={`w-6 h-6 text-${metric.color}-500`} />
+                </div>
+                <button className="p-1 hover:bg-surface-muted rounded">
+                  <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
+                </button>
               </div>
-              <span className="rnrb-backstage-pass text-xs">{stat.change}</span>
+              
+              <div className="rnrb-metric-value">{metric.value}</div>
+              <div className="rnrb-metric-label">{metric.label}</div>
+              
+              <div className={`
+                rnrb-metric-change 
+                ${metric.change > 0 ? 'positive' : 'negative'}
+              `}>
+                {metric.change > 0 ? (
+                  <ArrowUpRight className="w-4 h-4" />
+                ) : (
+                  <ArrowDownRight className="w-4 h-4" />
+                )}
+                <span>{Math.abs(metric.change)}%</span>
+                <span className="text-muted-foreground">{metric.period}</span>
+              </div>
             </div>
-            <div className="relative z-20">
-              <p className="rnrb-gig-poster-heading text-3xl mb-1">{stat.value}</p>
-              <p className="text-sm text-rnrb-dust uppercase tracking-wide">{stat.label}</p>
-            </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Activity - Venue Bulletin Board */}
-        <div className="lg:col-span-2 rnrb-booth">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="rnrb-gig-poster-heading text-2xl">VENUE BULLETIN</h2>
-            <Link href="/activity" className="rnrb-exit-sign text-xs">
-              ALL ACTIVITY
-            </Link>
-          </div>
-          <div className="rnrb-setlist">
-            {recentActivity.map((activity, index) => (
-              <div key={index} className="flex items-center gap-4 p-3 border-b border-rnrb-smoke-haze/20 last:border-0">
-                <div className="rnrb-bar-stool w-12 h-12 flex items-center justify-center">
-                  <activity.icon size={20} className="text-rnrb-neon-cyan relative z-10" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-bold uppercase tracking-wide">{activity.title}</p>
-                  <p className="text-sm text-rnrb-dust rnrb-graffiti">{activity.action}</p>
-                </div>
-                <span className="rnrb-sticky-note text-xs p-1">{activity.time}</span>
+        {/* Charts Section */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Revenue Chart */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="rnrb-card p-6"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-semibold">Revenue Overview</h2>
+                <p className="text-sm text-muted-foreground">Last 6 months</p>
               </div>
-            ))}
-          </div>
+              <select className="rnrb-select text-sm">
+                <option>All Sources</option>
+                <option>Streaming</option>
+                <option>Downloads</option>
+                <option>Live Shows</option>
+              </select>
+            </div>
+            <div className="h-64">
+              <Line data={revenueData} options={chartOptions} />
+            </div>
+          </motion.div>
+
+          {/* Weekly Plays Chart */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="rnrb-card p-6"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-semibold">Weekly Plays</h2>
+                <p className="text-sm text-muted-foreground">Last 7 days</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4 text-green-500" />
+                <span className="text-sm font-medium">+8.3%</span>
+              </div>
+            </div>
+            <div className="h-48">
+              <Bar data={playsData} options={chartOptions} />
+            </div>
+          </motion.div>
+
+          {/* Top Projects */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="rnrb-card p-6"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold">Top Projects</h2>
+              <Link 
+                href="/projects" 
+                className="text-sm text-brand-primary hover:text-brand-primary/80 transition-colors"
+              >
+                View all
+              </Link>
+            </div>
+            <div className="space-y-4">
+              {topProjects.map((project, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-surface rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-brand-primary/20 to-brand-primary/10 flex items-center justify-center">
+                      <Music className="w-6 h-6 text-brand-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-medium">{project.name}</h3>
+                      <p className="text-sm text-muted-foreground">{project.songs} songs</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold">{project.revenue}</p>
+                    <p className="text-sm text-muted-foreground flex items-center justify-end gap-1">
+                      {project.trend > 0 ? (
+                        <ArrowUpRight className="w-3 h-3 text-green-500" />
+                      ) : (
+                        <ArrowDownRight className="w-3 h-3 text-red-500" />
+                      )}
+                      <span className={project.trend > 0 ? 'text-green-500' : 'text-red-500'}>
+                        {Math.abs(project.trend)}%
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Quick Actions Card */}
-          <div className="rnrb-card">
-            <h3 className="font-bold mb-4">Quick Actions</h3>
-            <div className="space-y-2">
-              <Link href="/projects/new" className="rnrb-btn rnrb-btn-primary w-full justify-center">
-                <PlusCircle size={18} />
+          {/* Quick Actions */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="rnrb-card p-6"
+          >
+            <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
+            <div className="space-y-3">
+              <Link 
+                href="/projects/new" 
+                className="rnrb-button-primary w-full justify-center py-3 rounded-lg"
+              >
+                <PlusCircle className="w-5 h-5 mr-2" />
                 New Project
               </Link>
-              <Link href="/songs/new" className="rnrb-btn rnrb-btn-secondary w-full justify-center">
-                <Music size={18} />
-                Add Song
+              <Link 
+                href="/songs/upload" 
+                className="rnrb-button-secondary w-full justify-center py-3 rounded-lg"
+              >
+                <Music className="w-5 h-5 mr-2" />
+                Upload Song
               </Link>
-              <Link href="/shows/new" className="rnrb-btn rnrb-btn-secondary w-full justify-center">
-                <Calendar size={18} />
+              <Link 
+                href="/shows/schedule" 
+                className="rnrb-button-secondary w-full justify-center py-3 rounded-lg"
+              >
+                <Calendar className="w-5 h-5 mr-2" />
                 Schedule Show
               </Link>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Featured Content - Rock poster style */}
-          <div className="rnrb-poster-card rnrb-card relative overflow-hidden h-48">
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/20 to-accent/20" />
-            <div className="relative z-10 p-6 flex flex-col justify-between h-full">
-              <div>
-                <Award className="w-8 h-8 text-warning mb-2" />
-                <h3 className="font-bold text-lg">Artist Spotlight</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Your track "Midnight Blues" is trending!
-                </p>
-              </div>
-              <Link href="/analytics" className="text-sm text-brand-primary hover:underline">
-                View Analytics →
+          {/* Recent Activity */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="rnrb-card p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Recent Activity</h3>
+              <Link 
+                href="/activity" 
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                View all
               </Link>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Upcoming Shows */}
-      <div className="mt-6 rnrb-card">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">Upcoming Shows</h2>
-          <Link href="/shows" className="text-sm text-brand-primary hover:underline">
-            Manage all
-          </Link>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Venue</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Date</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Time</th>
-                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Tickets</th>
-                <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {upcomingShows.map((show, index) => (
-                <tr key={index} className="border-b border-border hover:bg-surface-muted transition-colors">
-                  <td className="py-4 px-4 font-medium">{show.venue}</td>
-                  <td className="py-4 px-4 text-sm">{show.date}</td>
-                  <td className="py-4 px-4 text-sm">{show.time}</td>
-                  <td className="py-4 px-4">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-surface-elevated rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-brand-primary"
-                          style={{ width: `${(show.ticketsSold / show.capacity) * 100}%` }}
-                        />
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {show.ticketsSold}/{show.capacity}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4 text-right">
-                    <button className="text-sm text-brand-primary hover:underline">
-                      Manage
-                    </button>
-                  </td>
-                </tr>
+            <div className="space-y-4">
+              {recentActivity.map((activity, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <div className={`
+                    w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0
+                    ${activity.type === 'revenue' ? 'bg-green-500/10' : 'bg-surface-muted'}
+                  `}>
+                    <activity.icon className={`
+                      w-4 h-4 
+                      ${activity.type === 'revenue' ? 'text-green-500' : 'text-muted-foreground'}
+                    `} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">{activity.title}</p>
+                    <p className="text-xs text-muted-foreground truncate">{activity.description}</p>
+                    {activity.amount && (
+                      <p className="text-sm font-semibold text-green-500 mt-1">{activity.amount}</p>
+                    )}
+                  </div>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    {activity.time}
+                  </span>
+                </div>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </div>
+          </motion.div>
 
-      {/* Bottom CTA - Rock inspired */}
-      <div className="mt-8 relative">
-        <div className="rnrb-vinyl absolute -right-4 -top-4 opacity-10" />
-        <div className="rnrb-card-elevated p-8 relative overflow-hidden">
-          <div className="relative z-10">
-            <h3 className="text-2xl font-bold mb-2">Ready to rock?</h3>
-            <p className="text-muted-foreground mb-4">
-              Upgrade to Pro and unlock advanced features for serious musicians
-            </p>
-            <Link href="/pricing" className="rnrb-btn rnrb-btn-primary">
-              <TrendingUp size={18} />
-              Upgrade to Pro
-            </Link>
-          </div>
+          {/* Pro Upgrade CTA */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="relative overflow-hidden rounded-xl rnrb-gold-gradient p-6 text-white"
+          >
+            <div className="absolute inset-0 bg-black/30" />
+            <div className="relative z-10">
+              <Award className="w-8 h-8 mb-3" />
+              <h3 className="text-lg font-semibold mb-2">Upgrade to Pro</h3>
+              <p className="text-sm text-white/80 mb-4">
+                Unlock advanced analytics, unlimited projects, and priority support.
+              </p>
+              <Link 
+                href="/pricing" 
+                className="inline-flex items-center text-sm font-medium hover:underline"
+              >
+                Learn more
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>

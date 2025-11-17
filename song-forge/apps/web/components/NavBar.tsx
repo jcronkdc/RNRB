@@ -2,61 +2,51 @@
 
 import { cn } from '@cronkwaters/ui';
 import { motion, useReducedMotion } from 'framer-motion';
-import { HeartHandshake, Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, Command } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ThemeToggle } from './theme/ThemeToggle';
-import { Wordmark } from './Wordmark';
 
 type NavLink = {
   label: string;
   href: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  ariaLabel?: string;
+  children?: NavLink[];
 };
 
 const LINKS: NavLink[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Feature Guide', href: '/guide', ariaLabel: 'Find the right features for you' },
-  { label: 'Why', href: '/why', ariaLabel: 'Understand why Rock N\' Roll Basement exists' },
-  { label: 'Our Vision', href: '/vision', ariaLabel: 'Learn about Rock N\' Roll Basement vision and founders' },
-  { label: 'Membership', href: '/membership', ariaLabel: 'View membership options' },
-  { label: 'Donate', href: '/donate', icon: HeartHandshake, ariaLabel: 'Support Rock N\' Roll Basement mission' }
+  { label: 'Platform', href: '/guide' },
+  { label: 'Solutions', href: '/solutions', children: [
+    { label: 'For Artists', href: '/solutions/artists' },
+    { label: 'For Studios', href: '/solutions/studios' },
+    { label: 'For Labels', href: '/solutions/labels' },
+  ]},
+  { label: 'Enterprise', href: '/enterprise' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'About', href: '/about', children: [
+    { label: 'Company', href: '/about' },
+    { label: 'Mission', href: '/why' },
+    { label: 'Team', href: '/team' },
+    { label: 'Contact', href: '/contact' },
+  ]},
 ];
-
-const motionConfig = {
-  initial: { opacity: 0, y: -12 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.35, ease: 'easeOut' }
-} as const;
 
 export function NavBar() {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
-  const [currentHash, setCurrentHash] = useState<string>('');
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
-    const updateHash = () => {
-      setCurrentHash(window.location.hash || "");
-      if (window.location.hash) {
-        document.body.setAttribute('data-active-hash', window.location.hash);
-      } else {
-        document.body.removeAttribute('data-active-hash');
-      }
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
     };
-    const onScroll = () => setScrolled(window.scrollY > 16);
-    updateHash();
-    onScroll();
-    window.addEventListener('hashchange', updateHash);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('hashchange', updateHash);
-      window.removeEventListener('scroll', onScroll);
-    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Close mobile menu on route change
@@ -64,165 +54,239 @@ export function NavBar() {
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when mobile menu is open
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = 'unset';
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [mobileMenuOpen]);
 
-  /* focus section heading on anchor-link click, for a11y */
-  useEffect(() => {
-    const onClick = (e: MouseEvent) => {
-      const t = e.target as HTMLElement;
-      if (t.tagName === 'A' && t.getAttribute('href')?.startsWith('#')) {
-        const id = t.getAttribute('href')!.slice(1);
-        setTimeout(() => {
-          const el = document.getElementById(id);
-          if (el && el.tabIndex === -1) el.focus();
-        }, 0);
-      }
-    };
-    document.body.addEventListener('click', onClick);
-    return () => document.body.removeEventListener('click', onClick);
-  }, []);
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(href);
+  };
 
-  const skipClasses =
-    'sr-only focus:not-sr-only focus:absolute focus:z-50 focus:mx-auto focus:w-auto focus:rounded-full focus:bg-brand-primary focus:px-4 focus:py-2 focus:text-brand-primary-foreground';
+  const NavItem = ({ link }: { link: NavLink }) => {
+    const hasChildren = link.children && link.children.length > 0;
+    const isDropdownActive = activeDropdown === link.label;
 
-  const navClass = useMemo(
-    () =>
-      cn(
-        'sticky top-0 z-40 w-full border-b backdrop-blur transition-all duration-300',
-        scrolled ? 'bg-surface/95 shadow-soft' : 'bg-surface/70'
-      ),
-    [scrolled]
-  );
-
-  const listClass =
-    'flex items-center gap-1 rounded-full border border-border/60 bg-surface/70 px-2 py-1 text-sm shadow-soft';
+    return (
+      <div
+        className="relative"
+        onMouseEnter={() => hasChildren && setActiveDropdown(link.label)}
+        onMouseLeave={() => setActiveDropdown(null)}
+      >
+        <Link
+          href={link.href}
+          className={cn(
+            "rnrb-nav-item flex items-center gap-1",
+            isActive(link.href) && "active"
+          )}
+        >
+          {link.label}
+          {hasChildren && (
+            <ChevronDown 
+              className={cn(
+                "w-3 h-3 transition-transform",
+                isDropdownActive && "rotate-180"
+              )}
+            />
+          )}
+        </Link>
+        
+        {hasChildren && (
+          <motion.div
+            initial={false}
+            animate={{
+              opacity: isDropdownActive ? 1 : 0,
+              y: isDropdownActive ? 0 : -10,
+              pointerEvents: isDropdownActive ? 'auto' : 'none'
+            }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full left-0 mt-2 w-48 rnrb-card p-2 shadow-xl"
+          >
+            {link.children.map((child) => (
+              <Link
+                key={child.href}
+                href={child.href}
+                className={cn(
+                  "block px-3 py-2 text-sm rounded-md",
+                  "text-muted-foreground hover:text-foreground hover:bg-surface",
+                  "transition-colors duration-200",
+                  isActive(child.href) && "text-foreground bg-surface"
+                )}
+              >
+                {child.label}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
-      <a href="#main-content" className={skipClasses}>
-        Skip to content
-      </a>
-      <motion.nav
-        className={navClass}
-        {...(!prefersReducedMotion ? motionConfig : { initial: false })}
-        aria-label="Primary navigation"
-      >
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          {/* Logo */}
-          <Link
-            href="/"
-            aria-label="Rock N' Roll Basement home"
-            className="flex items-center text-brand-foreground transition-colors hover:text-brand-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            <Wordmark className="h-6 w-auto" />
-            <span className="sr-only">Rock N' Roll Basement</span>
-          </Link>
+      <header className={cn("rnrb-header", scrolled && "scrolled")}>
+        <nav className="rnrb-container h-full">
+          <div className="flex items-center justify-between h-full">
+            {/* Logo */}
+            <Link href="/" className="rnrb-logo flex items-center gap-3">
+              <Image
+                src="/rnrdark.png"
+                alt="Rock N' Roll Basement"
+                width={40}
+                height={40}
+                className="dark:hidden"
+              />
+              <Image
+                src="/rnrlight.png"
+                alt="Rock N' Roll Basement"
+                width={40}
+                height={40}
+                className="hidden dark:block"
+              />
+              <span className="text-lg font-medium hidden sm:inline">
+                Rock N' Roll Basement
+              </span>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <ul className={cn(listClass, 'hidden md:flex')}>
-            {LINKS.map(({ label, href, icon: Icon, ariaLabel }) => {
-              const isAnchor = href.startsWith('#');
-              const isActive = isAnchor
-                ? currentHash === href
-                : pathname === href || (href === '/' && pathname === '/');
-              return (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    aria-label={ariaLabel ?? label}
-                    className={cn(
-                      'flex items-center gap-1 rounded-full px-3 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-                      isActive
-                        ? 'bg-brand-primary/15 text-brand-foreground'
-                        : 'text-muted-foreground hover:text-brand-foreground'
-                    )}
-                  >
-                    {Icon ? <Icon className="h-4 w-4 opacity-80" aria-hidden="true" /> : null}
-                    <span>{label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-8">
+              <nav className="flex items-center gap-6">
+                {LINKS.map((link) => (
+                  <NavItem key={link.label} link={link} />
+                ))}
+              </nav>
 
-          {/* Desktop Theme Toggle and Mobile Menu Button */}
-          <div className="flex items-center gap-3">
-            <div className="hidden md:block">
-              <ThemeToggle />
+              <div className="flex items-center gap-4">
+                {/* Command Palette Trigger */}
+                <button
+                  className="rnrb-button-ghost px-3 py-1.5 text-sm rounded-md flex items-center gap-2"
+                  onClick={() => {/* TODO: Implement command palette */}}
+                >
+                  <Search className="w-4 h-4" />
+                  <span className="hidden xl:inline">Search</span>
+                  <kbd className="hidden xl:inline px-1.5 py-0.5 text-xs rounded bg-surface-muted border border-border">
+                    <Command className="w-3 h-3 inline" />K
+                  </kbd>
+                </button>
+
+                <ThemeToggle />
+                
+                <div className="h-6 w-px bg-border" />
+                
+                <Link
+                  href="/signin"
+                  className="rnrb-button-ghost px-4 py-2 rounded-md text-sm"
+                >
+                  Sign In
+                </Link>
+                
+                <Link
+                  href="/signup"
+                  className="rnrb-button-primary px-4 py-2 rounded-md text-sm"
+                >
+                  Get Started
+                </Link>
+              </div>
             </div>
-            
-            {/* Mobile Menu Button */}
+
+            {/* Mobile Menu Toggle */}
             <button
+              className="lg:hidden p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden rounded-lg p-2 text-muted-foreground hover:text-brand-foreground hover:bg-surface-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
-                <X className="h-6 w-6" aria-hidden="true" />
+                <X className="w-5 h-5" />
               ) : (
-                <Menu className="h-6 w-6" aria-hidden="true" />
+                <Menu className="w-5 h-5" />
               )}
             </button>
           </div>
-        </div>
+        </nav>
+      </header>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden border-t border-border/40 bg-surface/95 backdrop-blur"
-          >
-            <div className="px-4 py-6 space-y-3">
-              {LINKS.map(({ label, href, icon: Icon, ariaLabel }) => {
-                const isAnchor = href.startsWith('#');
-                const isActive = isAnchor
-                  ? currentHash === href
-                  : pathname === href || (href === '/' && pathname === '/');
-                return (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    aria-label={ariaLabel ?? label}
-                    className={cn(
-                      'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary',
-                      isActive
-                        ? 'bg-brand-primary/15 text-brand-foreground font-medium'
-                        : 'text-muted-foreground hover:text-brand-foreground hover:bg-surface-muted'
-                    )}
-                  >
-                    {Icon ? <Icon className="h-5 w-5" aria-hidden="true" /> : null}
-                    <span className="text-base">{label}</span>
-                  </Link>
-                );
-              })}
-              
-              {/* Mobile Theme Toggle */}
-              <div className="pt-3 border-t border-border/40">
-                <div className="px-4">
-                  <ThemeToggle />
+      {/* Mobile Menu */}
+      <motion.div
+        initial={false}
+        animate={{
+          x: mobileMenuOpen ? '0%' : '100%'
+        }}
+        transition={{
+          type: 'spring',
+          damping: 30,
+          stiffness: 300
+        }}
+        className="fixed inset-y-0 right-0 w-full max-w-sm bg-background border-l border-border z-[60] lg:hidden"
+        style={{ top: '72px' }}
+      >
+        <nav className="p-6 space-y-6">
+          {LINKS.map((link) => (
+            <div key={link.label}>
+              <Link
+                href={link.href}
+                className={cn(
+                  "block text-lg font-medium py-2",
+                  isActive(link.href) ? "text-foreground" : "text-muted-foreground"
+                )}
+              >
+                {link.label}
+              </Link>
+              {link.children && (
+                <div className="ml-4 mt-2 space-y-2">
+                  {link.children.map((child) => (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      className={cn(
+                        "block text-sm py-1",
+                        isActive(child.href) ? "text-foreground" : "text-muted-foreground"
+                      )}
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
-          </motion.div>
-        )}
-      </motion.nav>
+          ))}
+          
+          <div className="pt-6 space-y-4 border-t border-border">
+            <Link
+              href="/signin"
+              className="rnrb-button-secondary w-full py-3 rounded-md justify-center"
+            >
+              Sign In
+            </Link>
+            
+            <Link
+              href="/signup"
+              className="rnrb-button-primary w-full py-3 rounded-md justify-center"
+            >
+              Get Started
+            </Link>
+            
+            <div className="flex justify-center pt-4">
+              <ThemeToggle />
+            </div>
+          </div>
+        </nav>
+      </motion.div>
+
+      {/* Mobile Menu Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[55] lg:hidden"
+          style={{ top: '72px' }}
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
     </>
   );
 }
-
-
