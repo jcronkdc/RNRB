@@ -202,27 +202,50 @@ export default function ProjectDetailPage() {
           <div className="lg:col-span-2 space-y-6">
             <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-semibold text-white flex items-center gap-2">
-                  <Music className="w-6 h-6 text-purple-400" />
+                <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
+                  <Music className="w-6 h-6 text-brand-primary" />
                   Songs (Hyphae)
                 </h2>
-                <Button className="bg-purple-600 hover:bg-purple-700 flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
-                  Add Song
-                </Button>
+                <Link href={`/projects/${slug}/songs/new`}>
+                  <Button className="bg-brand-primary hover:bg-brand-primary/90 text-brand-primary-foreground flex items-center gap-2">
+                    <Plus className="w-4 h-4" />
+                    Add Song
+                  </Button>
+                </Link>
               </div>
               
               {(project.song_count || 0) === 0 ? (
                 <div className="text-center py-12">
                   <Music className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                   <p className="text-muted-foreground mb-4">No songs yet - the mycelium awaits</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground mb-4">
                     Songs are the hyphae - the creative threads branching from your project
                   </p>
+                  <Link href={`/projects/${slug}/songs/new`}>
+                    <Button className="bg-brand-primary hover:bg-brand-primary/90 text-brand-primary-foreground">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create First Song
+                    </Button>
+                  </Link>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">Songs will appear here as you add them</p>
+                  {(project.songs || []).map((song: any) => (
+                    <Link key={song.id} href={`/projects/${slug}/songs/${song.id}`}>
+                      <div className="p-4 bg-surface hover:bg-surface-muted border border-border rounded-lg transition cursor-pointer">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-semibold text-foreground">{song.title}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {song.key && `${song.key} • `}
+                              {song.tempo && `${song.tempo} BPM`}
+                            </p>
+                          </div>
+                          {song.has_lyrics && <FileText className="w-5 h-5 text-blue-500" />}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
                 </div>
               )}
             </Card>
