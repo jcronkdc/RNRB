@@ -20,8 +20,9 @@ import {
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
-// Dynamically import Daily.co and Ably to prevent SSR issues
-const DailyProvider = dynamic(() => import('@daily-co/daily-react').then(m => m.DailyProvider), { ssr: false });
+// Dynamically import collaboration components
+const ProjectChat = dynamic(() => import('@/components/project-chat').then(m => m.ProjectChat), { ssr: false });
+const ProjectVideoRoom = dynamic(() => import('@/components/project-video-room').then(m => m.ProjectVideoRoom), { ssr: false });
 
 export default function ProjectCollaboratePage() {
   const params = useParams();
@@ -278,50 +279,17 @@ export default function ProjectCollaboratePage() {
           </div>
         )}
 
-        {/* Chat View */}
+        {/* Chat View - LIVE Ably Integration */}
         {activeView === 'chat' && (
           <Card className="p-6">
-            <h2 className="text-2xl font-semibold text-foreground mb-4">
-              Project Chat (Ably Real-Time)
-            </h2>
-            <div className="p-12 text-center bg-surface/50 rounded-lg border-2 border-dashed border-border">
-              <MessageSquare className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground mb-2">Real-time chat integration coming soon</p>
-              <p className="text-sm text-muted-foreground">
-                Ably-powered messaging with @mentions, file sharing, and presence awareness
-              </p>
-            </div>
+            <ProjectChat projectSlug={slug} projectName={project.name} />
           </Card>
         )}
 
-        {/* Video View */}
+        {/* Video View - LIVE Daily.co Integration */}
         {activeView === 'video' && (
           <Card className="p-6">
-            <h2 className="text-2xl font-semibold text-foreground mb-4">
-              Video Collaboration Room (Daily.co)
-            </h2>
-            <div className="p-12 text-center bg-surface/50 rounded-lg border-2 border-dashed border-border">
-              <Video className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground mb-4">Video room integration coming soon</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto text-left">
-                <div className="p-3 bg-background rounded">
-                  <p className="text-sm font-medium text-foreground mb-1">🎥 HD Video</p>
-                  <p className="text-xs text-muted-foreground">Up to 32 participants</p>
-                </div>
-                <div className="p-3 bg-background rounded">
-                  <p className="text-sm font-medium text-foreground mb-1">🖱️ Cursor Control</p>
-                  <p className="text-xs text-muted-foreground">Shared screen control</p>
-                </div>
-                <div className="p-3 bg-background rounded">
-                  <p className="text-sm font-medium text-foreground mb-1">💬 In-Room Chat</p>
-                  <p className="text-xs text-muted-foreground">Text while collaborating</p>
-                </div>
-                <div className="p-3 bg-background rounded">
-                  <p className="text-sm font-medium text-foreground mb-1">🎙️ Talkback</p>
-                  <p className="text-xs text-muted-foreground">Producer communication</p>
-                </div>
-              </div>
-            </div>
+            <ProjectVideoRoom projectSlug={slug} projectName={project.name} />
           </Card>
         )}
       </div>
