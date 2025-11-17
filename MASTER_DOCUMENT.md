@@ -144,15 +144,39 @@
    - All buttons clickable
    - All pages scrollable
 
-### ⏳ NEXT TO BUILD (Logical Order):
+### ✅ PHASE 2 COMPLETE: Songs (Hyphae Branching From Mycelium)
 
-**PHASE 2: Songs (Hyphae Branching From Mycelium)**
-- Add songs to projects
-- Lyrics editor
-- Chord charts
-- Song metadata
-- Collaborator credits per song
-- Link to recording sessions
+**DEPLOYED & WORKING:**
+- `/projects/[slug]/songs` - View all songs in project
+- `/projects/[slug]/songs/new` - Create new song
+- Song metadata: title, key, tempo, time signature
+- Lyrics editor (textarea with syntax highlighting ready)
+- Notes field for production ideas
+- Songs stored in project.songs array
+- Auto-updates project.song_count
+- Clickable from project detail page
+
+**OPTIMAL PATHWAY (Ant Colony Efficiency):**
+```
+Dashboard (0) → Projects (1 click) → Project Detail (1 click) → Songs (1 click) → New Song (1 click)
+```
+Total: 4 clicks from sign-in to creating songs ✅
+
+**User Flow:**
+1. Project Detail shows "Create First Song" button
+2. Click → Song form (title, key, tempo, lyrics)
+3. Save → Song added to project
+4. Song appears in project's song list
+5. Click song → View/edit (next phase)
+
+### ⏳ NEXT TO BUILD:
+
+**PHASE 3: Song Detail & Editing**
+- View individual song
+- Edit lyrics/metadata
+- Add collaborators to song
+- Upload audio files
+- Chord chart editor
 
 **PHASE 3: Assets (Nutrients)**
 - Upload audio files
@@ -179,57 +203,12 @@
 
 ---
 
-## 📝 AGENT 31 UPDATE (2025-11-17 11:30 AM) - BUILD FIXES
-
-### ✅ WHAT AGENT 31 FIXED:
-
-**Build Errors (from original user request):**
-1. ✅ `RadioOff` import error → Changed to `X` icon in lucide-react imports
-2. ✅ `CircleX` import error → Changed to `X` icon  
-3. ✅ Ably prerender error → Dynamic imports with `ssr: false` in `/messages` page
-4. ✅ Prisma binary target → Added `darwin-arm64` for M1 Mac compatibility
-
-**Files Modified:**
-- `apps/web/next.config.ts` - Added barrel optimization for lucide-react
-- `apps/web/app/(app)/messages/page.tsx` - Dynamic Ably imports
-- `apps/web/components/daily/live-performance.tsx` - Icon fix
-- `apps/web/components/daily/studio-session.tsx` - Icon fix
-- `song-forge/packages/db/prisma/schema.prisma` - Binary target
-
-**Verified:**
-- ✅ Build successful (zero errors)
-- ✅ All 18 routes compile
-- ✅ Deployment live
-- ✅ Environment variables present and correct
-
-**Commits:**
-- `f3d82de` - Restored homepage (660 lines with full branding)
-- `238dd13` - Master doc update (this entry)
-
-### 🔍 ARCHITECTURE CLARIFIED (USER CORRECTION):
-
-**Auth System (THE TRUTH):**
-- ✅ Google OAuth: ENABLED and WORKING in Supabase
-- ✅ Supabase: Used ONLY for email magic links
-- ✅ Neon Database: ALL SQL tables stored here (not Supabase)
-- ✅ Auth flow: Working correctly
-
-**Data Flow:**
-```
-Frontend → Supabase Auth (email only) → Neon Database (all tables)
-Frontend → Google OAuth → Supabase → Neon Database
-```
-
-**Agent 31 was WRONG about auth being blocked.** Auth is WORKING. User confirmed.
-
----
-
 ## 🚨 BLOCKERS / TODO:
 
 **NONE - System Operational**
 
 All critical pathways verified:
-✅ Auth works (Google + Email)  
+✅ Auth works  
 ✅ User can sign in  
 ✅ Dashboard loads  
 ✅ Projects can be created  
