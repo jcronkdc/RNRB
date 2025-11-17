@@ -1,23 +1,5 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { useMemo } from 'react';
-
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogPrimitive,
-  DialogTitle,
-  DialogTrigger,
-  Input,
-  useToast,
-} from '@cronkwaters/ui';
-import { trpc } from '@cronkwaters/trpc';
 
 const navLinks = [
   { label: 'GitHub', href: 'https://github.com/jcronkdc/RNRB' },
@@ -45,25 +27,8 @@ const resourceCards = [
 ] as const;
 
 export default function HomePage() {
-  const { notify } = useToast();
-  const healthQuery = trpc.health.check.useQuery(undefined, {
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
-  });
-  const viewerQuery = trpc.viewer.me.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-    staleTime: 60_000,
-  });
-
-  const healthLabel = useMemo(() => {
-    if (healthQuery.isLoading) return 'checking...';
-    if (healthQuery.isError) return 'unavailable';
-
-    return new Date(healthQuery.data?.timestamp ?? Date.now()).toLocaleTimeString();
-  }, [healthQuery.data?.timestamp, healthQuery.isError, healthQuery.isLoading]);
-
   return (
-    <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-[#050816] via-[#061125] to-[#0f172a] text-foreground">
+    <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-[#050816] via-[#061125] to-[#0f172a] text-white">
       <div className="absolute inset-x-0 top-0 -z-10 h-[30rem] overflow-hidden blur-3xl">
         <div className="mx-auto h-full max-w-5xl bg-[radial-gradient(circle_at_top,_rgba(103,63,255,0.35)_0%,_rgba(12,18,40,0)_60%)]" />
       </div>
@@ -72,7 +37,7 @@ export default function HomePage() {
           <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-black/60">
             <Image
               src="/logo-light.png"
-              alt="Rock N’ Roll Basement logo"
+              alt="Rock N' Roll Basement logo"
               width={40}
               height={40}
               className="h-8 w-auto"
@@ -80,8 +45,8 @@ export default function HomePage() {
             />
           </span>
           <div>
-            <p className="text-base font-semibold tracking-tight">Rock N’ Roll Basement</p>
-            <p className="text-sm text-brand-muted-foreground">
+            <p className="text-base font-semibold tracking-tight">Rock N' Roll Basement</p>
+            <p className="text-sm text-gray-400">
               The underground OS for bands, studios, and music organizations.
             </p>
           </div>
@@ -91,103 +56,36 @@ export default function HomePage() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-brand-muted-foreground transition hover:text-brand-secondary"
+              className="text-sm font-medium text-gray-400 transition hover:text-purple-400"
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-brand-muted-foreground">
-            API health <span className="font-semibold text-brand-secondary">{healthLabel}</span>
-          </span>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="secondary" size="sm" type="button">
-                New workspace
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-[#0b1220] text-foreground">
-              <DialogHeader>
-                <DialogTitle>Create workspace</DialogTitle>
-                <DialogDescription>
-                  Kickstart a new collaborative space for your band, studio, or organization.
-                </DialogDescription>
-              </DialogHeader>
-              <form className="grid gap-4">
-                <div className="grid gap-2">
-                  <label htmlFor="name" className="text-sm font-medium text-brand-muted-foreground">
-                    Workspace name
-                  </label>
-                  <Input id="name" name="name" placeholder="The Basement Tapes" autoFocus />
-                </div>
-                <div className="grid gap-2">
-                  <label htmlFor="slug" className="text-sm font-medium text-brand-muted-foreground">
-                    URL slug
-                  </label>
-                  <Input id="slug" name="slug" placeholder="basement" />
-                </div>
-              </form>
-              <DialogFooter>
-                <DialogPrimitive.Close asChild>
-                  <Button variant="ghost" type="button">
-                    Cancel
-                  </Button>
-                </DialogPrimitive.Close>
-                <DialogPrimitive.Close asChild>
-                  <Button
-                    type="button"
-                    onClick={() =>
-                      notify({
-                        title: 'Workspace created',
-                        description:
-                          'Invite collaborators, plug in your providers, and start wiring up the basement.',
-                      })
-                    }
-                  >
-                    Continue
-                  </Button>
-                </DialogPrimitive.Close>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
       </header>
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-12 px-6 pb-24 sm:px-12 lg:px-0">
         <section className="mt-12 space-y-8 text-center">
-          <span className="inline-flex items-center gap-2 self-center rounded-full bg-brand-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-brand-primary">
+          <span className="inline-flex items-center gap-2 self-center rounded-full bg-purple-600/10 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-purple-400">
             Full-stack music ecosystem
           </span>
           <div className="space-y-4">
             <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
               Run your entire music world from the basement.
             </h1>
-            <p className="mx-auto max-w-2xl text-base text-brand-muted-foreground">
-              Rock N’ Roll Basement connects projects, songs, tours, rights, and revenue into one
+            <p className="mx-auto max-w-2xl text-base text-gray-400">
+              Rock N' Roll Basement connects projects, songs, tours, rights, and revenue into one
               opinionated workspace so bands, studios, and organizations can stay loud, organized,
               and paid.
             </p>
           </div>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button
-              size="lg"
-              type="button"
-              onClick={() =>
-                notify({
-                  title: 'Demo toast',
-                  description:
-                    'Notification primitives live in packages/ui and are wired for RN’RB branding.',
-                })
-              }
+            <Link
+              href="https://github.com/jcronkdc/RNRB"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-purple-700"
             >
-              Trigger toast
-            </Button>
-            <Button size="lg" variant="ghost" asChild>
-              <Link href="https://github.com/jcronkdc/RNRB">
-                View repository<span aria-hidden className="ml-2">→</span>
-              </Link>
-            </Button>
+              View repository<span aria-hidden className="ml-2">→</span>
+            </Link>
           </div>
         </section>
 
@@ -199,51 +97,28 @@ export default function HomePage() {
               className="group rounded-xl border border-white/5 bg-white/5 p-6 text-left shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
             >
               <h2 className="text-lg font-semibold text-white">{card.title}</h2>
-              <p className="mt-2 text-sm text-brand-muted-foreground">{card.description}</p>
-              <Button variant="link" className="mt-6 px-0 text-brand-secondary" asChild>
-                <Link href={card.href}>Explore details</Link>
-              </Button>
+              <p className="mt-2 text-sm text-gray-400">{card.description}</p>
+              <Link href={card.href} className="mt-6 inline-block text-sm text-purple-400 hover:underline">
+                Explore details
+              </Link>
             </article>
           ))}
-        </section>
-
-        <section className="rounded-2xl border border-white/5 bg-white/5 p-8 text-left shadow-xl">
-          <h2 className="text-lg font-semibold text-white">Connected services</h2>
-          <p className="mt-2 text-sm text-brand-muted-foreground">
-            These integrations come wired up out of the box.
-          </p>
-          <dl className="mt-6 grid gap-6 sm:grid-cols-2">
-            <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-              <dt className="text-sm font-medium text-brand-muted-foreground">Authenticated user</dt>
-              <dd className="mt-2 text-base font-semibold text-white">
-                {viewerQuery.data?.user?.email ?? 'Anonymous viewer'}
-              </dd>
-            </div>
-            <div className="rounded-lg border border-white/10 bg-black/30 p-4">
-              <dt className="text-sm font-medium text-brand-muted-foreground">Organizations</dt>
-              <dd className="mt-2 text-base font-semibold text-white">
-                {viewerQuery.data?.memberships?.length
-                  ? `${viewerQuery.data.memberships.length} linked`
-                  : 'Connect a workspace'}
-              </dd>
-            </div>
-          </dl>
         </section>
       </main>
 
       <footer className="border-t border-white/10 bg-[#050816]/70 py-6">
-        <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-4 px-6 text-sm text-brand-muted-foreground sm:flex-row sm:px-12 lg:px-0">
+        <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-4 px-6 text-sm text-gray-400 sm:flex-row sm:px-12 lg:px-0">
           <p>
             Built with Next.js 15, Tailwind CSS, Radix UI, NextAuth, Prisma, and tRPC v11.{' '}
-            <span className="text-brand-secondary">Deployed with Turborepo.</span>
+            <span className="text-purple-400">Deployed with Turborepo.</span>
           </p>
           <div className="flex items-center gap-4">
-            <Link href="mailto:hello@rnrb.ai" className="transition hover:text-brand-secondary">
+            <Link href="mailto:hello@rnrb.ai" className="transition hover:text-purple-400">
               hello@rnrb.ai
             </Link>
             <Link
               href="https://twitter.com/rnrb"
-              className="transition hover:text-brand-secondary"
+              className="transition hover:text-purple-400"
             >
               @rnrb
             </Link>
@@ -253,4 +128,3 @@ export default function HomePage() {
     </div>
   );
 }
-
