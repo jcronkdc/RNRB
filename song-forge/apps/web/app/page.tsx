@@ -104,47 +104,52 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="mb-8 inline-block"
             >
-              <Image
-                src="/rnrdark.png"
-                alt="Rock N' Roll Basement"
-                width={100}
-                height={100}
-                className="dark:hidden"
-              />
-              <Image
-                src="/rnrlight.png"
-                alt="Rock N' Roll Basement"
-                width={100}
-                height={100}
-                className="hidden dark:block"
-              />
+              <div className="relative">
+                <Image
+                  src="/rnrlight.png"
+                  alt="Rock N' Roll Basement"
+                  width={140}
+                  height={140}
+                  className="dark:hidden drop-shadow-2xl"
+                  style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.8))' }}
+                />
+                <Image
+                  src="/rnrlight.png"
+                  alt="Rock N' Roll Basement"
+                  width={140}
+                  height={140}
+                  className="hidden dark:block drop-shadow-2xl"
+                  style={{ filter: 'drop-shadow(0 4px 6px rgba(255,255,255,0.2))' }}
+                />
+              </div>
             </motion.div>
 
             <h1 className="text-6xl md:text-7xl lg:text-8xl mb-6">
-              <span className="font-display font-normal">The Platform for</span>
+              <span className="font-display font-normal">From Bedroom to</span>
               <br />
-              <span className="font-display font-normal rnrb-gradient-text">
-                Music Professionals
+              <span className="font-display font-black rnrb-gradient-text tracking-tight">
+                Billboard
               </span>
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              Where artists, producers, and labels manage their entire creative business. 
-              From first song to world tour.
+              The ultimate playground for musicians at <span className="text-foreground font-semibold">every level</span>. 
+              Whether you're writing your first song or planning your world tour.
             </p>
             
             <div className="flex items-center justify-center gap-4 flex-wrap">
               <Link 
                 href="/auth"
-                className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-medium"
+                className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-bold uppercase tracking-wider transform hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl"
+                style={{ boxShadow: '0 4px 20px rgba(201, 169, 97, 0.3)' }}
               >
-                Start Free
-                <ArrowRight className="ml-2 w-5 h-5 inline-block" />
+                Start Jamming
+                <ArrowRight className="ml-2 w-5 h-5 inline-block animate-pulse" />
               </Link>
               
               <Link 
                 href="/demo"
-                className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-medium"
+                className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-medium uppercase tracking-wide border-2"
               >
                 Watch Demo
               </Link>
@@ -185,11 +190,18 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-display mb-6">
-              Everything You Need to Succeed
+              Your Journey, Your Way
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              A complete ecosystem designed for the modern music industry
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+              From <span className="text-foreground font-semibold">bedroom producers</span> to <span className="text-foreground font-semibold">touring legends</span> - 
+              tools that grow with your ambition
             </p>
+            <div className="flex justify-center gap-4 flex-wrap text-sm">
+              <span className="rnrb-badge border-green-500/30 text-green-400">🎸 Beginners Welcome</span>
+              <span className="rnrb-badge border-blue-500/30 text-blue-400">🎤 Semi-Pro Tools</span>
+              <span className="rnrb-badge border-purple-500/30 text-purple-400">🎹 Pro Features</span>
+              <span className="rnrb-badge border-red-500/30 text-red-400">🥁 Industry Standard</span>
+            </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -202,19 +214,19 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="group"
               >
-                <div className="rnrb-card h-full p-8 rnrb-hover-lift rnrb-hover-glow">
-                  <div className="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-colors">
+                <div className="rnrb-card h-full p-8 rnrb-hover-lift rnrb-hover-glow rnrb-edge rnrb-grunge">
+                  <div className="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-all duration-300 group-hover:scale-110">
                     <feature.icon className="w-7 h-7 text-brand-primary" />
                   </div>
                   
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <h3 className="text-xl font-bold mb-3 tracking-tight">{feature.title}</h3>
                   <p className="text-muted-foreground mb-4">{feature.description}</p>
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-brand-primary">
+                    <span className="text-sm font-bold text-brand-primary uppercase tracking-wider">
                       {feature.stats}
                     </span>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary transition-colors" />
+                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary transition-all duration-300 group-hover:translate-x-1" />
                   </div>
                 </div>
               </motion.div>
@@ -398,23 +410,23 @@ export default function HomePage() {
             
             <div className="relative z-10">
               <h2 className="text-5xl md:text-6xl font-display text-white mb-6">
-                Ready to Transform Your Career?
+                Ready to Rock?
               </h2>
               <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-                Join the platform that's revolutionizing the music industry. 
-                Start your free account today.
+                Whether you're laying down your first track or booking your 50th tour, 
+                <span className="text-white font-semibold"> we've got your back</span>.
               </p>
               
               <Link 
                 href="/auth"
-                className="inline-flex items-center gap-3 px-10 py-5 bg-white text-black rounded-xl font-semibold text-lg hover:bg-white/90 transition-colors"
+                className="inline-flex items-center gap-3 px-10 py-5 bg-white text-black rounded-xl font-bold text-lg hover:bg-white/90 transition-all duration-300 transform hover:scale-105 uppercase tracking-wider shadow-2xl"
               >
-                Get Started Free
-                <ArrowRight className="w-6 h-6" />
+                Start Your Journey
+                <ArrowRight className="w-6 h-6 animate-pulse" />
               </Link>
               
               <p className="mt-6 text-sm text-white/60">
-                No credit card required • Free forever plan available
+                No credit card required • <span className="font-semibold">Always free for beginners</span>
               </p>
             </div>
           </motion.div>
@@ -427,20 +439,21 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-3">
               <Image
-                src="/rnrdark.png"
+                src="/rnrlight.png"
                 alt="Rock N' Roll Basement"
-                width={32}
-                height={32}
-                className="dark:hidden"
+                width={48}
+                height={48}
+                className="dark:hidden drop-shadow-md"
+                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }}
               />
               <Image
                 src="/rnrlight.png"
                 alt="Rock N' Roll Basement"
-                width={32}
-                height={32}
+                width={48}
+                height={48}
                 className="hidden dark:block"
               />
-              <span className="text-lg font-medium">Rock N' Roll Basement</span>
+              <span className="text-lg font-bold tracking-tight">Rock N' Roll Basement</span>
             </div>
             
             <div className="flex items-center gap-6 text-sm text-muted-foreground">

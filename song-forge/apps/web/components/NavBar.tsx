@@ -136,21 +136,24 @@ export function NavBar() {
           <div className="flex items-center justify-between h-full">
             {/* Logo */}
             <Link href="/" className="rnrb-logo flex items-center gap-3">
-              <Image
-                src="/rnrdark.png"
-                alt="Rock N' Roll Basement"
-                width={40}
-                height={40}
-                className="dark:hidden"
-              />
-              <Image
-                src="/rnrlight.png"
-                alt="Rock N' Roll Basement"
-                width={40}
-                height={40}
-                className="hidden dark:block"
-              />
-              <span className="text-lg font-medium hidden sm:inline">
+              <div className="relative">
+                <Image
+                  src="/rnrlight.png"
+                  alt="Rock N' Roll Basement"
+                  width={56}
+                  height={56}
+                  className="dark:hidden drop-shadow-lg"
+                  style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }}
+                />
+                <Image
+                  src="/rnrlight.png"
+                  alt="Rock N' Roll Basement"
+                  width={56}
+                  height={56}
+                  className="hidden dark:block"
+                />
+              </div>
+              <span className="text-lg font-bold hidden sm:inline tracking-tight">
                 Rock N' Roll Basement
               </span>
             </Link>
