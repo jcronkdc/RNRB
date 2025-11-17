@@ -285,13 +285,22 @@ Project Detail → Songs → Click Song Title → Collaborative Workspace
 Total: 3 clicks from project to focused song collaboration ✅
 ```
 
-**COLLABORATION WORKFLOW:**
-1. Click any lyric line → Suggestion form appears
-2. Enter alternative lyric + optional reason
-3. Submit → Suggestion appears under original line (yellow highlight)
-4. Other collaborators see it → Click Accept ✓ or Reject ✗
-5. Accepted → Line updates automatically
-6. Export → Download with metadata + all suggestions
+**REFINED COLLABORATION WORKFLOW (User-Defined Clean Model):**
+1. **Write** → Add verse to song → Becomes **MASTER VERSION**
+2. **Collaborator reads** → Click any WORD → Suggest replacement word
+3. **Or** → Click LINE → Rewrite entire SENTENCE  
+4. **Suggestion appears** → Highlighted (yellow) under original, shows author name
+5. **Review** → Accept ✓ (merges to master) / Revise ✏️ (counter-suggest) / Reject ✗
+6. **Master updates** → Accepted change merges immediately
+7. **Always editable** → Can re-edit master version anytime (nothing set in stone)
+8. **Export** → Download master + all pending/accepted changes
+
+**Granularity Levels:**
+- Word-level: Click "heart" → Suggest "soul"
+- Sentence-level: Click whole line → Rewrite it
+- Track who changed what, when
+- Visual diff (strikethrough original, green suggested)
+- Clean modal for each suggestion
 
 **UNIQUE INTERACTION (What No Other Platform Has):**
 ✅ Click-to-suggest on any lyric line  
@@ -326,14 +335,18 @@ Total: 3 clicks from project to focused song collaboration ✅
 - ✅ Components: ProjectChat, ProjectPresence
 - ✅ Result: 1-click access from project to all collaboration features
 
-**Phase 4: Song-Level Collaboration (Unique Creative Workspace):**
-- ✅ Database: SongVersion, LyricSuggestion models  
-- ✅ Page: /projects/[slug]/songs/[songId] (3.62 kB)
-- ✅ Collaborative lyrics editor - Click line → Suggest → Accept/Reject
+**Phase 4: Song-Level Collaboration (Unique Creative Workspace - REFINED):**
+- ✅ Database: SongVersion, LyricChange models (word/sentence/line granularity)
+- ✅ Page: /projects/[slug]/songs/[songId] (3.53 kB)
+- ✅ Clean collaborative editor - Click WORD or SENTENCE → Suggest → Accept/Revise/Reject
+- ✅ Master version concept - Accepted changes merge automatically
+- ✅ Always editable - Nothing set in stone, can re-edit master
+- ✅ Change tracking - Who suggested, who reviewed, when
+- ✅ Visual diff - Strikethrough + green highlight for changes
 - ✅ Song-scoped chat (Ably) - Focused on THIS song
 - ✅ Song-scoped video (Daily.co placeholder) - Co-write THIS song
 - ✅ AI suggestions API - /api/ai/suggest-lyrics (GPT-4)
-- ✅ Export system - Download lyrics with suggestions
+- ✅ Export system - Download master + all changes
 - ✅ Result: 3 clicks from project to focused song collaboration
 
 **Bug Fixes:**
