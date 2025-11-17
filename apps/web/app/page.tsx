@@ -1,130 +1,549 @@
+'use client';
+
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { 
+  // Core Icons
+  Zap,
+  Shield,
+  Globe,
+  Layers,
+  
+  // Feature Icons
+  Music,
+  Users,
+  DollarSign,
+  BarChart3,
+  Database,
+  Radio,
+  Award,
+  Headphones,
+  
+  // UI Icons
+  ArrowRight,
+  Check,
+  Star,
+} from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRef } from 'react';
 
-const navLinks = [
-  { label: 'GitHub', href: 'https://github.com/jcronkdc/RNRB' },
-] as const;
+const features = [
+  {
+    title: 'Music Projects',
+    description: 'Professional project management for your creative work',
+    icon: Music,
+    stats: '∞ Songs'
+  },
+  {
+    title: 'Rights & Royalties',
+    description: 'Transparent split sheets and automated revenue tracking',
+    icon: DollarSign,
+    stats: '100% Transparent'
+  },
+  {
+    title: 'Live Performance',
+    description: 'Tour management, venues, and setlist organization',
+    icon: Radio,
+    stats: '1000+ Venues'
+  },
+  {
+    title: 'Analytics',
+    description: 'Real-time insights into your music career',
+    icon: BarChart3,
+    stats: 'Live Data'
+  },
+  {
+    title: 'Collaboration',
+    description: 'Connect with musicians, producers, and industry pros',
+    icon: Users,
+    stats: 'Global Network'
+  },
+  {
+    title: 'Asset Storage',
+    description: 'Secure cloud storage for all your creative assets',
+    icon: Database,
+    stats: 'Unlimited'
+  }
+];
 
-const resourceCards = [
+const testimonials = [
   {
-    title: 'Songwriting & projects',
-    description:
-      'Track songs, projects, and versions with rich metadata so every riff, lyric, and idea has a home.',
-    href: '#songs',
+    quote: "The most comprehensive platform I've ever used for managing my music career.",
+    author: "Sarah Chen",
+    role: "Independent Artist",
+    rating: 5
   },
   {
-    title: 'Tours & live shows',
-    description:
-      'Plan tours, shows, venues, and setlists so your live world stays in sync with the studio.',
-    href: '#touring',
+    quote: "Rock N' Roll Basement transformed how our label operates. It's a game-changer.",
+    author: "Marcus Thompson",
+    role: "Label Executive",
+    rating: 5
   },
   {
-    title: 'Rights & royalties',
-    description:
-      'Model splits, licenses, and transactions so the money side is as organized as the music.',
-    href: '#rights',
-  },
-] as const;
+    quote: "Finally, a platform that understands what musicians actually need.",
+    author: "Alex Rivera",
+    role: "Producer",
+    rating: 5
+  }
+];
 
 export default function HomePage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+  
+  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
   return (
-    <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-gradient-to-b from-[#050816] via-[#061125] to-[#0f172a] text-white">
-      <div className="absolute inset-x-0 top-0 -z-10 h-[30rem] overflow-hidden blur-3xl">
-        <div className="mx-auto h-full max-w-5xl bg-[radial-gradient(circle_at_top,_rgba(103,63,255,0.35)_0%,_rgba(12,18,40,0)_60%)]" />
-      </div>
-      <header className="flex items-center justify-between gap-6 px-6 py-6 sm:px-12 lg:px-20">
-        <div className="flex items-center gap-3">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-black/60">
-            <Image
-              src="/logo-light.png"
-              alt="Rock N' Roll Basement logo"
-              width={40}
-              height={40}
-              className="h-8 w-auto"
-              priority
-            />
-          </span>
-          <div>
-            <p className="text-base font-semibold tracking-tight">Rock N' Roll Basement</p>
-            <p className="text-sm text-gray-400">
-              The underground OS for bands, studios, and music organizations.
+    <div ref={containerRef} className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Premium Background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-surface/20 to-background" />
+          <motion.div 
+            style={{ y, opacity }}
+            className="absolute inset-0"
+          >
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-primary/3 rounded-full blur-3xl" />
+          </motion.div>
+        </div>
+
+        <div className="rnrb-container relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-5xl mx-auto"
+          >
+            {/* Logo */}
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="mb-8 inline-block"
+            >
+              <Image
+                src="/rnrdark.png"
+                alt="Rock N' Roll Basement"
+                width={100}
+                height={100}
+                className="dark:hidden"
+              />
+              <Image
+                src="/rnrlight.png"
+                alt="Rock N' Roll Basement"
+                width={100}
+                height={100}
+                className="hidden dark:block"
+              />
+            </motion.div>
+
+            <h1 className="text-6xl md:text-7xl lg:text-8xl mb-6">
+              <span className="font-display font-normal">The Platform for</span>
+              <br />
+              <span className="font-display font-normal rnrb-gradient-text">
+                Music Professionals
+              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
+              Where artists, producers, and labels manage their entire creative business. 
+              From first song to world tour.
             </p>
+            
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <Link 
+                href="/auth"
+                className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-medium"
+              >
+                Start Free
+                <ArrowRight className="ml-2 w-5 h-5 inline-block" />
+              </Link>
+              
+              <Link 
+                href="/demo"
+                className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-medium"
+              >
+                Watch Demo
+              </Link>
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground"
+            >
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                <span>Bank-level Security</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                <span>Global Infrastructure</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                <span>Lightning Fast</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Trust Section */}
+      <section className="py-20 border-y border-border/50">
+        <div className="rnrb-container">
+          <div className="text-center mb-12">
+            <p className="text-sm uppercase tracking-wider text-muted-foreground mb-4">
+              Trusted by Industry Leaders
+            </p>
+            <div className="flex items-center justify-center gap-12 opacity-50">
+              {/* Placeholder for partner logos */}
+              <div className="text-2xl font-bold text-muted-foreground">Sony Music</div>
+              <div className="text-2xl font-bold text-muted-foreground">Warner</div>
+              <div className="text-2xl font-bold text-muted-foreground">Universal</div>
+              <div className="text-2xl font-bold text-muted-foreground">BMG</div>
+            </div>
           </div>
         </div>
-        <nav className="hidden items-center gap-6 md:flex">
-          {navLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-gray-400 transition hover:text-purple-400"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </header>
+      </section>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-12 px-6 pb-24 sm:px-12 lg:px-0">
-        <section className="mt-12 space-y-8 text-center">
-          <span className="inline-flex items-center gap-2 self-center rounded-full bg-purple-600/10 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-purple-400">
-            Full-stack music ecosystem
-          </span>
-          <div className="space-y-4">
-            <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-              Run your entire music world from the basement.
-            </h1>
-            <p className="mx-auto max-w-2xl text-base text-gray-400">
-              Rock N' Roll Basement connects projects, songs, tours, rights, and revenue into one
-              opinionated workspace so bands, studios, and organizations can stay loud, organized,
-              and paid.
+      {/* Features Grid */}
+      <section className="py-24">
+        <div className="rnrb-container">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              Everything You Need to Succeed
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              A complete ecosystem designed for the modern music industry
             </p>
-          </div>
-          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="https://github.com/jcronkdc/RNRB"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-purple-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-purple-700"
-            >
-              View repository<span aria-hidden className="ml-2">→</span>
-            </Link>
-          </div>
-        </section>
+          </motion.div>
 
-        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {resourceCards.map((card) => (
-            <article
-              key={card.title}
-              id={card.href.slice(1)}
-              className="group rounded-xl border border-white/5 bg-white/5 p-6 text-left shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <div className="rnrb-card h-full p-8 rnrb-hover-lift rnrb-hover-glow">
+                  <div className="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-colors">
+                    <feature.icon className="w-7 h-7 text-brand-primary" />
+                  </div>
+                  
+                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <p className="text-muted-foreground mb-4">{feature.description}</p>
+                  
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-brand-primary">
+                      {feature.stats}
+                    </span>
+                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary transition-colors" />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Preview */}
+      <section className="py-24 bg-surface/30">
+        <div className="rnrb-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              See It In Action
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              A glimpse into your new command center
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="aspect-video bg-surface rounded-2xl border border-border/50 shadow-2xl overflow-hidden">
+              {/* Dashboard Preview Placeholder */}
+              <div className="p-8 h-full flex items-center justify-center">
+                <div className="text-center">
+                  <Layers className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+                  <p className="text-muted-foreground">Interactive Dashboard Preview</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Floating UI Elements */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="absolute -left-4 top-1/4 rnrb-card p-4 shadow-xl"
             >
-              <h2 className="text-lg font-semibold text-white">{card.title}</h2>
-              <p className="mt-2 text-sm text-gray-400">{card.description}</p>
-              <Link href={card.href} className="mt-6 inline-block text-sm text-purple-400 hover:underline">
-                Explore details
+              <div className="flex items-center gap-3">
+                <Award className="w-8 h-8 text-brand-primary" />
+                <div>
+                  <p className="text-sm font-semibold">New Achievement</p>
+                  <p className="text-xs text-muted-foreground">1M Streams Reached</p>
+                </div>
+              </div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="absolute -right-4 bottom-1/4 rnrb-card p-4 shadow-xl"
+            >
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-8 h-8 text-green-500" />
+                <div>
+                  <p className="text-sm font-semibold">Revenue Up 32%</p>
+                  <p className="text-xs text-muted-foreground">This month</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24">
+        <div className="rnrb-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              Loved by the Industry
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Join thousands of music professionals already using Rock N' Roll Basement
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="rnrb-card p-8"
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-brand-primary text-brand-primary" />
+                  ))}
+                </div>
+                
+                <p className="text-lg mb-6 leading-relaxed">"{testimonial.quote}"</p>
+                
+                <div>
+                  <p className="font-semibold">{testimonial.author}</p>
+                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Preview */}
+      <section className="py-24 bg-surface/30">
+        <div className="rnrb-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto text-center"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              Start Free, Scale As You Grow
+            </h2>
+            <p className="text-xl text-muted-foreground mb-12">
+              No credit card required. Upgrade when you're ready.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="rnrb-card p-6">
+                <h3 className="text-lg font-semibold mb-2">Explorer</h3>
+                <p className="text-3xl font-bold mb-4">Free</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>5 Active Projects</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>Basic Analytics</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>Community Support</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="rnrb-card p-6 border-2 border-brand-primary relative">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-brand-primary text-xs font-medium rounded-full text-brand-primary-foreground">
+                  Most Popular
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Professional</h3>
+                <p className="text-3xl font-bold mb-4">$29/mo</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>Unlimited Projects</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>Advanced Analytics</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>Priority Support</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="rnrb-card p-6">
+                <h3 className="text-lg font-semibold mb-2">Enterprise</h3>
+                <p className="text-3xl font-bold mb-4">Custom</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>Custom Integrations</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>Dedicated Support</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>SLA Guarantee</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <Link 
+              href="/pricing"
+              className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-medium inline-flex items-center gap-2"
+            >
+              View All Features
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-32">
+        <div className="rnrb-container">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-3xl rnrb-gold-gradient p-16 text-center"
+          >
+            <div className="absolute inset-0 bg-black/50" />
+            
+            <div className="relative z-10">
+              <h2 className="text-5xl md:text-6xl font-display text-white mb-6">
+                Ready to Transform Your Career?
+              </h2>
+              <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+                Join the platform that's revolutionizing the music industry. 
+                Start your free account today.
+              </p>
+              
+              <Link 
+                href="/auth"
+                className="inline-flex items-center gap-3 px-10 py-5 bg-white text-black rounded-xl font-semibold text-lg hover:bg-white/90 transition-colors"
+              >
+                Get Started Free
+                <ArrowRight className="w-6 h-6" />
               </Link>
-            </article>
-          ))}
-        </section>
-      </main>
+              
+              <p className="mt-6 text-sm text-white/60">
+                No credit card required • Free forever plan available
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
-      <footer className="border-t border-white/10 bg-[#050816]/70 py-6">
-        <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-between gap-4 px-6 text-sm text-gray-400 sm:flex-row sm:px-12 lg:px-0">
-          <p>
-            Built with Next.js 15, Tailwind CSS, Radix UI, NextAuth, Prisma, and tRPC v11.{' '}
-            <span className="text-purple-400">Deployed with Turborepo.</span>
-          </p>
-          <div className="flex items-center gap-4">
-            <Link href="mailto:hello@rnrb.ai" className="transition hover:text-purple-400">
-              hello@rnrb.ai
-            </Link>
-            <Link
-              href="https://twitter.com/rnrb"
-              className="transition hover:text-purple-400"
-            >
-              @rnrb
-            </Link>
+      {/* Footer */}
+      <footer className="py-12 border-t border-border/50">
+        <div className="rnrb-container">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/rnrdark.png"
+                alt="Rock N' Roll Basement"
+                width={32}
+                height={32}
+                className="dark:hidden"
+              />
+              <Image
+                src="/rnrlight.png"
+                alt="Rock N' Roll Basement"
+                width={32}
+                height={32}
+                className="hidden dark:block"
+              />
+              <span className="text-lg font-medium">Rock N' Roll Basement</span>
+            </div>
+            
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
+              <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+              <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
+            </div>
+            
+            <p className="text-sm text-muted-foreground">
+              © 2024 Rock N' Roll Basement. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
     </div>
   );
 }
+
+export const dynamic = "force-static";
