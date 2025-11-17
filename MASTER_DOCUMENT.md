@@ -32,7 +32,12 @@
 ### 🔧 DEPLOYMENT FIXES APPLIED
 - **lockfile updated:** Added `ably` dependency to pnpm-lock.yaml
 - **devDependencies fix:** `vercel.json` uses `pnpm install --prod=false`
+- **Packages copied:** Copied all packages from `song-forge/packages/` to root `packages/`
+  - This fixes Vercel build error "cannot find @cronkwaters/* packages"
+  - Root `apps/web` now has access to auth, db, trpc, ui packages
 - **Latest commits:**
+  - `9c4fc35` - Copy packages to root (CRITICAL FIX)
+  - `99a5569` - Clean master doc
   - `d57fdc2` - Ably integration and auth fixes
   - `de4bed5` - lockfile update
   - `6c6940d` - devDependencies fix
