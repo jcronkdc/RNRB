@@ -169,37 +169,75 @@ Total: 4 clicks from sign-in to creating songs ✅
 4. Song appears in project's song list
 5. Click song → View/edit (next phase)
 
-### ⏳ NEXT TO BUILD:
+## 🕸️ OPTIMAL NETWORK ARCHITECTURE (Ant Colony + Tokyo Subway Model)
 
-**PHASE 3: Song Detail & Editing**
-- View individual song
-- Edit lyrics/metadata
-- Add collaborators to song
-- Upload audio files
-- Chord chart editor
+**COLLABORATION-FIRST DESIGN:**
 
-**PHASE 3: Assets (Nutrients)**
-- Upload audio files
-- Upload lyrics/charts
-- File organization
-- Cloud storage integration
+Every feature has collaboration BAKED IN at the core:
 
-**PHASE 4: Sessions (Growth Events)**
-- Schedule recording sessions
-- Link to projects/songs
-- Invite participants
-- Record HD video/audio
+```
+PROJECT (Mycelium Hub)
+  ├─ INVITE SYSTEM (Gate) ✅ Invite-only access control
+  │   └─ Email invites, accept/decline, role management
+  │
+  ├─ PROJECT CHAT (Communication Thread)
+  │   ├─ Ably real-time messaging
+  │   ├─ @mentions for collaborators
+  │   └─ File sharing in chat
+  │
+  ├─ SONGS (Creative Hyphae) ✅ Built
+  │   ├─ Chat per song (discuss lyrics, arrangement)
+  │   ├─ Daily.co video room per song (remote writing)
+  │   ├─ Cursor control (shared lyric editing)
+  │   └─ Collaborator credits & splits
+  │
+  ├─ RECORDING SESSIONS (Collaborative Events)
+  │   ├─ Daily.co HD video/audio
+  │   ├─ Multi-participant (up to 32)
+  │   ├─ Screen share for DAW
+  │   ├─ Talkback system
+  │   └─ Cloud recording per participant
+  │
+  └─ REVENUE (Transparent Flow)
+      ├─ Split sheets per song
+      ├─ Automatic calculations
+      └─ Transparent to all collaborators
+```
 
-**PHASE 5: Royalties & Splits (Flow)**
-- Revenue tracking
-- Split sheet automation
-- Payment distribution
+**PRINCIPLE:** No feature exists without collaboration pathway.
 
-**PHASE 6: Tours (Fruiting Body)**
-- Tour management (already info pages exist)
-- Connect to projects
-- Setlist builder
-- Ticket tracking
+### ⏳ BUILD ORDER (Optimal Dependencies):
+
+**NEXT IMMEDIATE (Phase 3):**
+1. **Project Invitations** - Gate control for collaboration
+   - Invite by email
+   - Accept/decline flow
+   - Role assignment (owner/admin/member)
+   - Permission system
+
+2. **Project-Level Chat** - Communication backbone
+   - Ably channel per project
+   - Real-time messaging
+   - File sharing
+   - @mentions
+
+**THEN (Phase 4):**
+3. **Song Collaboration Features**
+   - Daily.co room per song (video co-writing)
+   - Shared lyrics editor (cursor control)
+   - Song-specific chat
+   - Collaborator credits
+
+4. **Assets with Collaboration**
+   - Upload audio/files
+   - Version control (who changed what)
+   - Comments on assets
+   - Approval workflows
+
+**FINALLY (Phase 5+):**
+5. **Recording Sessions** - Already have Daily.co, connect to projects
+6. **Royalty Splits** - Transparent to all collaborators
+7. **Tours** - Connect to projects, collaborative setlist building
 
 ---
 
