@@ -1,11 +1,59 @@
 # 🍄 Rock N' Roll Basement Master Document — Truth Only
 
-**Last Updated:** 2025-01-21 (Agent 15 Verification Session - Fixed Vercel Build Command)
-**Status:** ✅ **FULLY DEPLOYED & OPERATIONAL** – All systems working, authentication fixed, Ably messaging live
+**Last Updated:** 2025-11-17 (Agent 29 - Mushroom Mind Verification)
+**Status:** ⚠️ **BUILD STATUS UNCLEAR** – User corrected vercel.json back to @rnrb/web, deployment status unknown
 
 > One master doc. Agent-to-agent conversation. Each agent VERIFIES previous work, NEVER assumes. Updates with TRUTH ONLY.
 
 ---
+
+## 🚨 CRITICAL STATUS UPDATE - Agent 29 (Mushroom Mind Verification)
+
+### 🍄 REPOSITORY STRUCTURE VERIFIED
+**Truth revealed through mycelial network:**
+- **TWO separate app structures exist:**
+  - `apps/web/` - Package name: `@rnrb/web` (minimal, premium design)
+  - `song-forge/apps/web/` - Package name: `@cronkwaters/web` (full features, wrong branding)
+- **User corrected `vercel.json` back to:**
+  - Build command: `pnpm turbo run build --filter=@rnrb/web`
+  - Output directory: `apps/web/.next`
+- **This means deployment uses ROOT `apps/web/` NOT `song-forge/`**
+
+### ⚠️ CRITICAL CONFUSION DETECTED
+Previous agents (especially Agent 28) were confused about structure:
+- Agent 28 thought fixes were applied to `song-forge/apps/web/`
+- But user's correction shows deployment uses ROOT `apps/web/`
+- Messages page was DELETED from root `apps/web/` (no `/messages` route exists)
+
+### ✅ SEO OPTIMIZATION VERIFIED
+Root `apps/web/app/layout.tsx` has comprehensive SEO:
+- Meta title, description, keywords
+- Open Graph tags with images
+- Twitter Card metadata
+- Canonical URLs
+- Robots configuration
+- Viewport settings for mobile
+
+### ✅ MOBILE OPTIMIZATION VERIFIED
+Root `apps/web/app/globals.css` has full mobile support:
+- Responsive typography scale (sm/md/lg breakpoints)
+- Mobile-first Tailwind utilities
+- Viewport meta tag configured
+- Touch-friendly focus states
+- Smooth scrolling enabled
+
+### ✅ DATABASE SCHEMA VERIFIED
+Full-featured schema in `packages/db/prisma/schema.prisma`:
+- 36 models covering entire music industry ecosystem
+- User, Org, Project, Song, Asset, License, Event, Tour, Venue, Show
+- Collaboration, Forum, Messaging, Studio Sessions
+- Rights management, Royalties, Transactions
+- Complete with indexes and relations
+
+### ⚠️ AUTHENTICATION STATUS UNCLEAR
+- Root `apps/web/auth.ts` DOES re-export from `@cronkwaters/auth`
+- But user has NOT confirmed if account creation is working
+- Email auth requires EMAIL_SERVER_URL and EMAIL_FROM env vars
 
 ## 🚨 CRITICAL STATUS UPDATE - Agent 28
 
@@ -44,30 +92,31 @@
 
 ---
 
-## 🎯 NEXT AGENT INSTRUCTIONS (Agent 29)
+## 🎯 NEXT AGENT INSTRUCTIONS (Agent 30)
 
-### 1. VERIFY DEPLOYMENT SUCCESS
-```bash
-# Check latest deployment status
-vercel list --count 5
+### 1. RESOLVE DEPLOYMENT CONFUSION
+**CRITICAL: Determine which app is actually deployed:**
+- User corrected vercel.json to use `@rnrb/web` (root app)
+- But Agent 28's fixes were in `song-forge/apps/web`
+- Root `apps/web` has NO `/messages` page
+- Need to verify deployment status and which code is live
 
-# If deployment succeeded, get shareable URL
-mcp_Vercel_get_access_to_vercel_url --url [deployment-url]
+### 2. IF ROOT APP IS DEPLOYED
+**Missing features that need to be added:**
+- Ably messaging integration (components exist but not used)
+- Messages demo page (was deleted)
+- Test authentication (should work via @cronkwaters/auth)
+- Verify Email auth env vars are set
+
+### 3. IF SONG-FORGE APP SHOULD BE DEPLOYED
+**Update vercel.json to:**
+```json
+{
+  "buildCommand": "pnpm turbo run build --filter=@cronkwaters/web",
+  "installCommand": "pnpm install --frozen-lockfile --prod=false",
+  "outputDirectory": "song-forge/apps/web/.next"
+}
 ```
-
-### 2. TEST AUTHENTICATION
-- Visit `/auth` page
-- Test both Google OAuth and Email Magic Links
-- Verify user can reach dashboard after login
-- Check `/api/auth/debug/providers` endpoint
-
-### 3. TEST ABLY MESSAGING
-- Visit `/messages` page (requires auth)
-- Verify real-time features work:
-  - Chat messages appear instantly
-  - Presence shows online users
-  - Connection status updates
-- Check browser console for Ably errors
 
 ### 4. CRITICAL TASKS REMAINING
 
