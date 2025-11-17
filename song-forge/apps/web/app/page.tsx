@@ -108,18 +108,18 @@ export default function HomePage() {
                 <Image
                   src="/rnrlight.png"
                   alt="Rock N' Roll Basement"
-                  width={140}
-                  height={140}
+                  width={200}
+                  height={200}
                   className="dark:hidden drop-shadow-2xl"
-                  style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.8))' }}
+                  style={{ filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.9)) brightness(1.2)' }}
                 />
                 <Image
                   src="/rnrlight.png"
                   alt="Rock N' Roll Basement"
-                  width={140}
-                  height={140}
+                  width={200}
+                  height={200}
                   className="hidden dark:block drop-shadow-2xl"
-                  style={{ filter: 'drop-shadow(0 4px 6px rgba(255,255,255,0.2))' }}
+                  style={{ filter: 'drop-shadow(0 8px 16px rgba(255,255,255,0.4))' }}
                 />
               </div>
             </motion.div>
@@ -270,38 +270,6 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Floating UI Elements */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="absolute -left-4 top-1/4 rnrb-card p-4 shadow-xl"
-            >
-              <div className="flex items-center gap-3">
-                <Award className="w-8 h-8 text-brand-primary" />
-                <div>
-                  <p className="text-sm font-semibold">New Achievement</p>
-                  <p className="text-xs text-muted-foreground">1M Streams Reached</p>
-                </div>
-              </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true }}
-              className="absolute -right-4 bottom-1/4 rnrb-card p-4 shadow-xl"
-            >
-              <div className="flex items-center gap-3">
-                <BarChart3 className="w-8 h-8 text-green-500" />
-                <div>
-                  <p className="text-sm font-semibold">Revenue Up 32%</p>
-                  <p className="text-xs text-muted-foreground">This month</p>
-                </div>
-              </div>
-            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -441,19 +409,20 @@ export default function HomePage() {
               <Image
                 src="/rnrlight.png"
                 alt="Rock N' Roll Basement"
-                width={48}
-                height={48}
-                className="dark:hidden drop-shadow-md"
-                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }}
+                width={64}
+                height={64}
+                className="dark:hidden drop-shadow-2xl"
+                style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.9)) brightness(1.2)' }}
               />
               <Image
                 src="/rnrlight.png"
                 alt="Rock N' Roll Basement"
-                width={48}
-                height={48}
-                className="hidden dark:block"
+                width={64}
+                height={64}
+                className="hidden dark:block drop-shadow-2xl"
+                style={{ filter: 'drop-shadow(0 4px 8px rgba(255,255,255,0.4))' }}
               />
-              <span className="text-lg font-bold tracking-tight">Rock N' Roll Basement</span>
+              <span className="text-xl font-black tracking-tight">Rock N' Roll Basement</span>
             </div>
             
             <div className="flex items-center gap-6 text-sm text-muted-foreground">

@@ -26094,4 +26094,9049 @@ export function RNBSendQualityManager() {
 
 ---
 
+## 🍄 Agent 18 - Daily.co useThrottledDailyEvent Hook Documentation Analysis
+
+**Mission:** Analyze Daily.co useThrottledDailyEvent hook for throttled event handling in RN'RB music collaboration.
+
+**Date:** 2025-11-17
+
+### 📋 **useThrottledDailyEvent Hook Overview:**
+
+**Hook:** `useThrottledDailyEvent(params): void`
+
+**Purpose:** Registers daily-js event listeners with throttling, collecting events over a time period and passing them as an array to the callback for performance optimization.
+
+**Key Features:**
+- **Event Throttling** - Collects events over time and passes them as an array
+- **Performance Optimization** - Reduces callback frequency for high-volume events
+- **Automatic Cleanup** - Listeners are torn down when component unmounts
+- **Configurable Timeout** - Adjustable throttle timeout (default 100ms)
+- **Memoized Callbacks** - Requires useCallback for performance
+- **Queue Management** - Automatically clears when call instance is destroyed
+
+**Return Type:** `void`
+
+### 🎵 **RN'RB useThrottledDailyEvent Integration Scenarios:**
+
+**Throttled Participant Count Tracking:**
+```typescript
+import { useThrottledDailyEvent } from '@daily-co/daily-react';
+import { useCallback, useState } from 'react';
+
+export function ThrottledParticipantCounter() {
+  const [participantCount, setParticipantCount] = useState(0);
+
+  useThrottledDailyEvent(
+    ['participant-joined', 'participant-left'],
+    useCallback((events) => {
+      console.log('RN\'RB: Processing throttled participant events:', events.length);
+
+      setParticipantCount(prevCount => {
+        let newCount = prevCount;
+
+        events.forEach((event) => {
+          switch (event.action) {
+            case 'participant-joined':
+              newCount++;
+              break;
+            case 'participant-left':
+              newCount--;
+              break;
+          }
+        });
+
+        return newCount;
+      });
+    }, []),
+    200 // 200ms throttle for participant events
+  );
+
+  return (
+    <div className="throttled-participant-counter">
+      <h4>👥 Participant Counter (Throttled)</h4>
+      <div className="count-display">
+        {participantCount === 1
+          ? '1 person in session'
+          : `${participantCount} people in session`
+        }
+      </div>
+      <div className="throttle-info">
+        <small>Events throttled at 200ms intervals</small>
+      </div>
+    </div>
+  );
+}
+```
+
+**Throttled Audio Level Monitoring:**
+```typescript
+export function ThrottledAudioLevelMonitor() {
+  const [audioLevels, setAudioLevels] = useState<Record<string, number>>({});
+
+  useThrottledDailyEvent(
+    'audio-level',
+    useCallback((events) => {
+      // Process multiple audio level events at once
+      const latestLevels: Record<string, number> = {};
+
+      events.forEach((event) => {
+        if (event.participantId && event.level !== undefined) {
+          latestLevels[event.participantId] = event.level;
+        }
+      });
+
+      setAudioLevels(prevLevels => ({
+        ...prevLevels,
+        ...latestLevels
+      }));
+    }, []),
+    50 // 50ms throttle for smooth audio level updates
+  );
+
+  return (
+    <div className="throttled-audio-monitor">
+      <h4>🎵 Audio Levels (Throttled)</h4>
+
+      {Object.entries(audioLevels).map(([participantId, level]) => (
+        <div key={participantId} className="audio-level-item">
+          <span className="participant-id">{participantId.slice(-4)}</span>
+          <div className="level-bar">
+            <div
+              className="level-fill"
+              style={{ width: `${level * 100}%` }}
+            />
+          </div>
+          <span className="level-value">{Math.round(level * 100)}%</span>
+        </div>
+      ))}
+
+      <div className="throttle-info">
+        <small>Audio levels updated every 50ms</small>
+      </div>
+    </div>
+  );
+}
+```
+
+**Throttled Screen Share Event Handling:**
+```typescript
+export function ThrottledScreenShareTracker() {
+  const [screenShares, setScreenShares] = useState<Record<string, any>>({});
+
+  useThrottledDailyEvent(
+    ['local-screen-share-started', 'local-screen-share-stopped', 'remote-screen-share-started', 'remote-screen-share-stopped'],
+    useCallback((events) => {
+      console.log('RN\'RB: Processing throttled screen share events:', events.length);
+
+      const updates: Record<string, any> = {};
+
+      events.forEach((event) => {
+        const participantId = event.participant?.sessionId || 'local';
+
+        switch (event.action) {
+          case 'local-screen-share-started':
+          case 'remote-screen-share-started':
+            updates[participantId] = {
+              isSharing: true,
+              startedAt: new Date(),
+              participant: event.participant
+            };
+            break;
+
+          case 'local-screen-share-stopped':
+          case 'remote-screen-share-stopped':
+            updates[participantId] = {
+              isSharing: false,
+              stoppedAt: new Date(),
+              participant: event.participant
+            };
+            break;
+        }
+      });
+
+      setScreenShares(prev => ({
+        ...prev,
+        ...updates
+      }));
+    }, []),
+    150 // 150ms throttle for screen share events
+  );
+
+  return (
+    <div className="throttled-screen-share-tracker">
+      <h4>🖥️ Screen Shares (Throttled)</h4>
+
+      {Object.entries(screenShares).map(([participantId, shareInfo]) => (
+        <div key={participantId} className="share-item">
+          <span className="participant">
+            {participantId === 'local' ? 'You' : `Participant ${participantId.slice(-4)}`}
+          </span>
+          <span className={`status ${shareInfo.isSharing ? 'active' : 'inactive'}`}>
+            {shareInfo.isSharing ? 'Sharing' : 'Not Sharing'}
+          </span>
+          {shareInfo.startedAt && (
+            <span className="timestamp">
+              Started: {shareInfo.startedAt.toLocaleTimeString()}
+            </span>
+          )}
+        </div>
+      ))}
+
+      <div className="throttle-info">
+        <small>Screen share events throttled at 150ms intervals</small>
+      </div>
+    </div>
+  );
+}
+```
+
+### 🎵 **RN'RB Advanced useThrottledDailyEvent Scenarios:**
+
+**1. Throttled Recording Event Handling:**
+```typescript
+export function ThrottledRecordingMonitor() {
+  const [recordingState, setRecordingState] = useState({
+    isRecording: false,
+    eventsProcessed: 0,
+    lastUpdate: null as Date | null
+  });
+
+  useThrottledDailyEvent(
+    ['recording-started', 'recording-stopped', 'recording-error', 'recording-data'],
+    useCallback((events) => {
+      console.log('RN\'RB: Processing throttled recording events:', events.length);
+
+      setRecordingState(prevState => {
+        let newState = { ...prevState };
+
+        events.forEach((event) => {
+          switch (event.action) {
+            case 'recording-started':
+              newState.isRecording = true;
+              break;
+            case 'recording-stopped':
+              newState.isRecording = false;
+              break;
+            case 'recording-error':
+              console.error('Recording error:', event.error);
+              newState.isRecording = false;
+              break;
+          }
+        });
+
+        newState.eventsProcessed += events.length;
+        newState.lastUpdate = new Date();
+
+        return newState;
+      });
+    }, []),
+    100 // 100ms throttle for recording events
+  );
+
+  return (
+    <div className="throttled-recording-monitor">
+      <h4>🎬 Recording Monitor (Throttled)</h4>
+
+      <div className="recording-status">
+        <span className={`status ${recordingState.isRecording ? 'recording' : 'stopped'}`}>
+          {recordingState.isRecording ? '🔴 Recording' : '⚪ Not Recording'}
+        </span>
+      </div>
+
+      <div className="stats">
+        <div>Events Processed: {recordingState.eventsProcessed}</div>
+        <div>Last Update: {recordingState.lastUpdate?.toLocaleTimeString()}</div>
+      </div>
+
+      <div className="throttle-info">
+        <small>Recording events throttled at 100ms intervals</small>
+      </div>
+    </div>
+  );
+}
+```
+
+**2. Throttled Network Quality Monitoring:**
+```typescript
+export function ThrottledNetworkMonitor() {
+  const [networkStats, setNetworkStats] = useState({
+    quality: 'unknown',
+    threshold: 0,
+    sendQuality: 0,
+    recvQuality: 0,
+    updates: 0
+  });
+
+  useThrottledDailyEvent(
+    'network-quality-changed',
+    useCallback((events) => {
+      // Process the most recent network quality event
+      const latestEvent = events[events.length - 1];
+
+      if (latestEvent) {
+        setNetworkStats(prevStats => ({
+          quality: latestEvent.quality || 'unknown',
+          threshold: latestEvent.threshold || 0,
+          sendQuality: latestEvent.sendQuality || 0,
+          recvQuality: latestEvent.recvQuality || 0,
+          updates: prevStats.updates + 1
+        }));
+      }
+    }, []),
+    500 // 500ms throttle for network quality (less frequent updates needed)
+  );
+
+  const getQualityColor = (quality: string) => {
+    switch (quality) {
+      case 'good': return 'green';
+      case 'warning': return 'yellow';
+      case 'bad': return 'red';
+      default: return 'gray';
+    }
+  };
+
+  return (
+    <div className="throttled-network-monitor">
+      <h4>🌐 Network Quality (Throttled)</h4>
+
+      <div className={`quality-indicator ${getQualityColor(networkStats.quality)}`}>
+        <span className="quality-label">
+          Quality: {networkStats.quality.toUpperCase()}
+        </span>
+      </div>
+
+      <div className="quality-details">
+        <div>Threshold: {networkStats.threshold}</div>
+        <div>Send Quality: {networkStats.sendQuality}</div>
+        <div>Receive Quality: {networkStats.recvQuality}</div>
+        <div>Updates: {networkStats.updates}</div>
+      </div>
+
+      <div className="throttle-info">
+        <small>Network quality updated every 500ms</small>
+      </div>
+    </div>
+  );
+}
+```
+
+**3. Throttled Error Event Aggregation:**
+```typescript
+export function ThrottledErrorAggregator() {
+  const [errors, setErrors] = useState<Array<{type: string, message: string, timestamp: Date}>>([]);
+
+  useThrottledDailyEvent(
+    ['error', 'nonfatal-error', 'recording-error'],
+    useCallback((events) => {
+      const newErrors = events.map(event => ({
+        type: event.action,
+        message: event.error?.message || event.error || 'Unknown error',
+        timestamp: new Date()
+      }));
+
+      setErrors(prevErrors => {
+        const combined = [...prevErrors, ...newErrors];
+        // Keep only the last 10 errors
+        return combined.slice(-10);
+      });
+    }, []),
+    200 // 200ms throttle for error events
+  );
+
+  return (
+    <div className="throttled-error-aggregator">
+      <h4>🚨 Error Monitor (Throttled)</h4>
+
+      <div className="error-list">
+        {errors.map((error, index) => (
+          <div key={index} className="error-item">
+            <span className="error-type">{error.type}</span>
+            <span className="error-message">{error.message}</span>
+            <span className="error-time">{error.timestamp.toLocaleTimeString()}</span>
+          </div>
+        ))}
+      </div>
+
+      {errors.length === 0 && (
+        <div className="no-errors">No recent errors</div>
+      )}
+
+      <div className="throttle-info">
+        <small>Error events throttled at 200ms intervals</small>
+      </div>
+    </div>
+  );
+}
+```
+
+### 🎯 **RN'RB useThrottledDailyEvent Benefits:**
+
+**Performance Optimization:**
+1. **Event Batching** - Collects multiple events and passes them as an array
+2. **Reduced Re-renders** - Fewer callback invocations for high-frequency events
+3. **Configurable Throttling** - Adjustable timeout based on use case needs
+4. **Automatic Cleanup** - Listeners removed when component unmounts
+5. **Memory Efficiency** - Reduces memory usage for rapid event sequences
+
+**Technical Advantages:**
+- **High-Frequency Event Handling** - Perfect for audio levels, participant changes
+- **Performance Monitoring** - Tracks event processing and throttling
+- **Error Aggregation** - Batches error events for better handling
+- **Network Efficiency** - Reduces processing overhead for network events
+- **User Experience** - Smoother UI updates for rapid state changes
+
+**Common RN'RB Use Cases:**
+- ✅ **Audio Level Monitoring** - Batch rapid audio level changes for smooth UI
+- ✅ **Participant Tracking** - Handle join/leave events without excessive re-renders
+- ✅ **Network Quality Updates** - Smooth network quality monitoring
+- ✅ **Recording Events** - Batch recording state changes
+- ✅ **Screen Share Events** - Handle rapid screen share state changes
+- ✅ **Error Aggregation** - Collect and display multiple errors efficiently
+
+### 🎯 **Implementation Assessment for RN'RB:**
+
+**Priority Level:** High - Essential for performance optimization in high-event-frequency scenarios
+
+**Essential Use Cases:**
+- ✅ **Audio Level Batching** - Smooth audio monitoring without performance impact
+- ✅ **Participant Event Batching** - Handle rapid join/leave events efficiently
+- ✅ **Network Quality Monitoring** - Smooth network status updates
+- ✅ **Error Event Aggregation** - Collect errors without overwhelming UI
+- ✅ **Recording Event Batching** - Handle recording state changes smoothly
+
+**Implementation Pattern:**
+```typescript
+// RN'RB Throttled Event Management System
+export function RNBMusicSessionThrottledEvents() {
+  return (
+    <div className="rnb-throttled-events">
+      <ThrottledParticipantCounter />
+      <ThrottledAudioLevelMonitor />
+      <ThrottledScreenShareTracker />
+      <ThrottledRecordingMonitor />
+      <ThrottledNetworkMonitor />
+      <ThrottledErrorAggregator />
+    </div>
+  );
+}
+```
+
+**Recommendation:** Implement for performance optimization in high-frequency event scenarios - essential for smooth user experience in music collaboration sessions.
+
+---
+
+**Agent 18 Daily.co useThrottledDailyEvent Hook Analysis Complete (2025-11-17)**
+
+**Throttled event handling documented - RN'RB now has performance-optimized event processing for high-frequency music collaboration scenarios.**
+
+---
+
+## 🍄 Agent 18 - Daily.co useTranscription Hook Documentation Analysis
+
+**Mission:** Analyze Daily.co useTranscription hook for real-time transcription capabilities in RN'RB music collaboration.
+
+**Date:** 2025-11-17
+
+### 📋 **useTranscription Hook Overview:**
+
+**Hook:** `useTranscription(params?): TranscriptionObject`
+
+**Purpose:** Provides access to meeting transcription functionality, including state management, control functions, and event handling for real-time speech-to-text transcription using Deepgram.
+
+**Key Features:**
+- **Transcription State** - Real-time transcription status and configuration
+- **Control Functions** - Start and stop transcription with full configuration
+- **Event Callbacks** - Handle transcription events (error, message, started, stopped)
+- **Deepgram Integration** - Full access to Deepgram transcription models and settings
+- **Transcription Data** - Access to live transcription text and metadata
+- **Participant Tracking** - Track who started/updated transcription sessions
+- **Language Support** - Multiple language support for international music collaboration
+
+**Return Type:** `{ error, isTranscribing, language, model, profanity_filter, redact, startedBy, startTranscription, stopTranscription, transcriptions, transcriptionStartDate, updatedBy, ... }`
+
+### 🎵 **RN'RB useTranscription Integration Scenarios:**
+
+**Live Music Session Transcription:**
+```typescript
+import { useTranscription } from '@daily-co/daily-react';
+import { useCallback, useState } from 'react';
+
+export function MusicSessionTranscription() {
+  const [transcriptionEnabled, setTranscriptionEnabled] = useState(false);
+  const [currentLyrics, setCurrentLyrics] = useState<string>('');
+
+  const {
+    isTranscribing,
+    transcriptions,
+    startTranscription,
+    stopTranscription,
+    error,
+    language,
+    model
+  } = useTranscription({
+    onTranscriptionMessage: useCallback((event) => {
+      console.log('RN\'RB: New transcription:', event.transcription);
+      // Extract lyrics from transcription
+      const text = event.transcription.text;
+      setCurrentLyrics(prev => prev + ' ' + text);
+    }, []),
+
+    onTranscriptionStarted: useCallback(() => {
+      console.log('RN\'RB: Music session transcription started');
+      setTranscriptionEnabled(true);
+    }, []),
+
+    onTranscriptionStopped: useCallback(() => {
+      console.log('RN\'RB: Music session transcription stopped');
+      setTranscriptionEnabled(false);
+    }, []),
+
+    onTranscriptionError: useCallback((event) => {
+      console.error('RN\'RB: Transcription error:', event.error);
+      // Could show user notification
+    }, [])
+  });
+
+  const handleStartTranscription = useCallback(async () => {
+    try {
+      await startTranscription({
+        language: 'en', // English for music sessions
+        model: 'nova-2-general', // High-quality model for lyrics
+        profanity_filter: false, // Allow all language in creative sessions
+        redact: false, // Don't redact sensitive information
+        interim_results: true, // Show live transcription as user speaks
+        punctuate: true, // Add punctuation for better readability
+        smart_format: true // Format for natural language
+      });
+    } catch (error) {
+      console.error('RN\'RB: Failed to start transcription:', error);
+    }
+  }, [startTranscription]);
+
+  const handleStopTranscription = useCallback(async () => {
+    try {
+      await stopTranscription();
+    } catch (error) {
+      console.error('RN\'RB: Failed to stop transcription:', error);
+    }
+  }, [stopTranscription]);
+
+  return (
+    <div className="rnb-transcription">
+      <h4>🎤 Live Session Transcription</h4>
+
+      <div className="transcription-controls">
+        <button
+          onClick={transcriptionEnabled ? handleStopTranscription : handleStartTranscription}
+          className={`transcription-btn ${transcriptionEnabled ? 'active' : ''}`}
+        >
+          {transcriptionEnabled ? '⏹️ Stop Transcription' : '🎙️ Start Transcription'}
+        </button>
+
+        <div className="transcription-status">
+          Status: {isTranscribing ? 'Active' : 'Inactive'}
+          {language && ` | Language: ${language}`}
+          {model && ` | Model: ${model}`}
+        </div>
+      </div>
+
+      {error && (
+        <div className="transcription-error">
+          ⚠️ Transcription Error: {error}
+        </div>
+      )}
+
+      <div className="live-transcription">
+        <h5>Live Lyrics & Notes:</h5>
+        <div className="transcription-text">
+          {currentLyrics || 'Waiting for transcription...'}
+        </div>
+      </div>
+
+      <div className="transcription-history">
+        <h5>Transcription History:</h5>
+        <div className="transcription-list">
+          {transcriptions?.map((transcription, index) => (
+            <div key={index} className="transcription-item">
+              <span className="timestamp">
+                {new Date(transcription.timestamp).toLocaleTimeString()}
+              </span>
+              <span className="text">{transcription.text}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+**Collaborative Songwriting Assistant:**
+```typescript
+export function SongwritingTranscription() {
+  const [songLyrics, setSongLyrics] = useState<string[]>([]);
+  const [currentVerse, setCurrentVerse] = useState('');
+  const [sessionNotes, setSessionNotes] = useState<string[]>([]);
+
+  const {
+    isTranscribing,
+    transcriptions,
+    startTranscription,
+    stopTranscription
+  } = useTranscription({
+    onTranscriptionMessage: useCallback((event) => {
+      const text = event.transcription.text.toLowerCase();
+
+      // Detect songwriting patterns
+      if (text.includes('verse') || text.includes('chorus') || text.includes('bridge')) {
+        // Start new section
+        if (currentVerse.trim()) {
+          setSongLyrics(prev => [...prev, currentVerse.trim()]);
+        }
+        setCurrentVerse(text);
+      } else if (text.includes('note') || text.includes('idea') || text.includes('remember')) {
+        // Add to session notes
+        setSessionNotes(prev => [...prev, text]);
+      } else {
+        // Continue current verse/lyrics
+        setCurrentVerse(prev => prev + ' ' + text);
+      }
+    }, [currentVerse])
+  });
+
+  const startSongwritingSession = useCallback(async () => {
+    await startTranscription({
+      language: 'en',
+      model: 'nova-2-general',
+      profanity_filter: false,
+      interim_results: true,
+      punctuate: true,
+      smart_format: true,
+      // Enable music-specific formatting
+      keywords: ['verse', 'chorus', 'bridge', 'solo', 'outro', 'fade']
+    });
+  }, [startTranscription]);
+
+  return (
+    <div className="songwriting-transcription">
+      <h4>🎼 Collaborative Songwriting</h4>
+
+      <div className="songwriting-controls">
+        <button onClick={startSongwritingSession} disabled={isTranscribing}>
+          🎵 Start Songwriting Session
+        </button>
+        <button onClick={stopTranscription} disabled={!isTranscribing}>
+          ⏹️ End Session
+        </button>
+      </div>
+
+      <div className="lyrics-display">
+        <h5>🎤 Live Lyrics:</h5>
+        <div className="current-verse">
+          {currentVerse || 'Speak your lyrics...'}
+        </div>
+
+        <h5>📝 Song Structure:</h5>
+        <div className="lyrics-sections">
+          {songLyrics.map((verse, index) => (
+            <div key={index} className="verse">
+              <strong>Verse {index + 1}:</strong> {verse}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="session-notes">
+        <h5>💡 Session Notes & Ideas:</h5>
+        <ul>
+          {sessionNotes.map((note, index) => (
+            <li key={index}>{note}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+```
+
+**Accessibility & Meeting Notes:**
+```typescript
+export function AccessibleSessionTranscription() {
+  const [meetingNotes, setMeetingNotes] = useState<string>('');
+  const [actionItems, setActionItems] = useState<string[]>([]);
+
+  const { isTranscribing, startTranscription, stopTranscription } = useTranscription({
+    onTranscriptionMessage: useCallback((event) => {
+      const text = event.transcription.text;
+
+      // Auto-extract action items
+      if (text.toLowerCase().includes('need to') ||
+          text.toLowerCase().includes('should') ||
+          text.toLowerCase().includes('todo') ||
+          text.toLowerCase().includes('action item')) {
+        setActionItems(prev => [...prev, text]);
+      }
+
+      // Build meeting notes
+      setMeetingNotes(prev => prev + ' ' + text);
+    }, [])
+  });
+
+  const startAccessibleSession = useCallback(async () => {
+    await startTranscription({
+      language: 'en',
+      model: 'nova-2-meeting', // Optimized for meetings
+      profanity_filter: true, // Clean language for professional sessions
+      punctuate: true,
+      smart_format: true,
+      interim_results: true
+    });
+  }, [startTranscription]);
+
+  return (
+    <div className="accessible-transcription">
+      <h4>♿ Accessible Session Transcription</h4>
+
+      <div className="accessibility-controls">
+        <button onClick={startAccessibleSession} disabled={isTranscribing}>
+          ♿ Start Accessible Session
+        </button>
+        <button onClick={stopTranscription} disabled={!isTranscribing}>
+          ⏹️ Stop Transcription
+        </button>
+      </div>
+
+      <div className="live-captioning">
+        <h5>📺 Live Captioning:</h5>
+        <div className="caption-display">
+          {meetingNotes.slice(-200) || 'Waiting for speech...'}
+        </div>
+      </div>
+
+      <div className="meeting-notes">
+        <h5>📝 Full Meeting Notes:</h5>
+        <div className="notes-content">
+          {meetingNotes || 'No notes yet...'}
+        </div>
+      </div>
+
+      <div className="action-items">
+        <h5>✅ Action Items:</h5>
+        <ul>
+          {actionItems.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+```
+
+### 🎵 **RN'RB Advanced useTranscription Scenarios:**
+
+**1. Multi-Language Music Session:**
+```typescript
+export function MultiLanguageTranscription() {
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  const [languageTranscriptions, setLanguageTranscriptions] = useState<Record<string, string[]>>({});
+
+  const { startTranscription, stopTranscription, isTranscribing } = useTranscription({
+    onTranscriptionMessage: useCallback((event) => {
+      const text = event.transcription.text;
+
+      setLanguageTranscriptions(prev => ({
+        ...prev,
+        [selectedLanguage]: [...(prev[selectedLanguage] || []), text]
+      }));
+    }, [selectedLanguage])
+  });
+
+  const startMultiLanguageSession = useCallback(async (language: string) => {
+    setSelectedLanguage(language);
+
+    const languageConfig = {
+      en: { model: 'nova-2-general', language: 'en' },
+      es: { model: 'nova-2-general', language: 'es' },
+      fr: { model: 'nova-2-general', language: 'fr' },
+      de: { model: 'nova-2-general', language: 'de' },
+      ja: { model: 'nova-2-general', language: 'ja' }
+    };
+
+    await startTranscription(languageConfig[language]);
+  }, [startTranscription]);
+
+  return (
+    <div className="multi-language-transcription">
+      <h4>🌍 Multi-Language Music Session</h4>
+
+      <div className="language-selector">
+        <h5>Select Language:</h5>
+        {['en', 'es', 'fr', 'de', 'ja'].map(lang => (
+          <button
+            key={lang}
+            onClick={() => startMultiLanguageSession(lang)}
+            className={selectedLanguage === lang ? 'active' : ''}
+          >
+            {lang.toUpperCase()}
+          </button>
+        ))}
+      </div>
+
+      <div className="transcription-by-language">
+        {Object.entries(languageTranscriptions).map(([lang, texts]) => (
+          <div key={lang} className="language-section">
+            <h5>{lang.toUpperCase()} Transcription:</h5>
+            <div className="language-text">
+              {texts.join(' ')}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+**2. Professional Session Recording with Transcription:**
+```typescript
+export function ProfessionalRecordingTranscription() {
+  const [sessionTranscript, setSessionTranscript] = useState('');
+  const [recordingId, setRecordingId] = useState<string | null>(null);
+
+  const { isTranscribing, startTranscription, transcriptions } = useTranscription({
+    onTranscriptionStarted: useCallback(async () => {
+      // Start recording when transcription begins
+      try {
+        const recording = await startRecording(roomName, {
+          layout: { preset: 'music-session' }
+        });
+        setRecordingId(recording.id);
+        console.log('RN\'RB: Professional recording started with transcription');
+      } catch (error) {
+        console.error('Failed to start recording:', error);
+      }
+    }, []),
+
+    onTranscriptionMessage: useCallback((event) => {
+      // Build searchable transcript
+      const newText = event.transcription.text;
+      setSessionTranscript(prev => prev + ' ' + newText);
+    }, []),
+
+    onTranscriptionStopped: useCallback(async () => {
+      // Stop recording when transcription ends
+      if (recordingId) {
+        await stopRecording(roomName, recordingId);
+        console.log('RN\'RB: Professional recording stopped');
+
+        // Save transcript with recording metadata
+        await saveTranscriptWithRecording(recordingId, sessionTranscript);
+      }
+    }, [recordingId, sessionTranscript])
+  });
+
+  return (
+    <div className="professional-recording-transcription">
+      <h4>🎬 Professional Session Recording + Transcription</h4>
+
+      <div className="session-status">
+        <div>Transcription: {isTranscribing ? 'Active' : 'Inactive'}</div>
+        <div>Recording: {recordingId ? 'Active' : 'Inactive'}</div>
+      </div>
+
+      <div className="live-transcript">
+        <h5>📝 Live Session Transcript:</h5>
+        <div className="transcript-content">
+          {sessionTranscript || 'Waiting for session to begin...'}
+        </div>
+      </div>
+
+      <div className="transcript-search">
+        <input
+          type="text"
+          placeholder="Search transcript..."
+          onChange={(e) => {
+            // Implement search functionality
+            const searchTerm = e.target.value.toLowerCase();
+            // Highlight matching text in transcript
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+```
+
+**3. Real-time Chord Progression Transcription:**
+```typescript
+export function ChordProgressionTranscription() {
+  const [detectedChords, setDetectedChords] = useState<string[]>([]);
+  const [chordProgression, setChordProgression] = useState<string[]>([]);
+
+  const { startTranscription } = useTranscription({
+    onTranscriptionMessage: useCallback((event) => {
+      const text = event.transcription.text.toLowerCase();
+
+      // Chord detection patterns
+      const chordPatterns = [
+        /\b[a-g](#|b)?(?:maj|min|m|dim|aug|sus|add|7|9|11|13)?\d*\b/g,
+        /\b(?:i|ii|iii|iv|v|vi|vii)(?:maj|min|m|dim|aug|sus|add|7|9|11|13)?\d*\b/g
+      ];
+
+      chordPatterns.forEach(pattern => {
+        const matches = text.match(pattern);
+        if (matches) {
+          setDetectedChords(prev => [...prev, ...matches]);
+
+          // Build progression if multiple chords detected in sequence
+          if (matches.length > 1) {
+            setChordProgression(prev => [...prev, matches.join(' - ')]);
+          }
+        }
+      });
+    }, [])
+  });
+
+  const startChordTranscription = useCallback(async () => {
+    await startTranscription({
+      language: 'en',
+      model: 'nova-2-general',
+      keywords: ['chord', 'progression', 'maj', 'min', '7', '9', '11', '13'],
+      interim_results: true
+    });
+  }, [startTranscription]);
+
+  return (
+    <div className="chord-transcription">
+      <h4>🎸 Chord Progression Transcription</h4>
+
+      <button onClick={startChordTranscription}>
+        🎵 Start Chord Transcription
+      </button>
+
+      <div className="detected-chords">
+        <h5>Detected Chords:</h5>
+        <div className="chord-list">
+          {detectedChords.map((chord, index) => (
+            <span key={index} className="chord-tag">{chord}</span>
+          ))}
+        </div>
+      </div>
+
+      <div className="chord-progressions">
+        <h5>Chord Progressions:</h5>
+        <div className="progression-list">
+          {chordProgression.map((prog, index) => (
+            <div key={index} className="progression-item">
+              {prog}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### 🎯 **RN'RB useTranscription Benefits:**
+
+**Real-time Music Collaboration:**
+1. **Live Lyrics Capture** - Transcribe song lyrics as they're sung
+2. **Session Notes** - Capture feedback, ideas, and discussions
+3. **Chord Progressions** - Transcribe musical directions and chord changes
+4. **Collaborative Songwriting** - Multiple musicians contributing lyrics simultaneously
+5. **Accessibility Support** - Real-time captioning for hearing-impaired musicians
+6. **Searchable Archives** - Full-text search through session recordings
+7. **Multi-language Support** - International music collaboration
+8. **Meeting Documentation** - Automatic meeting notes and action items
+
+**Technical Advantages:**
+- **Deepgram Integration** - High-quality speech recognition
+- **Real-time Processing** - Live transcription with interim results
+- **Configurable Models** - Choose appropriate models for music content
+- **Event-driven Updates** - Reactive UI updates
+- **Error Handling** - Comprehensive transcription error management
+- **Participant Tracking** - Know who initiated transcription
+- **Language Flexibility** - Support for multiple languages
+
+**Common RN'RB Use Cases:**
+- ✅ **Live Lyrics Transcription** - Capture song lyrics in real-time
+- ✅ **Session Feedback** - Transcribe musician feedback and notes
+- ✅ **Chord Progression Notes** - Document musical directions
+- ✅ **Collaborative Songwriting** - Multi-user lyric contribution
+- ✅ **Accessibility Features** - Real-time captioning for inclusivity
+- ✅ **Meeting Documentation** - Automatic session notes and action items
+- ✅ **Searchable Archives** - Full-text search through recordings
+- ✅ **International Sessions** - Multi-language music collaboration
+
+### 🎯 **Implementation Assessment for RN'RB:**
+
+**Priority Level:** High - Essential for music collaboration and accessibility
+
+**Essential Use Cases:**
+- ✅ **Live Lyrics Transcription** - Core songwriting feature
+- ✅ **Session Notes & Feedback** - Essential collaboration tool
+- ✅ **Accessibility Support** - Important for inclusive music sessions
+- ✅ **Chord Progression Documentation** - Musical direction tracking
+- ✅ **Meeting Documentation** - Professional session management
+- ✅ **Multi-language Support** - International collaboration
+
+**Implementation Pattern:**
+```typescript
+// RN'RB Transcription Management System
+export function RNBMusicTranscriptionManager() {
+  return (
+    <div className="rnb-transcription-manager">
+      <MusicSessionTranscription />
+      <SongwritingTranscription />
+      <AccessibleSessionTranscription />
+      <MultiLanguageTranscription />
+      <ProfessionalRecordingTranscription />
+      <ChordProgressionTranscription />
+    </div>
+  );
+}
+```
+
+**Recommendation:** Implement for comprehensive music collaboration - essential for live lyrics capture, accessibility, and session documentation.
+
+---
+
+**Agent 18 Daily.co useTranscription Hook Analysis Complete (2025-11-17)**
+
+**Real-time transcription capabilities documented - RN'RB now has live speech-to-text for music collaboration, accessibility, and session documentation.**
+
+---
+
+## 🍄 Agent 18 - Daily.co useWaitingParticipants Hook Documentation Analysis
+
+**Mission:** Analyze Daily.co useWaitingParticipants hook for controlled access management in RN'RB music collaboration.
+
+**Date:** 2025-11-17
+
+### 📋 **useWaitingParticipants Hook Overview:**
+
+**Hook:** `useWaitingParticipants(params?): WaitingParticipantsObject`
+
+**Purpose:** Provides access to participants waiting for access to the call, with methods to grant or deny entry for controlled session management.
+
+**Key Features:**
+- **Waiting Participant List** - Access to all participants awaiting admission
+- **Access Control** - Grant or deny access to individual or all waiting participants
+- **Event Callbacks** - Handle waiting participant state changes
+- **Bulk Operations** - Admit or deny all waiting participants at once
+- **Session Management** - Essential for private and controlled music sessions
+- **Participant Details** - Access to waiting participant information
+
+**Return Type:** `{ waitingParticipants: Object[]; grantAccess: function; denyAccess: function }`
+
+### 🎵 **RN'RB useWaitingParticipants Integration Scenarios:**
+
+**Private Music Session Access Control:**
+```typescript
+import { useWaitingParticipants } from '@daily-co/daily-react';
+import { useCallback } from 'react';
+
+export function MusicSessionAccessControl() {
+  const {
+    waitingParticipants,
+    grantAccess,
+    denyAccess
+  } = useWaitingParticipants({
+    onWaitingParticipantAdded: useCallback((event) => {
+      console.log('RN\'RB: New musician waiting for session access:', event.participant);
+      // Could play notification sound or show toast
+    }, []),
+
+    onWaitingParticipantUpdated: useCallback((event) => {
+      console.log('RN\'RB: Waiting musician updated:', event.participant);
+    }, []),
+
+    onWaitingParticipantRemoved: useCallback((event) => {
+      console.log('RN\'RB: Musician removed from waiting list:', event.participant);
+    }, [])
+  });
+
+  const admitMusician = useCallback(async (sessionId: string) => {
+    try {
+      await grantAccess(sessionId);
+      console.log('RN\'RB: Musician admitted to session');
+    } catch (error) {
+      console.error('RN\'RB: Failed to admit musician:', error);
+    }
+  }, [grantAccess]);
+
+  const denyMusician = useCallback(async (sessionId: string) => {
+    try {
+      await denyAccess(sessionId);
+      console.log('RN\'RB: Musician denied session access');
+    } catch (error) {
+      console.error('RN\'RB: Failed to deny musician:', error);
+    }
+  }, [denyAccess]);
+
+  const admitAllMusicians = useCallback(async () => {
+    try {
+      await grantAccess('*');
+      console.log('RN\'RB: All waiting musicians admitted to session');
+    } catch (error) {
+      console.error('RN\'RB: Failed to admit all musicians:', error);
+    }
+  }, [grantAccess]);
+
+  const denyAllMusicians = useCallback(async () => {
+    try {
+      await denyAccess('*');
+      console.log('RN\'RB: All waiting musicians denied session access');
+    } catch (error) {
+      console.error('RN\'RB: Failed to deny all musicians:', error);
+    }
+  }, [denyAccess]);
+
+  return (
+    <div className="rnb-access-control">
+      <h4>🎸 Session Access Control</h4>
+
+      <div className="waiting-list">
+        <h5>🎤 Musicians Waiting for Access ({waitingParticipants.length})</h5>
+
+        {waitingParticipants.length === 0 ? (
+          <div className="no-waiting">No musicians waiting for access</div>
+        ) : (
+          <div className="waiting-participants-list">
+            {waitingParticipants.map((participant) => (
+              <div key={participant.sessionId} className="waiting-participant">
+                <div className="participant-info">
+                  <span className="participant-name">
+                    {participant.name || participant.user_name || `Musician ${participant.sessionId.slice(-4)}`}
+                  </span>
+                  <span className="waiting-time">
+                    Waiting since: {new Date(participant.joinedAt || Date.now()).toLocaleTimeString()}
+                  </span>
+                </div>
+
+                <div className="access-controls">
+                  <button
+                    onClick={() => admitMusician(participant.sessionId)}
+                    className="admit-btn"
+                  >
+                    ✅ Admit
+                  </button>
+                  <button
+                    onClick={() => denyMusician(participant.sessionId)}
+                    className="deny-btn"
+                  >
+                    ❌ Deny
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {waitingParticipants.length > 0 && (
+          <div className="bulk-controls">
+            <h6>Bulk Actions:</h6>
+            <button onClick={admitAllMusicians} className="admit-all-btn">
+              🎸 Admit All Musicians
+            </button>
+            <button onClick={denyAllMusicians} className="deny-all-btn">
+              🚫 Deny All
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+**Professional Studio Session Management:**
+```typescript
+export function StudioSessionManager() {
+  const [sessionType, setSessionType] = useState<'rehearsal' | 'recording' | 'performance'>('rehearsal');
+  const {
+    waitingParticipants,
+    grantAccess,
+    denyAccess
+  } = useWaitingParticipants();
+
+  const accessPolicy = useMemo(() => {
+    switch (sessionType) {
+      case 'rehearsal':
+        return { maxParticipants: 10, autoAdmit: true };
+      case 'recording':
+        return { maxParticipants: 6, autoAdmit: false }; // Strict control for recording
+      case 'performance':
+        return { maxParticipants: 20, autoAdmit: false }; // Controlled audience
+      default:
+        return { maxParticipants: 10, autoAdmit: false };
+    }
+  }, [sessionType]);
+
+  const admitWithPolicyCheck = useCallback(async (sessionId: string) => {
+    // Check if admitting this participant would exceed capacity
+    const currentParticipants = 4; // This would come from useParticipantIds
+    const availableSlots = accessPolicy.maxParticipants - currentParticipants;
+
+    if (availableSlots <= 0) {
+      console.log('RN\'RB: Session at capacity, cannot admit more participants');
+      return;
+    }
+
+    try {
+      await grantAccess(sessionId);
+      console.log('RN\'RB: Participant admitted under policy');
+    } catch (error) {
+      console.error('RN\'RB: Failed to admit participant:', error);
+    }
+  }, [grantAccess, accessPolicy]);
+
+  const handleSessionTypeChange = useCallback((newType: string) => {
+    setSessionType(newType as any);
+    // Could automatically deny excess participants when switching to more restrictive session
+  }, []);
+
+  return (
+    <div className="studio-session-manager">
+      <h4>🎼 Professional Studio Session Manager</h4>
+
+      <div className="session-type-selector">
+        <h5>Session Type:</h5>
+        <select value={sessionType} onChange={(e) => handleSessionTypeChange(e.target.value)}>
+          <option value="rehearsal">🎸 Rehearsal (Max 10, Auto-admit)</option>
+          <option value="recording">🎬 Recording (Max 6, Manual control)</option>
+          <option value="performance">🎪 Performance (Max 20, Controlled access)</option>
+        </select>
+      </div>
+
+      <div className="access-policy">
+        <h5>Access Policy:</h5>
+        <div>Max Participants: {accessPolicy.maxParticipants}</div>
+        <div>Auto-Admit: {accessPolicy.autoAdmit ? 'Yes' : 'No'}</div>
+        <div>Available Slots: {accessPolicy.maxParticipants - 4}</div>
+      </div>
+
+      <div className="waiting-queue">
+        <h5>🎤 Waiting Queue ({waitingParticipants.length})</h5>
+
+        {waitingParticipants.map((participant, index) => (
+          <div key={participant.sessionId} className="queue-item">
+            <div className="queue-position">#{index + 1}</div>
+            <div className="participant-details">
+              <div className="name">
+                {participant.name || participant.user_name || `Artist ${participant.sessionId.slice(-4)}`}
+              </div>
+              <div className="role">
+                {participant.role || 'Musician'}
+              </div>
+            </div>
+            <div className="queue-actions">
+              <button
+                onClick={() => admitWithPolicyCheck(participant.sessionId)}
+                disabled={accessPolicy.maxParticipants - 4 <= 0}
+                className="admit-queue-btn"
+              >
+                🎸 Admit
+              </button>
+              <button
+                onClick={() => denyAccess(participant.sessionId)}
+                className="deny-queue-btn"
+              >
+                🚫 Deny
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+**VIP Music Event Access Control:**
+```typescript
+export function VIPMusicEventAccess() {
+  const [vipList, setVipList] = useState<Set<string>>(new Set(['vip1', 'vip2', 'vip3']));
+  const {
+    waitingParticipants,
+    grantAccess,
+    denyAccess
+  } = useWaitingParticipants();
+
+  const isVIP = useCallback((participantId: string) => {
+    return vipList.has(participantId);
+  }, [vipList]);
+
+  const admitVIPs = useCallback(async () => {
+    const vipParticipants = waitingParticipants.filter(p => isVIP(p.sessionId));
+    try {
+      // Admit all VIPs
+      for (const vip of vipParticipants) {
+        await grantAccess(vip.sessionId);
+      }
+      console.log('RN\'RB: All VIP musicians admitted');
+    } catch (error) {
+      console.error('RN\'RB: Failed to admit VIPs:', error);
+    }
+  }, [waitingParticipants, grantAccess, isVIP]);
+
+  const admitPriorityOrder = useCallback(async () => {
+    // Admit VIPs first, then others
+    const vips = waitingParticipants.filter(p => isVIP(p.sessionId));
+    const regular = waitingParticipants.filter(p => !isVIP(p.sessionId));
+
+    try {
+      // Admit VIPs first
+      for (const vip of vips) {
+        await grantAccess(vip.sessionId);
+      }
+      // Then admit regular participants
+      for (const regularParticipant of regular) {
+        await grantAccess(regularParticipant.sessionId);
+      }
+      console.log('RN\'RB: Participants admitted by priority');
+    } catch (error) {
+      console.error('RN\'RB: Failed to admit by priority:', error);
+    }
+  }, [waitingParticipants, grantAccess, isVIP]);
+
+  const vipsWaiting = waitingParticipants.filter(p => isVIP(p.sessionId));
+  const regularWaiting = waitingParticipants.filter(p => !isVIP(p.sessionId));
+
+  return (
+    <div className="vip-event-access">
+      <h4>⭐ VIP Music Event Access Control</h4>
+
+      <div className="waiting-breakdown">
+        <div className="vip-waiting">
+          <h5>🎸 VIP Musicians Waiting: {vipsWaiting.length}</h5>
+          {vipsWaiting.map((participant) => (
+            <div key={participant.sessionId} className="vip-participant">
+              <span className="vip-badge">⭐ VIP</span>
+              <span className="participant-name">
+                {participant.name || participant.user_name}
+              </span>
+              <button
+                onClick={() => grantAccess(participant.sessionId)}
+                className="vip-admit-btn"
+              >
+                🎸 Admit VIP
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="regular-waiting">
+          <h5>🎤 Regular Participants Waiting: {regularWaiting.length}</h5>
+          {regularWaiting.map((participant) => (
+            <div key={participant.sessionId} className="regular-participant">
+              <span className="participant-name">
+                {participant.name || participant.user_name}
+              </span>
+              <button
+                onClick={() => grantAccess(participant.sessionId)}
+                className="regular-admit-btn"
+              >
+                ✅ Admit
+              </button>
+              <button
+                onClick={() => denyAccess(participant.sessionId)}
+                className="regular-deny-btn"
+              >
+                ❌ Deny
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bulk-vip-actions">
+        <h5>🎪 Bulk Actions:</h5>
+        <button onClick={admitVIPs} disabled={vipsWaiting.length === 0}>
+          ⭐ Admit All VIPs ({vipsWaiting.length})
+        </button>
+        <button onClick={admitPriorityOrder} disabled={waitingParticipants.length === 0}>
+          🎯 Admit by Priority (VIPs First)
+        </button>
+        <button onClick={() => denyAccess('*')} disabled={waitingParticipants.length === 0}>
+          🚫 Clear Waiting List
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+### 🎵 **RN'RB Advanced useWaitingParticipants Scenarios:**
+
+**1. Role-Based Session Access:**
+```typescript
+export function RoleBasedSessionAccess() {
+  const [sessionRoles, setSessionRoles] = useState({
+    producers: new Set(['prod1', 'prod2']),
+    musicians: new Set(['mus1', 'mus2', 'mus3']),
+    audience: new Set(['aud1', 'aud2'])
+  });
+
+  const { waitingParticipants, grantAccess, denyAccess } = useWaitingParticipants();
+
+  const admitByRole = useCallback(async (role: keyof typeof sessionRoles) => {
+    const roleParticipants = waitingParticipants.filter(p => sessionRoles[role].has(p.sessionId));
+    try {
+      for (const participant of roleParticipants) {
+        await grantAccess(participant.sessionId);
+      }
+      console.log(`RN\'RB: All ${role} admitted to session`);
+    } catch (error) {
+      console.error(`RN\'RB: Failed to admit ${role}:`, error);
+    }
+  }, [waitingParticipants, grantAccess, sessionRoles]);
+
+  const getParticipantsByRole = useCallback((role: keyof typeof sessionRoles) => {
+    return waitingParticipants.filter(p => sessionRoles[role].has(p.sessionId));
+  }, [waitingParticipants, sessionRoles]);
+
+  return (
+    <div className="role-based-access">
+      <h4>👥 Role-Based Session Access</h4>
+
+      <div className="role-breakdown">
+        <div className="role-section">
+          <h5>🎹 Producers ({getParticipantsByRole('producers').length})</h5>
+          <button onClick={() => admitByRole('producers')}>
+            🎹 Admit All Producers
+          </button>
+        </div>
+
+        <div className="role-section">
+          <h5>🎸 Musicians ({getParticipantsByRole('musicians').length})</h5>
+          <button onClick={() => admitByRole('musicians')}>
+            🎸 Admit All Musicians
+          </button>
+        </div>
+
+        <div className="role-section">
+          <h5>👥 Audience ({getParticipantsByRole('audience').length})</h5>
+          <button onClick={() => admitByRole('audience')}>
+            👥 Admit All Audience
+          </button>
+        </div>
+      </div>
+
+      <div className="individual-admission">
+        <h5>🎯 Individual Admission:</h5>
+        {waitingParticipants.map((participant) => {
+          const role = Object.keys(sessionRoles).find(r =>
+            sessionRoles[r as keyof typeof sessionRoles].has(participant.sessionId)
+          );
+          return (
+            <div key={participant.sessionId} className="individual-participant">
+              <span>{participant.name || participant.user_name}</span>
+              <span className="role-badge">{role || 'Unknown'}</span>
+              <button onClick={() => grantAccess(participant.sessionId)}>
+                ✅ Admit
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+```
+
+**2. Time-Based Access Control:**
+```typescript
+export function TimeBasedAccessControl() {
+  const [accessSchedule, setAccessSchedule] = useState({
+    doorsOpen: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes from now
+    vipEarlyAccess: new Date(Date.now() + 30 * 60 * 1000), // 30 minutes from now
+    generalAdmission: new Date(Date.now() + 60 * 60 * 1000) // 1 hour from now
+  });
+
+  const { waitingParticipants, grantAccess } = useWaitingParticipants();
+
+  const checkAccessTime = useCallback(() => {
+    const now = new Date();
+
+    if (now >= accessSchedule.generalAdmission) {
+      return 'general';
+    } else if (now >= accessSchedule.doorsOpen) {
+      return 'doors-open';
+    } else if (now >= accessSchedule.vipEarlyAccess) {
+      return 'vip-early';
+    } else {
+      return 'closed';
+    }
+  }, [accessSchedule]);
+
+  const admitBasedOnTime = useCallback(async () => {
+    const accessLevel = checkAccessTime();
+    const participantsToAdmit = waitingParticipants.filter(participant => {
+      // Logic to determine which participants can be admitted based on time
+      // This would be based on participant type (VIP, general, etc.)
+      return true; // Placeholder logic
+    });
+
+    try {
+      for (const participant of participantsToAdmit) {
+        await grantAccess(participant.sessionId);
+      }
+      console.log('RN\'RB: Participants admitted based on schedule');
+    } catch (error) {
+      console.error('RN\'RB: Failed to admit based on time:', error);
+    }
+  }, [waitingParticipants, grantAccess, checkAccessTime]);
+
+  return (
+    <div className="time-based-access">
+      <h4>⏰ Time-Based Access Control</h4>
+
+      <div className="access-schedule">
+        <h5>🎪 Event Schedule:</h5>
+        <div>VIP Early Access: {accessSchedule.vipEarlyAccess.toLocaleTimeString()}</div>
+        <div>Doors Open: {accessSchedule.doorsOpen.toLocaleTimeString()}</div>
+        <div>General Admission: {accessSchedule.generalAdmission.toLocaleTimeString()}</div>
+        <div className="current-status">
+          Current Status: {checkAccessTime().toUpperCase()}
+        </div>
+      </div>
+
+      <div className="waiting-queue">
+        <h5>🎸 Waiting Musicians ({waitingParticipants.length})</h5>
+        <button onClick={admitBasedOnTime} disabled={checkAccessTime() === 'closed'}>
+          🎪 Admit Based on Schedule
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+**3. Capacity-Based Session Control:**
+```typescript
+export function CapacityBasedSessionControl() {
+  const [sessionCapacity, setSessionCapacity] = useState({
+    maxParticipants: 12,
+    reservedSlots: 2, // For producers/engineers
+    currentParticipants: 4
+  });
+
+  const { waitingParticipants, grantAccess, denyAccess } = useWaitingParticipants();
+
+  const availableSlots = sessionCapacity.maxParticipants - sessionCapacity.currentParticipants;
+  const reservedSlots = sessionCapacity.maxParticipants - sessionCapacity.reservedSlots - sessionCapacity.currentParticipants;
+
+  const admitUpToCapacity = useCallback(async () => {
+    const slotsToFill = Math.min(availableSlots, waitingParticipants.length);
+    const participantsToAdmit = waitingParticipants.slice(0, slotsToFill);
+
+    try {
+      for (const participant of participantsToAdmit) {
+        await grantAccess(participant.sessionId);
+      }
+      console.log(`RN\'RB: Admitted ${slotsToFill} participants up to capacity`);
+    } catch (error) {
+      console.error('RN\'RB: Failed to admit up to capacity:', error);
+    }
+  }, [waitingParticipants, grantAccess, availableSlots]);
+
+  return (
+    <div className="capacity-based-control">
+      <h4>🎛️ Capacity-Based Session Control</h4>
+
+      <div className="capacity-info">
+        <h5>🎪 Session Capacity:</h5>
+        <div>Max Participants: {sessionCapacity.maxParticipants}</div>
+        <div>Current Participants: {sessionCapacity.currentParticipants}</div>
+        <div>Available Slots: {availableSlots}</div>
+        <div>Reserved Slots: {reservedSlots}</div>
+      </div>
+
+      <div className="capacity-actions">
+        <button
+          onClick={admitUpToCapacity}
+          disabled={availableSlots <= 0 || waitingParticipants.length === 0}
+        >
+          🎸 Fill Available Slots ({availableSlots})
+        </button>
+
+        <button
+          onClick={() => denyAccess('*')}
+          disabled={waitingParticipants.length === 0}
+        >
+          🚫 Clear Waiting List
+        </button>
+      </div>
+
+      <div className="waiting-list">
+        <h5>🎤 Waiting List ({waitingParticipants.length})</h5>
+        {waitingParticipants.map((participant, index) => (
+          <div key={participant.sessionId} className="waiting-item">
+            <span className="position">#{index + 1}</span>
+            <span className="name">
+              {participant.name || participant.user_name}
+            </span>
+            <span className={`admission-status ${index < availableSlots ? 'can-admit' : 'waiting'}`}>
+              {index < availableSlots ? '🎸 Can Admit' : '⏳ Waiting'}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+### 🎯 **RN'RB useWaitingParticipants Benefits:**
+
+**Controlled Session Management:**
+1. **Private Sessions** - Control who enters music collaboration sessions
+2. **Professional Access** - Manage admission to recording sessions and performances
+3. **Capacity Control** - Limit participants based on session type and resources
+4. **Role-Based Access** - Different admission rules for producers, musicians, audience
+5. **Time-Based Entry** - Scheduled admission for events and performances
+6. **VIP Management** - Priority access for important collaborators
+7. **Bulk Operations** - Admit or deny multiple participants efficiently
+8. **Event-Driven Updates** - Real-time waiting list management
+
+**Technical Advantages:**
+- **Bulk Access Control** - Admit/deny all or individual participants
+- **Event Callbacks** - React to waiting participant changes
+- **Participant Information** - Access to waiting participant details
+- **Session Management** - Essential for controlled music environments
+- **Scalable Control** - Handle large waiting lists efficiently
+- **Flexible Policies** - Implement custom admission rules
+- **Real-time Updates** - Immediate UI updates for waiting list changes
+
+**Common RN'RB Use Cases:**
+- ✅ **Private Music Sessions** - Controlled access to exclusive collaborations
+- ✅ **Recording Studio Control** - Limited access for professional recording
+- ✅ **Live Performance Access** - Managed audience admission
+- ✅ **VIP Music Events** - Priority access for special guests
+- ✅ **Role-Based Admission** - Different rules for producers vs musicians vs audience
+- ✅ **Capacity Management** - Control session size based on resources
+- ✅ **Time-Scheduled Events** - Controlled admission timing
+- ✅ **Bulk Admission** - Efficient management of large waiting lists
+
+### 🎯 **Implementation Assessment for RN'RB:**
+
+**Priority Level:** High - Essential for professional music session management
+
+**Essential Use Cases:**
+- ✅ **Private Session Control** - Essential for exclusive music collaborations
+- ✅ **Recording Session Access** - Critical for professional recording environments
+- ✅ **Live Event Management** - Important for performances and concerts
+- ✅ **Capacity Control** - Necessary for resource management
+- ✅ **Role-Based Access** - Important for different participant types
+- ✅ **VIP Management** - Valuable for special music events
+
+**Implementation Pattern:**
+```typescript
+// RN'RB Access Control Management System
+export function RNBAccessControlManager() {
+  return (
+    <div className="rnb-access-manager">
+      <MusicSessionAccessControl />
+      <StudioSessionManager />
+      <VIPMusicEventAccess />
+      <RoleBasedSessionAccess />
+      <TimeBasedAccessControl />
+      <CapacityBasedSessionControl />
+    </div>
+  );
+}
+```
+
+**Recommendation:** Implement for professional session management - essential for controlled access to music collaboration environments.
+
+---
+
+**Agent 18 Daily.co useWaitingParticipants Hook Analysis Complete (2025-11-17)**
+
+**Controlled access management documented - RN'RB now has complete session admission control for professional music collaboration.**
+
+---
+
+## 🍄 Agent 18 - Daily.co Webhook System Documentation Analysis
+
+**Mission:** Analyze Daily.co webhook system for asynchronous event notifications and real-time music collaboration workflows in RN'RB.
+
+**Date:** 2025-11-17
+
+### 📋 **Daily.co Webhook System Overview:**
+
+**Purpose:** Asynchronous event notification system that POSTs real-time updates about Daily activities to configured endpoints, enabling automated workflows and real-time responses for music collaboration.
+
+**Key Features:**
+- **Asynchronous Event Delivery** - Real-time notifications without API polling
+- **Comprehensive Event Coverage** - Meetings, participants, recordings, transcription, streaming
+- **Security & Verification** - HMAC signature validation and optional basic auth
+- **Reliability** - Circuit breaker pattern and exponential retry mechanisms
+- **Scalable Architecture** - Domain-wide webhook configuration
+- **Real-time Workflows** - Automated responses to music session events
+
+**Core Endpoints:**
+- `POST /webhooks` - Create webhook
+- `DELETE /webhooks/:uuid` - Delete webhook
+- `GET /webhooks` - List webhooks
+- `GET /webhooks/:uuid` - Get webhook info
+- `POST /webhooks/:uuid` - Update/reactivate webhook
+
+### 🎵 **RN'RB Webhook Integration Scenarios:**
+
+**Recording Workflow Automation:**
+```typescript
+// RN'RB Recording Workflow Webhook Handler
+export async function handleRecordingWebhook(event: any) {
+  const { type, data } = event;
+
+  switch (type) {
+    case 'recording.started':
+      console.log('RN\'RB: Recording started for session:', data.room_name);
+      // Update session status in database
+      await updateSessionStatus(data.room_name, 'recording');
+      // Notify participants via in-app message
+      await notifyParticipants(data.room_name, 'Recording has started');
+      break;
+
+    case 'recording.ready-to-download':
+      console.log('RN\'RB: Recording ready for download:', data.id);
+      // Generate secure download link
+      const downloadLink = await generateSecureDownloadLink(data.id);
+      // Email download link to session participants
+      await emailDownloadLink(data.room_name, downloadLink);
+      // Archive recording metadata
+      await archiveRecordingMetadata(data);
+      break;
+
+    case 'recording.error':
+      console.error('RN\'RB: Recording error:', data.error);
+      // Alert session producer
+      await alertProducer(data.room_name, `Recording failed: ${data.error}`);
+      // Attempt recovery or cleanup
+      await handleRecordingError(data);
+      break;
+  }
+}
+```
+
+**Session Management Automation:**
+```typescript
+// RN'RB Session Management Webhook Handler
+export async function handleSessionWebhook(event: any) {
+  const { type, data } = event;
+
+  switch (type) {
+    case 'meeting.started':
+      console.log('RN\'RB: Music session started:', data.room_name);
+      // Initialize session analytics
+      await initializeSessionAnalytics(data.room_name, data.id);
+      // Set up automated tasks (recording, transcription, etc.)
+      await setupSessionAutomation(data);
+      break;
+
+    case 'meeting.ended':
+      console.log('RN\'RB: Music session ended:', data.room_name);
+      // Finalize recordings and generate reports
+      await finalizeSessionRecordings(data.room_name);
+      // Generate session summary
+      await generateSessionReport(data);
+      // Clean up temporary resources
+      await cleanupSessionResources(data.room_name);
+      break;
+
+    case 'participant.joined':
+      console.log('RN\'RB: Musician joined session:', data.participant.name);
+      // Update participant analytics
+      await updateParticipantAnalytics(data.room_name, data.participant, 'joined');
+      // Trigger welcome message or instructions
+      await sendWelcomeMessage(data.participant.sessionId);
+      break;
+
+    case 'participant.left':
+      console.log('RN\'RB: Musician left session:', data.participant.name);
+      // Update departure analytics
+      await updateParticipantAnalytics(data.room_name, data.participant, 'left');
+      // Check if session should be cleaned up
+      await checkSessionCleanup(data.room_name);
+      break;
+  }
+}
+```
+
+**Transcription Workflow Integration:**
+```typescript
+// RN'RB Transcription Webhook Handler
+export async function handleTranscriptionWebhook(event: any) {
+  const { type, data } = event;
+
+  switch (type) {
+    case 'transcript.started':
+      console.log('RN\'RB: Transcription started for session:', data.room_name);
+      // Initialize transcription tracking
+      await initializeTranscriptionTracking(data.room_name, data.id);
+      break;
+
+    case 'transcript.ready-to-download':
+      console.log('RN\'RB: Transcription ready for download:', data.id);
+      // Process and format transcription
+      const formattedTranscript = await processTranscription(data.id);
+      // Extract song lyrics and session notes
+      const { lyrics, notes } = await extractLyricsAndNotes(formattedTranscript);
+      // Save to session database
+      await saveLyricsToSession(data.room_name, lyrics);
+      await saveSessionNotes(data.room_name, notes);
+      // Generate searchable transcript
+      await createSearchableTranscript(data.room_name, formattedTranscript);
+      break;
+
+    case 'transcript.error':
+      console.error('RN\'RB: Transcription error:', data.error);
+      // Fallback to manual transcription or retry
+      await handleTranscriptionError(data);
+      break;
+  }
+}
+```
+
+### 🎵 **RN'RB Webhook Implementation Patterns:**
+
+**1. Webhook Server Setup:**
+```typescript
+// RN'RB Webhook Server Implementation
+import express from 'express';
+import crypto from 'crypto';
+
+const app = express();
+app.use(express.json());
+
+// Store webhook secrets securely
+const webhookSecrets = new Map<string, string>();
+
+// RN'RB Webhook Verification Middleware
+function verifyWebhook(req: any, res: any, next: any) {
+  const signature = req.headers['x-webhook-signature'];
+  const timestamp = req.headers['x-webhook-timestamp'];
+  const body = JSON.stringify(req.body);
+
+  // Get the webhook secret (you'd store this securely)
+  const webhookId = req.body.room_name; // Or however you identify the webhook
+  const secret = webhookSecrets.get(webhookId);
+
+  if (!secret || !signature || !timestamp) {
+    return res.status(401).json({ error: 'Invalid webhook signature' });
+  }
+
+  // Verify HMAC signature
+  const base64DecodedSecret = Buffer.from(secret, 'base64');
+  const hmac = crypto.createHmac('sha256', base64DecodedSecret);
+  const computedSignature = hmac.update(`${timestamp}.${body}`).digest('base64');
+
+  if (computedSignature !== signature) {
+    return res.status(401).json({ error: 'Invalid signature' });
+  }
+
+  next();
+}
+
+// RN'RB Main Webhook Endpoint
+app.post('/webhooks/daily', verifyWebhook, async (req, res) => {
+  try {
+    const event = req.body;
+
+    // Respond immediately to avoid timeout
+    res.status(200).json({ received: true });
+
+    // Process event asynchronously
+    setImmediate(() => {
+      processDailyEvent(event);
+    });
+  } catch (error) {
+    console.error('Webhook processing error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// RN'RB Event Processing
+async function processDailyEvent(event: any) {
+  const { type } = event;
+
+  try {
+    switch (type) {
+      case 'recording.started':
+      case 'recording.ready-to-download':
+      case 'recording.error':
+        await handleRecordingWebhook(event);
+        break;
+
+      case 'meeting.started':
+      case 'meeting.ended':
+      case 'participant.joined':
+      case 'participant.left':
+        await handleSessionWebhook(event);
+        break;
+
+      case 'transcript.started':
+      case 'transcript.ready-to-download':
+      case 'transcript.error':
+        await handleTranscriptionWebhook(event);
+        break;
+
+      default:
+        console.log('RN\'RB: Unhandled webhook event:', type);
+    }
+  } catch (error) {
+    console.error('RN\'RB: Error processing webhook event:', error);
+    // Could implement retry logic or dead letter queue
+  }
+}
+
+// RN'RB Webhook Registration
+async function registerRNBWebhooks() {
+  const webhooks = [
+    {
+      url: `${process.env.RNB_WEBHOOK_BASE_URL}/webhooks/daily`,
+      eventTypes: [
+        'recording.started',
+        'recording.ready-to-download',
+        'recording.error',
+        'meeting.started',
+        'meeting.ended',
+        'participant.joined',
+        'participant.left',
+        'transcript.started',
+        'transcript.ready-to-download',
+        'transcript.error'
+      ]
+    }
+  ];
+
+  for (const webhook of webhooks) {
+    try {
+      const response = await fetch('https://api.daily.co/v1/webhooks', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.DAILY_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(webhook)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Store the HMAC secret securely
+        webhookSecrets.set(data.uuid, data.hmac);
+        console.log('RN\'RB: Webhook registered successfully:', data.uuid);
+      } else {
+        console.error('RN\'RB: Failed to register webhook:', data);
+      }
+    } catch (error) {
+      console.error('RN\'RB: Error registering webhook:', error);
+    }
+  }
+}
+
+export { app, registerRNBWebhooks };
+```
+
+**2. Database Integration for Webhook Data:**
+```typescript
+// RN'RB Webhook Event Storage and Processing
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+// RN'RB Webhook Event Schema (add to Prisma schema)
+/*
+model WebhookEvent {
+  id          String   @id @default(cuid())
+  type        String
+  roomName    String?
+  sessionId   String?
+  participantId String?
+  data        Json
+  processed   Boolean  @default(false)
+  processedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([type])
+  @@index([roomName])
+  @@index([processed])
+}
+*/
+
+export async function storeWebhookEvent(event: any) {
+  try {
+    await prisma.webhookEvent.create({
+      data: {
+        type: event.type,
+        roomName: event.data?.room_name,
+        sessionId: event.data?.id,
+        participantId: event.data?.participant?.sessionId,
+        data: event
+      }
+    });
+  } catch (error) {
+    console.error('RN\'RB: Failed to store webhook event:', error);
+  }
+}
+
+export async function processPendingWebhookEvents() {
+  const pendingEvents = await prisma.webhookEvent.findMany({
+    where: { processed: false },
+    orderBy: { createdAt: 'asc' },
+    take: 10 // Process in batches
+  });
+
+  for (const event of pendingEvents) {
+    try {
+      await processDailyEvent(event.data as any);
+      await prisma.webhookEvent.update({
+        where: { id: event.id },
+        data: {
+          processed: true,
+          processedAt: new Date()
+        }
+      });
+    } catch (error) {
+      console.error('RN\'RB: Failed to process webhook event:', event.id, error);
+      // Could implement retry logic or dead letter queue
+    }
+  }
+}
+
+export async function getSessionEvents(roomName: string, eventTypes?: string[]) {
+  const where: any = { roomName };
+
+  if (eventTypes) {
+    where.type = { in: eventTypes };
+  }
+
+  return await prisma.webhookEvent.findMany({
+    where,
+    orderBy: { createdAt: 'desc' }
+  });
+}
+```
+
+**3. Real-time Dashboard Updates:**
+```typescript
+// RN'RB Real-time Dashboard with Webhook Integration
+import { useEffect, useState } from 'react';
+
+export function RNBSessionDashboard({ roomName }: { roomName: string }) {
+  const [sessionStats, setSessionStats] = useState({
+    participants: 0,
+    recordings: [],
+    transcriptions: [],
+    duration: 0,
+    lastActivity: null
+  });
+
+  // RN'RB WebSocket or polling for real-time updates
+  useEffect(() => {
+    const fetchSessionStats = async () => {
+      try {
+        // Get events from database (populated by webhooks)
+        const events = await getSessionEvents(roomName);
+
+        const participants = new Set(
+          events
+            .filter(e => e.type === 'participant.joined')
+            .map(e => e.participantId)
+        ).size;
+
+        const recordings = events.filter(e =>
+          e.type.startsWith('recording.')
+        );
+
+        const transcriptions = events.filter(e =>
+          e.type.startsWith('transcript.')
+        );
+
+        const meetingStarted = events.find(e => e.type === 'meeting.started');
+        const meetingEnded = events.find(e => e.type === 'meeting.ended');
+
+        const duration = meetingStarted ?
+          (meetingEnded ? meetingEnded.createdAt - meetingStarted.createdAt : Date.now() - meetingStarted.createdAt)
+          : 0;
+
+        const lastActivity = events.length > 0 ?
+          Math.max(...events.map(e => e.createdAt.getTime())) : null;
+
+        setSessionStats({
+          participants,
+          recordings,
+          transcriptions,
+          duration,
+          lastActivity: lastActivity ? new Date(lastActivity) : null
+        });
+      } catch (error) {
+        console.error('RN\'RB: Failed to fetch session stats:', error);
+      }
+    };
+
+    fetchSessionStats();
+
+    // Poll for updates (in production, use WebSocket or Server-Sent Events)
+    const interval = setInterval(fetchSessionStats, 5000);
+
+    return () => clearInterval(interval);
+  }, [roomName]);
+
+  return (
+    <div className="rnb-session-dashboard">
+      <h4>🎼 Session Dashboard - {roomName}</h4>
+
+      <div className="dashboard-stats">
+        <div className="stat-item">
+          <span className="stat-label">Active Participants</span>
+          <span className="stat-value">{sessionStats.participants}</span>
+        </div>
+
+        <div className="stat-item">
+          <span className="stat-label">Recordings</span>
+          <span className="stat-value">{sessionStats.recordings.length}</span>
+        </div>
+
+        <div className="stat-item">
+          <span className="stat-label">Transcriptions</span>
+          <span className="stat-value">{sessionStats.transcriptions.length}</span>
+        </div>
+
+        <div className="stat-item">
+          <span className="stat-label">Session Duration</span>
+          <span className="stat-value">
+            {Math.floor(sessionStats.duration / 60000)}m {Math.floor((sessionStats.duration % 60000) / 1000)}s
+          </span>
+        </div>
+      </div>
+
+      <div className="recent-activity">
+        <h5>Recent Activity</h5>
+        {sessionStats.lastActivity && (
+          <div className="last-activity">
+            Last activity: {sessionStats.lastActivity.toLocaleTimeString()}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+### 🎯 **RN'RB Webhook System Benefits:**
+
+**Asynchronous Event Processing:**
+1. **Real-time Notifications** - Instant updates without API polling
+2. **Automated Workflows** - Trigger actions based on session events
+3. **Scalable Architecture** - Handle multiple concurrent sessions efficiently
+4. **Reliable Delivery** - Circuit breaker and retry mechanisms
+5. **Security Verification** - HMAC signature validation
+6. **Event Persistence** - Store and replay webhook events
+7. **Business Intelligence** - Comprehensive session analytics
+8. **Error Recovery** - Automatic failure handling and recovery
+
+**Music Collaboration Features:**
+- **Recording Automation** - Auto-process recordings when complete
+- **Session Management** - Track participant activity and session lifecycle
+- **Transcription Integration** - Process lyrics and notes automatically
+- **Quality Monitoring** - Alert on recording/transcription errors
+- **Participant Analytics** - Track engagement and participation
+- **Resource Management** - Clean up resources when sessions end
+- **Notification System** - Alert users of important events
+- **Searchable Archives** - Index session content for discovery
+
+**Technical Advantages:**
+- **Asynchronous Processing** - Non-blocking event handling
+- **High Reliability** - Multiple retry strategies and circuit breakers
+- **Security** - HMAC verification and optional basic auth
+- **Scalability** - Domain-wide webhook configuration
+- **Monitoring** - Failed delivery tracking and alerting
+- **Flexibility** - Configurable event types and endpoints
+- **Integration** - Easy connection to existing RN'RB infrastructure
+
+**Common RN'RB Use Cases:**
+- ✅ **Recording Workflow** - Auto-download and process session recordings
+- ✅ **Session Analytics** - Real-time participant and engagement tracking
+- ✅ **Transcription Processing** - Automatic lyrics extraction and formatting
+- ✅ **Error Handling** - Alert on recording/transcription failures
+- ✅ **Resource Management** - Auto-cleanup when sessions end
+- ✅ **Notification System** - Real-time alerts for session events
+- ✅ **Search Indexing** - Make session content discoverable
+- ✅ **Business Intelligence** - Comprehensive session metrics and reporting
+
+### 🎯 **Implementation Assessment for RN'RB:**
+
+**Priority Level:** High - Essential for automated music collaboration workflows
+
+**Essential Use Cases:**
+- ✅ **Recording Automation** - Critical for professional session workflows
+- ✅ **Session Management** - Important for resource management and analytics
+- ✅ **Transcription Processing** - Valuable for lyrics and notes capture
+- ✅ **Error Monitoring** - Important for reliability and user experience
+- ✅ **Real-time Notifications** - Enhances user experience significantly
+
+**Implementation Pattern:**
+```typescript
+// RN'RB Webhook Management System
+export function RNBWebhookManager() {
+  return (
+    <div className="rnb-webhook-manager">
+      <WebhookRegistration />
+      <WebhookMonitoring />
+      <EventProcessingDashboard />
+      <SessionAnalytics />
+    </div>
+  );
+}
+```
+
+**Recommendation:** Implement webhook system for automated music session workflows - essential for professional music collaboration platform reliability and user experience.
+
+---
+
+**Agent 18 Daily.co Webhook System Analysis Complete (2025-11-17)**
+
+**Asynchronous event notification system documented - RN'RB now has complete webhook infrastructure for automated music collaboration workflows.**
+
+---
+
+## 🍄 Agent 18 - Daily.co Video Component System (VCS) Documentation Analysis
+
+**Mission:** Analyze Daily.co Video Component System for advanced video compositing and professional music session layouts in RN'RB.
+
+**Date:** 2025-11-17
+
+### 📋 **Daily.co Video Component System (VCS) Overview:**
+
+**Purpose:** Advanced video layout and compositing engine enabling highly customized live streams, recordings, and interactive experiences for music collaboration.
+
+**Key Features:**
+- **Professional Video Compositing** - Custom layouts, graphics, and branding for music sessions
+- **Dual Implementation** - Server-side cloud rendering and client-side web rendering
+- **Baseline Composition** - Pre-built layouts and graphics for quick customization
+- **VCS SDK** - Full source code access for maximum customization
+- **Interactive Live Streaming** - Real-time composition with overlay graphics
+- **Enterprise Recording** - Professional-quality session captures with custom branding
+
+**Core Components:**
+- **Box** - Layout containers and positioning
+- **Image** - Custom graphics, logos, and branding elements
+- **Text** - Dynamic text overlays for lyrics, session info, timestamps
+- **Video** - Participant video feeds with custom positioning and effects
+- **WebFrame** - Embedded web content for interactive elements
+
+### 🎵 **RN'RB VCS Integration Scenarios:**
+
+**Professional Music Session Recording Layout:**
+```typescript
+// RN'RB Professional Recording Composition
+const musicSessionComposition = {
+  width: 1920,
+  height: 1080,
+  background: {
+    type: 'color',
+    color: '#1a1a1a' // RN'RB dark theme
+  },
+  elements: [
+    // Main video grid for musicians
+    {
+      type: 'box',
+      x: 50,
+      y: 50,
+      width: 1400,
+      height: 800,
+      backgroundColor: '#2a2a2a',
+      borderRadius: 12,
+      elements: [
+        // Participant videos in grid layout
+        {
+          type: 'video',
+          participantId: 'musician-1',
+          x: 20,
+          y: 20,
+          width: 680,
+          height: 380,
+          borderRadius: 8
+        },
+        {
+          type: 'video',
+          participantId: 'musician-2',
+          x: 720,
+          y: 20,
+          width: 680,
+          height: 380,
+          borderRadius: 8
+        },
+        {
+          type: 'video',
+          participantId: 'producer',
+          x: 20,
+          y: 420,
+          width: 680,
+          height: 380,
+          borderRadius: 8
+        },
+        {
+          type: 'video',
+          participantId: 'engineer',
+          x: 720,
+          y: 420,
+          width: 680,
+          height: 380,
+          borderRadius: 8
+        }
+      ]
+    },
+
+    // RN'RB Branding
+    {
+      type: 'image',
+      url: 'https://rnrb.ai/logo-light.png',
+      x: 1500,
+      y: 50,
+      width: 200,
+      height: 80
+    },
+
+    // Session info overlay
+    {
+      type: 'text',
+      text: 'Rock N\' Roll Basement - Recording Session',
+      x: 1500,
+      y: 150,
+      fontSize: 24,
+      fontFamily: 'Arial Black',
+      color: '#ff6b35', // RN'RB accent color
+      fontWeight: 'bold'
+    },
+
+    // Live indicators
+    {
+      type: 'text',
+      text: '🔴 LIVE RECORDING',
+      x: 1500,
+      y: 200,
+      fontSize: 18,
+      color: '#ff4444',
+      fontWeight: 'bold'
+    },
+
+    // Timestamp
+    {
+      type: 'text',
+      text: new Date().toLocaleTimeString(),
+      x: 1500,
+      y: 250,
+      fontSize: 16,
+      color: '#ffffff'
+    }
+  ]
+};
+```
+
+**Live Concert Streaming with Interactive Graphics:**
+```typescript
+// RN'RB Live Concert Composition
+const concertStreamingComposition = {
+  width: 1920,
+  height: 1080,
+  background: {
+    type: 'image',
+    url: 'https://rnrb.ai/concert-background.jpg' // Custom concert venue background
+  },
+  elements: [
+    // Main performer spotlight
+    {
+      type: 'video',
+      participantId: 'lead-singer',
+      x: 400,
+      y: 200,
+      width: 800,
+      height: 600,
+      borderRadius: 12,
+      style: {
+        boxShadow: '0 0 50px rgba(255, 107, 53, 0.5)' // RN'RB accent glow
+      }
+    },
+
+    // Band member thumbnails
+    {
+      type: 'box',
+      x: 50,
+      y: 50,
+      width: 300,
+      height: 200,
+      backgroundColor: 'rgba(0,0,0,0.7)',
+      borderRadius: 8,
+      elements: [
+        {
+          type: 'video',
+          participantId: 'guitarist',
+          x: 10,
+          y: 10,
+          width: 135,
+          height: 90,
+          borderRadius: 4
+        },
+        {
+          type: 'video',
+          participantId: 'bassist',
+          x: 155,
+          y: 10,
+          width: 135,
+          height: 90,
+          borderRadius: 4
+        },
+        {
+          type: 'video',
+          participantId: 'drummer',
+          x: 10,
+          y: 110,
+          width: 135,
+          height: 90,
+          borderRadius: 4
+        },
+        {
+          type: 'video',
+          participantId: 'keyboardist',
+          x: 155,
+          y: 110,
+          width: 135,
+          height: 90,
+          borderRadius: 4
+        }
+      ]
+    },
+
+    // Live lyrics display
+    {
+      type: 'box',
+      x: 50,
+      y: 800,
+      width: 1400,
+      height: 200,
+      backgroundColor: 'rgba(0,0,0,0.8)',
+      borderRadius: 8,
+      elements: [
+        {
+          type: 'text',
+          text: '♪ Now playing: "Electric Dreams" ♪',
+          x: 20,
+          y: 20,
+          fontSize: 32,
+          fontFamily: 'Arial',
+          color: '#ffffff',
+          fontWeight: 'bold'
+        },
+        {
+          type: 'text',
+          text: 'Verse 1: Under neon lights we play...',
+          x: 20,
+          y: 80,
+          fontSize: 24,
+          color: '#ff6b35', // RN'RB accent
+          fontStyle: 'italic'
+        }
+      ]
+    },
+
+    // Interactive chat overlay
+    {
+      type: 'webframe',
+      url: 'https://rnrb.ai/live-chat',
+      x: 1500,
+      y: 300,
+      width: 400,
+      height: 600,
+      borderRadius: 8
+    },
+
+    // Live viewer count
+    {
+      type: 'text',
+      text: '👥 1,247 viewers',
+      x: 1500,
+      y: 250,
+      fontSize: 18,
+      color: '#ffffff',
+      fontWeight: 'bold'
+    }
+  ]
+};
+```
+
+**Music Production Interface with DAW Integration:**
+```typescript
+// RN'RB Music Production Composition
+const productionComposition = {
+  width: 1920,
+  height: 1080,
+  elements: [
+    // Main DAW screen share
+    {
+      type: 'video',
+      participantId: 'producer-screen',
+      x: 50,
+      y: 50,
+      width: 1200,
+      height: 800,
+      type: 'screenVideo', // Screen share
+      borderRadius: 8
+    },
+
+    // Producer video inset
+    {
+      type: 'video',
+      participantId: 'producer',
+      x: 1300,
+      y: 50,
+      width: 300,
+      height: 200,
+      borderRadius: 8,
+      style: {
+        border: '3px solid #ff6b35' // RN'RB accent border
+      }
+    },
+
+    // Audio levels visualization
+    {
+      type: 'box',
+      x: 1300,
+      y: 280,
+      width: 300,
+      height: 150,
+      backgroundColor: 'rgba(0,0,0,0.8)',
+      borderRadius: 8,
+      elements: [
+        // Dynamic audio level bars would be updated via composition updates
+        {
+          type: 'text',
+          text: '🎵 Audio Levels',
+          x: 10,
+          y: 10,
+          fontSize: 16,
+          color: '#ffffff'
+        }
+        // Audio level bars would be added dynamically
+      ]
+    },
+
+    // Session timeline
+    {
+      type: 'box',
+      x: 50,
+      y: 880,
+      width: 1200,
+      height: 150,
+      backgroundColor: 'rgba(0,0,0,0.9)',
+      borderRadius: 8,
+      elements: [
+        {
+          type: 'text',
+          text: '🎼 Session Timeline',
+          x: 20,
+          y: 20,
+          fontSize: 18,
+          color: '#ffffff'
+        },
+        {
+          type: 'text',
+          text: 'Track 1: Guitar - ✅ Recorded',
+          x: 20,
+          y: 60,
+          fontSize: 14,
+          color: '#4caf50'
+        },
+        {
+          type: 'text',
+          text: 'Track 2: Vocals - 🔄 Recording...',
+          x: 20,
+          y: 90,
+          fontSize: 14,
+          color: '#ff6b35'
+        },
+        {
+          type: 'text',
+          text: 'Track 3: Drums - ⏳ Pending',
+          x: 20,
+          y: 120,
+          fontSize: 14,
+          color: '#666666'
+        }
+      ]
+    },
+
+    // Collaboration notes
+    {
+      type: 'box',
+      x: 1300,
+      y: 460,
+      width: 570,
+      height: 570,
+      backgroundColor: 'rgba(0,0,0,0.8)',
+      borderRadius: 8,
+      elements: [
+        {
+          type: 'text',
+          text: '📝 Session Notes',
+          x: 20,
+          y: 20,
+          fontSize: 18,
+          color: '#ffffff'
+        },
+        {
+          type: 'text',
+          text: '• Great take on verse 2',
+          x: 20,
+          y: 60,
+          fontSize: 14,
+          color: '#ffffff'
+        },
+        {
+          type: 'text',
+          text: '• Add reverb to vocal track',
+          x: 20,
+          y: 90,
+          fontSize: 14,
+          color: '#ffffff'
+        },
+        {
+          type: 'text',
+          text: '• Guitar solo needs EQ boost',
+          x: 20,
+          y: 120,
+          fontSize: 14,
+          color: '#ffffff'
+        }
+      ]
+    }
+  ]
+};
+```
+
+### 🎵 **RN'RB VCS Architecture Deep Dive:**
+
+**Baseline Composition vs. VCS SDK:**
+```typescript
+// RN'RB Baseline Composition (JSON-based - Simple)
+await call.startRecording(roomName, {
+  layout: {
+    preset: 'custom',
+    composition_id: 'daily:baseline',
+    composition_params: {
+      mode: 'grid', // Grid layout for music sessions
+      showTextOverlay: true,
+      'text.content': 'Rock N\' Roll Basement - Recording Session',
+      'text.align_horizontal': 'right',
+      'text.align_vertical': 'bottom',
+      'text.fontFamily': 'Arial Black',
+      'text.fontWeight': 'bold',
+      'text.color': '#ff6b35', // RN'RB accent
+      videoSettings: {
+        roundedCorners: true,
+        showParticipantLabels: true
+      },
+      showImageOverlay: true,
+      'image.assetName': 'rnb-logo'
+    },
+    session_assets: {
+      'images/rnb-logo': 'https://rnrb.ai/logo-light.png'
+    }
+  }
+});
+
+// RN'RB VCS SDK (Full Customization - Advanced)
+await call.startRecording(roomName, {
+  layout: {
+    preset: 'custom',
+    session_assets: {
+      'RNBMusicComposition.js': 'https://rnrb.ai/compositions/RNBMusicComposition.js'
+    }
+  }
+});
+```
+
+### 🎵 **RN'RB VCS Core Concepts Implementation:**
+
+**Video Composition as React Program:**
+```typescript
+// RN'RB Music Composition Component
+import React from 'react';
+import { Box, Video, Text, Image } from '@daily-co/vcs-react';
+
+export function RNBMusicComposition({ inputs, controls }) {
+  // Real-time inputs from Daily
+  const { videos, activeSpeaker, lyrics } = inputs;
+
+  // Control parameters
+  const { showBranding, sessionType } = controls;
+
+  return (
+    <Box
+      width={1920}
+      height={1080}
+      backgroundColor="#1a1a1a" // RN'RB dark theme
+    >
+      {/* Dynamic participant layout based on session type */}
+      {sessionType === 'recording' && (
+        <RNBRecordingLayout videos={videos} activeSpeaker={activeSpeaker} />
+      )}
+
+      {sessionType === 'performance' && (
+        <RNBPerformanceLayout videos={videos} activeSpeaker={activeSpeaker} />
+      )}
+
+      {sessionType === 'production' && (
+        <RNBProductionLayout videos={videos} />
+      )}
+
+      {/* Live lyrics overlay */}
+      {lyrics && (
+        <Text
+          x={50}
+          y={900}
+          fontSize={24}
+          color="#ffffff"
+          backgroundColor="rgba(0,0,0,0.8)"
+          padding={20}
+          borderRadius={8}
+          text={lyrics}
+        />
+      )}
+
+      {/* RN'RB Branding */}
+      {showBranding && (
+        <Image
+          url="https://rnrb.ai/logo-light.png"
+          x={1600}
+          y={50}
+          width={240}
+          height={100}
+        />
+      )}
+    </Box>
+  );
+}
+
+function RNBRecordingLayout({ videos, activeSpeaker }) {
+  return (
+    <Box>
+      {/* Grid layout for recording sessions */}
+      {videos.map((video, index) => (
+        <Video
+          key={video.participantId}
+          participantId={video.participantId}
+          x={(index % 3) * 640}
+          y={Math.floor(index / 3) * 360}
+          width={640}
+          height={360}
+          borderRadius={8}
+          style={{
+            border: activeSpeaker === video.participantId ?
+              '4px solid #ff6b35' : '2px solid #333'
+          }}
+        />
+      ))}
+    </Box>
+  );
+}
+
+function RNBPerformanceLayout({ videos, activeSpeaker }) {
+  const spotlightVideo = videos.find(v => v.participantId === activeSpeaker);
+
+  return (
+    <Box>
+      {/* Spotlight main performer */}
+      {spotlightVideo && (
+        <Video
+          participantId={spotlightVideo.participantId}
+          x={400}
+          y={200}
+          width={800}
+          height={600}
+          borderRadius={12}
+          style={{
+            boxShadow: '0 0 50px rgba(255, 107, 53, 0.5)'
+          }}
+        />
+      )}
+
+      {/* Band member thumbnails */}
+      <Box x={50} y={50} width={300} height={200}>
+        {videos.filter(v => v.participantId !== activeSpeaker).map((video, index) => (
+          <Video
+            key={video.participantId}
+            participantId={video.participantId}
+            x={(index % 2) * 140}
+            y={Math.floor(index / 2) * 90}
+            width={130}
+            height={80}
+            borderRadius={4}
+          />
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
+function RNBProductionLayout({ videos }) {
+  return (
+    <Box>
+      {/* DAW screen share as main focus */}
+      <Video
+        participantId="producer-screen"
+        type="screenVideo"
+        x={50}
+        y={50}
+        width={1200}
+        height={800}
+        borderRadius={8}
+      />
+
+      {/* Producer video inset */}
+      <Video
+        participantId="producer"
+        x={1300}
+        y={50}
+        width={300}
+        height={200}
+        borderRadius={8}
+        style={{ border: '3px solid #ff6b35' }}
+      />
+
+      {/* Session timeline and controls */}
+      <Box x={50} y={880} width={1200} height={150} backgroundColor="rgba(0,0,0,0.9)">
+        <Text x={20} y={20} text="🎼 Session Timeline" fontSize={18} color="#ffffff" />
+        {/* Dynamic timeline elements */}
+      </Box>
+    </Box>
+  );
+}
+```
+
+**Real-time VCS Performance Optimization:**
+```typescript
+// RN'RB VCS Performance-Optimized Composition
+export function RNBOptimizedComposition({ inputs }) {
+  // Memoize expensive calculations
+  const layout = React.useMemo(() => {
+    const { videos, sessionType } = inputs;
+
+    // Pre-calculate positions to avoid recalculation per frame
+    const positions = calculateVideoPositions(videos, sessionType);
+
+    return {
+      videos: videos.map((video, index) => ({
+        ...video,
+        ...positions[index]
+      }))
+    };
+  }, [inputs.videos, inputs.sessionType]);
+
+  return (
+    <Box width={1920} height={1080}>
+      {/* Render only visible elements */}
+      {layout.videos.map(video => (
+        <Video
+          key={video.participantId}
+          participantId={video.participantId}
+          x={video.x}
+          y={video.y}
+          width={video.width}
+          height={video.height}
+          // Only update when necessary
+          style={React.useMemo(() => ({
+            borderRadius: 8,
+            border: video.isActive ? '2px solid #ff6b35' : 'none'
+          }), [video.isActive])}
+        />
+      ))}
+    </Box>
+  );
+}
+
+function calculateVideoPositions(videos, sessionType) {
+  // Optimized position calculations
+  switch (sessionType) {
+    case 'grid':
+      return videos.map((_, index) => ({
+        x: (index % 3) * 640,
+        y: Math.floor(index / 3) * 360,
+        width: 640,
+        height: 360
+      }));
+
+    case 'spotlight':
+      return videos.map((_, index) => index === 0 ? {
+        x: 400, y: 200, width: 800, height: 600
+      } : {
+        x: 50 + (index - 1) * 150,
+        y: 50,
+        width: 130,
+        height: 80
+      });
+
+    default:
+      return [];
+  }
+}
+```
+
+**VCS Cross-Platform Implementation:**
+```typescript
+// RN'RB Cross-Platform VCS (Browser + Cloud)
+export function RNBCrossPlatformComposition({ platform }) {
+  // Platform-specific optimizations
+  const isCloud = platform === 'cloud';
+  const isBrowser = platform === 'browser';
+
+  return (
+    <Box>
+      {/* Different rendering strategies per platform */}
+      {isCloud && <RNDCloudOptimizedComposition />}
+      {isBrowser && <RNBBrowserInteractiveComposition />}
+
+      {/* Platform-agnostic branding */}
+      <Image
+        url="https://rnrb.ai/logo-light.png"
+        x={1600}
+        y={50}
+        width={240}
+        height={100}
+      />
+    </Box>
+  );
+}
+
+// Cloud-optimized (performance-critical)
+function RNDCloudOptimizedComposition() {
+  return (
+    <Box backgroundColor="#1a1a1a">
+      {/* Minimal elements for cloud rendering */}
+      <Video participantId="main" x={0} y={0} width={1920} height={1080} />
+      <Text text="RN'RB Live" x={50} y={50} color="#ff6b35" />
+    </Box>
+  );
+}
+
+// Browser-interactive (feature-rich)
+function RNBBrowserInteractiveComposition() {
+  const [selectedParticipant, setSelectedParticipant] = React.useState(null);
+
+  return (
+    <Box
+      onClick={(event) => {
+        // Interactive participant selection
+        const clickedParticipant = findParticipantAt(event.x, event.y);
+        setSelectedParticipant(clickedParticipant);
+      }}
+    >
+      {/* Interactive elements available in browser */}
+      <Video
+        participantId="interactive"
+        x={100}
+        y={100}
+        width={800}
+        height={600}
+        style={{
+          cursor: 'pointer',
+          border: selectedParticipant === 'interactive' ? '4px solid #ff6b35' : 'none'
+        }}
+      />
+    </Box>
+  );
+}
+```
+
+### 🎵 **RN'RB VCS Implementation Patterns:**
+
+**Server-Side Custom Composition:**
+```typescript
+// RN'RB Server-Side VCS Composition
+export function createRNBMusicComposition(sessionType: string) {
+  const baseComposition = {
+    width: 1920,
+    height: 1080,
+    background: { type: 'color', color: '#1a1a1a' },
+    elements: []
+  };
+
+  // Add RN'RB branding
+  baseComposition.elements.push({
+    type: 'image',
+    url: 'https://rnrb.ai/logo-light.png',
+    x: 1600,
+    y: 50,
+    width: 240,
+    height: 100
+  });
+
+  // Add session-specific elements
+  switch (sessionType) {
+    case 'recording':
+      return createRecordingComposition(baseComposition);
+    case 'performance':
+      return createPerformanceComposition(baseComposition);
+    case 'production':
+      return createProductionComposition(baseComposition);
+    default:
+      return baseComposition;
+  }
+}
+
+function createRecordingComposition(base: any) {
+  // Add recording-specific layout
+  base.elements.push({
+    type: 'text',
+    text: '🎬 RECORDING SESSION',
+    x: 100,
+    y: 100,
+    fontSize: 36,
+    color: '#ff6b35',
+    fontWeight: 'bold'
+  });
+
+  // Add participant grid
+  // ... participant video elements
+
+  return base;
+}
+
+// RN'RB VCS Usage in Recording
+const composition = createRNBMusicComposition('recording');
+
+await startRecording(roomName, {
+  layout: {
+    preset: 'custom',
+    session_assets: {
+      'RNBMusicComposition.js': 'https://rnrb.ai/compositions/RNBMusicComposition.js'
+    }
+  }
+});
+```
+
+**Client-Side Preview and Interaction:**
+```typescript
+// RN'RB Client-Side VCS Preview
+import { VCSRenderer } from '@daily-co/vcs-react';
+
+export function RNBMusicSessionPreview({ roomUrl }: { roomUrl: string }) {
+  const [composition, setComposition] = useState(createRNBMusicComposition('recording'));
+
+  return (
+    <div className="rnb-vcs-preview">
+      <VCSRenderer
+        roomUrl={roomUrl}
+        composition={composition}
+        width={1920}
+        height={1080}
+        onCompositionUpdate={(updates) => {
+          // Handle real-time composition updates
+          setComposition(prev => ({ ...prev, ...updates }));
+        }}
+      />
+
+      {/* RN'RB Composition Controls */}
+      <div className="vcs-controls">
+        <button onClick={() => updateCompositionLayout('grid')}>
+          Grid View
+        </button>
+        <button onClick={() => updateCompositionLayout('spotlight')}>
+          Spotlight
+        </button>
+        <button onClick={() => addTextOverlay('Live Session')}>
+          Add Text
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+**Interactive Live Session with Real-time Updates:**
+```typescript
+// RN'RB Interactive VCS Session
+export function RNBInteractiveSession({ roomUrl }: { roomUrl: string }) {
+  const [activeSpeaker, setActiveSpeaker] = useState<string | null>(null);
+  const [lyrics, setLyrics] = useState<string>('');
+
+  useTranscription({
+    onTranscriptionMessage: (event) => {
+      // Update lyrics overlay in real-time
+      const newLyrics = event.transcription.text;
+      setLyrics(prev => prev + ' ' + newLyrics);
+    }
+  });
+
+  useActiveSpeakerId({
+    onActiveSpeakerChange: (speakerId) => {
+      setActiveSpeaker(speakerId);
+      // Update VCS composition to spotlight active speaker
+      updateCompositionSpotlight(speakerId);
+    }
+  });
+
+  const composition = useMemo(() => ({
+    width: 1920,
+    height: 1080,
+    elements: [
+      // Dynamic spotlight based on active speaker
+      activeSpeaker ? {
+        type: 'video',
+        participantId: activeSpeaker,
+        x: 400,
+        y: 200,
+        width: 800,
+        height: 600,
+        style: {
+          boxShadow: '0 0 50px rgba(255, 107, 53, 0.8)',
+          borderRadius: '12px'
+        }
+      } : null,
+
+      // Live lyrics overlay
+      {
+        type: 'text',
+        text: lyrics.slice(-100), // Last 100 chars
+        x: 100,
+        y: 900,
+        fontSize: 24,
+        color: '#ffffff',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        padding: 20,
+        borderRadius: 8
+      },
+
+      // RN'RB branding
+      {
+        type: 'image',
+        url: 'https://rnrb.ai/logo-light.png',
+        x: 1600,
+        y: 50,
+        width: 200,
+        height: 80
+      }
+    ].filter(Boolean)
+  }), [activeSpeaker, lyrics]);
+
+  return (
+    <VCSRenderer
+      roomUrl={roomUrl}
+      composition={composition}
+      interactive={true}
+      onParticipantClick={(participantId) => {
+        // Allow clicking participants to change spotlight
+        setActiveSpeaker(participantId);
+      }}
+    />
+  );
+}
+```
+
+### 🎯 **RN'RB VCS Benefits:**
+
+**Professional Video Production:**
+1. **Custom Branding** - RN'RB logos, colors, and themes in all recordings
+2. **Dynamic Layouts** - Responsive layouts that adapt to session types
+3. **Interactive Elements** - Clickable participants, real-time overlays
+4. **Multi-format Output** - Live streaming and recording with identical quality
+5. **Real-time Updates** - Live composition changes during sessions
+6. **Professional Quality** - Broadcast-quality video with custom graphics
+7. **Accessibility** - Enhanced captions and visual indicators
+8. **Engagement Features** - Interactive elements for live sessions
+
+**Music-Specific Enhancements:**
+- **Lyrics Display** - Real-time lyrics overlay from transcription
+- **Audio Visualization** - Live audio level displays and waveforms
+- **Session Timeline** - Track progress and recording status
+- **Participant Spotlight** - Dynamic focus on active musicians
+- **Production Notes** - On-screen session feedback and directions
+- **Brand Integration** - RN'RB aesthetic throughout all content
+- **Live Chat Integration** - Interactive chat overlays for engagement
+
+**Technical Advantages:**
+- **Server-Side Rendering** - Cloud-based composition for scalability
+- **Client-Side Preview** - Real-time preview matching final output
+- **Flexible Architecture** - JSON-based composition definitions
+- **Performance Optimized** - Efficient rendering for live sessions
+- **Extensible Components** - Custom components for music-specific needs
+- **Real-time Synchronization** - Live updates across all viewers
+
+**Common RN'RB Use Cases:**
+- ✅ **Professional Recordings** - Branded session captures with custom layouts
+- ✅ **Live Concert Streaming** - Interactive broadcasts with graphics and overlays
+- ✅ **Music Production Sessions** - DAW integration with participant video feeds
+- ✅ **Collaborative Songwriting** - Lyrics display and participant spotlighting
+- ✅ **Virtual Music Events** - Custom layouts for concerts and performances
+- ✅ **Educational Content** - Professional-looking music tutorials and lessons
+- ✅ **Session Archives** - Consistent branding across all recorded content
+
+### 🎯 **Implementation Assessment for RN'RB:**
+
+**Priority Level:** High - Essential for professional music content creation and broadcasting
+
+**Essential Use Cases:**
+- ✅ **Professional Recording Layouts** - Essential for branded session captures
+- ✅ **Live Performance Streaming** - Critical for virtual concerts and events
+- ✅ **Music Production Interface** - Important for collaborative production workflows
+- ✅ **Interactive Live Sessions** - Valuable for engaging music experiences
+- ✅ **Lyrics and Graphics Overlay** - Enhances music session presentations
+
+**Implementation Pattern:**
+```typescript
+// RN'RB VCS Management System
+export function RNBVCSManager() {
+  return (
+    <div className="rnb-vcs-manager">
+      <VCSCompositionBuilder />
+      <VCSSessionPreview />
+      <VCSLiveControls />
+      <VCSRecordingManager />
+    </div>
+  );
+}
+```
+
+**Framework-Agnostic Architecture:**
+- **React Runtime Independence** - VCS uses React but your app can use Vue, Angular, or any framework
+- **Cloud Processing** - VCS code runs in Daily's cloud pipeline, independent of client architecture
+- **API Abstraction** - Only params API communicates with VCS compositions in production
+- **Development Flexibility** - Use any frontend framework while leveraging VCS for video compositing
+
+**Real-time Performance Constraints:**
+- **30fps Requirement** - Strict performance limits for live video (no missed frames)
+- **JavaScript Optimization** - Only programmable parts in JS, native graphics for heavy lifting
+- **Video-Specific Optimizations** - Optimized for video color spaces and data types
+- **Performance-First Design** - Every component curated for real-time video rendering
+
+**Sandbox Environment:**
+- **Embedded Execution** - VCS runs in sandboxed JavaScript environment
+- **No Host Access** - Cannot access or modify host application code
+- **Input/Output Boundaries** - Strict communication through defined APIs
+- **Security Isolation** - Protected execution environment for video processing
+
+**Cross-Platform Promise:**
+- **Browser Target** - Local development and testing via VCS Simulator
+- **Cloud Pipeline** - Production rendering on Daily's server infrastructure
+- **Mobile Potential** - Architecture supports iOS/Android with GPU acceleration
+- **Consistent Output** - Same composition produces identical results across platforms
+
+**Limited Component Ecosystem:**
+- **Curated Components** - Only essential video compositing elements available
+- **No HTML/CSS Parity** - Cannot replicate full web styling capabilities
+- **Video-Optimized Styles** - Properties designed for video content requirements
+- **Performance-Constrained** - Components optimized for 30fps real-time rendering
+
+**VCS Simulator Development:**
+- **Local Testing** - Browser-based GUI for composition development and testing
+- **Editable Environment** - Modify baseline composition code for custom layouts
+- **Interactive Controls** - Click buttons to send data and see composition changes
+- **Production Guarantee** - What works in simulator works identically in cloud
+
+**VCS Composition File Structure:**
+- **Folder-based** - Compositions supplied as folder with index.jsx (composition root)
+- **ES6 Modules** - Must use import/export, not CommonJS require/module.exports
+- **No package.json Required** - Runtime inspection discovers features, npm packages not supported
+- **Multi-file Structure** - Real compositions should include assets, not single-file like examples
+
+**VCS Composition Interface:**
+```typescript
+// Required exports from index.jsx
+export const compositionInterface = {
+  displayMeta: {
+    name: 'RN\'RB Music Composition',
+    description: 'Professional music session layouts with branding'
+  },
+  params: [
+    {
+      id: 'showBranding',
+      type: 'boolean',
+      defaultValue: true
+    },
+    {
+      id: 'sessionType',
+      type: 'enum',
+      values: ['recording', 'performance', 'production'],
+      defaultValue: 'recording'
+    },
+    {
+      id: 'accentColor',
+      type: 'text',
+      defaultValue: '#ff6b35'
+    },
+    {
+      id: 'maxParticipants',
+      type: 'number',
+      defaultValue: 6,
+      step: 1
+    }
+  ]
+};
+
+export default function RNBMusicComposition() {
+  // React functional component
+  return (
+    <Box width={1920} height={1080}>
+      {/* Composition rendering logic */}
+    </Box>
+  );
+}
+```
+
+**VCS Parameter Types:**
+- **boolean** - Checkbox control for on/off settings
+- **number** - Number input with increment/decrement buttons
+- **text** - Text field for strings and colors
+- **enum** - Dropdown menu for predefined options
+- **step** - Increment value for number parameters
+
+**RN'RB VCS Composition File Structure:**
+```
+/rnb-music-composition/
+├── index.jsx              # Main composition file
+├── components/
+│   ├── RecordingLayout.jsx
+│   ├── PerformanceLayout.jsx
+│   ├── ProductionLayout.jsx
+│   └── BrandingOverlay.jsx
+├── assets/
+│   ├── logo-light.png
+│   └── background-rock.jpg
+└── package.json          # Optional metadata only
+```
+
+**RN'RB VCS Composition Implementation:**
+```typescript
+// /rnb-music-composition/index.jsx
+import React from 'react';
+import { Box, Video, Text, Image } from '@daily-co/vcs-react';
+import { RecordingLayout } from './components/RecordingLayout';
+import { PerformanceLayout } from './components/PerformanceLayout';
+import { ProductionLayout } from './components/ProductionLayout';
+import { BrandingOverlay } from './components/BrandingOverlay';
+
+export const compositionInterface = {
+  displayMeta: {
+    name: 'RN\'RB Music Composition',
+    description: 'Professional music session layouts with Rock N\' Roll Basement branding'
+  },
+  params: [
+    {
+      id: 'showBranding',
+      type: 'boolean',
+      defaultValue: true
+    },
+    {
+      id: 'sessionType',
+      type: 'enum',
+      values: ['recording', 'performance', 'production'],
+      defaultValue: 'recording'
+    },
+    {
+      id: 'accentColor',
+      type: 'text',
+      defaultValue: '#ff6b35'
+    },
+    {
+      id: 'maxParticipants',
+      type: 'number',
+      defaultValue: 6,
+      step: 1
+    },
+    {
+      id: 'showLyrics',
+      type: 'boolean',
+      defaultValue: true
+    }
+  ]
+};
+
+export default function RNBMusicComposition({ inputs, params }) {
+  const { videos, activeSpeaker, lyrics } = inputs;
+  const { showBranding, sessionType, accentColor, maxParticipants, showLyrics } = params;
+
+  // Limit participants based on parameter
+  const displayVideos = videos.slice(0, maxParticipants);
+
+  return (
+    <Box
+      width={1920}
+      height={1080}
+      backgroundColor="#1a1a1a" // RN'RB dark theme
+    >
+      {/* Dynamic layout based on session type */}
+      {sessionType === 'recording' && (
+        <RecordingLayout videos={displayVideos} activeSpeaker={activeSpeaker} accentColor={accentColor} />
+      )}
+
+      {sessionType === 'performance' && (
+        <PerformanceLayout videos={displayVideos} activeSpeaker={activeSpeaker} accentColor={accentColor} />
+      )}
+
+      {sessionType === 'production' && (
+        <ProductionLayout videos={displayVideos} accentColor={accentColor} />
+      )}
+
+      {/* Live lyrics overlay */}
+      {showLyrics && lyrics && (
+        <Box
+          x={50}
+          y={900}
+          width={1400}
+          height={150}
+          backgroundColor="rgba(0,0,0,0.8)"
+          borderRadius={8}
+        >
+          <Text
+            x={20}
+            y={20}
+            text="♪ Live Lyrics ♪"
+            fontSize={18}
+            color="#ffffff"
+            fontWeight="bold"
+          />
+          <Text
+            x={20}
+            y={60}
+            text={lyrics.slice(-80)} // Last 80 chars
+            fontSize={24}
+            color={accentColor}
+            fontStyle="italic"
+          />
+        </Box>
+      )}
+
+      {/* RN'RB Branding */}
+      {showBranding && (
+        <BrandingOverlay accentColor={accentColor} />
+      )}
+    </Box>
+  );
+}
+```
+
+**RN'RB VCS Component Examples:**
+```typescript
+// /rnb-music-composition/components/RecordingLayout.jsx
+export function RecordingLayout({ videos, activeSpeaker, accentColor }) {
+  return (
+    <Box>
+      {/* Grid layout for recording sessions */}
+      {videos.map((video, index) => {
+        const isActive = activeSpeaker === video.participantId;
+        return (
+          <Video
+            key={video.participantId}
+            participantId={video.participantId}
+            x={(index % 3) * 640}
+            y={Math.floor(index / 3) * 360}
+            width={640}
+            height={360}
+            borderRadius={8}
+            style={{
+              border: isActive ? `4px solid ${accentColor}` : '2px solid #333'
+            }}
+          />
+        );
+      })}
+    </Box>
+  );
+}
+
+// /rnb-music-composition/components/BrandingOverlay.jsx
+export function BrandingOverlay({ accentColor }) {
+  return (
+    <Box x={1600} y={50} width={240} height={100}>
+      <Image
+        url="assets/logo-light.png"
+        x={0}
+        y={0}
+        width={240}
+        height={80}
+      />
+      <Text
+        x={0}
+        y={90}
+        text="Rock N' Roll Basement"
+        fontSize={12}
+        color={accentColor}
+        fontWeight="bold"
+      />
+    </Box>
+  );
+}
+```
+
+**RN'RB VCS Deployment:**
+```typescript
+// Deploy RN'RB custom composition
+await call.startRecording(roomName, {
+  layout: {
+    preset: 'custom',
+    session_assets: {
+      'RNBMusicComposition.js': 'https://rnrb.ai/compositions/RNBMusicComposition.js',
+      'RecordingLayout.js': 'https://rnrb.ai/compositions/components/RecordingLayout.js',
+      'BrandingOverlay.js': 'https://rnrb.ai/compositions/components/BrandingOverlay.js',
+      'logo-light.png': 'https://rnrb.ai/compositions/assets/logo-light.png'
+    },
+    // Pass parameter values to composition
+    composition_params: {
+      showBranding: true,
+      sessionType: 'recording',
+      accentColor: '#ff6b35',
+      maxParticipants: 6,
+      showLyrics: true
+    }
+  }
+});
+```
+
+**VCS Runtime Input Model:**
+```typescript
+// Four types of runtime inputs available to VCS compositions
+
+// 1. Parameters - Like React props, defined by composition interface
+const params = useParams(); // Hook to access current parameter values
+// params: { showBranding: true, sessionType: 'recording', accentColor: '#ff6b35' }
+
+// 2. Video Slots - Array of media stream descriptions
+const videoSlots = [
+  {
+    sourceId: 'participant-1',    // Opaque ID for <Video> component
+    active: true,                 // Connection status
+    paused: false,                // Video paused/muted status
+    displayName: 'Guitar Player'  // Human-readable name
+  },
+  // ... more video slots
+];
+
+// 3. Assets - Static media (images)
+const assets = {
+  composition: {},  // Bundled with composition
+  session: {        // Passed at runtime via session_assets
+    'logo.png': 'https://rnrb.ai/logo-light.png'
+  },
+  dynamic: {}       // Loaded at runtime
+};
+
+// 4. WebFrame - Embedded web browser
+<WebFrame
+  url="https://rnrb.ai/live-chat"
+  x={1500}
+  y={300}
+  width={400}
+  height={600}
+/>
+```
+
+**VCS Video Hamburger Compositing Model:**
+```typescript
+// VCS uses "video hamburger" model for optimal compositing
+// "Beef" = Video layers in YUV color space (no color conversion)
+// "Buns" = RGBA graphics layers (foreground/background)
+
+export function RNBMusicComposition() {
+  return (
+    <Box width={1920} height={1080}>
+      {/* Foreground "bun" - RGBA graphics */}
+      <Text text="RN'RB Live" x={50} y={50} color="#ff6b35" />
+
+      {/* Video "beef" layers - YUV color space */}
+      <Video participantId="guitarist" x={100} y={100} width={640} height={360} />
+      <Video participantId="vocalist" x={800} y={100} width={640} height={360} />
+
+      {/* Graphics between videos move to RGBA layers automatically */}
+      <Box x={400} y={500} width={200} height={100} backgroundColor="rgba(0,0,0,0.8)">
+        <Text text="♪ Lyrics Display ♪" color="#ffffff" />
+      </Box>
+
+      {/* More video "beef" */}
+      <Video participantId="drummer" x={100} y={520} width={640} height={360} />
+      <Video participantId="bassist" x={800} y={520} width={640} height={360} />
+
+      {/* Background "bun" - RGBA graphics (optional) */}
+      <Image url="background.jpg" x={0} y={0} width={1920} height={1080} />
+    </Box>
+  );
+}
+
+// Result: VCS automatically optimizes layer ordering:
+// 1. Background RGBA graphics
+// 2. Video layers (YUV, no color conversion)
+// 3. Foreground RGBA graphics (overlays, text, logos)
+// = Perfect "video hamburger" for optimal performance
+```
+
+**RN'RB VCS Input Processing:**
+```typescript
+// RN'RB composition with all input types
+export default function RNBMusicComposition({ inputs, params }) {
+  // Parameters from composition interface
+  const { showBranding, sessionType, accentColor, maxParticipants } = params;
+
+  // Video slots from Daily call
+  const { videos, activeSpeaker, lyrics } = inputs;
+
+  // Use VCS hooks for convenience
+  const activeVideoIds = useActiveVideo(); // Filtered active video IDs
+  const gridLayout = useGrid({ maxColumns: 3 }); // Grid positioning helper
+
+  // Limit participants based on parameter
+  const displayVideos = videos.slice(0, maxParticipants);
+
+  return (
+    <Box width={1920} height={1080} backgroundColor="#1a1a1a">
+      {/* Render videos using grid layout */}
+      {displayVideos.map((video, index) => {
+        const position = gridLayout.getPosition(index);
+        const isActive = activeSpeaker === video.participantId;
+
+        return (
+          <Video
+            key={video.sourceId}
+            participantId={video.sourceId}
+            x={position.x}
+            y={position.y}
+            width={position.width}
+            height={position.height}
+            style={{
+              border: isActive ? `4px solid ${accentColor}` : 'none',
+              borderRadius: '8px'
+            }}
+          />
+        );
+      })}
+
+      {/* Lyrics overlay using WebFrame for rich content */}
+      <WebFrame
+        url={`data:text/html,<div style="background:black;color:white;padding:20px;border-radius:8px;">${lyrics}</div>`}
+        x={100}
+        y={900}
+        width={1400}
+        height={150}
+      />
+
+      {/* RN'RB branding with session assets */}
+      {showBranding && (
+        <Image
+          url="session:logo-light.png" // Session asset
+          x={1600}
+          y={50}
+          width={240}
+          height={100}
+        />
+      )}
+    </Box>
+  );
+}
+```
+
+### 🎯 **RN'RB VCS Implementation Roadmap:**
+
+**Phase 1: Baseline Composition (Quick Wins):**
+1. **JSON-Based Layouts** - Start with simple grid/spotlight configurations
+2. **RN'RB Branding** - Add logos, session titles, and accent colors
+3. **Text Overlays** - Session info, participant names, live indicators
+4. **Basic Graphics** - Simple image overlays and session branding
+
+**Phase 2: VCS SDK (Advanced Customization):**
+1. **Custom Components** - Build music-specific layout components
+2. **Real-time Updates** - Dynamic layouts based on active speakers
+3. **Interactive Elements** - Clickable participants and controls
+4. **Performance Optimization** - Memoized calculations and efficient rendering
+
+**Phase 3: Cross-Platform Production:**
+1. **Cloud Deployment** - Server-side rendering for live streaming
+2. **Browser Preview** - Client-side interactive preview
+3. **Mobile Support** - Future iOS/Android video compositing
+4. **Enterprise Scaling** - High-performance cloud processing
+
+**Phase 4: RN'RB-Specific Features:**
+1. **Lyrics Integration** - Real-time transcription overlays
+2. **Audio Visualization** - Live level meters and waveforms
+3. **Session Timelines** - Track progress and recording status
+4. **Brand Consistency** - Unified visual identity across all content
+
+**VCS Best Practices for RN'RB:**
+```typescript
+// VCS Best Practices for Music Sessions
+
+// 1. Performance-First Design (30fps constraint)
+export function RNBOptimizedComposition() {
+  // Memoize expensive calculations
+  const layout = React.useMemo(() => calculateLayout(videos), [videos]);
+
+  // Only render visible elements
+  return (
+    <Box>
+      {layout.visibleVideos.map(video => (
+        <Video key={video.id} participantId={video.id} />
+      ))}
+    </Box>
+  );
+}
+
+// 2. Handle Video Hamburger Model Correctly
+export function RNBLayeredComposition() {
+  return (
+    <Box>
+      {/* Background graphics (RGBA "bun") */}
+      <Image url="background.jpg" />
+
+      {/* Video layers (YUV "beef") - no color conversion */}
+      <Video participantId="main" />
+
+      {/* Graphics between videos automatically move to RGBA layers */}
+      <Text text="Lyrics" /> {/* Moves to foreground RGBA layer */}
+
+      {/* More video layers */}
+      <Video participantId="secondary" />
+
+      {/* Foreground overlays (RGBA "bun") */}
+      <Image url="logo.png" />
+    </Box>
+  );
+}
+
+// 3. Use VCS Hooks for Convenience
+export function RNBSmartComposition() {
+  const activeIds = useActiveVideo(); // Only active videos
+  const grid = useGrid({ maxColumns: 3 }); // Automatic grid layout
+  const params = useParams(); // Access parameters
+
+  return (
+    <Box>
+      {activeIds.map((id, index) => {
+        const pos = grid.getPosition(index);
+        return (
+          <Video
+            key={id}
+            participantId={id}
+            x={pos.x}
+            y={pos.y}
+            width={pos.width}
+            height={pos.height}
+          />
+        );
+      })}
+    </Box>
+  );
+}
+
+// 4. Sandbox-Aware Development
+export function RNBSandboxSafeComposition() {
+  // ❌ No direct user events (sandboxed)
+  // ❌ No network requests
+  // ❌ No device access
+
+  // ✅ Use provided inputs only
+  // ✅ Parameters for configuration
+  // ✅ Video slots for media
+  // ✅ Assets for static content
+  // ✅ WebFrame for embedded content
+
+  return <Box>{/* Composition logic */}</Box>;
+}
+
+// 5. VCS-Specific React Best Practices
+export function RNBBestPracticeComposition() {
+  // ✅ Use useRef instead of useState for better performance
+  const animationPhase = React.useRef(0);
+
+  // ✅ Use useVideoTime for video-based timing (not wall clock)
+  const videoTime = useVideoTime();
+
+  // ✅ Avoid setTimeout/setInterval - use video time instead
+  React.useEffect(() => {
+    // Animation logic based on video time
+    animationPhase.current = (videoTime / 1000) % (2 * Math.PI);
+  }, [videoTime]);
+
+  // ✅ No event listeners needed - data comes through params
+  const { showAnimation, animationSpeed } = useParams();
+
+  return (
+    <Box>
+      {/* Animated elements based on video time */}
+      <Text
+        text="♪"
+        x={100 + Math.sin(animationPhase.current) * 50}
+        y={100 + Math.cos(animationPhase.current) * 50}
+        fontSize={showAnimation ? 48 : 24}
+        opacity={showAnimation ? 1 : 0.5}
+      />
+    </Box>
+  );
+}
+
+// 6. Framework-Agnostic Design
+export function RNBCrossFrameworkCompatible() {
+  // VCS works with any frontend framework - your app can use:
+  // ✅ React, ✅ Vue, ✅ Angular, ✅ Svelte, ✅ Vanilla JS
+
+  // Cloud rendering is independent of client framework
+  // Only params API communicates with VCS compositions
+
+  return <Box>{/* Framework-agnostic composition */}</Box>;
+}
+```
+
+**VCS Layout API - Functional Video Layout System:**
+```typescript
+// VCS Layout API - Three Separate Specifications
+
+// 1. STYLING - Properties applied when generating element content
+<Text
+  text="RN'RB Live"
+  style={{
+    fontSize: 48,        // Font size in pixels
+    color: '#ff6b35',     // RN'RB accent color
+    fontWeight: 'bold'
+  }}
+/>
+
+// 2. COMPOSITING - Transformations and blending at render stage
+<Box
+  transform={{           // Apply transformations
+    rotation: 45,        // Rotate 45 degrees
+    scale: 1.2          // Scale up
+  }}
+  blend={{              // Apply blending
+    mode: 'multiply',   // Blend mode
+    opacity: 0.8        // Opacity
+  }}
+/>
+
+// 3. LAYOUT - Functional layout using layout prop
+<Box layout={[lowerThirdLayout, { pad_gu: 1 }]}>
+  <Text text="Lower Third Title" />
+</Box>
+```
+
+**VCS Layout Property Structure:**
+```typescript
+// Layout property is an array with [function, params]
+const layout = [
+  lowerThirdLayout,      // Layout function (mandatory)
+  { pad_gu: 1 }         // Parameters object (optional)
+];
+
+// Layout function signature
+function layoutFunction(parentFrame, params, layoutContext) {
+  // Transform parent rectangle into child rectangle
+  const { x, y, w, h } = parentFrame;
+
+  // Apply layout logic
+  const newFrame = {
+    x: x + padding,
+    y: y + offset,
+    w: w - (2 * padding),
+    h: h * 0.3  // Lower third = 30% height
+  };
+
+  return newFrame; // Must return {x, y, w, h}
+}
+```
+
+**Grid Unit System for Device-Independent Design:**
+```typescript
+// Grid Unit (gu) - Device-independent measurement
+// 1 gu = 1/36 of minimum output dimension
+// 720p stream: 1 gu = 20px
+// 1080p stream: 1 gu = 30px
+
+// RN'RB Layout Functions Using Grid Units
+function lowerThirdLayout(parentFrame, params, layoutCtx) {
+  const pad = params.pad_gu * layoutCtx.pixelsPerGridUnit; // Convert gu to pixels
+
+  let { x, y, w, h } = parentFrame;
+
+  // Lower third: bottom 1/3 of frame
+  h = Math.round(h / 3);
+  y += parentFrame.h - h;
+
+  // Apply grid-unit padding
+  x += pad;
+  y += pad;
+  w -= 2 * pad;
+  h -= 2 * pad;
+
+  return { x, y, w, h };
+}
+
+function sidebarLayout(parentFrame, params, layoutCtx) {
+  const width_gu = params.width_gu || 6; // Default 6 grid units wide
+  const side = params.side || 'right'; // 'left' or 'right'
+
+  const width_px = width_gu * layoutCtx.pixelsPerGridUnit;
+  let { x, y, w, h } = parentFrame;
+
+  if (side === 'right') {
+    x += w - width_px;
+  }
+  w = width_px;
+
+  return { x, y, w, h };
+}
+
+// RN'RB Music Session Layout Usage
+<Box layout={[lowerThirdLayout, { pad_gu: 1 }]}>
+  <Text text="🎸 Recording Session" />
+</Box>
+
+<Box layout={[sidebarLayout, { width_gu: 8, side: 'left' }]}>
+  <Text text="Participant List" />
+</Box>
+```
+
+**Layout Context Object - Advanced Layout Capabilities:**
+```typescript
+// Layout context provides essential layout information
+function advancedLayout(parentFrame, params, layoutCtx) {
+  // pixelsPerGridUnit: Convert grid units to pixels
+  const margin = params.margin_gu * layoutCtx.pixelsPerGridUnit;
+
+  // viewport: Access full viewport dimensions
+  const { w: viewportWidth, h: viewportHeight } = layoutCtx.viewport;
+
+  // useIntrinsicSize: Get natural size of content (images, etc.)
+  const intrinsicSize = layoutCtx.useIntrinsicSize();
+  // Returns {width, height} of the element's intrinsic content
+
+  // useContentSize: Get computed content size (two-pass layout)
+  const contentSize = layoutCtx.useContentSize();
+  // First pass: returns {width: 0, height: 0}
+  // Second pass: returns actual computed content size
+
+  // Calculate layout based on content
+  let { x, y, w, h } = parentFrame;
+
+  if (contentSize.width > 0) {
+    // Two-pass layout: size based on content
+    w = Math.min(w, contentSize.width + (2 * margin));
+    h = Math.min(h, contentSize.height + (2 * margin));
+  }
+
+  x += margin;
+  y += margin;
+  w -= 2 * margin;
+  h -= 2 * margin;
+
+  return { x, y, w, h };
+}
+```
+
+**Two-Pass Layout for Dynamic Content Sizing:**
+```typescript
+// Two-Pass Layout: Container adapts to content size
+function stretchBoxLayout(parentFrame, params, layoutCtx) {
+  const minWidth = params.minWidth_gu * layoutCtx.pixelsPerGridUnit;
+  const minHeight = params.minHeight_gu * layoutCtx.pixelsPerGridUnit;
+
+  // First pass: Get content size (may be 0)
+  const contentSize = layoutCtx.useContentSize();
+
+  let { x, y, w, h } = parentFrame;
+
+  // Use content size if available, otherwise minimum size
+  w = Math.max(minWidth, contentSize.width || minWidth);
+  h = Math.max(minHeight, contentSize.height || minHeight);
+
+  // Center in parent frame
+  x += (parentFrame.w - w) / 2;
+  y += (parentFrame.h - h) / 2;
+
+  return { x, y, w, h };
+}
+
+// RN'RB Dynamic Text Container
+function RNBTextContainer({ children }) {
+  return (
+    <Box layout={[stretchBoxLayout, { minWidth_gu: 12, minHeight_gu: 3 }]}>
+      <Box
+        backgroundColor="rgba(0,0,0,0.8)"
+        borderRadius={8}
+        padding_gu={1}
+      >
+        {children}
+      </Box>
+    </Box>
+  );
+}
+
+// Usage: Container grows to fit lyrics text
+<RNBTextContainer>
+  <Text
+    text="♪ Verse 1: Under neon lights we play..."
+    fontSize_gu={1.5}
+    color="#ffffff"
+  />
+</RNBTextContainer>
+```
+
+**RN'RB VCS Layout System Implementation:**
+```typescript
+// RN'RB Complete Layout System
+export const RNBLayoutSystem = {
+  // Predefined layout functions
+  lowerThird: lowerThirdLayout,
+  sidebar: sidebarLayout,
+  stretchBox: stretchBoxLayout,
+  grid: gridLayout,
+  spotlight: spotlightLayout,
+
+  // RN'RB-specific layout helpers
+  createMusicSessionLayout: (sessionType) => {
+    switch (sessionType) {
+      case 'recording':
+        return [gridLayout, { columns: 3, rows: 2 }];
+      case 'performance':
+        return [spotlightLayout, { spotlightSize: 0.7 }];
+      case 'production':
+        return [sidebarLayout, { width_gu: 10, side: 'right' }];
+      default:
+        return [gridLayout, { columns: 2, rows: 2 }];
+    }
+  },
+
+  // Grid unit utilities
+  gu: (value) => ({ gu: value }), // Helper for grid unit values
+  pixels: (value) => value,       // Helper for pixel values
+};
+
+// RN'RB Professional Session Layout
+export function RNBProfessionalSession({ sessionType, participants }) {
+  const layout = RNBLayoutSystem.createMusicSessionLayout(sessionType);
+
+  return (
+    <Box width={1920} height={1080}>
+      {/* Main participant area */}
+      <Box layout={layout}>
+        {participants.map((participant, index) => (
+          <Video
+            key={participant.id}
+            participantId={participant.id}
+            style={{
+              borderRadius: 8,
+              border: participant.isActive ? '2px solid #ff6b35' : 'none'
+            }}
+          />
+        ))}
+      </Box>
+
+      {/* RN'RB Branding - Lower Third */}
+      <Box layout={[RNBLayoutSystem.lowerThird, { pad_gu: 1 }]}>
+        <Image
+          url="session:logo-light.png"
+          x={0}
+          y={0}
+          width={200}
+          height={80}
+        />
+        <Text
+          text="Rock N' Roll Basement - Live Session"
+          x={220}
+          y={20}
+          fontSize={24}
+          color="#ff6b35"
+          fontWeight="bold"
+        />
+      </Box>
+
+      {/* Participant count sidebar */}
+      <Box layout={[RNBLayoutSystem.sidebar, { width_gu: 4, side: 'right' }]}>
+        <Text
+          text={`👥 ${participants.length} Musicians`}
+          fontSize={16}
+          color="#ffffff"
+        />
+      </Box>
+    </Box>
+  );
+}
+```
+
+**VCS Installation and Development Setup:**
+```bash
+# Clone VCS SDK repository
+git clone https://github.com/daily-co/daily-vcs.git
+cd daily-vcs/js
+
+# Install dependencies
+yarn install
+# OR
+npm install
+
+# Run VCS Simulator with baseline composition
+yarn open-browser daily:baseline
+
+# Run example custom composition
+yarn open-browser example:hello
+
+# Edit compositions and see live updates in browser
+# VCS Simulator auto-refreshes on file changes
+```
+
+**VCS Development Workflow:**
+```typescript
+// 1. Test baseline composition first (no coding required)
+await call.startRecording(roomName, {
+  layout: {
+    preset: 'custom',
+    composition_id: 'daily:baseline',
+    composition_params: {
+      mode: 'grid',
+      showTextOverlay: true,
+      'text.content': 'RN\'RB Live Session'
+    }
+  }
+});
+
+// 2. If baseline insufficient, clone VCS SDK
+// 3. Modify existing compositions or create new ones
+// 4. Test in VCS Simulator locally
+// 5. Deploy custom compositions to production
+```
+
+**RN'RB VCS Development Environment Setup:**
+```bash
+# Set up RN'RB VCS development workspace
+mkdir rnb-vcs-compositions
+cd rnb-vcs-compositions
+
+# Initialize with VCS SDK template
+git clone https://github.com/daily-co/daily-vcs.git .
+cd js
+
+# Install and start development
+yarn install
+yarn open-browser daily:baseline  # Start with baseline
+
+# Create RN'RB-specific composition
+cp example/hello.jsx compositions/rnb-music-composition.jsx
+# Edit with RN'RB branding and layouts
+
+# Test custom composition
+yarn open-browser file:compositions/rnb-music-composition.jsx
+```
+
+**VCS Production Deployment:**
+```typescript
+// Deploy RN'RB custom composition to production
+await call.startRecording(roomName, {
+  layout: {
+    preset: 'custom',
+    session_assets: {
+      'RNBMusicComposition.js': 'https://rnrb.ai/compositions/RNBMusicComposition.js'
+    },
+    composition_params: {
+      showBranding: true,
+      sessionType: 'recording',
+      accentColor: '#ff6b35'
+    }
+  }
+});
+
+// Composition loads from session_assets URL
+// Parameters passed via composition_params
+// VCS Simulator testing ensures production reliability
+```
+
+**VCS Core Components Reference:**
+```typescript
+// VCS Component Ecosystem - React-based but video-optimized
+
+// 1. <Box> - Layout container (like HTML <div>)
+<Box
+  width={1920}
+  height={1080}
+  backgroundColor="#1a1a1a"
+  borderRadius={8}
+  layout={[gridLayout, { columns: 3 }]} // Functional layout
+>
+  {/* Child components */}
+</Box>
+
+// 2. <Image> - Static image display (like HTML <img>)
+<Image
+  url="session:logo.png" // Session asset
+  x={50}
+  y={50}
+  width={200}
+  height={100}
+  style={{ opacity: 0.8 }}
+/>
+
+// 3. <Text> - Text rendering (like HTML <p>)
+<Text
+  text="Rock N' Roll Basement"
+  x={100}
+  y={100}
+  fontSize={36}
+  color="#ff6b35"
+  fontWeight="bold"
+  fontFamily="Arial Black"
+  textAlign="center"
+/>
+
+// 4. <Video> - Video feed display (like HTML <video>)
+<Video
+  participantId="guitarist"
+  x={200}
+  y={200}
+  width={640}
+  height={360}
+  borderRadius={8}
+  style={{
+    border: '2px solid #ff6b35'
+  }}
+/>
+
+// 5. <WebFrame> - Embedded web content (like HTML <iframe>)
+<WebFrame
+  url="https://rnrb.ai/live-chat"
+  x={1500}
+  y={300}
+  width={400}
+  height={600}
+  borderRadius={8}
+/>
+```
+
+**RN'RB VCS Component Usage Examples:**
+```typescript
+// Professional Music Session Layout with VCS Components
+export default function RNBMusicComposition({ inputs, params }) {
+  const { videos, activeSpeaker, lyrics } = inputs;
+  const { showBranding, accentColor } = params;
+
+  return (
+    <Box width={1920} height={1080} backgroundColor="#1a1a1a">
+      {/* Main video grid using <Video> components */}
+      {videos.slice(0, 6).map((video, index) => {
+        const col = index % 3;
+        const row = Math.floor(index / 3);
+        
+        return (
+          <Video
+            key={video.sourceId}
+            participantId={video.sourceId}
+            x={100 + col * 600}
+            y={100 + row * 300}
+            width={560}
+            height={280}
+            style={{
+              border: activeSpeaker === video.sourceId ? 
+                `3px solid ${accentColor}` : '1px solid #333',
+              borderRadius: 8
+            }}
+          />
+        );
+      })}
+
+      {/* Live lyrics using <Text> component */}
+      <Box
+        x={50}
+        y={850}
+        width={1400}
+        height={200}
+        backgroundColor="rgba(0,0,0,0.8)"
+        borderRadius={12}
+      >
+        <Text
+          text="♪ Live Lyrics ♪"
+          x={20}
+          y={20}
+          fontSize={24}
+          color="#ffffff"
+          fontWeight="bold"
+        />
+        <Text
+          text={lyrics?.slice(-100) || "Waiting for transcription..."}
+          x={20}
+          y={60}
+          fontSize={20}
+          color={accentColor}
+          fontStyle="italic"
+        />
+      </Box>
+
+      {/* RN'RB branding using <Image> component */}
+      {showBranding && (
+        <Image
+          url="https://rnrb.ai/logo-light.png"
+          x={1600}
+          y={50}
+          width={240}
+          height={100}
+        />
+      )}
+
+      {/* Interactive chat using <WebFrame> component */}
+      <WebFrame
+        url={`data:text/html,
+          <div style="background:black;color:white;padding:20px;border-radius:8px;">
+            <h3>Session Chat</h3>
+            <div id="messages"></div>
+            <input id="input" placeholder="Type message..." />
+            <button onclick="sendMessage()">Send</button>
+          </div>
+        `}
+        x={1500}
+        y={200}
+        width={350}
+        height={500}
+      />
+    </Box>
+  );
+}
+
+// VCS Components vs HTML/React Native Comparison
+// VCS <Box> = HTML <div> = React Native <View>
+// VCS <Image> = HTML <img> = React Native <Image>
+// VCS <Text> = HTML <p>/<span> = React Native <Text>
+// VCS <Video> = HTML <video> = React Native (custom)
+// VCS <WebFrame> = HTML <iframe> = React Native <WebView>
+```
+
+**VCS Styling Properties (Component-Specific):**
+```typescript
+// Each VCS component has curated styling properties
+// No CSS compatibility - optimized for video performance
+
+const textStyles = {
+  fontSize: 24,           // Font size in pixels
+  fontFamily: 'Arial',    // Font family
+  fontWeight: 'bold',     // Font weight
+  color: '#ffffff',       // Text color
+  textAlign: 'center',    // Text alignment
+  fontSize_gu: 1.5        // Grid unit font size (device-independent)
+};
+
+const boxStyles = {
+  backgroundColor: '#1a1a1a',  // Background color
+  borderRadius: 8,            // Border radius
+  opacity: 0.9               // Opacity
+};
+
+const imageStyles = {
+  opacity: 0.8,             // Image opacity
+  // Additional image-specific properties
+};
+
+const videoStyles = {
+  borderRadius: 8,          // Video border radius
+  // Video-specific styling properties
+};
+
+// Applied to components
+<Text text="RN'RB" style={textStyles} />
+<Box style={boxStyles} />
+<Image url="logo.png" style={imageStyles} />
+<Video participantId="musician" style={videoStyles} />
+```
+
+**VCS Box Component - Detailed API Reference:**
+```typescript
+// Box Component - Container for other components (HTML <div> equivalent)
+// Can be styled or act as invisible layout container
+
+import { Box } from '@daily-co/vcs-react';
+
+// Basic usage as styled container
+<Box
+  width={1920}
+  height={1080}
+  style={{
+    fillColor: '#1a1a1a',        // Background color
+    cornerRadius_px: 12,         // Rounded corners
+    strokeColor: '#ff6b35',       // Outline color
+    strokeWidth_px: 2            // Outline width
+  }}
+>
+  {/* Child components */}
+</Box>
+
+// As layout container (invisible, just for positioning)
+<Box layout={[gridLayout, { columns: 3, rows: 2 }]}>
+  {/* Children inherit layout positioning */}
+</Box>
+
+// Advanced Box with transform and blend
+<Box
+  transform={{
+    rotate_deg: 45  // Rotate 45 degrees
+  }}
+  blend={{
+    opacity: 0.8   // 80% opacity
+  }}
+  clip={true}      // Clip children within bounds
+>
+  {/* Transformed, semi-transparent, clipped content */}
+</Box>
+```
+
+**Box Component Props Reference:**
+```typescript
+// Box-Specific Props
+interface BoxProps {
+  // Transform - Applied at compositing stage
+  transform?: {
+    rotate_deg: number;  // Rotation in degrees
+  };
+
+  // Blend - Compositing properties  
+  blend?: {
+    opacity: number;  // 0-1 (0 = transparent, 1 = opaque)
+  };
+
+  // Clipping
+  clip?: boolean;  // Whether to clip children within bounds (default: false)
+}
+
+// Common Props (all VCS components)
+interface CommonProps {
+  id?: string;           // Component identifier for debugging
+  key?: string | number; // React key for array rendering
+  style?: BoxStyle;      // Component-specific styling
+  layout?: [Function, object?]; // Layout system integration
+}
+
+// Box Style Properties
+interface BoxStyle {
+  cornerRadius_px?: number;  // Rounded corner radius in pixels
+  fillColor?: string;        // Background color (hex, RGB, CSS names)
+  strokeColor?: string;      // Outline/border color
+  strokeWidth_px?: number;   // Outline width in pixels
+}
+
+// Valid Color Formats
+const validColors = [
+  '#ff6b35',           // Hex color codes
+  'rgb(255, 107, 53)', // RGB syntax
+  'rgba(255, 107, 53, 0.8)', // RGBA syntax
+  'blue',              // CSS color names
+  'transparent'        // Special values
+];
+```
+
+**RN'RB Box Component Implementation Examples:**
+```typescript
+// Professional Music Session Layouts with Box
+export default function RNBMusicComposition({ inputs, params }) {
+  const { videos, sessionType } = inputs;
+  const { accentColor, showBorders } = params;
+
+  return (
+    <Box 
+      width={1920} 
+      height={1080}
+      style={{
+        fillColor: '#1a1a1a',  // RN'RB dark theme background
+        cornerRadius_px: 0     // Full screen, no rounding
+      }}
+    >
+      {/* Main content area with subtle border */}
+      <Box
+        x={50}
+        y={50} 
+        width={1400}
+        height={800}
+        style={{
+          fillColor: 'rgba(255, 255, 255, 0.05)', // Subtle background
+          cornerRadius_px: 12,
+          strokeColor: showBorders ? '#333' : 'transparent',
+          strokeWidth_px: 1
+        }}
+        layout={[gridLayout, { columns: 3, rows: 2 }]}
+      >
+        {/* Video grid inside styled container */}
+        {videos.slice(0, 6).map((video, index) => (
+          <Box
+            key={video.sourceId}
+            style={{
+              cornerRadius_px: 8,
+              strokeColor: accentColor,
+              strokeWidth_px: 2,
+              fillColor: 'rgba(0,0,0,0.8)'
+            }}
+            blend={{ opacity: 0.95 }}
+          >
+            <Video
+              participantId={video.sourceId}
+              width={560}
+              height={280}
+            />
+          </Box>
+        ))}
+      </Box>
+
+      {/* Sidebar with rotation effect */}
+      <Box
+        x={1500}
+        y={100}
+        width={350}
+        height={600}
+        transform={{
+          rotate_deg: sessionType === 'performance' ? 2 : 0  // Subtle tilt for performance
+        }}
+        style={{
+          fillColor: 'rgba(0,0,0,0.9)',
+          cornerRadius_px: 16,
+          strokeColor: accentColor,
+          strokeWidth_px: 2
+        }}
+        blend={{ opacity: 0.9 }}
+      >
+        {/* Sidebar content */}
+        <Text text="Session Controls" color="#ffffff" />
+      </Box>
+
+      {/* Lyrics overlay with clipping */}
+      <Box
+        x={50}
+        y={880}
+        width={1400}
+        height={150}
+        clip={true}  // Clip text within bounds
+        style={{
+          fillColor: 'rgba(0,0,0,0.8)',
+          cornerRadius_px: 8,
+          strokeColor: accentColor,
+          strokeWidth_px: 1
+        }}
+      >
+        <Text 
+          text="♪ Live lyrics display with professional styling ♪"
+          color="#ffffff"
+          fontSize={20}
+        />
+      </Box>
+    </Box>
+  );
+}
+
+// Advanced Box Techniques
+function AdvancedBoxUsage() {
+  return (
+    <Box>
+      {/* Nested layout containers */}
+      <Box layout={[horizontalSplit, { ratio: 0.7 }]}>
+        <Box style={{ fillColor: 'red' }}>{/* Left side */}</Box>
+        <Box style={{ fillColor: 'blue' }}>{/* Right side */}</Box>
+      </Box>
+
+      {/* Transform and blend combinations */}
+      <Box
+        transform={{ rotate_deg: 15 }}
+        blend={{ opacity: 0.7 }}
+        style={{ 
+          fillColor: 'yellow',
+          cornerRadius_px: 20 
+        }}
+      >
+        {/* Rotated, semi-transparent content */}
+      </Box>
+
+      {/* Clipping for advanced layouts */}
+      <Box
+        x={100}
+        y={100}
+        width={400}
+        height={300}
+        clip={true}
+        style={{ 
+          fillColor: 'black',
+          cornerRadius_px: 12 
+        }}
+      >
+        {/* Content clipped to rounded rectangle */}
+        <Image url="large-image.jpg" width={600} height={400} />
+      </Box>
+    </Box>
+  );
+}
+```
+
+**VCS Image Component - Detailed API Reference:**
+```typescript
+// Image Component - Static image rendering (HTML <img> equivalent)
+// Sources must be provided via session_assets
+
+import { Image } from '@daily-co/vcs-react';
+
+// Basic usage with session asset
+<Image 
+  src="logo-light"  // Asset name (no file extension)
+  x={50}
+  y={50}
+  width={200}
+  height={100}
+/>
+
+// Advanced Image with scaling and effects
+<Image
+  src="rnb-background"
+  scaleMode="fill"  // 'fit', 'fill', or 'stretch'
+  transform={{
+    rotate_deg: 15  // Rotate 15 degrees
+  }}
+  blend={{
+    opacity: 0.8   // 80% opacity
+  }}
+  style={{
+    cornerRadius_px: 12  // Rounded corners
+  }}
+/>
+```
+
+**Image Component Props Reference:**
+```typescript
+// Image-Specific Props
+interface ImageProps {
+  // Source - Asset name within default namespace
+  src: string;  // Asset identifier (set via session_assets)
+
+  // Scaling mode
+  scaleMode?: 'fit' | 'fill' | 'stretch';
+  // 'fit' - Scale to fit without cropping, centered
+  // 'fill' - Crop and scale to fill frame
+  // 'stretch' - Stretch to fill (may distort)
+
+  // Transform - Applied at compositing stage
+  transform?: {
+    rotate_deg: number;  // Rotation in degrees
+  };
+
+  // Blend - Compositing properties
+  blend?: {
+    opacity: number;     // 0-1 (0 = transparent, 1 = opaque)
+  };
+}
+
+// Common Props (all VCS components)
+interface CommonProps {
+  id?: string;           // Component identifier for debugging
+  key?: string | number; // React key for array rendering
+  style?: ImageStyle;    // Component-specific styling
+  layout?: [Function, object?]; // Layout system integration
+}
+
+// Image Style Properties
+interface ImageStyle {
+  cornerRadius_px?: number;  // Rounded corner radius in pixels
+}
+```
+
+**Image Asset Management for RN'RB:**
+```typescript
+// Three ways to provide image sources
+
+// 1. Composition Assets (Built-in, not customizable yet)
+// - Part of VCS baseline composition
+// - Small icons, placeholders
+// - Cannot be customized currently
+
+// 2. Session Assets (Recommended for RN'RB)
+// - Specified when starting streaming/recording
+// - Downloaded and validated before rendering
+// - Guaranteed to be available
+
+await call.startRecording(roomName, {
+  layout: {
+    session_assets: {
+      'logo-light': 'https://rnrb.ai/logo-light.png',
+      'background-rock': 'https://rnrb.ai/concert-background.jpg',
+      'watermark': 'https://rnrb.ai/watermark.png'
+    }
+  }
+});
+
+// 3. Dynamic Assets (Future feature)
+// - Specified during active session
+// - Downloaded in background
+// - Use hooks to detect when available
+// - Not yet available in current API
+```
+
+**RN'RB Image Component Implementation Examples:**
+```typescript
+// Professional Music Session Branding with Images
+export default function RNBMusicComposition({ inputs, params }) {
+  const { sessionType } = inputs;
+  const { showBranding, showWatermark } = params;
+
+  return (
+    <Box width={1920} height={1080}>
+      
+      {/* RN'RB Logo - Session Asset */}
+      {showBranding && (
+        <Image
+          src="logo-light"  // References session_assets entry
+          x={1600}
+          y={50}
+          width={240}
+          height={100}
+          blend={{ opacity: 0.9 }}
+          style={{ cornerRadius_px: 8 }}
+        />
+      )}
+
+      {/* Background Image for Concert Sessions */}
+      {sessionType === 'performance' && (
+        <Image
+          src="background-rock"
+          x={0}
+          y={0}
+          width={1920}
+          height={1080}
+          scaleMode="fill"  // Fill entire frame, may crop
+          blend={{ opacity: 0.3 }}  // Subtle background
+        />
+      )}
+
+      {/* Watermark Overlay */}
+      {showWatermark && (
+        <Image
+          src="watermark"
+          x={1700}
+          y={950}
+          width={150}
+          height={80}
+          transform={{ rotate_deg: -15 }}  // Angled watermark
+          blend={{ opacity: 0.6 }}
+          scaleMode="fit"  // Fit without cropping
+        />
+      )}
+
+      {/* Participant Avatars (when video is off) */}
+      {videos.map((video, index) => (
+        video.active ? (
+          <Video participantId={video.sourceId} />
+        ) : (
+          <Image
+            src="default-avatar"  // Placeholder avatar
+            x={100 + (index % 3) * 600}
+            y={100 + Math.floor(index / 3) * 300}
+            width={200}
+            height={200}
+            style={{ cornerRadius_px: 100 }}  // Circular avatar
+            blend={{ opacity: 0.7 }}
+          />
+        )
+      ))}
+
+      {/* Animated Logo Sequence */}
+      <Image
+        src="animated-logo"
+        x={800}
+        y={400}
+        width={320}
+        height={280}
+        transform={{ rotate_deg: Math.sin(Date.now() * 0.001) * 5 }}
+        blend={{ opacity: 0.8 }}
+        scaleMode="fit"
+      />
+
+    </Box>
+  );
+}
+
+// Advanced Image Techniques
+function AdvancedImageUsage() {
+  return (
+    <Box>
+      {/* Background with fill mode */}
+      <Image
+        src="studio-background"
+        x={0}
+        y={0}
+        width={1920}
+        height={1080}
+        scaleMode="fill"  // Crop to fill exactly
+      />
+
+      {/* Foreground overlay with rotation */}
+      <Image
+        src="guitar-overlay"
+        x={1200}
+        y={200}
+        width={400}
+        height={300}
+        scaleMode="fit"   // Fit without cropping
+        transform={{ rotate_deg: 12 }}
+        blend={{ opacity: 0.7 }}
+        style={{ cornerRadius_px: 16 }}
+      />
+
+      {/* Stretched graphic element */}
+      <Image
+        src="gradient-bar"
+        x={100}
+        y={900}
+        width={1400}
+        height={4}
+        scaleMode="stretch"  // Stretch to exact dimensions
+        blend={{ opacity: 0.8 }}
+      />
+    </Box>
+  );
+}
+```
+
+**VCS Text Component - Detailed API Reference:**
+```typescript
+// Text Component - Multi-line text rendering (HTML <p> equivalent)
+// Requires explicit style prop since VCS has no CSS inheritance cascade
+
+import { Text } from '@daily-co/vcs-react';
+
+// Basic usage with required styling
+const labelStyle = {
+  textColor: 'white',
+  fontFamily: 'Roboto',
+  fontWeight: '600',
+  fontSize_px: 16,
+};
+
+<Text style={labelStyle}>Hello world</Text>
+
+// Advanced Text with all styling options
+<Text
+  style={{
+    textColor: '#ff6b35',           // RN'RB accent color
+    fontFamily: 'Bangers',          // Rock-style font
+    fontSize_px: 48,                // Large display text
+    fontWeight: '700',              // Bold
+    fontStyle: 'normal',            // Normal (not italic)
+    strokeColor: '#000000',         // Black outline
+    strokeWidth_px: 2               // 2px outline
+  }}
+  transform={{
+    rotate_deg: 5                   // Slight rotation
+  }}
+  blend={{
+    opacity: 0.9                    // 90% opacity
+  }}
+>
+  ROCK N' ROLL BASEMENT
+</Text>
+```
+
+**Text Component Props Reference:**
+```typescript
+// Text-Specific Props
+interface TextProps {
+  // Transform - Applied at compositing stage
+  transform?: {
+    rotate_deg: number;  // Rotation in degrees
+  };
+
+  // Blend - Compositing properties
+  blend?: {
+    opacity: number;     // 0-1 (0 = transparent, 1 = opaque)
+  };
+
+  // Clipping
+  clip?: boolean;        // Whether to clip children within bounds (default: false)
+}
+
+// Common Props (all VCS components)
+interface CommonProps {
+  id?: string;           // Component identifier for debugging
+  key?: string | number; // React key for array rendering
+  style?: TextStyle;     // Component-specific styling
+  layout?: [Function, object?]; // Layout system integration
+}
+
+// Text Style Properties - Extensive typography control
+interface TextStyle {
+  // Color - Valid CSS color formats
+  textColor?: string;        // Hex, RGB, RGBA, CSS names
+
+  // Font sizing - Two options
+  fontSize_gu?: number;      // Grid units (relative, recommended)
+  fontSize_px?: number;      // Pixels (absolute)
+
+  // Typography
+  fontFamily?: TextFontFamily; // Limited selection
+  fontStyle?: 'normal' | 'italic';
+  fontWeight?: TextFontWeight; // '100' to '900'
+
+  // Text effects
+  strokeColor?: string;      // Outline color
+  strokeWidth_px?: number;   // Outline width in pixels
+}
+
+// Available Font Families (curated selection)
+type TextFontFamily =
+  | 'Roboto'           // Clean, modern
+  | 'RobotoCondensed'  // Condensed variant
+  | 'Anton'            // Bold, display
+  | 'Bangers'          // Comic/cartoon style
+  | 'Bitter'           // Serif, elegant
+  | 'Exo'              // Tech/sci-fi
+  | 'Magra'            // Bold, geometric
+  | 'PermanentMarker'  // Handwritten style
+  | 'SuezOne'          // Decorative, vintage
+  | 'Teko'             // Condensed, modern
+
+// Font Weights (string values, not numbers)
+type TextFontWeight =
+  | '100' | '200' | '300' | '400' | '500'
+  | '600' | '700' | '800' | '900'
+
+// Valid Color Format Examples
+const validTextColors = [
+  '#ff6b35',           // Hex color codes
+  'rgb(255, 107, 53)', // RGB syntax
+  'rgba(255, 107, 53, 0.8)', // RGBA syntax
+  'blue',              // CSS color names
+  'white',             // Common names
+  'black',
+  'transparent'
+];
+```
+
+**RN'RB Text Component Implementation Examples:**
+```typescript
+// Professional Music Session Text Styling
+export default function RNBMusicComposition({ inputs, params }) {
+  const { currentSong, currentArtist, sessionType } = inputs;
+  const { showLyrics, showCredits } = params;
+
+  return (
+    <Box width={1920} height={1080}>
+      
+      {/* Main Title - Rock Style */}
+      <Text
+        x={100}
+        y={100}
+        style={{
+          textColor: '#ff6b35',     // RN'RB accent color
+          fontFamily: 'Bangers',    // Bold, rock-style font
+          fontSize_px: 72,
+          fontWeight: '700',
+          strokeColor: '#000000',
+          strokeWidth_px: 3
+        }}
+        transform={{ rotate_deg: -2 }} // Slight rock attitude
+      >
+        ROCK N' ROLL BASEMENT
+      </Text>
+
+      {/* Session Type Badge */}
+      <Text
+        x={1500}
+        y={100}
+        style={{
+          textColor: 'white',
+          fontFamily: 'Teko',
+          fontSize_px: 24,
+          fontWeight: '600',
+          strokeColor: '#ff6b35',
+          strokeWidth_px: 1
+        }}
+      >
+        {sessionType.toUpperCase()} SESSION
+      </Text>
+
+      {/* Song Information */}
+      <Text
+        x={100}
+        y={250}
+        style={{
+          textColor: '#ffffff',
+          fontFamily: 'Roboto',
+          fontSize_px: 36,
+          fontWeight: '500'
+        }}
+      >
+        {currentSong || 'No song selected'}
+      </Text>
+
+      <Text
+        x={100}
+        y={300}
+        style={{
+          textColor: '#cccccc',
+          fontFamily: 'Roboto',
+          fontSize_px: 24,
+          fontWeight: '300',
+          fontStyle: 'italic'
+        }}
+      >
+        by {currentArtist || 'Unknown Artist'}
+      </Text>
+
+      {/* Live Lyrics Display */}
+      {showLyrics && (
+        <Text
+          x={100}
+          y={800}
+          width={1400}
+          style={{
+            textColor: '#ffffff',
+            fontFamily: 'Roboto',
+            fontSize_px: 28,
+            fontWeight: '400',
+            strokeColor: 'rgba(0,0,0,0.5)',
+            strokeWidth_px: 1
+          }}
+          blend={{ opacity: 0.9 }}
+        >
+          ♪ Live lyrics will appear here during performance ♪
+        </Text>
+      )}
+
+      {/* Credits and Branding */}
+      {showCredits && (
+        <Text
+          x={1600}
+          y={1000}
+          style={{
+            textColor: '#888888',
+            fontFamily: 'RobotoCondensed',
+            fontSize_px: 16,
+            fontWeight: '400'
+          }}
+          blend={{ opacity: 0.7 }}
+        >
+          RN'RB • Professional Music Collaboration
+        </Text>
+      )}
+
+      {/* Performance Indicators */}
+      <Text
+        x={100}
+        y={1000}
+        style={{
+          textColor: '#00ff00',
+          fontFamily: 'Exo',
+          fontSize_px: 18,
+          fontWeight: '600'
+        }}
+      >
+        🔴 LIVE • {participants.length} musicians connected
+      </Text>
+
+    </Box>
+  );
+}
+
+// Advanced Text Techniques for Music Sessions
+function AdvancedTextUsage() {
+  return (
+    <Box>
+      {/* Chord Progressions with Rock Fonts */}
+      <Text
+        x={50}
+        y={50}
+        style={{
+          textColor: '#ff6b35',
+          fontFamily: 'PermanentMarker', // Handwritten guitar tabs
+          fontSize_px: 24,
+          fontWeight: '400'
+        }}
+      >
+        🎸 C - G - Am - F Progression
+      </Text>
+
+      {/* BPM Display with Tech Font */}
+      <Text
+        x={1500}
+        y={200}
+        style={{
+          textColor: '#00ffff',
+          fontFamily: 'Exo', // Tech/sci-fi aesthetic
+          fontSize_px: 36,
+          fontWeight: '700',
+          strokeColor: '#000000',
+          strokeWidth_px: 2
+        }}
+        transform={{ rotate_deg: 90 }} // Vertical BPM meter
+      >
+        120 BPM
+      </Text>
+
+      {/* Session Timer with Condensed Font */}
+      <Text
+        x={800}
+        y={50}
+        style={{
+          textColor: 'white',
+          fontFamily: 'Teko', // Condensed, modern
+          fontSize_px: 48,
+          fontWeight: '600'
+        }}
+      >
+        02:34:15
+      </Text>
+
+      {/* Multi-line Lyrics with Proper Spacing */}
+      <Text
+        x={100}
+        y={600}
+        width={800}
+        style={{
+          textColor: '#ffffff',
+          fontFamily: 'Roboto',
+          fontSize_px: 20,
+          fontWeight: '400',
+          strokeColor: 'rgba(0,0,0,0.3)',
+          strokeWidth_px: 0.5
+        }}
+        blend={{ opacity: 0.95 }}
+      >
+        {`Verse 1:
+        In the basement where the amps are loud
+        Rock n' roll dreams echo all around
+        Guitars screaming, drums beating fast
+        This is where the music's meant to last`}
+      </Text>
+
+      {/* Artist Names with Elegant Serif */}
+      <Text
+        x={1000}
+        y={900}
+        style={{
+          textColor: '#ff6b35',
+          fontFamily: 'Bitter', // Elegant serif
+          fontSize_px: 32,
+          fontWeight: '600',
+          fontStyle: 'italic'
+        }}
+      >
+        Featuring: The Basement Band
+      </Text>
+    </Box>
+  );
+}
+```
+
+**VCS Text Component Best Practices for RN'RB:**
+
+**Typography Hierarchy:**
+```typescript
+// Title Text - Large, bold, rock-style fonts
+const titleStyle = {
+  textColor: '#ff6b35',
+  fontFamily: 'Bangers',
+  fontSize_px: 72,
+  fontWeight: '700',
+  strokeColor: '#000000',
+  strokeWidth_px: 3
+};
+
+// Body Text - Clean, readable
+const bodyStyle = {
+  textColor: '#ffffff',
+  fontFamily: 'Roboto',
+  fontSize_px: 24,
+  fontWeight: '400'
+};
+
+// Accent Text - Highlighted information
+const accentStyle = {
+  textColor: '#00ff00',
+  fontFamily: 'Exo',
+  fontSize_px: 18,
+  fontWeight: '600'
+};
+```
+
+**Font Selection Strategy:**
+- **Bangers** - Titles, rock branding (bold, comic-style)
+- **PermanentMarker** - Guitar tabs, handwritten notes
+- **Teko** - Modern UI elements, session info
+- **Exo** - Tech displays, BPM meters, performance data
+- **Roboto** - Body text, lyrics, readable content
+- **Anton** - Secondary headings, band names
+- **SuezOne** - Vintage/retro elements
+
+**Text Effects for Music Sessions:**
+- **Stroke/Outline** - Text visibility over video backgrounds
+- **Rotation** - Dynamic, energetic feel for live sessions
+- **Opacity** - Layered text overlays
+- **Multi-line** - Lyrics, session notes, participant lists
+- **Color coding** - Different text colors for different content types
+
+**Recommendation:** Start with baseline composition for immediate branding wins, then progress to VCS SDK for full music production customization - essential for professional RN'RB video content.
+
+---
+
+**Agent 18 Daily.co Video Component System Text Component API Complete (2025-11-17)**
+
+**VCS Text component API fully documented - RN'RB now has complete Text component reference with extensive typography controls (fonts, colors, effects) for professional music session branding and lyrics display.**
+
+---
+
+**VCS Video Component - Detailed API Reference:**
+```typescript
+// Video Component - Video feed rendering (HTML <video> equivalent)
+// Uses video input slots for participant streams and other video sources
+
+import { Video } from '@daily-co/vcs-react';
+import { useActiveVideo } from '@daily-co/vcs-react';
+
+// Basic usage - display dominant/active video
+export default function DominantVideo() {
+  const { dominantId } = useActiveVideo();
+  return <Video key="video" src={dominantId} />;
+}
+
+// Advanced Video with scaling and styling
+<Video
+  src="participant-camera-123"  // Video source ID
+  scaleMode="fill"              // 'fit' or 'fill'
+  x={100}
+  y={100}
+  width={800}
+  height={600}
+  style={{
+    cornerRadius_px: 12         // Rounded corners
+  }}
+/>
+```
+
+**Video Component Props Reference:**
+```typescript
+// Video-Specific Props
+interface VideoProps {
+  // Source - Video input slot ID
+  src: string;  // Video source ID from useActiveVideo()
+
+  // Scaling mode (same as Image)
+  scaleMode?: 'fit' | 'fill';
+  // 'fit' - Scale to fit without cropping, centered
+  // 'fill' - Crop and scale to fill frame
+}
+
+// Common Props (all VCS components)
+interface CommonProps {
+  id?: string;           // Component identifier for debugging
+  key?: string | number; // React key for array rendering
+  style?: VideoStyle;    // Component-specific styling
+  layout?: [Function, object?]; // Layout system integration
+}
+
+// Video Style Properties
+interface VideoStyle {
+  cornerRadius_px?: number;  // Rounded corner radius in pixels
+}
+```
+
+**Video Source Management - Input Slots:**
+```typescript
+// Video sources come from "input slots" - not assets like images
+// Input slots represent: participants, screen shares, other video inputs
+
+// Primary Hook: useActiveVideo() - Filtered video sources
+const { activeIds, dominantId } = useActiveVideo();
+// activeIds: Array of available video source IDs
+// dominantId: ID of dominant/active video (usually current speaker)
+
+// Alternative Hook: useMediaInput() - Raw input slots array
+const { inputs } = useMediaInput();
+// inputs: Raw array of all media input slots
+// Rarely needed - useActiveVideo() is usually sufficient
+
+// Video Input Slot Types:
+// - Camera feeds from participants
+// - Screen shares
+// - Custom video inputs (future)
+// - Virtual cameras, overlays (future)
+```
+
+**RN'RB Video Component Implementation Examples:**
+```typescript
+// Professional Music Session Video Layout
+export default function RNBMusicComposition({ inputs, params }) {
+  const { activeIds, dominantId } = useActiveVideo();
+  const { layoutMode, showScreenShare } = params;
+
+  return (
+    <Box width={1920} height={1080}>
+
+      {/* Dominant Speaker - Large central video */}
+      {dominantId && (
+        <Video
+          key={`dominant-${dominantId}`}
+          src={dominantId}
+          x={320}
+          y={140}
+          width={1280}
+          height={720}
+          scaleMode="fit"
+          style={{ cornerRadius_px: 16 }}
+        />
+      )}
+
+      {/* Participant Grid - Smaller videos around dominant */}
+      {layoutMode === 'grid' && activeIds
+        .filter(id => id !== dominantId)
+        .slice(0, 6) // Max 6 additional videos
+        .map((videoId, index) => {
+          const cols = 3;
+          const rows = 2;
+          const col = index % cols;
+          const row = Math.floor(index / cols);
+
+          return (
+            <Video
+              key={`participant-${videoId}`}
+              src={videoId}
+              x={50 + col * 420}
+              y={50 + row * 240}
+              width={400}
+              height={225}
+              scaleMode="fill"
+              style={{ cornerRadius_px: 8 }}
+            />
+          );
+        })}
+
+      {/* Screen Share - Full overlay */}
+      {showScreenShare && (
+        <Video
+          key="screen-share"
+          src="screen-share-id" // From useActiveVideo()
+          x={0}
+          y={0}
+          width={1920}
+          height={1080}
+          scaleMode="fit"
+        />
+      )}
+
+      {/* Picture-in-Picture - Small overlay */}
+      <Video
+        key="pip"
+        src={dominantId}
+        x={1600}
+        y={50}
+        width={240}
+        height={135}
+        scaleMode="fill"
+        style={{ cornerRadius_px: 4 }}
+        blend={{ opacity: 0.8 }}
+      />
+
+    </Box>
+  );
+}
+
+// Advanced Video Techniques for Music Sessions
+function AdvancedVideoUsage() {
+  const { activeIds } = useActiveVideo();
+
+  return (
+    <Box>
+      {/* Stage Layout - Band members in positions */}
+      <Video
+        src="drummer-camera"
+        x={100}
+        y={300}
+        width={400}
+        height={300}
+        scaleMode="fill"
+        style={{ cornerRadius_px: 12 }}
+      />
+
+      <Video
+        src="guitarist-camera"
+        x={550}
+        y={200}
+        width={400}
+        height={300}
+        scaleMode="fill"
+        style={{ cornerRadius_px: 12 }}
+      />
+
+      <Video
+        src="vocalist-camera"
+        x={1000}
+        y={150}
+        width={400}
+        height={300}
+        scaleMode="fill"
+        style={{ cornerRadius_px: 12 }}
+      />
+
+      <Video
+        src="bassist-camera"
+        x={1450}
+        y={300}
+        width={400}
+        height={300}
+        scaleMode="fill"
+        style={{ cornerRadius_px: 12 }}
+      />
+
+      {/* DAW Screen Share - Technical view */}
+      <Video
+        src="daw-screen-share"
+        x={50}
+        y={650}
+        width={800}
+        height={380}
+        scaleMode="fit"
+        style={{ cornerRadius_px: 8 }}
+      />
+
+      {/* Chat/Webcam Mix - Technical + personal */}
+      {activeIds.slice(4, 8).map((videoId, index) => (
+        <Video
+          key={`chat-${videoId}`}
+          src={videoId}
+          x={900 + (index % 2) * 210}
+          y={650 + Math.floor(index / 2) * 160}
+          width={200}
+          height={150}
+          scaleMode="fill"
+          style={{ cornerRadius_px: 4 }}
+        />
+      ))}
+
+    </Box>
+  );
+}
+```
+
+**Video Component Best Practices for RN'RB:**
+
+**Video Source Management:**
+```typescript
+// Always use useActiveVideo() for participant videos
+const { activeIds, dominantId } = useActiveVideo();
+
+// Handle video source changes gracefully
+useEffect(() => {
+  if (dominantId) {
+    console.log('RN\'RB: Dominant speaker changed to:', dominantId);
+    // Update layout, focus, etc.
+  }
+}, [dominantId]);
+
+// Filter out unwanted video sources
+const participantVideos = activeIds.filter(id =>
+  !id.includes('screen-share') && !id.includes('daw')
+);
+const screenShares = activeIds.filter(id =>
+  id.includes('screen-share') || id.includes('daw')
+);
+```
+
+**Performance Optimization:**
+```typescript
+// VCS optimizes video rendering - follow these rules:
+// 1. Keep video on fast path - avoid mixing with heavy graphics
+// 2. Use appropriate scaleMode based on content
+// 3. Limit concurrent video streams (6-8 max recommended)
+// 4. Use layout system for positioning, not manual coordinates
+// 5. Batch video updates to avoid layout thrashing
+
+// Good: Videos in dedicated layer
+<Video src={dominantId} scaleMode="fit" />
+
+// Avoid: Heavy graphics mixed with video (performance impact)
+<Video src={dominantId}>
+  <HeavyGraphicsOverlay /> {/* Slows down video rendering */}
+</Video>
+```
+
+**Layout Strategies for Music Sessions:**
+- **Stage Layout**: Position musicians like a real stage (drums back, vocals front)
+- **Grid Layout**: Equal-sized videos for rehearsals
+- **Dominant Speaker**: Large central video + small PiP thumbnails
+- **Screen Share Focus**: DAW interface large, participants small
+- **Mixed Mode**: Technical (DAW) + personal (webcams) split
+- **Performance Mode**: Minimal UI, maximum video real estate
+
+**ScaleMode Selection:**
+- **fit**: Use for presentations, screen shares, DAW interfaces (preserves aspect ratio)
+- **fill**: Use for participant videos, cameras (fills frame, may crop)
+
+**Recommendation:** Start with baseline composition for immediate branding wins, then progress to VCS SDK for full music production customization - essential for professional RN'RB video content.
+
+---
+
+**Agent 18 Daily.co Video Component System Video Component API Complete (2025-11-17)**
+
+**VCS Video component API fully documented - RN'RB now has complete Video component reference with input slots, scaleMode, and performance optimization for professional participant video rendering.**
+
+---
+
+**VCS WebFrame Component - Detailed API Reference:**
+```typescript
+// WebFrame Component - Embedded web page rendering (HTML <iframe> equivalent)
+// Singleton component - only one allowed per composition, ~2 fps refresh rate
+
+import { WebFrame } from '@daily-co/vcs-react';
+
+// Basic usage - embed public web page
+export default function CustomWebFrameOverlay() {
+  const src = 'https://example.com';
+  const size = { w: 960, h: 640 };
+  const opacity = 0.9;
+
+  return <WebFrame
+    src={src}
+    viewportSize={size}
+    blend={{ opacity }}
+  />;
+}
+
+// Advanced WebFrame with scaling and interaction
+<WebFrame
+  src="https://docs.google.com/presentation/d/123/edit"
+  viewportSize={{ w: 1280, h: 720 }}
+  scaleMode="fit"
+  transform={{
+    rotate_deg: 5
+  }}
+  blend={{
+    opacity: 0.95
+  }}
+  style={{
+    cornerRadius_px: 12
+  }}
+  keyPressAction={{
+    name: 'ArrowRight',
+    modifiers: '',
+    key: 1  // Unique identifier to trigger event
+  }}
+/>
+```
+
+**WebFrame Component Props Reference:**
+```typescript
+// WebFrame-Specific Props
+interface WebFrameProps {
+  // Source - Public URL (loaded on Daily's servers)
+  src: string;  // Must be publicly accessible
+
+  // Viewport size for embedded browser
+  viewportSize?: {
+    w: number;  // Width in pixels
+    h: number;  // Height in pixels
+  };
+
+  // Simulated keyboard interaction
+  keyPressAction?: {
+    name: string;      // Key name (ArrowRight, Enter, etc.)
+    modifiers: string; // Modifier keys ('Shift+Meta', etc.)
+    key: number;       // Unique identifier (> 0, triggers event when changed)
+  };
+}
+
+// Shared with Image Component
+interface WebFrameImageProps {
+  // Scaling mode
+  scaleMode?: 'fit' | 'fill';
+  // 'fit' - Scale to fit without cropping, centered
+  // 'fill' - Crop and scale to fill frame
+
+  // Transform - Applied at compositing stage
+  transform?: {
+    rotate_deg: number;  // Rotation in degrees
+  };
+
+  // Blend - Compositing properties
+  blend?: {
+    opacity: number;     // 0-1 (0 = transparent, 1 = opaque)
+  };
+}
+
+// Common Props (all VCS components)
+interface CommonProps {
+  id?: string;           // Component identifier for debugging
+  key?: string | number; // React key for array rendering
+  style?: WebFrameStyle; // Component-specific styling
+  layout?: [Function, object?]; // Layout system integration
+}
+
+// WebFrame Style Properties
+interface WebFrameStyle {
+  cornerRadius_px?: number;  // Rounded corner radius in pixels
+}
+```
+
+**WebFrame Interaction - Keyboard Events:**
+```typescript
+// Supported Key Names
+const supportedKeys = [
+  // Digits
+  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+
+  // Letters
+  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+  'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+  'U', 'V', 'W', 'X', 'Y', 'Z',
+
+  // Special characters
+  '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
+  '+', '-', '=', '[', ']', '{', '}', '\\', '|',
+  ';', ':', '\'', '"', ',', '.', '<', '>', '/', '?',
+  '`', '~',
+
+  // Function keys
+  'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
+  'F7', 'F8', 'F9', 'F10', 'F11', 'F12',
+
+  // Control keys
+  'Enter', 'Escape', 'Backspace', 'Tab',
+  'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+  'PageUp', 'PageDown'
+];
+
+// Modifier Keys
+const modifierKeys = [
+  'Shift',    // Shift key
+  'Control',  // Ctrl key
+  'Alt',      // Alt/Option key
+  'Meta'      // Cmd/Windows key
+];
+
+// Combine with + (e.g., 'Shift+Meta')
+```
+
+**WebFrame Interaction Examples:**
+```typescript
+// Google Slides Control Functions
+let kpkey = 0; // Unique key counter (use React ref in real app)
+
+export function makeKeyPressAction_StartSlideShow() {
+  return {
+    name: 'Enter',
+    modifiers: 'Shift+Meta',  // Shift+Cmd on Mac
+    key: ++kpkey,
+  };
+}
+
+export function makeKeyPressAction_NextSlide() {
+  return {
+    name: 'ArrowRight',
+    modifiers: '',
+    key: ++kpkey,
+  };
+}
+
+export function makeKeyPressAction_PreviousSlide() {
+  return {
+    name: 'ArrowLeft',
+    modifiers: '',
+    key: ++kpkey,
+  };
+}
+
+export function makeKeyPressAction_Fullscreen() {
+  return {
+    name: 'F',
+    modifiers: '',
+    key: ++kpkey,
+  };
+}
+```
+
+**RN'RB WebFrame Component Implementation Examples:**
+```typescript
+// Professional Music Session WebFrame Usage
+export default function RNBMusicComposition({ inputs, params }) {
+  const { documentUrl, showPresentation, interactionKey } = inputs;
+  const { viewportWidth, viewportHeight } = params;
+
+  // Only one WebFrame allowed per composition
+  if (!showPresentation || !documentUrl) {
+    return null;
+  }
+
+  return (
+    <Box width={1920} height={1080}>
+
+      {/* Embedded Document - Google Docs/Sheets/Slides */}
+      <WebFrame
+        key="presentation-frame"
+        src={documentUrl}  // https://docs.google.com/presentation/d/123/edit
+        viewportSize={{
+          w: viewportWidth || 1280,
+          h: viewportHeight || 720
+        }}
+        x={100}
+        y={150}
+        width={1400}
+        height={780}
+        scaleMode="fit"
+        blend={{ opacity: 0.95 }}
+        style={{ cornerRadius_px: 12 }}
+        keyPressAction={interactionKey ? {
+          name: interactionKey.name,
+          modifiers: interactionKey.modifiers || '',
+          key: interactionKey.id
+        } : undefined}
+      />
+
+      {/* Control Instructions Overlay */}
+      <Text
+        x={100}
+        y={950}
+        style={{
+          textColor: '#ffffff',
+          fontFamily: 'Roboto',
+          fontSize_px: 16,
+          fontWeight: '400'
+        }}
+        blend={{ opacity: 0.8 }}
+      >
+        Use keyboard controls to navigate presentation
+      </Text>
+
+    </Box>
+  );
+}
+
+// Interactive Document Viewer Component
+function InteractiveDocumentViewer({ url, viewportSize }) {
+  const [currentKeyAction, setCurrentKeyAction] = useState(null);
+  const keyCounterRef = useRef(0);
+
+  const sendKeyPress = useCallback((name, modifiers = '') => {
+    setCurrentKeyAction({
+      name,
+      modifiers,
+      key: ++keyCounterRef.current
+    });
+  }, []);
+
+  return (
+    <Box>
+      <WebFrame
+        src={url}
+        viewportSize={viewportSize}
+        scaleMode="fit"
+        keyPressAction={currentKeyAction}
+      />
+
+      {/* Control Panel */}
+      <Box x={50} y={50} style={{ fillColor: 'rgba(0,0,0,0.8)', cornerRadius_px: 8 }}>
+        <Text style={{ textColor: 'white', fontSize_px: 14 }}>
+          Document Controls
+        </Text>
+
+        {/* Navigation buttons would trigger sendKeyPress */}
+        <button onClick={() => sendKeyPress('ArrowLeft')}>Previous</button>
+        <button onClick={() => sendKeyPress('ArrowRight')}>Next</button>
+        <button onClick={() => sendKeyPress('F', '')}>Fullscreen</button>
+      </Box>
+    </Box>
+  );
+}
+
+// Live Widget Integration
+function LiveWidgetDisplay({ widgetUrl }) {
+  return (
+    <WebFrame
+      src={widgetUrl}  // e.g., live analytics dashboard
+      viewportSize={{ w: 800, h: 400 }}
+      scaleMode="fit"
+      blend={{ opacity: 0.9 }}
+      style={{ cornerRadius_px: 8 }}
+    />
+  );
+}
+```
+
+**WebFrame Component Best Practices for RN'RB:**
+
+**Singleton Restriction:**
+```typescript
+// ❌ WRONG: Multiple WebFrames (undefined behavior)
+<Box>
+  <WebFrame src="https://slides.com" />
+  <WebFrame src="https://notion.com" /> {/* Will render same as first */}
+</Box>
+
+// ✅ CORRECT: Only one WebFrame per composition
+<Box>
+  <WebFrame src="https://slides.com" />
+  {/* Use other components for additional content */}
+  <Image src="notion-screenshot" />
+</Box>
+```
+
+**Viewport Size Optimization:**
+```typescript
+// Choose viewport size carefully for legibility
+const viewportSizes = {
+  // Small - Good for text readability in video
+  document: { w: 960, h: 640 },   // 3:2 aspect ratio
+  presentation: { w: 1280, h: 720 }, // 16:9 HD
+  mobile: { w: 375, h: 667 },     // iPhone size
+
+  // Avoid large sizes - text becomes too small in video
+  // defaultSize: { w: 1280, h: 720 } // Current default, may change
+};
+
+// Test in browser DevTools to find optimal size
+// Load page, resize window, check legibility
+```
+
+**Performance Considerations:**
+```typescript
+// WebFrame Limitations:
+// - ~2 fps refresh rate (not suitable for video)
+// - No guaranteed frame rate
+// - Singleton restriction
+// - Cloud-based rendering on Daily servers
+
+// Use Cases:
+// ✅ Static documents (Google Docs, Sheets, Slides)
+// ✅ Live dashboards/widgets (analytics, chat)
+// ✅ Presentation slides
+// ✅ Embedded forms
+// ✅ Web-based tools
+
+// Don't Use For:
+// ❌ Video content (use Remote Media Player)
+// ❌ Animated content (too slow)
+// ❌ Real-time games
+// ❌ High-frequency updates
+```
+
+**Interactive Content Examples:**
+```typescript
+// Google Slides Navigation
+const slidesNavigation = {
+  startShow: { name: 'Enter', modifiers: 'Shift+Meta' },
+  nextSlide: { name: 'ArrowRight' },
+  prevSlide: { name: 'ArrowLeft' },
+  endShow: { name: 'Escape' }
+};
+
+// Google Docs Editing
+const docsEditing = {
+  save: { name: 'S', modifiers: 'Meta' },  // Cmd+S
+  undo: { name: 'Z', modifiers: 'Meta' },  // Cmd+Z
+  find: { name: 'F', modifiers: 'Meta' }   // Cmd+F
+};
+
+// Generic Navigation
+const webNavigation = {
+  scrollDown: { name: 'ArrowDown' },
+  scrollUp: { name: 'ArrowUp' },
+  refresh: { name: 'R', modifiers: 'Meta' }  // Cmd+R
+};
+```
+
+**Integration with RN'RB Music Sessions:**
+- **Set Lists**: Embed Google Sheets with song lists
+- **Lyrics**: Display web-based lyric documents
+- **Presentations**: Live slide shows for teaching/masterclasses
+- **Analytics**: Real-time session metrics dashboards
+- **Collaborative Docs**: Live editing of chord charts, notes
+- **Forms**: Feedback collection during sessions
+
+**Recommendation:** Start with baseline composition for immediate branding wins, then progress to VCS SDK for full music production customization - essential for professional RN'RB video content.
+
+---
+
+**Agent 18 Daily.co Video Component System WebFrame Component API Complete (2025-11-17)**
+
+**VCS WebFrame component API fully documented - RN'RB now has complete WebFrame component reference with embedded web content, viewport sizing, and keyboard interaction for professional document and widget integration.**
+
+---
+
+**🎯 DAILY.CO VIDEO COMPONENT SYSTEM - COMPLETE CORE COMPONENTS ANALYSIS**
+
+**✅ CORE VCS COMPONENTS FULLY ANALYZED (5/5):**
+
+1. **<Box>** - Container/layout component with transform, blend, clip, styling
+2. **<Image>** - Static image rendering with scaleMode, asset management, effects
+3. **<Text>** - Multi-line text with extensive typography (10 fonts, colors, effects)
+4. **<Video>** - Video feed rendering (participant streams, screen shares, DAW interfaces)
+5. **<WebFrame>** - Embedded web content with keyboard interaction and viewport control
+
+**✅ VCS ARCHITECTURE COMPLETE:**
+- Core concepts and React-based programming model
+- File structure and composition interfaces
+- Input models (parameters, video slots, assets)
+- Compositing model (YUV video + RGBA graphics)
+- Best practices for performance and sandboxing
+- Layout API (styling, compositing, functional layout)
+- Grid unit system and measurement
+- Development workflow and tools
+
+**🎸 RN'RB NOW HAS PROFESSIONAL VIDEO COMPOSITING CAPABILITIES!**
+
+**What component shall we build first in your RN'RB video system?** 🚀
+
+---
+
+**🔧 REACT CUSTOM HOOKS - BUILDING YOUR OWN HOOKS**
+
+**Custom Hooks Fundamentals - Complete Guide for VCS Development:**
+
+**Custom Hook Definition:**
+```typescript
+// A custom Hook is a JavaScript function whose name starts with "use"
+// and that may call other Hooks
+
+function useCustomHook(parameters) {
+  // Use built-in Hooks inside
+  const [state, setState] = useState(initialValue);
+  useEffect(() => {
+    // Effect logic
+    return () => {
+      // Cleanup
+    };
+  }, [dependencies]);
+
+  // Return whatever you want
+  return [state, actions];
+}
+```
+
+**Custom Hook Rules:**
+```typescript
+// ✅ CORRECT: Start with "use"
+function useFriendStatus(friendID) { /* ... */ }
+
+// ❌ WRONG: Doesn't start with "use"
+function getFriendStatus(friendID) { /* ... */ }
+
+// ✅ CORRECT: Call Hooks at top level only
+function useCustomHook() {
+  const [count, setCount] = useState(0); // Top level
+  useEffect(() => { /* ... */ }, []);     // Top level
+
+  if (condition) {
+    // ❌ WRONG: Conditional Hook call
+    // useState(0);
+  }
+
+  return count;
+}
+```
+
+**State Sharing Between Components - Before Custom Hooks:**
+```typescript
+// ❌ REPETITIVE: Duplicated logic in multiple components
+function FriendStatus({ friend }) {
+  const [isOnline, setIsOnline] = useState(null);
+  useEffect(() => {
+    function handleStatusChange(status) {
+      setIsOnline(status.isOnline);
+    }
+    ChatAPI.subscribeToFriendStatus(friend.id, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(friend.id, handleStatusChange);
+    };
+  }, [friend.id]);
+
+  return isOnline ? 'Online' : 'Offline';
+}
+
+function FriendListItem({ friend }) {
+  const [isOnline, setIsOnline] = useState(null);
+  useEffect(() => {
+    function handleStatusChange(status) {
+      setIsOnline(status.isOnline);
+    }
+    ChatAPI.subscribeToFriendStatus(friend.id, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(friend.id, handleStatusChange);
+    };
+  }, [friend.id]);
+
+  return (
+    <li style={{ color: isOnline ? 'green' : 'black' }}>
+      {friend.name}
+    </li>
+  );
+}
+```
+
+**State Sharing - After Custom Hooks:**
+```typescript
+// ✅ EFFICIENT: Extracted to reusable custom Hook
+function useFriendStatus(friendID) {
+  const [isOnline, setIsOnline] = useState(null);
+
+  useEffect(() => {
+    function handleStatusChange(status) {
+      setIsOnline(status.isOnline);
+    }
+
+    ChatAPI.subscribeToFriendStatus(friendID, handleStatusChange);
+    return () => {
+      ChatAPI.unsubscribeFromFriendStatus(friendID, handleStatusChange);
+    };
+  }, [friendID]); // Important: friendID as dependency
+
+  return isOnline;
+}
+
+// ✅ CLEAN: Components use shared logic
+function FriendStatus({ friend }) {
+  const isOnline = useFriendStatus(friend.id);
+  return isOnline ? 'Online' : 'Offline';
+}
+
+function FriendListItem({ friend }) {
+  const isOnline = useFriendStatus(friend.id);
+  return (
+    <li style={{ color: isOnline ? 'green' : 'black' }}>
+      {friend.name}
+    </li>
+  );
+}
+```
+
+**Information Passing Between Hooks:**
+```typescript
+// Custom Hooks can pass information to each other
+function ChatRecipientPicker() {
+  const [recipientID, setRecipientID] = useState(1);
+  const isRecipientOnline = useFriendStatus(recipientID); // Passes state to Hook
+
+  return (
+    <>
+      <Circle color={isRecipientOnline ? 'green' : 'red'} />
+      <select value={recipientID} onChange={e => setRecipientID(Number(e.target.value))}>
+        {friendList.map(friend => (
+          <option key={friend.id} value={friend.id}>
+            {friend.name}
+          </option>
+        ))}
+      </select>
+    </>
+  );
+}
+```
+
+**State Isolation - Each Hook Call is Independent:**
+```typescript
+// ❌ MYTH: Components using same Hook share state
+function Component1() {
+  const status = useFriendStatus(1); // Independent state
+  return <div>{status}</div>;
+}
+
+function Component2() {
+  const status = useFriendStatus(1); // Independent state (same friendID, but isolated)
+  return <div>{status}</div>;
+}
+
+// Each useFriendStatus call has its own state and effects
+// They don't share state even with same parameters
+```
+
+**Advanced Custom Hook - useReducer Example:**
+```typescript
+// Custom Hook for reducer-based state management
+function useReducer(reducer, initialState) {
+  const [state, setState] = useState(initialState);
+
+  function dispatch(action) {
+    const nextState = reducer(state, action);
+    setState(nextState);
+  }
+
+  return [state, dispatch];
+}
+
+// Usage in component
+function todosReducer(state, action) {
+  switch (action.type) {
+    case 'add':
+      return [...state, {
+        text: action.text,
+        completed: false
+      }];
+    case 'toggle':
+      return state.map(todo =>
+        todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
+      );
+    default:
+      return state;
+  }
+}
+
+function TodoApp() {
+  const [todos, dispatch] = useReducer(todosReducer, []);
+
+  function handleAddTodo(text) {
+    dispatch({ type: 'add', text });
+  }
+
+  function handleToggleTodo(id) {
+    dispatch({ type: 'toggle', id });
+  }
+
+  return (
+    <div>
+      {todos.map(todo => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={() => handleToggleTodo(todo.id)}
+        />
+      ))}
+      <AddTodo onAdd={handleAddTodo} />
+    </div>
+  );
+}
+```
+
+**VCS-Specific Custom Hook Examples:**
+```typescript
+// VCS Custom Hook for dynamic video layouts
+function useDynamicVideoLayout() {
+  const { activeIds } = useActiveVideo();
+  const [layout, setLayout] = useState('grid');
+
+  useEffect(() => {
+    // Auto-switch layout based on participant count
+    if (activeIds.length <= 2) setLayout('spotlight');
+    else if (activeIds.length <= 6) setLayout('grid');
+    else setLayout('filmstrip');
+  }, [activeIds.length]);
+
+  return layout;
+}
+
+// VCS Custom Hook for session timing
+function useSessionTimer(sessionId) {
+  const [elapsed, setElapsed] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    let interval;
+    if (isActive) {
+      interval = setInterval(() => {
+        setElapsed(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isActive]);
+
+  const start = () => setIsActive(true);
+  const stop = () => setIsActive(false);
+  const reset = () => setElapsed(0);
+
+  return { elapsed, isActive, start, stop, reset };
+}
+
+// Usage in VCS composition
+function RNBMusicSession({ sessionId }) {
+  const layout = useDynamicVideoLayout();
+  const timer = useSessionTimer(sessionId);
+
+  return (
+    <Box>
+      <Text>Session Time: {Math.floor(timer.elapsed / 60)}:{(timer.elapsed % 60).toString().padStart(2, '0')}</Text>
+      <VideoGrid layout={layout} />
+      <button onClick={timer.start}>Start Session</button>
+    </Box>
+  );
+}
+```
+
+**When to Create Custom Hooks:**
+```typescript
+// ✅ GOOD: Extract when logic is reused
+// - Same stateful logic in multiple components
+// - Complex state management patterns
+// - Timer, animation, or subscription logic
+// - Form handling with validation
+// - API calls with loading/error states
+
+// ❌ AVOID: Extract too early
+// - Simple one-off logic
+// - Component-specific behavior
+// - Logic that's unlikely to be reused
+// - When it increases complexity unnecessarily
+
+// Rule of thumb: If you find yourself copying logic between components,
+// it's time for a custom Hook
+```
+
+**Custom Hook Best Practices:**
+```typescript
+// 1. Always start with "use" prefix
+function useCustomLogic() { /* ... */ }
+
+// 2. Use ESLint rules for Hooks
+// eslint-plugin-react-hooks will catch violations
+
+// 3. Document your custom Hooks
+/**
+ * useFriendStatus - Tracks online status of a friend
+ * @param {string} friendID - The ID of the friend to track
+ * @returns {boolean|null} - true if online, false if offline, null if loading
+ */
+
+// 4. Handle dependencies correctly
+useEffect(() => {
+  // Include ALL dependencies
+}, [friendID, otherDependency]);
+
+// 5. Return consistent interface
+// Prefer object return for multiple values
+function useCustomHook() {
+  return {
+    data,
+    loading,
+    error,
+    refetch
+  };
+}
+
+// 6. Handle cleanup properly
+useEffect(() => {
+  const subscription = subscribe();
+  return () => subscription.unsubscribe();
+}, []);
+
+// 7. Consider TypeScript for better DX
+interface UseCustomHookOptions {
+  enabled?: boolean;
+  refetchInterval?: number;
+}
+
+function useCustomHook(options: UseCustomHookOptions = {}) {
+  // ...
+}
+```
+
+**Recommendation:** Custom Hooks are perfect for VCS development - extract session management, layout logic, and real-time features into reusable Hooks for clean, maintainable compositions.
+
+---
+
+**🌐 REACT DOM APIs - REFERENCE FOR VCS DEVELOPMENT**
+
+**React DOM APIs Reference - Complete guide for web-based VCS applications:**
+
+**APIs Importable from Components:**
+```typescript
+// Rarely used, but available in VCS compositions
+import { createPortal, flushSync } from 'react-dom';
+
+// createPortal - Render children in different DOM part
+const modalRoot = document.getElementById('modal-root');
+const modal = createPortal(
+  <ModalContent />,
+  modalRoot
+);
+
+// flushSync - Force synchronous DOM update (rarely needed)
+flushSync(() => {
+  setCount(c => c + 1);
+});
+// DOM is updated immediately after this call
+```
+
+**Resource Preloading APIs - Performance Optimization:**
+```typescript
+// Pre-load resources for faster VCS loading
+import {
+  prefetchDNS,
+  preconnect,
+  preload,
+  preloadModule,
+  preinit,
+  preinitModule
+} from 'react-dom';
+
+// prefetchDNS - Resolve DNS early
+prefetchDNS('api.daily.co');  // Pre-resolve Daily.co DNS
+
+// preconnect - Establish connection early
+preconnect('https://api.daily.co', { crossOrigin: 'anonymous' });
+
+// preload - Fetch resources early
+preload('/fonts/roboto.woff2', { as: 'font', type: 'font/woff2' });
+preload('/images/logo.png', { as: 'image' });
+
+// preloadModule - Fetch ESM modules
+preloadModule('/modules/daily-vcs.js', { as: 'script' });
+
+// preinit - Fetch and evaluate scripts/styles
+preinit('/styles/theme.css', { as: 'style' });
+preinit('/scripts/analytics.js', { as: 'script' });
+
+// preinitModule - Fetch and evaluate ESM modules
+preinitModule('/modules/vcs-layout.js');
+```
+
+**Entry Points for VCS Applications:**
+```typescript
+// Client-side rendering (main entry for VCS)
+import { createRoot, hydrateRoot } from 'react-dom/client';
+
+const root = createRoot(document.getElementById('root'));
+root.render(<VCSApp />);
+
+// Server-side rendering (SSR/SSG support)
+import {
+  renderToString,
+  renderToPipeableStream,
+  renderToReadableStream
+} from 'react-dom/server';
+
+// Static generation
+import { renderToStaticMarkup } from 'react-dom/server';
+```
+
+**Removed APIs (React 19) - Migration Guide:**
+```typescript
+// ❌ REMOVED: Don't use these in new code
+// findDOMNode - Use refs or state instead
+// hydrate - Use hydrateRoot instead
+// render - Use createRoot instead
+// unmountComponentAtNode - Use root.unmount() instead
+
+// ✅ MIGRATION: React 19 patterns
+import { createRoot, hydrateRoot } from 'react-dom/client';
+
+// Instead of: ReactDOM.render(<App />, rootElement)
+const root = createRoot(rootElement);
+root.render(<App />);
+
+// Instead of: ReactDOM.hydrate(<App />, rootElement)
+hydrateRoot(rootElement, <App />);
+
+// Instead of: ReactDOM.unmountComponentAtNode(rootElement)
+root.unmount();
+```
+
+**VCS-Specific DOM API Usage:**
+```typescript
+// Resource preloading for VCS performance
+function VCSApp() {
+  // Pre-load Daily.co resources on app start
+  useEffect(() => {
+    prefetchDNS('api.daily.co');
+    preconnect('https://api.daily.co');
+    preload('/daily-js.js', { as: 'script' });
+    preload('/daily-react.js', { as: 'script' });
+  }, []);
+
+  return <DailyProvider><VCSComposition /></DailyProvider>;
+}
+
+// Portal usage for VCS overlays
+function VCSModal({ children, isOpen }) {
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div className="vcs-modal-overlay">
+      <div className="vcs-modal-content">
+        {children}
+    </div>,
+    document.getElementById('modal-root')
+  );
+}
+
+// Force sync updates for critical VCS state
+function VCSCriticalUpdate() {
+  const [criticalState, setCriticalState] = useState(false);
+
+  const handleCriticalUpdate = () => {
+    // Force immediate DOM update for critical VCS changes
+    flushSync(() => {
+      setCriticalState(true);
+    });
+    // DOM is guaranteed to be updated here
+    performCriticalVCSOperation();
+  };
+
+  return <button onClick={handleCriticalUpdate}>Critical Update</button>;
+}
+```
+
+**Performance Optimization Strategies for VCS:**
+```typescript
+// Resource preloading strategy for VCS
+const VCS_RESOURCE_PRELOADS = [
+  // Core Daily.co resources
+  () => prefetchDNS('api.daily.co'),
+  () => preconnect('https://api.daily.co', { crossOrigin: 'anonymous' }),
+
+  // VCS component resources
+  () => preload('/vcs-components.js', { as: 'script' }),
+  () => preload('/vcs-layout.js', { as: 'script' }),
+
+  // Fonts for text components
+  () => preload('/fonts/roboto.woff2', {
+    as: 'font',
+    type: 'font/woff2',
+    crossOrigin: 'anonymous'
+  }),
+
+  // Images for branding
+  () => preload('/logo-light.png', { as: 'image' }),
+  () => preload('/background-rock.jpg', { as: 'image' }),
+
+  // External scripts
+  () => preinit('/analytics.js', { as: 'script' })
+];
+
+// Execute preloads on app initialization
+function preloadVCSResources() {
+  VCS_RESOURCE_PRELOADS.forEach(preload => preload());
+}
+
+// Call during app startup
+preloadVCSResources();
+```
+
+**React 19 Migration for VCS Applications:**
+```typescript
+// Before React 19 (don't use)
+import ReactDOM from 'react-dom';
+ReactDOM.render(<VCSApp />, rootElement);
+
+// After React 19 (correct)
+import { createRoot } from 'react-dom/client';
+const root = createRoot(rootElement);
+root.render(<VCSApp />);
+
+// Hydration changes
+// Before
+ReactDOM.hydrate(<VCSApp />, rootElement);
+
+// After
+import { hydrateRoot } from 'react-dom/client';
+hydrateRoot(rootElement, <VCSApp />);
+
+// Unmounting changes
+// Before
+ReactDOM.unmountComponentAtNode(rootElement);
+
+// After
+root.unmount();
+```
+
+**Recommendation:** Use React DOM APIs judiciously in VCS applications - focus on resource preloading for performance and portals for advanced UI patterns. Most VCS development won't require direct DOM manipulation.
+
+---
+
+**⚛️ REACT BUILT-IN HOOKS - COMPLETE REFERENCE FOR VCS DEVELOPMENT**
+
+**React Built-in Hooks Reference - Complete guide for VCS component development:**
+
+**State Hooks - Managing Component Memory:**
+```typescript
+// useState - Direct state management
+function ImageGallery() {
+  const [index, setIndex] = useState(0);  // State variable + setter
+  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  return (
+    <div>
+      <button onClick={() => setIndex(index - 1)}>Previous</button>
+      <img src={images[index]} alt="Gallery" />
+      <button onClick={() => setIndex(index + 1)}>Next</button>
+    </div>
+  );
+}
+
+// useReducer - Complex state with reducer logic
+function Counter() {
+  const [count, dispatch] = useReducer(counterReducer, 0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+    </div>
+  );
+}
+
+function counterReducer(state: number, action: { type: string }) {
+  switch (action.type) {
+    case 'increment': return state + 1;
+    case 'decrement': return state - 1;
+    default: return state;
+  }
+}
+```
+
+**Context Hooks - Accessing Distant Parent Data:**
+```typescript
+// useContext - Read context values
+function Button() {
+  const theme = useContext(ThemeContext);  // Access theme from distant parent
+  const user = useContext(UserContext);
+
+  return (
+    <button style={{ backgroundColor: theme.primaryColor }}>
+      {user.name}
+    </button>
+  );
+}
+
+// VCS Context Usage
+function VCSControls() {
+  const room = useContext(VCSRoomContext);
+  const session = useContext(VCSSessionContext);
+
+  return (
+    <div>
+      <p>Room: {room.name}</p>
+      <p>Session: {session.id}</p>
+    </div>
+  );
+}
+```
+
+**Ref Hooks - Direct DOM Access and Imperative APIs:**
+```typescript
+// useRef - Hold mutable values or DOM references
+function VideoPlayer() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout>();
+
+  const play = () => videoRef.current?.play();
+  const pause = () => videoRef.current?.pause();
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      // Access video element directly
+      if (videoRef.current) {
+        console.log('Current time:', videoRef.current.currentTime);
+      }
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  return <video ref={videoRef} src="video.mp4" />;
+}
+
+// useImperativeHandle - Customize ref exposed by component
+function FancyInput(props, ref) {
+  const inputRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    focus: () => inputRef.current.focus(),
+    scrollIntoView: () => inputRef.current.scrollIntoView(),
+  }));
+
+  return <input ref={inputRef} {...props} />;
+}
+
+FancyInput = forwardRef(FancyInput);
+
+// Usage
+const inputRef = useRef();
+<inputRef.current.focus(); // Custom focus method
+```
+
+**Effect Hooks - External System Synchronization:**
+```typescript
+// useEffect - Connect to external systems
+function ChatRoom({ roomId }) {
+  useEffect(() => {
+    const connection = createConnection(roomId);
+    connection.connect();
+
+    return () => connection.disconnect();  // Cleanup
+  }, [roomId]);  // Re-run when roomId changes
+
+  return <div>Connected to {roomId}</div>;
+}
+
+// VCS Effect Usage
+function VCSRoomManager({ roomUrl }) {
+  useEffect(() => {
+    // Connect to Daily.co room
+    const call = Daily.createCallObject();
+    call.join({ url: roomUrl });
+
+    return () => call.leave();  // Cleanup on unmount
+  }, [roomUrl]);
+
+  return <VCSInterface />;
+}
+
+// useLayoutEffect - Measure layout before paint
+function Tooltip({ children, text }) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const ref = useRef();
+
+  useLayoutEffect(() => {
+    const rect = ref.current.getBoundingClientRect();
+    setPosition({ x: rect.left, y: rect.top - 10 });
+  }, [children]);
+
+  return (
+    <>
+      <div ref={ref}>{children}</div>
+      <div style={{ position: 'absolute', ...position }}>
+        {text}
+      </div>
+    </>
+  );
+}
+
+// useInsertionEffect - Insert dynamic CSS (rare, library use)
+function DynamicStyles() {
+  useInsertionEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = '.dynamic { color: red; }';
+    document.head.appendChild(style);
+
+    return () => document.head.removeChild(style);
+  }, []);
+
+  return <div className="dynamic">Styled dynamically</div>;
+}
+```
+
+**Performance Hooks - Optimization and Prioritization:**
+```typescript
+// useMemo - Cache expensive calculations
+function TodoList({ todos, filter }) {
+  const visibleTodos = useMemo(() => {
+    console.log('Filtering todos...');  // Only runs when dependencies change
+    return todos.filter(todo => {
+      switch (filter) {
+        case 'all': return true;
+        case 'active': return !todo.completed;
+        case 'completed': return todo.completed;
+      }
+    });
+  }, [todos, filter]);  // Only recalculate when todos or filter change
+
+  return (
+    <ul>
+      {visibleTodos.map(todo => (
+        <li key={todo.id}>{todo.text}</li>
+      ))}
+    </ul>
+  );
+}
+
+// useCallback - Cache function definitions
+function ParentComponent() {
+  const [count, setCount] = useState(0);
+
+  const increment = useCallback(() => {
+    setCount(c => c + 1);
+  }, []);  // Empty deps - function never changes
+
+  return <ChildComponent onIncrement={increment} />;
+}
+
+// Child with React.memo optimization
+const ChildComponent = React.memo(({ onIncrement }) => (
+  <button onClick={onIncrement}>Increment</button>
+));
+
+// useTransition - Mark non-blocking updates
+function SearchComponent() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [isPending, startTransition] = useTransition();
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+
+    // Non-blocking: Update results without blocking input
+    startTransition(() => {
+      const filtered = expensiveSearch(value);
+      setResults(filtered);
+    });
+  };
+
+  return (
+    <div>
+      <input value={query} onChange={handleChange} />
+      {isPending && <p>Loading...</p>}
+      <ResultsList results={results} />
+    </div>
+  );
+}
+
+// useDeferredValue - Defer non-critical updates
+function SearchResults({ query }) {
+  const deferredQuery = useDeferredValue(query);  // Defer updates
+  const results = useMemo(() => search(deferredQuery), [deferredQuery]);
+
+  return <ResultsList results={results} />;
+}
+
+function SearchApp() {
+  const [query, setQuery] = useState('');
+
+  return (
+    <div>
+      <input
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        placeholder="Search..."
+      />
+      <SearchResults query={query} />  {/* Updates are deferred */}
+    </div>
+  );
+}
+```
+
+**Other Hooks - Advanced and Library Use:**
+```typescript
+// useDebugValue - Custom labels in React DevTools
+function useCustomHook(value) {
+  useDebugValue(value ? 'Active' : 'Inactive');  // Shows in DevTools
+
+  // Hook logic...
+}
+
+// useId - Generate unique IDs for accessibility
+function FormField({ label }) {
+  const id = useId();  // Generates unique ID
+
+  return (
+    <>
+      <label htmlFor={id}>{label}</label>
+      <input id={id} type="text" />
+    </>
+  );
+}
+
+// useSyncExternalStore - Subscribe to external stores
+function useStore(store) {
+  return useSyncExternalStore(
+    store.subscribe,  // Subscribe function
+    store.getState,   // Get current state
+    store.getServerState  // Server state (SSR)
+  );
+}
+
+const store = createStore();
+function App() {
+  const state = useStore(store);
+  return <div>{state.count}</div>;
+}
+
+// useActionState - Manage action state (React 19)
+function ActionForm() {
+  const [state, action, isPending] = useActionState(
+    async (previousState, formData) => {
+      // Action logic
+      const result = await submitForm(formData);
+      return { success: true, data: result };
+    },
+    { success: false, data: null }
+  );
+
+  return (
+    <form action={action}>
+      <input name="email" />
+      <button disabled={isPending}>
+        {isPending ? 'Submitting...' : 'Submit'}
+      </button>
+      {state.success && <p>Success!</p>}
+    </form>
+  );
+}
+```
+
+**VCS-Specific Hook Usage Patterns:**
+```typescript
+// State Management in VCS Components
+function VCSRecordingControls({ roomName }) {
+  const [isRecording, setIsRecording] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [participants, dispatch] = useReducer(participantsReducer, []);
+
+  // Effect for Daily.co integration
+  useEffect(() => {
+    const call = Daily.createCallObject();
+    call.join({ url: roomName });
+
+    return () => call.leave();
+  }, [roomName]);
+
+  // Ref for DOM access
+  const controlsRef = useRef<HTMLDivElement>(null);
+
+  // Memoized expensive calculations
+  const activeParticipants = useMemo(() =>
+    participants.filter(p => p.isActive),
+    [participants]
+  );
+
+  // Callback for event handlers
+  const handleRecordToggle = useCallback(() => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+    setIsRecording(!isRecording);
+  }, [isRecording]);
+
+  return (
+    <div ref={controlsRef}>
+      <button onClick={handleRecordToggle}>
+        {isRecording ? 'Stop' : 'Start'} Recording
+      </button>
+      <ParticipantList participants={activeParticipants} />
+    </div>
+  );
+}
+
+// Context for VCS app state
+const VCSContext = createContext();
+
+function VCSProvider({ children }) {
+  const [room, setRoom] = useState(null);
+  const [session, setSession] = useState(null);
+
+  return (
+    <VCSContext.Provider value={{ room, session, setRoom, setSession }}>
+      {children}
+    </VCSContext.Provider>
+  );
+}
+
+function VCSComponent() {
+  const { room, session } = useContext(VCSContext);
+  // Access room and session from any component
+}
+```
+
+**Recommendation:** Master these built-in hooks for VCS development - they're the foundation for state management, effects, performance optimization, and external system integration essential for professional video collaboration features.
+
+---
+
+**📡 ABLY REALTIME MESSAGING - INTEGRATION FOR RN'RB COLLABORATION**
+
+**Ably realtime messaging integration documented - RN'RB now has enterprise-grade pub/sub messaging for live music collaboration features.**
+
+**Ably Setup for RNRB:**
+```typescript
+// Ably API Key for RNRB project
+const ABLY_API_KEY = '5VgiQQ.5m0sdg:09jLRjTeJpfN35J0zcRNb8CWbmNgjfaZETFk60d_fW8';
+
+// Environment variable for production
+process.env.ABLY_API_KEY = ABLY_API_KEY;
+```
+
+**Ably SDK Integration:**
+```typescript
+// Install Ably SDK
+// npm install ably
+
+import * as Ably from 'ably';
+
+// Initialize Ably client
+const ablyClient = new Ably.Realtime(ABLY_API_KEY);
+
+// Connection handling
+ablyClient.connection.once('connected', () => {
+  console.log('RN\'RB: Connected to Ably realtime messaging');
+});
+
+// Error handling
+ablyClient.connection.on('failed', (stateChange) => {
+  console.error('RN\'RB: Ably connection failed:', stateChange.reason);
+});
+```
+
+**Real-time Chat for Music Sessions:**
+```typescript
+// Channel for session chat
+const chatChannel = ablyClient.channels.get('music-session-chat');
+
+interface ChatMessage {
+  id: string;
+  userId: string;
+  userName: string;
+  message: string;
+  timestamp: number;
+  type: 'chat' | 'system' | 'chord' | 'cue';
+}
+
+// Subscribe to chat messages
+await chatChannel.subscribe('message', (message) => {
+  const chatData: ChatMessage = message.data;
+  console.log(`${chatData.userName}: ${chatData.message}`);
+
+  // Add to UI chat history
+  addMessageToChat(chatData);
+});
+
+// Send chat message
+async function sendChatMessage(message: string, type: ChatMessage['type'] = 'chat') {
+  const chatMessage: ChatMessage = {
+    id: generateId(),
+    userId: currentUser.id,
+    userName: currentUser.name,
+    message,
+    timestamp: Date.now(),
+    type
+  };
+
+  await chatChannel.publish('message', chatMessage);
+}
+
+// Usage
+sendChatMessage('Great take on that solo! 🎸');
+sendChatMessage('Verse 1 starting...', 'cue');
+```
+
+**Live Session Events Broadcasting:**
+```typescript
+// Channel for session events
+const sessionChannel = ablyClient.channels.get('session-events');
+
+interface SessionEvent {
+  type: 'recording_started' | 'recording_stopped' | 'participant_joined' | 'participant_left';
+  userId: string;
+  userName: string;
+  sessionId: string;
+  timestamp: number;
+  data?: any;
+}
+
+// Broadcast session events
+async function broadcastSessionEvent(event: SessionEvent) {
+  await sessionChannel.publish('event', event);
+}
+
+// Subscribe to session events
+await sessionChannel.subscribe('event', (message) => {
+  const event: SessionEvent = message.data;
+
+  switch (event.type) {
+    case 'recording_started':
+      showRecordingIndicator(event.userName);
+      break;
+    case 'participant_joined':
+      updateParticipantList(event.userName, 'joined');
+      break;
+    case 'participant_left':
+      updateParticipantList(event.userName, 'left');
+      break;
+  }
+});
+
+// Integration with Daily.co events
+function setupDailyAblyBridge(dailyCall: any) {
+  // When Daily.co participant joins, broadcast via Ably
+  dailyCall.on('participant-joined', (participant) => {
+    broadcastSessionEvent({
+      type: 'participant_joined',
+      userId: participant.user_id,
+      userName: participant.user_name,
+      sessionId: currentSession.id,
+      timestamp: Date.now()
+    });
+  });
+
+  // When recording starts/stops, broadcast via Ably
+  dailyCall.on('recording-started', (recording) => {
+    broadcastSessionEvent({
+      type: 'recording_started',
+      userId: currentUser.id,
+      userName: currentUser.name,
+      sessionId: currentSession.id,
+      timestamp: Date.now(),
+      data: { recordingId: recording.id }
+    });
+  });
+}
+```
+
+**Real-time Chord Progression Sharing:**
+```typescript
+// Channel for musical collaboration
+const musicChannel = ablyClient.channels.get('music-collaboration');
+
+interface ChordProgression {
+  id: string;
+  chords: string[];
+  key: string;
+  userId: string;
+  userName: string;
+  timestamp: number;
+}
+
+// Share chord progression in real-time
+async function shareChordProgression(chords: string[], key: string) {
+  const progression: ChordProgression = {
+    id: generateId(),
+    chords,
+    key,
+    userId: currentUser.id,
+    userName: currentUser.name,
+    timestamp: Date.now()
+  };
+
+  await musicChannel.publish('chord_progression', progression);
+}
+
+// Subscribe to chord progressions
+await musicChannel.subscribe('chord_progression', (message) => {
+  const progression: ChordProgression = message.data;
+
+  // Display in shared chord chart
+  displayChordProgression(progression);
+
+  // Add to session history
+  addToChordHistory(progression);
+});
+
+// Real-time lyrics synchronization
+interface LyricLine {
+  id: string;
+  line: string;
+  timestamp: number;
+  userId: string;
+}
+
+await musicChannel.subscribe('lyric_update', (message) => {
+  const lyric: LyricLine = message.data;
+  updateSharedLyrics(lyric);
+});
+```
+
+**Presence and Typing Indicators:**
+```typescript
+// Channel for presence
+const presenceChannel = ablyClient.channels.get('presence');
+
+interface PresenceUpdate {
+  userId: string;
+  userName: string;
+  status: 'online' | 'away' | 'recording' | 'performing';
+  lastSeen: number;
+}
+
+// Update presence
+async function updatePresence(status: PresenceUpdate['status']) {
+  const presence: PresenceUpdate = {
+    userId: currentUser.id,
+    userName: currentUser.name,
+    status,
+    lastSeen: Date.now()
+  };
+
+  await presenceChannel.publish('presence_update', presence);
+}
+
+// Subscribe to presence updates
+await presenceChannel.subscribe('presence_update', (message) => {
+  const presence: PresenceUpdate = message.data;
+  updateUserPresence(presence);
+});
+
+// Typing indicators for chat
+const typingChannel = ablyClient.channels.get('typing');
+
+function startTyping() {
+  typingChannel.publish('typing_start', {
+    userId: currentUser.id,
+    userName: currentUser.name
+  });
+}
+
+function stopTyping() {
+  typingChannel.publish('typing_stop', {
+    userId: currentUser.id
+  });
+}
+
+await typingChannel.subscribe('typing_start', (message) => {
+  showTypingIndicator(message.data.userName);
+});
+
+await typingChannel.subscribe('typing_stop', (message) => {
+  hideTypingIndicator(message.data.userId);
+});
+```
+
+**Session State Synchronization:**
+```typescript
+// Channel for session state
+const stateChannel = ablyClient.channels.get('session-state');
+
+interface SessionState {
+  bpm: number;
+  currentSong?: string;
+  currentSection: 'verse' | 'chorus' | 'bridge' | 'solo';
+  isRecording: boolean;
+  participants: string[];
+}
+
+// Synchronize session state across all participants
+async function updateSessionState(updates: Partial<SessionState>) {
+  const newState = { ...currentSessionState, ...updates };
+  await stateChannel.publish('state_update', newState);
+  currentSessionState = newState;
+}
+
+// Subscribe to state changes
+await stateChannel.subscribe('state_update', (message) => {
+  const newState: SessionState = message.data;
+  updateLocalSessionState(newState);
+
+  // Update UI elements
+  updateBPMDisplay(newState.bpm);
+  updateSongDisplay(newState.currentSong);
+  updateSectionIndicator(newState.currentSection);
+  updateRecordingIndicator(newState.isRecording);
+});
+```
+
+**Performance Monitoring and Analytics:**
+```typescript
+// Channel for performance metrics
+const metricsChannel = ablyClient.channels.get('performance-metrics');
+
+interface PerformanceMetric {
+  userId: string;
+  metric: 'latency' | 'cpu' | 'network' | 'audio_level';
+  value: number;
+  timestamp: number;
+}
+
+// Send performance metrics
+async function sendPerformanceMetric(metric: PerformanceMetric['metric'], value: number) {
+  await metricsChannel.publish('metric', {
+    userId: currentUser.id,
+    metric,
+    value,
+    timestamp: Date.now()
+  });
+}
+
+// Subscribe to performance data (for session monitoring)
+await metricsChannel.subscribe('metric', (message) => {
+  const metric: PerformanceMetric = message.data;
+
+  // Update performance dashboard
+  updatePerformanceDashboard(metric);
+});
+```
+
+**Integration with Daily.co VCS:**
+```typescript
+// Combined Daily.co + Ably integration
+function createRNBCollaborationSession(roomUrl: string) {
+  // Daily.co for video/audio
+  const dailyCall = Daily.createCallObject();
+
+  // Ably for messaging and events
+  const ablyClient = new Ably.Realtime(ABLY_API_KEY);
+
+  // Bridge events between systems
+  setupDailyAblyBridge(dailyCall, ablyClient);
+
+  return { dailyCall, ablyClient };
+}
+
+// Bridge Daily.co events to Ably
+function setupDailyAblyBridge(dailyCall: any, ablyClient: any) {
+  const sessionChannel = ablyClient.channels.get('session-events');
+
+  // Video participant events
+  dailyCall.on('participant-joined', (participant) => {
+    sessionChannel.publish('video_join', {
+      userId: participant.user_id,
+      userName: participant.user_name,
+      type: 'video'
+    });
+  });
+
+  dailyCall.on('participant-left', (participant) => {
+    sessionChannel.publish('video_leave', {
+      userId: participant.user_id,
+      type: 'video'
+    });
+  });
+
+  // Recording events
+  dailyCall.on('recording-started', (recording) => {
+    sessionChannel.publish('recording_start', {
+      recordingId: recording.id,
+      userId: currentUser.id
+    });
+  });
+
+  // Audio level events
+  dailyCall.on('audio-level', (levels) => {
+    // Send audio levels via Ably for visualization
+    sessionChannel.publish('audio_levels', levels);
+  });
+}
+```
+
+**Ably Best Practices for RN'RB:**
+```typescript
+// Channel naming convention
+const CHANNELS = {
+  chat: 'music-session-chat',
+  events: 'session-events',
+  presence: 'presence',
+  music: 'music-collaboration',
+  state: 'session-state',
+  metrics: 'performance-metrics'
+};
+
+// Message rate limiting
+const messageQueue: any[] = [];
+let isProcessing = false;
+
+async function sendMessage(channel: any, event: string, data: any) {
+  messageQueue.push({ channel, event, data });
+
+  if (!isProcessing) {
+    isProcessing = true;
+    while (messageQueue.length > 0) {
+      const msg = messageQueue.shift();
+      await msg.channel.publish(msg.event, msg.data);
+      // Small delay to prevent flooding
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    isProcessing = false;
+  }
+}
+
+// Connection resilience
+ablyClient.connection.on('disconnected', () => {
+  console.log('RN\'RB: Ably disconnected, attempting reconnection...');
+});
+
+ablyClient.connection.on('connected', () => {
+  console.log('RN\'RB: Ably reconnected, resubscribing to channels...');
+  // Resubscribe to all channels
+  resubscribeToChannels();
+});
+```
+
+**Recommendation:** Integrate Ably for comprehensive realtime messaging alongside Daily.co video - enables chat, live collaboration, event broadcasting, and performance monitoring essential for professional music sessions.
+
+---
+
+**💬 ABLY CHAT SDK - ADVANCED CHAT FUNCTIONALITY FOR RN'RB**
+
+**Ably Chat SDK integration documented - RN'RB now has enterprise-grade chat system with rooms, typing indicators, reactions, and moderation for professional music collaboration.**
+
+**Ably Chat SDK Setup:**
+```typescript
+// Install both packages
+// npm install ably @ably/chat
+
+import * as Ably from "ably";
+import {
+  ChatClient,
+  ConnectionStatusChange,
+  ChatMessageEvent,
+  RoomStatusChange,
+} from "@ably/chat";
+
+// Initialize with API key
+const ablyClient = new Ably.Realtime({
+  key: "5VgiQQ.5m0sdg:09jLRjTeJpfN35J0zcRNb8CWbmNgjfaZETFk60d_fW8",
+  clientId: "rnb-chat-client",
+});
+
+// Create Chat client
+const chatClient = new ChatClient(ablyClient);
+```
+
+**Room-Based Chat System:**
+```typescript
+// Get or create a chat room
+const room = await chatClient.rooms.get("music-session-123");
+
+// Room lifecycle management
+const { off: unsubscribeRoomStatus } = room.onStatusChange(
+  (change: RoomStatusChange) => {
+    console.log("RN'RB Room state:", change.current);
+    switch (change.current) {
+      case 'attached':
+        console.log('RN\'RB: Joined chat room successfully');
+        break;
+      case 'attaching':
+        console.log('RN\'RB: Joining chat room...');
+        break;
+      case 'detached':
+        console.log('RN\'RB: Left chat room');
+        break;
+    }
+  }
+);
+
+// Attach to room (required before sending/receiving messages)
+await room.attach();
+
+// Send messages
+await room.messages.send({
+  text: "🎸 Great solo on that last take!",
+});
+
+// Subscribe to messages
+const { unsubscribe: messageUnsubscribe } = room.messages.subscribe(
+  (message: ChatMessageEvent) => {
+    console.log(`RN'RB Chat: ${message.message.text}`);
+    addMessageToChat(message.message);
+  }
+);
+
+// Clean up when leaving
+await chatClient.rooms.release(room.name);
+messageUnsubscribe();
+unsubscribeRoomStatus();
+```
+
+**Advanced Chat Features for Music Sessions:**
+```typescript
+// Typing indicators
+const { off: typingOff } = room.typing.onTyping((event) => {
+  if (event.currentlyTyping.includes('guitarist123')) {
+    showTypingIndicator('🎸 Guitarist is typing...');
+  }
+});
+
+// Start/stop typing
+await room.typing.startTyping();
+await room.typing.stopTyping();
+
+// Reactions to messages
+await room.messages.react('message-id', {
+  type: 'emoji',
+  metadata: { emoji: '🎵' }
+});
+
+// Subscribe to reactions
+const { unsubscribe: reactionUnsubscribe } = room.messages.onReaction(
+  (reaction) => {
+    updateMessageReactions(reaction.messageId, reaction.reaction);
+  }
+);
+```
+
+**Chat Moderation and Admin Features:**
+```typescript
+// Room occupancy and participant management
+const { off: occupancyOff } = room.occupancy.onChange((occupancy) => {
+  console.log(`RN'RB Room has ${occupancy.connections} connections`);
+  updateParticipantCount(occupancy.connections);
+});
+
+// Admin/moderation capabilities
+if (currentUser.isHost) {
+  // Delete inappropriate messages
+  await room.messages.delete('message-id', {
+    reason: 'Inappropriate content'
+  });
+
+  // Mute/unmute participants
+  await room.members.setRole('user-id', 'muted');
+
+  // Room settings and moderation
+  await room.updateRoomOptions({
+    moderation: {
+      blockWords: ['inappropriate', 'spam'],
+      maxMessageLength: 500
+    }
+  });
+}
+```
+
+**Music Session Chat Integration:**
+```typescript
+// Specialized chat for different music collaboration types
+enum ChatRoomType {
+  GENERAL = 'general-chat',
+  TECH_DISCUSSION = 'tech-talk',
+  LYRICS_COLLAB = 'lyrics-writing',
+  PRODUCTION_NOTES = 'production-notes'
+}
+
+class RNBChatManager {
+  private chatClient: ChatClient;
+  private activeRooms: Map<string, any> = new Map();
+
+  constructor(ablyClient: Ably.Realtime) {
+    this.chatClient = new ChatClient(ablyClient);
+  }
+
+  async joinSessionChat(sessionId: string) {
+    const roomName = `session-${sessionId}`;
+
+    try {
+      const room = await this.chatClient.rooms.get(roomName);
+      await room.attach();
+
+      // Set up message handling
+      this.setupMessageHandling(room);
+
+      // Set up typing indicators
+      this.setupTypingIndicators(room);
+
+      this.activeRooms.set(roomName, room);
+
+      return room;
+    } catch (error) {
+      console.error('RN\'RB: Failed to join chat room:', error);
+      throw error;
+    }
+  }
+
+  private setupMessageHandling(room: any) {
+    room.messages.subscribe((message: ChatMessageEvent) => {
+      const msg = message.message;
+
+      // Handle different message types for music collaboration
+      switch (msg.metadata?.type) {
+        case 'chord_progression':
+          displayChordProgression(msg.metadata.chords);
+          break;
+        case 'lyric_update':
+          updateSharedLyrics(msg.metadata.line);
+          break;
+        case 'cue':
+          handlePerformanceCue(msg.text);
+          break;
+        default:
+          addChatMessage(msg);
+      }
+    });
+  }
+
+  private setupTypingIndicators(room: any) {
+    room.typing.onTyping((event) => {
+      const typingUsers = event.currentlyTyping;
+      updateTypingIndicators(typingUsers);
+    });
+  }
+
+  async sendMusicMessage(type: string, content: any) {
+    const room = this.activeRooms.get(`session-${currentSession.id}`);
+    if (!room) return;
+
+    await room.messages.send({
+      text: content.text || content.message,
+      metadata: {
+        type,
+        ...content
+      }
+    });
+  }
+
+  async leaveSessionChat(sessionId: string) {
+    const roomName = `session-${sessionId}`;
+    const room = this.activeRooms.get(roomName);
+
+    if (room) {
+      await this.chatClient.rooms.release(roomName);
+      this.activeRooms.delete(roomName);
+    }
+  }
+}
+
+// Usage
+const chatManager = new RNBChatManager(ablyClient);
+
+// Join session chat
+await chatManager.joinSessionChat('session-123');
+
+// Send different types of music messages
+await chatManager.sendMusicMessage('chord_progression', {
+  chords: ['Cmaj7', 'Dm7', 'Em7', 'Fmaj7'],
+  key: 'C'
+});
+
+await chatManager.sendMusicMessage('cue', {
+  text: '🎯 Bridge coming up!'
+});
+```
+
+**Chat History and Persistence:**
+```typescript
+// Retrieve message history
+async function loadChatHistory(roomName: string, limit = 50) {
+  const room = await chatClient.rooms.get(roomName);
+  await room.attach();
+
+  // Get recent messages
+  const messages = await room.messages.get({
+    limit,
+    direction: 'backwards' // Most recent first
+  });
+
+  return messages.items.reverse(); // Oldest first for display
+}
+
+// Message threading for complex discussions
+async function createThread(parentMessageId: string, replyText: string) {
+  const room = await chatClient.rooms.get('music-session-123');
+
+  await room.messages.send({
+    text: replyText,
+    metadata: {
+      threadParent: parentMessageId,
+      type: 'thread_reply'
+    }
+  });
+}
+
+// Search messages
+async function searchMessages(roomName: string, query: string) {
+  const room = await chatClient.rooms.get(roomName);
+
+  const messages = await room.messages.get({
+    query,
+    limit: 100
+  });
+
+  return messages.items;
+}
+```
+
+**Real-time Presence and Status:**
+```typescript
+// Advanced presence tracking
+const { off: presenceOff } = room.occupancy.onChange((occupancy) => {
+  const members = occupancy.members;
+
+  // Update online musicians list
+  const onlineMusicians = members.filter(member =>
+    member.data?.role === 'musician'
+  );
+
+  updateOnlineMusicians(onlineMusicians);
+
+  // Show who's actively participating
+  const activeParticipants = members.filter(member =>
+    member.data?.status === 'active'
+  );
+
+  updateActiveParticipants(activeParticipants);
+});
+
+// Member-specific presence
+await room.members.updatePresence({
+  status: 'recording',
+  activity: 'laying down guitar track'
+});
+
+// Subscribe to member presence changes
+const { unsubscribe: memberUnsubscribe } = room.members.onPresence(
+  (presence) => {
+    updateMemberStatus(presence.member.clientId, presence.data);
+  }
+);
+```
+
+**Integration with Daily.co Sessions:**
+```typescript
+// Bridge Daily.co participants to Ably Chat
+function setupDailyAblyChatBridge(dailyCall: any, chatManager: RNBChatManager) {
+  // When participant joins Daily.co call
+  dailyCall.on('participant-joined', async (participant) => {
+    // Auto-join chat room
+    await chatManager.joinSessionChat(currentSession.id);
+
+    // Send system message
+    await chatManager.sendMusicMessage('system', {
+      text: `${participant.user_name} joined the session 🎵`,
+      system: true
+    });
+  });
+
+  // When participant leaves
+  dailyCall.on('participant-left', async (participant) => {
+    await chatManager.sendMusicMessage('system', {
+      text: `${participant.user_name} left the session 👋`,
+      system: true
+    });
+  });
+
+  // Recording events
+  dailyCall.on('recording-started', async (recording) => {
+    await chatManager.sendMusicMessage('system', {
+      text: `🎬 Recording started - ${recording.id}`,
+      recording: true
+    });
+  });
+
+  dailyCall.on('recording-stopped', async () => {
+    await chatManager.sendMusicMessage('system', {
+      text: `⏹️ Recording stopped`,
+      recording: false
+    });
+  });
+}
+```
+
+**Chat UI Components for RN'RB:**
+```typescript
+// React component for music session chat
+function MusicSessionChat({ sessionId }: { sessionId: string }) {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const chatManagerRef = useRef<RNBChatManager>();
+
+  useEffect(() => {
+    // Initialize chat manager
+    const ablyClient = new Ably.Realtime({ key: ABLY_API_KEY });
+    chatManagerRef.current = new RNBChatManager(ablyClient);
+
+    // Join session chat
+    chatManagerRef.current.joinSessionChat(sessionId);
+
+    return () => {
+      chatManagerRef.current?.leaveSessionChat(sessionId);
+    };
+  }, [sessionId]);
+
+  const sendMessage = async () => {
+    if (!currentMessage.trim()) return;
+
+    await chatManagerRef.current?.sendMusicMessage('chat', {
+      text: currentMessage
+    });
+
+    setCurrentMessage('');
+  };
+
+  const sendChordProgression = async (chords: string[], key: string) => {
+    await chatManagerRef.current?.sendMusicMessage('chord_progression', {
+      chords,
+      key,
+      text: `🎸 Shared chord progression: ${chords.join(' - ')} in ${key}`
+    });
+  };
+
+  return (
+    <div className="rnb-chat">
+      <div className="chat-messages">
+        {messages.map(msg => (
+          <div key={msg.id} className={`message ${msg.metadata?.type}`}>
+            <span className="sender">{msg.sender?.name}</span>
+            <span className="content">{msg.text}</span>
+            {msg.metadata?.type === 'chord_progression' && (
+              <ChordDisplay chords={msg.metadata.chords} key={msg.metadata.key} />
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="chat-input">
+        <input
+          value={currentMessage}
+          onChange={(e) => setCurrentMessage(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+          placeholder="Type a message... or share chords 🎸"
+        />
+        <button onClick={sendMessage}>Send</button>
+        <button onClick={() => sendChordProgression(['Cmaj7', 'Dm7'], 'C')}>
+          Share C Progression
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+**Performance and Scaling Considerations:**
+```typescript
+// Message rate limiting for music sessions
+class RateLimitedChatManager extends RNBChatManager {
+  private messageQueue: any[] = [];
+  private isProcessing = false;
+
+  async sendMusicMessage(type: string, content: any) {
+    // Queue messages to prevent flooding
+    this.messageQueue.push({ type, content });
+
+    if (!this.isProcessing) {
+      this.isProcessing = true;
+
+      while (this.messageQueue.length > 0) {
+        const msg = this.messageQueue.shift();
+        await super.sendMusicMessage(msg.type, msg.content);
+
+        // Small delay between messages
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
+      this.isProcessing = false;
+    }
+  }
+}
+
+// Connection resilience
+chatClient.connection.onStatusChange((change: ConnectionStatusChange) => {
+  switch (change.current) {
+    case 'connected':
+      console.log('RN\'RB: Chat reconnected');
+      // Resubscribe to all rooms
+      resubscribeToRooms();
+      break;
+    case 'disconnected':
+      console.log('RN\'RB: Chat disconnected, attempting reconnection...');
+      break;
+    case 'failed':
+      console.error('RN\'RB: Chat connection failed');
+      showConnectionError();
+      break;
+  }
+});
+```
+
+**Recommendation:** Use Ably Chat SDK for sophisticated chat features in RN'RB - provides rooms, typing indicators, reactions, moderation, and seamless integration with Daily.co video sessions for comprehensive music collaboration.
+
+---
+
+**📡 ABLY PUB/SUB - CORE REALTIME MESSAGING FOUNDATION**
+
+**Ably Pub/Sub fundamentals documented - RN'RB now has complete understanding of Ably's core realtime messaging architecture and capabilities.**
+
+**Ably Core Features for RN'RB:**
+
+**1. Publish and Subscribe - Channel-Based Messaging:**
+```typescript
+// Channels separate messages into topics
+// Publishers and subscribers are decoupled
+const channel = ablyClient.channels.get('music-session-events');
+
+// Publishers send messages
+await channel.publish('recording-started', {
+  sessionId: 'session-123',
+  timestamp: Date.now(),
+  userId: currentUser.id
+});
+
+// Subscribers receive only messages on subscribed channels
+await channel.subscribe('recording-started', (message) => {
+  console.log('RN\'RB: Recording started event:', message.data);
+  showRecordingIndicator(message.data);
+});
+
+// Multiple subscribers can listen to same channel
+// Each gets independent copy of messages
+```
+
+**2. Presence - Real-time Participant Awareness:**
+```typescript
+// Presence enables awareness of other clients on channels
+const presenceChannel = ablyClient.channels.get('session-presence');
+
+// Enter presence set when joining session
+await presenceChannel.presence.enter({
+  userId: currentUser.id,
+  userName: currentUser.name,
+  role: 'musician',
+  instrument: 'guitar'
+});
+
+// Listen for presence events
+await presenceChannel.presence.subscribe('enter', (member) => {
+  console.log(`RN'RB: ${member.data.userName} joined the session`);
+  addParticipantToUI(member.data);
+});
+
+await presenceChannel.presence.subscribe('leave', (member) => {
+  console.log(`RN'RB: ${member.data.userName} left the session`);
+  removeParticipantFromUI(member.data.userId);
+});
+
+await presenceChannel.presence.subscribe('update', (member) => {
+  // Handle presence updates (status changes, etc.)
+  updateParticipantStatus(member.data);
+});
+
+// Get current presence set
+const presenceSet = await presenceChannel.presence.get();
+console.log(`RN'RB: ${presenceSet.length} participants currently present`);
+```
+
+**3. Message History - Persistent Message Storage:**
+```typescript
+// Messages stored in memory for 2 minutes across all locations
+// Automatic retrieval on reconnection after connectivity issues
+// Configurable disk persistence for longer retention
+
+// Retrieve recent messages
+const messageHistory = await channel.history({
+  limit: 50,        // Last 50 messages
+  direction: 'backwards' // Most recent first
+});
+
+// Paginate through older messages
+const olderMessages = await channel.history({
+  limit: 50,
+  untilAttach: false,
+  start: messageHistory.items[0].id // Start from last message
+});
+
+// Load message history when joining session
+async function loadSessionHistory(sessionId: string) {
+  const sessionChannel = ablyClient.channels.get(`session-${sessionId}`);
+
+  try {
+    const history = await sessionChannel.history({ limit: 100 });
+    const messages = history.items.reverse(); // Oldest first
+
+    // Display message history in chat
+    messages.forEach(message => {
+      displayHistoricalMessage(message);
+    });
+  } catch (error) {
+    console.error('RN'RB: Failed to load message history:', error);
+  }
+}
+```
+
+**4. Push Notifications - Device Notifications:**
+```typescript
+// Send push notifications to devices via FCM/APNs
+// Works even when app is closed
+// Battery-efficient OS-level delivery
+
+// Publish push notification directly
+await channel.publish('push', {
+  notification: {
+    title: 'RN\'RB Session Update',
+    body: 'Recording has started!',
+    sound: 'default',
+    badge: 1
+  },
+  data: {
+    sessionId: 'session-123',
+    action: 'recording_started'
+  }
+});
+
+// Target specific devices/users
+await ablyClient.push.publishToDevices({
+  recipient: {
+    clientId: 'user-device-id'
+  },
+  notification: {
+    title: 'RN\'RB Alert',
+    body: 'Your turn to record vocals!'
+  }
+});
+
+// Handle push notifications in app
+// (Handled automatically by device OS when app is closed)
+// When app is open, can intercept via push event listeners
+```
+
+**Realtime vs REST Interfaces:**
+
+**REST Interface - Stateless HTTP Communication:**
+```typescript
+// HTTP-based, stateless communication
+// Used for server-side operations and non-realtime clients
+// Perfect for: publishing messages, retrieving data, issuing tokens
+
+const restClient = new Ably.Rest({ key: ABLY_API_KEY });
+
+// Publish messages server-side
+await restClient.channels.get('session-events').publish('system-alert', {
+  type: 'maintenance',
+  message: 'Scheduled maintenance in 5 minutes'
+});
+
+// Retrieve message history server-side
+const history = await restClient.channels.get('session-chat').history({
+  limit: 100
+});
+
+// Issue tokens for realtime clients
+const tokenRequest = await restClient.auth.createTokenRequest({
+  clientId: 'session-user-123',
+  capability: {
+    'session-*': ['publish', 'subscribe', 'presence']
+  }
+});
+```
+
+**Realtime Interface - Persistent WebSocket Connections:**
+```typescript
+// WebSocket-based persistent connections
+// Full feature set for client-side realtime applications
+// Perfect for: live collaboration, presence, high-frequency messaging
+
+const realtimeClient = new Ably.Realtime({ key: ABLY_API_KEY });
+
+// Maintain persistent connection to Ably
+realtimeClient.connection.on('connected', () => {
+  console.log('RN\'RB: Connected to Ably realtime');
+});
+
+// Attach to multiple channels simultaneously
+const chatChannel = realtimeClient.channels.get('session-chat');
+const eventChannel = realtimeClient.channels.get('session-events');
+const presenceChannel = realtimeClient.channels.get('session-presence');
+
+// Publish at high frequencies with low latency
+setInterval(async () => {
+  await eventChannel.publish('heartbeat', {
+    timestamp: Date.now(),
+    userId: currentUser.id
+  });
+}, 1000); // 1Hz heartbeat for session monitoring
+
+// Automatic reconnection and message recovery
+realtimeClient.connection.on('disconnected', () => {
+  console.log('RN\'RB: Temporarily disconnected, will reconnect automatically');
+});
+
+realtimeClient.connection.on('connected', () => {
+  console.log('RN\'RB: Reconnected, message history will be recovered automatically');
+});
+```
+
+**Supported Protocols for Specialized Use Cases:**
+
+**MQTT Protocol - IoT and Resource-Constrained Devices:**
+```typescript
+// MQTT for remote devices with small footprints
+// Translate between MQTT and Ably's protocol
+// Used in embedded systems, IoT devices, remote sensors
+
+// Example: Music equipment sensors publishing to Ably via MQTT
+// Temperature sensors on recording equipment
+// Battery levels from portable recording devices
+// Network status from remote streaming locations
+```
+
+**Server-Sent Events (SSE) - Read-Only Realtime Streams:**
+```typescript
+// SSE for memory-constrained environments
+// One-way realtime data streaming
+// Perfect for: dashboards, monitoring, read-only displays
+
+// Example: RN'RB session monitoring dashboard
+// Real-time session statistics display
+// Live performance metrics visualization
+// Studio equipment status monitoring
+```
+
+**Migration Adapters - Pusher and PubNub Compatibility:**
+```typescript
+// Pusher Adapter - Quick migration from Pusher
+// Drop-in replacement for existing Pusher implementations
+// Same API surface, Ably's reliability and scale
+
+// PubNub Adapter - Migration from PubNub
+// Compatible API for existing PubNub applications
+// Leverage Ably's global infrastructure
+```
+
+**Ably Architecture Benefits for RN'RB:**
+
+**Global Infrastructure:**
+```typescript
+// 205+ edge locations worldwide
+// Automatic routing to nearest datacenter
+// Sub-50ms latencies globally
+
+// Messages automatically replicated across regions
+// 99.999% uptime SLA
+// Automatic failover and recovery
+```
+
+**Message Delivery Guarantees:**
+```typescript
+// At-least-once delivery (configurable)
+// Message ordering preserved per channel
+// Automatic deduplication
+// Exactly-once delivery available for premium use cases
+```
+
+**Security and Compliance:**
+```typescript
+// End-to-end encryption available
+// SOC 2 Type II, HIPAA, GDPR compliant
+// Enterprise-grade security
+// Token-based authentication
+// Granular access controls via capabilities
+```
+
+**Scalability:**
+```typescript
+// Handle millions of concurrent connections
+// Billions of messages per month
+// Auto-scaling infrastructure
+// No rate limiting for normal use cases
+```
+
+**Integration with RN'RB Music Sessions:**
+```typescript
+// Multi-protocol support enables diverse device integration
+// REST API for server-side session management
+// Realtime API for live collaboration
+// Presence for participant awareness
+// History for session replay and catch-up
+// Push notifications for session alerts
+
+// Example: Complete RN'RB session architecture
+class RNSessionManager {
+  constructor() {
+    this.restClient = new Ably.Rest({ key: ABLY_API_KEY });
+    this.realtimeClient = new Ably.Realtime({ key: ABLY_API_KEY });
+    this.setupRealtimeFeatures();
+  }
+
+  async createSession(sessionConfig) {
+    // Use REST API to initialize session metadata
+    await this.restClient.channels.get('session-metadata')
+      .publish('session-created', sessionConfig);
+
+    // Set up realtime features
+    this.setupSessionChannels(sessionConfig.id);
+    this.setupPresenceTracking(sessionConfig.id);
+    this.setupMessageHistory(sessionConfig.id);
+  }
+
+  setupRealtimeFeatures() {
+    // Real-time chat, events, presence all work together
+    // Daily.co handles video/audio, Ably handles collaboration
+  }
+}
+```
+
+**Recommendation:** Ably Pub/Sub provides the robust realtime messaging foundation for RN'RB - combining REST reliability with realtime performance, global scale, and rich features like presence, history, and push notifications essential for professional music collaboration.
+
+---
+
+**💬 ABLY CHAT REACT TUTORIAL - COMPLETE GETTING STARTED GUIDE**
+
+**Ably Chat React implementation tutorial documented - RN'RB now has complete step-by-step guide for building professional chat interfaces with rooms, messages, presence, and reactions.**
+
+**Ably Chat React Setup - Complete Tutorial:**
+
+**Project Setup with Vite:**
+```bash
+# Create new React + TypeScript project
+npm create vite@latest my-chat-react-app -- --template react-ts
+
+# Install Tailwind CSS
+npm install tailwindcss @tailwindcss/vite
+
+# Install Ably SDKs
+npm install ably @ably/chat
+```
+
+**Environment Configuration:**
+```bash
+# Create .env file
+echo "VITE_ABLY_API_KEY=your-ably-api-key-here" > .env
+```
+
+**Provider Setup (main.tsx):**
+```typescript
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import * as Ably from 'ably';
+import { ChatClient, LogLevel } from '@ably/chat';
+import { ChatClientProvider } from '@ably/chat/react';
+import { AblyProvider } from 'ably/react';
+import App from './App';
+
+// Initialize Ably clients
+const realtimeClient = new Ably.Realtime({
+  key: import.meta.env.VITE_ABLY_API_KEY,
+  clientId: 'my-first-client', // Use token auth in production
+});
+
+const chatClient = new ChatClient(realtimeClient, {
+  logLevel: LogLevel.Info, // Debug logging
+});
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <AblyProvider client={realtimeClient}>
+      <ChatClientProvider client={chatClient}>
+        <App />
+      </ChatClientProvider>
+    </AblyProvider>
+  </React.StrictMode>,
+);
+```
+
+**Connection Status Component:**
+```typescript
+import { useChatConnection } from '@ably/chat/react';
+
+function ConnectionStatus() {
+  const { currentStatus } = useChatConnection();
+
+  return (
+    <div className="p-4 text-center h-full border-gray-300 bg-gray-100">
+      <h2 className="text-lg font-semibold text-blue-500">Ably Chat Connection</h2>
+      <p className="mt-2">Connection: {currentStatus}!</p>
+    </div>
+  );
+}
+```
+
+**Room Creation with ChatRoomProvider:**
+```typescript
+import { ChatRoomProvider } from '@ably/chat/react';
+
+function App() {
+  return (
+    <ChatRoomProvider name="music-session-room">
+      <div className="chat-app">
+        <ConnectionStatus />
+        <RoomStatus />
+        <ChatInterface />
+      </div>
+    </ChatRoomProvider>
+  );
+}
+```
+
+**Room Status Monitoring:**
+```typescript
+import { useRoom } from '@ably/chat/react';
+
+function RoomStatus() {
+  const [currentRoomStatus, setCurrentRoomStatus] = useState('');
+  const { roomName } = useRoom({
+    onStatusChange: (status) => {
+      setCurrentRoomStatus(status.current);
+    },
+  });
+
+  return (
+    <div className="p-4 text-center h-full border-gray-300 bg-gray-100">
+      <h2 className="text-lg font-semibold text-blue-500">Room Status</h2>
+      <p className="mt-2">
+        Status: {currentRoomStatus}<br/>
+        Room: {roomName}
+      </p>
+    </div>
+  );
+}
+```
+
+**Complete Chat Component with Messages:**
+```typescript
+import { useMessages } from '@ably/chat/react';
+import { ChatMessageEvent, ChatMessageEventType, Message } from '@ably/chat';
+
+function ChatBox() {
+  const [inputValue, setInputValue] = useState('');
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const { sendMessage, updateMessage } = useMessages({
+    listener: (event: ChatMessageEvent) => {
+      const message = event.message;
+      switch (event.type) {
+        case ChatMessageEventType.Created:
+          setMessages(prev => [...prev, message]);
+          break;
+        case ChatMessageEventType.Updated:
+          setMessages(prev => {
+            const index = prev.findIndex(m => m.serial === message.serial);
+            if (index === -1) return prev;
+            const updated = [...prev];
+            updated[index] = message;
+            return updated;
+          });
+          break;
+      }
+    }
+  });
+
+  const handleSend = () => {
+    if (!inputValue.trim()) return;
+    sendMessage({ text: inputValue.trim() });
+    setInputValue('');
+  };
+
+  const handleEditMessage = (message: Message) => {
+    const newText = prompt('Enter new text');
+    if (!newText) return;
+    updateMessage(message.serial, {
+      text: newText,
+      metadata: message.metadata,
+      headers: message.headers,
+    });
+  };
+
+  return (
+    <div className="flex flex-col w-full h-[600px] border-1 border-blue-500 rounded-lg overflow-hidden">
+      <div className="flex-1 p-4 overflow-y-auto space-y-2">
+        {messages.map((msg, idx) => {
+          const isMine = msg.clientId === 'my-first-client';
+          return (
+            <div
+              key={idx}
+              className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}
+              onClick={() => handleEditMessage(msg)}
+            >
+              <div className={`max-w-[60%] rounded-2xl px-3 py-2 shadow-sm ${
+                isMine
+                  ? 'bg-green-200 text-gray-800 rounded-br-none'
+                  : 'bg-blue-50 text-gray-800 rounded-bl-none'
+              }`}>
+                {msg.text}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center px-2 mt-auto mb-2">
+        <input
+          type="text"
+          placeholder="Type your message..."
+          className="flex-1 p-2 border border-gray-400 rounded outline-none bg-white"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+        />
+        <button
+          className="bg-blue-500 text-white px-4 ml-2 h-10 rounded hover:bg-blue-600"
+          onClick={handleSend}
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+**Message History for Continuity:**
+```typescript
+function ChatBox() {
+  // ... existing code ...
+
+  const { sendMessage, updateMessage, historyBeforeSubscribe } = useMessages({
+    // ... existing listener ...
+  });
+
+  useEffect(() => {
+    async function loadHistory() {
+      if (!historyBeforeSubscribe) return;
+
+      try {
+        const history = await historyBeforeSubscribe({ limit: 10 });
+        setMessages(history.items);
+      } catch (error) {
+        console.error('Error loading message history:', error);
+      }
+    }
+    loadHistory();
+  }, [historyBeforeSubscribe]);
+
+  // ... rest of component ...
+}
+```
+
+**Typing Indicators Implementation:**
+```typescript
+import { useTyping } from '@ably/chat/react';
+
+function ChatBox() {
+  // ... existing code ...
+
+  const { currentlyTyping, keystroke, stop } = useTyping();
+
+  const handleSend = () => {
+    if (!inputValue.trim()) return;
+    sendMessage({ text: inputValue.trim() });
+    setInputValue('');
+    stop(); // Stop typing when message is sent
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+
+    if (newValue.trim().length > 0) {
+      keystroke(); // Start typing indicator
+    } else {
+      stop(); // Stop typing indicator
+    }
+  };
+
+  return (
+    <div className="flex flex-col w-full h-[600px]">
+      {/* ... messages ... */}
+
+      <div className="flex flex-col border-t border-gray-300 bg-gray-100" style={{ minHeight: '100px' }}>
+        {/* Typing indicator */}
+        <div className="h-6 px-2 pt-2">
+          {currentlyTyping.size > 0 && (
+            <p className="text-sm text-gray-700">
+              {Array.from(currentlyTyping).join(', ')} {currentlyTyping.size > 1 ? 'are' : 'is'} typing...
+            </p>
+          )}
+        </div>
+
+        {/* Input and send button */}
+        <div className="flex items-center px-2 mt-auto mb-2">
+          <input
+            type="text"
+            placeholder="Type something..."
+            value={inputValue}
+            onChange={handleChange}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+            className="flex-1 p-2 border border-gray-400 rounded outline-none bg-white"
+          />
+          <button onClick={handleSend} className="bg-blue-500 text-white px-4 ml-2 h-10 rounded hover:bg-blue-600">
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+**Presence System for Online Users:**
+```typescript
+import { usePresence, usePresenceListener } from '@ably/chat/react';
+
+function PresenceStatus() {
+  // Enter presence
+  usePresence();
+
+  // Listen to presence changes
+  const { presenceData } = usePresenceListener();
+
+  return (
+    <div className="flex flex-col border-b border-gray-300 bg-white w-full h-full px-4 py-2">
+      <strong className="text-green-700 mr-4 text-center border-b border-gray-900">
+        Online: {presenceData.length}
+      </strong>
+      <div className="flex-1 flex-col flex flex-nowrap items-start gap-4 overflow-x-auto">
+        {presenceData.map((member, idx) => (
+          <div key={idx} className="flex items-center gap-1">
+            <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
+            <span className="text-gray-800">{member.clientId}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+**Room Reactions System:**
+```typescript
+import { useRoomReactions } from '@ably/chat/react';
+import { RoomReaction } from '@ably/chat';
+
+function ReactionComponent() {
+  const reactions = ['👍', '❤️', '💥', '🚀', '👎', '💔'];
+  const [roomReactions, setRoomReactions] = useState<RoomReaction[]>([]);
+
+  const { sendRoomReaction } = useRoomReactions({
+    listener: (reactionEvent) => {
+      setRoomReactions(prev => [...prev, reactionEvent.reaction]);
+    },
+  });
+
+  return (
+    <div>
+      {/* Reaction buttons */}
+      <div className="flex justify-evenly items-center px-4 py-2 border-t border-gray-300 bg-white">
+        {reactions.map((reaction) => (
+          <button
+            key={reaction}
+            onClick={() => sendRoomReaction({ name: reaction })}
+            className="text-xl p-1 border border-blue-500 rounded hover:bg-blue-100 text-blue-500"
+          >
+            {reaction}
+          </button>
+        ))}
+      </div>
+
+      {/* Display received reactions */}
+      <div className="flex gap-2 px-2 py-2 border-t border-gray-300">
+        <span>Received reactions:</span>
+        <div className="flex-1 flex items-center max-h-[24px] gap-1 overflow-x-auto">
+          {roomReactions.map((r, idx) => (
+            <span key={idx} className="px-2 py-1 bg-white rounded text-blue-600">
+              {r.name}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+**Complete App Structure:**
+```typescript
+function App() {
+  return (
+    <ChatRoomProvider name="music-session-room">
+      <div className="flex flex-col w-[900px] h-full border-1 border-blue-500 rounded-lg overflow-hidden mx-auto font-sans">
+        {/* Status bar */}
+        <div className="flex flex-row w-full">
+          <ConnectionStatus />
+          <RoomStatus />
+        </div>
+
+        {/* Main content */}
+        <div className="flex flex-1 flex-row justify-evenly">
+          {/* Left panel - Presence and Reactions */}
+          <div className="flex flex-col w-1/2">
+            <div className="flex-1 overflow-y-auto">
+              <PresenceStatus />
+            </div>
+            <div className="min-h-[100px] max-h-[100px]">
+              <ReactionComponent />
+            </div>
+          </div>
+
+          {/* Right panel - Chat */}
+          <div className="flex flex-col bg-white w-1/2">
+            <ChatBox />
+          </div>
+        </div>
+      </div>
+    </ChatRoomProvider>
+  );
+}
+```
+
+**Testing with Ably CLI:**
+```bash
+# Send message from CLI
+ably rooms messages send music-session-room 'Hello from CLI!'
+
+# Simulate presence
+ably rooms presence enter music-session-room --client-id "cli-user"
+
+# Send reaction
+ably rooms reactions send music-session-room 👍
+
+# Simulate typing
+ably rooms typing keystroke music-session-room --client-id "cli-user"
+```
+
+**Production Considerations:**
+```typescript
+// Use token authentication in production (not API keys)
+const realtimeClient = new Ably.Realtime({
+  authUrl: '/api/ably-auth', // Your token endpoint
+  clientId: userId, // Dynamic client ID
+});
+
+// Proper error handling
+chatClient.connection.on('failed', (stateChange) => {
+  console.error('Chat connection failed:', stateChange.reason);
+  // Show user-friendly error message
+});
+
+// Resource cleanup
+useEffect(() => {
+  return () => {
+    // Cleanup handled automatically by providers
+    // But you can manually close if needed
+    // realtimeClient.connection.close();
+  };
+}, []);
+```
+
+**Next Steps for Advanced Features:**
+- **Token Authentication**: Secure auth for production
+- **Message Threads**: Nested conversations
+- **File Sharing**: Media uploads in chat
+- **Moderation**: Admin controls for rooms
+- **Message Search**: Full-text search capabilities
+- **Push Notifications**: Mobile alerts for messages
+- **Message Encryption**: End-to-end security
+- **Offline Support**: Queue messages when offline
+
+**Integration with RN'RB Music Sessions:**
+```typescript
+// Bridge Ably Chat with Daily.co
+function setupMusicCollaborationBridge(dailyCall: any, chatClient: any) {
+  // When participant joins Daily.co
+  dailyCall.on('participant-joined', async (participant) => {
+    // Auto-join music chat room
+    const room = await chatClient.rooms.get(`session-${currentSession.id}`);
+    await room.attach();
+
+    // Send system message
+    await room.messages.send({
+      text: `${participant.user_name} joined the music session! 🎸`,
+      metadata: { type: 'system', event: 'participant_joined' }
+    });
+  });
+
+  // When recording starts
+  dailyCall.on('recording-started', async (recording) => {
+    const room = await chatClient.rooms.get(`session-${currentSession.id}`);
+    await room.messages.send({
+      text: `🎬 Recording started! Take ${recording.id}`,
+      metadata: { type: 'system', event: 'recording_started' }
+    });
+  });
+}
+```
+
+**Recommendation:** Follow this complete React tutorial to build professional chat interfaces for RN'RB music collaboration - provides production-ready messaging with presence, typing indicators, reactions, and seamless Daily.co integration.
+
+---
+
+**🎨 ABLY CHAT REACT UI KIT - PRE-BUILT COMPONENTS FOR RAPID DEVELOPMENT**
+
+**Ably Chat React UI Kit documented - RN'RB now has complete pre-built chat components for instant professional UI implementation!**
+
+**Ably UI Kit Setup - Ready-to-Use Components:**
+
+**Project Setup:**
+```bash
+npm create vite@latest my-chat-ui-app --template react-ts
+cd my-chat-ui-app
+npm install ably @ably/chat @ably/chat-react-ui-kit
+echo "ABLY_API_KEY=your-key-here" > .env
+```
+
+**Provider Architecture:**
+```typescript
+// main.tsx - Complete provider setup
+import * as Ably from 'ably';
+import { ChatClient } from '@ably/chat';
+import { ChatClientProvider } from '@ably/chat/react';
+import { ThemeProvider, AvatarProvider, ChatSettingsProvider } from '@ably/chat-react-ui-kit';
+
+const ablyClient = new Ably.Realtime({
+  key: process.env.ABLY_API_KEY,
+  clientId: 'your-chat-client-id',
+});
+
+const chatClient = new ChatClient(ablyClient);
+
+ReactDOM.createRoot(document.querySelector('#root')!).render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <AvatarProvider>
+        <ChatSettingsProvider>
+          <ChatClientProvider client={chatClient}>
+            {/* Your chat components */}
+          </ChatClientProvider>
+        </ChatSettingsProvider>
+      </AvatarProvider>
+    </ThemeProvider>
+  </React.StrictMode>,
+);
+```
+
+**Complete Chat Application - Single Component:**
+```typescript
+import { App } from '@ably/chat-react-ui-kit';
+import '@ably/chat-react-ui-kit/dist/style.css';
+
+// That's it! Complete chat app
+<App initialRoomNames={["music-session-room"]} />
+```
+
+**Individual Components for Custom Layouts:**
+
+**ChatWindow - Full Chat Interface:**
+```typescript
+import { ChatWindow } from '@ably/chat-react-ui-kit';
+import { ChatRoomProvider } from '@ably/chat/react';
+
+<ChatRoomProvider name="music-session-room">
+  <ChatWindow 
+    roomName="music-session-room" 
+    enableTypingIndicators={true}
+    customHeaderContent={<RoomInfo />}
+    customFooterContent={<RoomReaction />}
+  />
+</ChatRoomProvider>
+```
+
+**RoomInfo - Presence & Participant Display:**
+```typescript
+import { RoomInfo } from '@ably/chat-react-ui-kit';
+
+<RoomInfo 
+  roomAvatar={{
+    displayName: 'RN\'RB Session',
+    color: 'bg-purple-500',
+    initials: 'RB',
+    src: '/rnrb-logo.png'
+  }}
+  className="custom-room-info"
+/>
+```
+
+**Sidebar - Room Navigation:**
+```typescript
+import { Sidebar } from '@ably/chat-react-ui-kit';
+
+<Sidebar
+  roomNames={['session-1', 'session-2', 'general']}
+  activeRoomName="session-1"
+  addRoom={handleAddRoom}
+  setActiveRoom={setActiveRoom}
+  leaveRoom={handleLeaveRoom}
+  isCollapsed={false}
+  onToggleCollapse={toggleSidebar}
+/>
+```
+
+**RoomReaction - Ephemeral Reactions:**
+```typescript
+import { RoomReaction } from '@ably/chat-react-ui-kit';
+
+<RoomReaction /> // 🎸 👍 ❤️ 💥 🚀 👎 💔
+```
+
+**Custom Styling & Theming:**
+```typescript
+<ThemeProvider options={{ 
+  persist: true, 
+  defaultTheme: 'dark' // For rock bar aesthetic
+}}>
+  {/* Components automatically adapt */}
+</ThemeProvider>
+```
+
+**Avatar Customization:**
+```typescript
+<AvatarProvider>
+  {/* Automatic avatar generation with rock-themed colors */}
+</AvatarProvider>
+```
+
+**Settings Control:**
+```typescript
+<ChatSettingsProvider>
+  {/* Controls message editing, reactions, etc. */}
+</ChatSettingsProvider>
+```
+
+**Testing with CLI:**
+```bash
+# Test all features
+ably rooms messages send music-session-room "🎸 Let's jam!"
+ably rooms presence enter music-session-room --clientId "guitarist-1"
+ably rooms reactions send music-session-room 🎸
+ably rooms typing keystroke music-session-room --clientId "drummer"
+```
+
+**RN'RB Integration - Custom Music Session UI:**
+```typescript
+function MusicSessionChat() {
+  return (
+    <div className="rnrb-chat-container dark-theme">
+      <Sidebar 
+        roomNames={sessionRooms}
+        activeRoomName={currentSession.id}
+        addRoom={createNewSession}
+        className="rock-sidebar"
+      />
+      
+      <ChatRoomProvider name={`session-${currentSession.id}`}>
+        <ChatWindow
+          roomName={`session-${currentSession.id}`}
+          customHeaderContent={
+            <RoomInfo roomAvatar={{
+              displayName: currentSession.name,
+              color: 'bg-red-600', // Rock red
+              initials: currentSession.name.slice(0,2).toUpperCase()
+            }} />
+          }
+          customFooterContent={<RoomReaction />}
+        />
+      </ChatRoomProvider>
+    </div>
+  );
+}
+```
+
+**Key Benefits for RN'RB:**
+
+**🚀 Rapid Development:**
+- Pre-built, production-ready components
+- Professional styling included
+- Dark theme support for rock bar aesthetic
+- Automatic responsive design
+
+**🎵 Music Session Optimized:**
+- Typing indicators for real-time collaboration
+- Presence for session participant tracking
+- Reactions for quick feedback (🎸 👍 🎯)
+- Message history for session continuity
+
+**🎨 Customizable:**
+- Theme provider for dark rock aesthetic
+- Avatar customization with band logos
+- Custom styling via className props
+- Header/footer slots for music-specific UI
+
+**⚡ Performance:**
+- Optimized message rendering
+- Lazy loading of message history
+- Efficient presence updates
+- Collapsible sidebar for screen space
+
+**🔧 Enterprise Ready:**
+- Built on Ably's global infrastructure
+- Automatic reconnection handling
+- Message persistence and history
+- Security and compliance features
+
+**Recommendation:** Use Ably Chat React UI Kit for RN'RB to get professional chat interfaces instantly - combines pre-built components with full customization for music collaboration workflows.
+
+---
+
+**🖥️ ABLY CLI - COMPREHENSIVE DEVELOPMENT & TESTING TOOLKIT**
+
+**Ably CLI documented - RN'RB now has complete command-line toolkit for testing, debugging, and developing chat, pub/sub, and realtime features!**
+
+**Ably CLI Installation & Setup:**
+
+```bash
+# Install CLI globally
+npm install -g @ably/cli
+
+# Login to your Ably account
+ably login
+
+# Optional: Install for additional testing
+npm install -g @ably/cli
+```
+
+**Interactive Mode for Development:**
+```bash
+# Start interactive shell with command history and tab completion
+ably-interactive
+
+# Features:
+# - Command history (up/down arrows)
+# - Tab completion for commands and flags
+# - Ctrl+C handling (interrupt current command)
+# - Double Ctrl+C to force quit
+# - No "ably" prefix needed (just type commands directly)
+```
+
+**🎸 RN'RB Chat Testing Commands:**
+
+**Message Testing:**
+```bash
+# Send messages to rooms
+ably rooms messages send "music-session-room" "🎸 Let's jam!"
+ably rooms messages send "session-1" "Recording starting in 5 minutes"
+
+# Send multiple messages with delay
+ably rooms messages send "session-1" "Message {{.Count}}" --count 5 --delay 1000
+
+# Subscribe to room messages
+ably rooms messages subscribe "music-session-room"
+
+# Get message history
+ably rooms messages history "music-session-room" --limit 20
+```
+
+**Presence Testing:**
+```bash
+# Enter room presence
+ably rooms presence enter "music-session-room" --client-id "guitarist-1"
+
+# Subscribe to presence events
+ably rooms presence subscribe "music-session-room"
+
+# Enter with custom data
+ably rooms presence enter "music-session-room" --data '{"name":"Alex","role":"guitarist"}'
+```
+
+**Typing Indicators Testing:**
+```bash
+# Simulate typing (auto-stops after timeout)
+ably rooms typing keystroke "music-session-room" --client-id "drummer"
+
+# Keep typing active
+ably rooms typing keystroke "music-session-room" --autoType --client-id "bassist"
+
+# Subscribe to typing events
+ably rooms typing subscribe "music-session-room"
+```
+
+**Room Reactions Testing:**
+```bash
+# Send emoji reactions
+ably rooms reactions send "music-session-room" 🎸
+ably rooms reactions send "music-session-room" 👍
+ably rooms reactions send "music-session-room" ❤️
+
+# Subscribe to reactions
+ably rooms reactions subscribe "music-session-room"
+```
+
+**Message Reactions Testing:**
+```bash
+# Add reactions to specific messages
+ably rooms messages reactions send "music-session-room" "message-serial-123" 👍
+
+# Remove reactions
+ably rooms messages reactions remove "music-session-room" "message-serial-123" 👍
+
+# Subscribe to message reactions
+ably rooms messages reactions subscribe "music-session-room"
+```
+
+**Room Management:**
+```bash
+# List all active rooms
+ably rooms list
+
+# Filter rooms by prefix
+ably rooms list --prefix "session-"
+
+# Get room occupancy
+ably rooms occupancy get "music-session-room"
+ably rooms occupancy subscribe "music-session-room"
+```
+
+**📡 Pub/Sub Channel Testing:**
+
+**Basic Publishing:**
+```bash
+# Publish messages to channels
+ably channels publish "music-updates" "New song uploaded!"
+ably channels publish "session-events" '{"type":"recording_started","sessionId":"123"}'
+
+# Publish with metadata
+ably channels publish "music-updates" "Song complete" --name "song-finished" --metadata '{"songId":"abc123"}'
+```
+
+**Channel Subscription:**
+```bash
+# Subscribe to channels
+ably channels subscribe "music-updates"
+ably channels subscribe "music-updates" "session-events" "chat-messages"
+
+# Subscribe with rewind
+ably channels subscribe "music-updates" --rewind 10
+```
+
+**Channel Presence:**
+```bash
+# Enter channel presence
+ably channels presence enter "music-updates" --client-id "producer-1"
+
+# Subscribe to presence
+ably channels presence subscribe "music-updates"
+```
+
+**Channel History:**
+```bash
+# Get message history
+ably channels history "music-updates" --limit 50
+ably channels history "music-updates" --start "2024-01-01T00:00:00Z" --end "2024-01-02T00:00:00Z"
+```
+
+**Batch Publishing:**
+```bash
+# Publish to multiple channels
+ably channels batch-publish --channels "channel1,channel2" "Hello multiple channels"
+
+# Use batch spec for complex publishing
+ably channels batch-publish --spec '{"channels":["chan1","chan2"],"messages":{"data":"test"}}'
+```
+
+**🎵 RN'RB Development Workflow:**
+
+**Testing Session Chat:**
+```bash
+# Terminal 1: Subscribe to session messages
+ably rooms messages subscribe "session-1"
+
+# Terminal 2: Send test messages
+ably rooms messages send "session-1" "🎸 Guitar solo ready"
+ably rooms messages send "session-1" "🎤 Vocals recorded"
+
+# Terminal 3: Simulate participants
+ably rooms presence enter "session-1" --client-id "guitarist"
+ably rooms presence enter "session-1" --client-id "drummer"
+ably rooms presence enter "session-1" --client-id "bassist"
+```
+
+**Testing Real-time Events:**
+```bash
+# Terminal 1: Monitor session events
+ably channels subscribe "session-events"
+
+# Terminal 2: Send session events
+ably channels publish "session-events" '{"type":"recording_started","sessionId":"1"}'
+ably channels publish "session-events" '{"type":"track_finished","track":"guitar"}'
+ably channels publish "session-events" '{"type":"mix_complete","sessionId":"1"}'
+```
+
+**Multi-user Testing:**
+```bash
+# Simulate full band session
+ably rooms presence enter "band-practice" --data '{"name":"Alex","instrument":"guitar"}'
+ably rooms presence enter "band-practice" --data '{"name":"Jordan","instrument":"drums"}'
+ably rooms presence enter "band-practice" --data '{"name":"Sam","instrument":"bass"}'
+ably rooms presence enter "band-practice" --data '{"name":"Casey","instrument":"vocals"}'
+
+# Send collaborative messages
+ably rooms messages send "band-practice" "🎵 Ready for verse 2?"
+ably rooms typing keystroke "band-practice" --client-id "drummer"
+ably rooms reactions send "band-practice" 👍
+```
+
+**⚡ MCP Server for AI Integration:**
+
+**Starting MCP Server:**
+```bash
+# For AI tools like Claude Desktop
+ably mcp start-server
+
+# Or via npm script
+pnpm mcp-server
+```
+
+**MCP Environment Variables:**
+```bash
+export ABLY_API_KEY="your-api-key"
+export ABLY_CLIENT_ID="ai-assistant"
+export ABLY_ENVIRONMENT="production"
+```
+
+**Available MCP Commands:**
+- `list_channels` - List active channels
+- `subscribe_to_channel` - Subscribe to messages
+- `publish_to_channel` - Publish messages
+- `get_channel_history` - Retrieve message history
+- Channel presence operations
+
+**🔧 Advanced CLI Features:**
+
+**Account Management:**
+```bash
+# Switch between accounts
+ably accounts login
+ably accounts list
+ably accounts switch "production-account"
+
+# Check account stats
+ably accounts stats --live
+```
+
+**App Management:**
+```bash
+# List and switch apps
+ably apps list
+ably apps switch "music-app"
+
+# Create channel rules
+ably apps channel-rules create --name "music-*" --persisted
+```
+
+**Token Management:**
+```bash
+# Generate tokens for testing
+ably auth issue-ably-token --capability '{"music-*":["publish","subscribe"]}'
+ably auth issue-jwt-token --capability '{"*":["*"]}' --ttl 3600
+```
+
+**Performance Testing:**
+```bash
+# Benchmark publishing
+ably bench publisher "test-channel" --messages 1000 --rate 10
+
+# Benchmark subscribing
+ably bench subscriber "test-channel"
+```
+
+**Logging & Monitoring:**
+```bash
+# Stream app logs
+ably logs app subscribe
+
+# Monitor channel lifecycle
+ably logs channel-lifecycle subscribe
+
+# Check connection status
+ably connections test
+```
+
+**🎼 RN'RB Integration Testing:**
+
+**Complete Session Simulation:**
+```bash
+#!/bin/bash
+# rnrb-session-test.sh
+
+# Start session monitoring
+echo "🎵 Starting RN'RB Session Test..."
+
+# Subscribe to all session channels
+ably channels subscribe "session-events" "music-updates" &
+ably rooms messages subscribe "session-1" &
+ably rooms presence subscribe "session-1" &
+
+# Simulate session participants
+sleep 2
+echo "👥 Adding session participants..."
+ably rooms presence enter "session-1" --data '{"name":"Producer","role":"engineer"}'
+ably rooms presence enter "session-1" --data '{"name":"Guitarist","role":"musician"}'
+ably rooms presence enter "session-1" --data '{"name":"Drummer","role":"musician"}'
+
+# Simulate session events
+sleep 1
+echo "🎬 Starting recording session..."
+ably channels publish "session-events" '{"type":"session_started","sessionId":"1","participants":3}'
+ably rooms messages send "session-1" "🎸 Session started! Ready to record guitar track"
+
+# Simulate activity
+sleep 3
+ably rooms typing keystroke "session-1" --client-id "guitarist"
+sleep 2
+ably rooms messages send "session-1" "🎵 Guitar track recorded and ready for mixing"
+ably rooms reactions send "session-1" 👍
+
+echo "✅ RN'RB session test complete!"
+```
+
+**Production Debugging:**
+```bash
+# Monitor live app performance
+ably apps stats --live --interval 30
+
+# Check channel occupancy
+ably channels occupancy subscribe "music-session-1"
+
+# Monitor connection health
+ably connections stats --live
+```
+
+**Recommendation:** Use Ably CLI extensively for RN'RB development and testing - provides comprehensive tools for simulating multi-user sessions, testing chat features, monitoring performance, and debugging realtime interactions essential for professional music collaboration.
+
+---
+
 ---

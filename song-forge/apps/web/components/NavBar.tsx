@@ -140,20 +140,21 @@ export function NavBar() {
                 <Image
                   src="/rnrlight.png"
                   alt="Rock N' Roll Basement"
-                  width={56}
-                  height={56}
-                  className="dark:hidden drop-shadow-lg"
-                  style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }}
+                  width={80}
+                  height={80}
+                  className="dark:hidden drop-shadow-2xl"
+                  style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.9)) brightness(1.1)' }}
                 />
                 <Image
                   src="/rnrlight.png"
                   alt="Rock N' Roll Basement"
-                  width={56}
-                  height={56}
-                  className="hidden dark:block"
+                  width={80}
+                  height={80}
+                  className="hidden dark:block drop-shadow-2xl"
+                  style={{ filter: 'drop-shadow(0 4px 8px rgba(255,255,255,0.4))' }}
                 />
               </div>
-              <span className="text-lg font-bold hidden sm:inline tracking-tight">
+              <span className="text-xl font-black hidden sm:inline tracking-tight">
                 Rock N' Roll Basement
               </span>
             </Link>
