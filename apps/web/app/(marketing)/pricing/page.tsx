@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, X, Zap, Users, Building2, AlertCircle } from 'lucide-react';
+import { Check, X, Zap, Users, Building2, AlertCircle, ChevronDown, ChevronUp, Sparkles, ArrowRight, TrendingUp } from 'lucide-react';
 import { Card, Button } from '@cronkwaters/ui';
 import Link from 'next/link';
 
@@ -167,61 +167,88 @@ const costBreakdown = {
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [showCostDetails, setShowCostDetails] = useState(false);
+  const [expandedPlan, setExpandedPlan] = useState<string | null>(null);
 
   const getPrice = (basePrice: number) => {
     return billingCycle === 'yearly' ? Math.floor(basePrice * 0.83) : basePrice;
   };
 
-  return (
-    <div className="container mx-auto px-4 py-16">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-7xl mx-auto"
-      >
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4">
-            Transparent Pricing for Musicians
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            All plans include core features. Pay for what you use, with generous limits that cover most needs.
-          </p>
-          
-          {/* Billing Toggle */}
-          <div className="mt-8 flex items-center justify-center gap-4">
-            <span className={billingCycle === 'monthly' ? 'font-semibold' : 'text-muted-foreground'}>
-              Monthly
-            </span>
-            <button
-              onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-              className="relative w-16 h-8 bg-muted rounded-full transition-colors"
-            >
-              <motion.div
-                className="absolute top-1 left-1 w-6 h-6 bg-foreground rounded-full"
-                animate={{ x: billingCycle === 'yearly' ? 32 : 0 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-              />
-            </button>
-            <span className={billingCycle === 'yearly' ? 'font-semibold' : 'text-muted-foreground'}>
-              Yearly
-              <span className="ml-2 text-sm text-green-500 font-normal">Save 17%</span>
-            </span>
-          </div>
+  const scrollToDetails = () => {
+    document.getElementById('feature-details')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-          {/* Cost Transparency Button */}
-          <button
-            onClick={() => setShowCostDetails(!showCostDetails)}
-            className="mt-4 text-sm text-muted-foreground hover:text-foreground flex items-center gap-2 mx-auto"
-          >
-            <AlertCircle className="h-4 w-4" />
-            {showCostDetails ? 'Hide' : 'Show'} actual service costs
-          </button>
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Premium Hero Section */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-purple-500/10" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
         </div>
+        
+        <div className="rnrb-container max-w-7xl relative z-10 py-20 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-6">
+              <Sparkles className="w-4 h-4 text-purple-400" />
+              <span className="text-sm font-medium text-purple-400">AI-Powered Platform</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6">
+              Transparent Pricing for Musicians
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+              Fair pricing with AI features included. No hidden fees, no price gouging - just sustainable margins for continuous development.
+            </p>
+            
+            {/* Billing Toggle */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <span className={billingCycle === 'monthly' ? 'font-semibold' : 'text-muted-foreground'}>
+                Monthly
+              </span>
+              <button
+                onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                className="relative w-16 h-8 bg-surface-muted rounded-full transition-colors border border-border"
+              >
+                <motion.div
+                  className="absolute top-0.5 left-0.5 w-7 h-7 bg-brand-primary rounded-full shadow-lg"
+                  animate={{ x: billingCycle === 'yearly' ? 30 : 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                />
+              </button>
+              <span className={billingCycle === 'yearly' ? 'font-semibold' : 'text-muted-foreground'}>
+                Yearly
+                <span className="ml-2 text-sm text-green-500 font-normal">Save 17%</span>
+              </span>
+            </div>
+
+            <button
+              onClick={() => setShowCostDetails(!showCostDetails)}
+              className="text-sm text-brand-primary hover:text-brand-primary/80 flex items-center gap-2 mx-auto transition"
+            >
+              <AlertCircle className="h-4 w-4" />
+              {showCostDetails ? 'Hide' : 'See'} our actual costs & margins
+            </button>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="rnrb-container max-w-7xl py-16 px-4">
 
         {/* Cost Details */}
         {showCostDetails && (
-          <Card className="p-6 mb-8 bg-yellow-500/5 border-yellow-500/20">
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-8"
+          >
+          <Card className="p-8 rnrb-card bg-yellow-500/5 border-yellow-500/20">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
               <AlertCircle className="h-5 w-5 text-yellow-500" />
               Actual Service Costs (What We Pay)
@@ -251,31 +278,41 @@ export default function PricingPage() {
               <strong>Our commitment:</strong> Transparent costs + sustainable 35-40% margin for development & support. No hidden fees, no price gouging.
             </p>
           </Card>
+          </motion.div>
         )}
 
-        {/* Value Proposition */}
-        <Card className="p-8 mb-12 bg-gradient-to-r from-green-500/10 to-blue-500/10">
+        {/* Value Proposition - No Emojis */}
+        <Card className="p-8 mb-12 rnrb-card bg-gradient-to-br from-brand-primary/5 to-purple-500/5">
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold mb-4">Fair, Sustainable Pricing</h2>
-            <p className="text-lg mb-6">
+            <h2 className="text-3xl font-display font-bold mb-4">Fair, Sustainable Pricing</h2>
+            <p className="text-lg text-muted-foreground mb-8">
               Start small and scale as you grow. Our pricing is designed to be sustainable for both you and us.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-              <div>
-                <h3 className="font-semibold mb-2">💰 Pay for What You Use</h3>
-                <p className="text-muted-foreground">
-                  Reasonable included limits with transparent overage pricing
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="rnrb-card p-6">
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                  <Check className="w-6 h-6 text-brand-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">Pay for What You Use</h3>
+                <p className="text-sm text-muted-foreground">
+                  Generous included limits with transparent overage pricing
                 </p>
               </div>
-              <div>
-                <h3 className="font-semibold mb-2">📈 Volume Discounts</h3>
-                <p className="text-muted-foreground">
+              <div className="rnrb-card p-6">
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                  <TrendingUp className="w-6 h-6 text-brand-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">Volume Discounts</h3>
+                <p className="text-sm text-muted-foreground">
                   Better rates as you upgrade - grow with confidence
                 </p>
               </div>
-              <div>
-                <h3 className="font-semibold mb-2">🎯 No Surprises</h3>
-                <p className="text-muted-foreground">
+              <div className="rnrb-card p-6">
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                  <Sparkles className="w-6 h-6 text-brand-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">No Surprises</h3>
+                <p className="text-sm text-muted-foreground">
                   Clear notifications before hitting limits
                 </p>
               </div>
@@ -322,44 +359,76 @@ export default function PricingPage() {
                 </div>
 
                 {/* Features */}
-                <div className="space-y-3 mb-6">
+                <div className="space-y-2.5 mb-6">
                   {plan.features.map((feature, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      {feature.includes('✨') ? (
+                        <Sparkles className="h-5 w-5 text-purple-400 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      )}
                       <span className="text-sm">{feature}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* Usage Limits */}
-                <div className="border-t pt-4 mb-6">
-                  <h4 className="font-semibold text-sm mb-3">Usage Limits</h4>
-                  <div className="space-y-2 text-xs text-muted-foreground">
-                    <p>• Recording: {plan.limits.recording}</p>
-                    <p>• Streaming: {plan.limits.streaming}</p>
-                    <p>• Messaging: {plan.limits.messaging}</p>
-                    <p>• Storage: {plan.limits.storage}</p>
-                  </div>
-                </div>
+                {/* Expand for More Details Button */}
+                <button
+                  onClick={() => setExpandedPlan(expandedPlan === plan.name ? null : plan.name)}
+                  className="w-full py-2 text-sm text-brand-primary hover:text-brand-primary/80 font-medium flex items-center justify-center gap-2 transition mb-4"
+                >
+                  {expandedPlan === plan.name ? (
+                    <><ChevronUp className="w-4 h-4" /> Hide Details</>
+                  ) : (
+                    <><ChevronDown className="w-4 h-4" /> See Full Details</>
+                  )}
+                </button>
 
-                {/* Not Included */}
-                {plan.notIncluded.length > 0 && (
-                  <div className="space-y-2 mb-6">
-                    {plan.notIncluded.map((feature, index) => (
-                      <div key={index} className="flex items-start gap-3">
-                        <X className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-muted-foreground">{feature}</span>
+                {/* Expanded Details */}
+                {expandedPlan === plan.name && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mb-6 space-y-4"
+                  >
+                    {/* Usage Limits */}
+                    <div className="border-t pt-4">
+                      <h4 className="font-semibold text-sm mb-3">Usage Limits & Overages</h4>
+                      <div className="space-y-2 text-xs text-muted-foreground bg-surface/50 p-3 rounded-lg">
+                        <p>• Recording: {plan.limits.recording}</p>
+                        <p>• Streaming: {plan.limits.streaming}</p>
+                        <p>• Messaging: {plan.limits.messaging}</p>
+                        <p>• Storage: {plan.limits.storage}</p>
+                        {plan.limits.ai && <p>• AI: {plan.limits.ai}</p>}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+
+                    {/* Not Included */}
+                    {plan.notIncluded.length > 0 && (
+                      <div className="border-t pt-4">
+                        <h4 className="font-semibold text-sm mb-3">Not Included in This Plan</h4>
+                        <div className="space-y-2">
+                          {plan.notIncluded.map((feature, index) => (
+                            <div key={index} className="flex items-start gap-3 text-xs">
+                              <X className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                              <span className="text-muted-foreground">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
                 )}
 
-                <Button 
-                  className="w-full" 
-                  variant={plan.popular ? 'default' : 'secondary'}
-                >
-                  Get Started
-                </Button>
+                <Link href="/auth">
+                  <Button 
+                    className={`w-full ${plan.popular ? 'rnrb-button-primary' : 'rnrb-button-secondary'} px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2`}
+                  >
+                    {plan.price === 0 ? 'Start Free' : 'Get Started'}
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
               </Card>
             </motion.div>
           ))}
@@ -489,7 +558,7 @@ export default function PricingPage() {
             </Card>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
