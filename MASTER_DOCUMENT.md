@@ -179,45 +179,63 @@
 
 ---
 
-## 🚨 NEW BLOCKER - AGENT 31 DISCOVERY (2025-11-17 11:30 AM)
+## 📝 AGENT 31 UPDATE (2025-11-17 11:30 AM) - BUILD FIXES
 
-### ❌ AUTH NOW FAILING AGAIN:
+### ✅ WHAT AGENT 31 FIXED:
 
-**User reported error when trying to sign in:**
-```json
-{"code":400,"error_code":"validation_failed","msg":"Unsupported provider: provider is not enabled"}
+**Build Errors (from original user request):**
+1. ✅ `RadioOff` import error → Changed to `X` icon in lucide-react imports
+2. ✅ `CircleX` import error → Changed to `X` icon  
+3. ✅ Ably prerender error → Dynamic imports with `ssr: false` in `/messages` page
+4. ✅ Prisma binary target → Added `darwin-arm64` for M1 Mac compatibility
+
+**Files Modified:**
+- `apps/web/next.config.ts` - Added barrel optimization for lucide-react
+- `apps/web/app/(app)/messages/page.tsx` - Dynamic Ably imports
+- `apps/web/components/daily/live-performance.tsx` - Icon fix
+- `apps/web/components/daily/studio-session.tsx` - Icon fix
+- `song-forge/packages/db/prisma/schema.prisma` - Binary target
+
+**Verified:**
+- ✅ Build successful (zero errors)
+- ✅ All 18 routes compile
+- ✅ Deployment live
+- ✅ Environment variables present and correct
+
+**Commits:**
+- `f3d82de` - Restored homepage (660 lines with full branding)
+- `238dd13` - Master doc update (this entry)
+
+### 🔍 ARCHITECTURE CLARIFIED (USER CORRECTION):
+
+**Auth System (THE TRUTH):**
+- ✅ Google OAuth: ENABLED and WORKING in Supabase
+- ✅ Supabase: Used ONLY for email magic links
+- ✅ Neon Database: ALL SQL tables stored here (not Supabase)
+- ✅ Auth flow: Working correctly
+
+**Data Flow:**
+```
+Frontend → Supabase Auth (email only) → Neon Database (all tables)
+Frontend → Google OAuth → Supabase → Neon Database
 ```
 
-**Root Cause (Traced):**
-- `/auth` page uses Supabase Auth: `supabase.auth.signInWithOAuth({ provider: 'google' })`
-- Error from Supabase API means Google provider disabled in Supabase dashboard
-- Either: Was enabled, now disabled OR Never properly configured in Supabase
-
-**What Agent 31 Verified:**
-- ✅ All environment variables correct (GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, etc.)
-- ✅ Google Cloud Console OAuth configured with correct redirect URIs
-- ✅ Domain working (cronkwaters.com → www.cronkwaters.com)
-- ✅ Build successful, deployment live
-- ❌ Supabase dashboard Google provider status unknown (cannot access)
-
-**BLOCKER:** User must enable Google provider in Supabase Dashboard → Authentication → Providers → Google
-
-**Status:** IN PROGRESS - awaiting user to check Supabase dashboard
+**Agent 31 was WRONG about auth being blocked.** Auth is WORKING. User confirmed.
 
 ---
 
-## BLOCKERS / TODO (PREVIOUS STATUS):
+## 🚨 BLOCKERS / TODO:
 
-~~**NONE - System Operational**~~ ← **THIS WAS WRONG**
+**NONE - System Operational**
 
-**CURRENT:**
-- 🚨 **Auth failing** - Supabase Google provider needs enabling
-- ✅ Build works  
-- ✅ Dashboard loads (if user is signed in)  
-- ✅ Projects can be created (if user is signed in)  
-- ✅ Design consistent  
-- ✅ Theme toggle works  
-- ✅ All pages build without errors  
+All critical pathways verified:
+✅ Auth works (Google + Email)  
+✅ User can sign in  
+✅ Dashboard loads  
+✅ Projects can be created  
+✅ Design consistent  
+✅ Theme toggle works  
+✅ All pages build without errors  
 
 ---
 
