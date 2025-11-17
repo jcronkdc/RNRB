@@ -30,6 +30,11 @@ const CollaborativePresence = dynamic(() => import('@/components/song/collaborat
   loading: () => <div className="animate-pulse h-32 rnrb-card" />
 });
 
+const VersionHistory = dynamic(() => import('@/components/song/version-history'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-96 rnrb-card" />
+});
+
 type SongSection = {
   id: string;
   type: 'intro' | 'verse' | 'chorus' | 'bridge' | 'outro' | 'instrumental';
@@ -57,6 +62,32 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
 
   const [sections, setSections] = useState<SongSection[]>(song.structure || []);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  // Mock version history - will be loaded from database
+  const mockVersions = [
+    {
+      id: 'v1',
+      versionNumber: 3,
+      title: song.title,
+      lyrics: sections.map(s => s.lyrics).join('\n\n'),
+      chords: JSON.stringify(sections.map(s => s.chords)),
+      structure: JSON.stringify(sections),
+      createdAt: new Date(Date.now() - 10 * 60 * 1000), // 10 min ago
+      createdByName: 'You',
+      snapshotReason: 'Auto-save snapshot'
+    },
+    {
+      id: 'v2',
+      versionNumber: 2,
+      title: song.title,
+      lyrics: 'Old version lyrics...',
+      chords: '[]',
+      structure: '[]',
+      createdAt: new Date(Date.now() - 30 * 60 * 1000), // 30 min ago
+      createdByName: 'You',
+      snapshotReason: 'Before restructure'
+    },
+  ];
 
   const handleDragStart = (index: number) => {
     setDraggedIndex(index);
@@ -96,6 +127,30 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
 
   const removeSection = (id: string) => {
     setSections(sections.filter(s => s.id !== id));
+  };
+
+  // Version history handlers
+  const handleRestoreVersion = (versionId: string) => {
+    const version = mockVersions.find(v => v.id === versionId);
+    if (version && version.structure) {
+      const restoredStructure = JSON.parse(version.structure);
+      setSections(restoredStructure);
+      // TODO: Also restore chords, key, tempo from version
+      console.log('Restored version:', versionId);
+    }
+  };
+
+  const handlePreviewVersion = (versionId: string) => {
+    const version = mockVersions.find(v => v.id === versionId);
+    if (version) {
+      // TODO: Show preview modal with version content
+      console.log('Preview version:', versionId);
+    }
+  };
+
+  const handleCompareVersions = (versionId1: string, versionId2: string) => {
+    // TODO: Show side-by-side comparison
+    console.log('Compare versions:', versionId1, versionId2);
   };
 
   const SECTION_TEMPLATES = [
@@ -350,6 +405,16 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
                 </div>
               </div>
             </Card>
+
+            {/* Version History */}
+            <VersionHistory
+              songId={params.songId}
+              versions={mockVersions}
+              currentVersion={3}
+              onRestore={handleRestoreVersion}
+              onPreview={handlePreviewVersion}
+              onCompare={handleCompareVersions}
+            />
 
             {/* Quick Actions */}
             <Card className="p-6">
