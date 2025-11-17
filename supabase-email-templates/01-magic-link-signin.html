@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in to Rock N' Roll Basement</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #050816;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #050816; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #0f172a; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);">
+          
+          <!-- Header with Branding -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%); padding: 40px 40px 30px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                🎸 Rock N' Roll Basement
+              </h1>
+              <p style="margin: 8px 0 0; color: #e0e7ff; font-size: 14px; opacity: 0.9;">
+                Your All-in-One Music Platform
+              </p>
+            </td>
+          </tr>
+
+          <!-- Main Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <h2 style="margin: 0 0 16px; color: #ffffff; font-size: 24px; font-weight: 600;">
+                Sign in to your account
+              </h2>
+              
+              <p style="margin: 0 0 24px; color: #94a3b8; font-size: 16px; line-height: 1.6;">
+                Click the button below to securely sign in to Rock N' Roll Basement. This link will expire in 60 minutes.
+              </p>
+
+              <!-- Magic Link Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding: 24px 0;">
+                    <a href="{{ .ConfirmationURL }}" 
+                       style="display: inline-block; background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: #ffffff; text-decoration: none; padding: 16px 48px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);">
+                      ✉️ Sign In Now
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Alternative Link -->
+              <p style="margin: 24px 0 0; color: #64748b; font-size: 14px; line-height: 1.6;">
+                If the button doesn't work, copy and paste this link into your browser:
+              </p>
+              <p style="margin: 8px 0 0; padding: 12px; background-color: #1e293b; border-radius: 6px; word-break: break-all;">
+                <a href="{{ .ConfirmationURL }}" style="color: #8b5cf6; text-decoration: none; font-size: 13px;">
+                  {{ .ConfirmationURL }}
+                </a>
+              </p>
+
+              <!-- Security Notice -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 32px; background-color: #1e293b; border-left: 4px solid #f59e0b; border-radius: 6px;">
+                <tr>
+                  <td style="padding: 16px;">
+                    <p style="margin: 0; color: #fbbf24; font-size: 14px; font-weight: 600;">
+                      🔒 Security Note
+                    </p>
+                    <p style="margin: 8px 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
+                      This link is unique to you and expires in 60 minutes. If you didn't request this email, you can safely ignore it.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px; background-color: #0a0f1e; border-top: 1px solid #1e293b;">
+              <p style="margin: 0 0 12px; color: #64748b; font-size: 13px; text-align: center;">
+                Rock N' Roll Basement • The World's First All-in-One Music Platform
+              </p>
+              <p style="margin: 0; color: #475569; font-size: 12px; text-align: center;">
+                Record • Stream • Collaborate • Manage Tours • Track Royalties
+              </p>
+              <p style="margin: 16px 0 0; color: #475569; font-size: 11px; text-align: center;">
+                © 2024 Rock N' Roll Basement. All rights reserved.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+

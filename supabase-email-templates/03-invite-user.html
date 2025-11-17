@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're Invited to Rock N' Roll Basement</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #050816;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #050816; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #0f172a; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%); padding: 40px 40px 30px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">
+                🎸 Rock N' Roll Basement
+              </h1>
+              <p style="margin: 8px 0 0; color: #e0e7ff; font-size: 14px;">
+                You've Been Invited!
+              </p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <h2 style="margin: 0 0 16px; color: #ffffff; font-size: 24px; font-weight: 600;">
+                Join {{ .SiteURL }}
+              </h2>
+              
+              <p style="margin: 0 0 24px; color: #94a3b8; font-size: 16px; line-height: 1.6;">
+                You've been invited to collaborate on Rock N' Roll Basement - the all-in-one platform for musicians, bands, and music professionals.
+              </p>
+
+              <!-- Accept Invitation Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding: 24px 0;">
+                    <a href="{{ .ConfirmationURL }}" 
+                       style="display: inline-block; background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); color: #ffffff; text-decoration: none; padding: 16px 48px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);">
+                      🎉 Accept Invitation
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- What You'll Get -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 32px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 8px; border: 1px solid #8b5cf6;">
+                <tr>
+                  <td style="padding: 24px;">
+                    <p style="margin: 0 0 16px; color: #ffffff; font-size: 16px; font-weight: 600;">
+                      What's waiting for you:
+                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding: 8px 0;">
+                          <span style="color: #8b5cf6; font-size: 18px;">🎙️</span>
+                          <span style="color: #94a3b8; font-size: 14px; margin-left: 12px;">Cloud recording studio</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0;">
+                          <span style="color: #6366f1; font-size: 18px;">🎤</span>
+                          <span style="color: #94a3b8; font-size: 14px; margin-left: 12px;">Live streaming to YouTube, Twitch, Facebook</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0;">
+                          <span style="color: #d946ef; font-size: 18px;">💬</span>
+                          <span style="color: #94a3b8; font-size: 14px; margin-left: 12px;">Real-time messaging with your band</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0;">
+                          <span style="color: #f59e0b; font-size: 18px;">📊</span>
+                          <span style="color: #94a3b8; font-size: 14px; margin-left: 12px;">Tour management & analytics</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Alternative Link -->
+              <p style="margin: 32px 0 0; color: #64748b; font-size: 13px;">
+                If the button doesn't work, copy and paste this link:
+              </p>
+              <p style="margin: 8px 0 0; padding: 12px; background-color: #1e293b; border-radius: 6px; word-break: break-all;">
+                <a href="{{ .ConfirmationURL }}" style="color: #8b5cf6; text-decoration: none; font-size: 12px;">
+                  {{ .ConfirmationURL }}
+                </a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px; background-color: #0a0f1e; border-top: 1px solid #1e293b;">
+              <p style="margin: 0 0 8px; color: #64748b; font-size: 13px; text-align: center;">
+                Invited to: <strong style="color: #8b5cf6;">{{ .Email }}</strong>
+              </p>
+              <p style="margin: 0; color: #475569; font-size: 11px; text-align: center;">
+                Rock N' Roll Basement • The World's First All-in-One Music Platform
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+

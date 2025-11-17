@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Your Identity - Rock N' Roll Basement</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #050816;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #050816; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #0f172a; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); padding: 40px 40px 30px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">
+                🎸 Rock N' Roll Basement
+              </h1>
+              <p style="margin: 8px 0 0; color: #dbeafe; font-size: 14px;">
+                Security Verification Required
+              </p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <h2 style="margin: 0 0 16px; color: #ffffff; font-size: 24px; font-weight: 600;">
+                Confirm it's you
+              </h2>
+              
+              <p style="margin: 0 0 24px; color: #94a3b8; font-size: 16px; line-height: 1.6;">
+                For your security, we need to verify your identity before proceeding with this sensitive action.
+              </p>
+
+              <!-- Confirm Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding: 24px 0;">
+                    <a href="{{ .ConfirmationURL }}" 
+                       style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: #ffffff; text-decoration: none; padding: 16px 48px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);">
+                      🛡️ Confirm My Identity
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Security Info -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 32px; background-color: #1e293b; border-radius: 8px; border: 1px solid #3b82f6;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <p style="margin: 0 0 12px; color: #ffffff; font-size: 15px; font-weight: 600;">
+                      🔐 Why am I seeing this?
+                    </p>
+                    <p style="margin: 0; color: #94a3b8; font-size: 14px; line-height: 1.6;">
+                      We require reauthentication when you:
+                    </p>
+                    <ul style="margin: 8px 0 0; padding-left: 20px; color: #94a3b8; font-size: 14px; line-height: 1.6;">
+                      <li>Change your email or password</li>
+                      <li>Delete your account</li>
+                      <li>Access sensitive account settings</li>
+                      <li>Link new authentication providers</li>
+                    </ul>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Security Warning -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 24px; background-color: #7c2d12; border-left: 4px solid #f59e0b; border-radius: 6px;">
+                <tr>
+                  <td style="padding: 16px;">
+                    <p style="margin: 0; color: #fbbf24; font-size: 14px; font-weight: 600;">
+                      ⚠️ Didn't request this?
+                    </p>
+                    <p style="margin: 8px 0 0; color: #fcd34d; font-size: 13px; line-height: 1.5;">
+                      If you didn't try to perform a sensitive action, someone may have accessed your account. 
+                      Please sign in and change your password immediately.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Alternative Link -->
+              <p style="margin: 32px 0 0; color: #64748b; font-size: 13px;">
+                Or copy and paste this link:
+              </p>
+              <p style="margin: 8px 0 0; padding: 12px; background-color: #1e293b; border-radius: 6px; word-break: break-all;">
+                <a href="{{ .ConfirmationURL }}" style="color: #3b82f6; text-decoration: none; font-size: 12px;">
+                  {{ .ConfirmationURL }}
+                </a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 30px 40px; background-color: #0a0f1e; border-top: 1px solid #1e293b;">
+              <p style="margin: 0 0 8px; color: #64748b; font-size: 13px; text-align: center;">
+                Account: <strong style="color: #3b82f6;">{{ .Email }}</strong>
+              </p>
+              <p style="margin: 0; color: #475569; font-size: 11px; text-align: center;">
+                Rock N' Roll Basement • The World's First All-in-One Music Platform
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+
