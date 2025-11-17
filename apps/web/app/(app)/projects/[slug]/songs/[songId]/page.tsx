@@ -35,6 +35,11 @@ const VersionHistory = dynamic(() => import('@/components/song/version-history')
   loading: () => <div className="animate-pulse h-96 rnrb-card" />
 });
 
+const ChordExplorer = dynamic(() => import('@/components/song/chord-explorer'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-96 rnrb-card" />
+});
+
 type SongSection = {
   id: string;
   type: 'intro' | 'verse' | 'chorus' | 'bridge' | 'outro' | 'instrumental';
@@ -47,6 +52,8 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
   const [showVideo, setShowVideo] = useState(false);
   const [activeTab, setActiveTab] = useState<'edit' | 'chat' | 'video'>('edit');
   const [showChords, setShowChords] = useState(true);
+  const [selectedChordForExploration, setSelectedChordForExploration] = useState<string | undefined>();
+  const [showChordLibrary, setShowChordLibrary] = useState(false);
 
   // Mock song data - will be replaced with database
   const song = {
@@ -414,6 +421,17 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
               onRestore={handleRestoreVersion}
               onPreview={handlePreviewVersion}
               onCompare={handleCompareVersions}
+            />
+
+            {/* Chord Explorer & Progression Library */}
+            <ChordExplorer
+              currentChord={selectedChordForExploration}
+              songKey={song.key}
+              onSelectChord={(chord) => {
+                // TODO: Add chord to current section at cursor position
+                console.log('Selected chord:', chord);
+                setSelectedChordForExploration(chord);
+              }}
             />
 
             {/* Quick Actions */}
