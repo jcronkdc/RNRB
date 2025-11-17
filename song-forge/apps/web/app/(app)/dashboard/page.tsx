@@ -36,6 +36,7 @@ import {
   Filler
 } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
+import { RealtimeLobbyPanel } from '../../../components/ably/realtime-lobby-panel';
 
 ChartJS.register(
   CategoryScale,
@@ -206,6 +207,11 @@ export default function DashboardPage() {
         <p className="text-muted-foreground">
           Here's your music business at a glance
         </p>
+      </div>
+
+      {/* Realtime Lobby Monitor */}
+      <div className="mb-8">
+        <RealtimeLobbyPanel />
       </div>
 
       {/* Metrics Grid */}

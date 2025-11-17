@@ -6,7 +6,10 @@
 const required = {
   'NEXTAUTH_SECRET': '🔴 CRITICAL - Authentication will not work without this!',
   'NEXTAUTH_URL': '🟡 Required for production',
-  'DATABASE_URL': '🔴 CRITICAL - Database connection required'
+  'DATABASE_URL': '🔴 CRITICAL - Database connection required (Neon)',
+  'NEXT_PUBLIC_SUPABASE_URL': '🔴 Required for Supabase realtime/auth clients',
+  'NEXT_PUBLIC_SUPABASE_ANON_KEY': '🔴 Required for Supabase realtime/auth clients',
+  'ABLY_API_KEY': '🔴 Required for Ably token generation'
 };
 
 const optional = {

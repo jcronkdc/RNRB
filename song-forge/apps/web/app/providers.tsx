@@ -6,6 +6,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from "react";
 
 import { MotionProvider } from "../components/motion-provider";
+import { RNRBAblyProvider } from "../components/ably-provider";
 
 type ThemeMode = "light" | "dark" | "warm";
 
@@ -98,7 +99,9 @@ export function Providers({ children }: ProvidersProps) {
       <ThemeProvider theme={theme}>
         <MotionProvider>
           <TrpcProvider>
-            <ToastProvider>{children}</ToastProvider>
+            <RNRBAblyProvider>
+              <ToastProvider>{children}</ToastProvider>
+            </RNRBAblyProvider>
           </TrpcProvider>
         </MotionProvider>
       </ThemeProvider>

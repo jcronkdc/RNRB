@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { 
+import {
   Bell, 
   Search, 
   Menu, 
@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@cronkwaters/ui';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { AblyConnectionStatusBanner } from '../ably/connection-status-banner';
 
 type TopBarProps = {
   onMenuClick: () => void;
@@ -47,7 +48,8 @@ export function TopBar({ onMenuClick }: TopBarProps) {
   const currentThemeIcon = themes.find(t => t.value === theme)?.icon || Moon;
 
   return (
-    <header className="rnrb-topbar">
+    <div className="flex flex-col gap-2">
+      <header className="rnrb-topbar">
       <div className="flex items-center gap-4 flex-1">
         {/* Mobile menu button */}
         <button
@@ -172,6 +174,8 @@ export function TopBar({ onMenuClick }: TopBarProps) {
           )}
         </div>
       </div>
-    </header>
+      </header>
+      <AblyConnectionStatusBanner />
+    </div>
   );
 }

@@ -19,6 +19,12 @@ const serverEnvSchema = z.object({
   EMAIL_SERVER_URL: z.string().url().optional(),
   EMAIL_FROM: z.string().email().optional(),
 
+  // Supabase - Server only!
+  SUPABASE_URL: z.string().url().optional(),
+  SUPABASE_ANON_KEY: z.string().optional(),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url('NEXT_PUBLIC_SUPABASE_URL must be a valid URL').optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, 'NEXT_PUBLIC_SUPABASE_ANON_KEY is required').optional(),
+
   // OAuth - Server only!
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   APPLE_CLIENT_SECRET: z.string().optional(),
@@ -38,6 +44,9 @@ const serverEnvSchema = z.object({
   // AI Services - Server only!
   OPENAI_API_KEY: z.string().optional(),
   ELEVENLABS_API_KEY: z.string().optional(),
+
+  // Ably - Server only!
+  ABLY_API_KEY: z.string().min(1, 'ABLY_API_KEY is required for realtime transport'),
   
   // Rate limiting - Server only!
   UPSTASH_REDIS_REST_URL: z.string().url().optional(),
@@ -51,6 +60,8 @@ const serverEnvSchema = z.object({
 const clientEnvSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3000'),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url('NEXT_PUBLIC_SUPABASE_URL must be a valid URL').optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, 'NEXT_PUBLIC_SUPABASE_ANON_KEY is required').optional(),
   
   // OAuth client IDs (safe to expose)
   NEXT_PUBLIC_GOOGLE_CLIENT_ID: z.string().optional(),
@@ -67,7 +78,10 @@ const clientEnvSchema = z.object({
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
   
   // AI Voice ID (safe to expose)
-  NEXT_PUBLIC_ELEVENLABS_VOICE_ID: z.string().optional()
+  NEXT_PUBLIC_ELEVENLABS_VOICE_ID: z.string().optional(),
+
+  // Ably client configuration
+  NEXT_PUBLIC_ABLY_CLIENT_ID: z.string().optional()
 });
 
 // Combine schemas for full validation
@@ -104,6 +118,8 @@ export function getEnv(): Env {
       NEXTAUTH_URL: process.env.NEXTAUTH_URL,
       EMAIL_SERVER_URL: process.env.EMAIL_SERVER_URL,
       EMAIL_FROM: process.env.EMAIL_FROM,
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
       GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
       APPLE_CLIENT_SECRET: process.env.APPLE_CLIENT_SECRET,
       STORAGE_ENDPOINT: process.env.STORAGE_ENDPOINT,
@@ -116,20 +132,35 @@ export function getEnv(): Env {
       GIVE_LIVELY_API_KEY: process.env.GIVE_LIVELY_API_KEY,
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,
       ELEVENLABS_API_KEY: process.env.ELEVENLABS_API_KEY,
+      ABLY_API_KEY: process.env.ABLY_API_KEY,
       UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
       UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
       
       // Client-safe vars (NEXT_PUBLIC_ prefix)
       NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
       NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+      NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY:
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY,
       NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID,
       NEXT_PUBLIC_APPLE_CLIENT_ID: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID || process.env.APPLE_CLIENT_ID,
       NEXT_PUBLIC_STORAGE_URL: process.env.NEXT_PUBLIC_STORAGE_URL || process.env.STORAGE_PUBLIC_URL,
       NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN,
       NEXT_PUBLIC_ANALYTICS_ID: process.env.NEXT_PUBLIC_ANALYTICS_ID || process.env.ANALYTICS_ID,
       NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY,
-      NEXT_PUBLIC_ELEVENLABS_VOICE_ID: process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID || process.env.ELEVENLABS_VOICE_ID
+      NEXT_PUBLIC_ELEVENLABS_VOICE_ID: process.env.NEXT_PUBLIC_ELEVENLABS_VOICE_ID || process.env.ELEVENLABS_VOICE_ID,
+      NEXT_PUBLIC_ABLY_CLIENT_ID: process.env.NEXT_PUBLIC_ABLY_CLIENT_ID
     });
+    const supabaseUrl =
+      validatedEnv.NEXT_PUBLIC_SUPABASE_URL || validatedEnv.SUPABASE_URL;
+    const supabaseAnonKey =
+      validatedEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY || validatedEnv.SUPABASE_ANON_KEY;
+    if (!supabaseUrl) {
+      throw new Error('Supabase URL is not configured (set NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL)');
+    }
+    if (!supabaseAnonKey) {
+      throw new Error('Supabase anon key is not configured (set NEXT_PUBLIC_SUPABASE_ANON_KEY or SUPABASE_ANON_KEY)');
+    }
   }
 
   return validatedEnv;
@@ -142,6 +173,9 @@ export function getClientEnv() {
   return {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_ABLY_CLIENT_ID: process.env.NEXT_PUBLIC_ABLY_CLIENT_ID,
     NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
     NEXT_PUBLIC_APPLE_CLIENT_ID: process.env.NEXT_PUBLIC_APPLE_CLIENT_ID,
     NEXT_PUBLIC_STORAGE_URL: process.env.NEXT_PUBLIC_STORAGE_URL,
