@@ -16,12 +16,10 @@ import {
   Database,
   Radio,
   Award,
-  Headphones,
   
   // UI Icons
   ArrowRight,
   Check,
-  Star,
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -63,27 +61,6 @@ const features = [
     description: 'Secure cloud storage for all your creative assets',
     icon: Database,
     stats: 'Unlimited'
-  }
-];
-
-const testimonials = [
-  {
-    quote: "The most comprehensive platform I've ever used for managing my music career.",
-    author: "Sarah Chen",
-    role: "Independent Artist",
-    rating: 5
-  },
-  {
-    quote: "Rock N' Roll Basement transformed how our label operates. It's a game-changer.",
-    author: "Marcus Thompson",
-    role: "Label Executive",
-    rating: 5
-  },
-  {
-    quote: "Finally, a platform that understands what musicians actually need.",
-    author: "Alex Rivera",
-    role: "Producer",
-    rating: 5
   }
 ];
 
@@ -197,23 +174,6 @@ export default function HomePage() {
       </section>
 
       {/* Trust Section */}
-      <section className="py-20 border-y border-border/50">
-        <div className="rnrb-container">
-          <div className="text-center mb-12">
-            <p className="text-sm uppercase tracking-wider text-muted-foreground mb-4">
-              Trusted by Industry Leaders
-            </p>
-            <div className="flex items-center justify-center gap-12 opacity-50">
-              {/* Placeholder for partner logos */}
-              <div className="text-2xl font-bold text-muted-foreground">Sony Music</div>
-              <div className="text-2xl font-bold text-muted-foreground">Warner</div>
-              <div className="text-2xl font-bold text-muted-foreground">Universal</div>
-              <div className="text-2xl font-bold text-muted-foreground">BMG</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Features Grid */}
       <section className="py-24">
         <div className="rnrb-container">
@@ -331,52 +291,6 @@ export default function HomePage() {
               </div>
             </motion.div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-24">
-        <div className="rnrb-container">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-display mb-6">
-              Loved by the Industry
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join thousands of music professionals already using Rock N' Roll Basement
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="rnrb-card p-8"
-              >
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-brand-primary text-brand-primary" />
-                  ))}
-                </div>
-                
-                <p className="text-lg mb-6 leading-relaxed">"{testimonial.quote}"</p>
-                
-                <div>
-                  <p className="font-semibold">{testimonial.author}</p>
-                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
