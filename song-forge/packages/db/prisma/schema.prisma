@@ -218,9 +218,11 @@ enum ProjectInvitationStatus {
 }
 
 model Song {
-  id            String        @id @default(cuid())
+  id            String             @id @default(cuid())
   projectId     String
   title         String
+  versions      SongVersion[]      // Version control for collaborative editing
+  suggestions   LyricSuggestion[]  // Collaborative suggestions
   key           String?
   tempo         Int?
   timeSignature String?
@@ -236,6 +238,51 @@ model Song {
 
   @@index([projectId])
   @@index([iswc])
+}
+
+// Collaboration Layer: Song Versions (Version Control for Collaborative Editing)
+model SongVersion {
+  id          String   @id @default(cuid())
+  songId      String
+  versionName String // "Original Draft", "After Sarah's Edits", "Final Mix"
+  lyrics      String?
+  notes       String?
+  createdById String
+  createdAt   DateTime @default(now())
+  isCurrent   Boolean  @default(false) // Track which version is active
+  song        Song     @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@index([songId])
+  @@index([createdById])
+  @@index([isCurrent])
+}
+
+// Collaboration Layer: Lyric Suggestions (Click Line → Suggest Alternative → Accept/Reject)
+model LyricSuggestion {
+  id              String             @id @default(cuid())
+  songId          String
+  lineNumber      Int // Which line in the lyrics (0-indexed)
+  originalText    String // The original lyric line
+  suggestedText   String // The suggested alternative
+  reason          String? // Why this change? Optional explanation
+  status          SuggestionStatus   @default(pending)
+  suggestedById   String // Who made the suggestion
+  reviewedById    String? // Who accepted/rejected
+  reviewedAt      DateTime?
+  createdAt       DateTime           @default(now())
+  song            Song               @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@index([songId])
+  @@index([suggestedById])
+  @@index([status])
+  @@index([lineNumber])
+}
+
+enum SuggestionStatus {
+  pending  // Waiting for review
+  accepted // Incorporated into lyrics
+  rejected // Declined
+  superseded // Replaced by newer suggestion
 }
 
 model Asset {
