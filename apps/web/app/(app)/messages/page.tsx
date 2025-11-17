@@ -31,19 +31,42 @@ export default function MessagesPage() {
   const [activeTab, setActiveTab] = useState<'chat' | 'presence' | 'notifications'>('chat');
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-6xl mx-auto"
-      >
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Real-time Messaging</h1>
-          <p className="text-muted-foreground">
-            Collaborate with your band members, producers, and team in real-time
-          </p>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-1/3 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
         </div>
+        
+        <div className="rnrb-container max-w-6xl relative z-10 py-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                <MessageSquare className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Real-Time Communication</p>
+                <h1 className="text-3xl md:text-4xl font-display font-bold">Messaging</h1>
+              </div>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Collaborate with your band, producers, and team instantly
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="rnrb-container max-w-6xl py-12 px-4"
+      >
 
         {/* Comprehensive Messaging Overview */}
         <Card className="p-8 mb-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
@@ -135,7 +158,7 @@ export default function MessagesPage() {
         {/* Detailed Features */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <Card className="p-6">
-            <h3 className="text-2xl font-semibold mb-6">Advanced Chat Features</h3>
+            <h3 className="text-2xl font-semibold mb-6">💬 Advanced Chat Features</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
@@ -390,7 +413,7 @@ export default function MessagesPage() {
             </Card>
           </div>
         </div>
-        </div> {/* End of hidden tab content */}
+        </div> {/* Close hidden div */}
       </motion.div>
     </div>
   );

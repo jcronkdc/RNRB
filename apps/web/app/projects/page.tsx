@@ -150,19 +150,19 @@ export default function ProjectsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
                 <div className="p-4 bg-background/50 rounded-lg">
-                  <p className="font-semibold text-white mb-2">🎵 Organize Songs</p>
+                  <p className="font-semibold text-white mb-2">Organize Songs</p>
                   <p className="text-sm text-muted-foreground">
                     Group songs into albums, EPs, or singles
                   </p>
                 </div>
                 <div className="p-4 bg-background/50 rounded-lg">
-                  <p className="font-semibold text-white mb-2">🤝 Collaborate</p>
+                  <p className="font-semibold text-white mb-2">Collaborate</p>
                   <p className="text-sm text-muted-foreground">
                     Invite band members and track contributions
                   </p>
                 </div>
                 <div className="p-4 bg-background/50 rounded-lg">
-                  <p className="font-semibold text-white mb-2">💰 Track Royalties</p>
+                  <p className="font-semibold text-white mb-2">Track Royalties</p>
                   <p className="text-sm text-muted-foreground">
                     Manage splits and revenue per project
                   </p>

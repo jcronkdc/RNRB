@@ -136,7 +136,7 @@ export default function ProjectDetailPage() {
                 </div>
                 {project.genre && (
                   <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full">
-                    <span className="text-purple-400">🎵 {project.genre}</span>
+                    <span className="text-purple-400">{project.genre}</span>
                   </div>
                 )}
               </div>

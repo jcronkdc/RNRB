@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 @import '@cronkwaters/ui/styles.css';
-@import './design-tokens.css';
 
 /* Rock N' Roll Basement - Premium Design System */
 /* Inspired by the geometric RR monogram - sophisticated, modern, timeless */
@@ -25,12 +24,9 @@
   --rnrb-danger: 0 84% 60%;           /* #ef4444 - Error states */
   
   /* Typography Scale */
-  --rnrb-font-display: var(--font-bebas), "Bebas Neue", sans-serif;
-  --rnrb-font-heading: var(--font-oswald), "Oswald", sans-serif;
-  --rnrb-font-sans: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --rnrb-font-mono: var(--font-mono), "JetBrains Mono", "SF Mono", monospace;
-  --rnrb-font-rock: var(--font-rock), "Rock Salt", cursive;
-  --rnrb-font-marker: var(--font-marker), "Permanent Marker", cursive;
+  --rnrb-font-display: "Instrument Serif", "Playfair Display", serif;
+  --rnrb-font-sans: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --rnrb-font-mono: "JetBrains Mono", "SF Mono", monospace;
   
   /* Spacing */
   --rnrb-space-xs: 0.25rem;

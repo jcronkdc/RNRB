@@ -1,204 +1,461 @@
 'use client';
 
-import { NavBar } from '@/components/NavBar';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { 
+  Music, 
+  Radio, 
+  Disc, 
+  Users, 
+  Calendar,
+  Settings,
+  Plus,
+  Play,
+  Pause,
+  SkipForward,
+  Volume2,
+  Headphones,
+  Mic,
+  MonitorSpeaker,
+  CheckCircle,
+  Video
+} from 'lucide-react';
+import { Card, Button } from '@cronkwaters/ui';
+import { DailyProvider } from '@daily-co/daily-react';
+import Daily from '@daily-co/daily-js';
+import { StudioSession } from '@/components/daily/studio-session';
+import { useDailyRoom } from '@/hooks/use-daily-room';
 
 export default function StudioPage() {
-  const [activeMode, setActiveMode] = useState<'recording' | 'streaming' | 'collaboration' | 'schedule'>('recording');
+  const [activeSession, setActiveSession] = useState(false);
+  const [callObject, setCallObject] = useState<any>(null);
+  const [roomData, setRoomData] = useState<{ room: any; token: string } | null>(null);
+  const { createRoom, isLoading, error } = useDailyRoom();
 
-  const studioModes = [
-    {
-      id: 'recording',
-      title: 'RECORDING',
-      subtitle: 'CAPTURE YOUR SOUND',
-      description: 'Professional HD recording',
-      features: ['48kHz/24-bit Audio', 'Multi-track Recording', 'Cloud Storage', 'Auto Backup'],
-      cta: 'START SESSION',
-      href: '/projects',
-      gradient: 'from-red-950/20 to-black',
-      accent: 'red'
-    },
-    {
-      id: 'streaming',
-      title: 'LIVE STREAM',
-      subtitle: 'BROADCAST WORLDWIDE',
-      description: 'Stream to all platforms',
-      features: ['YouTube/Twitch/Facebook', '1080p HD Video', 'Custom RTMP', 'Chat Integration'],
-      cta: 'GO LIVE',
-      href: '/projects',
-      gradient: 'from-blue-950/20 to-black',
-      accent: 'blue'
-    },
-    {
-      id: 'collaboration',
-      title: 'COLLABORATE',
-      subtitle: 'CONNECT WITH ARTISTS',
-      description: 'Real-time remote sessions',
-      features: ['Video Calls', 'Screen Sharing', 'DAW Control', 'Low Latency'],
-      cta: 'INVITE MUSICIANS',
-      href: '/projects',
-      gradient: 'from-green-950/20 to-black',
-      accent: 'green'
-    },
-    {
-      id: 'schedule',
-      title: 'SCHEDULE',
-      subtitle: 'PLAN YOUR SESSIONS',
-      description: 'Studio time management',
-      features: ['Calendar Sync', 'Reminder Alerts', 'Team Availability', 'Time Zones'],
-      cta: 'VIEW CALENDAR',
-      href: '/projects',
-      gradient: 'from-purple-950/20 to-black',
-      accent: 'purple'
+  useEffect(() => {
+    // Initialize Daily call object
+    const daily = Daily.createCallObject({
+      subscribeToTracksAutomatically: true,
+    });
+    setCallObject(daily);
+
+    return () => {
+      daily.destroy();
+    };
+  }, []);
+
+  const startNewSession = async () => {
+    try {
+      const data = await createRoom({
+        name: `studio-${Date.now()}`,
+        properties: {
+          enable_recording: true,
+          enable_live_streaming: true,
+          enable_chat: true,
+          enable_screenshare: true,
+        },
+      });
+      setRoomData(data);
+      setActiveSession(true);
+    } catch (err) {
+      console.error('Failed to create room:', err);
     }
-  ] as const;
-
-  const activeStudioMode = studioModes.find(mode => mode.id === activeMode)!;
+  };
 
   return (
-    <main className="min-h-screen bg-zinc-950 pt-20">
-        {/* Studio Header */}
-        <section className="border-b border-zinc-800 bg-black/50">
-          <div className="container mx-auto px-6 py-12">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-400 mb-2">
-                PROFESSIONAL STUDIO
-              </h1>
-              <p className="font-[family-name:var(--rnrb-font-marker)] text-4xl mb-8 text-white">
-                Cloud Recording Studio
-              </p>
-              
-              {/* Mode Selector */}
-              <div className="flex gap-6">
-                {studioModes.map((mode) => (
-                  <button
-                    key={mode.id}
-                    onClick={() => setActiveMode(mode.id as any)}
-                    className={`
-                      font-mono text-xs uppercase tracking-[0.2em] pb-4
-                      transition-all duration-300
-                      ${activeMode === mode.id 
-                        ? 'text-white border-b-2 border-white' 
-                        : 'text-zinc-600 hover:text-zinc-400'
-                      }
-                    `}
-                  >
-                    {mode.title}
-                  </button>
-                ))}
-              </div>
-            </motion.div>
+    <DailyProvider callObject={callObject}>
+      <div className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden border-b border-border/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+          <div className="absolute inset-0">
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
           </div>
-        </section>
-
-        {/* Active Mode Display */}
-        <section className="py-20">
-          <div className="container mx-auto px-6">
+          
+          <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
             <motion.div
-              key={activeMode}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="max-w-5xl mx-auto"
+              transition={{ duration: 0.6 }}
             >
-              <div className={`
-                border border-zinc-800 
-                bg-gradient-to-br ${activeStudioMode.gradient}
-                overflow-hidden
-              `}>
-                {/* Mode Header */}
-                <div className="p-12 text-center border-b border-zinc-800">
-                  <h2 className="font-mono text-4xl uppercase tracking-wider mb-2">
-                    {activeStudioMode.subtitle}
-                  </h2>
-                  <p className="text-zinc-400 text-lg">
-                    {activeStudioMode.description}
-                  </p>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                  <Video className="w-6 h-6 text-brand-primary" />
                 </div>
-
-                {/* Features Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4">
-                  {activeStudioMode.features.map((feature, index) => (
-                    <div 
-                      key={index}
-                      className="p-6 border-r border-b border-zinc-800 last:border-r-0 md:odd:last:border-r md:last:border-b-0 md:[&:nth-last-child(-n+4)]:border-b-0"
-                    >
-                      <p className="font-mono text-xs uppercase tracking-widest text-zinc-500">
-                        {String(index + 1).padStart(2, '0')}
-                      </p>
-                      <p className="mt-2 text-sm uppercase tracking-wider">
-                        {feature}
-                      </p>
-                    </div>
-                  ))}
+                <div>
+                  <p className="text-sm text-muted-foreground">Professional Studio</p>
+                  <h1 className="text-3xl md:text-4xl font-display font-bold">Recording Sessions</h1>
                 </div>
+              </div>
+              <p className="text-lg text-muted-foreground max-w-2xl">
+                HD recording, real-time collaboration, and live streaming - all in one place
+              </p>
+            </motion.div>
+          </div>
+        </div>
 
-                {/* CTA */}
-                <div className="p-12 text-center bg-black/40">
-                  <Link 
-                    href={activeStudioMode.href}
-                    className={`
-                      inline-block px-12 py-4 
-                      bg-white text-black 
-                      font-mono text-xs uppercase tracking-[0.3em]
-                      hover:bg-zinc-200 transition-colors
-                    `}
-                  >
-                    {activeStudioMode.cta}
-                  </Link>
+        <div className="rnrb-container max-w-7xl py-12 px-4">
+
+          {/* Quick Actions */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-display font-bold mb-2">Quick Actions</h2>
+            <p className="text-muted-foreground">Start your creative session</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="rnrb-card p-6 rnrb-hover-lift cursor-pointer border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors" 
+              onClick={startNewSession}
+            >
+              <div className="flex flex-col gap-4">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+                  <Disc className="h-6 w-6 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Start Recording</h3>
+                  <p className="text-sm text-muted-foreground">HD video/audio session</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="rnrb-card p-6 rnrb-hover-lift cursor-pointer hover:border-brand-primary/30 transition-colors"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+                  <Radio className="h-6 w-6 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Go Live</h3>
+                  <p className="text-sm text-muted-foreground">Stream to fans</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="rnrb-card p-6 rnrb-hover-lift cursor-pointer hover:border-brand-primary/30 transition-colors"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+                  <Users className="h-6 w-6 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Collaborate</h3>
+                  <p className="text-sm text-muted-foreground">Invite musicians</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="rnrb-card p-6 rnrb-hover-lift cursor-pointer hover:border-brand-primary/30 transition-colors"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+                  <Calendar className="h-6 w-6 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Schedule</h3>
+                  <p className="text-sm text-muted-foreground">Plan sessions</p>
                 </div>
               </div>
             </motion.div>
           </div>
-        </section>
 
-        {/* Technical Specs */}
-        <section className="border-t border-zinc-900 py-20">
-          <div className="container mx-auto px-6">
-            <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500 mb-8 text-center">
-              TECHNICAL SPECIFICATIONS
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              {[
-                { label: 'AUDIO ENGINE', specs: ['48kHz/24-bit', 'Zero Latency', 'VST Support', 'MIDI Control'] },
-                { label: 'VIDEO QUALITY', specs: ['1080p @ 60fps', '4K Ready', 'H.264 Codec', 'Hardware Accel'] },
-                { label: 'CONNECTIVITY', specs: ['WebRTC P2P', 'Global CDN', 'Auto Failover', '< 50ms RTT'] }
-              ].map((category) => (
-                <div key={category.label} className="border border-zinc-800 p-6">
-                  <h4 className="font-mono text-sm uppercase tracking-widest mb-4">
-                    {category.label}
-                  </h4>
-                  <ul className="space-y-2">
-                    {category.specs.map((spec, index) => (
-                      <li key={index} className="text-sm text-zinc-400 flex items-center gap-2">
-                        <span className="w-1 h-1 bg-zinc-600 rounded-full" />
-                        {spec}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+          {/* Active Session or Session List */}
+          {activeSession && roomData ? (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-semibold">Live Studio Session</h2>
+                <Button 
+                  variant="secondary" 
+                  onClick={() => {
+                    setActiveSession(false);
+                    setRoomData(null);
+                  }}
+                >
+                  End Session
+                </Button>
+              </div>
+              
+              <StudioSession roomUrl={roomData.room.url} token={roomData.token} />
             </div>
-          </div>
-        </section>
+          ) : (
+            <>
+              {/* Comprehensive Studio Overview */}
+              <Card className="p-8 mb-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
+                <h2 className="text-3xl font-bold mb-4">🎸 Professional Recording Studio</h2>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Rock N' Roll Basement provides a complete cloud-based recording studio with HD video/audio recording, 
+                  real-time collaboration, and professional livestreaming capabilities - all accessible from your browser.
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div className="p-4 bg-background/50 rounded-lg">
+                    <Disc className="h-8 w-8 text-red-500 mb-3" />
+                    <h4 className="font-semibold mb-2">HD Recording</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Record in 1080p video with 48kHz/24-bit audio. Professional quality for any project.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-background/50 rounded-lg">
+                    <Radio className="h-8 w-8 text-blue-500 mb-3" />
+                    <h4 className="font-semibold mb-2">Multi-Platform Streaming</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Broadcast to YouTube, Twitch, Facebook Live, or custom RTMP destinations simultaneously.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-background/50 rounded-lg">
+                    <Users className="h-8 w-8 text-green-500 mb-3" />
+                    <h4 className="font-semibold mb-2">Global Collaboration</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Connect with up to 32 participants for remote recording sessions and virtual band practice.
+                    </p>
+                  </div>
+                </div>
 
-        {/* Recording Guide Link */}
-        <section className="py-12 border-t border-zinc-900">
-          <div className="container mx-auto px-6 text-center">
-            <Link 
-              href="/studio/recording-guide"
-              className="text-zinc-600 hover:text-white font-mono text-xs uppercase tracking-[0.2em] transition-colors"
-            >
-              VIEW RECORDING GUIDE →
-            </Link>
-          </div>
-        </section>
-    </main>
+                <div className="bg-background/30 rounded-lg p-6 border border-brand-primary/20">
+                  <h3 className="text-xl font-semibold mb-4">What Makes Our Studio Different</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">No Software Installation Required</p>
+                        <p className="text-sm text-muted-foreground">
+                          Works entirely in your browser - no DAW plugins, no complex setups. Just open the link and start recording.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Automatic Cloud Backup</p>
+                        <p className="text-sm text-muted-foreground">
+                          Every take is automatically saved to cloud storage. Never lose a performance due to computer crashes.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Built-in Livestreaming</p>
+                        <p className="text-sm text-muted-foreground">
+                          Record AND stream simultaneously. Engage your audience while creating content - no separate tools needed.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Real-Time Collaboration</p>
+                        <p className="text-sm text-muted-foreground">
+                          Band members join from anywhere. See everyone's video, hear everyone's audio, collaborate like you're in the same room.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Detailed Features Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <Card className="p-6">
+                  <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <Mic className="h-6 w-6 text-red-500" />
+                    Advanced Recording Features
+                  </h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start gap-3">
+                      <div className="p-2 bg-red-500/10 rounded flex-shrink-0">
+                        <Disc className="h-5 w-5 text-red-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Multi-track Audio Recording</p>
+                        <p className="text-sm text-muted-foreground">
+                          Record up to 32 separate audio tracks simultaneously. Perfect for full band recordings, 
+                          orchestras, or complex production setups. Each track is saved independently for post-production.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
+                        <Video className="h-5 w-5 text-purple-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">HD Video Recording (1080p)</p>
+                        <p className="text-sm text-muted-foreground">
+                          Crystal-clear 1080p video at 30fps. Capture performances, music videos, or behind-the-scenes 
+                          content with professional quality. Customizable layouts include grid view, active speaker, or picture-in-picture.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="p-2 bg-blue-500/10 rounded flex-shrink-0">
+                        <MonitorSpeaker className="h-5 w-5 text-blue-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Zero-Latency Monitoring</p>
+                        <p className="text-sm text-muted-foreground">
+                          Hear yourself and other musicians in real-time with less than 50ms latency. Critical for 
+                          tight performances and staying in sync during remote sessions.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="p-2 bg-green-500/10 rounded flex-shrink-0">
+                        <Headphones className="h-5 w-5 text-green-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Individual Headphone Mixes</p>
+                        <p className="text-sm text-muted-foreground">
+                          Each participant controls their own monitor mix. Drummers can boost the click track, 
+                          vocalists can adjust their reverb - everyone hears exactly what they need.
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <Users className="h-6 w-6 text-green-500" />
+                    Collaboration & Streaming
+                  </h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start gap-3">
+                      <div className="p-2 bg-green-500/10 rounded flex-shrink-0">
+                        <Users className="h-5 w-5 text-green-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Up to 32 Participants</p>
+                        <p className="text-sm text-muted-foreground">
+                          Host massive remote sessions. Perfect for orchestras, choirs, or multi-band collaborations. 
+                          Everyone sees and hears each other in real-time.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="p-2 bg-blue-500/10 rounded flex-shrink-0">
+                        <Radio className="h-5 w-5 text-blue-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Multi-Destination Streaming</p>
+                        <p className="text-sm text-muted-foreground">
+                          Stream to YouTube, Twitch, Facebook Live, and custom RTMP servers simultaneously. 
+                          Reach all your audiences at once without complex restreaming services.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
+                        <Volume2 className="h-5 w-5 text-purple-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Built-in Talkback System</p>
+                        <p className="text-sm text-muted-foreground">
+                          Producer/engineer communicates with performers without the audience hearing. Essential for 
+                          directing sessions and giving feedback during livestreams.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="p-2 bg-orange-500/10 rounded flex-shrink-0">
+                        <Settings className="h-5 w-5 text-orange-500" />
+                      </div>
+                      <div>
+                        <p className="font-semibold mb-1">Session Templates</p>
+                        <p className="text-sm text-muted-foreground">
+                          Save your audio routing, video layouts, and stream settings. Load them instantly for 
+                          consistent quality across all your sessions.
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
+                </Card>
+              </div>
+
+              {/* Additional Features */}
+              <Card className="p-8 mb-8">
+                <h3 className="text-2xl font-bold mb-6">Technical Specifications</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Audio Quality</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• 48kHz/24-bit audio recording</li>
+                      <li>• Opus codec for streaming (48kbps-510kbps)</li>
+                      <li>• Automatic gain control (AGC)</li>
+                      <li>• Noise suppression & echo cancellation</li>
+                      <li>• Stereo and mono input support</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Video Quality</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• 1080p HD video (1920x1080)</li>
+                      <li>• 30fps smooth motion</li>
+                      <li>• H.264 codec for compatibility</li>
+                      <li>• Custom layouts (grid, speaker, PIP)</li>
+                      <li>• Screen sharing up to 4K</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Streaming</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• RTMP/RTMPS output</li>
+                      <li>• 1080p @ 6Mbps bitrate</li>
+                      <li>• Multi-platform simultaneous</li>
+                      <li>• Custom stream keys</li>
+                      <li>• DVR/replay capability</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Recording Formats</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• MP4 video files</li>
+                      <li>• WAV/MP3 audio exports</li>
+                      <li>• Per-participant track isolation</li>
+                      <li>• Automatic cloud storage</li>
+                      <li>• Instant downloads</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Collaboration</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• Screen sharing & annotations</li>
+                      <li>• In-session text chat</li>
+                      <li>• Session recording permissions</li>
+                      <li>• Mute/unmute controls</li>
+                      <li>• Participant management</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-3 text-brand-primary">Use Cases</h4>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• Remote band rehearsals</li>
+                      <li>• Album recording sessions</li>
+                      <li>• Live concert streaming</li>
+                      <li>• Music lessons/coaching</li>
+                      <li>• Podcast recording</li>
+                    </ul>
+                  </div>
+                </div>
+              </Card>
+
+            </>
+          )}
+        </div>
+      </div>
+    </DailyProvider>
   );
 }

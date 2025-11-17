@@ -49,19 +49,37 @@ export default function ToursPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-7xl mx-auto"
-      >
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Tours & Live Performances</h1>
-          <p className="text-muted-foreground">
-            Connect with fans through live shows and virtual performances
-          </p>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
         </div>
+        
+        <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                <Radio className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Live Performance</p>
+                <h1 className="text-3xl md:text-4xl font-display font-bold">Tours & Shows</h1>
+              </div>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Manage your live shows, venues, and virtual performances
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="rnrb-container max-w-7xl py-12 px-4">
 
         {showLiveStream && callObject && selectedShow ? (
           <DailyProvider callObject={callObject}>
@@ -220,7 +238,7 @@ export default function ToursPage() {
               </Card>
 
               <Card className="p-6">
-                <h3 className="text-2xl font-semibold mb-6">Revenue & Analytics</h3>
+                <h3 className="text-2xl font-semibold mb-6">💰 Revenue & Analytics</h3>
                 <ul className="space-y-4">
                   <li className="flex items-start gap-3">
                     <div className="p-2 bg-green-500/10 rounded flex-shrink-0">
@@ -362,7 +380,7 @@ export default function ToursPage() {
             </div>
           </>
         )}
-      </motion.div>
+      </div>
     </div>
   );
 }
