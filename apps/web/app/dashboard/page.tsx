@@ -25,11 +25,11 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
         <motion.div 
           animate={{ opacity: [0.2, 1, 0.2] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="text-zinc-600 font-mono text-sm uppercase tracking-widest"
+          className="text-zinc-400 font-mono text-sm uppercase tracking-widest"
         >
           Loading Session
         </motion.div>
@@ -44,51 +44,51 @@ export default function DashboardPage() {
       title: 'STUDIO',
       subtitle: 'Record & Collaborate',
       href: '/studio',
-      gradient: 'from-red-950/20 to-black',
-      border: 'border-red-900/20',
-      accent: 'red-600',
+      gradient: 'from-red-900/30 to-zinc-900/50',
+      border: 'border-red-800/50',
+      accent: 'red-500',
       description: 'HD multi-track recording'
     },
     {
       title: 'PROJECTS',
       subtitle: 'Manage Your Music',
       href: '/projects',
-      gradient: 'from-blue-950/20 to-black',
-      border: 'border-blue-900/20',
-      accent: 'blue-600',
+      gradient: 'from-blue-900/30 to-zinc-900/50',
+      border: 'border-blue-800/50',
+      accent: 'blue-500',
       description: 'Albums, EPs, Singles'
     },
     {
       title: 'TOUR DATES',
       subtitle: 'Shows & Streaming',
       href: '/tours',
-      gradient: 'from-purple-950/20 to-black',
-      border: 'border-purple-900/20',
-      accent: 'purple-600',
+      gradient: 'from-purple-900/30 to-zinc-900/50',
+      border: 'border-purple-800/50',
+      accent: 'purple-500',
       description: 'Live performances'
     },
     {
       title: 'NETWORK',
       subtitle: 'Connect & Message',
       href: '/messages',
-      gradient: 'from-green-950/20 to-black',
-      border: 'border-green-900/20',
-      accent: 'green-600',
+      gradient: 'from-green-900/30 to-zinc-900/50',
+      border: 'border-green-800/50',
+      accent: 'green-500',
       description: 'Real-time collaboration'
     },
   ];
 
   const stats = [
-    { label: 'ACTIVE PROJECTS', value: '03', unit: '' },
-    { label: 'TOTAL TRACKS', value: '48', unit: '' },
-    { label: 'COLLABORATORS', value: '12', unit: '' },
-    { label: 'THIS MONTH', value: '4.3', unit: 'K' },
+    { label: 'ACTIVE PROJECTS', value: '0', unit: '' },
+    { label: 'TOTAL TRACKS', value: '0', unit: '' },
+    { label: 'COLLABORATORS', value: '0', unit: '' },
+    { label: 'THIS MONTH', value: '0', unit: '' },
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-zinc-950 text-white">
       {/* Studio-style Header */}
-      <header className="border-b border-zinc-900">
+      <header className="border-b border-zinc-800 bg-black/50">
         <div className="container mx-auto px-6 py-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -96,16 +96,16 @@ export default function DashboardPage() {
             className="flex items-center justify-between"
           >
             <div>
-              <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500 mb-2">
+              <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-400 mb-2">
                 DASHBOARD
               </h1>
-              <p className="font-[family-name:var(--rnrb-font-marker)] text-3xl">
+              <p className="font-[family-name:var(--rnrb-font-marker)] text-3xl text-white">
                 {displayName}
               </p>
             </div>
             <Link 
               href="/projects/new"
-              className="px-6 py-3 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors"
+              className="px-6 py-3 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-zinc-100 transition-colors"
             >
               NEW PROJECT
             </Link>
@@ -131,24 +131,24 @@ export default function DashboardPage() {
                   relative overflow-hidden h-48 
                   bg-gradient-to-br ${item.gradient} 
                   border ${item.border}
-                  hover:border-zinc-700 transition-all duration-500
+                  hover:border-zinc-600 transition-all duration-500
                   group cursor-pointer
                 `}
               >
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                 
                 <div className="relative h-full p-8 flex flex-col justify-between">
                   <div>
-                    <h2 className="font-mono text-2xl uppercase tracking-wider mb-1">
+                    <h2 className="font-mono text-2xl uppercase tracking-wider mb-1 text-white">
                       {item.title}
                     </h2>
-                    <p className="text-zinc-400 text-sm uppercase tracking-widest">
+                    <p className="text-zinc-300 text-sm uppercase tracking-widest">
                       {item.subtitle}
                     </p>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <p className="text-zinc-500 text-xs uppercase tracking-wider">
+                    <p className="text-zinc-400 text-xs uppercase tracking-wider">
                       {item.description}
                     </p>
                     <div className={`w-2 h-2 bg-${item.accent} rounded-full animate-pulse`} />
@@ -170,14 +170,14 @@ export default function DashboardPage() {
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"
         >
           {stats.map((stat, index) => (
-            <div key={stat.label} className="border border-zinc-900 p-6 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <p className="text-zinc-500 text-xs uppercase tracking-widest mb-2 font-mono">
+            <div key={stat.label} className="border border-zinc-800 bg-zinc-900/50 p-6 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <p className="text-zinc-400 text-xs uppercase tracking-widest mb-2 font-mono">
                 {stat.label}
               </p>
-              <p className="font-[family-name:var(--rnrb-font-marker)] text-4xl">
+              <p className="font-[family-name:var(--rnrb-font-marker)] text-4xl text-white">
                 {stat.value}
-                <span className="text-zinc-600 text-2xl">{stat.unit}</span>
+                <span className="text-zinc-500 text-2xl">{stat.unit}</span>
               </p>
             </div>
           ))}
@@ -188,46 +188,22 @@ export default function DashboardPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="border border-zinc-900"
+          className="border border-zinc-800 bg-zinc-900/50"
         >
-          <div className="border-b border-zinc-900 p-6">
-            <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
+          <div className="border-b border-zinc-800 p-6 bg-black/30">
+            <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-400">
               RECENT ACTIVITY
             </h3>
           </div>
           
           <div className="p-6">
-            <div className="space-y-4">
-              {[
-                { time: '2 HOURS AGO', action: 'RECORDING SESSION', project: 'Summer Sessions', status: 'COMPLETED' },
-                { time: '5 HOURS AGO', action: 'NEW COLLABORATOR', project: 'Rock Anthem EP', status: 'JOHN SMITH JOINED' },
-                { time: '1 DAY AGO', action: 'ROYALTY PAYMENT', project: 'Streaming Revenue', status: '$125.00' },
-              ].map((activity, index) => (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 + index * 0.1 }}
-                  className="flex items-center justify-between py-3 border-b border-zinc-900/50 last:border-0"
-                >
-                  <div className="flex items-center gap-6">
-                    <span className="text-zinc-600 font-mono text-xs uppercase tracking-wider">
-                      {activity.time}
-                    </span>
-                    <div>
-                      <p className="text-sm uppercase tracking-wider">
-                        {activity.action}
-                      </p>
-                      <p className="text-zinc-500 text-xs uppercase tracking-wider">
-                        {activity.project}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="text-zinc-400 font-mono text-xs uppercase tracking-wider">
-                    {activity.status}
-                  </span>
-                </motion.div>
-              ))}
+            <div className="text-center py-12">
+              <p className="text-zinc-500 text-sm uppercase tracking-wider">
+                No recent activity
+              </p>
+              <p className="text-zinc-600 text-xs mt-2">
+                Start by creating your first project
+              </p>
             </div>
           </div>
         </motion.div>
@@ -242,13 +218,11 @@ export default function DashboardPage() {
           {[
             { label: 'SETTINGS', href: '/settings/profile' },
             { label: 'DISCOVER', href: '/discover' },
-            { label: 'HELP', href: '/help' },
-            { label: 'LOGOUT', href: '/logout' },
           ].map((link) => (
             <Link 
               key={link.label}
               href={link.href}
-              className="text-zinc-600 hover:text-white font-mono text-xs uppercase tracking-[0.2em] transition-colors"
+              className="text-zinc-500 hover:text-white font-mono text-xs uppercase tracking-[0.2em] transition-colors"
             >
               {link.label}
             </Link>
