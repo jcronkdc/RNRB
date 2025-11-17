@@ -63,6 +63,23 @@ export default function DashboardPage() {
 
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <Link href="/projects/new">
+            <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500/30">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-purple-500/20 rounded-lg">
+                  <Music className="h-8 w-8 text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">New Project</h3>
+                  <p className="text-sm text-purple-400">Start here! 🍄</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Create the mycelium foundation - organize your songs, collaborators, and revenue
+              </p>
+            </Card>
+          </Link>
+
           <Link href="/studio">
             <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer bg-gradient-to-br from-red-500/5 to-purple-500/5 border border-red-500/20">
               <div className="flex items-center gap-4 mb-4">
@@ -121,12 +138,12 @@ export default function DashboardPage() {
                   <Calendar className="h-8 w-8 text-green-500" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">Projects</h3>
-                  <p className="text-sm text-muted-foreground">Manage your music</p>
+                  <h3 className="text-lg font-semibold text-white">My Projects</h3>
+                  <p className="text-sm text-muted-foreground">View all networks</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
-                Organize songs, collaborate, track royalties and splits
+                See all your projects, songs, collaborators, and revenue
               </p>
             </Card>
           </Link>
