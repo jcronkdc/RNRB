@@ -143,17 +143,32 @@ export default function HomePage() {
               />
             </motion.div>
 
+            {/* New Badge */}
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary/10 border border-brand-primary/20 rounded-full mb-8"
+            >
+              <Zap className="w-4 h-4 text-brand-primary" />
+              <span className="text-sm font-medium">
+                The World's First & Only All-in-One Music Platform
+              </span>
+            </motion.div>
+
             <h1 className="text-6xl md:text-7xl lg:text-8xl mb-6">
-              <span className="font-display font-normal">The Platform for</span>
+              <span className="font-display font-normal">Stop Using</span>
               <br />
               <span className="font-display font-normal rnrb-gradient-text">
-                Music Professionals
+                7 Different Apps
               </span>
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-              Where artists, producers, and labels manage their entire creative business. 
-              From first song to world tour.
+              Record HD video sessions. Stream live concerts. Manage tours. Track royalties. 
+              <span className="text-brand-primary font-semibold"> All in one platform.</span>
+              <br />
+              <span className="text-lg">No other platform in the world does this.</span>
             </p>
             
             <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -161,15 +176,15 @@ export default function HomePage() {
                 href="/auth"
                 className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-medium"
               >
-                Start Free
+                Start Free Trial
                 <ArrowRight className="ml-2 w-5 h-5 inline-block" />
               </Link>
               
               <Link 
-                href="/demo"
+                href="/why-rnrb"
                 className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-medium"
               >
-                Watch Demo
+                See Why We're Different
               </Link>
             </div>
 
