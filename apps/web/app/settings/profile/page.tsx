@@ -15,11 +15,14 @@ import {
   Save, 
   Eye, 
   EyeOff,
-  Link as LinkIcon,
   Instagram,
   Youtube,
-  Twitter
+  Twitter,
+  Music2,
+  Disc,
+  Users
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 type ProfileData = {
   username: string;
@@ -27,15 +30,29 @@ type ProfileData = {
   bio: string;
   profile_picture_url: string;
   is_public: boolean;
+  
+  // Contact
   website: string;
-  instagram: string;
-  youtube: string;
-  twitter: string;
   phone: string;
   phone_public: boolean;
   email_public: boolean;
+  
+  // Social Media
+  instagram: string;
+  youtube: string;
+  twitter: string;
+  tiktok: string;
+  spotify_artist: string;
+  apple_music: string;
+  soundcloud: string;
+  bandcamp: string;
+  
+  // Musical Identity
   instruments: string[];
   genres: string[];
+  bands_current: string[]; // Bands currently in
+  bands_past: string[]; // Bands previously played with
+  collaborators: string[]; // Notable collaborators
 };
 
 export default function ProfileSettingsPage() {
@@ -52,18 +69,27 @@ export default function ProfileSettingsPage() {
     profile_picture_url: '',
     is_public: true,
     website: '',
-    instagram: '',
-    youtube: '',
-    twitter: '',
     phone: '',
     phone_public: false,
     email_public: true,
+    instagram: '',
+    youtube: '',
+    twitter: '',
+    tiktok: '',
+    spotify_artist: '',
+    apple_music: '',
+    soundcloud: '',
+    bandcamp: '',
     instruments: [],
-    genres: []
+    genres: [],
+    bands_current: [],
+    bands_past: [],
+    collaborators: []
   });
 
   const [uploadingPicture, setUploadingPicture] = useState(false);
-  const [uploadingMusic, setUploadingMusic] = useState(false);
+  const [newBand, setNewBand] = useState('');
+  const [newPastBand, setNewPastBand] = useState('');
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -71,7 +97,6 @@ export default function ProfileSettingsPage() {
         router.push('/auth');
       } else {
         setUser(user);
-        // Load existing profile from user_metadata
         if (user.user_metadata) {
           setProfile({
             username: user.user_metadata.username || '',
@@ -83,11 +108,19 @@ export default function ProfileSettingsPage() {
             instagram: user.user_metadata.instagram || '',
             youtube: user.user_metadata.youtube || '',
             twitter: user.user_metadata.twitter || '',
+            tiktok: user.user_metadata.tiktok || '',
+            spotify_artist: user.user_metadata.spotify_artist || '',
+            apple_music: user.user_metadata.apple_music || '',
+            soundcloud: user.user_metadata.soundcloud || '',
+            bandcamp: user.user_metadata.bandcamp || '',
             phone: user.user_metadata.phone || '',
             phone_public: user.user_metadata.phone_public || false,
             email_public: user.user_metadata.email_public !== false,
             instruments: user.user_metadata.instruments || [],
-            genres: user.user_metadata.genres || []
+            genres: user.user_metadata.genres || [],
+            bands_current: user.user_metadata.bands_current || [],
+            bands_past: user.user_metadata.bands_past || [],
+            collaborators: user.user_metadata.collaborators || []
           });
         }
         setLoading(false);
@@ -108,7 +141,7 @@ export default function ProfileSettingsPage() {
 
       setMessage({
         type: 'success',
-        text: 'Profile updated successfully!'
+        text: 'Profile updated successfully'
       });
     } catch (error: any) {
       setMessage({
@@ -127,27 +160,21 @@ export default function ProfileSettingsPage() {
     setUploadingPicture(true);
 
     try {
-      // Upload to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
       
-      const { data, error } = await supabase!.storage
+      const { error } = await supabase!.storage
         .from('profile-pictures')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
+        .upload(fileName, file, { cacheControl: '3600', upsert: false });
 
       if (error) throw error;
 
-      // Get public URL
       const { data: { publicUrl } } = supabase!.storage
         .from('profile-pictures')
         .getPublicUrl(fileName);
 
-      // Update profile
       setProfile({ ...profile, profile_picture_url: publicUrl });
-      setMessage({ type: 'success', text: 'Profile picture uploaded!' });
+      setMessage({ type: 'success', text: 'Profile picture uploaded' });
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message || 'Upload failed' });
     } finally {
@@ -157,36 +184,48 @@ export default function ProfileSettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a0f1e] to-[#0f172a]">
+        <div className="text-gray-400">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-surface/20 to-background py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-[#0a0f1e] via-[#0f172a] to-[#050816] py-12 px-4">
       <div className="container mx-auto max-w-4xl">
-        <h1 className="text-4xl font-bold text-white mb-8">Profile Settings</h1>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h1 className="text-5xl font-serif font-bold text-white mb-3">Profile</h1>
+          <p className="text-xl text-gray-400 mb-8">
+            Build your musical identity
+          </p>
+        </motion.div>
 
         {message && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            message.type === 'success' 
-              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
-              : 'bg-red-500/10 border border-red-500/20 text-red-400'
-          }`}>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`mb-6 p-4 rounded-lg border ${
+              message.type === 'success' 
+                ? 'bg-green-500/10 border-green-500/20 text-green-400'
+                : 'bg-red-500/10 border-red-500/20 text-red-400'
+            }`}
+          >
             {message.text}
-          </div>
+          </motion.div>
         )}
 
         {/* Profile Picture */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Profile Picture</h2>
-          <div className="flex items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-3xl font-bold overflow-hidden">
+        <Card className="p-8 mb-6 border border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
+          <h2 className="text-2xl font-serif font-semibold text-white mb-6">Profile Picture</h2>
+          <div className="flex items-center gap-8">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#c9a961]/30 to-[#c9a961]/10 border-2 border-[#c9a961]/20 flex items-center justify-center text-white text-4xl font-bold overflow-hidden">
               {profile.profile_picture_url ? (
                 <img src={profile.profile_picture_url} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                user?.email?.[0].toUpperCase()
+                <span className="text-[#c9a961]">{user?.email?.[0].toUpperCase()}</span>
               )}
             </div>
             <div>
@@ -197,89 +236,311 @@ export default function ProfileSettingsPage() {
                   onChange={handleProfilePictureUpload}
                   className="hidden"
                 />
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                <div className="inline-flex items-center gap-2 px-6 py-3 bg-[#c9a961] text-black rounded-lg hover:bg-[#c9a961]/90 transition-all font-medium">
                   <Upload className="w-4 h-4" />
                   {uploadingPicture ? 'Uploading...' : 'Upload Photo'}
                 </div>
               </label>
-              <p className="text-xs text-muted-foreground mt-2">
-                JPG, PNG or GIF. Max 5MB.
+              <p className="text-sm text-gray-500 mt-2">
+                JPG or PNG. Maximum 5MB.
               </p>
             </div>
           </div>
         </Card>
 
         {/* Basic Info */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Basic Information</h2>
+        <Card className="p-8 mb-6 border border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
+          <h2 className="text-2xl font-serif font-semibold text-white mb-6">Basic Information</h2>
           
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Username (Alias) *
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Username
               </label>
               <input
                 type="text"
                 value={profile.username}
                 onChange={(e) => setProfile({ ...profile, username: e.target.value })}
-                placeholder="rockstar123"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                placeholder="your-unique-handle"
+                className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none focus:ring-1 focus:ring-[#c9a961]"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                Your unique handle. Others can find you by this username.
+              <p className="text-xs text-gray-600 mt-1.5">
+                Your unique handle. URL: /u/{profile.username || 'username'}
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-400 mb-2">
                 Display Name
               </label>
               <input
                 type="text"
                 value={profile.display_name}
                 onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-                placeholder="John Doe"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+                placeholder="Your Name or Stage Name"
+                className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none focus:ring-1 focus:ring-[#c9a961]"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-gray-400 mb-2">
                 Bio
               </label>
               <textarea
                 value={profile.bio}
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                placeholder="Tell the world about your music..."
+                placeholder="Tell your story..."
                 rows={4}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none resize-none"
+                className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none focus:ring-1 focus:ring-[#c9a961] resize-none"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                Describe your music style, experience, what you're working on, etc.
-              </p>
             </div>
           </div>
         </Card>
 
-        {/* Privacy Settings */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-            {profile.is_public ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
-            Privacy Settings
+        {/* Musical Identity */}
+        <Card className="p-8 mb-6 border border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
+          <h2 className="text-2xl font-serif font-semibold text-white mb-6">Musical Identity</h2>
+          
+          <div className="space-y-6">
+            {/* Current Bands */}
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-3">
+                Current Bands / Projects
+              </label>
+              <div className="flex gap-2 mb-3">
+                <input
+                  type="text"
+                  value={newBand}
+                  onChange={(e) => setNewBand(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && newBand.trim()) {
+                      setProfile({ ...profile, bands_current: [...profile.bands_current, newBand.trim()] });
+                      setNewBand('');
+                    }
+                  }}
+                  placeholder="Band name (press Enter to add)"
+                  className="flex-1 px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {profile.bands_current.map((band, index) => (
+                  <span
+                    key={index}
+                    onClick={() => setProfile({ ...profile, bands_current: profile.bands_current.filter((_, i) => i !== index) })}
+                    className="px-3 py-1.5 bg-[#c9a961]/20 border border-[#c9a961]/30 rounded-lg text-[#c9a961] text-sm cursor-pointer hover:bg-[#c9a961]/30 transition-colors"
+                  >
+                    {band} ×
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Past Bands */}
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-3">
+                Past Bands / Collaborations
+              </label>
+              <div className="flex gap-2 mb-3">
+                <input
+                  type="text"
+                  value={newPastBand}
+                  onChange={(e) => setNewPastBand(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && newPastBand.trim()) {
+                      setProfile({ ...profile, bands_past: [...profile.bands_past, newPastBand.trim()] });
+                      setNewPastBand('');
+                    }
+                  }}
+                  placeholder="Previous band (press Enter to add)"
+                  className="flex-1 px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {profile.bands_past.map((band, index) => (
+                  <span
+                    key={index}
+                    onClick={() => setProfile({ ...profile, bands_past: profile.bands_past.filter((_, i) => i !== index) })}
+                    className="px-3 py-1.5 bg-gray-700/30 border border-gray-600/30 rounded-lg text-gray-400 text-sm cursor-pointer hover:bg-gray-700/50 transition-colors"
+                  >
+                    {band} ×
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* Streaming Platforms */}
+        <Card className="p-8 mb-6 border border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
+          <h2 className="text-2xl font-serif font-semibold text-white mb-6">Streaming & Social</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                <Music className="w-4 h-4" />
+                Spotify Artist URL
+              </label>
+              <input
+                type="url"
+                value={profile.spotify_artist}
+                onChange={(e) => setProfile({ ...profile, spotify_artist: e.target.value })}
+                placeholder="https://open.spotify.com/artist/..."
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                <Music2 className="w-4 h-4" />
+                Apple Music
+              </label>
+              <input
+                type="url"
+                value={profile.apple_music}
+                onChange={(e) => setProfile({ ...profile, apple_music: e.target.value })}
+                placeholder="https://music.apple.com/artist/..."
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                <Disc className="w-4 h-4" />
+                SoundCloud
+              </label>
+              <input
+                type="text"
+                value={profile.soundcloud}
+                onChange={(e) => setProfile({ ...profile, soundcloud: e.target.value })}
+                placeholder="soundcloud.com/yourprofile"
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                <Music className="w-4 h-4" />
+                Bandcamp
+              </label>
+              <input
+                type="text"
+                value={profile.bandcamp}
+                onChange={(e) => setProfile({ ...profile, bandcamp: e.target.value })}
+                placeholder="yourband.bandcamp.com"
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                <Instagram className="w-4 h-4" />
+                Instagram
+              </label>
+              <input
+                type="text"
+                value={profile.instagram}
+                onChange={(e) => setProfile({ ...profile, instagram: e.target.value })}
+                placeholder="@yourhandle"
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                <Youtube className="w-4 h-4" />
+                YouTube
+              </label>
+              <input
+                type="text"
+                value={profile.youtube}
+                onChange={(e) => setProfile({ ...profile, youtube: e.target.value })}
+                placeholder="@yourchannel"
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                <Twitter className="w-4 h-4" />
+                X (Twitter)
+              </label>
+              <input
+                type="text"
+                value={profile.twitter}
+                onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}
+                placeholder="@yourhandle"
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2 flex items-center gap-2">
+                <Music2 className="w-4 h-4" />
+                TikTok
+              </label>
+              <input
+                type="text"
+                value={profile.tiktok}
+                onChange={(e) => setProfile({ ...profile, tiktok: e.target.value })}
+                placeholder="@yourhandle"
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none text-sm"
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* Contact & Website */}
+        <Card className="p-8 mb-6 border border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
+          <h2 className="text-2xl font-serif font-semibold text-white mb-6">Contact</h2>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Website
+              </label>
+              <input
+                type="url"
+                value={profile.website}
+                onChange={(e) => setProfile({ ...profile, website: e.target.value })}
+                placeholder="https://yourwebsite.com"
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                value={profile.phone}
+                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                placeholder="+1 (555) 123-4567"
+                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-600 focus:border-[#c9a961] focus:outline-none"
+              />
+            </div>
+          </div>
+        </Card>
+
+        {/* Privacy */}
+        <Card className="p-8 mb-6 border border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
+          <h2 className="text-2xl font-serif font-semibold text-white mb-6 flex items-center gap-2">
+            {profile.is_public ? <Eye className="w-5 h-5 text-[#c9a961]" /> : <EyeOff className="w-5 h-5 text-gray-500" />}
+            Privacy
           </h2>
           
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+            <div className="flex items-center justify-between p-5 bg-white/[0.02] border border-white/5 rounded-lg">
               <div>
-                <p className="font-medium text-white">Public Profile</p>
-                <p className="text-sm text-muted-foreground">
-                  Allow others to find and view your profile
+                <p className="font-medium text-white mb-1">Public Profile</p>
+                <p className="text-sm text-gray-500">
+                  Allow others to discover and view your profile
                 </p>
               </div>
               <button
                 onClick={() => setProfile({ ...profile, is_public: !profile.is_public })}
                 className={`relative w-14 h-7 rounded-full transition-colors ${
-                  profile.is_public ? 'bg-purple-600' : 'bg-gray-600'
+                  profile.is_public ? 'bg-[#c9a961]' : 'bg-gray-700'
                 }`}
               >
                 <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
@@ -288,17 +549,17 @@ export default function ProfileSettingsPage() {
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+            <div className="flex items-center justify-between p-5 bg-white/[0.02] border border-white/5 rounded-lg">
               <div>
-                <p className="font-medium text-white">Email Visibility</p>
-                <p className="text-sm text-muted-foreground">
-                  Show email on public profile (searchable)
+                <p className="font-medium text-white mb-1">Email Searchable</p>
+                <p className="text-sm text-gray-500">
+                  Allow people to find you by email address
                 </p>
               </div>
               <button
                 onClick={() => setProfile({ ...profile, email_public: !profile.email_public })}
                 className={`relative w-14 h-7 rounded-full transition-colors ${
-                  profile.email_public ? 'bg-purple-600' : 'bg-gray-600'
+                  profile.email_public ? 'bg-[#c9a961]' : 'bg-gray-700'
                 }`}
               >
                 <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
@@ -307,17 +568,17 @@ export default function ProfileSettingsPage() {
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+            <div className="flex items-center justify-between p-5 bg-white/[0.02] border border-white/5 rounded-lg">
               <div>
-                <p className="font-medium text-white">Phone Number Visibility</p>
-                <p className="text-sm text-muted-foreground">
-                  Show phone on public profile (searchable)
+                <p className="font-medium text-white mb-1">Phone Searchable</p>
+                <p className="text-sm text-gray-500">
+                  Allow people to find you by phone number
                 </p>
               </div>
               <button
                 onClick={() => setProfile({ ...profile, phone_public: !profile.phone_public })}
                 className={`relative w-14 h-7 rounded-full transition-colors ${
-                  profile.phone_public ? 'bg-purple-600' : 'bg-gray-600'
+                  profile.phone_public ? 'bg-[#c9a961]' : 'bg-gray-700'
                 }`}
               >
                 <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
@@ -328,111 +589,15 @@ export default function ProfileSettingsPage() {
           </div>
         </Card>
 
-        {/* Contact & Links */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Contact & Links</h2>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Phone className="w-4 h-4" />
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                value={profile.phone}
-                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                placeholder="+1 (555) 123-4567"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Globe className="w-4 h-4" />
-                Website
-              </label>
-              <input
-                type="url"
-                value={profile.website}
-                onChange={(e) => setProfile({ ...profile, website: e.target.value })}
-                placeholder="https://yourwebsite.com"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Instagram className="w-4 h-4" />
-                Instagram
-              </label>
-              <input
-                type="text"
-                value={profile.instagram}
-                onChange={(e) => setProfile({ ...profile, instagram: e.target.value })}
-                placeholder="@yourhandle"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Youtube className="w-4 h-4" />
-                YouTube Channel
-              </label>
-              <input
-                type="text"
-                value={profile.youtube}
-                onChange={(e) => setProfile({ ...profile, youtube: e.target.value })}
-                placeholder="@yourchannel or channel URL"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Twitter className="w-4 h-4" />
-                X (Twitter)
-              </label>
-              <input
-                type="text"
-                value={profile.twitter}
-                onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}
-                placeholder="@yourhandle"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
-              />
-            </div>
-          </div>
-        </Card>
-
-        {/* Music Samples (SoundCloud-style) */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-            <Music className="w-5 h-5" />
-            Music Samples (Coming Soon)
-          </h2>
-          <p className="text-muted-foreground mb-4">
-            Upload your music to showcase your work. Others can listen directly on your profile (like SoundCloud).
-          </p>
-          
-          <div className="p-6 border-2 border-dashed border-white/20 rounded-lg text-center bg-white/5">
-            <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground mb-2">Music upload feature coming soon</p>
-            <p className="text-xs text-muted-foreground">
-              Will support: MP3, WAV, FLAC • Up to 50MB per track
-            </p>
-          </div>
-        </Card>
-
         {/* Save Button */}
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            {profile.is_public ? '👁️ Your profile is public' : '🔒 Your profile is private'}
+          <p className="text-sm text-gray-500">
+            {profile.is_public ? 'Profile is public' : 'Profile is private'}
           </p>
           <Button
             onClick={handleSaveProfile}
             disabled={saving}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
+            className="bg-[#c9a961] hover:bg-[#c9a961]/90 text-black px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Profile'}
@@ -441,11 +606,11 @@ export default function ProfileSettingsPage() {
 
         {/* Profile Preview Link */}
         {profile.username && (
-          <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <p className="text-sm text-blue-400">
-              Your public profile will be at: 
-              <a href={`/u/${profile.username}`} className="font-mono ml-2 underline">
-                www.cronkwaters.com/u/{profile.username}
+          <div className="mt-8 p-5 bg-blue-500/5 border border-blue-500/10 rounded-lg">
+            <p className="text-sm text-gray-400">
+              Your public profile: 
+              <a href={`/u/${profile.username}`} className="font-mono ml-2 text-[#c9a961] hover:underline">
+                cronkwaters.com/u/{profile.username}
               </a>
             </p>
           </div>
@@ -454,4 +619,3 @@ export default function ProfileSettingsPage() {
     </div>
   );
 }
-
