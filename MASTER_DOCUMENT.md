@@ -208,18 +208,34 @@ PROJECT (Mycelium Hub)
 
 ### ⏳ BUILD ORDER (Optimal Dependencies):
 
-**NEXT IMMEDIATE (Phase 3):**
-1. **Project Invitations** - Gate control for collaboration
-   - Invite by email
-   - Accept/decline flow
-   - Role assignment (owner/admin/member)
-   - Permission system
+### ✅ PHASE 3A COMPLETE: Collaboration Hub (Invite-Only Gates)
 
-2. **Project-Level Chat** - Communication backbone
-   - Ably channel per project
-   - Real-time messaging
-   - File sharing
-   - @mentions
+**DEPLOYED:**
+- `/projects/[slug]/collaborate` - Collaboration hub
+  - Team management (view all collaborators)
+  - Invite system (email invitations)
+  - Role display (owner/admin/member)
+  - Pending invites tracking
+  - Project chat tab (Ably placeholder ready)
+  - Video room tab (Daily.co placeholder ready)
+
+**OPTIMAL PATHWAY:**
+```
+Project Detail → "Collaborate" button (1 click) → Collaboration Hub
+```
+
+**Invite Flow:**
+1. Enter collaborator email
+2. Click "Send Invitation"
+3. Email sent (invite-only access)
+4. They accept → Added to project
+5. Can now see project, chat, collaborate
+
+**NEXT IMMEDIATE (Phase 3B):**
+- Wire up Ably real-time chat (channel per project)
+- Wire up Daily.co video rooms (room per project)
+- Cursor control for shared editing
+- File sharing in chat
 
 **THEN (Phase 4):**
 3. **Song Collaboration Features**
