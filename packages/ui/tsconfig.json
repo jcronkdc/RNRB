@@ -1,0 +1,11 @@
+{
+  "extends": "@cronkwaters/config/tsconfig/react",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": ".",
+    "types": ["node", "vite/client"],
+    "outDir": "dist"
+  },
+  "include": ["src", "stories"],
+  "exclude": ["dist", "node_modules"]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "CronkWaters Next.js",
+  "extends": "./react.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "incremental": true,
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
+    "plugins": [{
+      "name": "next"
+    }]
+  }
+}
