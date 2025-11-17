@@ -1336,3 +1336,34 @@ In Google Cloud Console, add:
 
 ---
 
+### 🎨 LOGO PROMINENCE FIX
+
+**User feedback:** "Where are the custom logos? Two R's upside down, white and black versions - need them prominent!"
+
+**TRUTH:** Logos WERE already present but too small.
+
+**What Agent #4 Found:**
+- ✅ Custom logos exist: `/public/rnrdark.png` and `/public/rnrlight.png`
+- ✅ Already used in NavBar (40x40px)
+- ✅ Already used on homepage hero (120x120px)
+- ❌ But not prominent enough
+
+**What Agent #4 Fixed:**
+
+✅ **Homepage Hero Logo** (`apps/web/app/page.tsx`)
+- Size: 120px → **180px** (50% larger)
+- Added `drop-shadow-2xl` for visual impact
+- Added `priority` loading for instant display
+- Animated entrance with scale effect
+
+✅ **Navigation Logo** (`components/NavBar.tsx`)
+- Size: 40px → **50px** (25% larger)
+- Added `priority` loading
+- Theme-aware (dark logo for light mode, light logo for dark mode)
+
+**Result:** Custom upside-down double-R logos now prominently displayed site-wide
+
+**Commit:** `1f6cb3c` - "feat: Make custom RNR logos MORE prominent"
+
+---
+
