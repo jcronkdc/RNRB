@@ -197,7 +197,7 @@ export default function ProjectDetailPage() {
           </Card>
         </div>
 
-        {/* Project Content - The Mycelium Network Visualization */}
+        {/* Project Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Songs (Main Column) */}
@@ -206,7 +206,7 @@ export default function ProjectDetailPage() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
                   <Music className="w-6 h-6 text-brand-primary" />
-                  Songs (Hyphae)
+                  Songs
                 </h2>
                 <Link href={`/projects/${slug}/songs/new`}>
                   <Button className="bg-brand-primary hover:bg-brand-primary/90 text-brand-primary-foreground flex items-center gap-2">
@@ -219,9 +219,9 @@ export default function ProjectDetailPage() {
               {(project.song_count || 0) === 0 ? (
                 <div className="text-center py-12">
                   <Music className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground mb-4">No songs yet - the mycelium awaits</p>
+                  <p className="text-muted-foreground mb-4">No songs yet</p>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Songs are the hyphae - the creative threads branching from your project
+                    Create your first song to get started
                   </p>
                   <Link href={`/projects/${slug}/songs/new`}>
                     <Button className="bg-brand-primary hover:bg-brand-primary/90 text-brand-primary-foreground">
@@ -352,30 +352,30 @@ export default function ProjectDetailPage() {
               </div>
             </Card>
 
-            {/* Mycelium Visualization */}
+            {/* Project Stats */}
             <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20">
-              <h3 className="text-lg font-semibold text-white mb-3">🍄 Network Health</h3>
+              <h3 className="text-lg font-semibold text-white mb-3">Project Stats</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Songs (Hyphae)</span>
+                  <span className="text-muted-foreground">Songs</span>
                   <span className="text-purple-400 font-medium">{project.song_count || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Sessions (Nutrients)</span>
+                  <span className="text-muted-foreground">Sessions</span>
                   <span className="text-blue-400 font-medium">{project.session_count || 0}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Collaborators (Nodes)</span>
+                  <span className="text-muted-foreground">Collaborators</span>
                   <span className="text-green-400 font-medium">{project.collaborator_count || 1}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Revenue (Flow)</span>
+                  <span className="text-muted-foreground">Revenue</span>
                   <span className="text-orange-400 font-medium">$0</span>
                 </div>
               </div>
               <div className="mt-4 p-3 bg-background/50 rounded border border-purple-500/20">
                 <p className="text-xs text-purple-300">
-                  💡 The network is young. Add songs and collaborators to strengthen the mycelium.
+                  Add songs and collaborators to grow your project
                 </p>
               </div>
             </Card>

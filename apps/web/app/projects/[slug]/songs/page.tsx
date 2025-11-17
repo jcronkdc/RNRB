@@ -65,7 +65,7 @@ export default function ProjectSongsPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-foreground mb-2">
-              🌿 Songs - The Hyphae
+              Songs
             </h1>
             <p className="text-xl text-muted-foreground">
               Creative threads branching from <span className="text-brand-primary">{project.name}</span>
@@ -83,10 +83,10 @@ export default function ProjectSongsPage() {
           <Card className="p-12 text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10">
             <Music className="w-16 h-16 text-brand-primary mx-auto mb-4" />
             <h2 className="text-2xl font-semibold text-foreground mb-4">
-              No songs yet - the hyphae await
+              No songs yet
             </h2>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Songs are the creative threads (hyphae) that branch from your project mycelium. 
+              Songs are the creative threads that make up your project. 
               Each song carries lyrics, chords, collaborators, and revenue - all interconnected.
             </p>
             <Link href={`/projects/${slug}/songs/new`}>

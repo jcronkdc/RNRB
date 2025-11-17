@@ -72,7 +72,7 @@ export default function ProjectsPage() {
               Your Projects
             </h1>
             <p className="text-xl text-muted-foreground">
-              The mycelium network - where all your music lives and grows
+              Where all your music lives and grows
             </p>
           </div>
           <Link href="/projects/new">
@@ -142,11 +142,10 @@ export default function ProjectsPage() {
                 <Music className="w-12 h-12 text-purple-400" />
               </div>
               <h2 className="text-3xl font-bold text-white mb-4">
-                Grow Your First Mycelium Network
+                Create Your First Project
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Projects are the foundation - your mycelium substrate. Create your first project to start organizing songs, 
-                collaborating with others, and building your music empire.
+                Projects are your foundation for organizing songs, collaborating with others, and building your music career.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
@@ -220,42 +219,7 @@ export default function ProjectsPage() {
           </div>
         )}
 
-        {/* Explanation Section */}
-        {projects.length === 0 && (
-          <div className="mt-12 p-8 bg-white/5 border border-white/10 rounded-lg">
-            <h3 className="text-2xl font-semibold text-white mb-4">🍄 Understanding Projects (The Mycelium)</h3>
-            <p className="text-muted-foreground mb-6">
-              Just as mycelium forms the underground network connecting an entire forest, projects are the living network 
-              connecting all aspects of your music:
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg">
-                <p className="font-semibold text-purple-400 mb-2">🌱 Songs Branch From Projects</p>
-                <p className="text-sm text-muted-foreground">
-                  Like hyphae growing from mycelium, your songs organize naturally within projects
-                </p>
-              </div>
-              <div className="p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
-                <p className="font-semibold text-blue-400 mb-2">💧 Sessions Feed the Network</p>
-                <p className="text-sm text-muted-foreground">
-                  Recording sessions channel creative energy into your project's songs
-                </p>
-              </div>
-              <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
-                <p className="font-semibold text-green-400 mb-2">🌿 Tours Fruit From Projects</p>
-                <p className="text-sm text-muted-foreground">
-                  Tours are the visible fruiting body - sprouting from the hidden project network
-                </p>
-              </div>
-              <div className="p-4 bg-orange-500/5 border border-orange-500/20 rounded-lg">
-                <p className="font-semibold text-orange-400 mb-2">💰 Revenue Flows Through</p>
-                <p className="text-sm text-muted-foreground">
-                  Like nutrients cycling through mycelium, royalties distribute across the project
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Explanation Section - Removed mushroom language */}
       </div>
     </div>
   );

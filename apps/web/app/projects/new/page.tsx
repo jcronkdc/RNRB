@@ -114,10 +114,10 @@ export default function NewProjectPage() {
             Back to Projects
           </Link>
           <h1 className="text-4xl font-display font-bold mb-2">
-            Spawn New Mycelium Network
+            Create New Project
           </h1>
           <p className="text-xl text-muted-foreground">
-            Create a project - the substrate where your music will grow
+            Organize your songs, collaborators, and creative work
           </p>
         </div>
 
