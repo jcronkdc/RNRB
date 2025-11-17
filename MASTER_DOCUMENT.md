@@ -324,28 +324,60 @@ Project → Collaborate (1 click) → Video Tab → Start Room → LIVE Daily.co
 ✅ In-room text chat
 ✅ Cloud recording per session
 
-**NEXT PHASE:**
-- Song-level collaboration (chat + video per song)
-- Shared lyrics editor with cursor tracking
-- Asset upload with collaboration
+### ✅ PHASE 4B COMPLETE: Enhanced Import with Organization
 
-**THEN (Phase 4):**
-3. **Song Collaboration Features**
-   - Daily.co room per song (video co-writing)
-   - Shared lyrics editor (cursor control)
-   - Song-specific chat
-   - Collaborator credits
+**USER REQUEST:**
+"I have 30 songs - how do I upload, separate, add metadata, organize by album/status?"
 
-4. **Assets with Collaboration**
-   - Upload audio/files
-   - Version control (who changed what)
-   - Comments on assets
-   - Approval workflows
+**WHAT IF SONGS BLEND TOGETHER?**
+✅ FIXED: Robust parser uses triple newline separator
+✅ FIXED: Preview every song BEFORE importing
+✅ FIXED: Edit any song in preview (title, lyrics, metadata)
+✅ FIXED: Remove songs from batch before importing
 
-**FINALLY (Phase 5+):**
-5. **Recording Sessions** - Already have Daily.co, connect to projects
-6. **Royalty Splits** - Transparent to all collaborators
-7. **Tours** - Connect to projects, collaborative setlist building
+**METADATA SYSTEM:**
+✅ Title - Editable before and after import
+✅ Writer - Your name (or co-writers)
+✅ Date Written - Approximate (optional, like "2024" or "Spring 2023")
+✅ Status - Draft / In Progress / Needs Review / Complete
+✅ Album/Group - Organize related songs together
+✅ Key - Musical key (C, Am, G, etc.)
+✅ Tempo - BPM
+✅ Visibility - Private / Team / Public
+
+**ORGANIZATION FEATURES:**
+✅ Filter by STATUS - See all drafts, in progress, needs review, complete
+✅ Filter by ALBUM - Group songs by album/collection
+✅ Search by title or lyrics
+✅ Stats: Total, Complete, In Progress, Private, Albums count
+✅ Status badges - Color-coded visualization
+
+**FLEXIBLE WORKFLOW:**
+✅ Songs can be STANDALONE (no project required)
+✅ Songs can be added to projects later (optional)
+✅ Single song is valid - Don't need project for every song
+✅ Organize by album WITHOUT projects
+✅ Full metadata on every song
+
+**IMPORT PROCESS (30 SONGS):**
+1. Dashboard → Import Songs (1 click)
+2. Paste 30 songs (separate with 3 blank lines)
+3. Click "Parse" → See all 30 listed
+4. Edit EACH song's metadata:
+   - Confirm title (auto-detected from first line)
+   - Add your name as writer
+   - Add approximate date (optional)
+   - Set status (draft by default)
+   - Add album name (optional grouping)
+5. Remove any incorrectly parsed songs
+6. Click "Import X Songs" → All saved privately
+7. Library shows all with filters
+
+**NEXT PHASE (5):**
+- Asset upload (audio files, stems, bounces)
+- File version control
+- Recording session management
+- Royalty splits
 
 ---
 
