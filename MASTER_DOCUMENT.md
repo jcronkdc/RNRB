@@ -73,6 +73,26 @@
 ✅ Invite-only project groups
 ✅ Optimal pathways (max 3 clicks to any feature)
 
+**FULL CONTENT AUDIT - BRUTAL HONESTY:**
+
+**HOMEPAGE CLAIMS FIXED:**
+- DELETED: "World's First & Only All-in-One" (false - BandLab exists)
+- DELETED: "No other platform in the world does this" (false claim)
+- DELETED: "Track royalties" (not built yet)
+- REPLACED WITH: "Collaboration-First Music Platform", "Currently in active development"
+
+**TOURS PAGE HONESTY:**
+- Changed: "Complete Tour Management Platform" → "Tour Management - In Development"
+- CLEARLY LABELED: Only "Virtual Concerts" available now (Daily.co streaming)
+- ALL OTHER FEATURES: Marked "Coming Soon (not built yet)"
+  - Venue Database, Show Scheduling, Ticketing Integration
+- "Planned Features (Not Built Yet)" section added
+
+**MESSAGES PAGE HONESTY:**
+- Changed: Focus on what Ably ACTUALLY provides
+- WORKING NOW: Real-time text, project channels, basic presence
+- CLEARLY MARKED as coming soon: File sharing, read receipts, typing indicators, notifications, offline support, threads, search
+
 **STUDIO PAGE - BRUTAL HONESTY APPLIED:**
 ✅ **Removed FALSE CLAIMS** - User: "Don't make crazy claims, be realistic"
 - DELETED: "Professional multi-track recording" (Daily.co can't do this)
