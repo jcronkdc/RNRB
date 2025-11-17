@@ -23,8 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     openGraph: {
       images: [`/p/${slug}/opengraph-image`],
-      title: project?.name || "CronkWaters Project",
-      description: project?.description || "A CronkWaters release.",
+      title: project?.name || "Rock N' Roll Basement Project",
+      description: project?.description || "A Rock N' Roll Basement release.",
     },
   };
 }

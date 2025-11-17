@@ -1,7 +1,7 @@
 import { prisma } from '../src/index';
 
 async function main() {
-  const existing = await prisma.user.findFirst({ where: { email: 'demo@cronkwaters.dev' } });
+  const existing = await prisma.user.findFirst({ where: { email: 'demo@rnrb.com' } });
   if (existing) {
     console.log('Seed data already present. Skipping.');
     return;

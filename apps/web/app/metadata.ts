@@ -6,19 +6,19 @@ const ogImage = '/og-default.jpg';
 
 const metadata: Metadata = {
   title: {
-    default: 'The CronkWaters Project',
-    template: '%s • The CronkWaters Project',
+    default: 'Rock N\' Roll Basement',
+    template: '%s • Rock N\' Roll Basement',
   },
-  description: 'A beautiful, collaborative ecosystem for songwriting, recording, and community.',
+  description: 'Where musicians create, collaborate, and change the industry. The underground HQ for artists from amateur to pro.',
   metadataBase: new URL(base),
   openGraph: {
     type: 'website',
-    siteName: 'The CronkWaters Project',
+    siteName: 'Rock N\' Roll Basement',
     images: [ogImage],
   },
   twitter: {
     card: 'summary_large_image',
-    creator: '@cronkwaters',
+    creator: '@rnrbasement',
     images: [ogImage],
   },
   icons: {
