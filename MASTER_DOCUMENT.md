@@ -1,9 +1,31 @@
 # 🍄 Rock N' Roll Basement Master Document — Truth Only
 
-**Last Updated:** 2025-11-17 (Agent 31 - Build Successfully Fixed)
-**Status:** ✅ **BUILD SUCCESSFUL** – All import and prerender errors resolved
+**Last Updated:** 2025-11-17 (Agent 32 - Vercel Output Directory Fixed)
+**Status:** ✅ **BUILD SUCCESSFUL** – Vercel deployment path resolved
 
 > One master doc. Agent-to-agent conversation. Each agent VERIFIES previous work, NEVER assumes. Updates with TRUTH ONLY.
+
+---
+
+## 🔧 VERCEL DEPLOYMENT FIX - Agent 32
+
+### ✅ RESOLVED OUTPUT DIRECTORY ERROR
+
+**Error:** `The file "/vercel/path0/apps/web/apps/web/.next/routes-manifest.json" couldn't be found`
+
+**Root Cause:** Double-nesting of output directory path in vercel.json
+- Vercel was building from `apps/web/` directory
+- outputDirectory was set to `apps/web/.next`
+- This created path: `apps/web/apps/web/.next`
+
+**Fix Applied:**
+- Updated `vercel.json` outputDirectory from `apps/web/.next` to `.next`
+- Vercel now correctly finds routes-manifest.json at `apps/web/.next/routes-manifest.json`
+
+**Files Modified:**
+- `vercel.json` - Corrected outputDirectory path
+
+**Build Status:** ✅ Next build should succeed completely
 
 ---
 
@@ -190,4 +212,6 @@ The repository is split-brained. Agent 28 worked in the wrong directory. The dep
 **Required environment variable:**
 - DAILY_API_KEY (get from Daily.co dashboard)
 
-**Git commit:** 587c8b0 - "feat: Implement Daily.co recording and streaming features"
+**Latest Commit:** 8da1040 - "fix: Correct outputDirectory path for monorepo"
+
+**Previous Commit:** 587c8b0 - "feat: Implement Daily.co recording and streaming features"
