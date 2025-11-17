@@ -1,5 +1,5 @@
 {
   "buildCommand": "pnpm turbo run build --filter=@cronkwaters/web",
   "installCommand": "pnpm install --frozen-lockfile --prod=false",
-  "outputDirectory": "apps/web/.next"
+  "outputDirectory": "song-forge/apps/web/.next"
 }
