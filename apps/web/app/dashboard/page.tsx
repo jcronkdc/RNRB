@@ -106,7 +106,7 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Link href="/projects/new">
+            <Link href="/songs">
               <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
@@ -114,11 +114,15 @@ export default function DashboardPage() {
                   </div>
                   <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">New Project</h3>
+                <h3 className="text-xl font-semibold mb-2">My Songs</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Create a new project to organize songs, collaborators, and revenue
+                  View your song library, import songs, add chords & organize
                 </p>
-                <div className="text-sm text-brand-primary font-medium">Get started →</div>
+                <div className="text-sm text-brand-primary font-medium">
+                  {(user?.user_metadata?.songs?.length || 0) > 0 
+                    ? `View ${user?.user_metadata?.songs?.length} songs →`
+                    : 'Import songs →'}
+                </div>
               </div>
             </Link>
           </motion.div>
