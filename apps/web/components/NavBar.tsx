@@ -99,14 +99,13 @@ export function NavBar() {
     () =>
       cn(
         'sticky top-0 z-40 w-full border-b backdrop-blur transition-all duration-300',
-        scrolled ? 'bg-surface/95 shadow-soft border-rnrb-neon-purple/40' : 'bg-surface/70 border-transparent',
-        'rock-nav' // Rock theme class
+        scrolled ? 'bg-surface/95 shadow-soft' : 'bg-surface/70'
       ),
     [scrolled]
   );
 
   const listClass =
-    'flex items-center gap-1 rounded-full border bg-surface/70 px-2 py-1 text-sm shadow-soft rock-nav-list';
+    'flex items-center gap-1 rounded-full border border-border/60 bg-surface/70 px-2 py-1 text-sm shadow-soft';
 
   return (
     <>

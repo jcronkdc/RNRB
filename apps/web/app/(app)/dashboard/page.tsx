@@ -1,221 +1,213 @@
-import { auth } from "@cronkwaters/auth";
-import { prisma } from "@cronkwaters/db";
-import { Badge, Card, CardContent, CardHeader, CardTitle } from "@cronkwaters/ui";
-import { redirect } from "next/navigation";
-import crypto from "node:crypto";
+'use client';
 
-import { LeaseDialog } from "./LeaseDialog";
-import { NewSongDialog } from "./NewSongDialog";
-import { RemixQrModal } from "./RemixQrModal";
+import { 
+  Music, 
+  Calendar, 
+  DollarSign, 
+  Users, 
+  TrendingUp,
+  Clock,
+  FileText,
+  Mic,
+  Award,
+  MessageSquare,
+  Play,
+  PlusCircle
+} from 'lucide-react';
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
-export const dynamic = "force-dynamic";
+// Mock data - in real app this would come from your database
+const stats = [
+  { label: 'Active Projects', value: '12', icon: Music, change: '+2 this week', color: 'text-brand-primary' },
+  { label: 'Upcoming Shows', value: '5', icon: Calendar, change: '3 this month', color: 'text-accent' },
+  { label: 'Revenue (30d)', value: '$4,827', icon: DollarSign, change: '+12.5%', color: 'text-success' },
+  { label: 'Collaborators', value: '24', icon: Users, change: '+3 new', color: 'text-warning' }
+];
 
-type SongMetadata = {
-  status?: string;
-  prompt?: string;
-  mood?: string | null;
-  vocalUrl?: string | null;
-  stems?: Array<{ type: string; url: string }>;
-};
+const recentActivity = [
+  { type: 'song', title: 'Midnight Blues', action: 'New mix uploaded', time: '2 hours ago', icon: Music },
+  { type: 'show', title: 'The Whiskey Bar', action: 'Tickets on sale', time: '5 hours ago', icon: Mic },
+  { type: 'collab', title: 'Sarah Chen', action: 'Joined "Summer EP"', time: '1 day ago', icon: Users },
+  { type: 'revenue', title: 'Spotify Royalties', action: '$127.43 received', time: '2 days ago', icon: DollarSign }
+];
 
-type SongSummary = {
-  id: string;
-  title: string;
-  createdAt: Date;
-  projectName: string;
-  status: string;
-  stems: Array<{ type: string; url: string }>;
-};
+const upcomingShows = [
+  { venue: 'The Basement', date: 'Nov 24', time: '9:00 PM', ticketsSold: 45, capacity: 100 },
+  { venue: 'Blue Note Jazz', date: 'Dec 2', time: '8:30 PM', ticketsSold: 78, capacity: 150 },
+  { venue: 'Rock Bottom', date: 'Dec 15', time: '10:00 PM', ticketsSold: 23, capacity: 80 }
+];
 
-// Removed createServerSupabaseClient - using NextAuth for authentication
+export default function DashboardPage() {
+  const [greeting, setGreeting] = useState('');
 
-function parseMetadata(raw: string | null | undefined): SongMetadata {
-  if (!raw) return {};
-  try {
-    const decoded = JSON.parse(raw) as SongMetadata;
-    return decoded ?? {};
-  } catch {
-    return {};
-  }
-}
-
-function formatStemLabel(value: string) {
-  return value
-    .split(/[-_\s]/)
-    .filter(Boolean)
-    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(" ");
-}
-
-function createRoomId(songId: string) {
-  return `${songId}-${crypto.randomUUID().slice(0, 8)}`;
-}
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(date);
-}
-
-async function loadSongs(userId: string): Promise<SongSummary[]> {
-  const accessibleProjects = await prisma.project.findMany({
-    where: {
-      org: {
-        memberships: {
-          some: { userId },
-        },
-      },
-    },
-    select: { id: true, name: true },
-  });
-
-  if (!accessibleProjects.length) {
-    return [];
-  }
-
-  const projectIdToName = new Map(
-    accessibleProjects.map(
-      (project: { id: string; name: string }) => [project.id, project.name] as const,
-    ),
-  );
-
-  const songs = await prisma.song.findMany({
-    where: { projectId: { in: accessibleProjects.map((project: { id: string }) => project.id) } },
-    select: {
-      id: true,
-      title: true,
-      createdAt: true,
-      description: true,
-      projectId: true,
-    },
-    orderBy: { createdAt: "desc" },
-  });
-
-  return songs.map(
-    (song: {
-      id: string;
-      title: string;
-      createdAt: Date;
-      description: string | null;
-      projectId: string;
-    }) => {
-      const metadata = parseMetadata(song.description);
-      return {
-        id: song.id,
-        title: song.title,
-        createdAt: song.createdAt,
-        projectName: projectIdToName.get(song.projectId) ?? "Untitled Project",
-        status: (typeof metadata.status === "string" ? metadata.status : undefined) ?? "ready",
-        stems: (metadata.stems as Array<{ type: string; url: string }> | undefined) ?? [],
-      } satisfies SongSummary;
-    },
-  );
-}
-
-// eslint-disable-next-line import/no-default-export
-export default async function DashboardPage() {
-  // Use NextAuth for authentication
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    redirect("/auth");
-  }
-
-  const songs = await loadSongs(session.user.id);
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting('Good morning');
+    else if (hour < 18) setGreeting('Good afternoon');
+    else setGreeting('Good evening');
+  }, []);
 
   return (
-    <section className="space-y-10">
-      <header className="border-border/50 flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2">
-          <h2 className="text-brand-foreground text-2xl font-semibold sm:text-3xl">Your songs</h2>
-          <p className="text-muted-foreground max-w-xl text-sm">
-            Every composition you have access to lives here. Open a project, continue a stem, or
-            drop a new idea with the prompt-first CronkWaters flow.
-          </p>
-        </div>
-        <div className="flex-shrink-0">
-          <NewSongDialog />
-        </div>
-      </header>
+    <div>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">
+          {greeting}, Rockstar
+        </h1>
+        <p className="text-muted-foreground">
+          Here's what's happening in your musical universe
+        </p>
+      </div>
 
-      {songs.length === 0 ? (
-        <Card className="border-border/60 bg-surface/70 rounded-3xl border-dashed">
-          <CardHeader>
-            <CardTitle className="text-brand-foreground text-xl">No songs yet</CardTitle>
-          </CardHeader>
-          <CardContent className="text-muted-foreground space-y-3 text-sm">
-            <p>Kick off your first track by launching the New Song prompt modal.</p>
-            <p>Invite collaborators and keep every stem and split aligned from the start.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-4">
-          {songs.map((song) => (
-            <details
-              key={song.id}
-              className="border-border/60 bg-surface shadow-soft hover:shadow-elevated group rounded-3xl border p-6 transition hover:-translate-y-0.5"
-            >
-              <summary className="flex cursor-pointer list-none flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="space-y-1">
-                  <h3 className="text-brand-foreground text-lg font-semibold sm:text-xl">
-                    {song.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm">Project · {song.projectName}</p>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {stats.map((stat) => (
+          <div key={stat.label} className="rnrb-card group hover:border-brand-primary/50 transition-all">
+            <div className="flex items-start justify-between mb-4">
+              <stat.icon className={`w-8 h-8 ${stat.color}`} />
+              <span className="text-xs text-muted-foreground">{stat.change}</span>
+            </div>
+            <div>
+              <p className="text-2xl font-bold mb-1">{stat.value}</p>
+              <p className="text-sm text-muted-foreground">{stat.label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recent Activity */}
+        <div className="lg:col-span-2 rnrb-card">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold">Recent Activity</h2>
+            <Link href="/activity" className="text-sm text-brand-primary hover:underline">
+              View all
+            </Link>
+          </div>
+          <div className="space-y-4">
+            {recentActivity.map((activity, index) => (
+              <div key={index} className="flex items-center gap-4 p-3 hover:bg-surface-muted rounded-lg transition-colors">
+                <div className={`w-10 h-10 rounded-lg bg-surface-elevated flex items-center justify-center`}>
+                  <activity.icon size={20} className="text-muted-foreground" />
                 </div>
-                <div className="text-muted-foreground flex items-center justify-between gap-3 text-sm sm:justify-end">
-                  <div className="flex items-center gap-2 sm:flex-col sm:items-end">
-                    <Badge variant="outline" className="text-xs">
-                      {song.status}
-                    </Badge>
-                    <span className="text-xs sm:text-sm">{formatDate(song.createdAt)}</span>
-                  </div>
-                  <span className="text-muted-foreground text-xs uppercase tracking-[0.35em] transition-transform duration-200 group-open:-rotate-180">
-                    ▼
-                  </span>
+                <div className="flex-1">
+                  <p className="font-medium">{activity.title}</p>
+                  <p className="text-sm text-muted-foreground">{activity.action}</p>
                 </div>
-              </summary>
-              <div className="border-border/30 mt-6 space-y-4 border-t pt-6">
-                {song.stems.length > 0 ? (
-                  song.stems.map((stem) => (
-                    <div
-                      key={`${song.id}-${stem.type}`}
-                      className="border-border/60 bg-surface/70 flex flex-col gap-3 rounded-2xl border p-4 sm:flex-row sm:items-center sm:gap-5"
-                    >
-                      <div className="text-muted-foreground text-xs font-semibold uppercase tracking-[0.25em] sm:w-32 sm:text-sm">
-                        {formatStemLabel(stem.type)}
-                      </div>
-                      <div className="flex flex-1 flex-col gap-3">
-                        <audio controls preload="metadata" className="w-full rounded-lg">
-                          <track kind="captions" />
-                          <source src={stem.url} type="audio/mpeg" />
-                          Your browser does not support audio playback.
-                        </audio>
-                        <div
-                          className="border-border/40 bg-surface/80 relative h-8 overflow-hidden rounded-lg border sm:h-12"
-                          aria-hidden="true"
-                        >
-                          <div className="absolute inset-0 animate-pulse bg-[repeating-linear-gradient(90deg,rgba(139,92,246,0.18)_0,rgba(139,92,246,0.18)_6px,transparent_6px,transparent_12px)]" />
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="border-border/50 bg-surface/60 text-muted-foreground rounded-2xl border border-dashed p-4 text-sm">
-                    Stems are processing. You will see preview players here once generation
-                    finishes.
-                  </p>
-                )}
-                <div className="flex flex-wrap items-center justify-end gap-3">
-                  <RemixQrModal roomId={createRoomId(song.id)} songTitle={song.title} />
-                  <LeaseDialog songId={song.id} songTitle={song.title} />
-                </div>
+                <span className="text-xs text-muted-foreground">{activity.time}</span>
               </div>
-            </details>
-          ))}
+            ))}
+          </div>
         </div>
-      )}
-    </section>
+
+        {/* Quick Actions */}
+        <div className="space-y-6">
+          {/* Quick Actions Card */}
+          <div className="rnrb-card">
+            <h3 className="font-bold mb-4">Quick Actions</h3>
+            <div className="space-y-2">
+              <Link href="/projects/new" className="rnrb-btn rnrb-btn-primary w-full justify-center">
+                <PlusCircle size={18} />
+                New Project
+              </Link>
+              <Link href="/songs/new" className="rnrb-btn rnrb-btn-secondary w-full justify-center">
+                <Music size={18} />
+                Add Song
+              </Link>
+              <Link href="/shows/new" className="rnrb-btn rnrb-btn-secondary w-full justify-center">
+                <Calendar size={18} />
+                Schedule Show
+              </Link>
+            </div>
+          </div>
+
+          {/* Featured Content - Rock poster style */}
+          <div className="rnrb-poster-card rnrb-card relative overflow-hidden h-48">
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/20 to-accent/20" />
+            <div className="relative z-10 p-6 flex flex-col justify-between h-full">
+              <div>
+                <Award className="w-8 h-8 text-warning mb-2" />
+                <h3 className="font-bold text-lg">Artist Spotlight</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Your track "Midnight Blues" is trending!
+                </p>
+              </div>
+              <Link href="/analytics" className="text-sm text-brand-primary hover:underline">
+                View Analytics →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Upcoming Shows */}
+      <div className="mt-6 rnrb-card">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold">Upcoming Shows</h2>
+          <Link href="/shows" className="text-sm text-brand-primary hover:underline">
+            Manage all
+          </Link>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Venue</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Date</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Time</th>
+                <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Tickets</th>
+                <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {upcomingShows.map((show, index) => (
+                <tr key={index} className="border-b border-border hover:bg-surface-muted transition-colors">
+                  <td className="py-4 px-4 font-medium">{show.venue}</td>
+                  <td className="py-4 px-4 text-sm">{show.date}</td>
+                  <td className="py-4 px-4 text-sm">{show.time}</td>
+                  <td className="py-4 px-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-2 bg-surface-elevated rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-brand-primary"
+                          style={{ width: `${(show.ticketsSold / show.capacity) * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        {show.ticketsSold}/{show.capacity}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-4 text-right">
+                    <button className="text-sm text-brand-primary hover:underline">
+                      Manage
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Bottom CTA - Rock inspired */}
+      <div className="mt-8 relative">
+        <div className="rnrb-vinyl absolute -right-4 -top-4 opacity-10" />
+        <div className="rnrb-card-elevated p-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <h3 className="text-2xl font-bold mb-2">Ready to rock?</h3>
+            <p className="text-muted-foreground mb-4">
+              Upgrade to Pro and unlock advanced features for serious musicians
+            </p>
+            <Link href="/pricing" className="rnrb-btn rnrb-btn-primary">
+              <TrendingUp size={18} />
+              Upgrade to Pro
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

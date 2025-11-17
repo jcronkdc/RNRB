@@ -1,0 +1,337 @@
+/* Rock N' Roll Basement Professional Design System */
+/* A dark, professional music platform with subtle rock-bar inspiration */
+
+:root {
+  /* Professional Dark Base Colors */
+  --rnrb-base-900: 220 30% 8%;     /* Near-black with blue undertone */
+  --rnrb-base-800: 220 28% 12%;    /* Dark surface */
+  --rnrb-base-700: 220 25% 16%;    /* Elevated surface */
+  --rnrb-base-600: 220 22% 20%;    /* Card backgrounds */
+  --rnrb-base-500: 220 20% 30%;    /* Borders */
+  --rnrb-base-400: 220 15% 45%;    /* Muted text */
+  --rnrb-base-300: 220 10% 70%;    /* Secondary text */
+  --rnrb-base-200: 220 8% 85%;     /* Light text */
+  --rnrb-base-100: 220 5% 95%;     /* Primary text */
+  
+  /* Accent Colors - Restrained Palette */
+  --rnrb-accent-primary: 195 100% 50%;    /* Cyan/Blue primary */
+  --rnrb-accent-primary-dark: 195 100% 40%;
+  --rnrb-accent-primary-light: 195 90% 65%;
+  --rnrb-accent-secondary: 40 90% 55%;    /* Amber secondary */
+  --rnrb-accent-secondary-dark: 40 90% 45%;
+  --rnrb-accent-secondary-light: 40 85% 70%;
+  
+  /* Semantic Colors */
+  --rnrb-success: 140 60% 50%;
+  --rnrb-warning: 40 90% 55%;
+  --rnrb-danger: 0 70% 55%;
+  --rnrb-info: 210 90% 55%;
+  
+  /* Spacing Scale */
+  --rnrb-space-xs: 0.25rem;
+  --rnrb-space-sm: 0.5rem;
+  --rnrb-space-md: 1rem;
+  --rnrb-space-lg: 1.5rem;
+  --rnrb-space-xl: 2rem;
+  --rnrb-space-2xl: 3rem;
+  --rnrb-space-3xl: 4rem;
+  
+  /* Border Radius */
+  --rnrb-radius-sm: 0.25rem;
+  --rnrb-radius-md: 0.5rem;
+  --rnrb-radius-lg: 0.75rem;
+  --rnrb-radius-xl: 1rem;
+}
+
+/* Override theme system with professional colors */
+[data-theme='dark'],
+[data-theme='light'],
+[data-theme='warm'] {
+  /* Base colors */
+  --sf-color-background: var(--rnrb-base-900);
+  --sf-color-surface: var(--rnrb-base-800);
+  --sf-color-surface-muted: var(--rnrb-base-700);
+  --sf-color-surface-elevated: var(--rnrb-base-600);
+  
+  /* Text colors */
+  --sf-color-foreground: var(--rnrb-base-100);
+  --sf-color-muted: var(--rnrb-base-400);
+  --sf-color-muted-foreground: var(--rnrb-base-300);
+  --sf-color-border: var(--rnrb-base-500);
+  
+  /* Brand colors */
+  --sf-color-brand-primary: var(--rnrb-accent-primary);
+  --sf-color-brand-primary-foreground: var(--rnrb-base-900);
+  --sf-color-brand-secondary: var(--rnrb-accent-secondary);
+  --sf-color-brand-secondary-foreground: var(--rnrb-base-900);
+  
+  /* Semantic colors */
+  --sf-color-success: var(--rnrb-success);
+  --sf-color-warning: var(--rnrb-warning);
+  --sf-color-danger: var(--rnrb-danger);
+  --sf-color-accent: var(--rnrb-accent-primary);
+  
+  /* Effects */
+  --sf-shadow-soft: 0 4px 20px -2px rgb(0 0 0 / 0.5);
+  --sf-shadow-elevated: 0 8px 30px -4px rgb(0 0 0 / 0.6);
+  --sf-shadow-glow: 0 0 20px -5px hsl(var(--rnrb-accent-primary) / 0.3);
+}
+
+/* Light theme overrides for professional daytime use */
+[data-theme='light'] {
+  --sf-color-background: 0 0% 98%;
+  --sf-color-surface: 0 0% 100%;
+  --sf-color-surface-muted: 220 10% 97%;
+  --sf-color-surface-elevated: 220 10% 95%;
+  --sf-color-foreground: var(--rnrb-base-900);
+  --sf-color-muted: 220 15% 55%;
+  --sf-color-muted-foreground: 220 12% 40%;
+  --sf-color-border: 220 15% 85%;
+  --sf-shadow-soft: 0 4px 20px -2px rgb(0 0 0 / 0.08);
+  --sf-shadow-elevated: 0 8px 30px -4px rgb(0 0 0 / 0.12);
+}
+
+/* Warm theme for studio aesthetic */
+[data-theme='warm'] {
+  --sf-color-background: 30 20% 10%;
+  --sf-color-surface: 30 18% 14%;
+  --sf-color-surface-muted: 30 16% 18%;
+  --sf-color-surface-elevated: 30 14% 22%;
+  --sf-color-foreground: 30 10% 94%;
+  --sf-color-muted: 30 10% 50%;
+  --sf-color-muted-foreground: 30 10% 70%;
+  --sf-color-border: 30 15% 30%;
+}
+
+/* Professional Typography */
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', sans-serif;
+  background-color: hsl(var(--sf-color-background));
+  color: hsl(var(--sf-color-foreground));
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: 0.875rem; }
+
+/* Professional Component Styles */
+
+/* Buttons */
+.rnrb-btn {
+  padding: var(--rnrb-space-sm) var(--rnrb-space-lg);
+  border-radius: var(--rnrb-radius-md);
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rnrb-space-sm);
+}
+
+.rnrb-btn-primary {
+  background-color: hsl(var(--rnrb-accent-primary));
+  color: hsl(var(--rnrb-base-900));
+}
+
+.rnrb-btn-primary:hover {
+  background-color: hsl(var(--rnrb-accent-primary-dark));
+  transform: translateY(-1px);
+  box-shadow: var(--sf-shadow-soft);
+}
+
+.rnrb-btn-secondary {
+  background-color: hsl(var(--rnrb-base-700));
+  color: hsl(var(--rnrb-base-100));
+  border: 1px solid hsl(var(--rnrb-base-500));
+}
+
+.rnrb-btn-secondary:hover {
+  background-color: hsl(var(--rnrb-base-600));
+  border-color: hsl(var(--rnrb-accent-primary) / 0.5);
+}
+
+/* Cards */
+.rnrb-card {
+  background-color: hsl(var(--sf-color-surface));
+  border: 1px solid hsl(var(--sf-color-border));
+  border-radius: var(--rnrb-radius-lg);
+  padding: var(--rnrb-space-lg);
+  box-shadow: var(--sf-shadow-soft);
+}
+
+.rnrb-card-elevated {
+  background-color: hsl(var(--sf-color-surface-elevated));
+  box-shadow: var(--sf-shadow-elevated);
+}
+
+/* App Shell Layout */
+.rnrb-app-shell {
+  display: flex;
+  height: 100vh;
+  background-color: hsl(var(--sf-color-background));
+}
+
+.rnrb-sidebar {
+  width: 260px;
+  background-color: hsl(var(--sf-color-surface));
+  border-right: 1px solid hsl(var(--sf-color-border));
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.rnrb-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.rnrb-topbar {
+  height: 64px;
+  background-color: hsl(var(--sf-color-surface));
+  border-bottom: 1px solid hsl(var(--sf-color-border));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--rnrb-space-lg);
+}
+
+.rnrb-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--rnrb-space-xl);
+}
+
+/* Navigation Items */
+.rnrb-nav-section {
+  padding: var(--rnrb-space-md);
+}
+
+.rnrb-nav-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: hsl(var(--sf-color-muted));
+  margin-bottom: var(--rnrb-space-sm);
+}
+
+.rnrb-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--rnrb-space-sm);
+  padding: var(--rnrb-space-sm) var(--rnrb-space-md);
+  border-radius: var(--rnrb-radius-md);
+  color: hsl(var(--sf-color-muted-foreground));
+  text-decoration: none;
+  transition: all 0.15s ease;
+  margin-bottom: 2px;
+}
+
+.rnrb-nav-item:hover {
+  background-color: hsl(var(--rnrb-base-700) / 0.5);
+  color: hsl(var(--sf-color-foreground));
+}
+
+.rnrb-nav-item.active {
+  background-color: hsl(var(--rnrb-accent-primary) / 0.1);
+  color: hsl(var(--rnrb-accent-primary));
+  font-weight: 600;
+}
+
+/* Rock-inspired accent elements (contained) */
+.rnrb-poster-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, 
+    hsl(var(--rnrb-base-700)), 
+    hsl(var(--rnrb-base-800))
+  );
+  border: 2px solid hsl(var(--rnrb-accent-primary) / 0.3);
+  transform: rotate(-1deg);
+  box-shadow: 0 10px 40px -10px rgb(0 0 0 / 0.5);
+}
+
+.rnrb-poster-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg,
+    hsl(var(--rnrb-accent-primary)),
+    hsl(var(--rnrb-accent-secondary))
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+.rnrb-poster-card:hover::before {
+  opacity: 0.3;
+}
+
+/* Vinyl record element */
+.rnrb-vinyl {
+  width: 120px;
+  height: 120px;
+  background: 
+    radial-gradient(circle at center,
+      hsl(var(--rnrb-base-900)) 20%,
+      hsl(var(--rnrb-base-700)) 20.5%,
+      hsl(var(--rnrb-base-700)) 40%,
+      hsl(var(--rnrb-base-600)) 40.5%,
+      hsl(var(--rnrb-base-600)) 60%,
+      hsl(var(--rnrb-base-500)) 60.5%
+    );
+  border-radius: 50%;
+  box-shadow: 0 4px 20px -4px rgb(0 0 0 / 0.5);
+  position: relative;
+}
+
+.rnrb-vinyl::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  background: hsl(var(--rnrb-accent-secondary));
+  border-radius: 50%;
+  box-shadow: inset 0 0 10px rgb(0 0 0 / 0.5);
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .rnrb-sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    transition: left 0.3s ease;
+  }
+  
+  .rnrb-sidebar.open {
+    left: 0;
+  }
+  
+  .rnrb-content {
+    padding: var(--rnrb-space-md);
+  }
+}

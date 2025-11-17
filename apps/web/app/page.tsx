@@ -181,18 +181,17 @@ export default function HomePage() {
           </div>
 
           <motion.h1 
-            className="text-6xl md:text-8xl font-black mb-6 rock-logo"
+            className="text-6xl md:text-8xl font-bold mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            data-text="WHERE ROCK LIVES"
           >
-            <span className="bg-gradient-to-br from-rnrb-neon-purple via-rnrb-neon-pink to-rnrb-neon-blue bg-clip-text text-transparent uppercase">
-              Where Rock
+            <span className="bg-gradient-to-br from-brand-primary to-accent bg-clip-text text-transparent">
+              Where Musicians
             </span>
             <br />
-            <span className="bg-gradient-to-br from-rnrb-neon-blue via-rnrb-neon-cyan to-rnrb-neon-purple bg-clip-text text-transparent uppercase">
-              Lives Forever
+            <span className="text-foreground">
+              Build Their Future
             </span>
           </motion.h1>
           
@@ -213,28 +212,22 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.6 }}
           >
             <Link 
-              href="/guide"
-              className="rock-btn sf-btn-primary group relative px-8 py-4 rounded-2xl font-black text-lg text-white overflow-hidden"
+              href="/auth"
+              className="rnrb-btn rnrb-btn-primary text-lg px-8 py-4"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                Find Your Features
+              <span className="flex items-center gap-2">
+                Get Started Free
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
-              <motion.div 
-                className="absolute inset-0 bg-gradient-to-r from-brand-secondary to-brand-primary"
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3 }}
-              />
             </Link>
             
             <Link 
-              href="/auth"
-              className="group px-8 py-4 border-2 border-rnrb-neon-purple/50 hover:border-rnrb-neon-purple bg-rnrb-color-stage/80 backdrop-blur rounded-2xl font-black text-lg uppercase transition-all hover:shadow-xl hover:shadow-rnrb-neon-purple/30 rock-hover"
+              href="#features"
+              className="rnrb-btn rnrb-btn-secondary text-lg px-8 py-4"
             >
               <span className="flex items-center gap-2">
-                Start Jamming
-                <Guitar className="w-5 h-5 text-rnrb-neon-purple group-hover:animate-string-vibrate transition-transform" />
+                Explore Features
+                <Sparkles className="w-5 h-5" />
               </span>
             </Link>
           </motion.div>
@@ -324,9 +317,8 @@ export default function HomePage() {
                 className="group relative h-full"
               >
                 <div className={`
-                  relative h-full overflow-hidden rounded-xl border-2 bg-rnrb-color-stage/80 backdrop-blur amp-stack
-                  ${hoveredFeature === index ? 'border-rnrb-neon-purple/70 shadow-2xl shadow-rnrb-neon-purple/30' : 'border-rnrb-neon-purple/30'}
-                  transition-all duration-300 cursor-pointer rock-hover
+                  rnrb-card h-full cursor-pointer transition-all duration-300
+                  ${hoveredFeature === index ? 'rnrb-card-elevated transform scale-105' : ''}
                 `}>
                 {/* Background Pattern */}
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${feature.bgPattern}`} />
@@ -358,13 +350,15 @@ export default function HomePage() {
                 )}
                 
                 <div className="relative z-10 p-6">
-                  {/* Icon with rock style */}
+                  {/* Icon with professional style */}
                   <motion.div 
-                    className="guitar-pick mb-4 group-hover:scale-110 transition-transform flex items-center justify-center"
+                    className={`w-16 h-16 rounded-lg bg-gradient-to-br ${feature.color} p-0.5 mb-4 group-hover:scale-110 transition-transform`}
                     whileHover={{ rotate: [0, -10, 10, 0] }}
                     transition={{ duration: 0.5 }}
                   >
-                    <feature.icon className="w-8 h-8 text-white z-10" />
+                    <div className="w-full h-full rounded-lg bg-background/50 backdrop-blur flex items-center justify-center">
+                      <feature.icon className="w-8 h-8 text-white" />
+                    </div>
                   </motion.div>
 
                   {/* Content */}

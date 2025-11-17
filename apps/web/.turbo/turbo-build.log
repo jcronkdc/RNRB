@@ -14,14 +14,15 @@
      ⨯ serverMinification
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 5.5s
+ ✓ Compiled successfully in 6.8s
    Skipping validation of types
    Skipping linting
    Collecting page data ...
  ⚠ Using edge runtime on a page currently disables static generation for that page
-   Generating static pages (0/25) ...
-   Generating static pages (6/25) 
-   Generating static pages (12/25) 
+   Generating static pages (0/26) ...
+   Generating static pages (6/26) 
+   Generating static pages (12/26) 
+   Generating static pages (19/26) 
 Failed to fetch public projects for sitemap: Error [PrismaClientInitializationError]: 
 Invalid `prisma.project.findMany()` invocation:
 
@@ -42,13 +43,12 @@ Error querying the database: ERROR: password authentication failed for user 'neo
   clientVersion: '5.22.0',
   errorCode: undefined
 }
-   Generating static pages (18/25) 
- ✓ Generating static pages (25/25)
+ ✓ Generating static pages (26/26)
    Finalizing page optimization ...
    Collecting build traces ...
 
 Route (app)                                 Size  First Load JS
-┌ ○ /                                     7.4 kB         152 kB
+┌ ○ /                                    7.33 kB         152 kB
 ├ ƒ /_not-found                            187 B         102 kB
 ├ ○ /analytics                            2.5 kB         147 kB
 ├ ƒ /api/ai-lyrics                         187 B         102 kB
@@ -64,11 +64,11 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /api/upload-audio                      187 B         102 kB
 ├ ƒ /artist/[slug]                       2.75 kB         178 kB
 ├ ○ /assets                              2.96 kB         147 kB
-├ ƒ /audience/[sessionId]                  53 kB         217 kB
-├ ○ /auth                                14.9 kB         218 kB
+├ ƒ /audience/[sessionId]                52.4 kB         217 kB
+├ ○ /auth                                5.01 kB         218 kB
 ├ ƒ /blocked                               166 B         106 kB
 ├ ƒ /community                           3.99 kB         168 kB
-├ ƒ /dashboard                           11.3 kB         214 kB
+├ ○ /dashboard                           3.14 kB         109 kB
 ├ ƒ /dashboard/assets                      251 B         159 kB
 ├ ƒ /dashboard/distribute                  251 B         159 kB
 ├ ƒ /dashboard/licenses                    251 B         159 kB
@@ -78,7 +78,7 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /discover                            5.28 kB         211 kB
 ├ ƒ /donate                              3.63 kB         171 kB
 ├ ƒ /foundation                           4.8 kB         169 kB
-├ ○ /guide                               6.73 kB         151 kB
+├ ○ /guide                               6.74 kB         151 kB
 ├ ƒ /learn                               4.39 kB         168 kB
 ├ ƒ /licenses                              187 B         102 kB
 ├ ○ /membership                          4.52 kB         149 kB
@@ -93,7 +93,7 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /projects/[slug]/songs/[songId]      4.52 kB         207 kB
 ├ ƒ /projects/[slug]/songs/[songSlug]      145 B         176 kB
 ├ ƒ /projects/new                          247 B         163 kB
-├ ƒ /remix/[roomId]                      3.34 kB         167 kB
+├ ƒ /remix/[roomId]                      2.61 kB         167 kB
 ├ ○ /robots.txt                            187 B         102 kB
 ├ ƒ /search                              2.97 kB         170 kB
 ├ ○ /sessions                            3.24 kB         147 kB
@@ -102,7 +102,7 @@ Route (app)                                 Size  First Load JS
 ├ ƒ /settings/org                        2.15 kB         166 kB
 ├ ○ /signin                                187 B         102 kB
 ├ ○ /sitemap.xml                           187 B         102 kB
-├ ○ /splits                              3.04 kB         147 kB
+├ ○ /splits                              3.02 kB         147 kB
 ├ ƒ /terms                                 251 B         159 kB
 ├ ƒ /test                                  187 B         102 kB
 ├ ƒ /theming                               251 B         159 kB
@@ -114,7 +114,7 @@ Route (app)                                 Size  First Load JS
 + First Load JS shared by all             102 kB
   ├ chunks/30065108-6ead69e6ef0ebbbb.js  54.2 kB
   ├ chunks/5542-123c5d89f3d04e21.js      46.1 kB
-  └ other shared chunks (total)          1.96 kB
+  └ other shared chunks (total)          1.97 kB
 
 
 ƒ Middleware                             65.5 kB

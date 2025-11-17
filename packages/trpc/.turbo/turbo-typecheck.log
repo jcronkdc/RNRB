@@ -1,4 +1,4 @@
 
-> @cronkwaters/trpc@0.1.0 typecheck /workspace/packages/trpc
+> @cronkwaters/trpc@0.1.0 typecheck /Users/justincronk/Desktop/Rock & Roll Basement/song-forge/packages/trpc
 > tsc --noEmit
 
