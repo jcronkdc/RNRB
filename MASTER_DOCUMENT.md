@@ -5150,6 +5150,28 @@ The build failure was purely a stale lockfile. Re-running `pnpm install` refresh
 
 ---
 
+## 🍄 Agent 26 (MUSHROOM) - Root Lockfile Spec Sync (2025-11-17)
+
+### What Broke
+- New Vercel build (`05:42:39`) failed during `pnpm install --frozen-lockfile --prod=false`
+- Error: `ERR_PNPM_OUTDATED_LOCKFILE` because `song-forge/packages/ui/package.json` lists `@types/node:^22.15.3` but `pnpm-lock.yaml` still referenced the older `^22.5.4` spec **and** was missing the entry entirely under the workspace devDependencies
+- Result: installation aborted before Turbo could run, so production deploys halted again
+
+### Actions Taken
+1. Edited root `pnpm-lock.yaml` to:
+   - Add the missing `@types/node` devDependency block for `song-forge/packages/ui`
+   - Bump the stale spec within the workspace section from `^22.5.4` → `^22.15.3`
+2. Ran `pnpm install --frozen-lockfile --prod=false` at repo root to confirm the regenerated lock satisfies pnpm’s frozen check (exit code 0)
+3. Reverted incidental changes to `song-forge/pnpm-lock.yaml` so only the intentional root lock modifications remain
+4. Verified no other files were touched; environment variables, SEO, and mobile settings unchanged
+
+### Current Truth
+- Root lockfile now matches the actual specs for `@cronkwaters/ui` and `@cronkwaters/web`, so Vercel can run `pnpm install --frozen-lockfile --prod=false` without error
+- No new dependencies introduced; this was purely a spec alignment fix
+- Next step before redeploy: commit `pnpm-lock.yaml`, then trigger `vercel --prod` to confirm the Portland build completes
+
+---
+
 ## 🍄 Agent 17 - Mushroom Mind Full Verification & Critical Corrections (RN'RB Current Repo)
 
 **Mission:** Review ALL previous agent claims (Agents 9-16), verify current state with code inspection, CLI tools, and direct file examination. Verify Supabase/Neon configurations, check branding completion status, SEO/mobile optimization, and identify critical errors in previous agent reporting. Never assume previous agents did what they claimed. Enforce truth above all else.
