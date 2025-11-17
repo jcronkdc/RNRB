@@ -35139,4 +35139,725 @@ ably connections stats --live
 
 ---
 
+**🔄 ABLY LIVEOBJECTS - REALTIME COLLABORATIVE DATA STRUCTURES**
+
+**Ably LiveObjects Swift tutorial documented - RN'RB now has realtime collaborative data structures for shared session state management!**
+
+**Ably LiveObjects Overview:**
+```typescript
+// LiveObjects provides realtime collaborative data structures:
+// - LiveMap: Distributed key-value store
+// - LiveCounter: Atomic counter with increment/decrement
+// - Automatic synchronization across all connected clients
+// - Persistence on channels
+// - Realtime updates via subscriptions
+
+// Perfect for RN'RB music session state:
+// - Current song/track being played
+// - BPM/tempo settings
+// - Chord progressions
+// - Shared lyrics/notes
+// - Session participant counts
+// - Real-time collaboration metadata
+```
+
+**Swift Implementation - Complete Setup:**
+
+**Installation:**
+```swift
+// Add to Package.swift or Xcode
+dependencies: [
+    .package(url: "https://github.com/ably/ably-cocoa", from: "1.2.0"),
+    .package(url: "https://github.com/ably/ably-liveobjects-swift-plugin", from: "0.1.0")
+]
+
+// Import in Swift files
+import Ably
+import AblyLiveObjects
+```
+
+**Client Setup with LiveObjects Plugin:**
+```swift
+let clientOptions = ARTClientOptions(key: "your-api-key")
+clientOptions.plugins = [.liveObjects: AblyLiveObjects.Plugin.self]
+
+let realtimeClient = ARTRealtime(options: clientOptions)
+```
+
+**Channel Configuration:**
+```swift
+// Required channel modes for LiveObjects
+let channelOptions = ARTRealtimeChannelOptions()
+channelOptions.modes = [.objectPublish, .objectSubscribe] // Read + write access
+
+let channel = realtimeClient.channels.get("music-session-state", options: channelOptions)
+
+// Attach to channel for synchronization
+try await withCheckedThrowingContinuation { continuation in
+    channel.attach { error in
+        if let error {
+            continuation.resume(throwing: error)
+        } else {
+            continuation.resume()
+        }
+    }
+}
+```
+
+**Get Root Object:**
+```swift
+// Root object is always a LiveMap - entry point for all LiveObjects
+let root = try await channel.objects.getRoot()
+// Root acts as top-level container for session state
+```
+
+**Create LiveObjects:**
+```swift
+// Create collaborative data structures
+let sessionParticipants = try await channel.objects.createCounter()
+let sessionMetadata = try await channel.objects.createMap()
+let currentSong = try await channel.objects.createMap()
+
+// Attach to root for persistence and sharing
+try await root.set(key: "participants", value: .liveCounter(sessionParticipants))
+try await root.set(key: "metadata", value: .liveMap(sessionMetadata))
+try await root.set(key: "currentSong", value: .liveMap(currentSong))
+```
+
+**Subscribe to Realtime Updates:**
+```swift
+// Monitor participant count changes
+try sessionParticipants.subscribe { _, _ in
+    let count = try sessionParticipants.value
+    print("Session participants: \(count)")
+    updateParticipantUI(count: count)
+}
+
+// Monitor session metadata changes
+try sessionMetadata.subscribe { _, _ in
+    let entries = try sessionMetadata.entries
+    print("Session metadata updated: \(entries)")
+    updateSessionInfo(entries: entries)
+}
+
+// Monitor current song changes
+try currentSong.subscribe { _, _ in
+    let songData = try currentSong.entries
+    print("Current song updated: \(songData)")
+    updateCurrentSong(data: songData)
+}
+```
+
+**Update LiveObjects:**
+```swift
+// Increment participant counter when someone joins
+try await sessionParticipants.increment(amount: 1)
+
+// Set current song information
+try await currentSong.set(key: "title", value: "Bohemian Rhapsody")
+try await currentSong.set(key: "artist", value: "Queen")
+try await currentSong.set(key: "bpm", value: 72)
+
+// Update session metadata
+try await sessionMetadata.set(key: "tempo", value: 120)
+try await sessionMetadata.set(key: "key", value: "A minor")
+try await sessionMetadata.set(key: "genre", value: "Rock")
+```
+
+**RN'RB Music Session State Management:**
+
+**Complete Session State Structure:**
+```swift
+// Proposed LiveObjects structure for RN'RB sessions
+struct RNSessionLiveObjects {
+    // Root level objects
+    let participants: LiveCounter        // Track active musicians
+    let currentSong: LiveMap            // Current track metadata
+    let sessionSettings: LiveMap        // BPM, key, tempo
+    let chordProgression: LiveMap       // Current song chords
+    let sharedNotes: LiveMap           // Collaborative notes/lyrics
+
+    init(channel: ARTRealtimeChannel) async throws {
+        let root = try await channel.objects.getRoot()
+
+        // Create collaborative objects
+        self.participants = try await channel.objects.createCounter()
+        self.currentSong = try await channel.objects.createMap()
+        self.sessionSettings = try await channel.objects.createMap()
+        self.chordProgression = try await channel.objects.createMap()
+        self.sharedNotes = try await channel.objects.createMap()
+
+        // Attach to root for persistence
+        try await root.set(key: "participants", value: .liveCounter(participants))
+        try await root.set(key: "currentSong", value: .liveMap(currentSong))
+        try await root.set(key: "sessionSettings", value: .liveMap(sessionSettings))
+        try await root.set(key: "chordProgression", value: .liveMap(chordProgression))
+        try await root.set(key: "sharedNotes", value: .liveMap(sharedNotes))
+    }
+}
+```
+
+**Session State Usage Example:**
+```swift
+// Initialize session state
+let sessionState = try await RNSessionLiveObjects(channel: channel)
+
+// Set up subscriptions for UI updates
+try sessionState.participants.subscribe { _, _ in
+    let count = try sessionState.participants.value
+    updateParticipantCount(count)
+}
+
+try sessionState.currentSong.subscribe { _, _ in
+    let songInfo = try sessionState.currentSong.entries
+    updateNowPlaying(songInfo)
+}
+
+try sessionState.sessionSettings.subscribe { _, _ in
+    let settings = try sessionState.sessionSettings.entries
+    updateSessionSettings(settings)
+}
+
+// Update session when musicians join/leave
+try await sessionState.participants.increment(amount: 1) // Musician joined
+
+// Update current song
+try await sessionState.currentSong.set(key: "title", value: "Stairway to Heaven")
+try await sessionState.currentSong.set(key: "bpm", value: 80)
+
+// Update session settings
+try await sessionState.sessionSettings.set(key: "tempo", value: 120)
+try await sessionState.sessionSettings.set(key: "key", value: "A minor")
+
+// Collaborative chord progression
+try await sessionState.chordProgression.set(key: "verse", value: "Am F C G")
+try await sessionState.chordProgression.set(key: "chorus", value: "C G Am F")
+```
+
+**API Key Capabilities for LiveObjects:**
+```json
+{
+  "capability": {
+    "object-subscribe": ["*"],  // Read access to LiveObjects
+    "object-publish": ["*"]     // Write access to LiveObjects
+  }
+}
+// Required capabilities for LiveObjects operations
+```
+
+**Advanced Features:**
+
+**Batch Operations:**
+```swift
+// Perform multiple operations atomically
+try await channel.objects.batch { batch in
+    try await batch.counter(sessionParticipants).increment(amount: 1)
+    try await batch.map(sessionMetadata).set(key: "status", value: "active")
+    try await batch.map(currentSong).set(key: "startTime", value: Date().timeIntervalSince1970)
+}
+```
+
+**Lifecycle Events:**
+```swift
+// Monitor object lifecycle
+channel.objects.onLifecycleEvent = { event in
+    switch event.type {
+    case .objectCreated:
+        print("New collaborative object created: \(event.objectId)")
+    case .objectDeleted:
+        print("Object removed: \(event.objectId)")
+    case .garbageCollected:
+        print("Unreachable object cleaned up: \(event.objectId)")
+    }
+}
+```
+
+**Typing Support:**
+```swift
+// Define typed interfaces for LiveObjects
+struct SongMetadata: Codable {
+    let title: String
+    let artist: String
+    let bpm: Int
+    let key: String
+    let duration: TimeInterval
+}
+
+// Use with typed operations
+let songData = SongMetadata(title: "Bohemian Rhapsody", artist: "Queen", bpm: 72, key: "Bb Major", duration: 355)
+try await currentSong.set(key: "metadata", value: .json(songData))
+```
+
+**REST API Access:**
+```swift
+// Access LiveObjects via REST API for server-side operations
+let restClient = ARTRest(options: clientOptions)
+let channel = restClient.channels.get("music-session-state")
+
+// Get current root object state
+let rootObject = try await channel.objects.getRoot()
+
+// Perform operations via REST
+try await rootObject.set(key: "serverUpdate", value: "Session synced")
+```
+
+**RN'RB Integration Benefits:**
+
+**🎵 Real-time Session Synchronization:**
+- All musicians see live updates to current song, tempo, chords
+- Participant count automatically tracks session attendance
+- Shared notes and lyrics update instantly across all clients
+
+**🎼 Collaborative Music Creation:**
+- Chord progressions can be built collaboratively
+- Session settings (BPM, key) sync automatically
+- Live feedback and reactions to musical changes
+
+**⚡ Performance & Reliability:**
+- Atomic operations prevent race conditions
+- Automatic conflict resolution
+- Offline-aware with automatic resync on reconnection
+
+**🔧 Development Advantages:**
+- Type-safe operations with Swift generics
+- Automatic serialization of complex data structures
+- Built-in subscription patterns for reactive UI updates
+
+**Recommendation:** Use Ably LiveObjects for RN'RB session state management - provides realtime collaborative data structures perfect for music session coordination, replacing manual pub/sub patterns with structured, persistent state.
+
+---
+
+**🏢 ABLY SPACES - COLLABORATIVE UI/UX FEATURES**
+
+**Ably Spaces React Hooks documented - RN'RB now has complete collaborative UI features for music production workflows!**
+
+**Ably Spaces Overview:**
+```typescript
+// Spaces provides collaborative UI/UX features:
+// - Avatar stacks: Show who's online in sessions
+// - Member locations: Track positions in virtual spaces
+// - Live cursors: Follow mouse movements for collaboration
+// - Component locking: Prevent edit conflicts
+// - Real-time presence and member management
+
+// Perfect for RN'RB music collaboration:
+// - Avatar stacks showing session participants
+// - Live cursors for collaborative music notation
+// - Component locking for shared DAW controls
+// - Location tracking for virtual studio "rooms"
+```
+
+**React Hooks Setup:**
+
+**Installation:**
+```bash
+npm install ably @ably/spaces
+```
+
+**Provider Setup:**
+```typescript
+import { Realtime } from "ably";
+import Spaces from "@ably/spaces";
+import { SpacesProvider, SpaceProvider } from "@ably/spaces/react";
+
+const ably = new Realtime({ key: "your-api-key", clientId: 'musician-1' });
+const spaces = new Spaces(ably);
+
+<SpacesProvider client={spaces}>
+  <SpaceProvider name="music-session-studio">
+    <RNBCollaborativeInterface />
+  </SpaceProvider>
+</SpacesProvider>
+```
+
+**useSpace - Space Management:**
+```typescript
+import { useSpace } from "@ably/spaces/react";
+
+const MusicSessionSpace = () => {
+  const { space, connectionError, channelError } = useSpace((update) => {
+    console.log("Space update:", update);
+    // Handle space state changes (connecting, connected, etc.)
+  });
+
+  if (connectionError) return <div>Connection error: {connectionError.message}</div>;
+  if (channelError) return <div>Channel error: {channelError.message}</div>;
+
+  return <div>Space: {space?.name}</div>;
+};
+```
+
+**useMembers - Avatar Stacks:**
+```typescript
+import { useMembers } from "@ably/spaces/react";
+
+const SessionAvatarStack = () => {
+  const { self, others, members, connectionError, channelError } = useMembers();
+
+  // Subscribe to all member events
+  useMembers((memberUpdate) => {
+    console.log("Member update:", memberUpdate);
+  });
+
+  // Subscribe to specific events
+  useMembers('enter', (memberJoined) => {
+    console.log(`🎸 ${memberJoined.member.name} joined the session!`);
+  });
+
+  useMembers('leave', (memberLeft) => {
+    console.log(`👋 ${memberLeft.member.name} left the session`);
+  });
+
+  return (
+    <div className="avatar-stack">
+      {/* Current user's avatar */}
+      <div className="avatar self">
+        <img src={self?.profileData?.avatar} alt={self?.name} />
+        <span className="status online">●</span>
+      </div>
+
+      {/* Other participants */}
+      {others.map(member => (
+        <div key={member.connectionId} className="avatar other">
+          <img src={member.profileData?.avatar} alt={member.name} />
+          <span className={`status ${member.isConnected ? 'online' : 'offline'}`}>●</span>
+          <span className="name">{member.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+```
+
+**useLocations - Member Positioning:**
+```typescript
+import { useLocations } from "@ably/spaces/react";
+
+const VirtualStudioRoom = () => {
+  const { update, connectionError, channelError } = useLocations((locationUpdate) => {
+    console.log("Location update:", locationUpdate);
+    // Update member positions on virtual studio floor
+  });
+
+  const moveToDrumKit = () => {
+    update({ x: 100, y: 200, name: "drum-kit" });
+  };
+
+  const moveToGuitarAmp = () => {
+    update({ x: 300, y: 150, name: "guitar-amp" });
+  };
+
+  return (
+    <div className="virtual-studio">
+      <button onClick={moveToDrumKit}>Move to Drum Kit</button>
+      <button onClick={moveToGuitarAmp}>Move to Guitar Amp</button>
+      {/* Render virtual studio with member positions */}
+    </div>
+  );
+};
+```
+
+**useCursors - Live Mouse Tracking:**
+```typescript
+import { useCursors } from "@ably/spaces/react";
+
+const CollaborativeNotation = () => {
+  const { set, cursors } = useCursors((cursorUpdate) => {
+    // Handle cursor position updates from other members
+    console.log("Cursor moved:", cursorUpdate);
+  }, { returnCursors: true });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      set({
+        position: { x: e.clientX, y: e.clientY },
+        data: { color: '#ff6b35', userId: 'musician-1' }
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [set]);
+
+  return (
+    <div className="notation-canvas">
+      {/* Render sheet music or notation */}
+      {cursors.map(cursor => (
+        <div
+          key={cursor.member.connectionId}
+          className="cursor"
+          style={{
+            left: cursor.position.x,
+            top: cursor.position.y,
+            backgroundColor: cursor.data?.color || '#000'
+          }}
+        >
+          {cursor.member.name}
+        </div>
+      ))}
+    </div>
+  );
+};
+```
+
+**useLocks - Component Locking:**
+```typescript
+import { useLocks, useLock } from "@ably/spaces/react";
+
+const DAWControls = () => {
+  // Subscribe to all lock events
+  const { connectionError, channelError } = useLocks((lockUpdate) => {
+    console.log("Lock update:", lockUpdate);
+  });
+
+  // Check specific lock status
+  const { status, member } = useLock('master-volume');
+
+  const acquireLock = async () => {
+    try {
+      await space?.locks.acquire('master-volume', { timeout: 30000 });
+    } catch (error) {
+      console.error("Failed to acquire lock:", error);
+    }
+  };
+
+  const releaseLock = async () => {
+    try {
+      await space?.locks.release('master-volume');
+    } catch (error) {
+      console.error("Failed to release lock:", error);
+    }
+  };
+
+  return (
+    <div className="daw-controls">
+      <div className="master-volume">
+        <label>Master Volume</label>
+        {status === 'locked' && member ? (
+          <div className="locked-by">
+            Locked by: {member.name}
+            {member.connectionId === self?.connectionId && (
+              <button onClick={releaseLock}>Release</button>
+            )}
+          </div>
+        ) : (
+          <button onClick={acquireLock}>Lock for Editing</button>
+        )}
+        {/* Volume slider - disabled when locked by someone else */}
+        <input
+          type="range"
+          disabled={status === 'locked' && member?.connectionId !== self?.connectionId}
+        />
+      </div>
+    </div>
+  );
+};
+```
+
+**RN'RB Music Collaboration Features:**
+
+**Complete Session Interface:**
+```typescript
+const RNBMusicSession = () => {
+  return (
+    <SpacesProvider client={spaces}>
+      <SpaceProvider name="rock-session-1">
+        <div className="rnrb-session">
+          {/* Header with session info and avatar stack */}
+          <header className="session-header">
+            <SessionInfo />
+            <SessionAvatarStack />
+          </header>
+
+          {/* Main collaboration area */}
+          <main className="collaboration-area">
+            <div className="left-panel">
+              <VirtualStudioRoom />
+              <DAWControls />
+            </div>
+
+            <div className="center-panel">
+              <CollaborativeNotation />
+              <SharedLyrics />
+            </div>
+
+            <div className="right-panel">
+              <SessionChat />
+              <LiveReactions />
+            </div>
+          </main>
+        </div>
+      </SpaceProvider>
+    </SpacesProvider>
+  );
+};
+```
+
+**Virtual Studio Positioning:**
+```typescript
+const VirtualStudioRoom = () => {
+  const { update } = useLocations();
+  const { others } = useMembers();
+
+  const studioPositions = {
+    'drum-kit': { x: 100, y: 200 },
+    'guitar-amp': { x: 300, y: 150 },
+    'microphone': { x: 500, y: 250 },
+    'mixing-board': { x: 400, y: 50 }
+  };
+
+  return (
+    <div className="virtual-studio-floor">
+      {Object.entries(studioPositions).map(([instrument, pos]) => (
+        <button
+          key={instrument}
+          className="studio-position"
+          style={{ left: pos.x, top: pos.y }}
+          onClick={() => update({ ...pos, name: instrument })}
+        >
+          {instrument.replace('-', ' ')}
+        </button>
+      ))}
+
+      {/* Show other members' positions */}
+      {others.map(member => (
+        <div
+          key={member.connectionId}
+          className="member-position"
+          style={{
+            left: member.location?.x || 0,
+            top: member.location?.y || 0
+          }}
+        >
+          <img src={member.profileData?.avatar} alt={member.name} />
+          <span>{member.name}</span>
+          {member.location?.name && (
+            <div className="instrument">at {member.location.name}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+```
+
+**Collaborative Music Notation:**
+```typescript
+const CollaborativeNotation = () => {
+  const { set, cursors } = useCursors((cursorUpdate) => {
+    // Handle collaborative cursor movements
+  }, { returnCursors: true });
+
+  const { status: notationLock, member: notationLockHolder } = useLock('notation-canvas');
+
+  return (
+    <div className="notation-canvas">
+      {notationLock === 'locked' && notationLockHolder && (
+        <div className="editing-notice">
+          {notationLockHolder.name} is editing the notation
+        </div>
+      )}
+
+      <canvas
+        onMouseMove={(e) => {
+          if (notationLock === 'locked' && notationLockHolder?.connectionId !== self?.connectionId) {
+            return; // Don't track cursor if someone else is editing
+          }
+          set({
+            position: { x: e.clientX, y: e.clientY },
+            data: { tool: 'pencil', color: '#ff6b35' }
+          });
+        }}
+        // ... canvas drawing logic
+      />
+
+      {/* Render other members' cursors */}
+      {cursors.map(cursor => (
+        <div
+          key={cursor.member.connectionId}
+          className="collaborative-cursor"
+          style={{
+            left: cursor.position.x,
+            top: cursor.position.y,
+            borderColor: cursor.data?.color || '#000'
+          }}
+        >
+          <div className="cursor-pointer" style={{ backgroundColor: cursor.data?.color }} />
+          <span className="cursor-label">{cursor.member.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+```
+
+**Locking Shared Controls:**
+```typescript
+const SharedDAWControls = () => {
+  const volumeLock = useLock('master-volume');
+  const eqLock = useLock('master-eq');
+  const reverbLock = useLock('master-reverb');
+
+  const acquireVolumeLock = async () => {
+    await space?.locks.acquire('master-volume', { timeout: 30000 });
+  };
+
+  return (
+    <div className="shared-daw-controls">
+      <div className="control-group">
+        <h4>Master Volume</h4>
+        {volumeLock.status === 'locked' ? (
+          <div className="locked-notice">
+            Locked by {volumeLock.member?.name}
+            {volumeLock.member?.connectionId === self?.connectionId && (
+              <button onClick={() => space?.locks.release('master-volume')}>
+                Release
+              </button>
+            )}
+          </div>
+        ) : (
+          <button onClick={acquireVolumeLock}>Lock for Adjustment</button>
+        )}
+        <input
+          type="range"
+          disabled={volumeLock.status === 'locked' && volumeLock.member?.connectionId !== self?.connectionId}
+        />
+      </div>
+
+      {/* Similar pattern for other controls */}
+    </div>
+  );
+};
+```
+
+**RN'RB Integration Benefits:**
+
+**🎸 Collaborative Music Production:**
+- Avatar stacks show who's actively in the session
+- Live cursors track collaborative music editing
+- Component locking prevents conflicts on shared controls
+- Location tracking for virtual studio positioning
+
+**🎼 Real-time Collaboration:**
+- See exactly where other musicians are working
+- Follow their mouse movements during composition
+- Prevent accidental overwrites with locking
+- Know who's editing what in real-time
+
+**⚡ User Experience:**
+- Visual presence indicators for session participants
+- Intuitive collaborative workflows
+- Conflict-free shared control editing
+- Professional music production environment
+
+**🔧 Technical Advantages:**
+- React hooks for seamless integration
+- Automatic error handling and reconnection
+- Type-safe operations
+- Performance optimized for real-time collaboration
+
+**Recommendation:** Use Ably Spaces for RN'RB collaborative UI features - provides avatar stacks, live cursors, component locking, and location tracking perfect for professional music collaboration interfaces.
+
+---
+
 ---

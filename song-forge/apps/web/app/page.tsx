@@ -124,13 +124,15 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            <h1 className="text-6xl md:text-7xl lg:text-8xl mb-6">
-              <span className="font-display font-normal">From Bedroom to</span>
-              <br />
+            <h1 className="text-6xl md:text-7xl lg:text-8xl mb-4">
               <span className="font-display font-black rnrb-gradient-text tracking-tight">
-                Billboard
+                Rock N' Roll Basement
               </span>
             </h1>
+            
+            <p className="text-3xl md:text-4xl font-display mb-8 tracking-wide">
+              Where Music Comes Alive
+            </p>
             
             <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
               The ultimate playground for musicians at <span className="text-foreground font-semibold">every level</span>. 
@@ -197,10 +199,10 @@ export default function HomePage() {
               tools that grow with your ambition
             </p>
             <div className="flex justify-center gap-4 flex-wrap text-sm">
-              <span className="rnrb-badge border-green-500/30 text-green-400">🎸 Beginners Welcome</span>
-              <span className="rnrb-badge border-blue-500/30 text-blue-400">🎤 Semi-Pro Tools</span>
-              <span className="rnrb-badge border-purple-500/30 text-purple-400">🎹 Pro Features</span>
-              <span className="rnrb-badge border-red-500/30 text-red-400">🥁 Industry Standard</span>
+              <span className="rnrb-badge bg-gradient-to-r from-green-900/20 to-green-800/20 border-green-500/50 text-green-300 font-bold uppercase tracking-wider">Beginners Welcome</span>
+              <span className="rnrb-badge bg-gradient-to-r from-blue-900/20 to-blue-800/20 border-blue-500/50 text-blue-300 font-bold uppercase tracking-wider">Semi-Pro Tools</span>
+              <span className="rnrb-badge bg-gradient-to-r from-purple-900/20 to-purple-800/20 border-purple-500/50 text-purple-300 font-bold uppercase tracking-wider">Pro Features</span>
+              <span className="rnrb-badge bg-gradient-to-r from-red-900/20 to-red-800/20 border-red-500/50 text-red-300 font-bold uppercase tracking-wider">Industry Standard</span>
             </div>
           </motion.div>
 
@@ -258,18 +260,123 @@ export default function HomePage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="relative"
+            className="relative max-w-6xl mx-auto"
           >
-            <div className="aspect-video bg-surface rounded-2xl border border-border/50 shadow-2xl overflow-hidden">
-              {/* Dashboard Preview Placeholder */}
-              <div className="p-8 h-full flex items-center justify-center">
-                <div className="text-center">
-                  <Layers className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
-                  <p className="text-muted-foreground">Interactive Dashboard Preview</p>
+            <div className="bg-background rounded-2xl border-2 border-border shadow-2xl overflow-hidden">
+              {/* Browser Chrome */}
+              <div className="bg-surface-muted border-b border-border px-4 py-3 flex items-center gap-2">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                </div>
+                <div className="flex-1 flex justify-center">
+                  <div className="bg-background/50 px-4 py-1 rounded-md text-xs text-muted-foreground">
+                    rocknrollbasement.com/dashboard
+                  </div>
+                </div>
+              </div>
+              
+              {/* Dashboard Content */}
+              <div className="p-6 bg-gradient-to-br from-background via-surface/20 to-background">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h3 className="text-2xl font-bold">Welcome back, Artist</h3>
+                    <p className="text-muted-foreground">Your music empire at a glance</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <button className="rnrb-button-secondary px-4 py-2 text-sm">
+                      <Music className="w-4 h-4 mr-2 inline" />
+                      New Song
+                    </button>
+                    <button className="rnrb-button-primary px-4 py-2 text-sm">
+                      <Radio className="w-4 h-4 mr-2 inline" />
+                      Go Live
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Stats Grid */}
+                <div className="grid grid-cols-4 gap-4 mb-8">
+                  <div className="rnrb-card p-4">
+                    <p className="text-sm text-muted-foreground mb-1">Active Projects</p>
+                    <p className="text-3xl font-bold">-</p>
+                    <p className="text-xs text-muted-foreground">Your stats here</p>
+                  </div>
+                  <div className="rnrb-card p-4">
+                    <p className="text-sm text-muted-foreground mb-1">Total Streams</p>
+                    <p className="text-3xl font-bold">-</p>
+                    <p className="text-xs text-muted-foreground">Track plays</p>
+                  </div>
+                  <div className="rnrb-card p-4">
+                    <p className="text-sm text-muted-foreground mb-1">Revenue</p>
+                    <p className="text-3xl font-bold">$-</p>
+                    <p className="text-xs text-muted-foreground">Your earnings</p>
+                  </div>
+                  <div className="rnrb-card p-4">
+                    <p className="text-sm text-muted-foreground mb-1">Collaborators</p>
+                    <p className="text-3xl font-bold">-</p>
+                    <p className="text-xs text-muted-foreground">Team size</p>
+                  </div>
+                </div>
+                
+                {/* Content Preview */}
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="rnrb-card p-6">
+                    <h4 className="font-semibold mb-4 flex items-center gap-2">
+                      <Music className="w-5 h-5 text-brand-primary" />
+                      Recent Projects
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded"></div>
+                          <div>
+                            <p className="font-medium">Midnight Sessions</p>
+                            <p className="text-xs text-muted-foreground">Rock • 8 tracks</p>
+                          </div>
+                        </div>
+                        <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Active</span>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded"></div>
+                          <div>
+                            <p className="font-medium">Electric Dreams EP</p>
+                            <p className="text-xs text-muted-foreground">Electronic • 5 tracks</p>
+                          </div>
+                        </div>
+                        <span className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded">Review</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="rnrb-card p-6">
+                    <h4 className="font-semibold mb-4 flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-brand-primary" />
+                      Performance Chart
+                    </h4>
+                    <div className="h-32 flex items-end gap-2">
+                      <div className="flex-1 bg-brand-primary/20 rounded-t" style={{ height: '60%' }}></div>
+                      <div className="flex-1 bg-brand-primary/30 rounded-t" style={{ height: '80%' }}></div>
+                      <div className="flex-1 bg-brand-primary/40 rounded-t" style={{ height: '45%' }}></div>
+                      <div className="flex-1 bg-brand-primary/50 rounded-t" style={{ height: '90%' }}></div>
+                      <div className="flex-1 bg-brand-primary/60 rounded-t" style={{ height: '70%' }}></div>
+                      <div className="flex-1 bg-brand-primary rounded-t" style={{ height: '100%' }}></div>
+                    </div>
+                    <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                      <span>Mon</span>
+                      <span>Today</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             
+            {/* Decorative Elements */}
+            <div className="absolute -z-10 top-10 left-10 w-40 h-40 bg-brand-primary/10 rounded-full blur-3xl"></div>
+            <div className="absolute -z-10 bottom-10 right-10 w-60 h-60 bg-brand-primary/5 rounded-full blur-3xl"></div>
           </motion.div>
         </div>
       </section>
