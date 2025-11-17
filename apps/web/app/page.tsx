@@ -515,15 +515,15 @@ export default function HomePage() {
                 <p className="text-3xl font-bold mb-4">Free</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>5 Active Projects</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Basic Analytics</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Community Support</span>
                   </li>
                 </ul>
@@ -537,15 +537,15 @@ export default function HomePage() {
                 <p className="text-3xl font-bold mb-4">$29/mo</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Unlimited Projects</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Advanced Analytics</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Priority Support</span>
                   </li>
                 </ul>
@@ -556,15 +556,15 @@ export default function HomePage() {
                 <p className="text-3xl font-bold mb-4">Custom</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Custom Integrations</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Dedicated Support</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>SLA Guarantee</span>
                   </li>
                 </ul>

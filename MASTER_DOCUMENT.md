@@ -16,15 +16,21 @@
 ✅ **Dashboard** - Welcome page displays  
 ✅ **Sign Out** - Functional  
 
-**AESTHETIC FIX DEPLOYED:**
-✅ **Premium Dark Mode** - Forced across all authenticated pages
-- HTML locked to dark mode (matches homepage)
-- Body: Premium dark gradient (#0a0f1e → #0f172a → #050816)
-- Gold accent (#c9a961) on all primary buttons
-- Typography: Instrument Serif display font
-- Text: White headers, gray-400 subtext (like homepage)
-- Cards: Subtle borders, gradient backgrounds
-- No more light mode rendering issues  
+**AESTHETIC FIX DEPLOYED (UPDATED):**
+✅ **Removed forced dark mode** - User feedback: "It's just too dark"
+- HTML: NO forced dark class (respects theme preference)
+- Body: Uses `bg-background` (theme-aware like homepage)
+- Buttons: `rnrb-button-primary` (gold in dark, purple in light)
+- Typography: `font-display` for headings
+- Text: Theme-aware colors (no hardcoded white)
+- Cards: `rnrb-card` class (matches homepage exactly)
+- Pricing: Removed emoji Check icons (✓ instead)
+
+**USER FEEDBACK ADDRESSED:**
+✅ "Homepage looks good" - Kept as-is
+✅ "Dashboard too dark" - Fixed, now matches homepage
+✅ "Hard to see" - Removed forced dark mode
+✅ "Pricing emojis cheesy" - Replaced with simple ✓  
 
 **Technical Stack:**
 - Supabase Auth (replaced NextAuth which failed for 1+ week)
