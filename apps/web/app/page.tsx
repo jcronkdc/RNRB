@@ -20,6 +20,7 @@ import {
   Mic,
   Video,
   MessageSquare,
+  Sparkles,
   
   // UI Icons
   ArrowRight,
@@ -33,45 +34,47 @@ import { NavBar } from '@/components/NavBar';
 
 const features = [
   {
-    title: 'Music Projects',
-    description: 'Professional project management for your creative work',
-    icon: Music,
-    stats: 'Organize Everything',
+    title: 'Integrated Collaboration Hub',
+    description: 'Real-time chat + HD video + AI assistant all in one project workspace. The only platform combining Ably messaging, Daily.co video, and GPT-4 assistance.',
+    icon: Users,
+    stats: 'Chat + Video + AI',
+    href: '/projects',
+    highlight: true
+  },
+  {
+    title: 'AI-Powered Chat Assistant',
+    description: 'Get chord suggestions, music theory help, and lyric improvements directly in project chat. Ethical AI that assists creativity.',
+    icon: MessageSquare,
+    stats: 'Live Now',
+    href: '/projects',
+    highlight: true
+  },
+  {
+    title: 'HD Video Collaboration',
+    description: 'Daily.co integration with screen sharing, 32 participants, and cursor control via screenshare for unique real-time interaction.',
+    icon: Video,
+    stats: 'Up to 32 People',
     href: '/studio'
   },
   {
-    title: 'Rights & Royalties',
-    description: 'Transparent split sheets and automated revenue tracking',
-    icon: DollarSign,
-    stats: '100% Transparent',
-    href: '/why-rnrb'
+    title: 'Project Management',
+    description: 'Organize songs, sessions, collaborators, and revenue in invite-only project workspaces.',
+    icon: Music,
+    stats: 'Private by Default',
+    href: '/projects'
   },
   {
-    title: 'Live Performance',
-    description: 'Tour management, venues, and setlist organization',
-    icon: Radio,
-    stats: 'Full Tour Management',
+    title: 'AI Tour Optimization',
+    description: 'Tokyo subway ant colony model - input cities, AI calculates optimal routing to minimize travel distance.',
+    icon: Globe,
+    stats: 'Coming Soon',
     href: '/tours'
   },
   {
-    title: 'Analytics',
-    description: 'Real-time insights into your music career',
-    icon: BarChart3,
-    stats: 'Live Data',
-    href: '/why-rnrb'
-  },
-  {
-    title: 'Collaboration',
-    description: 'Connect with musicians, producers, and industry pros',
-    icon: Users,
-    stats: 'Global Network',
-    href: '/messages'
-  },
-  {
-    title: 'Asset Storage',
-    description: 'Secure cloud storage for all your creative assets',
-    icon: Database,
-    stats: 'Cloud Storage',
+    title: 'Live Streaming',
+    description: 'Stream finished performances to YouTube, Twitch, Facebook simultaneously via RTMP.',
+    icon: Radio,
+    stats: 'Multi-Platform',
     href: '/studio'
   }
 ];
@@ -507,19 +510,37 @@ export default function HomePage() {
                 className="group"
               >
                 <Link href={feature.href} className="block h-full">
-                  <div className="rnrb-card h-full p-8 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-                    <div className="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-colors">
-                      <feature.icon className="w-7 h-7 text-brand-primary" />
+                  <div className={`rnrb-card h-full p-8 rnrb-hover-lift cursor-pointer ${
+                    feature.highlight 
+                      ? 'bg-gradient-to-br from-purple-500/5 to-transparent border-2 border-purple-500/30' 
+                      : ''
+                  }`}>
+                    {feature.highlight && (
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full">
+                        <Sparkles className="w-3 h-3 text-purple-400" />
+                        <span className="text-xs font-semibold text-purple-400">UNIQUE INTEGRATION</span>
+                      </div>
+                    )}
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-colors ${
+                      feature.highlight 
+                        ? 'bg-purple-500/10 group-hover:bg-purple-500/20' 
+                        : 'bg-brand-primary/10 group-hover:bg-brand-primary/20'
+                    }`}>
+                      <feature.icon className={`w-7 h-7 ${feature.highlight ? 'text-purple-400' : 'text-brand-primary'}`} />
                     </div>
                     
                     <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                    <p className="text-muted-foreground mb-4">{feature.description}</p>
+                    <p className="text-muted-foreground mb-4 leading-relaxed">{feature.description}</p>
                     
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-brand-primary">
+                      <span className={`text-sm font-medium ${feature.highlight ? 'text-purple-400' : 'text-brand-primary'}`}>
                         {feature.stats}
                       </span>
-                      <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary transition-colors" />
+                      <ArrowRight className={`w-5 h-5 text-muted-foreground transition-colors ${
+                        feature.highlight 
+                          ? 'group-hover:text-purple-400' 
+                          : 'group-hover:text-brand-primary'
+                      }`} />
                     </div>
                   </div>
                 </Link>
