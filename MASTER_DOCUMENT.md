@@ -2669,3 +2669,105 @@ vs typing paragraphs of text
 
 **ONE MASTER DOCUMENT - Exact truth maintained.**
 
+
+---
+
+## ✅ AGENT 31 - PROJECT PAGES REDESIGNED (USER FEEDBACK)
+
+**User Saw:** "Old aesthetic, mushroom talk, can't see collaborative features, not intuitive"
+
+### PAGES REBUILT:
+
+**1. Project Detail Page (/projects/[slug])**
+
+**REMOVED (Mushroom Language):**
+- ❌ "Network Nodes" → ✅ "Team"  
+- ❌ "nutrients flowing through network" → ✅ Removed
+- ❌ "Sessions feed creative energy" → ✅ Removed
+- ❌ "Revenue Network" → ✅ "Project Info"
+- ❌ Old gradients (purple/blue) → ✅ Professional rnrb-card
+
+**ADDED (Collaborative Features Visible):**
+✅ Sidebar with clear buttons:
+  - "Group Chat" → Text & voice messages
+  - "Video Meeting" → Voice/video + screen share  
+  - "Team Members" → Invite collaborators
+✅ Professional aesthetic (matches design system)
+✅ Clear, intuitive layout
+✅ First-time users can immediately see collaboration options
+
+---
+
+**2. New Song Page (/projects/[slug]/songs/new)**
+
+**REMOVED:**
+- ❌ "🌱 Grow New Hypha (Song)" emoji + mushroom talk
+- ❌ "creative thread branching" language
+- ❌ Old aesthetic
+
+**ADDED: DRAG-AND-DROP SONG STRUCTURE BUILDER**
+
+**Features:**
+✅ Build song by dragging sections
+✅ Section types: Intro, Verse, Chorus, Bridge, Instrumental, Outro
+✅ Drag to reorder (GripVertical icon)
+✅ Add multiple verses (Verse 1, Verse 2, Verse 3)
+✅ Add multiple choruses
+✅ Rename sections (click label to edit)
+✅ Remove sections (X button)
+✅ Independent lyrics per section
+✅ Structure preview on right
+✅ Professional aesthetic
+
+**User Workflow (Now Intuitive):**
+1. Enter song title, key, tempo
+2. Click "+ VERSE" → Adds Verse 1 box
+3. Type lyrics in verse box
+4. Click "+ CHORUS" → Adds Chorus box
+5. Type chorus lyrics
+6. Click "+ VERSE" → Adds Verse 2 box
+7. **Drag Verse 2 above Chorus if you want**
+8. Click "+ BRIDGE" → Adds Bridge
+9. **Drag sections** to perfect order
+10. Preview shows: "1. Verse 1, 2. Chorus, 3. Verse 2, 4. Bridge"
+11. Click "CREATE SONG"
+
+**Drag-and-Drop:**
+- Grab any section by the grip icon
+- Drag up/down
+- Visual feedback (opacity changes)
+- Drops in new position
+- Structure updates instantly
+
+---
+
+## 🎯 WHAT'S NOW VISIBLE (FIRST-TIME USER EXPERIENCE):
+
+**Project Page:**
+1. See project name, stats
+2. See "Songs" section with "NEW SONG" button
+3. **Sidebar clearly shows:**
+   - Group Chat (collaborative)
+   - Video Meeting (collaborative)
+   - Team Members (collaborative)
+4. **Intuitive:** Click any button, feature works
+
+**New Song Page:**
+1. See form for title/key/tempo
+2. See drag-and-drop section builder on left
+3. See structure preview on right
+4. See buttons to add: Intro, Verse, Chorus, Bridge, etc.
+5. **Intuitive:** Click button → Section appears → Type lyrics → Drag to reorder → Save
+
+**USER FEEDBACK ADDRESSED:**
+✅ "Old aesthetic" → Professional design matching site
+✅ "Mushroom talk" → All removed
+✅ "Can't see collaborative features" → Visible in sidebar
+✅ "Not intuitive" → Clear buttons, drag-and-drop visual
+✅ "Want drag-and-drop song structure" → Built and working
+
+---
+
+Build: 40 routes, zero errors
+Pages redesigned, collaborative features visible, drag-and-drop working
+
