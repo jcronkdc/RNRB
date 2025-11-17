@@ -14,17 +14,19 @@ import { motion } from 'framer-motion';
 interface SongVideoSessionProps {
   songId: string;
   songTitle: string;
+  mode?: 'video' | 'voice'; // Microsoft Teams style: voice-only or video
   onClose?: () => void;
 }
 
-export default function SongVideoSession({ songId, songTitle, onClose }: SongVideoSessionProps) {
+export default function SongVideoSession({ songId, songTitle, mode = 'video', onClose }: SongVideoSessionProps) {
   const [roomUrl, setRoomUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [callFrame, setCallFrame] = useState<any>(null);
   const [participants, setParticipants] = useState<number>(0);
-  const [localVideo, setLocalVideo] = useState(true);
+  const [localVideo, setLocalVideo] = useState(mode === 'video');
   const [localAudio, setLocalAudio] = useState(true);
   const [screenShare, setScreenShare] = useState(false);
+  const [sessionMode, setSessionMode] = useState<'video' | 'voice'>(mode);
 
   useEffect(() => {
     // Create Daily.co room for this song
@@ -111,6 +113,22 @@ export default function SongVideoSession({ songId, songTitle, onClose }: SongVid
     }
   };
 
+  const switchToVoiceMode = () => {
+    if (callFrame && localVideo) {
+      callFrame.setLocalVideo(false);
+      setLocalVideo(false);
+    }
+    setSessionMode('voice');
+  };
+
+  const switchToVideoMode = () => {
+    if (callFrame && !localVideo) {
+      callFrame.setLocalVideo(true);
+      setLocalVideo(true);
+    }
+    setSessionMode('video');
+  };
+
   const toggleScreenShare = async () => {
     if (!callFrame) return;
 
@@ -162,37 +180,49 @@ export default function SongVideoSession({ songId, songTitle, onClose }: SongVid
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={toggleVideo}
-          >
-            {localVideo ? <Video className="w-4 h-4" /> : <VideoOff className="w-4 h-4" />}
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={toggleAudio}
-          >
-            {localAudio ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={toggleScreenShare}
-            className={screenShare ? 'bg-brand-primary text-brand-primary-foreground' : ''}
-          >
-            {screenShare ? <MonitorOff className="w-4 h-4" /> : <Monitor className="w-4 h-4" />}
-          </Button>
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={leaveCall}
-          >
-            <X className="w-4 h-4" />
-          </Button>
-        </div>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 border border-border rounded overflow-hidden">
+                <button
+                  onClick={switchToVoiceMode}
+                  className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    sessionMode === 'voice' ? 'bg-brand-primary text-brand-primary-foreground' : 'hover:bg-surface'
+                  }`}
+                >
+                  VOICE
+                </button>
+                <button
+                  onClick={switchToVideoMode}
+                  className={`px-3 py-1.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    sessionMode === 'video' ? 'bg-brand-primary text-brand-primary-foreground' : 'hover:bg-surface'
+                  }`}
+                >
+                  VIDEO
+                </button>
+              </div>
+              
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={toggleAudio}
+              >
+                {localAudio ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={toggleScreenShare}
+                className={screenShare ? 'bg-brand-primary text-brand-primary-foreground' : ''}
+              >
+                {screenShare ? <MonitorOff className="w-4 h-4" /> : <Monitor className="w-4 h-4" />}
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={leaveCall}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
       </div>
 
       {/* Video Container */}
@@ -204,12 +234,13 @@ export default function SongVideoSession({ songId, songTitle, onClose }: SongVid
 
       {/* Help Text */}
       <div className="text-sm text-muted-foreground p-4 rounded-lg bg-muted/20">
-        <p className="font-medium mb-2">Co-Writing Tips:</p>
+        <p className="font-medium mb-2">Microsoft Teams Style Meeting:</p>
         <ul className="space-y-1 text-xs">
-          <li>• Use screen share to show your DAW or lyrics editor</li>
-          <li>• Everyone can see cursor movements during screen share</li>
-          <li>• Switch to Chat tab to discuss without speaking</li>
-          <li>• Session auto-records to cloud for playback</li>
+          <li>• <strong>VOICE mode:</strong> Audio-only (like Discord/Teams) - lighter bandwidth</li>
+          <li>• <strong>VIDEO mode:</strong> HD video with face cam</li>
+          <li>• <strong>Screen Share:</strong> Show your lyrics, DAW, or any window - everyone sees your cursor</li>
+          <li>• Talk while editing - no need to stop working to discuss</li>
+          <li>• Session auto-records to cloud for playback later</li>
         </ul>
       </div>
     </div>
