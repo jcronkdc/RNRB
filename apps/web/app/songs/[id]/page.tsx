@@ -18,6 +18,10 @@ interface Song {
   id: string;
   title: string;
   lyrics: string;
+  writer?: string;
+  dateWritten?: string;
+  status: 'draft' | 'in-progress' | 'needs-review' | 'complete';
+  album?: string;
   key?: string;
   tempo?: number;
   visibility: 'private' | 'org' | 'public';
@@ -211,15 +215,72 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
               <div className="space-y-4">
                 <div>
                   <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
-                    KEY
+                    WRITER
                   </label>
                   <input
                     type="text"
-                    value={song.key || ''}
-                    onChange={(e) => setSong({ ...song, key: e.target.value })}
-                    placeholder="C, Am, G"
+                    value={song.writer || ''}
+                    onChange={(e) => setSong({ ...song, writer: e.target.value })}
+                    placeholder="Your name"
                     className="w-full px-3 py-2 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none font-mono text-sm"
                   />
+                </div>
+
+                <div>
+                  <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
+                    DATE WRITTEN
+                  </label>
+                  <input
+                    type="text"
+                    value={song.dateWritten || ''}
+                    onChange={(e) => setSong({ ...song, dateWritten: e.target.value })}
+                    placeholder="2024, Spring 2023 (approx)"
+                    className="w-full px-3 py-2 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none font-mono text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
+                    STATUS
+                  </label>
+                  <select
+                    value={song.status}
+                    onChange={(e) => setSong({ ...song, status: e.target.value as any })}
+                    className="w-full px-3 py-2 bg-black border border-zinc-800 text-white focus:border-zinc-600 focus:outline-none font-mono text-sm"
+                  >
+                    <option value="draft">DRAFT</option>
+                    <option value="in-progress">IN PROGRESS</option>
+                    <option value="needs-review">NEEDS REVIEW</option>
+                    <option value="complete">COMPLETE</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
+                    ALBUM/GROUP
+                  </label>
+                  <input
+                    type="text"
+                    value={song.album || ''}
+                    onChange={(e) => setSong({ ...song, album: e.target.value })}
+                    placeholder="Optional grouping"
+                    className="w-full px-3 py-2 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none font-mono text-sm"
+                  />
+                </div>
+
+                <div className="pt-4 border-t border-zinc-800">
+                  <div>
+                    <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
+                      KEY
+                    </label>
+                    <input
+                      type="text"
+                      value={song.key || ''}
+                      onChange={(e) => setSong({ ...song, key: e.target.value })}
+                      placeholder="C, Am, G"
+                      className="w-full px-3 py-2 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none font-mono text-sm"
+                    />
+                  </div>
                 </div>
 
                 <div>

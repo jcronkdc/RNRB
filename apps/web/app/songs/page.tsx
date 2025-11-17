@@ -12,6 +12,10 @@ interface Song {
   id: string;
   title: string;
   lyrics: string;
+  writer?: string;
+  dateWritten?: string;
+  status: 'draft' | 'in-progress' | 'needs-review' | 'complete';
+  album?: string;
   key?: string;
   tempo?: number;
   visibility: 'private' | 'org' | 'public';
@@ -27,6 +31,8 @@ export default function SongsLibraryPage() {
   const [loading, setLoading] = useState(true);
   const [songs, setSongs] = useState<Song[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [albumFilter, setAlbumFilter] = useState<string>('all');
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -40,10 +46,18 @@ export default function SongsLibraryPage() {
     });
   }, [router]);
 
-  const filteredSongs = songs.filter(song =>
-    song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    song.lyrics.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Get unique albums for filter
+  const albums = [...new Set(songs.map(s => s.album).filter(Boolean))];
+
+  // Apply filters
+  const filteredSongs = songs.filter(song => {
+    const matchesSearch = song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         song.lyrics.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || song.status === statusFilter;
+    const matchesAlbum = albumFilter === 'all' || song.album === albumFilter;
+    
+    return matchesSearch && matchesStatus && matchesAlbum;
+  });
 
   if (loading) {
     return (
@@ -84,46 +98,101 @@ export default function SongsLibraryPage() {
       </header>
 
       <main className="container mx-auto px-6 py-12">
-        {/* Search */}
+        {/* Search & Filters */}
         <div className="mb-8">
-          <div className="relative max-w-md">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search songs..."
-              className="w-full pl-12 pr-4 py-3 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none font-mono text-sm"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search songs..."
+                className="w-full pl-12 pr-4 py-3 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none font-mono text-sm"
+              />
+            </div>
+
+            {/* Status Filter */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-4 py-3 bg-black border border-zinc-800 text-white focus:border-zinc-600 focus:outline-none font-mono text-sm"
+            >
+              <option value="all">ALL STATUS</option>
+              <option value="draft">DRAFT</option>
+              <option value="in-progress">IN PROGRESS</option>
+              <option value="needs-review">NEEDS REVIEW</option>
+              <option value="complete">COMPLETE</option>
+            </select>
+
+            {/* Album Filter */}
+            <select
+              value={albumFilter}
+              onChange={(e) => setAlbumFilter(e.target.value)}
+              className="px-4 py-3 bg-black border border-zinc-800 text-white focus:border-zinc-600 focus:outline-none font-mono text-sm"
+            >
+              <option value="all">ALL ALBUMS</option>
+              {albums.map((album) => (
+                <option key={album} value={album}>
+                  {album}
+                </option>
+              ))}
+              <option value="none">NO ALBUM</option>
+            </select>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-6 mb-8">
-          <div className="border border-zinc-800 bg-zinc-900/50 p-6">
-            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-2 font-mono">
-              TOTAL SONGS
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+          <div className="border border-zinc-800 bg-zinc-900/50 p-4">
+            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1 font-mono">
+              TOTAL
             </p>
-            <p className="font-[family-name:var(--rnrb-font-marker)] text-3xl text-white">
+            <p className="font-[family-name:var(--rnrb-font-marker)] text-2xl text-white">
               {songs.length}
             </p>
           </div>
-          <div className="border border-zinc-800 bg-zinc-900/50 p-6">
-            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-2 font-mono">
+          <div className="border border-zinc-800 bg-zinc-900/50 p-4">
+            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1 font-mono">
+              COMPLETE
+            </p>
+            <p className="font-[family-name:var(--rnrb-font-marker)] text-2xl text-green-500">
+              {songs.filter(s => s.status === 'complete').length}
+            </p>
+          </div>
+          <div className="border border-zinc-800 bg-zinc-900/50 p-4">
+            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1 font-mono">
+              IN PROGRESS
+            </p>
+            <p className="font-[family-name:var(--rnrb-font-marker)] text-2xl text-blue-500">
+              {songs.filter(s => s.status === 'in-progress').length}
+            </p>
+          </div>
+          <div className="border border-zinc-800 bg-zinc-900/50 p-4">
+            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1 font-mono">
               PRIVATE
             </p>
-            <p className="font-[family-name:var(--rnrb-font-marker)] text-3xl text-white">
+            <p className="font-[family-name:var(--rnrb-font-marker)] text-2xl text-white">
               {songs.filter(s => s.visibility === 'private').length}
             </p>
           </div>
-          <div className="border border-zinc-800 bg-zinc-900/50 p-6">
-            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-2 font-mono">
-              COLLABORATIONS
+          <div className="border border-zinc-800 bg-zinc-900/50 p-4">
+            <p className="text-zinc-500 text-xs uppercase tracking-widest mb-1 font-mono">
+              ALBUMS
             </p>
-            <p className="font-[family-name:var(--rnrb-font-marker)] text-3xl text-white">
-              {songs.filter(s => s.collaborators?.length > 0).length}
+            <p className="font-[family-name:var(--rnrb-font-marker)] text-2xl text-white">
+              {albums.length}
             </p>
           </div>
+        </div>
+
+        {/* Info Note */}
+        <div className="mb-8 p-4 border border-zinc-800 bg-zinc-900/30 rounded">
+          <p className="text-sm text-zinc-400">
+            <strong className="text-white">Note:</strong> Songs can exist independently OR be added to projects later. 
+            A single song can be its own standalone entity - you don't need to create a project for every song.
+          </p>
         </div>
 
         {/* Songs Grid */}
@@ -205,13 +274,35 @@ export default function SongsLibraryPage() {
                         {song.title}
                       </h3>
                       
-                      <p className="text-xs text-zinc-500 line-clamp-3 mb-4 font-mono">
-                        {song.lyrics.substring(0, 120)}...
-                      </p>
+                      <div className="space-y-2 mb-4">
+                        {song.writer && (
+                          <p className="text-xs text-zinc-500 font-mono">
+                            BY: {song.writer}
+                          </p>
+                        )}
+                        {song.album && (
+                          <p className="text-xs text-zinc-500 font-mono">
+                            ALBUM: {song.album}
+                          </p>
+                        )}
+                        {song.dateWritten && (
+                          <p className="text-xs text-zinc-600 font-mono">
+                            {song.dateWritten}
+                          </p>
+                        )}
+                      </div>
                       
-                      <div className="flex items-center gap-4 font-mono text-xs text-zinc-600">
-                        {song.key && <span>KEY: {song.key}</span>}
-                        {song.tempo && <span>{song.tempo} BPM</span>}
+                      <div className="flex items-center gap-3 font-mono text-xs">
+                        <span className={`px-2 py-1 rounded ${
+                          song.status === 'complete' ? 'bg-green-900/30 text-green-500' :
+                          song.status === 'in-progress' ? 'bg-blue-900/30 text-blue-500' :
+                          song.status === 'needs-review' ? 'bg-yellow-900/30 text-yellow-500' :
+                          'bg-zinc-800 text-zinc-500'
+                        }`}>
+                          {song.status.toUpperCase()}
+                        </span>
+                        {song.key && <span className="text-zinc-600">{song.key}</span>}
+                        {song.tempo && <span className="text-zinc-600">{song.tempo} BPM</span>}
                       </div>
                     </div>
 
