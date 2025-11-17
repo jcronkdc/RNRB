@@ -47,7 +47,7 @@ export default function MessagesPage() {
 
         {/* Comprehensive Messaging Overview */}
         <Card className="p-8 mb-8 bg-gradient-to-r from-purple-500/10 to-blue-500/10">
-          <h2 className="text-3xl font-bold mb-4">💬 Professional Real-Time Messaging</h2>
+          <h2 className="text-3xl font-bold mb-4">Professional Real-Time Messaging</h2>
           <p className="text-lg text-muted-foreground mb-6">
             Rock N' Roll Basement provides enterprise-grade real-time communication built specifically for music collaboration. 
             Keep your entire team connected - from band members to producers, managers to crew - with instant messaging, 

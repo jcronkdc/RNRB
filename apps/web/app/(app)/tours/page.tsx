@@ -91,7 +91,7 @@ export default function ToursPage() {
             {/* Tour Stats */}
             {/* Comprehensive Tour Management */}
             <Card className="p-8 mb-8 bg-gradient-to-r from-blue-500/10 to-purple-500/10">
-              <h2 className="text-3xl font-bold mb-4">🎤 Complete Tour Management Platform</h2>
+              <h2 className="text-3xl font-bold mb-4">Complete Tour Management Platform</h2>
               <p className="text-lg text-muted-foreground mb-6">
                 Rock N' Roll Basement provides end-to-end tour management: from booking venues to streaming virtual concerts, 
                 managing setlists to tracking ticket sales - everything you need to run successful tours.
@@ -220,7 +220,7 @@ export default function ToursPage() {
               </Card>
 
               <Card className="p-6">
-                <h3 className="text-2xl font-semibold mb-6">💰 Revenue & Analytics</h3>
+                <h3 className="text-2xl font-semibold mb-6">Revenue & Analytics</h3>
                 <ul className="space-y-4">
                   <li className="flex items-start gap-3">
                     <div className="p-2 bg-green-500/10 rounded flex-shrink-0">

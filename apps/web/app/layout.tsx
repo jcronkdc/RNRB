@@ -116,8 +116,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${bebasNeue.variable} ${oswald.variable} ${inter.variable} ${jetbrainsMono.variable} ${rockSalt.variable} ${permanentMarker.variable} font-sans bg-gradient-to-b from-[#0a0f1e] via-[#0f172a] to-[#050816]`}>
+    <html lang="en">
+      <body className={`${bebasNeue.variable} ${oswald.variable} ${inter.variable} ${jetbrainsMono.variable} ${rockSalt.variable} ${permanentMarker.variable} font-sans bg-background text-foreground`}>
         <AblyProvider>
           {children}
         </AblyProvider>

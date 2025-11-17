@@ -82,9 +82,9 @@ export function UserMenu() {
           />
           
           {/* Dropdown Menu */}
-          <div className="absolute right-0 mt-2 w-64 bg-[#0f172a] border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden">
+          <div className="absolute right-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl z-50 overflow-hidden">
             {/* User Info */}
-            <div className="p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-b border-white/10">
+            <div className="p-4 bg-zinc-950 border-b border-zinc-800">
               <p className="text-sm font-medium text-white">{user.email}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 {user.user_metadata?.name || 'Account Active'}

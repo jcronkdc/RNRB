@@ -58,21 +58,18 @@ export default function StudioPage() {
   const activeStudioMode = studioModes.find(mode => mode.id === activeMode)!;
 
   return (
-    <>
-      <NavBar />
-      
-      <main className="min-h-screen bg-black pt-20">
+    <main className="min-h-screen bg-zinc-950 pt-20">
         {/* Studio Header */}
-        <section className="border-b border-zinc-900">
+        <section className="border-b border-zinc-800 bg-black/50">
           <div className="container mx-auto px-6 py-12">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500 mb-2">
+              <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-400 mb-2">
                 PROFESSIONAL STUDIO
               </h1>
-              <p className="font-[family-name:var(--rnrb-font-marker)] text-4xl mb-8">
+              <p className="font-[family-name:var(--rnrb-font-marker)] text-4xl mb-8 text-white">
                 Cloud Recording Studio
               </p>
               
@@ -202,7 +199,6 @@ export default function StudioPage() {
             </Link>
           </div>
         </section>
-      </main>
-    </>
+    </main>
   );
 }

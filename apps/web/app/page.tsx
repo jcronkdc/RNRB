@@ -146,7 +146,7 @@ export default function HomePage() {
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6">
-              <span className="font-[family-name:var(--rnrb-font-heading)] text-white font-bold tracking-tight">
+              <span className="font-[family-name:var(--rnrb-font-heading)] text-foreground font-bold tracking-tight">
                 Rock N' Roll Basement
               </span>
             </h1>
