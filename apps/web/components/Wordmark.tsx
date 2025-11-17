@@ -9,7 +9,7 @@ interface WordmarkProps {
 export function Wordmark({ className }: WordmarkProps) {
   return (
     <div className={cn("font-serif font-bold text-2xl tracking-tighter", className)}>
-      The CronkWaters Project
+      Rock N' Roll Basement
     </div>
   );
 }

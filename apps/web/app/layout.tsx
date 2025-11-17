@@ -35,10 +35,32 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Rock N' Roll Basement",
   description:
-    "Rock N' Roll Basement is an end-to-end workspace for collaborative songwriting powered by modern web tooling.",
+    "Where musicians create, collaborate, and change the industry. The underground HQ for artists from amateur to pro.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rocknrollbasement.com'),
   icons: {
     icon: "/icon.svg",
   },
+  openGraph: {
+    type: 'website',
+    siteName: 'Rock N\' Roll Basement',
+    title: 'Rock N\' Roll Basement - Underground HQ for Musicians',
+    description: 'Where musicians create, collaborate, and change the industry. The underground HQ for artists from amateur to pro.',
+    images: [{
+      url: '/og-default.jpg',
+      width: 1200,
+      height: 630,
+      alt: 'Rock N\' Roll Basement'
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@rnrbasement',
+    creator: '@rnrbasement',
+    title: 'Rock N\' Roll Basement',
+    description: 'Where musicians create, collaborate, and change the industry.',
+    images: ['/og-default.jpg'],
+  },
+  keywords: ['music collaboration', 'songwriting', 'music production', 'band management', 'music industry', 'rock n roll'],
 };
 
 const themeInitializer = `
