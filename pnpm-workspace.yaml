@@ -1,4 +1,6 @@
 packages:
   - "apps/*"
   - "packages/*"
+  - "song-forge/apps/*"
+  - "song-forge/packages/*"
 
