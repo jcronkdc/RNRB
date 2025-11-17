@@ -6,8 +6,9 @@ import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Music, Save, Users, Mail, Lock, Globe, Trash2, Download, Cloud, CloudOff, Tag, Plus, X, Archive } from 'lucide-react';
+import { Music, Save, Users, Mail, Lock, Globe, Trash2, Download, Cloud, CloudOff, Tag, Plus, X, Archive, Undo2, Redo2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { useUndoRedo } from '@/hooks/use-undo-redo';
 
 const SongVideoSession = dynamic(() => import('@/components/song/song-video-session'), {
   ssr: false,
@@ -56,7 +57,6 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [song, setSong] = useState<Song | null>(null);
   const [autoSaving, setAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [cloudSynced, setCloudSynced] = useState(true);
@@ -64,6 +64,19 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
   const [inviteEmail, setInviteEmail] = useState('');
   const [newTag, setNewTag] = useState('');
   const [showChords, setShowChords] = useState(false);
+  
+  // Undo/Redo for song edits
+  const {
+    state: song,
+    setState: setSong,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useUndoRedo<Song | null>({
+    initialState: null,
+    maxHistory: 50,
+  });
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -252,6 +265,26 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
             </div>
 
             <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 border border-border rounded overflow-hidden">
+                <button
+                  onClick={undo}
+                  disabled={!canUndo}
+                  title="Undo (Ctrl+Z)"
+                  className="px-3 py-2 hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  <Undo2 className="w-4 h-4" />
+                </button>
+                <div className="w-px h-6 bg-border" />
+                <button
+                  onClick={redo}
+                  disabled={!canRedo}
+                  title="Redo (Ctrl+Y)"
+                  className="px-3 py-2 hover:bg-surface disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  <Redo2 className="w-4 h-4" />
+                </button>
+              </div>
+              
               <button
                 onClick={exportLyrics}
                 title="Download backup to your computer"
