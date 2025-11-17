@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { LogOut, User as UserIcon, Settings, Music } from 'lucide-react';
+import { LogOut, User as UserIcon, Settings, Music, Users, Search } from 'lucide-react';
 
 export function UserMenu() {
   const [user, setUser] = useState<User | null>(null);
@@ -103,12 +103,30 @@ export function UserMenu() {
               </Link>
               
               <Link
-                href="/studio"
+                href="/settings/profile"
                 className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-white hover:bg-white/5 transition-colors"
                 onClick={() => setMenuOpen(false)}
               >
                 <UserIcon className="w-4 h-4" />
-                Studio Sessions
+                My Profile
+              </Link>
+
+              <Link
+                href="/discover"
+                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-white hover:bg-white/5 transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                <Search className="w-4 h-4" />
+                Discover Musicians
+              </Link>
+              
+              <Link
+                href="/studio"
+                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:text-white hover:bg-white/5 transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                <Music className="w-4 h-4" />
+                Studio
               </Link>
 
               <Link
@@ -117,7 +135,7 @@ export function UserMenu() {
                 onClick={() => setMenuOpen(false)}
               >
                 <Settings className="w-4 h-4" />
-                Settings
+                Account Settings
               </Link>
             </div>
 
