@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import '@cronkwaters/ui/styles.css';
+@import './design-tokens.css';
 
 /* Rock N' Roll Basement - Premium Design System */
 /* Inspired by the geometric RR monogram - sophisticated, modern, timeless */
