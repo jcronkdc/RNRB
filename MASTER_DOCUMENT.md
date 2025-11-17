@@ -16,103 +16,21 @@
 ✅ **Dashboard** - Welcome page displays  
 ✅ **Sign Out** - Functional  
 
-**AESTHETIC FIX DEPLOYED (Agent 31):**
-✅ **Premium Dark Sanctuary** - All pages redesigned
-- Removed ALL emojis (dashboard had 🎸🎉🍄1️⃣2️⃣3️⃣4️⃣🔍📧📱🎵🚀, discover had 🎸💡, profile had 👁️🔒)
-- Background: Premium dark gradient (#0a0f1e → #0f172a → #050816) matching homepage
-- Typography: Font-serif for headlines (Instrument Serif)
-- Gold accent (#c9a961) on all primary actions
-- Text: White headers, gray-400 body text
-- Cards: Subtle white/5 borders, transparent gradients
-- Hover states: Shadow-2xl, gold transitions
-- Animations: Framer Motion (fade-in, slide-up)
-- Design: Artistic, sophisticated, not over-the-top
+**AESTHETIC FIX DEPLOYED (UPDATED):**
+✅ **Removed forced dark mode** - User feedback: "It's just too dark"
+- HTML: NO forced dark class (respects theme preference)
+- Body: Uses `bg-background` (theme-aware like homepage)
+- Buttons: `rnrb-button-primary` (gold in dark, purple in light)
+- Typography: `font-display` for headings
+- Text: Theme-aware colors (no hardcoded white)
+- Cards: `rnrb-card` class (matches homepage exactly)
+- Pricing: Removed emoji Check icons (✓ instead)
 
-**Pages Rebuilt:**
-- Dashboard: Premium sanctuary (was: emoji-heavy)
-- Discover: Clean, artistic search (was: cheesy icons)
-- Profile: Enhanced with streaming platforms (was: basic)
-
-**Profile Enhanced:**
-Added social handles: Spotify, Apple Music, SoundCloud, Bandcamp, TikTok, Instagram, YouTube, X
-Added band history: Current bands (multi), Past bands (multi), Notable collaborators
-
-**Landing Page Premium Upgrade:**
-- ✅ Headline: Permanent Marker font (black, uppercase) - "cooler font type"
-- ✅ NavBar: Permanent Marker font - fixed "boring Arial"
-- ✅ Feature icons: 43% larger (w-7 → w-10), glassmorphism containers
-- ✅ Icon backgrounds: 20px containers with gradient + backdrop-blur + gold borders
-- ✅ Drop shadows: Gold glow effect on all icons
-- ✅ Visibility fixed: No more white-on-white issues
-- ✅ "For Everyone" icons: 50% larger (w-8 → w-12)
-- ✅ Premium glassmorphism throughout
-
-**PROFESSIONAL MUSIC STUDIO REDESIGN:**
-Dashboard:
-- ✅ Studio control room aesthetic (black, minimal)
-- ✅ NO icons/emojis - pure typography design
-- ✅ Monospace fonts for technical feel
-- ✅ Grid navigation with hover effects
-- ✅ Activity feed with timestamps
-- ✅ Stats in marker font
-
-Projects:
-- ✅ Professional catalog layout
-- ✅ Album/EP/Single format cards
-- ✅ Status indicators (recording/mixing/complete)
-- ✅ No icons - pure text hierarchy
-
-Studio:
-- ✅ 4 modes: Recording, Streaming, Collaboration, Schedule
-- ✅ Technical specifications grid
-- ✅ No cheesy icons - typography only
-- ✅ Professional gradient backgrounds
-
-**User Feedback Addressed:** 
-- "Dashboard looks like shit" → Professional studio control room ✅
-- "Need professional music creator's place" → Recording studio aesthetic ✅
-- "Cool font for headline" → Permanent Marker font ✅
-- "Boring Arial in navbar" → Permanent Marker font ✅
-- "Premium grade, no cheesy emojis/icons" → Pure typography design ✅
-
-**Latest Fixes (Agent 31):**
-- ✅ Landing headline: Oswald font (not Arial, not Permanent Marker)
-- ✅ Dashboard visibility: Improved contrast (zinc-950 bg, better borders)
-- ✅ ALL FAKE CONTENT REMOVED:
-  - No fake stats (all zeros)
-  - No fake activity feed
-  - No fake projects or names
-  - "Real people testing this"
-
-## 🔒 IMMUTABLE DESIGN SYSTEM CREATED
-
-**Design System Files:**
-- `DESIGN_SYSTEM.md` - Complete immutable rules and guidelines
-- `design-tokens.css` - Locked CSS variables
-
-**Key Design Principles (LOCKED):**
-1. **NO EMOJIS** in UI (documentation only)
-2. **NO ICONS** unless absolutely necessary
-3. **NO CHEESY ELEMENTS** - ever
-4. **NO FAKE CONTENT** - all data must be real or empty
-5. **TYPOGRAPHY FIRST** - text hierarchy solves everything
-
-**Color Palette (IMMUTABLE):**
-- Backgrounds: black, zinc-950, zinc-900, zinc-800
-- Text: white, zinc-300, zinc-400, zinc-500
-- Accents: red-500, blue-500, green-500, purple-500, gold
-
-**Typography (IMMUTABLE):**
-- Headlines: Oswald
-- Special text: Permanent Marker
-- Body: Inter
-- Technical: JetBrains Mono
-
-**ALL FUTURE AGENTS MUST:**
-1. Read DESIGN_SYSTEM.md first
-2. Never override these decisions
-3. No exceptions to these rules
-4. When in doubt - simpler, darker, more minimal  
+**USER FEEDBACK ADDRESSED:**
+✅ "Homepage looks good" - Kept as-is
+✅ "Dashboard too dark" - Fixed, now matches homepage
+✅ "Hard to see" - Removed forced dark mode
+✅ "Pricing emojis cheesy" - Replaced with simple ✓  
 
 **Technical Stack:**
 - Supabase Auth (replaced NextAuth which failed for 1+ week)

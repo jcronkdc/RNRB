@@ -146,9 +146,7 @@ export default function HomePage() {
             </motion.div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6">
-              <span className="font-[family-name:var(--rnrb-font-heading)] text-foreground font-bold tracking-tight">
-                Rock N' Roll Basement
-              </span>
+              <span className="font-display font-bold">Rock N' Roll Basement</span>
             </h1>
 
             {/* Badge */}
@@ -245,8 +243,8 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="rnrb-card p-8 text-center"
             >
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#c9a961]/20 to-[#c9a961]/5 backdrop-blur-sm border border-[#c9a961]/20 flex items-center justify-center mb-6 mx-auto shadow-[0_0_20px_rgba(201,169,97,0.15)]">
-                <Mic className="w-12 h-12 text-[#c9a961] drop-shadow-[0_2px_8px_rgba(201,169,97,0.3)]" />
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <Mic className="w-8 h-8 text-brand-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Solo Artists</h3>
               <p className="text-muted-foreground text-sm">
@@ -262,8 +260,8 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="rnrb-card p-8 text-center"
             >
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#c9a961]/20 to-[#c9a961]/5 backdrop-blur-sm border border-[#c9a961]/20 flex items-center justify-center mb-6 mx-auto shadow-[0_0_20px_rgba(201,169,97,0.15)]">
-                <MessageSquare className="w-12 h-12 text-[#c9a961] drop-shadow-[0_2px_8px_rgba(201,169,97,0.3)]" />
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <MessageSquare className="w-8 h-8 text-brand-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Co-Writers</h3>
               <p className="text-muted-foreground text-sm">
@@ -279,8 +277,8 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="rnrb-card p-8 text-center"
             >
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#c9a961]/20 to-[#c9a961]/5 backdrop-blur-sm border border-[#c9a961]/20 flex items-center justify-center mb-6 mx-auto shadow-[0_0_20px_rgba(201,169,97,0.15)]">
-                <Users className="w-12 h-12 text-[#c9a961] drop-shadow-[0_2px_8px_rgba(201,169,97,0.3)]" />
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <Users className="w-8 h-8 text-brand-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Bands</h3>
               <p className="text-muted-foreground text-sm">
@@ -296,8 +294,8 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="rnrb-card p-8 text-center"
             >
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#c9a961]/20 to-[#c9a961]/5 backdrop-blur-sm border border-[#c9a961]/20 flex items-center justify-center mb-6 mx-auto shadow-[0_0_20px_rgba(201,169,97,0.15)]">
-                <Video className="w-12 h-12 text-[#c9a961] drop-shadow-[0_2px_8px_rgba(201,169,97,0.3)]" />
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <Video className="w-8 h-8 text-brand-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-3">Live Performers</h3>
               <p className="text-muted-foreground text-sm">
@@ -354,8 +352,8 @@ export default function HomePage() {
               >
                 <Link href={feature.href} className="block h-full">
                   <div className="rnrb-card h-full p-8 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#c9a961]/20 to-[#c9a961]/5 backdrop-blur-sm border border-[#c9a961]/20 flex items-center justify-center mb-6 group-hover:border-[#c9a961]/40 group-hover:shadow-[0_0_30px_rgba(201,169,97,0.2)] transition-all duration-300">
-                      <feature.icon className="w-10 h-10 text-[#c9a961] drop-shadow-[0_2px_8px_rgba(201,169,97,0.3)]" />
+                    <div className="w-14 h-14 rounded-xl bg-brand-primary/10 flex items-center justify-center mb-6 group-hover:bg-brand-primary/20 transition-colors">
+                      <feature.icon className="w-7 h-7 text-brand-primary" />
                     </div>
                     
                     <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
@@ -517,15 +515,15 @@ export default function HomePage() {
                 <p className="text-3xl font-bold mb-4">Free</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>5 Active Projects</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Basic Analytics</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Community Support</span>
                   </li>
                 </ul>
@@ -539,15 +537,15 @@ export default function HomePage() {
                 <p className="text-3xl font-bold mb-4">$29/mo</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Unlimited Projects</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Advanced Analytics</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Priority Support</span>
                   </li>
                 </ul>
@@ -558,15 +556,15 @@ export default function HomePage() {
                 <p className="text-3xl font-bold mb-4">Custom</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Custom Integrations</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>Dedicated Support</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-green-500" />
+                    <span className="text-green-500 font-bold">✓</span>
                     <span>SLA Guarantee</span>
                   </li>
                 </ul>

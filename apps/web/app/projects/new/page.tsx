@@ -4,8 +4,18 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import { Card, Button } from '@cronkwaters/ui';
+import { 
+  Music, 
+  Upload, 
+  Lock, 
+  Users, 
+  Globe,
+  Building,
+  Sparkles,
+  ArrowLeft
+} from 'lucide-react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -87,191 +97,204 @@ export default function NewProjectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <motion.div 
-          animate={{ opacity: [0.2, 1, 0.2] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-zinc-400 font-mono text-sm uppercase tracking-widest"
-        >
-          Loading...
-        </motion.div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 pt-20">
-      <div className="container mx-auto px-6 max-w-4xl">
+    <div className="min-h-screen bg-background py-12 px-4">
+      <div className="rnrb-container max-w-4xl">
         
         {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mb-12"
-        >
-          <Link 
-            href="/projects" 
-            className="text-zinc-500 hover:text-white font-mono text-xs uppercase tracking-[0.2em] transition-colors inline-block mb-8"
-          >
-            ← BACK TO PROJECTS
+        <div className="mb-8">
+          <Link href="/projects" className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 mb-4 transition">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Projects
           </Link>
-          
-          <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-400 mb-2">
-            CREATE NEW PROJECT
+          <h1 className="text-4xl font-display font-bold mb-2">
+            Spawn New Mycelium Network
           </h1>
-          <p className="font-[family-name:var(--rnrb-font-marker)] text-4xl text-white">
-            Start Your Next Release
+          <p className="text-xl text-muted-foreground">
+            Create a project - the substrate where your music will grow
           </p>
-        </motion.div>
+        </div>
 
         {message && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className={`mb-8 p-4 border ${
-              message.type === 'success'
-                ? 'border-green-800 bg-green-900/20 text-green-400'
-                : 'border-red-800 bg-red-900/20 text-red-400'
-            }`}
-          >
-            <p className="font-mono text-xs uppercase tracking-wider">{message.text}</p>
-          </motion.div>
+          <div className={`mb-6 p-4 rounded-lg ${
+            message.type === 'success'
+              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+              : 'bg-red-500/10 border border-red-500/20 text-red-400'
+          }`}>
+            {message.text}
+          </div>
         )}
 
         {/* Project Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="border border-zinc-800 bg-zinc-900/50 p-8 mb-8"
-        >
-          <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-zinc-400 mb-8">
-            PROJECT INFORMATION
-          </h2>
+        <Card className="p-8 mb-6">
+          <h2 className="text-2xl font-semibold text-white mb-6">Project Details</h2>
           
           <div className="space-y-6">
             <div>
-              <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
-                PROJECT NAME *
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Project Name *
               </label>
               <input
                 type="text"
                 value={projectData.name}
                 onChange={(e) => setProjectData({ ...projectData, name: e.target.value })}
-                placeholder="Enter project name"
-                className="w-full px-4 py-3 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none transition-colors font-mono"
+                placeholder="My Debut Album"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-lg focus:border-purple-500 focus:outline-none"
               />
-              {projectData.name && (
-                <p className="text-xs text-zinc-600 mt-2 font-mono">
-                  URL: /projects/{generateSlug(projectData.name)}
-                </p>
-              )}
+              <p className="text-xs text-muted-foreground mt-1">
+                {projectData.name && `URL: /projects/${generateSlug(projectData.name)}`}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Tagline
+              </label>
+              <input
+                type="text"
+                value={projectData.tagline}
+                onChange={(e) => setProjectData({ ...projectData, tagline: e.target.value })}
+                placeholder="The album that changed everything"
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Description
+              </label>
+              <textarea
+                value={projectData.description}
+                onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
+                placeholder="Describe your project, its vision, the story behind it..."
+                rows={4}
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none resize-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
-                  GENRE
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Genre
                 </label>
                 <input
                   type="text"
                   value={projectData.genre}
                   onChange={(e) => setProjectData({ ...projectData, genre: e.target.value })}
-                  placeholder="Rock, Electronic, etc"
-                  className="w-full px-4 py-3 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none transition-colors font-mono"
+                  placeholder="Rock, Jazz, Hip-Hop..."
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
-                  RELEASE DATE
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Target Release Date
                 </label>
                 <input
                   type="date"
                   value={projectData.target_release_date}
                   onChange={(e) => setProjectData({ ...projectData, target_release_date: e.target.value })}
-                  className="w-full px-4 py-3 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none transition-colors font-mono"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
                 />
               </div>
             </div>
-
-            <div>
-              <label className="font-mono text-xs uppercase tracking-widest text-zinc-500 block mb-2">
-                DESCRIPTION
-              </label>
-              <textarea
-                value={projectData.description}
-                onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
-                placeholder="Describe your project..."
-                rows={4}
-                className="w-full px-4 py-3 bg-black border border-zinc-800 text-white placeholder-zinc-600 focus:border-zinc-600 focus:outline-none transition-colors font-mono resize-none"
-              />
-            </div>
           </div>
-        </motion.div>
+        </Card>
 
         {/* Privacy Settings */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="border border-zinc-800 bg-zinc-900/50 p-8 mb-12"
-        >
-          <h2 className="font-mono text-sm uppercase tracking-[0.2em] text-zinc-400 mb-8">
-            VISIBILITY SETTINGS
-          </h2>
+        <Card className="p-8 mb-6">
+          <h2 className="text-2xl font-semibold text-white mb-6">Privacy & Access</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { value: 'private', label: 'PRIVATE', desc: 'Only visible to you' },
-              { value: 'org', label: 'TEAM', desc: 'Visible to your team' },
-              { value: 'public', label: 'PUBLIC', desc: 'Visible to everyone' }
-            ].map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setProjectData({ ...projectData, visibility: option.value as any })}
-                className={`
-                  p-6 border transition-all text-left
-                  ${projectData.visibility === option.value
-                    ? 'border-white bg-zinc-800'
-                    : 'border-zinc-800 hover:border-zinc-700'
-                  }
-                `}
-              >
-                <p className="font-mono text-xs uppercase tracking-widest mb-1">
-                  {option.label}
-                </p>
-                <p className="text-xs text-zinc-500">
-                  {option.desc}
-                </p>
-              </button>
-            ))}
-          </div>
-        </motion.div>
+          <div className="space-y-4">
+            <button
+              onClick={() => setProjectData({ ...projectData, visibility: 'private' })}
+              className={`w-full p-4 rounded-lg border-2 transition text-left ${
+                projectData.visibility === 'private'
+                  ? 'border-purple-500 bg-purple-500/10'
+                  : 'border-white/10 bg-white/5 hover:border-white/20'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <Lock className={`w-5 h-5 mt-1 ${
+                  projectData.visibility === 'private' ? 'text-purple-400' : 'text-muted-foreground'
+                }`} />
+                <div>
+                  <p className="font-semibold text-white mb-1">🔒 Private</p>
+                  <p className="text-sm text-muted-foreground">
+                    Only you can see this project. Perfect for works in progress.
+                  </p>
+                </div>
+              </div>
+            </button>
 
-        {/* Actions */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="flex items-center justify-between"
-        >
-          <Link
-            href="/projects"
-            className="text-zinc-500 hover:text-white font-mono text-xs uppercase tracking-[0.2em] transition-colors"
-          >
-            CANCEL
+            <button
+              onClick={() => setProjectData({ ...projectData, visibility: 'org' })}
+              className={`w-full p-4 rounded-lg border-2 transition text-left ${
+                projectData.visibility === 'org'
+                  ? 'border-blue-500 bg-blue-500/10'
+                  : 'border-white/10 bg-white/5 hover:border-white/20'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <Users className={`w-5 h-5 mt-1 ${
+                  projectData.visibility === 'org' ? 'text-blue-400' : 'text-muted-foreground'
+                }`} />
+                <div>
+                  <p className="font-semibold text-white mb-1">👥 Band/Organization</p>
+                  <p className="text-sm text-muted-foreground">
+                    Shared with your band or organization members only.
+                  </p>
+                </div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setProjectData({ ...projectData, visibility: 'public' })}
+              className={`w-full p-4 rounded-lg border-2 transition text-left ${
+                projectData.visibility === 'public'
+                  ? 'border-green-500 bg-green-500/10'
+                  : 'border-white/10 bg-white/5 hover:border-white/20'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <Globe className={`w-5 h-5 mt-1 ${
+                  projectData.visibility === 'public' ? 'text-green-400' : 'text-muted-foreground'
+                }`} />
+                <div>
+                  <p className="font-semibold text-white mb-1">🌍 Public</p>
+                  <p className="text-sm text-muted-foreground">
+                    Anyone can discover and listen. Great for released albums.
+                  </p>
+                </div>
+              </div>
+            </button>
+          </div>
+        </Card>
+
+        {/* Create Button */}
+        <div className="flex items-center justify-between">
+          <Link href="/projects">
+            <Button variant="secondary" className="px-6 py-3">
+              Cancel
+            </Button>
           </Link>
-          
-          <button
-            onClick={handleCreateProject}
-            disabled={creating || !projectData.name.trim()}
-            className="px-8 py-3 bg-white text-black font-mono text-xs uppercase tracking-[0.3em] hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {creating ? 'CREATING...' : 'CREATE PROJECT'}
-          </button>
-        </motion.div>
+            <Button
+              onClick={handleCreateProject}
+              disabled={creating || !projectData.name.trim()}
+              className="rnrb-button-primary px-8 py-3 rounded-xl font-semibold flex items-center gap-2 disabled:opacity-50"
+            >
+            <Sparkles className="w-5 h-5" />
+            {creating ? 'Creating...' : 'Create Project'}
+          </Button>
+        </div>
       </div>
     </div>
   );
 }
+

@@ -4,19 +4,33 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import { Card, Button } from '@cronkwaters/ui';
+import { 
+  Plus, 
+  Music, 
+  Users, 
+  Calendar,
+  TrendingUp,
+  MoreVertical,
+  Folder,
+  Lock,
+  Globe,
+  Eye
+} from 'lucide-react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 
 type Project = {
   id: string;
   name: string;
   slug: string;
-  type: 'album' | 'ep' | 'single' | 'mixtape';
-  status: 'planning' | 'recording' | 'mixing' | 'complete';
+  description: string;
+  cover_image: string;
+  visibility: 'private' | 'org' | 'public';
   created_at: string;
   updated_at: string;
   song_count: number;
-  collaborators: number;
+  collaborator_count: number;
+  session_count: number;
 };
 
 export default function ProjectsPage() {
@@ -31,6 +45,9 @@ export default function ProjectsPage() {
         router.push('/auth');
       } else {
         setUser(user);
+        // Load projects from user_metadata for now (will connect to database later)
+        const userProjects = user.user_metadata?.projects || [];
+        setProjects(userProjects);
         setLoading(false);
       }
     });
@@ -38,164 +55,209 @@ export default function ProjectsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <motion.div 
-          animate={{ opacity: [0.2, 1, 0.2] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-zinc-600 font-mono text-xs uppercase tracking-widest"
-        >
-          Loading Projects
-        </motion.div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
+        <div className="text-white">Loading your projects...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="border-b border-zinc-900">
-        <div className="container mx-auto px-6 py-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500 mb-2">
-                PROJECT LIBRARY
-              </h1>
-              <p className="font-[family-name:var(--rnrb-font-marker)] text-3xl">
-                Your Music Catalog
-              </p>
-            </div>
-            <Link 
-              href="/projects/new"
-              className="px-6 py-3 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors"
-            >
-              NEW PROJECT
-            </Link>
+    <div className="min-h-screen bg-background py-12 px-4">
+      <div className="rnrb-container max-w-7xl">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-display font-bold mb-2">
+              Your Projects
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              The mycelium network - where all your music lives and grows
+            </p>
           </div>
+          <Link href="/projects/new">
+            <Button className="rnrb-button-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2">
+              <Plus className="w-5 h-5" />
+              New Project
+            </Button>
+          </Link>
         </div>
-      </header>
 
-      <main className="container mx-auto px-6 py-12">
-        {projects.length === 0 ? (
-          // Empty State
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="max-w-4xl mx-auto text-center py-20"
-          >
-            <div className="border border-zinc-900 p-12">
-              <h2 className="font-mono text-2xl uppercase tracking-wider mb-4">
-                NO ACTIVE PROJECTS
-              </h2>
-              <p className="text-zinc-400 mb-8 max-w-lg mx-auto">
-                Start your first project to organize songs, manage collaborations, and track your creative process.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 text-left">
-                {[
-                  { type: 'ALBUM', tracks: '8-16 TRACKS', time: '40-80 MIN' },
-                  { type: 'EP', tracks: '4-6 TRACKS', time: '20-30 MIN' },
-                  { type: 'SINGLE', tracks: '1-3 TRACKS', time: '5-15 MIN' },
-                ].map((format) => (
-                  <div key={format.type} className="border border-zinc-800 p-6">
-                    <h3 className="font-mono text-sm uppercase tracking-widest mb-2">
-                      {format.type}
-                    </h3>
-                    <p className="text-zinc-500 text-xs uppercase tracking-wider">
-                      {format.tracks}
-                    </p>
-                    <p className="text-zinc-600 text-xs uppercase">
-                      {format.time}
-                    </p>
-                  </div>
-                ))}
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Card className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-purple-500/10 rounded-lg">
+                <Folder className="w-6 h-6 text-purple-500" />
               </div>
-              
-              <Link 
-                href="/projects/new"
-                className="inline-block px-8 py-4 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors"
-              >
-                CREATE FIRST PROJECT
+              <div>
+                <p className="text-2xl font-bold text-white">{projects.length}</p>
+                <p className="text-sm text-muted-foreground">Active Projects</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-blue-500/10 rounded-lg">
+                <Music className="w-6 h-6 text-blue-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-sm text-muted-foreground">Total Songs</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-green-500/10 rounded-lg">
+                <Users className="w-6 h-6 text-green-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-sm text-muted-foreground">Collaborators</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-orange-500/10 rounded-lg">
+                <Calendar className="w-6 h-6 text-orange-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-sm text-muted-foreground">Sessions</p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Projects Grid */}
+        {projects.length === 0 ? (
+          <Card className="p-12 text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10">
+            <div className="max-w-2xl mx-auto">
+              <div className="w-24 h-24 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Music className="w-12 h-12 text-purple-400" />
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Grow Your First Mycelium Network
+              </h2>
+              <p className="text-lg text-muted-foreground mb-8">
+                Projects are the foundation - your mycelium substrate. Create your first project to start organizing songs, 
+                collaborating with others, and building your music empire.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
+                <div className="p-4 bg-background/50 rounded-lg">
+                  <p className="font-semibold text-white mb-2">🎵 Organize Songs</p>
+                  <p className="text-sm text-muted-foreground">
+                    Group songs into albums, EPs, or singles
+                  </p>
+                </div>
+                <div className="p-4 bg-background/50 rounded-lg">
+                  <p className="font-semibold text-white mb-2">🤝 Collaborate</p>
+                  <p className="text-sm text-muted-foreground">
+                    Invite band members and track contributions
+                  </p>
+                </div>
+                <div className="p-4 bg-background/50 rounded-lg">
+                  <p className="font-semibold text-white mb-2">💰 Track Royalties</p>
+                  <p className="text-sm text-muted-foreground">
+                    Manage splits and revenue per project
+                  </p>
+                </div>
+              </div>
+
+              <Link href="/projects/new">
+                <Button className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-3">
+                  <Plus className="w-6 h-6" />
+                  Create Your First Project
+                </Button>
               </Link>
             </div>
-          </motion.div>
+          </Card>
         ) : (
-          // Projects Grid
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Link href={`/projects/${project.slug}`}>
-                  <div className="border border-zinc-800 hover:border-zinc-700 transition-all cursor-pointer group">
-                    {/* Project Cover */}
-                    <div className="aspect-square bg-gradient-to-br from-zinc-900 to-black relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <p className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-500 mb-2">
-                          {project.type}
-                        </p>
-                        <h3 className="font-[family-name:var(--rnrb-font-marker)] text-2xl mb-1">
-                          {project.name}
-                        </h3>
-                        <div className="flex items-center gap-4 font-mono text-xs uppercase tracking-wider text-zinc-500">
-                          <span>{project.song_count} TRACKS</span>
-                          <span>{project.collaborators} ARTISTS</span>
-                        </div>
-                      </div>
+            {projects.map((project) => (
+              <Link href={`/projects/${project.slug}`} key={project.id}>
+                <Card className="p-6 hover:shadow-xl hover:scale-105 transition-all cursor-pointer h-full">
+                  {/* Cover Image */}
+                  <div className="aspect-square bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                    {project.cover_image ? (
+                      <img src={project.cover_image} alt={project.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <Music className="w-16 h-16 text-white/50" />
+                    )}
+                  </div>
+
+                  {/* Project Info */}
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-xl font-semibold text-white">{project.name}</h3>
+                    {project.visibility === 'private' && <Lock className="w-4 h-4 text-muted-foreground" />}
+                    {project.visibility === 'public' && <Globe className="w-4 h-4 text-green-500" />}
+                  </div>
+
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    {project.description || 'No description yet'}
+                  </p>
+
+                  {/* Stats */}
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Music className="w-4 h-4" />
+                      {project.song_count || 0} songs
                     </div>
-                    
-                    {/* Project Status */}
-                    <div className="p-4 border-t border-zinc-800">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-500">
-                            STATUS
-                          </p>
-                          <p className="font-mono text-xs uppercase tracking-wider">
-                            {project.status.toUpperCase()}
-                          </p>
-                        </div>
-                        <div 
-                          className={`w-2 h-2 rounded-full ${
-                            project.status === 'recording' ? 'bg-red-600 animate-pulse' :
-                            project.status === 'mixing' ? 'bg-yellow-600' :
-                            project.status === 'complete' ? 'bg-green-600' :
-                            'bg-zinc-600'
-                          }`} 
-                        />
-                      </div>
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
+                      {project.collaborator_count || 1}
                     </div>
                   </div>
-                </Link>
-              </motion.div>
+                </Card>
+              </Link>
             ))}
           </div>
         )}
 
-        {/* Bottom Navigation */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-20 flex items-center justify-center gap-8"
-        >
-          {[
-            { label: 'ARCHIVE', count: 0 },
-            { label: 'DRAFTS', count: 0 },
-            { label: 'SHARED', count: 0 },
-          ].map((item) => (
-            <button
-              key={item.label}
-              className="font-mono text-xs uppercase tracking-[0.2em] text-zinc-600 hover:text-white transition-colors"
-            >
-              {item.label} ({item.count})
-            </button>
-          ))}
-        </motion.div>
-      </main>
+        {/* Explanation Section */}
+        {projects.length === 0 && (
+          <div className="mt-12 p-8 bg-white/5 border border-white/10 rounded-lg">
+            <h3 className="text-2xl font-semibold text-white mb-4">🍄 Understanding Projects (The Mycelium)</h3>
+            <p className="text-muted-foreground mb-6">
+              Just as mycelium forms the underground network connecting an entire forest, projects are the living network 
+              connecting all aspects of your music:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-4 bg-purple-500/5 border border-purple-500/20 rounded-lg">
+                <p className="font-semibold text-purple-400 mb-2">🌱 Songs Branch From Projects</p>
+                <p className="text-sm text-muted-foreground">
+                  Like hyphae growing from mycelium, your songs organize naturally within projects
+                </p>
+              </div>
+              <div className="p-4 bg-blue-500/5 border border-blue-500/20 rounded-lg">
+                <p className="font-semibold text-blue-400 mb-2">💧 Sessions Feed the Network</p>
+                <p className="text-sm text-muted-foreground">
+                  Recording sessions channel creative energy into your project's songs
+                </p>
+              </div>
+              <div className="p-4 bg-green-500/5 border border-green-500/20 rounded-lg">
+                <p className="font-semibold text-green-400 mb-2">🌿 Tours Fruit From Projects</p>
+                <p className="text-sm text-muted-foreground">
+                  Tours are the visible fruiting body - sprouting from the hidden project network
+                </p>
+              </div>
+              <div className="p-4 bg-orange-500/5 border border-orange-500/20 rounded-lg">
+                <p className="font-semibold text-orange-400 mb-2">💰 Revenue Flows Through</p>
+                <p className="text-sm text-muted-foreground">
+                  Like nutrients cycling through mycelium, royalties distribute across the project
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+

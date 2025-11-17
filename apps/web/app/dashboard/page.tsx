@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import { Music, Radio, MessageSquare, Calendar, TrendingUp, Users } from 'lucide-react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -25,210 +25,210 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <motion.div 
-          animate={{ opacity: [0.2, 1, 0.2] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-zinc-400 font-mono text-sm uppercase tracking-widest"
-        >
-          Loading Session
-        </motion.div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-lg">Loading your dashboard...</div>
       </div>
     );
   }
 
-  const displayName = user?.user_metadata?.display_name || user?.user_metadata?.name || user?.email?.split('@')[0];
-
-  const navigationItems = [
-    {
-      title: 'STUDIO',
-      subtitle: 'Record & Collaborate',
-      href: '/studio',
-      gradient: 'from-red-900/30 to-zinc-900/50',
-      border: 'border-red-800/50',
-      accent: 'red-500',
-      description: 'HD multi-track recording'
-    },
-    {
-      title: 'PROJECTS',
-      subtitle: 'Manage Your Music',
-      href: '/projects',
-      gradient: 'from-blue-900/30 to-zinc-900/50',
-      border: 'border-blue-800/50',
-      accent: 'blue-500',
-      description: 'Albums, EPs, Singles'
-    },
-    {
-      title: 'TOUR DATES',
-      subtitle: 'Shows & Streaming',
-      href: '/tours',
-      gradient: 'from-purple-900/30 to-zinc-900/50',
-      border: 'border-purple-800/50',
-      accent: 'purple-500',
-      description: 'Live performances'
-    },
-    {
-      title: 'NETWORK',
-      subtitle: 'Connect & Message',
-      href: '/messages',
-      gradient: 'from-green-900/30 to-zinc-900/50',
-      border: 'border-green-800/50',
-      accent: 'green-500',
-      description: 'Real-time collaboration'
-    },
-  ];
-
-  const stats = [
-    { label: 'ACTIVE PROJECTS', value: '0', unit: '' },
-    { label: 'TOTAL TRACKS', value: '0', unit: '' },
-    { label: 'COLLABORATORS', value: '0', unit: '' },
-    { label: 'THIS MONTH', value: '0', unit: '' },
-  ];
-
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      {/* Studio-style Header */}
-      <header className="border-b border-zinc-800 bg-black/50">
-        <div className="container mx-auto px-6 py-8">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center justify-between"
-          >
-            <div>
-              <h1 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-400 mb-2">
-                DASHBOARD
-              </h1>
-              <p className="font-[family-name:var(--rnrb-font-marker)] text-3xl text-white">
-                {displayName}
-              </p>
-            </div>
-            <Link 
-              href="/projects/new"
-              className="px-6 py-3 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-zinc-100 transition-colors"
-            >
-              NEW PROJECT
-            </Link>
-          </motion.div>
+    <div className="min-h-screen bg-background py-12 px-4">
+      <div className="rnrb-container max-w-7xl">
+        {/* Welcome Header */}
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">
+            Welcome back, {user?.user_metadata?.name || user?.email?.split('@')[0] || 'Musician'}!
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Your Rock N' Roll Basement command center
+          </p>
         </div>
-      </header>
 
-      {/* Main Grid */}
-      <main className="container mx-auto px-6 py-12">
-        {/* Navigation Grid */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
-        >
-          {navigationItems.map((item, index) => (
-            <Link key={item.href} href={item.href}>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: index * 0.1 }}
-                className={`
-                  relative overflow-hidden h-48 
-                  bg-gradient-to-br ${item.gradient} 
-                  border ${item.border}
-                  hover:border-zinc-600 transition-all duration-500
-                  group cursor-pointer
-                `}
-              >
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
-                
-                <div className="relative h-full p-8 flex flex-col justify-between">
-                  <div>
-                    <h2 className="font-mono text-2xl uppercase tracking-wider mb-1 text-white">
-                      {item.title}
-                    </h2>
-                    <p className="text-zinc-300 text-sm uppercase tracking-widest">
-                      {item.subtitle}
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <p className="text-zinc-400 text-xs uppercase tracking-wider">
-                      {item.description}
-                    </p>
-                    <div className={`w-2 h-2 bg-${item.accent} rounded-full animate-pulse`} />
-                  </div>
+        {/* Success Message */}
+        <div className="mb-8 p-6 rnrb-card bg-green-500/5 border-green-500/20">
+          <div className="flex items-start gap-4">
+            <div className="text-4xl">🎉</div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">You're Successfully Signed In!</h3>
+              <p className="text-muted-foreground mb-3">
+                Email: <span className="text-brand-primary font-mono">{user?.email}</span>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                You now have access to all platform features. Start by exploring the studio, creating your first project, or checking out the tour management tools below.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <Link href="/projects/new">
+            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <Music className="h-8 w-8 text-brand-primary" />
                 </div>
-                
-                {/* Hover effect */}
-                <div className="absolute inset-0 border border-white/10 scale-105 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500" />
-              </motion.div>
-            </Link>
-          ))}
-        </motion.div>
-
-        {/* Stats Row */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"
-        >
-          {stats.map((stat, index) => (
-            <div key={stat.label} className="border border-zinc-800 bg-zinc-900/50 p-6 relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-800/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <p className="text-zinc-400 text-xs uppercase tracking-widest mb-2 font-mono">
-                {stat.label}
-              </p>
-              <p className="font-[family-name:var(--rnrb-font-marker)] text-4xl text-white">
-                {stat.value}
-                <span className="text-zinc-500 text-2xl">{stat.unit}</span>
+                <div>
+                  <h3 className="text-lg font-semibold">New Project</h3>
+                  <p className="text-sm text-brand-primary">Start here!</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Create the mycelium foundation - organize your songs, collaborators, and revenue
               </p>
             </div>
-          ))}
-        </motion.div>
+          </Link>
 
-        {/* Activity Feed */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="border border-zinc-800 bg-zinc-900/50"
-        >
-          <div className="border-b border-zinc-800 p-6 bg-black/30">
-            <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-400">
-              RECENT ACTIVITY
-            </h3>
-          </div>
-          
-          <div className="p-6">
-            <div className="text-center py-12">
-              <p className="text-zinc-500 text-sm uppercase tracking-wider">
-                No recent activity
-              </p>
-              <p className="text-zinc-600 text-xs mt-2">
-                Start by creating your first project
+          <Link href="/studio">
+            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <Music className="h-8 w-8 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">Recording Studio</h3>
+                  <p className="text-sm text-muted-foreground">Start a session</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Record HD video/audio, collaborate remotely, stream to multiple platforms
               </p>
             </div>
-          </div>
-        </motion.div>
+          </Link>
 
-        {/* Quick Links */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-12 flex gap-6 justify-center"
-        >
-          {[
-            { label: 'SETTINGS', href: '/settings/profile' },
-            { label: 'DISCOVER', href: '/discover' },
-          ].map((link) => (
-            <Link 
-              key={link.label}
-              href={link.href}
-              className="text-zinc-500 hover:text-white font-mono text-xs uppercase tracking-[0.2em] transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </motion.div>
-      </main>
+          <Link href="/tours">
+            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <Radio className="h-8 w-8 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">Tours & Shows</h3>
+                  <p className="text-sm text-muted-foreground">Manage your tour</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Schedule shows, track tickets, stream virtual concerts
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/messages">
+            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <MessageSquare className="h-8 w-8 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">Messaging</h3>
+                  <p className="text-sm text-muted-foreground">Chat with your team</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Real-time messaging, file sharing, presence awareness
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/projects">
+            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-brand-primary/10 rounded-lg">
+                  <Calendar className="h-8 w-8 text-brand-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">My Projects</h3>
+                  <p className="text-sm text-muted-foreground">View all networks</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                See all your projects, songs, collaborators, and revenue
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/analytics">
+            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-orange-500/10 rounded-lg">
+                  <TrendingUp className="h-8 w-8 text-orange-500" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Analytics</h3>
+                  <p className="text-sm text-muted-foreground">Track your growth</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Revenue tracking, streaming stats, audience insights
+              </p>
+            </div>
+          </Link>
+
+          <Link href="/settings">
+            <div className="rnrb-card p-6 rnrb-hover-lift rnrb-hover-glow cursor-pointer">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-gray-500/10 rounded-lg">
+                  <Users className="h-8 w-8 text-gray-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Settings</h3>
+                  <p className="text-sm text-muted-foreground">Account & preferences</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Profile, billing, notifications, integrations
+              </p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Getting Started Guide */}
+        <div className="rnrb-card p-8">
+          <h2 className="text-2xl font-bold text-white mb-4">🚀 Getting Started</h2>
+          <p className="text-muted-foreground mb-6">
+            You're all set up! Here's what you can do now:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">1️⃣</div>
+              <div>
+                <p className="font-semibold text-white mb-1">Start Recording</p>
+                <p className="text-sm text-muted-foreground">
+                  Go to Studio → Click "Start Recording" → Record HD video/audio or stream live
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">2️⃣</div>
+              <div>
+                <p className="font-semibold text-white mb-1">Create a Project</p>
+                <p className="text-sm text-muted-foreground">
+                  Organize your songs, demos, and collaborations in one place
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">3️⃣</div>
+              <div>
+                <p className="font-semibold text-white mb-1">Plan Your Tour</p>
+                <p className="text-sm text-muted-foreground">
+                  Add shows, manage setlists, track ticket sales
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">4️⃣</div>
+              <div>
+                <p className="font-semibold text-white mb-1">Invite Your Band</p>
+                <p className="text-sm text-muted-foreground">
+                  Collaborate in real-time with messaging and shared projects
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
+
