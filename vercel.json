@@ -1,6 +1,5 @@
 {
-  "buildCommand": "cd ../apps/web && pnpm build",
-  "installCommand": "cd .. && pnpm install",
-  "outputDirectory": "../apps/web/.next",
-  "framework": "nextjs"
+  "buildCommand": "turbo run build --filter=@cronkwaters/web",
+  "installCommand": "pnpm install",
+  "outputDirectory": "apps/web/.next"
 }
