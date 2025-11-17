@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { signIn } from '@/auth';
 
 export default function SignInPage() {
   return (
@@ -15,14 +14,13 @@ export default function SignInPage() {
         </div>
 
         <div className="space-y-4">
-          <form
-            action={async () => {
-              'use server';
-              await signIn('google', { redirectTo: '/' });
-            }}
+          {/* Google OAuth - Direct Link (No Server Action) */}
+          <Link
+            href="/api/auth/signin/google"
+            className="w-full block"
           >
             <button
-              type="submit"
+              type="button"
               className="w-full rounded-lg bg-white px-4 py-3 text-sm font-semibold text-gray-900 shadow-lg transition hover:bg-gray-100"
             >
               <div className="flex items-center justify-center gap-3">
@@ -47,7 +45,7 @@ export default function SignInPage() {
                 Continue with Google
               </div>
             </button>
-          </form>
+          </Link>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -58,15 +56,12 @@ export default function SignInPage() {
             </div>
           </div>
 
+          {/* Email Magic Link - Simple Form to NextAuth Endpoint */}
           <form
-            action={async (formData) => {
-              'use server';
-              await signIn('email', {
-                email: formData.get('email') as string,
-                redirectTo: '/',
-              });
-            }}
+            action="/api/auth/signin/email"
+            method="POST"
           >
+            <input type="hidden" name="csrfToken" value="REPLACE_WITH_CSRF" />
             <div className="space-y-3">
               <input
                 type="email"
@@ -79,8 +74,11 @@ export default function SignInPage() {
                 type="submit"
                 className="w-full rounded-lg bg-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-purple-700"
               >
-                Sign in with Email
+                Send Magic Link
               </button>
+              <p className="text-xs text-gray-400 text-center">
+                Check your email for a sign-in link (no password needed!)
+              </p>
             </div>
           </form>
         </div>
@@ -96,6 +94,14 @@ export default function SignInPage() {
           </Link>
           .
         </p>
+
+        <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+          <p className="text-sm text-blue-400 font-medium mb-2">💡 Email Sign-In Alternative</p>
+          <p className="text-xs text-gray-400">
+            Since Google auth is having issues, use email magic link instead! 
+            Just enter your email, and we'll send you a one-time sign-in link. No password required.
+          </p>
+        </div>
       </div>
     </div>
   );
