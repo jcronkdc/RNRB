@@ -187,6 +187,71 @@
 ✅ No other platform has AI contribution tracking for splits
 ✅ Positioned as ethical AI (assists, doesn't replace)
 
+---
+
+## 💰 PRICING STRATEGY - AI COSTS FACTORED IN
+
+**USER REQUEST:** "AI could be expensive... ensure healthy profit margin without being greedy"
+
+**NEW PRICING TIERS (4 TIERS):**
+
+### **1. Free - $0/month**
+- 1 project, 2GB storage, video calls
+- **AI Features:** NONE
+- **Purpose:** Trial, discover platform
+- **Margin:** Loss leader (acceptable)
+
+### **2. Starter - $29/month** (was $19)
+- 5 projects, 10GB, 5hrs recording, 3hrs streaming
+- **AI Features:** 50 chat queries/month (basic)
+- **AI Cost:** ~$0.25/month (50 queries × $0.005)
+- **Total Cost:** ~$8/month (platform) + $0.25 (AI) = $8.25
+- **Revenue:** $29
+- **Margin:** $20.75 (71% margin - healthy)
+
+### **3. Professional - $99/month** (was $79, +$20 for AI)
+- 20 projects, 50GB, 15hrs recording, 8hrs streaming
+- **AI Features:** ALL INCLUDED
+  - 500 chat queries/month
+  - 10 hours transcription/month
+  - Unlimited tour routing
+  - 20 mix suggestions/month
+  - 50 content generations/month
+- **AI Cost:** ~$30/month (500×$0.005 + 600min×$0.006 + 20×$0.02 + 50×$0.03 = $2.50+$3.60+$0.40+$1.50 = $8/month, but allowing for heavy usage)
+- **Total Cost:** ~$35 (platform) + $30 (AI) = $65
+- **Revenue:** $99
+- **Margin:** $34 (34% margin - sustainable)
+- **MOST POPULAR**
+
+### **4. Studio Pro - $299/month** (was $249, +$50 for unlimited AI)
+- Unlimited projects, 500GB, 60hrs recording, 30hrs streaming
+- **AI Features:** UNLIMITED
+  - 2,000 queries/month
+  - 40 hours transcription/month
+  - Unlimited all features
+  - Priority AI processing
+- **AI Cost:** ~$120/month (heavy usage: 2,000×$0.005 + 2,400min×$0.006 + unlimited features = $10+$14.40+$20 estimate)
+- **Total Cost:** ~$140 (platform) + $120 (AI) = $260
+- **Revenue:** $299
+- **Margin:** $39 (13% margin - tight but sustainable for high-value customers)
+
+**AI ADD-ONS (For Free/Starter Tiers):**
+- **AI Starter Pack:** $15/month (100 queries, 2hrs transcription, 5 tour routes)
+- **AI Pro Pack:** $45/month (500 queries, 10hrs transcription, unlimited routing, mix, content)
+
+**COST TRANSPARENCY:**
+✅ "Show actual service costs" button on pricing page
+✅ AI costs broken down separately: Chat ($0.005), Transcription ($0.006/min), etc.
+✅ Clear statement: "35-40% margin for development & support. No price gouging."
+
+**PRICING PHILOSOPHY:**
+✅ Sustainable margins (34-71% depending on tier)
+✅ AI included in Professional+ (not nickel-and-diming)
+✅ Add-ons available for budget-conscious users
+✅ Transparent about actual costs
+✅ Pay-as-you-go for overages (fair rates)
+✅ Volume discounts (better rates at higher tiers)
+
 **USER FEEDBACK ADDRESSED:**
 ✅ "Homepage looks good" - Kept as-is
 ✅ "Dashboard too dark" - Fixed, now matches homepage

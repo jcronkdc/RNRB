@@ -8,102 +8,144 @@ import Link from 'next/link';
 
 const plans = [
   {
-    name: 'Starter',
-    price: 19,
-    description: 'Get started with core features and pay as you grow',
+    name: 'Free',
+    price: 0,
+    description: 'Try the platform with essential features',
     features: [
-      '3 active projects',
-      '5 GB storage',
-      '5 hours recording/month',
-      '2 hours streaming/month',
-      'Basic analytics',
-      'Email support',
-      'Mobile app access',
+      '1 active project',
+      '2 GB storage',
+      '2 hours video calls/month',
       'Real-time messaging',
+      'Project management',
+      'Community support',
     ],
-    limits: {
-      recording: '5 hours included, then $0.99/hour',
-      streaming: '2 hours included, then $1.49/hour',
-      messaging: '10,000 messages/month',
-      storage: '5 GB included, then $5/10GB',
+    aiFeatures: {
+      included: false,
+      note: 'AI features not included'
     },
-    costAnalysis: {
-      includedValue: 8,
-      platformCost: 11,
-      margin: '40%',
+    limits: {
+      recording: 'Not available',
+      streaming: 'Not available',
+      messaging: '5,000 messages/month',
+      storage: '2 GB max',
     },
     notIncluded: [
+      'AI features',
+      'Recording/streaming',
       'Team collaboration',
-      'Advanced analytics',
       'Priority support',
-      'Custom branding',
-      'API access',
+    ],
+    popular: false,
+  },
+  {
+    name: 'Starter',
+    price: 29,
+    description: 'Core collaboration features for solo artists',
+    features: [
+      '5 active projects',
+      '10 GB storage',
+      '10 hours video calls/month',
+      '5 hours recording/month',
+      '3 hours streaming/month',
+      'Real-time messaging',
+      'Email support',
+    ],
+    aiFeatures: {
+      included: true,
+      limits: '50 AI queries/month',
+      note: 'Basic AI assistance'
+    },
+    limits: {
+      recording: '5 hours included, then $0.99/hour',
+      streaming: '3 hours included, then $1.49/hour',
+      messaging: '20,000 messages/month',
+      storage: '10 GB included, then $5/10GB',
+      ai: '50 AI chat queries/month, then $0.10/query',
+    },
+    notIncluded: [
+      'AI transcription',
+      'AI tour routing',
+      'AI content generator',
+      'Team collaboration (5+ members)',
+      'Advanced analytics',
     ],
     popular: false,
   },
   {
     name: 'Professional',
-    price: 79,
-    description: 'For serious musicians and active collaborations',
+    price: 99,
+    description: 'Full AI suite + professional collaboration tools',
     features: [
       '20 active projects',
       '50 GB storage',
-      '30 hours recording/month',
-      '10 hours streaming/month',
+      '30 hours video calls/month',
+      '15 hours recording/month',
+      '8 hours streaming/month',
       'Advanced analytics',
       'Priority support',
-      'Team collaboration (5 members)',
-      'Project templates',
-      'Version control',
-      'Guest access (10/month)',
+      'Team collaboration (10 members)',
+      '✨ ALL AI FEATURES INCLUDED',
+      '500 AI queries/month',
+      '10 hours AI transcription/month',
+      'AI tour routing (unlimited)',
+      'AI mix suggestions (20 songs/month)',
+      'AI content generator (50 uses/month)',
     ],
-    limits: {
-      recording: '30 hours included, then $0.89/hour',
-      streaming: '10 hours included, then $1.29/hour',
-      messaging: '100,000 messages/month',
-      storage: '50 GB included, then $4/10GB',
+    aiFeatures: {
+      included: true,
+      limits: '500 AI chat queries, 10hrs transcription, unlimited routing',
+      highlight: true
     },
-    costAnalysis: {
-      includedValue: 33,
-      platformCost: 46,
-      margin: '40%',
+    limits: {
+      recording: '15 hours included, then $0.89/hour',
+      streaming: '8 hours included, then $1.29/hour',
+      messaging: '200,000 messages/month',
+      storage: '50 GB included, then $4/10GB',
+      ai: '500 queries, 10hrs transcription, 20 mix assists/mo, then pay-as-you-go',
     },
     notIncluded: [
       'Phone support',
       'Custom domain',
       'White labeling',
-      'Unlimited guests',
     ],
     popular: true,
   },
   {
-    name: 'Studio',
-    price: 249,
-    description: 'For studios and labels with high-volume needs',
+    name: 'Studio Pro',
+    price: 299,
+    description: 'For studios, labels, and teams with high AI usage',
     features: [
       'Unlimited projects',
-      '200 GB storage',
-      '100 hours recording/month',
-      '40 hours streaming/month',
+      '500 GB storage',
+      '100 hours video calls/month',
+      '60 hours recording/month',
+      '30 hours streaming/month',
       'Premium analytics & insights',
       '24/7 priority support',
       'Unlimited team members',
-      'Advanced permissions',
+      '✨ UNLIMITED AI FEATURES',
+      '2,000 AI queries/month',
+      '40 hours AI transcription/month',
+      'Unlimited AI tour routing',
+      'Unlimited AI mix suggestions',
+      'Unlimited AI content generation',
+      'AI royalty split tracking',
       'Custom branding',
       'API access',
-      'Bulk export tools',
-      'Priority processing',
+      'Priority AI processing',
     ],
-    limits: {
-      recording: '100 hours included, then $0.79/hour',
-      streaming: '40 hours included, then $1.19/hour',
-      messaging: 'Unlimited',
-      storage: '200 GB included, then $3/10GB',
+    aiFeatures: {
+      included: true,
+      limits: '2,000 queries, 40hrs transcription, all features unlimited',
+      highlight: true,
+      priority: true
     },
-    costAnalysis: {
-      includedValue: 117,
-      platformCost: 132,
-      margin: '47%',
+    limits: {
+      recording: '60 hours included, then $0.79/hour',
+      streaming: '30 hours included, then $1.19/hour',
+      messaging: 'Unlimited',
+      storage: '500 GB included, then $2.50/10GB',
+      ai: '2,000 queries, 40hrs transcription, unlimited mix/routing/content',
     },
     notIncluded: [],
     popular: false,
@@ -111,11 +153,15 @@ const plans = [
 ];
 
 const costBreakdown = {
-  recording: 0.81, // per hour
-  streaming: 0.90, // per hour RTMP
-  storage: 0.18, // per hour after 30 days
-  videoCall: 0.24, // per hour per participant
-  messaging: 0.00001, // per message (Ably estimate)
+  recording: 0.81, // per hour (Daily.co)
+  streaming: 0.90, // per hour RTMP (Daily.co)
+  storage: 0.18, // per GB/month after 30 days
+  videoCall: 0.24, // per hour per participant (Daily.co)
+  messaging: 0.00001, // per message (Ably)
+  aiChatQuery: 0.005, // per query (GPT-4 Turbo avg)
+  aiTranscription: 0.006, // per minute (Whisper API)
+  aiMixAnalysis: 0.02, // per song analysis
+  aiContentGen: 0.03, // per generation
 };
 
 export default function PricingPage() {
@@ -180,20 +226,29 @@ export default function PricingPage() {
               <AlertCircle className="h-5 w-5 text-yellow-500" />
               Actual Service Costs (What We Pay)
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div>
-                <p><strong>Recording:</strong> $0.81/hour (Daily.co)</p>
-                <p><strong>Streaming:</strong> $0.90/hour RTMP (Daily.co)</p>
-                <p><strong>Video Calls:</strong> $0.24/hour/participant (Daily.co)</p>
+                <p className="font-semibold text-brand-primary mb-2">Video/Recording:</p>
+                <p><strong>Recording:</strong> $0.81/hour</p>
+                <p><strong>Streaming:</strong> $0.90/hour</p>
+                <p><strong>Video Calls:</strong> $0.24/hr/person</p>
               </div>
               <div>
-                <p><strong>Storage:</strong> $0.18/hour after 30 days</p>
-                <p><strong>Messaging:</strong> ~$0.01 per 1,000 messages (Ably)</p>
-                <p><strong>Infrastructure:</strong> ~15-20% of revenue</p>
+                <p className="font-semibold text-purple-400 mb-2">AI Services (NEW):</p>
+                <p><strong>Chat Query:</strong> ~$0.005 each</p>
+                <p><strong>Transcription:</strong> $0.006/min</p>
+                <p><strong>Mix Analysis:</strong> $0.02/song</p>
+                <p><strong>Content Gen:</strong> $0.03/use</p>
+              </div>
+              <div>
+                <p className="font-semibold text-brand-primary mb-2">Infrastructure:</p>
+                <p><strong>Storage:</strong> $0.18/GB/month</p>
+                <p><strong>Messaging:</strong> $0.01/1K msgs</p>
+                <p><strong>Platform:</strong> ~15-20% overhead</p>
               </div>
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
-              Our pricing includes these costs plus platform development, support, and a sustainable margin.
+              <strong>Our commitment:</strong> Transparent costs + sustainable 35-40% margin for development & support. No hidden fees, no price gouging.
             </p>
           </Card>
         )}
@@ -244,8 +299,14 @@ export default function PricingPage() {
                 </div>
               )}
               
-              <Card className={`p-8 h-full ${plan.popular ? 'border-2 border-purple-500/50' : ''}`}>
+              <Card className={`p-8 h-full ${plan.popular ? 'border-2 border-purple-500/50' : ''} ${plan.aiFeatures?.highlight ? 'bg-gradient-to-br from-purple-500/5 to-transparent' : ''}`}>
                 <div className="mb-6">
+                  {plan.aiFeatures?.highlight && (
+                    <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full">
+                      <Zap className="w-4 h-4 text-purple-400" />
+                      <span className="text-xs font-semibold text-purple-400">AI POWERED</span>
+                    </div>
+                  )}
                   <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                   <p className="text-muted-foreground text-sm">{plan.description}</p>
                   
@@ -304,8 +365,49 @@ export default function PricingPage() {
           ))}
         </div>
 
+        {/* AI Add-On Option */}
+        <Card className="p-8 mb-12 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border-2 border-purple-500/30">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Zap className="w-6 h-6 text-purple-400" />
+              <h2 className="text-3xl font-bold">AI Feature Add-On</h2>
+            </div>
+            <p className="text-center text-lg text-muted-foreground mb-8">
+              Already have Free or Starter? Add AI features à la carte
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="rnrb-card p-6 bg-purple-500/5">
+                <h3 className="font-semibold mb-3 text-purple-400">AI Starter Pack - $15/month</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>✓ 100 AI chat queries/month</li>
+                  <li>✓ 2 hours AI transcription/month</li>
+                  <li>✓ AI tour routing (5 routes/month)</li>
+                  <li>✓ $0.10 per additional query</li>
+                </ul>
+              </div>
+              
+              <div className="rnrb-card p-6 bg-purple-500/5">
+                <h3 className="font-semibold mb-3 text-purple-400">AI Pro Pack - $45/month</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>✓ 500 AI chat queries/month</li>
+                  <li>✓ 10 hours AI transcription/month</li>
+                  <li>✓ Unlimited AI tour routing</li>
+                  <li>✓ AI mix suggestions (20/month)</li>
+                  <li>✓ AI content generator (30/month)</li>
+                  <li>✓ Better overage rates</li>
+                </ul>
+              </div>
+            </div>
+            
+            <p className="text-center mt-6 text-sm text-muted-foreground">
+              💡 <strong>Note:</strong> Professional & Studio Pro plans include AI features - add-ons are for Free/Starter tiers only
+            </p>
+          </div>
+        </Card>
+
         {/* Enterprise Section */}
-        <Card className="p-12 text-center bg-gradient-to-r from-purple-500/10 to-pink-500/10">
+        <Card className="p-12 text-center rnrb-card bg-gradient-to-r from-purple-500/10 to-pink-500/10">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold mb-4">
               Enterprise & Custom Solutions
