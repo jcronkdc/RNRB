@@ -6,7 +6,7 @@ import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Music, Plus, Search, Lock, Users as UsersIcon, Globe } from 'lucide-react';
+import { Music, Plus, Search, Lock, Users as UsersIcon, Globe, Cloud, Download } from 'lucide-react';
 
 interface Song {
   id: string;
@@ -16,7 +16,9 @@ interface Song {
   coWriters?: string[];
   dateWritten?: string;
   status: 'draft' | 'in-progress' | 'needs-review' | 'complete';
-  album?: string;
+  tags: string[]; // Flexible: Setlist, Open Mic, Future Album, etc.
+  album?: string; // Legacy
+  archived: boolean;
   key?: string;
   tempo?: number;
   visibility: 'private' | 'org' | 'public';
@@ -33,7 +35,8 @@ export default function SongsLibraryPage() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [albumFilter, setAlbumFilter] = useState<string>('all');
+  const [tagFilter, setTagFilter] = useState<string>('all');
+  const [showArchived, setShowArchived] = useState(false);
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -41,24 +44,53 @@ export default function SongsLibraryPage() {
         router.push('/auth');
       } else {
         setUser(user);
-        setSongs(user.user_metadata?.songs || []);
+        // Ensure all songs have tags array (backward compatibility)
+        const normalizedSongs = (user.user_metadata?.songs || []).map((s: Song) => ({
+          ...s,
+          tags: s.tags || (s.album ? [s.album] : []),
+          archived: s.archived || false,
+        }));
+        setSongs(normalizedSongs);
         setLoading(false);
       }
     });
   }, [router]);
 
-  // Get unique albums for filter
-  const albums = [...new Set(songs.map(s => s.album).filter(Boolean))];
+  // Get all unique tags from all songs
+  const allTags = [...new Set(songs.flatMap(s => s.tags || []))].sort();
 
   // Apply filters
   const filteredSongs = songs.filter(song => {
     const matchesSearch = song.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          song.lyrics.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || song.status === statusFilter;
-    const matchesAlbum = albumFilter === 'all' || song.album === albumFilter;
+    const matchesTag = tagFilter === 'all' || (song.tags || []).includes(tagFilter);
+    const matchesArchived = showArchived ? true : !song.archived;
     
-    return matchesSearch && matchesStatus && matchesAlbum;
+    return matchesSearch && matchesStatus && matchesTag && matchesArchived;
   });
+
+  const exportAllSongs = () => {
+    if (songs.length === 0) return;
+    
+    const content = songs.map(song => {
+      return `${song.title}\n` +
+             `Writer: ${song.writer || 'Unknown'}\n` +
+             (song.coWriters?.length ? `Co-Writers: ${song.coWriters.join(', ')}\n` : '') +
+             (song.dateWritten ? `Date: ${song.dateWritten}\n` : '') +
+             (song.tags?.length ? `Tags: ${song.tags.join(', ')}\n` : '') +
+             `Status: ${song.status}\n` +
+             `\n${song.lyrics}\n\n---\n\n`;
+    }).join('\n');
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `my-songs-backup-${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (loading) {
     return (
@@ -88,12 +120,22 @@ export default function SongsLibraryPage() {
                 Your Complete Catalog
               </p>
             </div>
-            <Link 
-              href="/songs/import"
-              className="px-6 py-3 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-zinc-100 transition-colors"
-            >
-              IMPORT SONGS
-            </Link>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={exportAllSongs}
+                disabled={songs.length === 0}
+                className="px-4 py-2 border border-zinc-800 hover:border-zinc-700 font-mono text-xs uppercase tracking-wider transition-colors disabled:opacity-50"
+              >
+                <Download className="w-3 h-3 inline mr-2" />
+                BACKUP
+              </button>
+              <Link 
+                href="/songs/import"
+                className="px-6 py-3 bg-white text-black font-mono text-xs uppercase tracking-widest hover:bg-zinc-100 transition-colors"
+              >
+                IMPORT SONGS
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -188,12 +230,20 @@ export default function SongsLibraryPage() {
           </div>
         </div>
 
-        {/* Info Note */}
-        <div className="mb-8 p-4 border border-zinc-800 bg-zinc-900/30 rounded">
-          <p className="text-sm text-zinc-400">
-            <strong className="text-white">Note:</strong> Songs can exist independently OR be added to projects later. 
-            A single song can be its own standalone entity - you don't need to create a project for every song.
-          </p>
+        {/* Info Note & Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="p-4 border border-zinc-800 bg-zinc-900/30 rounded">
+            <p className="text-sm text-zinc-400">
+              <strong className="text-white">Folders & Tags:</strong> Organize songs with flexible tags like "Setlist", "Open Mic", "Future Album", "Work in Progress" - add unlimited tags per song.
+            </p>
+          </div>
+          <div className="p-4 border border-green-800/50 bg-green-900/10 rounded flex items-center justify-between">
+            <div>
+              <p className="text-sm font-semibold text-green-500">Auto-Save Active</p>
+              <p className="text-xs text-zinc-400">All changes saved within 3 seconds</p>
+            </div>
+            <Cloud className="w-5 h-5 text-green-500" />
+          </div>
         </div>
 
         {/* Songs Grid */}
