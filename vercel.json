@@ -1,6 +1,5 @@
 {
   "buildCommand": "pnpm turbo run build --filter=@rnrb/web",
-  "installCommand": "pnpm install --frozen-lockfile",
+  "installCommand": "pnpm install --frozen-lockfile --prod=false",
   "outputDirectory": "apps/web/.next"
 }
-
