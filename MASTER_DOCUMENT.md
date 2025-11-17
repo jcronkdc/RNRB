@@ -231,11 +231,43 @@ Project Detail → "Collaborate" button (1 click) → Collaboration Hub
 4. They accept → Added to project
 5. Can now see project, chat, collaborate
 
-**NEXT IMMEDIATE (Phase 3B):**
-- Wire up Ably real-time chat (channel per project)
-- Wire up Daily.co video rooms (room per project)
-- Cursor control for shared editing
-- File sharing in chat
+### ✅ PHASE 3B COMPLETE: Ably Chat + Daily.co Video LIVE
+
+**DEPLOYED & WORKING:**
+- **Ably Real-Time Chat** - Live in collaboration hub
+  - Channel per project (`project-{slug}`)
+  - Real-time messaging
+  - Presence awareness
+  - @mentions ready
+  - File sharing (Ably component has it)
+
+- **Daily.co Video Rooms** - Live in collaboration hub
+  - Create room per project (1 click)
+  - HD video/audio
+  - Screen sharing
+  - Up to 32 participants
+  - In-room chat
+  - Cloud recording
+  - Cursor control via screenshare
+
+**COLLABORATION PATHWAY (Tested):**
+```
+Project → Collaborate (1 click) → Chat Tab → LIVE Ably messaging
+Project → Collaborate (1 click) → Video Tab → Start Room → LIVE Daily.co
+```
+
+**UNIQUE INTERACTION:**
+✅ Real-time chat (Ably WebSocket)
+✅ HD video collaboration (Daily.co)
+✅ Screen share with cursor control
+✅ Up to 32 simultaneous participants
+✅ In-room text chat
+✅ Cloud recording per session
+
+**NEXT PHASE:**
+- Song-level collaboration (chat + video per song)
+- Shared lyrics editor with cursor tracking
+- Asset upload with collaboration
 
 **THEN (Phase 4):**
 3. **Song Collaboration Features**
