@@ -72,6 +72,9 @@ importers:
       next-auth:
         specifier: 4.24.7
         version: 4.24.7(next@15.5.6(@babel/core@7.28.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      openai:
+        specifier: ^4.24.1
+        version: 4.104.0(ws@8.18.3)(zod@3.25.76)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1549,7 +1552,7 @@ packages:
     resolution: {integrity: sha512-Cdko4KfcmKjsyHFrWwZ//lfLUbcLqlyFqjd/nYE2m3aZ7tjMNUjpks47iw7NTCnXf+5UWz5Ypyt1dSs1EP5QJw==}
     peerDependencies:
       '@prisma/client': '>=2.26.0 || >=3'
-      next-auth: ^4
+      next-auth: 4.24.7
 
   '@next/env@15.5.6':
     resolution: {integrity: sha512-3qBGRW+sCGzgbpc5TS1a0p7eNxnOarGVQhZxfvTdnV0gFI61lX7QNtQ4V1TSREctXzYn5NetbUsLvyqwLFJM6Q==}
