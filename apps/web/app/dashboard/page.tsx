@@ -77,7 +77,7 @@ export default function DashboardPage() {
             </div>
             <div className="rnrb-card p-4">
               <p className="text-sm text-muted-foreground mb-1">Total Songs</p>
-              <p className="text-2xl font-bold">0</p>
+              <p className="text-2xl font-bold">{user?.user_metadata?.songs?.length || 0}</p>
             </div>
             <div className="rnrb-card p-4">
               <p className="text-sm text-muted-foreground mb-1">Collaborators</p>
@@ -106,11 +106,33 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
+            <Link href="/songs/import">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full border-2 border-brand-primary/30 hover:border-brand-primary/60 transition-colors bg-gradient-to-br from-brand-primary/5 to-transparent">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/20 flex items-center justify-center group-hover:bg-brand-primary/30 transition-colors">
+                    <Music className="w-6 h-6 text-brand-primary" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-brand-primary group-hover:translate-x-1 transition-all" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Import Your Songs</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Upload all your existing songs at once - private & secure by default
+                </p>
+                <div className="text-sm text-brand-primary font-medium">Start import →</div>
+              </div>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+          >
             <Link href="/projects/new">
               <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors">
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Music className="w-6 h-6 text-brand-primary" />
+                    <Folder className="w-6 h-6 text-brand-primary" />
                   </div>
                   <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
