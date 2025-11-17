@@ -1,4 +1,4 @@
-import Ably from 'ably/promises';
+import Ably from 'ably';
 import { NextResponse } from 'next/server';
 
 const ablyApiKey = process.env.ABLY_API_KEY;

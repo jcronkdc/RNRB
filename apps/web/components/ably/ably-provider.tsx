@@ -1,6 +1,6 @@
 'use client';
 
-import Ably from 'ably/promises';
+import Ably from 'ably';
 import type { RealtimePromise } from 'ably';
 import { AblyProvider as ReactAblyProvider } from 'ably/react';
 import { useEffect, useState, type ReactNode } from 'react';
