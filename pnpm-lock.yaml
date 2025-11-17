@@ -358,6 +358,9 @@ importers:
       '@cronkwaters/config':
         specifier: workspace:*
         version: link:../config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.19.1
       eslint:
         specifier: ^9.12.0
         version: 9.39.1(jiti@1.21.7)
