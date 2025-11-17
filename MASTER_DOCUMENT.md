@@ -359,19 +359,23 @@ Project → Collaborate (1 click) → Video Tab → Start Room → LIVE Daily.co
 ✅ Organize by album WITHOUT projects
 ✅ Full metadata on every song
 
-**IMPORT PROCESS (30 SONGS):**
-1. Dashboard → Import Songs (1 click)
-2. Paste 30 songs (separate with 3 blank lines)
-3. Click "Parse" → See all 30 listed
-4. Edit EACH song's metadata:
-   - Confirm title (auto-detected from first line)
-   - Add your name as writer
-   - Add approximate date (optional)
-   - Set status (draft by default)
-   - Add album name (optional grouping)
-5. Remove any incorrectly parsed songs
-6. Click "Import X Songs" → All saved privately
-7. Library shows all with filters
+**IMPORT PROCESS (30 SONGS) - SIMPLE:**
+1. Dashboard → Click "Import Your Songs" (1 click)
+2. Paste ENTIRE 30-page document - ANY FORMAT (no formatting needed)
+3. Click "Auto-Detect Songs" → System finds all 30 automatically (1 click)
+4. Review list - edit metadata if desired (optional):
+   - Title, writer, date, status, album - all in one row
+   - Merge songs if wrongly split (click merge button)
+   - Remove any bad detections (click X)
+5. Click "Import X Songs" → All saved privately (1 click)
+
+**TOTAL: 3 CLICKS (paste → auto-detect → import)**
+
+NO MANUAL FORMATTING REQUIRED:
+❌ No triple newlines needed
+❌ No special separators
+❌ No formatting rules
+✅ Intelligent auto-detection handles everything
 
 **NEXT PHASE (5):**
 - Asset upload (audio files, stems, bounces)
