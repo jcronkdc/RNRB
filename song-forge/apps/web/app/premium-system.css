@@ -73,7 +73,12 @@
 
 /* Premium Metric Cards */
 .rnrb-metric-card {
-  @apply rnrb-card p-6;
+  @apply bg-surface rounded-lg border border-border/50 shadow-md p-6;
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--sf-color-surface)),
+    hsl(var(--sf-color-surface) / 0.95)
+  );
   position: relative;
   overflow: hidden;
 }
@@ -148,8 +153,13 @@
 
 /* Premium Project Cards */
 .rnrb-project-card {
-  @apply rnrb-card p-0 overflow-hidden;
-  @apply transition-all duration-300;
+  @apply bg-surface rounded-lg border border-border/50 shadow-md;
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--sf-color-surface)),
+    hsl(var(--sf-color-surface) / 0.95)
+  );
+  @apply p-0 overflow-hidden transition-all duration-300;
 }
 
 .rnrb-project-card:hover {
@@ -192,7 +202,10 @@
 }
 
 .rnrb-select {
-  @apply rnrb-input appearance-none;
+  @apply w-full rounded-md bg-surface border border-border/50;
+  @apply px-3 py-2 text-sm placeholder:text-muted-foreground;
+  @apply focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20;
+  @apply transition-colors duration-200 appearance-none;
   background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-position: right 0.75rem center;
   background-repeat: no-repeat;
@@ -200,7 +213,10 @@
 }
 
 .rnrb-textarea {
-  @apply rnrb-input resize-y min-h-[100px];
+  @apply w-full rounded-md bg-surface border border-border/50;
+  @apply px-3 py-2 text-sm placeholder:text-muted-foreground;
+  @apply focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20;
+  @apply transition-colors duration-200 resize-y min-h-[100px];
 }
 
 /* Premium Toggle Switch */

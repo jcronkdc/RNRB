@@ -5102,6 +5102,10 @@ Completely removed the "horrifyingly ugly" rock venue theme. Implemented a sophi
 2. Re-linked the repo to Vercel (`vercel link --project cronkwater`) so we can continue inspecting environment variables locally
 3. Verified all 46+ environment variables still exist (plus new Auth0 + MXBAI + STACK keys) – **no missing env vars**
 4. Counted remaining CronkWater references in the active app shell (`song-forge/apps/web`) – **236 instances left** (down from 923 reported earlier but still massive debt)
+5. Added the missing dashboard dependencies (`chart.js`, `react-chartjs-2`) to `apps/web/package.json` so the new analytics cards can actually compile on Vercel
+6. Rebuilt `apps/web/app/premium-system.css` so it no longer `@apply`s custom classes (`rnrb-card`, `rnrb-input`) that Tailwind can’t resolve in imported files – removed PostCSSSyntaxError entirely
+7. Ran `pnpm --filter @cronkwaters/web build` locally – build now passes (only warns about Prisma creds for sitemap because `.env` isn’t configured outside Vercel)
+8. Triggered a fresh production deploy `https://cronkwater-30hw38kso-justins-projects-d7153a8c.vercel.app` – build + deploy completed successfully after the fixes
 
 ### 🌐 Systems Health Re-check
 - **Vercel Env Vars:** `vercel env ls` confirms `RESEND_API_KEY`, `NEXTAUTH_*`, Google OAuth, Auth0, Neon/Postgres, Stack Auth, Supabase, MXBAI all present. No missing env variables.
@@ -5111,10 +5115,12 @@ Completely removed the "horrifyingly ugly" rock venue theme. Implemented a sophi
 - **Mobile:** Premium Tailwind tokens in `globals.css` (`premium-system.css`) still enforce responsive typography and spacing.
 
 ### 📦 Files Changed
-- `pnpm-lock.yaml` (regenerated to capture updated dependencies)
+- `pnpm-lock.yaml` (regenerated to capture updated dependencies + new chart packages)
+- `apps/web/package.json` (adds `chart.js` + `react-chartjs-2` for the premium dashboard)
+- `apps/web/app/premium-system.css` (inlines card/input styles so Tailwind can compile the premium system)
 
 ### ⚠️ Remaining Risks
-1. **Vercel deploy still needs to be re-run** now that the lockfile is current.
+1. **Monitor the latest prod deploy (`cronkwater-30hw38kso`)** – runtime is healthy now, but keep watching Prisma metrics once Neon creds rotate again.
 2. **236 CronkWater references** persist in `song-forge/apps/web` – branding contamination still severe.
 3. **TypeScript errors** logged during previous `pnpm build` remain unresolved (pre-existing).
 
