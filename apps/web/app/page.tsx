@@ -408,7 +408,7 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Floating UI Elements */}
+            {/* Feature Highlights */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -417,10 +417,10 @@ export default function HomePage() {
               className="absolute -left-4 top-1/4 rnrb-card p-4 shadow-xl"
             >
               <div className="flex items-center gap-3">
-                <Award className="w-8 h-8 text-brand-primary" />
+                <Music className="w-8 h-8 text-brand-primary" />
                 <div>
-                  <p className="text-sm font-semibold">New Achievement</p>
-                  <p className="text-xs text-muted-foreground">1M Streams Reached</p>
+                  <p className="text-sm font-semibold">In Development</p>
+                  <p className="text-xs text-muted-foreground">Dashboard Preview</p>
                 </div>
               </div>
             </motion.div>
@@ -433,10 +433,10 @@ export default function HomePage() {
               className="absolute -right-4 bottom-1/4 rnrb-card p-4 shadow-xl"
             >
               <div className="flex items-center gap-3">
-                <BarChart3 className="w-8 h-8 text-green-500" />
+                <BarChart3 className="w-8 h-8 text-purple-500" />
                 <div>
-                  <p className="text-sm font-semibold">Revenue Up 32%</p>
-                  <p className="text-xs text-muted-foreground">This month</p>
+                  <p className="text-sm font-semibold">Coming Soon</p>
+                  <p className="text-xs text-muted-foreground">Real Analytics</p>
                 </div>
               </div>
             </motion.div>
