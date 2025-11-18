@@ -1,12 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Sparkles, Music, Users, Play, Download, RefreshCw, Sliders } from 'lucide-react';
 import { Button, Card } from '@cronkwaters/ui';
-import dynamic from 'next/dynamic';
-
-// Dynamically import Ably for real-time collaboration
-const AblyProvider = dynamic(() => import('./ably/ably-provider').then(m => m.AblyProvider), { ssr: false });
+import { useChannel } from '@ably/ably-react';
 
 type CollaborativeAIMusicProps = {
   projectSlug: string;
@@ -47,9 +44,48 @@ export function CollaborativeAIMusic({ projectSlug, projectName, collaborators }
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeCollaborators, setActiveCollaborators] = useState<string[]>([]);
   const [selectedStem, setSelectedStem] = useState<StemType | null>(null);
+  const isLocalUpdate = useRef(false);
 
   // Real-time collaboration state sync via Ably
   const channelName = `ai-music-${projectSlug}`;
+
+  // Subscribe to real-time session updates
+  const { channel } = useChannel(channelName, (message) => {
+    // Only update if this is a remote change (not from this client)
+    if (message.name === 'session-update' && !isLocalUpdate.current) {
+      setSession(message.data);
+    }
+    if (message.name === 'stem-update' && !isLocalUpdate.current) {
+      setSession(prev => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          stems: prev.stems.map(s => 
+            s.type === message.data.stemType 
+              ? { ...s, ...message.data.updates }
+              : s
+          )
+        };
+      });
+    }
+  });
+
+  // Broadcast session changes to other collaborators
+  const broadcastSessionUpdate = useCallback((newSession: MusicSession) => {
+    isLocalUpdate.current = true;
+    channel?.publish('session-update', newSession);
+    setTimeout(() => {
+      isLocalUpdate.current = false;
+    }, 100);
+  }, [channel]);
+
+  const broadcastStemUpdate = useCallback((stemType: StemType, updates: Partial<Stem>) => {
+    isLocalUpdate.current = true;
+    channel?.publish('stem-update', { stemType, updates });
+    setTimeout(() => {
+      isLocalUpdate.current = false;
+    }, 100);
+  }, [channel]);
 
   const startNewSession = async () => {
     if (!prompt.trim() || !title.trim()) return;
@@ -75,6 +111,7 @@ export function CollaborativeAIMusic({ projectSlug, projectName, collaborators }
     };
 
     setSession(newSession);
+    broadcastSessionUpdate(newSession);
 
     try {
       // Step 1: Generate lyrics with OpenAI
@@ -89,7 +126,9 @@ export function CollaborativeAIMusic({ projectSlug, projectName, collaborators }
         ? generatedLyrics 
         : JSON.stringify(generatedLyrics, null, 2);
 
-      setSession(prev => prev ? { ...prev, lyrics: lyricsText, status: 'generating_stems' } : null);
+      const updatedSession = { ...newSession, lyrics: lyricsText, status: 'generating_stems' as AIGenerationState };
+      setSession(updatedSession);
+      broadcastSessionUpdate(updatedSession);
 
       // Step 2: Generate AI stems (mock for now, will integrate real AI music API)
       // In production: Use Suno API, Udio, or MusicGen
@@ -105,11 +144,14 @@ export function CollaborativeAIMusic({ projectSlug, projectName, collaborators }
 
       const generatedStems = await Promise.all(stemPromises);
       
-      setSession(prev => prev ? { 
-        ...prev, 
+      const finalSession = {
+        ...newSession,
+        lyrics: lyricsText,
         stems: generatedStems,
-        status: 'ready' 
-      } : null);
+        status: 'ready' as AIGenerationState
+      };
+      setSession(finalSession);
+      broadcastSessionUpdate(finalSession);
 
     } catch (error) {
       console.error('AI music generation failed:', error);
@@ -121,6 +163,9 @@ export function CollaborativeAIMusic({ projectSlug, projectName, collaborators }
   const regenerateStem = async (stemType: StemType) => {
     if (!session) return;
 
+    // Broadcast that this stem is regenerating
+    broadcastStemUpdate(stemType, { status: 'generating' });
+    
     setSession(prev => {
       if (!prev) return null;
       return {
@@ -136,13 +181,21 @@ export function CollaborativeAIMusic({ projectSlug, projectName, collaborators }
     // Simulate regeneration
     await new Promise(resolve => setTimeout(resolve, 2000));
 
+    const newStemData = {
+      url: `/api/mock-stem/${session.id}/${stemType}-v2`,
+      status: 'ready' as const
+    };
+
+    // Broadcast the regenerated stem
+    broadcastStemUpdate(stemType, newStemData);
+
     setSession(prev => {
       if (!prev) return null;
       return {
         ...prev,
         stems: prev.stems.map(s => 
           s.type === stemType 
-            ? { ...s, url: `/api/mock-stem/${session.id}/${stemType}-v2`, status: 'ready' as const } 
+            ? { ...s, ...newStemData } 
             : s
         )
       };
@@ -166,13 +219,23 @@ export function CollaborativeAIMusic({ projectSlug, projectName, collaborators }
 
       const { url } = await uploadResponse.json();
 
+      const newStemData = {
+        url,
+        isAI: false,
+        status: 'replaced' as const,
+        uploadedBy: 'current-user'
+      };
+
+      // Broadcast the human stem replacement
+      broadcastStemUpdate(stemType, newStemData);
+
       setSession(prev => {
         if (!prev) return null;
         return {
           ...prev,
           stems: prev.stems.map(s => 
             s.type === stemType 
-              ? { ...s, url, isAI: false, status: 'replaced' as const, uploadedBy: 'current-user' } 
+              ? { ...s, ...newStemData } 
               : s
           )
         };
@@ -192,14 +255,20 @@ export function CollaborativeAIMusic({ projectSlug, projectName, collaborators }
             Collaborative AI Music Studio
           </h3>
           <p className="text-sm text-muted-foreground mt-1">
-            Create music together - AI assists, you control
+            Create music together - AI assists, you control • Real-time sync enabled
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-brand-primary" />
-          <span className="text-sm text-muted-foreground">
-            {collaborators.length} team {collaborators.length === 1 ? 'member' : 'members'}
-          </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 border border-green-500/30 rounded-full">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <span className="text-xs text-green-400 font-medium">Live</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 text-brand-primary" />
+            <span className="text-sm text-muted-foreground">
+              {collaborators.length} team {collaborators.length === 1 ? 'member' : 'members'}
+            </span>
+          </div>
         </div>
       </div>
 
