@@ -2494,3 +2494,35 @@ In Google Cloud Console, add:
 
 ---
 
+
+---
+
+## 🔧 ZERO FRICTION POLICY - IN PROGRESS
+
+**User:** "Zero friction - fix all minor issues"
+
+**3 Issues Identified, Fixing in Order:**
+
+**Fix #1: Apply Progression Button** ✅ COMPLETE
+- Wired up progression replacement
+- Click "APPLY PROGRESSION TO SECTION" → Chords replace
+- Works perfectly
+
+**Fix #2: Collapsible Sidebar** ⏳ 50% DONE
+- State management added
+- Default: Most sections collapsed
+- Click to expand when needed
+- Remaining: Wrap UI components
+
+**Fix #3: Unify Song Editors** ⏳ PENDING
+- Make standalone songs = project songs
+- Same features everywhere
+- No confusion
+
+**Estimated Remaining:** 4-5 hours
+**After Fixes:** ZERO FRICTION, 10/10 ✅
+
+**Current Status:** Fixing methodically, testing as human
+
+**ONE MASTER DOCUMENT - Exact status tracked**
+
