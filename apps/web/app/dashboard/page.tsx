@@ -144,7 +144,10 @@ export default function DashboardPage() {
             transition={{ duration: 0.5 }}
           >
             <Link href="/projects/new">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors">
+              <div 
+                className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors"
+                title="Create a new project to organize your songs, collaborators, and sessions. Like an album or EP workspace."
+              >
                 <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 bg-brand-primary/10 border border-brand-primary/20 rounded-full">
                   <span className="text-xs font-semibold text-brand-primary">START HERE</span>
                 </div>
@@ -173,7 +176,10 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.05 }}
           >
             <Link href="/discover">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-purple-500/30 transition-all relative overflow-hidden">
+              <div 
+                className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-purple-500/30 transition-all relative overflow-hidden"
+                title="Search for musicians by username or email. Invite them to your projects for real-time collaboration."
+              >
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
@@ -199,7 +205,10 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <Link href="/studio">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-pink-500/30 transition-all relative overflow-hidden">
+              <div 
+                className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-pink-500/30 transition-all relative overflow-hidden"
+                title="HD video recording, remote collaboration, live streaming. Powered by Daily.co with screen share and cursor control."
+              >
                 <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
@@ -225,7 +234,10 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Link href="/tours">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-green-500/30 transition-all relative overflow-hidden">
+              <div 
+                className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-green-500/30 transition-all relative overflow-hidden"
+                title="Stream virtual concerts, plan tours, create setlists. Connect with fans worldwide."
+              >
                 <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
@@ -251,7 +263,10 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Link href="/messages">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-blue-500/30 transition-all relative overflow-hidden">
+              <div 
+                className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-blue-500/30 transition-all relative overflow-hidden"
+                title="Real-time chat and video calls with your team. Powered by Ably + Daily.co with screen sharing."
+              >
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
@@ -277,7 +292,10 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <Link href="/projects">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/40 transition-all relative overflow-hidden">
+              <div 
+                className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/40 transition-all relative overflow-hidden"
+                title="View all your albums, EPs, and singles. Manage songs and invite collaborators."
+              >
                 <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
