@@ -188,6 +188,27 @@ A solo artist trying to make a living juggles 20+ jobs:
 ✅ **Tools SERVE Creativity:** AI/chat/video presented as tools serving the deeper creative mission
 ✅ **Order:** Heart & Soul FIRST → Collaboration Tools → AI Features (supporting role)
 
+**🎵 SACRED HOMEPAGE MESSAGE (NEVER CHANGE):**
+```
+"Find the Magic You're Looking For
+
+Whether you're a songwriter needing better tools, new to the business and finding gigs, 
+discovering your roots in gospel or Appalachian folk, inventing country metal, 
+or following Dylan's path to say what you need to say— 
+this is where your music finds its voice.
+
+Collaborate with artists worldwide in ways rarely seen before."
+```
+
+**USER QUOTE:** "This is the vibe I like, gets me intrigued and excited. Don't change this one at all."
+
+**BRANDING DIRECTIVE:**
+- ✅ Homepage emotional message is PROTECTED (never alter)
+- ✅ Echo this inclusive, supportive vibe subtly throughout site
+- ✅ Use in: Onboarding messages, empty states, success messages
+- ✅ Not overly intrusive, just heart-first touches
+- ✅ Make people fall in love with the platform through emotional connection
+
 **THE COMPLETE MISSION (NEW UNDERSTANDING):**
 ✅ **Real solo artist's list:** 20+ jobs they juggle daily just to survive
 ✅ **The Vision:** "There's no place that does it all for them, except maybe this place someday"
