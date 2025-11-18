@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Music2, Sparkles, Users, MessageSquare } from 'lucide-react';
-import { Card } from '@cronkwaters/ui';
+import { Music2, Sparkles, Users, MessageSquare, Video } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import dynamic from 'next/dynamic';
 
@@ -55,60 +54,89 @@ export default function SongwritingPage() {
   }, []);
 
   return (
-    <div className="rnrb-container max-w-7xl mx-auto py-8">
-      {/* Premium Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center shadow-lg">
-              <Music2 className="w-8 h-8 text-white" />
+    <div className="min-h-screen bg-black">
+      <div className="max-w-7xl mx-auto py-8 px-4">
+        {/* BADASS Header with Orange Gradient */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative mb-8 rounded-2xl overflow-hidden bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 border border-orange-500/20 p-8"
+        >
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/50">
+                <Music2 className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold text-white mb-2">Collaborative Songwriting Studio</h1>
+                <p className="text-gray-300 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-orange-500" />
+                  Drag-and-drop builder with real-time collaboration
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-4xl font-display font-bold mb-2">Collaborative Songwriting Studio</h1>
-              <p className="text-muted-foreground flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-purple-400" />
-                Drag-and-drop song builder with real-time collaboration
-              </p>
+            {user && (
+              <div className="px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full">
+                <PresenceIndicator
+                  channelName="songwriting:studio"
+                  currentUser={{
+                    userId: user.id,
+                    userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                    userEmail: user.email || '',
+                    avatar: user.user_metadata?.avatar_url,
+                  }}
+                  location={`songwriting:${activeView}`}
+                  showDetails={false}
+                  maxVisible={5}
+                />
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Collaboration Features Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8 bg-purple-500/10 border border-purple-500/30 rounded-xl p-4"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-purple-400" />
+                <span className="text-white font-medium">Chat</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Video className="w-5 h-5 text-purple-400" />
+                <span className="text-white font-medium">Video</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-purple-400" />
+                <span className="text-white font-medium">Multi-Cursor</span>
+              </div>
+            </div>
+            <div className="text-sm text-purple-300">
+              ✨ All collaboration features active
             </div>
           </div>
-          {user && (
-            <div className="px-4 py-2 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-full">
-              <PresenceIndicator
-                channelName="songwriting:studio"
-                currentUser={{
-                  userId: user.id,
-                  userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
-                  userEmail: user.email || '',
-                  avatar: user.user_metadata?.avatar_url,
-                }}
-                location={`songwriting:${activeView}`}
-                showDetails={false}
-                maxVisible={5}
-              />
-            </div>
-          )}
-        </div>
+        </motion.div>
 
         {/* View Tabs */}
-        <div className="flex gap-2 border-b border-border">
+        <div className="flex gap-2 mb-8 border-b border-gray-800">
           <button
             onClick={() => setActiveView('structure')}
             className={`px-6 py-3 font-semibold transition-all relative ${
               activeView === 'structure'
-                ? 'text-brand-primary'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'text-orange-500'
+                : 'text-gray-400 hover:text-white'
             }`}
           >
-            <Music2 className="w-4 h-4 inline-block mr-2" />
             Song Structure
             {activeView === 'structure' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
               />
             )}
           </button>
@@ -116,16 +144,15 @@ export default function SongwritingPage() {
             onClick={() => setActiveView('chords')}
             className={`px-6 py-3 font-semibold transition-all relative ${
               activeView === 'chords'
-                ? 'text-brand-primary'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'text-orange-500'
+                : 'text-gray-400 hover:text-white'
             }`}
           >
-            <Sparkles className="w-4 h-4 inline-block mr-2" />
-            Chord Progression
+            Chord Progressions
             {activeView === 'chords' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
               />
             )}
           </button>
@@ -133,106 +160,100 @@ export default function SongwritingPage() {
             onClick={() => setActiveView('lyrics')}
             className={`px-6 py-3 font-semibold transition-all relative ${
               activeView === 'lyrics'
-                ? 'text-brand-primary'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'text-orange-500'
+                : 'text-gray-400 hover:text-white'
             }`}
           >
-            <MessageSquare className="w-4 h-4 inline-block mr-2" />
-            Lyrics & AI Assist
+            Lyrics Assistant
             {activeView === 'lyrics' && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
               />
             )}
           </button>
         </div>
-      </motion.div>
 
-      {/* Tab Content */}
-      <motion.div
-        key={activeView}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {activeView === 'structure' && user && (
-          <CollaborativeVisualBuilder
-            projectSlug="songwriting-studio"
-            onSongChange={(blocks) => setSongBlocks(blocks)}
-            currentUser={{
-              userId: user.id,
-              userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
-            }}
-          />
-        )}
+        {/* Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          {activeView === 'structure' && user && (
+            <CollaborativeVisualBuilder
+              projectSlug="songwriting-studio"
+              currentUser={{
+                userId: user.id,
+                userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                userEmail: user.email || '',
+                avatar: user.user_metadata?.avatar_url,
+              }}
+            />
+          )}
 
-        {activeView === 'chords' && (
-          <div className="space-y-6">
-            <Card className="p-6 rnrb-card bg-gradient-to-br from-purple-500/5 to-blue-500/5 border-purple-500/20">
-              <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-purple-400" />
-                Interactive Chord Progression Builder
-              </h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Drag and drop chords to build your progression. Get AI suggestions for chord sequences that sound great together.
-              </p>
-            </Card>
-            <ChordBuilder onChange={(chords) => setChordProgression(chords)} />
-          </div>
-        )}
-
-        {activeView === 'lyrics' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="p-6 rnrb-card">
-              <h3 className="text-xl font-semibold mb-4">Lyrics Workspace</h3>
-              <textarea
-                value={lyrics}
-                onChange={(e) => setLyrics(e.target.value)}
-                placeholder="Write your lyrics here... Use the AI assistant on the right for help with rhymes, synonyms, and creative suggestions."
-                className="w-full h-[600px] px-4 py-3 bg-surface border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition resize-none font-mono text-base leading-relaxed"
+          {activeView === 'chords' && (
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+              <ChordBuilder
+                onChange={(progression) => {
+                  setChordProgression(
+                    progression.map((chord, i) => ({
+                      id: `chord_${i}`,
+                      chord,
+                      duration: '1 bar'
+                    }))
+                  );
+                }}
               />
-            </Card>
+            </div>
+          )}
 
-            <Card className="p-6 rnrb-card">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-purple-400" />
-                AI Lyrics Assistant
-              </h3>
+          {activeView === 'lyrics' && (
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
               <LyricsAssistant
-                currentLyrics={lyrics}
-                onInsert={(text) => setLyrics(prev => prev ? `${prev}\n${text}` : text)}
+                initialLyrics={lyrics}
+                onChange={setLyrics}
               />
-            </Card>
-          </div>
-        )}
-      </motion.div>
+            </div>
+          )}
+        </motion.div>
 
-      {/* Info Banner */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="mt-8"
-      >
-        <Card className="p-6 rnrb-card bg-gradient-to-r from-brand-primary/5 to-purple-500/5 border-brand-primary/20">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-brand-primary/20 flex items-center justify-center flex-shrink-0">
-              <Users className="w-6 h-6 text-brand-primary" />
+        {/* Collaboration Info */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="mt-8 bg-gray-900 border border-gray-800 rounded-xl p-6"
+        >
+          <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+            <Users className="w-5 h-5 text-orange-500" />
+            Collaborative Features Active
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="flex items-start gap-3">
+              <MessageSquare className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-white font-medium">Real-time Chat</p>
+                <p className="text-gray-400">Message your collaborators while writing</p>
+              </div>
             </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-2">Real-Time Collaboration Features</h4>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• <strong>Drag & Drop Song Blocks:</strong> Build song structure with verse, chorus, bridge, and chord blocks</li>
-                <li>• <strong>Live Team Chat:</strong> Discuss ideas with collaborators in real-time (expand chat at bottom)</li>
-                <li>• <strong>Chord Grid System:</strong> Visual chord progression builder with common chord palette</li>
-                <li>• <strong>AI Lyrics Help:</strong> Get rhyme suggestions, synonyms, and creative AI assistance</li>
-                <li>• <strong>Export & History:</strong> Save versions, undo/redo, and export your work</li>
-              </ul>
+            <div className="flex items-start gap-3">
+              <Video className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-white font-medium">Video Sessions</p>
+                <p className="text-gray-400">Face-to-face collaboration with screen share</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Users className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-white font-medium">Multi-Cursor</p>
+                <p className="text-gray-400">See everyone&apos;s cursor in real-time</p>
+              </div>
             </div>
           </div>
-        </Card>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }
