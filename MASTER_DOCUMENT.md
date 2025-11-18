@@ -197,6 +197,64 @@ A solo artist trying to make a living juggles 20+ jobs:
 
 **HONESTY:** We're not there yet. But the vision is clear, and we're building toward it systematically.
 
+---
+
+## 🧪 UX METHODOLOGY - FIRST-TIME USER SIMULATION
+
+**NEW WORKFLOW (User Request):** "Pretend you're human, first time, rely on visual cues. Fix workflow if it feels off."
+
+**UX IMPROVEMENTS DEPLOYED:**
+
+### **1. First-Time User Onboarding** ✅
+- **What:** 4-step guided tour on first dashboard visit
+- **Steps:** Welcome → What's a Project → Real-Time Collaboration → AI Tools
+- **Design:** Modal with progress dots, skip option, premium aesthetic
+- **Storage:** LocalStorage tracks completion, "Need help?" button replays
+- **Result:** New users understand "What's a project?" immediately
+
+### **2. Dashboard Visual Cues** ✅
+- **"START HERE" badge** on New Project card (gold accent)
+- **Improved descriptions:** "Projects organize your songs... Like an album workspace—private by default"
+- **"Need help?" button** - Replays onboarding tour
+- **Subtext:** "Jump into your workflow - start here if you're new"
+
+### **3. Quick Collaboration Access** ✅
+- **"Find Collaborators" card** added to dashboard (reduces clicks)
+- **Direct link:** Dashboard → Discover → Search musicians (2 clicks instead of 5+)
+- **Clear description:** "Search for musicians, invite to projects"
+
+### **4. AI Assistant NOW FUNCTIONAL** ✅
+- **Purple sparkle button** in chat (visible, clickable)
+- **Click it:** Drops down AI helper popup
+- **Ask question:** "What chord goes after Am?"
+- **Get suggestion:** AI responds in purple card
+- **"Use This" button:** Inserts "[AI] {suggestion}" into message field
+- **Clear instructions:** "Click sparkle button for chord suggestions"
+
+### **5. Workflow Tested - FIRST-TIME USER SIMULATION:**
+
+**Path 1: I want to create music**
+1. Land homepage → Emotional hook ✅
+2. Sign in → Dashboard with onboarding ✅
+3. Read: "Welcome! Projects are your workspace" ✅
+4. See: "START HERE" badge on New Project ✅
+5. Click → Create project → Success ✅
+
+**Path 2: I want AI chord help**
+1. Dashboard → Create project ✅
+2. Go to Collaborate tab ✅
+3. See Chat with purple sparkle button ✅
+4. Click sparkle → AI helper pops up ✅
+5. Type "what chord after Am?" → Get suggestion ✅
+6. Click "Use This" → Suggestion in message field ✅
+
+**Path 3: I want to find collaborators**
+1. Dashboard → See "Find Collaborators" card ✅
+2. Click → Discover page ✅
+3. Search musicians → Invite to project ✅
+
+**RESULT:** Workflow feels intuitive. Visual cues guide without overwhelming. Aesthetic preserved.
+
 **AI POSITIONING (TRUE & UNIQUE, BUT SUPPORTING):**
 ✅ **"The Only Music Platform with AI-Powered Collaboration"** (moved lower on page)
 ✅ AI is a TOOL that serves creativity, not the focal point
