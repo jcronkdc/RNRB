@@ -34,48 +34,48 @@ import { NavBar } from '@/components/NavBar';
 
 const features = [
   {
-    title: 'Integrated Collaboration Hub',
-    description: 'Real-time chat + HD video + AI assistant all in one project workspace. The only platform combining Ably messaging, Daily.co video, and GPT-4 assistance.',
+    title: 'Find the Perfect Word',
+    description: 'Double-click any word - discover 100 rhyming alternatives. Filter by syllables. Write three times faster than staring at a blank page.',
     icon: Users,
-    stats: 'Chat + Video + AI',
+    stats: 'Rhyme Dictionary',
     href: '/projects',
     highlight: true
   },
   {
-    title: 'AI-Powered Chat Assistant',
-    description: 'Get chord suggestions, music theory help, and lyric improvements directly in project chat. Ethical AI that assists creativity.',
+    title: 'Escape the Same Four Chords',
+    description: 'Try Cmaj7 instead of C. Explore 20+ progressions from blues to jazz. Right-click any chord - see what else works. Find your unique sound.',
     icon: MessageSquare,
-    stats: 'Live Now',
+    stats: 'Chord Library',
     href: '/projects',
     highlight: true
   },
   {
-    title: 'HD Video Collaboration',
-    description: 'Daily.co integration with screen sharing, 32 participants, and cursor control via screenshare for unique real-time interaction.',
-    icon: Video,
-    stats: 'Up to 32 People',
+    title: 'Write to Your Music',
+    description: 'Upload your instrumental. Play it while you write. Match your words to the actual melody, timing, and feel.',
+    icon: Headphones,
+    stats: 'Audio Playback',
     href: '/studio'
   },
   {
-    title: 'Project Management',
-    description: 'Organize songs, sessions, collaborators, and revenue in invite-only project workspaces.',
+    title: 'Build Like LEGO Blocks',
+    description: 'Drag intro here, verse there, chorus, bridge - see your song take shape. Reorder anytime. Structure becomes clear.',
     icon: Music,
-    stats: 'Private by Default',
+    stats: 'Visual Builder',
     href: '/projects'
   },
   {
-    title: 'AI Tour Optimization',
-    description: 'Tokyo subway ant colony model - input cities, AI calculates optimal routing to minimize travel distance.',
-    icon: Globe,
-    stats: 'Coming Soon',
-    href: '/tours'
+    title: 'Collaborate Like Never Before',
+    description: 'Voice or video calls while editing together. Share your screen - they see your cursor move. Leave voice messages. Real-time presence.',
+    icon: Video,
+    stats: 'Teams Meetings',
+    href: '/studio'
   },
   {
-    title: 'Live Streaming',
-    description: 'Stream finished performances to YouTube, Twitch, Facebook simultaneously via RTMP.',
+    title: 'Never Lose a Version',
+    description: "Every 5 minutes, a snapshot. Undo last 50 actions. Restore yesterday's version. Your work is sacred - we protect it.",
     icon: Radio,
-    stats: 'Multi-Platform',
-    href: '/studio'
+    stats: 'Time Travel',
+    href: '/projects'
   }
 ];
 
