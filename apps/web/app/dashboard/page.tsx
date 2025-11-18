@@ -5,8 +5,9 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2, HelpCircle, Users } from 'lucide-react';
 import Link from 'next/link';
+import { FirstTimeOnboarding } from '@/components/first-time-onboarding';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -34,6 +35,9 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* First-Time User Onboarding */}
+      <FirstTimeOnboarding />
+      
       {/* Hero Section with Gradient */}
       <div className="relative overflow-hidden border-b border-border/50">
         <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
@@ -93,14 +97,25 @@ export default function DashboardPage() {
 
       <div className="rnrb-container max-w-7xl py-12 px-4">
 
-        {/* Section Header */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-display font-bold mb-2">Quick Actions</h2>
-          <p className="text-muted-foreground">Jump into your workflow</p>
+        {/* Section Header with Helper */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-display font-bold mb-2">Quick Actions</h2>
+            <p className="text-muted-foreground">Jump into your workflow - start here if you're new</p>
+          </div>
+          <button
+            onClick={() => localStorage.removeItem('rnrb_onboarding_complete')}
+            className="text-sm text-brand-primary hover:text-brand-primary/80 flex items-center gap-1 transition"
+            title="Replay onboarding tour"
+          >
+            <HelpCircle className="w-4 h-4" />
+            Need help?
+          </button>
         </div>
 
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          {/* NEW PROJECT - Primary Action */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -108,17 +123,43 @@ export default function DashboardPage() {
           >
             <Link href="/projects/new">
               <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors">
+                <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 bg-brand-primary/10 border border-brand-primary/20 rounded-full">
+                  <span className="text-xs font-semibold text-brand-primary">START HERE</span>
+                </div>
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
                     <Music className="w-6 h-6 text-brand-primary" />
                   </div>
                   <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">New Project</h3>
+                <h3 className="text-xl font-semibold mb-2">Create Your First Project</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Create a new project to organize songs, collaborators, and revenue
+                  Projects organize your songs, collaborators, and creative work. Like an album workspace—private by default.
                 </p>
                 <div className="text-sm text-brand-primary font-medium">Get started →</div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* FIND COLLABORATORS - Quick Shortcut */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+          >
+            <Link href="/discover">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
+                    <Users className="w-6 h-6 text-brand-primary" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Find Collaborators</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Search for musicians by username or email. Invite them to your projects for real-time collaboration.
+                </p>
+                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Discover artists →</div>
               </div>
             </Link>
           </motion.div>
