@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2, HelpCircle, Users } from 'lucide-react';
+import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2, HelpCircle, Users, Mic2, Video, BarChart3, Headphones } from 'lucide-react';
 import Link from 'next/link';
 import { FirstTimeOnboarding } from '@/components/first-time-onboarding';
 
@@ -38,12 +38,34 @@ export default function DashboardPage() {
       {/* First-Time User Onboarding */}
       <FirstTimeOnboarding />
       
-      {/* Hero Section with Gradient */}
+      {/* Hero Section with Vibrant Gradient */}
       <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-brand-primary/10 to-pink-500/10" />
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+          />
+          <motion.div 
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              opacity: [0.2, 0.4, 0.2]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/15 rounded-full blur-3xl"
+          />
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.1, 1],
+              opacity: [0.1, 0.3, 0.1]
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"
+          />
         </div>
         
         <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
@@ -132,11 +154,14 @@ export default function DashboardPage() {
                   </div>
                   <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Create Your First Project</h3>
+                <h3 className="text-xl font-semibold mb-2">Start a New Album/EP</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Projects organize your songs, collaborators, and creative work. Like an album workspace—private by default.
+                  Organize songs, invite collaborators, track sessions. Your private creative workspace.
                 </p>
-                <div className="text-sm text-brand-primary font-medium">Get started →</div>
+                <div className="text-sm text-brand-primary font-medium flex items-center gap-1">
+                  <Music className="w-4 h-4" />
+                  Create project →
+                </div>
               </div>
             </Link>
           </motion.div>
@@ -148,18 +173,22 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.05 }}
           >
             <Link href="/discover">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Users className="w-6 h-6 text-brand-primary" />
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-purple-500/30 transition-all relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                    <Users className="w-6 h-6 text-purple-400" />
                   </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Find Collaborators</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Search for musicians by username or email. Invite them to your projects for real-time collaboration.
+                <h3 className="text-xl font-semibold mb-2 relative">Find Band Members</h3>
+                <p className="text-sm text-muted-foreground mb-3 relative">
+                  Search musicians, invite to collaborate. Real-time chat & video co-writing.
                 </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Discover artists →</div>
+                <div className="text-sm text-purple-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity relative flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  Discover →
+                </div>
               </div>
             </Link>
           </motion.div>
@@ -170,18 +199,22 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <Link href="/studio">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Music className="w-6 h-6 text-brand-primary" />
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-pink-500/30 transition-all relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
+                    <Mic2 className="w-6 h-6 text-pink-400" />
                   </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-pink-400 group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Recording Studio</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Record HD video/audio, collaborate remotely, stream to platforms
+                <h3 className="text-xl font-semibold mb-2 relative">Record Your Music</h3>
+                <p className="text-sm text-muted-foreground mb-3 relative">
+                  HD video sessions, remote collaboration, live streaming. Daily.co powered.
                 </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Start session →</div>
+                <div className="text-sm text-pink-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity relative flex items-center gap-1">
+                  <Mic2 className="w-4 h-4" />
+                  Start recording →
+                </div>
               </div>
             </Link>
           </motion.div>
