@@ -1,6 +1,7 @@
 {
+  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@rnrb/web",
+  "outputDirectory": ".next",
+  "installCommand": "pnpm install",
   "framework": "nextjs",
-  "buildCommand": "pnpm turbo run build --filter=@rnrb/web",
-  "installCommand": "pnpm install --frozen-lockfile --prod=false",
-  "outputDirectory": "apps/web/.next"
+  "rootDirectory": "apps/web"
 }
