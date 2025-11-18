@@ -40,6 +40,11 @@ const ChordExplorer = dynamic(() => import('@/components/song/chord-explorer'), 
   loading: () => <div className="animate-pulse h-96 rnrb-card" />
 });
 
+const RhymeDictionary = dynamic(() => import('@/components/song/rhyme-dictionary'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-64 rnrb-card" />
+});
+
 type SongSection = {
   id: string;
   type: 'intro' | 'verse' | 'chorus' | 'bridge' | 'outro' | 'instrumental';
@@ -54,6 +59,8 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
   const [showChords, setShowChords] = useState(true);
   const [selectedChordForExploration, setSelectedChordForExploration] = useState<string | undefined>();
   const [selectedChordPosition, setSelectedChordPosition] = useState<{ sectionId: string; lineIndex: number; position: number } | null>(null);
+  const [selectedWordForRhymes, setSelectedWordForRhymes] = useState<string | null>(null);
+  const [selectedWordPosition, setSelectedWordPosition] = useState<{ sectionId: string; lineIndex: number; wordIndex: number } | null>(null);
 
   // Mock song data - will be replaced with database
   const song = {

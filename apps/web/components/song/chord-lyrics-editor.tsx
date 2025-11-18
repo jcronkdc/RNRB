@@ -25,7 +25,8 @@ interface ChordLyricsEditorProps {
   initialChords?: ChordPosition[];
   songKey?: string;
   onSave?: (lyrics: string, chords: ChordPosition[]) => void;
-  onChordClick?: (chord: string, lineIndex: number, position: number) => void; // NEW: Make chords clickable
+  onChordClick?: (chord: string, lineIndex: number, position: number) => void;
+  onWordSelect?: (word: string, lineIndex: number, wordIndex: number) => void; // NEW: Make words clickable for rhymes
 }
 
 export default function ChordLyricsEditor({
@@ -35,6 +36,7 @@ export default function ChordLyricsEditor({
   songKey,
   onSave,
   onChordClick,
+  onWordSelect,
 }: ChordLyricsEditorProps) {
   const [lyrics, setLyrics] = useState(initialLyrics);
   const [chords, setChords] = useState<ChordPosition[]>(initialChords);
@@ -292,12 +294,36 @@ export default function ChordLyricsEditor({
                       newLines[lineIndex] = e.target.value;
                       setLyrics(newLines.join('\n'));
                     }}
+                    onDoubleClick={(e) => {
+                      if (!onWordSelect) return;
+                      
+                      const input = e.target as HTMLInputElement;
+                      const clickPosition = input.selectionStart || 0;
+                      const words = line.split(/\s+/);
+                      let charCount = 0;
+                      let wordIndex = 0;
+                      
+                      for (let i = 0; i < words.length; i++) {
+                        charCount += words[i].length;
+                        if (clickPosition <= charCount) {
+                          wordIndex = i;
+                          break;
+                        }
+                        charCount += 1; // Space
+                      }
+                      
+                      const selectedWord = words[wordIndex]?.replace(/[.,!?;:]/g, '').toLowerCase();
+                      if (selectedWord && selectedWord.length > 1) {
+                        onWordSelect(selectedWord, lineIndex, wordIndex);
+                      }
+                    }}
                     className={`flex-1 bg-transparent border-0 focus:outline-none focus:ring-0 ${
                       isSectionHeader ? 'font-bold text-brand-primary uppercase text-xs tracking-wider' :
                       isBlank ? 'text-muted-foreground/30' :
                       'text-foreground'
                     }`}
                     placeholder={isBlank ? '(blank line)' : 'Lyrics...'}
+                    title="Double-click any word to find rhymes"
                   />
                 </div>
 

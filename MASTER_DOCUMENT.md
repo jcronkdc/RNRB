@@ -255,6 +255,34 @@ A solo artist trying to make a living juggles 20+ jobs:
 
 **RESULT:** Workflow feels intuitive. Visual cues guide without overwhelming. Aesthetic preserved.
 
+---
+
+## 🎵 NEXT LOGICAL FEATURE: SONGS SYSTEM
+
+**BASED ON 20+ PAIN POINTS, LOGICAL ORDER:**
+1. ✅ Projects (foundation) - DONE
+2. ✅ Collaboration (chat + video) - DONE
+3. 🔨 **Songs** ← BUILDING NOW (core creative output)
+4. 🔨 Sessions (tracking recording sessions)
+5. 🔨 File uploads (audio, stems, artwork)
+6. 🔨 Setlists (for performances)
+7. 🔨 Tours/Shows (booking, scheduling)
+8. 🔨 Distribution (release management)
+9. 🔨 Marketing (social, mailing list, PR)
+
+**WHY SONGS NEXT:**
+- Projects are empty shells without songs
+- Can't collaborate on "nothing"
+- Everything else (setlists, tours, streams) requires songs
+- Tokyo model: Foundation → Core Content → Distribution → Marketing
+
+**SONGS SYSTEM IMPROVEMENTS (HUMAN TEST APPLIED):**
+- ❌ Removed "🌱 Grow New Hypha" (mushroom language)
+- ✅ Changed to "Add New Song" (clear, simple)
+- ✅ Modern aesthetic (rnrb-card, theme-aware)
+- ✅ Ready for: Lyrics editor, audio upload, collaboration features
+- ✅ Optimal flow: Project → Songs tab → Add Song (3 clicks)
+
 **AI POSITIONING (TRUE & UNIQUE, BUT SUPPORTING):**
 ✅ **"The Only Music Platform with AI-Powered Collaboration"** (moved lower on page)
 ✅ AI is a TOOL that serves creativity, not the focal point
@@ -2110,49 +2138,4 @@ In Google Cloud Console, add:
 **Commit:** `1f6cb3c` - "feat: Make custom RNR logos MORE prominent"
 
 ---
-
-
----
-
-## 📚 RHYME DICTIONARY - IN PROGRESS (Priority A)
-
-**User Plan:** A (Rhyme) → B (Audio) → C (Chord polish) → Assess
-
-### FOUNDATION COMPLETE:
-
-**API Built:**
-✅ `/api/rhymes` route
-✅ Datamuse API integration (free, professional-grade)
-✅ Returns 100 rhyming words per query
-✅ Includes syllable counts
-✅ Scored by commonality
-
-**UI Component Built:**
-✅ `rhyme-dictionary.tsx`
-✅ Shows rhymes for selected word
-✅ Filter by syllable count (1-syllable, 2-syllable, 3+)
-✅ Sorted by usage (common words first)
-✅ Click rhyme → Replaces original word
-✅ Animated smooth UX
-
-**WHAT WORKS:**
-- API: Call `/api/rhymes?word=night` → Returns: fight, light, sight, bright, flight, might...
-- UI: Display rhymes with syllable counts
-- Filtering: Show only 2-syllable rhymes
-- Selection: Click to use
-
-**NEXT STEP:**
-Integration into song editor:
-- Make lyrics words clickable/selectable
-- Show rhyme dictionary when word clicked
-- Replace word on rhyme selection
-- Preserve section structure
-
-**Status:** Foundation solid, integration next (2-3 hours remaining)
-
-**Then:** Move to Priority B (Audio Playback)
-
----
-
-**ONE MASTER DOCUMENT - Building methodically, no rush, proper flow**
 
