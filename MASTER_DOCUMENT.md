@@ -2053,3 +2053,57 @@ In Google Cloud Console, add:
 
 ---
 
+
+---
+
+## 🎯 AGENT 31 - NEXT STEP ASSESSMENT
+
+**Chord Progression Library Status:**
+- Tokyo Score: 9/10 (functional and usable)
+- Could polish to 10/10 with:
+  * "Apply Progression to Section" button (1 hour)
+  * Collapsible sidebar sections (30 min)
+  * More progressions (1-2 hours)
+  
+**OR Move to Critical Gaps:**
+
+### HIGHEST IMPACT NEXT FEATURES:
+
+**1. RHYME DICTIONARY** ❌ **MOST CRITICAL GAP**
+- Every professional tool has this
+- We don't
+- Speeds up writing 3x
+- Industry baseline
+- **Effort:** 4-6 hours
+- **Impact:** 7/10 → 8/10
+
+**2. SYLLABLE COUNTER** ❌ **PROFESSIONAL BASELINE**
+- Essential for meter/flow
+- Check line consistency
+- **Effort:** 2-3 hours
+- **Impact:** 8/10 → 8.5/10
+
+**3. AUDIO PLAYBACK** ❌ **USER ASKED FOR THIS**
+- "Where do I upload my music?"
+- Write lyrics to actual instrumental
+- Major workflow gap
+- **Effort:** 6-8 hours
+- **Impact:** 8.5/10 → 9/10
+
+**4. VERSION COMPARISON** ❌ **USER'S COLLABORATION MODEL**
+- Fork and compare workflow
+- Side-by-side view
+- **Effort:** 6-8 hours
+- **Impact:** 9/10 → 9.5/10
+
+**AGENT 31 RECOMMENDATION:**
+Move to **Rhyme Dictionary** (most critical professional gap, quick build, high ROI)
+
+**Alternative:**
+Move to **Audio Playback** (user specifically asked about it)
+
+**Current Score: 8.5/10**
+**Path to 10/10: 3-4 more features**
+
+**Waiting for user direction...**
+
