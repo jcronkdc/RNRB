@@ -2336,3 +2336,34 @@ In Google Cloud Console, add:
 
 ---
 
+
+---
+
+## ⏳ PRIORITY B IN PROGRESS: AUDIO PLAYBACK (Steps 1-2 of 4 Complete)
+
+**User Request:** "Where do I upload my music?"
+
+**COMPLETED:**
+✅ Step 1: Audio Upload Component (file picker, validation, progress)
+✅ Step 2: Audio Player Component (play/pause/seek/volume controls)
+
+**Components Built:**
+- `audio-upload.tsx` - Upload MP3/WAV/OGG (max 50MB)
+- `audio-player.tsx` - Full playback controls
+
+**REMAINING (2-3 hours):**
+- Step 3: Integrate into song editor (add to sidebar)
+- Step 4: Test as human (Tokyo test complete flow)
+
+**After Integration, User Can:**
+1. Upload instrumental track
+2. Play while editing lyrics
+3. Match words to music timing
+4. Share audio with collaborators
+
+**Status:** 50% complete (foundation built, integration pending)
+
+**Next Session:** Complete Steps 3-4, then move to Priority C
+
+**ONE MASTER DOCUMENT - Progress tracked accurately**
+
