@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Users, Bell, Wifi, CheckCircle } from 'lucide-react';
+import { MessageSquare, Users, Bell, Wifi, CheckCircle, ArrowRight, Plus } from 'lucide-react';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { Card } from '@cronkwaters/ui';
+import { Card, Button } from '@cronkwaters/ui';
 
 // Dynamically import Ably components to prevent SSR issues
 const ChatRoom = dynamic(() => import('@/components/ably').then(m => m.ChatRoom), {
@@ -276,8 +277,31 @@ export default function MessagesPage() {
           </div>
         </Card>
 
-        {/* REMOVED Tab Navigation - will be enabled when Ably is configured */}
-        <div style={{ display: 'none' }}>
+        {/* Redirect to Projects - Real chat is there */}
+        <Card className="p-12 text-center rnrb-card bg-brand-primary/5 border-brand-primary/20">
+          <MessageSquare className="w-20 h-20 text-brand-primary mx-auto mb-6" />
+          <h2 className="text-3xl font-display font-bold mb-4">Messaging Lives in Your Projects</h2>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Real-time chat and collaboration happen inside your projects and songs. Create a project to start chatting with your team.
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            <Link href="/projects">
+              <Button className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
+                Go to My Projects
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </Link>
+            <Link href="/projects/new">
+              <Button className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
+                Create New Project
+                <Plus className="w-5 h-5" />
+              </Button>
+            </Link>
+          </div>
+        </Card>
+
+        {/* REMOVED: Hidden tab navigation that didn't work */}
+        <div style={{ display: 'none' }} className="opacity-0 pointer-events-none">
         {/* Tab Navigation */}
         <div className="flex gap-4 mb-8">
           <button
