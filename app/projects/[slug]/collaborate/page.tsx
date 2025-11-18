@@ -23,6 +23,7 @@ import dynamic from 'next/dynamic';
 // Dynamically import collaboration components
 const ProjectChat = dynamic(() => import('@/components/project-chat').then(m => m.ProjectChat), { ssr: false });
 const ProjectVideoRoom = dynamic(() => import('@/components/project-video-room').then(m => m.ProjectVideoRoom), { ssr: false });
+const CollaborativeAIMusic = dynamic(() => import('@/components/collaborative-ai-music').then(m => m.CollaborativeAIMusic), { ssr: false });
 
 export default function ProjectCollaboratePage() {
   const params = useParams();
@@ -34,7 +35,7 @@ export default function ProjectCollaboratePage() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviting, setInviting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [activeView, setActiveView] = useState<'team' | 'chat' | 'video'>('team');
+  const [activeView, setActiveView] = useState<'team' | 'chat' | 'video' | 'ai-music'>('team');
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -149,10 +150,10 @@ export default function ProjectCollaboratePage() {
         )}
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex gap-2 mb-6 overflow-x-auto">
           <button
             onClick={() => setActiveView('team')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-lg font-medium transition whitespace-nowrap ${
               activeView === 'team'
                 ? 'bg-brand-primary text-brand-primary-foreground'
                 : 'bg-surface text-muted-foreground hover:text-foreground'
@@ -163,25 +164,36 @@ export default function ProjectCollaboratePage() {
           </button>
           <button
             onClick={() => setActiveView('chat')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-lg font-medium transition whitespace-nowrap ${
               activeView === 'chat'
                 ? 'bg-brand-primary text-brand-primary-foreground'
                 : 'bg-surface text-muted-foreground hover:text-foreground'
             }`}
           >
             <MessageSquare className="w-4 h-4 inline mr-2" />
-            Project Chat
+            Chat
           </button>
           <button
             onClick={() => setActiveView('video')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
+            className={`px-4 py-2 rounded-lg font-medium transition whitespace-nowrap ${
               activeView === 'video'
                 ? 'bg-brand-primary text-brand-primary-foreground'
                 : 'bg-surface text-muted-foreground hover:text-foreground'
             }`}
           >
             <Video className="w-4 h-4 inline mr-2" />
-            Video Room
+            Video
+          </button>
+          <button
+            onClick={() => setActiveView('ai-music')}
+            className={`px-4 py-2 rounded-lg font-medium transition whitespace-nowrap ${
+              activeView === 'ai-music'
+                ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
+                : 'bg-surface text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <Share2 className="w-4 h-4 inline mr-2" />
+            AI Music Together
           </button>
         </div>
 
@@ -290,6 +302,17 @@ export default function ProjectCollaboratePage() {
         {activeView === 'video' && (
           <Card className="p-6">
             <ProjectVideoRoom projectSlug={slug} projectName={project.name} />
+          </Card>
+        )}
+
+        {/* AI Music View - Collaborative AI Music Generation */}
+        {activeView === 'ai-music' && (
+          <Card className="p-6">
+            <CollaborativeAIMusic 
+              projectSlug={slug} 
+              projectName={project.name}
+              collaborators={collaborators}
+            />
           </Card>
         )}
       </div>
