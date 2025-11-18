@@ -17,13 +17,20 @@ import {
   Play,
   Sparkles,
   FileText,
-  Mic2
+  Mic2,
+  Instagram,
+  Facebook,
+  Twitter,
+  Copy,
+  Check,
+  Loader2
 } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
 // Dynamically import chat for song-level collaboration
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then(m => m.ChatRoom), { ssr: false });
+const SocialMediaGenerator = dynamic(() => import('@/components/social-media-generator').then(m => m.SocialMediaGenerator), { ssr: false });
 
 export default function SongDetailPage() {
   const params = useParams();
@@ -36,7 +43,7 @@ export default function SongDetailPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'details' | 'lyrics' | 'audio' | 'chat'>('details');
+  const [activeTab, setActiveTab] = useState<'details' | 'lyrics' | 'audio' | 'chat' | 'share'>('details');
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -112,7 +119,7 @@ export default function SongDetailPage() {
 
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b border-border">
-          {['details', 'lyrics', 'audio', 'chat'].map((tab) => (
+          {['details', 'lyrics', 'audio', 'share', 'chat'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
@@ -125,6 +132,7 @@ export default function SongDetailPage() {
               {tab === 'chat' && <MessageSquare className="w-4 h-4 inline-block mr-2" />}
               {tab === 'lyrics' && <FileText className="w-4 h-4 inline-block mr-2" />}
               {tab === 'audio' && <Mic2 className="w-4 h-4 inline-block mr-2" />}
+              {tab === 'share' && <Sparkles className="w-4 h-4 inline-block mr-2" />}
               {tab}
             </button>
           ))}
@@ -265,6 +273,39 @@ export default function SongDetailPage() {
                       No files uploaded yet. Upload your first recording above.
                     </p>
                   </div>
+                </div>
+              </Card>
+            </motion.div>
+          )}
+
+          {activeTab === 'share' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <Card className="p-8 rnrb-card">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-semibold mb-2 flex items-center gap-2">
+                    <Sparkles className="w-6 h-6 text-purple-400" />
+                    AI Social Media Posts
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Generate Instagram, Facebook, and Twitter posts about "{song.title}". 
+                    AI creates 5 options - pick your favorite and edit before posting.
+                  </p>
+                </div>
+                <SocialMediaGenerator
+                  songTitle={song.title}
+                  projectName={project.name}
+                  genre={song.genre || project.genre}
+                  key={song.key}
+                  tempo={song.tempo}
+                />
+                <div className="mt-6 rnrb-card p-4 bg-brand-primary/5">
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-brand-primary" />
+                    <strong>Collaborative:</strong> Share drafts in project chat for team feedback before posting
+                  </p>
                 </div>
               </Card>
             </motion.div>
