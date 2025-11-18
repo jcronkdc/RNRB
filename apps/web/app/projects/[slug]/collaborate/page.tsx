@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
@@ -15,7 +16,8 @@ import {
   Shield,
   User as UserIcon,
   X,
-  Check
+  Check,
+  ArrowLeft
 } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -116,8 +118,14 @@ export default function ProjectCollaboratePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background via-surface/20 to-background">
-        <div className="text-foreground">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <motion.div 
+          animate={{ opacity: [0.2, 1, 0.2] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-muted-foreground font-mono text-sm"
+        >
+          Loading collaboration hub...
+        </motion.div>
       </div>
     );
   }
@@ -128,15 +136,47 @@ export default function ProjectCollaboratePage() {
   const pendingInvites = project.invites || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-surface/20 to-background py-12 px-4">
-      <div className="container mx-auto max-w-6xl">
+    <div className="min-h-screen bg-background">
+      
+      {/* Premium Hero Section */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
+        </div>
         
-        <h1 className="text-4xl font-bold text-foreground mb-2">
-          🕸️ Collaboration Hub
-        </h1>
-        <p className="text-xl text-muted-foreground mb-8">
-          The network nodes for <span className="text-brand-primary">{project.name}</span>
-        </p>
+        <div className="container mx-auto max-w-6xl relative z-10 py-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {/* Breadcrumb */}
+            <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-primary mb-6 transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              <span className="font-mono text-xs uppercase tracking-wider">Back to Project</span>
+            </Link>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                <Users className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Collaborate on</p>
+                <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground">
+                  {project.name}
+                </h1>
+              </div>
+            </div>
+            <p className="text-lg text-muted-foreground">
+              Real-time chat, video collaboration, and team management in one place
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="container mx-auto max-w-6xl py-12 px-4">
 
         {message && (
           <div className={`mb-6 p-4 rounded-lg border ${
@@ -149,68 +189,85 @@ export default function ProjectCollaboratePage() {
         )}
 
         {/* Tab Navigation */}
-        <div className="flex gap-2 mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex gap-2 mb-6 border-b border-border pb-2"
+        >
           <button
             onClick={() => setActiveView('team')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
+            className={`flex items-center gap-2 px-6 py-3 rounded-t-lg transition-all font-medium ${
               activeView === 'team'
                 ? 'bg-brand-primary text-brand-primary-foreground'
-                : 'bg-surface text-muted-foreground hover:text-foreground'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
             }`}
           >
-            <Users className="w-4 h-4 inline mr-2" />
+            <Users className="w-4 h-4" />
             Team
           </button>
           <button
             onClick={() => setActiveView('chat')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
+            className={`flex items-center gap-2 px-6 py-3 rounded-t-lg transition-all font-medium ${
               activeView === 'chat'
                 ? 'bg-brand-primary text-brand-primary-foreground'
-                : 'bg-surface text-muted-foreground hover:text-foreground'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
             }`}
           >
-            <MessageSquare className="w-4 h-4 inline mr-2" />
-            Project Chat
+            <MessageSquare className="w-4 h-4" />
+            Chat
           </button>
           <button
             onClick={() => setActiveView('video')}
-            className={`px-4 py-2 rounded-lg font-medium transition ${
+            className={`flex items-center gap-2 px-6 py-3 rounded-t-lg transition-all font-medium ${
               activeView === 'video'
                 ? 'bg-brand-primary text-brand-primary-foreground'
-                : 'bg-surface text-muted-foreground hover:text-foreground'
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
             }`}
           >
-            <Video className="w-4 h-4 inline mr-2" />
-            Video Room
+            <Video className="w-4 h-4" />
+            Video
           </button>
-        </div>
+        </motion.div>
 
         {/* Team View */}
         {activeView === 'team' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+          >
             <div className="lg:col-span-2 space-y-6">
               {/* Current Team */}
-              <Card className="p-6">
-                <h2 className="text-2xl font-semibold text-foreground mb-4">
-                  Network Nodes ({collaborators.length})
+              <Card className="p-6 rnrb-card">
+                <h2 className="text-2xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <Users className="w-6 h-6 text-brand-primary" />
+                  Team Members ({collaborators.length})
                 </h2>
                 <div className="space-y-3">
-                  {collaborators.map((collab: any) => (
-                    <div key={collab.id} className="flex items-center justify-between p-4 bg-surface border border-border rounded-lg">
+                  {collaborators.map((collab: any, index: number) => (
+                    <motion.div
+                      key={collab.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      className="flex items-center justify-between p-4 bg-surface hover:bg-surface-muted border border-border rounded-xl transition-all"
+                    >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                        <div className="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center text-foreground font-semibold">
                           {collab.email[0].toUpperCase()}
                         </div>
                         <div>
                           <p className="font-medium text-foreground">{collab.email}</p>
                           <p className="text-sm text-muted-foreground flex items-center gap-2">
-                            {collab.role === 'owner' && <><Crown className="w-3 h-3 text-yellow-500" /> Owner</>}
-                            {collab.role === 'admin' && <><Shield className="w-3 h-3 text-blue-500" /> Admin</>}
+                            {collab.role === 'owner' && <><Crown className="w-3 h-3 text-brand-primary" /> Owner</>}
+                            {collab.role === 'admin' && <><Shield className="w-3 h-3 text-brand-primary" /> Admin</>}
                             {collab.role === 'member' && <><UserIcon className="w-3 h-3" /> Member</>}
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </Card>
@@ -242,13 +299,13 @@ export default function ProjectCollaboratePage() {
 
             {/* Invite Panel */}
             <div>
-              <Card className="p-6">
+              <Card className="p-6 rnrb-card">
                 <h3 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
                   <UserPlus className="w-5 h-5 text-brand-primary" />
-                  Invite Collaborator
+                  Invite Member
                 </h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Invite musicians to collaborate on this project. They'll get email access.
+                  Invite musicians to collaborate on this project
                 </p>
                 <div className="space-y-3">
                   <input
@@ -256,22 +313,28 @@ export default function ProjectCollaboratePage() {
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="musician@example.com"
-                    className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-none"
+                    className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition"
+                    onKeyPress={(e) => e.key === 'Enter' && handleInvite()}
                   />
                   <Button
                     onClick={handleInvite}
                     disabled={inviting}
-                    className="w-full bg-brand-primary hover:bg-brand-primary/90 text-brand-primary-foreground"
+                    className="w-full rnrb-button-primary"
                   >
                     <Mail className="w-4 h-4 mr-2" />
                     {inviting ? 'Sending...' : 'Send Invitation'}
                   </Button>
                 </div>
 
-                <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                  <p className="text-sm text-blue-400 font-medium mb-2">🔒 Invite-Only Access</p>
+                <div className="mt-6 p-4 rnrb-card bg-surface-muted/50 border border-border">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-5 h-5 rounded-full bg-brand-primary/20 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-brand-primary" />
+                    </div>
+                    <p className="text-sm font-semibold text-foreground">Invite-Only Access</p>
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    Only people you invite can see this project. They must accept the invitation to gain access.
+                    Only invited members can see this project. All collaboration is private by default.
                   </p>
                 </div>
               </Card>
