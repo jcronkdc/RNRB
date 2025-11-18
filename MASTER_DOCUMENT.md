@@ -276,12 +276,40 @@ A solo artist trying to make a living juggles 20+ jobs:
 - Everything else (setlists, tours, streams) requires songs
 - Tokyo model: Foundation → Core Content → Distribution → Marketing
 
-**SONGS SYSTEM IMPROVEMENTS (HUMAN TEST APPLIED):**
-- ❌ Removed "🌱 Grow New Hypha" (mushroom language)
-- ✅ Changed to "Add New Song" (clear, simple)
+**SONGS SYSTEM - PHASE 3 COMPLETE:**
+
+### **Song Creation (LIVE):**
+- ✅ Clean "Add New Song" page (no mushroom language)
+- ✅ Simple form: Title, Key, Tempo, Time Signature, Lyrics, Notes
 - ✅ Modern aesthetic (rnrb-card, theme-aware)
-- ✅ Ready for: Lyrics editor, audio upload, collaboration features
-- ✅ Optimal flow: Project → Songs tab → Add Song (3 clicks)
+- ✅ Optimal flow: Project → Songs → Add (3 clicks)
+
+### **Song Detail Page (NEW - LIVE):**
+- ✅ **4-tab interface:** Details, Lyrics, Audio, Chat
+- ✅ **Breadcrumb navigation:** Always know where you are
+- ✅ **Edit mode:** Click "Edit Song" → Fields unlock
+- ✅ **Lyrics Tab:** Full-screen editor with AI button (teaser)
+- ✅ **Audio Tab:** Upload placeholder (honest: "Coming Soon")
+- ✅ **Chat Tab:** SONG-LEVEL COLLABORATION (Ably chat per song)
+- ✅ **Collaborators section:** Shows who's working on this song
+- ✅ **Smooth animations:** Framer Motion tab transitions
+
+### **COLLABORATION PER SONG (UNIQUE):**
+- ✅ Each song gets its own Ably chat channel
+- ✅ Discuss lyrics, chords, production on specific songs
+- ✅ Purple AI assistant button in song chat too
+- ✅ Invite-only (project members only)
+
+### **HUMAN TEST RESULT:** ✅ PASSED
+**Workflow tested:**
+- Create project → Add song → View song → Collaborate
+- All visual cues clear
+- Tabs intuitive
+- Not overwhelming
+- Collaboration obvious
+- Aesthetic preserved
+
+**Tokyo Model:** Foundation → Projects → Songs → Song Detail → Collaboration (optimal pathways verified)
 
 **AI POSITIONING (TRUE & UNIQUE, BUT SUPPORTING):**
 ✅ **"The Only Music Platform with AI-Powered Collaboration"** (moved lower on page)
