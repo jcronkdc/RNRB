@@ -428,12 +428,12 @@ export default function ProfileSettingsPage() {
         {/* Save Button */}
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {profile.is_public ? '👁️ Your profile is public' : '🔒 Your profile is private'}
+            {profile.is_public ? 'Your profile is public' : 'Your profile is private'}
           </p>
           <Button
             onClick={handleSaveProfile}
             disabled={saving}
-            className="bg-purple-600 hover:bg-purple-700 text-foreground px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
+            className="rnrb-button-primary px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Profile'}

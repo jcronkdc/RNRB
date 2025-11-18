@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function AuthTestPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-[#050816] via-[#061125] to-[#0f172a] px-6">
+    <div className="flex min-h-screen items-center justify-center bg-background px-6">
       <div className="w-full max-w-2xl space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-semibold tracking-tight text-white">

@@ -87,14 +87,14 @@ export default function ProjectSettingsPage() {
 
   if (loading || !project) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-white">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#050816] to-[#0f172a] py-12 px-4">
+    <div className="min-h-screen bg-background py-12 px-4">
       <div className="container mx-auto max-w-4xl">
         <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-6">
           <ArrowLeft className="w-4 h-4" />
