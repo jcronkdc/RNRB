@@ -79,277 +79,282 @@ export default function CreatePage() {
   const canGenerate = prompt.trim() || selectedGenres.length > 0 || selectedMoods.length > 0;
   
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
-          <Sparkles className="w-8 h-8 text-brand-primary" />
-          Create New Track
-        </h1>
-        <p className="text-foreground-muted">
-          Describe your music idea or use the style options below to generate AI music
-        </p>
-      </div>
-      
-      {/* Main Prompt Area */}
-      <div className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            Describe your track
-          </label>
-          <div className="relative">
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="E.g., A driving rock anthem with powerful electric guitars and thunderous drums..."
-              className="
-                prompt-input w-full resize-none
-                pr-12 focus:ring-2 focus:ring-brand-primary/30
-              "
-              rows={3}
-              disabled={isGenerating}
-            />
-            <button
-              onClick={() => setPrompt(examplePrompts[Math.floor(Math.random() * examplePrompts.length)])}
-              className="
-                absolute bottom-3 right-3 
-                btn-ghost p-2 text-foreground-muted
-                hover:text-foreground
-              "
-              title="Get random prompt"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
-          </div>
-          
-          {/* Example prompts */}
-          <div className="mt-2 flex items-center gap-2">
-            <span className="text-xs text-foreground-muted">Try:</span>
-            <div className="flex gap-2 flex-wrap">
-              {examplePrompts.slice(0, 3).map((example, i) => (
-                <button
-                  key={i}
-                  onClick={() => setPrompt(example)}
-                  className="
-                    text-xs px-2 py-1 rounded-md
-                    bg-surface border border-border
-                    hover:bg-surface-hover hover:border-border-strong
-                    transition-all duration-200
-                  "
-                >
-                  {example.substring(0, 30)}...
-                </button>
-              ))}
-            </div>
-          </div>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-1/3 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
         </div>
         
-        {/* Style Chips */}
-        <div className="space-y-4">
-          {/* Genre */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Genre
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {styleOptions.genre.map((genre) => (
-                <button
-                  key={genre}
-                  onClick={() => toggleChip(genre, selectedGenres, setSelectedGenres)}
-                  className={`
-                    chip
-                    ${selectedGenres.includes(genre) ? 'active' : ''}
-                  `}
-                  disabled={isGenerating}
-                >
-                  {genre}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          {/* Mood */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Mood
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {styleOptions.mood.map((mood) => (
-                <button
-                  key={mood}
-                  onClick={() => toggleChip(mood, selectedMoods, setSelectedMoods)}
-                  className={`
-                    chip
-                    ${selectedMoods.includes(mood) ? 'active' : ''}
-                  `}
-                  disabled={isGenerating}
-                >
-                  {mood}
-                </button>
-              ))}
-            </div>
-          </div>
-          
-          {/* Instruments */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Instruments
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {styleOptions.instruments.map((instrument) => (
-                <button
-                  key={instrument}
-                  onClick={() => toggleChip(instrument, selectedInstruments, setSelectedInstruments)}
-                  className={`
-                    chip
-                    ${selectedInstruments.includes(instrument) ? 'active' : ''}
-                  `}
-                  disabled={isGenerating}
-                >
-                  <Mic2 className="w-3 h-3" />
-                  {instrument}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* Duration & Parameters */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              <Clock className="w-4 h-4 inline mr-1" />
-              Duration
-            </label>
-            <div className="flex items-center gap-3">
-              <input
-                type="range"
-                min="15"
-                max="180"
-                step="15"
-                value={duration}
-                onChange={(e) => setDuration(parseInt(e.target.value))}
-                className="flex-1"
-                disabled={isGenerating}
-              />
-              <span className="text-sm font-medium w-16 text-right">
-                {duration}s
-              </span>
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              <Zap className="w-4 h-4 inline mr-1" />
-              Tempo (BPM)
-            </label>
-            <div className="flex items-center gap-3">
-              <input
-                type="range"
-                min="60"
-                max="200"
-                step="10"
-                value={tempo}
-                onChange={(e) => setTempo(parseInt(e.target.value))}
-                className="flex-1"
-                disabled={isGenerating}
-              />
-              <span className="text-sm font-medium w-16 text-right">
-                {tempo}
-              </span>
-            </div>
-          </div>
-        </div>
-        
-        {/* Advanced Options */}
-        <div>
-          <button
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="
-              flex items-center gap-2 text-sm font-medium
-              text-foreground-muted hover:text-foreground
-              transition-colors duration-200
-            "
+        <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <Sliders className="w-4 h-4" />
-            Advanced Options
-            <ChevronDown className={`
-              w-4 h-4 transition-transform duration-200
-              ${showAdvanced ? 'rotate-180' : ''}
-            `} />
-          </button>
-          
-          <AnimatePresence>
-            {showAdvanced && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">AI Music Generation</p>
+                <h1 className="text-3xl md:text-4xl font-display font-bold">Create New Track</h1>
+              </div>
+            </div>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Describe your music idea or use the style options below to generate AI music
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="rnrb-container max-w-6xl py-12 px-4">
+
+      {/* Main Content Card */}
+      <div className="rnrb-card p-8">
+        <div className="space-y-8">
+          <div>
+            <label className="block text-sm font-medium mb-3">
+              Describe your track
+            </label>
+            <div className="relative">
+              <textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder="E.g., A driving rock anthem with powerful electric guitars and thunderous drums..."
+                className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition resize-none"
+                rows={4}
+                disabled={isGenerating}
+              />
+              <button
+                onClick={() => setPrompt(examplePrompts[Math.floor(Math.random() * examplePrompts.length)])}
+                className="absolute bottom-3 right-3 p-2 text-muted-foreground hover:text-foreground transition rounded-lg hover:bg-surface/50"
+                title="Get random prompt"
               >
-                <div className="mt-4 p-4 bg-surface rounded-lg border border-border">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        <Hash className="w-4 h-4 inline mr-1" />
-                        Seed (optional)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Enter seed for consistent results"
-                        className="input w-full"
-                        disabled={isGenerating}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        Key Signature
-                      </label>
-                      <select className="input w-full" disabled={isGenerating}>
-                        <option>Auto</option>
-                        <option>C Major</option>
-                        <option>G Major</option>
-                        <option>D Major</option>
-                        <option>A Minor</option>
-                        <option>E Minor</option>
-                      </select>
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            </div>
+            
+            {/* Example prompts */}
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Try:</span>
+              <div className="flex gap-2 flex-wrap">
+                {examplePrompts.slice(0, 3).map((example, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setPrompt(example)}
+                    className="text-xs px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface/80 hover:border-brand-primary/50 transition-all"
+                  >
+                    {example.substring(0, 30)}...
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* Style Chips */}
+          <div className="space-y-6">
+            {/* Genre */}
+            <div>
+              <label className="block text-sm font-medium mb-3">
+                Genre
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {styleOptions.genre.map((genre) => (
+                  <button
+                    key={genre}
+                    onClick={() => toggleChip(genre, selectedGenres, setSelectedGenres)}
+                    className={`px-4 py-2 rounded-xl font-medium transition ${
+                      selectedGenres.includes(genre)
+                        ? 'bg-brand-primary text-brand-primary-foreground'
+                        : 'bg-surface border border-border hover:border-brand-primary/50'
+                    }`}
+                    disabled={isGenerating}
+                  >
+                    {genre}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Mood */}
+            <div>
+              <label className="block text-sm font-medium mb-3">
+                Mood
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {styleOptions.mood.map((mood) => (
+                  <button
+                    key={mood}
+                    onClick={() => toggleChip(mood, selectedMoods, setSelectedMoods)}
+                    className={`px-4 py-2 rounded-xl font-medium transition ${
+                      selectedMoods.includes(mood)
+                        ? 'bg-brand-primary text-brand-primary-foreground'
+                        : 'bg-surface border border-border hover:border-brand-primary/50'
+                    }`}
+                    disabled={isGenerating}
+                  >
+                    {mood}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Instruments */}
+            <div>
+              <label className="block text-sm font-medium mb-3">
+                Instruments
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {styleOptions.instruments.map((instrument) => (
+                  <button
+                    key={instrument}
+                    onClick={() => toggleChip(instrument, selectedInstruments, setSelectedInstruments)}
+                    className={`px-4 py-2 rounded-xl font-medium transition flex items-center gap-2 ${
+                      selectedInstruments.includes(instrument)
+                        ? 'bg-brand-primary text-brand-primary-foreground'
+                        : 'bg-surface border border-border hover:border-brand-primary/50'
+                    }`}
+                    disabled={isGenerating}
+                  >
+                    <Mic2 className="w-3 h-3" />
+                    {instrument}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* Duration & Parameters */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium mb-3 flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                Duration
+              </label>
+              <div className="flex items-center gap-4">
+                <input
+                  type="range"
+                  min="15"
+                  max="180"
+                  step="15"
+                  value={duration}
+                  onChange={(e) => setDuration(parseInt(e.target.value))}
+                  className="flex-1"
+                  disabled={isGenerating}
+                />
+                <span className="text-sm font-medium w-16 text-right">
+                  {duration}s
+                </span>
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-3 flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                Tempo (BPM)
+              </label>
+              <div className="flex items-center gap-4">
+                <input
+                  type="range"
+                  min="60"
+                  max="200"
+                  step="10"
+                  value={tempo}
+                  onChange={(e) => setTempo(parseInt(e.target.value))}
+                  className="flex-1"
+                  disabled={isGenerating}
+                />
+                <span className="text-sm font-medium w-16 text-right">
+                  {tempo}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Advanced Options */}
+          <div>
+            <button
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Sliders className="w-4 h-4" />
+              Advanced Options
+              <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+            </button>
+            
+            <AnimatePresence>
+              {showAdvanced && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-4 p-6 bg-surface/50 rounded-xl border border-border">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                          <Hash className="w-4 h-4" />
+                          Seed (optional)
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter seed for consistent results"
+                          className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none transition"
+                          disabled={isGenerating}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Key Signature
+                        </label>
+                        <select 
+                          className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none transition"
+                          disabled={isGenerating}
+                        >
+                          <option>Auto</option>
+                          <option>C Major</option>
+                          <option>G Major</option>
+                          <option>D Major</option>
+                          <option>A Minor</option>
+                          <option>E Minor</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-        
-        {/* Generate Button */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-foreground-muted">
-            <Info className="w-4 h-4" />
-            <span>Generation uses 10 credits</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           
-          <button
-            onClick={handleGenerate}
-            disabled={!canGenerate || isGenerating}
-            className={`
-              btn-primary px-8 py-3 text-base font-semibold
-              disabled:opacity-50 disabled:cursor-not-allowed
-              ${isGenerating ? 'cursor-wait' : ''}
-            `}
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-5 h-5 mr-2" />
-                Generate Track
-              </>
-            )}
-          </button>
+          {/* Generate Button */}
+          <div className="flex items-center justify-between pt-4 border-t border-border">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Info className="w-4 h-4" />
+              <span>Generation uses 10 credits</span>
+            </div>
+            
+            <button
+              onClick={handleGenerate}
+              disabled={!canGenerate || isGenerating}
+              className="rnrb-button-primary px-8 py-3 rounded-xl text-base font-semibold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Generate Track
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
       
@@ -358,15 +363,18 @@ export default function CreatePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-8 p-8 bg-surface rounded-lg border border-border text-center"
+          className="mt-8"
         >
-          <Music2 className="w-16 h-16 mx-auto mb-4 text-brand-primary animate-pulse" />
-          <h3 className="text-lg font-semibold mb-2">Creating your track...</h3>
-          <p className="text-foreground-muted">
-            This usually takes 20-30 seconds
-          </p>
+          <Card className="p-12 text-center rnrb-card">
+            <Music2 className="w-16 h-16 mx-auto mb-4 text-brand-primary rnrb-pulse" />
+            <h3 className="text-xl font-semibold mb-2">Creating your track...</h3>
+            <p className="text-muted-foreground">
+              This usually takes 20-30 seconds
+            </p>
+          </Card>
         </motion.div>
       )}
+      </div>
     </div>
   );
 }

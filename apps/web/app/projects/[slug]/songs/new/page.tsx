@@ -175,10 +175,16 @@ export default function NewSongPage() {
         )}
 
         {/* Collaborative Visual Builder - Complete Interface */}
-        <CollaborativeVisualBuilder
-          projectSlug={slug}
-          onSongChange={(blocks) => setSongData({ ...songData, songStructure: blocks })}
-        />
+        {user && (
+          <CollaborativeVisualBuilder
+            projectSlug={slug}
+            onSongChange={(blocks) => setSongData({ ...songData, songStructure: blocks })}
+            currentUser={{
+              userId: user.id,
+              userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+            }}
+          />
+        )}
 
         {/* Save Button (Always Visible) */}
         <div className="flex items-center justify-between mt-8 sticky bottom-4 bg-background/80 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">

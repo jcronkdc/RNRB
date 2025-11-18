@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { 
   Music2, 
   Sparkles, 
@@ -25,6 +26,9 @@ import {
   Share2
 } from 'lucide-react';
 import Link from 'next/link';
+
+// Dynamically import activity feed
+const CompactActivityFeed = dynamic(() => import('@/components/activity-feed').then(m => m.CompactActivityFeed), { ssr: false });
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -130,13 +134,21 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             {
-              title: "AI Music Studio",
-              description: "Create tracks with AI assistance",
+              title: "Songwriting Studio",
+              description: "AI-powered chord progressions & lyrics",
+              icon: Music2,
+              href: "/songwriting",
+              color: "from-pink-500/20 to-purple-500/20",
+              iconColor: "text-pink-400",
+              badge: "AI POWERED"
+            },
+            {
+              title: "Create Track",
+              description: "Generate full songs with AI",
               icon: Sparkles,
               href: "/create",
               color: "from-orange-500/20 to-red-500/20",
-              iconColor: "text-orange-400",
-              badge: "NEW"
+              iconColor: "text-orange-400"
             },
             {
               title: "New Project",
@@ -147,18 +159,18 @@ export default function DashboardPage() {
               iconColor: "text-blue-400"
             },
             {
-              title: "Upload Track",
-              description: "Add existing music",
+              title: "My Library",
+              description: "View your music assets",
               icon: FileMusic,
-              href: "/library/upload",
+              href: "/library",
               color: "from-green-500/20 to-teal-500/20",
               iconColor: "text-green-400"
             },
             {
-              title: "Find Collaborators",
-              description: "Connect with artists",
+              title: "Explore Community",
+              description: "Discover trending tracks & musicians",
               icon: Users2,
-              href: "/collab",
+              href: "/explore",
               color: "from-purple-500/20 to-pink-500/20",
               iconColor: "text-purple-400"
             }
@@ -222,7 +234,7 @@ export default function DashboardPage() {
             { label: "Projects Started", value: "0", icon: Folder, subtext: "Create your first project" },
             { label: "Tracks Created", value: "0", icon: Music2, subtext: "Start with AI Studio" },
             { label: "Collaborators", value: "0", icon: Users2, subtext: "Invite band members" },
-            { label: "Credits Used", value: "0", icon: Zap, subtext: "150 credits available" }
+            { label: "Total Plays", value: "0", icon: Play, subtext: "Share music to get plays" }
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -264,7 +276,7 @@ export default function DashboardPage() {
               description: "Work with your band remotely",
               icon: Share2,
               time: "10 min",
-              href: "/collab"
+              href: "/projects"
             },
             {
               title: "Tour Our Features",
@@ -305,6 +317,21 @@ export default function DashboardPage() {
           ))}
         </div>
       </motion.div>
+
+      {/* Recent Activity Feed */}
+      {user && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-12"
+        >
+          <h2 className="text-2xl font-semibold mb-6">Recent Activity</h2>
+          <div className="card p-6">
+            <CompactActivityFeed channelName="activity:global" />
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

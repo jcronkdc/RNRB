@@ -15,9 +15,14 @@ import {
   Users,
   Share2,
   Download,
-  Sparkles
+  Sparkles,
+  Edit
 } from 'lucide-react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+// Dynamically import setlist builder
+const CollaborativeSetlistBuilder = dynamic(() => import('@/components/setlist-builder').then(m => m.CollaborativeSetlistBuilder), { ssr: false });
 
 type Setlist = {
   id: string;
@@ -37,6 +42,8 @@ export default function SetlistsPage() {
   const [project, setProject] = useState<any>(null);
   const [setlists, setSetlists] = useState<Setlist[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedSetlist, setSelectedSetlist] = useState<Setlist | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -70,6 +77,63 @@ export default function SetlistsPage() {
 
   const projectSongs = project.songs || [];
 
+  const createNewSetlist = () => {
+    const newSetlist: Setlist = {
+      id: `setlist_${Date.now()}`,
+      name: 'New Setlist',
+      songs: [],
+      created_at: new Date().toISOString(),
+    };
+    setSelectedSetlist(newSetlist);
+    setIsCreating(true);
+  };
+
+  const saveSetlist = async (songs: any[]) => {
+    // Would save to Supabase in production
+    console.log('Saving setlist with songs:', songs);
+  };
+
+  // If viewing/editing a setlist
+  if (selectedSetlist) {
+    return (
+      <div className="min-h-screen bg-background py-12 px-4">
+        <div className="rnrb-container max-w-7xl">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <Button
+                variant="ghost"
+                onClick={() => setSelectedSetlist(null)}
+                className="mb-4"
+              >
+                ← Back to Setlists
+              </Button>
+              <h1 className="text-4xl font-display font-bold mb-2">{selectedSetlist.name}</h1>
+              <p className="text-muted-foreground">Collaborative setlist builder</p>
+            </div>
+            <Button className="flex items-center gap-2">
+              <Edit className="w-4 h-4" />
+              Rename Setlist
+            </Button>
+          </div>
+
+          {/* Collaborative Builder */}
+          <CollaborativeSetlistBuilder
+            setlistId={selectedSetlist.id}
+            projectSlug={slug}
+            projectSongs={projectSongs}
+            initialSongs={[]}
+            onUpdate={saveSetlist}
+            currentUser={{
+              userId: user?.id || 'anonymous',
+              userName: user?.user_metadata?.name || user?.email?.split('@')[0] || 'User',
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="rnrb-container max-w-7xl">
@@ -92,6 +156,7 @@ export default function SetlistsPage() {
             </p>
           </div>
           <Button
+            onClick={createNewSetlist}
             className="rnrb-button-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
@@ -123,7 +188,10 @@ export default function SetlistsPage() {
                 </Link>
               </div>
             ) : (
-              <Button className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-3">
+              <Button 
+                onClick={createNewSetlist}
+                className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-3"
+              >
                 <Plus className="w-6 h-6" />
                 Create Your First Setlist
               </Button>

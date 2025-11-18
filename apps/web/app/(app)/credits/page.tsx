@@ -4,248 +4,175 @@ import { motion } from 'framer-motion';
 import { 
   CreditCard,
   Sparkles,
-  Check,
-  ArrowRight,
-  TrendingUp,
-  Clock
+  Music2,
+  FileText,
+  Info,
+  ChevronRight,
+  Plus
 } from 'lucide-react';
 import Link from 'next/link';
-
-const plans = [
-  {
-    name: 'Free',
-    price: '$0',
-    credits: 50,
-    features: [
-      '50 credits per month',
-      'Basic AI models',
-      'MP3 downloads',
-      '30-second tracks',
-      'Community support'
-    ],
-    current: true
-  },
-  {
-    name: 'Pro',
-    price: '$19',
-    credits: 500,
-    features: [
-      '500 credits per month',
-      'Advanced AI models',
-      'WAV + MP3 downloads',
-      'Up to 3-minute tracks',
-      'Stem separation',
-      'Priority support',
-      'Commercial license'
-    ],
-    popular: true
-  },
-  {
-    name: 'Studio',
-    price: '$49',
-    credits: 2000,
-    features: [
-      '2000 credits per month',
-      'All AI models',
-      'All export formats',
-      'Unlimited track length',
-      'Advanced stem control',
-      'API access',
-      'Dedicated support',
-      'Full commercial rights'
-    ]
-  }
-];
-
-const creditUsage = [
-  { action: 'Generate track', cost: 10 },
-  { action: 'Extend track', cost: 5 },
-  { action: 'Get stems', cost: 8 },
-  { action: 'Remix/variation', cost: 7 },
-  { action: 'High quality export', cost: 3 }
-];
+import { Card, Button } from '@cronkwaters/ui';
 
 export default function CreditsPage() {
-  const currentCredits = 150;
-  const maxCredits = 500;
-  const creditPercentage = (currentCredits / maxCredits) * 100;
-
   return (
-    <div className="space-y-8 max-w-6xl mx-auto">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <CreditCard className="w-8 h-8 text-brand-primary" />
-          Credits & Billing
-        </h1>
-        <p className="text-foreground-muted mt-1">
-          Manage your subscription and track credit usage
-        </p>
-      </div>
-
-      {/* Current Usage */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="card p-6"
-      >
-        <h2 className="text-lg font-semibold mb-4">Current Usage</h2>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
+        </div>
         
-        <div className="space-y-4">
-          <div>
-            <div className="flex justify-between items-baseline mb-2">
-              <span className="text-sm text-foreground-muted">Credits remaining</span>
-              <span className="text-2xl font-bold">{currentCredits} / {maxCredits}</span>
+        <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                <CreditCard className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">AI Features</p>
+                <h1 className="text-3xl md:text-4xl font-display font-bold">Credits & Billing</h1>
+              </div>
             </div>
-            <div className="h-3 bg-surface-hover rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-gradient-to-r from-brand-secondary to-brand-primary"
-                initial={{ width: 0 }}
-                animate={{ width: `${creditPercentage}%` }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-              />
-            </div>
-            <p className="text-xs text-foreground-muted mt-1">
-              Resets on December 1st
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Credits power AI features like music generation and songwriting assistance
             </p>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
-            <div>
-              <p className="text-sm text-foreground-muted">Used this month</p>
-              <p className="text-xl font-semibold">{maxCredits - currentCredits}</p>
-            </div>
-            <div>
-              <p className="text-sm text-foreground-muted">Average daily use</p>
-              <p className="text-xl font-semibold">12</p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Credit Costs */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="card p-6"
-      >
-        <h2 className="text-lg font-semibold mb-4">Credit Costs</h2>
-        
-        <div className="space-y-3">
-          {creditUsage.map((item, i) => (
-            <div key={i} className="flex justify-between items-center">
-              <span className="text-sm">{item.action}</span>
-              <span className="text-sm font-medium text-foreground-muted">
-                {item.cost} credits
-              </span>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Pricing Plans */}
-      <div>
-        <h2 className="text-xl font-semibold mb-6">Subscription Plans</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {plans.map((plan, i) => (
-            <motion.div
-              key={plan.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + (i * 0.1) }}
-              className={`
-                card p-6 relative
-                ${plan.popular ? 'border-2 border-brand-primary' : ''}
-                ${plan.current ? 'bg-surface-hover' : ''}
-              `}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-brand-primary text-background text-xs font-bold px-3 py-1 rounded-full">
-                    MOST POPULAR
-                  </span>
-                </div>
-              )}
-              
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-3xl font-bold">{plan.price}</span>
-                  <span className="text-foreground-muted">/month</span>
-                </div>
-                <p className="text-sm text-foreground-muted mt-1">
-                  {plan.credits.toLocaleString()} credits
-                </p>
-              </div>
-              
-              <ul className="space-y-3 mb-6">
-                {plan.features.map((feature, j) => (
-                  <li key={j} className="flex items-start gap-2 text-sm">
-                    <Check className="w-4 h-4 text-brand-primary flex-shrink-0 mt-0.5" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              {plan.current ? (
-                <button className="btn-secondary w-full" disabled>
-                  Current Plan
-                </button>
-              ) : (
-                <button className="btn-primary w-full">
-                  Upgrade to {plan.name}
-                </button>
-              )}
-            </motion.div>
-          ))}
+          </motion.div>
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="card p-6"
-      >
-        <h2 className="text-lg font-semibold mb-4">Recent Credit Usage</h2>
-        
-        <div className="space-y-3">
-          {[
-            { action: 'Generated "Summer Vibes"', cost: -10, time: '2 hours ago' },
-            { action: 'Extended "Midnight Drive"', cost: -5, time: '5 hours ago' },
-            { action: 'Extracted stems', cost: -8, time: 'Yesterday' },
-            { action: 'Monthly refill', cost: +500, time: '3 days ago' },
-          ].map((activity, i) => (
-            <div key={i} className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className={`
-                  w-8 h-8 rounded-lg flex items-center justify-center
-                  ${activity.cost > 0 ? 'bg-success/20' : 'bg-surface-hover'}
-                `}>
-                  {activity.cost > 0 ? (
-                    <TrendingUp className="w-4 h-4 text-success" />
-                  ) : (
-                    <Sparkles className="w-4 h-4 text-foreground-muted" />
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm">{activity.action}</p>
-                  <p className="text-xs text-foreground-muted">{activity.time}</p>
-                </div>
+      <div className="rnrb-container max-w-4xl py-12 px-4 space-y-8">
+        {/* Current Plan */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <Card className="p-8 rnrb-card">
+            <h2 className="text-2xl font-display font-bold mb-4">Your Current Plan</h2>
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <p className="text-2xl font-bold">Free Plan</p>
+                <p className="text-sm text-muted-foreground">Perfect for getting started</p>
               </div>
-              <span className={`
-                text-sm font-medium
-                ${activity.cost > 0 ? 'text-success' : 'text-foreground-muted'}
-              `}>
-                {activity.cost > 0 ? '+' : ''}{Math.abs(activity.cost)}
-              </span>
+              <Link href="/pricing">
+                <Button className="rnrb-button-primary px-6 py-2.5 rounded-xl font-semibold">
+                  Upgrade Plan
+                </Button>
+              </Link>
             </div>
-          ))}
-        </div>
-      </motion.div>
+            
+            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border">
+              <div className="text-center">
+                <p className="text-3xl font-bold">0</p>
+                <p className="text-sm text-muted-foreground">Credits Used</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl font-bold text-green-400">100</p>
+                <p className="text-sm text-muted-foreground">Credits Available</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl font-bold">100</p>
+                <p className="text-sm text-muted-foreground">Monthly Allowance</p>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* What Uses Credits */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Card className="p-8 rnrb-card">
+            <h2 className="text-2xl font-display font-bold mb-6">What Uses Credits?</h2>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between py-4 border-b border-border">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-brand-primary/10">
+                    <Sparkles className="w-5 h-5 text-brand-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium">AI Music Generation</p>
+                    <p className="text-sm text-muted-foreground">Create full tracks with AI</p>
+                  </div>
+                </div>
+                <span className="font-semibold">10 credits</span>
+              </div>
+              
+              <div className="flex items-center justify-between py-4 border-b border-border">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-pink-500/10">
+                    <Music2 className="w-5 h-5 text-pink-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Chord Progression AI</p>
+                    <p className="text-sm text-muted-foreground">Generate chord progressions</p>
+                  </div>
+                </div>
+                <span className="font-semibold">2 credits</span>
+              </div>
+              
+              <div className="flex items-center justify-between py-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-purple-500/10">
+                    <FileText className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Lyrics Generation</p>
+                    <p className="text-sm text-muted-foreground">AI-powered lyrics suggestions</p>
+                  </div>
+                </div>
+                <span className="font-semibold">3 credits</span>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Info Box */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <Card className="p-6 rnrb-card bg-blue-500/5 border-blue-500/20">
+            <h3 className="font-semibold mb-3 flex items-center gap-2">
+              <Info className="w-5 h-5 text-blue-400" />
+              Good to Know
+            </h3>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>• Free plan includes 100 credits per month</li>
+              <li>• Credits reset on the 1st of each month</li>
+              <li>• Unused credits don't roll over</li>
+              <li>• Collaboration features don't use credits</li>
+              <li>• Upgrade anytime for more credits and features</li>
+            </ul>
+          </Card>
+        </motion.div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-center"
+        >
+          <p className="text-muted-foreground mb-4">
+            Ready to unlock more AI features?
+          </p>
+          <Link href="/pricing">
+            <Button className="rnrb-button-primary px-8 py-3 rounded-xl font-semibold inline-flex items-center gap-2">
+              View Upgrade Options
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </Link>
+        </motion.div>
+      </div>
     </div>
   );
 }

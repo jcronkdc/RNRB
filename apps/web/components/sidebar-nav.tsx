@@ -19,7 +19,7 @@ import {
   Mic2,
   Radio,
   Headphones,
-  Activity
+  MessageSquare
 } from 'lucide-react';
 
 interface NavItem {
@@ -32,11 +32,15 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Home', href: '/dashboard', icon: Home },
-  { label: 'Create', href: '/create', icon: Sparkles, badge: 'AI' },
+  { label: 'Collaboration', href: '/collaboration', icon: Users, badge: 'LIVE' },
+  { label: 'Songwriting', href: '/songwriting', icon: Music4, badge: 'AI' },
+  { label: 'Create Track', href: '/create', icon: Sparkles },
   { label: 'Projects', href: '/projects', icon: FolderOpen },
-  { label: 'Library', href: '/library', icon: Library },
-  { label: 'Collaborate', href: '/collab', icon: Users },
+  { label: 'Studio', href: '/studio', icon: Mic2 },
+  { label: 'Tours', href: '/tours', icon: Radio },
   { label: 'Explore', href: '/explore', icon: Compass },
+  { label: 'Messages', href: '/messages', icon: MessageSquare },
+  { label: 'Library', href: '/library', icon: Library },
   { divider: true, label: '', href: '', icon: Home },
   { label: 'Credits', href: '/credits', icon: CreditCard },
   { label: 'Settings', href: '/settings', icon: Settings },
@@ -189,37 +193,6 @@ export function SidebarNav() {
         })}
       </nav>
 
-      {/* Bottom Section - Activity Monitor */}
-      {!isCollapsed && (
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <div 
-            className="rounded-xl p-4"
-            style={{ 
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.05)'
-            }}
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <Activity className="w-5 h-5 text-green-400" />
-              <span className="text-sm font-medium text-white">Live Activity</span>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">CPU</span>
-                <span className="text-xs text-gray-300">12%</span>
-              </div>
-              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                <motion.div 
-                  className="h-full bg-gradient-to-r from-green-400 to-green-600"
-                  initial={{ width: '0%' }}
-                  animate={{ width: '12%' }}
-                  transition={{ duration: 1 }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Floating Music Icons (subtle animation) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -252,6 +225,24 @@ export function SidebarNav() {
           </motion.div>
         ))}
       </div>
+
+      {/* Keyboard Shortcuts Hint */}
+      <AnimatePresence>
+        {!isCollapsed && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="absolute bottom-4 left-0 right-0 px-4 pointer-events-auto"
+          >
+            <div className="p-3 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20">
+              <p className="text-xs text-muted-foreground text-center">
+                Press <kbd className="px-1.5 py-0.5 rounded bg-muted text-[10px] font-medium">?</kbd> for shortcuts
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.aside>
   );
 }

@@ -221,6 +221,51 @@
   .rnrb-nav-item.active {
     @apply text-foreground after:scale-x-100;
   }
+  
+  /* Premium Header */
+  .rnrb-header {
+    @apply sticky top-0 z-40 w-full;
+    @apply bg-background/80 backdrop-blur-xl;
+    @apply border-b border-border/50;
+    @apply transition-all duration-200;
+    height: 4rem;
+  }
+  
+  .rnrb-header.scrolled {
+    @apply shadow-lg bg-background/95;
+  }
+  
+  /* Premium Logo */
+  .rnrb-logo {
+    @apply transition-transform duration-200;
+  }
+  
+  .rnrb-logo:hover {
+    @apply scale-105;
+  }
+  
+  /* Premium Hover Lift */
+  .rnrb-hover-lift {
+    @apply transition-all duration-200;
+  }
+  
+  .rnrb-hover-lift:hover {
+    @apply -translate-y-1 shadow-xl;
+  }
+  
+  /* Premium Pulse */
+  @keyframes rnrb-pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  .rnrb-pulse {
+    animation: rnrb-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
 }
 
 @layer utilities {

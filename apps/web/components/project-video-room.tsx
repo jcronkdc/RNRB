@@ -103,10 +103,10 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
               <div className="p-4 bg-surface border border-border rounded-lg">
                 <p className="font-medium text-foreground mb-2 flex items-center gap-2">
                   <Share2 className="w-4 h-4 text-purple-400" />
-                  Screen Share & Cursor Control
+                  Screen Share (Cursor Visible)
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Share your DAW, sheet music, or collaborate on lyrics
+                  Share your DAW, sheet music, or lyrics - cursor is visible to team
                 </p>
               </div>
               <div className="p-4 bg-surface border border-border rounded-lg">

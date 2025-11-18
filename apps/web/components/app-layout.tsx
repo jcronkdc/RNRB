@@ -5,6 +5,8 @@ import { TopBar } from './top-bar';
 import { TransportBar } from './transport-bar';
 import { Breadcrumbs } from './breadcrumbs';
 import { AblyProvider } from '@/components/ably';
+import { CommandPalette } from './command-palette';
+import { KeyboardShortcutsHelp } from './keyboard-shortcuts-help';
 import { usePathname } from 'next/navigation';
 
 interface AppLayoutProps {
@@ -35,6 +37,12 @@ export function AppLayout({
   return (
     <AblyProvider>
       <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        {/* Command Palette (Global) */}
+        <CommandPalette />
+        
+        {/* Keyboard Shortcuts Help (Global) */}
+        <KeyboardShortcutsHelp />
+        
         {/* Sidebar */}
         <SidebarNav />
         

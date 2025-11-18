@@ -1,440 +1,311 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Users, Bell, Wifi, CheckCircle, ArrowRight, Plus } from 'lucide-react';
-import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Card, Button } from '@cronkwaters/ui';
+import { 
+  MessageSquare,
+  Search,
+  Send,
+  Users,
+  Music2,
+  Paperclip,
+  Smile,
+  Plus,
+  Check,
+  Zap
+} from 'lucide-react';
 
-// Dynamically import Ably components to prevent SSR issues
-const ChatRoom = dynamic(() => import('@/components/ably').then(m => m.ChatRoom), {
+// Dynamically import Ably ChatRoom
+const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then(m => m.ChatRoom), {
   ssr: false,
-  loading: () => <div className="animate-pulse h-[600px] rounded-lg bg-white/5" />
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <p className="text-muted-foreground">Loading chat...</p>
+    </div>
+  )
 });
 
-const PresenceList = dynamic(() => import('@/components/ably').then(m => m.PresenceList), {
-  ssr: false,
-  loading: () => <div className="animate-pulse h-96 rounded-lg bg-white/5" />
-});
-
-const NotificationFeed = dynamic(() => import('@/components/ably').then(m => m.NotificationFeed), {
-  ssr: false,
-  loading: () => <div className="animate-pulse h-96 rounded-lg bg-white/5" />
-});
-
-const ConnectionStatus = dynamic(() => import('@/components/ably').then(m => m.ConnectionStatus), {
-  ssr: false,
-  loading: () => <span className="text-sm text-gray-500">Connecting...</span>
-});
+type Conversation = {
+  id: string;
+  otherUserEmail: string;
+  otherUserName: string;
+  channelName: string;
+  lastMessage: string;
+  lastMessageTime: string;
+};
 
 export default function MessagesPage() {
-  const [activeTab, setActiveTab] = useState<'chat' | 'presence' | 'notifications'>('chat');
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [messageText, setMessageText] = useState('');
+  const [showNewConversation, setShowNewConversation] = useState(false);
+  const [newUserEmail, setNewUserEmail] = useState('');
+
+  // Load conversations from user metadata
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+
+  useEffect(() => {
+    supabase?.auth.getUser().then(({ data: { user } }) => {
+      if (!user) {
+        router.push('/auth');
+      } else {
+        setUser(user);
+        // Load direct message conversations
+        const dmConversations = user.user_metadata?.dm_conversations || [];
+        setConversations(dmConversations);
+        setLoading(false);
+      }
+    });
+  }, [router]);
+
+  const generateChannelName = (userEmail: string, otherEmail: string) => {
+    // Create consistent channel name regardless of who starts conversation
+    const emails = [userEmail, otherEmail].sort();
+    return `dm-${emails[0]}-${emails[1]}`.replace(/[@.]/g, '-');
+  };
+
+  const startNewConversation = async () => {
+    if (!newUserEmail.trim() || !user) return;
+
+    const channelName = generateChannelName(user.email, newUserEmail);
+    
+    const newConversation: Conversation = {
+      id: `conv_${Date.now()}`,
+      otherUserEmail: newUserEmail,
+      otherUserName: newUserEmail.split('@')[0],
+      channelName,
+      lastMessage: 'Start chatting...',
+      lastMessageTime: new Date().toISOString()
+    };
+
+    const existingConversations = user.user_metadata?.dm_conversations || [];
+    
+    // Check if conversation already exists
+    const exists = existingConversations.find((c: Conversation) => c.otherUserEmail === newUserEmail);
+    if (exists) {
+      setSelectedConversation(exists);
+      setShowNewConversation(false);
+      setNewUserEmail('');
+      return;
+    }
+
+    // Save to user metadata
+    await supabase!.auth.updateUser({
+      data: {
+        ...user.user_metadata,
+        dm_conversations: [...existingConversations, newConversation]
+      }
+    });
+
+    setConversations([...existingConversations, newConversation]);
+    setSelectedConversation(newConversation);
+    setShowNewConversation(false);
+    setNewUserEmail('');
+  };
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-muted-foreground">Loading messages...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
-        <div className="absolute inset-0">
-          <div className="absolute top-0 right-1/3 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
+    <div className="h-screen flex bg-background">
+      {/* Conversations List */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-80 border-r flex flex-col border-border"
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-border">
+          <h1 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <MessageSquare className="w-6 h-6 text-brand-primary" />
+            Direct Messages
+          </h1>
+          
+          {/* Search - Coming Soon */}
+          <div className="relative opacity-50 cursor-not-allowed">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search (coming soon)..."
+              disabled
+              className="w-full pl-10 pr-4 py-2 rounded-lg bg-surface border border-border text-foreground"
+            />
+          </div>
         </div>
-        
-        <div className="rnrb-container max-w-6xl relative z-10 py-16 px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                <MessageSquare className="w-6 h-6 text-brand-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Real-Time Communication</p>
-                <h1 className="text-3xl md:text-4xl font-display font-bold">Messaging</h1>
+
+        {/* Conversations */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {conversations.length === 0 ? (
+            <div className="text-center py-8">
+              <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-50 text-brand-primary" />
+              <p className="font-medium mb-2">No conversations yet</p>
+              <p className="text-sm text-muted-foreground">
+                Start messaging your collaborators
+              </p>
+            </div>
+          ) : (
+            conversations.map(conv => (
+              <button
+                key={conv.id}
+                onClick={() => setSelectedConversation(conv)}
+                className={`w-full p-3 rounded-lg mb-2 text-left transition-all ${
+                  selectedConversation?.id === conv.id 
+                    ? 'bg-brand-primary/10 border border-brand-primary/20' 
+                    : 'hover:bg-surface-muted border border-transparent'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                    {conv.otherUserName[0].toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate">{conv.otherUserName}</p>
+                    <p className="text-xs truncate text-muted-foreground">
+                      {conv.otherUserEmail}
+                    </p>
+                  </div>
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+
+        {/* Start New Conversation */}
+        <div className="p-4 border-t border-border">
+          {showNewConversation ? (
+            <div className="space-y-2">
+              <input
+                type="email"
+                value={newUserEmail}
+                onChange={(e) => setNewUserEmail(e.target.value)}
+                placeholder="colleague@example.com"
+                className="w-full px-3 py-2 rounded-lg bg-surface border border-border text-foreground text-sm"
+                onKeyPress={(e) => e.key === 'Enter' && startNewConversation()}
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={startNewConversation}
+                  className="flex-1 px-3 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-1"
+                >
+                  <Check className="w-4 h-4" />
+                  Start
+                </button>
+                <button
+                  onClick={() => {
+                    setShowNewConversation(false);
+                    setNewUserEmail('');
+                  }}
+                  className="px-3 py-2 bg-surface hover:bg-surface-muted border border-border rounded-lg text-sm"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Collaborate with your band, producers, and team instantly
-            </p>
-          </motion.div>
+          ) : (
+            <button
+              onClick={() => setShowNewConversation(true)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-lg font-medium"
+            >
+              <Plus className="w-4 h-4" />
+              New Conversation
+            </button>
+          )}
         </div>
-      </div>
+      </motion.div>
 
+      {/* Chat Area */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="rnrb-container max-w-6xl py-12 px-4"
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="flex-1 flex flex-col"
       >
-
-        {/* Honest Messaging Overview */}
-        <Card className="p-8 mb-8 rnrb-card">
-          <h2 className="text-3xl font-display font-bold mb-4">Real-Time Messaging with Ably</h2>
-          <p className="text-lg text-muted-foreground mb-6">
-            Project-level real-time chat powered by Ably. Basic messaging is live, advanced features coming soon.
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="rnrb-card p-6 bg-green-500/5 border-green-500/20">
-              <h4 className="font-semibold mb-3 text-brand-primary flex items-center gap-2">
-                <CheckCircle className="w-5 h-5" />
-                What's WORKING NOW
-              </h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Real-time text messaging (Ably integration)</li>
-                <li>✓ Project-based chat channels</li>
-                <li>✓ Basic presence awareness</li>
-                <li>✓ Message history in session</li>
-                <li>✓ Up to 32 participants per channel</li>
-              </ul>
+        {selectedConversation ? (
+          <div className="flex-1 flex flex-col h-full">
+            {/* Chat Header */}
+            <div className="p-4 border-b border-border bg-surface">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-semibold">
+                  {selectedConversation.otherUserName[0].toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-semibold">{selectedConversation.otherUserName}</p>
+                  <p className="text-xs text-muted-foreground">{selectedConversation.otherUserEmail}</p>
+                </div>
+              </div>
             </div>
-            
-            <div className="rnrb-card p-6 bg-orange-500/5 border-orange-500/20">
-              <h4 className="font-semibold mb-3 text-muted-foreground flex items-center gap-2">
-                <CheckCircle className="w-5 h-5" />
-                Coming Soon (Not Built Yet)
-              </h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• File attachments & image sharing</li>
-                <li>• Read receipts & typing indicators</li>
-                <li>• @mentions & smart notifications</li>
-                <li>• Offline message queuing</li>
-                <li>• Thread conversations</li>
-                <li>• Message search & archive</li>
-              </ul>
+
+            {/* Ably Chat Room */}
+            <div className="flex-1 overflow-hidden">
+              <ChatRoom channelName={selectedConversation.channelName} />
+            </div>
+
+            {/* Info Footer */}
+            <div className="p-3 border-t border-border bg-surface/50">
+              <p className="text-xs text-muted-foreground flex items-center gap-2">
+                <Zap className="w-3 h-3 text-brand-primary" />
+                Real-time messaging powered by Ably • Messages sync instantly
+              </p>
             </div>
           </div>
-
-          <div className="bg-background/30 rounded-lg p-6 border border-brand-primary/20">
-            <h3 className="text-xl font-semibold mb-4">Built for Music Collaboration</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="font-medium">Project-Based Channels</p>
-                  <p className="text-sm text-muted-foreground">
-                    Each project gets its own chat channel via Ably. Message history persists during active sessions only (archive feature coming soon).
-                  </p>
-                </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center p-8">
+            <div className="text-center max-w-md">
+              <div 
+                className="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center"
+                style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(236,72,153,0.05) 100%)' }}
+              >
+                <MessageSquare className="w-12 h-12 text-purple-400" />
               </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="font-medium">Audio Message Sharing</p>
-                  <p className="text-sm text-muted-foreground">
-                    Send voice memos, song ideas, or quick feedback as audio messages. Perfect for sharing melodic 
-                    ideas or explaining production notes that are hard to type.
-                  </p>
+              <h2 className="text-2xl font-semibold mb-3">Direct Messaging</h2>
+              <p className="mb-6 text-muted-foreground">
+                Chat 1-on-1 with your collaborators in real-time. Powered by Ably for instant, 
+                reliable messaging with typing indicators and presence.
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 p-3 bg-surface border border-border rounded-lg text-left">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                    <Users className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">1-on-1 Conversations</p>
+                    <p className="text-xs text-muted-foreground">Private chats with band members</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="font-medium">File Sharing Integration</p>
-                  <p className="text-sm text-muted-foreground">
-                    Drag and drop audio files, PDFs, images, or videos directly into chat. All files automatically 
-                    stored in your project's asset library for easy retrieval later.
-                  </p>
+                <div className="flex items-start gap-3 p-3 bg-surface border border-border rounded-lg text-left">
+                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-5 h-5 text-green-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Instant Sync</p>
+                    <p className="text-xs text-muted-foreground">Messages appear in real-time</p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="font-medium">Thread Conversations</p>
-                  <p className="text-sm text-muted-foreground">
-                    Reply to specific messages to create threads. Keep multiple conversations organized without 
-                    cluttering the main channel - essential for busy project channels.
-                  </p>
+                <div className="flex items-start gap-3 p-3 bg-surface border border-border rounded-lg text-left">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                    <Music2 className="w-5 h-5 text-purple-400" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Music Collaboration</p>
+                    <p className="text-xs text-muted-foreground">Discuss tracks, lyrics, and ideas</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </Card>
-
-        {/* Detailed Features */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <Card className="p-6">
-            <h3 className="text-2xl font-semibold mb-6">💬 Advanced Chat Features</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
-                  <MessageSquare className="h-5 w-5 text-purple-500" />
-                </div>
-                <div>
-                  <p className="font-semibold mb-1">Rich Text Formatting</p>
-                  <p className="text-sm text-muted-foreground">
-                    Bold, italic, code blocks, bullet lists, and links. Format messages for clarity. 
-                    Use markdown shortcuts for fast formatting.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="p-2 bg-blue-500/10 rounded flex-shrink-0">
-                  <Users className="h-5 w-5 text-blue-500" />
-                </div>
-                <div>
-                  <p className="font-semibold mb-1">@Mentions & Notifications</p>
-                  <p className="text-sm text-muted-foreground">
-                    Tag specific team members with @username to get their attention. Mention @everyone for 
-                    urgent announcements. Smart notifications only alert what's relevant to you.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="p-2 bg-green-500/10 rounded flex-shrink-0">
-                  <Bell className="h-5 w-5 text-green-500" />
-                </div>
-                <div>
-                  <p className="font-semibold mb-1">Pinned Messages</p>
-                  <p className="text-sm text-muted-foreground">
-                    Pin important info to the top of channels. Perfect for setlists, schedule changes, or 
-                    venue details that everyone needs quick access to.
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </Card>
-
-          <Card className="p-6">
-            <h3 className="text-2xl font-semibold mb-6">🔔 Collaboration Tools</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <div className="p-2 bg-orange-500/10 rounded flex-shrink-0">
-                  <Wifi className="h-5 w-5 text-orange-500" />
-                </div>
-                <div>
-                  <p className="font-semibold mb-1">Always-On Connection</p>
-                  <p className="text-sm text-muted-foreground">
-                    WebSocket-based real-time updates. See new messages instantly without refreshing. 
-                    Automatic reconnection if internet drops - messages sync when you're back online.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="p-2 bg-purple-500/10 rounded flex-shrink-0">
-                  <MessageSquare className="h-5 w-5 text-purple-500" />
-                </div>
-                <div>
-                  <p className="font-semibold mb-1">Message History Search</p>
-                  <p className="text-sm text-muted-foreground">
-                    Full-text search across all your conversations. Find that lyric idea from 3 months ago or 
-                    the venue contact info shared last tour.
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="p-2 bg-blue-500/10 rounded flex-shrink-0">
-                  <Users className="h-5 w-5 text-blue-500" />
-                </div>
-                <div>
-                  <p className="font-semibold mb-1">Direct Messages & Group Chats</p>
-                  <p className="text-sm text-muted-foreground">
-                    1-on-1 DMs for private conversations or create group chats for specific topics. Keep band 
-                    discussions separate from business meetings separate from creative sessions.
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </Card>
-        </div>
-
-        {/* Technical Details */}
-        <Card className="p-8">
-          <h3 className="text-2xl font-bold mb-6">Technical Specifications</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <h4 className="font-semibold mb-3 text-brand-primary">Real-Time Technology</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• WebSocket connections (sub-100ms latency)</li>
-                <li>• Automatic reconnection with exponential backoff</li>
-                <li>• Message queuing for offline periods</li>
-                <li>• End-to-end encryption option</li>
-                <li>• Presence heartbeats every 15 seconds</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3 text-brand-primary">Message Features</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• Markdown formatting support</li>
-                <li>• File attachments up to 100MB</li>
-                <li>• Image/video inline previews</li>
-                <li>• Message reactions (emoji responses)</li>
-                <li>• Edit & delete messages</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-3 text-brand-primary">Organization</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• Unlimited channels per project</li>
-                <li>• Thread conversations</li>
-                <li>• Message pinning</li>
-                <li>• Full history search</li>
-                <li>• Archive old channels</li>
-              </ul>
-            </div>
-          </div>
-        </Card>
-
-        {/* Redirect to Projects - Real chat is there */}
-        <Card className="p-12 text-center rnrb-card bg-brand-primary/5 border-brand-primary/20">
-          <MessageSquare className="w-20 h-20 text-brand-primary mx-auto mb-6" />
-          <h2 className="text-3xl font-display font-bold mb-4">Messaging Lives in Your Projects</h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Real-time chat and collaboration happen inside your projects and songs. Create a project to start chatting with your team.
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <Link href="/projects">
-              <Button className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
-                Go to My Projects
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Link href="/projects/new">
-              <Button className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
-                Create New Project
-                <Plus className="w-5 h-5" />
-              </Button>
-            </Link>
-          </div>
-        </Card>
-
-        {/* REMOVED: Hidden tab navigation that didn't work */}
-        <div style={{ display: 'none' }} className="opacity-0 pointer-events-none">
-        {/* Tab Navigation */}
-        <div className="flex gap-4 mb-8">
-          <button
-            onClick={() => setActiveTab('chat')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-              activeTab === 'chat'
-                ? 'bg-accent text-accent-foreground'
-                : 'bg-card hover:bg-card/80'
-            }`}
-          >
-            <MessageSquare className="w-4 h-4" />
-            Chat Room
-          </button>
-          <button
-            onClick={() => setActiveTab('presence')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-              activeTab === 'presence'
-                ? 'bg-accent text-accent-foreground'
-                : 'bg-card hover:bg-card/80'
-            }`}
-          >
-            <Users className="w-4 h-4" />
-            Who's Online
-          </button>
-          <button
-            onClick={() => setActiveTab('notifications')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-              activeTab === 'notifications'
-                ? 'bg-accent text-accent-foreground'
-                : 'bg-card hover:bg-card/80'
-            }`}
-          >
-            <Bell className="w-4 h-4" />
-            Notifications
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <Card className="p-6">
-              {activeTab === 'chat' && (
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                    <MessageSquare className="w-5 h-5" />
-                    Band Chat
-                  </h2>
-                  <ChatRoom channelName="band-general" />
-                </div>
-              )}
-              
-              {activeTab === 'presence' && (
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    Online Members
-                  </h2>
-                  <PresenceList channelName="band-general" />
-                  <div className="mt-6 p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">
-                      See who's currently active in your workspace. Perfect for coordinating
-                      real-time collaboration sessions, remote rehearsals, or production meetings.
-                    </p>
-                  </div>
-                </div>
-              )}
-              
-              {activeTab === 'notifications' && (
-                <div>
-                  <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-                    <Bell className="w-5 h-5" />
-                    Activity Feed
-                  </h2>
-                  <NotificationFeed />
-                  <div className="mt-6 p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">
-                      Real-time notifications for project updates, new songs, tour announcements,
-                      and more. Never miss important updates from your team.
-                    </p>
-                  </div>
-                </div>
-              )}
-            </Card>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Features Card */}
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Real-time Features</h3>
-              <ul className="space-y-3 text-sm">
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5" />
-                  <div>
-                    <strong>Instant Messaging:</strong> Chat with band members and collaborators
-                  </div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5" />
-                  <div>
-                    <strong>Presence Tracking:</strong> See who's online and available
-                  </div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5" />
-                  <div>
-                    <strong>Live Notifications:</strong> Get updates as they happen
-                  </div>
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5" />
-                  <div>
-                    <strong>Auto-reconnection:</strong> Seamless experience even with network issues
-                  </div>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Coming Soon Card */}
-            <Card className="p-6 border-dashed">
-              <h3 className="text-lg font-semibold mb-4">Coming Soon</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>• Voice & Video Calls</li>
-                <li>• Screen Sharing for DAW Sessions</li>
-                <li>• Live Collaborative Editing</li>
-                <li>• Real-time Audio Streaming</li>
-                <li>• Virtual Studio Sessions</li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-        </div> {/* Close hidden div */}
+        )}
       </motion.div>
     </div>
   );

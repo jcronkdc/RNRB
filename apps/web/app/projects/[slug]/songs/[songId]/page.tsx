@@ -27,10 +27,24 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import { useAudioUpload } from '@/hooks/use-audio-upload';
 
 // Dynamically import chat for song-level collaboration
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then(m => m.ChatRoom), { ssr: false });
 const SocialMediaGenerator = dynamic(() => import('@/components/social-media-generator').then(m => m.SocialMediaGenerator), { ssr: false });
+const PresenceIndicator = dynamic(() => import('@/components/presence-indicator').then(m => m.PresenceIndicator), { ssr: false });
+const WaveformPlayer = dynamic(() => import('@/components/waveform-player').then(m => m.WaveformPlayer), { ssr: false });
+
+type AudioFileInfo = {
+  id: string;
+  name: string;
+  url: string;
+  path: string;
+  size: number;
+  type: 'demo' | 'stem' | 'final' | 'reference';
+  uploadedAt: string;
+  uploadedBy: string;
+};
 
 export default function SongDetailPage() {
   const params = useParams();
@@ -44,6 +58,8 @@ export default function SongDetailPage() {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<'details' | 'lyrics' | 'audio' | 'chat' | 'share'>('details');
+  const [audioFiles, setAudioFiles] = useState<AudioFileInfo[]>([]);
+  const { upload, uploading, progress, error: uploadError } = useAudioUpload();
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -69,9 +85,70 @@ export default function SongDetailPage() {
       
       setProject(foundProject);
       setSong(foundSong);
+      // Load audio files from song metadata
+      setAudioFiles(foundSong.audioFiles || []);
       setLoading(false);
     });
   }, [router, slug, songId]);
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    const result = await upload(file, slug, songId, 'demo');
+    if (result) {
+      // Add to audio files list
+      const newAudioFile: AudioFileInfo = {
+        id: `audio_${Date.now()}`,
+        name: file.name,
+        url: result.url,
+        path: result.path,
+        size: file.size,
+        type: 'demo',
+        uploadedAt: new Date().toISOString(),
+        uploadedBy: user.email || 'Unknown'
+      };
+
+      const updatedAudioFiles = [...audioFiles, newAudioFile];
+      setAudioFiles(updatedAudioFiles);
+
+      // Save to song metadata
+      const allProjects = user.user_metadata?.projects || [];
+      const updatedProjects = allProjects.map((p: any) => {
+        if (p.slug === slug) {
+          return {
+            ...p,
+            songs: (p.songs || []).map((s: any) => {
+              if (s.id === songId) {
+                return { ...s, audioFiles: updatedAudioFiles };
+              }
+              return s;
+            }),
+            updated_at: new Date().toISOString()
+          };
+        }
+        return p;
+      });
+
+      await supabase!.auth.updateUser({
+        data: {
+          ...user.user_metadata,
+          projects: updatedProjects
+        }
+      });
+    }
+
+    // Reset file input
+    event.target.value = '';
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  };
 
   if (loading) {
     return (
@@ -122,6 +199,28 @@ export default function SongDetailPage() {
             )}
           </Button>
         </div>
+
+        {/* Real-time Presence Indicator */}
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-lg"
+          >
+            <PresenceIndicator
+              channelName={`song:${slug}:${songId}`}
+              currentUser={{
+                userId: user.id,
+                userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                userEmail: user.email || '',
+                avatar: user.user_metadata?.avatar_url,
+              }}
+              location={`song:${slug}:${songId}:${activeTab}`}
+              showDetails={false}
+              maxVisible={8}
+            />
+          </motion.div>
+        )}
 
         {/* Tabs */}
         <div className="flex gap-2 mb-6 border-b border-border">
@@ -244,41 +343,107 @@ export default function SongDetailPage() {
                 </div>
 
                 {/* Upload Area */}
-                <div className="border-2 border-dashed border-border rounded-xl p-12 text-center hover:border-brand-primary/50 transition cursor-pointer">
-                  <Mic2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">Upload Your Recording</h4>
-                  <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                    Drag and drop your audio file here, or click to browse. Share stems, demos, or final mixes with your collaborators.
-                  </p>
-                  <input
-                    type="file"
-                    accept="audio/*"
-                    className="hidden"
-                    id="audio-upload"
-                  />
-                  <label htmlFor="audio-upload">
-                    <Button className="rnrb-button-primary px-6 py-3 rounded-xl flex items-center gap-2 mx-auto cursor-pointer">
-                      <Upload className="w-5 h-5" />
-                      Choose Audio File
-                    </Button>
-                  </label>
-                  <p className="text-xs text-muted-foreground mt-4 flex items-center gap-1 justify-center">
-                    <Sparkles className="w-3 h-3 text-purple-400" />
-                    Supabase Storage integration launching soon - files will be cloud-backed and shareable
-                  </p>
+                <div className={`border-2 border-dashed rounded-xl p-12 text-center transition ${
+                  uploading ? 'border-brand-primary bg-brand-primary/5' : 'border-border hover:border-brand-primary/50 cursor-pointer'
+                }`}>
+                  {uploading ? (
+                    <>
+                      <Loader2 className="w-16 h-16 text-brand-primary mx-auto mb-4 animate-spin" />
+                      <h4 className="text-lg font-semibold mb-2">Uploading to Supabase Storage...</h4>
+                      {progress && (
+                        <div className="max-w-md mx-auto">
+                          <div className="w-full bg-surface-muted rounded-full h-2 mb-2">
+                            <div 
+                              className="bg-brand-primary h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${progress.percentage}%` }}
+                            />
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            {Math.round(progress.percentage)}% • {formatFileSize(progress.loaded)} / {formatFileSize(progress.total)}
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Mic2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                      <h4 className="text-lg font-semibold mb-2">Upload Your Recording</h4>
+                      <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                        Share stems, demos, or final mixes with your collaborators. Files stored securely in Supabase.
+                      </p>
+                      <input
+                        type="file"
+                        accept="audio/*,.mp3,.wav,.aiff,.flac,.ogg,.m4a"
+                        className="hidden"
+                        id="audio-upload"
+                        onChange={handleFileUpload}
+                        disabled={uploading}
+                      />
+                      <label htmlFor="audio-upload">
+                        <Button className="rnrb-button-primary px-6 py-3 rounded-xl flex items-center gap-2 mx-auto cursor-pointer">
+                          <Upload className="w-5 h-5" />
+                          Choose Audio File
+                        </Button>
+                      </label>
+                      <p className="text-xs text-muted-foreground mt-4">
+                        Max 500MB • Supports MP3, WAV, AIFF, FLAC, OGG, M4A
+                      </p>
+                    </>
+                  )}
+                  {uploadError && (
+                    <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                      <p className="text-sm text-red-400">{uploadError}</p>
+                    </div>
+                  )}
                 </div>
 
-                {/* Placeholder for uploaded files list */}
+                {/* Uploaded Files List */}
                 <div className="mt-6">
                   <h4 className="font-semibold mb-3 flex items-center gap-2">
                     <Music className="w-5 h-5 text-brand-primary" />
-                    Uploaded Files
+                    Uploaded Files ({audioFiles.length})
                   </h4>
-                  <div className="rnrb-card p-6 bg-surface-muted/50">
-                    <p className="text-sm text-muted-foreground text-center">
-                      No files uploaded yet. Upload your first recording above.
-                    </p>
-                  </div>
+                  {audioFiles.length === 0 ? (
+                    <div className="rnrb-card p-6 bg-surface-muted/50 text-center">
+                      <p className="text-sm text-muted-foreground">
+                        No files uploaded yet. Upload your first recording above.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {audioFiles.map((file, index) => (
+                        <motion.div
+                          key={file.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                          className="rnrb-card p-6"
+                        >
+                          {/* File Info Header */}
+                          <div className="flex items-center gap-4 mb-4">
+                            <div className="w-12 h-12 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
+                              <Music className="w-6 h-6 text-brand-primary" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold">{file.name}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {formatFileSize(file.size)} • Uploaded {new Date(file.uploadedAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <span className="px-3 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-400 capitalize">
+                              {file.type}
+                            </span>
+                          </div>
+
+                          {/* Waveform Player */}
+                          <WaveformPlayer
+                            audioUrl={file.url}
+                            audioName={file.name}
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </Card>
             </motion.div>
