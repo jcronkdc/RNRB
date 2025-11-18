@@ -225,18 +225,22 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Link href="/tours">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Radio className="w-6 h-6 text-brand-primary" />
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-green-500/30 transition-all relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
+                    <Radio className="w-6 h-6 text-green-400" />
                   </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-green-400 group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Tours & Shows</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Schedule shows, track tickets, stream virtual concerts
+                <h3 className="text-xl font-semibold mb-2 relative">Stream Live Shows</h3>
+                <p className="text-sm text-muted-foreground mb-3 relative">
+                  Virtual concerts, tour planning, setlists. Connect with fans worldwide.
                 </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Manage tour →</div>
+                <div className="text-sm text-green-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity relative flex items-center gap-1">
+                  <Radio className="w-4 h-4" />
+                  Go live →
+                </div>
               </div>
             </Link>
           </motion.div>
@@ -247,18 +251,22 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <Link href="/messages">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <MessageSquare className="w-6 h-6 text-brand-primary" />
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-blue-500/30 transition-all relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                    <MessageSquare className="w-6 h-6 text-blue-400" />
                   </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-blue-400 group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Messaging</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Real-time chat, file sharing, presence awareness
+                <h3 className="text-xl font-semibold mb-2 relative">Team Chat & Video</h3>
+                <p className="text-sm text-muted-foreground mb-3 relative">
+                  Real-time messaging, video calls, screen share. Ably + Daily.co powered.
                 </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Start chatting →</div>
+                <div className="text-sm text-blue-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity relative flex items-center gap-1">
+                  <MessageSquare className="w-4 h-4" />
+                  Open chat →
+                </div>
               </div>
             </Link>
           </motion.div>
@@ -269,18 +277,22 @@ export default function DashboardPage() {
             transition={{ duration: 0.5, delay: 0.4 }}
           >
             <Link href="/projects">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
+              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/40 transition-all relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative flex items-start justify-between mb-4">
                   <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
                     <Folder className="w-6 h-6 text-brand-primary" />
                   </div>
                   <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">My Projects</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  View all your projects, songs, and collaborations
+                <h3 className="text-xl font-semibold mb-2 relative">View All Projects</h3>
+                <p className="text-sm text-muted-foreground mb-3 relative">
+                  Access all your albums, EPs, singles. Manage songs and collaborators.
                 </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">View all →</div>
+                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity relative flex items-center gap-1">
+                  <Folder className="w-4 h-4" />
+                  Browse projects →
+                </div>
               </div>
             </Link>
           </motion.div>
