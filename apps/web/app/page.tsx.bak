@@ -1,0 +1,841 @@
+'use client';
+
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { 
+  // Core Icons
+  Zap,
+  Shield,
+  Globe,
+  Layers,
+  
+  // Feature Icons
+  Music,
+  Users,
+  DollarSign,
+  BarChart3,
+  Database,
+  Radio,
+  Award,
+  Headphones,
+  Mic,
+  Video,
+  MessageSquare,
+  Sparkles,
+  
+  // UI Icons
+  ArrowRight,
+  Check,
+  Star,
+} from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRef } from 'react';
+import { NavBar } from '@/components/NavBar';
+
+const features = [
+  {
+    title: 'Integrated Collaboration Hub',
+    description: 'Real-time chat + HD video + AI assistant all in one project workspace. The only platform combining Ably messaging, Daily.co video, and GPT-4 assistance.',
+    icon: Users,
+    stats: 'Chat + Video + AI',
+    href: '/projects',
+    highlight: true
+  },
+  {
+    title: 'AI-Powered Chat Assistant',
+    description: 'Get chord suggestions, music theory help, and lyric improvements directly in project chat. Ethical AI that assists creativity.',
+    icon: MessageSquare,
+    stats: 'Live Now',
+    href: '/projects',
+    highlight: true
+  },
+  {
+    title: 'HD Video Collaboration',
+    description: 'Daily.co integration with screen sharing, 32 participants, and cursor control via screenshare for unique real-time interaction.',
+    icon: Video,
+    stats: 'Up to 32 People',
+    href: '/studio'
+  },
+  {
+    title: 'Project Management',
+    description: 'Organize songs, sessions, collaborators, and revenue in invite-only project workspaces.',
+    icon: Music,
+    stats: 'Private by Default',
+    href: '/projects'
+  },
+  {
+    title: 'AI Tour Optimization',
+    description: 'Tokyo subway ant colony model - input cities, AI calculates optimal routing to minimize travel distance.',
+    icon: Globe,
+    stats: 'Coming Soon',
+    href: '/tours'
+  },
+  {
+    title: 'Live Streaming',
+    description: 'Stream finished performances to YouTube, Twitch, Facebook simultaneously via RTMP.',
+    icon: Radio,
+    stats: 'Multi-Platform',
+    href: '/studio'
+  }
+];
+
+const testimonials = [
+  {
+    quote: "Currently in development - join our beta program to be among the first to experience the platform.",
+    author: "Beta Program",
+    role: "Early Access Available",
+    rating: 0
+  }
+];
+
+export default function HomePage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+  
+  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  return (
+    <div ref={containerRef} className="min-h-screen bg-background">
+      <NavBar />
+      
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Premium Background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-surface/20 to-background" />
+          <motion.div 
+            style={{ y, opacity }}
+            className="absolute inset-0"
+          >
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-primary/3 rounded-full blur-3xl" />
+          </motion.div>
+        </div>
+
+        <div className="rnrb-container relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-5xl mx-auto"
+          >
+            {/* Logo - Custom RNR Double R Logo */}
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="mb-8 inline-block"
+            >
+              <Image
+                src="/rnrdark.png"
+                alt="Rock N' Roll Basement - Custom Double R Logo"
+                width={180}
+                height={180}
+                className="dark:hidden drop-shadow-2xl"
+                priority
+              />
+              <Image
+                src="/rnrlight.png"
+                alt="Rock N' Roll Basement - Custom Double R Logo"
+                width={180}
+                height={180}
+                className="hidden dark:block drop-shadow-2xl"
+                priority
+              />
+            </motion.div>
+
+            <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl mb-6">
+              <span className="font-display font-bold">Rock N' Roll Basement</span>
+            </h1>
+
+            {/* Badge */}
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary/10 border border-brand-primary/20 rounded-full mb-6"
+            >
+              <Music className="w-4 h-4 text-brand-primary" />
+              <span className="text-sm font-medium">
+                Where Your Music Comes Alive
+              </span>
+            </motion.div>
+
+            <p className="text-2xl md:text-3xl text-muted-foreground max-w-3xl mx-auto mb-4 leading-relaxed font-semibold">
+              Find the Magic You're Looking For
+            </p>
+            
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
+              Whether you're a songwriter needing better tools, new to the business and finding gigs, discovering your roots in gospel or Appalachian folk, inventing country metal, or following Dylan's path to say what you need to say—
+              <span className="text-brand-primary font-semibold"> this is where your music finds its voice.</span>
+              <br />
+              <span className="font-semibold">Collaborate with artists worldwide in ways rarely seen before.</span>
+            </p>
+            
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <Link 
+                href="/auth"
+                className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-medium"
+              >
+                Start Free Trial
+                <ArrowRight className="ml-2 w-5 h-5 inline-block" />
+              </Link>
+              
+              <Link 
+                href="/why-rnrb"
+                className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-medium"
+              >
+                See Why We're Different
+              </Link>
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mt-12 flex items-center justify-center gap-8 text-sm text-muted-foreground"
+            >
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                <span>Bank-level Security</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                <span>Global Infrastructure</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4" />
+                <span>Lightning Fast</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-24 bg-surface/30">
+        <div className="rnrb-container">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              How It Works
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Three simple steps to start creating, collaborating, and growing your music career
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Step 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-full bg-brand-primary text-brand-primary-foreground flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
+                  1
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Create Your Project</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Set up your album, EP, or single project. Add your vision, genre, and collaborators. Invite-only privacy keeps your work secure.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Step 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-full bg-brand-primary text-brand-primary-foreground flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
+                  2
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Collaborate in Real-Time</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Chat with your team, share your screen in HD video sessions, get AI suggestions for chords and lyrics. Work together like you're in the same room.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Step 3 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-full bg-brand-primary text-brand-primary-foreground flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
+                  3
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Share Your Music</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Record sessions, stream live performances, manage tours. Your music reaches the world while you focus on creating.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
+            <Link 
+              href="/why-rnrb"
+              className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-medium inline-flex items-center gap-2"
+            >
+              See All Features
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* AI Features Section - NEW */}
+      <section className="py-24 bg-gradient-to-br from-purple-500/5 via-transparent to-purple-500/5">
+        <div className="rnrb-container">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-4">
+              <Zap className="w-4 h-4 text-purple-400" />
+              <span className="text-sm font-medium text-purple-400">AI-Powered Features</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              The Only Platform with AI Collaboration
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Ethical AI that enhances your creativity without replacing it. Smart assistance for the creative process.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <MessageSquare className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Chat Assistant</h3>
+              <p className="text-muted-foreground mb-4">
+                Type "what chord after Am?" in project chat - AI suggests progressions, theory help, lyric improvements in real-time
+              </p>
+              <span className="text-sm text-purple-400 font-medium">✓ Live Now</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <Video className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Session Transcription</h3>
+              <p className="text-muted-foreground mb-4">
+                Auto-transcribe video sessions. AI extracts action items: "At 14:32 Sarah suggested changing the bridge"
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <Globe className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Tour Router</h3>
+              <p className="text-muted-foreground mb-4">
+                Tokyo subway ant colony optimization. Input 10 cities, AI calculates optimal routing to minimize travel distance
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <Music className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Mix Assistant</h3>
+              <p className="text-muted-foreground mb-4">
+                "Your kick drum is -6dB quieter than industry standard" - suggestions, not automation. Learn as you mix
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <DollarSign className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Royalty Splits</h3>
+              <p className="text-muted-foreground mb-4">
+                Tracks contributions (3 writing sessions, 40% of lyrics) and suggests fair splits based on industry standards
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="rnrb-card p-8"
+            >
+              <div className="w-14 h-14 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
+                <BarChart3 className="w-7 h-7 text-purple-400" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">AI Content Generator</h3>
+              <p className="text-muted-foreground mb-4">
+                Generate social media posts, tour announcement emails, press releases. AI drafts, you edit before publishing
+              </p>
+              <span className="text-sm text-muted-foreground font-medium">Coming Soon</span>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center bg-purple-500/10 border border-purple-500/20 rounded-2xl p-8 max-w-3xl mx-auto"
+          >
+            <h3 className="text-2xl font-display font-bold mb-4">Ethical AI Principles</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+              <div className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <p className="text-sm text-muted-foreground">AI assists creativity, never replaces it</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <p className="text-sm text-muted-foreground">All suggestions clearly labeled as AI-generated</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <p className="text-sm text-muted-foreground">You always have final creative decision</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                <p className="text-sm text-muted-foreground">Transparent about AI usage and limitations</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="py-24">
+        <div className="rnrb-container">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              Core Collaboration Features
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Real-time tools designed for distributed music teams
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group"
+              >
+                <Link href={feature.href} className="block h-full">
+                  <div className={`rnrb-card h-full p-8 rnrb-hover-lift cursor-pointer ${
+                    feature.highlight 
+                      ? 'bg-gradient-to-br from-purple-500/5 to-transparent border-2 border-purple-500/30' 
+                      : ''
+                  }`}>
+                    {feature.highlight && (
+                      <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full">
+                        <Sparkles className="w-3 h-3 text-purple-400" />
+                        <span className="text-xs font-semibold text-purple-400">UNIQUE INTEGRATION</span>
+                      </div>
+                    )}
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-colors ${
+                      feature.highlight 
+                        ? 'bg-purple-500/10 group-hover:bg-purple-500/20' 
+                        : 'bg-brand-primary/10 group-hover:bg-brand-primary/20'
+                    }`}>
+                      <feature.icon className={`w-7 h-7 ${feature.highlight ? 'text-purple-400' : 'text-brand-primary'}`} />
+                    </div>
+                    
+                    <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                    <p className="text-muted-foreground mb-4 leading-relaxed">{feature.description}</p>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm font-medium ${feature.highlight ? 'text-purple-400' : 'text-brand-primary'}`}>
+                        {feature.stats}
+                      </span>
+                      <ArrowRight className={`w-5 h-5 text-muted-foreground transition-colors ${
+                        feature.highlight 
+                          ? 'group-hover:text-purple-400' 
+                          : 'group-hover:text-brand-primary'
+                      }`} />
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Preview */}
+      <section className="py-24 bg-surface/30">
+        <div className="rnrb-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              See It In Action
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              A glimpse into your new command center
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="aspect-video bg-surface rounded-2xl border border-border/50 shadow-2xl overflow-hidden">
+              {/* Dashboard Preview Placeholder */}
+              <div className="p-8 h-full flex items-center justify-center">
+                <div className="text-center">
+                  <Layers className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+                  <p className="text-muted-foreground">Interactive Dashboard Preview</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Feature Highlights */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="absolute -left-4 top-1/4 rnrb-card p-4 shadow-xl"
+            >
+              <div className="flex items-center gap-3">
+                <Music className="w-8 h-8 text-brand-primary" />
+                <div>
+                  <p className="text-sm font-semibold">In Development</p>
+                  <p className="text-xs text-muted-foreground">Dashboard Preview</p>
+                </div>
+              </div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="absolute -right-4 bottom-1/4 rnrb-card p-4 shadow-xl"
+            >
+              <div className="flex items-center gap-3">
+                <BarChart3 className="w-8 h-8 text-purple-500" />
+                <div>
+                  <p className="text-sm font-semibold">Coming Soon</p>
+                  <p className="text-xs text-muted-foreground">Real Analytics</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24">
+        <div className="rnrb-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              Loved by the Industry
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Join thousands of music professionals already using Rock N' Roll Basement
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="rnrb-card p-8"
+              >
+                {testimonial.rating > 0 && (
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-brand-primary text-brand-primary" />
+                    ))}
+                  </div>
+                )}
+                
+                <p className="text-lg mb-6 leading-relaxed">"{testimonial.quote}"</p>
+                
+                <div>
+                  <p className="font-semibold">{testimonial.author}</p>
+                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Preview */}
+      <section className="py-24 bg-surface/30">
+        <div className="rnrb-container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto text-center"
+          >
+            <h2 className="text-4xl md:text-5xl font-display mb-6">
+              Start Free, Scale As You Grow
+            </h2>
+            <p className="text-xl text-muted-foreground mb-12">
+              No credit card required. Upgrade when you're ready.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="rnrb-card p-6">
+                <h3 className="text-lg font-semibold mb-2">Free</h3>
+                <p className="text-3xl font-bold mb-4">$0</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span>1 Project</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span>2 GB Storage</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span>Video Calls</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-red-400 font-bold">✗</span>
+                    <span>No AI Features</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="rnrb-card p-6 border-2 border-purple-500/50 relative bg-gradient-to-br from-purple-500/5 to-transparent">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-purple-600 text-xs font-medium rounded-full text-white flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  Most Popular
+                </div>
+                <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full">
+                  <Zap className="w-4 h-4 text-purple-400" />
+                  <span className="text-xs font-semibold text-purple-400">ALL AI FEATURES</span>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Professional</h3>
+                <p className="text-3xl font-bold mb-4">$99/mo</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span>20 Projects</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-purple-400 font-bold">✨</span>
+                    <span>500 AI Queries/mo</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-purple-400 font-bold">✨</span>
+                    <span>AI Transcription</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-purple-400 font-bold">✨</span>
+                    <span>AI Tour Routing</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="rnrb-card p-6">
+                <h3 className="text-lg font-semibold mb-2">Studio Pro</h3>
+                <p className="text-3xl font-bold mb-4">$299/mo</p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span>Unlimited Projects</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-purple-400 font-bold">✨</span>
+                    <span>Unlimited AI Features</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span>2,000 AI Queries/mo</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-green-500 font-bold">✓</span>
+                    <span>24/7 Support</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <Link 
+              href="/pricing"
+              className="rnrb-button-secondary px-8 py-4 rounded-xl text-lg font-medium inline-flex items-center gap-2"
+            >
+              View All Features
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-32">
+        <div className="rnrb-container">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-3xl rnrb-gold-gradient p-16 text-center"
+          >
+            <div className="absolute inset-0 bg-black/50" />
+            
+            <div className="relative z-10">
+              <h2 className="text-5xl md:text-6xl font-display text-white mb-6">
+                Ready to Transform Your Career?
+              </h2>
+              <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+                Join the platform that's revolutionizing the music industry. 
+                Start your free account today.
+              </p>
+              
+              <Link 
+                href="/auth"
+                className="inline-flex items-center gap-3 px-10 py-5 bg-white text-black rounded-xl font-semibold text-lg hover:bg-white/90 transition-colors"
+              >
+                Get Started Free
+                <ArrowRight className="w-6 h-6" />
+              </Link>
+              
+              <p className="mt-6 text-sm text-white/60">
+                No credit card required • Free forever plan available
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 border-t border-border/50">
+        <div className="rnrb-container">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/rnrdark.png"
+                alt="Rock N' Roll Basement"
+                width={32}
+                height={32}
+                className="dark:hidden"
+              />
+              <Image
+                src="/rnrlight.png"
+                alt="Rock N' Roll Basement"
+                width={32}
+                height={32}
+                className="hidden dark:block"
+              />
+              <span className="text-lg font-medium">Rock N' Roll Basement</span>
+            </div>
+            
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
+              <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+              <Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link>
+            </div>
+            
+            <p className="text-sm text-muted-foreground">
+              © 2024 Rock N' Roll Basement. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export const dynamic = "force-static";
