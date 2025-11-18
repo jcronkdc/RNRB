@@ -325,6 +325,12 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
                                 // Scroll to chord explorer
                                 document.getElementById('chord-explorer')?.scrollIntoView({ behavior: 'smooth' });
                               }}
+                              onWordSelect={(word, lineIndex, wordIndex) => {
+                                setSelectedWordForRhymes(word);
+                                setSelectedWordPosition({ sectionId: section.id, lineIndex, wordIndex });
+                                // Scroll to rhyme dictionary
+                                document.getElementById('rhyme-dictionary')?.scrollIntoView({ behavior: 'smooth' });
+                              }}
                             />
                           ) : (
                             <textarea
@@ -435,6 +441,32 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
               onPreview={handlePreviewVersion}
               onCompare={handleCompareVersions}
             />
+
+            {/* Rhyme Dictionary */}
+            <div id="rhyme-dictionary">
+              <RhymeDictionary
+                selectedWord={selectedWordForRhymes}
+                onSelectRhyme={(rhyme) => {
+                  if (selectedWordPosition) {
+                    const section = sections.find(s => s.id === selectedWordPosition.sectionId);
+                    if (section) {
+                      const lines = section.lyrics.split('\n');
+                      const line = lines[selectedWordPosition.lineIndex] || '';
+                      const words = line.split(/\s+/);
+                      
+                      // Replace the word
+                      words[selectedWordPosition.wordIndex] = rhyme;
+                      lines[selectedWordPosition.lineIndex] = words.join(' ');
+                      
+                      updateSectionLyrics(selectedWordPosition.sectionId, lines.join('\n'));
+                    }
+                  }
+                  // Clear selection
+                  setSelectedWordForRhymes(null);
+                  setSelectedWordPosition(null);
+                }}
+              />
+            </div>
 
             {/* Chord Explorer & Progression Library */}
             <div id="chord-explorer">
