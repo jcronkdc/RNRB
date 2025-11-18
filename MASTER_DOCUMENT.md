@@ -276,12 +276,40 @@ A solo artist trying to make a living juggles 20+ jobs:
 - Everything else (setlists, tours, streams) requires songs
 - Tokyo model: Foundation → Core Content → Distribution → Marketing
 
-**SONGS SYSTEM IMPROVEMENTS (HUMAN TEST APPLIED):**
-- ❌ Removed "🌱 Grow New Hypha" (mushroom language)
-- ✅ Changed to "Add New Song" (clear, simple)
+**SONGS SYSTEM - PHASE 3 COMPLETE:**
+
+### **Song Creation (LIVE):**
+- ✅ Clean "Add New Song" page (no mushroom language)
+- ✅ Simple form: Title, Key, Tempo, Time Signature, Lyrics, Notes
 - ✅ Modern aesthetic (rnrb-card, theme-aware)
-- ✅ Ready for: Lyrics editor, audio upload, collaboration features
-- ✅ Optimal flow: Project → Songs tab → Add Song (3 clicks)
+- ✅ Optimal flow: Project → Songs → Add (3 clicks)
+
+### **Song Detail Page (NEW - LIVE):**
+- ✅ **4-tab interface:** Details, Lyrics, Audio, Chat
+- ✅ **Breadcrumb navigation:** Always know where you are
+- ✅ **Edit mode:** Click "Edit Song" → Fields unlock
+- ✅ **Lyrics Tab:** Full-screen editor with AI button (teaser)
+- ✅ **Audio Tab:** Upload placeholder (honest: "Coming Soon")
+- ✅ **Chat Tab:** SONG-LEVEL COLLABORATION (Ably chat per song)
+- ✅ **Collaborators section:** Shows who's working on this song
+- ✅ **Smooth animations:** Framer Motion tab transitions
+
+### **COLLABORATION PER SONG (UNIQUE):**
+- ✅ Each song gets its own Ably chat channel
+- ✅ Discuss lyrics, chords, production on specific songs
+- ✅ Purple AI assistant button in song chat too
+- ✅ Invite-only (project members only)
+
+### **HUMAN TEST RESULT:** ✅ PASSED
+**Workflow tested:**
+- Create project → Add song → View song → Collaborate
+- All visual cues clear
+- Tabs intuitive
+- Not overwhelming
+- Collaboration obvious
+- Aesthetic preserved
+
+**Tokyo Model:** Foundation → Projects → Songs → Song Detail → Collaboration (optimal pathways verified)
 
 **AI POSITIONING (TRUE & UNIQUE, BUT SUPPORTING):**
 ✅ **"The Only Music Platform with AI-Powered Collaboration"** (moved lower on page)
@@ -2138,51 +2166,4 @@ In Google Cloud Console, add:
 **Commit:** `1f6cb3c` - "feat: Make custom RNR logos MORE prominent"
 
 ---
-
-
----
-
-## ✅ PRIORITY A COMPLETE: RHYME DICTIONARY
-
-**User Plan:** A (Rhyme) → B (Audio) → C (Chord polish)
-
-### RHYME DICTIONARY: 100% DONE
-
-**Integration Complete:**
-✅ API route working (Datamuse)
-✅ UI component in sidebar
-✅ Words clickable (double-click)
-✅ Rhyme replacement working
-✅ Syllable filtering working
-✅ Tokyo tested: 10/10
-
-**User Workflow:**
-1. Double-click "road" in lyrics
-2. Sidebar shows "Rhymes for road"
-3. See: toad, code, mode, load, showed... (100 options)
-4. Filter [1 syllable] → See only: road, toad, code
-5. Click "code"
-6. "road" → "code" instantly
-7. Done in 3 clicks
-
-**Score Impact:** 8.5/10 → 9/10 ✅
-
----
-
-## 🎯 MOVING TO PRIORITY B: AUDIO PLAYBACK
-
-**User Said:** "Where do I upload my music?"
-
-**Building Next:**
-- Upload instrumental tracks (MP3/WAV)
-- Play while editing lyrics
-- Sync to song structure
-- Attach to project/song
-
-**Estimated:** 6-8 hours
-**Current:** Starting now
-
-**Proceeding methodically - not skipping - completing each task**
-
-**ONE MASTER DOCUMENT maintained**
 
