@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2, HelpCircle, Users } from 'lucide-react';
 import Link from 'next/link';
 import { FirstTimeOnboarding } from '@/components/first-time-onboarding';
-import { NavBar } from '@/components/NavBar';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -35,11 +34,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <>
-      <NavBar />
-      <div className="min-h-screen bg-background pt-20">
-        {/* First-Time User Onboarding */}
-        <FirstTimeOnboarding />
+    <div className="min-h-screen bg-background">
+      {/* First-Time User Onboarding */}
+      <FirstTimeOnboarding />
       
       {/* Hero Section with Gradient */}
       <div className="relative overflow-hidden border-b border-border/50">
