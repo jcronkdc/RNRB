@@ -1,11 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
-import { ArrowLeft, Save, Trash2, Settings as SettingsIcon } from 'lucide-react';
+import { ArrowLeft, Save, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ProjectSettingsPage() {
@@ -88,124 +87,88 @@ export default function ProjectSettingsPage() {
 
   if (loading || !project) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-lg">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
+        <div className="text-white">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      
-      {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
-        
-        <div className="rnrb-container max-w-4xl relative z-10 py-12 px-4">
-          <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 mb-6 transition">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Project
-          </Link>
+    <div className="min-h-screen bg-gradient-to-b from-[#050816] to-[#0f172a] py-12 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 mb-6">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Project
+        </Link>
 
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-              <SettingsIcon className="w-6 h-6 text-brand-primary" />
-            </div>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-display font-bold">Project Settings</h1>
-              <p className="text-sm text-muted-foreground">{project.name}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        <h1 className="text-4xl font-bold text-white mb-8">Project Settings</h1>
 
-      <div className="rnrb-container max-w-4xl py-12 px-4">
         {message && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`mb-6 p-4 rounded-lg border ${
-              message.type === 'success'
-                ? 'bg-green-500/10 border-green-500/20 text-green-400'
-                : 'bg-red-500/10 border-red-500/20 text-red-400'
-            }`}
-          >
-            <p className="text-sm font-medium">{message.text}</p>
-          </motion.div>
+          <div className={`mb-6 p-4 rounded-lg ${
+            message.type === 'success'
+              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+              : 'bg-red-500/10 border border-red-500/20 text-red-400'
+          }`}>
+            {message.text}
+          </div>
         )}
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="rnrb-card p-8 mb-6">
-            <h2 className="text-2xl font-display font-bold mb-6">Basic Information</h2>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2">Project Name</label>
-                <input
-                  type="text"
-                  value={project.name}
-                  onChange={(e) => setProject({ ...project, name: e.target.value })}
-                  className="w-full px-4 py-2 bg-surface border border-border rounded-lg focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Tagline</label>
-                <input
-                  type="text"
-                  value={project.tagline || ''}
-                  onChange={(e) => setProject({ ...project, tagline: e.target.value })}
-                  className="w-full px-4 py-2 bg-surface border border-border rounded-lg focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Description</label>
-                <textarea
-                  value={project.description || ''}
-                  onChange={(e) => setProject({ ...project, description: e.target.value })}
-                  rows={4}
-                  className="w-full px-4 py-2 bg-surface border border-border rounded-lg focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition resize-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">Genre</label>
-                <input
-                  type="text"
-                  value={project.genre || ''}
-                  onChange={(e) => setProject({ ...project, genre: e.target.value })}
-                  placeholder="Rock, Jazz, Hip-Hop..."
-                  className="w-full px-4 py-2 bg-surface border border-border rounded-lg focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
-                />
-              </div>
+        <Card className="p-6 mb-6">
+          <h2 className="text-xl font-semibold text-white mb-4">Basic Information</h2>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Project Name</label>
+              <input
+                type="text"
+                value={project.name}
+                onChange={(e) => setProject({ ...project, name: e.target.value })}
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+              />
             </div>
-          </Card>
 
-          <div className="flex items-center justify-between">
-            <Button
-              onClick={handleDelete}
-              variant="secondary"
-              className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Delete Project
-            </Button>
-            
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="rnrb-button-primary px-8 py-3 disabled:opacity-50"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {saving ? 'Saving...' : 'Save Changes'}
-            </Button>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Tagline</label>
+              <input
+                type="text"
+                value={project.tagline || ''}
+                onChange={(e) => setProject({ ...project, tagline: e.target.value })}
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+              <textarea
+                value={project.description || ''}
+                onChange={(e) => setProject({ ...project, description: e.target.value })}
+                rows={4}
+                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:border-purple-500 focus:outline-none resize-none"
+              />
+            </div>
           </div>
-        </motion.div>
+        </Card>
+
+        <div className="flex items-center justify-between">
+          <Button
+            onClick={handleDelete}
+            variant="secondary"
+            className="text-red-400 hover:text-red-300"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Delete Project
+          </Button>
+          
+          <Button
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            {saving ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
       </div>
     </div>
   );
 }
+
