@@ -339,7 +339,7 @@ export default function ProjectCollaboratePage() {
                 </div>
               </Card>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Chat View - LIVE Ably Integration */}
