@@ -76,7 +76,13 @@ export default function SongDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-lg">Loading song...</div>
+        <motion.div 
+          animate={{ opacity: [0.2, 1, 0.2] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-muted-foreground font-mono text-sm"
+        >
+          Loading song...
+        </motion.div>
       </div>
     );
   }

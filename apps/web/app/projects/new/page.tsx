@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
@@ -13,7 +14,8 @@ import {
   Globe,
   Building,
   Sparkles,
-  ArrowLeft
+  ArrowLeft,
+  Folder
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -98,28 +100,58 @@ export default function NewProjectPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-lg">Loading...</div>
+        <motion.div 
+          animate={{ opacity: [0.2, 1, 0.2] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-muted-foreground font-mono text-sm"
+        >
+          Loading...
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
-      <div className="rnrb-container max-w-4xl">
-        
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/projects" className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 mb-4 transition">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Projects
-          </Link>
-          <h1 className="text-4xl font-display font-bold mb-2">
-            Create New Project
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Organize your songs, collaborators, and creative work
-          </p>
+    <div className="min-h-screen bg-background">
+      
+      {/* Premium Hero Section */}
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0">
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
         </div>
+        
+        <div className="rnrb-container max-w-4xl relative z-10 py-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Link href="/projects" className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-primary mb-6 transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              <span className="font-mono text-xs uppercase tracking-wider">Back to Projects</span>
+            </Link>
+            
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                <Folder className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Create New</p>
+                <h1 className="text-3xl md:text-4xl font-display font-bold">
+                  Project
+                </h1>
+              </div>
+            </div>
+            <p className="text-lg text-muted-foreground">
+              Organize your songs, collaborate with your team, and build your music career
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="rnrb-container max-w-4xl py-12 px-4">
 
         {message && (
           <div className={`mb-6 p-4 rounded-lg ${
@@ -132,7 +164,12 @@ export default function NewProjectPage() {
         )}
 
         {/* Project Form */}
-        <Card className="p-8 mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Card className="p-8 mb-6 rnrb-card">
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
@@ -203,16 +240,22 @@ export default function NewProjectPage() {
               </div>
             </div>
           </div>
-        </Card>
+          </Card>
+        </motion.div>
 
         {/* Privacy Settings */}
-        <Card className="p-8 mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <Card className="p-8 mb-6 rnrb-card">
           <h2 className="text-2xl font-semibold mb-6">Privacy & Access</h2>
           
           <div className="space-y-4">
             <button
               onClick={() => setProjectData({ ...projectData, visibility: 'private' })}
-              className={`w-full p-4 rounded-lg border-2 transition text-left ${
+              className={`w-full p-4 rounded-xl border-2 transition text-left ${
                 projectData.visibility === 'private'
                   ? 'border-brand-primary bg-brand-primary/10'
                   : 'border-border bg-surface hover:border-brand-primary/50'
@@ -223,7 +266,7 @@ export default function NewProjectPage() {
                   projectData.visibility === 'private' ? 'text-brand-primary' : 'text-muted-foreground'
                 }`} />
                 <div>
-                  <p className="font-semibold text-foreground mb-1">🔒 Private</p>
+                  <p className="font-semibold text-foreground mb-1">Private</p>
                   <p className="text-sm text-muted-foreground">
                     Only you can see this project. Perfect for works in progress.
                   </p>
@@ -233,18 +276,18 @@ export default function NewProjectPage() {
 
             <button
               onClick={() => setProjectData({ ...projectData, visibility: 'org' })}
-              className={`w-full p-4 rounded-lg border-2 transition text-left ${
+              className={`w-full p-4 rounded-xl border-2 transition text-left ${
                 projectData.visibility === 'org'
-                  ? 'border-blue-500 bg-blue-500/10'
-                  : 'border-white/10 bg-white/5 hover:border-white/20'
+                  ? 'border-brand-primary bg-brand-primary/10'
+                  : 'border-border bg-surface hover:border-brand-primary/50'
               }`}
             >
               <div className="flex items-start gap-3">
                 <Users className={`w-5 h-5 mt-1 ${
-                  projectData.visibility === 'org' ? 'text-blue-400' : 'text-muted-foreground'
+                  projectData.visibility === 'org' ? 'text-brand-primary' : 'text-muted-foreground'
                 }`} />
                 <div>
-                  <p className="font-semibold text-foreground mb-1">👥 Band/Organization</p>
+                  <p className="font-semibold text-foreground mb-1">Band/Organization</p>
                   <p className="text-sm text-muted-foreground">
                     Shared with your band or organization members only.
                   </p>
@@ -254,18 +297,18 @@ export default function NewProjectPage() {
 
             <button
               onClick={() => setProjectData({ ...projectData, visibility: 'public' })}
-              className={`w-full p-4 rounded-lg border-2 transition text-left ${
+              className={`w-full p-4 rounded-xl border-2 transition text-left ${
                 projectData.visibility === 'public'
-                  ? 'border-green-500 bg-green-500/10'
-                  : 'border-white/10 bg-white/5 hover:border-white/20'
+                  ? 'border-brand-primary bg-brand-primary/10'
+                  : 'border-border bg-surface hover:border-brand-primary/50'
               }`}
             >
               <div className="flex items-start gap-3">
                 <Globe className={`w-5 h-5 mt-1 ${
-                  projectData.visibility === 'public' ? 'text-green-400' : 'text-muted-foreground'
+                  projectData.visibility === 'public' ? 'text-brand-primary' : 'text-muted-foreground'
                 }`} />
                 <div>
-                  <p className="font-semibold text-foreground mb-1">🌍 Public</p>
+                  <p className="font-semibold text-foreground mb-1">Public</p>
                   <p className="text-sm text-muted-foreground">
                     Anyone can discover and listen. Great for released albums.
                   </p>
@@ -273,10 +316,16 @@ export default function NewProjectPage() {
               </div>
             </button>
           </div>
-        </Card>
+          </Card>
+        </motion.div>
 
         {/* Create Button */}
-        <div className="flex items-center justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="flex items-center justify-between"
+        >
           <Link href="/projects">
             <Button variant="secondary" className="px-6 py-3">
               Cancel
@@ -290,7 +339,7 @@ export default function NewProjectPage() {
             <Sparkles className="w-5 h-5" />
             {creating ? 'Creating...' : 'Create Project'}
           </Button>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
