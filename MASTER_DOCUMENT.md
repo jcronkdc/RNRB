@@ -852,13 +852,70 @@ Collaborate with artists worldwide in ways rarely seen before."
 - `/app/(app)/layout.tsx` ✅ (NavBar + breadcrumbs)
 - `/app/dashboard/page.tsx` 🔨 (redesigning)
 
-**NEXT SESSION CONTINUATION:**
-- Complete dashboard visual redesign
-- Add tooltips system-wide
-- Build help section
-- Add FAB and command palette
-- Update songwriting tool with chord grid
-- Deploy all changes together after testing
+**EXACT CONTINUATION POINT (Next Agent Start Here):**
+
+### **WHAT'S DEPLOYED & WORKING (Production):**
+1. ✅ Phase 1: Persistent Navigation (NavBar + Breadcrumbs on all pages) - LIVE
+2. ✅ Collaborative features: Ably chat (project + song), Daily.co video, AI assistant
+3. ✅ Homepage message PROTECTED (never change)
+4. ✅ 8 phases complete: Auth, Projects, Songs, Sessions, Analytics, Social Media, Setlists, Navigation
+
+### **WHAT'S PARTIALLY COMPLETE:**
+- ⚠️ Collaborative Visual Song Builder (component exists, not wired to production yet)
+- ⚠️ Sessions (can view, can't log - needs modal)
+- ⚠️ Setlists (can view, can't create - needs builder)
+
+### **DASHBOARD REDESIGN - 6 PHASES REMAINING:**
+
+**Phase 2: Dashboard Visual Redesign (IN PROGRESS)**
+- File: `/app/dashboard/page.tsx`
+- TODO: Add vibrant purple/gold/pink gradients
+- TODO: Music-themed background elements (🎸🎵🎹)
+- TODO: Animated pulse effects
+- TODO: Change labels to be specific ("Start New Album/EP")
+
+**Phase 3: Tool Clarity**
+- TODO: Each tool gets unique visual identity
+- TODO: Clearer labels (less vague)
+- TODO: Creative card designs with imagery
+
+**Phase 4: Hand-Holding Tutorial System**
+- TODO: Add tooltips (hover help on all buttons)
+- TODO: Enhance onboarding tour (point to specific elements)
+- TODO: Build `/help` page (searchable documentation)
+
+**Phase 5: Quick Navigation**
+- TODO: FAB (floating action button) bottom-right
+- TODO: Command palette (Cmd+K)
+- TODO: Never lose your place
+
+**Phase 6: Songwriting Tool Updates**
+- File: `/app/projects/[slug]/songs/new/page.tsx`
+- TODO: Add free-form chord grid above lyrics
+- TODO: Change title to "Visual Songwriting Studio"
+- TODO: Clearer purpose description
+- TODO: Collaborative features visible
+
+**Phase 7: Integration Testing**
+- TODO: Human test entire flow
+- TODO: Verify navigation works everywhere
+- TODO: Test collaboration features
+- TODO: Deploy when all phases complete
+
+### **CRITICAL FILES TO CONTINUE:**
+- `/app/dashboard/page.tsx` - Dashboard redesign
+- `/app/projects/[slug]/songs/new/page.tsx` - Songwriting tool
+- `/components/breadcrumbs.tsx` - Already deployed ✅
+- `/app/(app)/layout.tsx` - Already deployed ✅
+
+### **METHODOLOGY TO MAINTAIN:**
+1. Human test simulation before every feature
+2. Build phase completely before moving to next
+3. Document progress in THIS document
+4. Deploy only when tested
+5. Tokyo model: Optimal pathways, max 3 clicks
+
+**ONE MASTER_DOCUMENT. Next agent: Continue with Phase 2 (Dashboard Visual Redesign) using files listed above.**
 
 ---
 
