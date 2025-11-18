@@ -255,6 +255,34 @@ A solo artist trying to make a living juggles 20+ jobs:
 
 **RESULT:** Workflow feels intuitive. Visual cues guide without overwhelming. Aesthetic preserved.
 
+---
+
+## 🎵 NEXT LOGICAL FEATURE: SONGS SYSTEM
+
+**BASED ON 20+ PAIN POINTS, LOGICAL ORDER:**
+1. ✅ Projects (foundation) - DONE
+2. ✅ Collaboration (chat + video) - DONE
+3. 🔨 **Songs** ← BUILDING NOW (core creative output)
+4. 🔨 Sessions (tracking recording sessions)
+5. 🔨 File uploads (audio, stems, artwork)
+6. 🔨 Setlists (for performances)
+7. 🔨 Tours/Shows (booking, scheduling)
+8. 🔨 Distribution (release management)
+9. 🔨 Marketing (social, mailing list, PR)
+
+**WHY SONGS NEXT:**
+- Projects are empty shells without songs
+- Can't collaborate on "nothing"
+- Everything else (setlists, tours, streams) requires songs
+- Tokyo model: Foundation → Core Content → Distribution → Marketing
+
+**SONGS SYSTEM IMPROVEMENTS (HUMAN TEST APPLIED):**
+- ❌ Removed "🌱 Grow New Hypha" (mushroom language)
+- ✅ Changed to "Add New Song" (clear, simple)
+- ✅ Modern aesthetic (rnrb-card, theme-aware)
+- ✅ Ready for: Lyrics editor, audio upload, collaboration features
+- ✅ Optimal flow: Project → Songs tab → Add Song (3 clicks)
+
 **AI POSITIONING (TRUE & UNIQUE, BUT SUPPORTING):**
 ✅ **"The Only Music Platform with AI-Powered Collaboration"** (moved lower on page)
 ✅ AI is a TOOL that serves creativity, not the focal point

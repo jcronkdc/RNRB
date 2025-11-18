@@ -98,20 +98,22 @@ export default function NewSongPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-surface/20 to-background py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
+    <div className="min-h-screen bg-background py-12 px-4">
+      <div className="rnrb-container max-w-4xl">
         
-        <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-brand-primary hover:opacity-80 mb-6">
+        <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 mb-6 transition">
           <ArrowLeft className="w-4 h-4" />
           Back to Project
         </Link>
 
-        <h1 className="text-4xl font-bold text-foreground mb-2">
-          🌱 Grow New Hypha (Song)
-        </h1>
-        <p className="text-xl text-muted-foreground mb-8">
-          A new creative thread branching from {project?.name}
-        </p>
+        <div className="mb-8">
+          <h1 className="text-4xl font-display font-bold mb-2">
+            Add New Song
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Create a new song in {project?.name}
+          </p>
+        </div>
 
         {message && (
           <div className={`mb-6 p-4 rounded-lg border ${
@@ -123,8 +125,8 @@ export default function NewSongPage() {
           </div>
         )}
 
-        <Card className="p-8 mb-6">
-          <h2 className="text-2xl font-semibold text-foreground mb-6">Song Details</h2>
+        <Card className="p-8 mb-6 rnrb-card">
+          <h2 className="text-2xl font-semibold mb-6">Song Details</h2>
           
           <div className="space-y-6">
             <div>
