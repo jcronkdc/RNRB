@@ -8,8 +8,8 @@ import { ArrowLeft, Save, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
-// Dynamically import visual song builder
-const VisualSongBuilder = dynamic(() => import('@/components/songwriting').then(m => m.VisualSongBuilder), { ssr: false });
+// Dynamically import collaborative visual builder
+const CollaborativeVisualBuilder = dynamic(() => import('@/components/songwriting').then(m => m.CollaborativeVisualBuilder), { ssr: false });
 
 export default function NewSongPage() {
   const params = useParams();
@@ -174,8 +174,9 @@ export default function NewSongPage() {
           </div>
         )}
 
-        {/* Visual Song Builder - Unified Canvas */}
-        <VisualSongBuilder
+        {/* Collaborative Visual Builder - Complete Interface */}
+        <CollaborativeVisualBuilder
+          projectSlug={slug}
           onSongChange={(blocks) => setSongData({ ...songData, songStructure: blocks })}
         />
 
