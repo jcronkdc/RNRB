@@ -70,6 +70,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Daily.co CDN for video collaboration */}
+        <script src="https://unpkg.com/@daily-co/daily-js" async></script>
+      </head>
       <body>
         <AblyProvider>
           {children}
