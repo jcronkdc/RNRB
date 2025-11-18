@@ -172,17 +172,19 @@ export default function ProjectDetailPage() {
             </Card>
           </Link>
 
-          <Card className="p-4 hover:shadow-lg transition cursor-pointer bg-gradient-to-br from-green-500/5 to-green-500/10 border border-green-500/20">
-            <div className="flex flex-col items-center text-center gap-3">
-              <div className="p-3 bg-green-500/20 rounded-lg">
-                <Calendar className="w-6 h-6 text-green-400" />
+          <Link href={`/projects/${slug}/sessions`}>
+            <Card className="p-4 hover:shadow-lg hover:scale-105 transition cursor-pointer bg-gradient-to-br from-green-500/5 to-green-500/10 border border-green-500/20">
+              <div className="flex flex-col items-center text-center gap-3">
+                <div className="p-3 bg-green-500/20 rounded-lg">
+                  <Calendar className="w-6 h-6 text-green-400" />
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground">Sessions</p>
+                  <p className="text-xs text-muted-foreground">Track your work</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-white">Session</p>
-                <p className="text-xs text-muted-foreground">Schedule recording</p>
-              </div>
-            </div>
-          </Card>
+            </Card>
+          </Link>
 
           <Card className="p-4 hover:shadow-lg transition cursor-pointer bg-gradient-to-br from-orange-500/5 to-orange-500/10 border border-orange-500/20">
             <div className="flex flex-col items-center text-center gap-3">
