@@ -57,7 +57,7 @@ export default function ProjectDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#050816] to-[#0f172a]">
-        <div className="text-white">Loading project...</div>
+        <div className="text-foreground">Loading project...</div>
       </div>
     );
   }
@@ -82,7 +82,7 @@ export default function ProjectDetailPage() {
               {project.cover_image ? (
                 <img src={project.cover_image} alt={project.name} className="w-full h-full object-cover" />
               ) : (
-                <Music className="w-24 h-24 text-white/30" />
+                <Music className="w-24 h-24 text-foreground/30" />
               )}
             </div>
 
@@ -91,7 +91,7 @@ export default function ProjectDetailPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-4xl font-bold text-white">{project.name}</h1>
+                    <h1 className="text-4xl font-bold text-foreground">{project.name}</h1>
                     {project.visibility === 'private' && (
                       <span className="px-3 py-1 bg-gray-500/20 border border-gray-500/30 rounded-full text-sm text-gray-400 flex items-center gap-1">
                         <Lock className="w-3 h-3" />
@@ -122,21 +122,21 @@ export default function ProjectDetailPage() {
 
               {/* Quick Stats */}
               <div className="flex flex-wrap gap-4 text-sm">
-                <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full">
-                  <Music className="w-4 h-4 text-purple-400" />
-                  <span className="text-white">{project.song_count || 0} songs</span>
+                <div className="flex items-center gap-2 px-3 py-1 bg-surface-muted border border-border rounded-full">
+                  <Music className="w-4 h-4 text-brand-primary" />
+                  <span className="text-foreground">{project.song_count || 0} songs</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full">
-                  <Users className="w-4 h-4 text-blue-400" />
-                  <span className="text-white">{project.collaborator_count || 1} collaborators</span>
+                <div className="flex items-center gap-2 px-3 py-1 bg-surface-muted border border-border rounded-full">
+                  <Users className="w-4 h-4 text-brand-primary" />
+                  <span className="text-foreground">{project.collaborator_count || 1} collaborators</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full">
-                  <Calendar className="w-4 h-4 text-green-400" />
-                  <span className="text-white">{project.session_count || 0} sessions</span>
+                <div className="flex items-center gap-2 px-3 py-1 bg-surface-muted border border-border rounded-full">
+                  <Calendar className="w-4 h-4 text-brand-primary" />
+                  <span className="text-foreground">{project.session_count || 0} sessions</span>
                 </div>
                 {project.genre && (
-                  <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full">
-                    <span className="text-purple-400">{project.genre}</span>
+                  <div className="flex items-center gap-2 px-3 py-1 bg-surface-muted border border-border rounded-full">
+                    <span className="text-brand-primary">{project.genre}</span>
                   </div>
                 )}
               </div>
@@ -152,7 +152,7 @@ export default function ProjectDetailPage() {
                 <Music className="w-6 h-6 text-purple-400" />
               </div>
               <div>
-                <p className="font-semibold text-white">Add Song</p>
+                <p className="font-semibold text-foreground">Add Song</p>
                 <p className="text-xs text-muted-foreground">Create new track</p>
               </div>
             </div>
@@ -192,7 +192,7 @@ export default function ProjectDetailPage() {
                 <Upload className="w-6 h-6 text-orange-400" />
               </div>
               <div>
-                <p className="font-semibold text-white">Upload</p>
+                <p className="font-semibold text-foreground">Upload</p>
                 <p className="text-xs text-muted-foreground">Add files</p>
               </div>
             </div>
@@ -257,7 +257,7 @@ export default function ProjectDetailPage() {
             {/* Sessions */}
             <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-blue-400" />
                   Recording Sessions
                 </h2>
@@ -273,7 +273,7 @@ export default function ProjectDetailPage() {
             {/* Assets */}
             <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
                   <Upload className="w-5 h-5 text-green-400" />
                   Project Assets
                 </h2>
@@ -291,17 +291,17 @@ export default function ProjectDetailPage() {
           <div className="space-y-6">
             {/* Collaborators */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Users className="w-5 h-5 text-blue-400" />
                 Network Nodes
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-foreground font-semibold">
                     {user?.email?.[0].toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">You (Owner)</p>
+                    <p className="text-sm font-medium text-foreground">You (Owner)</p>
                     <p className="text-xs text-muted-foreground">{user?.email}</p>
                   </div>
                 </div>
@@ -314,14 +314,14 @@ export default function ProjectDetailPage() {
 
             {/* Revenue Flow */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-green-400" />
                 Revenue Network
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                   <span className="text-sm text-muted-foreground">Total Earnings</span>
-                  <span className="text-lg font-bold text-white">$0.00</span>
+                  <span className="text-lg font-bold text-foreground">$0.00</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                   <span className="text-sm text-muted-foreground">This Month</span>
@@ -335,7 +335,7 @@ export default function ProjectDetailPage() {
 
             {/* Quick Actions */}
             <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h3>
               <div className="space-y-2">
                 <Link href={`/projects/${slug}/settings`}>
                   <Button variant="secondary" className="w-full justify-start" size="sm">
@@ -356,7 +356,7 @@ export default function ProjectDetailPage() {
 
             {/* Project Stats */}
             <Card className="p-6 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border border-purple-500/20">
-              <h3 className="text-lg font-semibold text-white mb-3">Project Stats</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-3">Project Stats</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Songs</span>
