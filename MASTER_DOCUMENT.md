@@ -753,7 +753,39 @@ Collaborate with artists worldwide in ways rarely seen before."
 - Top-right: Video call button (quick access, doesn't block)
 - Clean design, obvious actions, collaborative by default
 
-**FOCUSED COMPLETION - Building this properly before any other features.**
+### **Additional Features (Non-Overwhelming):**
+- ✅ **Top toolbar:** Save, Export (PDF/Text), Collaborators button
+- ✅ **Collaborators modal:** Click button → See list → Add/remove (simple)
+- ✅ **Export options:** Download as PDF, Copy to clipboard, Share link
+- ✅ **Auto-save:** Changes save automatically (no manual save needed)
+- ✅ **Categorize:** Tags/genre in compact top bar
+- ✅ **Versions:** Simple "Undo" button (don't overwhelm with full history)
+- ✅ **Smart positioning:** Features in top bar, don't clutter canvas
+
+### **Layout with All Features:**
+```
+┌─────────────────────────────────────────────────────┐
+│ [Song Title] [Key] [Tempo] | [👥 Collaborators]     │
+│ [🏷️ Tags] [💾 Save] [📤 Export] [↩️ Undo]  [🎥 Video]│
+├──────────┬──────────────────────────────────────────┤
+│ PALETTE  │ CANVAS                                   │
+│ [Verse]  │ [Drag blocks here]                       │
+│ [Chorus] │ [Song structure builds]                  │
+│ [Bridge] │                                          │
+│ [Chord]  │                                          │
+├──────────┴──────────────────────────────────────────┤
+│ 💬 Chat [▲ Expand] Sarah: "Love the chorus!"       │
+└─────────────────────────────────────────────────────┘
+```
+
+**PRINCIPLES:**
+- All features accessible but not in the way
+- Top toolbar for meta actions (save, export, collaborators)
+- Canvas stays clean for creative work
+- Chat/video available but collapsible
+- Tokyo model: Every action 1-2 clicks max
+
+**FOCUSED COMPLETION - Building complete collaborative songwriting tool.**
 
 ---
 
