@@ -2167,3 +2167,22 @@ In Google Cloud Console, add:
 
 ---
 
+
+---
+
+## 🎯 AGENT 31 - PRIORITY B STARTING: AUDIO PLAYBACK
+
+**Plan:** A (Rhyme ✅) → B (Audio - NOW) → C (Chord polish) → Assess
+
+**User Question:** "Where do I upload my music?"
+
+**Building:** Audio upload and playback system
+- Upload MP3/WAV instrumentals
+- Play while editing lyrics
+- Attach to songs
+- Visual player controls
+
+**Proceeding methodically with human tests at each step**
+
+**ONE MASTER DOCUMENT - Next agent: Priority B in progress**
+
