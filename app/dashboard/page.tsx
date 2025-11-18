@@ -5,9 +5,23 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2, HelpCircle, Users } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { 
+  Music2, 
+  Sparkles, 
+  Folder, 
+  Users2, 
+  Play,
+  ArrowRight,
+  Compass,
+  FileMusic,
+  Share2,
+  Zap
+} from 'lucide-react';
 import Link from 'next/link';
-import { FirstTimeOnboarding } from '@/components/first-time-onboarding';
+
+// Dynamically import activity feed
+const CompactActivityFeed = dynamic(() => import('@/components/activity-feed').then(m => m.CompactActivityFeed), { ssr: false });
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -27,351 +41,272 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-lg">Loading your dashboard...</div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <div className="w-16 h-16 rounded-full border-4 border-orange-500/30 border-t-orange-500 animate-spin mx-auto mb-4" />
+          <p className="text-lg text-gray-400">Setting up your studio...</p>
+        </motion.div>
       </div>
     );
   }
 
+  const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Artist';
+  
+  // Welcome messages that resonate with musicians
+  const welcomeMessages = [
+    "Ready to create your next masterpiece?",
+    "Your music journey continues here.",
+    "Time to make something amazing!",
+    "Let's turn ideas into music.",
+    "Welcome to your creative space."
+  ];
+  const randomWelcome = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* First-Time User Onboarding */}
-      <FirstTimeOnboarding />
-      
-      {/* Hero Section with Gradient */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
-        <div className="absolute inset-0">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
+    <div className="min-h-screen bg-black">
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Hero Section with Orange Gradient */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+          className="relative mb-12 rounded-2xl overflow-hidden bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 border border-orange-500/20"
+      >
+          {/* Animated background orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+            {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+                className="absolute rounded-full bg-orange-500/10 blur-3xl"
+              style={{
+                  width: `${200 + i * 100}px`,
+                  height: `${200 + i * 100}px`,
+                  left: `${i * 30}%`,
+                  top: `${i * 20}%`
+              }}
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.1, 0.2, 0.1]
+              }}
+              transition={{
+                duration: 4 + i,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
         </div>
         
-        <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-brand-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Welcome to your workspace</p>
-                <h1 className="text-3xl md:text-4xl font-display font-bold">
-                  {user?.user_metadata?.name || user?.email?.split('@')[0] || 'Musician'}
-                </h1>
-              </div>
-            </div>
-            <p className="text-lg text-muted-foreground max-w-2xl">
-              Your central command hub for projects, collaborations, and creative work
-            </p>
-          </motion.div>
-
-          {/* Stats Row */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8"
-          >
-            <div className="rnrb-card p-4">
-              <p className="text-sm text-muted-foreground mb-1">Active Projects</p>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-            <div className="rnrb-card p-4">
-              <p className="text-sm text-muted-foreground mb-1">Total Songs</p>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-            <div className="rnrb-card p-4">
-              <p className="text-sm text-muted-foreground mb-1">Collaborators</p>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-            <div className="rnrb-card p-4">
-              <p className="text-sm text-muted-foreground mb-1">Sessions</p>
-              <p className="text-2xl font-bold">0</p>
-            </div>
-          </motion.div>
+        <div className="relative z-10 p-10">
+            <h1 className="text-5xl font-bold mb-3 text-white">
+            Welcome back, {userName}!
+          </h1>
+            <p className="text-xl text-gray-300">
+            {randomWelcome}
+          </p>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="rnrb-container max-w-7xl py-12 px-4">
+      {/* Quick Actions Grid */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="mb-12"
+      >
+          <h2 className="text-2xl font-semibold mb-6 text-white">Start Creating</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            {
+              title: "Songwriting Studio",
+              description: "AI-powered chord progressions & lyrics",
+              icon: Music2,
+              href: "/songwriting",
+              badge: "AI POWERED"
+            },
+            {
+              title: "Create Track",
+              description: "Generate full songs with AI",
+              icon: Sparkles,
+                href: "/create"
+            },
+            {
+              title: "New Project",
+              description: "Start an album or EP",
+              icon: Folder,
+                href: "/projects/new"
+            },
+            {
+              title: "My Library",
+              description: "View your music assets",
+              icon: FileMusic,
+                href: "/library"
+            },
+            {
+              title: "Explore Community",
+              description: "Discover trending tracks & musicians",
+              icon: Users2,
+                href: "/explore"
+            }
+          ].map((action, index) => (
+            <motion.div
+              key={action.href}
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + index * 0.05 }}
+            >
+              <Link href={action.href}>
+                  <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 h-full cursor-pointer group relative overflow-hidden hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-300">
+                    {/* Orange glow on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  <div className="relative z-10">
+                    {/* Badge */}
+                    {action.badge && (
+                        <span className="absolute -top-3 -right-3 px-2 py-1 text-xs font-bold rounded-full bg-orange-500 text-white">
+                        {action.badge}
+                      </span>
+                    )}
+                    
+                    {/* Icon */}
+                      <div className="w-14 h-14 bg-orange-500/10 rounded-xl mb-4 flex items-center justify-center group-hover:bg-orange-500/20 transition-all duration-300">
+                        <action.icon className="w-7 h-7 text-orange-500" />
+                    </div>
+                    
+                    {/* Content */}
+                      <h3 className="font-semibold text-lg mb-2 text-white group-hover:text-orange-500 transition-colors">
+                      {action.title}
+                    </h3>
+                      <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                      {action.description}
+                    </p>
+                    
+                    {/* Arrow indicator */}
+                      <ArrowRight className="absolute bottom-6 right-6 w-5 h-5 text-gray-600 opacity-0 group-hover:opacity-100 group-hover:text-orange-500 transform translate-x-2 group-hover:translate-x-0 transition-all" />
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
 
-        {/* Section Header with Helper */}
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-display font-bold mb-2">Quick Actions</h2>
-            <p className="text-muted-foreground">Jump into your workflow - start here if you're new</p>
+      {/* Your Progress Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="mb-12"
+      >
+          <h2 className="text-2xl font-semibold mb-6 text-white">Your Journey So Far</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { label: "Projects Started", value: "0", icon: Folder, subtext: "Create your first project" },
+            { label: "Tracks Created", value: "0", icon: Music2, subtext: "Start with AI Studio" },
+            { label: "Collaborators", value: "0", icon: Users2, subtext: "Invite band members" },
+            { label: "Total Plays", value: "0", icon: Play, subtext: "Share music to get plays" }
+          ].map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 + index * 0.05 }}
+                className="bg-gray-900 border border-gray-800 rounded-xl p-6 text-center hover:border-orange-500/50 transition-colors"
+            >
+                <div className="w-12 h-12 bg-orange-500/10 rounded-xl mx-auto mb-3 flex items-center justify-center">
+                  <stat.icon className="w-6 h-6 text-orange-500" />
+              </div>
+                <p className="text-3xl font-bold mb-1 text-white">{stat.value}</p>
+                <p className="text-sm text-gray-400 mb-2">{stat.label}</p>
+              <p className="text-xs text-gray-500">{stat.subtext}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Learning Resources */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+          className="mb-12"
+      >
+          <h2 className="text-2xl font-semibold mb-6 text-white">Get Started</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[
+            {
+              title: "5-Minute Quick Start",
+              description: "Create your first AI track",
+              icon: Play,
+              time: "5 min",
+              href: "/create"
+            },
+            {
+              title: "Collaboration Guide",
+              description: "Work with your band remotely",
+              icon: Share2,
+              time: "10 min",
+              href: "/projects"
+            },
+            {
+              title: "Tour Our Features",
+              description: "See everything we offer",
+              icon: Compass,
+              time: "3 min",
+              href: "/explore"
+            }
+          ].map((guide, index) => (
+            <motion.div
+              key={guide.title}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 + index * 0.05 }}
+            >
+              <Link href={guide.href}>
+                  <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 cursor-pointer group flex items-center gap-4 hover:border-orange-500/50 transition-all">
+                    <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-orange-500/20 transition-colors">
+                      <guide.icon className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <div className="flex-1">
+                      <h3 className="font-medium mb-1 text-white group-hover:text-orange-500 transition-colors">
+                      {guide.title}
+                    </h3>
+                      <p className="text-sm text-gray-400">
+                      {guide.description}
+                    </p>
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {guide.time}
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Recent Activity Feed */}
+      {user && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+            <h2 className="text-2xl font-semibold mb-6 text-white">Recent Activity</h2>
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+            <CompactActivityFeed channelName="activity:global" />
           </div>
-          <button
-            onClick={() => localStorage.removeItem('rnrb_onboarding_complete')}
-            className="text-sm text-brand-primary hover:text-brand-primary/80 flex items-center gap-1 transition"
-            title="Replay onboarding tour"
-          >
-            <HelpCircle className="w-4 h-4" />
-            Need help?
-          </button>
-        </div>
-
-        {/* Quick Actions Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {/* NEW PROJECT - Primary Action */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Link href="/projects/new">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full border-2 border-brand-primary/20 hover:border-brand-primary/50 transition-colors">
-                <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 bg-brand-primary/10 border border-brand-primary/20 rounded-full">
-                  <span className="text-xs font-semibold text-brand-primary">START HERE</span>
-                </div>
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Music className="w-6 h-6 text-brand-primary" />
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Create Your First Project</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Projects organize your songs, collaborators, and creative work. Like an album workspace—private by default.
-                </p>
-                <div className="text-sm text-brand-primary font-medium">Get started →</div>
-              </div>
-            </Link>
-          </motion.div>
-
-          {/* FIND COLLABORATORS - Quick Shortcut */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-          >
-            <Link href="/discover">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Users className="w-6 h-6 text-brand-primary" />
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Find Collaborators</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Search for musicians by username or email. Invite them to your projects for real-time collaboration.
-                </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Discover artists →</div>
-              </div>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <Link href="/studio">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Music className="w-6 h-6 text-brand-primary" />
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Recording Studio</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Record HD video/audio, collaborate remotely, stream to platforms
-                </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Start session →</div>
-              </div>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Link href="/tours">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Radio className="w-6 h-6 text-brand-primary" />
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Tours & Shows</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Schedule shows, track tickets, stream virtual concerts
-                </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Manage tour →</div>
-              </div>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <Link href="/messages">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <MessageSquare className="w-6 h-6 text-brand-primary" />
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Messaging</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Real-time chat, file sharing, presence awareness
-                </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Start chatting →</div>
-              </div>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <Link href="/projects">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Folder className="w-6 h-6 text-brand-primary" />
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">My Projects</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  View all your projects, songs, and collaborations
-                </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">View all →</div>
-              </div>
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            <Link href="/settings">
-              <div className="group rnrb-card p-6 rnrb-hover-lift cursor-pointer h-full hover:border-brand-primary/30 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors">
-                    <Settings className="w-6 h-6 text-brand-primary" />
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Settings</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Profile, billing, notifications, integrations
-                </p>
-                <div className="text-sm text-brand-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">Configure →</div>
-              </div>
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Getting Started Section */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-display font-bold mb-2">Get Started</h2>
-          <p className="text-muted-foreground">Build your creative workflow step by step</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="rnrb-card p-6"
-          >
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-                <CheckCircle2 className="w-5 h-5 text-brand-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Create Your First Project</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Projects are your foundation - organize songs, collaborators, sessions, and revenue in one place
-                </p>
-                <Link href="/projects/new" className="text-sm text-brand-primary font-medium hover:underline">
-                  Create project →
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.7 }}
-            className="rnrb-card p-6"
-          >
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-                <CheckCircle2 className="w-5 h-5 text-brand-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Invite Collaborators</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Add band members and collaborators to projects for real-time chat, video sessions, and shared workflows
-                </p>
-                <Link href="/projects" className="text-sm text-brand-primary font-medium hover:underline">
-                  Manage collaborators →
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-            className="rnrb-card p-6"
-          >
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-                <CheckCircle2 className="w-5 h-5 text-brand-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Start Recording</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Use the studio for HD video/audio recording, screen sharing, and live streaming to multiple platforms
-                </p>
-                <Link href="/studio" className="text-sm text-brand-primary font-medium hover:underline">
-                  Go to studio →
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.9 }}
-            className="rnrb-card p-6"
-          >
-            <div className="flex items-start gap-4">
-              <div className="w-10 h-10 rounded-lg bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-                <CheckCircle2 className="w-5 h-5 text-brand-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Plan Tours & Shows</h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Schedule venues, manage setlists, track ticket sales, and stream virtual concerts
-                </p>
-                <Link href="/tours" className="text-sm text-brand-primary font-medium hover:underline">
-                  Manage tours →
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+        </motion.div>
+      )}
       </div>
     </div>
   );
 }
-
