@@ -17,12 +17,6 @@ import {
   FileText
 } from 'lucide-react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-// Dynamically import modal to avoid SSR issues
-const LogSessionModal = dynamic(() => import('@/components/sessions/log-session-modal'), {
-  ssr: false
-});
 
 type Session = {
   id: string;
@@ -85,65 +79,6 @@ export default function ProjectSessionsPage() {
     acc[session.type] = (acc[session.type] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-
-  // Get project songs for linking
-  const projectSongs = project.songs || [];
-  
-  // Get collaborators for participant selection
-  const collaborators = project.collaborators || [
-    { email: user.email, name: user.user_metadata?.name }
-  ];
-
-  const handleSaveSession = async (sessionData: {
-    type: Session['type'];
-    duration_minutes: number;
-    song_id?: string;
-    song_title?: string;
-    notes: string;
-    participants: string[];
-    date: string;
-  }) => {
-    const newSession: Session = {
-      id: `session_${Date.now()}`,
-      type: sessionData.type,
-      song_id: sessionData.song_id,
-      song_title: sessionData.song_title,
-      duration_minutes: sessionData.duration_minutes,
-      notes: sessionData.notes,
-      participants: sessionData.participants,
-      date: sessionData.date,
-      created_by: user.email,
-      created_at: new Date().toISOString(),
-    };
-
-    // Update project with new session
-    const allProjects = user.user_metadata?.projects || [];
-    const updatedProjects = allProjects.map((p: any) => {
-      if (p.slug === slug) {
-        return {
-          ...p,
-          sessions: [...(p.sessions || []), newSession],
-          session_count: (p.session_count || 0) + 1,
-          updated_at: new Date().toISOString()
-        };
-      }
-      return p;
-    });
-
-    const { error } = await supabase!.auth.updateUser({
-      data: {
-        ...user.user_metadata,
-        projects: updatedProjects
-      }
-    });
-
-    if (error) throw error;
-
-    // Update local state
-    setSessions([...sessions, newSession]);
-    const updated = updatedProjects.find((p: any) => p.slug === slug);
-    setProject(updated);
-  };
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">
@@ -314,15 +249,6 @@ export default function ProjectSessionsPage() {
           </p>
         </Card>
       </div>
-
-      {/* Log Session Modal */}
-      <LogSessionModal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        onSave={handleSaveSession}
-        projectSongs={projectSongs}
-        projectCollaborators={collaborators}
-      />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2, HelpCircle, Users, Home } from 'lucide-react';
+import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2, HelpCircle, Users } from 'lucide-react';
 import Link from 'next/link';
 import { FirstTimeOnboarding } from '@/components/first-time-onboarding';
 
@@ -35,19 +35,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <div className="border-b border-border/50">
-        <div className="rnrb-container max-w-7xl px-4 py-4">
-          <Link 
-            href="/"
-            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Home className="w-4 h-4" />
-            <span className="text-sm font-medium">Home</span>
-          </Link>
-        </div>
-      </div>
-
       {/* First-Time User Onboarding */}
       <FirstTimeOnboarding />
       

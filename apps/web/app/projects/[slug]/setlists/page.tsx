@@ -18,12 +18,6 @@ import {
   Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-// Dynamically import modal
-const CreateSetlistModal = dynamic(() => import('@/components/setlists/create-setlist-modal'), {
-  ssr: false
-});
 
 type Setlist = {
   id: string;
@@ -43,7 +37,6 @@ export default function SetlistsPage() {
   const [project, setProject] = useState<any>(null);
   const [setlists, setSetlists] = useState<Setlist[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -77,51 +70,6 @@ export default function SetlistsPage() {
 
   const projectSongs = project.songs || [];
 
-  const handleSaveSetlist = async (setlistData: {
-    name: string;
-    venue?: string;
-    date?: string;
-    songs: string[];
-    notes?: string;
-  }) => {
-    const newSetlist: Setlist = {
-      id: `setlist_${Date.now()}`,
-      name: setlistData.name,
-      venue: setlistData.venue,
-      date: setlistData.date,
-      songs: setlistData.songs,
-      notes: setlistData.notes,
-      created_at: new Date().toISOString(),
-    };
-
-    // Update project with new setlist
-    const allProjects = user.user_metadata?.projects || [];
-    const updatedProjects = allProjects.map((p: any) => {
-      if (p.slug === slug) {
-        return {
-          ...p,
-          setlists: [...(p.setlists || []), newSetlist],
-          updated_at: new Date().toISOString()
-        };
-      }
-      return p;
-    });
-
-    const { error } = await supabase!.auth.updateUser({
-      data: {
-        ...user.user_metadata,
-        projects: updatedProjects
-      }
-    });
-
-    if (error) throw error;
-
-    // Update local state
-    setSetlists([...setlists, newSetlist]);
-    const updated = updatedProjects.find((p: any) => p.slug === slug);
-    setProject(updated);
-  };
-
   return (
     <div className="min-h-screen bg-background py-12 px-4">
       <div className="rnrb-container max-w-7xl">
@@ -144,7 +92,6 @@ export default function SetlistsPage() {
             </p>
           </div>
           <Button
-            onClick={() => setShowCreateModal(true)}
             className="rnrb-button-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
@@ -176,10 +123,7 @@ export default function SetlistsPage() {
                 </Link>
               </div>
             ) : (
-              <Button 
-                onClick={() => setShowCreateModal(true)}
-                className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-3"
-              >
+              <Button className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-3">
                 <Plus className="w-6 h-6" />
                 Create Your First Setlist
               </Button>
@@ -215,55 +159,33 @@ export default function SetlistsPage() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {setlists.map((setlist) => {
-              // Get song details for display
-              const setlistSongDetails = setlist.songs
-                .map(songId => projectSongs.find((s: any) => s.id === songId || s.title === songId))
-                .filter(Boolean);
-              
-              return (
-                <motion.div
-                  key={setlist.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <Card className="p-6 rnrb-card hover:border-brand-primary/30 transition cursor-pointer">
-                    <h3 className="text-xl font-semibold mb-3">{setlist.name}</h3>
-                    {setlist.venue && (
-                      <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                        <MapPin className="w-4 h-4" />
-                        {setlist.venue}
-                      </p>
-                    )}
-                    {setlist.date && (
-                      <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        {new Date(setlist.date).toLocaleDateString()}
-                      </p>
-                    )}
-                    <p className="text-sm text-muted-foreground flex items-center gap-2">
-                      <Music className="w-4 h-4" />
-                      {setlist.songs.length} songs
+            {setlists.map((setlist) => (
+              <motion.div
+                key={setlist.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <Card className="p-6 rnrb-card hover:border-brand-primary/30 transition cursor-pointer">
+                  <h3 className="text-xl font-semibold mb-3">{setlist.name}</h3>
+                  {setlist.venue && (
+                    <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      {setlist.venue}
                     </p>
-                    
-                    {/* Song Preview */}
-                    {setlistSongDetails.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-border">
-                        <p className="text-xs text-muted-foreground mb-2">Songs:</p>
-                        <ol className="text-xs text-muted-foreground space-y-1">
-                          {setlistSongDetails.slice(0, 3).map((song: any, index) => (
-                            <li key={index}>{index + 1}. {song?.title || 'Unknown'}</li>
-                          ))}
-                          {setlistSongDetails.length > 3 && (
-                            <li className="italic">+ {setlistSongDetails.length - 3} more...</li>
-                          )}
-                        </ol>
-                      </div>
-                    )}
-                  </Card>
-                </motion.div>
-              );
-            })}
+                  )}
+                  {setlist.date && (
+                    <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      {new Date(setlist.date).toLocaleDateString()}
+                    </p>
+                  )}
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Music className="w-4 h-4" />
+                    {setlist.songs.length} songs
+                  </p>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         )}
 
@@ -279,20 +201,6 @@ export default function SetlistsPage() {
           </p>
         </Card>
       </div>
-
-      {/* Create Setlist Modal */}
-      <CreateSetlistModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onSave={handleSaveSetlist}
-        projectSongs={projectSongs.map((s: any) => ({
-          id: s.id || s.title,
-          title: s.title,
-          key: s.key,
-          tempo: s.tempo,
-          duration_estimate: 3, // Default 3 minutes per song
-        }))}
-      />
     </div>
   );
 }

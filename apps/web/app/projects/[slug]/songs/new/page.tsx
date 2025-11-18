@@ -1,11 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
-import { ArrowLeft, Save, Music, FileText, Mic } from 'lucide-react';
+import { ArrowLeft, Save, Music, FileText, Mic, Sparkles, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+// Dynamically import songwriting tools
+const ChordBuilder = dynamic(() => import('@/components/songwriting').then(m => m.ChordBuilder), { ssr: false });
+const LyricsAssistant = dynamic(() => import('@/components/songwriting').then(m => m.LyricsAssistant), { ssr: false });
 
 export default function NewSongPage() {
   const params = useParams();
@@ -22,8 +28,10 @@ export default function NewSongPage() {
     tempo: '',
     time_signature: '4/4',
     lyrics: '',
-    notes: ''
+    notes: '',
+    chordProgression: [] as any[]
   });
+  const [activeSection, setActiveSection] = useState<'basics' | 'chords' | 'lyrics'>('basics');
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -99,7 +107,7 @@ export default function NewSongPage() {
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">
-      <div className="rnrb-container max-w-4xl">
+      <div className="rnrb-container max-w-6xl">
         
         <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 mb-6 transition">
           <ArrowLeft className="w-4 h-4" />
@@ -108,11 +116,31 @@ export default function NewSongPage() {
 
         <div className="mb-8">
           <h1 className="text-4xl font-display font-bold mb-2">
-            Add New Song
+            Craft Your Song
           </h1>
           <p className="text-xl text-muted-foreground">
-            Create a new song in {project?.name}
+            Build your song visually with chords, lyrics, and AI assistance
           </p>
+        </div>
+
+        {/* Section Tabs */}
+        <div className="flex gap-2 mb-8 border-b border-border">
+          {['basics', 'chords', 'lyrics'].map((section) => (
+            <button
+              key={section}
+              onClick={() => setActiveSection(section as any)}
+              className={`px-6 py-3 font-medium transition capitalize ${
+                activeSection === section
+                  ? 'border-b-2 border-brand-primary text-brand-primary'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {section === 'basics' && <Music className="w-4 h-4 inline-block mr-2" />}
+              {section === 'chords' && <Sparkles className="w-4 h-4 inline-block mr-2" />}
+              {section === 'lyrics' && <FileText className="w-4 h-4 inline-block mr-2" />}
+              {section}
+            </button>
+          ))}
         </div>
 
         {message && (
@@ -125,8 +153,14 @@ export default function NewSongPage() {
           </div>
         )}
 
-        <Card className="p-8 mb-6 rnrb-card">
-          <h2 className="text-2xl font-semibold mb-6">Song Details</h2>
+        {/* Basics Section */}
+        {activeSection === 'basics' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Card className="p-8 mb-6 rnrb-card">
+              <h2 className="text-2xl font-semibold mb-6">Song Basics</h2>
           
           <div className="space-y-6">
             <div>
@@ -214,20 +248,79 @@ export default function NewSongPage() {
               />
             </div>
           </div>
-        </Card>
+            </Card>
+          </motion.div>
+        )}
 
-        <div className="flex items-center justify-between">
-          <Link href={`/projects/${slug}`}>
-            <Button variant="secondary">Cancel</Button>
-          </Link>
-          <Button
-            onClick={handleSave}
-            disabled={saving || !songData.title.trim()}
-            className="bg-brand-primary hover:bg-brand-primary/90 text-brand-primary-foreground px-8 py-3 disabled:opacity-50"
+        {/* Chords Section */}
+        {activeSection === 'chords' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
           >
-            <Save className="w-4 h-4 mr-2" />
-            {saving ? 'Creating...' : 'Create Song'}
-          </Button>
+            <Card className="p-8 rnrb-card">
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold mb-2">Build Your Chord Progression</h2>
+                <p className="text-muted-foreground">
+                  Drag and drop chord blocks to arrange your progression. Click "Add Chord" to choose from our library.
+                </p>
+              </div>
+              <ChordBuilder onChange={(chords) => setSongData({ ...songData, chordProgression: chords })} />
+            </Card>
+          </motion.div>
+        )}
+
+        {/* Lyrics Section */}
+        {activeSection === 'lyrics' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Lyrics Editor */}
+              <Card className="p-8 rnrb-card">
+                <h2 className="text-2xl font-semibold mb-6">Write Your Lyrics</h2>
+                <textarea
+                  value={songData.lyrics}
+                  onChange={(e) => setSongData({ ...songData, lyrics: e.target.value })}
+                  placeholder="Write your lyrics here... verse, chorus, bridge..."
+                  className="w-full h-[500px] px-4 py-3 bg-surface border border-border rounded-xl text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition resize-none font-mono text-base leading-relaxed"
+                />
+              </Card>
+
+              {/* Lyrics Assistant */}
+              <Card className="p-8 rnrb-card">
+                <h2 className="text-2xl font-semibold mb-6">Writing Tools</h2>
+                <LyricsAssistant
+                  currentLyrics={songData.lyrics}
+                  onInsert={(text) => setSongData({ ...songData, lyrics: songData.lyrics + '\n' + text })}
+                />
+              </Card>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Save Button (Always Visible) */}
+        <div className="flex items-center justify-between mt-8 sticky bottom-4 bg-background/80 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <HelpCircle className="w-4 h-4" />
+            <span>Navigate sections with tabs • Changes save when you click Create Song</span>
+          </div>
+          <div className="flex gap-4">
+            <Link href={`/projects/${slug}`}>
+              <Button variant="secondary" className="px-6 py-3 rounded-xl">
+                Cancel
+              </Button>
+            </Link>
+            <Button
+              onClick={handleSave}
+              disabled={saving || !songData.title.trim()}
+              className="rnrb-button-primary px-8 py-3 rounded-xl font-semibold flex items-center gap-2 disabled:opacity-50"
+            >
+              <Save className="w-5 h-5" />
+              {saving ? 'Creating...' : 'Create Song'}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
