@@ -216,7 +216,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* For Everyone Section - THE HEART */}
+      {/* How It Works Section */}
       <section className="py-24 bg-surface/30">
         <div className="rnrb-container">
           <motion.div 
@@ -227,89 +227,69 @@ export default function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-display mb-6">
-              Enter the Basement - Find Your Magic
+              How It Works
             </h2>
-            <p className="text-xl text-muted-foreground max-w-4xl mx-auto mb-6 leading-relaxed">
-              Are you a songwriter who needs better tools? New to the business and searching for gigs? 
-              Singing gospel or discovering Appalachian folk roots? Inventing "country metal" like Def Leppard meets George Jones? 
-              Chasing Rolling Stones anthems about dancing and sweet love? Following Bob Dylan's path to finally say what you need to say?
-            </p>
-            <p className="text-2xl text-brand-primary font-semibold max-w-3xl mx-auto mb-4">
-              This is where your music comes alive.
-            </p>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              <span className="font-semibold">We built tools that serve YOUR creative vision.</span> Collaborate with artists worldwide, 
-              find your sound, tell your story.
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Three simple steps to start creating, collaborating, and growing your music career
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Solo Songwriter */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Step 1 */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="rnrb-card p-8 text-center"
+              className="relative"
             >
-              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
-                <Mic className="w-8 h-8 text-brand-primary" />
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-full bg-brand-primary text-brand-primary-foreground flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
+                  1
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Create Your Project</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Set up your album, EP, or single project. Add your vision, genre, and collaborators. Invite-only privacy keeps your work secure.
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Solo Artists</h3>
-              <p className="text-muted-foreground text-sm">
-                Write, record demos, and manage your music career from one place
-              </p>
             </motion.div>
 
-            {/* Duo/Collaboration */}
+            {/* Step 2 */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               viewport={{ once: true }}
-              className="rnrb-card p-8 text-center"
+              className="relative"
             >
-              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
-                <MessageSquare className="w-8 h-8 text-brand-primary" />
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-full bg-brand-primary text-brand-primary-foreground flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
+                  2
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Collaborate in Real-Time</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Chat with your team, share your screen in HD video sessions, get AI suggestions for chords and lyrics. Work together like you're in the same room.
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Co-Writers</h3>
-              <p className="text-muted-foreground text-sm">
-                Real-time messaging, split sheets, and version control for collaborations
-              </p>
             </motion.div>
 
-            {/* Full Band */}
+            {/* Step 3 */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               viewport={{ once: true }}
-              className="rnrb-card p-8 text-center"
+              className="relative"
             >
-              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
-                <Users className="w-8 h-8 text-brand-primary" />
+              <div className="text-center">
+                <div className="w-16 h-16 rounded-full bg-brand-primary text-brand-primary-foreground flex items-center justify-center text-2xl font-bold mb-4 mx-auto shadow-lg">
+                  3
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Share Your Music</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Record sessions, stream live performances, manage tours. Your music reaches the world while you focus on creating.
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-3">Bands</h3>
-              <p className="text-muted-foreground text-sm">
-                Manage rehearsals, setlists, tours, and revenue splits with your bandmates
-              </p>
-            </motion.div>
-
-            {/* Live Streaming */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="rnrb-card p-8 text-center"
-            >
-              <div className="w-16 h-16 rounded-full bg-brand-primary/10 flex items-center justify-center mb-4 mx-auto">
-                <Video className="w-8 h-8 text-brand-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-3">Live Performers</h3>
-              <p className="text-muted-foreground text-sm">
-                Stream concerts to YouTube, Twitch, and Facebook with HD video recording
-              </p>
             </motion.div>
           </div>
 

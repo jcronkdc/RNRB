@@ -25,6 +25,7 @@ interface ChordLyricsEditorProps {
   initialChords?: ChordPosition[];
   songKey?: string;
   onSave?: (lyrics: string, chords: ChordPosition[]) => void;
+  onChordClick?: (chord: string, lineIndex: number, position: number) => void; // NEW: Make chords clickable
 }
 
 export default function ChordLyricsEditor({
