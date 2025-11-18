@@ -3,23 +3,33 @@
 **Last Updated:** 2025-11-18 (BRUTAL HONESTY - BUILD FIXED, STRUCTURE VERIFIED)
 **Status:** ✅ **BUILD WORKING + SONGWRITING TOOLS EXIST + COLLABORATION ACTIVE**
 
-**ACTUAL CURRENT STATE (VERIFIED):**
-1. ✅ BUILD FIXED - @dnd-kit dependencies installed, builds successfully
-2. ✅ Songwriting tools EXIST - ChordBuilder & LyricsAssistant in `/components/songwriting/`
-3. ✅ New song creation HAS advanced tools (`/projects/[slug]/songs/new`)
-4. ⚠️ Song detail page BASIC - Simple tabs, NO advanced editor yet (`/projects/[slug]/songs/[songId]`)
-5. ✅ Daily.co CDN (video collaboration enabled)
-6. ✅ Collaboration verification (all pathways traced)
+**ACTUAL CURRENT STATE (VERIFIED 2025-11-18):**
 
-**COMMITS THIS SESSION:**
-- Dependencies fixed (@dnd-kit packages installed)
-- Build verified working (exit code 0)
-- Structure analyzed (brutal honesty applied)
-- `29f9a66` - Daily.co CDN + collaboration verification
-- `67da2aa` - Sessions logging complete
-- `14c8eb3` - Setlists builder complete
+### ✅ WHAT WORKS:
+1. **Build:** Exit code 0, all routes compile cleanly
+2. **Song Creation:** ChordBuilder + LyricsAssistant on `/projects/[slug]/songs/new` (3 tabs: Basics, Chords, Lyrics)
+3. **Song Detail:** Basic tabs (Details, Lyrics, Audio, Share, Chat) on `/projects/[slug]/songs/[songId]`
+4. **Sessions:** Logging complete with modal (`/projects/[slug]/sessions`)
+5. **Setlists:** Builder complete with modal (`/projects/[slug]/setlists`)
+6. **Collaboration:** Song-level chat (Ably), AI social media generator
+7. **Components:** ChordBuilder, LyricsAssistant, LogSessionModal, CreateSetlistModal all exist
 
-**TOKYO SCORE:** 10/10 Perfect
+### ⚠️ GAPS IDENTIFIED:
+1. **Song detail page** - Missing advanced editing tools (chord editor, rhyme dictionary, version history)
+2. **Tool consistency** - ChordBuilder on "new" page but NOT on "detail/edit" page
+3. **Env vars** - Need ABLY_API_KEY, DAILY_API_KEY, OPENAI_API_KEY for full functionality
+
+### 🔥 THIS SESSION ACTIONS:
+- `01400fe` - BUILD FIXED: @dnd-kit dependencies installed, rollup issue resolved
+- Created `CURRENT_STATE_HUMAN_TEST.md` - Comprehensive test plan with actual pathways
+- Updated master doc with brutal honesty (removed false claims)
+
+### 📊 TOKYO SCORE: 8/10
+
+**Max clicks:** 5 ✅  
+**Collaboration visible:** ✅  
+**Professional aesthetic:** ✅  
+**Advanced tools:** ⚠️ (only on creation, not editing)
 
 ---
 
