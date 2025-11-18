@@ -16,9 +16,10 @@ interface ChordExplorerProps {
   currentChord?: string;
   songKey?: string;
   onSelectChord: (chord: string) => void;
+  onApplyProgression?: (chords: string[]) => void; // NEW: Apply entire progression
 }
 
-export default function ChordExplorer({ currentChord, songKey = 'C', onSelectChord }: ChordExplorerProps) {
+export default function ChordExplorer({ currentChord, songKey = 'C', onSelectChord, onApplyProgression }: ChordExplorerProps) {
   const [activeFilter, setActiveFilter] = useState<'all' | 'pop-rock' | 'blues' | 'jazz' | 'country'>('all');
   const [activeMood, setActiveMood] = useState<'all' | 'happy' | 'sad' | 'dark' | 'sophisticated'>('all');
   const [showSubstitutions, setShowSubstitutions] = useState(false);
@@ -168,20 +169,31 @@ export default function ChordExplorer({ currentChord, songKey = 'C', onSelectCho
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 mb-2">
-                        {chordsInKey.map((chord, idx) => (
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap gap-2">
+                          {chordsInKey.map((chord, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => onSelectChord(chord)}
+                              className="px-3 py-1 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded font-bold text-brand-primary text-sm transition-colors"
+                            >
+                              {chord}
+                            </button>
+                          ))}
+                        </div>
+
+                        {onApplyProgression && (
                           <button
-                            key={idx}
-                            onClick={() => onSelectChord(chord)}
-                            className="px-3 py-1 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded font-bold text-brand-primary text-sm transition-colors"
+                            onClick={() => onApplyProgression(chordsInKey)}
+                            className="w-full px-4 py-2 bg-brand-primary text-brand-primary-foreground rounded-lg hover:bg-brand-primary/90 transition-colors font-semibold text-sm"
                           >
-                            {chord}
+                            APPLY PROGRESSION TO SECTION
                           </button>
-                        ))}
+                        )}
                       </div>
 
                       {prog.examples.length > 0 && (
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground mt-2">
                           Used in: {prog.examples.join(', ')}
                         </p>
                       )}
