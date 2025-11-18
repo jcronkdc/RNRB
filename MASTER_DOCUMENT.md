@@ -811,6 +811,57 @@ Collaborate with artists worldwide in ways rarely seen before."
 
 ---
 
+## 🎨 DASHBOARD REDESIGN IN PROGRESS - Artist Sanctuary
+
+**USER FEEDBACK:**
+"Dashboard is confusing, boring library feel, needs to be artist sanctuary with vibrant colors"
+
+**PLAN APPROVED - IMPLEMENTING:**
+
+### **Phase 1: Persistent Navigation** ✅ COMPLETE
+- ✅ NavBar added to all authenticated pages
+- ✅ Breadcrumbs component created and integrated
+- ✅ AblyProvider wrapper in app layout
+- ✅ Build successful (zero errors)
+
+### **Phase 2: Dashboard Visual Redesign** 🔨 IN PROGRESS
+**REQUIREMENTS:**
+- Vibrant colors (purple/gold/pink accents)
+- Music-themed backgrounds (guitars, notes, waveforms)
+- Animated elements (pulse effects, glow)
+- Less corporate, more creative
+- Artist sanctuary feel
+
+**CHANGES:**
+- Hero: Gradient backgrounds with music icons
+- Stats cards: Animated glows
+- Quick actions: Creative imagery on hover
+- Labels: More specific ("Start New Album/EP" not "New Project")
+
+### **Phases 3-7 TODO:**
+3. Tool Clarity (distinct visual identity per tool)
+4. Hand-Holding (tooltips, enhanced tour, help section)
+5. Quick Navigation (FAB, command palette)
+6. Songwriting Tool (free-form chord grid above lyrics, clearer purpose)
+7. Full integration testing
+
+**FILES CREATED:**
+- `/components/breadcrumbs.tsx` ✅
+
+**FILES MODIFIED:**
+- `/app/(app)/layout.tsx` ✅ (NavBar + breadcrumbs)
+- `/app/dashboard/page.tsx` 🔨 (redesigning)
+
+**NEXT SESSION CONTINUATION:**
+- Complete dashboard visual redesign
+- Add tooltips system-wide
+- Build help section
+- Add FAB and command palette
+- Update songwriting tool with chord grid
+- Deploy all changes together after testing
+
+---
+
 ## 🎸 PHASE 8: SETLIST BUILDER - DEPLOYED
 
 **HUMAN TEST SIMULATION FIRST:**

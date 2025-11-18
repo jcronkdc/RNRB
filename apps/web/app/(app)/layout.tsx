@@ -1,4 +1,6 @@
 import { NavBar } from '@/components/NavBar';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { AblyProvider } from '@/components/ably';
 
 export default function AppLayout({
   children,
@@ -6,10 +8,15 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <NavBar />
-      {children}
-    </>
+    <AblyProvider>
+      <div className="min-h-screen bg-background">
+        <NavBar />
+        <Breadcrumbs />
+        <main>
+          {children}
+        </main>
+      </div>
+    </AblyProvider>
   );
 }
 
