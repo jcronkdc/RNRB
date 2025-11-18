@@ -764,18 +764,28 @@ Collaborate with artists worldwide in ways rarely seen before."
 
 ### **Layout with All Features:**
 ```
-┌─────────────────────────────────────────────────────┐
-│ [Song Title] [Key] [Tempo] | [👥 Collaborators]     │
-│ [🏷️ Tags] [💾 Save] [📤 Export] [↩️ Undo]  [🎥 Video]│
-├──────────┬──────────────────────────────────────────┤
-│ PALETTE  │ CANVAS                                   │
-│ [Verse]  │ [Drag blocks here]                       │
-│ [Chorus] │ [Song structure builds]                  │
-│ [Bridge] │                                          │
-│ [Chord]  │                                          │
-├──────────┴──────────────────────────────────────────┤
-│ 💬 Chat [▲ Expand] Sarah: "Love the chorus!"       │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│ [Song Title] [Key] [Tempo] [🏷️ Tags]                    │
+│ [👥 Collaborators] [💾 Save] [📤 Export] [📜 History]    │
+│ [↩️ Undo] [↪️ Redo] [🎥 Video]                          │
+├──────────┬───────────────────────────────────────────────┤
+│ PALETTE  │ CANVAS                                        │
+│          │                                               │
+│ [📝      │ Drop blocks here →                            │
+│  Verse]  │                                               │
+│          │ [Verse 1: Walking down that road...]          │
+│ [🎵      │ [Chorus: Am - F - C - G]                      │
+│  Chorus] │ [Verse 2: Lost in my thoughts...]            │
+│          │ [Bridge: Then I saw the light...]             │
+│ [🌉      │                                               │
+│  Bridge] │ Sarah is editing ↑                            │
+│          │                                               │
+│ [🎸      │                                               │
+│  Chord]  │                                               │
+│          │                                               │
+├──────────┴───────────────────────────────────────────────┤
+│ 💬 Chat [▲ Expand] • 2 online • Sarah: "Love chorus!"   │
+└──────────────────────────────────────────────────────────┘
 ```
 
 **PRINCIPLES:**
