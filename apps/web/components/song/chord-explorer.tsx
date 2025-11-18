@@ -49,25 +49,34 @@ export default function ChordExplorer({ currentChord, songKey = 'C', onSelectCho
           </div>
 
           {showSubstitutions && substitutions.length > 0 && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               {substitutions.map((sub) => (
-                <button
+                <div
                   key={sub.chord}
-                  onClick={() => onSelectChord(sub.chord)}
-                  className="p-3 bg-surface hover:bg-surface-muted border border-border hover:border-brand-primary rounded-lg transition-all text-left group"
+                  className="p-3 bg-surface border border-border rounded-lg"
                 >
-                  <div className="flex items-start justify-between mb-1">
-                    <span className="font-bold text-brand-primary group-hover:text-brand-primary text-lg">
-                      {sub.chord}
-                    </span>
-                    <span className="text-xs px-2 py-0.5 bg-brand-primary/10 rounded">
-                      {sub.vibe}
-                    </span>
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-brand-primary text-lg">
+                          {sub.chord}
+                        </span>
+                        <span className="text-xs px-2 py-0.5 bg-brand-primary/10 rounded">
+                          {sub.vibe}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {sub.description}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => onSelectChord(sub.chord)}
+                      className="px-4 py-2 bg-brand-primary text-brand-primary-foreground rounded-lg hover:bg-brand-primary/90 transition-colors font-semibold text-xs whitespace-nowrap"
+                    >
+                      USE THIS
+                    </button>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {sub.description}
-                  </p>
-                </button>
+                </div>
               ))}
             </div>
           )}

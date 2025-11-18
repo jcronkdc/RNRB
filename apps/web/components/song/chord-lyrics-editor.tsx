@@ -34,6 +34,7 @@ export default function ChordLyricsEditor({
   initialChords = [],
   songKey,
   onSave,
+  onChordClick,
 }: ChordLyricsEditorProps) {
   const [lyrics, setLyrics] = useState(initialLyrics);
   const [chords, setChords] = useState<ChordPosition[]>(initialChords);
@@ -222,8 +223,15 @@ export default function ChordLyricsEditor({
                         setEditingChord({ lineIndex, position: chordPos.position });
                         setChordInput(chordPos.chord);
                       }}
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        if (onChordClick) {
+                          onChordClick(chordPos.chord, lineIndex, chordPos.position);
+                        }
+                      }}
                       style={{ position: 'absolute', left: `${chordPos.position * 0.6}ch` }}
-                      className="px-2 py-0.5 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded text-xs font-bold text-brand-primary transition-colors"
+                      className="px-2 py-0.5 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded text-xs font-bold text-brand-primary transition-colors cursor-pointer"
+                      title="Left-click: Edit | Right-click: Explore alternatives"
                     >
                       {chordPos.chord}
                     </button>

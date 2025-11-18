@@ -53,7 +53,7 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
   const [activeTab, setActiveTab] = useState<'edit' | 'chat' | 'video'>('edit');
   const [showChords, setShowChords] = useState(true);
   const [selectedChordForExploration, setSelectedChordForExploration] = useState<string | undefined>();
-  const [showChordLibrary, setShowChordLibrary] = useState(false);
+  const [selectedChordPosition, setSelectedChordPosition] = useState<{ sectionId: string; lineIndex: number; position: number } | null>(null);
 
   // Mock song data - will be replaced with database
   const song = {
@@ -312,6 +312,12 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
                                 updateSectionLyrics(section.id, newLyrics);
                                 updateSectionChords(section.id, newChords.map(c => ({ position: c.position, chord: c.chord })));
                               }}
+                              onChordClick={(chord, lineIndex, position) => {
+                                setSelectedChordForExploration(chord);
+                                setSelectedChordPosition({ sectionId: section.id, lineIndex, position });
+                                // Scroll to chord explorer
+                                document.getElementById('chord-explorer')?.scrollIntoView({ behavior: 'smooth' });
+                              }}
                             />
                           ) : (
                             <textarea
@@ -424,15 +430,29 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
             />
 
             {/* Chord Explorer & Progression Library */}
-            <ChordExplorer
-              currentChord={selectedChordForExploration}
-              songKey={song.key}
-              onSelectChord={(chord) => {
-                // TODO: Add chord to current section at cursor position
-                console.log('Selected chord:', chord);
-                setSelectedChordForExploration(chord);
-              }}
-            />
+            <div id="chord-explorer">
+              <ChordExplorer
+                currentChord={selectedChordForExploration}
+                songKey={song.key}
+                onSelectChord={(chord) => {
+                  if (selectedChordPosition) {
+                    // Replace the selected chord
+                    const section = sections.find(s => s.id === selectedChordPosition.sectionId);
+                    if (section && section.chords) {
+                      const updatedChords = section.chords.map(c => 
+                        c.position === selectedChordPosition.position 
+                          ? { ...c, chord }
+                          : c
+                      );
+                      updateSectionChords(selectedChordPosition.sectionId, updatedChords);
+                    }
+                  }
+                  // Clear selection after use
+                  setSelectedChordPosition(null);
+                  setSelectedChordForExploration(undefined);
+                }}
+              />
+            </div>
 
             {/* Quick Actions */}
             <Card className="p-6">
