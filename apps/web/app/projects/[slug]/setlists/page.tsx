@@ -215,33 +215,55 @@ export default function SetlistsPage() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {setlists.map((setlist) => (
-              <motion.div
-                key={setlist.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <Card className="p-6 rnrb-card hover:border-brand-primary/30 transition cursor-pointer">
-                  <h3 className="text-xl font-semibold mb-3">{setlist.name}</h3>
-                  {setlist.venue && (
-                    <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                      <MapPin className="w-4 h-4" />
-                      {setlist.venue}
+            {setlists.map((setlist) => {
+              // Get song details for display
+              const setlistSongDetails = setlist.songs
+                .map(songId => projectSongs.find((s: any) => s.id === songId || s.title === songId))
+                .filter(Boolean);
+              
+              return (
+                <motion.div
+                  key={setlist.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <Card className="p-6 rnrb-card hover:border-brand-primary/30 transition cursor-pointer">
+                    <h3 className="text-xl font-semibold mb-3">{setlist.name}</h3>
+                    {setlist.venue && (
+                      <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        {setlist.venue}
+                      </p>
+                    )}
+                    {setlist.date && (
+                      <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        {new Date(setlist.date).toLocaleDateString()}
+                      </p>
+                    )}
+                    <p className="text-sm text-muted-foreground flex items-center gap-2">
+                      <Music className="w-4 h-4" />
+                      {setlist.songs.length} songs
                     </p>
-                  )}
-                  {setlist.date && (
-                    <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      {new Date(setlist.date).toLocaleDateString()}
-                    </p>
-                  )}
-                  <p className="text-sm text-muted-foreground flex items-center gap-2">
-                    <Music className="w-4 h-4" />
-                    {setlist.songs.length} songs
-                  </p>
-                </Card>
-              </motion.div>
-            ))}
+                    
+                    {/* Song Preview */}
+                    {setlistSongDetails.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-border">
+                        <p className="text-xs text-muted-foreground mb-2">Songs:</p>
+                        <ol className="text-xs text-muted-foreground space-y-1">
+                          {setlistSongDetails.slice(0, 3).map((song: any, index) => (
+                            <li key={index}>{index + 1}. {song?.title || 'Unknown'}</li>
+                          ))}
+                          {setlistSongDetails.length > 3 && (
+                            <li className="italic">+ {setlistSongDetails.length - 3} more...</li>
+                          )}
+                        </ol>
+                      </div>
+                    )}
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         )}
 
@@ -263,7 +285,7 @@ export default function SetlistsPage() {
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onSave={handleSaveSetlist}
-        projectSongs={projectSongs.map(s => ({
+        projectSongs={projectSongs.map((s: any) => ({
           id: s.id || s.title,
           title: s.title,
           key: s.key,
