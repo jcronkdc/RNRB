@@ -79,40 +79,40 @@ export default function CreatePage() {
   const canGenerate = prompt.trim() || selectedGenres.length > 0 || selectedMoods.length > 0;
   
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+    <div className="min-h-screen bg-black">
+      {/* Hero Section - BADASS Orange Gradient */}
+      <div className="relative overflow-hidden border-b border-gray-800">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-orange-500/5" />
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-1/3 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-1/3 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
         </div>
         
-        <div className="rnrb-container max-w-7xl relative z-10 py-16 px-4">
+        <div className="max-w-7xl mx-auto relative z-10 py-16 px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-brand-primary" />
+              <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-orange-500" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">AI Music Generation</p>
-                <h1 className="text-3xl md:text-4xl font-display font-bold">Create New Track</h1>
+                <p className="text-sm text-gray-400">AI Music Generation</p>
+                <h1 className="text-3xl md:text-4xl font-bold text-white">Create New Track</h1>
               </div>
             </div>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-lg text-gray-300 max-w-2xl">
               Describe your music idea or use the style options below to generate AI music
             </p>
           </motion.div>
         </div>
       </div>
 
-      <div className="rnrb-container max-w-6xl py-12 px-4">
+      <div className="max-w-6xl mx-auto py-12 px-4">
 
       {/* Main Content Card */}
-      <div className="rnrb-card p-8">
+      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
         <div className="space-y-8">
           <div>
             <label className="block text-sm font-medium mb-3">

@@ -90,24 +90,24 @@ export default function ProjectsPage() {
                   <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center">
                     <Folder className="w-6 h-6 text-orange-500" />
                   </div>
-                  <div>
+          <div>
                     <p className="text-sm text-gray-400">Your Creative Workspace</p>
                     <h1 className="text-3xl md:text-4xl font-bold text-white">
                       Projects
-                    </h1>
+            </h1>
                   </div>
                 </div>
                 <p className="text-lg text-gray-300 max-w-2xl">
                   Where all your music lives and grows - organize songs, collaborate with your team, and build your career
-                </p>
-              </div>
-              <Link href="/projects/new">
+            </p>
+          </div>
+          <Link href="/projects/new">
                 <Button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all">
-                  <Plus className="w-5 h-5" />
-                  New Project
-                </Button>
-              </Link>
-            </div>
+              <Plus className="w-5 h-5" />
+              New Project
+            </Button>
+          </Link>
+        </div>
           </motion.div>
         </div>
       </div>
@@ -124,19 +124,19 @@ export default function ProjectsPage() {
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-orange-500/50 transition-colors">
             <p className="text-sm text-gray-400 mb-1">Active Projects</p>
             <p className="text-2xl font-bold text-white">{projects.length}</p>
-          </div>
+              </div>
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-orange-500/50 transition-colors">
             <p className="text-sm text-gray-400 mb-1">Total Songs</p>
             <p className="text-2xl font-bold text-white">{projects.reduce((sum, p) => sum + (p.song_count || 0), 0)}</p>
-          </div>
+              </div>
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-orange-500/50 transition-colors">
             <p className="text-sm text-gray-400 mb-1">Collaborators</p>
             <p className="text-2xl font-bold text-white">{projects.reduce((sum, p) => sum + (p.collaborator_count || 1), 0)}</p>
-          </div>
+            </div>
           <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-orange-500/50 transition-colors">
             <p className="text-sm text-gray-400 mb-1">Total Sessions</p>
             <p className="text-2xl font-bold text-white">{projects.reduce((sum, p) => sum + (p.session_count || 0), 0)}</p>
-          </div>
+              </div>
         </motion.div>
 
         {/* Projects Grid */}
@@ -147,36 +147,36 @@ export default function ProjectsPage() {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <div className="p-12 text-center bg-gray-900 border border-gray-800 rounded-2xl">
-              <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto">
                 <div className="w-24 h-24 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Music className="w-12 h-12 text-orange-500" />
-                </div>
+              </div>
                 <h2 className="text-3xl font-bold text-white mb-4">
-                  Create Your First Project
-                </h2>
+                Create Your First Project
+              </h2>
                 <p className="text-lg text-gray-300 mb-8">
-                  Projects are your foundation for organizing songs, collaborating with others, and building your music career.
-                </p>
+                Projects are your foundation for organizing songs, collaborating with others, and building your music career.
+              </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
                   <div className="p-4 bg-black/50 border border-gray-800 rounded-xl hover:border-orange-500/50 transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-3">
                       <Music className="w-5 h-5 text-orange-500" />
                     </div>
                     <p className="font-semibold text-white mb-2">Organize Songs</p>
                     <p className="text-sm text-gray-400">
-                      Group songs into albums, EPs, or singles
-                    </p>
-                  </div>
+                    Group songs into albums, EPs, or singles
+                  </p>
+                </div>
                   <div className="p-4 bg-black/50 border border-gray-800 rounded-xl hover:border-orange-500/50 transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-3">
                       <Users className="w-5 h-5 text-orange-500" />
                     </div>
                     <p className="font-semibold text-white mb-2">Collaborate</p>
                     <p className="text-sm text-gray-400">
-                      Invite band members and track contributions
-                    </p>
-                  </div>
+                    Invite band members and track contributions
+                  </p>
+                </div>
                   <div className="p-4 bg-black/50 border border-gray-800 rounded-xl hover:border-orange-500/50 transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center mb-3">
                       <TrendingUp className="w-5 h-5 text-orange-500" />
@@ -184,17 +184,17 @@ export default function ProjectsPage() {
                     <p className="font-semibold text-white mb-2">Track Progress</p>
                     <p className="text-sm text-gray-400">
                       Monitor sessions and creative work
-                    </p>
-                  </div>
+                  </p>
                 </div>
-
-                <Link href="/projects/new">
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-3 transition-all">
-                    <Plus className="w-6 h-6" />
-                    Create Your First Project
-                  </Button>
-                </Link>
               </div>
+
+              <Link href="/projects/new">
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-3 transition-all">
+                  <Plus className="w-6 h-6" />
+                  Create Your First Project
+                </Button>
+              </Link>
+            </div>
             </div>
           </motion.div>
         ) : (
@@ -208,11 +208,11 @@ export default function ProjectsPage() {
               >
                 <Link href={`/projects/${project.slug}`}>
                   <div className="group bg-gray-900 border border-gray-800 rounded-xl p-6 cursor-pointer h-full hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-300 transform hover:-translate-y-1">
-                    {/* Cover Image */}
+                  {/* Cover Image */}
                     <div className="aspect-square bg-gradient-to-br from-orange-500/20 to-orange-500/5 rounded-xl mb-4 flex items-center justify-center overflow-hidden relative">
-                      {project.cover_image ? (
-                        <img src={project.cover_image} alt={project.name} className="w-full h-full object-cover" />
-                      ) : (
+                    {project.cover_image ? (
+                      <img src={project.cover_image} alt={project.name} className="w-full h-full object-cover" />
+                    ) : (
                         <Music className="w-16 h-16 text-orange-500/50" />
                       )}
                       <div className="absolute top-2 right-2">
@@ -225,30 +225,30 @@ export default function ProjectsPage() {
                           <div className="p-1.5 bg-black/90 backdrop-blur-sm rounded-lg border border-gray-700">
                             <Globe className="w-4 h-4 text-green-500" />
                           </div>
-                        )}
+                    )}
                       </div>
-                    </div>
+                  </div>
 
-                    {/* Project Info */}
-                    <div className="flex items-start justify-between mb-3">
+                  {/* Project Info */}
+                  <div className="flex items-start justify-between mb-3">
                       <h3 className="text-xl font-semibold text-white group-hover:text-orange-500 transition-colors">
                         {project.name}
                       </h3>
                       <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all flex-shrink-0" />
-                    </div>
+                  </div>
 
                     <p className="text-sm text-gray-400 mb-4 line-clamp-2">
-                      {project.description || 'No description yet'}
-                    </p>
+                    {project.description || 'No description yet'}
+                  </p>
 
-                    {/* Stats */}
+                  {/* Stats */}
                     <div className="flex items-center gap-4 text-sm text-gray-400 pt-4 border-t border-gray-800">
-                      <div className="flex items-center gap-1">
-                        <Music className="w-4 h-4" />
+                    <div className="flex items-center gap-1">
+                      <Music className="w-4 h-4" />
                         <span>{project.song_count || 0}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4" />
                         <span>{project.collaborator_count || 1}</span>
                       </div>
                       {project.session_count > 0 && (
@@ -259,7 +259,7 @@ export default function ProjectsPage() {
                       )}
                     </div>
                   </div>
-                </Link>
+              </Link>
               </motion.div>
             ))}
           </div>
