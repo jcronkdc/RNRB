@@ -2111,3 +2111,48 @@ In Google Cloud Console, add:
 
 ---
 
+
+---
+
+## 📚 RHYME DICTIONARY - IN PROGRESS (Priority A)
+
+**User Plan:** A (Rhyme) → B (Audio) → C (Chord polish) → Assess
+
+### FOUNDATION COMPLETE:
+
+**API Built:**
+✅ `/api/rhymes` route
+✅ Datamuse API integration (free, professional-grade)
+✅ Returns 100 rhyming words per query
+✅ Includes syllable counts
+✅ Scored by commonality
+
+**UI Component Built:**
+✅ `rhyme-dictionary.tsx`
+✅ Shows rhymes for selected word
+✅ Filter by syllable count (1-syllable, 2-syllable, 3+)
+✅ Sorted by usage (common words first)
+✅ Click rhyme → Replaces original word
+✅ Animated smooth UX
+
+**WHAT WORKS:**
+- API: Call `/api/rhymes?word=night` → Returns: fight, light, sight, bright, flight, might...
+- UI: Display rhymes with syllable counts
+- Filtering: Show only 2-syllable rhymes
+- Selection: Click to use
+
+**NEXT STEP:**
+Integration into song editor:
+- Make lyrics words clickable/selectable
+- Show rhyme dictionary when word clicked
+- Replace word on rhyme selection
+- Preserve section structure
+
+**Status:** Foundation solid, integration next (2-3 hours remaining)
+
+**Then:** Move to Priority B (Audio Playback)
+
+---
+
+**ONE MASTER DOCUMENT - Building methodically, no rush, proper flow**
+
