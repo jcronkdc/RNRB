@@ -86,74 +86,84 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-3">
         <button
           onClick={() => setMode('rhyme')}
-          className={`px-4 py-2 rounded-lg transition font-medium ${
+          className={`px-6 py-3.5 rounded-xl transition-all font-semibold text-left ${
             mode === 'rhyme'
-              ? 'bg-brand-primary text-brand-primary-foreground'
-              : 'bg-surface-muted hover:bg-surface text-foreground border border-border'
+              ? 'bg-brand-primary text-brand-primary-foreground shadow-lg border-2 border-brand-primary'
+              : 'bg-surface-muted hover:bg-surface text-foreground border-2 border-border hover:border-brand-primary/30'
           }`}
         >
-          <Book className="w-4 h-4 inline-block mr-2" />
-          Rhymes
+          <Book className="w-5 h-5 inline-block mr-3" />
+          Find Rhymes
         </button>
         <button
           onClick={() => setMode('thesaurus')}
-          className={`px-4 py-2 rounded-lg transition font-medium ${
+          className={`px-6 py-3.5 rounded-xl transition-all font-semibold text-left ${
             mode === 'thesaurus'
-              ? 'bg-brand-primary text-brand-primary-foreground'
-              : 'bg-surface-muted hover:bg-surface text-foreground border border-border'
+              ? 'bg-brand-primary text-brand-primary-foreground shadow-lg border-2 border-brand-primary'
+              : 'bg-surface-muted hover:bg-surface text-foreground border-2 border-border hover:border-brand-primary/30'
           }`}
         >
-          <Book className="w-4 h-4 inline-block mr-2" />
+          <Book className="w-5 h-5 inline-block mr-3" />
           Thesaurus
         </button>
         <button
           onClick={() => setMode('ai')}
-          className={`px-4 py-2 rounded-lg transition font-medium ${
+          className={`px-6 py-3.5 rounded-xl transition-all font-semibold text-left ${
             mode === 'ai'
-              ? 'bg-purple-600 text-white'
-              : 'bg-surface-muted hover:bg-surface text-foreground border border-border'
+              ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg border-2 border-purple-500'
+              : 'bg-surface-muted hover:bg-surface text-foreground border-2 border-border hover:border-purple-500/30'
           }`}
         >
-          <Sparkles className="w-4 h-4 inline-block mr-2" />
-          AI Suggest
+          <Sparkles className="w-5 h-5 inline-block mr-3" />
+          AI Suggestions
         </button>
       </div>
 
-      <div className="flex gap-2">
+      <div className="relative">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
           placeholder={
-            mode === 'rhyme' ? 'Word to rhyme with...' :
-            mode === 'thesaurus' ? 'Word to find synonyms...' :
-            'Ask AI for lyric suggestions...'
+            mode === 'rhyme' ? 'Enter a word to find rhymes...' :
+            mode === 'thesaurus' ? 'Enter a word to find synonyms...' :
+            'Ask AI for lyric help (e.g., "help with chorus about heartbreak")'
           }
-          className="flex-1 px-4 py-2.5 bg-surface border border-border rounded-xl text-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition"
+          className="w-full px-4 py-4 pr-32 bg-surface border-2 border-border rounded-xl text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition text-base"
         />
         <Button
           onClick={handleSearch}
           disabled={loading || !query.trim()}
-          className="px-6 py-2.5 rounded-xl"
+          className={`absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 rounded-lg ${
+            mode === 'ai' ? 'bg-purple-600 hover:bg-purple-700' : ''
+          }`}
         >
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Search'}
         </Button>
       </div>
 
       {suggestions.length > 0 && (
-        <div className="space-y-2">
+        <div className="space-y-3">
+          <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            {mode === 'ai' ? 'AI Suggestions' : mode === 'rhyme' ? 'Rhymes' : 'Synonyms'}
+          </h4>
           {suggestions.map((suggestion, index) => (
             <Card
               key={index}
-              className="p-4 rnrb-card bg-surface-muted hover:border-brand-primary/30 transition cursor-pointer"
+              className="p-5 rnrb-card bg-gradient-to-br from-surface-muted to-surface hover:from-brand-primary/5 hover:to-transparent border-2 border-border hover:border-brand-primary/40 transition-all duration-200 cursor-pointer group"
               onClick={() => onInsert(suggestion)}
             >
-              <p className="text-sm text-foreground">{suggestion}</p>
+              <div className="flex items-start justify-between gap-4">
+                <p className="text-sm text-foreground leading-relaxed flex-1">{suggestion}</p>
+                <div className="opacity-0 group-hover:opacity-100 transition text-brand-primary text-xs font-medium">
+                  Click to insert →
+                </div>
+              </div>
             </Card>
           ))}
         </div>
