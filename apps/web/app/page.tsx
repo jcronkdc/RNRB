@@ -838,4 +838,4 @@ export default function HomePage() {
   );
 }
 
-export const dynamic = "force-static";
+export const dynamic = "force-static";# Deployment trigger
