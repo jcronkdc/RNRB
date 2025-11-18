@@ -72,6 +72,19 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
   const [selectedWordForRhymes, setSelectedWordForRhymes] = useState<string | null>(null);
   const [selectedWordPosition, setSelectedWordPosition] = useState<{ sectionId: string; lineIndex: number; wordIndex: number } | null>(null);
   const [audioFile, setAudioFile] = useState<{ url: string; filename: string; duration: number } | null>(null);
+  
+  // Collapsible sidebar sections
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['presence', 'audio']));
+  
+  const toggleSection = (section: string) => {
+    const newExpanded = new Set(expandedSections);
+    if (newExpanded.has(section)) {
+      newExpanded.delete(section);
+    } else {
+      newExpanded.add(section);
+    }
+    setExpandedSections(newExpanded);
+  };
 
   // Mock song data - will be replaced with database
   const song = {
@@ -516,6 +529,17 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
                   // Clear selection after use
                   setSelectedChordPosition(null);
                   setSelectedChordForExploration(undefined);
+                }}
+                onApplyProgression={(chords) => {
+                  // Apply entire progression to first section with chords enabled
+                  if (sections.length > 0) {
+                    const targetSection = sections[0]; // Apply to first section
+                    const newChords = chords.map((chord, index) => ({
+                      position: index * 10, // Space them out
+                      chord
+                    }));
+                    updateSectionChords(targetSection.id, newChords);
+                  }
                 }}
               />
             </div>
