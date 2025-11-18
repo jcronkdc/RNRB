@@ -2595,3 +2595,37 @@ In Google Cloud Console, add:
 
 **ONE MASTER DOCUMENT maintained with complete truth**
 
+
+---
+
+## 🚨 CRITICAL GAP IDENTIFIED: HOMEPAGE OUT OF DATE
+
+**User Question:** "Should homepage showcase our features?"
+
+**PROBLEM FOUND:**
+Homepage shows:
+- ❌ "AI Tour Optimization" (we haven't built this)
+- ❌ Generic collaboration mentions
+- ❌ No mention of: Rhyme dictionary, chord library, audio playback, drag-and-drop, etc.
+
+**What We Actually Built:**
+- ✅ Rhyme dictionary (100 rhymes, syllable filter)
+- ✅ Chord progression library (20+ progressions, substitutions, genre/mood)
+- ✅ Audio playback (upload instrumentals, play while writing)
+- ✅ Drag-and-drop song builder (Intro/Verse/Chorus/Bridge)
+- ✅ Voice messages (WhatsApp-style)
+- ✅ Revision history (permanent snapshots)
+- ✅ Undo/redo (Ctrl+Z)
+- ✅ AI chord suggestions (GPT-4)
+- ✅ Auto-transpose
+
+**MISMATCH:** Homepage doesn't reflect actual platform ❌
+
+**FIX NEEDED:**
+1. Update homepage features section (show actual tools)
+2. Create `/features` page (detailed showcase)
+
+**Priority:** HIGH (marketing/communication issue)
+
+**Building now...**
+
