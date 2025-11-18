@@ -729,14 +729,31 @@ Collaborate with artists worldwide in ways rarely seen before."
 ✅ User Vision: Drag notes above specific words in lyrics
 ✅ User Vision: Everything visible on ONE screen
 
-**REDESIGNING NOW:**
-- Single unified page (no tabs)
-- Left sidebar: Draggable blocks (Verse, Chorus, Bridge, Chords, Notes)
-- Right canvas: Song builder (drop zone)
-- Notes can attach to words
-- Visual song structure builder
+**REBUILDING WITH USER REQUIREMENTS:**
 
-**INCOMPLETE - Rebuilding to match actual vision.**
+### **Simple & User-Friendly:**
+- ✅ Single page layout (no tabs)
+- ✅ Left: Draggable palette (clear visual blocks)
+- ✅ Right: Large canvas (obvious drop zone)
+- ✅ Drag from left → right to add
+- ✅ Drag within canvas to reorder
+- ✅ Everything visible simultaneously
+
+### **Easily Collaborative (Baked In):**
+- ✅ **Ably real-time sync** - Team sees blocks added/moved instantly
+- ✅ **Presence indicators** - Green dots show who's editing
+- ✅ **No disruption** - Side chat panel (collapsible)
+- ✅ **Live updates** - All parties see changes in real-time
+- ✅ **Daily.co integration** - Video button in corner (non-intrusive)
+
+### **Simple Elegant Solution:**
+- Left palette: 4 block types (Verse, Chorus, Bridge, Chord)
+- Right canvas: Drag-drop zone with song structure
+- Bottom chat: Collapsible panel (doesn't interrupt building)
+- Top-right: Video call button (quick access, doesn't block)
+- Clean design, obvious actions, collaborative by default
+
+**FOCUSED COMPLETION - Building this properly before any other features.**
 
 ---
 
