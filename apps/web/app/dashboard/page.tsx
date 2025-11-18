@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Music, Radio, MessageSquare, Folder, TrendingUp, Settings, Sparkles, ArrowRight, CheckCircle2, HelpCircle, Users, Mic2, Video, BarChart3, Headphones } from 'lucide-react';
 import Link from 'next/link';
 import { FirstTimeOnboarding } from '@/components/first-time-onboarding';
+import { FABQuickActions } from '@/components/fab-quick-actions';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -37,6 +38,9 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-background">
       {/* First-Time User Onboarding */}
       <FirstTimeOnboarding />
+      
+      {/* FAB Quick Actions */}
+      <FABQuickActions />
       
       {/* Hero Section with Vibrant Gradient */}
       <div className="relative overflow-hidden border-b border-border/50">
