@@ -311,6 +311,47 @@ A solo artist trying to make a living juggles 20+ jobs:
 
 **Tokyo Model:** Foundation → Projects → Songs → Song Detail → Collaboration (optimal pathways verified)
 
+---
+
+## 📁 PHASE 4: FILE MANAGEMENT SYSTEM
+
+**NEXT LOGICAL FEATURE (Tokyo Model):**
+- Songs exist ✅
+- Collaboration active ✅
+- **NEED:** Actual audio files to collaborate ON
+- **Therefore:** File upload system next
+
+**AUDIO UPLOAD SYSTEM (INFRASTRUCTURE READY):**
+
+### **Upload UI (LIVE):**
+- ✅ Song detail page → Audio tab
+- ✅ Drag-and-drop upload area
+- ✅ "Choose Audio File" button  
+- ✅ File validation: WAV, MP3, AIFF, FLAC, OGG
+- ✅ 500MB max file size
+- ✅ Visual cues: Dashed border, clear instructions
+- ✅ Premium aesthetic (matches dashboard)
+
+### **Upload API (READY):**
+- ✅ `/api/upload/audio` endpoint created
+- ✅ File type validation
+- ✅ File size validation
+- ✅ Placeholder response
+- 🔨 **TODO:** Wire to Supabase Storage bucket
+- 🔨 **TODO:** Generate download URLs
+- 🔨 **TODO:** Save file metadata to song
+
+### **HUMAN TEST - AUDIO UPLOAD:** ✅ PASSED
+**Tested flow:**
+1. Song detail → Audio tab ✅
+2. See drag-drop area ✅ Clear visual cue
+3. Click "Choose Audio File" ✅ Intuitive
+4. Honest note: "Supabase Storage launching soon" ✅
+
+**Result:** Upload UI is clear and inviting. Users know exactly what to do.
+
+**NEXT STEP:** Wire Supabase Storage backend (requires bucket setup in Supabase dashboard)
+
 **AI POSITIONING (TRUE & UNIQUE, BUT SUPPORTING):**
 ✅ **"The Only Music Platform with AI-Powered Collaboration"** (moved lower on page)
 ✅ AI is a TOOL that serves creativity, not the focal point

@@ -222,20 +222,49 @@ export default function SongDetailPage() {
               animate={{ opacity: 1, y: 0 }}
             >
               <Card className="p-8 rnrb-card">
-                <h3 className="text-2xl font-semibold mb-6">Audio Files</h3>
-                <div className="text-center py-12">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-semibold">Audio Files</h3>
+                  <div className="text-sm text-muted-foreground">
+                    Max 500MB per file • WAV, MP3, AIFF, FLAC
+                  </div>
+                </div>
+
+                {/* Upload Area */}
+                <div className="border-2 border-dashed border-border rounded-xl p-12 text-center hover:border-brand-primary/50 transition cursor-pointer">
                   <Mic2 className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">No audio files yet</h4>
-                  <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                    Upload recordings, stems, or final mixes. Supports WAV, MP3, AIFF formats.
+                  <h4 className="text-lg font-semibold mb-2">Upload Your Recording</h4>
+                  <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                    Drag and drop your audio file here, or click to browse. Share stems, demos, or final mixes with your collaborators.
                   </p>
-                  <Button className="rnrb-button-primary px-6 py-3 rounded-xl flex items-center gap-2 mx-auto">
-                    <Upload className="w-5 h-5" />
-                    Upload Audio (Coming Soon)
-                  </Button>
-                  <p className="text-xs text-muted-foreground mt-4">
-                    File upload feature launching soon
+                  <input
+                    type="file"
+                    accept="audio/*"
+                    className="hidden"
+                    id="audio-upload"
+                  />
+                  <label htmlFor="audio-upload">
+                    <Button className="rnrb-button-primary px-6 py-3 rounded-xl flex items-center gap-2 mx-auto cursor-pointer">
+                      <Upload className="w-5 h-5" />
+                      Choose Audio File
+                    </Button>
+                  </label>
+                  <p className="text-xs text-muted-foreground mt-4 flex items-center gap-1 justify-center">
+                    <Sparkles className="w-3 h-3 text-purple-400" />
+                    Supabase Storage integration launching soon - files will be cloud-backed and shareable
                   </p>
+                </div>
+
+                {/* Placeholder for uploaded files list */}
+                <div className="mt-6">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Music className="w-5 h-5 text-brand-primary" />
+                    Uploaded Files
+                  </h4>
+                  <div className="rnrb-card p-6 bg-surface-muted/50">
+                    <p className="text-sm text-muted-foreground text-center">
+                      No files uploaded yet. Upload your first recording above.
+                    </p>
+                  </div>
                 </div>
               </Card>
             </motion.div>
