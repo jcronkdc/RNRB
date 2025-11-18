@@ -37,7 +37,7 @@ export default function HomePage() {
             {/* Prominent Logo */}
             <div className="logo-hero-wrapper mb-8">
               <img 
-                src="/logo-light.png" 
+                src="/logo-dark.png" 
                 alt="Rock N' Roll Basement" 
                 className="logo-hero mx-auto"
               />

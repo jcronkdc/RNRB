@@ -13,10 +13,10 @@ export function NavBar() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3">
             <img 
-              src="/logo-light.png" 
+              src="/logo-dark.png" 
               alt="Rock N' Roll Basement" 
               className="h-10 w-auto"
-              style={{ filter: 'brightness(1.1)' }}
+              style={{ filter: 'brightness(1.2) contrast(1.1)' }}
             />
           </Link>
           <div className="hidden md:flex items-center gap-6">

@@ -518,7 +518,11 @@ a{color:var(--accent);text-decoration:none}
   .logo-hero {
     width: 240px;
     height: auto;
-    filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.3));
+    filter: 
+      drop-shadow(0 4px 20px rgba(255, 255, 255, 0.5))
+      drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))
+      brightness(1.2)
+      contrast(1.1);
     animation: logo-float 6s ease-in-out infinite;
     position: relative;
     z-index: 2;
