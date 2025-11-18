@@ -34,6 +34,16 @@ export default function HomePage() {
 
         <div className="container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
+            {/* Prominent Logo */}
+            <div className="logo-hero-wrapper mb-8">
+              <img 
+                src="/logo-light.png" 
+                alt="Rock N' Roll Basement" 
+                className="logo-hero mx-auto"
+              />
+              <div className="logo-hero-glow"></div>
+            </div>
+            
             {/* Animated Title */}
             <h1 className="hero-title relative inline-block" data-immutable="true">
               <span className="hero-text-gradient">Rock N' Roll Basement</span>

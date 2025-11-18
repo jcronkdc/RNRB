@@ -11,9 +11,14 @@ export function NavBar() {
     <nav className="border-b" style={{ borderColor: 'var(--border)' }}>
       <div className="container flex items-center justify-between h-16">
         <div className="flex items-center gap-8">
-          <Link href="/" className="text-xl font-bold">
-            RNR Basement
-        </Link>
+          <Link href="/" className="flex items-center gap-3">
+            <img 
+              src="/logo-light.png" 
+              alt="Rock N' Roll Basement" 
+              className="h-10 w-auto"
+              style={{ filter: 'brightness(1.1)' }}
+            />
+          </Link>
           <div className="hidden md:flex items-center gap-6">
               <Link
               href="/#who" 

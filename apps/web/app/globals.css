@@ -494,10 +494,76 @@ a{color:var(--accent);text-decoration:none}
     }
   }
   
+  /* Hero Logo Styles */
+  .logo-hero-wrapper {
+    position: relative;
+    display: inline-block;
+    animation: logo-entrance 1.5s ease-out;
+  }
+  
+  @keyframes logo-entrance {
+    0% {
+      opacity: 0;
+      transform: scale(0.5) rotateZ(-10deg);
+    }
+    50% {
+      transform: scale(1.1) rotateZ(5deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotateZ(0deg);
+    }
+  }
+  
+  .logo-hero {
+    width: 240px;
+    height: auto;
+    filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.3));
+    animation: logo-float 6s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
+  }
+  
+  @keyframes logo-float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  .logo-hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+    filter: blur(60px);
+    animation: logo-glow-pulse 4s ease-in-out infinite;
+    z-index: 1;
+  }
+  
+  @keyframes logo-glow-pulse {
+    0%, 100% {
+      opacity: 0.3;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+    50% {
+      opacity: 0.6;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+  }
+  
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .hero-text-gradient {
       font-size: 2.5rem;
+    }
+    .logo-hero {
+      width: 180px;
     }
     .gradient-orb-1 { width: 200px; height: 200px; }
     .gradient-orb-2 { width: 300px; height: 300px; }

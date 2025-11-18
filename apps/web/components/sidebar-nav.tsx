@@ -81,31 +81,22 @@ export function SidebarNav() {
         className="h-16 flex items-center justify-between px-4"
         style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}
       >
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <motion.div
-            animate={{ rotate: isHovered ? 360 : 0 }}
-            transition={{ duration: 0.6, ease: 'easeInOut' }}
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{
-              background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
-              boxShadow: '0 4px 12px rgba(255, 99, 71, 0.4)'
+        <Link href="/dashboard" className="flex items-center">
+          <motion.img
+            src="/logo-light.png"
+            alt="Rock N' Roll Basement"
+            animate={{ 
+              scale: isHovered ? 1.05 : 1,
+              filter: isHovered ? 'brightness(1.2)' : 'brightness(1)'
             }}
-          >
-            <Music4 className="w-6 h-6 text-white" />
-          </motion.div>
-          <AnimatePresence>
-            {!isCollapsed && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                className="flex flex-col"
-              >
-                <span className="text-white font-bold text-lg">RNR</span>
-                <span className="text-xs text-gray-400 -mt-1">Basement</span>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="h-10 w-auto"
+            style={{
+              filter: 'drop-shadow(0 2px 8px rgba(255, 255, 255, 0.2))',
+              maxWidth: isCollapsed ? '40px' : '200px',
+              transition: 'max-width 0.3s ease'
+            }}
+          />
         </Link>
         
         <button
