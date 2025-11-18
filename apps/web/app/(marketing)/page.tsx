@@ -4,16 +4,70 @@ export default function HomePage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {/* Hero Section */}
-      <section className="page-section">
-        <div className="container">
+      <section className="page-section relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 opacity-30">
+          {/* Floating music notes */}
+          <div className="music-notes-container">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="music-note"
+                style={{
+                  left: `${15 + i * 15}%`,
+                  animationDelay: `${i * 0.5}s`,
+                  fontSize: `${20 + Math.random() * 20}px`
+                }}
+              >
+                ♪
+              </div>
+            ))}
+          </div>
+          
+          {/* Animated gradient orbs */}
+          <div className="absolute inset-0">
+            <div className="gradient-orb gradient-orb-1"></div>
+            <div className="gradient-orb gradient-orb-2"></div>
+            <div className="gradient-orb gradient-orb-3"></div>
+          </div>
+        </div>
+
+        <div className="container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="hero-title" data-immutable="true">Rock N' Roll Basement</h1>
-            <p className="text-xl mb-8" style={{ color: 'var(--muted)' }} data-immutable="true">
-              Whether you're a songwriter needing better tools, new to the business and finding gigs, discovering your roots in gospel or Appalachian folk, inventing country metal, or following Dylan's path to say what you need to say. This is where your music finds its voice. Collaborate with artists worldwide in ways rarely seen before.
-            </p>
-            <div className="flex items-center justify-center gap-4">
-              <Link href="/auth?signup=true" className="button">Start Free</Link>
-              <Link href="#why" className="button secondary">See Why</Link>
+            {/* Animated Title */}
+            <h1 className="hero-title relative inline-block" data-immutable="true">
+              <span className="hero-text-gradient">Rock N' Roll Basement</span>
+              <div className="hero-underline"></div>
+              
+              {/* Glow effect */}
+              <div className="absolute inset-0 hero-glow"></div>
+            </h1>
+            
+            {/* Animated Description */}
+            <div className="hero-description-wrapper">
+              <p className="hero-description text-xl mb-8" data-immutable="true">
+                Whether you're a songwriter needing better tools, new to the business and finding gigs, discovering your roots in gospel or Appalachian folk, inventing country metal, or following Dylan's path to say what you need to say. This is where your music finds its voice. Collaborate with artists worldwide in ways rarely seen before.
+              </p>
+              
+              {/* Subtle highlight effect */}
+              <div className="hero-highlight-words">
+                <span className="highlight-word" style={{ animationDelay: '2s' }}>songwriter</span>
+                <span className="highlight-word" style={{ animationDelay: '2.5s' }}>gospel</span>
+                <span className="highlight-word" style={{ animationDelay: '3s' }}>Dylan</span>
+                <span className="highlight-word" style={{ animationDelay: '3.5s' }}>voice</span>
+                <span className="highlight-word" style={{ animationDelay: '4s' }}>worldwide</span>
+              </div>
+            </div>
+            
+            {/* Animated Buttons */}
+            <div className="flex items-center justify-center gap-4 hero-buttons">
+              <Link href="/auth?signup=true" className="button hero-button-primary">
+                <span>Start Free</span>
+                <div className="button-shine"></div>
+              </Link>
+              <Link href="#why" className="button secondary hero-button-secondary">
+                <span>See Why</span>
+              </Link>
             </div>
           </div>
         </div>
