@@ -136,10 +136,10 @@ export default function ProjectsPage() {
 
         {/* Projects Grid */}
         {projects.length === 0 ? (
-          <Card className="p-12 text-center bg-gradient-to-r from-purple-500/10 to-blue-500/10">
+          <Card className="p-12 text-center rnrb-card">
             <div className="max-w-2xl mx-auto">
-              <div className="w-24 h-24 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Music className="w-12 h-12 text-purple-400" />
+              <div className="w-24 h-24 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Music className="w-12 h-12 text-brand-primary" />
               </div>
               <h2 className="text-3xl font-bold text-foreground mb-4">
                 Create Your First Project
@@ -149,7 +149,7 @@ export default function ProjectsPage() {
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-left">
-                <div className="p-4 bg-background/50 rounded-lg">
+                <div className="p-4 rnrb-card bg-surface-muted/50">
                   <p className="font-semibold text-foreground mb-2">Organize Songs</p>
                   <p className="text-sm text-muted-foreground">
                     Group songs into albums, EPs, or singles
