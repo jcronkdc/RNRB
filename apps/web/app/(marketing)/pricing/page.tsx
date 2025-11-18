@@ -8,8 +8,8 @@ export default function PricingPage() {
           <div className="section-header">
             <h1 className="text-5xl font-bold mb-4">Simple Pricing</h1>
             <p className="section-subtitle">Start free, upgrade when you're ready</p>
-          </div>
-          
+        </div>
+        
           <div className="feature-grid max-w-5xl mx-auto">
             <div className="card text-center">
               <h3 className="text-2xl font-semibold mb-2">Free</h3>
@@ -83,7 +83,7 @@ export default function PricingPage() {
               </ul>
               <Link href="/auth?signup=true" className="button w-full">
                 Start Free Trial
-              </Link>
+                </Link>
             </div>
             
             <div className="card text-center">
@@ -117,7 +117,7 @@ export default function PricingPage() {
                   <span style={{ color: 'var(--accent)' }}>✓</span>
                   <span>Team management</span>
                 </li>
-              </ul>
+                </ul>
               <Link href="/contact" className="button secondary w-full">
                 Contact Sales
               </Link>

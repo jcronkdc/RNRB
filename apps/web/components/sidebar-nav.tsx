@@ -1,286 +1,266 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { 
-  Home,
-  Sparkles,
-  Folder,
-  Library,
-  Users2,
+  Home, 
+  Sparkles, 
+  FolderOpen, 
+  Library, 
+  Users, 
   Compass,
   CreditCard,
   Settings,
   ChevronLeft,
-  Music2,
-  Menu
+  ChevronRight,
+  Music4,
+  Mic2,
+  Radio,
+  Headphones,
+  Activity
 } from 'lucide-react';
 
-// Navigation items following the specified IA
-const navItems = [
-  { 
-    id: 'home',
-    icon: Home, 
-    label: 'Home', 
-    href: '/dashboard',
-    description: 'Overview & recent activity'
-  },
-  { 
-    id: 'create',
-    icon: Sparkles, 
-    label: 'Create', 
-    href: '/create',
-    description: 'AI music composer',
-    highlight: true // Special styling for primary CTA
-  },
-  { 
-    id: 'projects',
-    icon: Folder, 
-    label: 'Projects', 
-    href: '/projects',
-    description: 'Your music projects'
-  },
-  { 
-    id: 'library',
-    icon: Library, 
-    label: 'Library', 
-    href: '/library',
-    description: 'Assets & resources'
-  },
-  { 
-    id: 'collab',
-    icon: Users2, 
-    label: 'Collab', 
-    href: '/collab',
-    description: 'Sessions & invites'
-  },
-  { 
-    id: 'explore',
-    icon: Compass, 
-    label: 'Explore', 
-    href: '/explore',
-    description: 'Community & inspiration'
-  },
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge?: string;
+  divider?: boolean;
+}
+
+const navItems: NavItem[] = [
+  { label: 'Home', href: '/dashboard', icon: Home },
+  { label: 'Create', href: '/create', icon: Sparkles, badge: 'AI' },
+  { label: 'Projects', href: '/projects', icon: FolderOpen },
+  { label: 'Library', href: '/library', icon: Library },
+  { label: 'Collaborate', href: '/collab', icon: Users },
+  { label: 'Explore', href: '/explore', icon: Compass },
+  { divider: true, label: '', href: '', icon: Home },
+  { label: 'Credits', href: '/credits', icon: CreditCard },
+  { label: 'Settings', href: '/settings', icon: Settings },
 ];
 
-const bottomNavItems = [
-  { 
-    id: 'credits',
-    icon: CreditCard, 
-    label: 'Credits', 
-    href: '/credits',
-    description: 'Usage & billing'
-  },
-  { 
-    id: 'settings',
-    icon: Settings, 
-    label: 'Settings', 
-    href: '/settings',
-    description: 'Preferences'
-  },
-];
+// Music-themed icons for visual interest
+const floatingIcons = [Music4, Mic2, Radio, Headphones];
 
 export function SidebarNav() {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    // Restore collapsed state from localStorage
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('sidebar-collapsed') === 'true';
-    }
-    return false;
-  });
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Save collapsed state to localStorage
-  useEffect(() => {
-    localStorage.setItem('sidebar-collapsed', isCollapsed.toString());
-  }, [isCollapsed]);
+  // Don't show sidebar on marketing pages
+  const isMarketingPage = pathname === '/' || 
+                         pathname.startsWith('/auth') || 
+                         pathname.startsWith('/pricing') ||
+                         pathname.startsWith('/about') ||
+                         pathname.startsWith('/contact');
 
-  // Don't show sidebar on marketing pages or auth pages
-  if (
-    pathname === '/' || 
-    pathname?.startsWith('/pricing') || 
-    pathname?.startsWith('/why-rnrb') ||
-    pathname?.startsWith('/auth')
-  ) {
-    return null;
-  }
-
-  const isActive = (href: string) => {
-    if (href === '/dashboard' && pathname === '/dashboard') return true;
-    if (href !== '/dashboard' && pathname?.startsWith(href)) return true;
-    return false;
-  };
+  if (isMarketingPage) return null;
 
   return (
-    <>
-      {/* Sidebar */}
-      <motion.aside
-        animate={{ width: isCollapsed ? '64px' : '240px' }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="fixed left-0 top-0 h-screen bg-background border-r border-border z-40 flex flex-col"
+    <motion.aside
+      initial={{ x: -260 }}
+      animate={{ 
+        x: 0,
+        width: isCollapsed ? 64 : 260
+      }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="fixed left-0 top-0 h-screen z-40"
+      style={{
+        background: 'linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 100%)',
+        borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '4px 0 24px rgba(0, 0, 0, 0.4)'
+      }}
+    >
+      {/* Logo Section */}
+      <div 
+        className="h-16 flex items-center justify-between px-4"
+        style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}
       >
-        {/* Logo */}
-        <div className="h-[56px] flex items-center px-4 border-b border-border">
-          <Link 
-            href="/dashboard" 
-            className="flex items-center gap-2 overflow-hidden"
-            title="Rock N' Roll Basement"
+        <Link href="/dashboard" className="flex items-center gap-3">
+          <motion.div
+            animate={{ rotate: isHovered ? 360 : 0 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
+              boxShadow: '0 4px 12px rgba(255, 99, 71, 0.4)'
+            }}
           >
-            <Music2 className="w-6 h-6 text-brand-primary flex-shrink-0" />
+            <Music4 className="w-6 h-6 text-white" />
+          </motion.div>
+          <AnimatePresence>
             {!isCollapsed && (
-              <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.2 }}
-                className="font-semibold text-lg whitespace-nowrap"
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                className="flex flex-col"
               >
-                RNRB
-              </motion.span>
+                <span className="text-white font-bold text-lg">RNR</span>
+                <span className="text-xs text-gray-400 -mt-1">Basement</span>
+              </motion.div>
             )}
-          </Link>
-        </div>
+          </AnimatePresence>
+        </Link>
+        
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors"
+          style={{ color: '#a8a8a8' }}
+        >
+          {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        </button>
+      </div>
 
-        {/* Main Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4 space-y-1">
-          {/* Primary Nav Items */}
-          <div className="px-3 pb-3">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-              
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-md
-                    transition-all duration-200 group relative
-                    ${active 
-                      ? item.highlight 
-                        ? 'bg-brand-primary text-background font-semibold shadow-glow'
-                        : 'bg-surface-hover text-foreground font-medium'
-                      : item.highlight
-                        ? 'text-foreground hover:bg-brand-primary/10 hover:text-brand-primary'
-                        : 'text-foreground-muted hover:text-foreground hover:bg-surface-hover'
-                    }
-                  `}
-                  title={isCollapsed ? item.label : item.description}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
+      {/* Navigation Items */}
+      <nav className="px-3 py-6 space-y-1">
+        {navItems.map((item, index) => {
+          if (item.divider) {
+            return <div key={index} className="my-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />;
+          }
+
+          const isActive = pathname === item.href || 
+                          (item.href !== '/dashboard' && pathname.startsWith(item.href));
+          
+          return (
+            <Link key={item.href} href={item.href}>
+              <motion.div
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
+                className={`
+                  group relative flex items-center gap-3 px-3 py-2.5 rounded-xl
+                  transition-all duration-200 cursor-pointer
+                  ${isActive ? 'bg-gradient-to-r from-orange-500/20 to-red-500/20' : 'hover:bg-white/5'}
+                `}
+              >
+                {/* Active Indicator */}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full"
+                    style={{ background: 'linear-gradient(180deg, #FF6347 0%, #FF4500 100%)' }}
+                  />
+                )}
+
+                {/* Icon */}
+                <div className={`
+                  w-10 h-10 rounded-lg flex items-center justify-center shrink-0
+                  ${isActive 
+                    ? 'bg-gradient-to-br from-orange-500/30 to-red-500/30' 
+                    : 'bg-white/5 group-hover:bg-white/10'
+                  }
+                  transition-all duration-200
+                `}>
+                  <item.icon className={`
+                    w-5 h-5 
+                    ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'}
+                    transition-colors
+                  `} />
+                </div>
+
+                {/* Label */}
+                <AnimatePresence>
                   {!isCollapsed && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.2 }}
-                      className="min-w-0"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className="flex-1 flex items-center justify-between"
                     >
-                      <span className="block truncate">{item.label}</span>
-                      {!active && (
-                        <span className="text-xs opacity-0 group-hover:opacity-60 transition-opacity block truncate">
-                          {item.description}
+                      <span className={`
+                        font-medium text-sm
+                        ${isActive ? 'text-white' : 'text-gray-300 group-hover:text-white'}
+                        transition-colors
+                      `}>
+                        {item.label}
+                      </span>
+                      {item.badge && (
+                        <span className="px-2 py-0.5 text-xs font-medium rounded-full"
+                              style={{
+                                background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
+                                color: 'white',
+                                fontSize: '10px'
+                              }}>
+                          {item.badge}
                         </span>
                       )}
                     </motion.div>
                   )}
-                  {active && !item.highlight && (
-                    <motion.div
-                      layoutId="activeIndicator"
-                      className="absolute left-0 w-0.5 h-6 bg-brand-primary rounded-r"
-                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-          
-          {/* Divider */}
-          <div className="px-3 py-3">
-            <div className="h-px bg-border" />
-          </div>
-          
-          {/* Bottom Nav Items */}
-          <div className="px-3">
-            {bottomNavItems.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
-              
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  className={`
-                    flex items-center gap-3 px-3 py-2.5 rounded-md
-                    transition-all duration-200
-                    ${active 
-                      ? 'bg-surface-hover text-foreground font-medium'
-                      : 'text-foreground-muted hover:text-foreground hover:bg-surface-hover'
-                    }
-                  `}
-                  title={isCollapsed ? item.label : item.description}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  {!isCollapsed && (
-                    <motion.span
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.2 }}
-                      className="truncate"
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        </nav>
+                </AnimatePresence>
+              </motion.div>
+            </Link>
+          );
+        })}
+      </nav>
 
-        {/* Collapse Toggle */}
-        <div className="p-3 border-t border-border">
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="
-              w-full flex items-center justify-center gap-2 
-              p-2 rounded-md text-foreground-muted
-              hover:bg-surface-hover hover:text-foreground 
-              transition-all duration-200
-            "
-            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          >
-            {isCollapsed ? (
-              <Menu className="w-5 h-5" />
-            ) : (
-              <>
-                <ChevronLeft className="w-5 h-5" />
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                  className="text-sm"
-                >
-                  Collapse
-                </motion.span>
-              </>
-            )}
-          </button>
-        </div>
-      </motion.aside>
-
-      {/* Mobile Overlay - click to close on mobile */}
+      {/* Bottom Section - Activity Monitor */}
       {!isCollapsed && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 lg:hidden"
-          onClick={() => setIsCollapsed(true)}
-        />
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <div 
+            className="rounded-xl p-4"
+            style={{ 
+              background: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.05)'
+            }}
+          >
+            <div className="flex items-center gap-3 mb-3">
+              <Activity className="w-5 h-5 text-green-400" />
+              <span className="text-sm font-medium text-white">Live Activity</span>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-400">CPU</span>
+                <span className="text-xs text-gray-300">12%</span>
+              </div>
+              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-green-400 to-green-600"
+                  initial={{ width: '0%' }}
+                  animate={{ width: '12%' }}
+                  transition={{ duration: 1 }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
-    </>
+
+      {/* Floating Music Icons (subtle animation) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {floatingIcons.map((Icon, index) => (
+          <motion.div
+            key={index}
+            className="absolute opacity-5"
+            initial={{ 
+              x: Math.random() * 200, 
+              y: Math.random() * 600,
+              scale: 0 
+            }}
+            animate={{ 
+              y: [null, -20, 20, -20],
+              scale: 1
+            }}
+            transition={{
+              y: {
+                repeat: Infinity,
+                duration: 6 + index * 2,
+                ease: "easeInOut"
+              },
+              scale: {
+                duration: 0.5,
+                delay: index * 0.2
+              }
+            }}
+          >
+            <Icon className="w-16 h-16 text-white" />
+          </motion.div>
+        ))}
+      </div>
+    </motion.aside>
   );
 }
-

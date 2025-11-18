@@ -6,16 +6,16 @@ import { UserMenu } from './UserMenu';
 
 export function NavBar() {
   const pathname = usePathname();
-  
-  return (
+
+    return (
     <nav className="border-b" style={{ borderColor: 'var(--border)' }}>
       <div className="container flex items-center justify-between h-16">
         <div className="flex items-center gap-8">
           <Link href="/" className="text-xl font-bold">
             RNR Basement
-          </Link>
+        </Link>
           <div className="hidden md:flex items-center gap-6">
-            <Link 
+              <Link
               href="/#who" 
               className={`nav-link ${pathname === '/#who' ? 'text-[#FF5C39]' : ''}`}
             >
@@ -24,16 +24,16 @@ export function NavBar() {
             <Link 
               href="/#how" 
               className={`nav-link ${pathname === '/#how' ? 'text-[#FF5C39]' : ''}`}
-            >
+      >
               How It Works
-            </Link>
-            <Link 
+              </Link>
+                    <Link
               href="/#features" 
               className={`nav-link ${pathname === '/#features' ? 'text-[#FF5C39]' : ''}`}
-            >
+                    >
               Features
             </Link>
-            <Link 
+            <Link
               href="/pricing" 
               className={`nav-link ${pathname === '/pricing' ? 'text-[#FF5C39]' : ''}`}
             >
@@ -44,7 +44,7 @@ export function NavBar() {
         <div className="flex items-center gap-4">
           <UserMenu />
         </div>
-      </div>
-    </nav>
+          </div>
+        </nav>
   );
 }

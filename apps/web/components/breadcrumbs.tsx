@@ -55,9 +55,9 @@ export function Breadcrumbs() {
       // Fallback: Format segment as title case
       label = segment
         .replace(/[\[\]]/g, '')
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
     }
     
     return { href, label, segment };
@@ -89,24 +89,24 @@ export function Breadcrumbs() {
       {/* Breadcrumb trail */}
       <div className="flex items-center gap-1.5 text-sm flex-1">
         {/* Home/Dashboard link */}
-        <Link 
-          href="/dashboard" 
+          <Link 
+            href="/dashboard" 
           className="
             flex items-center gap-1 px-2 py-1 rounded-md
             text-foreground-muted hover:text-foreground 
             hover:bg-surface transition-all duration-200
           "
-        >
+          >
           <Home className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Home</span>
-        </Link>
+          </Link>
         
         {/* Breadcrumb segments */}
-        {breadcrumbs.map((crumb, index) => (
+          {breadcrumbs.map((crumb, index) => (
           <div key={crumb.href} className="flex items-center gap-1.5">
             <ChevronRight className="w-3.5 h-3.5 text-foreground-muted opacity-50" />
             
-            {index === breadcrumbs.length - 1 ? (
+              {index === breadcrumbs.length - 1 ? (
               // Current page (non-clickable)
               <span className="
                 px-2 py-1 text-foreground font-medium
@@ -115,24 +115,24 @@ export function Breadcrumbs() {
                 {crumb.segment === 'projects' && <Folder className="w-3.5 h-3.5" />}
                 {crumb.label}
               </span>
-            ) : (
+              ) : (
               // Clickable parent segments
-              <Link 
-                href={crumb.href}
+                <Link 
+                  href={crumb.href}
                 className="
                   px-2 py-1 rounded-md
                   text-foreground-muted hover:text-foreground
                   hover:bg-surface transition-all duration-200
                   flex items-center gap-1.5
                 "
-              >
+                >
                 {crumb.segment === 'projects' && <Folder className="w-3.5 h-3.5" />}
-                {crumb.label}
-              </Link>
-            )}
-          </div>
-        ))}
-      </div>
+                  {crumb.label}
+                </Link>
+              )}
+            </div>
+          ))}
+        </div>
       
       {/* Quick actions based on context */}
       {segments[0] === 'projects' && segments.length === 2 && (
@@ -143,7 +143,7 @@ export function Breadcrumbs() {
           <button className="btn-ghost text-sm">
             Project Settings
           </button>
-        </div>
+      </div>
       )}
     </div>
   );

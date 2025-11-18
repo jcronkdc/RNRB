@@ -4,18 +4,30 @@
 
 @import '@cronkwaters/ui/styles.css';
 
-/* === RNR Basement Emergency Reset === */
+/* === RNR Basement Human-First Design === */
 :root{
-  --bg:#1a1a1a;          /* softer dark gray instead of near-black */
-  --panel:#242424;       /* lighter card panels for better contrast */
-  --text:#f0f0f0;        /* brighter text for better readability */
-  --muted:#b8b8b8;       /* brighter secondary text */
-  --accent:#FF6B4A;      /* slightly desaturated orange for less harshness */
-  --border:#3a3a3a;      /* more visible borders */
-  --radius:12px;         /* global radius */
+  /* Comfortable dark theme - like a cozy music studio */
+  --bg:#1e1e1e;          /* Warm dark gray - easier on eyes than pure black */
+  --panel:#2a2a2a;       /* Elevated surfaces - clear visual hierarchy */
+  --panel-hover:#323232; /* Subtle hover feedback */
+  --text:#ffffff;        /* Pure white for maximum clarity */
+  --text-secondary:#e8e8e8; /* Slightly dimmed for less important text */
+  --muted:#a8a8a8;       /* Muted text - still readable but de-emphasized */
+  --accent:#FF6347;      /* Tomato red - warm, inviting, energetic */
+  --accent-hover:#FF7F50; /* Coral on hover */
+  --accent-dim:#CC5036;   /* Dimmed accent for backgrounds */
+  --success:#4ade80;     /* Green for positive actions */
+  --warning:#fbbf24;     /* Amber for warnings */
+  --error:#ef4444;       /* Red for errors */
+  --border:#404040;      /* Clearly visible borders */
+  --border-strong:#606060; /* Stronger borders for emphasis */
+  --radius:16px;         /* Softer, more modern radius */
+  --radius-sm:8px;       /* Small radius for inner elements */
+  --shadow:0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg:0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;
   --space-5:24px;--space-6:32px;--space-7:40px;--space-8:56px;
-  --maxw:1200px;         /* content width */
+  --maxw:1280px;         /* Slightly wider for modern screens */
 }
 
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
@@ -30,55 +42,97 @@ section{padding:var(--space-8) 0;border-top:1px solid var(--border);}
 h1,h2,h3{margin:0 0 var(--space-4);line-height:1.2}
 p{margin:0 0 var(--space-5);color:var(--text)}
 a{color:var(--accent);text-decoration:none}
-.button{display:inline-flex;align-items:center;gap:10px;padding:14px 20px;
-  border-radius:var(--radius);border:1px solid var(--border);background:var(--accent);
-  color:#ffffff;font-weight:600;font-size:15px;letter-spacing:0.02em;
-  transition:all 0.2s ease;cursor:pointer;}
-.button:hover{background:#FF7D5C;transform:translateY(-1px);box-shadow:0 4px 12px rgba(255,107,74,0.3);}
-.button.secondary{background:transparent;color:var(--text);border:2px solid var(--border);}
-.button.secondary:hover{background:var(--panel);border-color:var(--accent);color:var(--accent);}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-6)}
+/* Buttons that feel clickable and satisfying */
+.button{display:inline-flex;align-items:center;gap:12px;padding:16px 24px;
+  border-radius:var(--radius-sm);border:2px solid transparent;background:var(--accent);
+  color:#ffffff;font-weight:600;font-size:16px;letter-spacing:0.025em;
+  transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1);cursor:pointer;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.button::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+  transition:left 0.5s;}
+.button:hover{background:var(--accent-hover);transform:translateY(-2px);
+  box-shadow:var(--shadow-lg);}
+.button:hover::before{left:100%;}
+.button:active{transform:translateY(0);box-shadow:var(--shadow);}
+.button.secondary{background:#2a2a2a;color:var(--text);border:2px solid var(--border);}
+.button.secondary:hover{background:var(--panel-hover);border-color:var(--accent);color:var(--accent);}
+/* Cards that feel tangible and interactive */
+.card{background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--radius);padding:var(--space-6);
+  box-shadow:var(--shadow);transition:all 0.2s ease;
+  position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;
+  height:1px;background:linear-gradient(90deg,transparent,var(--border-strong),transparent);
+  opacity:0;transition:opacity 0.2s;}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);
+  background:var(--panel-hover);}
+.card:hover::before{opacity:1;}
 
 /* Left app menu (authenticated pages) */
 .app{display:grid;grid-template-columns:260px 1fr;min-height:100dvh}
-.app .sidebar{position:sticky;top:0;height:100dvh;background:#141414;border-right:1px solid var(--border);padding:var(--space-6)}
+/* Sidebar that feels like a control panel */
+.app .sidebar{position:sticky;top:0;height:100dvh;
+  background:linear-gradient(180deg, #1a1a1a 0%, #161616 100%);
+  border-right:1px solid var(--border);padding:var(--space-6);
+  box-shadow:4px 0 24px -4px rgba(0,0,0,0.3);}
 @media (max-width:1024px){.app{grid-template-columns:1fr}.app .sidebar{display:none}}
 
 /* Ensure contrast (quick fix) */
 .btn, .button, .card, nav{filter:none}
 
-/* Typography System */
+/* Typography System - Optimized for Human Reading */
 @layer base {
   h1 { 
     font-size: 48px; 
     line-height: 1.3; 
     font-weight: 700; 
-    color: #ffffff; /* pure white for headings */
+    color: var(--text);
     letter-spacing: -0.02em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
   }
   h2 { 
-    font-size: 32px; 
+    font-size: 36px; 
     line-height: 1.3; 
     font-weight: 600; 
-    color: #ffffff; /* pure white for headings */
+    color: var(--text);
     letter-spacing: -0.01em;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
   }
   h3 { 
     font-size: 24px; 
     line-height: 1.4; 
     font-weight: 600; 
-    color: #fafafa; /* slightly off-white for h3 */
+    color: var(--text-secondary);
+    letter-spacing: 0;
+  }
+  h4 {
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--text-secondary);
   }
   body { 
     font-size: 16px; 
-    line-height: 1.7; /* increased for better readability */
-    letter-spacing: 0.01em; /* slight spacing for clarity */
+    line-height: 1.7;
+    letter-spacing: 0.01em;
     font-weight: 400;
+    color: var(--text-secondary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  p {
+    margin-bottom: 1.5em;
+  }
+  
+  /* Focus visible for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 }
-
+  
 /* Component Classes */
 @layer components {
   /* Navigation */
@@ -185,8 +239,8 @@ a{color:var(--accent);text-decoration:none}
   :root {
     --background: 11 11 12;
     --foreground: 233 233 236;
-  }
-  
+}
+
   body {
     background-color: rgb(var(--background));
     color: rgb(var(--foreground));

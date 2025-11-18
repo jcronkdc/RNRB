@@ -1,191 +1,281 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
-  Command, 
-  Plus,
-  Bell,
+  Plus, 
+  Bell, 
+  User,
+  Command,
   CreditCard,
+  LogOut,
+  ChevronDown,
   Sparkles,
-  X 
+  Zap,
+  Music
 } from 'lucide-react';
-import Link from 'next/link';
-import { UserMenu } from './UserMenu';
-import { ThemeToggle } from './theme/ThemeToggle';
+import { supabase } from '@/lib/supabase';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
-interface TopBarProps {
-  credits?: number;
-  maxCredits?: number;
-}
+export function TopBar() {
+  const router = useRouter();
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [credits, setCredits] = useState(150); // Mock credits
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [notifications, setNotifications] = useState(3); // Mock notifications
 
-export function TopBar({ credits = 150, maxCredits = 500 }: TopBarProps) {
-  const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const [notifications, setNotifications] = useState(2); // Mock notification count
-  
-  // Command+K shortcut
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setShowCommandPalette(true);
-      }
-      if (e.key === 'Escape') {
-        setShowCommandPalette(false);
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    supabase?.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
   }, []);
-  
-  const creditPercentage = (credits / maxCredits) * 100;
-  const isLowCredits = creditPercentage < 20;
-  
+
+  const handleSignOut = async () => {
+    await supabase?.auth.signOut();
+    router.push('/');
+  };
+
   return (
-    <>
-      <header className="fixed top-0 right-0 left-[240px] h-[56px] bg-background border-b border-border z-30">
-        <div className="h-full flex items-center justify-between px-6">
-          {/* Left side - Search */}
-          <div className="flex items-center gap-4 flex-1 max-w-lg">
+    <header 
+      className="fixed top-0 left-0 right-0 h-14 z-30 backdrop-blur-xl"
+      style={{
+        background: 'rgba(30, 30, 30, 0.8)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        marginLeft: '260px'
+      }}
+    >
+      <div className="h-full px-6 flex items-center justify-between">
+        {/* Left Section - Search */}
+        <div className="flex items-center gap-4 flex-1">
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/5 transition-all group"
+            style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
+          >
+            <Search className="w-4 h-4 text-gray-400 group-hover:text-white" />
+            <span className="text-sm text-gray-400 group-hover:text-white">Search</span>
+            <div className="flex items-center gap-1 ml-8 opacity-50">
+              <Command className="w-3 h-3" />
+              <span className="text-xs">K</span>
+            </div>
+          </button>
+
+          {/* Quick Create Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/create')}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-white"
+            style={{
+              background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
+              boxShadow: '0 4px 12px rgba(255, 99, 71, 0.3)'
+            }}
+          >
+            <Plus className="w-4 h-4" />
+            <span className="text-sm">New</span>
+            <Sparkles className="w-3 h-3" />
+          </motion.button>
+        </div>
+
+        {/* Right Section - Credits, Notifications, Profile */}
+        <div className="flex items-center gap-3">
+          {/* Credits Display */}
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            onClick={() => router.push('/credits')}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/5 transition-all group"
+            style={{ 
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'rgba(255, 99, 71, 0.1)'
+            }}
+          >
+            <Zap className="w-4 h-4 text-orange-400" />
+            <span className="text-sm font-medium text-white">{credits}</span>
+            <span className="text-xs text-gray-400">credits</span>
+          </motion.button>
+
+          {/* Notifications */}
+          <button
+            className="relative w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/5 transition-all"
+            style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
+          >
+            <Bell className="w-5 h-5 text-gray-400" />
+            {notifications > 0 && (
+              <span 
+                className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                style={{ background: '#FF6347' }}
+              >
+                {notifications}
+              </span>
+            )}
+          </button>
+
+          {/* Profile Dropdown */}
+          <div className="relative">
             <button
-              onClick={() => setShowCommandPalette(true)}
-              className="
-                flex items-center gap-2 px-3 py-1.5 w-full max-w-sm
-                text-sm text-foreground-muted
-                bg-surface rounded-md border border-border
-                hover:bg-surface-hover hover:border-border-strong
-                transition-all duration-200 group
-              "
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all"
+              style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
             >
-              <Search className="w-4 h-4" />
-              <span className="flex-1 text-left">Search or type a command...</span>
-              <kbd className="
-                hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 
-                text-xs rounded bg-background border border-border
-                group-hover:border-border-strong
-              ">
-                <Command className="w-3 h-3" />K
-              </kbd>
+              {user?.user_metadata?.avatar_url ? (
+                <img 
+                  src={user.user_metadata.avatar_url} 
+                  alt="Profile" 
+                  className="w-8 h-8 rounded-lg"
+                  style={{ border: '2px solid rgba(255, 99, 71, 0.5)' }}
+                />
+              ) : (
+                <div 
+                  className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
+                    border: '2px solid rgba(255, 99, 71, 0.5)'
+                  }}
+                >
+                  <User className="w-5 h-5 text-white" />
+                </div>
+              )}
+              <span className="text-sm font-medium text-white max-w-[120px] truncate">
+                {user?.user_metadata?.name || user?.email?.split('@')[0] || 'Artist'}
+              </span>
+              <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
             </button>
+
+            {/* Profile Dropdown Menu */}
+            <AnimatePresence>
+              {profileOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                  className="absolute right-0 mt-2 w-56 rounded-xl overflow-hidden"
+                  style={{
+                    background: 'rgba(30, 30, 30, 0.95)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+                    backdropFilter: 'blur(20px)'
+                  }}
+                >
+                  <div className="p-4 border-b" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+                    <p className="text-sm font-medium text-white">
+                      {user?.user_metadata?.name || 'Artist'}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {user?.email}
+                    </p>
+                  </div>
+
+                  <div className="p-2">
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        router.push('/settings');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-all text-left"
+                    >
+                      <User className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm text-gray-300">Profile Settings</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        router.push('/credits');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-all text-left"
+                    >
+                      <CreditCard className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm text-gray-300">Billing & Credits</span>
+                    </button>
+
+                    <div className="my-2 border-t" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-500/10 transition-all text-left group"
+                    >
+                      <LogOut className="w-4 h-4 text-gray-400 group-hover:text-red-400" />
+                      <span className="text-sm text-gray-300 group-hover:text-red-400">Sign Out</span>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-          
-          {/* Right side - Actions */}
-          <div className="flex items-center gap-3">
-            {/* New/Create Button */}
-            <Link
-              href="/create"
-              className="
-                btn-primary flex items-center gap-1.5
-                px-3 py-1.5 text-sm
-              "
+        </div>
+      </div>
+
+      {/* Global Search Modal */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-start justify-center pt-32"
+            style={{ background: 'rgba(0, 0, 0, 0.8)' }}
+            onClick={() => setSearchOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: -20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: -20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-2xl rounded-2xl overflow-hidden"
+              style={{
+                background: 'rgba(30, 30, 30, 0.95)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 24px 48px rgba(0, 0, 0, 0.5)',
+                backdropFilter: 'blur(20px)'
+              }}
             >
-              <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">New Track</span>
-            </Link>
-            
-            {/* Credits meter */}
-            <div className={`
-              flex items-center gap-2 px-3 py-1.5 
-              rounded-md border transition-colors duration-200
-              ${isLowCredits 
-                ? 'bg-error/10 border-error/30 text-error' 
-                : 'bg-surface border-border text-foreground-muted'
-              }
-            `}>
-              <CreditCard className="w-4 h-4" />
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">{credits}</span>
-                <div className="w-16 h-1.5 bg-surface-hover rounded-full overflow-hidden">
-                  <motion.div 
-                    className={`h-full ${isLowCredits ? 'bg-error' : 'bg-brand-secondary'}`}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${creditPercentage}%` }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
+              <div className="p-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <Search className="w-6 h-6 text-gray-400" />
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder="Search projects, tracks, collaborators..."
+                    className="flex-1 bg-transparent text-lg text-white placeholder-gray-400 outline-none"
                   />
                 </div>
-              </div>
-              {isLowCredits && (
-                <Link 
-                  href="/credits"
-                  className="text-xs underline hover:no-underline"
-                >
-                  Upgrade
-                </Link>
-              )}
-            </div>
-            
-            {/* Notifications */}
-            <button className="btn-icon relative">
-              <Bell className="w-5 h-5" />
-              {notifications > 0 && (
-                <span className="
-                  absolute -top-1 -right-1 w-5 h-5 
-                  bg-brand-primary text-background
-                  text-xs font-bold rounded-full 
-                  flex items-center justify-center
-                ">
-                  {notifications}
-                </span>
-              )}
-            </button>
-            
-            {/* Theme Toggle */}
-            <ThemeToggle />
-            
-            {/* Divider */}
-            <div className="h-6 w-px bg-border" />
-            
-            {/* User Menu */}
-            <UserMenu />
-          </div>
-        </div>
-      </header>
-      
-      {/* Command Palette (placeholder) */}
-      {showCommandPalette && (
-        <div className="fixed inset-0 z-50">
-          <div 
-            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
-            onClick={() => setShowCommandPalette(false)}
-          />
-          <div className="relative flex items-start justify-center pt-20">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ duration: 0.2 }}
-              className="
-                w-full max-w-2xl bg-surface rounded-lg 
-                border border-border shadow-xl overflow-hidden
-              "
-            >
-              <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
-                <Search className="w-5 h-5 text-foreground-muted" />
-                <input
-                  type="text"
-                  placeholder="Search projects, tracks, or type a command..."
-                  className="flex-1 bg-transparent text-foreground outline-none placeholder:text-foreground-muted"
-                  autoFocus
-                />
-                <button
-                  onClick={() => setShowCommandPalette(false)}
-                  className="btn-icon w-8 h-8"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              
-              {/* Command palette results would go here */}
-              <div className="p-4 text-center text-foreground-muted">
-                <Sparkles className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">Command palette coming soon...</p>
+                
+                <div className="space-y-2">
+                  <p className="text-xs text-gray-500 uppercase font-medium mb-3">Quick Actions</p>
+                  {[
+                    { icon: Sparkles, label: 'Create New Track', shortcut: '⌘N' },
+                    { icon: Music, label: 'Browse Library', shortcut: '⌘L' },
+                    { icon: User, label: 'View Profile', shortcut: '⌘P' }
+                  ].map((action, index) => (
+                    <button
+                      key={index}
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-white/5 transition-all"
+                    >
+                      <div className="flex items-center gap-3">
+                        <action.icon className="w-5 h-5 text-gray-400" />
+                        <span className="text-sm text-gray-300">{action.label}</span>
+                      </div>
+                      <span className="text-xs text-gray-500">{action.shortcut}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </motion.div>
-          </div>
-        </div>
-      )}
-    </>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Responsive styles */}
+      <style jsx>{`
+        @media (max-width: 1024px) {
+          header {
+            margin-left: 0 !important;
+          }
+        }
+      `}</style>
+    </header>
   );
 }

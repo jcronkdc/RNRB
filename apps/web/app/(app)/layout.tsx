@@ -7,7 +7,7 @@ export default function Layout({
 }) {
   return (
     <AppLayout>
-      {children}
+          {children}
     </AppLayout>
   );
 }
