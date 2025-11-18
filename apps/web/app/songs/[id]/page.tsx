@@ -6,7 +6,7 @@ import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Music, Save, Users, Mail, Lock, Globe, Trash2, Download, Cloud, CloudOff, Tag, Plus, X, Archive, Undo2, Redo2 } from 'lucide-react';
+import { Music, Save, Users, Mail, Lock, Globe, Trash2, Download, Cloud, CloudOff, Tag, Plus, X, Archive, Undo2, Redo2, ChevronDown } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useUndoRedo } from '@/hooks/use-undo-redo';
 
@@ -23,6 +23,31 @@ const ChordLyricsEditor = dynamic(() => import('@/components/song/chord-lyrics-e
 const CollaborativePresence = dynamic(() => import('@/components/song/collaborative-presence'), {
   ssr: false,
   loading: () => <div className="animate-pulse h-32 rnrb-card" />
+});
+
+const VersionHistory = dynamic(() => import('@/components/song/version-history'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-96 rnrb-card" />
+});
+
+const ChordExplorer = dynamic(() => import('@/components/song/chord-explorer'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-96 rnrb-card" />
+});
+
+const RhymeDictionary = dynamic(() => import('@/components/song/rhyme-dictionary'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-64 rnrb-card" />
+});
+
+const AudioUpload = dynamic(() => import('@/components/song/audio-upload'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-48 rnrb-card" />
+});
+
+const AudioPlayer = dynamic(() => import('@/components/song/audio-player'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse h-48 rnrb-card" />
 });
 
 interface ChordPosition {
@@ -64,6 +89,22 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
   const [inviteEmail, setInviteEmail] = useState('');
   const [newTag, setNewTag] = useState('');
   const [showChords, setShowChords] = useState(false);
+  const [selectedChordForExploration, setSelectedChordForExploration] = useState<string | undefined>();
+  const [selectedWordForRhymes, setSelectedWordForRhymes] = useState<string | null>(null);
+  const [audioFile, setAudioFile] = useState<{ url: string; filename: string; duration: number } | null>(null);
+  
+  // Collapsible sidebar sections - Start collapsed for cleaner UX
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([]));
+  
+  const toggleSection = (section: string) => {
+    const newExpanded = new Set(expandedSections);
+    if (newExpanded.has(section)) {
+      newExpanded.delete(section);
+    } else {
+      newExpanded.add(section);
+    }
+    setExpandedSections(newExpanded);
+  };
   
   // Undo/Redo for song edits
   const {
@@ -341,6 +382,28 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
                   onSave={(newLyrics, newChords) => {
                     setSong({ ...song, lyrics: newLyrics, chords: newChords });
                   }}
+                  onChordClick={(chord, lineIndex, position) => {
+                    setSelectedChordForExploration(chord);
+                    // Expand chord explorer section
+                    const newExpanded = new Set(expandedSections);
+                    newExpanded.add('chords');
+                    setExpandedSections(newExpanded);
+                    // Scroll to chord explorer
+                    setTimeout(() => {
+                      document.getElementById('chord-explorer')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
+                  onWordSelect={(word, lineIndex, wordIndex) => {
+                    setSelectedWordForRhymes(word);
+                    // Expand rhyme dictionary section
+                    const newExpanded = new Set(expandedSections);
+                    newExpanded.add('rhymes');
+                    setExpandedSections(newExpanded);
+                    // Scroll to rhyme dictionary
+                    setTimeout(() => {
+                      document.getElementById('rhyme-dictionary')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                  }}
                 />
               ) : (
                 <textarea
@@ -582,11 +645,173 @@ export default function SongEditPage({ params }: { params: { id: string } }) {
               </div>
             </motion.div>
 
-            {/* Archive & Backup */}
+            {/* Audio Upload/Player - Always visible */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
+            >
+              {audioFile ? (
+                <AudioPlayer
+                  audioUrl={audioFile.url}
+                  filename={audioFile.filename}
+                  onRemove={() => setAudioFile(null)}
+                />
+              ) : (
+                <AudioUpload
+                  songId={song.id}
+                  onUploadComplete={(url, filename, duration) => {
+                    setAudioFile({ url, filename, duration });
+                  }}
+                />
+              )}
+            </motion.div>
+
+            {/* Version History - Collapsible */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.45 }}
+              className="rnrb-card p-6"
+            >
+              <button
+                onClick={() => toggleSection('versions')}
+                className="w-full flex items-center justify-between mb-4"
+              >
+                <h3 className="font-semibold">Version History</h3>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('versions') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </button>
+              {expandedSections.has('versions') && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                >
+                  <VersionHistory
+                    songId={song.id}
+                    versions={[
+                      {
+                        id: 'v1',
+                        versionNumber: 1,
+                        title: song.title,
+                        lyrics: song.lyrics,
+                        chords: JSON.stringify(song.chords || []),
+                        structure: '[]',
+                        createdAt: new Date(song.updatedAt),
+                        createdByName: 'You',
+                        snapshotReason: 'Current version'
+                      }
+                    ]}
+                    currentVersion={1}
+                    onRestore={(versionId) => console.log('Restore version:', versionId)}
+                    onPreview={(versionId) => console.log('Preview version:', versionId)}
+                    onCompare={(v1, v2) => console.log('Compare:', v1, v2)}
+                  />
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* Rhyme Dictionary - Collapsible */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="rnrb-card p-6"
+              id="rhyme-dictionary"
+            >
+              <button
+                onClick={() => toggleSection('rhymes')}
+                className="w-full flex items-center justify-between mb-4"
+              >
+                <h3 className="font-semibold">Rhyme Dictionary</h3>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('rhymes') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </button>
+              {expandedSections.has('rhymes') && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                >
+                  <RhymeDictionary
+                    selectedWord={selectedWordForRhymes}
+                    onSelectRhyme={(rhyme) => {
+                      if (selectedWordForRhymes) {
+                        // Replace word in lyrics
+                        const newLyrics = song.lyrics.replace(
+                          new RegExp(`\\b${selectedWordForRhymes}\\b`, 'g'),
+                          rhyme
+                        );
+                        setSong({ ...song, lyrics: newLyrics });
+                      }
+                      setSelectedWordForRhymes(null);
+                    }}
+                  />
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* Chord Explorer - Collapsible */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55 }}
+              className="rnrb-card p-6"
+              id="chord-explorer"
+            >
+              <button
+                onClick={() => toggleSection('chords')}
+                className="w-full flex items-center justify-between mb-4"
+              >
+                <h3 className="font-semibold">Chord Explorer</h3>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('chords') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </button>
+              {expandedSections.has('chords') && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                >
+                  <ChordExplorer
+                    currentChord={selectedChordForExploration}
+                    songKey={song.key}
+                    onSelectChord={(chord) => {
+                      setSelectedChordForExploration(chord);
+                      // Could add chord to the song chords array here
+                    }}
+                    onApplyProgression={(chords) => {
+                      // Apply chord progression to song
+                      const newChords = chords.map((chord, index) => ({
+                        lineIndex: 0,
+                        position: index * 10,
+                        chord
+                      }));
+                      setSong({ ...song, chords: newChords });
+                    }}
+                  />
+                </motion.div>
+              )}
+            </motion.div>
+
+            {/* Archive & Backup */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
               className="rnrb-card p-6"
             >
               <h3 className="font-semibold mb-4">Backup & Archive</h3>

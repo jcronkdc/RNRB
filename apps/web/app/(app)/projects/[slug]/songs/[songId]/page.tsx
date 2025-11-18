@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { 
-  Music, MessageSquare, Video, ArrowLeft, Save, Undo2, Redo2, GripVertical, Plus, X
+  Music, MessageSquare, Video, ArrowLeft, Save, Undo2, Redo2, GripVertical, Plus, X, ChevronDown
 } from 'lucide-react';
 import { Card, Button } from '@cronkwaters/ui';
 import dynamic from 'next/dynamic';
@@ -73,8 +73,8 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
   const [selectedWordPosition, setSelectedWordPosition] = useState<{ sectionId: string; lineIndex: number; wordIndex: number } | null>(null);
   const [audioFile, setAudioFile] = useState<{ url: string; filename: string; duration: number } | null>(null);
   
-  // Collapsible sidebar sections
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['presence', 'audio']));
+  // Collapsible sidebar sections - Start with only essential visible
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([]));
   
   const toggleSection = (section: string) => {
     const newExpanded = new Set(expandedSections);
@@ -346,14 +346,26 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
                               onChordClick={(chord, lineIndex, position) => {
                                 setSelectedChordForExploration(chord);
                                 setSelectedChordPosition({ sectionId: section.id, lineIndex, position });
+                                // Expand chord explorer section
+                                const newExpanded = new Set(expandedSections);
+                                newExpanded.add('chords');
+                                setExpandedSections(newExpanded);
                                 // Scroll to chord explorer
-                                document.getElementById('chord-explorer')?.scrollIntoView({ behavior: 'smooth' });
+                                setTimeout(() => {
+                                  document.getElementById('chord-explorer')?.scrollIntoView({ behavior: 'smooth' });
+                                }, 100);
                               }}
                               onWordSelect={(word, lineIndex, wordIndex) => {
                                 setSelectedWordForRhymes(word);
                                 setSelectedWordPosition({ sectionId: section.id, lineIndex, wordIndex });
+                                // Expand rhyme dictionary section
+                                const newExpanded = new Set(expandedSections);
+                                newExpanded.add('rhymes');
+                                setExpandedSections(newExpanded);
                                 // Scroll to rhyme dictionary
-                                document.getElementById('rhyme-dictionary')?.scrollIntoView({ behavior: 'smooth' });
+                                setTimeout(() => {
+                                  document.getElementById('rhyme-dictionary')?.scrollIntoView({ behavior: 'smooth' });
+                                }, 100);
                               }}
                             />
                           ) : (
@@ -427,7 +439,7 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Collaborative Presence */}
+            {/* Collaborative Presence - Always visible */}
             <CollaborativePresence
               songId={params.songId}
               currentUserName="You"
@@ -437,7 +449,7 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
               }}
             />
 
-            {/* Audio Upload/Player */}
+            {/* Audio Upload/Player - Always visible */}
             {audioFile ? (
               <AudioPlayer
                 audioUrl={audioFile.url}
@@ -453,98 +465,178 @@ export default function SongDetailPage({ params }: { params: { slug: string; son
               />
             )}
 
-            {/* Song Info */}
+            {/* Song Info - Collapsible */}
             <Card className="p-6">
-              <h3 className="font-semibold mb-4">Song Details</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Key</span>
-                  <span className="font-medium">{song.key || 'Not set'}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Tempo</span>
-                  <span className="font-medium">{song.tempo ? `${song.tempo} BPM` : 'Not set'}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Sections</span>
-                  <span className="font-medium">{sections.length}</span>
-                </div>
-              </div>
+              <button
+                onClick={() => toggleSection('details')}
+                className="w-full flex items-center justify-between mb-4"
+              >
+                <h3 className="font-semibold">Song Details</h3>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('details') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </button>
+              {expandedSections.has('details') && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="space-y-3 text-sm"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Key</span>
+                    <span className="font-medium">{song.key || 'Not set'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Tempo</span>
+                    <span className="font-medium">{song.tempo ? `${song.tempo} BPM` : 'Not set'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Sections</span>
+                    <span className="font-medium">{sections.length}</span>
+                  </div>
+                </motion.div>
+              )}
             </Card>
 
-            {/* Version History */}
-            <VersionHistory
-              songId={params.songId}
-              versions={mockVersions}
-              currentVersion={3}
-              onRestore={handleRestoreVersion}
-              onPreview={handlePreviewVersion}
-              onCompare={handleCompareVersions}
-            />
+            {/* Version History - Collapsible */}
+            <Card className="p-6">
+              <button
+                onClick={() => toggleSection('versions')}
+                className="w-full flex items-center justify-between mb-4"
+              >
+                <h3 className="font-semibold">Version History</h3>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('versions') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </button>
+              {expandedSections.has('versions') && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                >
+                  <VersionHistory
+                    songId={params.songId}
+                    versions={mockVersions}
+                    currentVersion={3}
+                    onRestore={handleRestoreVersion}
+                    onPreview={handlePreviewVersion}
+                    onCompare={handleCompareVersions}
+                  />
+                </motion.div>
+              )}
+            </Card>
 
-            {/* Rhyme Dictionary */}
-            <div id="rhyme-dictionary">
-              <RhymeDictionary
-                selectedWord={selectedWordForRhymes}
-                onSelectRhyme={(rhyme) => {
-                  if (selectedWordPosition) {
-                    const section = sections.find(s => s.id === selectedWordPosition.sectionId);
-                    if (section) {
-                      const lines = section.lyrics.split('\n');
-                      const line = lines[selectedWordPosition.lineIndex] || '';
-                      const words = line.split(/\s+/);
-                      
-                      // Replace the word
-                      words[selectedWordPosition.wordIndex] = rhyme;
-                      lines[selectedWordPosition.lineIndex] = words.join(' ');
-                      
-                      updateSectionLyrics(selectedWordPosition.sectionId, lines.join('\n'));
-                    }
-                  }
-                  // Clear selection
-                  setSelectedWordForRhymes(null);
-                  setSelectedWordPosition(null);
-                }}
-              />
-            </div>
+            {/* Rhyme Dictionary - Collapsible */}
+            <Card className="p-6" id="rhyme-dictionary">
+              <button
+                onClick={() => toggleSection('rhymes')}
+                className="w-full flex items-center justify-between mb-4"
+              >
+                <h3 className="font-semibold">Rhyme Dictionary</h3>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('rhymes') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </button>
+              {expandedSections.has('rhymes') && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                >
+                  <RhymeDictionary
+                    selectedWord={selectedWordForRhymes}
+                    onSelectRhyme={(rhyme) => {
+                      if (selectedWordPosition) {
+                        const section = sections.find(s => s.id === selectedWordPosition.sectionId);
+                        if (section) {
+                          const lines = section.lyrics.split('\n');
+                          const line = lines[selectedWordPosition.lineIndex] || '';
+                          const words = line.split(/\s+/);
+                          
+                          // Replace the word
+                          words[selectedWordPosition.wordIndex] = rhyme;
+                          lines[selectedWordPosition.lineIndex] = words.join(' ');
+                          
+                          updateSectionLyrics(selectedWordPosition.sectionId, lines.join('\n'));
+                        }
+                      }
+                      // Clear selection
+                      setSelectedWordForRhymes(null);
+                      setSelectedWordPosition(null);
+                    }}
+                  />
+                </motion.div>
+              )}
+            </Card>
 
-            {/* Chord Explorer & Progression Library */}
-            <div id="chord-explorer">
-              <ChordExplorer
-                currentChord={selectedChordForExploration}
-                songKey={song.key}
-                onSelectChord={(chord) => {
-                  if (selectedChordPosition) {
-                    // Replace the selected chord
-                    const section = sections.find(s => s.id === selectedChordPosition.sectionId);
-                    if (section && section.chords) {
-                      const updatedChords = section.chords.map(c => 
-                        c.position === selectedChordPosition.position 
-                          ? { ...c, chord }
-                          : c
-                      );
-                      updateSectionChords(selectedChordPosition.sectionId, updatedChords);
-                    }
-                  }
-                  // Clear selection after use
-                  setSelectedChordPosition(null);
-                  setSelectedChordForExploration(undefined);
-                }}
-                onApplyProgression={(chords) => {
-                  // Apply entire progression to first section with chords enabled
-                  if (sections.length > 0) {
-                    const targetSection = sections[0]; // Apply to first section
-                    const newChords = chords.map((chord, index) => ({
-                      position: index * 10, // Space them out
-                      chord
-                    }));
-                    updateSectionChords(targetSection.id, newChords);
-                  }
-                }}
-              />
-            </div>
+            {/* Chord Explorer & Progression Library - Collapsible */}
+            <Card className="p-6" id="chord-explorer">
+              <button
+                onClick={() => toggleSection('chords')}
+                className="w-full flex items-center justify-between mb-4"
+              >
+                <h3 className="font-semibold">Chord Explorer</h3>
+                <motion.div
+                  animate={{ rotate: expandedSections.has('chords') ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.div>
+              </button>
+              {expandedSections.has('chords') && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                >
+                  <ChordExplorer
+                    currentChord={selectedChordForExploration}
+                    songKey={song.key}
+                    onSelectChord={(chord) => {
+                      if (selectedChordPosition) {
+                        // Replace the selected chord
+                        const section = sections.find(s => s.id === selectedChordPosition.sectionId);
+                        if (section && section.chords) {
+                          const updatedChords = section.chords.map(c => 
+                            c.position === selectedChordPosition.position 
+                              ? { ...c, chord }
+                              : c
+                          );
+                          updateSectionChords(selectedChordPosition.sectionId, updatedChords);
+                        }
+                      }
+                      // Clear selection after use
+                      setSelectedChordPosition(null);
+                      setSelectedChordForExploration(undefined);
+                    }}
+                    onApplyProgression={(chords) => {
+                      // Apply entire progression to first section with chords enabled
+                      if (sections.length > 0) {
+                        const targetSection = sections[0]; // Apply to first section
+                        const newChords = chords.map((chord, index) => ({
+                          position: index * 10, // Space them out
+                          chord
+                        }));
+                        updateSectionChords(targetSection.id, newChords);
+                      }
+                    }}
+                  />
+                </motion.div>
+              )}
+            </Card>
 
-            {/* Quick Actions */}
+            {/* Quick Actions - Always visible */}
             <Card className="p-6">
               <h3 className="font-semibold mb-4">Quick Actions</h3>
               <div className="space-y-2">
