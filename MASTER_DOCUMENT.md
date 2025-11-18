@@ -1,15 +1,48 @@
 # 🎵 Rock N' Roll Basement Master Document — Truth Only
 
-**Last Updated:** 2025-11-18 @ Agent 35 - 7 Pages BADASS Redesigned  
-**Status:** 🔥 **LIVE IN PRODUCTION - BADASS DESIGN SYSTEM - DEPLOYING**
+**Last Updated:** 2025-11-18 @ Agent 36 - Deployment Pathway Fixed  
+**Status:** 🔴 **DEPLOYMENT BLOCKED - GitHub 500 Errors - Fix Ready to Push**
 **Production URL:** https://www.cronkwaters.com
-**Token Usage:** ~169k / 1,000,000 (16.9%) - ⚠️ **31k tokens to 200k PRICE DOUBLES**
+**Token Usage:** ~73k / 1,000,000 (7.3%) - ⚠️ **127k tokens to 200k PRICE DOUBLES**
 
 ---
 
 ## 🔄 HANDOFF FOR NEXT AGENT (START HERE - BRUTAL HONESTY)
 
-### **🎯 WHERE WE ARE NOW (Agent 35)**
+### **🎯 WHERE WE ARE NOW (Agent 36)**
+
+**🚨 CRITICAL DEPLOYMENT ISSUE DISCOVERED & FIXED (Local Only - Awaiting GitHub):**
+
+**ROOT CAUSE FOUND:**
+- Agent 35 created BADASS redesigns in `/apps/web/app` (monorepo)
+- BUT production was deploying from `/app` (old standalone app)
+- Result: Terms/Privacy pages 404, Auth page still OLD design
+- **Mycelial pathway was BROKEN** - two disconnected app directories!
+
+**FIXES APPLIED (Commits ready, GitHub down):**
+1. ✅ Copied Terms/Privacy pages to both `/app` and `/apps/web/app`
+2. ✅ Updated `vercel.json` to deploy from monorepo (`rootDirectory: "apps/web"`)
+3. ✅ Fixed build commands to use `pnpm turbo build --filter=@rnrb/web`
+4. 🔴 **BLOCKED:** Cannot push to GitHub (500 Internal Server Error - 4 attempts)
+5. 📦 **Local commit ready:** "Fix Vercel to deploy from monorepo apps/web with correct build commands"
+
+**WHAT NEEDS TO HAPPEN NEXT:**
+1. ⏳ Wait for GitHub to recover from outage
+2. 🚀 Push the local commit with vercel.json fix
+3. ✅ Vercel will auto-deploy with correct monorepo config
+4. 🧪 Run HUMAN TEST #26 to verify all pages work
+5. 📝 Update this document with success
+
+**BRUTAL HONESTY - Current Production Status (Human Test #25 @ ~2:40 PM):**
+- ✅ Homepage: Working
+- 🔴 /terms: 404 (waiting for deployment fix)
+- 🔴 /privacy: 404 (waiting for deployment fix)
+- 🔴 /auth: OLD design (waiting for deployment fix)
+- 🔴 All BADASS redesigns: NOT live yet
+
+---
+
+### **🎯 WHERE WE WERE (Agent 35 - Previous Session)**
 
 **✅ COMPLETED THIS SESSION:**
 1. ✅ **ADDED TERMS & PRIVACY PAGES** - Fixed auth flow 404 errors
