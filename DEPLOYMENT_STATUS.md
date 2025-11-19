@@ -1,38 +1,54 @@
-# 🚀 Deployment Status - Design Restoration
+# 🚀 Deployment Status - Custom Domain Cache Issue
 
-## Latest Deployment ✅
+## Latest Deployment 🔄
+
+**Date:** November 19, 2025  
+**Time:** ~5:45 PM CST  
+**Commit:** `6cb3963d` - Bust Vercel edge cache for cronkwaters.com custom domain
+**Status:** DEPLOYING → Cache invalidation for custom domain
+
+### Issue: Custom Domain Serving Stale Content (IN PROGRESS)
+
+**Problem:** 
+- Beautiful design works on `cronkwater.vercel.app` ✅
+- `cronkwaters.com` still serves old cached content with plain design ❌
+
+**Root Cause:**
+- Vercel's edge cache serving stale CSS to custom domain
+- CDN cached old version before UI package import was removed
+- `.vercel.app` URLs bypassed cache, custom domain did not
+
+**Solution Applied:**
+- ✅ Triggered new deployment to force cache invalidation
+- ✅ All CSS verified correct in build (animations, gradients, dark theme intact)
+- ⏳ Waiting for edge cache purge to propagate to `cronkwaters.com`
+
+**Verification:**
+- ✅ `https://cronkwater.vercel.app` - Design working perfectly
+- ⏳ `https://www.cronkwaters.com` - Waiting for cache purge (~1-2 minutes)
+
+---
+
+## Previous Deployment - Design Fix ✅
 
 **Date:** November 19, 2025  
 **Time:** ~5:37 PM CST  
 **Commit:** `c595cda0` - Remove conflicting UI package import restoring custom design
-**Status:** DEPLOYING → Restoring beautiful hero animations + custom design
+**Status:** DEPLOYED SUCCESSFULLY to Vercel
 
 ### Issue: Beautiful Design Lost (RESOLVED)
 
-**Problem:** Site reverted to plain, unstyled appearance - all beautiful animations, gradients, and custom styling gone
+**Problem:** Site reverted to plain, unstyled appearance - all animations, gradients, custom styling gone
 
 **Root Cause:**
-- `@cronkwaters/ui/styles.css` import in `globals.css` was **overriding** all custom design
-- UI package injected conflicting:
-  - Background gradients overriding dark theme
-  - Typography system replacing custom fonts
-  - Color tokens conflicting with `--accent`, `--bg`, `--text` variables
-  - Body styling with light theme defaults
+- `@cronkwaters/ui/styles.css` import was **overriding** all custom design
+- UI package injected conflicting light theme, typography, color tokens
 
-**Solution:**
+**Solution Implemented:**
 - ✅ Removed `@import '@cronkwaters/ui/styles.css';` from `apps/web/app/globals.css`
-- ✅ All custom design preserved: Hero animations, gradient orbs, floating music notes, gradient text
-- ✅ Dark theme variables restored
-- ✅ Custom button shine effects, logo glow, all animations intact
-
-**Expected After Deployment:**
-- ✅ Beautiful hero section with animated gradient text
-- ✅ Floating music notes animation
-- ✅ Gradient orbs moving in background
-- ✅ Logo with glow effect
-- ✅ Button shine effects on hover
-- ✅ Dark theme with tomato red accents
-- ✅ All modern UI preserved
+- ✅ All custom design preserved: Hero animations, gradient orbs, floating music notes
+- ✅ Dark theme variables restored (`--bg:#1e1e1e`, `--accent:#FF6347`)
+- ✅ CSS verified in build output with all animations intact
 
 ---
 
