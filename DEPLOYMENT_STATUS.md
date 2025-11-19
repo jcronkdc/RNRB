@@ -1,6 +1,39 @@
-# 🚀 Deployment Status - Dashboard Loading Fix (REVERTED)
+# 🚀 Deployment Status - SSL Certificate Fixed
 
 ## Latest Deployment ✅
+
+**Date:** November 19, 2025  
+**Time:** ~5:04 PM EST  
+**Commit:** `979d8a0d` - SSL certificate regenerated for www.cronkwaters.com
+**Deployment ID:** `dpl_4XsV4bL4aEe1Np5ayupwn1HSchaz`
+
+### Issue Resolved
+
+**Problem:** Can't establish secure connection - SSL_ERROR_SYSCALL on www.cronkwaters.com
+
+**Root Cause:**
+- SSL certificate for www subdomain wasn't fully provisioned
+- DNS was correct (CNAME → cname.vercel-dns.com)
+- Non-www (cronkwaters.com) worked, but www failed SSL handshake
+- Vercel base URL (cronkwater.vercel.app) worked fine
+
+**Solution:**
+- ✅ Triggered fresh production deployment via `vercel --prod`
+- ✅ Forced SSL certificate regeneration for all domain aliases
+- ✅ Let's Encrypt certificate now provisioned for www.cronkwaters.com
+- ✅ HTTPS connection now established successfully
+
+### Verification
+
+- ✅ **https://www.cronkwaters.com** → HTTP/2 200 OK
+- ✅ **https://cronkwaters.com** → 307 redirect to www (working)
+- ✅ **https://cronkwater.vercel.app** → 200 OK
+- ✅ SSL Certificate: Valid, served by Vercel
+- ✅ All domain aliases active
+
+---
+
+## Previous Deployment - Dashboard Loading Fix (REVERTED)
 
 **Date:** November 19, 2025  
 **Time:** ~3:00 PM  

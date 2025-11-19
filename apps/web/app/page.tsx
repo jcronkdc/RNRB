@@ -160,8 +160,8 @@ export default function HomePage() {
             <p className="section-subtitle">Tools built for real musicians</p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {/* Real-Time Collaboration */}
-            <div className="tile group">
+            {/* HD Video Calls - Links to Collaboration */}
+            <Link href="/features/collaboration" className="tile group hover:border-accent/30 transition-colors cursor-pointer">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                      style={{ background: 'rgba(255, 99, 71, 0.1)' }}>
@@ -172,13 +172,13 @@ export default function HomePage() {
                 <div>
                   <h3 className="mb-2 font-semibold">HD Video Calls</h3>
                   <p style={{ color: 'var(--muted)' }}>Crystal-clear video sessions powered by Daily.co for remote collaboration.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Up to 50 participants</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Up to 50 participants →</p>
                 </div>
               </div>
-            </div>
+            </Link>
             
-            {/* Screen Sharing */}
-            <div className="tile group">
+            {/* Screen Sharing - Links to Collaboration */}
+            <Link href="/features/collaboration" className="tile group hover:border-accent/30 transition-colors cursor-pointer">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                      style={{ background: 'rgba(59, 130, 246, 0.1)' }}>
@@ -189,13 +189,13 @@ export default function HomePage() {
                 <div>
                   <h3 className="mb-2 font-semibold">Screen Sharing</h3>
                   <p style={{ color: 'var(--muted)' }}>Share your DAW, lyrics, or any app in real-time during sessions.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Low latency streaming</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Low latency streaming →</p>
                 </div>
               </div>
-            </div>
+            </Link>
             
-            {/* Real-Time Chat */}
-            <div className="tile group">
+            {/* Instant Messaging - Links to Collaboration */}
+            <Link href="/features/collaboration" className="tile group hover:border-accent/30 transition-colors cursor-pointer">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                      style={{ background: 'rgba(139, 92, 246, 0.1)' }}>
@@ -206,13 +206,13 @@ export default function HomePage() {
                 <div>
                   <h3 className="mb-2 font-semibold">Instant Messaging</h3>
                   <p style={{ color: 'var(--muted)' }}>Real-time chat powered by Ably with read receipts and typing indicators.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>End-to-end encrypted</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>End-to-end encrypted →</p>
                 </div>
               </div>
-            </div>
+            </Link>
             
-            {/* AI Songwriting */}
-            <div className="tile group">
+            {/* AI Songwriting - Links to Songwriting */}
+            <Link href="/features/songwriting" className="tile group hover:border-accent/30 transition-colors cursor-pointer">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                      style={{ background: 'rgba(236, 72, 153, 0.1)' }}>
@@ -223,13 +223,13 @@ export default function HomePage() {
                 <div>
                   <h3 className="mb-2 font-semibold">AI Songwriting Studio</h3>
                   <p style={{ color: 'var(--muted)' }}>AI-powered chord progressions, lyrics suggestions, and melody ideas.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>GPT-4 powered</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>GPT-4 powered →</p>
                 </div>
               </div>
-            </div>
+            </Link>
             
-            {/* Project Management */}
-            <div className="tile group">
+            {/* Project Management - Links to Project Management */}
+            <Link href="/features/project-management" className="tile group hover:border-accent/30 transition-colors cursor-pointer">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                      style={{ background: 'rgba(34, 197, 94, 0.1)' }}>
@@ -240,13 +240,13 @@ export default function HomePage() {
                 <div>
                   <h3 className="mb-2 font-semibold">Smart Project Organization</h3>
                   <p style={{ color: 'var(--muted)' }}>Organize songs into albums, EPs, and manage versions effortlessly.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Version control included</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Version control included →</p>
                 </div>
               </div>
-            </div>
+            </Link>
             
-            {/* AI Music Generation */}
-            <div className="tile group">
+            {/* AI Music Generation - Links to AI Music */}
+            <Link href="/features/ai-music" className="tile group hover:border-accent/30 transition-colors cursor-pointer">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
                      style={{ background: 'rgba(251, 146, 60, 0.1)' }}>
@@ -257,10 +257,10 @@ export default function HomePage() {
                 <div>
                   <h3 className="mb-2 font-semibold">AI Music Generation <span className="text-xs font-normal text-yellow-400">BETA</span></h3>
                   <p style={{ color: 'var(--muted)' }}>Create full tracks with AI, then replace stems with your recordings.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Coming soon</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Coming soon →</p>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
           <div className="text-center mt-8">
             <Link href="#labs" className="button secondary">Discover RNR Labs →</Link>
