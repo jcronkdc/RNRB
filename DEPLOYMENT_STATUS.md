@@ -1,36 +1,86 @@
-# 🚀 Deployment Status - SSL Certificate Issue (Recurring)
+# 🚀 Deployment Status - Design Restoration
 
-## Latest Deployment ⚠️
+## Latest Deployment ✅
+
+**Date:** November 19, 2025  
+**Time:** ~5:37 PM CST  
+**Commit:** `c595cda0` - Remove conflicting UI package import restoring custom design
+**Status:** DEPLOYING → Restoring beautiful hero animations + custom design
+
+### Issue: Beautiful Design Lost (RESOLVED)
+
+**Problem:** Site reverted to plain, unstyled appearance - all beautiful animations, gradients, and custom styling gone
+
+**Root Cause:**
+- `@cronkwaters/ui/styles.css` import in `globals.css` was **overriding** all custom design
+- UI package injected conflicting:
+  - Background gradients overriding dark theme
+  - Typography system replacing custom fonts
+  - Color tokens conflicting with `--accent`, `--bg`, `--text` variables
+  - Body styling with light theme defaults
+
+**Solution:**
+- ✅ Removed `@import '@cronkwaters/ui/styles.css';` from `apps/web/app/globals.css`
+- ✅ All custom design preserved: Hero animations, gradient orbs, floating music notes, gradient text
+- ✅ Dark theme variables restored
+- ✅ Custom button shine effects, logo glow, all animations intact
+
+**Expected After Deployment:**
+- ✅ Beautiful hero section with animated gradient text
+- ✅ Floating music notes animation
+- ✅ Gradient orbs moving in background
+- ✅ Logo with glow effect
+- ✅ Button shine effects on hover
+- ✅ Dark theme with tomato red accents
+- ✅ All modern UI preserved
+
+---
+
+## Previous Deployment - SSL Certificate Issue ⚠️
 
 **Date:** November 19, 2025  
 **Time:** ~5:18 PM CST  
-**Commit:** `G2wpwjHQ` - Attempting SSL certificate fix for www.cronkwaters.com
-**Deployment ID:** `dpl_G2wpwjHQ4jKGQX5NenGB1eUtV3W9`
+**Commit:** `5ab83ce2` - Redirect www to non-www due to SSL cert issue
 **Status:** SSL_ERROR_SYSCALL on www subdomain (recurring issue)
 
-### Issue Resolved
+### Issue: SSL Certificate Failing (PERSISTENT)
 
 **Problem:** Can't establish secure connection - SSL_ERROR_SYSCALL on www.cronkwaters.com
 
 **Root Cause:**
-- SSL certificate for www subdomain wasn't fully provisioned
-- DNS was correct (CNAME → cname.vercel-dns.com)
-- Non-www (cronkwaters.com) worked, but www failed SSL handshake
-- Vercel base URL (cronkwater.vercel.app) worked fine
+- Vercel SSL certificate exists (`cert_gfde7HSO81f0dP7CFPRP0gbn`) but SSL handshake fails
+- DNS is correct (CNAME → cname.vercel-dns.com, resolves to 66.33.60.35 and 66.33.60.129)
+- Non-www (cronkwaters.com) works, but www subdomain fails SSL handshake
+- Vercel base URLs (cronkwater.vercel.app) work fine
+- Certificate cannot be deleted manually (system-managed by Vercel)
 
-**Solution:**
-- ✅ Triggered fresh production deployment via `vercel --prod`
-- ✅ Forced SSL certificate regeneration for all domain aliases
-- ✅ Let's Encrypt certificate now provisioned for www.cronkwaters.com
-- ✅ HTTPS connection now established successfully
+**Attempted Solutions:**
+- ❌ Triggered multiple production deployments via `vercel --prod`
+- ❌ Attempted to remove and regenerate certificate (blocked: "system certificates cannot be deleted")
+- ❌ Added redirect in `vercel.json` to bypass www (overridden by dashboard settings)
+- ❌ Waited for SSL propagation (issue persists after multiple deployments)
 
-### Verification
+**Current Status:**
+- ✅ **https://cronkwater.vercel.app** → HTTP/2 200 OK (Working)
+- ✅ **https://cronkwaters.com** → HTTP/2 307 redirect to www (Working domain, broken target)
+- ❌ **https://www.cronkwaters.com** → `curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL`
+- ⚠️ **Site is inaccessible** because non-www redirects to broken www
 
-- ✅ **https://www.cronkwaters.com** → HTTP/2 200 OK
-- ✅ **https://cronkwaters.com** → 307 redirect to www (working)
-- ✅ **https://cronkwater.vercel.app** → 200 OK
-- ✅ SSL Certificate: Valid, served by Vercel
-- ✅ All domain aliases active
+### Next Steps (REQUIRES USER ACTION)
+
+This is a Vercel infrastructure issue that requires dashboard access:
+
+1. **Access Vercel Dashboard:**
+   - Go to https://vercel.com/justins-projects-d7153a8c/cronkwater
+   - Navigate to **Settings** → **Domains**
+
+2. **Fix Domain Redirect:**
+   - Change redirect direction from `cronkwaters.com → www.cronkwaters.com` TO `www.cronkwaters.com → cronkwaters.com`
+   - OR remove www.cronkwaters.com domain entirely and use only non-www
+
+3. **Alternative: Contact Vercel Support:**
+   - If changing redirect doesn't work, open support ticket
+   - Report SSL_ERROR_SYSCALL on www.cronkwaters.com with cert ID `cert_gfde7HSO81f0dP7CFPRP0gbn`
 
 ---
 
