@@ -1,287 +1,522 @@
-'use client';
-
 import Link from 'next/link';
-import { 
-  Guitar, Piano, Drum, Headphones, Radio, Music,
-  Check, ArrowRight, Sparkles, HeartHandshake, 
-  Users, AudioLines, Lock, Rocket, Cpu, CloudLightning
-} from 'lucide-react';
 
 export default function HomePage() {
   return (
-    <div className="rnrb-venue min-h-screen overflow-hidden">
-      {/* Background Effects */}
-      <div className="fixed inset-0 -z-10">
-        <div className="rnrb-stage-light absolute inset-0" />
-        <div className="absolute top-1/4 -left-20 opacity-10">
-          <div className="rnrb-vinyl" style={{ transform: 'scale(4) rotate(15deg)' }} />
-        </div>
-        <div className="absolute top-3/4 -right-20 opacity-10">
-          <div className="rnrb-vinyl" style={{ transform: 'scale(5) rotate(-45deg)' }} />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-rnrb-smoke-haze/20 via-transparent to-transparent" />
-      </div>
-
+    <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {/* Hero Section */}
-      <section className="relative z-10 px-6 pt-32 pb-20 max-w-7xl mx-auto">
-        <div className="text-center">
-          {/* Icons */}
-          <div className="flex items-center justify-center gap-6 mb-8">
-            {[Piano, Guitar, Drum, Headphones, Radio].map((Icon, i) => (
-              <div key={i} className="relative">
-                <div>
-                  <Icon className="w-8 h-8 text-muted-foreground" aria-hidden="true" />
-                </div>
+      <section className="page-section relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 opacity-30">
+          {/* Floating music notes */}
+          <div className="music-notes-container">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="music-note"
+                style={{
+                  left: `${15 + i * 15}%`,
+                  animationDelay: `${i * 0.5}s`,
+                  fontSize: `${20 + Math.random() * 20}px`
+                }}
+              >
+                ♪
               </div>
             ))}
           </div>
-
-          <h1 className="text-6xl md:text-8xl font-bold mb-6">
-            <span className="bg-gradient-to-br from-brand-primary to-accent bg-clip-text text-transparent">
-              Where Musicians
-            </span>
-            <br />
-            <span className="text-foreground">Build Their Future</span>
-          </h1>
-
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed">
-            The creative sanctuary for artists who dare to dream. Build, collaborate, and share your sound with the world.
-          </p>
-
-          <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Link
-              href="/auth"
-              className="rnrb-btn rnrb-btn-primary text-lg px-8 py-4"
-            >
-              <span className="flex items-center gap-2">
-                Get Started Free
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </Link>
-            <a
-              href="#features"
-              className="rnrb-btn rnrb-btn-secondary text-lg px-8 py-4"
-            >
-              <span className="flex items-center gap-2">
-                Explore Features
-                <Sparkles className="w-5 h-5" />
-              </span>
-            </a>
+          
+          {/* Animated gradient orbs */}
+          <div className="absolute inset-0">
+            <div className="gradient-orb gradient-orb-1"></div>
+            <div className="gradient-orb gradient-orb-2"></div>
+            <div className="gradient-orb gradient-orb-3"></div>
           </div>
+        </div>
 
-          <div className="mt-8 flex items-center justify-center gap-2 text-sm">
-            <div className="flex items-center gap-2 px-4 py-2 bg-surface/80 backdrop-blur border border-brand-primary/20 rounded-full">
-              <Lock className="w-4 h-4 text-brand-primary" />
-              <span className="text-muted-foreground">Secure platform</span>
-              <span className="text-muted-foreground">•</span>
-              <span className="text-brand-primary font-medium">Free tier available</span>
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Prominent Logo */}
+            <div className="logo-hero-wrapper mb-8">
+              <img 
+                src="/logo-dark.png" 
+                alt="Rock N' Roll Basement" 
+                className="logo-hero mx-auto"
+              />
+              <div className="logo-hero-glow"></div>
+            </div>
+            
+            {/* Animated Title */}
+            <h1 className="hero-title relative inline-block" data-immutable="true">
+              <span className="hero-text-gradient">Rock N' Roll Basement</span>
+              <div className="hero-underline"></div>
+              
+              {/* Glow effect */}
+              <div className="absolute inset-0 hero-glow"></div>
+            </h1>
+            
+            {/* Animated Description */}
+            <div className="hero-description-wrapper">
+              <p className="hero-description text-xl mb-8" data-immutable="true">
+                Whether you're a songwriter needing better tools, new to the business and finding gigs, discovering your roots in gospel or Appalachian folk, inventing country metal, or following Dylan's path to say what you need to say. This is where your music finds its voice. Collaborate with artists worldwide in ways rarely seen before.
+              </p>
+              
+              {/* Subtle highlight effect */}
+              <div className="hero-highlight-words">
+                <span className="highlight-word" style={{ animationDelay: '2s' }}>songwriter</span>
+                <span className="highlight-word" style={{ animationDelay: '2.5s' }}>gospel</span>
+                <span className="highlight-word" style={{ animationDelay: '3s' }}>Dylan</span>
+                <span className="highlight-word" style={{ animationDelay: '3.5s' }}>voice</span>
+                <span className="highlight-word" style={{ animationDelay: '4s' }}>worldwide</span>
+              </div>
+            </div>
+            
+            {/* Animated Buttons */}
+            <div className="flex items-center justify-center gap-4 hero-buttons">
+              <Link href="/auth?signup=true" className="button hero-button-primary">
+                <span>Start Free</span>
+                <div className="button-shine"></div>
+              </Link>
+              <Link href="#why" className="button secondary hero-button-secondary">
+                <span>See Why</span>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="relative z-10 px-6 py-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 p-8 bg-surface/50 backdrop-blur border border-border/50 rounded-3xl">
-            {[
-              { icon: Users, number: 'Join First', label: 'Artists Creating' },
-              { icon: AudioLines, number: 'Be Pioneer', label: 'Songs Crafted' },
-              { icon: Radio, number: '100+', label: 'Cities Ready' },
-              { icon: Sparkles, number: '∞', label: 'Dreams Supported' }
-            ].map((stat, i) => (
-              <div key={i} className="text-center group">
-                <div>
-                  <stat.icon className="w-10 h-10 mx-auto mb-3 text-brand-primary group-hover:text-brand-secondary transition-colors" />
-                </div>
-                <div className="text-2xl font-bold bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent">
-                  {stat.number}
-                </div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+      {/* Who It's For */}
+      <section id="who" className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Who It's For</h2>
+            <p className="section-subtitle">Built for creators at every stage</p>
           </div>
-        </div>
-      </section>
-
-      {/* Who It's For Section */}
-      <section className="relative z-10 px-6 py-24 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Who It's For</h2>
-          <p className="text-xl text-muted-foreground">Built for creators at every stage</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { title: 'Songwriters', items: ['Track versions and ideas', 'Collaborate in real-time', 'Protect your work'] },
-            { title: 'Bands & Producers', items: ['Manage sessions remotely', 'Share stems and mixes', 'Coordinate schedules'] },
-            { title: 'Emerging Artists', items: ['Find collaborators', 'Book and plan tours', 'Build your catalog'] }
-          ].map((category, i) => (
-            <div key={i} className="rnrb-card p-6">
-              <h3 className="text-xl font-bold mb-4">{category.title}</h3>
-              <ul className="space-y-2">
-                {category.items.map((item, j) => (
-                  <li key={j} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Check className="w-4 h-4 text-brand-primary mt-0.5 flex-shrink-0" />
-                    <span>• {item}</span>
-                  </li>
-                ))}
+          <div className="feature-grid">
+            <div className="card">
+              <h3>Songwriters</h3>
+              <ul className="mt-4 space-y-2" style={{ color: 'var(--muted)' }}>
+                <li>• Track versions and ideas</li>
+                <li>• Collaborate in real-time</li>
+                <li>• Protect your work</li>
               </ul>
             </div>
-          ))}
+            <div className="card">
+              <h3>Bands & Producers</h3>
+              <ul className="mt-4 space-y-2" style={{ color: 'var(--muted)' }}>
+                <li>• Manage sessions remotely</li>
+                <li>• Share stems and mixes</li>
+                <li>• Coordinate schedules</li>
+              </ul>
+            </div>
+            <div className="card">
+              <h3>Emerging Artists</h3>
+              <ul className="mt-4 space-y-2" style={{ color: 'var(--muted)' }}>
+                <li>• Find collaborators</li>
+                <li>• Book and plan tours</li>
+                <li>• Build your catalog</li>
+              </ul>
+            </div>
+          </div>
+          <div className="text-center mt-8">
+            <Link href="#how" className="button secondary">See How It Works →</Link>
+          </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="relative z-10 px-6 py-24 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">How It Works</h2>
-          <p className="text-xl text-muted-foreground">Three steps to better music creation</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { step: '1', title: 'Create', desc: 'Start projects, upload tracks, organize your work in one secure space.' },
-            { step: '2', title: 'Collaborate', desc: 'Invite bandmates, work in real-time, share feedback instantly.' },
-            { step: '3', title: 'Share', desc: 'Export finished tracks, manage rights, distribute your music.' }
-          ].map((step, i) => (
-            <div key={i} className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4">
-                {step.step}
-              </div>
-              <h3 className="text-2xl font-bold mb-2">{step.title}</h3>
-              <p className="text-muted-foreground">{step.desc}</p>
+      <section id="how" className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">How It Works</h2>
+            <p className="section-subtitle">Three steps to better music creation</p>
+          </div>
+          <div className="feature-grid">
+            <div className="text-center">
+              <div className="text-5xl mb-4" style={{ color: 'var(--accent)' }}>1</div>
+              <h3>Create</h3>
+              <p style={{ color: 'var(--muted)' }}>Start projects, upload tracks, organize your work in one secure space.</p>
             </div>
-          ))}
+            <div className="text-center">
+              <div className="text-5xl mb-4" style={{ color: 'var(--accent)' }}>2</div>
+              <h3>Collaborate</h3>
+              <p style={{ color: 'var(--muted)' }}>Invite bandmates, work in real-time, share feedback instantly.</p>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl mb-4" style={{ color: 'var(--accent)' }}>3</div>
+              <h3>Share</h3>
+              <p style={{ color: 'var(--muted)' }}>Export finished tracks, manage rights, distribute your music.</p>
+            </div>
+          </div>
+          <div className="text-center mt-8">
+            <Link href="#features" className="button secondary">Explore Features →</Link>
+          </div>
         </div>
       </section>
 
       {/* Feature Highlights */}
-      <section id="features" className="relative z-10 px-6 py-24 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Feature Highlights</h2>
-          <p className="text-xl text-muted-foreground">Tools built for real musicians</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            { title: 'HD Video Calls', desc: 'Crystal-clear video sessions powered by Daily.co for remote collaboration.', badge: 'Up to 50 participants' },
-            { title: 'Screen Sharing', desc: 'Share your DAW, lyrics, or any app in real-time during sessions.', badge: 'Low latency streaming' },
-            { title: 'Instant Messaging', desc: 'Real-time chat powered by Ably with read receipts and typing indicators.', badge: 'End-to-end encrypted' },
-            { title: 'AI Songwriting Studio', desc: 'AI-powered chord progressions, lyrics suggestions, and melody ideas.', badge: 'GPT-4 powered' },
-            { title: 'Smart Project Organization', desc: 'Organize songs into albums, EPs, and manage versions effortlessly.', badge: 'Version control included' },
-            { title: 'AI Music Generation BETA', desc: 'Create full tracks with AI, then replace stems with your recordings.', badge: 'Coming soon' }
-          ].map((feature, i) => (
-            <div key={i} className="rnrb-card p-6">
-              <h3 className="text-lg font-bold mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{feature.desc}</p>
-              <span className="text-xs px-3 py-1 rounded-full font-medium bg-brand-primary/20 text-brand-primary">
-                {feature.badge}
-              </span>
+      <section id="features" className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Feature Highlights</h2>
+            <p className="section-subtitle">Tools built for real musicians</p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* Real-Time Collaboration */}
+            <div className="tile group">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                     style={{ background: 'rgba(255, 99, 71, 0.1)' }}>
+                  <svg className="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="mb-2 font-semibold">HD Video Calls</h3>
+                  <p style={{ color: 'var(--muted)' }}>Crystal-clear video sessions powered by Daily.co for remote collaboration.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Up to 50 participants</p>
+                </div>
+              </div>
             </div>
-          ))}
+            
+            {/* Screen Sharing */}
+            <div className="tile group">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                     style={{ background: 'rgba(59, 130, 246, 0.1)' }}>
+                  <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="mb-2 font-semibold">Screen Sharing</h3>
+                  <p style={{ color: 'var(--muted)' }}>Share your DAW, lyrics, or any app in real-time during sessions.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Low latency streaming</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Real-Time Chat */}
+            <div className="tile group">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                     style={{ background: 'rgba(139, 92, 246, 0.1)' }}>
+                  <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="mb-2 font-semibold">Instant Messaging</h3>
+                  <p style={{ color: 'var(--muted)' }}>Real-time chat powered by Ably with read receipts and typing indicators.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>End-to-end encrypted</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* AI Songwriting */}
+            <div className="tile group">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                     style={{ background: 'rgba(236, 72, 153, 0.1)' }}>
+                  <svg className="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="mb-2 font-semibold">AI Songwriting Studio</h3>
+                  <p style={{ color: 'var(--muted)' }}>AI-powered chord progressions, lyrics suggestions, and melody ideas.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>GPT-4 powered</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Project Management */}
+            <div className="tile group">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                     style={{ background: 'rgba(34, 197, 94, 0.1)' }}>
+                  <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="mb-2 font-semibold">Smart Project Organization</h3>
+                  <p style={{ color: 'var(--muted)' }}>Organize songs into albums, EPs, and manage versions effortlessly.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Version control included</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* AI Music Generation */}
+            <div className="tile group">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                     style={{ background: 'rgba(251, 146, 60, 0.1)' }}>
+                  <svg className="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="mb-2 font-semibold">AI Music Generation <span className="text-xs font-normal text-yellow-400">BETA</span></h3>
+                  <p style={{ color: 'var(--muted)' }}>Create full tracks with AI, then replace stems with your recordings.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Coming soon</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="text-center mt-8">
+            <Link href="#labs" className="button secondary">Discover RNR Labs →</Link>
+          </div>
         </div>
       </section>
 
-      {/* Powered by Innovation */}
-      <section className="relative z-10 px-6 py-24">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Powered by Innovation</h2>
-            <p className="text-xl text-muted-foreground">Enterprise-grade technology meets artistic creativity</p>
+      {/* RNR Basement Labs */}
+      <section id="labs" className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">RNR Basement Labs</h2>
+            <p className="section-subtitle">Shape the future of music tools</p>
           </div>
+          <div className="card max-w-2xl mx-auto text-center">
+            <p className="mb-6">Join early access to experimental features and help us build what musicians actually need.</p>
+            <Link href="/labs" className="button">Join Labs</Link>
+          </div>
+          <div className="text-center mt-8">
+            <Link href="#social" className="button secondary">See Who's Using It →</Link>
+          </div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { icon: CloudLightning, title: 'Lightning Fast', desc: 'Edge computing for instant response' },
-              { icon: Lock, title: 'Fort Knox Security', desc: 'Your art, protected 24/7' },
-              { icon: Rocket, title: 'Infinite Scale', desc: 'Grow without limits' },
-              { icon: Cpu, title: 'AI-Powered', desc: 'Smart tools that understand you' }
-            ].map((tech, i) => (
-              <div key={i} className="text-center group">
-                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 flex items-center justify-center group-hover:from-brand-primary/20 group-hover:to-brand-secondary/20 transition-all">
-                  <tech.icon className="w-10 h-10 text-brand-primary" />
-                </div>
-                <h3 className="font-bold mb-2">{tech.title}</h3>
-                <p className="text-sm text-muted-foreground">{tech.desc}</p>
-              </div>
-            ))}
+      {/* Social Proof */}
+      <section id="social" className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Trusted by Musicians</h2>
+          </div>
+          <div className="feature-grid">
+            <div className="card text-center">
+              <p style={{ color: 'var(--muted)' }}>[PLACEHOLDER – QUOTE]</p>
+            </div>
+            <div className="card text-center">
+              <p style={{ color: 'var(--muted)' }}>[PLACEHOLDER – QUOTE]</p>
+            </div>
+            <div className="card text-center">
+              <p style={{ color: 'var(--muted)' }}>[PLACEHOLDER – QUOTE]</p>
+            </div>
+          </div>
+          <div className="text-center mt-8">
+            <Link href="#pricing" className="button secondary">View Pricing →</Link>
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section className="relative z-10 px-6 py-24 bg-gradient-to-br from-surface to-background">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-primary/10 via-brand-secondary/10 to-purple-600/10 p-16 border border-brand-primary/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-brand-secondary/5" />
-            <div className="relative z-10">
-              <h2 className="text-5xl font-bold text-foreground mb-6">Start Free, Grow at Your Pace</h2>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Begin your journey with our Explorer tier. Upgrade when you're ready to unlock advanced features and AI credits.
-              </p>
-              <div className="flex items-center justify-center gap-4 flex-wrap">
-                <Link
-                  href="/membership"
-                  className="px-8 py-4 bg-white dark:bg-background text-brand-primary border-2 border-brand-primary rounded-2xl font-semibold hover:shadow-xl transition-all"
-                >
-                  View All Plans
-                </Link>
-                <Link
-                  href="/auth"
-                  className="px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-2xl font-semibold hover:shadow-xl transition-all"
-                >
-                  Start Free
-                </Link>
+      <section id="pricing" className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Simple Pricing</h2>
+            <p className="section-subtitle">Start free, upgrade when you're ready</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {/* Free Plan */}
+            <div className="card text-center">
+              <h3 className="text-xl font-semibold mb-2">Free</h3>
+              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>Perfect for getting started</p>
+              <div className="text-4xl font-bold mb-1">$0</div>
+              <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>forever</p>
+              <ul className="text-left space-y-2 mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>3 active projects</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Basic collaboration tools</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>5GB cloud storage</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Real-time chat</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Basic songwriting tools</span>
+                </li>
+              </ul>
+              <Link href="/auth?signup=true" className="button secondary w-full">Get Started</Link>
+            </div>
+            
+            {/* Songwriter Plan */}
+            <div className="card text-center">
+              <h3 className="text-xl font-semibold mb-2">Songwriter</h3>
+              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>For solo artists</p>
+              <div className="text-4xl font-bold mb-1">$9</div>
+              <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>per month</p>
+              <ul className="text-left space-y-2 mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>10 active projects</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>AI-powered songwriting</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>25GB storage</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Chord progression AI</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Lyrics assistant</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Export to PDF/MIDI</span>
+                </li>
+              </ul>
+              <Link href="/auth?signup=true&plan=songwriter" className="button secondary w-full">Start Free Trial</Link>
+            </div>
+            
+            {/* Band Plan - Most Popular */}
+            <div className="card text-center relative border-2" style={{ borderColor: 'var(--accent)' }}>
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-3 py-1 text-xs font-semibold rounded-full"
+                   style={{ background: 'var(--accent)', color: 'white' }}>
+                MOST POPULAR
               </div>
+              <h3 className="text-xl font-semibold mb-2">Band</h3>
+              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>For groups & collaboration</p>
+              <div className="text-4xl font-bold mb-1">$29</div>
+              <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>per month</p>
+              <ul className="text-left space-y-2 mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Unlimited projects</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Real-time video calls</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Screen sharing</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>100GB storage</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>5 team members</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>AI music generation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Priority support</span>
+                </li>
+              </ul>
+              <Link href="/auth?signup=true&plan=band" className="button w-full">Start Free Trial</Link>
+            </div>
+            
+            {/* Studio Plan */}
+            <div className="card text-center">
+              <h3 className="text-xl font-semibold mb-2">Studio</h3>
+              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>For professionals</p>
+              <div className="text-4xl font-bold mb-1">$99</div>
+              <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>per month</p>
+              <ul className="text-left space-y-2 mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Everything in Band</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>1TB storage</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Unlimited team members</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Advanced analytics</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Custom integrations</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>White-glove support</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>SLA guarantee</span>
+                </li>
+              </ul>
+              <Link href="/contact?plan=studio" className="button secondary w-full">Contact Sales</Link>
+            </div>
+          </div>
+          <div className="text-center mt-8">
+            <Link href="#faq" className="button secondary">Common Questions →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Frequently Asked Questions</h2>
+          </div>
+          <div className="max-w-3xl mx-auto">
+            <div className="faq-item">
+              <h3 className="faq-question">Who owns my music?</h3>
+              <p className="faq-answer">You do. Always. We never claim any rights to your work.</p>
+            </div>
+            <div className="faq-item">
+              <h3 className="faq-question">Is my data private?</h3>
+              <p className="faq-answer">Yes. End-to-end encryption for all your projects and communications.</p>
+            </div>
+            <div className="faq-item">
+              <h3 className="faq-question">Can I export my work?</h3>
+              <p className="faq-answer">Export anytime in standard formats. Your music, your choice.</p>
+            </div>
+            <div className="faq-item">
+              <h3 className="faq-question">How does collaboration work?</h3>
+              <p className="faq-answer">Invite by email, set permissions, work together in real-time.</p>
+            </div>
+            <div className="faq-item">
+              <h3 className="faq-question">What about offline work?</h3>
+              <p className="faq-answer">[PLACEHOLDER – CONTENT NEEDED]</p>
+            </div>
+            <div className="faq-item">
+              <h3 className="faq-question">Do you offer education discounts?</h3>
+              <p className="faq-answer">[PLACEHOLDER – CONTENT NEEDED]</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="relative z-10 px-6 py-32 max-w-7xl mx-auto">
-        <div className="text-center">
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
-            Your Music Deserves
-            <br />
-            <span className="bg-gradient-to-r from-brand-primary via-purple-500 to-brand-secondary bg-clip-text text-transparent">
-              A Stage This Grand
-            </span>
-          </h2>
-          <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Join the revolution. Be part of something bigger than music.
-          </p>
-          <div>
-            <Link
-              href="/auth"
-              className="inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-brand-primary to-brand-secondary text-white rounded-3xl font-bold text-xl shadow-2xl shadow-brand-primary/30 hover:shadow-brand-primary/50 transition-all"
-            >
-              <Sparkles className="w-6 h-6" />
-              Begin Your Journey
-              <ArrowRight className="w-6 h-6" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="relative z-10 px-6 py-12 border-t border-border/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <AudioLines className="w-8 h-8 text-brand-primary" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-              Rock N' Roll Basement
-            </span>
-          </div>
-          <div className="text-center text-sm text-muted-foreground">
-            <p className="mb-4">© 2024 Rock N' Roll Basement. Crafted with ❤️ for the creative souls.</p>
-            <div className="flex items-center justify-center gap-6">
-              <Link href="/privacy" className="hover:text-brand-primary transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-brand-primary transition-colors">Terms</Link>
-              <Link href="/why" className="hover:text-brand-primary transition-colors">Why</Link>
-              <Link href="/vision" className="hover:text-brand-primary transition-colors">Our Vision</Link>
-              <Link href="/community" className="hover:text-brand-primary transition-colors">Community</Link>
+      <footer style={{ borderTop: '1px solid var(--border)', padding: 'var(--space-6) 0' }}>
+        <div className="container">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-sm" style={{ color: 'var(--muted)' }}>
+              © 2024 Rock N' Roll Basement. All rights reserved.
+            </div>
+            <div className="flex gap-6 text-sm">
+              <Link href="/about" className="nav-link">About</Link>
+              <Link href="/terms" className="nav-link">Terms</Link>
+              <Link href="/privacy" className="nav-link">Privacy</Link>
+              <Link href="/contact" className="nav-link">Contact</Link>
             </div>
           </div>
         </div>
