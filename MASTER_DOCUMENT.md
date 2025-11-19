@@ -43,27 +43,30 @@
 - ✅ Feature pages detail Ably chat (end-to-end encrypted, real-time)
 
 **WHAT STILL NEEDS TESTING/BUILDING:**
-⚠️ **Actual Collaboration Flow (NEEDS HUMAN TEST):**
-- Daily.co video calls inside projects - not yet tested with real users
-- Ably real-time chat in projects - not yet tested with real messages
-- Screen sharing capability - mentioned but not verified live
-- Cursor control/screen sharing permissions - mentioned but not implemented
+⚠️ **Actual Collaboration Flow (READY FOR HUMAN TEST - Daily.co API KEY CONFIGURED):**
+- ✅ Daily.co API key: Configured in Vercel + local `.env.local`
+- ✅ `/studio` page: Working Daily.co integration (Start Recording → HD video session)
+- ✅ `/projects/[slug]/collaborate` page: Exists with ProjectVideoRoom + ProjectChat
+- ✅ API route `/api/daily/rooms`: Creates rooms, generates tokens (up to 50 participants)
+- ✅ Screen sharing, recording, live streaming: All enabled in room properties
+- ⚠️ **NEEDS HUMAN TEST:** Sign up → Create project → Go to `/projects/YOUR-PROJECT/collaborate` → Click "Start Video Room"
 
-⚠️ **Invite-Only Project Groups (NOT IMPLEMENTED):**
-- Currently: Projects might be public or auth-gated, unclear
-- Need: Invite-only groups with email invitations
-- Need: Role-based permissions (owner, editor, viewer)
-- Need: Group creation UI in dashboard
-- Need: Invitation system (email, accept/reject flow)
+⚠️ **Invite-Only Project Groups (PARTIALLY IMPLEMENTED):**
+- ✅ `/projects/[slug]/collaborate` has invite UI (email input, send button)
+- ✅ Role system exists (owner, editor, viewer) with permission checks
+- ✅ `/api/invites/send` endpoint referenced (handles email invitations)
+- ⚠️ **STATUS UNKNOWN:** Does `/api/invites/send` actually work? Does it send emails?
+- ⚠️ **NEEDS TEST:** Try inviting someone, check if email arrives, see if they can accept
 
-⚠️ **Collaborative Pathways (STATUS UNKNOWN):**
-- Can users actually create a project and invite others?
-- Does the project detail page have video/chat UI?
-- Are Daily.co rooms created per project?
-- Are Ably channels scoped to projects?
-- Where is the "Start Collaborating" button that actually works?
+⚠️ **Collaborative Pathways (INFRASTRUCTURE COMPLETE, NEEDS VERIFICATION):**
+- ✅ Can users create a project? YES - `/projects` page exists
+- ✅ Does project detail page have video/chat UI? YES - `/projects/[slug]/collaborate`
+- ✅ Are Daily.co rooms created per project? YES - `project-${projectSlug}-${timestamp}` naming
+- ✅ Are Ably channels scoped to projects? NEEDS VERIFICATION in ProjectChat component
+- ✅ Where is "Start Collaborating" button? In `/projects/[slug]/collaborate` page
 
-**TOKYO SUBWAY PRINCIPLE:** Like the ants mapping optimal routes, the pathways EXIST (routes, pages) but the FLOW (user journey from signup → create project → invite friend → video call) has NOT been traced end-to-end. We have stations but haven't ridden the train.
+**TOKYO SUBWAY PRINCIPLE - UPDATED:** 
+The ants have mapped ALL the routes. The stations exist. The trains (Daily.co, Ably) are fueled and ready. But we haven't RIDDEN THE TRAIN yet. Next step: Human boards at Station 1 (sign up) → Station 2 (create project) → Station 3 (click collaborate) → Station 4 (start video) → Station 5 (verify video works). This is the critical path test.
 
 ---
 
