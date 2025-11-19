@@ -10,10 +10,10 @@ export default function PricingPage() {
             <p className="section-subtitle">Start free, upgrade when you're ready</p>
         </div>
         
-          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
+          <div className="feature-grid max-w-5xl mx-auto">
             <div className="card text-center">
               <h3 className="text-2xl font-semibold mb-2">Free</h3>
-              <p className="mb-4" style={{ color: 'var(--muted)' }}>Perfect for getting started</p>
+              <p className="mb-6" style={{ color: 'var(--muted)' }}>Perfect for getting started</p>
               <div className="text-4xl font-bold mb-6">$0</div>
               <ul className="text-left space-y-3 mb-8" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
@@ -22,7 +22,7 @@ export default function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Basic collaboration</span>
+                  <span>Basic collaboration tools</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
@@ -30,40 +30,11 @@ export default function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>10 AI credits/mo</span>
+                  <span>Community support</span>
                 </li>
               </ul>
               <Link href="/auth?signup=true" className="button secondary w-full">
                 Start Free
-              </Link>
-            </div>
-            
-            <div className="card text-center">
-              <h3 className="text-2xl font-semibold mb-2">Songwriter</h3>
-              <p className="mb-4" style={{ color: 'var(--muted)' }}>For solo artists</p>
-              <div className="text-4xl font-bold mb-6">
-                $9<span className="text-base font-normal">/mo</span>
-              </div>
-              <ul className="text-left space-y-3 mb-8" style={{ color: 'var(--text)' }}>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>10 active projects</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>AI songwriting tools</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>25GB storage</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>100 AI credits/mo</span>
-                </li>
-              </ul>
-              <Link href="/auth?signup=true&plan=songwriter" className="button secondary w-full">
-                Start Free Trial
               </Link>
             </div>
             
@@ -83,10 +54,10 @@ export default function PricingPage() {
               >
                 MOST POPULAR
               </div>
-              <h3 className="text-2xl font-semibold mb-2">Band</h3>
-              <p className="mb-4" style={{ color: 'var(--muted)' }}>For groups</p>
+              <h3 className="text-2xl font-semibold mb-2">Professional</h3>
+              <p className="mb-6" style={{ color: 'var(--muted)' }}>For serious musicians</p>
               <div className="text-4xl font-bold mb-6">
-                $29<span className="text-base font-normal">/mo</span>
+                $19<span className="text-base font-normal">/month</span>
               </div>
               <ul className="text-left space-y-3 mb-8" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
@@ -95,7 +66,7 @@ export default function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Video calls & sharing</span>
+                  <span>Advanced collaboration</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
@@ -103,28 +74,32 @@ export default function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>500 AI credits/mo</span>
+                  <span>Real-time video sessions</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>Priority support</span>
                 </li>
               </ul>
-              <Link href="/auth?signup=true&plan=band" className="button w-full">
+              <Link href="/auth?signup=true" className="button w-full">
                 Start Free Trial
-              </Link>
+                </Link>
             </div>
             
             <div className="card text-center">
-              <h3 className="text-2xl font-semibold mb-2">Studio</h3>
-              <p className="mb-4" style={{ color: 'var(--muted)' }}>For professionals</p>
+              <h3 className="text-2xl font-semibold mb-2">Studio Pro</h3>
+              <p className="mb-6" style={{ color: 'var(--muted)' }}>For studios & labels</p>
               <div className="text-4xl font-bold mb-6">
-                $99<span className="text-base font-normal">/mo</span>
+                $49<span className="text-base font-normal">/month</span>
               </div>
               <ul className="text-left space-y-3 mb-8" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Everything in Band</span>
+                  <span>Everything in Pro</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>1TB storage</span>
+                  <span>500GB storage</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
@@ -132,48 +107,18 @@ export default function PricingPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>2000 AI credits/mo</span>
-                </li>
-              </ul>
-              <Link href="/contact?plan=studio" className="button secondary w-full">
-                Contact Sales
-              </Link>
-            </div>
-            
-            <div className="card text-center relative" style={{ background: 'linear-gradient(135deg, rgba(255,107,107,0.05) 0%, rgba(138,43,226,0.05) 100%)' }}>
-              <div 
-                className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-4 py-1 text-sm font-semibold rounded-full"
-                style={{ 
-                  background: 'linear-gradient(135deg, #ff6b6b 0%, #8a2be2 100%)',
-                  color: 'white'
-                }}
-              >
-                ENTERPRISE
-              </div>
-              <h3 className="text-2xl font-semibold mb-2">Studio Pro</h3>
-              <p className="mb-4" style={{ color: 'var(--muted)' }}>For labels & studios</p>
-              <div className="text-4xl font-bold mb-6">
-                $299<span className="text-base font-normal">/mo</span>
-              </div>
-              <ul className="text-left space-y-3 mb-8" style={{ color: 'var(--text)' }}>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>500GB storage</span>
+                  <span>Custom integrations</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span><strong>Unlimited AI</strong></span>
+                  <span>White-glove support</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>White-label options</span>
+                  <span>Team management</span>
                 </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Dedicated manager</span>
-                </li>
-              </ul>
-              <Link href="/contact?plan=enterprise" className="button w-full">
+                </ul>
+              <Link href="/contact" className="button secondary w-full">
                 Contact Sales
               </Link>
             </div>
