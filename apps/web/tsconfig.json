@@ -1,5 +1,5 @@
 {
-  "extends": "@cronkwaters/config/tsconfig/next",
+  "extends": "../../packages/config/tsconfig/next.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
