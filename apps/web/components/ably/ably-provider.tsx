@@ -11,11 +11,15 @@ interface Props {
 
 export function AblyProvider({ children }: Props) {
   const [client, setClient] = useState<RealtimePromise | null>(null);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
     }
+
+    // Set ready immediately so UI isn't blocked
+    setIsReady(true);
 
     const ablyClient = new Ably.Realtime({
       authUrl: '/api/ably/token',
@@ -35,7 +39,8 @@ export function AblyProvider({ children }: Props) {
     };
   }, []);
 
-  if (!client) {
+  // Always render children, don't block on client initialization
+  if (!isReady || !client) {
     return <>{children}</>;
   }
 
