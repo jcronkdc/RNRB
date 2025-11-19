@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import '@cronkwaters/ui/styles.css';
-
 /* === RNR Basement Human-First Design === */
 :root{
   /* Comfortable dark theme - like a cozy music studio */
