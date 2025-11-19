@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { AblyProvider } from '@/components/ably';
 import { NavBar } from '@/components/NavBar';
+import { Providers } from '@/components/providers';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -72,10 +73,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AblyProvider>
-          <NavBar />
-          {children}
-        </AblyProvider>
+        <Providers>
+          <AblyProvider>
+            <NavBar />
+            {children}
+          </AblyProvider>
+        </Providers>
       </body>
     </html>
   );

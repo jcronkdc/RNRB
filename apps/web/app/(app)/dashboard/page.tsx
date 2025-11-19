@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { 
@@ -25,19 +24,14 @@ const CompactActivityFeed = dynamic(() => import('@/components/activity-feed').t
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
+  const loading = status === 'loading';
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        setUser(user);
-        setLoading(false);
-      }
-    });
-  }, [router]);
+    if (status === 'unauthenticated') {
+      router.push('/auth');
+    }
+  }, [status, router]);
 
   if (loading) {
     return (
@@ -54,7 +48,7 @@ export default function DashboardPage() {
     );
   }
 
-  const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Artist';
+  const userName = session?.user?.name || session?.user?.email?.split('@')[0] || 'Artist';
   
   // Welcome messages that resonate with musicians
   const welcomeMessages = [
@@ -294,7 +288,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Recent Activity Feed */}
-      {user && (
+      {session && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
