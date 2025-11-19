@@ -1,11 +1,12 @@
-# 🚀 Deployment Status - SSL Certificate Fixed
+# 🚀 Deployment Status - SSL Certificate Issue (Recurring)
 
-## Latest Deployment ✅
+## Latest Deployment ⚠️
 
 **Date:** November 19, 2025  
-**Time:** ~5:04 PM EST  
-**Commit:** `979d8a0d` - SSL certificate regenerated for www.cronkwaters.com
-**Deployment ID:** `dpl_4XsV4bL4aEe1Np5ayupwn1HSchaz`
+**Time:** ~5:18 PM CST  
+**Commit:** `G2wpwjHQ` - Attempting SSL certificate fix for www.cronkwaters.com
+**Deployment ID:** `dpl_G2wpwjHQ4jKGQX5NenGB1eUtV3W9`
+**Status:** SSL_ERROR_SYSCALL on www subdomain (recurring issue)
 
 ### Issue Resolved
 
