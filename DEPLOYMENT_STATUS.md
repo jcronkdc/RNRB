@@ -1,10 +1,30 @@
-# 🚀 Deployment Status - Dashboard Loading Fix
+# 🚀 Deployment Status - Dashboard Loading Fix (REVERTED)
 
 ## Latest Deployment ✅
 
 **Date:** November 19, 2025  
-**Time:** ~2:30 PM  
-**Commit:** `0ef58c98` - Fix dashboard stuck loading: Replace Supabase auth with NextAuth session
+**Time:** ~3:00 PM  
+**Commit:** `2b37cd8d` - Revert dashboard to working Supabase auth version
+
+### What Happened
+
+**Attempted Fix (FAILED):** `0ef58c98` - Tried to replace Supabase auth with NextAuth
+- ❌ Broke the dashboard - ERR_CONNECTION_CLOSED
+- ❌ NextAuth may not have been properly configured
+- ❌ Introduced SessionProvider without verifying setup
+
+**Working Fix (RESTORED):** `376b06ab` - Don't block UI while Ably realtime connection initializes
+- ✅ Add isReady state to prevent UI blocking  
+- ✅ Render children immediately, initialize Ably in background
+- ✅ This was the CORRECT fix - keeps Supabase auth but fixes Ably blocking
+
+### Build Details
+
+- **Status:** ● DEPLOYING → Production
+- **Production URL:** https://www.cronkwaters.com  
+- **Git Ref:** main @ `2b37cd8d`
+
+## Previous Attempt (FAILED) - NextAuth Approach
 
 ### Issue Resolved
 
