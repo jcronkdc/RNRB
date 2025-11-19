@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Video, MessageSquare, Share2, Users, Monitor, Shield, ChevronRight, ArrowRight, CheckCircle } from 'lucide-react';

@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Music2, Sparkles, FileText, ChevronRight, ArrowRight, CheckCircle } from 'lucide-react';
