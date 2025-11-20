@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { AblyProvider } from '@/components/ably';
+// import { AblyProvider } from '@/components/ably'; // Temporarily disabled - Ably client initialization error
 import { NavBar } from '@/components/NavBar';
 import './globals.css';
 
@@ -72,10 +72,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AblyProvider>
-          <NavBar />
-          {children}
-        </AblyProvider>
+        {/* AblyProvider temporarily disabled - causes runtime crash */}
+        <NavBar />
+        {children}
       </body>
     </html>
   );
