@@ -24,7 +24,7 @@ import {
   Sparkles,
   Share2,
   MoreVertical,
-  FolderMusic
+  Folder
 } from 'lucide-react';
 
 type LibraryFile = {
@@ -159,7 +159,7 @@ export default function LibraryPage() {
             <div>
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center">
-                  <FolderMusic className="w-6 h-6 text-orange-500" />
+                  <Folder className="w-6 h-6 text-orange-500" />
                 </div>
                 <h1 className="text-4xl font-bold text-white">My Library</h1>
               </div>
@@ -294,7 +294,7 @@ export default function LibraryPage() {
             className="bg-gray-900 border border-gray-800 rounded-2xl p-12 text-center"
           >
             <div className="w-24 h-24 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <FolderMusic className="w-12 h-12 text-orange-500" />
+              <Folder className="w-12 h-12 text-orange-500" />
             </div>
             <h2 className="text-2xl font-bold text-white mb-2">
               {searchQuery || filterType !== 'all' ? 'No files found' : 'Your Library is Empty'}
