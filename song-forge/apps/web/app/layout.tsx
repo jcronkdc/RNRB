@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   title: "Rock N' Roll Basement",
   description:
     "Where musicians create, collaborate, and change the industry. The underground HQ for artists from amateur to pro.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rocknrollbasement.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cronkwaters.com'),
   icons: {
     icon: "/icon.svg",
   },
