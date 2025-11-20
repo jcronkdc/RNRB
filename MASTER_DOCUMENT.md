@@ -1,17 +1,50 @@
 # 🎵 Rock N' Roll Basement Master Document — Truth Only
 
-**Last Updated:** 2025-11-19 @ Agent 40 - ✅ Homepage Feature Tiles NOW CLICKABLE  
+**Last Updated:** 2025-11-20 @ Agent 41 - 📊 Vercel Config Review  
 **Status:** ✅ **LIVE IN PRODUCTION - Features Fully Interactive**
 **Production URL:** https://www.cronkwaters.com  
-**Latest Working Deployment:** https://cronkwater-jhct2iwl1-justins-projects-d7153a8c.vercel.app (deploying new one)
+**Latest Working Deployment:** https://cronkwater-jhct2iwl1-justins-projects-d7153a8c.vercel.app
 **Commit:** `69536575` - Made feature tiles clickable, created missing feature pages
-**Token Usage:** ~84k / 200,000 (42%) - 116k tokens remaining
+**Token Usage:** ~38k / 200,000 (19%) - 162k tokens remaining
 
 ---
 
 ## 🔥 CURRENT STATE (BRUTAL TRUTH FOR NEXT AGENT)
 
-### **What Just Happened (Agent 40 Session - Part 2: Clickable Features)**
+### **What Just Happened (Agent 41 Session - Vercel Configuration Review)**
+
+**USER QUESTION:** Vercel deployment settings review - deployment checks inquiry
+
+**FINDINGS:**
+1. ✅ **Vercel Config Verified Correct:**
+   - Root Directory: `apps/web` (matches monorepo structure)
+   - Build Command: `pnpm build` (matches package.json)
+   - Output Directory: `.next` (standard Next.js)
+   - Node.js Version: 22.x (required for Next.js 15)
+   - Install Command: `pnpm install`
+
+2. ✅ **Deployment Settings Reviewed:**
+   - Prioritize Production Builds: ENABLED
+   - On-Demand Concurrent Builds: ENABLED
+   - Build Machine: Enhanced (8 vCPUs, 16GB) - EXPENSIVE ($0.03/min vs $0.014/min)
+   - Rolling Releases: DISABLED (appropriate for current stage)
+
+3. ⚠️ **Deployment Checks Discussion:**
+   - User explored adding GitHub Actions-based deployment checks
+   - Would require `.github/workflows/*.yml` files (don't exist yet)
+   - Vercel modal showed "Unable to load checks" (expected - no workflows exist)
+   - **DECISION: Skip deployment checks for now** - can add later when needed
+   - Current manual deployment process is sufficient
+
+**RECOMMENDATIONS NOTED:**
+- Consider downgrading build machine to Standard (4 vCPUs, 8GB) if builds < 2min to save costs
+- Add deployment checks later when team grows or need automated gates
+
+**NO CHANGES MADE** - Config already optimal, user skipped deployment checks setup
+
+---
+
+### **Previous Session (Agent 40 - Part 2: Clickable Features)**
 
 **USER ISSUE:** "It's loading correctly, but I still can't click any of the features"
 
