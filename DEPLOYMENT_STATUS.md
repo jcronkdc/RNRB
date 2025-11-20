@@ -1,31 +1,35 @@
-# 🚀 Deployment Status - Custom Domain Cache Issue
+# 🚀 Deployment Status - CSS Bundle Not Loading
 
 ## Latest Deployment 🔄
 
-**Date:** November 19, 2025  
-**Time:** ~5:45 PM CST  
-**Commit:** `6cb3963d` - Bust Vercel edge cache for cronkwaters.com custom domain
-**Status:** DEPLOYING → Cache invalidation for custom domain
+**Date:** November 20, 2025  
+**Time:** ~8:11 PM CST  
+**Commit:** TBD - Force Vercel to rebuild CSS bundle with all animations
+**Status:** DEPLOYING → Fixing CSS bundle issue
 
-### Issue: Custom Domain Serving Stale Content (IN PROGRESS)
+### Issue: Design Reverted - CSS Animations Missing (IN PROGRESS)
 
 **Problem:** 
-- Beautiful design works on `cronkwater.vercel.app` ✅
-- `cronkwaters.com` still serves old cached content with plain design ❌
+- Site showing plain design - all animations, gradients, glowing effects gone
+- `www.cronkwaters.com` serves minimal CSS (1 line, redirects to "Redirecting...")
+- CSS bundle exists in source but not being loaded by Vercel
 
 **Root Cause:**
-- Vercel's edge cache serving stale CSS to custom domain
-- CDN cached old version before UI package import was removed
-- `.vercel.app` URLs bypassed cache, custom domain did not
+- Vercel deployment CSS bundle corrupt/incomplete - only serving redirect page
+- Local build generates correct 85.8 KB CSS with all animation classes ✅
+- Deployed version: CSS link returns "Redirecting..." instead of actual styles ❌
+- Code is correct, build is correct, deployment is broken
+
+**Diagnosis:**
+1. ✅ Confirmed `apps/web/app/globals.css` has ALL animations (lines 255-574)
+2. ✅ Confirmed `apps/web/app/page.tsx` has correct HTML structure with animation classes
+3. ✅ Confirmed local `pnpm build` produces 85.8KB CSS with "gradient-orb" class
+4. ❌ Confirmed deployed CSS at `/_next/static/css/27b1a299a29b19e6.css` returns "Redirecting..."
+5. ❌ Confirmed deployed site missing all animation styles
 
 **Solution Applied:**
-- ✅ Triggered new deployment to force cache invalidation
-- ✅ All CSS verified correct in build (animations, gradients, dark theme intact)
-- ⏳ Waiting for edge cache purge to propagate to `cronkwaters.com`
-
-**Verification:**
-- ✅ `https://cronkwater.vercel.app` - Design working perfectly
-- ⏳ `https://www.cronkwaters.com` - Waiting for cache purge (~1-2 minutes)
+- Trigger new production deployment to force Vercel to regenerate CSS bundle
+- All code is correct - this is purely a deployment artifact issue
 
 ---
 
