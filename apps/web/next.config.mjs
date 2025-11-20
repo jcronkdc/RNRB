@@ -1,6 +1,5 @@
-import type { NextConfig } from 'next';
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true
@@ -11,7 +10,7 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
-  webpack: (config: any) => {
+  webpack: (config) => {
     // Ensure proper handling of lucide-react icons
     config.module.rules.push({
       test: /lucide-react/,
@@ -22,4 +21,3 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
-
