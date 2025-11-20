@@ -1,9 +1,9 @@
-import type { Config } from 'tailwindcss';
 import tailwindcssAnimate from 'tailwindcss-animate';
 
-const withAlpha = (variable: string) => `hsl(var(${variable}) / <alpha-value>)`;
+const withAlpha = (variable) => `hsl(var(${variable}) / <alpha-value>)`;
 
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+const config = {
   darkMode: ['class'],
   content: [
     './app/**/*.{ts,tsx}',
