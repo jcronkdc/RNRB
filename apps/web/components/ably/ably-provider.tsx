@@ -21,22 +21,28 @@ export function AblyProvider({ children }: Props) {
     // Set ready immediately so UI isn't blocked
     setIsReady(true);
 
-    const ablyClient = new Ably.Realtime({
-      authUrl: '/api/ably/token',
-      authMethod: 'GET',
-      clientId: process.env.NEXT_PUBLIC_ABLY_CLIENT_ID ?? 'rnrb-web',
-      echoMessages: false,
-      closeOnUnload: true,
-      transportParams: {
-        remainPresentFor: 60,
-      },
-    }) as RealtimePromise;
+    try {
+      const ablyClient = new Ably.Realtime({
+        authUrl: '/api/ably/token',
+        authMethod: 'GET',
+        clientId: process.env.NEXT_PUBLIC_ABLY_CLIENT_ID ?? 'rnrb-web',
+        echoMessages: false,
+        closeOnUnload: true,
+        transportParams: {
+          remainPresentFor: 60,
+        },
+      }) as RealtimePromise;
 
-    setClient(ablyClient);
+      setClient(ablyClient);
 
-    return () => {
-      ablyClient.close();
-    };
+      return () => {
+        ablyClient.close();
+      };
+    } catch (error) {
+      console.warn('Ably client initialization failed:', error);
+      // App continues without real-time features
+      return undefined;
+    }
   }, []);
 
   // Always render children, don't block on client initialization
