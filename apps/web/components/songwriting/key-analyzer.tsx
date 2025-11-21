@@ -1,19 +1,76 @@
 'use client';
 
-import { useMemo, memo } from 'react';
-import { Music, TrendingUp, Info, Sparkles } from 'lucide-react';
+import { useMemo, memo, useState, useEffect } from 'react';
+import { Music, TrendingUp, Info, Sparkles, Zap, Brain, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { detectKey, type KeySuggestion } from '@/lib/music-theory/key-detector';
+import { detectKeyWithAI, type AIKeyAnalysis } from '@/lib/music-theory/ai-key-detector';
 
 interface KeyAnalyzerProps {
   chords: string[];
   className?: string;
+  useAI?: boolean; // Enable AI-powered analysis
 }
 
-export const KeyAnalyzer = memo(function KeyAnalyzer({ chords, className = '' }: KeyAnalyzerProps) {
-  const suggestions = useMemo(() => {
+export const KeyAnalyzer = memo(function KeyAnalyzer({ chords, className = '', useAI = true }: KeyAnalyzerProps) {
+  const [aiAnalysis, setAiAnalysis] = useState<AIKeyAnalysis | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showAIInsights, setShowAIInsights] = useState(false);
+
+  // Deterministic analysis (instant)
+  const deterministicSuggestions = useMemo(() => {
     return detectKey(chords);
   }, [chords]);
+
+  // AI analysis (async, only when chords change)
+  useEffect(() => {
+    if (!useAI || chords.length < 3) {
+      setAiAnalysis(null);
+      return;
+    }
+
+    let cancelled = false;
+    setIsAnalyzing(true);
+
+    detectKeyWithAI(chords)
+      .then((result) => {
+        if (!cancelled) {
+          setAiAnalysis(result.ai);
+          setIsAnalyzing(false);
+        }
+      })
+      .catch((error) => {
+        console.error('AI analysis failed:', error);
+        if (!cancelled) {
+          setIsAnalyzing(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [chords, useAI]);
+
+  // Use AI result if available and confident, otherwise deterministic
+  const suggestions = useMemo(() => {
+    if (aiAnalysis && aiAnalysis.confidence >= 70) {
+      const aiSuggestion: KeySuggestion = {
+        key: aiAnalysis.primaryKey,
+        confidence: aiAnalysis.confidence,
+        reasons: aiAnalysis.reasons,
+        mode: aiAnalysis.primaryKey.toLowerCase().includes('minor') ? 'minor' : 'major',
+      };
+      
+      // Remove duplicates and add AI result at top
+      const filtered = deterministicSuggestions.filter(
+        s => s.key.toLowerCase() !== aiAnalysis.primaryKey.toLowerCase()
+      );
+      
+      return [aiSuggestion, ...filtered].slice(0, 5);
+    }
+    
+    return deterministicSuggestions;
+  }, [aiAnalysis, deterministicSuggestions]);
 
   if (chords.length === 0) {
     return (
@@ -77,8 +134,32 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({ chords, className = '' }:
       {/* Main Key Detection */}
       <motion.div
         layout
-        className={`rounded-xl border-2 ${getConfidenceColor(topSuggestion.confidence)} p-6 shadow-lg`}
+        className={`rounded-xl border-2 ${getConfidenceColor(topSuggestion.confidence)} p-6 shadow-lg relative`}
       >
+        {/* AI Badge */}
+        {aiAnalysis && aiAnalysis.confidence >= 70 && (
+          <motion.div
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 bg-purple-500/20 border border-purple-500/50 rounded-full"
+          >
+            <Brain className="w-3 h-3 text-purple-400" />
+            <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">AI Enhanced</span>
+          </motion.div>
+        )}
+
+        {/* Loading indicator */}
+        {isAnalyzing && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 bg-blue-500/20 border border-blue-500/50 rounded-full"
+          >
+            <Loader2 className="w-3 h-3 text-blue-400 animate-spin" />
+            <span className="text-[10px] font-medium text-blue-400">Analyzing...</span>
+          </motion.div>
+        )}
+
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <motion.div
@@ -100,6 +181,13 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({ chords, className = '' }:
               >
                 {topSuggestion.key}
               </motion.h3>
+              {/* Modal info if AI detected it */}
+              {aiAnalysis?.modalAnalysis && aiAnalysis.modalAnalysis.mode !== 'Ionian' && aiAnalysis.modalAnalysis.mode !== 'Aeolian' && (
+                <p className="text-xs text-purple-500 font-medium mt-0.5 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  {aiAnalysis.modalAnalysis.mode} mode
+                </p>
+              )}
             </div>
           </div>
           
@@ -142,6 +230,111 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({ chords, className = '' }:
               ))}
             </AnimatePresence>
           </div>
+        )}
+
+        {/* AI Insights Toggle */}
+        {aiAnalysis && (aiAnalysis.aiInsights?.length > 0 || aiAnalysis.musicalCharacter) && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 pt-4 border-t border-border/50"
+          >
+            <button
+              onClick={() => setShowAIInsights(!showAIInsights)}
+              className="flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition"
+            >
+              <Brain className="w-4 h-4" />
+              <span>{showAIInsights ? 'Hide' : 'Show'} AI Insights</span>
+              <motion.div
+                animate={{ rotate: showAIInsights ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <TrendingUp className="w-3 h-3" />
+              </motion.div>
+            </button>
+
+            <AnimatePresence>
+              {showAIInsights && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="mt-3 space-y-2 overflow-hidden"
+                >
+                  {/* Musical Character */}
+                  {aiAnalysis.musicalCharacter && (
+                    <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                      <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 mb-1">Musical Character</p>
+                      <p className="text-sm text-foreground/90">{aiAnalysis.musicalCharacter}</p>
+                    </div>
+                  )}
+
+                  {/* Progression Type */}
+                  {aiAnalysis.progressionType && (
+                    <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                      <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">Progression Type</p>
+                      <p className="text-sm text-foreground/90">{aiAnalysis.progressionType}</p>
+                    </div>
+                  )}
+
+                  {/* AI Insights */}
+                  {aiAnalysis.aiInsights && aiAnalysis.aiInsights.length > 0 && (
+                    <div className="space-y-1.5">
+                      {aiAnalysis.aiInsights.map((insight, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="flex items-start gap-2 text-sm"
+                        >
+                          <Zap className="w-3 h-3 text-purple-400 shrink-0 mt-0.5" />
+                          <span className="opacity-90">{insight}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Suggested Next Chords */}
+                  {aiAnalysis.suggestedNextChords && aiAnalysis.suggestedNextChords.length > 0 && (
+                    <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                      <p className="text-xs font-semibold text-green-600 dark:text-green-400 mb-2">Suggested Next Chords</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {aiAnalysis.suggestedNextChords.map((chord, i) => (
+                          <span
+                            key={i}
+                            className="px-2 py-1 bg-green-500/20 border border-green-500/40 rounded text-xs font-bold text-green-600 dark:text-green-400"
+                          >
+                            {chord}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Secondary Dominants */}
+                  {aiAnalysis.secondaryDominants && aiAnalysis.secondaryDominants.length > 0 && (
+                    <div className="p-3 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+                      <p className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-1">Secondary Dominants Detected</p>
+                      <p className="text-sm text-foreground/90">{aiAnalysis.secondaryDominants.join(', ')}</p>
+                    </div>
+                  )}
+
+                  {/* Modulations */}
+                  {aiAnalysis.modulations && aiAnalysis.modulations.length > 0 && (
+                    <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                      <p className="text-xs font-semibold text-red-600 dark:text-red-400 mb-2">Key Changes Detected</p>
+                      {aiAnalysis.modulations.map((mod, i) => (
+                        <p key={i} className="text-sm text-foreground/90">
+                          {mod.fromKey} → {mod.toKey} (chord {mod.atChord})
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         )}
       </motion.div>
 
