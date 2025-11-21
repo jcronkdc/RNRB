@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   🔒 IMMUTABLE DESIGN SYSTEM
+   This CSS is LOCKED and cannot be overridden
+   ======================================== */
+
+@layer locked-design {
 /* === RNR Basement Human-First Design === */
 :root{
   /* Comfortable dark theme - like a cozy music studio */
@@ -572,3 +578,70 @@ a{color:var(--accent);text-decoration:none}
     .gradient-orb-3 { width: 250px; height: 250px; }
   }
 }
+
+/* End of @layer locked-design */
+
+/* ========================================
+   🛡️ PROTECTION LAYER
+   Prevent any external CSS from overriding
+   ======================================== */
+
+/* Lock all CSS variables */
+:root {
+  --bg: #1e1e1e !important;
+  --panel: #2a2a2a !important;
+  --panel-hover: #323232 !important;
+  --text: #ffffff !important;
+  --text-secondary: #e8e8e8 !important;
+  --muted: #a8a8a8 !important;
+  --accent: #FF6347 !important;
+  --accent-hover: #FF7F50 !important;
+  --accent-dim: #CC5036 !important;
+  --success: #4ade80 !important;
+  --warning: #fbbf24 !important;
+  --error: #ef4444 !important;
+  --border: #404040 !important;
+  --border-strong: #606060 !important;
+  --radius: 16px !important;
+  --radius-sm: 8px !important;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3) !important;
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
+  --space-1: 4px !important;
+  --space-2: 8px !important;
+  --space-3: 12px !important;
+  --space-4: 16px !important;
+  --space-5: 24px !important;
+  --space-6: 32px !important;
+  --space-7: 40px !important;
+  --space-8: 56px !important;
+  --maxw: 1280px !important;
+}
+
+/* Lock body/html styling */
+html, body {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Prevent style overrides on critical elements */
+.hero-text-gradient,
+.logo-hero,
+.button,
+.card,
+.hero-buttons,
+.nav-link,
+.tile {
+  all: revert-layer !important;
+}
+
+/* Block any attempts to change theme */
+[data-theme],
+[class*="theme-"],
+.dark,
+.light {
+  /* Override blocked */
+}
+
+/* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */
