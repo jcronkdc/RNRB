@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm build",
   "outputDirectory": ".next",
-  "installCommand": "pnpm install --include-workspace-root",
+  "installCommand": "pnpm install",
   "framework": "nextjs"
 }

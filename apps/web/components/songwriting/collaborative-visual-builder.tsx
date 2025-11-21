@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Card, Button } from '@cronkwaters/ui';
 import { 
   Music, Sparkles, GripVertical, Plus, X, Users, Save, Download, 
   History, Undo, Redo, Video, MessageSquare, ChevronUp, ChevronDown,
-  Tag, Copy, Check, Mail, UserPlus, Clock
+  Tag, Copy, Check, Mail, UserPlus, Clock, Keyboard
 } from 'lucide-react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -13,15 +13,25 @@ import { CSS } from '@dnd-kit/utilities';
 import dynamic from 'next/dynamic';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { CursorOverlay } from '@/components/cursor-overlay';
+import { GranularChordEditor, type ChordPlacement } from './granular-chord-editor';
+import { KeyAnalyzer } from './key-analyzer';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Dynamically import chat
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then(m => m.ChatRoom), { ssr: false });
+
+type ChordPlacement = {
+  wordIndex: number;
+  lineIndex: number;
+  chord: string;
+};
 
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'chord';
   content: string;
   chord?: string;
+  chordPlacements?: ChordPlacement[];
 };
 
 const PALETTE_BLOCKS = [
@@ -31,7 +41,17 @@ const PALETTE_BLOCKS = [
   { type: 'chord' as const, label: 'Chord', icon: '🎸', color: 'green' },
 ];
 
-function SortableBlock({ block, onEdit, onRemove }: { block: SongBlock; onEdit: (content: string) => void; onRemove: () => void }) {
+function SortableBlock({ 
+  block, 
+  onEdit, 
+  onRemove,
+  onChordsChange,
+}: { 
+  block: SongBlock; 
+  onEdit: (content: string) => void; 
+  onRemove: () => void;
+  onChordsChange: (chordPlacements: ChordPlacement[]) => void;
+}) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: block.id });
 
   const getColor = () => {
@@ -42,6 +62,9 @@ function SortableBlock({ block, onEdit, onRemove }: { block: SongBlock; onEdit: 
       case 'chord': return 'from-green-500/10 to-green-500/5 border-green-500/30';
     }
   };
+
+  // Use granular chord editor for verse, chorus, and bridge types
+  const useGranularEditor = block.type === 'verse' || block.type === 'chorus' || block.type === 'bridge';
 
   return (
     <div
@@ -60,13 +83,24 @@ function SortableBlock({ block, onEdit, onRemove }: { block: SongBlock; onEdit: 
               <X className="w-4 h-4" />
             </button>
           </div>
-          <textarea
-            value={block.content}
-            onChange={(e) => onEdit(e.target.value)}
-            placeholder={`Write your ${block.type}...`}
-            className="w-full px-3 py-2 bg-surface/50 border border-border/50 rounded-lg text-foreground text-sm resize-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none"
-            rows={3}
-          />
+          
+          {useGranularEditor ? (
+            <GranularChordEditor
+              content={block.content}
+              chordPlacements={block.chordPlacements || []}
+              onContentChange={onEdit}
+              onChordsChange={onChordsChange}
+              blockType={block.type}
+            />
+          ) : (
+            <textarea
+              value={block.content}
+              onChange={(e) => onEdit(e.target.value)}
+              placeholder={`Write your ${block.type}...`}
+              className="w-full px-3 py-2 bg-surface/50 border border-border/50 rounded-lg text-foreground text-sm resize-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none"
+              rows={3}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -92,6 +126,7 @@ export function CollaborativeVisualBuilder({
   const [chatExpanded, setChatExpanded] = useState(false);
   const [showCollaborators, setShowCollaborators] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
   const [copied, setCopied] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [history, setHistory] = useState<{ blocks: SongBlock[]; timestamp: Date }[]>([]);
@@ -106,6 +141,41 @@ export function CollaborativeVisualBuilder({
     userName: currentUser.userName,
     enabled: true,
   });
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd/Ctrl + Z = Undo
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      }
+      // Cmd/Ctrl + Shift + Z = Redo
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && e.shiftKey) {
+        e.preventDefault();
+        redo();
+      }
+      // Cmd/Ctrl + S = Export
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        exportToClipboard();
+      }
+      // Cmd/Ctrl + K = Show shortcuts
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowKeyboardHelp(true);
+      }
+      // Escape = Close modals
+      if (e.key === 'Escape') {
+        setShowKeyboardHelp(false);
+        setShowCollaborators(false);
+        setShowHistory(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [historyIndex, history.length, blocks]);
 
   // Save to history whenever blocks change
   const saveToHistory = (newBlocks: SongBlock[]) => {
@@ -148,6 +218,26 @@ export function CollaborativeVisualBuilder({
     onSongChange?.(updated);
     // Don't save to history on every keystroke - only on significant changes
   };
+
+  const updateBlockChords = (id: string, chordPlacements: ChordPlacement[]) => {
+    const updated = blocks.map(b => b.id === id ? { ...b, chordPlacements } : b);
+    setBlocks(updated);
+    onSongChange?.(updated);
+    saveToHistory(updated);
+  };
+
+  // Extract all unique chords from all blocks for key detection
+  const allChords = useMemo(() => {
+    const chordSet = new Set<string>();
+    blocks.forEach(block => {
+      if (block.chordPlacements) {
+        block.chordPlacements.forEach(placement => {
+          chordSet.add(placement.chord);
+        });
+      }
+    });
+    return Array.from(chordSet);
+  }, [blocks]);
 
   const removeBlock = (id: string) => {
     const updated = blocks.filter(b => b.id !== id);
@@ -221,6 +311,14 @@ export function CollaborativeVisualBuilder({
               {copied ? <Check className="w-4 h-4 mr-2" /> : <Download className="w-4 h-4 mr-2" />}
               {copied ? 'Copied!' : 'Export'}
             </Button>
+            <Button 
+              size="sm" 
+              variant="ghost"
+              onClick={() => setShowKeyboardHelp(true)}
+              title="Keyboard shortcuts (⌘K)"
+            >
+              <Keyboard className="w-4 h-4" />
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             <Button 
@@ -257,7 +355,7 @@ export function CollaborativeVisualBuilder({
       {/* Main Layout */}
       <div className="grid grid-cols-12 gap-4">
         {/* Left Palette */}
-        <div className="col-span-12 lg:col-span-3">
+        <div className="col-span-12 lg:col-span-3 space-y-4">
           <Card className="p-6 rnrb-card sticky top-4">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-purple-400" />
@@ -281,6 +379,9 @@ export function CollaborativeVisualBuilder({
               ))}
             </div>
           </Card>
+
+          {/* Key Analyzer */}
+          <KeyAnalyzer chords={allChords} />
         </div>
 
         {/* Right Canvas */}
@@ -303,6 +404,7 @@ export function CollaborativeVisualBuilder({
                       block={block}
                       onEdit={(content) => editBlock(block.id, content)}
                       onRemove={() => removeBlock(block.id)}
+                      onChordsChange={(chordPlacements) => updateBlockChords(block.id, chordPlacements)}
                     />
                   ))}
                 </SortableContext>
@@ -493,6 +595,84 @@ export function CollaborativeVisualBuilder({
 
       {/* Collaborative Cursors Overlay */}
       <CursorOverlay cursors={remoteCursors} />
+
+      {/* Keyboard Shortcuts Help Modal */}
+      <AnimatePresence>
+        {showKeyboardHelp && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={() => setShowKeyboardHelp(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="rnrb-card p-8 max-w-lg w-full bg-surface border-2 border-border rounded-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-display font-bold flex items-center gap-2">
+                    <Keyboard className="w-6 h-6 text-brand-primary" />
+                    Keyboard Shortcuts
+                  </h3>
+                  <p className="text-sm text-muted-foreground mt-1">Work faster with shortcuts</p>
+                </div>
+                <button
+                  onClick={() => setShowKeyboardHelp(false)}
+                  className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition"
+                  aria-label="Close keyboard shortcuts"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  { keys: ['⌘/Ctrl', 'Z'], action: 'Undo last change' },
+                  { keys: ['⌘/Ctrl', 'Shift', 'Z'], action: 'Redo last undone change' },
+                  { keys: ['⌘/Ctrl', 'S'], action: 'Export to clipboard' },
+                  { keys: ['⌘/Ctrl', 'K'], action: 'Show this help' },
+                  { keys: ['Esc'], action: 'Close modals' },
+                ].map((shortcut, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="flex items-center justify-between p-3 bg-surface-muted rounded-lg"
+                  >
+                    <span className="text-foreground">{shortcut.action}</span>
+                    <div className="flex items-center gap-1">
+                      {shortcut.keys.map((key, i) => (
+                        <span key={i} className="flex items-center gap-1">
+                          <kbd className="px-2 py-1 rounded bg-background border border-border text-xs font-medium">
+                            {key}
+                          </kbd>
+                          {i < shortcut.keys.length - 1 && (
+                            <span className="text-muted-foreground text-xs">+</span>
+                          )}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="mt-6 pt-6 border-t border-border">
+                <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-2">
+                  <Sparkles className="w-3 h-3 text-purple-400" />
+                  Pro tip: Click any word in lyrics to add chords instantly!
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
