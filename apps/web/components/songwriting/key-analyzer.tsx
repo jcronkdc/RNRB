@@ -336,6 +336,83 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({ chords, className = '', u
             </AnimatePresence>
           </motion.div>
         )}
+
+        {/* Chord Alternatives Section - Non-obtrusive */}
+        {aiAnalysis?.chordAlternatives && aiAnalysis.chordAlternatives.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-4 pt-4 border-t border-border/50"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles className="w-4 h-4 text-purple-400" />
+              <h5 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Try These Alternatives
+              </h5>
+            </div>
+            
+            <div className="space-y-2">
+              {aiAnalysis.chordAlternatives.map((chordAlt, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="group"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm font-bold text-brand-primary">{chordAlt.originalChord}</span>
+                    <span className="text-xs text-muted-foreground">→</span>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2 pl-6">
+                    {chordAlt.alternatives.map((alt, altIndex) => {
+                      const vibeColors = {
+                        similar: 'bg-blue-500/10 border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20',
+                        jazzier: 'bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20',
+                        mellower: 'bg-green-500/10 border-green-500/30 text-green-600 dark:text-green-400 hover:bg-green-500/20',
+                        brighter: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-600 dark:text-yellow-400 hover:bg-yellow-500/20',
+                        darker: 'bg-gray-500/10 border-gray-500/30 text-gray-600 dark:text-gray-400 hover:bg-gray-500/20',
+                      };
+                      
+                      const vibeIcons = {
+                        similar: '≈',
+                        jazzier: '🎷',
+                        mellower: '🌙',
+                        brighter: '☀️',
+                        darker: '🌑',
+                      };
+
+                      return (
+                        <motion.div
+                          key={altIndex}
+                          whileHover={{ scale: 1.05 }}
+                          className={`group/alt cursor-pointer px-3 py-2 rounded-lg border-2 transition-all ${vibeColors[alt.vibe]}`}
+                          title={alt.reason}
+                        >
+                          <div className="flex items-center gap-1.5 mb-0.5">
+                            <span className="font-bold text-sm font-display">{alt.chord}</span>
+                            <span className="text-xs opacity-70">{vibeIcons[alt.vibe]}</span>
+                          </div>
+                          <p className="text-[10px] opacity-70 leading-tight max-w-[140px] hidden group-hover/alt:block">
+                            {alt.reason}
+                          </p>
+                          <span className="text-[9px] uppercase font-semibold tracking-wider opacity-60">
+                            {alt.vibe}
+                          </span>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <p className="text-[10px] text-muted-foreground mt-3 text-center opacity-60">
+              💡 Hover over alternatives to see why they work
+            </p>
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Alternative Keys */}

@@ -28,6 +28,16 @@ export interface AIKeyAnalysis {
   progressionType?: string; // "I-IV-V-vi pop progression", "ii-V-I jazz", etc.
   suggestedNextChords?: string[];
   
+  // Chord substitutions for each chord in the progression
+  chordAlternatives?: {
+    originalChord: string;
+    alternatives: {
+      chord: string;
+      reason: string; // Why this works
+      vibe: 'similar' | 'jazzier' | 'mellower' | 'brighter' | 'darker';
+    }[];
+  }[];
+  
   // AI insights
   aiInsights: string[];
   musicalCharacter?: string; // "Melancholic", "Uplifting", "Jazzy", etc.
@@ -48,7 +58,11 @@ Provide a comprehensive analysis including:
 7. **Progression Type**: Common pattern? (I-IV-V, ii-V-I, 12-bar blues, etc.)
 8. **Musical Character**: How does this progression feel? (uplifting, melancholic, jazzy, etc.)
 9. **Next Chord Suggestions**: What 3-5 chords would work well next?
-10. **Key Musical Insights**: Interesting theory observations about this progression
+10. **Chord Alternatives**: For EACH chord in the progression, suggest 2-3 alternative chords that could replace it. Include:
+    - The alternative chord
+    - Why it works (music theory reason)
+    - The vibe it creates ("similar", "jazzier", "mellower", "brighter", "darker")
+11. **Key Musical Insights**: Interesting theory observations about this progression
 
 Format your response as JSON:
 {
@@ -62,6 +76,24 @@ Format your response as JSON:
   "modulations": [{ "fromKey": "C Major", "toKey": "G Major", "atChord": 4 }],
   "progressionType": "I-IV-V-vi pop progression",
   "suggestedNextChords": ["F", "Am", "G", "Em", "Dm"],
+  "chordAlternatives": [
+    {
+      "originalChord": "C",
+      "alternatives": [
+        { "chord": "Cmaj7", "reason": "Adds sophistication with major 7th", "vibe": "jazzier" },
+        { "chord": "Cadd9", "reason": "Adds shimmer with 9th", "vibe": "brighter" },
+        { "chord": "Em", "reason": "Relative minor substitution", "vibe": "mellower" }
+      ]
+    },
+    {
+      "originalChord": "Am",
+      "alternatives": [
+        { "chord": "Am7", "reason": "Softens with 7th", "vibe": "jazzier" },
+        { "chord": "C", "reason": "Relative major substitution", "vibe": "brighter" },
+        { "chord": "Fmaj7", "reason": "Substitute with IV", "vibe": "similar" }
+      ]
+    }
+  ],
   "aiInsights": [
     "Classic pop progression popularized in the 2000s",
     "The vi chord adds emotional depth",
