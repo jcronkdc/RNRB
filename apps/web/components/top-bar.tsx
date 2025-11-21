@@ -34,8 +34,33 @@ export function TopBar() {
   }, []);
 
   const handleSignOut = async () => {
-    await supabase?.auth.signOut();
-    router.push('/');
+    try {
+      if (!supabase) {
+        console.error('Supabase not initialized - cannot sign out');
+        // Force redirect to home page anyway
+        router.push('/');
+        return;
+      }
+      
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('Sign out error:', error);
+        // Still redirect even if there's an error
+      }
+      
+      // Clear any local storage/session data
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('supabase.auth.token');
+        window.sessionStorage.clear();
+      }
+      
+      router.push('/');
+    } catch (error) {
+      console.error('Unexpected sign out error:', error);
+      // Force redirect anyway
+      router.push('/');
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { 
@@ -19,8 +19,10 @@ import {
   Mic2,
   Radio,
   Headphones,
-  MessageSquare
+  MessageSquare,
+  LogOut
 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 
 interface NavItem {
   label: string;
@@ -51,6 +53,7 @@ const floatingIcons = [Music4, Mic2, Radio, Headphones];
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -62,6 +65,33 @@ export function SidebarNav() {
                          pathname.startsWith('/contact');
 
   if (isMarketingPage) return null;
+
+  const handleSignOut = async () => {
+    try {
+      if (!supabase) {
+        console.error('Supabase not initialized - cannot sign out');
+        router.push('/');
+        return;
+      }
+      
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('Sign out error:', error);
+      }
+      
+      // Clear any local storage/session data
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('supabase.auth.token');
+        window.sessionStorage.clear();
+      }
+      
+      router.push('/');
+    } catch (error) {
+      console.error('Unexpected sign out error:', error);
+      router.push('/');
+    }
+  };
 
   return (
     <motion.aside
@@ -233,7 +263,7 @@ export function SidebarNav() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute bottom-4 left-0 right-0 px-4 pointer-events-auto"
+            className="absolute bottom-20 left-0 right-0 px-4 pointer-events-auto"
           >
             <div className="p-3 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20">
               <p className="text-xs text-muted-foreground text-center">
@@ -243,6 +273,37 @@ export function SidebarNav() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Sign Out Button at Bottom */}
+      <div className="absolute bottom-4 left-0 right-0 px-3 pointer-events-auto">
+        <motion.button
+          onClick={handleSignOut}
+          whileHover={{ x: 4 }}
+          whileTap={{ scale: 0.98 }}
+          className="group relative flex items-center gap-3 px-3 py-2.5 rounded-xl w-full
+                     transition-all duration-200 hover:bg-red-500/10"
+        >
+          {/* Icon */}
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0
+                          bg-white/5 group-hover:bg-red-500/20 transition-all duration-200">
+            <LogOut className="w-5 h-5 text-gray-400 group-hover:text-red-400 transition-colors" />
+          </div>
+
+          {/* Label */}
+          <AnimatePresence>
+            {!isCollapsed && (
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                className="font-medium text-sm text-gray-300 group-hover:text-red-400 transition-colors"
+              >
+                Sign Out
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
+      </div>
     </motion.aside>
   );
 }

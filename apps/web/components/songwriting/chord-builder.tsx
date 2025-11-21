@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { Card } from '@cronkwaters/ui';
-import { Plus, X, Music, Sparkles } from 'lucide-react';
+import { Plus, X, Music, Sparkles, GripVertical, LayoutGrid, List } from 'lucide-react';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, horizontalListSortingStrategy, rectSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -21,6 +21,7 @@ const COMMON_CHORDS = [
   'Cmaj7', 'Dmaj7', 'Emaj7', 'Fmaj7', 'Gmaj7', 'Amaj7', 'Bmaj7'
 ];
 
+// Large block view component
 function SortableChordBlock({ id, chord, duration, onRemove }: ChordBlock & { onRemove: () => void }) {
   const {
     attributes,
@@ -81,9 +82,52 @@ function SortableChordBlock({ id, chord, duration, onRemove }: ChordBlock & { on
   );
 }
 
+// Compact inline chord button component
+function SortableChordButton({ id, chord, onRemove }: ChordBlock & { onRemove: () => void }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="relative inline-flex group"
+    >
+      <div
+        {...attributes}
+        {...listeners}
+        className="relative px-4 py-3 bg-gradient-to-br from-brand-primary/20 to-brand-primary/10 border-2 border-brand-primary/40 rounded-xl font-display font-bold text-lg text-brand-primary cursor-move hover:shadow-lg hover:border-brand-primary/60 hover:scale-105 transition-all duration-200"
+      >
+        <GripVertical className="absolute left-1 top-1/2 -translate-y-1/2 w-3 h-3 opacity-0 group-hover:opacity-40 transition" />
+        <span className="px-1">{chord}</span>
+      </div>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onRemove();
+        }}
+        className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 hover:bg-red-600 text-white opacity-0 group-hover:opacity-100 transition flex items-center justify-center shadow-lg"
+      >
+        <X className="w-3 h-3" />
+      </button>
+    </div>
+  );
+}
+
 export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) => void }) {
   const [chords, setChords] = useState<ChordBlock[]>([]);
   const [showChordPalette, setShowChordPalette] = useState(false);
+  const [viewMode, setViewMode] = useState<'compact' | 'blocks'>('compact'); // Default to compact
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -110,7 +154,7 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
     const newChord: ChordBlock = {
       id: `chord-${Date.now()}`,
       chord,
-      duration: '1 bar'
+      duration: viewMode === 'blocks' ? '1 bar' : undefined
     };
     const updated = [...chords, newChord];
     setChords(updated);
@@ -126,21 +170,54 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h3 className="text-xl font-semibold mb-1 flex items-center gap-2">
             <Music className="w-5 h-5 text-brand-primary" />
             Chord Progression Builder
           </h3>
-          <p className="text-sm text-muted-foreground">Drag blocks to reorder • Click chord to edit</p>
+          <p className="text-sm text-muted-foreground">
+            {viewMode === 'compact' 
+              ? 'Drag chord buttons to reorder • Click to add more'
+              : 'Drag blocks to reorder • Click chord to edit'}
+          </p>
         </div>
-        <button
-          onClick={() => setShowChordPalette(!showChordPalette)}
-          className="rnrb-button-primary px-4 py-2 rounded-xl font-medium flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Add Chord
-        </button>
+        <div className="flex items-center gap-2">
+          {/* View Mode Toggle */}
+          <div className="flex items-center gap-1 bg-surface/80 border border-border/60 rounded-lg p-1">
+            <button
+              onClick={() => setViewMode('compact')}
+              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-xs font-medium transition ${
+                viewMode === 'compact'
+                  ? 'bg-brand-primary text-white shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+              title="Compact inline view"
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              Compact
+            </button>
+            <button
+              onClick={() => setViewMode('blocks')}
+              className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-xs font-medium transition ${
+                viewMode === 'blocks'
+                  ? 'bg-brand-primary text-white shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+              title="Large block view"
+            >
+              <List className="w-3.5 h-3.5" />
+              Blocks
+            </button>
+          </div>
+          <button
+            onClick={() => setShowChordPalette(!showChordPalette)}
+            className="rnrb-button-primary px-4 py-2 rounded-xl font-medium flex items-center gap-2"
+          >
+            <Plus className="w-4 h-4" />
+            Add Chord
+          </button>
+        </div>
       </div>
 
       {/* Chord Palette */}
@@ -187,7 +264,7 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
             </div>
             <h3 className="text-2xl font-display font-bold mb-3">Your Canvas Awaits</h3>
             <p className="text-lg text-muted-foreground mb-4 max-w-md">
-              Click "Add Chord" above to start building your progression with drag-drop blocks.
+              Click "Add Chord" above to start building your progression.
             </p>
             <p className="text-sm text-brand-primary italic font-medium">
               "Every song starts with a single chord"
@@ -201,17 +278,31 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
           >
             <SortableContext
               items={chords.map(c => c.id)}
-              strategy={verticalListSortingStrategy}
+              strategy={viewMode === 'compact' ? rectSortingStrategy : verticalListSortingStrategy}
             >
-              <div className="space-y-3">
-                {chords.map((chord) => (
-                  <SortableChordBlock
-                    key={chord.id}
-                    {...chord}
-                    onRemove={() => removeChord(chord.id)}
-                  />
-                ))}
-              </div>
+              {viewMode === 'compact' ? (
+                /* Compact inline view with wrapping */
+                <div className="flex flex-wrap gap-3 items-start">
+                  {chords.map((chord) => (
+                    <SortableChordButton
+                      key={chord.id}
+                      {...chord}
+                      onRemove={() => removeChord(chord.id)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                /* Large block view - vertical stacking */
+                <div className="space-y-3">
+                  {chords.map((chord) => (
+                    <SortableChordBlock
+                      key={chord.id}
+                      {...chord}
+                      onRemove={() => removeChord(chord.id)}
+                    />
+                  ))}
+                </div>
+              )}
             </SortableContext>
           </DndContext>
         )}
@@ -229,7 +320,8 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
                 {chords.map(c => c.chord).join(' → ')}
               </p>
               <p className="text-xs text-muted-foreground mt-2">
-                {chords.length} {chords.length === 1 ? 'chord' : 'chords'} • Drag blocks above to reorder
+                {chords.length} {chords.length === 1 ? 'chord' : 'chords'} • 
+                {viewMode === 'compact' ? ' Drag buttons to reorder' : ' Drag blocks above to reorder'}
               </p>
             </div>
           </div>

@@ -356,32 +356,34 @@ export function CollaborativeVisualBuilder({
       <div className="grid grid-cols-12 gap-4">
         {/* Left Palette */}
         <div className="col-span-12 lg:col-span-3 space-y-4">
-          <Card className="p-6 rnrb-card sticky top-4">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-400" />
-              Building Blocks
-            </h3>
-            <div className="space-y-3">
-              {PALETTE_BLOCKS.map((item) => (
-                <button
-                  key={item.type}
-                  onClick={() => addBlock(item.type)}
-                  className="w-full rnrb-card p-4 bg-gradient-to-r from-brand-primary/10 to-transparent border-2 border-dashed border-brand-primary/30 hover:border-brand-primary/50 hover:shadow-lg transition-all text-left"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl">{item.icon}</div>
-                    <div>
-                      <p className="font-semibold text-foreground">{item.label}</p>
-                      <p className="text-xs text-muted-foreground">Click to add →</p>
+          <div className="lg:sticky lg:top-4 space-y-4">
+            <Card className="p-6 rnrb-card">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-purple-400" />
+                Building Blocks
+              </h3>
+              <div className="space-y-3">
+                {PALETTE_BLOCKS.map((item) => (
+                  <button
+                    key={item.type}
+                    onClick={() => addBlock(item.type)}
+                    className="w-full rnrb-card p-4 bg-gradient-to-r from-brand-primary/10 to-transparent border-2 border-dashed border-brand-primary/30 hover:border-brand-primary/50 hover:shadow-lg transition-all text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="text-2xl">{item.icon}</div>
+                      <div>
+                        <p className="font-semibold text-foreground">{item.label}</p>
+                        <p className="text-xs text-muted-foreground">Click to add →</p>
+                      </div>
                     </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </Card>
+                  </button>
+                ))}
+              </div>
+            </Card>
 
-          {/* Key Analyzer */}
-          <KeyAnalyzer chords={allChords} />
+            {/* Key Analyzer */}
+            <KeyAnalyzer chords={allChords} />
+          </div>
         </div>
 
         {/* Right Canvas */}
