@@ -6,7 +6,7 @@ const DAILY_API_URL = 'https://api.daily.co/v1';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { roomName: string } }
+  { params }: { params: Promise<{ roomName: string }> }
 ) {
   try {
     // Check authentication
@@ -22,7 +22,7 @@ export async function GET(
       );
     }
 
-    const { roomName } = params;
+    const { roomName } = await params;
 
     // Get room details
     const response = await fetch(`${DAILY_API_URL}/rooms/${roomName}`, {
@@ -86,7 +86,7 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { roomName: string } }
+  { params }: { params: Promise<{ roomName: string }> }
 ) {
   try {
     // Check authentication
@@ -102,7 +102,7 @@ export async function DELETE(
       );
     }
 
-    const { roomName } = params;
+    const { roomName } = await params;
 
     // Delete room
     const response = await fetch(`${DAILY_API_URL}/rooms/${roomName}`, {

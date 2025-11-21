@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@cronkwaters/ui';
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 
 type BackgroundProps = {
   children: ReactNode;
@@ -79,21 +79,28 @@ export function Background({
   backgroundColor = DEFAULT_BACKGROUND,
   foregroundColor = DEFAULT_FOREGROUND
 }: BackgroundProps) {
-  useEffect(() => {
+  // Memoize contrast calculation to avoid recalculation on every render
+  const contrastWarning = useMemo(() => {
     const ratio = contrastRatio(foregroundColor, backgroundColor);
     if (ratio !== null && ratio < 4.5) {
-      console.warn(
-        `[CronkWaters] Background contrast ratio ${ratio.toFixed(
-          2
-        )} is below 4.5:1. Consider adjusting token values for improved readability.`
-      );
+      return `[CronkWaters] Background contrast ratio ${ratio.toFixed(
+        2
+      )} is below 4.5:1. Consider adjusting token values for improved readability.`;
     }
+    return null;
   }, [backgroundColor, foregroundColor]);
+
+  useEffect(() => {
+    if (contrastWarning) {
+      console.warn(contrastWarning);
+    }
+  }, [contrastWarning]);
 
   return (
     <div className={cn('relative isolate overflow-hidden', className)}>
-      <div aria-hidden className="sf-bg-gradient" />
-      <div aria-hidden className="sf-film-grain" />
+      {/* Use CSS will-change for better animation performance */}
+      <div aria-hidden className="sf-bg-gradient" style={{ willChange: 'transform' }} />
+      <div aria-hidden className="sf-film-grain" style={{ willChange: 'opacity' }} />
       <div className={cn('relative z-10 flex min-h-full flex-col', contentClassName)}>{children}</div>
     </div>
   );

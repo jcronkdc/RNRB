@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
-import { useDaily, useParticipants, useLocalParticipant, useScreenShare, DailyProvider } from '@daily-co/daily-react';
+import { useDaily, useLocalParticipant, useScreenShare, DailyProvider } from '@daily-co/daily-react';
 import DailyIframe from '@daily-co/daily-js';
 import { Video, VideoOff, Mic, MicOff, Monitor, MonitorOff, Users } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
@@ -15,9 +15,9 @@ interface CollaborativeRoomProps {
 
 function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
   const callObject = useDaily();
-  const participants = useParticipants();
   const localParticipant = useLocalParticipant();
   const { isSharingScreen, startScreenShare, stopScreenShare } = useScreenShare();
+  const [participants, setParticipants] = useState<Record<string, any>>({});
   
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
@@ -41,14 +41,35 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
         setIsJoining(false);
       } catch (err) {
         console.error('Failed to join room:', err);
-        setError(err instanceof Error ? err.message : 'Failed to join room');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to join room';
+        
+        // Provide helpful message if Daily.co API key is missing
+        if (errorMessage.includes('401') || errorMessage.includes('unauthorized')) {
+          setError('Video collaboration is not configured. Please contact support or check DAILY_API_KEY.');
+        } else {
+          setError(errorMessage);
+        }
         setIsJoining(false);
       }
     };
 
     joinRoom();
+    
+    // Track participants
+    const updateParticipants = () => {
+      const currentParticipants = callObject.participants();
+      setParticipants(currentParticipants || {});
+    };
+    
+    callObject.on('participant-joined', updateParticipants);
+    callObject.on('participant-left', updateParticipants);
+    callObject.on('participant-updated', updateParticipants);
+    updateParticipants();
 
     return () => {
+      callObject.off('participant-joined', updateParticipants);
+      callObject.off('participant-left', updateParticipants);
+      callObject.off('participant-updated', updateParticipants);
       callObject.leave();
     };
   }, [callObject, roomUrl, userName]);
@@ -209,7 +230,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 }
 
 export default function CollaborativeRoom({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
-  const [callObject, setCallObject] = useState<DailyIframe | null>(null);
+  const [callObject, setCallObject] = useState<typeof DailyIframe | null>(null);
 
   useEffect(() => {
     const daily = DailyIframe.createCallObject({
@@ -236,6 +257,7 @@ export default function CollaborativeRoom({ roomUrl, roomName, userName }: Colla
     </DailyProvider>
   );
 }
+
 
 
 

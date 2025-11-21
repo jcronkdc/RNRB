@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { memo, useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Bell, 
   Search, 
@@ -11,7 +11,6 @@ import {
   Palette
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useState, useEffect } from 'react';
 import { cn } from '@cronkwaters/ui';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -20,6 +19,80 @@ import { AblyConnectionStatusBanner } from '../ably/connection-status-banner';
 type TopBarProps = {
   onMenuClick: () => void;
 };
+
+// Memoized organization menu component
+const OrganizationMenu = memo(({ 
+  show, 
+  onClose 
+}: { 
+  show: boolean; 
+  onClose: () => void;
+}) => {
+  if (!show) return null;
+
+  return (
+    <>
+      <div className="fixed inset-0 z-40" onClick={onClose} />
+      <div className="absolute top-full left-0 mt-2 w-64 rnrb-card p-1 z-50">
+        <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors">
+          <p className="text-sm font-medium">The Basement Band</p>
+          <p className="text-xs text-muted-foreground">Pro Plan</p>
+        </button>
+        <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors">
+          <p className="text-sm font-medium">Solo Project</p>
+          <p className="text-xs text-muted-foreground">Free Plan</p>
+        </button>
+        <hr className="my-1 border-border" />
+        <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors text-sm">
+          Create Organization
+        </button>
+      </div>
+    </>
+  );
+});
+OrganizationMenu.displayName = 'OrganizationMenu';
+
+// Memoized profile menu component
+const ProfileMenu = memo(({ 
+  show, 
+  session,
+  onClose,
+  onSignOut 
+}: { 
+  show: boolean;
+  session: any;
+  onClose: () => void;
+  onSignOut: () => void;
+}) => {
+  if (!show) return null;
+
+  return (
+    <>
+      <div className="fixed inset-0 z-40" onClick={onClose} />
+      <div className="absolute top-full right-0 mt-2 w-56 rnrb-card p-1 z-50">
+        <div className="px-3 py-2">
+          <p className="text-sm font-medium">{session?.user?.name || 'User'}</p>
+          <p className="text-xs text-muted-foreground">{session?.user?.email}</p>
+        </div>
+        <hr className="my-1 border-border" />
+        <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors text-sm">
+          Profile Settings
+        </button>
+        <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors text-sm">
+          Organization Settings
+        </button>
+        <hr className="my-1 border-border" />
+        <button
+          onClick={onSignOut}
+          className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors text-sm text-danger"
+        >
+          Sign Out
+        </button>
+      </div>
+    </>
+  );
+});
+ProfileMenu.displayName = 'ProfileMenu';
 
 export function TopBar({ onMenuClick }: TopBarProps) {
   const { data: session } = useSession();
@@ -32,20 +105,44 @@ export function TopBar({ onMenuClick }: TopBarProps) {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  // Memoized theme toggle handler
+  const handleThemeToggle = useCallback(() => {
+    const themes = ['dark', 'light', 'warm'];
+    const currentIndex = themes.indexOf(theme || 'dark');
+    const nextIndex = (currentIndex + 1) % themes.length;
+    setTheme(themes[nextIndex]);
+  }, [theme, setTheme]);
 
-  const currentOrg = {
+  // Memoized menu toggles
+  const toggleOrgMenu = useCallback(() => setShowOrgMenu(prev => !prev), []);
+  const toggleProfileMenu = useCallback(() => setShowProfileMenu(prev => !prev), []);
+  const closeOrgMenu = useCallback(() => setShowOrgMenu(false), []);
+  const closeProfileMenu = useCallback(() => setShowProfileMenu(false), []);
+
+  // Memoized sign out handler
+  const handleSignOut = useCallback(() => {
+    signOut({ callbackUrl: '/' });
+  }, []);
+
+  // Memoized current org
+  const currentOrg = useMemo(() => ({
     name: 'The Basement Band',
     plan: 'Pro'
-  };
+  }), []);
 
-  const themes = [
+  // Memoized theme icon
+  const themes = useMemo(() => [
     { value: 'dark', label: 'Dark', icon: Moon },
     { value: 'light', label: 'Light', icon: Sun },
     { value: 'warm', label: 'Warm', icon: Palette }
-  ];
+  ], []);
 
-  const currentThemeIcon = themes.find(t => t.value === theme)?.icon || Moon;
+  const currentThemeIcon = useMemo(() => 
+    themes.find(t => t.value === theme)?.icon || Moon,
+    [theme, themes]
+  );
+
+  if (!mounted) return null;
 
   return (
     <div className="flex flex-col gap-2">
@@ -63,7 +160,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
         {/* Organization switcher */}
         <div className="relative">
           <button
-            onClick={() => setShowOrgMenu(!showOrgMenu)}
+            onClick={toggleOrgMenu}
             className="flex items-center gap-2 px-3 py-2 hover:bg-surface-muted rounded-lg transition-colors"
           >
             <div className="text-left">
@@ -73,22 +170,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
             <ChevronDown size={16} className="text-muted-foreground" />
           </button>
 
-          {showOrgMenu && (
-            <div className="absolute top-full left-0 mt-2 w-64 rnrb-card p-1 z-50">
-              <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors">
-                <p className="text-sm font-medium">The Basement Band</p>
-                <p className="text-xs text-muted-foreground">Pro Plan</p>
-              </button>
-              <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors">
-                <p className="text-sm font-medium">Solo Project</p>
-                <p className="text-xs text-muted-foreground">Free Plan</p>
-              </button>
-              <hr className="my-1 border-border" />
-              <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors text-sm">
-                Create Organization
-              </button>
-            </div>
-          )}
+          <OrganizationMenu show={showOrgMenu} onClose={closeOrgMenu} />
         </div>
 
         {/* Search */}
@@ -108,12 +190,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
         {/* Theme toggle */}
         <div className="relative">
           <button
-            onClick={() => {
-              const themes = ['dark', 'light', 'warm'];
-              const currentIndex = themes.indexOf(theme || 'dark');
-              const nextIndex = (currentIndex + 1) % themes.length;
-              setTheme(themes[nextIndex]);
-            }}
+            onClick={handleThemeToggle}
             className="p-2 hover:bg-surface-muted rounded-lg transition-colors"
             aria-label="Toggle theme"
           >
@@ -130,7 +207,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
         {/* Profile menu */}
         <div className="relative">
           <button
-            onClick={() => setShowProfileMenu(!showProfileMenu)}
+            onClick={toggleProfileMenu}
             className="flex items-center gap-2 p-1.5 hover:bg-surface-muted rounded-lg transition-colors"
           >
             {session?.user?.image ? (
@@ -150,28 +227,12 @@ export function TopBar({ onMenuClick }: TopBarProps) {
             )}
           </button>
 
-          {showProfileMenu && (
-            <div className="absolute top-full right-0 mt-2 w-56 rnrb-card p-1 z-50">
-              <div className="px-3 py-2">
-                <p className="text-sm font-medium">{session?.user?.name || 'User'}</p>
-                <p className="text-xs text-muted-foreground">{session?.user?.email}</p>
-              </div>
-              <hr className="my-1 border-border" />
-              <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors text-sm">
-                Profile Settings
-              </button>
-              <button className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors text-sm">
-                Organization Settings
-              </button>
-              <hr className="my-1 border-border" />
-              <button
-                onClick={() => signOut({ callbackUrl: '/' })}
-                className="w-full text-left px-3 py-2 hover:bg-surface-muted rounded-md transition-colors text-sm text-danger"
-              >
-                Sign Out
-              </button>
-            </div>
-          )}
+          <ProfileMenu 
+            show={showProfileMenu}
+            session={session}
+            onClose={closeProfileMenu}
+            onSignOut={handleSignOut}
+          />
         </div>
       </div>
       </header>

@@ -134,6 +134,17 @@ export async function middleware(req: NextRequest) {
   );
   response.headers.set("Content-Security-Policy", csp);
 
+  // Performance headers
+  // Enable client-side caching for static assets
+  if (pathname.match(/\.(jpg|jpeg|png|gif|svg|ico|webp|avif|woff|woff2|ttf|eot|css|js)$/)) {
+    response.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+  }
+  
+  // Enable stale-while-revalidate for HTML pages
+  if (!pathname.includes('.') && !pathname.startsWith('/api/')) {
+    response.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=86400");
+  }
+
   // Additional security headers - commented out temporarily to debug blank page
   // response.headers.set('X-Permitted-Cross-Domain-Policies', 'none');
   // response.headers.set('Cross-Origin-Embedder-Policy', 'require-corp');

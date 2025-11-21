@@ -18,6 +18,12 @@ const nextConfig: NextConfig = {
   // Image optimization with restricted domains
   images: {
     formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 31536000, // 1 year cache for optimized images
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
@@ -41,16 +47,68 @@ const nextConfig: NextConfig = {
 
   // Performance optimizations
   experimental: {
-    // Temporarily disabled due to new component exports
-    // optimizePackageImports: ['@cronkwaters/ui', 'lucide-react']
-    serverMinification: false,
+    // Optimize package imports for faster builds
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    // Enable server minification in production
+    serverMinification: true,
+    // Optimize CSS
+    optimizeCss: true,
+    // Enable strict Next.js mode for better performance
+    strictNextHead: true,
   },
 
   // Security-focused webpack configuration
   webpack: (config, { isServer, dev, webpack }) => {
-    // Disable source maps in production
-    if (!dev && !isServer) {
-      config.devtool = false;
+    // Production optimizations
+    if (!dev) {
+      // Disable source maps in production for faster builds and smaller bundles
+      if (!isServer) {
+        config.devtool = false;
+      }
+      
+      // Enable aggressive code splitting
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+        runtimeChunk: 'single',
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            // Vendor chunk
+            vendor: {
+              name: 'vendor',
+              chunks: 'all',
+              test: /node_modules/,
+              priority: 20
+            },
+            // Common chunk
+            common: {
+              name: 'common',
+              minChunks: 2,
+              chunks: 'all',
+              priority: 10,
+              reuseExistingChunk: true,
+              enforce: true
+            },
+            // React/Next.js framework chunk
+            framework: {
+              name: 'framework',
+              test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
+              priority: 40,
+              chunks: 'all'
+            },
+            // UI library chunk
+            lib: {
+              test: /[\\/]node_modules[\\/](framer-motion|lucide-react)[\\/]/,
+              name: 'lib',
+              priority: 30,
+              chunks: 'all'
+            }
+          }
+        }
+      };
     }
 
     // Handle optional dependencies

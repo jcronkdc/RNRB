@@ -81,6 +81,8 @@ model User {
   subscriptions           Subscription[]
   songs                   Song[] // Owned songs
   songCollaborations      SongCollaborator[] // Songs shared with user
+  sentInvitations         Invitation[]        @relation("SentInvitations")
+  projectMemberships      ProjectMember[]
 
   @@index([email])
 }
@@ -120,6 +122,7 @@ model Org {
   projects        Project[]        @relation("OrgProjects")
   shows           Show[]
   tours           Tour[]
+  invitations     Invitation[]
 
   @@index([slug])
   @@index([type])
@@ -161,6 +164,8 @@ model Project {
   splitSheets    SplitSheet[]
   studioSessions StudioSession[]
   transactions   Transaction[]
+  invitations    Invitation[]
+  members        ProjectMember[]
 
   @@index([orgId])
   @@index([slug])
@@ -830,6 +835,46 @@ model OrgInvite {
   @@index([orgId])
   @@index([code])
   @@index([expiresAt])
+}
+
+// Generic invitation model for projects and orgs
+model Invitation {
+  id         String    @id @default(cuid())
+  email      String
+  token      String    @unique
+  role       String    @default("member")
+  status     String    @default("pending") // pending, accepted, expired
+  orgId      String?
+  projectId  String?
+  senderId   String
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+  
+  sender  User     @relation("SentInvitations", fields: [senderId], references: [id])
+  org     Org?     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([email])
+  @@index([token])
+  @@index([orgId])
+  @@index([projectId])
+  @@index([status])
+}
+
+// Project membership/collaboration model
+model ProjectMember {
+  userId    String
+  projectId String
+  role      String   @default("member") // owner, admin, member, viewer
+  status    String   @default("active")
+  joinedAt  DateTime @default(now())
+  
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([userId, projectId])
+  @@index([projectId])
 }
 
 model AssetShare {

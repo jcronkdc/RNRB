@@ -11,6 +11,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         solid: 'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]',
+        secondary:
+          'bg-secondary text-secondary-foreground shadow-soft hover:bg-secondary/90 hover:shadow-elevated motion-safe:active:scale-[0.99]',
         outline:
           'border border-border bg-transparent text-brand-foreground shadow-outline hover:bg-brand-muted/70 hover:text-brand-primary motion-safe:active:scale-[0.99]',
         ghost:

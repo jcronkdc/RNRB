@@ -6,7 +6,7 @@ import { Menu, X, ChevronDown, Search, Command } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 
 import { ThemeToggle } from './theme/ThemeToggle';
 
@@ -40,12 +40,22 @@ export function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
+  // Throttled scroll handler for better performance
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 10);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Passive listener for better scroll performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -63,12 +73,13 @@ export function NavBar() {
     }
   }, [mobileMenuOpen]);
 
-  const isActive = (href: string) => {
+  // Memoize isActive function to prevent re-creation on every render
+  const isActive = useCallback((href: string) => {
     if (href === '/') {
       return pathname === '/';
     }
     return pathname.startsWith(href);
-  };
+  }, [pathname]);
 
   const NavItem = ({ link }: { link: NavLink }) => {
     const hasChildren = link.children && link.children.length > 0;
@@ -134,7 +145,7 @@ export function NavBar() {
       <header className={cn("rnrb-header", scrolled && "scrolled")}>
         <nav className="rnrb-container h-full">
           <div className="flex items-center justify-between h-full">
-            {/* Logo */}
+            {/* Logo - Optimized with priority loading */}
             <Link href="/" className="rnrb-logo flex items-center gap-3">
               <div className="relative">
                 <Image
@@ -142,6 +153,8 @@ export function NavBar() {
                   alt="Rock N' Roll Basement"
                   width={80}
                   height={80}
+                  priority
+                  quality={90}
                   className="dark:hidden drop-shadow-2xl"
                   style={{ filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.9)) brightness(1.1)' }}
                 />
@@ -150,6 +163,8 @@ export function NavBar() {
                   alt="Rock N' Roll Basement"
                   width={80}
                   height={80}
+                  priority
+                  quality={90}
                   className="hidden dark:block drop-shadow-2xl"
                   style={{ filter: 'drop-shadow(0 4px 8px rgba(255,255,255,0.4))' }}
                 />
