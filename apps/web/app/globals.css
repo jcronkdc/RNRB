@@ -7,7 +7,6 @@
    This CSS is LOCKED and cannot be overridden
    ======================================== */
 
-@layer locked-design {
 /* === RNR Basement Human-First Design === */
 :root{
   /* Comfortable dark theme - like a cozy music studio */
@@ -579,14 +578,12 @@ a{color:var(--accent);text-decoration:none}
   }
 }
 
-/* End of @layer locked-design */
-
 /* ========================================
    🛡️ PROTECTION LAYER
    Prevent any external CSS from overriding
    ======================================== */
 
-/* Lock all CSS variables */
+/* Lock all CSS variables with !important */
 :root {
   --bg: #1e1e1e !important;
   --panel: #2a2a2a !important;
@@ -623,17 +620,6 @@ html, body {
   color: var(--text) !important;
   margin: 0 !important;
   padding: 0 !important;
-}
-
-/* Prevent style overrides on critical elements */
-.hero-text-gradient,
-.logo-hero,
-.button,
-.card,
-.hero-buttons,
-.nav-link,
-.tile {
-  all: revert-layer !important;
 }
 
 /* Block any attempts to change theme */
