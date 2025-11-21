@@ -2,18 +2,5 @@
   "buildCommand": "pnpm build",
   "outputDirectory": ".next",
   "installCommand": "pnpm install --include-workspace-root",
-  "framework": "nextjs",
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.cronkwaters.com"
-        }
-      ],
-      "destination": "https://cronkwaters.com/:path*",
-      "permanent": true
-    }
-  ]
+  "framework": "nextjs"
 }
