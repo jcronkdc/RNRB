@@ -19,6 +19,16 @@ export default function SignInPage() {
     setLoading(true);
     setMessage(null);
 
+    // Check if Supabase is initialized
+    if (!supabase) {
+      setMessage({
+        type: 'error',
+        text: 'Authentication service is not configured. Please contact support.'
+      });
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase.auth.signInWithOtp({
         email: email,
@@ -48,6 +58,16 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setMessage(null);
+
+    // Check if Supabase is initialized
+    if (!supabase) {
+      setMessage({
+        type: 'error',
+        text: 'Authentication service is not configured. Please contact support.'
+      });
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({

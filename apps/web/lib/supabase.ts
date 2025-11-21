@@ -37,10 +37,14 @@ function getSupabaseClient() {
   return supabaseInstance;
 }
 
-export const supabase = getSupabaseClient()!;
+export const supabase = getSupabaseClient();
 
 // Helper function to get current user
 export async function getCurrentUser() {
+  if (!supabase) {
+    console.error('Supabase client not initialized');
+    return null;
+  }
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error) {
     console.error('Error getting user:', error);
@@ -51,6 +55,10 @@ export async function getCurrentUser() {
 
 // Helper function to sign out
 export async function signOut() {
+  if (!supabase) {
+    console.error('Supabase client not initialized');
+    return { error: new Error('Supabase client not initialized') };
+  }
   const { error } = await supabase.auth.signOut();
   if (error) {
     console.error('Error signing out:', error);
