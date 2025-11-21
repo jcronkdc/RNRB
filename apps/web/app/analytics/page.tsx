@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 import { Card, Button } from '@cronkwaters/ui';
 import { 
   TrendingUp,
@@ -21,9 +20,7 @@ import {
 import Link from 'next/link';
 
 export default function AnalyticsPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useRequireAuth();
   const [stats, setStats] = useState({
     totalProjects: 0,
     totalSongs: 0,
@@ -36,14 +33,7 @@ export default function AnalyticsPage() {
   });
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
-      
-      setUser(user);
-      
+    if (user) {
       // Calculate stats from user data
       const projects = user.user_metadata?.projects || [];
       const totalProjects = projects.length;
@@ -69,10 +59,8 @@ export default function AnalyticsPage() {
         thisWeekHours: 0, // TODO: Calculate based on date
         streakDays: 0 // TODO: Calculate work streak
       });
-      
-      setLoading(false);
-    });
-  }, [router]);
+    }
+  }, [user]);
 
   if (loading) {
     return (

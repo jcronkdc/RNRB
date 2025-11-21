@@ -1,10 +1,23 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { AblyProvider } from '@/components/ably/ably-provider';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { NavBar } from '@/components/NavBar';
 import './globals.css';
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#1e1e1e' },
+    { media: '(prefers-color-scheme: light)', color: '#1e1e1e' }
+  ],
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL('https://cronkwaters.com'),
   title: "Rock N' Roll Basement",
   description:
     "Rock N' Roll Basement is a full-stack music workspace for bands, studios, and organizations to manage songs, tours, rights, and revenue in one place.",
@@ -21,9 +34,13 @@ export const metadata: Metadata = {
   authors: [{ name: "Rock N' Roll Basement" }],
   creator: "Rock N' Roll Basement",
   publisher: "Rock N' Roll Basement",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: "Rock N' Roll Basement",
+  },
+  formatDetection: {
+    telephone: false,
   },
   robots: {
     index: true,
@@ -63,6 +80,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://rnrb.ai',
   },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({

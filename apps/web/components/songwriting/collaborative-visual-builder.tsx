@@ -79,10 +79,12 @@ export function CollaborativeVisualBuilder({
   currentUser,
 }: { 
   projectSlug: string;
-  onSongChange: (blocks: SongBlock[]) => void;
+  onSongChange?: (blocks: SongBlock[]) => void;
   currentUser: {
     userId: string;
     userName: string;
+    userEmail?: string;
+    avatar?: string;
   };
 }) {
   const [blocks, setBlocks] = useState<SongBlock[]>([]);
@@ -121,7 +123,7 @@ export function CollaborativeVisualBuilder({
     };
     const updated = [...blocks, newBlock];
     setBlocks(updated);
-    onSongChange(updated);
+    onSongChange?.(updated);
     saveToHistory(updated);
   };
 
@@ -134,7 +136,7 @@ export function CollaborativeVisualBuilder({
       const oldIndex = items.findIndex(b => b.id === active.id);
       const newIndex = items.findIndex(b => b.id === over.id);
       const reordered = arrayMove(items, oldIndex, newIndex);
-      onSongChange(reordered);
+      onSongChange?.(reordered);
       saveToHistory(reordered);
       return reordered;
     });
@@ -143,14 +145,14 @@ export function CollaborativeVisualBuilder({
   const editBlock = (id: string, content: string) => {
     const updated = blocks.map(b => b.id === id ? { ...b, content } : b);
     setBlocks(updated);
-    onSongChange(updated);
+    onSongChange?.(updated);
     // Don't save to history on every keystroke - only on significant changes
   };
 
   const removeBlock = (id: string) => {
     const updated = blocks.filter(b => b.id !== id);
     setBlocks(updated);
-    onSongChange(updated);
+    onSongChange?.(updated);
     saveToHistory(updated);
   };
 
@@ -168,7 +170,7 @@ export function CollaborativeVisualBuilder({
       setHistoryIndex(newIndex);
       const restored = history[newIndex].blocks;
       setBlocks(restored);
-      onSongChange(restored);
+      onSongChange?.(restored);
     }
   };
 
@@ -179,7 +181,7 @@ export function CollaborativeVisualBuilder({
       setHistoryIndex(newIndex);
       const restored = history[newIndex].blocks;
       setBlocks(restored);
-      onSongChange(restored);
+      onSongChange?.(restored);
     }
   };
 
@@ -197,7 +199,7 @@ export function CollaborativeVisualBuilder({
     setHistoryIndex(versionIndex);
     const restored = history[versionIndex].blocks;
     setBlocks(restored);
-    onSongChange(restored);
+    onSongChange?.(restored);
     setShowHistory(false);
   };
 

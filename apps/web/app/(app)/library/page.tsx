@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
 import { useAudioUpload } from '@/hooks/use-audio-upload';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 import { 
   Music, 
   Upload, 
@@ -40,9 +39,7 @@ type LibraryFile = {
 };
 
 export default function LibraryPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useRequireAuth();
   const [files, setFiles] = useState<LibraryFile[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,18 +48,12 @@ export default function LibraryPage() {
   const { upload, uploading, progress, error: uploadError } = useAudioUpload();
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        setUser(user);
-        // Load library files from user metadata
-        const libraryFiles = user.user_metadata?.library_files || [];
-        setFiles(libraryFiles);
-        setLoading(false);
-      }
-    });
-  }, [router]);
+    if (user) {
+      // Load library files from user metadata
+      const libraryFiles = user.user_metadata?.library_files || [];
+      setFiles(libraryFiles);
+    }
+  }, [user]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: LibraryFile['type']) => {
     const file = event.target.files?.[0];

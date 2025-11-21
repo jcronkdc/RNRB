@@ -2,9 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
 import { 
   Plus, 
@@ -21,6 +18,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 
 type Project = {
   id: string;
@@ -37,24 +35,16 @@ type Project = {
 };
 
 export default function ProjectsPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useRequireAuth();
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        setUser(user);
-        // Load projects from user_metadata for now (will connect to database later)
-        const userProjects = user.user_metadata?.projects || [];
-        setProjects(userProjects);
-        setLoading(false);
-      }
-    });
-  }, [router]);
+    if (user) {
+      // Load projects from user_metadata for now (will connect to database later)
+      const userProjects = user.user_metadata?.projects || [];
+      setProjects(userProjects);
+    }
+  }, [user]);
 
   if (loading) {
     return (

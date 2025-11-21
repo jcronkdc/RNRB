@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 import { 
   MessageSquare,
   Search,
@@ -38,9 +37,7 @@ type Conversation = {
 };
 
 export default function MessagesPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useRequireAuth();
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messageText, setMessageText] = useState('');
   const [showNewConversation, setShowNewConversation] = useState(false);
@@ -50,18 +47,12 @@ export default function MessagesPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        setUser(user);
-        // Load direct message conversations
-        const dmConversations = user.user_metadata?.dm_conversations || [];
-        setConversations(dmConversations);
-        setLoading(false);
-      }
-    });
-  }, [router]);
+    if (user) {
+      // Load direct message conversations
+      const dmConversations = user.user_metadata?.dm_conversations || [];
+      setConversations(dmConversations);
+    }
+  }, [user]);
 
   const generateChannelName = (userEmail: string, otherEmail: string) => {
     // Create consistent channel name regardless of who starts conversation

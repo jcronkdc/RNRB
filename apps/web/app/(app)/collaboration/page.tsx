@@ -15,10 +15,8 @@
  * This demonstrates the power of the interconnected network!
  */
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
 import { 
   Users, 
   Activity, 
@@ -31,26 +29,14 @@ import {
   Eye
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 
 // Dynamically import components
 const ActivityFeed = dynamic(() => import('@/components/activity-feed').then(m => m.ActivityFeed), { ssr: false });
 const PresenceIndicator = dynamic(() => import('@/components/presence-indicator').then(m => m.PresenceIndicator), { ssr: false });
 
 export default function CollaborationDashboard() {
-  const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        setUser(user);
-        setLoading(false);
-      }
-    });
-  }, [router]);
+  const { user, loading } = useRequireAuth();
 
   if (loading) {
     return (

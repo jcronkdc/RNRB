@@ -98,3 +98,5 @@ CREATE POLICY "Members can leave projects"
     ON "ProjectMember" FOR DELETE
     USING ("userId" = current_setting('request.jwt.claims', true)::json->>'sub');
 
+
+

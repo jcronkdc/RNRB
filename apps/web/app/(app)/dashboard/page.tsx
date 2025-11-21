@@ -1,10 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { 
   Music2, 
@@ -19,25 +15,13 @@ import {
   Zap
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 
 // Dynamically import activity feed
 const CompactActivityFeed = dynamic(() => import('@/components/activity-feed').then(m => m.CompactActivityFeed), { ssr: false });
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        setUser(user);
-        setLoading(false);
-      }
-    });
-  }, [router]);
+  const { user, loading } = useRequireAuth();
 
   if (loading) {
     return (

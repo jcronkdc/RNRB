@@ -34,6 +34,7 @@ export async function middleware(req: NextRequest) {
     '/enterprise',
     '/pricing',
     '/demo',
+    '/features', // Marketing pages for features
     // Add feature exploration routes for public access
     '/projects',
     '/splits',

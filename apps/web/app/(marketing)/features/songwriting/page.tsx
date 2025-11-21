@@ -36,9 +36,9 @@ export default function SongwritingFeaturePage() {
             </p>
             
             <div className="flex items-center justify-center gap-4">
-              <Link href="/auth?signup=true">
+              <Link href="/songwriting">
                 <Button className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold flex items-center gap-2">
-                  Try It Free
+                  Launch Studio
                   <ArrowRight className="w-5 h-5" />
                 </Button>
               </Link>
@@ -279,9 +279,9 @@ export default function SongwritingFeaturePage() {
             <p className="text-xl text-muted-foreground mb-8">
               Free plan includes 50 AI assists per month - enough to write several songs.
             </p>
-            <Link href="/auth?signup=true">
+            <Link href="/songwriting">
               <Button className="rnrb-button-primary px-8 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-2">
-                Try Songwriting AI Free
+                Launch Songwriting Studio
                 <ChevronRight className="w-5 h-5" />
               </Button>
             </Link>

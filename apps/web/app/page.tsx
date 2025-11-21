@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function HomePage() {
   return (
@@ -36,10 +37,14 @@ export default function HomePage() {
           <div className="max-w-4xl mx-auto text-center">
             {/* Prominent Logo */}
             <div className="logo-hero-wrapper mb-8">
-              <img 
+              <Image 
                 src="/logo-dark.png" 
                 alt="Rock N' Roll Basement" 
                 className="logo-hero mx-auto"
+                width={240}
+                height={100}
+                priority
+                quality={90}
               />
               <div className="logo-hero-glow"></div>
             </div>

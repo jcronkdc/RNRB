@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Music2, Sparkles, Users, MessageSquare, Video } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import dynamic from 'next/dynamic';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 
 // Import the drag-drop collaborative songwriting components
 const CollaborativeVisualBuilder = dynamic(
@@ -45,13 +45,7 @@ export default function SongwritingPage() {
   const [songBlocks, setSongBlocks] = useState<SongBlock[]>([]);
   const [chordProgression, setChordProgression] = useState<ChordBlock[]>([]);
   const [lyrics, setLyrics] = useState('');
-  const [user, setUser] = useState<any>(null);
-
-  useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
-  }, []);
+  const { user } = useRequireAuth({ redirectIfNoUser: false });
 
   return (
     <div className="min-h-screen bg-black">
@@ -183,6 +177,7 @@ export default function SongwritingPage() {
           {activeView === 'structure' && user && (
             <CollaborativeVisualBuilder
               projectSlug="songwriting-studio"
+              onSongChange={(blocks) => setSongBlocks(blocks)}
               currentUser={{
                 userId: user.id,
                 userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
@@ -211,8 +206,8 @@ export default function SongwritingPage() {
           {activeView === 'lyrics' && (
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
               <LyricsAssistant
-                initialLyrics={lyrics}
-                onChange={setLyrics}
+                currentLyrics={lyrics}
+                onInsert={(text) => setLyrics(lyrics ? lyrics + '\n' + text : text)}
               />
             </div>
           )}
