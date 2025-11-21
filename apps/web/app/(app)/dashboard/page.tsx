@@ -23,22 +23,10 @@ const CompactActivityFeed = dynamic(() => import('@/components/activity-feed').t
 export default function DashboardPage() {
   const { user, loading } = useRequireAuth();
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
-        >
-          <div className="w-16 h-16 rounded-full border-4 border-orange-500/30 border-t-orange-500 animate-spin mx-auto mb-4" />
-          <p className="text-lg text-gray-400">Setting up your studio...</p>
-        </motion.div>
-      </div>
-    );
-  }
-
-  const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'Artist';
+  // Optimistic rendering: Show UI immediately, update user name when ready
+  const userName = loading 
+    ? 'Artist' 
+    : user?.user_metadata?.name || user?.email?.split('@')[0] || 'Artist';
   
   // Welcome messages that resonate with musicians
   const welcomeMessages = [
@@ -50,9 +38,25 @@ export default function DashboardPage() {
   ];
   const randomWelcome = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
 
+  // Show loading indicator only briefly at top, not full screen
+  const showLoadingBadge = loading;
+
   return (
     <div className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Subtle loading indicator */}
+        {showLoadingBadge && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-20 right-6 z-50 bg-orange-500/10 border border-orange-500/30 rounded-full px-4 py-2 text-xs text-orange-400 flex items-center gap-2"
+          >
+            <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+            Loading...
+          </motion.div>
+        )}
+
         {/* Hero Section with Orange Gradient */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -277,7 +281,7 @@ export default function DashboardPage() {
         </div>
       </motion.div>
 
-      {/* Recent Activity Feed */}
+      {/* Recent Activity Feed - Only show when user is loaded */}
       {user && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}

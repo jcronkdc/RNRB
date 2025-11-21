@@ -6,20 +6,18 @@ import { useEffect, useState, type ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
+  lazy?: boolean; // New: Allow lazy initialization
 }
 
-export function AblyProvider({ children }: Props) {
+export function AblyProvider({ children, lazy = true }: Props) {
   const [client, setClient] = useState<Ably.Realtime | null>(null);
-  const [isReady, setIsReady] = useState(false);
+  const [shouldInit, setShouldInit] = useState(!lazy);
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || !shouldInit) {
       return;
     }
-
-    // Set ready immediately so UI isn't blocked
-    setIsReady(true);
 
     try {
       const ablyClient = new Ably.Realtime({
@@ -58,11 +56,23 @@ export function AblyProvider({ children }: Props) {
       // App continues without real-time features
       return undefined;
     }
-  }, []);
+  }, [shouldInit]);
 
-  // Always render children - don't block app if Ably fails
-  // This makes the app resilient to real-time service failures
-  if (!isReady || !client || hasError) {
+  // Lazy initialization: only connect when user interacts or after delay
+  useEffect(() => {
+    if (lazy && !shouldInit) {
+      // Delay Ably connection until after initial render
+      const timer = setTimeout(() => {
+        setShouldInit(true);
+      }, 2000); // Initialize after 2 seconds or user interaction
+
+      return () => clearTimeout(timer);
+    }
+  }, [lazy, shouldInit]);
+
+  // Always render children immediately - don't block app
+  // This makes the app resilient and fast
+  if (!client || hasError) {
     return <>{children}</>;
   }
 

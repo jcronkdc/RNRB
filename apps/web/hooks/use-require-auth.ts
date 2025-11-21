@@ -14,9 +14,15 @@ interface UseRequireAuthReturn {
   error: Error | null;
 }
 
+// Cache to speed up subsequent page loads (in-memory cache)
+let cachedUser: User | null | undefined = undefined;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 30000; // 30 seconds
+
 /**
  * Custom hook to require authentication on a page.
  * Handles Supabase client initialization issues and provides proper error handling.
+ * Now includes caching to speed up subsequent page loads.
  * 
  * @param options - Configuration options
  * @param options.redirectTo - Where to redirect if not authenticated (default: '/auth')
@@ -32,11 +38,15 @@ export function useRequireAuth(
   } = options;
   
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  
+  // Check cache first - show cached user immediately for fast initial render
+  const isCacheValid = cachedUser !== undefined && (Date.now() - cacheTimestamp < CACHE_DURATION);
+  const [user, setUser] = useState<User | null>(isCacheValid ? (cachedUser || null) : null);
+  const [loading, setLoading] = useState(!isCacheValid); // Don't show loading if cache is valid
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    // If cache is valid, still verify in background but show UI immediately
     const checkAuth = async () => {
       // Handle case where supabase client is not initialized
       if (!supabase) {
@@ -52,32 +62,36 @@ export function useRequireAuth(
       }
       
       try {
-        const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+        // Use getSession first (faster - local storage check)
+        const { data: { session } } = await supabase.auth.getSession();
         
-        if (authError) {
-          console.error('Auth error:', authError);
-          setError(authError);
+        if (session?.user) {
+          // Update cache
+          cachedUser = session.user;
+          cacheTimestamp = Date.now();
+          setUser(session.user);
+          setLoading(false);
+        } else {
+          // No session in local storage, clear cache
+          cachedUser = null;
+          cacheTimestamp = Date.now();
           
           if (redirectIfNoUser) {
             router.push(redirectTo);
           }
-        } else if (!authUser) {
-          if (redirectIfNoUser) {
-            router.push(redirectTo);
-          }
-        } else {
-          setUser(authUser);
+          setLoading(false);
         }
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Unexpected auth error');
         console.error('Unexpected auth error:', error);
         setError(error);
         
+        // Clear cache on error
+        cachedUser = undefined;
+        
         if (redirectIfNoUser) {
           router.push(redirectTo);
         }
-      } finally {
-        // Always set loading to false, even if there's an error
         setLoading(false);
       }
     };
