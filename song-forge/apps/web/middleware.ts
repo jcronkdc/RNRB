@@ -147,11 +147,13 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - _next (Next.js internals)
+     * - api/ (API routes)
+     * - _next/static (static files including CSS/JS)
+     * - _next/image (image optimization files)
      * - favicon, icon, robots.txt, sitemap.xml (static files)
      * - opengraph-image (Next.js metadata)
-     * - files with extensions: svg, jpg, png
+     * - files with extensions: svg, jpg, png, css, js, etc.
      */
-    "/((?!_next|favicon|icon|robots\\.txt|sitemap\\.xml|opengraph-image|.*\\.(?:svg|jpg|png)).*)",
+    "/((?!api/|_next/static|_next/image|_next/webpack-hmr|favicon|icon|robots\\.txt|sitemap\\.xml|opengraph-image|.*\\.(?:svg|jpg|png|ico|css|js|woff|woff2|ttf|eot)).*)",
   ],
 };
