@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
-  "installCommand": "NODE_ENV=development pnpm install --frozen-lockfile",
-  "buildCommand": "NODE_ENV=production pnpm build"
+  "installCommand": "pnpm install --include-workspace-root",
+  "buildCommand": "pnpm build"
 }
