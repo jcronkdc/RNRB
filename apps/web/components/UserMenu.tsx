@@ -24,22 +24,40 @@ export function UserMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    // Check if Supabase is initialized
+    if (!supabase) {
+      console.warn('Supabase client not initialized in UserMenu');
+      setLoading(false);
+      return;
+    }
+
     // Get initial user
-    supabase?.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
+      setLoading(false);
+    }).catch(err => {
+      console.error('Error getting user:', err);
       setLoading(false);
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase?.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-    }) ?? { data: { subscription: { unsubscribe: () => {} } } };
+    });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const handleSignOut = async () => {
-    await supabase?.auth.signOut();
+    if (!supabase) {
+      console.error('Cannot sign out - Supabase not initialized');
+      window.location.href = '/';
+      return;
+    }
+    await supabase.auth.signOut();
     window.location.href = '/';
   };
 
