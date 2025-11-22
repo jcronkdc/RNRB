@@ -187,6 +187,26 @@ export default function SongwritingPage() {
             />
           )}
 
+          {activeView === 'structure' && !user && (
+            <div className="flex items-center justify-center min-h-[500px] bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 border border-orange-500/20 rounded-2xl p-12">
+              <div className="text-center max-w-md">
+                <div className="w-20 h-20 rounded-2xl bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/50 mx-auto mb-6">
+                  <Music2 className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">Sign In to Collaborate</h3>
+                <p className="text-gray-300 mb-6">
+                  The collaborative song structure builder requires authentication to track your changes and enable real-time collaboration with other musicians.
+                </p>
+                <a
+                  href="/auth"
+                  className="inline-block px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors"
+                >
+                  Sign In to Continue
+                </a>
+              </div>
+            </div>
+          )}
+
           {activeView === 'chords' && (
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
               <ChordBuilder
