@@ -87,15 +87,15 @@ export function NavBar() {
                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)'
                    }}>
                 <div className="p-2">
-                  <Link href="/solutions/bands" className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all">
+                  <Link href="/#solutions" className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all">
                     <p className="text-sm font-medium text-white">For Bands</p>
                     <p className="text-xs" style={{ color: 'var(--muted)' }}>Collaborate across distances</p>
                   </Link>
-                  <Link href="/solutions/songwriters" className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all">
+                  <Link href="/#solutions" className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all">
                     <p className="text-sm font-medium text-white">For Songwriters</p>
                     <p className="text-xs" style={{ color: 'var(--muted)' }}>Tools to craft your best songs</p>
                   </Link>
-                  <Link href="/solutions/studios" className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all">
+                  <Link href="/#solutions" className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all">
                     <p className="text-sm font-medium text-white">For Studios</p>
                     <p className="text-xs" style={{ color: 'var(--muted)' }}>Professional workflow tools</p>
                   </Link>
@@ -111,8 +111,8 @@ export function NavBar() {
             </Link>
             
             <Link 
-              href="/about" 
-              className={`nav-link ${pathname === '/about' ? 'text-[#FF5C39]' : ''}`}
+              href="/why-rnrb" 
+              className={`nav-link ${pathname === '/why-rnrb' ? 'text-[#FF5C39]' : ''}`}
             >
               About
             </Link>
@@ -202,7 +202,7 @@ export function NavBar() {
                   <div className="border-t border-[var(--border)] pt-4">
                     <p className="text-xs font-semibold text-[var(--muted)] mb-2 px-3">SOLUTIONS</p>
                     <Link 
-                      href="/solutions/bands" 
+                      href="/#solutions" 
                       className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all"
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -210,7 +210,7 @@ export function NavBar() {
                       <p className="text-xs text-[var(--muted)]">Collaborate across distances</p>
                     </Link>
                     <Link 
-                      href="/solutions/songwriters" 
+                      href="/#solutions" 
                       className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all"
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -218,7 +218,7 @@ export function NavBar() {
                       <p className="text-xs text-[var(--muted)]">Tools to craft your best songs</p>
                     </Link>
                     <Link 
-                      href="/solutions/studios" 
+                      href="/#solutions" 
                       className="block px-3 py-2 rounded-lg hover:bg-white/5 transition-all"
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -237,7 +237,7 @@ export function NavBar() {
                       Pricing
                     </Link>
                     <Link 
-                      href="/about" 
+                      href="/why-rnrb" 
                       className="block px-3 py-2 text-sm font-medium text-white hover:bg-white/5 rounded-lg transition-all"
                       onClick={() => setMobileMenuOpen(false)}
                     >
