@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Music2, Sparkles, Users, MessageSquare, Video } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -45,7 +45,17 @@ export default function SongwritingPage() {
   const [songBlocks, setSongBlocks] = useState<SongBlock[]>([]);
   const [chordProgression, setChordProgression] = useState<ChordBlock[]>([]);
   const [lyrics, setLyrics] = useState('');
-  const { user } = useRequireAuth({ redirectIfNoUser: false });
+  const { user, loading } = useRequireAuth({ redirectIfNoUser: false });
+
+  // Debug logging
+  useEffect(() => {
+    console.log('🎸 Songwriting Page - Auth State:', {
+      user: user ? { id: user.id, email: user.email } : null,
+      loading,
+      hasUser: !!user,
+      activeView
+    });
+  }, [user, loading, activeView]);
 
   return (
     <div className="min-h-screen bg-black">
@@ -174,7 +184,16 @@ export default function SongwritingPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          {activeView === 'structure' && user && (
+          {activeView === 'structure' && loading && (
+            <div className="flex items-center justify-center min-h-[500px] bg-gray-900 border border-gray-800 rounded-2xl">
+              <div className="text-center">
+                <Music2 className="w-12 h-12 text-orange-500 animate-pulse mx-auto mb-4" />
+                <p className="text-gray-400">Loading authentication...</p>
+              </div>
+            </div>
+          )}
+
+          {activeView === 'structure' && !loading && user && (
             <CollaborativeVisualBuilder
               projectSlug="songwriting-studio"
               onSongChange={(blocks) => setSongBlocks(blocks)}
@@ -187,7 +206,7 @@ export default function SongwritingPage() {
             />
           )}
 
-          {activeView === 'structure' && !user && (
+          {activeView === 'structure' && !loading && !user && (
             <div className="flex items-center justify-center min-h-[500px] bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 border border-orange-500/20 rounded-2xl p-12">
               <div className="text-center max-w-md">
                 <div className="w-20 h-20 rounded-2xl bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/50 mx-auto mb-6">
