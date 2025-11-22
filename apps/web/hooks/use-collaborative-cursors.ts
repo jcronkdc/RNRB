@@ -131,6 +131,13 @@ export function useCollaborativeCursors({
       try {
         // Get token from API
         const response = await fetch('/api/ably/token');
+        
+        // If Ably is not configured (503), fail silently - cursors will be disabled
+        if (response.status === 503) {
+          console.info('Ably not configured - collaborative cursors disabled');
+          return;
+        }
+        
         if (!response.ok) throw new Error('Failed to get Ably token');
 
         // Create Ably client

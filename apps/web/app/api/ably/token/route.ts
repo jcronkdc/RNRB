@@ -6,9 +6,10 @@ const ablyRest = ablyApiKey ? new Ably.Rest(ablyApiKey) : null;
 
 export async function GET() {
   if (!ablyRest) {
+    // Return 503 (Service Unavailable) instead of 500 to indicate optional service
     return NextResponse.json(
-      { error: 'ABLY_API_KEY is not configured' },
-      { status: 500 },
+      { error: 'ABLY_API_KEY is not configured - real-time features disabled' },
+      { status: 503 },
     );
   }
 
@@ -18,7 +19,8 @@ export async function GET() {
     });
     return NextResponse.json(tokenRequest, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
-    console.error('RN\'RB: Failed to create Ably token request', error);
+    // Only log errors when API key exists but auth fails (real issue)
+    console.warn('Ably token request failed:', error instanceof Error ? error.message : 'Unknown error');
     return NextResponse.json(
       { error: 'Failed to create Ably token request' },
       { status: 500 },
