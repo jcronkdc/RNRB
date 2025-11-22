@@ -28,9 +28,9 @@ type ChordPlacement = {
 
 type SongBlock = {
   id: string;
-  type: 'verse' | 'chorus' | 'bridge' | 'chord';
+  type: 'verse' | 'chorus' | 'bridge';
   content: string;
-  chord?: string;
+  chord?: string; // Legacy field, keeping for backward compatibility
   chordPlacements?: ChordPlacement[];
 };
 
@@ -38,7 +38,6 @@ const PALETTE_BLOCKS = [
   { type: 'verse' as const, label: 'Verse', icon: '📝', color: 'blue' },
   { type: 'chorus' as const, label: 'Chorus', icon: '🎵', color: 'gold' },
   { type: 'bridge' as const, label: 'Bridge', icon: '🌉', color: 'purple' },
-  { type: 'chord' as const, label: 'Chord', icon: '🎸', color: 'green' },
 ];
 
 function SortableBlock({ 
@@ -59,7 +58,7 @@ function SortableBlock({
       case 'verse': return 'from-blue-500/10 to-blue-500/5 border-blue-500/30';
       case 'chorus': return 'from-brand-primary/10 to-brand-primary/5 border-brand-primary/30';
       case 'bridge': return 'from-purple-500/10 to-purple-500/5 border-purple-500/30';
-      case 'chord': return 'from-green-500/10 to-green-500/5 border-green-500/30';
+      default: return 'from-gray-500/10 to-gray-500/5 border-gray-500/30';
     }
   };
 
