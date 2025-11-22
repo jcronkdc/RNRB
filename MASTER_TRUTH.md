@@ -1,13 +1,13 @@
 # 🍄 ROCK N' ROLL BASEMENT - MASTER TRUTH
 
-**Last Updated:** 2025-11-22 @ Agent 55 (Auth Verified + 404s Fixed!)  
+**Last Updated:** 2025-11-22 @ Agent 55 (Chord UX Improved!)  
 **Production:** https://www.cronkwaters.com  
-**Health:** **99% OPERATIONAL** (auth working, nav fixed)  
-**Git:** `e4d27cca` ✅ **DEPLOYED** (404 errors eliminated!)  
+**Health:** **99% OPERATIONAL** (compact chords only!)  
+**Git:** `827c5e44` ✅ **DEPLOYED** (low-profile chords!)  
 **UptimeRobot:** ✅ 225ms avg, 0 incidents  
 **🎉 Real-time collaboration ACTIVE!**
-**🚀 Granular chords + key analyzer LIVE!**
-**✅ Auth pathways verified - working correctly!**
+**🚀 Compact word-level chords ONLY!**
+**✅ Auth verified + nav fixed + chords optimized!**
 
 ---
 
@@ -31,6 +31,45 @@ Songwriting page had uncommitted changes that would have allowed unauthenticated
 2. ✅ Enhanced Ably error handling (503 vs 500)
 3. ✅ Graceful failure for collaborative cursors
 4. ✅ Improved logging (console.warn vs console.error)
+
+### **Fix #5: Low-Profile Chord Placement** ✅ DEPLOYED
+**Commit:** `827c5e44`  
+**Issue:** Large chord blocks taking entire row, not enough placement flexibility  
+**Status:** ✅ Fixed - only compact word-level chords now available
+
+**Problem:**
+User reported that when adding chords, they appeared as "big drag-and-drop sections that take an entire row" with limited placement flexibility. Needed "super low profile" chords that "take up very little space."
+
+**Root Cause:**
+CollaborativeVisualBuilder had TWO ways to add chords:
+1. **Word-level chords** via GranularChordEditor (compact, inline, flexible) ✅ Good
+2. **Standalone "Chord" blocks** in palette (full-width, large cards) ❌ Bad
+
+The standalone "Chord" block type was redundant and took up too much space.
+
+**Solution Implemented:**
+Removed standalone "Chord" block type entirely:
+1. ✅ Removed from `PALETTE_BLOCKS` array
+2. ✅ Updated `SongBlock` type definition (removed 'chord' option)
+3. ✅ Updated color switch statement (added default case)
+4. ✅ Now only Verse, Chorus, and Bridge blocks available
+5. ✅ All chord placement done via GranularChordEditor (word-level, compact)
+
+**User Experience Now:**
+- **Add block:** Verse, Chorus, or Bridge only
+- **Add chords:** Click any word → compact chord picker appears
+- **Chord display:** Small green squares above words (32px min-width)
+- **Flexibility:** Multiple chords per line, precise word-level placement
+- **Low profile:** Minimal visual footprint, maximum placement control
+
+**Files Changed:**
+- `apps/web/components/songwriting/collaborative-visual-builder.tsx` - Removed chord block type
+
+**Build Status:** ✅ Clean build in 5.8s, 0 errors, 0 linter issues  
+**Impact:** Cleaner UI, better UX, no more confusing duplicate chord systems  
+**Deployment Status:** ✅ Pushed to GitHub, Vercel auto-deploying
+
+---
 
 ### **Fix #4: NavBar 404 Errors** ✅ DEPLOYED
 **Commit:** `e4d27cca`  
