@@ -7,19 +7,34 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get('code');
 
   if (code) {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.startsWith('http')
-      ? process.env.NEXT_PUBLIC_SUPABASE_URL
-      : `https://${process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('ttps://', '')}`;
-    
+    // Safety: Correct malformed URL (missing 'h' in 'https://')
+    // This handles cases where NEXT_PUBLIC_SUPABASE_URL="ttps://..." in .env
+    let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
       return NextResponse.redirect(new URL('/auth?error=Configuration', requestUrl.origin));
     }
 
+    // Validate and correct URL format
+    if (!supabaseUrl.startsWith('http')) {
+      // If missing protocol entirely, add https://
+      supabaseUrl = `https://${supabaseUrl}`;
+    } else if (supabaseUrl.startsWith('ttps://')) {
+      // Fix common typo: missing 'h' in https://
+      supabaseUrl = `h${supabaseUrl}`;
+    }
+
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-    await supabase.auth.exchangeCodeForSession(code);
+    // Bug Fix: Wrap exchangeCodeForSession in try-catch
+    // This method can throw on invalid codes, network errors, or auth failures
+    try {
+      await supabase.auth.exchangeCodeForSession(code);
+    } catch (error) {
+      console.error('Auth callback error:', error);
+      return NextResponse.redirect(new URL('/auth?error=AuthenticationFailed', requestUrl.origin));
+    }
   }
 
   // URL to redirect to after sign in process completes

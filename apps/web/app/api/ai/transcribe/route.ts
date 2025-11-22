@@ -1,8 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { transcribeSession, extractActionItems } from '@/lib/ai/openai';
+import { requireFeatureAccess } from '@/lib/subscription-access';
+import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
+import { getCurrentUser } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
+    // ✅ SECURITY: Check subscription access
+    try {
+      await requireFeatureAccess('aiTranscription');
+    } catch (error: any) {
+      return NextResponse.json(
+        { 
+          error: error.message || 'Upgrade to Creator or Studio plan to access AI transcription',
+          requiresUpgrade: true,
+          currentTier: error.tier || 'free',
+        },
+        { status: 403 }
+      );
+    }
+
+    // 🔒 RATE LIMITING: Check usage quota (transcription counts as 2 requests)
+    try {
+      await requireUsageQuota('aiRequests', 2);
+    } catch (error: any) {
+      if (error.code === 'QUOTA_EXCEEDED') {
+        return NextResponse.json(
+          {
+            error: error.message,
+            requiresUpgrade: true,
+            tier: error.tier,
+            used: error.used,
+            limit: error.limit,
+            resetDate: error.resetDate,
+          },
+          { status: 429 } // Too Many Requests
+        );
+      }
+      throw error;
+    }
+
     const body = await request.json();
     const { audioUrl, extractActions } = body;
 
@@ -26,6 +63,12 @@ export async function POST(request: NextRequest) {
     let actionItems = null;
     if (extractActions) {
       actionItems = await extractActionItems(transcription);
+    }
+
+    // 📊 Track successful usage (transcription counts as 2 requests)
+    const user = await getCurrentUser();
+    if (user) {
+      await trackUsage(user.id, 'aiRequests', 2);
     }
 
     return NextResponse.json({

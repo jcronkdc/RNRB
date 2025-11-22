@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUser } from '@/lib/supabase';
 
 // Email sending via Resend (configured in environment)
 // Falls back to logging if EMAIL_SERVER_URL not set
 
 export async function POST(request: NextRequest) {
   try {
+    // ✅ SECURITY: Require authentication to prevent spam
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     const { inviteEmail, projectName, projectSlug, inviterName, inviterEmail } = await request.json();
 
     if (!inviteEmail || !projectName || !projectSlug) {

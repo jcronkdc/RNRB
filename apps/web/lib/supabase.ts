@@ -12,17 +12,23 @@ function getSupabaseClient() {
     return supabaseInstance;
   }
 
-  // Note: NEXT_PUBLIC_SUPABASE_URL has typo in env (missing 'h' in https)
-  // Correcting it here
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.startsWith('http') 
-    ? process.env.NEXT_PUBLIC_SUPABASE_URL 
-    : `https://${process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('ttps://', '')}`;
-
+  // Safety: Correct malformed URL (missing 'h' in 'https://')
+  // This handles cases where NEXT_PUBLIC_SUPABASE_URL="ttps://..." in .env
+  let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
     console.error('Missing Supabase environment variables');
     return null;
+  }
+
+  // Validate and correct URL format
+  if (!supabaseUrl.startsWith('http')) {
+    // If missing protocol entirely, add https://
+    supabaseUrl = `https://${supabaseUrl}`;
+  } else if (supabaseUrl.startsWith('ttps://')) {
+    // Fix common typo: missing 'h' in https://
+    supabaseUrl = `h${supabaseUrl}`;
   }
 
   // Create Supabase client for client-side usage

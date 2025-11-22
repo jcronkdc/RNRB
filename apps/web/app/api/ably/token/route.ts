@@ -1,10 +1,20 @@
 import Ably from 'ably';
 import { NextResponse } from 'next/server';
+import { getCurrentUser } from '@/lib/supabase';
 
 const ablyApiKey = process.env.ABLY_API_KEY;
 const ablyRest = ablyApiKey ? new Ably.Rest(ablyApiKey) : null;
 
 export async function GET() {
+  // ✅ SECURITY: Require authentication for real-time features
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json(
+      { error: 'Authentication required' },
+      { status: 401 }
+    );
+  }
+
   if (!ablyRest) {
     // Return 503 (Service Unavailable) instead of 500 to indicate optional service
     return NextResponse.json(
@@ -15,7 +25,7 @@ export async function GET() {
 
   try {
     const tokenRequest = await ablyRest.auth.createTokenRequest({
-      clientId: process.env.NEXT_PUBLIC_ABLY_CLIENT_ID ?? 'rnrb-web',
+      clientId: user.id, // Use actual user ID instead of generic client ID
     });
     return NextResponse.json(tokenRequest, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {

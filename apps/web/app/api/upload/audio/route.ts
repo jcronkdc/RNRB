@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUser } from '@/lib/supabase';
 
 /**
  * Audio Upload Endpoint
@@ -13,6 +14,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
+    // ✅ SECURITY: Require authentication
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const songId = formData.get('songId') as string;
@@ -43,6 +53,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // TODO: Check storage quota against subscription tier
     // TODO: Upload to Supabase Storage
     // For now, return placeholder response
     return NextResponse.json({

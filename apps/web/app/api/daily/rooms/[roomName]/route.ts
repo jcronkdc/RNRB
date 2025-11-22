@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { requireFeatureAccess } from '@/lib/subscription-access';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
 const DAILY_API_URL = 'https://api.daily.co/v1';
@@ -13,6 +14,21 @@ export async function GET(
     const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // ✅ SECURITY: Video calls are Studio-tier only
+    try {
+      await requireFeatureAccess('videoCalls');
+    } catch (error: any) {
+      return NextResponse.json(
+        { 
+          error: error.message || 'Upgrade to Studio plan to access video calls',
+          requiresUpgrade: true,
+          currentTier: error.tier || 'free',
+          requiredTier: 'studio',
+        },
+        { status: 403 }
+      );
     }
 
     if (!DAILY_API_KEY) {

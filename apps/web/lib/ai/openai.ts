@@ -62,7 +62,7 @@ Keep responses concise (2-3 sentences max). Focus on actionable suggestions.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userMessage }
@@ -121,7 +121,7 @@ Be concise. Only extract clear decisions and actionable items.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: transcription }
@@ -170,7 +170,7 @@ Include total miles and recommended rest days.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o', // Using gpt-4o for complex routing logic (better than mini)
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: JSON.stringify(venues, null, 2) }
@@ -214,7 +214,7 @@ Keep suggestions practical and educational.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: JSON.stringify(audioAnalysis, null, 2) }
@@ -259,7 +259,7 @@ Be fair and transparent.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o', // Using gpt-4o for fairness analysis (needs reasoning)
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: JSON.stringify(contributions, null, 2) }
@@ -308,7 +308,7 @@ Keep it authentic and aligned with artist's voice.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Generate ${type} content:\n${JSON.stringify(context, null, 2)}` }

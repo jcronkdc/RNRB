@@ -175,9 +175,9 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="mb-2 font-semibold">HD Video Calls</h3>
-                  <p style={{ color: 'var(--muted)' }}>Crystal-clear video sessions powered by Daily.co for remote collaboration.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Up to 50 participants →</p>
+                  <h3 className="mb-2 font-semibold">HD Video Calls <span className="text-xs font-normal" style={{ color: 'var(--accent)' }}>LIVE</span></h3>
+                  <p style={{ color: 'var(--muted)' }}>Crystal-clear video sessions powered by Daily.co with up to 50 participants.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Studio plan →</p>
                 </div>
               </div>
             </Link>
@@ -192,9 +192,9 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="mb-2 font-semibold">Screen Sharing</h3>
-                  <p style={{ color: 'var(--muted)' }}>Share your DAW, lyrics, or any app in real-time during sessions.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Low latency streaming →</p>
+                  <h3 className="mb-2 font-semibold">Screen Sharing <span className="text-xs font-normal" style={{ color: 'var(--accent)' }}>LIVE</span></h3>
+                  <p style={{ color: 'var(--muted)' }}>Share your DAW, lyrics, or any app in real-time during video sessions.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Studio plan →</p>
                 </div>
               </div>
             </Link>
@@ -209,9 +209,9 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="mb-2 font-semibold">Instant Messaging</h3>
-                  <p style={{ color: 'var(--muted)' }}>Real-time chat powered by Ably with read receipts and typing indicators.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>End-to-end encrypted →</p>
+                  <h3 className="mb-2 font-semibold">Real-Time Collaboration <span className="text-xs font-normal" style={{ color: 'var(--accent)' }}>LIVE</span></h3>
+                  <p style={{ color: 'var(--muted)' }}>Multi-cursor editing, instant chat, presence tracking powered by Ably.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>See who's online →</p>
                 </div>
               </div>
             </Link>
@@ -226,9 +226,9 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="mb-2 font-semibold">AI Songwriting Studio</h3>
-                  <p style={{ color: 'var(--muted)' }}>AI-powered chord progressions, lyrics suggestions, and melody ideas.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>GPT-4 powered →</p>
+                  <h3 className="mb-2 font-semibold">AI Songwriting Studio <span className="text-xs font-normal" style={{ color: 'var(--accent)' }}>LIVE</span></h3>
+                  <p style={{ color: 'var(--muted)' }}>Real-time key detection, word-level chord placement, AI-powered lyrics and progressions.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Creator plan →</p>
                 </div>
               </div>
             </Link>
@@ -243,9 +243,9 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="mb-2 font-semibold">Smart Project Organization</h3>
-                  <p style={{ color: 'var(--muted)' }}>Organize songs into albums, EPs, and manage versions effortlessly.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Version control included →</p>
+                  <h3 className="mb-2 font-semibold">Smart Project Organization <span className="text-xs font-normal" style={{ color: 'var(--accent)' }}>LIVE</span></h3>
+                  <p style={{ color: 'var(--muted)' }}>Projects, songs, sessions, setlists. Invite collaborators with role-based permissions.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Full version control →</p>
                 </div>
               </div>
             </Link>
@@ -260,9 +260,9 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="mb-2 font-semibold">AI Music Generation <span className="text-xs font-normal text-yellow-400">BETA</span></h3>
-                  <p style={{ color: 'var(--muted)' }}>Create full tracks with AI, then replace stems with your recordings.</p>
-                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Coming soon →</p>
+                  <h3 className="mb-2 font-semibold">AI Tour Routing <span className="text-xs font-normal" style={{ color: 'var(--accent)' }}>LIVE</span></h3>
+                  <p style={{ color: 'var(--muted)' }}>Optimize your tour schedule with AI using Tokyo subway model algorithms.</p>
+                  <p className="text-xs mt-2" style={{ color: 'var(--accent)' }}>Creator plan →</p>
                 </div>
               </div>
             </Link>
@@ -320,7 +320,7 @@ export default function HomePage() {
             <h2 className="section-title">Simple Pricing</h2>
             <p className="section-subtitle">Start free, upgrade when you're ready</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {/* Free Plan */}
             <div className="card text-center">
               <h3 className="text-xl font-semibold mb-2">Free</h3>
@@ -330,38 +330,46 @@ export default function HomePage() {
               <ul className="text-left space-y-2 mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>3 active projects</span>
+                  <span>3 projects</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Basic collaboration tools</span>
+                  <span>1 collaborator per project</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>5GB cloud storage</span>
+                  <span>1 GB storage</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Real-time chat</span>
+                  <span>Real-time collaboration</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
                   <span>Basic songwriting tools</span>
                 </li>
               </ul>
-              <Link href="/auth?signup=true" className="button secondary w-full">Get Started</Link>
+              <Link href="/auth?signup=true" className="button secondary w-full">Get Started Free</Link>
             </div>
             
-            {/* Songwriter Plan */}
+            {/* Creator Plan */}
             <div className="card text-center">
-              <h3 className="text-xl font-semibold mb-2">Songwriter</h3>
-              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>For solo artists</p>
-              <div className="text-4xl font-bold mb-1">$9</div>
+              <h3 className="text-xl font-semibold mb-2">Creator</h3>
+              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>For serious musicians</p>
+              <div className="text-4xl font-bold mb-1">$9.99</div>
               <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>per month</p>
               <ul className="text-left space-y-2 mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>10 active projects</span>
+                  <span>10 projects</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>5 collaborators per project</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>10 GB storage</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
@@ -369,33 +377,29 @@ export default function HomePage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>25GB storage</span>
+                  <span>AI lyrics assistant</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Chord progression AI</span>
+                  <span>AI content generation</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Lyrics assistant</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Export to PDF/MIDI</span>
+                  <span>AI tour routing</span>
                 </li>
               </ul>
-              <Link href="/auth?signup=true&plan=songwriter" className="button secondary w-full">Start Free Trial</Link>
+              <Link href="/auth?signup=true&plan=creator" className="button secondary w-full">Start 7-Day Trial</Link>
             </div>
             
-            {/* Band Plan - Most Popular */}
+            {/* Studio Plan - Most Popular */}
             <div className="card text-center relative border-2" style={{ borderColor: 'var(--accent)' }}>
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-3 py-1 text-xs font-semibold rounded-full"
                    style={{ background: 'var(--accent)', color: 'white' }}>
                 MOST POPULAR
               </div>
-              <h3 className="text-xl font-semibold mb-2">Band</h3>
-              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>For groups & collaboration</p>
-              <div className="text-4xl font-bold mb-1">$29</div>
+              <h3 className="text-xl font-semibold mb-2">Studio</h3>
+              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>For professionals & teams</p>
+              <div className="text-4xl font-bold mb-1">$29.99</div>
               <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>per month</p>
               <ul className="text-left space-y-2 mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
                 <li className="flex items-start gap-2">
@@ -404,7 +408,19 @@ export default function HomePage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Real-time video calls</span>
+                  <span>Unlimited collaborators</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>100 GB storage</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>All AI features</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span style={{ color: 'var(--accent)' }}>✓</span>
+                  <span>HD video calls (up to 50)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
@@ -412,61 +428,10 @@ export default function HomePage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>100GB storage</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>5 team members</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>AI music generation</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
                   <span>Priority support</span>
                 </li>
               </ul>
-              <Link href="/auth?signup=true&plan=band" className="button w-full">Start Free Trial</Link>
-            </div>
-            
-            {/* Studio Plan */}
-            <div className="card text-center">
-              <h3 className="text-xl font-semibold mb-2">Studio</h3>
-              <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>For professionals</p>
-              <div className="text-4xl font-bold mb-1">$99</div>
-              <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>per month</p>
-              <ul className="text-left space-y-2 mb-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Everything in Band</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>1TB storage</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Unlimited team members</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Advanced analytics</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>Custom integrations</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>White-glove support</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span style={{ color: 'var(--accent)' }}>✓</span>
-                  <span>SLA guarantee</span>
-                </li>
-              </ul>
-              <Link href="/contact?plan=studio" className="button secondary w-full">Contact Sales</Link>
+              <Link href="/auth?signup=true&plan=studio" className="button w-full">Start 7-Day Trial</Link>
             </div>
           </div>
           <div className="text-center mt-8">
