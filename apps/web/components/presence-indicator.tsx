@@ -1,9 +1,13 @@
 'use client';
 
 /**
- * Presence Indicator Component - Stub for build
- * TODO: Implement full presence tracking with Ably integration
+ * Presence Indicator Component - FULLY WIRED
+ * Shows real-time presence tracking with Ably integration
  */
+
+import { usePresence } from '@/hooks/use-presence';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, Circle } from 'lucide-react';
 
 interface PresenceIndicatorProps {
   channelName: string;
@@ -19,17 +23,125 @@ interface PresenceIndicatorProps {
 }
 
 export function PresenceIndicator({ 
+  channelName,
   currentUser, 
-  showDetails = true 
+  location,
+  showDetails = true,
+  maxVisible = 10,
 }: PresenceIndicatorProps) {
-  return (
-    <div className="text-muted-foreground text-sm">
-      <div className="flex items-center gap-2 mb-2">
-        <div className="w-2 h-2 bg-green-500 rounded-full" />
-        <span>{currentUser.userName} (You)</span>
+  const { members, isConnected, error, activeMembers, idleMembers } = usePresence({
+    channelName,
+    userData: {
+      ...currentUser,
+      location,
+    },
+  });
+
+  // Filter out current user from display
+  const otherMembers = members.filter(m => m.data.userId !== currentUser.userId);
+  const displayMembers = otherMembers.slice(0, maxVisible);
+  const hiddenCount = Math.max(0, otherMembers.length - maxVisible);
+
+  if (error) {
+    return (
+      <div className="text-xs text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <Circle className="w-2 h-2 text-red-500" />
+          <span>Presence offline</span>
+        </div>
       </div>
-      {showDetails && (
-        <p className="text-xs">Presence tracking active</p>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {/* Connection Status */}
+      <div className="flex items-center gap-2">
+        <motion.div
+          className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}
+          animate={isConnected ? { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] } : {}}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+        <span className="text-xs font-medium text-muted-foreground">
+          {isConnected ? `${activeMembers} active` : 'Connecting...'}
+        </span>
+      </div>
+
+      {/* Members List */}
+      <AnimatePresence mode="popLayout">
+        {displayMembers.map((member) => (
+          <motion.div
+            key={member.clientId}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            className="flex items-center gap-2"
+          >
+            {/* Avatar or Icon */}
+            {member.data.avatar ? (
+              <img 
+                src={member.data.avatar} 
+                alt={member.data.userName}
+                className="w-6 h-6 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                <User className="w-3 h-3 text-primary" />
+              </div>
+            )}
+
+            {/* User Info */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">
+                {member.data.userName}
+              </p>
+              {showDetails && (
+                <p className="text-xs text-muted-foreground truncate">
+                  {member.data.status === 'active' ? '🟢 Active' : '🟡 Idle'}
+                </p>
+              )}
+            </div>
+          </motion.div>
+        ))}
+      </AnimatePresence>
+
+      {/* Hidden Count */}
+      {hiddenCount > 0 && (
+        <p className="text-xs text-muted-foreground">
+          + {hiddenCount} more {hiddenCount === 1 ? 'person' : 'people'}
+        </p>
+      )}
+
+      {/* You Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex items-center gap-2 pt-2 border-t border-border/50"
+      >
+        {currentUser.avatar ? (
+          <img 
+            src={currentUser.avatar} 
+            alt={currentUser.userName}
+            className="w-6 h-6 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center">
+            <User className="w-3 h-3 text-primary" />
+          </div>
+        )}
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground truncate">
+            {currentUser.userName} <span className="text-xs text-muted-foreground">(You)</span>
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Summary (if details enabled) */}
+      {showDetails && isConnected && (
+        <div className="pt-2 text-xs text-muted-foreground space-y-1">
+          <p>📊 {activeMembers} active, {idleMembers} idle</p>
+          <p>🍄 Mycelial network connected</p>
+        </div>
       )}
     </div>
   );
