@@ -24,6 +24,8 @@ import dynamic from 'next/dynamic';
 // Dynamically import setlist builder
 const CollaborativeSetlistBuilder = dynamic(() => import('@/components/setlist-builder').then(m => m.CollaborativeSetlistBuilder), { ssr: false });
 
+const PresenceIndicator = dynamic(() => import('@/components/presence-indicator').then(m => m.PresenceIndicator), { ssr: false });
+
 type Setlist = {
   id: string;
   name: string;
@@ -100,7 +102,7 @@ export default function SetlistsPage() {
         <div className="rnrb-container max-w-7xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <div>
+            <div className="flex-1">
               <Button
                 variant="ghost"
                 onClick={() => setSelectedSetlist(null)}
@@ -111,6 +113,25 @@ export default function SetlistsPage() {
               <h1 className="text-4xl font-display font-bold mb-2">{selectedSetlist.name}</h1>
               <p className="text-muted-foreground">Collaborative setlist builder</p>
             </div>
+            
+            {/* Presence Indicator */}
+            {user && (
+              <div className="mr-4">
+                <PresenceIndicator
+                  channelName={`setlist:${slug}:${selectedSetlist.id}`}
+                  currentUser={{
+                    userId: user.id,
+                    userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                    userEmail: user.email || '',
+                    avatar: user.user_metadata?.avatar_url,
+                  }}
+                  location={`Setlist: ${selectedSetlist.name}`}
+                  showDetails={true}
+                  maxVisible={5}
+                />
+              </div>
+            )}
+            
             <Button className="flex items-center gap-2">
               <Edit className="w-4 h-4" />
               Rename Setlist
