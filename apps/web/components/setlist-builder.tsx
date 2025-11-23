@@ -67,6 +67,7 @@ function useSetlistSync({
 }: UseSetlistSyncOptions) {
   const [isConnected, setIsConnected] = useState(false);
   const [activeUsers, setActiveUsers] = useState<string[]>([]);
+  const [channel, setChannel] = useState<any>(null);
 
   useEffect(() => {
     if (!enabled) return;
@@ -89,6 +90,7 @@ function useSetlistSync({
         }
 
         const channel = ablyClient.channels.get(channelName);
+        setChannel(channel); // Expose channel to component
 
         // Subscribe to setlist events
         channel.subscribe('song-added', (message) => {
@@ -133,10 +135,11 @@ function useSetlistSync({
       mounted = false;
       ablyClient?.close();
       setIsConnected(false);
+      setChannel(null);
     };
   }, [channelName, enabled]);
 
-  return { isConnected, activeUsers };
+  return { isConnected, activeUsers, channel };
 }
 
 /**
@@ -262,7 +265,7 @@ export function CollaborativeSetlistBuilder({
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   // Real-time setlist sync
-  const { isConnected, activeUsers } = useSetlistSync({
+  const { isConnected, activeUsers, channel } = useSetlistSync({
     channelName: `setlist:${projectSlug}-${setlistId}`,
     onSongAdded: (song) => {
       setSongs((prev) => [...prev, song].sort((a, b) => a.position - b.position));
@@ -308,12 +311,13 @@ export function CollaborativeSetlistBuilder({
       setlistId,
     };
 
-    setSongs((prev) => [...prev, setlistSong]);
-    onUpdate([...songs, setlistSong]);
+    // Compute updated array first to avoid stale closure
+    const updatedSongs = [...songs, setlistSong];
+    setSongs(updatedSongs);
+    onUpdate(updatedSongs);
 
     // Broadcast to collaborators
     try {
-      const channel = (window as any).__ablyChannel; // Global channel ref
       if (channel) {
         await channel.publish('song-added', setlistSong);
       }
@@ -331,7 +335,6 @@ export function CollaborativeSetlistBuilder({
     onUpdate(updated);
 
     try {
-      const channel = (window as any).__ablyChannel;
       if (channel) {
         await channel.publish('song-removed', { songId });
       }
@@ -355,7 +358,6 @@ export function CollaborativeSetlistBuilder({
 
       // Broadcast
       try {
-        const channel = (window as any).__ablyChannel;
         if (channel) {
           channel.publish('songs-reordered', { songs: reordered });
         }
