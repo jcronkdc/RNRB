@@ -1,126 +1,129 @@
 'use client';
 
 /**
- * Collaborative Setlist Builder
+ * COLLABORATIVE SETLIST BUILDER
  * 
- * Drag-and-drop setlist organizer with real-time sync
- * Perfect for planning live performances together
+ * Real-time setlist editing with Ably broadcast
+ * Drag-drop reordering syncs across all clients
+ * Duration calculator, key change indicators
  * 
- * Features:
- * - Drag-and-drop reordering
- * - Real-time sync via Ably
- * - Real-time collaborative cursors (see team members' cursors)
- * - Set duration calculator
- * - Key change indicators
- * - Notes per song
- * - Export/print
- * - Share with team
+ * Mycelial Pathway:
+ * User drags song → Ably broadcasts update → All clients reorder instantly
  */
 
-import { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { Realtime, Types } from 'ably';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Card, Button } from '@cronkwaters/ui';
 import { 
-  GripVertical,
-  Music,
+  Music, 
+  GripVertical, 
+  Plus, 
+  X, 
   Clock,
-  Key as KeyIcon,
-  FileText,
-  Trash2,
-  Plus,
-  Download,
-  Share2,
-  Users as UsersIcon
+  AlertCircle,
+  Users,
+  Sparkles,
+  Play,
+  Pause
 } from 'lucide-react';
-import { Button } from '@cronkwaters/ui';
+import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { CursorOverlay } from '@/components/cursor-overlay';
+import { Realtime } from 'ably';
 
-type SetlistSong = {
+type Song = {
   id: string;
-  songId: string;
-  songTitle: string;
-  duration?: number; // in seconds
+  title: string;
+  artist?: string;
   key?: string;
   tempo?: number;
+  duration?: number; // in seconds
   notes?: string;
-  order: number;
 };
 
-type CollaborativeSetlistProps = {
+type SetlistSong = Song & {
+  position: number;
   setlistId: string;
-  projectSlug: string;
-  projectSongs: any[];
-  initialSongs: SetlistSong[];
-  onUpdate: (songs: SetlistSong[]) => void;
-  currentUser: {
-    userId: string;
-    userName: string;
-  };
 };
 
-export function CollaborativeSetlistBuilder({
-  setlistId,
-  projectSlug,
-  projectSongs,
-  initialSongs,
-  onUpdate,
-  currentUser,
-}: CollaborativeSetlistProps) {
-  const [songs, setSongs] = useState<SetlistSong[]>(initialSongs);
-  const [ably, setAbly] = useState<Realtime | null>(null);
+type UseSetlistSyncOptions = {
+  channelName: string;
+  onSongAdded: (song: SetlistSong) => void;
+  onSongRemoved: (songId: string) => void;
+  onSongReordered: (songs: SetlistSong[]) => void;
+  enabled: boolean;
+};
+
+/**
+ * Hook: Real-time setlist sync via Ably
+ */
+function useSetlistSync({
+  channelName,
+  onSongAdded,
+  onSongRemoved,
+  onSongReordered,
+  enabled,
+}: UseSetlistSyncOptions) {
   const [isConnected, setIsConnected] = useState(false);
-  const [availableSongs, setAvailableSongs] = useState(projectSongs);
+  const [activeUsers, setActiveUsers] = useState<string[]>([]);
 
-  // Collaborative cursors
-  const { remoteCursors } = useCollaborativeCursors({
-    channelName: `setlist:${setlistId}-cursors`,
-    userId: currentUser.userId,
-    userName: currentUser.userName,
-    enabled: true,
-  });
-
-  // Initialize Ably for real-time sync
   useEffect(() => {
+    if (!enabled) return;
+
     let mounted = true;
-    let channel: Types.RealtimeChannelCallbacks | null = null;
+    let ablyClient: Realtime | null = null;
 
     const initAbly = async () => {
       try {
-        const ablyClient = new Realtime({ authUrl: '/api/ably/token' });
+        const response = await fetch('/api/ably/token');
+        if (!response.ok) {
+          console.info('Ably not configured - setlist sync disabled');
+          return;
+        }
+
+        ablyClient = new Realtime({ authUrl: '/api/ably/token' });
         if (!mounted) {
           ablyClient.close();
           return;
         }
 
-        setAbly(ablyClient);
-        channel = ablyClient.channels.get(`setlist:${setlistId}`);
+        const channel = ablyClient.channels.get(channelName);
 
-        // Subscribe to setlist updates
-        channel.subscribe('update', (message) => {
-          if (!mounted) return;
-          const updatedSongs: SetlistSong[] = message.data.songs;
-          setSongs(updatedSongs);
+        // Subscribe to setlist events
+        channel.subscribe('song-added', (message) => {
+          if (mounted) onSongAdded(message.data);
         });
 
-        // Subscribe to song additions
-        channel.subscribe('add', (message) => {
-          if (!mounted) return;
-          const newSong: SetlistSong = message.data;
-          setSongs(prev => [...prev, newSong].sort((a, b) => a.order - b.order));
+        channel.subscribe('song-removed', (message) => {
+          if (mounted) onSongRemoved(message.data.songId);
         });
 
-        // Subscribe to song removals
-        channel.subscribe('remove', (message) => {
-          if (!mounted) return;
-          const songId = message.data.songId;
-          setSongs(prev => prev.filter(s => s.id !== songId));
+        channel.subscribe('songs-reordered', (message) => {
+          if (mounted) onSongReordered(message.data.songs);
+        });
+
+        // Presence tracking
+        channel.presence.enter();
+        channel.presence.subscribe('enter', () => {
+          channel.presence.get((err, members) => {
+            if (!err && mounted) {
+              setActiveUsers(members?.map(m => m.clientId || 'anonymous') || []);
+            }
+          });
+        });
+
+        channel.presence.subscribe('leave', () => {
+          channel.presence.get((err, members) => {
+            if (!err && mounted) {
+              setActiveUsers(members?.map(m => m.clientId || 'anonymous') || []);
+            }
+          });
         });
 
         setIsConnected(true);
-      } catch (err) {
-        console.error('Setlist Ably error:', err);
+      } catch (error) {
+        console.error('Setlist sync error:', error);
       }
     };
 
@@ -128,349 +131,363 @@ export function CollaborativeSetlistBuilder({
 
     return () => {
       mounted = false;
-      channel?.unsubscribe();
-      ably?.close();
+      ablyClient?.close();
+      setIsConnected(false);
     };
-  }, [setlistId]);
+  }, [channelName, enabled]);
 
-  // Broadcast updates to other users
-  const broadcastUpdate = async (updatedSongs: SetlistSong[]) => {
-    if (!ably || !isConnected) return;
+  return { isConnected, activeUsers };
+}
 
-    const channel = ably.channels.get(`setlist:${setlistId}`);
-    await channel.publish('update', { songs: updatedSongs });
-  };
+/**
+ * Sortable Song Item
+ */
+function SortableSong({ 
+  song, 
+  onRemove,
+  onUpdateNotes,
+  previousKey,
+}: { 
+  song: SetlistSong; 
+  onRemove: () => void;
+  onUpdateNotes: (notes: string) => void;
+  previousKey?: string;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: song.id });
+  const [notesExpanded, setNotesExpanded] = useState(false);
 
-  // Handle drag end
-  const handleDragEnd = async (result: DropResult) => {
-    const { source, destination } = result;
-    
-    if (!destination) return;
+  // Detect key change from previous song
+  const keyChange = previousKey && song.key && previousKey !== song.key;
 
-    // Dragging from available songs to setlist (ADD song)
-    if (source.droppableId === 'available' && destination.droppableId === 'setlist') {
-      const draggedSong = availableSongs[source.index];
-      
-      // Check if already in setlist
-      if (songs.some(s => s.songId === draggedSong.id)) return;
-      
-      const newSong: SetlistSong = {
-        id: `setlist_song_${Date.now()}`,
-        songId: draggedSong.id,
-        songTitle: draggedSong.title,
-        duration: draggedSong.duration,
-        key: draggedSong.key,
-        tempo: draggedSong.tempo,
-        order: destination.index,
-      };
-
-      // Insert at the dropped position
-      const updatedSongs = Array.from(songs);
-      updatedSongs.splice(destination.index, 0, newSong);
-      
-      // Update order values
-      const reorderedSongs = updatedSongs.map((song, index) => ({
-        ...song,
-        order: index,
-      }));
-
-      setSongs(reorderedSongs);
-      onUpdate(reorderedSongs);
-
-      if (ably && isConnected) {
-        const channel = ably.channels.get(`setlist:${setlistId}`);
-        await channel.publish('add', newSong);
-      }
-      return;
-    }
-
-    // Reordering within setlist (MOVE song)
-    if (source.droppableId === 'setlist' && destination.droppableId === 'setlist') {
-      const items = Array.from(songs);
-      const [reorderedItem] = items.splice(source.index, 1);
-      items.splice(destination.index, 0, reorderedItem);
-
-      // Update order values
-      const reorderedSongs = items.map((song, index) => ({
-        ...song,
-        order: index,
-      }));
-
-      setSongs(reorderedSongs);
-      onUpdate(reorderedSongs);
-      await broadcastUpdate(reorderedSongs);
-    }
-  };
-
-  // Add song to setlist
-  const addSong = async (song: any) => {
-    const newSong: SetlistSong = {
-      id: `setlist_song_${Date.now()}`,
-      songId: song.id,
-      songTitle: song.title,
-      duration: song.duration,
-      key: song.key,
-      tempo: song.tempo,
-      order: songs.length,
-    };
-
-    const updatedSongs = [...songs, newSong];
-    setSongs(updatedSongs);
-    onUpdate(updatedSongs);
-
-    if (ably && isConnected) {
-      const channel = ably.channels.get(`setlist:${setlistId}`);
-      await channel.publish('add', newSong);
-    }
-  };
-
-  // Remove song from setlist
-  const removeSong = async (songId: string) => {
-    const updatedSongs = songs.filter(s => s.id !== songId).map((s, i) => ({ ...s, order: i }));
-    setSongs(updatedSongs);
-    onUpdate(updatedSongs);
-
-    if (ably && isConnected) {
-      const channel = ably.channels.get(`setlist:${setlistId}`);
-      await channel.publish('remove', { songId });
-    }
-  };
-
-  // Calculate total duration
-  const totalDuration = songs.reduce((acc, song) => acc + (song.duration || 0), 0);
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds?: number) => {
+    if (!seconds) return '?:??';
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Export setlist
-  const exportSetlist = () => {
-    const text = songs.map((song, i) => 
-      `${i + 1}. ${song.songTitle}${song.key ? ` (${song.key})` : ''}${song.notes ? ` - ${song.notes}` : ''}`
-    ).join('\n');
-    
-    const blob = new Blob([text], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `setlist_${Date.now()}.txt`;
-    link.click();
-  };
-
   return (
-    <div className="space-y-6">
-      {/* Stats Bar */}
-      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-lg">
-        <div className="flex items-center gap-6">
+    <div
+      ref={setNodeRef}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+      className="mb-3 rnrb-card p-4 bg-gradient-to-r from-surface to-surface-muted border-2 border-border hover:border-brand-primary/30 transition-all group"
+    >
+      <div className="flex items-center gap-3">
+        {/* Drag Handle */}
+        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+          <GripVertical className="w-5 h-5 text-muted-foreground" />
+        </div>
+
+        {/* Position */}
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary/20 text-brand-primary font-bold text-sm">
+          {song.position + 1}
+        </div>
+
+        {/* Song Info */}
+        <div className="flex-1">
           <div className="flex items-center gap-2">
-            <Music className="w-4 h-4 text-purple-400" />
-            <span className="text-sm font-medium">{songs.length} songs</span>
+            <h4 className="font-semibold text-foreground">{song.title}</h4>
+            {keyChange && (
+              <span className="px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-medium flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" />
+                Key Change
+              </span>
+            )}
           </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-blue-400" />
-            <span className="text-sm font-medium">{formatDuration(totalDuration)}</span>
+          <div className="flex items-center gap-4 text-xs text-muted-foreground mt-1">
+            {song.artist && <span>{song.artist}</span>}
+            {song.key && <span className="font-mono">{song.key}</span>}
+            {song.tempo && <span>{song.tempo} BPM</span>}
+            <span className="flex items-center gap-1">
+              <Clock className="w-3 h-3" />
+              {formatDuration(song.duration)}
+            </span>
           </div>
-          {isConnected && (
-            <div className="flex items-center gap-2">
-              <motion.div
-                className="w-2 h-2 rounded-full bg-green-500"
-                animate={{ opacity: [1, 0.5, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              <span className="text-xs text-green-400">Live Sync</span>
-            </div>
+          {notesExpanded && (
+            <textarea
+              value={song.notes || ''}
+              onChange={(e) => onUpdateNotes(e.target.value)}
+              placeholder="Add notes (key changes, tempo shifts, etc.)"
+              className="w-full mt-2 px-3 py-2 bg-surface border border-border rounded-lg text-sm resize-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none"
+              rows={2}
+            />
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={exportSetlist}
-            className="flex items-center gap-2"
+        {/* Actions */}
+        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            onClick={() => setNotesExpanded(!notesExpanded)}
+            className="px-3 py-1 rounded-lg bg-surface-muted hover:bg-surface text-xs font-medium"
           >
-            <Download className="w-4 h-4" />
-            Export
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="flex items-center gap-2"
+            {notesExpanded ? 'Hide' : 'Notes'}
+          </button>
+          <button
+            onClick={onRemove}
+            className="text-red-500 hover:text-red-600"
           >
-            <Share2 className="w-4 h-4" />
-            Share
-          </Button>
+            <X className="w-4 h-4" />
+          </button>
         </div>
       </div>
-
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Setlist (Drop Zone) */}
-          <div className="lg:col-span-2">
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">Your Setlist</h3>
-
-              <Droppable droppableId="setlist">
-                {(provided, snapshot) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className={`
-                      min-h-[200px] space-y-2 rounded-lg transition-all
-                      ${snapshot.isDraggingOver ? 'bg-brand-primary/5 ring-2 ring-brand-primary/30' : ''}
-                    `}
-                  >
-                    {songs.length === 0 && !snapshot.isDraggingOver && (
-                      <div className="text-center py-12 text-muted-foreground">
-                        <Music className="w-16 h-16 mx-auto mb-3 opacity-50" />
-                        <p>No songs in setlist yet</p>
-                        <p className="text-sm mt-1">Drag songs from the right panel or click to add</p>
-                      </div>
-                    )}
-                    
-                    {songs.map((song, index) => (
-                      <Draggable key={song.id} draggableId={song.id} index={index}>
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className={`
-                              p-4 bg-surface border border-border rounded-lg
-                              ${snapshot.isDragging ? 'shadow-lg ring-2 ring-brand-primary rotate-2' : ''}
-                              transition-all
-                            `}
-                          >
-                            <div className="flex items-center gap-3">
-                              {/* Drag Handle */}
-                              <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing">
-                                <GripVertical className="w-5 h-5 text-muted-foreground hover:text-brand-primary transition-colors" />
-                              </div>
-
-                              {/* Order Number */}
-                              <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary font-bold text-sm flex-shrink-0">
-                                {index + 1}
-                              </div>
-
-                              {/* Song Info */}
-                              <div className="flex-1 min-w-0">
-                                <p className="font-semibold truncate">{song.songTitle}</p>
-                                <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                                  {song.key && (
-                                    <span className="flex items-center gap-1">
-                                      <KeyIcon className="w-3 h-3" />
-                                      {song.key}
-                                    </span>
-                                  )}
-                                  {song.duration && (
-                                    <span className="flex items-center gap-1">
-                                      <Clock className="w-3 h-3" />
-                                      {formatDuration(song.duration)}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Remove Button */}
-                              <button
-                                onClick={() => removeSong(song.id)}
-                                className="p-2 hover:bg-red-500/20 rounded-lg transition-colors text-red-500"
-                                title="Remove from setlist"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </div>
-          </div>
-
-          {/* Right: Available Songs (Drag Source) */}
-          <div>
-            <div className="bg-card border border-border rounded-lg p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                Available Songs
-                <span className="text-xs text-muted-foreground font-normal">(Drag to add)</span>
-              </h3>
-              
-              {availableSongs.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground text-sm">
-                  <Music className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                  <p>No songs available</p>
-                </div>
-              ) : (
-                <Droppable droppableId="available" isDropDisabled={true}>
-                  {(provided) => (
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      className="space-y-2"
-                    >
-                      {availableSongs.map((song, index) => {
-                        const isInSetlist = songs.some(s => s.songId === song.id);
-                        
-                        return (
-                          <Draggable
-                            key={song.id}
-                            draggableId={`available-${song.id}`}
-                            index={index}
-                            isDragDisabled={isInSetlist}
-                          >
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={`
-                                  p-3 rounded-lg border transition-all
-                                  ${snapshot.isDragging ? 'shadow-lg ring-2 ring-brand-primary rotate-2' : ''}
-                                  ${isInSetlist 
-                                    ? 'border-green-500/30 bg-green-500/10 opacity-60' 
-                                    : 'border-border hover:border-brand-primary/50 cursor-grab active:cursor-grabbing'
-                                  }
-                                `}
-                                onClick={() => !isInSetlist && addSong(song)}
-                              >
-                                <div className="flex items-center gap-2">
-                                  {!isInSetlist && (
-                                    <GripVertical className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                                  )}
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium truncate">{song.title}</p>
-                                    {song.key && (
-                                      <p className="text-xs text-muted-foreground">Key: {song.key}</p>
-                                    )}
-                                  </div>
-                                  {isInSetlist ? (
-                                    <span className="text-xs text-green-400 flex-shrink-0">In setlist</span>
-                                  ) : (
-                                    <Plus className="w-4 h-4 text-brand-primary flex-shrink-0" />
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              )}
-            </div>
-          </div>
-        </div>
-      </DragDropContext>
-
-      {/* Collaborative Cursors Overlay */}
-      <CursorOverlay cursors={remoteCursors} />
     </div>
   );
 }
 
+/**
+ * Main Component: Collaborative Setlist Builder
+ */
+export function CollaborativeSetlistBuilder({
+  setlistId,
+  projectSlug,
+  projectSongs,
+  initialSongs = [],
+  onUpdate,
+  currentUser,
+}: {
+  setlistId: string;
+  projectSlug: string;
+  projectSongs: Song[];
+  initialSongs: SetlistSong[];
+  onUpdate: (songs: SetlistSong[]) => void;
+  currentUser: {
+    userId: string;
+    userName: string;
+  };
+}) {
+  const [songs, setSongs] = useState<SetlistSong[]>(initialSongs);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [showSongPicker, setShowSongPicker] = useState(false);
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+
+  // Real-time setlist sync
+  const { isConnected, activeUsers } = useSetlistSync({
+    channelName: `setlist:${projectSlug}-${setlistId}`,
+    onSongAdded: (song) => {
+      setSongs((prev) => [...prev, song].sort((a, b) => a.position - b.position));
+    },
+    onSongRemoved: (songId) => {
+      setSongs((prev) => prev.filter(s => s.id !== songId));
+    },
+    onSongReordered: (newSongs) => {
+      setSongs(newSongs);
+    },
+    enabled: true,
+  });
+
+  // Collaborative cursors
+  const { remoteCursors } = useCollaborativeCursors({
+    channelName: `setlist:${projectSlug}-${setlistId}-cursors`,
+    userId: currentUser.userId,
+    userName: currentUser.userName,
+    enabled: true,
+  });
+
+  // Calculate total duration
+  const totalDuration = useMemo(() => {
+    return songs.reduce((sum, song) => sum + (song.duration || 0), 0);
+  }, [songs]);
+
+  const formatTotalDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const hours = Math.floor(mins / 60);
+    const remainingMins = mins % 60;
+    
+    if (hours > 0) {
+      return `${hours}h ${remainingMins}m`;
+    }
+    return `${mins}m`;
+  };
+
+  // Broadcast song addition
+  const addSong = async (song: Song) => {
+    const setlistSong: SetlistSong = {
+      ...song,
+      position: songs.length,
+      setlistId,
+    };
+
+    setSongs((prev) => [...prev, setlistSong]);
+    onUpdate([...songs, setlistSong]);
+
+    // Broadcast to collaborators
+    try {
+      const channel = (window as any).__ablyChannel; // Global channel ref
+      if (channel) {
+        await channel.publish('song-added', setlistSong);
+      }
+    } catch (error) {
+      console.error('Failed to broadcast song addition:', error);
+    }
+
+    setShowSongPicker(false);
+  };
+
+  // Broadcast song removal
+  const removeSong = async (songId: string) => {
+    const updated = songs.filter(s => s.id !== songId).map((s, idx) => ({ ...s, position: idx }));
+    setSongs(updated);
+    onUpdate(updated);
+
+    try {
+      const channel = (window as any).__ablyChannel;
+      if (channel) {
+        await channel.publish('song-removed', { songId });
+      }
+    } catch (error) {
+      console.error('Failed to broadcast song removal:', error);
+    }
+  };
+
+  // Broadcast reorder
+  const handleDragEnd = async (event: any) => {
+    const { active, over } = event;
+    setActiveId(null);
+    if (!over || active.id === over.id) return;
+
+    setSongs((items) => {
+      const oldIndex = items.findIndex(s => s.id === active.id);
+      const newIndex = items.findIndex(s => s.id === over.id);
+      const reordered = arrayMove(items, oldIndex, newIndex).map((s, idx) => ({ ...s, position: idx }));
+      
+      onUpdate(reordered);
+
+      // Broadcast
+      try {
+        const channel = (window as any).__ablyChannel;
+        if (channel) {
+          channel.publish('songs-reordered', { songs: reordered });
+        }
+      } catch (error) {
+        console.error('Failed to broadcast reorder:', error);
+      }
+
+      return reordered;
+    });
+  };
+
+  const updateSongNotes = (songId: string, notes: string) => {
+    const updated = songs.map(s => s.id === songId ? { ...s, notes } : s);
+    setSongs(updated);
+    onUpdate(updated);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header Stats */}
+      <Card className="p-6 rnrb-card bg-gradient-to-r from-brand-primary/10 to-transparent border-brand-primary/30">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div>
+            <div className="text-sm text-muted-foreground mb-1">Total Songs</div>
+            <div className="text-3xl font-bold text-foreground">{songs.length}</div>
+          </div>
+          <div>
+            <div className="text-sm text-muted-foreground mb-1">Set Duration</div>
+            <div className="text-3xl font-bold text-foreground">{formatTotalDuration(totalDuration)}</div>
+          </div>
+          <div>
+            <div className="text-sm text-muted-foreground mb-1 flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              Collaborators
+            </div>
+            <div className="text-3xl font-bold text-foreground">{activeUsers.length + 1}</div>
+          </div>
+          <div>
+            <div className="text-sm text-muted-foreground mb-1">Sync Status</div>
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`} />
+              <span className="text-sm font-medium">{isConnected ? 'Live' : 'Offline'}</span>
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Setlist */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Setlist */}
+        <div className="lg:col-span-2">
+          <Card className="p-6 rnrb-card">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-display font-bold">Setlist Order</h2>
+              <Button
+                onClick={() => setShowSongPicker(true)}
+                className="flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Add Song
+              </Button>
+            </div>
+
+            {songs.length === 0 ? (
+              <div className="py-16 text-center">
+                <Music className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
+                <h3 className="text-xl font-semibold mb-2">Empty Setlist</h3>
+                <p className="text-muted-foreground mb-4">Add songs to build your performance setlist</p>
+                <Button onClick={() => setShowSongPicker(true)}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Your First Song
+                </Button>
+              </div>
+            ) : (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} onDragStart={(e) => setActiveId(e.active.id as string)}>
+                <SortableContext items={songs.map(s => s.id)} strategy={verticalListSortingStrategy}>
+                  {songs.map((song, index) => (
+                    <SortableSong
+                      key={song.id}
+                      song={song}
+                      onRemove={() => removeSong(song.id)}
+                      onUpdateNotes={(notes) => updateSongNotes(song.id, notes)}
+                      previousKey={index > 0 ? songs[index - 1].key : undefined}
+                    />
+                  ))}
+                </SortableContext>
+                <DragOverlay>
+                  {activeId ? (
+                    <div className="rnrb-card p-4 bg-surface border-2 border-brand-primary shadow-xl">
+                      <div className="font-semibold">{songs.find(s => s.id === activeId)?.title}</div>
+                    </div>
+                  ) : null}
+                </DragOverlay>
+              </DndContext>
+            )}
+          </Card>
+        </div>
+
+        {/* Song Picker Sidebar */}
+        <div>
+          <Card className="p-6 rnrb-card sticky top-4">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-400" />
+              Available Songs
+            </h3>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {projectSongs
+                .filter(ps => !songs.find(s => s.id === ps.id))
+                .map((song) => (
+                  <button
+                    key={song.id}
+                    onClick={() => addSong(song)}
+                    className="w-full text-left p-3 rounded-lg bg-surface-muted hover:bg-surface border border-transparent hover:border-brand-primary/30 transition-all"
+                  >
+                    <div className="font-medium text-sm">{song.title}</div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {song.key} • {song.tempo} BPM
+                    </div>
+                  </button>
+                ))}
+              {projectSongs.filter(ps => !songs.find(s => s.id === ps.id)).length === 0 && (
+                <div className="py-8 text-center text-sm text-muted-foreground">
+                  All songs added to setlist
+                </div>
+              )}
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      {/* Cursors Overlay */}
+      <CursorOverlay cursors={remoteCursors} />
+    </div>
+  );
+}
