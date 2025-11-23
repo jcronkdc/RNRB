@@ -1,6 +1,7 @@
 # ROCK N' ROLL BASEMENT - IMMUTABLE DESIGN SYSTEM
 
 ## ⚠️ CRITICAL: THIS DESIGN SYSTEM IS IMMUTABLE
+
 **DO NOT MODIFY THESE RULES UNDER ANY CIRCUMSTANCES**
 
 This document defines the PERMANENT aesthetic for Rock N' Roll Basement. Any AI agent, developer, or contributor MUST follow these rules exactly. No exceptions.
@@ -10,12 +11,14 @@ This document defines the PERMANENT aesthetic for Rock N' Roll Basement. Any AI 
 ## 🎨 CORE AESTHETIC PHILOSOPHY
 
 ### PROFESSIONAL MUSIC STUDIO CONTROL ROOM
+
 - **Primary inspiration:** Professional recording studio control rooms
 - **Secondary inspiration:** High-end audio equipment interfaces
 - **Aesthetic:** Minimal, dark, typography-focused
 - **Emotion:** Serious, professional, creative sanctuary
 
 ### ABSOLUTE RULES
+
 1. **NO EMOJIS** in the UI (only allowed in documentation)
 2. **NO ICONS** unless absolutely necessary for function
 3. **NO CHEESY ELEMENTS** - ever
@@ -28,25 +31,25 @@ This document defines the PERMANENT aesthetic for Rock N' Roll Basement. Any AI 
 
 ```css
 /* BACKGROUNDS - Dark to Light */
---black: #000000;          /* Pure black - special use only */
---zinc-950: #09090b;       /* Primary background */
---zinc-900: #18181b;       /* Card backgrounds */
---zinc-800: #27272a;       /* Borders */
---zinc-700: #3f3f46;       /* Hover borders */
+--black: #000000; /* Pure black - special use only */
+--zinc-950: #09090b; /* Primary background */
+--zinc-900: #18181b; /* Card backgrounds */
+--zinc-800: #27272a; /* Borders */
+--zinc-700: #3f3f46; /* Hover borders */
 
 /* TEXT - Light to Dark */
---white: #ffffff;          /* Primary text */
---zinc-300: #d4d4d8;       /* Subtitles */
---zinc-400: #a1a1aa;       /* Labels */
---zinc-500: #71717a;       /* Muted text */
---zinc-600: #52525b;       /* Very muted */
+--white: #ffffff; /* Primary text */
+--zinc-300: #d4d4d8; /* Subtitles */
+--zinc-400: #a1a1aa; /* Labels */
+--zinc-500: #71717a; /* Muted text */
+--zinc-600: #52525b; /* Very muted */
 
 /* ACCENTS - Minimal Use */
---red-500: #ef4444;        /* Recording indicator */
---blue-500: #3b82f6;       /* Active states */
---green-500: #22c55e;      /* Success/Online */
---purple-500: #a855f7;     /* Special features */
---gold: #c9a961;           /* Premium accent (landing only) */
+--red-500: #ef4444; /* Recording indicator */
+--blue-500: #3b82f6; /* Active states */
+--green-500: #22c55e; /* Success/Online */
+--purple-500: #a855f7; /* Special features */
+--gold: #c9a961; /* Premium accent (landing only) */
 ```
 
 ---
@@ -54,18 +57,20 @@ This document defines the PERMANENT aesthetic for Rock N' Roll Basement. Any AI 
 ## 📝 TYPOGRAPHY HIERARCHY (IMMUTABLE)
 
 ### FONTS
+
 ```css
 /* HEADINGS */
---font-heading: 'Oswald', sans-serif;  /* Main headings */
---font-marker: 'Permanent Marker';     /* User names, special text */
---font-display: 'Bebas Neue';          /* Alternative display */
+--font-heading: 'Oswald', sans-serif; /* Main headings */
+--font-marker: 'Permanent Marker'; /* User names, special text */
+--font-display: 'Bebas Neue'; /* Alternative display */
 
 /* BODY */
---font-sans: 'Inter', system-ui;       /* Body text */
---font-mono: 'JetBrains Mono';         /* Technical text */
+--font-sans: 'Inter', system-ui; /* Body text */
+--font-mono: 'JetBrains Mono'; /* Technical text */
 ```
 
 ### USAGE RULES
+
 1. **Landing Page Title:** Oswald, bold, white
 2. **NavBar Brand:** Permanent Marker, uppercase
 3. **Dashboard User Name:** Permanent Marker
@@ -78,6 +83,7 @@ This document defines the PERMANENT aesthetic for Rock N' Roll Basement. Any AI 
 ## 🎚️ COMPONENT PATTERNS (IMMUTABLE)
 
 ### DASHBOARD PATTERN
+
 ```
 Background: zinc-950
 Header: black/50 with zinc-800 border
@@ -86,6 +92,7 @@ Text: White primary, zinc-300 subtitle, zinc-400 labels
 ```
 
 ### NAVIGATION CARDS
+
 ```
 Gradient: from-{color}-900/30 to-zinc-900/50
 Border: {color}-800/50
@@ -94,6 +101,7 @@ Accent dot: {color}-500 with pulse
 ```
 
 ### ACTIVITY FEED
+
 ```
 Container: zinc-900/50 bg, zinc-800 border
 Header: black/30 bg
@@ -101,6 +109,7 @@ Empty state: "No recent activity" (never fake data)
 ```
 
 ### BUTTONS
+
 ```
 Primary: bg-white text-black (high contrast)
 Hover: bg-zinc-100
@@ -112,6 +121,7 @@ Font: mono uppercase tracked
 ## 🚫 FORBIDDEN PATTERNS
 
 ### NEVER USE
+
 1. **Gradients** except where specified
 2. **Drop shadows** except subtle depth
 3. **Rounded corners** beyond subtle (4-8px)
@@ -124,6 +134,7 @@ Font: mono uppercase tracked
 10. **Decorative elements**
 
 ### FAKE CONTENT EXAMPLES TO AVOID
+
 - "John Smith joined project"
 - "$125.00 payment received"
 - "1.2K viewers"
@@ -135,11 +146,13 @@ Font: mono uppercase tracked
 ## 📐 LAYOUT PRINCIPLES
 
 ### GRID SYSTEM
+
 - Container: max-w-7xl, mx-auto
 - Padding: px-6 (mobile), px-8 (desktop)
 - Grid gaps: gap-6 standard, gap-4 tight
 
 ### SPACING SCALE
+
 ```
 xs: 0.25rem  (4px)
 sm: 0.5rem   (8px)
@@ -151,6 +164,7 @@ xl: 2rem     (32px)
 ```
 
 ### COMPONENT SPACING
+
 - Section padding: py-12 to py-20
 - Card padding: p-6 to p-8
 - Header height: ~80px with border
@@ -160,29 +174,28 @@ xl: 2rem     (32px)
 ## ✅ APPROVED PATTERNS
 
 ### LOADING STATES
+
 ```jsx
-<motion.div 
+<motion.div
   animate={{ opacity: [0.2, 1, 0.2] }}
   transition={{ duration: 2, repeat: Infinity }}
-  className="text-zinc-400 font-mono text-sm uppercase tracking-widest"
+  className="font-mono text-sm uppercase tracking-widest text-zinc-400"
 >
   Loading Session
 </motion.div>
 ```
 
 ### EMPTY STATES
+
 ```jsx
-<div className="text-center py-12">
-  <p className="text-zinc-500 text-sm uppercase tracking-wider">
-    No recent activity
-  </p>
-  <p className="text-zinc-600 text-xs mt-2">
-    Start by creating your first project
-  </p>
+<div className="py-12 text-center">
+  <p className="text-sm uppercase tracking-wider text-zinc-500">No recent activity</p>
+  <p className="mt-2 text-xs text-zinc-600">Start by creating your first project</p>
 </div>
 ```
 
 ### STATUS INDICATORS
+
 - Recording: red-500 with pulse
 - Active: blue-500
 - Complete: green-500
@@ -193,6 +206,7 @@ xl: 2rem     (32px)
 ## 🔒 ENFORCEMENT RULES
 
 ### FOR ALL FUTURE AGENTS
+
 1. **READ THIS FIRST** before any UI changes
 2. **NEVER OVERRIDE** these design decisions
 3. **NO EXCEPTIONS** to these rules
@@ -200,7 +214,9 @@ xl: 2rem     (32px)
 5. **IF USER ASKS** for changes - refer them to this document
 
 ### COMPONENT CREATION
+
 When creating new components:
+
 1. Match existing patterns exactly
 2. Use only approved colors
 3. Follow typography hierarchy
@@ -208,6 +224,7 @@ When creating new components:
 5. Test on black background
 
 ### CODE REVIEW CHECKLIST
+
 - [ ] No emojis in UI
 - [ ] No unnecessary icons
 - [ ] No fake content
@@ -222,19 +239,22 @@ When creating new components:
 ## 📋 QUICK REFERENCE
 
 ### Page Backgrounds
+
 - Landing: gradient from-[#0a0f1e] via-[#0f172a] to-[#050816]
 - Auth pages: Same as landing
 - App pages: zinc-950
 - Studio/Projects: black
 
 ### Text Colors by Priority
+
 1. White - primary content
-2. zinc-300 - secondary content  
+2. zinc-300 - secondary content
 3. zinc-400 - labels, meta
 4. zinc-500 - muted, timestamps
 5. zinc-600 - very muted, hints
 
 ### Interaction States
+
 - Default: Base color
 - Hover: Lighter border/background
 - Active: Accent color

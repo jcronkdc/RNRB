@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       select: { orgId: true },
     });
 
-    const userOrgIds = memberships.map(m => m.orgId);
+    const userOrgIds = memberships.map((m) => m.orgId);
 
     if (userOrgIds.length === 0) {
       return NextResponse.json({ tours: [] });
@@ -65,18 +65,13 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: [
-        { startDate: 'desc' },
-      ],
+      orderBy: [{ startDate: 'desc' }],
     });
 
     return NextResponse.json({ tours });
   } catch (error) {
     console.error('Tours GET error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch tours' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch tours' }, { status: 500 });
   }
 }
 
@@ -167,10 +162,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ tour }, { status: 201 });
   } catch (error) {
     console.error('Tours POST error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create tour' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create tour' }, { status: 500 });
   }
 }
-

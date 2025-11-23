@@ -23,6 +23,7 @@
    - Name: "Rock N' Roll Basement - Production"
 
 5. **Add Authorized Redirect URIs:**
+
    ```
    https://www.cronkwaters.com/api/auth/callback/google
    https://cronkwaters.com/api/auth/callback/google
@@ -38,7 +39,7 @@
    - Visit: https://vercel.com/justins-projects-d7153a8c/cronkwater/settings/environment-variables
 
 2. **Add Variables:**
-   
+
    **Variable 1:**
    - Key: `GOOGLE_CLIENT_ID`
    - Value: (paste your Client ID)
@@ -60,6 +61,7 @@ git push origin main
 ```
 
 Or use Vercel Dashboard:
+
 - Go to "Deployments"
 - Click "..." on latest deployment
 - Click "Redeploy"
@@ -80,15 +82,19 @@ After deployment completes:
 ## 🔍 Troubleshooting
 
 ### Error: "redirect_uri_mismatch"
+
 **Fix:** Double-check redirect URIs in Google Console match exactly:
+
 ```
 https://www.cronkwaters.com/api/auth/callback/google
 ```
 
 ### Error: "OAuth client not configured"
+
 **Fix:** Verify environment variables are set in Vercel and redeploy
 
 ### Error: "Access blocked: This app's request is invalid"
+
 **Fix:** Enable Google+ API in Google Cloud Console
 
 ---
@@ -96,6 +102,7 @@ https://www.cronkwaters.com/api/auth/callback/google
 ## 🧪 Current Status
 
 **Build Output Shows:**
+
 ```javascript
 {
   hasGoogleClientId: false,    // ← Currently missing
@@ -106,6 +113,7 @@ https://www.cronkwaters.com/api/auth/callback/google
 ```
 
 **After Fix:**
+
 ```javascript
 {
   hasGoogleClientId: true,     // ✅ Fixed
@@ -120,6 +128,7 @@ https://www.cronkwaters.com/api/auth/callback/google
 ## 📋 Complete Environment Variables Checklist
 
 **Required for Auth:**
+
 - ✅ `DATABASE_URL` (already set - Neon/PostgreSQL)
 - ✅ `NEXTAUTH_SECRET` (already set)
 - ✅ `NEXTAUTH_URL` (should be `https://www.cronkwaters.com`)
@@ -127,6 +136,7 @@ https://www.cronkwaters.com/api/auth/callback/google
 - ❌ `GOOGLE_CLIENT_SECRET` **← NEED TO ADD**
 
 **Optional (for other features):**
+
 - `NEXT_PUBLIC_ABLY_CLIENT_ID` (real-time chat)
 - `DAILY_API_KEY` (video calls)
 - `EMAIL_SERVER` (magic links)
@@ -154,5 +164,3 @@ https://www.cronkwaters.com/api/auth/callback/google
 ---
 
 **READY TO PROCEED:** Follow Step 1-3 above to complete OAuth setup!
-
-

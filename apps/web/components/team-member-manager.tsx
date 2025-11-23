@@ -2,11 +2,11 @@
 
 /**
  * TEAM MEMBER ROLE MANAGEMENT
- * 
+ *
  * Real-time role changes with Ably broadcast
  * Permission-based UI (only owners/admins can change roles)
  * Invite members, change roles, remove members
- * 
+ *
  * Mycelial Pathway:
  * Owner changes role → Ably broadcasts → All clients update → Server persists
  */
@@ -25,7 +25,7 @@ import {
   Check,
   X,
   Loader2,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
 import { Realtime, Types } from 'ably';
 
@@ -156,14 +156,12 @@ export function TeamMemberManager({
       setMessage({ type: 'success', text: `${member.userName} joined the team` });
     },
     onMemberRemoved: (userId) => {
-      setMembers((prev) => prev.filter(m => m.userId !== userId));
+      setMembers((prev) => prev.filter((m) => m.userId !== userId));
       setMessage({ type: 'success', text: 'Member removed from team' });
     },
     onRoleChanged: (change) => {
       setMembers((prev) =>
-        prev.map(m =>
-          m.userId === change.userId ? { ...m, role: change.role } : m
-        )
+        prev.map((m) => (m.userId === change.userId ? { ...m, role: change.role } : m))
       );
       setMessage({ type: 'success', text: 'Role updated successfully' });
     },
@@ -255,9 +253,7 @@ export function TeamMemberManager({
       }
 
       // Update locally (will also be updated via Ably)
-      setMembers((prev) =>
-        prev.map(m => (m.userId === userId ? { ...m, role: newRole } : m))
-      );
+      setMembers((prev) => prev.map((m) => (m.userId === userId ? { ...m, role: newRole } : m)));
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message });
     }
@@ -270,7 +266,7 @@ export function TeamMemberManager({
       return;
     }
 
-    const member = members.find(m => m.userId === userId);
+    const member = members.find((m) => m.userId === userId);
     if (!member) return;
 
     if (!confirm(`Remove ${member.userName} from this project?`)) return;
@@ -292,7 +288,7 @@ export function TeamMemberManager({
       }
 
       // Update locally
-      setMembers((prev) => prev.filter(m => m.userId !== userId));
+      setMembers((prev) => prev.filter((m) => m.userId !== userId));
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message });
     }
@@ -301,13 +297,13 @@ export function TeamMemberManager({
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'owner':
-        return <Crown className="w-4 h-4 text-yellow-400" />;
+        return <Crown className="h-4 w-4 text-yellow-400" />;
       case 'admin':
-        return <Shield className="w-4 h-4 text-purple-400" />;
+        return <Shield className="h-4 w-4 text-purple-400" />;
       case 'member':
-        return <Edit className="w-4 h-4 text-blue-400" />;
+        return <Edit className="h-4 w-4 text-blue-400" />;
       case 'viewer':
-        return <Eye className="w-4 h-4 text-gray-400" />;
+        return <Eye className="h-4 w-4 text-gray-400" />;
       default:
         return null;
     }
@@ -331,7 +327,7 @@ export function TeamMemberManager({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-brand-primary animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
       </div>
     );
   }
@@ -341,21 +337,18 @@ export function TeamMemberManager({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-display font-bold flex items-center gap-3">
-            <Users className="w-7 h-7 text-brand-primary" />
+          <h2 className="font-display flex items-center gap-3 text-2xl font-bold">
+            <Users className="h-7 w-7 text-brand-primary" />
             Team Members
           </h2>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-muted-foreground">
             {members.length} {members.length === 1 ? 'member' : 'members'}
             {isConnected && <span className="ml-2 text-green-400">• Live sync enabled</span>}
           </p>
         </div>
         {canManageMembers && (
-          <Button
-            onClick={() => setShowInviteModal(true)}
-            className="flex items-center gap-2"
-          >
-            <UserPlus className="w-4 h-4" />
+          <Button onClick={() => setShowInviteModal(true)} className="flex items-center gap-2">
+            <UserPlus className="h-4 w-4" />
             Invite Member
           </Button>
         )}
@@ -363,15 +356,17 @@ export function TeamMemberManager({
 
       {/* Message */}
       {message && (
-        <Card className={`p-4 flex items-center gap-3 ${
-          message.type === 'success'
-            ? 'bg-green-500/10 border-green-500/20'
-            : 'bg-red-500/10 border-red-500/20'
-        }`}>
+        <Card
+          className={`flex items-center gap-3 p-4 ${
+            message.type === 'success'
+              ? 'border-green-500/20 bg-green-500/10'
+              : 'border-red-500/20 bg-red-500/10'
+          }`}
+        >
           {message.type === 'success' ? (
-            <Check className="w-5 h-5 text-green-400" />
+            <Check className="h-5 w-5 text-green-400" />
           ) : (
-            <AlertCircle className="w-5 h-5 text-red-400" />
+            <AlertCircle className="h-5 w-5 text-red-400" />
           )}
           <span className={message.type === 'success' ? 'text-green-400' : 'text-red-400'}>
             {message.text}
@@ -380,7 +375,7 @@ export function TeamMemberManager({
             onClick={() => setMessage(null)}
             className="ml-auto text-muted-foreground hover:text-foreground"
           >
-            <X className="w-4 h-4" />
+            <X className="h-4 w-4" />
           </button>
         </Card>
       )}
@@ -389,15 +384,20 @@ export function TeamMemberManager({
       <div className="space-y-3">
         {members.map((member) => {
           const isCurrentUser = member.userId === currentUser.userId;
-          const canChangeThisRole = canManageMembers && !isCurrentUser && (isOwner || member.role !== 'owner');
+          const canChangeThisRole =
+            canManageMembers && !isCurrentUser && (isOwner || member.role !== 'owner');
 
           return (
-            <Card key={member.userId} className="p-4 rnrb-card">
+            <Card key={member.userId} className="rnrb-card p-4">
               <div className="flex items-center gap-4">
                 {/* Avatar */}
-                <div className="w-12 h-12 rounded-full bg-brand-primary/20 flex items-center justify-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/20">
                   {member.avatar ? (
-                    <img src={member.avatar} alt={member.userName} className="w-full h-full rounded-full" />
+                    <img
+                      src={member.avatar}
+                      alt={member.userName}
+                      className="h-full w-full rounded-full"
+                    />
                   ) : (
                     <span className="text-xl font-bold text-brand-primary">
                       {member.userName.charAt(0).toUpperCase()}
@@ -410,13 +410,13 @@ export function TeamMemberManager({
                   <div className="flex items-center gap-2">
                     <h4 className="font-semibold text-foreground">{member.userName}</h4>
                     {isCurrentUser && (
-                      <span className="px-2 py-0.5 rounded-full bg-brand-primary/20 text-brand-primary text-xs font-medium">
+                      <span className="rounded-full bg-brand-primary/20 px-2 py-0.5 text-xs font-medium text-brand-primary">
                         You
                       </span>
                     )}
                   </div>
                   <p className="text-sm text-muted-foreground">{member.userEmail}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     Joined {new Date(member.joinedAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -427,7 +427,7 @@ export function TeamMemberManager({
                     <select
                       value={member.role}
                       onChange={(e) => changeRole(member.userId, e.target.value as any)}
-                      className={`px-3 py-1.5 rounded-lg border-2 text-sm font-medium ${getRoleBadgeColor(member.role)} hover:brightness-110 transition`}
+                      className={`rounded-lg border-2 px-3 py-1.5 text-sm font-medium ${getRoleBadgeColor(member.role)} transition hover:brightness-110`}
                     >
                       <option value="viewer">Viewer</option>
                       <option value="member">Member</option>
@@ -435,7 +435,9 @@ export function TeamMemberManager({
                       {isOwner && <option value="owner">Owner</option>}
                     </select>
                   ) : (
-                    <span className={`px-3 py-1.5 rounded-lg border-2 text-sm font-medium flex items-center gap-2 ${getRoleBadgeColor(member.role)}`}>
+                    <span
+                      className={`flex items-center gap-2 rounded-lg border-2 px-3 py-1.5 text-sm font-medium ${getRoleBadgeColor(member.role)}`}
+                    >
                       {getRoleIcon(member.role)}
                       {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
                     </span>
@@ -445,10 +447,10 @@ export function TeamMemberManager({
                   {canManageMembers && !isCurrentUser && (
                     <button
                       onClick={() => removeMember(member.userId)}
-                      className="text-red-400 hover:text-red-300 transition"
+                      className="text-red-400 transition hover:text-red-300"
                       title="Remove member"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   )}
                 </div>
@@ -461,41 +463,38 @@ export function TeamMemberManager({
       {/* Invite Modal */}
       {showInviteModal && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setShowInviteModal(false)}
         >
-          <Card
-            className="rnrb-card p-8 max-w-md w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-display font-bold">Invite Team Member</h3>
+          <Card className="rnrb-card w-full max-w-md p-8" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="font-display text-2xl font-bold">Invite Team Member</h3>
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center"
+                className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-surface-muted"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Email Address</label>
+                <label className="mb-2 block text-sm font-medium">Email Address</label>
                 <input
                   type="email"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@example.com"
-                  className="w-full px-4 py-3 bg-surface border-2 border-border rounded-xl focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none"
+                  className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Role</label>
+                <label className="mb-2 block text-sm font-medium">Role</label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as any)}
-                  className="w-full px-4 py-3 bg-surface border-2 border-border rounded-xl focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none"
+                  className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
                 >
                   <option value="viewer">Viewer (Read-only)</option>
                   <option value="member">Member (Can edit)</option>
@@ -514,16 +513,16 @@ export function TeamMemberManager({
                 <Button
                   onClick={handleInvite}
                   disabled={inviting || !inviteEmail.trim()}
-                  className="flex-1 flex items-center justify-center gap-2"
+                  className="flex flex-1 items-center justify-center gap-2"
                 >
                   {inviting ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       Sending...
                     </>
                   ) : (
                     <>
-                      <Mail className="w-4 h-4" />
+                      <Mail className="h-4 w-4" />
                       Send Invite
                     </>
                   )}
@@ -535,34 +534,34 @@ export function TeamMemberManager({
       )}
 
       {/* Role Legend */}
-      <Card className="p-6 bg-surface-muted">
-        <h4 className="text-sm font-semibold mb-4 text-muted-foreground">ROLE PERMISSIONS</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card className="bg-surface-muted p-6">
+        <h4 className="mb-4 text-sm font-semibold text-muted-foreground">ROLE PERMISSIONS</h4>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="flex items-start gap-3">
-            <Crown className="w-5 h-5 text-yellow-400 mt-0.5" />
+            <Crown className="mt-0.5 h-5 w-5 text-yellow-400" />
             <div>
-              <p className="font-medium text-sm">Owner</p>
+              <p className="text-sm font-medium">Owner</p>
               <p className="text-xs text-muted-foreground">Full control, including deletion</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <Shield className="w-5 h-5 text-purple-400 mt-0.5" />
+            <Shield className="mt-0.5 h-5 w-5 text-purple-400" />
             <div>
-              <p className="font-medium text-sm">Admin</p>
+              <p className="text-sm font-medium">Admin</p>
               <p className="text-xs text-muted-foreground">Can manage team and settings</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <Edit className="w-5 h-5 text-blue-400 mt-0.5" />
+            <Edit className="mt-0.5 h-5 w-5 text-blue-400" />
             <div>
-              <p className="font-medium text-sm">Member</p>
+              <p className="text-sm font-medium">Member</p>
               <p className="text-xs text-muted-foreground">Can edit songs and collaborate</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <Eye className="w-5 h-5 text-gray-400 mt-0.5" />
+            <Eye className="mt-0.5 h-5 w-5 text-gray-400" />
             <div>
-              <p className="font-medium text-sm">Viewer</p>
+              <p className="text-sm font-medium">Viewer</p>
               <p className="text-xs text-muted-foreground">Read-only access, no edits</p>
             </div>
           </div>
@@ -571,4 +570,3 @@ export function TeamMemberManager({
     </div>
   );
 }
-

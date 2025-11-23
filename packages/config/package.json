@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "type": "module",
   "private": false,
-  "files": ["tsconfig", "eslint", "prettier"],
+  "files": [
+    "tsconfig",
+    "eslint",
+    "prettier"
+  ],
   "exports": {
     "./tsconfig/base": "./tsconfig/base.json",
     "./tsconfig/react": "./tsconfig/react.json",

@@ -26,14 +26,9 @@ export function PresenceList({ channelName }: PresenceListProps) {
       </h3>
       <ul className="space-y-2">
         {presenceData.map((member) => (
-          <li
-            key={member.clientId}
-            className="flex items-center gap-2 text-sm"
-          >
+          <li key={member.clientId} className="flex items-center gap-2 text-sm">
             <Circle className="h-2 w-2 fill-green-500 text-green-500" />
-            <span className="text-white">
-              {member.data?.name || member.clientId}
-            </span>
+            <span className="text-white">{member.data?.name || member.clientId}</span>
             {member.data?.status && (
               <span className="text-xs text-gray-500">({member.data.status})</span>
             )}
@@ -43,4 +38,3 @@ export function PresenceList({ channelName }: PresenceListProps) {
     </div>
   );
 }
-

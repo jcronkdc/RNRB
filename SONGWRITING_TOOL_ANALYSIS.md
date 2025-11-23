@@ -6,17 +6,20 @@
 
 **Problem:**
 4 people collaborate on 30-line song for 1 hour:
+
 - Each person makes 10 suggestions
 - Total: 40 pending suggestions
 - Song owner has to review ALL 40 suggestions one by one
 
 **User Experience:**
+
 - Overwhelming to review
 - Hard to see overall song with 40 yellow highlights
 - Time-consuming
 - May miss good suggestions in the noise
 
 **Solution Needed:**
+
 - **Batch review UI** - Accept/reject multiple at once
 - **Filter suggestions** - By person, by line, by type
 - **Preview mode** - See song with all suggestions applied
@@ -30,17 +33,20 @@
 ### ISSUE #2: NO UNDO FOR ACCEPTED CHANGES ⚠️
 
 **Problem:**
+
 - Owner accepts Mike's suggestion
 - Master version updates
 - Realizes it was wrong
 - **No undo button**
 
 **Current State:**
+
 - Changes are permanent once accepted
 - No version history UI
 - Can't restore previous master
 
 **Solution Needed:**
+
 - **Undo/Redo** - Last 10 actions reversible
 - **Version history** - Snapshots every 5 minutes
 - **Restore point** - "Save as checkpoint"
@@ -53,6 +59,7 @@
 ### ISSUE #3: SUGGESTION MERGE CONFLICTS ⚠️
 
 **Problem:**
+
 ```
 Master: "Walking down the lonely road"
 Sarah suggests: "Walking down the empty road" (lonely → empty)
@@ -60,14 +67,17 @@ Mike suggests: "Strolling down the lonely road" (Walking → Strolling)
 ```
 
 If both accepted, result is unclear. Do we get:
+
 - "Strolling down the empty road" (both changes)
 - One change cancels the other?
 
 **Current State:**
+
 - No merge logic
 - Unclear behavior
 
 **Solution Needed:**
+
 - **Smart merge** - Apply both if they don't overlap
 - **Conflict detection** - Warn when suggestions conflict
 - **Merge preview** - Show result before accepting
@@ -79,6 +89,7 @@ If both accepted, result is unclear. Do we get:
 ### ISSUE #4: LARGE COLLABORATION SESSIONS ⚠️
 
 **Problem:**
+
 - 32 people join video call to write one song
 - 32 people all making suggestions
 - Hundreds of suggestions pile up
@@ -86,6 +97,7 @@ If both accepted, result is unclear. Do we get:
 - Impossible to coordinate
 
 **Solution Needed:**
+
 - **Roles** - Owner, Co-writer, Reviewer, Viewer
 - **Permissions** - Only co-writers can suggest changes
 - **Moderator tools** - Mute chat, limit video participants
@@ -98,6 +110,7 @@ If both accepted, result is unclear. Do we get:
 ### ISSUE #5: NO CONFLICT LOCKING ⚠️
 
 **Problem:**
+
 - Sarah starts editing verse 2 at 14:30
 - Mike starts editing same verse at 14:31
 - Both spend 10 minutes working
@@ -105,11 +118,13 @@ If both accepted, result is unclear. Do we get:
 - Mike's 10 minutes wasted (should've known Sarah was working on it)
 
 **Current State:**
+
 - Presence shows "editing" but not WHAT they're editing
 - No line-level locks
 - No "Sarah is editing line 12-18" indicator
 
 **Solution Needed:**
+
 - **Line-level presence** - "Sarah is editing lines 12-18" (grayed out for others)
 - **Soft locks** - Warning: "Sarah is editing this section"
 - **Live cursors** - Google Docs style cursor indicators
@@ -126,12 +141,14 @@ If both accepted, result is unclear. Do we get:
 #### **MISSING #1: RHYME DICTIONARY** ❌
 
 **What professionals need:**
+
 - Click word → See rhyming words
 - Filter by syllable count
 - Sort by common usage
 - AI contextual rhymes
 
 **Example:**
+
 ```
 Word: "night"
 Rhymes: fight, light, sight, bright, flight, might, right, tight
@@ -146,12 +163,14 @@ AI suggests: "light" (most common in love songs)
 #### **MISSING #2: SYLLABLE COUNTER** ❌
 
 **What professionals need:**
+
 - Automatic syllable count per line
 - Highlight meter inconsistencies
 - Common meters: 4/4, 3/4, 6/8
 - Rap flow patterns
 
 **Example:**
+
 ```
 Line 1: "Walking down the road" (5 syllables)
 Line 2: "Carrying this heavy load today" (9 syllables) ⚠️ Meter mismatch
@@ -164,6 +183,7 @@ Line 2: "Carrying this heavy load today" (9 syllables) ⚠️ Meter mismatch
 #### **MISSING #3: SONG STRUCTURE TEMPLATES** ❌
 
 **What professionals need:**
+
 - Quick start: Verse/Chorus/Verse/Chorus/Bridge/Chorus
 - Common structures: ABABCB, AABA, AAAA
 - Genre-specific (Country: Verse/Chorus/Verse/Chorus, Pop: Intro/Verse/Pre/Chorus)
@@ -176,12 +196,14 @@ Line 2: "Carrying this heavy load today" (9 syllables) ⚠️ Meter mismatch
 #### **MISSING #4: VOICE MEMOS** ❌
 
 **What professionals need:**
+
 - Record quick melody idea
 - Attach to song
 - Multiple voice memos per song
 - Transcribe to lyrics (AI)
 
 **Common workflow:**
+
 ```
 1. Singer hums melody
 2. Records voice memo on phone
@@ -197,12 +219,14 @@ Line 2: "Carrying this heavy load today" (9 syllables) ⚠️ Meter mismatch
 #### **MISSING #5: REFERENCE TRACKS** ❌
 
 **What professionals need:**
+
 - Attach inspiration songs
 - "Make it sound like this"
 - Timestamp specific sections
 - Notes per reference
 
 **Example:**
+
 ```
 Reference: "Hotel California" by Eagles
 Timestamp: 2:15 - 2:45 (guitar solo feel)
@@ -218,15 +242,18 @@ Note: "Want this vibe for our bridge"
 #### **MISSING #6: CHORD PROGRESSION ANALYZER** ❌
 
 **What we have:**
+
 - AI suggests progressions
 
 **What's missing:**
+
 - Analyze existing chords → Tell me what key I'm in
 - Detect key changes
 - Suggest next chord based on previous
 - Show chord function (I, IV, V, vi)
 
 **Example:**
+
 ```
 Chords: C, Am, F, G
 Analysis: Key of C major
@@ -239,6 +266,7 @@ Next chord suggestions: C (resolve), Em (continue), Dm (tension)
 #### **MISSING #7: CAPO SUGGESTIONS** ❌
 
 **What professionals need:**
+
 ```
 Song in Db (hard to play)
 Capo suggestion: "Capo 1, play in C"
@@ -252,6 +280,7 @@ Shows: Original chords + Capo chords side by side
 #### **MISSING #8: ALTERNATE TUNINGS** ❌
 
 **What professionals need:**
+
 - Drop D tuning note
 - Open G tuning
 - DADGAD
@@ -266,11 +295,13 @@ Shows: Original chords + Capo chords side by side
 #### **MISSING #9: THESAURUS INTEGRATION** ❌
 
 **What professionals need:**
+
 - Right-click word → Synonyms
 - Filter by: more poetic, more casual, more intense
 - AI contextual suggestions
 
 **Example:**
+
 ```
 Word: "sad"
 Synonyms: melancholy, blue, heartbroken, dejected, sorrowful
@@ -284,12 +315,14 @@ Intense: devastated, shattered
 #### **MISSING #10: LINE STRENGTH ANALYZER** ❌
 
 **AI Feature:**
+
 - Analyze each line for impact
 - "This line is weak/strong/cliché"
 - Suggest improvements
 - Highlight clichés automatically
 
 **Example:**
+
 ```
 Line: "I love you more than words can say"
 Analysis: ⚠️ Common cliché (used in 1000+ songs)
@@ -301,6 +334,7 @@ Suggestion: "I love you more than silence speaks"
 #### **MISSING #11: MOOD/EMOTION TAGGER** ❌
 
 **What professionals need:**
+
 - Tag sections by emotion
 - Verse 1: Melancholy
 - Chorus: Hopeful
@@ -316,6 +350,7 @@ Suggestion: "I love you more than silence speaks"
 #### **MISSING #12: BPM TAP TOOL** ❌
 
 **What's needed:**
+
 - Tap spacebar to rhythm
 - Auto-calculates BPM
 - More accurate than guessing
@@ -327,6 +362,7 @@ Suggestion: "I love you more than silence speaks"
 #### **MISSING #13: METRONOME** ❌
 
 **What professionals need:**
+
 - Built-in click track
 - Play while writing
 - Hear the tempo
@@ -337,6 +373,7 @@ Suggestion: "I love you more than silence speaks"
 #### **MISSING #14: AUDIO STEMS** ❌
 
 **What professionals need:**
+
 - Upload instrumental track
 - Upload vocal demo
 - Upload reference mix
@@ -350,6 +387,7 @@ Suggestion: "I love you more than silence speaks"
 #### **MISSING #15: TIME SIGNATURES** ❌
 
 **What's needed:**
+
 - Beyond 4/4
 - Support: 3/4 (waltz), 6/8, 5/4, 7/8
 - Syllable matching per measure
@@ -361,6 +399,7 @@ Suggestion: "I love you more than silence speaks"
 #### **MISSING #16: SETLIST MANAGER** ❌
 
 **What professionals need:**
+
 - Drag songs into setlist order
 - Calculate total duration
 - Add notes per song ("Capo 2", "Drop D")
@@ -368,6 +407,7 @@ Suggestion: "I love you more than silence speaks"
 - Send to band members
 
 **Current state:**
+
 - Have "Setlist" tags
 - Can filter by "Setlist"
 - But no actual setlist builder
@@ -377,11 +417,13 @@ Suggestion: "I love you more than silence speaks"
 #### **MISSING #17: SONG COMPARISON** ❌
 
 **What's needed:**
+
 - Compare two versions side-by-side
 - Show differences (diff view)
 - Merge best parts of each
 
 **Use case:**
+
 ```
 Version A: Great verse, weak chorus
 Version B: Weak verse, great chorus
@@ -394,12 +436,14 @@ Merge: Take verse from A, chorus from B
 #### **MISSING #18: DUPLICATE SONG** ❌
 
 **What's needed:**
+
 - "Save as new version"
 - Create alternate version
 - Try different approaches
 - Keep both versions
 
 **Use case:**
+
 - Acoustic version
 - Electric version
 - Radio edit
@@ -412,6 +456,7 @@ Merge: Take verse from A, chorus from B
 #### **MISSING #19: @MENTIONS IN SUGGESTIONS** ❌
 
 **What's needed:**
+
 - Sarah suggests change, @mentions Mike: "What do you think?"
 - Mike gets notification
 - Direct questions to specific people
@@ -421,6 +466,7 @@ Merge: Take verse from A, chorus from B
 #### **MISSING #20: SUGGESTION VOTING** ❌
 
 **What's needed:**
+
 - Multiple people can upvote/downvote suggestions
 - Owner sees: "+3 votes" on Sarah's suggestion
 - Democratic collaborative writing
@@ -430,8 +476,9 @@ Merge: Take verse from A, chorus from B
 #### **MISSING #21: COMMENT THREADS** ❌
 
 **What's needed:**
+
 - Comment on specific lines (not just suggestions)
-- "Not sure about this line" 
+- "Not sure about this line"
 - Threaded discussions
 - Resolve comment when fixed
 
@@ -440,6 +487,7 @@ Merge: Take verse from A, chorus from B
 #### **MISSING #22: CHANGE HISTORY/AUDIT LOG** ❌
 
 **What's needed:**
+
 - See all changes over time
 - "Mike changed 'walking' to 'strolling' at 2:34pm"
 - Restore any previous state
@@ -452,11 +500,13 @@ Merge: Take verse from A, chorus from B
 #### **MISSING #23: FULL SONG GENERATION** ❌
 
 **What AI could do:**
+
 - Input: Theme, mood, style
 - Output: Complete song draft
 - Or: Write verse 2 based on verse 1 pattern
 
 **Example:**
+
 ```
 Input: "Sad breakup song, Taylor Swift style, about moving on"
 Output: Complete 3-verse, 2-chorus song draft
@@ -468,6 +518,7 @@ User edits and refines
 #### **MISSING #24: MELODY SUGGESTIONS** ❌
 
 **What AI could do:**
+
 - Suggest melodic contour for lyrics
 - "This line should go up in pitch"
 - Simple notation (not full sheet music)
@@ -478,6 +529,7 @@ User edits and refines
 #### **MISSING #25: LYRIC CONTINUATION** ❌
 
 **What AI could do:**
+
 - User writes 2 lines of verse
 - AI suggests next 2 lines
 - Maintains rhyme scheme
@@ -490,6 +542,7 @@ User edits and refines
 #### **MISSING #26: COPYRIGHT/PUBLISHING INFO** ❌
 
 **What professionals need:**
+
 - ISWC code
 - PRO affiliation (ASCAP, BMI, SESAC)
 - Copyright year
@@ -503,6 +556,7 @@ User edits and refines
 #### **MISSING #27: DEMO RECORDING INTEGRATION** ❌
 
 **What professionals need:**
+
 - Record quick demo in-app
 - Attach to song
 - Share with collaborators
@@ -513,6 +567,7 @@ User edits and refines
 #### **MISSING #28: NOTATION EXPORT** ❌
 
 **What professionals need:**
+
 - Export to PDF with chords above lyrics
 - Professional songsheet format
 - Nashville number system option
@@ -523,12 +578,14 @@ User edits and refines
 #### **MISSING #29: COLLABORATION CONTRACTS** ❌
 
 **What professionals need:**
+
 - Define split percentages upfront
 - Digital signature
 - Agreement terms
 - Binding before song is released
 
 **Currently:**
+
 - Can add co-writers
 - No split percentages
 - No formal agreement
@@ -538,6 +595,7 @@ User edits and refines
 #### **MISSING #30: MULTI-LANGUAGE SUPPORT** ❌
 
 **What's needed:**
+
 - Write lyrics in Spanish, translate to English
 - Side-by-side translations
 - Phonetic pronunciation guides
@@ -549,21 +607,25 @@ User edits and refines
 ### CRITICAL (BUILD NEXT):
 
 **1. Batch Suggestion Review** ⚠️
+
 - Will become unbearable with multiple collaborators
 - Need: Select all, accept selected, reject selected
 - Filter by person
 
 **2. Undo/Redo + Version History** ⚠️
+
 - Accepted wrong suggestion? Can't fix it
 - Need: Undo button, version snapshots
 - Restore previous versions
 
 **3. Line-Level Locking** ⚠️
+
 - Shows which lines others are editing
 - Prevents wasted work
 - Soft warning (not hard lock)
 
 **4. Suggestion Conflict Detection** ⚠️
+
 - Warn when suggestions overlap
 - Show merge preview
 - Smart auto-merge
@@ -573,30 +635,36 @@ User edits and refines
 ### HIGH VALUE (WORLD'S BEST):
 
 **5. Rhyme Dictionary**
+
 - Click word → rhymes appear
 - Essential for songwriters
 - Fast lyric writing
 
 **6. Syllable Counter**
+
 - Automatic per line
 - Meter consistency
 - Flow optimization
 
 **7. Voice Memos**
+
 - Record melody ideas
 - Attach to song
 - Share with band
 
 **8. Audio Playback**
+
 - Upload instrumental
 - Play while editing lyrics
 - Sync karaoke-style
 
 **9. Song Structure Templates**
+
 - Quick start common structures
 - Saves time
 
 **10. Thesaurus Integration**
+
 - Right-click word → synonyms
 - Poetic alternatives
 
@@ -632,6 +700,7 @@ User edits and refines
 ### vs MasterWriter (Pro Songwriting Software)
 
 **They Have:**
+
 - ✅ Rhyme dictionary (we don't)
 - ✅ Thesaurus (we don't)
 - ✅ Song templates (we don't)
@@ -642,6 +711,7 @@ User edits and refines
 ### vs Songwriter's Pad
 
 **They Have:**
+
 - ✅ Rhyme dictionary (we don't)
 - ✅ Audio recording (we don't)
 - ✅ Voice memos (we don't)
@@ -652,6 +722,7 @@ User edits and refines
 ### vs Google Docs + Manual Tools
 
 **They Have:**
+
 - ✅ Real-time editing (we have suggestion workflow - better)
 - ❌ NO chord notation (we do!)
 - ❌ NO AI suggestions (we do!)
@@ -661,6 +732,7 @@ User edits and refines
 ### vs Notion
 
 **They Have:**
+
 - ✅ Templates (we need)
 - ✅ Comments (we need)
 - ❌ NO chord notation (we do!)
@@ -687,12 +759,14 @@ User edits and refines
 ## 🏆 TO BE "WORLD'S BEST" WE NEED:
 
 ### TIER 1: CRITICAL FIXES (Without these, collaboration breaks)
+
 1. **Batch suggestion review** (or overwhelming)
 2. **Undo/redo** (or risky)
 3. **Suggestion conflict detection** (or confusing)
 4. **Line-level locking** (or wasted work)
 
 ### TIER 2: ESSENTIAL WRITING TOOLS (Professional baseline)
+
 5. **Rhyme dictionary** (industry standard)
 6. **Syllable counter** (flow checking)
 7. **Thesaurus** (word choice)
@@ -700,6 +774,7 @@ User edits and refines
 9. **Voice memos** (melody capture)
 
 ### TIER 3: ADVANCED FEATURES (Competitive advantage)
+
 10. **Audio playback** (write to music)
 11. **BPM tap tool** (accurate tempo)
 12. **Chord analyzer** (what key am I in?)
@@ -711,19 +786,20 @@ User edits and refines
 
 ## 📊 CURRENT vs WORLD'S BEST:
 
-| Feature Category | Current Score | World's Best | Gap |
-|-----------------|---------------|--------------|-----|
-| Collaboration | 95% | 100% | Need undo, batch review |
-| Chord Tools | 90% | 100% | Need analyzer, capo calc |
-| Lyric Tools | 40% | 100% | Need rhyme, syllable, thesaurus |
-| AI Features | 70% | 100% | Need full generation, melody |
-| Organization | 95% | 100% | Need setlist builder |
-| Audio | 10% | 100% | Need playback, recording |
-| Professional | 30% | 100% | Need publishing, contracts |
+| Feature Category | Current Score | World's Best | Gap                             |
+| ---------------- | ------------- | ------------ | ------------------------------- |
+| Collaboration    | 95%           | 100%         | Need undo, batch review         |
+| Chord Tools      | 90%           | 100%         | Need analyzer, capo calc        |
+| Lyric Tools      | 40%           | 100%         | Need rhyme, syllable, thesaurus |
+| AI Features      | 70%           | 100%         | Need full generation, melody    |
+| Organization     | 95%           | 100%         | Need setlist builder            |
+| Audio            | 10%           | 100%         | Need playback, recording        |
+| Professional     | 30%           | 100%         | Need publishing, contracts      |
 
 **OVERALL: 61% of "World's Best"**
 
 **TO REACH 100%:**
+
 - Fix 4 collaboration issues (Tier 1)
 - Add 5 essential writing tools (Tier 2)
 - Add 10 advanced features (Tier 3)
@@ -733,6 +809,7 @@ User edits and refines
 ## 🚨 BRUTAL HONESTY:
 
 ### WHAT WE EXCEL AT:
+
 ✅ **Collaboration** - Video + cursor control is UNIQUE
 ✅ **Chord notation** - Easier than any competitor
 ✅ **AI integration** - Chord suggestions are smart
@@ -740,6 +817,7 @@ User edits and refines
 ✅ **Organization** - Tags are more flexible than competitors
 
 ### WHERE WE'RE WEAK:
+
 ❌ **Rhyming** - Professionals NEED rhyme dictionary (we have nothing)
 ❌ **Audio** - Can't hear the song while writing (major gap)
 ❌ **Conflict management** - Suggestion overload likely (need batch tools)
@@ -747,6 +825,7 @@ User edits and refines
 ❌ **Music theory** - Missing analyzer, capo calc, etc.
 
 ### COMPARISON TO "WORLD'S BEST":
+
 - **Collaboration:** We're #1 (video + cursor control unique)
 - **Chord tools:** We're top 3 (AI suggestions, transpose)
 - **Lyric tools:** We're bottom 50% (no rhyme/syllable/thesaurus)
@@ -758,12 +837,14 @@ User edits and refines
 ## 🎯 RECOMMENDED BUILD ORDER:
 
 ### PHASE 1: FIX COLLABORATION ISSUES (1-2 days)
+
 1. Batch suggestion review
 2. Undo/redo functionality
 3. Version history UI
 4. Suggestion conflict detection
 
 ### PHASE 2: ESSENTIAL WRITING TOOLS (2-3 days)
+
 5. Rhyme dictionary API + UI
 6. Syllable counter
 7. Thesaurus integration
@@ -771,6 +852,7 @@ User edits and refines
 9. Voice memo upload
 
 ### PHASE 3: ADVANCED FEATURES (1 week)
+
 10. Audio file playback
 11. BPM tap tool
 12. Chord progression analyzer
@@ -783,24 +865,28 @@ User edits and refines
 ## 💡 INNOVATION OPPORTUNITIES (BEYOND "BEST"):
 
 **IDEA #1: AI Co-Writer**
+
 - Real-time AI participant in collaboration
 - Makes suggestions like a human
 - Learns your style
 - "What would Paul McCartney suggest here?"
 
 **IDEA #2: Live Performance Mode**
+
 - Lyrics display for live shows
 - Scrolling teleprompter
 - Chord reminders
 - Setlist management
 
 **IDEA #3: Fan Feedback Integration**
+
 - Share demo with fans
 - Collect feedback on lyrics
 - Highlight favorite lines
 - A/B test different verses
 
 **IDEA #4: Sync with DAW**
+
 - Export chords to Ableton/Logic
 - Import MIDI timing
 - Sync lyrics to recorded vocals
@@ -811,6 +897,7 @@ User edits and refines
 ## 🔥 AGENT 31 VERDICT:
 
 **CURRENT STATE:**
+
 - Collaboration: Excellent (unique video + cursor features)
 - Chord tools: Very good (AI + transpose)
 - Lyric tools: Basic (need rhyme/syllable/thesaurus)
@@ -818,6 +905,7 @@ User edits and refines
 - Data safety: Excellent (auto-save + backup)
 
 **TO BE "WORLD'S BEST":**
+
 - Fix 4 collaboration issues (batch review, undo, conflicts, locking)
 - Add 5 essential tools (rhyme, syllable, thesaurus, templates, voice memos)
 - Add audio playback (write to music)

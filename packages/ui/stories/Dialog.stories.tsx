@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Button
+  Button,
 } from '@cronkwaters/ui';
 import { useState } from 'react';
 
@@ -15,8 +15,8 @@ const meta: Meta = {
   title: 'Primitives/Dialog',
   component: DialogContent,
   parameters: {
-    layout: 'centered'
-  }
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -52,6 +52,5 @@ export const Basic: Story = {
         </DialogContent>
       </Dialog>
     );
-  }
+  },
 };
-

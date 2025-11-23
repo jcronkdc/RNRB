@@ -23,7 +23,7 @@ export const brandColors = {
   warning: '36 94% 56%',
   warningForeground: '34 40% 16%',
   danger: '5 78% 50%',
-  dangerForeground: '24 62% 96%'
+  dangerForeground: '24 62% 96%',
 };
 
 export const radii = {
@@ -33,7 +33,7 @@ export const radii = {
   md: '18px',
   lg: '28px',
   xl: '40px',
-  full: '9999px'
+  full: '9999px',
 };
 
 export const spacing = {
@@ -44,25 +44,25 @@ export const spacing = {
   lg: '1.5rem',
   xl: '2rem',
   '2xl': '3rem',
-  '3xl': '4rem'
+  '3xl': '4rem',
 };
 
 export const fonts = {
   sans: 'var(--font-geist-sans, "Manrope", "Inter", "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif)',
   serif: '"Fraunces", "Playfair Display", "Georgia", serif',
-  mono: 'var(--font-geist-mono, "JetBrains Mono", "IBM Plex Mono", monospace)'
+  mono: 'var(--font-geist-mono, "JetBrains Mono", "IBM Plex Mono", monospace)',
 };
 
 export const shadows = {
   soft: '0 28px 60px -32px rgb(70 48 32 / 0.4)',
   elevated: '0 22px 48px -28px rgb(64 42 32 / 0.38)',
-  outline: '0 0 0 1px rgb(70 48 32 / 0.16)'
+  outline: '0 0 0 1px rgb(70 48 32 / 0.16)',
 };
 
 export const transitions = {
   fast: '140ms ease-out',
   base: '200ms cubic-bezier(0.4, 0, 0.2, 1)',
-  emphasized: '280ms cubic-bezier(0.65, 0, 0.35, 1)'
+  emphasized: '280ms cubic-bezier(0.65, 0, 0.35, 1)',
 };
 
 export const cssVariables = {
@@ -114,7 +114,7 @@ export const cssVariables = {
   '--sf-shadow-outline': shadows.outline,
   '--sf-transition-fast': transitions.fast,
   '--sf-transition-base': transitions.base,
-  '--sf-transition-emphasized': transitions.emphasized
+  '--sf-transition-emphasized': transitions.emphasized,
 } as const;
 
 export const songForgeTheme = {
@@ -124,7 +124,7 @@ export const songForgeTheme = {
   fonts,
   shadows,
   transitions,
-  cssVariables
+  cssVariables,
 };
 
 export type CronkWatersTheme = typeof songForgeTheme;

@@ -11,12 +11,12 @@ import {
   DailyVideo,
   DailyAudio,
 } from '@daily-co/daily-react';
-import { 
-  Video, 
-  VideoOff, 
-  Mic, 
-  MicOff, 
-  MonitorUp, 
+import {
+  Video,
+  VideoOff,
+  Mic,
+  MicOff,
+  MonitorUp,
   MonitorX,
   Radio,
   X,
@@ -25,7 +25,7 @@ import {
   Users,
   Settings,
   Phone,
-  PhoneOff
+  PhoneOff,
 } from 'lucide-react';
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
@@ -41,8 +41,14 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   const remoteParticipantIds = useParticipantIds({ filter: 'remote' });
   const { isRecording, startRecording, stopRecording, error: recordingError } = useRecording();
   const { isSharingScreen, startScreenShare, stopScreenShare, screens } = useScreenShare();
-  const { isLiveStreaming, startLiveStreaming, stopLiveStreaming, updateLiveStreaming, errorMsg: streamingError } = useLiveStreaming();
-  
+  const {
+    isLiveStreaming,
+    startLiveStreaming,
+    stopLiveStreaming,
+    updateLiveStreaming,
+    errorMsg: streamingError,
+  } = useLiveStreaming();
+
   const [isJoining, setIsJoining] = useState(false);
   const [callError, setCallError] = useState<string | null>(null);
   const [streamingUrl, setStreamingUrl] = useState('');
@@ -52,12 +58,12 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   // Join the call
   const joinCall = useCallback(async () => {
     if (!callObject || !roomUrl) return;
-    
+
     setIsJoining(true);
     setCallError(null);
-    
+
     try {
-      await callObject.join({ 
+      await callObject.join({
         url: roomUrl,
         token,
         userName: 'Studio User', // You can make this dynamic
@@ -73,7 +79,7 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   // Leave the call
   const leaveCall = useCallback(async () => {
     if (!callObject) return;
-    
+
     try {
       await callObject.leave();
     } catch (error) {
@@ -84,7 +90,7 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   // Toggle video
   const toggleVideo = useCallback(() => {
     if (!callObject) return;
-    
+
     callObject.setLocalVideo(!isVideoEnabled);
     setIsVideoEnabled(!isVideoEnabled);
   }, [callObject, isVideoEnabled]);
@@ -92,7 +98,7 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   // Toggle audio
   const toggleAudio = useCallback(() => {
     if (!callObject) return;
-    
+
     callObject.setLocalAudio(!isAudioEnabled);
     setIsAudioEnabled(!isAudioEnabled);
   }, [callObject, isAudioEnabled]);
@@ -105,8 +111,8 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
           preset: 'default',
           composition_params: {
             showParticipantLabels: true,
-          }
-        }
+          },
+        },
       });
     } catch (error) {
       console.error('Failed to start recording:', error);
@@ -125,7 +131,7 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
         rtmpUrl: streamingUrl,
         layout: {
           preset: 'default',
-        }
+        },
       });
     } catch (error) {
       console.error('Failed to start streaming:', error);
@@ -150,15 +156,9 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   if (!localParticipant) {
     return (
       <Card className="p-8 text-center">
-        <h3 className="text-xl font-semibold mb-4">Join Studio Session</h3>
-        {callError && (
-          <p className="text-red-500 mb-4">{callError}</p>
-        )}
-        <Button 
-          onClick={joinCall} 
-          disabled={isJoining}
-          className="min-w-[200px]"
-        >
+        <h3 className="mb-4 text-xl font-semibold">Join Studio Session</h3>
+        {callError && <p className="mb-4 text-red-500">{callError}</p>}
+        <Button onClick={joinCall} disabled={isJoining} className="min-w-[200px]">
           {isJoining ? 'Joining...' : 'Join Session'}
         </Button>
       </Card>
@@ -169,22 +169,18 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
     <div className="space-y-6">
       {/* Main Video Grid */}
       <Card className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* Local participant */}
-          <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-            <DailyVideo 
-              sessionId={localParticipant.session_id} 
-              type="video"
-              mirror
-            />
-            <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-sm">
+          <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
+            <DailyVideo sessionId={localParticipant.session_id} type="video" mirror />
+            <div className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
               You {localParticipant.audio ? '' : '(muted)'}
             </div>
           </div>
 
           {/* Remote participants */}
           {remoteParticipantIds.map((id) => (
-            <div key={id} className="relative aspect-video bg-black rounded-lg overflow-hidden">
+            <div key={id} className="relative aspect-video overflow-hidden rounded-lg bg-black">
               <DailyVideo sessionId={id} type="video" />
               <DailyAudio sessionId={id} type="audio" />
             </div>
@@ -192,9 +188,12 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
 
           {/* Screen shares */}
           {screens.map((screen) => (
-            <div key={screen.screenId} className="relative aspect-video bg-black rounded-lg overflow-hidden col-span-full">
+            <div
+              key={screen.screenId}
+              className="relative col-span-full aspect-video overflow-hidden rounded-lg bg-black"
+            >
               <DailyVideo sessionId={screen.session_id} type="screenVideo" />
-              <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-sm">
+              <div className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 text-sm text-white">
                 {screen.screenId} (Screen Share)
               </div>
             </div>
@@ -232,7 +231,7 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
             {isSharingScreen ? <MonitorX className="h-4 w-4" /> : <MonitorUp className="h-4 w-4" />}
           </Button>
 
-          <div className="w-px h-8 bg-border mx-2" />
+          <div className="mx-2 h-8 w-px bg-border" />
 
           {/* Recording */}
           <Button
@@ -261,13 +260,9 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
                 placeholder="RTMP URL"
                 value={streamingUrl}
                 onChange={(e) => setStreamingUrl(e.target.value)}
-                className="px-3 py-2 text-sm border rounded-md"
+                className="rounded-md border px-3 py-2 text-sm"
               />
-              <Button
-                variant="default"
-                onClick={handleStartStreaming}
-                className="gap-2"
-              >
+              <Button variant="default" onClick={handleStartStreaming} className="gap-2">
                 <Radio className="h-4 w-4" />
                 Go Live
               </Button>
@@ -275,24 +270,16 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
           )}
 
           {isLiveStreaming && (
-            <Button
-              variant="destructive"
-              onClick={stopLiveStreaming}
-              className="gap-2"
-            >
+            <Button variant="destructive" onClick={stopLiveStreaming} className="gap-2">
               <X className="h-4 w-4" />
               Stop Streaming
             </Button>
           )}
 
-          <div className="w-px h-8 bg-border mx-2" />
+          <div className="mx-2 h-8 w-px bg-border" />
 
           {/* Leave Call */}
-          <Button
-            variant="destructive"
-            onClick={leaveCall}
-            className="gap-2"
-          >
+          <Button variant="destructive" onClick={leaveCall} className="gap-2">
             <PhoneOff className="h-4 w-4" />
             Leave
           </Button>
@@ -306,26 +293,24 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-2 text-sm text-red-600"
             >
-              <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
+              <div className="h-2 w-2 animate-pulse rounded-full bg-red-600" />
               Recording in progress...
             </motion.div>
           )}
-          
+
           {isLiveStreaming && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-2 text-sm text-red-600"
             >
-              <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
+              <div className="h-2 w-2 animate-pulse rounded-full bg-red-600" />
               Live streaming active
             </motion.div>
           )}
 
           {(recordingError || streamingError) && (
-            <p className="text-sm text-red-500">
-              Error: {recordingError || streamingError}
-            </p>
+            <p className="text-sm text-red-500">Error: {recordingError || streamingError}</p>
           )}
         </div>
       </Card>

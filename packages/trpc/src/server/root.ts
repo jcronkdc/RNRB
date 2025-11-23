@@ -6,13 +6,9 @@ import { mergeRouters, router } from './trpc';
 export const appRouter = router({
   health: healthRouter,
   organization: organizationRouter,
-  viewer: viewerRouter
+  viewer: viewerRouter,
 });
 
 export type AppRouter = typeof appRouter;
 
 export const appMergeRouter = mergeRouters;
-
-
-
-

@@ -2,22 +2,22 @@
 
 /**
  * COLLABORATIVE SETLIST BUILDER
- * 
+ *
  * Real-time setlist editing with Ably broadcast
  * Drag-drop reordering syncs across all clients
  * Duration calculator, key change indicators
- * 
+ *
  * Mycelial Pathway:
  * User drags song → Ably broadcasts update → All clients reorder instantly
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, Button } from '@cronkwaters/ui';
-import { 
-  Music, 
-  GripVertical, 
-  Plus, 
-  X, 
+import {
+  Music,
+  GripVertical,
+  Plus,
+  X,
   Clock,
   AlertCircle,
   Users,
@@ -26,10 +26,22 @@ import {
   Pause,
   Download,
   Printer,
-  FileText
+  FileText,
 } from 'lucide-react';
-import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import {
+  DndContext,
+  DragOverlay,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { CursorOverlay } from '@/components/cursor-overlay';
@@ -114,7 +126,7 @@ function useSetlistSync({
         channel.presence.subscribe('enter', () => {
           channel.presence.get((err, members) => {
             if (!err && mounted) {
-              setActiveUsers(members?.map(m => m.clientId || 'anonymous') || []);
+              setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
             }
           });
         });
@@ -122,7 +134,7 @@ function useSetlistSync({
         channel.presence.subscribe('leave', () => {
           channel.presence.get((err, members) => {
             if (!err && mounted) {
-              setActiveUsers(members?.map(m => m.clientId || 'anonymous') || []);
+              setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
             }
           });
         });
@@ -149,13 +161,13 @@ function useSetlistSync({
 /**
  * Sortable Song Item
  */
-function SortableSong({ 
-  song, 
+function SortableSong({
+  song,
   onRemove,
   onUpdateNotes,
   previousKey,
-}: { 
-  song: SetlistSong; 
+}: {
+  song: SetlistSong;
   onRemove: () => void;
   onUpdateNotes: (notes: string) => void;
   previousKey?: string;
@@ -177,16 +189,16 @@ function SortableSong({
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className="mb-3 rnrb-card p-4 bg-gradient-to-r from-surface to-surface-muted border-2 border-border hover:border-brand-primary/30 transition-all group"
+      className="rnrb-card group mb-3 border-2 border-border bg-gradient-to-r from-surface to-surface-muted p-4 transition-all hover:border-brand-primary/30"
     >
       <div className="flex items-center gap-3">
         {/* Drag Handle */}
         <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
-          <GripVertical className="w-5 h-5 text-muted-foreground" />
+          <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
 
         {/* Position */}
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary/20 text-brand-primary font-bold text-sm">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-bold text-brand-primary">
           {song.position + 1}
         </div>
 
@@ -195,18 +207,18 @@ function SortableSong({
           <div className="flex items-center gap-2">
             <h4 className="font-semibold text-foreground">{song.title}</h4>
             {keyChange && (
-              <span className="px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 text-xs font-medium flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
+              <span className="flex items-center gap-1 rounded-full bg-yellow-500/20 px-2 py-0.5 text-xs font-medium text-yellow-400">
+                <AlertCircle className="h-3 w-3" />
                 Key Change
               </span>
             )}
           </div>
-          <div className="flex items-center gap-4 text-xs text-muted-foreground mt-1">
+          <div className="mt-1 flex items-center gap-4 text-xs text-muted-foreground">
             {song.artist && <span>{song.artist}</span>}
             {song.key && <span className="font-mono">{song.key}</span>}
             {song.tempo && <span>{song.tempo} BPM</span>}
             <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
+              <Clock className="h-3 w-3" />
               {formatDuration(song.duration)}
             </span>
           </div>
@@ -215,25 +227,22 @@ function SortableSong({
               value={song.notes || ''}
               onChange={(e) => onUpdateNotes(e.target.value)}
               placeholder="Add notes (key changes, tempo shifts, etc.)"
-              className="w-full mt-2 px-3 py-2 bg-surface border border-border rounded-lg text-sm resize-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none"
+              className="mt-2 w-full resize-none rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               rows={2}
             />
           )}
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
           <button
             onClick={() => setNotesExpanded(!notesExpanded)}
-            className="px-3 py-1 rounded-lg bg-surface-muted hover:bg-surface text-xs font-medium"
+            className="rounded-lg bg-surface-muted px-3 py-1 text-xs font-medium hover:bg-surface"
           >
             {notesExpanded ? 'Hide' : 'Notes'}
           </button>
-          <button
-            onClick={onRemove}
-            className="text-red-500 hover:text-red-600"
-          >
-            <X className="w-4 h-4" />
+          <button onClick={onRemove} className="text-red-500 hover:text-red-600">
+            <X className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -282,7 +291,7 @@ export function CollaborativeSetlistBuilder({
       setSongs((prev) => [...prev, song].sort((a, b) => a.position - b.position));
     },
     onSongRemoved: (songId) => {
-      setSongs((prev) => prev.filter(s => s.id !== songId));
+      setSongs((prev) => prev.filter((s) => s.id !== songId));
     },
     onSongReordered: (newSongs) => {
       setSongs(newSongs);
@@ -307,7 +316,7 @@ export function CollaborativeSetlistBuilder({
     const mins = Math.floor(seconds / 60);
     const hours = Math.floor(mins / 60);
     const remainingMins = mins % 60;
-    
+
     if (hours > 0) {
       return `${hours}h ${remainingMins}m`;
     }
@@ -341,7 +350,7 @@ export function CollaborativeSetlistBuilder({
 
   // Broadcast song removal
   const removeSong = async (songId: string) => {
-    const updated = songs.filter(s => s.id !== songId).map((s, idx) => ({ ...s, position: idx }));
+    const updated = songs.filter((s) => s.id !== songId).map((s, idx) => ({ ...s, position: idx }));
     setSongs(updated);
     onUpdate(updated);
 
@@ -361,10 +370,13 @@ export function CollaborativeSetlistBuilder({
     if (!over || active.id === over.id) return;
 
     setSongs((items) => {
-      const oldIndex = items.findIndex(s => s.id === active.id);
-      const newIndex = items.findIndex(s => s.id === over.id);
-      const reordered = arrayMove(items, oldIndex, newIndex).map((s, idx) => ({ ...s, position: idx }));
-      
+      const oldIndex = items.findIndex((s) => s.id === active.id);
+      const newIndex = items.findIndex((s) => s.id === over.id);
+      const reordered = arrayMove(items, oldIndex, newIndex).map((s, idx) => ({
+        ...s,
+        position: idx,
+      }));
+
       onUpdate(reordered);
 
       // Broadcast
@@ -381,7 +393,7 @@ export function CollaborativeSetlistBuilder({
   };
 
   const updateSongNotes = (songId: string, notes: string) => {
-    const updated = songs.map(s => s.id === songId ? { ...s, notes } : s);
+    const updated = songs.map((s) => (s.id === songId ? { ...s, notes } : s));
     setSongs(updated);
     onUpdate(updated);
   };
@@ -409,27 +421,31 @@ export function CollaborativeSetlistBuilder({
   return (
     <div className="space-y-6">
       {/* Header Stats */}
-      <Card className="p-6 rnrb-card bg-gradient-to-r from-brand-primary/10 to-transparent border-brand-primary/30">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <Card className="rnrb-card border-brand-primary/30 bg-gradient-to-r from-brand-primary/10 to-transparent p-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
           <div>
-            <div className="text-sm text-muted-foreground mb-1">Total Songs</div>
+            <div className="mb-1 text-sm text-muted-foreground">Total Songs</div>
             <div className="text-3xl font-bold text-foreground">{songs.length}</div>
           </div>
           <div>
-            <div className="text-sm text-muted-foreground mb-1">Set Duration</div>
-            <div className="text-3xl font-bold text-foreground">{formatTotalDuration(totalDuration)}</div>
+            <div className="mb-1 text-sm text-muted-foreground">Set Duration</div>
+            <div className="text-3xl font-bold text-foreground">
+              {formatTotalDuration(totalDuration)}
+            </div>
           </div>
           <div>
-            <div className="text-sm text-muted-foreground mb-1 flex items-center gap-2">
-              <Users className="w-4 h-4" />
+            <div className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
+              <Users className="h-4 w-4" />
               Collaborators
             </div>
             <div className="text-3xl font-bold text-foreground">{activeUsers.length + 1}</div>
           </div>
           <div>
-            <div className="text-sm text-muted-foreground mb-1">Sync Status</div>
+            <div className="mb-1 text-sm text-muted-foreground">Sync Status</div>
             <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`} />
+              <div
+                className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`}
+              />
               <span className="text-sm font-medium">{isConnected ? 'Live' : 'Offline'}</span>
             </div>
           </div>
@@ -437,12 +453,12 @@ export function CollaborativeSetlistBuilder({
       </Card>
 
       {/* Setlist */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Main Setlist */}
         <div className="lg:col-span-2">
-          <Card className="p-6 rnrb-card">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-display font-bold">Setlist Order</h2>
+          <Card className="rnrb-card p-6">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="font-display text-2xl font-bold">Setlist Order</h2>
               <div className="flex items-center gap-2">
                 {/* Export Menu */}
                 <div className="relative">
@@ -452,48 +468,45 @@ export function CollaborativeSetlistBuilder({
                     className="flex items-center gap-2"
                     disabled={songs.length === 0}
                   >
-                    <Download className="w-4 h-4" />
+                    <Download className="h-4 w-4" />
                     Export
                   </Button>
                   {showExportMenu && (
-                    <div className="absolute right-0 top-full mt-2 w-48 bg-surface border border-border rounded-lg shadow-xl z-10">
+                    <div className="absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-border bg-surface shadow-xl">
                       <button
                         onClick={() => handleExportPDF('full')}
-                        className="w-full px-4 py-2 text-left hover:bg-surface-muted transition flex items-center gap-2 text-sm"
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition hover:bg-surface-muted"
                       >
-                        <FileText className="w-4 h-4" />
+                        <FileText className="h-4 w-4" />
                         PDF (Full Detail)
                       </button>
                       <button
                         onClick={() => handleExportPDF('compact')}
-                        className="w-full px-4 py-2 text-left hover:bg-surface-muted transition flex items-center gap-2 text-sm"
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition hover:bg-surface-muted"
                       >
-                        <FileText className="w-4 h-4" />
+                        <FileText className="h-4 w-4" />
                         PDF (Compact)
                       </button>
                       <button
                         onClick={() => handleExportPDF('stage')}
-                        className="w-full px-4 py-2 text-left hover:bg-surface-muted transition flex items-center gap-2 text-sm"
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition hover:bg-surface-muted"
                       >
-                        <FileText className="w-4 h-4" />
+                        <FileText className="h-4 w-4" />
                         PDF (Stage View)
                       </button>
-                      <hr className="border-border my-1" />
+                      <hr className="my-1 border-border" />
                       <button
                         onClick={handlePrint}
-                        className="w-full px-4 py-2 text-left hover:bg-surface-muted transition flex items-center gap-2 text-sm rounded-b-lg"
+                        className="flex w-full items-center gap-2 rounded-b-lg px-4 py-2 text-left text-sm transition hover:bg-surface-muted"
                       >
-                        <Printer className="w-4 h-4" />
+                        <Printer className="h-4 w-4" />
                         Print
                       </button>
                     </div>
                   )}
                 </div>
-                <Button
-                  onClick={() => setShowSongPicker(true)}
-                  className="flex items-center gap-2"
-                >
-                  <Plus className="w-4 h-4" />
+                <Button onClick={() => setShowSongPicker(true)} className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
                   Add Song
                 </Button>
               </div>
@@ -501,17 +514,27 @@ export function CollaborativeSetlistBuilder({
 
             {songs.length === 0 ? (
               <div className="py-16 text-center">
-                <Music className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
-                <h3 className="text-xl font-semibold mb-2">Empty Setlist</h3>
-                <p className="text-muted-foreground mb-4">Add songs to build your performance setlist</p>
+                <Music className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
+                <h3 className="mb-2 text-xl font-semibold">Empty Setlist</h3>
+                <p className="mb-4 text-muted-foreground">
+                  Add songs to build your performance setlist
+                </p>
                 <Button onClick={() => setShowSongPicker(true)}>
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="mr-2 h-4 w-4" />
                   Add Your First Song
                 </Button>
               </div>
             ) : (
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} onDragStart={(e) => setActiveId(e.active.id as string)}>
-                <SortableContext items={songs.map(s => s.id)} strategy={verticalListSortingStrategy}>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+                onDragStart={(e) => setActiveId(e.active.id as string)}
+              >
+                <SortableContext
+                  items={songs.map((s) => s.id)}
+                  strategy={verticalListSortingStrategy}
+                >
                   {songs.map((song, index) => (
                     <SortableSong
                       key={song.id}
@@ -524,8 +547,10 @@ export function CollaborativeSetlistBuilder({
                 </SortableContext>
                 <DragOverlay>
                   {activeId ? (
-                    <div className="rnrb-card p-4 bg-surface border-2 border-brand-primary shadow-xl">
-                      <div className="font-semibold">{songs.find(s => s.id === activeId)?.title}</div>
+                    <div className="rnrb-card border-2 border-brand-primary bg-surface p-4 shadow-xl">
+                      <div className="font-semibold">
+                        {songs.find((s) => s.id === activeId)?.title}
+                      </div>
                     </div>
                   ) : null}
                 </DragOverlay>
@@ -536,27 +561,27 @@ export function CollaborativeSetlistBuilder({
 
         {/* Song Picker Sidebar */}
         <div>
-          <Card className="p-6 rnrb-card sticky top-4">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-400" />
+          <Card className="rnrb-card sticky top-4 p-6">
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+              <Sparkles className="h-5 w-5 text-purple-400" />
               Available Songs
             </h3>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
+            <div className="max-h-96 space-y-2 overflow-y-auto">
               {projectSongs
-                .filter(ps => !songs.find(s => s.id === ps.id))
+                .filter((ps) => !songs.find((s) => s.id === ps.id))
                 .map((song) => (
                   <button
                     key={song.id}
                     onClick={() => addSong(song)}
-                    className="w-full text-left p-3 rounded-lg bg-surface-muted hover:bg-surface border border-transparent hover:border-brand-primary/30 transition-all"
+                    className="w-full rounded-lg border border-transparent bg-surface-muted p-3 text-left transition-all hover:border-brand-primary/30 hover:bg-surface"
                   >
-                    <div className="font-medium text-sm">{song.title}</div>
-                    <div className="text-xs text-muted-foreground mt-1">
+                    <div className="text-sm font-medium">{song.title}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">
                       {song.key} • {song.tempo} BPM
                     </div>
                   </button>
                 ))}
-              {projectSongs.filter(ps => !songs.find(s => s.id === ps.id)).length === 0 && (
+              {projectSongs.filter((ps) => !songs.find((s) => s.id === ps.id)).length === 0 && (
                 <div className="py-8 text-center text-sm text-muted-foreground">
                   All songs added to setlist
                 </div>

@@ -17,10 +17,7 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ],
+      "outputs": ["dist/**", ".next/**"],
       "env": [
         "DATABASE_URL",
         "NEXTAUTH_SECRET",
@@ -81,4 +78,3 @@
     }
   }
 }
-

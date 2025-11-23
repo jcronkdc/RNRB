@@ -18,23 +18,15 @@ export default defineConfig({
         '**/*.test.ts',
         '**/*.config.*',
         '**/dist/',
-        '**/.next/'
-      ]
-    }
+        '**/.next/',
+      ],
+    },
   },
   resolve: {
     alias: {
       '@songforge/db': path.resolve(__dirname, './packages/db/src'),
       '@songforge/auth': path.resolve(__dirname, './packages/auth/src'),
-      '@songforge/ui': path.resolve(__dirname, './packages/ui/src')
-    }
-  }
+      '@songforge/ui': path.resolve(__dirname, './packages/ui/src'),
+    },
+  },
 });
-
-
-
-
-
-
-
-

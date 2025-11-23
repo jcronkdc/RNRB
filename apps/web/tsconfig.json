@@ -23,8 +23,5 @@
     "postcss.config.mjs",
     "eslint.config.mjs"
   ],
-  "exclude": [
-    "node_modules",
-    "public/sw.js"
-  ]
+  "exclude": ["node_modules", "public/sw.js"]
 }

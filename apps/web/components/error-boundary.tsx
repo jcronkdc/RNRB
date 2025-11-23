@@ -33,20 +33,18 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-background p-4">
-          <div className="max-w-md w-full rounded-2xl border border-border bg-surface p-8 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger/10">
+        <div className="flex min-h-screen items-center justify-center bg-background p-4">
+          <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-8 text-center">
+            <div className="bg-danger/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
               <span className="text-2xl">⚠️</span>
             </div>
-            <h2 className="mb-2 text-xl font-semibold text-foreground">
-              Something went wrong
-            </h2>
+            <h2 className="mb-2 text-xl font-semibold text-foreground">Something went wrong</h2>
             <p className="mb-6 text-sm text-muted-foreground">
               Don't worry - your work is safe. Try refreshing the page.
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl px-6 py-3 text-sm font-semibold transition-colors"
             >
               Refresh Page
             </button>
@@ -68,6 +66,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
-
-
-

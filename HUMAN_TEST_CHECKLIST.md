@@ -19,6 +19,7 @@
 ## 🏠 HOMEPAGE TESTS
 
 ### Navigation Bar
+
 - [ ] **Logo** - Click logo, should stay on homepage
 - [ ] **Features Dropdown** - Hover over "Features"
   - [ ] Click "Songwriting Studio" → Should go to `/features/songwriting`
@@ -35,15 +36,18 @@
 - [ ] **Sign In Button** (top right) - Click, should go to `/auth`
 
 ### Mobile Menu (Resize browser < 768px)
+
 - [ ] **Hamburger Icon** - Click to open mobile menu
 - [ ] Test all navigation links in mobile menu
 - [ ] **X Icon** - Click to close mobile menu
 
 ### Hero Section
+
 - [ ] **"Start Creating"** button - Click, should go to `/auth` or `/dashboard`
 - [ ] **"Watch Demo"** button (if present) - Click, should play video or open modal
 
 ### Call-to-Action Buttons
+
 - [ ] Any "Get Started" buttons on homepage
 - [ ] Any "Learn More" buttons on homepage
 
@@ -52,8 +56,9 @@
 ## 🔐 AUTHENTICATION TESTS
 
 ### Sign In Page (`/auth`)
+
 - [ ] **Email field** - Can type email
-- [ ] **Password field** - Can type password  
+- [ ] **Password field** - Can type password
 - [ ] **Sign In button** - Click (test with valid credentials)
 - [ ] **Sign Up tab** - Click to switch to sign-up form
 - [ ] **Sign Up button** - Test creating account (if needed)
@@ -61,6 +66,7 @@
 - [ ] **Google Sign-In** button (if configured)
 
 ### Post-Authentication
+
 - [ ] **Redirect to dashboard** - Should automatically redirect after sign-in
 - [ ] **User menu** (top right) - Click to open dropdown
   - [ ] Shows user email/name
@@ -71,6 +77,7 @@
 ## 📊 DASHBOARD TESTS (`/dashboard`)
 
 ### Navigation
+
 - [ ] **Sidebar** - All links clickable:
   - [ ] Dashboard
   - [ ] Projects
@@ -83,6 +90,7 @@
 - [ ] **Sign Out button** (bottom of sidebar) - Click, should sign out and redirect
 
 ### Dashboard Content
+
 - [ ] **Create Project** button
 - [ ] **View Projects** button
 - [ ] Any cards/buttons on dashboard
@@ -92,6 +100,7 @@
 ## 🎸 SONGWRITING TOOL TESTS (`/songwriting`)
 
 ### When NOT Signed In
+
 - [ ] Navigate to `/songwriting` without auth
 - [ ] **Should see:** "Sign In to Collaborate" prompt
 - [ ] **"Sign In to Continue"** button - Click, should go to `/auth`
@@ -102,6 +111,7 @@
   ```
 
 ### When Signed In
+
 - [ ] Navigate to `/songwriting` after signing in
 - [ ] **Should see:** CollaborativeVisualBuilder loads
 - [ ] Check console for auth logs:
@@ -111,12 +121,15 @@
   ```
 
 ### View Tabs
+
 - [ ] **"Song Structure"** tab - Click, should show structure builder
 - [ ] **"Chord Progressions"** tab - Click, should show chord builder
 - [ ] **"Lyrics Assistant"** tab - Click, should show lyrics tool
 
 ### Song Structure Builder (Structure Tab)
+
 **Building Blocks Palette:**
+
 - [ ] **Verify only 3 blocks:** Verse (📝), Chorus (🎵), Bridge (🌉)
 - [ ] **NO "Chord" block** should be visible ✅ (this was removed)
 - [ ] Click **Verse** - Should add verse block to canvas
@@ -124,6 +137,7 @@
 - [ ] Click **Bridge** - Should add bridge block to canvas
 
 **Block Interactions:**
+
 - [ ] **Type in verse block** - Should accept text input
 - [ ] **Drag block** (using grip icon) - Should reorder blocks
 - [ ] **Remove block** (X button on hover) - Should delete block
@@ -134,15 +148,18 @@
 - [ ] Add **multiple chords** on same line - Should fit inline ✅
 
 **Undo/Redo:**
+
 - [ ] Make changes to song structure
 - [ ] **Undo button** (⌘/Ctrl+Z) - Should undo last change
 - [ ] **Redo button** (⌘/Ctrl+Shift+Z) - Should redo change
 
 **Export/Save:**
+
 - [ ] **Export button** (⌘/Ctrl+S) - Should copy to clipboard
 - [ ] Check notification/toast message
 
 **Key Analyzer:**
+
 - [ ] Add several chords to blocks
 - [ ] **Key Analyzer card** should appear in right sidebar
 - [ ] Shows detected key (e.g., "C Major")
@@ -151,15 +168,19 @@
 - [ ] **AI badge** (if OpenRouter configured) - Shows enhanced analysis
 
 **Keyboard Shortcuts:**
+
 - [ ] Press **⌘/Ctrl + K** - Should show keyboard shortcuts modal
 - [ ] **Esc** - Should close modal
 
 ### Chord Progressions Builder (Chords Tab)
+
 **View Toggle:**
+
 - [ ] **"Compact"** button - Should be active by default ✅
 - [ ] **"Blocks"** button - Click to switch to large block view
 
 **Compact Mode (Default):**
+
 - [ ] **"Add Chord"** button - Click to show chord palette
 - [ ] **Chord Palette** - Grid of 28 common chords visible
 - [ ] Click any chord (e.g., "Am") - Should add as small inline button ✅
@@ -168,22 +189,26 @@
 - [ ] **Remove chord** (X on hover) - Should delete chord
 
 **Blocks Mode:**
+
 - [ ] Switch to "Blocks" view
-- [ ] Click "Add Chord" 
+- [ ] Click "Add Chord"
 - [ ] Select chord - Should appear as large card (full-width)
 - [ ] **Drag block** - Should reorder
 - [ ] **Remove block** - Should delete
 
 **Progression Display:**
+
 - [ ] Bottom card shows: "Your Progression: C → Am → F → G"
 - [ ] Updates as chords added/removed
 
 ### Lyrics Assistant (Lyrics Tab)
+
 - [ ] **Text area** - Can type lyrics
 - [ ] **AI suggestion button** (if configured)
 - [ ] Any other buttons in lyrics assistant
 
 ### Collaboration Features (If Ably Configured)
+
 - [ ] **Presence Indicator** (top right header) - Shows your user badge
 - [ ] **Chat button** - Opens chat sidebar
 - [ ] **Video button** - Opens video interface (if Daily.co configured)
@@ -194,12 +219,14 @@
 ## 📁 PROJECTS PAGE (`/projects`)
 
 ### Project Grid
+
 - [ ] **"New Project"** button - Opens create project form
 - [ ] **Project cards** - Clickable, should navigate to project detail
 - [ ] **Settings button** on project card
 - [ ] **Members indicator** on project card
 
 ### Project Detail (`/projects/[slug]`)
+
 - [ ] **Tabs** - Songs, Sessions, Setlists, Settings
 - [ ] **Add Song** button
 - [ ] **Invite Members** button
@@ -210,11 +237,13 @@
 ## ⚙️ SETTINGS PAGE (`/settings`)
 
 ### Settings Navigation
+
 - [ ] **Profile tab**
 - [ ] **Preferences tab** (if exists)
 - [ ] **Billing tab** (if exists)
 
 ### Profile Settings
+
 - [ ] **Name field** - Can edit
 - [ ] **Email field** - Can edit
 - [ ] **Avatar upload** button (if exists)
@@ -226,21 +255,25 @@
 ## 🎨 FEATURE PAGES
 
 ### `/features/songwriting`
+
 - [ ] Page loads correctly
 - [ ] All content visible
 - [ ] **"Try It Now"** button - Goes to `/songwriting` or `/auth`
 
 ### `/features/collaboration`
+
 - [ ] Page loads correctly
 - [ ] All content visible
 - [ ] Call-to-action buttons work
 
 ### `/features/ai-music`
+
 - [ ] Page loads correctly
 - [ ] All content visible
 - [ ] Call-to-action buttons work
 
 ### `/features/project-management`
+
 - [ ] Page loads correctly
 - [ ] All content visible
 - [ ] Call-to-action buttons work
@@ -250,6 +283,7 @@
 ## 💰 PRICING PAGE (`/pricing`)
 
 ### Pricing Cards
+
 - [ ] **Free plan** - "Get Started" button
 - [ ] **Pro plan** - "Upgrade" button
 - [ ] **Enterprise plan** - "Contact Us" button
@@ -260,6 +294,7 @@
 ## 📖 ABOUT PAGE (`/why-rnrb`)
 
 ### Page Content
+
 - [ ] Page loads correctly
 - [ ] All content visible
 - [ ] Any call-to-action buttons work
@@ -269,12 +304,15 @@
 ## 🐛 CONSOLE CHECKS
 
 ### No Critical Errors
+
 - [ ] **No red errors** in console (except expected 404s for missing resources)
 - [ ] **No auth errors** (unless not signed in)
 - [ ] **No failed API calls** (500 errors)
 
 ### Expected Console Output
+
 When on `/songwriting`:
+
 ```
 🔐 useRequireAuth: Starting auth check
 🔐 useRequireAuth: Getting session from Supabase
@@ -283,6 +321,7 @@ When on `/songwriting`:
 ```
 
 ### Fixed Issues (Should NOT Appear)
+
 - [ ] **No 404 for:** `/solutions/bands` ✅ Fixed
 - [ ] **No 404 for:** `/solutions/songwriters` ✅ Fixed
 - [ ] **No 404 for:** `/solutions/studios` ✅ Fixed
@@ -293,23 +332,28 @@ When on `/songwriting`:
 ## ✅ RECENT FIXES VERIFICATION
 
 ### Fix #1: Security (Auth Requirements)
+
 - [ ] **Collaborative features require auth** - Can't access without sign-in ✅
 - [ ] **No guest user creation** - No fake identities ✅
 
 ### Fix #2: Auth UX
+
 - [ ] **Loading state shows** while checking auth ✅
 - [ ] **Auth prompt displays** when not signed in ✅
 - [ ] **"Sign In to Continue"** button works ✅
 
 ### Fix #3: Auth Debugging
+
 - [ ] **Console logs present** with 🔐 and 🎸 emojis ✅
 - [ ] **Logs show auth state** clearly ✅
 
 ### Fix #4: Navigation 404s
+
 - [ ] **Solutions links** → `/#solutions` (no 404) ✅
 - [ ] **About link** → `/why-rnrb` (no 404) ✅
 
 ### Fix #5: Low-Profile Chords
+
 - [ ] **NO standalone "Chord" block** in palette ✅
 - [ ] **Chords added via word-level** placement only ✅
 - [ ] **Compact chord display** (32px, inline) ✅
@@ -349,14 +393,15 @@ When on `/songwriting`:
 
 ## ✅ TEST COMPLETION
 
-**Date Tested:** _____________  
-**Tested By:** _____________  
-**Browser:** _____________  
-**Device:** _____________  
-**Issues Found:** _____________  
-**Overall Status:** [ ] PASS  [ ] FAIL  
+**Date Tested:** **\*\***\_**\*\***  
+**Tested By:** **\*\***\_**\*\***  
+**Browser:** **\*\***\_**\*\***  
+**Device:** **\*\***\_**\*\***  
+**Issues Found:** **\*\***\_**\*\***  
+**Overall Status:** [ ] PASS [ ] FAIL
 
 **Notes:**
+
 - All recent fixes verified working
 - Auth flow confirmed secure
 - Chords now compact and flexible
@@ -365,4 +410,3 @@ When on `/songwriting`:
 ---
 
 **READY FOR PRODUCTION:** ✅ All tests should pass!
-

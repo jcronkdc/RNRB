@@ -14,7 +14,7 @@ export default function InviteAcceptPage() {
   const router = useRouter();
   const projectSlug = params?.projectSlug as string;
   const inviteEmail = searchParams?.get('email');
-  
+
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
@@ -38,7 +38,9 @@ export default function InviteAcceptPage() {
     // Check if invite email matches user email
     if (inviteEmail && user.email !== inviteEmail) {
       setStatus('error');
-      setMessage(`This invite was sent to ${inviteEmail}, but you're signed in as ${user.email}. Please sign in with the invited email.`);
+      setMessage(
+        `This invite was sent to ${inviteEmail}, but you're signed in as ${user.email}. Please sign in with the invited email.`
+      );
       return;
     }
 
@@ -52,7 +54,7 @@ export default function InviteAcceptPage() {
       if (projectExists) {
         // Already a member
         setStatus('accepted');
-        setMessage('You\'re already a member of this project!');
+        setMessage("You're already a member of this project!");
         setTimeout(() => router.push(`/projects/${projectSlug}`), 2000);
         return;
       }
@@ -61,14 +63,14 @@ export default function InviteAcceptPage() {
       const newProject = {
         id: `proj_${Date.now()}`,
         slug: projectSlug,
-        name: projectSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        name: projectSlug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
         description: 'Collaborative music project',
         visibility: 'private',
         role: 'member',
         joined_at: new Date().toISOString(),
         song_count: 0,
         collaborator_count: 1,
-        session_count: 0
+        session_count: 0,
       };
 
       const updatedProjects = [...allProjects, newProject];
@@ -76,8 +78,8 @@ export default function InviteAcceptPage() {
       const { error } = await supabase!.auth.updateUser({
         data: {
           ...user.user_metadata,
-          projects: updatedProjects
-        }
+          projects: updatedProjects,
+        },
       });
 
       if (error) throw error;
@@ -99,67 +101,65 @@ export default function InviteAcceptPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-brand-primary" />
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-6">
+    <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-2xl w-full"
+        className="w-full max-w-2xl"
       >
-        <Card className="p-8 rnrb-card">
+        <Card className="rnrb-card p-8">
           {/* Header */}
-          <div className="text-center mb-8">
-            <div 
-              className="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center"
+          <div className="mb-8 text-center">
+            <div
+              className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full"
               style={{ background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)' }}
             >
-              <Music className="w-10 h-10 text-white" />
+              <Music className="h-10 w-10 text-white" />
             </div>
-            <h1 className="text-3xl font-display font-bold mb-2">
-              Project Invitation
-            </h1>
+            <h1 className="font-display mb-2 text-3xl font-bold">Project Invitation</h1>
             <p className="text-muted-foreground">
               You've been invited to collaborate on a music project
             </p>
           </div>
 
           {/* Project Info */}
-          <div className="bg-surface-muted border border-border rounded-xl p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Users className="w-5 h-5 text-brand-primary" />
-              {projectSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+          <div className="mb-6 rounded-xl border border-border bg-surface-muted p-6">
+            <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
+              <Users className="h-5 w-5 text-brand-primary" />
+              {projectSlug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
             </h2>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="mb-4 text-sm text-muted-foreground">
               Join this project to collaborate with your team using:
             </p>
             <ul className="space-y-2 text-sm">
               <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-400" />
+                <Check className="h-4 w-4 text-green-400" />
                 Real-time chat powered by Ably
               </li>
               <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-400" />
+                <Check className="h-4 w-4 text-green-400" />
                 HD video collaboration with Daily.co
               </li>
               <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-400" />
+                <Check className="h-4 w-4 text-green-400" />
                 Collaborative songwriting tools
               </li>
               <li className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-green-400" />
+                <Check className="h-4 w-4 text-green-400" />
                 Audio file sharing & version control
               </li>
             </ul>
             {inviteEmail && (
-              <div className="mt-4 p-3 bg-surface border border-border rounded-lg">
+              <div className="mt-4 rounded-lg border border-border bg-surface p-3">
                 <p className="text-xs text-muted-foreground">
-                  Invited: <span className="text-foreground font-medium">{inviteEmail}</span>
+                  Invited: <span className="font-medium text-foreground">{inviteEmail}</span>
                 </p>
               </div>
             )}
@@ -170,10 +170,10 @@ export default function InviteAcceptPage() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg mb-6"
+              className="mb-6 rounded-lg border border-green-500/20 bg-green-500/10 p-4"
             >
-              <p className="text-sm text-green-400 flex items-center gap-2">
-                <Check className="w-5 h-5" />
+              <p className="flex items-center gap-2 text-sm text-green-400">
+                <Check className="h-5 w-5" />
                 {message}
               </p>
             </motion.div>
@@ -183,10 +183,10 @@ export default function InviteAcceptPage() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg mb-6"
+              className="mb-6 rounded-lg border border-red-500/20 bg-red-500/10 p-4"
             >
-              <p className="text-sm text-red-400 flex items-center gap-2">
-                <X className="w-5 h-5" />
+              <p className="flex items-center gap-2 text-sm text-red-400">
+                <X className="h-5 w-5" />
                 {message}
               </p>
             </motion.div>
@@ -205,18 +205,18 @@ export default function InviteAcceptPage() {
               </Button>
               <Button
                 onClick={handleAccept}
-                className="flex-1 rnrb-button-primary"
+                className="rnrb-button-primary flex-1"
                 disabled={accepting}
               >
                 {accepting ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Joining...
                   </>
                 ) : user ? (
                   <>
                     Accept & Join
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 ) : (
                   'Sign In to Accept'
@@ -227,9 +227,9 @@ export default function InviteAcceptPage() {
 
           {status === 'accepted' && (
             <Link href={`/projects/${projectSlug}`}>
-              <Button className="w-full rnrb-button-primary">
+              <Button className="rnrb-button-primary w-full">
                 Go to Project
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           )}
@@ -245,4 +245,3 @@ export default function InviteAcceptPage() {
     </div>
   );
 }
-

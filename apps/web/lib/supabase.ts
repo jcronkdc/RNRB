@@ -36,8 +36,8 @@ function getSupabaseClient() {
     auth: {
       autoRefreshToken: true,
       persistSession: true,
-      detectSessionInUrl: true
-    }
+      detectSessionInUrl: true,
+    },
   });
 
   return supabaseInstance;
@@ -45,13 +45,21 @@ function getSupabaseClient() {
 
 export const supabase = getSupabaseClient();
 
+// Export for browser client creation
+export function createBrowserClient() {
+  return getSupabaseClient();
+}
+
 // Helper function to get current user
 export async function getCurrentUser() {
   if (!supabase) {
     console.error('Supabase client not initialized');
     return null;
   }
-  const { data: { user }, error } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
   if (error) {
     console.error('Error getting user:', error);
     return null;
@@ -71,4 +79,3 @@ export async function signOut() {
   }
   return { error };
 }
-

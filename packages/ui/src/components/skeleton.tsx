@@ -24,4 +24,3 @@ Skeleton.displayName = 'Skeleton';
 
 export { Skeleton };
 export type { SkeletonProps };
-

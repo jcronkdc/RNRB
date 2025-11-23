@@ -9,11 +9,7 @@ export const viewerRouter = router({
     return {
       user: ctx.session.user,
       memberships: ctx.memberships,
-      activeMembership: ctx.activeMembership
+      activeMembership: ctx.activeMembership,
     };
-  })
+  }),
 });
-
-
-
-

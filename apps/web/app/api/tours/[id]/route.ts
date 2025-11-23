@@ -6,10 +6,7 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/tours/[id]
  * Get a single tour by ID or slug
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -18,10 +15,7 @@ export async function GET(
 
     const tour = await db.tour.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
       include: {
         org: {
@@ -74,10 +68,7 @@ export async function GET(
     return NextResponse.json({ tour });
   } catch (error) {
     console.error('Tour GET error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch tour' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch tour' }, { status: 500 });
   }
 }
 
@@ -85,10 +76,7 @@ export async function GET(
  * PATCH /api/tours/[id]
  * Update a tour
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -99,10 +87,7 @@ export async function PATCH(
 
     const existingTour = await db.tour.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
     });
 
@@ -128,11 +113,12 @@ export async function PATCH(
     }
 
     const updateData: any = {};
-    
+
     if (body.name !== undefined) updateData.name = body.name;
     if (body.description !== undefined) updateData.description = body.description;
     if (body.startDate !== undefined) updateData.startDate = new Date(body.startDate);
-    if (body.endDate !== undefined) updateData.endDate = body.endDate ? new Date(body.endDate) : null;
+    if (body.endDate !== undefined)
+      updateData.endDate = body.endDate ? new Date(body.endDate) : null;
     if (body.status !== undefined) updateData.status = body.status;
     if (body.posterImage !== undefined) updateData.posterImage = body.posterImage;
     if (body.sponsorLogos !== undefined) updateData.sponsorLogos = body.sponsorLogos;
@@ -156,10 +142,7 @@ export async function PATCH(
     return NextResponse.json({ tour });
   } catch (error) {
     console.error('Tour PATCH error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update tour' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update tour' }, { status: 500 });
   }
 }
 
@@ -167,10 +150,7 @@ export async function PATCH(
  * DELETE /api/tours/[id]
  * Delete a tour
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -179,10 +159,7 @@ export async function DELETE(
 
     const existingTour = await db.tour.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
       include: {
         shows: true,
@@ -225,10 +202,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Tour DELETE error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete tour' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete tour' }, { status: 500 });
   }
 }
-

@@ -19,15 +19,15 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
 
     const where: any = {};
-    
+
     if (city) {
       where.city = { contains: city, mode: 'insensitive' };
     }
-    
+
     if (type) {
       where.type = type;
     }
-    
+
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
@@ -37,19 +37,14 @@ export async function GET(request: NextRequest) {
 
     const venues = await db.venue.findMany({
       where,
-      orderBy: [
-        { name: 'asc' },
-      ],
+      orderBy: [{ name: 'asc' }],
       take: 100, // Limit results
     });
 
     return NextResponse.json({ venues });
   } catch (error) {
     console.error('Venues GET error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch venues' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch venues' }, { status: 500 });
   }
 }
 
@@ -84,10 +79,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     if (!name) {
-      return NextResponse.json(
-        { error: 'Venue name is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Venue name is required' }, { status: 400 });
     }
 
     // Generate slug from name
@@ -102,10 +94,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (existingVenue) {
-      return NextResponse.json(
-        { error: 'A venue with this name already exists' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'A venue with this name already exists' }, { status: 400 });
     }
 
     const venue = await db.venue.create({
@@ -132,10 +121,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ venue }, { status: 201 });
   } catch (error) {
     console.error('Venues POST error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create venue' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create venue' }, { status: 500 });
   }
 }
-

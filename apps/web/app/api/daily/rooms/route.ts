@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       await requireFeatureAccess('videoCalls');
     } catch (error: any) {
       return NextResponse.json(
-        { 
+        {
           error: error.message || 'Upgrade to Studio plan to access video calls',
           requiresUpgrade: true,
           currentTier: error.tier || 'free',
@@ -29,10 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!DAILY_API_KEY) {
-      return NextResponse.json(
-        { error: 'Daily API key not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Daily API key not configured' }, { status: 500 });
     }
 
     const body = await request.json();
@@ -43,7 +40,7 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${DAILY_API_KEY}`,
+        Authorization: `Bearer ${DAILY_API_KEY}`,
       },
       body: JSON.stringify({
         name,
@@ -68,13 +65,13 @@ export async function POST(request: NextRequest) {
     }
 
     const room = await response.json();
-    
+
     // Generate a meeting token for the user
     const tokenResponse = await fetch(`${DAILY_API_URL}/meeting-tokens`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${DAILY_API_KEY}`,
+        Authorization: `Bearer ${DAILY_API_KEY}`,
       },
       body: JSON.stringify({
         properties: {
@@ -89,7 +86,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (!tokenResponse.ok) {
-      const error = await tokenResponse.json().catch(() => ({ error: 'Failed to create meeting token' }));
+      const error = await tokenResponse
+        .json()
+        .catch(() => ({ error: 'Failed to create meeting token' }));
       return NextResponse.json(
         { error: error.error || 'Failed to create meeting token' },
         { status: tokenResponse.status }
@@ -105,9 +104,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating Daily room:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );
@@ -127,7 +126,7 @@ export async function GET(request: NextRequest) {
       await requireFeatureAccess('videoCalls');
     } catch (error: any) {
       return NextResponse.json(
-        { 
+        {
           error: error.message || 'Upgrade to Studio plan to access video calls',
           requiresUpgrade: true,
           currentTier: error.tier || 'free',
@@ -138,17 +137,14 @@ export async function GET(request: NextRequest) {
     }
 
     if (!DAILY_API_KEY) {
-      return NextResponse.json(
-        { error: 'Daily API key not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Daily API key not configured' }, { status: 500 });
     }
 
     // Get rooms list
     const response = await fetch(`${DAILY_API_URL}/rooms`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${DAILY_API_KEY}`,
+        Authorization: `Bearer ${DAILY_API_KEY}`,
       },
     });
 
@@ -165,9 +161,9 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching Daily rooms:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );

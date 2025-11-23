@@ -1,6 +1,6 @@
 import { prisma } from '@cronkwaters/db';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import NextAuth, { type NextAuthOptions , type Session } from 'next-auth';
+import NextAuth, { type NextAuthOptions, type Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import AppleProvider from 'next-auth/providers/apple';
 import EmailProvider from 'next-auth/providers/email';
@@ -23,94 +23,114 @@ function getAuthConfig(): NextAuthOptions {
   return {
     adapter: PrismaAdapter(prisma),
     session: {
-      strategy: 'jwt'
+      strategy: 'jwt',
     },
     providers: [
-      ...(env.EMAIL_FROM && env.EMAIL_SERVER_URL ? [
-        EmailProvider({
-          server: env.EMAIL_SERVER_URL,
-          from: env.EMAIL_FROM
-        })
-      ] : []),
-      ...(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET ? [
-        GoogleProvider({
-          clientId: env.GOOGLE_CLIENT_ID,
-          clientSecret: env.GOOGLE_CLIENT_SECRET
-        })
-      ] : []),
-      ...(env.APPLE_CLIENT_ID && env.APPLE_CLIENT_SECRET ? [
-        AppleProvider({
-          clientId: env.APPLE_CLIENT_ID,
-          clientSecret: env.APPLE_CLIENT_SECRET
-        })
-      ] : [])
+      ...(env.EMAIL_FROM && env.EMAIL_SERVER_URL
+        ? [
+            EmailProvider({
+              server: env.EMAIL_SERVER_URL,
+              from: env.EMAIL_FROM,
+            }),
+          ]
+        : []),
+      ...(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+        ? [
+            GoogleProvider({
+              clientId: env.GOOGLE_CLIENT_ID,
+              clientSecret: env.GOOGLE_CLIENT_SECRET,
+            }),
+          ]
+        : []),
+      ...(env.APPLE_CLIENT_ID && env.APPLE_CLIENT_SECRET
+        ? [
+            AppleProvider({
+              clientId: env.APPLE_CLIENT_ID,
+              clientSecret: env.APPLE_CLIENT_SECRET,
+            }),
+          ]
+        : []),
     ],
-  callbacks: {
-    async jwt({ token, user, trigger, session, account }) {
-      // Session fixation protection: Regenerate token ID on sign in
-      if (user && account) {
-        // Generate new session token ID to prevent session fixation
-        token.jti = crypto.randomBytes(32).toString('hex');
-        token.iat = Math.floor(Date.now() / 1000);
-        (token as JWT & { userId?: string }).userId = user.id;
-        
-        // Store session rotation timestamp
-        (token as JWT & { rotatedAt?: number }).rotatedAt = Date.now();
-      }
+    callbacks: {
+      async jwt({ token, user, trigger, session, account }) {
+        // Session fixation protection: Regenerate token ID on sign in
+        if (user && account) {
+          // Generate new session token ID to prevent session fixation
+          token.jti = crypto.randomBytes(32).toString('hex');
+          token.iat = Math.floor(Date.now() / 1000);
+          (token as JWT & { userId?: string }).userId = user.id;
 
-      // Session rotation: Regenerate token periodically
-      const tokenWithExtras = token as JWT & { 
-        userId?: string; 
-        organizationIds?: string[]; 
-        activeOrganizationId?: string;
-        rotatedAt?: number;
-        jti?: string;
-      };
-      
-      // Rotate session token every 60 minutes
-      const ROTATION_INTERVAL = 60 * 60 * 1000; // 1 hour
-      if (tokenWithExtras.rotatedAt && Date.now() - tokenWithExtras.rotatedAt > ROTATION_INTERVAL) {
-        tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
-        tokenWithExtras.rotatedAt = Date.now();
-      }
-
-      if (trigger === 'update') {
-        if (session?.activeOrganizationId) {
-          tokenWithExtras.activeOrganizationId = session.activeOrganizationId;
+          // Store session rotation timestamp
+          (token as JWT & { rotatedAt?: number }).rotatedAt = Date.now();
         }
-        // Regenerate token on manual update
-        tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
-        tokenWithExtras.rotatedAt = Date.now();
-      }
-      
-      if (tokenWithExtras.userId && (!tokenWithExtras.organizationIds || trigger === 'update')) {
-        const memberships = await prisma.membership.findMany({
-          where: { userId: tokenWithExtras.userId as string },
-          include: { org: true }
-        });
 
-        tokenWithExtras.organizationIds = memberships.map((membership: { orgId: string }) => membership.orgId);
-        tokenWithExtras.activeOrganizationId =
-          (session?.activeOrganizationId as string | undefined) ||
-          (tokenWithExtras.activeOrganizationId as string | undefined) ||
-          memberships[0]?.orgId;
-      }
+        // Session rotation: Regenerate token periodically
+        const tokenWithExtras = token as JWT & {
+          userId?: string;
+          organizationIds?: string[];
+          activeOrganizationId?: string;
+          rotatedAt?: number;
+          jti?: string;
+        };
 
-      return tokenWithExtras;
+        // Rotate session token every 60 minutes
+        const ROTATION_INTERVAL = 60 * 60 * 1000; // 1 hour
+        if (
+          tokenWithExtras.rotatedAt &&
+          Date.now() - tokenWithExtras.rotatedAt > ROTATION_INTERVAL
+        ) {
+          tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
+          tokenWithExtras.rotatedAt = Date.now();
+        }
+
+        if (trigger === 'update') {
+          if (session?.activeOrganizationId) {
+            tokenWithExtras.activeOrganizationId = session.activeOrganizationId;
+          }
+          // Regenerate token on manual update
+          tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
+          tokenWithExtras.rotatedAt = Date.now();
+        }
+
+        if (tokenWithExtras.userId && (!tokenWithExtras.organizationIds || trigger === 'update')) {
+          const memberships = await prisma.membership.findMany({
+            where: { userId: tokenWithExtras.userId as string },
+            include: { org: true },
+          });
+
+          tokenWithExtras.organizationIds = memberships.map(
+            (membership: { orgId: string }) => membership.orgId
+          );
+          tokenWithExtras.activeOrganizationId =
+            (session?.activeOrganizationId as string | undefined) ||
+            (tokenWithExtras.activeOrganizationId as string | undefined) ||
+            memberships[0]?.orgId;
+        }
+
+        return tokenWithExtras;
+      },
+      async session({ session, token }) {
+        const tokenWithExtras = token as JWT & {
+          userId?: string;
+          organizationIds?: string[];
+          activeOrganizationId?: string;
+        };
+        const sessionWithExtras = session as Session & {
+          user?: { id?: string; organizationIds?: string[]; activeOrganizationId?: string };
+        };
+
+        if (sessionWithExtras.user) {
+          sessionWithExtras.user.id = tokenWithExtras.userId as string;
+          sessionWithExtras.user.organizationIds =
+            (tokenWithExtras.organizationIds as string[]) ?? [];
+          sessionWithExtras.user.activeOrganizationId = tokenWithExtras.activeOrganizationId as
+            | string
+            | undefined;
+        }
+
+        return sessionWithExtras;
+      },
     },
-    async session({ session, token }) {
-      const tokenWithExtras = token as JWT & { userId?: string; organizationIds?: string[]; activeOrganizationId?: string };
-      const sessionWithExtras = session as Session & { user?: { id?: string; organizationIds?: string[]; activeOrganizationId?: string } };
-      
-      if (sessionWithExtras.user) {
-        sessionWithExtras.user.id = tokenWithExtras.userId as string;
-        sessionWithExtras.user.organizationIds = (tokenWithExtras.organizationIds as string[]) ?? [];
-        sessionWithExtras.user.activeOrganizationId = tokenWithExtras.activeOrganizationId as string | undefined;
-      }
-
-      return sessionWithExtras;
-    }
-  }
   };
 }
 
@@ -121,13 +141,13 @@ function getAuthInstance() {
   if (process.env.NEXT_PHASE === 'phase-production-build') {
     return null;
   }
-  
+
   // Check for required environment variables at runtime
   if (!process.env.NEXTAUTH_SECRET) {
     console.error('NEXTAUTH_SECRET is not configured. Authentication will not work.');
     return null;
   }
-  
+
   if (!_authInstance) {
     try {
       _authInstance = NextAuth(getAuthConfig());
@@ -147,7 +167,10 @@ export const handlers = {
       const url = new URL(req.url);
       const errorUrl = new URL('/api/auth/error', url.origin);
       errorUrl.searchParams.set('error', 'Configuration');
-      errorUrl.searchParams.set('error_description', 'Authentication is not configured. Please set NEXTAUTH_SECRET.');
+      errorUrl.searchParams.set(
+        'error_description',
+        'Authentication is not configured. Please set NEXTAUTH_SECRET.'
+      );
       return Response.redirect(errorUrl.toString(), 302);
     }
     try {
@@ -156,31 +179,47 @@ export const handlers = {
       console.error('NextAuth GET error:', error);
       // Check if it's a provider configuration error
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      if (errorMessage.includes('No provider') || errorMessage.includes('email') || errorMessage.includes('EMAIL_SERVER')) {
+      if (
+        errorMessage.includes('No provider') ||
+        errorMessage.includes('email') ||
+        errorMessage.includes('EMAIL_SERVER')
+      ) {
         return new Response(
-          JSON.stringify({ error: 'Email authentication is not configured. Please set EMAIL_SERVER_URL.' }),
-          { 
+          JSON.stringify({
+            error: 'Email authentication is not configured. Please set EMAIL_SERVER_URL.',
+          }),
+          {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       }
       // Handle SMTP/Resend connection errors gracefully
-      if (errorMessage.includes('SMTP') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('EHLO') || errorMessage.includes('resend')) {
+      if (
+        errorMessage.includes('SMTP') ||
+        errorMessage.includes('ECONNREFUSED') ||
+        errorMessage.includes('EHLO') ||
+        errorMessage.includes('resend')
+      ) {
         return new Response(
-          JSON.stringify({ error: 'Email service connection failed. Please check your Resend API key and configuration.' }),
-          { 
+          JSON.stringify({
+            error:
+              'Email service connection failed. Please check your Resend API key and configuration.',
+          }),
+          {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       }
       // Return a user-friendly error instead of 500
       return new Response(
-        JSON.stringify({ error: 'Authentication service error. Please try again or contact support.' }),
-        { 
+        JSON.stringify({
+          error: 'Authentication service error. Please try again or contact support.',
+        }),
+        {
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
         }
       );
     }
@@ -192,7 +231,10 @@ export const handlers = {
       const url = new URL(req.url);
       const errorUrl = new URL('/api/auth/error', url.origin);
       errorUrl.searchParams.set('error', 'Configuration');
-      errorUrl.searchParams.set('error_description', 'Authentication is not configured. Please set NEXTAUTH_SECRET.');
+      errorUrl.searchParams.set(
+        'error_description',
+        'Authentication is not configured. Please set NEXTAUTH_SECRET.'
+      );
       return Response.redirect(errorUrl.toString(), 302);
     }
     try {
@@ -201,35 +243,51 @@ export const handlers = {
       console.error('NextAuth POST error:', error);
       // Check if it's a provider configuration error
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      if (errorMessage.includes('No provider') || errorMessage.includes('email') || errorMessage.includes('EMAIL_SERVER')) {
+      if (
+        errorMessage.includes('No provider') ||
+        errorMessage.includes('email') ||
+        errorMessage.includes('EMAIL_SERVER')
+      ) {
         return new Response(
-          JSON.stringify({ error: 'Email authentication is not configured. Please set EMAIL_SERVER_URL.' }),
-          { 
+          JSON.stringify({
+            error: 'Email authentication is not configured. Please set EMAIL_SERVER_URL.',
+          }),
+          {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       }
       // Handle SMTP/Resend connection errors gracefully
-      if (errorMessage.includes('SMTP') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('EHLO') || errorMessage.includes('resend')) {
+      if (
+        errorMessage.includes('SMTP') ||
+        errorMessage.includes('ECONNREFUSED') ||
+        errorMessage.includes('EHLO') ||
+        errorMessage.includes('resend')
+      ) {
         return new Response(
-          JSON.stringify({ error: 'Email service connection failed. Please check your Resend API key and configuration.' }),
-          { 
+          JSON.stringify({
+            error:
+              'Email service connection failed. Please check your Resend API key and configuration.',
+          }),
+          {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       }
       // Return a user-friendly error instead of 500
       return new Response(
-        JSON.stringify({ error: 'Authentication service error. Please try again or contact support.' }),
-        { 
+        JSON.stringify({
+          error: 'Authentication service error. Please try again or contact support.',
+        }),
+        {
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { 'Content-Type': 'application/json' },
         }
       );
     }
-  }
+  },
 };
 
 export async function auth() {
@@ -245,7 +303,9 @@ export async function signIn(...args: Parameters<Awaited<ReturnType<typeof NextA
   return instance.signIn(...args);
 }
 
-export async function signOut(...args: Parameters<Awaited<ReturnType<typeof NextAuth>>['signOut']>) {
+export async function signOut(
+  ...args: Parameters<Awaited<ReturnType<typeof NextAuth>>['signOut']>
+) {
   const instance = getAuthInstance();
   return instance.signOut(...args);
 }

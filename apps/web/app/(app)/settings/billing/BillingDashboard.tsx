@@ -3,23 +3,23 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@cronkwaters/ui';
-import { 
-  Check, 
-  Crown, 
-  Zap, 
-  ExternalLink, 
-  CreditCard, 
+import {
+  Check,
+  Crown,
+  Zap,
+  ExternalLink,
+  CreditCard,
   AlertCircle,
   Sparkles,
   Music,
   X,
-  Loader2
+  Loader2,
 } from 'lucide-react';
-import { 
-  createSubscriptionCheckout, 
+import {
+  createSubscriptionCheckout,
   createBillingPortalSession,
   cancelUserSubscription,
-  reactivateUserSubscription
+  reactivateUserSubscription,
 } from '@/lib/actions/subscriptions';
 import { motion } from 'framer-motion';
 
@@ -113,7 +113,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
   const handleUpgrade = async (tier: 'creator' | 'studio') => {
     setIsLoading(tier);
     setError(null);
-    
+
     try {
       const checkoutUrl = await createSubscriptionCheckout(tier);
       window.location.href = checkoutUrl;
@@ -127,7 +127,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
   const handleManageBilling = async () => {
     setIsLoading('portal');
     setError(null);
-    
+
     try {
       const portalUrl = await createBillingPortalSession();
       window.location.href = portalUrl;
@@ -141,7 +141,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
   const handleCancelSubscription = async () => {
     setIsLoading('cancel');
     setError(null);
-    
+
     try {
       await cancelUserSubscription();
       setShowCancelDialog(false);
@@ -157,7 +157,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
   const handleReactivate = async () => {
     setIsLoading('reactivate');
     setError(null);
-    
+
     try {
       await reactivateUserSubscription();
       router.refresh();
@@ -178,17 +178,14 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-start gap-3"
+          className="flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4"
         >
-          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
           <div className="flex-1">
-            <p className="text-sm text-red-400 font-medium">{error}</p>
+            <p className="text-sm font-medium text-red-400">{error}</p>
           </div>
-          <button
-            onClick={() => setError(null)}
-            className="text-red-400 hover:text-red-300"
-          >
-            <X className="w-4 h-4" />
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">
+            <X className="h-4 w-4" />
           </button>
         </motion.div>
       )}
@@ -197,33 +194,37 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-gray-900 to-black border border-border rounded-xl p-8"
+        className="rounded-xl border border-border bg-gradient-to-r from-gray-900 to-black p-8"
       >
-        <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${planInfo.color} flex items-center justify-center`}>
-              <PlanIcon className="w-8 h-8 text-white" />
+            <div
+              className={`h-16 w-16 rounded-xl bg-gradient-to-br ${planInfo.color} flex items-center justify-center`}
+            >
+              <PlanIcon className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <h2 className="flex items-center gap-2 text-2xl font-bold text-white">
                 {planInfo.name} Plan
                 {currentTier !== 'free' && isActive && !isCanceled && (
-                  <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+                  <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
                     Active
                   </span>
                 )}
                 {isCanceled && (
-                  <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded-full">
+                  <span className="rounded-full bg-orange-500/20 px-2 py-1 text-xs text-orange-400">
                     Canceling
                   </span>
                 )}
               </h2>
-              <p className="text-3xl font-bold text-white mt-1">
+              <p className="mt-1 text-3xl font-bold text-white">
                 {planInfo.price}
-                {planInfo.period && <span className="text-lg text-gray-400">{planInfo.period}</span>}
+                {planInfo.period && (
+                  <span className="text-lg text-gray-400">{planInfo.period}</span>
+                )}
               </p>
               {subscription.subscriptionEndsAt && (
-                <p className="text-sm text-gray-400 mt-2">
+                <p className="mt-2 text-sm text-gray-400">
                   {isCanceled ? 'Access until' : 'Renews on'}{' '}
                   {new Date(subscription.subscriptionEndsAt).toLocaleDateString('en-US', {
                     month: 'long',
@@ -245,12 +246,12 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
                 >
                   {isLoading === 'reactivate' ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Reactivating...
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 mr-2" />
+                      <Sparkles className="mr-2 h-4 w-4" />
                       Reactivate Plan
                     </>
                   )}
@@ -263,14 +264,14 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
                 >
                   {isLoading === 'portal' ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Loading...
                     </>
                   ) : (
                     <>
-                      <CreditCard className="w-4 h-4 mr-2" />
+                      <CreditCard className="mr-2 h-4 w-4" />
                       Manage Billing
-                      <ExternalLink className="w-3 h-3 ml-2" />
+                      <ExternalLink className="ml-2 h-3 w-3" />
                     </>
                   )}
                 </Button>
@@ -282,8 +283,8 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
 
       {/* Available Plans */}
       <div>
-        <h2 className="text-xl font-semibold mb-6 text-white">Available Plans</h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        <h2 className="mb-6 text-xl font-semibold text-white">Available Plans</h2>
+        <div className="grid gap-6 md:grid-cols-3">
           {/* Free Plan */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -291,26 +292,26 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             transition={{ delay: 0.1 }}
             className={`rounded-xl p-6 ${
               currentTier === 'free'
-                ? 'bg-gradient-to-br from-orange-500/10 to-red-500/10 border-2 border-orange-500'
-                : 'bg-gray-900 border border-border'
+                ? 'border-2 border-orange-500 bg-gradient-to-br from-orange-500/10 to-red-500/10'
+                : 'border border-border bg-gray-900'
             }`}
           >
-            <div className="flex items-center gap-2 mb-4">
-              <Music className="w-5 h-5 text-gray-400" />
+            <div className="mb-4 flex items-center gap-2">
+              <Music className="h-5 w-5 text-gray-400" />
               <h3 className="text-lg font-semibold text-white">Explorer</h3>
             </div>
-            <p className="text-3xl font-bold text-white mb-2">Free</p>
-            <p className="text-sm text-gray-400 mb-6">Perfect for trying out the platform</p>
-            
-            <ul className="space-y-2.5 mb-6">
+            <p className="mb-2 text-3xl font-bold text-white">Free</p>
+            <p className="mb-6 text-sm text-gray-400">Perfect for trying out the platform</p>
+
+            <ul className="mb-6 space-y-2.5">
               {PLAN_FEATURES.free.map((feature, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                  <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
-            
+
             {currentTier === 'free' && (
               <Button disabled className="w-full">
                 Current Plan
@@ -323,35 +324,35 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className={`rounded-xl p-6 relative ${
+            className={`relative rounded-xl p-6 ${
               currentTier === 'creator'
-                ? 'bg-gradient-to-br from-orange-500/10 to-red-500/10 border-2 border-orange-500'
-                : 'bg-gray-900 border border-border'
+                ? 'border-2 border-orange-500 bg-gradient-to-br from-orange-500/10 to-red-500/10'
+                : 'border border-border bg-gray-900'
             }`}
           >
             {currentTier !== 'creator' && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-3 py-1 text-xs font-bold text-white">
                 POPULAR
               </div>
             )}
-            <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-orange-500" />
+            <div className="mb-4 flex items-center gap-2">
+              <Zap className="h-5 w-5 text-orange-500" />
               <h3 className="text-lg font-semibold text-white">Creator</h3>
             </div>
-            <p className="text-3xl font-bold text-white mb-2">
+            <p className="mb-2 text-3xl font-bold text-white">
               $9.99<span className="text-sm font-normal text-gray-400">/month</span>
             </p>
-            <p className="text-sm text-gray-400 mb-6">For serious musicians</p>
-            
-            <ul className="space-y-2.5 mb-6">
+            <p className="mb-6 text-sm text-gray-400">For serious musicians</p>
+
+            <ul className="mb-6 space-y-2.5">
               {PLAN_FEATURES.creator.map((feature, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                  <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
-            
+
             {currentTier === 'creator' ? (
               <Button disabled className="w-full">
                 Current Plan
@@ -364,7 +365,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
               >
                 {isLoading === 'creator' ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Loading...
                   </>
                 ) : (
@@ -390,41 +391,43 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             transition={{ delay: 0.3 }}
             className={`rounded-xl p-6 ${
               currentTier === 'studio'
-                ? 'bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-2 border-purple-500'
-                : 'bg-gray-900 border border-border'
+                ? 'border-2 border-purple-500 bg-gradient-to-br from-purple-500/10 to-pink-500/10'
+                : 'border border-border bg-gray-900'
             }`}
           >
-            <div className="flex items-center gap-2 mb-4">
-              <Crown className="w-5 h-5 text-purple-500" />
+            <div className="mb-4 flex items-center gap-2">
+              <Crown className="h-5 w-5 text-purple-500" />
               <h3 className="text-lg font-semibold text-white">Studio</h3>
             </div>
-            <p className="text-3xl font-bold text-white mb-2">
+            <p className="mb-2 text-3xl font-bold text-white">
               $29.99<span className="text-sm font-normal text-gray-400">/month</span>
             </p>
-            <p className="text-sm text-gray-400 mb-6">For professionals</p>
-            
-            <ul className="space-y-2.5 mb-6">
+            <p className="mb-6 text-sm text-gray-400">For professionals</p>
+
+            <ul className="mb-6 space-y-2.5">
               {PLAN_FEATURES.studio.map((feature, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                  <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
-            
+
             {currentTier === 'studio' ? (
               <Button disabled className="w-full">
                 Current Plan
               </Button>
             ) : (
               <Button
-                onClick={() => currentTier === 'free' ? handleUpgrade('studio') : handleManageBilling()}
+                onClick={() =>
+                  currentTier === 'free' ? handleUpgrade('studio') : handleManageBilling()
+                }
                 disabled={!!isLoading}
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
               >
                 {isLoading === 'studio' ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Loading...
                   </>
                 ) : currentTier === 'free' ? (
@@ -444,29 +447,26 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-gray-900 border border-border rounded-xl p-6"
+          className="rounded-xl border border-border bg-gray-900 p-6"
         >
-          <h2 className="text-xl font-semibold mb-4 text-white">Manage Your Subscription</h2>
-          <p className="text-gray-400 mb-6">
-            Update payment methods, view invoices, download receipts, or make changes to your subscription.
+          <h2 className="mb-4 text-xl font-semibold text-white">Manage Your Subscription</h2>
+          <p className="mb-6 text-gray-400">
+            Update payment methods, view invoices, download receipts, or make changes to your
+            subscription.
           </p>
-          
-          <div className="flex gap-3 flex-wrap">
-            <Button
-              onClick={handleManageBilling}
-              disabled={!!isLoading}
-              variant="outline"
-            >
+
+          <div className="flex flex-wrap gap-3">
+            <Button onClick={handleManageBilling} disabled={!!isLoading} variant="outline">
               {isLoading === 'portal' ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Loading...
                 </>
               ) : (
                 <>
-                  <CreditCard className="w-4 h-4 mr-2" />
+                  <CreditCard className="mr-2 h-4 w-4" />
                   Open Billing Portal
-                  <ExternalLink className="w-3 h-3 ml-2" />
+                  <ExternalLink className="ml-2 h-3 w-3" />
                 </>
               )}
             </Button>
@@ -476,7 +476,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
                 onClick={() => setShowCancelDialog(true)}
                 disabled={!!isLoading}
                 variant="ghost"
-                className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
               >
                 Cancel Subscription
               </Button>
@@ -484,14 +484,16 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
           </div>
 
           {isCanceled && subscription.subscriptionEndsAt && (
-            <div className="mt-6 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+            <div className="mt-6 rounded-lg border border-orange-500/30 bg-orange-500/10 p-4">
               <p className="text-sm text-orange-400">
-                <strong>Your subscription is scheduled to cancel.</strong> You'll continue to have access until{' '}
+                <strong>Your subscription is scheduled to cancel.</strong> You'll continue to have
+                access until{' '}
                 {new Date(subscription.subscriptionEndsAt).toLocaleDateString('en-US', {
                   month: 'long',
                   day: 'numeric',
                   year: 'numeric',
-                })}.
+                })}
+                .
               </p>
             </div>
           )}
@@ -503,21 +505,21 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
           onClick={() => setShowCancelDialog(false)}
         >
           <motion.div
             initial={{ scale: 0.95, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-gray-900 border border-border rounded-xl p-6 max-w-md w-full"
+            className="w-full max-w-md rounded-xl border border-border bg-gray-900 p-6"
           >
-            <h3 className="text-xl font-bold text-white mb-4">
-              Cancel Your Subscription?
-            </h3>
-            <p className="text-gray-400 mb-6">
-              You'll continue to have access until {subscription.subscriptionEndsAt && new Date(subscription.subscriptionEndsAt).toLocaleDateString()}.
-              After that, you'll be moved to the Explorer (Free) plan.
+            <h3 className="mb-4 text-xl font-bold text-white">Cancel Your Subscription?</h3>
+            <p className="mb-6 text-gray-400">
+              You'll continue to have access until{' '}
+              {subscription.subscriptionEndsAt &&
+                new Date(subscription.subscriptionEndsAt).toLocaleDateString()}
+              . After that, you'll be moved to the Explorer (Free) plan.
             </p>
             <div className="flex gap-3">
               <Button
@@ -535,7 +537,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
               >
                 {isLoading === 'cancel' ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Canceling...
                   </>
                 ) : (
@@ -553,16 +555,15 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/30 rounded-xl p-6"
+          className="rounded-xl border border-orange-500/30 bg-gradient-to-r from-orange-500/10 to-red-500/10 p-6"
         >
           <div className="flex items-start gap-4">
-            <Sparkles className="w-6 h-6 text-orange-500 flex-shrink-0" />
+            <Sparkles className="h-6 w-6 flex-shrink-0 text-orange-500" />
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Unlock More with Creator
-              </h3>
-              <p className="text-gray-300 text-sm mb-4">
-                Get unlimited projects, 50GB storage, AI features, and priority support for just $9.99/month.
+              <h3 className="mb-2 text-lg font-semibold text-white">Unlock More with Creator</h3>
+              <p className="mb-4 text-sm text-gray-300">
+                Get unlimited projects, 50GB storage, AI features, and priority support for just
+                $9.99/month.
               </p>
               <Button
                 onClick={() => handleUpgrade('creator')}
@@ -572,12 +573,12 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
               >
                 {isLoading === 'creator' ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Loading...
                   </>
                 ) : (
                   <>
-                    <Zap className="w-4 h-4 mr-2" />
+                    <Zap className="mr-2 h-4 w-4" />
                     Upgrade Now
                   </>
                 )}
@@ -589,4 +590,5 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
     </div>
   );
 }
+
 

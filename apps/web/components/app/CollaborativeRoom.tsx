@@ -1,7 +1,12 @@
-"use client";
+'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useDaily, useLocalParticipant, useScreenShare, DailyProvider } from '@daily-co/daily-react';
+import {
+  useDaily,
+  useLocalParticipant,
+  useScreenShare,
+  DailyProvider,
+} from '@daily-co/daily-react';
 import DailyIframe from '@daily-co/daily-js';
 import { Video, VideoOff, Mic, MicOff, Monitor, MonitorOff, Users } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
@@ -18,7 +23,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
   const localParticipant = useLocalParticipant();
   const { isSharingScreen, startScreenShare, stopScreenShare } = useScreenShare();
   const [participants, setParticipants] = useState<Record<string, any>>({});
-  
+
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isJoining, setIsJoining] = useState(true);
@@ -32,20 +37,22 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
       try {
         setIsJoining(true);
         setError(null);
-        
+
         await callObject.join({
           url: roomUrl,
           userName,
         });
-        
+
         setIsJoining(false);
       } catch (err) {
         console.error('Failed to join room:', err);
         const errorMessage = err instanceof Error ? err.message : 'Failed to join room';
-        
+
         // Provide helpful message if Daily.co API key is missing
         if (errorMessage.includes('401') || errorMessage.includes('unauthorized')) {
-          setError('Video collaboration is not configured. Please contact support or check DAILY_API_KEY.');
+          setError(
+            'Video collaboration is not configured. Please contact support or check DAILY_API_KEY.'
+          );
         } else {
           setError(errorMessage);
         }
@@ -54,13 +61,13 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
     };
 
     joinRoom();
-    
+
     // Track participants
     const updateParticipants = () => {
       const currentParticipants = callObject.participants();
       setParticipants(currentParticipants || {});
     };
-    
+
     callObject.on('participant-joined', updateParticipants);
     callObject.on('participant-left', updateParticipants);
     callObject.on('participant-updated', updateParticipants);
@@ -113,7 +120,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
   if (error) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-danger/60 bg-danger/10 p-8">
+      <div className="border-danger/60 bg-danger/10 flex min-h-[400px] items-center justify-center rounded-2xl border p-8">
         <div className="text-center">
           <p className="text-danger-foreground">{error}</p>
           <Button onClick={() => window.location.reload()} className="mt-4" variant="outline">
@@ -128,7 +135,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
     return (
       <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-border bg-surface p-8">
         <div className="text-center">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
+          <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
           <p className="text-muted-foreground">Joining {roomName}...</p>
         </div>
       </div>
@@ -140,11 +147,12 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
       {/* Room Header */}
       <div className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4">
         <div className="flex items-center gap-3">
-          <Users className="h-5 w-5 text-primary" />
+          <Users className="text-primary h-5 w-5" />
           <div>
             <h3 className="font-semibold text-foreground">{roomName}</h3>
             <p className="text-sm text-muted-foreground">
-              {Object.keys(participants).length} {Object.keys(participants).length === 1 ? 'participant' : 'participants'}
+              {Object.keys(participants).length}{' '}
+              {Object.keys(participants).length === 1 ? 'participant' : 'participants'}
             </p>
           </div>
         </div>
@@ -177,14 +185,16 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/20 text-2xl font-semibold text-primary">
+                <div className="from-primary/20 to-primary/5 flex h-full w-full items-center justify-center bg-gradient-to-br">
+                  <div className="bg-primary/20 text-primary flex h-16 w-16 items-center justify-center rounded-full text-2xl font-semibold">
                     {participant.user_name?.charAt(0).toUpperCase() || '?'}
                   </div>
                 </div>
               )}
               <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-sm">
-                <span className="text-sm font-medium text-white">{participant.user_name || 'Guest'}</span>
+                <span className="text-sm font-medium text-white">
+                  {participant.user_name || 'Guest'}
+                </span>
                 {!participant.audio && <MicOff className="h-3 w-3 text-white/80" />}
                 {participant.local && <span className="text-xs text-white/60">(You)</span>}
               </div>
@@ -204,7 +214,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
           {isVideoEnabled ? <Video className="h-4 w-4" /> : <VideoOff className="h-4 w-4" />}
           {isVideoEnabled ? 'Camera On' : 'Camera Off'}
         </Button>
-        
+
         <Button
           onClick={toggleAudio}
           variant={isAudioEnabled ? 'solid' : 'outline'}
@@ -214,7 +224,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
           {isAudioEnabled ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
           {isAudioEnabled ? 'Mic On' : 'Mic Off'}
         </Button>
-        
+
         <Button
           onClick={toggleScreenShare}
           variant={isSharingScreen ? 'solid' : 'outline'}
@@ -246,7 +256,7 @@ export default function CollaborativeRoom({ roomUrl, roomName, userName }: Colla
   if (!callObject) {
     return (
       <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-border bg-surface p-8">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
       </div>
     );
   }
@@ -257,9 +267,3 @@ export default function CollaborativeRoom({ roomUrl, roomName, userName }: Colla
     </DailyProvider>
   );
 }
-
-
-
-
-
-

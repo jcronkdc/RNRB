@@ -22,23 +22,14 @@ type SetlistExportOptions = {
 
 /**
  * Export setlist to PDF
- * 
+ *
  * Layouts:
  * - full: All details (song info, keys, tempos, notes)
  * - compact: Just songs, keys, and durations
  * - stage: Large fonts, minimal info for stage use
  */
-export function exportSetlistToPDF(
-  songs: SetlistSong[],
-  options: SetlistExportOptions
-) {
-  const {
-    showName,
-    venueName,
-    date,
-    notes,
-    layout = 'full',
-  } = options;
+export function exportSetlistToPDF(songs: SetlistSong[], options: SetlistExportOptions) {
+  const { showName, venueName, date, notes, layout = 'full' } = options;
 
   // Create PDF
   const doc = new jsPDF({
@@ -54,7 +45,7 @@ export function exportSetlistToPDF(
   // Header
   doc.setFontSize(layout === 'stage' ? 24 : 18);
   doc.setFont(undefined, 'bold');
-  doc.text(showName, pageWidth / 2, y, { align: 'center' });
+  doc.text(showName || 'Setlist', pageWidth / 2, y, { align: 'center' });
   y += 10;
 
   // Venue and date
@@ -64,7 +55,7 @@ export function exportSetlistToPDF(
     const subtitle: string[] = [];
     if (venueName) subtitle.push(venueName);
     if (date) subtitle.push(new Date(date).toLocaleDateString());
-    doc.text(subtitle.join(' • '), pageWidth / 2, y, { align: 'center' });
+    doc.text(subtitle.join(' • ') || '', pageWidth / 2, y, { align: 'center' });
     y += 10;
   }
 
@@ -92,7 +83,9 @@ export function exportSetlistToPDF(
   // Summary
   doc.setFontSize(10);
   doc.setTextColor(80);
-  doc.text(`${songs.length} songs • ${formatDuration(totalDuration)} total`, pageWidth / 2, y, { align: 'center' });
+  doc.text(`${songs.length} songs • ${formatDuration(totalDuration)} total`, pageWidth / 2, y, {
+    align: 'center',
+  });
   y += 10;
 
   // Reset color
@@ -116,7 +109,7 @@ export function exportSetlistToPDF(
       // Song title
       doc.setFontSize(20);
       doc.setTextColor(0);
-      doc.text(song.title, 25, y);
+      doc.text(song.title || 'Untitled', 25, y);
 
       y += 8;
 
@@ -128,7 +121,7 @@ export function exportSetlistToPDF(
         const meta: string[] = [];
         if (song.key) meta.push(`Key: ${song.key}`);
         if (song.tempo) meta.push(`${song.tempo} BPM`);
-        doc.text(meta.join(' • '), 25, y);
+        doc.text(meta.join(' • ') || '', 25, y);
         y += 8;
       }
 
@@ -137,7 +130,7 @@ export function exportSetlistToPDF(
         doc.setFontSize(12);
         doc.setTextColor(100);
         const splitSongNotes = doc.splitTextToSize(song.notes, pageWidth - 35);
-        doc.text(splitSongNotes, 25, y);
+        doc.text(splitSongNotes || '', 25, y);
         y += splitSongNotes.length * 5 + 3;
       }
 
@@ -169,12 +162,7 @@ export function exportSetlistToPDF(
           song.notes || '-',
         ];
       } else {
-        return [
-          index + 1,
-          song.title,
-          song.key || '-',
-          formatSongDuration(song.duration),
-        ];
+        return [index + 1, song.title, song.key || '-', formatSongDuration(song.duration)];
       }
     });
 
@@ -192,20 +180,23 @@ export function exportSetlistToPDF(
         textColor: [255, 255, 255],
         fontStyle: 'bold',
       },
-      columnStyles: layout === 'full' ? {
-        0: { cellWidth: 10 },  // #
-        1: { cellWidth: 50 },  // Song
-        2: { cellWidth: 40 },  // Artist
-        3: { cellWidth: 15 },  // Key
-        4: { cellWidth: 20 },  // Tempo
-        5: { cellWidth: 20 },  // Duration
-        6: { cellWidth: 40 },  // Notes
-      } : {
-        0: { cellWidth: 15 },  // #
-        1: { cellWidth: 100 }, // Song
-        2: { cellWidth: 30 },  // Key
-        3: { cellWidth: 30 },  // Duration
-      },
+      columnStyles:
+        layout === 'full'
+          ? {
+              0: { cellWidth: 10 }, // #
+              1: { cellWidth: 50 }, // Song
+              2: { cellWidth: 40 }, // Artist
+              3: { cellWidth: 15 }, // Key
+              4: { cellWidth: 20 }, // Tempo
+              5: { cellWidth: 20 }, // Duration
+              6: { cellWidth: 40 }, // Notes
+            }
+          : {
+              0: { cellWidth: 15 }, // #
+              1: { cellWidth: 100 }, // Song
+              2: { cellWidth: 30 }, // Key
+              3: { cellWidth: 30 }, // Duration
+            },
     });
   }
 
@@ -218,7 +209,7 @@ export function exportSetlistToPDF(
 
   // Generate filename
   const dateStr = date ? new Date(date).toISOString().split('T')[0] : 'setlist';
-  const filename = `${showName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${dateStr}.pdf`;
+  const filename = `${(showName || 'setlist').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${dateStr}.pdf`;
 
   // Save PDF
   doc.save(filename);
@@ -229,17 +220,9 @@ export function exportSetlistToPDF(
 /**
  * Print setlist (opens print dialog)
  */
-export function printSetlist(
-  songs: SetlistSong[],
-  options: SetlistExportOptions
-) {
+export function printSetlist(songs: SetlistSong[], options: SetlistExportOptions) {
   // Create PDF in memory
-  const {
-    showName,
-    venueName,
-    date,
-    layout = 'full',
-  } = options;
+  const { showName, venueName, date, layout = 'full' } = options;
 
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -253,7 +236,7 @@ export function printSetlist(
   // Header
   doc.setFontSize(18);
   doc.setFont(undefined, 'bold');
-  doc.text(showName, pageWidth / 2, y, { align: 'center' });
+  doc.text(showName || 'Setlist', pageWidth / 2, y, { align: 'center' });
   y += 10;
 
   if (venueName || date) {
@@ -262,14 +245,15 @@ export function printSetlist(
     const subtitle: string[] = [];
     if (venueName) subtitle.push(venueName);
     if (date) subtitle.push(new Date(date).toLocaleDateString());
-    doc.text(subtitle.join(' • '), pageWidth / 2, y, { align: 'center' });
+    doc.text(subtitle.join(' • ') || '', pageWidth / 2, y, { align: 'center' });
     y += 15;
   }
 
   // Table
-  const tableColumns = layout === 'compact'
-    ? ['#', 'Song', 'Key', 'Duration']
-    : ['#', 'Song', 'Artist', 'Key', 'Tempo', 'Duration'];
+  const tableColumns =
+    layout === 'compact'
+      ? ['#', 'Song', 'Key', 'Duration']
+      : ['#', 'Song', 'Artist', 'Key', 'Tempo', 'Duration'];
 
   const tableRows = songs.map((song, index) => {
     const formatSongDuration = (seconds?: number) => {
@@ -280,12 +264,7 @@ export function printSetlist(
     };
 
     if (layout === 'compact') {
-      return [
-        index + 1,
-        song.title,
-        song.key || '-',
-        formatSongDuration(song.duration),
-      ];
+      return [index + 1, song.title, song.key || '-', formatSongDuration(song.duration)];
     } else {
       return [
         index + 1,
@@ -312,4 +291,3 @@ export function printSetlist(
   doc.autoPrint();
   window.open(doc.output('bloburl'), '_blank');
 }
-

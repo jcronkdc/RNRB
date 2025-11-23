@@ -32,32 +32,39 @@ export interface CountersignLicenseInput {
 export const LICENSE_TEMPLATES: Record<LicenseTemplate, { name: string; defaultTerms: string }> = {
   COLLAB_NDA: {
     name: 'Collaboration NDA',
-    defaultTerms: 'This agreement establishes confidentiality for collaborative work. All parties agree not to disclose project details without written consent.'
+    defaultTerms:
+      'This agreement establishes confidentiality for collaborative work. All parties agree not to disclose project details without written consent.',
   },
   WORK_FOR_HIRE: {
     name: 'Work-for-Hire Agreement',
-    defaultTerms: 'This work is created as a work-for-hire. The hiring party owns all rights, title, and interest in the work.'
+    defaultTerms:
+      'This work is created as a work-for-hire. The hiring party owns all rights, title, and interest in the work.',
   },
   NON_EXCLUSIVE_COLLAB: {
     name: 'Non-Exclusive Collaboration',
-    defaultTerms: 'This is a non-exclusive collaboration. All parties retain rights to use the work independently.'
+    defaultTerms:
+      'This is a non-exclusive collaboration. All parties retain rights to use the work independently.',
   },
   PODCAST_MUSIC_LICENSE: {
     name: 'Podcast Music License',
-    defaultTerms: 'This license grants permission to use the musical work in podcast episodes with proper attribution.'
+    defaultTerms:
+      'This license grants permission to use the musical work in podcast episodes with proper attribution.',
   },
   EXCLUSIVE_LICENSE: {
     name: 'Exclusive License',
-    defaultTerms: 'This is an exclusive license. The licensor grants exclusive rights to the licensee for the specified term.'
+    defaultTerms:
+      'This is an exclusive license. The licensor grants exclusive rights to the licensee for the specified term.',
   },
   MASTER_USE: {
     name: 'Master Use License',
-    defaultTerms: 'This license grants permission to use the master recording in the specified project.'
+    defaultTerms:
+      'This license grants permission to use the master recording in the specified project.',
   },
   SYNCHRONIZATION: {
     name: 'Synchronization License',
-    defaultTerms: 'This license grants permission to synchronize the musical work with visual media.'
-  }
+    defaultTerms:
+      'This license grants permission to synchronize the musical work with visual media.',
+  },
 };
 
 /**
@@ -66,7 +73,7 @@ export const LICENSE_TEMPLATES: Record<LicenseTemplate, { name: string; defaultT
 export async function createLicense(input: CreateLicenseInput): Promise<License> {
   // Validate project exists
   const project = await prisma.project.findUnique({
-    where: { id: input.projectId }
+    where: { id: input.projectId },
   });
 
   if (!project) {
@@ -83,8 +90,8 @@ export async function createLicense(input: CreateLicenseInput): Promise<License>
       title: input.title,
       terms,
       notes: input.notes,
-      status: 'draft'
-    }
+      status: 'draft',
+    },
   });
 }
 
@@ -101,10 +108,10 @@ export async function updateLicense(
     include: {
       project: {
         select: {
-          orgId: true
-        }
-      }
-    }
+          orgId: true,
+        },
+      },
+    },
   });
 
   if (!existing) {
@@ -124,8 +131,8 @@ export async function updateLicense(
     where: { id: licenseId },
     data: {
       ...input,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -137,7 +144,7 @@ export async function initiateSignature(
   input: SignLicenseInput
 ): Promise<License> {
   const license = await prisma.license.findUnique({
-    where: { id: licenseId }
+    where: { id: licenseId },
   });
 
   if (!license) {
@@ -154,8 +161,8 @@ export async function initiateSignature(
       signerName: input.signerName,
       signerEmail: input.signerEmail,
       status: 'pending_signature',
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -164,7 +171,7 @@ export async function initiateSignature(
  */
 export async function signLicense(licenseId: string): Promise<License> {
   const license = await prisma.license.findUnique({
-    where: { id: licenseId }
+    where: { id: licenseId },
   });
 
   if (!license) {
@@ -180,8 +187,8 @@ export async function signLicense(licenseId: string): Promise<License> {
     data: {
       status: 'pending_countersignature',
       signedAt: new Date(),
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -194,7 +201,7 @@ export async function countersignLicense(
   pdfKey: string
 ): Promise<License> {
   const license = await prisma.license.findUnique({
-    where: { id: licenseId }
+    where: { id: licenseId },
   });
 
   if (!license) {
@@ -213,8 +220,8 @@ export async function countersignLicense(
       status: 'executed',
       countersignedAt: new Date(),
       pdfKey,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -223,7 +230,7 @@ export async function countersignLicense(
  */
 export async function cancelLicense(licenseId: string): Promise<License> {
   const license = await prisma.license.findUnique({
-    where: { id: licenseId }
+    where: { id: licenseId },
   });
 
   if (!license) {
@@ -238,8 +245,8 @@ export async function cancelLicense(licenseId: string): Promise<License> {
     where: { id: licenseId },
     data: {
       status: 'cancelled',
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -254,10 +261,10 @@ export async function getLicenseById(licenseId: string) {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   });
 }
 
@@ -268,9 +275,8 @@ export async function listLicenses(projectId: string, options?: { status?: Licen
   return prisma.license.findMany({
     where: {
       projectId,
-      ...(options?.status ? { status: options.status } : {})
+      ...(options?.status ? { status: options.status } : {}),
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
 }
-

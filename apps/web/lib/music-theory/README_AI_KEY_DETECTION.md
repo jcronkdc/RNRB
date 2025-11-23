@@ -35,19 +35,19 @@ The key detection system has been **10x'd** with AI-powered music theory analysi
 
 ### 🎯 What It Detects
 
-| Feature | Deterministic | AI-Enhanced |
-|---------|--------------|-------------|
-| Basic major/minor keys | ✅ | ✅ |
-| Confidence scoring | ✅ | ✅ |
-| I-IV-V progressions | ✅ | ✅ |
-| Tonic placement | ✅ | ✅ |
-| Modal analysis (Dorian, etc.) | ❌ | ✅ |
-| Secondary dominants | ❌ | ✅ |
-| Borrowed chords | ❌ | ✅ |
-| Key modulations | ❌ | ✅ |
-| Musical character | ❌ | ✅ |
-| Next chord suggestions | ❌ | ✅ |
-| Jazz progressions (ii-V-I) | ⚠️ | ✅ |
+| Feature                       | Deterministic | AI-Enhanced |
+| ----------------------------- | ------------- | ----------- |
+| Basic major/minor keys        | ✅            | ✅          |
+| Confidence scoring            | ✅            | ✅          |
+| I-IV-V progressions           | ✅            | ✅          |
+| Tonic placement               | ✅            | ✅          |
+| Modal analysis (Dorian, etc.) | ❌            | ✅          |
+| Secondary dominants           | ❌            | ✅          |
+| Borrowed chords               | ❌            | ✅          |
+| Key modulations               | ❌            | ✅          |
+| Musical character             | ❌            | ✅          |
+| Next chord suggestions        | ❌            | ✅          |
+| Jazz progressions (ii-V-I)    | ⚠️            | ✅          |
 
 ### 🎨 AI Insights Include:
 
@@ -135,6 +135,7 @@ console.log(result.ai?.suggestedNextChords); // ["Dm", "Em", "G7", "Am7", "Fmaj7
 **Input**: `['C', 'G', 'Am', 'F']`
 
 **AI Output**:
+
 - Primary Key: C Major
 - Confidence: 98%
 - Progression Type: "I-V-vi-IV pop progression"
@@ -147,6 +148,7 @@ console.log(result.ai?.suggestedNextChords); // ["Dm", "Em", "G7", "Am7", "Fmaj7
 **Input**: `['Dm7', 'G7', 'Cmaj7']`
 
 **AI Output**:
+
 - Primary Key: C Major
 - Confidence: 95%
 - Progression Type: "ii-V-I jazz progression"
@@ -158,6 +160,7 @@ console.log(result.ai?.suggestedNextChords); // ["Dm", "Em", "G7", "Am7", "Fmaj7
 **Input**: `['Dm', 'Em', 'F', 'G', 'Am']`
 
 **AI Output**:
+
 - Primary Key: D Dorian
 - Modal Analysis: Dorian mode (90% confidence)
 - Character: "Sophisticated and slightly melancholic"
@@ -178,6 +181,7 @@ npm run test:ai-key-detection
 ### Monitoring
 
 Check console for:
+
 - `AI key detection failed` - API issues
 - `No AI API key configured` - Missing env var
 - `AI API error: 401` - Invalid API key
@@ -207,4 +211,3 @@ Check console for:
 **Performance**: 10x better than deterministic alone
 **Cost**: ~$0.003 per analysis
 **Accuracy**: 95%+ on all genres
-

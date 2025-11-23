@@ -11,8 +11,9 @@ export async function POST(request: NextRequest) {
       await requireFeatureAccess('aiContentGeneration');
     } catch (error: any) {
       return NextResponse.json(
-        { 
-          error: error.message || 'Upgrade to Creator or Studio plan to access AI content generation',
+        {
+          error:
+            error.message || 'Upgrade to Creator or Studio plan to access AI content generation',
           requiresUpgrade: true,
           currentTier: error.tier || 'free',
         },
@@ -69,14 +70,10 @@ export async function POST(request: NextRequest) {
       content,
       type,
       isAiGenerated: true,
-      disclaimer: 'AI-generated draft - edit before publishing'
+      disclaimer: 'AI-generated draft - edit before publishing',
     });
   } catch (error: any) {
     console.error('AI content generation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate content' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate content' }, { status: 500 });
   }
 }
-

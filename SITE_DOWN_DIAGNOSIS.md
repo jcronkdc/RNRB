@@ -12,6 +12,7 @@
 ### **Test Results:**
 
 **cronkwaters.com (without www):**
+
 ```
 ✅ HTTP/2 308 (redirect working)
 ✅ Redirects to: https://www.cronkwaters.com/
@@ -20,6 +21,7 @@
 ```
 
 **www.cronkwaters.com (with www):**
+
 ```
 ❌ SSL_ERROR_SYSCALL
 ❌ Connection failed on port 443
@@ -33,6 +35,7 @@
 Vercel is configured to redirect `cronkwaters.com` → `www.cronkwaters.com`, but the **SSL certificate for www subdomain is not provisioned or has expired.**
 
 This creates a redirect loop:
+
 1. User visits `cronkwaters.com` ✅
 2. Vercel redirects to `www.cronkwaters.com` ✅
 3. SSL handshake fails ❌
@@ -94,6 +97,7 @@ If you want the site working NOW:
 ### **Option 3: Add Both Domains Explicitly**
 
 1. **In Vercel Domains:**
+
    ```
    cronkwaters.com (root)
    www.cronkwaters.com (add as separate domain)
@@ -111,6 +115,7 @@ If you want the site working NOW:
 Your DNS should have these records:
 
 **For Root Domain (cronkwaters.com):**
+
 ```
 Type: A
 Name: @
@@ -124,6 +129,7 @@ Value: cname.vercel-dns.com
 ```
 
 **For www Subdomain (www.cronkwaters.com):**
+
 ```
 Type: CNAME
 Name: www
@@ -135,6 +141,7 @@ Value: cname.vercel-dns.com
 ## 🧪 **TESTING COMMANDS**
 
 ### **Test SSL Certificate:**
+
 ```bash
 # Check if SSL is working:
 openssl s_client -connect www.cronkwaters.com:443 -servername www.cronkwaters.com
@@ -144,6 +151,7 @@ openssl s_client -connect www.cronkwaters.com:443 -servername www.cronkwaters.co
 ```
 
 ### **Test DNS Resolution:**
+
 ```bash
 # Check DNS for root:
 nslookup cronkwaters.com
@@ -155,6 +163,7 @@ nslookup www.cronkwaters.com
 ```
 
 ### **Test HTTP Response:**
+
 ```bash
 # Test root domain:
 curl -I https://cronkwaters.com
@@ -169,12 +178,12 @@ curl -I https://www.cronkwaters.com
 
 ## ⏰ **TIMELINE TO FIX**
 
-| Action | Time |
-|--------|------|
-| Regenerate SSL in Vercel | 1-2 minutes |
-| SSL propagation | 5-10 minutes |
-| DNS changes (if needed) | 10-60 minutes |
-| Full global propagation | Up to 48 hours (rare) |
+| Action                   | Time                  |
+| ------------------------ | --------------------- |
+| Regenerate SSL in Vercel | 1-2 minutes           |
+| SSL propagation          | 5-10 minutes          |
+| DNS changes (if needed)  | 10-60 minutes         |
+| Full global propagation  | Up to 48 hours (rare) |
 
 **Most likely:** Site should be back up in **5-10 minutes** after regenerating SSL.
 
@@ -185,6 +194,7 @@ curl -I https://www.cronkwaters.com
 While waiting for SSL to fix, users can access via:
 
 **Vercel Deployment URL:**
+
 ```
 https://[project-name].vercel.app
 ```
@@ -253,12 +263,14 @@ Once SSL is regenerated:
 ## 📝 **STATUS UPDATES**
 
 **Before Fix:**
+
 ```
 ❌ www.cronkwaters.com - SSL_ERROR_SYSCALL
 ✅ cronkwaters.com - Redirects to www (but www broken)
 ```
 
 **After Fix:**
+
 ```
 ✅ www.cronkwaters.com - Loads correctly
 ✅ cronkwaters.com - Redirects to www (working)
@@ -280,4 +292,3 @@ This is a common Vercel issue and should be resolved quickly!
 **Priority:** 🔴 **CRITICAL** - Site is down  
 **Estimated Fix Time:** 5-10 minutes in Vercel dashboard  
 **Root Cause:** SSL certificate issue (not code issue)
-

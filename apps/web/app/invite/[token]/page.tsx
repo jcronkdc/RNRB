@@ -43,8 +43,8 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <main className="flex min-h-screen items-center justify-center px-4 py-16">
         <div className="w-full max-w-md text-center">
           <div className="mb-4 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-danger/20">
-              <XCircle className="h-8 w-8 text-danger" />
+            <div className="bg-danger/20 flex h-16 w-16 items-center justify-center rounded-full">
+              <XCircle className="text-danger h-8 w-8" />
             </div>
           </div>
           <h1 className="text-2xl font-semibold text-foreground">Invitation Not Found</h1>
@@ -186,8 +186,8 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <div className="w-full max-w-md">
         <div className="rounded-3xl border border-border bg-surface p-8 shadow-soft">
           <div className="mb-6 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
-              <Mail className="h-8 w-8 text-primary" />
+            <div className="bg-primary/20 flex h-16 w-16 items-center justify-center rounded-full">
+              <Mail className="text-primary h-8 w-8" />
             </div>
           </div>
 
@@ -198,36 +198,30 @@ export default async function InvitePage({ params }: InvitePageProps) {
           <div className="mt-6 space-y-4">
             <div className="rounded-2xl border border-border bg-muted/50 p-4">
               <p className="text-sm text-muted-foreground">
-                <strong className="text-foreground">{invitation.sender.name || invitation.sender.email}</strong> has
-                invited you to join:
+                <strong className="text-foreground">
+                  {invitation.sender.name || invitation.sender.email}
+                </strong>{' '}
+                has invited you to join:
               </p>
               <p className="mt-2 text-lg font-semibold text-foreground">
                 {invitation.org?.name || invitation.project?.name}
               </p>
               {invitation.project && (
-                <p className="text-sm text-muted-foreground">
-                  in {invitation.project.org.name}
-                </p>
+                <p className="text-sm text-muted-foreground">in {invitation.project.org.name}</p>
               )}
-              <p className="mt-2 text-sm text-primary">
-                as {invitation.role}
-              </p>
+              <p className="text-primary mt-2 text-sm">as {invitation.role}</p>
             </div>
 
             <form action={acceptInvitation}>
-              <Button
-                type="submit"
-                variant="solid"
-                size="lg"
-                className="w-full rounded-2xl gap-2"
-              >
+              <Button type="submit" variant="solid" size="lg" className="w-full gap-2 rounded-2xl">
                 <CheckCircle2 className="h-5 w-5" />
                 Accept Invitation
               </Button>
             </form>
 
             <p className="text-center text-xs text-muted-foreground">
-              By accepting, you agree to collaborate with other members and follow the organization's guidelines.
+              By accepting, you agree to collaborate with other members and follow the
+              organization's guidelines.
             </p>
           </div>
         </div>
@@ -235,11 +229,3 @@ export default async function InvitePage({ params }: InvitePageProps) {
     </main>
   );
 }
-
-
-
-
-
-
-
-

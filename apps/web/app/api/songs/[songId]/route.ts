@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { db } from '@/lib/db';
-import { authOptions } from '@/auth';
+import { auth } from '@/auth';
 
 type RouteContext = {
   params: {
@@ -13,13 +12,10 @@ type RouteContext = {
  * GET /api/songs/[songId]
  * Get a specific song by ID
  */
-export async function GET(
-  req: NextRequest,
-  { params }: RouteContext
-) {
+export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
-    const session = await getServerSession(authOptions);
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -51,10 +47,7 @@ export async function GET(
     return NextResponse.json({ song });
   } catch (error) {
     console.error('GET /api/songs/[songId] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch song' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch song' }, { status: 500 });
   }
 }
 
@@ -62,13 +55,10 @@ export async function GET(
  * PATCH /api/songs/[songId]
  * Update a song (auto-save)
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: RouteContext
-) {
+export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
-    const session = await getServerSession(authOptions);
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -88,16 +78,7 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const {
-      title,
-      key,
-      tempo,
-      timeSignature,
-      lyrics,
-      chords,
-      status,
-      visibility,
-    } = body;
+    const { title, key, tempo, timeSignature, lyrics, chords, status, visibility } = body;
 
     const song = await db.song.update({
       where: { id: params.songId },
@@ -107,7 +88,9 @@ export async function PATCH(
         ...(tempo !== undefined && { tempo: tempo ? parseInt(tempo) : null }),
         ...(timeSignature !== undefined && { timeSignature }),
         ...(lyrics !== undefined && { lyrics }),
-        ...(chords !== undefined && { chords: typeof chords === 'string' ? chords : JSON.stringify(chords) }),
+        ...(chords !== undefined && {
+          chords: typeof chords === 'string' ? chords : JSON.stringify(chords),
+        }),
         ...(status !== undefined && { status }),
         ...(visibility !== undefined && { visibility }),
         lastSavedAt: new Date(),
@@ -117,10 +100,7 @@ export async function PATCH(
     return NextResponse.json({ song });
   } catch (error) {
     console.error('PATCH /api/songs/[songId] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update song' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update song' }, { status: 500 });
   }
 }
 
@@ -128,13 +108,10 @@ export async function PATCH(
  * DELETE /api/songs/[songId]
  * Delete a song (soft delete by archiving)
  */
-export async function DELETE(
-  req: NextRequest,
-  { params }: RouteContext
-) {
+export async function DELETE(req: NextRequest, { params }: RouteContext) {
   try {
-    const session = await getServerSession(authOptions);
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -162,10 +139,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('DELETE /api/songs/[songId] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete song' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete song' }, { status: 500 });
   }
 }
-

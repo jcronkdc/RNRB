@@ -6,16 +6,16 @@ import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
-import { 
-  Music, 
-  Upload, 
-  Lock, 
-  Users, 
+import {
+  Music,
+  Upload,
+  Lock,
+  Users,
   Globe,
   Building,
   Sparkles,
   ArrowLeft,
-  Folder
+  Folder,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -33,7 +33,7 @@ export default function NewProjectPage() {
     visibility: 'private' as 'private' | 'org' | 'public',
     cover_image: '',
     genre: '',
-    target_release_date: ''
+    target_release_date: '',
   });
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function NewProjectPage() {
       const newProject = await response.json();
 
       setMessage({ type: 'success', text: 'Project created! Redirecting...' });
-      
+
       setTimeout(() => {
         router.push(`/projects/${newProject.slug}`);
       }, 1000);
@@ -102,11 +102,11 @@ export default function NewProjectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <motion.div 
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <motion.div
           animate={{ opacity: [0.2, 1, 0.2] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="text-muted-foreground font-mono text-sm"
+          className="font-mono text-sm text-muted-foreground"
         >
           Loading...
         </motion.div>
@@ -116,35 +116,35 @@ export default function NewProjectPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      
       {/* Premium Hero Section */}
       <div className="relative overflow-hidden border-b border-border/50">
         <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
+          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-brand-primary/5 blur-3xl" />
         </div>
-        
-        <div className="rnrb-container max-w-4xl relative z-10 py-16 px-4">
+
+        <div className="rnrb-container relative z-10 max-w-4xl px-4 py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Link href="/projects" className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-primary mb-6 transition-colors">
-              <ArrowLeft className="w-4 h-4" />
+            <Link
+              href="/projects"
+              className="mb-6 inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-brand-primary"
+            >
+              <ArrowLeft className="h-4 w-4" />
               <span className="font-mono text-xs uppercase tracking-wider">Back to Projects</span>
             </Link>
-            
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                <Folder className="w-6 h-6 text-brand-primary" />
+
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
+                <Folder className="h-6 w-6 text-brand-primary" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Create New</p>
-                <h1 className="text-3xl md:text-4xl font-display font-bold">
-                  Project
-                </h1>
+                <h1 className="font-display text-3xl font-bold md:text-4xl">Project</h1>
               </div>
             </div>
             <p className="text-lg text-muted-foreground">
@@ -154,14 +154,15 @@ export default function NewProjectPage() {
         </div>
       </div>
 
-      <div className="rnrb-container max-w-4xl py-12 px-4">
-
+      <div className="rnrb-container max-w-4xl px-4 py-12">
         {message && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            message.type === 'success'
-              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
-              : 'bg-red-500/10 border border-red-500/20 text-red-400'
-          }`}>
+          <div
+            className={`mb-6 rounded-lg p-4 ${
+              message.type === 'success'
+                ? 'border border-green-500/20 bg-green-500/10 text-green-400'
+                : 'border border-red-500/20 bg-red-500/10 text-red-400'
+            }`}
+          >
             {message.text}
           </div>
         )}
@@ -172,77 +173,75 @@ export default function NewProjectPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <Card className="p-8 mb-6 rnrb-card">
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Project Name *
-              </label>
-              <input
-                type="text"
-                value={projectData.name}
-                onChange={(e) => setProjectData({ ...projectData, name: e.target.value })}
-                placeholder="My Debut Album"
-                className="w-full px-4 py-3 bg-surface border border-border rounded-lg text-foreground text-lg focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                {projectData.name && `URL: /projects/${generateSlug(projectData.name)}`}
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Tagline
-              </label>
-              <input
-                type="text"
-                value={projectData.tagline}
-                onChange={(e) => setProjectData({ ...projectData, tagline: e.target.value })}
-                placeholder="The album that changed everything"
-                className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Description
-              </label>
-              <textarea
-                value={projectData.description}
-                onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
-                placeholder="Describe your project, its vision, the story behind it..."
-                rows={4}
-                className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition resize-none"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="rnrb-card mb-6 p-8">
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Genre
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Project Name *
                 </label>
                 <input
                   type="text"
-                  value={projectData.genre}
-                  onChange={(e) => setProjectData({ ...projectData, genre: e.target.value })}
-                  placeholder="Rock, Jazz, Hip-Hop..."
-                  className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition"
+                  value={projectData.name}
+                  onChange={(e) => setProjectData({ ...projectData, name: e.target.value })}
+                  placeholder="My Debut Album"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-lg text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                />
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {projectData.name && `URL: /projects/${generateSlug(projectData.name)}`}
+                </p>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">Tagline</label>
+                <input
+                  type="text"
+                  value={projectData.tagline}
+                  onChange={(e) => setProjectData({ ...projectData, tagline: e.target.value })}
+                  placeholder="The album that changed everything"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Target Release Date
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Description
                 </label>
-                <input
-                  type="date"
-                  value={projectData.target_release_date}
-                  onChange={(e) => setProjectData({ ...projectData, target_release_date: e.target.value })}
-                  className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition focus:outline-none"
+                <textarea
+                  value={projectData.description}
+                  onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
+                  placeholder="Describe your project, its vision, the story behind it..."
+                  rows={4}
+                  className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                 />
               </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-foreground">Genre</label>
+                  <input
+                    type="text"
+                    value={projectData.genre}
+                    onChange={(e) => setProjectData({ ...projectData, genre: e.target.value })}
+                    placeholder="Rock, Jazz, Hip-Hop..."
+                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-foreground">
+                    Target Release Date
+                  </label>
+                  <input
+                    type="date"
+                    value={projectData.target_release_date}
+                    onChange={(e) =>
+                      setProjectData({ ...projectData, target_release_date: e.target.value })
+                    }
+                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
           </Card>
         </motion.div>
 
@@ -252,73 +251,85 @@ export default function NewProjectPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <Card className="p-8 mb-6 rnrb-card">
-          <h2 className="text-2xl font-semibold mb-6">Privacy & Access</h2>
-          
-          <div className="space-y-4">
-            <button
-              onClick={() => setProjectData({ ...projectData, visibility: 'private' })}
-              className={`w-full p-4 rounded-xl border-2 transition text-left ${
-                projectData.visibility === 'private'
-                  ? 'border-brand-primary bg-brand-primary/10'
-                  : 'border-border bg-surface hover:border-brand-primary/50'
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <Lock className={`w-5 h-5 mt-1 ${
-                  projectData.visibility === 'private' ? 'text-brand-primary' : 'text-muted-foreground'
-                }`} />
-                <div>
-                  <p className="font-semibold text-foreground mb-1">Private</p>
-                  <p className="text-sm text-muted-foreground">
-                    Only you can see this project. Perfect for works in progress.
-                  </p>
-                </div>
-              </div>
-            </button>
+          <Card className="rnrb-card mb-6 p-8">
+            <h2 className="mb-6 text-2xl font-semibold">Privacy & Access</h2>
 
-            <button
-              onClick={() => setProjectData({ ...projectData, visibility: 'org' })}
-              className={`w-full p-4 rounded-xl border-2 transition text-left ${
-                projectData.visibility === 'org'
-                  ? 'border-brand-primary bg-brand-primary/10'
-                  : 'border-border bg-surface hover:border-brand-primary/50'
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <Users className={`w-5 h-5 mt-1 ${
-                  projectData.visibility === 'org' ? 'text-brand-primary' : 'text-muted-foreground'
-                }`} />
-                <div>
-                  <p className="font-semibold text-foreground mb-1">Band/Organization</p>
-                  <p className="text-sm text-muted-foreground">
-                    Shared with your band or organization members only.
-                  </p>
+            <div className="space-y-4">
+              <button
+                onClick={() => setProjectData({ ...projectData, visibility: 'private' })}
+                className={`w-full rounded-xl border-2 p-4 text-left transition ${
+                  projectData.visibility === 'private'
+                    ? 'border-brand-primary bg-brand-primary/10'
+                    : 'border-border bg-surface hover:border-brand-primary/50'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <Lock
+                    className={`mt-1 h-5 w-5 ${
+                      projectData.visibility === 'private'
+                        ? 'text-brand-primary'
+                        : 'text-muted-foreground'
+                    }`}
+                  />
+                  <div>
+                    <p className="mb-1 font-semibold text-foreground">Private</p>
+                    <p className="text-sm text-muted-foreground">
+                      Only you can see this project. Perfect for works in progress.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
 
-            <button
-              onClick={() => setProjectData({ ...projectData, visibility: 'public' })}
-              className={`w-full p-4 rounded-xl border-2 transition text-left ${
-                projectData.visibility === 'public'
-                  ? 'border-brand-primary bg-brand-primary/10'
-                  : 'border-border bg-surface hover:border-brand-primary/50'
-              }`}
-            >
-              <div className="flex items-start gap-3">
-                <Globe className={`w-5 h-5 mt-1 ${
-                  projectData.visibility === 'public' ? 'text-brand-primary' : 'text-muted-foreground'
-                }`} />
-                <div>
-                  <p className="font-semibold text-foreground mb-1">Public</p>
-                  <p className="text-sm text-muted-foreground">
-                    Anyone can discover and listen. Great for released albums.
-                  </p>
+              <button
+                onClick={() => setProjectData({ ...projectData, visibility: 'org' })}
+                className={`w-full rounded-xl border-2 p-4 text-left transition ${
+                  projectData.visibility === 'org'
+                    ? 'border-brand-primary bg-brand-primary/10'
+                    : 'border-border bg-surface hover:border-brand-primary/50'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <Users
+                    className={`mt-1 h-5 w-5 ${
+                      projectData.visibility === 'org'
+                        ? 'text-brand-primary'
+                        : 'text-muted-foreground'
+                    }`}
+                  />
+                  <div>
+                    <p className="mb-1 font-semibold text-foreground">Band/Organization</p>
+                    <p className="text-sm text-muted-foreground">
+                      Shared with your band or organization members only.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </button>
-          </div>
+              </button>
+
+              <button
+                onClick={() => setProjectData({ ...projectData, visibility: 'public' })}
+                className={`w-full rounded-xl border-2 p-4 text-left transition ${
+                  projectData.visibility === 'public'
+                    ? 'border-brand-primary bg-brand-primary/10'
+                    : 'border-border bg-surface hover:border-brand-primary/50'
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <Globe
+                    className={`mt-1 h-5 w-5 ${
+                      projectData.visibility === 'public'
+                        ? 'text-brand-primary'
+                        : 'text-muted-foreground'
+                    }`}
+                  />
+                  <div>
+                    <p className="mb-1 font-semibold text-foreground">Public</p>
+                    <p className="text-sm text-muted-foreground">
+                      Anyone can discover and listen. Great for released albums.
+                    </p>
+                  </div>
+                </div>
+              </button>
+            </div>
           </Card>
         </motion.div>
 
@@ -334,12 +345,12 @@ export default function NewProjectPage() {
               Cancel
             </Button>
           </Link>
-            <Button
-              onClick={handleCreateProject}
-              disabled={creating || !projectData.name.trim()}
-              className="rnrb-button-primary px-8 py-3 rounded-xl font-semibold flex items-center gap-2 disabled:opacity-50"
-            >
-            <Sparkles className="w-5 h-5" />
+          <Button
+            onClick={handleCreateProject}
+            disabled={creating || !projectData.name.trim()}
+            className="rnrb-button-primary flex items-center gap-2 rounded-xl px-8 py-3 font-semibold disabled:opacity-50"
+          >
+            <Sparkles className="h-5 w-5" />
             {creating ? 'Creating...' : 'Create Project'}
           </Button>
         </motion.div>
@@ -347,4 +358,3 @@ export default function NewProjectPage() {
     </div>
   );
 }
-

@@ -1,9 +1,9 @@
 /**
  * Collaboration Error Tracker
- * 
+ *
  * Centralized error tracking for all Ably real-time features
  * Monitors connection status, logs errors, provides user feedback
- * 
+ *
  * Features:
  * - Connection health monitoring
  * - Error rate tracking
@@ -40,56 +40,59 @@ export function useCollaborationErrorTracking() {
   const [reconnectCount, setReconnectCount] = useState(0);
 
   // Track error
-  const trackError = useCallback((
-    feature: CollaborationError['feature'],
-    error: string,
-    severity: CollaborationError['severity'] = 'error'
-  ) => {
-    const newError: CollaborationError = {
-      id: `${feature}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: Date.now(),
-      feature,
-      error,
-      severity,
-    };
+  const trackError = useCallback(
+    (
+      feature: CollaborationError['feature'],
+      error: string,
+      severity: CollaborationError['severity'] = 'error'
+    ) => {
+      const newError: CollaborationError = {
+        id: `${feature}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        timestamp: Date.now(),
+        feature,
+        error,
+        severity,
+      };
 
-    setErrors(prev => [...prev, newError].slice(-20)); // Keep last 20 errors
+      setErrors((prev) => [...prev, newError].slice(-20)); // Keep last 20 errors
 
-    // Log to console for debugging
-    console.error(`[Collaboration ${severity.toUpperCase()}] ${feature}:`, error);
+      // Log to console for debugging
+      console.error(`[Collaboration ${severity.toUpperCase()}] ${feature}:`, error);
 
-    // Send to monitoring service (if configured)
-    if (typeof window !== 'undefined' && (window as any).logRocket) {
-      (window as any).logRocket.captureException(new Error(`Collaboration ${feature}: ${error}`));
-    }
-  }, []);
+      // Send to monitoring service (if configured)
+      if (typeof window !== 'undefined' && (window as any).logRocket) {
+        (window as any).logRocket.captureException(new Error(`Collaboration ${feature}: ${error}`));
+      }
+    },
+    []
+  );
 
   // Update connection status
-  const updateConnectionStatus = useCallback((
-    feature: keyof ConnectionStatus,
-    isConnected: boolean
-  ) => {
-    setConnectionStatus(prev => ({
-      ...prev,
-      [feature]: isConnected,
-    }));
+  const updateConnectionStatus = useCallback(
+    (feature: keyof ConnectionStatus, isConnected: boolean) => {
+      setConnectionStatus((prev) => ({
+        ...prev,
+        [feature]: isConnected,
+      }));
 
-    if (!isConnected) {
-      trackError(feature, 'Connection lost', 'warning');
-    }
-  }, [trackError]);
+      if (!isConnected) {
+        trackError(feature, 'Connection lost', 'warning');
+      }
+    },
+    [trackError]
+  );
 
   // Attempt reconnection
   const attemptReconnect = useCallback(() => {
     const now = Date.now();
-    
+
     // Prevent too frequent reconnect attempts (min 5 seconds between attempts)
     if (now - lastReconnectAttempt < 5000) {
       return;
     }
 
     setLastReconnectAttempt(now);
-    setReconnectCount(prev => prev + 1);
+    setReconnectCount((prev) => prev + 1);
 
     // Emit reconnect event for hooks to listen to
     window.dispatchEvent(new CustomEvent('collaboration-reconnect'));
@@ -97,8 +100,8 @@ export function useCollaborationErrorTracking() {
 
   // Auto-reconnect if all connections are down
   useEffect(() => {
-    const allDisconnected = Object.values(connectionStatus).every(status => !status);
-    
+    const allDisconnected = Object.values(connectionStatus).every((status) => !status);
+
     if (allDisconnected && reconnectCount < 3) {
       const timer = setTimeout(() => {
         attemptReconnect();
@@ -111,7 +114,7 @@ export function useCollaborationErrorTracking() {
   // Get error rate (errors per minute)
   const getErrorRate = useCallback(() => {
     const oneMinuteAgo = Date.now() - 60000;
-    return errors.filter(e => e.timestamp > oneMinuteAgo).length;
+    return errors.filter((e) => e.timestamp > oneMinuteAgo).length;
   }, [errors]);
 
   // Get health score (0-100)
@@ -129,7 +132,7 @@ export function useCollaborationErrorTracking() {
   // Get user-friendly status message
   const getStatusMessage = useCallback(() => {
     const healthScore = getHealthScore();
-    
+
     if (healthScore >= 90) return 'All collaboration features working perfectly';
     if (healthScore >= 70) return 'Minor connection issues detected';
     if (healthScore >= 50) return 'Some collaboration features may be slow';
@@ -141,7 +144,7 @@ export function useCollaborationErrorTracking() {
   useEffect(() => {
     const interval = setInterval(() => {
       const oneHourAgo = Date.now() - 3600000;
-      setErrors(prev => prev.filter(e => e.timestamp > oneHourAgo));
+      setErrors((prev) => prev.filter((e) => e.timestamp > oneHourAgo));
     }, 60000); // Clean up every minute
 
     return () => clearInterval(interval);
@@ -152,20 +155,20 @@ export function useCollaborationErrorTracking() {
     errors,
     connectionStatus,
     reconnectCount,
-    
+
     // Actions
     trackError,
     updateConnectionStatus,
     attemptReconnect,
-    
+
     // Computed
     errorRate: getErrorRate(),
     healthScore: getHealthScore(),
     statusMessage: getStatusMessage(),
-    
+
     // Flags
     hasErrors: errors.length > 0,
-    hasCriticalErrors: errors.some(e => e.severity === 'critical'),
+    hasCriticalErrors: errors.some((e) => e.severity === 'critical'),
     isHealthy: getHealthScore() >= 70,
   };
 }
@@ -187,46 +190,51 @@ export function CollaborationErrorBanner({
   if (errors.length === 0) return null;
 
   const latestError = errors[errors.length - 1];
-  const criticalErrors = errors.filter(e => e.severity === 'critical');
+  const criticalErrors = errors.filter((e) => e.severity === 'critical');
 
   return (
-    <div className={`p-4 rounded-xl border-2 ${
-      healthScore >= 70
-        ? 'bg-yellow-500/10 border-yellow-500/30'
-        : 'bg-red-500/10 border-red-500/30'
-    }`}>
+    <div
+      className={`rounded-xl border-2 p-4 ${
+        healthScore >= 70
+          ? 'border-yellow-500/30 bg-yellow-500/10'
+          : 'border-red-500/30 bg-red-500/10'
+      }`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <span className={`text-sm font-semibold ${
-              healthScore >= 70 ? 'text-yellow-400' : 'text-red-400'
-            }`}>
+          <div className="mb-1 flex items-center gap-2">
+            <span
+              className={`text-sm font-semibold ${
+                healthScore >= 70 ? 'text-yellow-400' : 'text-red-400'
+              }`}
+            >
               {statusMessage}
             </span>
-            <span className="px-2 py-0.5 rounded-full bg-surface-muted text-xs font-medium">
+            <span className="rounded-full bg-surface-muted px-2 py-0.5 text-xs font-medium">
               Health: {healthScore}%
             </span>
           </div>
-          
+
           {latestError && (
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="mt-2 text-xs text-muted-foreground">
               {latestError.feature}: {latestError.error}
             </p>
           )}
 
           {criticalErrors.length > 0 && (
-            <p className="text-xs text-red-400 mt-2 font-medium">
-              {criticalErrors.length} critical {criticalErrors.length === 1 ? 'error' : 'errors'} detected
+            <p className="mt-2 text-xs font-medium text-red-400">
+              {criticalErrors.length} critical {criticalErrors.length === 1 ? 'error' : 'errors'}{' '}
+              detected
             </p>
           )}
         </div>
-        
+
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="text-muted-foreground hover:text-foreground transition"
+            className="text-muted-foreground transition hover:text-foreground"
           >
-            <X className="w-4 h-4" />
+            <X className="h-4 w-4" />
           </button>
         )}
       </div>
@@ -237,9 +245,14 @@ export function CollaborationErrorBanner({
 // Simple X icon component if not imported
 function X({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   );
 }
-

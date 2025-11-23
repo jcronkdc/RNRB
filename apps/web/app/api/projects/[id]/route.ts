@@ -5,10 +5,7 @@ import { db } from '@/lib/db';
  * GET /api/projects/[id]
  * Get a single project by ID or slug
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const { searchParams } = new URL(req.url);
@@ -23,10 +20,7 @@ export async function GET(
       where: {
         AND: [
           {
-            OR: [
-              { id },
-              { slug: id },
-            ],
+            OR: [{ id }, { slug: id }],
           },
           {
             // Ensure user has access
@@ -40,7 +34,7 @@ export async function GET(
                 },
               },
             ],
-          }
+          },
         ],
       },
       include: {
@@ -95,7 +89,7 @@ export async function GET(
       song_count: project._count.songs,
       collaborator_count: project._count.members,
       session_count: project._count.studioSessions,
-      members: project.members.map(m => ({
+      members: project.members.map((m) => ({
         id: m.id,
         role: m.role,
         user: m.user,
@@ -106,10 +100,7 @@ export async function GET(
     return NextResponse.json(response);
   } catch (error) {
     console.error('GET /api/projects/[id] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch project' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch project' }, { status: 500 });
   }
 }
 
@@ -117,10 +108,7 @@ export async function GET(
  * PATCH /api/projects/[id]
  * Update a project
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const body = await req.json();
@@ -193,10 +181,7 @@ export async function PATCH(
     return NextResponse.json(response);
   } catch (error) {
     console.error('PATCH /api/projects/[id] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update project' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update project' }, { status: 500 });
   }
 }
 
@@ -204,10 +189,7 @@ export async function PATCH(
  * DELETE /api/projects/[id]
  * Delete a project (owner only)
  */
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const { searchParams } = new URL(req.url);
@@ -245,10 +227,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('DELETE /api/projects/[id] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete project' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete project' }, { status: 500 });
   }
 }
-

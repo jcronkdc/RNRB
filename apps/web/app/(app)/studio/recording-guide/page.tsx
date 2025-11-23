@@ -1,12 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { 
-  Disc, 
-  Video, 
-  Mic, 
-  MonitorUp, 
-  Radio, 
+import {
+  Disc,
+  Video,
+  Mic,
+  MonitorUp,
+  Radio,
   Download,
   Cloud,
   HardDrive,
@@ -16,7 +16,7 @@ import {
   Users,
   DollarSign,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
 import { Card } from '@cronkwaters/ui';
 
@@ -26,22 +26,23 @@ export default function RecordingGuidePage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-6xl mx-auto"
+        className="mx-auto max-w-6xl"
       >
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="text-5xl font-bold mb-4">Professional Recording Studio</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Everything you need to know about our advanced recording, streaming, and collaboration features
+          <h1 className="mb-4 text-5xl font-bold">Professional Recording Studio</h1>
+          <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
+            Everything you need to know about our advanced recording, streaming, and collaboration
+            features
           </p>
         </div>
 
         {/* Overview Section */}
-        <Card className="p-8 mb-8 bg-gradient-to-r from-red-500/10 to-purple-500/10">
-          <h2 className="text-3xl font-bold mb-6">🎙️ Studio Features Overview</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="mb-8 bg-gradient-to-r from-red-500/10 to-purple-500/10 p-8">
+          <h2 className="mb-6 text-3xl font-bold">🎙️ Studio Features Overview</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div>
-              <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+              <h3 className="mb-2 flex items-center gap-2 text-lg font-semibold">
                 <Disc className="h-5 w-5 text-red-500" />
                 Cloud Recording
               </h3>
@@ -50,7 +51,7 @@ export default function RecordingGuidePage() {
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+              <h3 className="mb-2 flex items-center gap-2 text-lg font-semibold">
                 <Radio className="h-5 w-5 text-blue-500" />
                 Live Streaming
               </h3>
@@ -59,7 +60,7 @@ export default function RecordingGuidePage() {
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+              <h3 className="mb-2 flex items-center gap-2 text-lg font-semibold">
                 <Users className="h-5 w-5 text-green-500" />
                 Collaboration
               </h3>
@@ -71,61 +72,65 @@ export default function RecordingGuidePage() {
         </Card>
 
         {/* Recording Features Detail */}
-        <div className="space-y-8 mb-12">
+        <div className="mb-12 space-y-8">
           <Card className="p-8">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
               <Disc className="h-6 w-6" />
               Recording Capabilities
             </h2>
-            
+
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold mb-3">Cloud Recording</h3>
+                <h3 className="mb-3 text-xl font-semibold">Cloud Recording</h3>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
                       <strong>HD Quality:</strong> Records in 1080p HD with crystal-clear audio
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
                       <strong>Format Options:</strong> MP4 for compatibility or HLS for streaming
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
-                      <strong>Custom Layouts:</strong> Grid view, active speaker, or custom compositions
+                      <strong>Custom Layouts:</strong> Grid view, active speaker, or custom
+                      compositions
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
-                      <strong>Storage Options:</strong> Daily cloud storage or your own AWS S3 bucket
+                      <strong>Storage Options:</strong> Daily cloud storage or your own AWS S3
+                      bucket
                     </div>
                   </li>
                 </ul>
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold mb-3">Individual Track Recording</h3>
+                <h3 className="mb-3 text-xl font-semibold">Individual Track Recording</h3>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
-                      <strong>Separate Tracks:</strong> Individual audio/video tracks for each participant
+                      <strong>Separate Tracks:</strong> Individual audio/video tracks for each
+                      participant
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
-                      <strong>Post-Production Ready:</strong> Perfect for professional editing and mixing
+                      <strong>Post-Production Ready:</strong> Perfect for professional editing and
+                      mixing
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
                       <strong>AI Integration:</strong> Ideal for transcription and content analysis
                     </div>
@@ -134,22 +139,22 @@ export default function RecordingGuidePage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-semibold mb-3">Recording Controls</h3>
+                <h3 className="mb-3 text-xl font-semibold">Recording Controls</h3>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
                       <strong>Pause/Resume:</strong> Take breaks without creating multiple files
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
                       <strong>Quality Settings:</strong> Choose bitrate from 1-3 Mbps for video
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
                       <strong>Real-time Status:</strong> Live indicators and duration tracking
                     </div>
@@ -161,14 +166,14 @@ export default function RecordingGuidePage() {
 
           {/* Live Streaming Features */}
           <Card className="p-8">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
               <Radio className="h-6 w-6" />
               Live Streaming Features
             </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <h3 className="text-lg font-semibold mb-3">Supported Platforms</h3>
+                <h3 className="mb-3 text-lg font-semibold">Supported Platforms</h3>
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-green-500" />
@@ -188,9 +193,9 @@ export default function RecordingGuidePage() {
                   </li>
                 </ul>
               </div>
-              
+
               <div>
-                <h3 className="text-lg font-semibold mb-3">Streaming Features</h3>
+                <h3 className="mb-3 text-lg font-semibold">Streaming Features</h3>
                 <ul className="space-y-2">
                   <li className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-green-500" />
@@ -215,14 +220,14 @@ export default function RecordingGuidePage() {
 
           {/* Technical Specifications */}
           <Card className="p-8">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
               <Settings className="h-6 w-6" />
               Technical Specifications
             </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               <div>
-                <h3 className="text-lg font-semibold mb-3">Video Specifications</h3>
+                <h3 className="mb-3 text-lg font-semibold">Video Specifications</h3>
                 <table className="w-full text-sm">
                   <tbody>
                     <tr className="border-b">
@@ -244,9 +249,9 @@ export default function RecordingGuidePage() {
                   </tbody>
                 </table>
               </div>
-              
+
               <div>
-                <h3 className="text-lg font-semibold mb-3">Audio Specifications</h3>
+                <h3 className="mb-3 text-lg font-semibold">Audio Specifications</h3>
                 <table className="w-full text-sm">
                   <tbody>
                     <tr className="border-b">
@@ -273,15 +278,15 @@ export default function RecordingGuidePage() {
 
           {/* How It Works */}
           <Card className="p-8">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
               <Zap className="h-6 w-6" />
               How It Works
             </h2>
-            
+
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-3">1. Starting a Session</h3>
-                <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+                <h3 className="mb-3 text-lg font-semibold">1. Starting a Session</h3>
+                <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
                   <li>Click "Start Recording" or "Go Live" from the Studio page</li>
                   <li>A secure room is automatically created with unique credentials</li>
                   <li>Grant camera and microphone permissions when prompted</li>
@@ -290,8 +295,8 @@ export default function RecordingGuidePage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-3">2. During the Session</h3>
-                <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+                <h3 className="mb-3 text-lg font-semibold">2. During the Session</h3>
+                <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
                   <li>Use the control bar to manage video, audio, and screen sharing</li>
                   <li>Start/stop recording or streaming as needed</li>
                   <li>Monitor participant status and connection quality</li>
@@ -300,8 +305,8 @@ export default function RecordingGuidePage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-3">3. After Recording</h3>
-                <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+                <h3 className="mb-3 text-lg font-semibold">3. After Recording</h3>
+                <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
                   <li>Recordings are automatically processed and stored</li>
                   <li>Access recordings from your dashboard within minutes</li>
                   <li>Download files or share via secure links</li>
@@ -313,51 +318,51 @@ export default function RecordingGuidePage() {
 
           {/* Security & Privacy */}
           <Card className="p-8">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
               <Shield className="h-6 w-6" />
               Security & Privacy
             </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <h3 className="text-lg font-semibold mb-3">Data Protection</h3>
+                <h3 className="mb-3 text-lg font-semibold">Data Protection</h3>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-500" />
                     End-to-end encryption for all sessions
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-500" />
                     GDPR and CCPA compliant
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-500" />
                     Secure token-based authentication
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-500" />
                     Automatic data retention policies
                   </li>
                 </ul>
               </div>
-              
+
               <div>
-                <h3 className="text-lg font-semibold mb-3">Access Control</h3>
+                <h3 className="mb-3 text-lg font-semibold">Access Control</h3>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-500" />
                     Role-based permissions
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-500" />
                     Session passwords optional
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-500" />
                     Waiting room for approval
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle className="mt-0.5 h-4 w-4 text-green-500" />
                     Ability to remove participants
                   </li>
                 </ul>
@@ -367,21 +372,21 @@ export default function RecordingGuidePage() {
         </div>
 
         {/* Cost Breakdown */}
-        <Card className="p-8 border-2 border-yellow-500/20 bg-yellow-500/5">
-          <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+        <Card className="border-2 border-yellow-500/20 bg-yellow-500/5 p-8">
+          <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
             <DollarSign className="h-6 w-6 text-yellow-500" />
             Cost Breakdown
           </h2>
-          
+
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold mb-3">Recording Costs</h3>
+              <h3 className="mb-3 text-lg font-semibold">Recording Costs</h3>
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2">Feature</th>
-                    <th className="text-right py-2">Cost</th>
-                    <th className="text-right py-2">Notes</th>
+                    <th className="py-2 text-left">Feature</th>
+                    <th className="py-2 text-right">Cost</th>
+                    <th className="py-2 text-right">Notes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -393,25 +398,29 @@ export default function RecordingGuidePage() {
                   <tr className="border-b">
                     <td className="py-3">Storage (after 30 days)</td>
                     <td className="py-3 text-right font-mono">$0.003/min</td>
-                    <td className="py-3 text-right text-sm text-muted-foreground">~$0.18/hour stored</td>
+                    <td className="py-3 text-right text-sm text-muted-foreground">
+                      ~$0.18/hour stored
+                    </td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-3">Individual Tracks</td>
                     <td className="py-3 text-right font-mono">+20%</td>
-                    <td className="py-3 text-right text-sm text-muted-foreground">Added to base recording</td>
+                    <td className="py-3 text-right text-sm text-muted-foreground">
+                      Added to base recording
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-3">Streaming Costs</h3>
+              <h3 className="mb-3 text-lg font-semibold">Streaming Costs</h3>
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2">Feature</th>
-                    <th className="text-right py-2">Cost</th>
-                    <th className="text-right py-2">Notes</th>
+                    <th className="py-2 text-left">Feature</th>
+                    <th className="py-2 text-right">Cost</th>
+                    <th className="py-2 text-right">Notes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -430,20 +439,22 @@ export default function RecordingGuidePage() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-3">Video Call Costs</h3>
+              <h3 className="mb-3 text-lg font-semibold">Video Call Costs</h3>
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2">Feature</th>
-                    <th className="text-right py-2">Cost</th>
-                    <th className="text-right py-2">Notes</th>
+                    <th className="py-2 text-left">Feature</th>
+                    <th className="py-2 text-right">Cost</th>
+                    <th className="py-2 text-right">Notes</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="border-b">
                     <td className="py-3">Participant Minutes</td>
                     <td className="py-3 text-right font-mono">$0.004/min</td>
-                    <td className="py-3 text-right text-sm text-muted-foreground">Per participant</td>
+                    <td className="py-3 text-right text-sm text-muted-foreground">
+                      Per participant
+                    </td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-3">Free Tier</td>
@@ -454,12 +465,12 @@ export default function RecordingGuidePage() {
               </table>
             </div>
 
-            <div className="mt-6 p-4 bg-yellow-500/10 rounded-lg">
-              <p className="text-sm flex items-start gap-2">
-                <AlertCircle className="h-4 w-4 text-yellow-500 mt-0.5" />
+            <div className="mt-6 rounded-lg bg-yellow-500/10 p-4">
+              <p className="flex items-start gap-2 text-sm">
+                <AlertCircle className="mt-0.5 h-4 w-4 text-yellow-500" />
                 <span>
-                  <strong>Note:</strong> Costs shown are base rates. Volume discounts available for high usage.
-                  Actual costs will be reflected in your subscription tier pricing.
+                  <strong>Note:</strong> Costs shown are base rates. Volume discounts available for
+                  high usage. Actual costs will be reflected in your subscription tier pricing.
                 </span>
               </p>
             </div>
@@ -467,9 +478,9 @@ export default function RecordingGuidePage() {
         </Card>
 
         {/* Quick Tips */}
-        <Card className="p-8 mt-8">
-          <h2 className="text-2xl font-bold mb-6">💡 Pro Tips</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="mt-8 p-8">
+          <h2 className="mb-6 text-2xl font-bold">💡 Pro Tips</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-3">
               <h3 className="font-semibold">Recording Best Practices</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">

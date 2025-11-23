@@ -11,6 +11,7 @@
 **Timeline:** 1 day
 
 **What Users Will Be Able To Do:**
+
 - ✅ View current subscription plan
 - ✅ Upgrade from Free → Creator → Studio
 - ✅ Downgrade Studio → Creator → Free
@@ -29,6 +30,7 @@
 2. Create three products:
 
 **Product 1: Creator**
+
 ```
 Name: Creator Plan
 Description: For serious musicians and small teams
@@ -37,6 +39,7 @@ Billing: Recurring monthly
 ```
 
 **Product 2: Studio**
+
 ```
 Name: Studio Plan
 Description: For labels, studios, and power users
@@ -47,6 +50,7 @@ Billing: Recurring monthly
 **Note:** Don't create "Explorer" - that's your free tier (no Stripe needed)
 
 3. **Save the Price IDs:**
+
 ```
 STRIPE_PRICE_ID_CREATOR=price_xxxxxxxxxxxxx
 STRIPE_PRICE_ID_STUDIO=price_xxxxxxxxxxxxx
@@ -87,9 +91,9 @@ model User {
   emailVerified           DateTime?
   name                    String?
   image                   String?
-  
+
   // ... existing fields ...
-  
+
   // NEW: Stripe subscription fields
   stripeCustomerId        String?                 @unique
   stripeSubscriptionId    String?                 @unique
@@ -98,9 +102,9 @@ model User {
   subscriptionStartedAt   DateTime?
   subscriptionEndsAt      DateTime?
   subscriptionCanceledAt  DateTime?
-  
+
   // ... rest of existing fields ...
-  
+
   @@index([stripeCustomerId])
   @@index([stripeSubscriptionId])
   @@index([subscriptionStatus])
@@ -183,10 +187,7 @@ export async function createCheckoutSession(
   });
 }
 
-export async function createCustomerPortalSession(
-  customerId: string,
-  returnUrl: string
-) {
+export async function createCustomerPortalSession(customerId: string, returnUrl: string) {
   return await stripe.billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
@@ -253,9 +254,7 @@ export async function createSubscriptionCheckout(
   const customerId = await getOrCreateStripeCustomer(userId, email, name);
 
   const priceId =
-    tier === 'creator'
-      ? process.env.STRIPE_PRICE_ID_CREATOR!
-      : process.env.STRIPE_PRICE_ID_STUDIO!;
+    tier === 'creator' ? process.env.STRIPE_PRICE_ID_CREATOR! : process.env.STRIPE_PRICE_ID_STUDIO!;
 
   const session = await createCheckoutSession(
     customerId,
@@ -311,7 +310,7 @@ import { BillingDashboard } from './BillingDashboard';
 
 export default async function BillingPage() {
   const session = await auth();
-  
+
   if (!session?.user) {
     redirect('/auth');
   }
@@ -321,7 +320,7 @@ export default async function BillingPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-8">Billing & Subscription</h1>
-      <BillingDashboard 
+      <BillingDashboard
         userId={session.user.id}
         userEmail={session.user.email!}
         userName={session.user.name}
@@ -416,7 +415,7 @@ export function BillingDashboard({ userId, userEmail, userName, subscription }: 
             )}
           </div>
           {currentTier !== 'free' && (
-            <Button 
+            <Button
               onClick={handleManageBilling}
               disabled={isLoading === 'portal'}
               variant="outline"
@@ -486,7 +485,7 @@ export function BillingDashboard({ userId, userEmail, userName, subscription }: 
             {currentTier === 'creator' ? (
               <Button disabled className="w-full">Current Plan</Button>
             ) : (
-              <Button 
+              <Button
                 onClick={() => handleUpgrade('creator')}
                 disabled={isLoading === 'creator'}
                 className="w-full"
@@ -526,7 +525,7 @@ export function BillingDashboard({ userId, userEmail, userName, subscription }: 
             {currentTier === 'studio' ? (
               <Button disabled className="w-full">Current Plan</Button>
             ) : (
-              <Button 
+              <Button
                 onClick={() => handleUpgrade('studio')}
                 disabled={isLoading === 'studio'}
                 className="w-full"
@@ -545,7 +544,7 @@ export function BillingDashboard({ userId, userEmail, userName, subscription }: 
           <p className="text-muted-foreground mb-4">
             Update payment methods, view invoices, or cancel your subscription through our secure billing portal.
           </p>
-          <Button 
+          <Button
             onClick={handleManageBilling}
             disabled={isLoading === 'portal'}
             variant="outline"
@@ -585,11 +584,7 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
+    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
@@ -627,16 +622,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Webhook handler error:', error);
-    return NextResponse.json(
-      { error: 'Webhook handler failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 });
   }
 }
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string;
-  
+
   const user = await prisma.user.findFirst({
     where: { stripeCustomerId: customerId },
   });
@@ -649,7 +641,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   // Determine tier from price ID
   const priceId = subscription.items.data[0]?.price.id;
   let tier = 'free';
-  
+
   if (priceId === process.env.STRIPE_PRICE_ID_CREATOR) {
     tier = 'creator';
   } else if (priceId === process.env.STRIPE_PRICE_ID_STUDIO) {
@@ -675,7 +667,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string;
-  
+
   const user = await prisma.user.findFirst({
     where: { stripeCustomerId: customerId },
   });
@@ -694,7 +686,7 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
 
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   const customerId = invoice.customer as string;
-  
+
   const user = await prisma.user.findFirst({
     where: { stripeCustomerId: customerId },
   });
@@ -783,6 +775,7 @@ const settingsNav = [
 ## 🎯 **WHAT USERS WILL SEE**
 
 ### **1. Settings → Billing Page:**
+
 ```
 ┌─────────────────────────────────────┐
 │ Current Plan                        │
@@ -800,7 +793,9 @@ Available Plans:
 ```
 
 ### **2. Stripe Customer Portal:**
+
 When users click "Manage Billing", they'll see Stripe's portal with:
+
 - Current subscription details
 - Payment method management
 - Billing history
@@ -811,16 +806,16 @@ When users click "Manage Billing", they'll see Stripe's portal with:
 
 ## 🚀 **ESTIMATED TIMELINE**
 
-| Phase | Task | Time |
-|-------|------|------|
-| 1 | Stripe Setup | 30 min |
-| 2 | Database Schema | 15 min |
-| 3 | Environment Variables | 5 min |
-| 4 | Code Implementation | 2-3 hours |
-| 5 | Webhook Handler | 1 hour |
-| 6 | Settings Navigation | 5 min |
-| 7 | Deploy & Test | 30 min |
-| **TOTAL** | **~5 hours** | **1 work day** |
+| Phase     | Task                  | Time           |
+| --------- | --------------------- | -------------- |
+| 1         | Stripe Setup          | 30 min         |
+| 2         | Database Schema       | 15 min         |
+| 3         | Environment Variables | 5 min          |
+| 4         | Code Implementation   | 2-3 hours      |
+| 5         | Webhook Handler       | 1 hour         |
+| 6         | Settings Navigation   | 5 min          |
+| 7         | Deploy & Test         | 30 min         |
+| **TOTAL** | **~5 hours**          | **1 work day** |
 
 ---
 
@@ -857,16 +852,19 @@ Once basic subscriptions work, consider:
 ## 🆘 **SUPPORT & RESOURCES**
 
 **Stripe Documentation:**
+
 - Customer Portal: https://stripe.com/docs/billing/subscriptions/customer-portal
 - Webhooks: https://stripe.com/docs/webhooks
 - Testing: https://stripe.com/docs/testing
 
 **Test Cards:**
+
 - Success: `4242 4242 4242 4242`
 - Decline: `4000 0000 0000 0002`
 - Requires Authentication: `4000 0025 0000 3155`
 
 **Need Help?**
+
 - Stripe Support: https://support.stripe.com
 - Stripe Discord: https://stripe.com/discord
 
@@ -877,4 +875,5 @@ Once basic subscriptions work, consider:
 Follow the phases in order, and you'll have a complete subscription system in one day!
 
 Let me know when you're ready to start, and I can help with any specific phase! 🎸
+
 

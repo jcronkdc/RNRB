@@ -9,6 +9,7 @@
 ## 🔍 **DETAILED DIAGNOSTICS**
 
 ### **DNS Resolution: ✅ Working**
+
 ```bash
 www.cronkwaters.com →
   cname.vercel-dns.com
@@ -17,6 +18,7 @@ www.cronkwaters.com →
 ```
 
 ### **SSL Handshake: ❌ Failing**
+
 ```
 * Connected to www.cronkwaters.com (66.33.60.129) port 443
 * ALPN: curl offers h2,http/1.1
@@ -31,13 +33,16 @@ www.cronkwaters.com →
 ## 🎯 **POSSIBLE CAUSES (When SSL "Looks Correct")**
 
 ### **Cause #1: SSL Certificate Not Fully Propagated Yet**
-**Symptoms:** 
+
+**Symptoms:**
+
 - Vercel dashboard shows "Valid"
 - Site still doesn't load
 - Just regenerated/added domain recently
 
 **Solution:**
 Wait 15-30 minutes for full propagation, then:
+
 ```bash
 # Clear DNS cache (Mac):
 sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
@@ -49,12 +54,15 @@ curl -I https://www.cronkwaters.com
 ---
 
 ### **Cause #2: Multiple Deployments/Branches Conflict**
+
 **Symptoms:**
+
 - Have both production and preview deployments
 - SSL configured on one but not the other
 - Domain assigned to wrong deployment
 
 **Solution in Vercel:**
+
 1. Go to Deployments tab
 2. Find the LATEST successful deployment
 3. Click the three dots (···)
@@ -65,18 +73,22 @@ curl -I https://www.cronkwaters.com
 ---
 
 ### **Cause #3: CAA DNS Records Blocking SSL**
+
 **Symptoms:**
+
 - SSL shows valid in Vercel
 - Connection fails at handshake
 - Just added/changed DNS recently
 
 **Check CAA Records:**
+
 ```bash
 dig CAA cronkwaters.com
 ```
 
 **Solution:**
 If CAA records exist, they must allow Let's Encrypt:
+
 ```
 cronkwaters.com. CAA 0 issue "letsencrypt.org"
 cronkwaters.com. CAA 0 issuewild "letsencrypt.org"
@@ -87,13 +99,16 @@ If wrong CA listed, update DNS at your registrar.
 ---
 
 ### **Cause #4: Vercel Edge Network Cache Issue**
+
 **Symptoms:**
+
 - SSL recently regenerated
 - Vercel dashboard shows valid
 - Some locations work, others don't
 
 **Solution:**
 Force Vercel to purge cache:
+
 1. In Vercel dashboard → Deployments
 2. Click latest deployment
 3. Click "Redeploy"
@@ -104,12 +119,15 @@ Force Vercel to purge cache:
 ---
 
 ### **Cause #5: Domain Verification Expired**
+
 **Symptoms:**
+
 - Domain added long ago
 - SSL recently stopped working
 - No recent DNS changes
 
 **Solution in Vercel:**
+
 1. Settings → Domains
 2. Click on `www.cronkwaters.com`
 3. Look for "Verification Status"
@@ -120,18 +138,22 @@ Force Vercel to purge cache:
 ---
 
 ### **Cause #6: TLS Version Mismatch**
+
 **Symptoms:**
+
 - Connection fails at handshake
 - Works on some devices/browsers, not others
 - OpenSSL test fails
 
 **Solution:**
 Try forcing TLS 1.2:
+
 ```bash
 curl --tlsv1.2 -I https://www.cronkwaters.com
 ```
 
 If this works but normal curl doesn't:
+
 1. Vercel may have disabled TLS 1.0/1.1 (good security practice)
 2. Update client/browser
 3. This is expected behavior for modern sites
@@ -139,12 +161,15 @@ If this works but normal curl doesn't:
 ---
 
 ### **Cause #7: www vs Root Domain Mismatch**
+
 **Symptoms:**
+
 - cronkwaters.com works
 - www.cronkwaters.com doesn't
 - Or vice versa
 
 **Solution in Vercel:**
+
 1. Settings → Domains
 2. Ensure BOTH domains listed:
    - `cronkwaters.com`
@@ -156,12 +181,15 @@ If this works but normal curl doesn't:
 ---
 
 ### **Cause #8: Deployment Failed But Vercel Doesn't Show It**
+
 **Symptoms:**
+
 - Recent git push
 - Build logs show success
 - But site doesn't load
 
 **Solution:**
+
 1. Check Vercel deployment logs carefully
 2. Look for runtime errors (not just build errors)
 3. Check Functions tab for any crashes
@@ -177,6 +205,7 @@ If this works but normal curl doesn't:
 ## 🔧 **STEP-BY-STEP TROUBLESHOOTING**
 
 ### **Step 1: Verify Deployment URL Works**
+
 ```bash
 # Find your Vercel deployment URL in dashboard, then:
 curl -I https://cronkwaters-[hash].vercel.app
@@ -188,6 +217,7 @@ curl -I https://cronkwaters-[hash].vercel.app
 ---
 
 ### **Step 2: Check Both Domains**
+
 ```bash
 # Test root:
 curl -I https://cronkwaters.com
@@ -197,18 +227,22 @@ curl -I https://www.cronkwaters.com
 ```
 
 **If root works but www doesn't:**
+
 - www domain not properly configured
 - Remove and re-add www in Vercel
 
 **If neither works:**
+
 - DNS issue or deployment issue
 
 ---
 
 ### **Step 3: Test from Different Location**
+
 Sometimes SSL works from some locations but not others.
 
 **Use online tools:**
+
 - https://www.ssllabs.com/ssltest/
 - https://www.sslshopper.com/ssl-checker.html
 - https://dnschecker.org/#A/www.cronkwaters.com
@@ -220,6 +254,7 @@ These will test from multiple global locations.
 ---
 
 ### **Step 4: Remove and Re-add Domain**
+
 If all else fails:
 
 1. **In Vercel → Settings → Domains:**
@@ -244,14 +279,17 @@ If all else fails:
 ## 🐛 **ADVANCED DEBUGGING**
 
 ### **Check Vercel's Status Page**
+
 ```
 https://www.vercel-status.com/
 ```
+
 Verify no outages or SSL provisioning issues.
 
 ---
 
 ### **Test with Different DNS Resolver**
+
 ```bash
 # Use Google DNS:
 nslookup www.cronkwaters.com 8.8.8.8
@@ -265,7 +303,9 @@ nslookup www.cronkwaters.com 1.1.1.1
 ---
 
 ### **Check Vercel Function Logs**
+
 If deployment URL works but custom domain doesn't:
+
 1. Vercel Dashboard → Logs
 2. Filter by "Errors"
 3. Look for SSL/domain-related errors
@@ -274,16 +314,19 @@ If deployment URL works but custom domain doesn't:
 ---
 
 ### **Try HTTP (Not HTTPS)**
+
 ```bash
 curl -I http://www.cronkwaters.com
 ```
 
 **If this works:**
+
 - HTTP redirect working
 - But HTTPS SSL failing
 - Confirms it's purely an SSL issue
 
 **If this fails too:**
+
 - DNS/routing issue
 - Not reaching Vercel at all
 
@@ -292,6 +335,7 @@ curl -I http://www.cronkwaters.com
 ## ✅ **EXPECTED RESULTS (When Working)**
 
 ### **Successful Connection:**
+
 ```bash
 $ curl -I https://www.cronkwaters.com
 
@@ -304,6 +348,7 @@ x-vercel-id: cle1::xxxxx
 ```
 
 ### **SSL Certificate Check:**
+
 ```bash
 $ openssl s_client -connect www.cronkwaters.com:443 -servername www.cronkwaters.com
 
@@ -323,11 +368,13 @@ While troubleshooting, give users this working URL:
 
 **Option 1: Use Root Domain**
 If `cronkwaters.com` works, temporarily:
+
 1. Make it primary (no redirect to www)
 2. Tell users to use `cronkwaters.com`
 
 **Option 2: Use Vercel URL**
 Share your deployment URL:
+
 ```
 https://[project-name].vercel.app
 ```
@@ -339,6 +386,7 @@ Found in: Vercel Dashboard → Deployments → Latest → Visit
 ## 📞 **CONTACT VERCEL SUPPORT**
 
 If none of these work, contact Vercel:
+
 1. Go to: https://vercel.com/help
 2. Describe issue:
    ```
@@ -372,4 +420,3 @@ If none of these work, contact Vercel:
 ---
 
 **Next Action:** Since SSL shows correct in Vercel but still fails, try **removing and re-adding the www domain** - this often forces a fresh SSL provision and fixes ghost issues.
-

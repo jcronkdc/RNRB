@@ -56,7 +56,10 @@ const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 DrawerHeader.displayName = 'DrawerHeader';
 
 const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end', className)} {...props} />
+  <div
+    className={cn('mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end', className)}
+    {...props}
+  />
 );
 DrawerFooter.displayName = 'DrawerFooter';
 
@@ -94,6 +97,5 @@ export {
   DrawerHeader,
   DrawerOverlay,
   DrawerPortal,
-  DrawerTitle
+  DrawerTitle,
 };
-

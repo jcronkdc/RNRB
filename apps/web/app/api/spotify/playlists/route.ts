@@ -16,21 +16,15 @@ export async function GET(request: NextRequest) {
     const accessToken = searchParams.get('token');
 
     if (!accessToken) {
-      return NextResponse.json(
-        { error: 'Access token required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Access token required' }, { status: 400 });
     }
 
     // Fetch user's playlists
-    const playlistsResponse = await fetch(
-      'https://api.spotify.com/v1/me/playlists?limit=50',
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const playlistsResponse = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
     if (!playlistsResponse.ok) {
       return NextResponse.json(
@@ -44,10 +38,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ playlists: playlistsData.items });
   } catch (error) {
     console.error('Spotify playlists error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch playlists' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch playlists' }, { status: 500 });
   }
 }
-

@@ -20,7 +20,7 @@ import { getCurrentUser } from '@/lib/supabase';
 export async function getUserSubscription() {
   try {
     const user = await getCurrentUser();
-    
+
     if (!user) {
       throw new Error('Not authenticated');
     }
@@ -57,7 +57,7 @@ export async function getUserSubscription() {
 export async function getOrCreateStripeCustomer() {
   try {
     const user = await getCurrentUser();
-    
+
     if (!user) {
       throw new Error('Not authenticated');
     }
@@ -95,10 +95,7 @@ export async function getOrCreateStripeCustomer() {
     }
 
     // Create new Stripe customer
-    const customer = await createStripeCustomer(
-      dbUser.email,
-      dbUser.name
-    );
+    const customer = await createStripeCustomer(dbUser.email, dbUser.name);
 
     // Save customer ID to database
     await prisma.user.update({
@@ -116,12 +113,10 @@ export async function getOrCreateStripeCustomer() {
 /**
  * Create checkout session for subscription upgrade
  */
-export async function createSubscriptionCheckout(
-  tier: 'creator' | 'studio'
-): Promise<string> {
+export async function createSubscriptionCheckout(tier: 'creator' | 'studio'): Promise<string> {
   try {
     const user = await getCurrentUser();
-    
+
     if (!user) {
       throw new Error('Not authenticated');
     }
@@ -130,9 +125,7 @@ export async function createSubscriptionCheckout(
 
     // Get price ID from environment
     const priceId =
-      tier === 'creator'
-        ? process.env.STRIPE_PRICE_ID_CREATOR
-        : process.env.STRIPE_PRICE_ID_STUDIO;
+      tier === 'creator' ? process.env.STRIPE_PRICE_ID_CREATOR : process.env.STRIPE_PRICE_ID_STUDIO;
 
     if (!priceId) {
       throw new Error(`Price ID for ${tier} tier is not configured`);
@@ -174,7 +167,7 @@ export async function createSubscriptionCheckout(
 export async function createBillingPortalSession(): Promise<string> {
   try {
     const user = await getCurrentUser();
-    
+
     if (!user) {
       throw new Error('Not authenticated');
     }
@@ -212,7 +205,7 @@ export async function createBillingPortalSession(): Promise<string> {
 export async function getSubscriptionDetails() {
   try {
     const user = await getCurrentUser();
-    
+
     if (!user) {
       throw new Error('Not authenticated');
     }
@@ -263,7 +256,7 @@ export async function getSubscriptionDetails() {
 export async function cancelUserSubscription() {
   try {
     const user = await getCurrentUser();
-    
+
     if (!user) {
       throw new Error('Not authenticated');
     }
@@ -307,7 +300,7 @@ export async function cancelUserSubscription() {
 export async function reactivateUserSubscription() {
   try {
     const user = await getCurrentUser();
-    
+
     if (!user) {
       throw new Error('Not authenticated');
     }
@@ -353,14 +346,15 @@ export async function checkSubscriptionAccess(
 ): Promise<boolean> {
   try {
     const subscription = await getUserSubscription();
-    
+
     const tierHierarchy = {
       free: 0,
       creator: 1,
       studio: 2,
     };
 
-    const userTierLevel = tierHierarchy[subscription.subscriptionTier as keyof typeof tierHierarchy] || 0;
+    const userTierLevel =
+      tierHierarchy[subscription.subscriptionTier as keyof typeof tierHierarchy] || 0;
     const requiredTierLevel = tierHierarchy[requiredTier];
 
     return userTierLevel >= requiredTierLevel;
@@ -369,4 +363,3 @@ export async function checkSubscriptionAccess(
     return false;
   }
 }
-

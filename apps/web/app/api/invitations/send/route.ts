@@ -6,7 +6,7 @@ import { randomBytes } from 'crypto';
 export async function POST(request: Request) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -19,10 +19,7 @@ export async function POST(request: Request) {
     }
 
     if (!orgId && !projectId) {
-      return NextResponse.json(
-        { error: 'Either orgId or projectId is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Either orgId or projectId is required' }, { status: 400 });
     }
 
     // Verify sender has permission to invite
@@ -118,7 +115,7 @@ export async function POST(request: Request) {
 
     // Generate secure token
     const token = randomBytes(32).toString('hex');
-    
+
     // Create invitation (expires in 7 days)
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
@@ -142,7 +139,7 @@ export async function POST(request: Request) {
     // TODO: Send email with invitation link
     // For now, return the invitation URL
     const inviteUrl = `${process.env.NEXTAUTH_URL}/invite/${token}`;
-    
+
     console.log('Invitation created:', { inviteUrl, invitation });
 
     return NextResponse.json({
@@ -157,17 +154,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('Error sending invitation:', error);
-    return NextResponse.json(
-      { error: 'Failed to send invitation' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to send invitation' }, { status: 500 });
   }
 }
-
-
-
-
-
-
-
-

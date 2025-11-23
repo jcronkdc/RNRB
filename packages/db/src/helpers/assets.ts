@@ -53,14 +53,14 @@ function sanitizeMetadata(metadata?: Record<string, unknown>): Record<string, un
     'WATERMARK_SECRET',
     'INTERNAL_KEY',
     'privateKey',
-    'accessKey'
+    'accessKey',
   ];
 
   const sanitized: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(metadata)) {
     const lowerKey = key.toLowerCase();
-    const isSensitive = sensitiveKeys.some(sk => lowerKey.includes(sk.toLowerCase()));
-    
+    const isSensitive = sensitiveKeys.some((sk) => lowerKey.includes(sk.toLowerCase()));
+
     if (!isSensitive) {
       sanitized[key] = value;
     }
@@ -79,7 +79,7 @@ export async function createAsset(input: CreateAssetInput): Promise<Asset> {
     // Check for existing asset by checksum first (deduplication)
     if (input.checksum) {
       const existingByChecksum = await tx.asset.findFirst({
-        where: { checksum: input.checksum }
+        where: { checksum: input.checksum },
       });
 
       if (existingByChecksum) {
@@ -90,7 +90,7 @@ export async function createAsset(input: CreateAssetInput): Promise<Asset> {
 
     // Validate storage key uniqueness within transaction
     const existing = await tx.asset.findUnique({
-      where: { storageKey: input.storageKey }
+      where: { storageKey: input.storageKey },
     });
 
     if (existing) {
@@ -100,7 +100,7 @@ export async function createAsset(input: CreateAssetInput): Promise<Asset> {
     // If projectId provided, validate project exists
     if (input.projectId) {
       const project = await tx.project.findUnique({
-        where: { id: input.projectId }
+        where: { id: input.projectId },
       });
 
       if (!project) {
@@ -114,12 +114,13 @@ export async function createAsset(input: CreateAssetInput): Promise<Asset> {
     return tx.asset.create({
       data: {
         ...input,
-        metadata: sanitizedMetadata ? (sanitizedMetadata as Prisma.InputJsonValue) : Prisma.JsonNull
-      }
+        metadata: sanitizedMetadata
+          ? (sanitizedMetadata as Prisma.InputJsonValue)
+          : Prisma.JsonNull,
+      },
     });
   });
 }
-
 
 /**
  * Update asset with org ownership validation
@@ -134,10 +135,10 @@ export async function updateAsset(
     include: {
       project: {
         select: {
-          orgId: true
-        }
-      }
-    }
+          orgId: true,
+        },
+      },
+    },
   });
 
   if (!existing) {
@@ -155,7 +156,7 @@ export async function updateAsset(
   // If projectId is being changed, validate new project exists and belongs to same org
   if (input.projectId !== undefined && input.projectId !== null) {
     const project = await prisma.project.findUnique({
-      where: { id: input.projectId }
+      where: { id: input.projectId },
     });
 
     if (!project) {
@@ -169,7 +170,7 @@ export async function updateAsset(
   }
 
   // BUG FIX: Sanitize metadata if being updated
-  const sanitizedMetadata = input.metadata 
+  const sanitizedMetadata = input.metadata
     ? sanitizeMetadata(input.metadata as Record<string, unknown>)
     : existing.metadata;
 
@@ -178,8 +179,8 @@ export async function updateAsset(
     data: {
       ...input,
       metadata: sanitizedMetadata ? (sanitizedMetadata as Prisma.InputJsonValue) : Prisma.JsonNull,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -194,10 +195,10 @@ export async function getAssetById(assetId: string) {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   });
 }
 
@@ -206,7 +207,7 @@ export async function getAssetById(assetId: string) {
  */
 export async function getAssetByStorageKey(storageKey: string) {
   return prisma.asset.findUnique({
-    where: { storageKey }
+    where: { storageKey },
   });
 }
 
@@ -215,7 +216,7 @@ export async function getAssetByStorageKey(storageKey: string) {
  */
 export async function getAssetByChecksum(checksum: string) {
   return prisma.asset.findFirst({
-    where: { checksum }
+    where: { checksum },
   });
 }
 
@@ -226,9 +227,9 @@ export async function listAssets(projectId: string, options?: { assetType?: Asse
   return prisma.asset.findMany({
     where: {
       projectId,
-      ...(options?.assetType ? { assetType: options.assetType } : {})
+      ...(options?.assetType ? { assetType: options.assetType } : {}),
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
 }
 
@@ -239,7 +240,7 @@ export async function listAllAssets(options?: { assetType?: AssetType; limit?: n
   return prisma.asset.findMany({
     where: options?.assetType ? { assetType: options.assetType } : {},
     orderBy: { createdAt: 'desc' },
-    take: options?.limit ?? 100
+    take: options?.limit ?? 100,
   });
 }
 
@@ -254,10 +255,10 @@ export async function deleteAsset(assetId: string, orgId?: string): Promise<void
       include: {
         project: {
           select: {
-            orgId: true
-          }
-        }
-      }
+            orgId: true,
+          },
+        },
+      },
     });
 
     if (!existing) {
@@ -271,7 +272,6 @@ export async function deleteAsset(assetId: string, orgId?: string): Promise<void
   }
 
   await prisma.asset.delete({
-    where: { id: assetId }
+    where: { id: assetId },
   });
 }
-

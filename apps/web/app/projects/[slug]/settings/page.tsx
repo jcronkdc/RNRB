@@ -9,7 +9,10 @@ import Link from 'next/link';
 import { useCollaborativeSettings } from '@/hooks/use-collaborative-settings';
 import dynamic from 'next/dynamic';
 
-const CursorOverlay = dynamic(() => import('@/components/cursor-overlay').then(m => m.CursorOverlay), { ssr: false });
+const CursorOverlay = dynamic(
+  () => import('@/components/cursor-overlay').then((m) => m.CursorOverlay),
+  { ssr: false }
+);
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 
 export default function ProjectSettingsPage() {
@@ -74,14 +77,16 @@ export default function ProjectSettingsPage() {
 
   useEffect(() => {
     const loadProject = async () => {
-      const { data: { user } } = await supabase!.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase!.auth.getUser();
       if (!user) {
         router.push('/auth');
         return;
       }
-      
+
       setUser(user);
-      
+
       // Load project from API
       try {
         const response = await fetch(`/api/projects/${slug}?userId=${user.id}`);
@@ -89,7 +94,7 @@ export default function ProjectSettingsPage() {
           router.push('/projects');
           return;
         }
-        
+
         const foundProject = await response.json();
         setProject(foundProject);
         setLoading(false);
@@ -98,13 +103,14 @@ export default function ProjectSettingsPage() {
         router.push('/projects');
       }
     };
-    
+
     loadProject();
   }, [router, slug]);
 
   // Delete project
   const handleDelete = async () => {
-    if (!confirm('Delete this project? This cannot be undone. All songs and data will be lost.')) return;
+    if (!confirm('Delete this project? This cannot be undone. All songs and data will be lost.'))
+      return;
 
     try {
       // Delete via API
@@ -125,9 +131,9 @@ export default function ProjectSettingsPage() {
 
   if (loading || !project) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-12 h-12 text-brand-primary animate-spin" />
+          <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
           <div className="text-foreground">Loading settings...</div>
         </div>
       </div>
@@ -135,35 +141,47 @@ export default function ProjectSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="container mx-auto max-w-4xl">
-        <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 mb-6 transition">
-          <ArrowLeft className="w-4 h-4" />
+        <Link
+          href={`/projects/${slug}`}
+          className="mb-6 inline-flex items-center gap-2 text-brand-primary transition hover:text-brand-primary/80"
+        >
+          <ArrowLeft className="h-4 w-4" />
           Back to Project
         </Link>
 
         {/* Header with Collaboration Status */}
-        <div className="flex items-start justify-between mb-8">
+        <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="text-4xl font-display font-bold text-foreground mb-2">Project Settings</h1>
+            <h1 className="font-display mb-2 text-4xl font-bold text-foreground">
+              Project Settings
+            </h1>
             <p className="text-muted-foreground">Manage your project details collaboratively</p>
           </div>
-          
+
           {/* Active Editors */}
-          <Card className="p-4 rnrb-card">
+          <Card className="rnrb-card p-4">
             <div className="flex items-center gap-3">
-              <Users className="w-5 h-5 text-brand-primary" />
+              <Users className="h-5 w-5 text-brand-primary" />
               <div>
                 <div className="text-sm font-medium">Active Editors</div>
-                <div className="text-xs text-muted-foreground">{activeEditors.length + 1} online</div>
+                <div className="text-xs text-muted-foreground">
+                  {activeEditors.length + 1} online
+                </div>
               </div>
-              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-gray-400'}`} />
+              <div
+                className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-gray-400'}`}
+              />
             </div>
             {activeEditors.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-border">
+              <div className="mt-3 border-t border-border pt-3">
                 {activeEditors.map((editor) => (
-                  <div key={editor.id} className="text-xs text-muted-foreground flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                  <div
+                    key={editor.id}
+                    className="flex items-center gap-2 text-xs text-muted-foreground"
+                  >
+                    <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
                     {editor.name}
                   </div>
                 ))}
@@ -173,32 +191,38 @@ export default function ProjectSettingsPage() {
         </div>
 
         {message && (
-          <div className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${
-            message.type === 'success'
-              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
-              : 'bg-red-500/10 border border-red-500/20 text-red-400'
-          }`}>
-            {message.type === 'success' ? <Check className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          <div
+            className={`mb-6 flex items-center gap-3 rounded-lg p-4 ${
+              message.type === 'success'
+                ? 'border border-green-500/20 bg-green-500/10 text-green-400'
+                : 'border border-red-500/20 bg-red-500/10 text-red-400'
+            }`}
+          >
+            {message.type === 'success' ? (
+              <Check className="h-5 w-5" />
+            ) : (
+              <AlertCircle className="h-5 w-5" />
+            )}
             {message.text}
           </div>
         )}
 
-        <Card className="p-6 mb-6 rnrb-card">
-          <h2 className="text-xl font-semibold text-foreground mb-4">Basic Information</h2>
+        <Card className="rnrb-card mb-6 p-6">
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Basic Information</h2>
           <div className="space-y-4">
             {/* Project Name */}
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-2">
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">
                 Project Name
                 {isFieldLocked('name') && (
-                  <span className="ml-2 text-xs text-yellow-400 flex items-center gap-1">
-                    <Lock className="w-3 h-3" />
+                  <span className="ml-2 flex items-center gap-1 text-xs text-yellow-400">
+                    <Lock className="h-3 w-3" />
                     Editing by {getFieldLocker('name')}
                   </span>
                 )}
                 {isFieldPending('name') && (
-                  <span className="ml-2 text-xs text-blue-400 flex items-center gap-1">
-                    <Loader2 className="w-3 h-3 animate-spin" />
+                  <span className="ml-2 flex items-center gap-1 text-xs text-blue-400">
+                    <Loader2 className="h-3 w-3 animate-spin" />
                     Saving...
                   </span>
                 )}
@@ -210,17 +234,17 @@ export default function ProjectSettingsPage() {
                 onFocus={() => lockField('name')}
                 onBlur={() => unlockField('name')}
                 disabled={isFieldLocked('name')}
-                className="w-full px-4 py-3 bg-surface border-2 border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
             {/* Tagline */}
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-2">
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">
                 Tagline
                 {isFieldLocked('tagline') && (
-                  <span className="ml-2 text-xs text-yellow-400 flex items-center gap-1">
-                    <Lock className="w-3 h-3" />
+                  <span className="ml-2 flex items-center gap-1 text-xs text-yellow-400">
+                    <Lock className="h-3 w-3" />
                     Editing by {getFieldLocker('tagline')}
                   </span>
                 )}
@@ -236,17 +260,17 @@ export default function ProjectSettingsPage() {
                 onBlur={() => unlockField('tagline')}
                 disabled={isFieldLocked('tagline')}
                 placeholder="A short description of your project"
-                className="w-full px-4 py-3 bg-surface border-2 border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-2">
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">
                 Description
                 {isFieldLocked('description') && (
-                  <span className="ml-2 text-xs text-yellow-400 flex items-center gap-1">
-                    <Lock className="w-3 h-3" />
+                  <span className="ml-2 flex items-center gap-1 text-xs text-yellow-400">
+                    <Lock className="h-3 w-3" />
                     Editing by {getFieldLocker('description')}
                   </span>
                 )}
@@ -262,28 +286,30 @@ export default function ProjectSettingsPage() {
                 disabled={isFieldLocked('description')}
                 rows={4}
                 placeholder="Tell the story of this project..."
-                className="w-full px-4 py-3 bg-surface border-2 border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full resize-none rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
             {/* Visibility */}
             <div>
-              <label className="block text-sm font-medium text-muted-foreground mb-2">
+              <label className="mb-2 block text-sm font-medium text-muted-foreground">
                 Visibility
                 {isFieldLocked('visibility') && (
-                  <span className="ml-2 text-xs text-yellow-400 flex items-center gap-1">
-                    <Lock className="w-3 h-3" />
+                  <span className="ml-2 flex items-center gap-1 text-xs text-yellow-400">
+                    <Lock className="h-3 w-3" />
                     Editing by {getFieldLocker('visibility')}
                   </span>
                 )}
               </label>
               <select
                 value={settings.visibility}
-                onChange={(e) => updateField('visibility', e.target.value as 'private' | 'org' | 'public')}
+                onChange={(e) =>
+                  updateField('visibility', e.target.value as 'private' | 'org' | 'public')
+                }
                 onFocus={() => lockField('visibility')}
                 onBlur={() => unlockField('visibility')}
                 disabled={isFieldLocked('visibility')}
-                className="w-full px-4 py-3 bg-surface border-2 border-border rounded-xl text-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="private">Private (Only invited members)</option>
                 <option value="org">Organization (All org members)</option>
@@ -294,8 +320,8 @@ export default function ProjectSettingsPage() {
         </Card>
 
         {/* Danger Zone */}
-        <Card className="p-6 border-2 border-red-500/20 bg-red-500/5">
-          <h2 className="text-xl font-semibold text-red-400 mb-4">Danger Zone</h2>
+        <Card className="border-2 border-red-500/20 bg-red-500/5 p-6">
+          <h2 className="mb-4 text-xl font-semibold text-red-400">Danger Zone</h2>
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-foreground">Delete this project</p>
@@ -304,19 +330,20 @@ export default function ProjectSettingsPage() {
             <Button
               onClick={handleDelete}
               variant="secondary"
-              className="bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border-red-500/20"
+              className="border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300"
             >
-              <Trash2 className="w-4 h-4 mr-2" />
+              <Trash2 className="mr-2 h-4 w-4" />
               Delete Project
             </Button>
           </div>
         </Card>
 
         {/* Info card */}
-        <Card className="p-4 mt-6 bg-brand-primary/5 border-brand-primary/20">
-          <p className="text-sm text-muted-foreground flex items-center gap-2">
-            <Check className="w-4 h-4 text-brand-primary" />
-            Changes are automatically saved as you type. Field locks prevent conflicts with other editors.
+        <Card className="mt-6 border-brand-primary/20 bg-brand-primary/5 p-4">
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Check className="h-4 w-4 text-brand-primary" />
+            Changes are automatically saved as you type. Field locks prevent conflicts with other
+            editors.
           </p>
         </Card>
       </div>
@@ -326,4 +353,3 @@ export default function ProjectSettingsPage() {
     </div>
   );
 }
-

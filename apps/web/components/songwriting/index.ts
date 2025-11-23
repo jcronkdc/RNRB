@@ -6,4 +6,3 @@ export { GranularChordEditor } from './granular-chord-editor';
 export { KeyAnalyzer } from './key-analyzer';
 export { ChordAlternativesPopover } from './chord-alternatives-popover';
 export type { ChordPlacement } from './granular-chord-editor';
-

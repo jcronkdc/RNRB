@@ -1,15 +1,15 @@
 /**
  * Collaboration Sync Hook
- * 
+ *
  * The mycelial connective tissue - makes all systems communicate
- * 
+ *
  * When one thing happens, the network responds:
  * - Audio upload → Activity feed + Notification + Presence update
  * - Video start → Activity feed + Notification + Presence update
  * - User joins → Activity feed + Notification
  * - Chat message → Activity feed (if @mention → Notification)
  * - Song created → Activity feed + Notification to collaborators
- * 
+ *
  * This creates the living, breathing network effect!
  */
 
@@ -19,7 +19,13 @@ import { useNotifications, type Notification } from './use-notifications';
 import { usePresence } from './use-presence';
 
 type CollaborationEvent = {
-  type: 'audio_upload' | 'video_start' | 'user_join' | 'chat_mention' | 'song_create' | 'invite_sent';
+  type:
+    | 'audio_upload'
+    | 'video_start'
+    | 'user_join'
+    | 'chat_mention'
+    | 'song_create'
+    | 'invite_sent';
   userId: string;
   userName: string;
   userAvatar?: string;
@@ -46,7 +52,6 @@ export function useCollaborationSync({
   userEmail,
   userAvatar,
 }: UseCollaborationSyncOptions) {
-  
   // Get activity feed publisher
   const { publishActivity } = useActivityFeed({
     channelName: projectId ? `activity:project:${projectId}` : 'activity:global',
@@ -80,7 +85,8 @@ export function useCollaborationSync({
     if (event.type === 'audio_upload' && event.metadata?.collaboratorIds) {
       // Notify all collaborators about audio upload
       for (const collabId of event.metadata.collaboratorIds) {
-        if (collabId !== userId) { // Don't notify yourself
+        if (collabId !== userId) {
+          // Don't notify yourself
           await sendNotification(collabId, {
             type: 'upload',
             title: 'New Audio Upload',
@@ -175,7 +181,7 @@ export function useCollaborationSync({
       const { publishActivity: publishGlobal } = useActivityFeed({
         channelName: 'activity:global',
       });
-      
+
       await publishGlobal({
         type: event.type,
         userId: event.userId,
@@ -241,11 +247,7 @@ export function useVideoStartSync(options: UseCollaborationSyncOptions) {
 export function useChatMentionSync(options: UseCollaborationSyncOptions) {
   const { broadcastEvent } = useCollaborationSync(options);
 
-  const syncChatMention = async (
-    mentionedUserId: string,
-    message: string,
-    link: string
-  ) => {
+  const syncChatMention = async (mentionedUserId: string, message: string, link: string) => {
     await broadcastEvent({
       type: 'chat_mention',
       userId: options.userId,
@@ -263,11 +265,7 @@ export function useChatMentionSync(options: UseCollaborationSyncOptions) {
 export function useSongCreateSync(options: UseCollaborationSyncOptions) {
   const { broadcastEvent } = useCollaborationSync(options);
 
-  const syncSongCreate = async (
-    songId: string,
-    songName: string,
-    collaboratorIds: string[]
-  ) => {
+  const syncSongCreate = async (songId: string, songName: string, collaboratorIds: string[]) => {
     await broadcastEvent({
       type: 'song_create',
       userId: options.userId,
@@ -301,4 +299,3 @@ export function useUserJoinSync(options: UseCollaborationSyncOptions) {
 
   return { syncUserJoin };
 }
-

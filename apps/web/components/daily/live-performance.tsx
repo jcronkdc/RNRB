@@ -9,8 +9,8 @@ import {
   DailyVideo,
   DailyAudio,
 } from '@daily-co/daily-react';
-import { 
-  Radio, 
+import {
+  Radio,
   X,
   Users,
   Eye,
@@ -21,7 +21,7 @@ import {
   Loader2,
   AlertCircle,
   Wifi,
-  WifiOff
+  WifiOff,
 } from 'lucide-react';
 import { Card, Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,22 +33,17 @@ interface LivePerformanceProps {
   ticketUrl?: string;
 }
 
-export function LivePerformance({ 
-  performanceName, 
+export function LivePerformance({
+  performanceName,
   description,
   scheduledTime,
-  ticketUrl
+  ticketUrl,
 }: LivePerformanceProps) {
   const daily = useDaily();
   const localParticipant = useLocalParticipant();
   const participantCounts = useParticipantCounts();
-  const { 
-    isLiveStreaming, 
-    startLiveStreaming, 
-    stopLiveStreaming,
-    updateLiveStreaming,
-    errorMsg 
-  } = useLiveStreaming();
+  const { isLiveStreaming, startLiveStreaming, stopLiveStreaming, updateLiveStreaming, errorMsg } =
+    useLiveStreaming();
 
   const [streamConfig, setStreamConfig] = useState({
     rtmpUrl: '',
@@ -64,14 +59,16 @@ export function LivePerformance({
   const [streamDuration, setStreamDuration] = useState(0);
   const [connectionQuality, setConnectionQuality] = useState<'good' | 'fair' | 'poor'>('good');
   const [showSettings, setShowSettings] = useState(false);
-  const [chatMessages, setChatMessages] = useState<Array<{id: string, user: string, message: string, timestamp: Date}>>([]);
+  const [chatMessages, setChatMessages] = useState<
+    Array<{ id: string; user: string; message: string; timestamp: Date }>
+  >([]);
 
   // Simulate viewer count updates
   useEffect(() => {
     if (!isLiveStreaming) return;
 
     const interval = setInterval(() => {
-      setViewerCount(prev => {
+      setViewerCount((prev) => {
         const change = Math.floor(Math.random() * 10) - 5;
         return Math.max(0, prev + change);
       });
@@ -98,7 +95,7 @@ export function LivePerformance({
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
@@ -126,9 +123,10 @@ export function LivePerformance({
       return;
     }
 
-    const rtmpUrl = streamConfig.platform === 'custom' 
-      ? streamConfig.rtmpUrl 
-      : `${getPlatformUrl(streamConfig.platform)}/${streamConfig.streamKey}`;
+    const rtmpUrl =
+      streamConfig.platform === 'custom'
+        ? streamConfig.rtmpUrl
+        : `${getPlatformUrl(streamConfig.platform)}/${streamConfig.streamKey}`;
 
     try {
       await startLiveStreaming({
@@ -137,14 +135,19 @@ export function LivePerformance({
           preset: 'default',
           composition_params: {
             showParticipantLabels: false,
-          }
+          },
         },
-        videoBitrate: streamConfig.quality === 'ultra' ? 3000 : 
-                     streamConfig.quality === 'high' ? 2000 : 
-                     streamConfig.quality === 'medium' ? 1000 : 500,
+        videoBitrate:
+          streamConfig.quality === 'ultra'
+            ? 3000
+            : streamConfig.quality === 'high'
+              ? 2000
+              : streamConfig.quality === 'medium'
+                ? 1000
+                : 500,
         audioBitrate: 128,
       });
-      
+
       setStreamStartTime(new Date());
       setStreamDuration(0);
       setViewerCount(Math.floor(Math.random() * 50) + 10);
@@ -168,20 +171,16 @@ export function LivePerformance({
   return (
     <div className="space-y-6">
       {/* Performance Header */}
-      <Card className="p-6 bg-gradient-to-r from-purple-500/10 to-pink-500/10">
+      <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-6">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-2xl font-bold mb-2">{performanceName}</h2>
-            {description && (
-              <p className="text-muted-foreground mb-4">{description}</p>
-            )}
+            <h2 className="mb-2 text-2xl font-bold">{performanceName}</h2>
+            {description && <p className="mb-4 text-muted-foreground">{description}</p>}
             {scheduledTime && !isLiveStreaming && (
-              <p className="text-sm">
-                Scheduled for: {scheduledTime.toLocaleString()}
-              </p>
+              <p className="text-sm">Scheduled for: {scheduledTime.toLocaleString()}</p>
             )}
           </div>
-          
+
           {ticketUrl && !isLiveStreaming && (
             <Button variant="default" onClick={() => window.open(ticketUrl, '_blank')}>
               Get Tickets
@@ -194,17 +193,17 @@ export function LivePerformance({
           <div className="mt-4 flex items-center gap-6">
             <div className="flex items-center gap-2">
               <div className="relative">
-                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                <div className="absolute inset-0 w-3 h-3 bg-red-500 rounded-full animate-ping" />
+                <div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
+                <div className="absolute inset-0 h-3 w-3 animate-ping rounded-full bg-red-500" />
               </div>
               <span className="font-semibold text-red-500">LIVE</span>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
               <span>{viewerCount.toLocaleString()} viewers</span>
             </div>
-            
+
             <div className="flex items-center gap-2">
               {connectionQuality === 'good' ? (
                 <Wifi className="h-4 w-4 text-green-500" />
@@ -220,29 +219,29 @@ export function LivePerformance({
       </Card>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Video/Stream Preview */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="space-y-4 lg:col-span-2">
           {/* Video Container */}
-          <Card className="aspect-video bg-black relative overflow-hidden">
+          <Card className="relative aspect-video overflow-hidden bg-black">
             {localParticipant ? (
-              <DailyVideo 
-                sessionId={localParticipant.session_id} 
+              <DailyVideo
+                sessionId={localParticipant.session_id}
                 type="video"
                 mirror={false}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex items-center justify-center h-full">
+              <div className="flex h-full items-center justify-center">
                 <p className="text-white/50">Camera preview will appear here</p>
               </div>
             )}
-            
+
             {/* Overlay Stats */}
             {isLiveStreaming && (
-              <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-2 rounded-lg">
+              <div className="absolute right-4 top-4 rounded-lg bg-black/70 px-3 py-2 text-white">
                 <p className="text-xs">Stream Health</p>
-                <p className="text-sm font-mono">{connectionQuality.toUpperCase()}</p>
+                <p className="font-mono text-sm">{connectionQuality.toUpperCase()}</p>
               </div>
             )}
           </Card>
@@ -255,18 +254,20 @@ export function LivePerformance({
                 <div className="flex items-center gap-4">
                   <select
                     value={streamConfig.platform}
-                    onChange={(e) => setStreamConfig({
-                      ...streamConfig,
-                      platform: e.target.value as any
-                    })}
-                    className="flex-1 px-3 py-2 border rounded-md"
+                    onChange={(e) =>
+                      setStreamConfig({
+                        ...streamConfig,
+                        platform: e.target.value as any,
+                      })
+                    }
+                    className="flex-1 rounded-md border px-3 py-2"
                   >
                     <option value="youtube">YouTube Live</option>
                     <option value="twitch">Twitch</option>
                     <option value="facebook">Facebook Live</option>
                     <option value="custom">Custom RTMP</option>
                   </select>
-                  
+
                   <Button
                     variant="ghost"
                     size="icon"
@@ -282,22 +283,26 @@ export function LivePerformance({
                     type="password"
                     placeholder="Enter your stream key"
                     value={streamConfig.streamKey}
-                    onChange={(e) => setStreamConfig({
-                      ...streamConfig,
-                      streamKey: e.target.value
-                    })}
-                    className="w-full px-3 py-2 border rounded-md"
+                    onChange={(e) =>
+                      setStreamConfig({
+                        ...streamConfig,
+                        streamKey: e.target.value,
+                      })
+                    }
+                    className="w-full rounded-md border px-3 py-2"
                   />
                 ) : (
                   <input
                     type="text"
                     placeholder="Enter RTMP URL"
                     value={streamConfig.rtmpUrl}
-                    onChange={(e) => setStreamConfig({
-                      ...streamConfig,
-                      rtmpUrl: e.target.value
-                    })}
-                    className="w-full px-3 py-2 border rounded-md"
+                    onChange={(e) =>
+                      setStreamConfig({
+                        ...streamConfig,
+                        rtmpUrl: e.target.value,
+                      })
+                    }
+                    className="w-full rounded-md border px-3 py-2"
                   />
                 )}
 
@@ -310,16 +315,18 @@ export function LivePerformance({
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="space-y-3 pt-4 border-t">
+                      <div className="space-y-3 border-t pt-4">
                         <div>
                           <label className="text-sm font-medium">Stream Quality</label>
                           <select
                             value={streamConfig.quality}
-                            onChange={(e) => setStreamConfig({
-                              ...streamConfig,
-                              quality: e.target.value as any
-                            })}
-                            className="w-full mt-1 px-3 py-2 border rounded-md"
+                            onChange={(e) =>
+                              setStreamConfig({
+                                ...streamConfig,
+                                quality: e.target.value as any,
+                              })
+                            }
+                            className="mt-1 w-full rounded-md border px-3 py-2"
                           >
                             <option value="low">Low (480p)</option>
                             <option value="medium">Medium (720p)</option>
@@ -333,10 +340,12 @@ export function LivePerformance({
                             <input
                               type="checkbox"
                               checked={streamConfig.showChat}
-                              onChange={(e) => setStreamConfig({
-                                ...streamConfig,
-                                showChat: e.target.checked
-                              })}
+                              onChange={(e) =>
+                                setStreamConfig({
+                                  ...streamConfig,
+                                  showChat: e.target.checked,
+                                })
+                              }
                             />
                             <span className="text-sm">Enable chat</span>
                           </label>
@@ -345,10 +354,12 @@ export function LivePerformance({
                             <input
                               type="checkbox"
                               checked={streamConfig.recordStream}
-                              onChange={(e) => setStreamConfig({
-                                ...streamConfig,
-                                recordStream: e.target.checked
-                              })}
+                              onChange={(e) =>
+                                setStreamConfig({
+                                  ...streamConfig,
+                                  recordStream: e.target.checked,
+                                })
+                              }
                             />
                             <span className="text-sm">Record stream</span>
                           </label>
@@ -372,20 +383,16 @@ export function LivePerformance({
             ) : (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <Button
-                    variant="destructive"
-                    onClick={handleStopStream}
-                    className="gap-2"
-                  >
+                  <Button variant="destructive" onClick={handleStopStream} className="gap-2">
                     <X className="h-4 w-4" />
                     End Stream
                   </Button>
-                  
+
                   <Button variant="secondary" size="icon">
                     <Share2 className="h-4 w-4" />
                   </Button>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <Heart className="h-5 w-5 text-red-500" />
                   <span className="font-semibold">
@@ -394,15 +401,13 @@ export function LivePerformance({
                 </div>
               </div>
             )}
-            
+
             {/* Error Message */}
             {errorMsg && (
-              <div className="mt-4 bg-red-50 dark:bg-red-900/20 rounded-lg p-3">
+              <div className="mt-4 rounded-lg bg-red-50 p-3 dark:bg-red-900/20">
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="h-4 w-4 text-red-500 mt-0.5" />
-                  <p className="text-sm text-red-700 dark:text-red-300">
-                    {errorMsg}
-                  </p>
+                  <AlertCircle className="mt-0.5 h-4 w-4 text-red-500" />
+                  <p className="text-sm text-red-700 dark:text-red-300">{errorMsg}</p>
                 </div>
               </div>
             )}
@@ -413,11 +418,11 @@ export function LivePerformance({
         <div className="space-y-4">
           {/* Viewer Engagement */}
           <Card className="p-4">
-            <h3 className="font-semibold mb-4 flex items-center gap-2">
+            <h3 className="mb-4 flex items-center gap-2 font-semibold">
               <Users className="h-4 w-4" />
               Audience Engagement
             </h3>
-            
+
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Peak Viewers</span>
@@ -425,12 +430,12 @@ export function LivePerformance({
                   {Math.max(viewerCount, Math.floor(viewerCount * 1.3)).toLocaleString()}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Chat Messages</span>
                 <span className="font-semibold">{chatMessages.length}</span>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Reactions</span>
                 <span className="font-semibold">
@@ -443,12 +448,12 @@ export function LivePerformance({
           {/* Live Chat */}
           {streamConfig.showChat && isLiveStreaming && (
             <Card className="p-4">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <h3 className="mb-4 flex items-center gap-2 font-semibold">
                 <MessageSquare className="h-4 w-4" />
                 Live Chat
               </h3>
-              
-              <div className="h-64 overflow-y-auto space-y-2 mb-4">
+
+              <div className="mb-4 h-64 space-y-2 overflow-y-auto">
                 {chatMessages.map((msg) => (
                   <div key={msg.id} className="text-sm">
                     <span className="font-semibold">{msg.user}:</span>{' '}
@@ -456,19 +461,22 @@ export function LivePerformance({
                   </div>
                 ))}
               </div>
-              
+
               <input
                 type="text"
                 placeholder="Type a message..."
-                className="w-full px-3 py-2 border rounded-md text-sm"
+                className="w-full rounded-md border px-3 py-2 text-sm"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter' && e.currentTarget.value) {
-                    setChatMessages([...chatMessages, {
-                      id: Date.now().toString(),
-                      user: 'Artist',
-                      message: e.currentTarget.value,
-                      timestamp: new Date()
-                    }]);
+                    setChatMessages([
+                      ...chatMessages,
+                      {
+                        id: Date.now().toString(),
+                        user: 'Artist',
+                        message: e.currentTarget.value,
+                        timestamp: new Date(),
+                      },
+                    ]);
                     e.currentTarget.value = '';
                   }
                 }}

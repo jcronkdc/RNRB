@@ -9,19 +9,14 @@ export async function POST(request: NextRequest) {
     // ✅ SECURITY: Require authentication to prevent spam
     const user = await getCurrentUser();
     if (!user) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    const { inviteEmail, projectName, projectSlug, inviterName, inviterEmail } = await request.json();
+    const { inviteEmail, projectName, projectSlug, inviterName, inviterEmail } =
+      await request.json();
 
     if (!inviteEmail || !projectName || !projectSlug) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // For now, we'll create the invite link and log it
@@ -91,19 +86,19 @@ Rock N' Roll Basement is a collaborative platform for musicians with:
 - Audio file sharing
 
 If you didn't expect this invitation, you can safely ignore this email.
-      `
+      `,
     };
 
     // Check if we have email server configured
     const emailServerUrl = process.env.EMAIL_SERVER_URL;
-    
+
     if (!emailServerUrl) {
       // Email not configured - log and return success with warning
       console.log('📧 EMAIL (not sent - EMAIL_SERVER_URL not configured):');
       console.log('To:', inviteEmail);
       console.log('Subject:', emailContent.subject);
       console.log('Link:', inviteLink);
-      
+
       return NextResponse.json({
         success: true,
         warning: 'Email system not configured - invite created but email not sent',
@@ -123,15 +118,10 @@ If you didn't expect this invitation, you can safely ignore this email.
       success: true,
       emailSent: false, // Honest: email not actually sent yet
       inviteLink,
-      message: 'Invite created. Share the link with your collaborator.'
+      message: 'Invite created. Share the link with your collaborator.',
     });
-
   } catch (error: any) {
     console.error('Invite send error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to send invite' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to send invite' }, { status: 500 });
   }
 }
-

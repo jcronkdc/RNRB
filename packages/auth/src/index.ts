@@ -32,7 +32,7 @@ export async function getServerSession(): Promise<AppSession | null> {
   // Import auth function dynamically to avoid build-time issues
   const { auth } = await import('./auth');
   const session = await auth();
-  
+
   if (!session?.user) {
     return null;
   }
@@ -42,9 +42,9 @@ export async function getServerSession(): Promise<AppSession | null> {
       id: session.user.id ?? '',
       name: session.user.name ?? null,
       email: session.user.email ?? null,
-      image: session.user.image ?? null
+      image: session.user.image ?? null,
     },
-    orgId: (session.user as { activeOrganizationId?: string }).activeOrganizationId ?? null
+    orgId: (session.user as { activeOrganizationId?: string }).activeOrganizationId ?? null,
   };
 }
 
@@ -65,14 +65,14 @@ export async function getOrgSession(): Promise<OrgSession> {
 
   const normalizedSession: AppSession = {
     ...session,
-    orgId
+    orgId,
   };
 
   return {
     session: normalizedSession,
     orgId,
     memberships: [],
-    activeMembership: null
+    activeMembership: null,
   };
 }
 
@@ -94,6 +94,6 @@ export async function setActiveOrgCookie(orgId: string | null): Promise<void> {
     secure: true,
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 90
+    maxAge: 60 * 60 * 24 * 90,
   });
 }

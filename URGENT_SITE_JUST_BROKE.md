@@ -16,7 +16,9 @@ Site was working → Now broken = **Deployment or Vercel infrastructure issue**
 ## 🔍 **WHAT HAPPENED IN LAST 10-30 MINUTES**
 
 ### **Git Commits (Last 30 min):**
+
 All documentation files only - NO code changes:
+
 ```
 5d6d7603 - SSL_ADVANCED_TROUBLESHOOTING.md (added)
 9e9b61a1 - SITE_DOWN_DIAGNOSIS.md (added)
@@ -27,6 +29,7 @@ ef85a90f - AUTH_FLOW_ANALYSIS.md (added)
 **Conclusion:** Documentation changes shouldn't break the site.
 
 ### **Code Changes (Last hour):**
+
 ```
 827c5e44 - Removed chord block type (minor UI change)
 e4d27cca - Updated NavBar links (404 fix)
@@ -71,6 +74,7 @@ e4d27cca - Updated NavBar links (404 fix)
 Visit: https://www.vercel-status.com/
 
 **Look for:**
+
 - SSL provisioning outages
 - Edge network issues
 - Deployment system problems
@@ -95,12 +99,15 @@ If no obvious failed deployment:
 ## 🐛 **POSSIBLE CAUSES (When Site Just Broke)**
 
 ### **Cause #1: Vercel Deployment Queue Issue**
+
 **Symptoms:**
+
 - Multiple commits pushed rapidly
 - Vercel building all of them
 - Latest deployment stuck or failed
 
 **Solution:**
+
 - Wait for all deployments to complete
 - Or cancel in-progress deployments
 - Rollback to last working one
@@ -108,12 +115,15 @@ If no obvious failed deployment:
 ---
 
 ### **Cause #2: Vercel Edge Network Issue**
+
 **Symptoms:**
+
 - No failed deployments visible
 - Build logs look clean
 - Just suddenly stopped working
 
 **Solution:**
+
 - Check Vercel status page
 - Try accessing from different network/device
 - If Vercel outage, just wait
@@ -121,29 +131,36 @@ If no obvious failed deployment:
 ---
 
 ### **Cause #3: SSL Certificate Auto-Renewal Failed**
+
 **Symptoms:**
+
 - Was working fine
 - SSL suddenly fails
 - Certificate expired/revoked
 
 **Check:**
+
 ```bash
 echo | openssl s_client -connect www.cronkwaters.com:443 2>&1 | grep 'Verify return'
 ```
 
 **Solution:**
+
 - Regenerate SSL in Vercel
 - Or remove and re-add domain
 
 ---
 
 ### **Cause #4: DNS Propagation from Recent Change**
+
 **Symptoms:**
+
 - Made DNS change recently (even hours ago)
 - Was working, now broken
 - Different results from different locations
 
 **Check:**
+
 ```bash
 # Check from multiple DNS servers:
 nslookup www.cronkwaters.com 8.8.8.8
@@ -151,22 +168,27 @@ nslookup www.cronkwaters.com 1.1.1.1
 ```
 
 **Solution:**
+
 - Wait for DNS to stabilize (can take up to 48 hours)
 - Or revert DNS changes
 
 ---
 
 ### **Cause #5: Build Output Changed**
+
 **Symptoms:**
+
 - Recent code changes
 - Build succeeded but runtime fails
 - 500 errors or blank pages
 
 **Check:**
+
 - Vercel function logs
 - Runtime errors (not build errors)
 
 **Solution:**
+
 - Rollback to previous deployment
 - Check what changed between working and broken
 
@@ -189,6 +211,7 @@ nslookup www.cronkwaters.com 1.1.1.1
 ## 🧪 **DIAGNOSTIC COMMANDS**
 
 ### **Test if it's truly down everywhere:**
+
 ```bash
 # Test from command line:
 curl -I https://www.cronkwaters.com
@@ -198,6 +221,7 @@ curl --dns-servers 8.8.8.8 -I https://www.cronkwaters.com
 ```
 
 ### **Test Vercel deployment URL:**
+
 ```bash
 # Get deployment URL from Vercel dashboard, then:
 curl -I https://cronkwaters-[hash].vercel.app
@@ -207,7 +231,9 @@ curl -I https://cronkwaters-[hash].vercel.app
 ```
 
 ### **Check if it's just your network:**
+
 Use online tools:
+
 - https://downforeveryoneorjustme.com/www.cronkwaters.com
 - https://isitdownrightnow.com/www.cronkwaters.com
 
@@ -253,6 +279,7 @@ Use online tools:
 If site is business-critical and none of the above work:
 
 **Vercel Support (Priority):**
+
 - https://vercel.com/help
 - Use "urgent" or "site down" in subject
 - Include: "Site was working 10 minutes ago, now SSL_ERROR_SYSCALL"
@@ -260,4 +287,3 @@ If site is business-critical and none of the above work:
 ---
 
 **MOST LIKELY:** There's a deployment stuck or Vercel is having SSL provisioning issues. Check Vercel dashboard immediately and rollback if you see a failed deployment!
-

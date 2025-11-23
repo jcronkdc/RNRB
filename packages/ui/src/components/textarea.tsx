@@ -25,4 +25,3 @@ Textarea.displayName = 'Textarea';
 
 export { Textarea };
 export type { TextareaProps };
-

@@ -23,13 +23,16 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-from-supabase-dashboard
 ## 🚀 How to Set Them
 
 ### Local Development
+
 Create a `.env.local` file in the project root:
+
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://lzfzkrylexsarpxypktt.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
 ### Vercel Production
+
 ```bash
 # After linking your project:
 vercel env add NEXT_PUBLIC_SUPABASE_URL production
@@ -40,6 +43,7 @@ vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
 ```
 
 Or via Vercel Dashboard:
+
 1. Go to: https://vercel.com/your-team/your-project/settings/environment-variables
 2. Add both variables
 3. Select environments: Production, Preview, Development
@@ -48,6 +52,7 @@ Or via Vercel Dashboard:
 ## ⚠️ Important Notes
 
 ### URL Format
+
 - **MUST** include full `https://` protocol
 - **NO trailing slash**
 - ✅ Correct: `https://lzfzkrylexsarpxypktt.supabase.co`
@@ -56,6 +61,7 @@ Or via Vercel Dashboard:
 - ❌ Wrong: `https://lzfzkrylexsarpxypktt.supabase.co/` (trailing slash)
 
 ### Anon Key
+
 - This is a **public** key (safe to expose in frontend)
 - It's NOT the service role key (keep that secret!)
 - Starts with: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`
@@ -64,24 +70,28 @@ Or via Vercel Dashboard:
 
 **Root Cause:** The environment variable in Vercel had a typo (missing 'h' in "https"). The code had workarounds to compensate.
 
-**Solution:** 
+**Solution:**
+
 1. User corrected the environment variable in Vercel ✅
 2. Removed the workaround code (no longer needed) ✅
 3. Redeployed to production ✅
 
 **Removed URL workarounds from:**
+
 - `apps/web/lib/supabase.ts` (lines 15-19 simplified to line 15)
 - `apps/web/app/auth/callback/route.ts` (lines 10-13 simplified to lines 10-11)
 
 **Previous code** had workarounds for URL typos:
+
 ```typescript
 // OLD (removed - was compensating for env var typo)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.startsWith('http') 
-  ? process.env.NEXT_PUBLIC_SUPABASE_URL 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.startsWith('http')
+  ? process.env.NEXT_PUBLIC_SUPABASE_URL
   : `https://${process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('ttps://', '')}`;
 ```
 
 **New clean code:**
+
 ```typescript
 // NEW (current - env var now correct)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -113,6 +123,7 @@ After setting environment variables, test authentication:
 ## 🗄️ Database Verification
 
 Your Supabase database has:
+
 - ✅ 5 users total
 - ✅ 2 active users with recent sign-ins
 - ✅ Email identity provider working
@@ -129,4 +140,3 @@ Your Supabase database has:
 ---
 
 **Status:** ✅ Fixed and verified (Agent 56 - 2025-11-22)
-

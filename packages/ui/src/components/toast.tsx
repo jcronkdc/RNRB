@@ -26,7 +26,7 @@ const ToastContext = React.createContext<ToastContextValue | undefined>(undefine
 
 const ToastProvider: React.FC<{ children: ReactNode; duration?: number }> = ({
   children,
-  duration = 4000
+  duration = 4000,
 }) => {
   const [toasts, setToasts] = React.useState<ToastItem[]>([]);
 
@@ -101,7 +101,9 @@ const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitive.Root>, Toa
       {...props}
     >
       <div className="grid gap-1">
-        {title ? <ToastPrimitive.Title className="text-sm font-semibold">{title}</ToastPrimitive.Title> : null}
+        {title ? (
+          <ToastPrimitive.Title className="text-sm font-semibold">{title}</ToastPrimitive.Title>
+        ) : null}
         {description ? (
           <ToastPrimitive.Description className="text-sm text-brand-muted-foreground">
             {description}

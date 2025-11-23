@@ -17,10 +17,7 @@ export async function POST(request: NextRequest) {
     const { projectId, songs } = body;
 
     if (!projectId || !songs || !Array.isArray(songs)) {
-      return NextResponse.json(
-        { error: 'Project ID and songs array required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Project ID and songs array required' }, { status: 400 });
     }
 
     // Verify user has access to project
@@ -34,10 +31,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!project || project.members.length === 0) {
-      return NextResponse.json(
-        { error: 'Project not found or access denied' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Project not found or access denied' }, { status: 403 });
     }
 
     // Check for existing songs by title to avoid duplicates
@@ -50,12 +44,10 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const existingTitles = new Set(existingSongs.map(s => s.title.toLowerCase()));
+    const existingTitles = new Set(existingSongs.map((s) => s.title.toLowerCase()));
 
     // Filter out duplicates
-    const newSongs = songs.filter(
-      (song: any) => !existingTitles.has(song.title.toLowerCase())
-    );
+    const newSongs = songs.filter((song: any) => !existingTitles.has(song.title.toLowerCase()));
 
     if (newSongs.length === 0) {
       return NextResponse.json({
@@ -87,10 +79,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Spotify import error:', error);
-    return NextResponse.json(
-      { error: 'Failed to import songs' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to import songs' }, { status: 500 });
   }
 }
-

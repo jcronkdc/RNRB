@@ -19,13 +19,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": [
-    "**/*.js",
-    "**/*.jsx",
-    "**/*.mjs",
-    "next-env.d.ts",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["**/*.js", "**/*.jsx", "**/*.mjs", "next-env.d.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
-

@@ -6,10 +6,7 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/shows/[id]
  * Get a single show by ID or slug
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -18,10 +15,7 @@ export async function GET(
 
     const show = await db.show.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
       include: {
         venue: true,
@@ -82,10 +76,7 @@ export async function GET(
     return NextResponse.json({ show });
   } catch (error) {
     console.error('Show GET error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch show' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch show' }, { status: 500 });
   }
 }
 
@@ -93,10 +84,7 @@ export async function GET(
  * PATCH /api/shows/[id]
  * Update a show
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -108,10 +96,7 @@ export async function PATCH(
     // Check if show exists
     const existingShow = await db.show.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
     });
 
@@ -137,14 +122,17 @@ export async function PATCH(
     }
 
     const updateData: any = {};
-    
+
     // Update fields if provided
     if (body.name !== undefined) updateData.name = body.name;
     if (body.description !== undefined) updateData.description = body.description;
     if (body.date !== undefined) updateData.date = new Date(body.date);
-    if (body.doorsTime !== undefined) updateData.doorsTime = body.doorsTime ? new Date(body.doorsTime) : null;
-    if (body.soundcheckTime !== undefined) updateData.soundcheckTime = body.soundcheckTime ? new Date(body.soundcheckTime) : null;
-    if (body.setLength !== undefined) updateData.setLength = body.setLength ? parseInt(body.setLength) : null;
+    if (body.doorsTime !== undefined)
+      updateData.doorsTime = body.doorsTime ? new Date(body.doorsTime) : null;
+    if (body.soundcheckTime !== undefined)
+      updateData.soundcheckTime = body.soundcheckTime ? new Date(body.soundcheckTime) : null;
+    if (body.setLength !== undefined)
+      updateData.setLength = body.setLength ? parseInt(body.setLength) : null;
     if (body.status !== undefined) updateData.status = body.status;
     if (body.venueId !== undefined) updateData.venueId = body.venueId;
     if (body.projectId !== undefined) updateData.projectId = body.projectId;
@@ -156,7 +144,8 @@ export async function PATCH(
     if (body.notes !== undefined) updateData.notes = body.notes;
     if (body.posterImage !== undefined) updateData.posterImage = body.posterImage;
     if (body.public !== undefined) updateData.public = body.public;
-    if (body.attendance !== undefined) updateData.attendance = body.attendance ? parseInt(body.attendance) : null;
+    if (body.attendance !== undefined)
+      updateData.attendance = body.attendance ? parseInt(body.attendance) : null;
     if (body.grossRevenue !== undefined) updateData.grossRevenue = body.grossRevenue;
 
     const show = await db.show.update({
@@ -172,10 +161,7 @@ export async function PATCH(
     return NextResponse.json({ show });
   } catch (error) {
     console.error('Show PATCH error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update show' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update show' }, { status: 500 });
   }
 }
 
@@ -183,10 +169,7 @@ export async function PATCH(
  * DELETE /api/shows/[id]
  * Delete a show (cascades to setlist)
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -196,10 +179,7 @@ export async function DELETE(
     // Check if show exists
     const existingShow = await db.show.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
     });
 
@@ -232,10 +212,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Show DELETE error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete show' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete show' }, { status: 500 });
   }
 }
-

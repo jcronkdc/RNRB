@@ -13,9 +13,20 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--sf-font-sans);
-    font-feature-settings: 'liga' 1, 'calt' 1;
-    background-image: radial-gradient(circle at top left, hsl(var(--sf-color-accent-subtle) / 0.35), transparent 55%),
-      radial-gradient(circle at bottom right, hsl(var(--sf-color-brand-muted) / 0.3), transparent 60%);
+    font-feature-settings:
+      'liga' 1,
+      'calt' 1;
+    background-image:
+      radial-gradient(
+        circle at top left,
+        hsl(var(--sf-color-accent-subtle) / 0.35),
+        transparent 55%
+      ),
+      radial-gradient(
+        circle at bottom right,
+        hsl(var(--sf-color-brand-muted) / 0.3),
+        transparent 60%
+      );
   }
 
   h1,

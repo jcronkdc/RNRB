@@ -1,9 +1,9 @@
 /**
  * Real-time Presence Hook
- * 
+ *
  * Tracks who's actively working where across the platform
  * Uses Ably presence API for instant updates
- * 
+ *
  * Shows presence in:
  * - Projects (who's viewing)
  * - Songs (who's editing)
@@ -12,7 +12,8 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Realtime, Types } from 'ably';
+import { Realtime } from 'ably';
+import type * as Ably from 'ably';
 
 type PresenceMember = {
   clientId: string;
@@ -45,16 +46,16 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
 
   useEffect(() => {
     let mounted = true;
-    let channel: Types.RealtimeChannelCallbacks | null = null;
+    let channel: Ably.Types.RealtimeChannelCallbacks | null = null;
 
     const initAbly = async () => {
       try {
         // Get token from API
         const response = await fetch('/api/ably/token');
         if (!response.ok) throw new Error('Failed to get Ably token');
-        
+
         const tokenData = await response.json();
-        
+
         // Create Ably client
         const ablyClient = new Realtime({
           authUrl: '/api/ably/token',
@@ -70,7 +71,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
 
         // Get channel and enter presence
         channel = ablyClient.channels.get(channelName);
-        
+
         // Enter presence with user data
         await channel.presence.enter({
           userId: userData.userId,
@@ -89,7 +90,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
           if (!mounted) return;
 
           // Get current members
-          channel?.presence.get((err, members) => {
+          channel?.presence.get((err: Ably.Types.ErrorInfo | null, members?: Ably.Types.PresenceMessage[]) => {
             if (err) {
               console.error('Error getting presence members:', err);
               return;
@@ -97,7 +98,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
 
             if (!mounted) return;
 
-            const presenceMembers = (members || []).map((member: any) => ({
+            const presenceMembers = (members || []).map((member) => ({
               clientId: member.clientId,
               data: member.data,
             }));
@@ -107,7 +108,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
         });
 
         // Get initial members
-        channel.presence.get((err, members) => {
+        channel.presence.get((err: Ably.Types.ErrorInfo | null, members?: Ably.Types.PresenceMessage[]) => {
           if (err) {
             console.error('Error getting initial presence:', err);
             return;
@@ -115,14 +116,13 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
 
           if (!mounted) return;
 
-          const presenceMembers = (members || []).map((member: any) => ({
+          const presenceMembers = (members || []).map((member) => ({
             clientId: member.clientId,
             data: member.data,
           }));
 
           setMembers(presenceMembers);
         });
-
       } catch (err) {
         console.error('Ably presence error:', err);
         if (mounted) {
@@ -137,7 +137,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
     let idleTimer: NodeJS.Timeout;
     const resetIdleTimer = () => {
       clearTimeout(idleTimer);
-      
+
       // Update to active
       channel?.presence.update({
         ...userData,
@@ -145,13 +145,16 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
         lastActive: Date.now(),
       });
 
-      idleTimer = setTimeout(() => {
-        channel?.presence.update({
-          ...userData,
-          status: 'idle',
-          lastActive: Date.now(),
-        });
-      }, 2 * 60 * 1000); // 2 minutes
+      idleTimer = setTimeout(
+        () => {
+          channel?.presence.update({
+            ...userData,
+            status: 'idle',
+            lastActive: Date.now(),
+          });
+        },
+        2 * 60 * 1000
+      ); // 2 minutes
     };
 
     // Listen for user activity
@@ -166,7 +169,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
     return () => {
       mounted = false;
       clearTimeout(idleTimer);
-      
+
       if (typeof window !== 'undefined') {
         window.removeEventListener('mousemove', resetIdleTimer);
         window.removeEventListener('keydown', resetIdleTimer);
@@ -175,7 +178,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
 
       // Leave presence
       channel?.presence.leave();
-      
+
       // Close connection
       ably?.close();
     };
@@ -198,8 +201,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
     isConnected,
     error,
     totalMembers: members.length,
-    activeMembers: members.filter(m => m.data.status === 'active').length,
-    idleMembers: members.filter(m => m.data.status === 'idle').length,
+    activeMembers: members.filter((m) => m.data.status === 'active').length,
+    idleMembers: members.filter((m) => m.data.status === 'idle').length,
   };
 }
-

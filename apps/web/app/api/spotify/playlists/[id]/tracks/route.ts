@@ -5,10 +5,7 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/spotify/playlists/[id]/tracks
  * Fetch tracks from a Spotify playlist
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -19,21 +16,15 @@ export async function GET(
     const accessToken = searchParams.get('token');
 
     if (!accessToken) {
-      return NextResponse.json(
-        { error: 'Access token required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Access token required' }, { status: 400 });
     }
 
     // Fetch playlist tracks
-    const tracksResponse = await fetch(
-      `https://api.spotify.com/v1/playlists/${params.id}/tracks`,
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const tracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${params.id}/tracks`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
     if (!tracksResponse.ok) {
       return NextResponse.json(
@@ -62,10 +53,6 @@ export async function GET(
     return NextResponse.json({ songs });
   } catch (error) {
     console.error('Spotify tracks error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch tracks' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch tracks' }, { status: 500 });
   }
 }
-

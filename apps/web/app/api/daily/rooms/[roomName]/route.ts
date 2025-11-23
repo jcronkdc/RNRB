@@ -21,7 +21,7 @@ export async function GET(
       await requireFeatureAccess('videoCalls');
     } catch (error: any) {
       return NextResponse.json(
-        { 
+        {
           error: error.message || 'Upgrade to Studio plan to access video calls',
           requiresUpgrade: true,
           currentTier: error.tier || 'free',
@@ -32,10 +32,7 @@ export async function GET(
     }
 
     if (!DAILY_API_KEY) {
-      return NextResponse.json(
-        { error: 'Daily API key not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Daily API key not configured' }, { status: 500 });
     }
 
     const { roomName } = await params;
@@ -44,7 +41,7 @@ export async function GET(
     const response = await fetch(`${DAILY_API_URL}/rooms/${roomName}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${DAILY_API_KEY}`,
+        Authorization: `Bearer ${DAILY_API_KEY}`,
       },
     });
 
@@ -57,13 +54,13 @@ export async function GET(
     }
 
     const room = await response.json();
-    
+
     // Generate a meeting token for the user
     const tokenResponse = await fetch(`${DAILY_API_URL}/meeting-tokens`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${DAILY_API_KEY}`,
+        Authorization: `Bearer ${DAILY_API_KEY}`,
       },
       body: JSON.stringify({
         properties: {
@@ -93,10 +90,7 @@ export async function GET(
     });
   } catch (error) {
     console.error('Error fetching Daily room:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -112,10 +106,7 @@ export async function DELETE(
     }
 
     if (!DAILY_API_KEY) {
-      return NextResponse.json(
-        { error: 'Daily API key not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Daily API key not configured' }, { status: 500 });
     }
 
     const { roomName } = await params;
@@ -124,7 +115,7 @@ export async function DELETE(
     const response = await fetch(`${DAILY_API_URL}/rooms/${roomName}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${DAILY_API_KEY}`,
+        Authorization: `Bearer ${DAILY_API_KEY}`,
       },
     });
 
@@ -139,9 +130,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting Daily room:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

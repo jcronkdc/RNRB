@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { uploadAudioFile, deleteAudioFile, type AudioFile, type UploadProgress } from '@/lib/storage';
+import {
+  uploadAudioFile,
+  deleteAudioFile,
+  type AudioFile,
+  type UploadProgress,
+} from '@/lib/storage';
 
 export function useAudioUpload() {
   const [uploading, setUploading] = useState(false);
@@ -17,15 +22,9 @@ export function useAudioUpload() {
     setProgress(null);
 
     try {
-      const result = await uploadAudioFile(
-        file,
-        projectSlug,
-        songId,
-        type,
-        (uploadProgress) => {
-          setProgress(uploadProgress);
-        }
-      );
+      const result = await uploadAudioFile(file, projectSlug, songId, type, (uploadProgress) => {
+        setProgress(uploadProgress);
+      });
 
       if (!result) {
         throw new Error('Upload failed - no result returned');
@@ -67,4 +66,3 @@ export function useAudioUpload() {
     error,
   };
 }
-

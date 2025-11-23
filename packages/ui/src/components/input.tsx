@@ -10,7 +10,18 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, containerClassName, leadingIcon: LeadingIcon, trailingIcon: TrailingIcon, type = 'text', disabled, ...props }, ref) => {
+  (
+    {
+      className,
+      containerClassName,
+      leadingIcon: LeadingIcon,
+      trailingIcon: TrailingIcon,
+      type = 'text',
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
     const innerRef = React.useRef<HTMLInputElement>(null);
     React.useImperativeHandle(ref, () => innerRef.current as HTMLInputElement);
 
@@ -23,24 +34,34 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         aria-disabled={disabled ? 'true' : undefined}
       >
-        {LeadingIcon && React.createElement(LeadingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>, {
-          className: "h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary",
-          'aria-hidden': "true"
-        })}
+        {LeadingIcon &&
+          React.createElement(
+            LeadingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>,
+            {
+              className:
+                'h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary',
+              'aria-hidden': 'true',
+            }
+          )}
         <input
           ref={innerRef}
           type={type}
           disabled={disabled}
           className={cn(
             'flex h-6 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/80',
-          className
-        )}
-        {...props}
-      />
-        {TrailingIcon && React.createElement(TrailingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>, {
-          className: "h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary",
-          'aria-hidden': "true"
-        })}
+            className
+          )}
+          {...props}
+        />
+        {TrailingIcon &&
+          React.createElement(
+            TrailingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>,
+            {
+              className:
+                'h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary',
+              'aria-hidden': 'true',
+            }
+          )}
       </div>
     );
   }

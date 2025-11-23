@@ -30,7 +30,7 @@ export async function getOrgSession(target?: {
 
   const memberships = await prisma.membership.findMany({
     where: { userId: session.user.id },
-    include: { org: true }
+    include: { org: true },
   });
 
   const activeMembership = resolveActiveMembership(session, memberships, target);
@@ -38,7 +38,7 @@ export async function getOrgSession(target?: {
   return {
     session,
     memberships,
-    activeMembership
+    activeMembership,
   };
 }
 
@@ -106,7 +106,7 @@ export async function setActiveOrgCookie(orgId: string | null): Promise<void> {
     secure: true,
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 90
+    maxAge: 60 * 60 * 24 * 90,
   });
 }
 
@@ -127,10 +127,10 @@ export function trackUserSession(userId: string, sessionId: string): void {
   if (!activeSessions.has(userId)) {
     activeSessions.set(userId, new Set());
   }
-  
+
   const userSessions = activeSessions.get(userId)!;
   userSessions.add(sessionId);
-  
+
   // Enforce concurrent session limit
   if (userSessions.size > MAX_CONCURRENT_SESSIONS) {
     const sessionsArray = Array.from(userSessions);
@@ -146,7 +146,7 @@ export function trackUserSession(userId: string, sessionId: string): void {
  */
 export async function invalidateUserSessions(userId: string): Promise<void> {
   activeSessions.delete(userId);
-  
+
   // In production: Also invalidate sessions in database/Redis
   // await redis.del(`sessions:${userId}:*`);
 }
@@ -186,23 +186,20 @@ export function validateSessionFingerprint(
   currentIp: string
 ): boolean {
   const currentFingerprint = generateSessionFingerprint(currentUserAgent, currentIp);
-  return crypto.timingSafeEqual(
-    Buffer.from(storedFingerprint),
-    Buffer.from(currentFingerprint)
-  );
+  return crypto.timingSafeEqual(Buffer.from(storedFingerprint), Buffer.from(currentFingerprint));
 }
 
 // Cleanup expired sessions periodically (server-side only)
 if (typeof window === 'undefined') {
-  setInterval(() => {
-    // Cleanup inactive sessions
-    for (const [userId, sessions] of activeSessions.entries()) {
-      if (sessions.size === 0) {
-        activeSessions.delete(userId);
+  setInterval(
+    () => {
+      // Cleanup inactive sessions
+      for (const [userId, sessions] of activeSessions.entries()) {
+        if (sessions.size === 0) {
+          activeSessions.delete(userId);
+        }
       }
-    }
-  }, 5 * 60 * 1000); // Every 5 minutes
+    },
+    5 * 60 * 1000
+  ); // Every 5 minutes
 }
-
-
-

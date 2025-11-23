@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { 
+import {
   Music2,
   Sparkles,
   Folder,
@@ -19,13 +19,13 @@ import {
   Settings,
   FileText,
   AlertCircle,
-  WifiOff
+  WifiOff,
 } from 'lucide-react';
 import Link from 'next/link';
 
-type EmptyStateType = 
+type EmptyStateType =
   | 'projects'
-  | 'tracks' 
+  | 'tracks'
   | 'library'
   | 'search'
   | 'collaborations'
@@ -43,72 +43,75 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-const stateConfigs: Record<EmptyStateType, {
-  icon: React.ElementType;
-  defaultTitle: string;
-  defaultDescription: string;
-  defaultActionLabel: string;
-  defaultActionHref?: string;
-}> = {
+const stateConfigs: Record<
+  EmptyStateType,
+  {
+    icon: React.ElementType;
+    defaultTitle: string;
+    defaultDescription: string;
+    defaultActionLabel: string;
+    defaultActionHref?: string;
+  }
+> = {
   projects: {
     icon: FolderOpen,
-    defaultTitle: "No projects yet",
-    defaultDescription: "Create your first project to start making music",
-    defaultActionLabel: "Create Project",
-    defaultActionHref: "/projects/new"
+    defaultTitle: 'No projects yet',
+    defaultDescription: 'Create your first project to start making music',
+    defaultActionLabel: 'Create Project',
+    defaultActionHref: '/projects/new',
   },
   tracks: {
     icon: Music2,
-    defaultTitle: "No tracks in this project",
-    defaultDescription: "Generate your first AI track or upload existing audio",
-    defaultActionLabel: "Create Track",
-    defaultActionHref: "/create"
+    defaultTitle: 'No tracks in this project',
+    defaultDescription: 'Generate your first AI track or upload existing audio',
+    defaultActionLabel: 'Create Track',
+    defaultActionHref: '/create',
   },
   library: {
     icon: Library,
-    defaultTitle: "Your library is empty",
-    defaultDescription: "Assets from your projects will appear here",
-    defaultActionLabel: "Browse Projects",
-    defaultActionHref: "/projects"
+    defaultTitle: 'Your library is empty',
+    defaultDescription: 'Assets from your projects will appear here',
+    defaultActionLabel: 'Browse Projects',
+    defaultActionHref: '/projects',
   },
   search: {
     icon: Search,
-    defaultTitle: "No results found",
-    defaultDescription: "Try adjusting your search terms or filters",
-    defaultActionLabel: "Clear Search"
+    defaultTitle: 'No results found',
+    defaultDescription: 'Try adjusting your search terms or filters',
+    defaultActionLabel: 'Clear Search',
   },
   collaborations: {
     icon: Users,
-    defaultTitle: "No active collaborations",
-    defaultDescription: "Invite others to collaborate on your projects",
-    defaultActionLabel: "Invite Collaborators"
+    defaultTitle: 'No active collaborations',
+    defaultDescription: 'Invite others to collaborate on your projects',
+    defaultActionLabel: 'Invite Collaborators',
   },
   messages: {
     icon: MessageSquare,
-    defaultTitle: "No messages yet",
-    defaultDescription: "Messages from collaborators will appear here",
-    defaultActionLabel: "Start a Project",
-    defaultActionHref: "/projects"
+    defaultTitle: 'No messages yet',
+    defaultDescription: 'Messages from collaborators will appear here',
+    defaultActionLabel: 'Start a Project',
+    defaultActionHref: '/projects',
   },
   analytics: {
     icon: BarChart3,
-    defaultTitle: "No data available",
-    defaultDescription: "Analytics will appear once you have active projects",
-    defaultActionLabel: "Create Project",
-    defaultActionHref: "/projects/new"
+    defaultTitle: 'No data available',
+    defaultDescription: 'Analytics will appear once you have active projects',
+    defaultActionLabel: 'Create Project',
+    defaultActionHref: '/projects/new',
   },
   error: {
     icon: AlertCircle,
-    defaultTitle: "Something went wrong",
-    defaultDescription: "We encountered an error loading this content",
-    defaultActionLabel: "Try Again"
+    defaultTitle: 'Something went wrong',
+    defaultDescription: 'We encountered an error loading this content',
+    defaultActionLabel: 'Try Again',
   },
   offline: {
     icon: WifiOff,
     defaultTitle: "You're offline",
-    defaultDescription: "Check your internet connection and try again",
-    defaultActionLabel: "Retry"
-  }
+    defaultDescription: 'Check your internet connection and try again',
+    defaultActionLabel: 'Retry',
+  },
 };
 
 export function EmptyState({
@@ -117,82 +120,64 @@ export function EmptyState({
   description,
   actionLabel,
   actionHref,
-  onAction
+  onAction,
 }: EmptyStateProps) {
   const config = stateConfigs[type];
   const Icon = config.icon;
-  
+
   const finalTitle = title || config.defaultTitle;
   const finalDescription = description || config.defaultDescription;
   const finalActionLabel = actionLabel || config.defaultActionLabel;
   const finalActionHref = actionHref || config.defaultActionHref;
-  
+
   const handleAction = () => {
     if (onAction) {
       onAction();
     }
   };
-  
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="
-        flex flex-col items-center justify-center
-        py-12 px-6 text-center
-        min-h-[400px]
-      "
+      className="flex min-h-[400px] flex-col items-center justify-center px-6 py-12 text-center"
     >
       {/* Icon with subtle animation */}
       <motion.div
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
-        transition={{ 
+        transition={{
           duration: 0.5,
           repeat: Infinity,
           repeatType: 'reverse',
-          repeatDelay: 3
+          repeatDelay: 3,
         }}
-        className="
-          w-20 h-20 rounded-full
-          bg-surface flex items-center justify-center
-          mb-6
-        "
+        className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-surface"
       >
-        <Icon className="w-10 h-10 text-foreground-muted" />
+        <Icon className="h-10 w-10 text-foreground-muted" />
       </motion.div>
-      
+
       {/* Text content */}
-      <h3 className="text-xl font-semibold mb-2">
-        {finalTitle}
-      </h3>
-      <p className="text-foreground-muted max-w-sm mb-6">
-        {finalDescription}
-      </p>
-      
+      <h3 className="mb-2 text-xl font-semibold">{finalTitle}</h3>
+      <p className="mb-6 max-w-sm text-foreground-muted">{finalDescription}</p>
+
       {/* Action button */}
       {finalActionHref ? (
-        <Link
-          href={finalActionHref}
-          className="btn-primary"
-        >
-          {type === 'projects' && <Plus className="w-4 h-4 mr-2" />}
-          {type === 'tracks' && <Sparkles className="w-4 h-4 mr-2" />}
+        <Link href={finalActionHref} className="btn-primary">
+          {type === 'projects' && <Plus className="mr-2 h-4 w-4" />}
+          {type === 'tracks' && <Sparkles className="mr-2 h-4 w-4" />}
           {finalActionLabel}
         </Link>
       ) : (
-        <button
-          onClick={handleAction}
-          className="btn-primary"
-        >
+        <button onClick={handleAction} className="btn-primary">
           {finalActionLabel}
         </button>
       )}
-      
+
       {/* Additional suggestions for specific types */}
       {type === 'projects' && (
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl">
+        <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
           <QuickAction
             icon={Mic2}
             title="Record Audio"
@@ -213,9 +198,9 @@ export function EmptyState({
           />
         </div>
       )}
-      
+
       {type === 'tracks' && (
-        <div className="mt-8 space-y-4 text-left max-w-md">
+        <div className="mt-8 max-w-md space-y-4 text-left">
           <h4 className="text-sm font-medium text-foreground-muted">
             Example prompts to get started:
           </h4>
@@ -231,12 +216,12 @@ export function EmptyState({
 }
 
 // Helper Components
-function QuickAction({ 
-  icon: Icon, 
-  title, 
-  description, 
-  href 
-}: { 
+function QuickAction({
+  icon: Icon,
+  title,
+  description,
+  href,
+}: {
   icon: React.ElementType;
   title: string;
   description: string;
@@ -245,15 +230,10 @@ function QuickAction({
   return (
     <Link
       href={href}
-      className="
-        p-6 rounded-lg border border-border
-        hover:border-border-strong hover:bg-surface
-        transition-all duration-200
-        text-center group
-      "
+      className="group rounded-lg border border-border p-6 text-center transition-all duration-200 hover:border-border-strong hover:bg-surface"
     >
-      <Icon className="w-8 h-8 mx-auto mb-3 text-foreground-muted group-hover:text-foreground" />
-      <h5 className="font-medium mb-1">{title}</h5>
+      <Icon className="mx-auto mb-3 h-8 w-8 text-foreground-muted group-hover:text-foreground" />
+      <h5 className="mb-1 font-medium">{title}</h5>
       <p className="text-sm text-foreground-muted">{description}</p>
     </Link>
   );
@@ -261,24 +241,17 @@ function QuickAction({
 
 function PromptExample({ text }: { text: string }) {
   return (
-    <div className="
-      p-3 rounded-md bg-surface border border-border
-      text-sm hover:border-border-strong
-      transition-all duration-200 cursor-pointer
-    ">
+    <div className="cursor-pointer rounded-md border border-border bg-surface p-3 text-sm transition-all duration-200 hover:border-border-strong">
       {text}
     </div>
   );
 }
 
 // Loading States
-export function LoadingState({ message = "Loading..." }: { message?: string }) {
+export function LoadingState({ message = 'Loading...' }: { message?: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-12">
-      <div className="
-        w-12 h-12 rounded-full border-2 border-surface
-        border-t-brand-primary animate-spin mb-4
-      " />
+      <div className="mb-4 h-12 w-12 animate-spin rounded-full border-2 border-surface border-t-brand-primary" />
       <p className="text-foreground-muted">{message}</p>
     </div>
   );
@@ -287,36 +260,33 @@ export function LoadingState({ message = "Loading..." }: { message?: string }) {
 // Skeleton Loading for Track Cards
 export function TrackCardSkeleton() {
   return (
-    <div className="
-      bg-surface rounded-lg border border-border
-      animate-pulse
-    ">
+    <div className="animate-pulse rounded-lg border border-border bg-surface">
       {/* Album art skeleton */}
-      <div className="aspect-square bg-surface-hover rounded-t-lg" />
-      
+      <div className="aspect-square rounded-t-lg bg-surface-hover" />
+
       {/* Info skeleton */}
-      <div className="p-4 space-y-3">
+      <div className="space-y-3 p-4">
         <div className="space-y-2">
-          <div className="h-4 bg-surface-hover rounded w-3/4" />
-          <div className="h-3 bg-surface-hover rounded w-1/2" />
+          <div className="h-4 w-3/4 rounded bg-surface-hover" />
+          <div className="h-3 w-1/2 rounded bg-surface-hover" />
         </div>
-        
+
         {/* Waveform skeleton */}
-        <div className="h-8 flex items-end gap-0.5">
+        <div className="flex h-8 items-end gap-0.5">
           {Array.from({ length: 20 }).map((_, i) => (
             <div
               key={i}
-              className="flex-1 bg-surface-hover rounded-t"
+              className="flex-1 rounded-t bg-surface-hover"
               style={{ height: `${Math.random() * 100}%` }}
             />
           ))}
         </div>
-        
+
         <div className="flex justify-between">
-          <div className="h-3 bg-surface-hover rounded w-20" />
+          <div className="h-3 w-20 rounded bg-surface-hover" />
           <div className="flex gap-2">
-            <div className="w-8 h-8 bg-surface-hover rounded" />
-            <div className="w-8 h-8 bg-surface-hover rounded" />
+            <div className="h-8 w-8 rounded bg-surface-hover" />
+            <div className="h-8 w-8 rounded bg-surface-hover" />
           </div>
         </div>
       </div>

@@ -8,14 +8,14 @@ This document details all performance optimizations implemented for wicked fast 
 
 ## 🎯 Performance Targets
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| **First Contentful Paint (FCP)** | < 1.0s | ~0.9s |
-| **Largest Contentful Paint (LCP)** | < 1.5s | ~1.2s |
-| **Time to Interactive (TTI)** | < 2.0s | ~1.8s |
-| **Total Blocking Time (TBT)** | < 200ms | ~150ms |
-| **Cumulative Layout Shift (CLS)** | < 0.1 | ~0.01 |
-| **Speed Index** | < 2.0s | ~1.5s |
+| Metric                             | Target  | Current |
+| ---------------------------------- | ------- | ------- |
+| **First Contentful Paint (FCP)**   | < 1.0s  | ~0.9s   |
+| **Largest Contentful Paint (LCP)** | < 1.5s  | ~1.2s   |
+| **Time to Interactive (TTI)**      | < 2.0s  | ~1.8s   |
+| **Total Blocking Time (TBT)**      | < 200ms | ~150ms  |
+| **Cumulative Layout Shift (CLS)**  | < 0.1   | ~0.01   |
+| **Speed Index**                    | < 2.0s  | ~1.5s   |
 
 **Lighthouse Score Goals:** 95+ on all metrics
 
@@ -26,16 +26,18 @@ This document details all performance optimizations implemented for wicked fast 
 ### 1. Code Splitting & Lazy Loading
 
 **Implementation:**
+
 - Footer component lazy loaded with dynamic import
 - AxeInitializer only loads in development
 - Suspense boundaries for progressive rendering
 
 ```typescript
-const Footer = dynamic(() => import("../components/Footer"), { ssr: true });
-const AxeInitializer = dynamic(() => import("../components/AxeInitializer"), { ssr: false });
+const Footer = dynamic(() => import('../components/Footer'), { ssr: true });
+const AxeInitializer = dynamic(() => import('../components/AxeInitializer'), { ssr: false });
 ```
 
 **Impact:**
+
 - Initial bundle: ~180KB (down from 320KB)
 - Footer: +15KB after scroll
 - Dev tools: 0KB in production
@@ -45,12 +47,14 @@ const AxeInitializer = dynamic(() => import("../components/AxeInitializer"), { s
 ### 2. Webpack Bundle Splitting
 
 **Strategy:**
+
 - Framework chunk (React, Next.js): Cached separately
 - Vendor chunk (3rd party libraries): Changes rarely
 - Library chunk (UI libraries): Framer Motion, Lucide
 - Common chunk: Shared code across pages
 
 **Result:**
+
 ```
 framework.js  - 150KB (rarely changes)
 vendor.js     - 80KB  (rarely changes)
@@ -63,6 +67,7 @@ main.js       - 95KB  (app code)
 ### 3. Tree Shaking
 
 **Configured packages:**
+
 - `lucide-react` - Only imports used icons (~500KB savings)
 - `framer-motion` - Optimized imports
 - Unused exports eliminated automatically
@@ -91,6 +96,7 @@ images: {
 5. **Lazy load** below-fold images (default)
 
 **Size Comparison:**
+
 - JPEG: 150KB
 - WebP: 45KB (70% smaller)
 - AVIF: 22KB (85% smaller)
@@ -138,29 +144,36 @@ Deferred (Low Priority):
 ### HTTP Caching Headers
 
 **Static Assets (CSS, JS, Fonts, Images):**
+
 ```
 Cache-Control: public, max-age=31536000, immutable
 ```
+
 → Cached for 1 year, never revalidated
 
 **HTML Pages:**
+
 ```
 Cache-Control: public, s-maxage=60, stale-while-revalidate=86400
 ```
+
 → CDN cache 60s, serve stale for 24h while revalidating
 
 ### Service Worker Caching
 
 **Cache-First Strategy:**
+
 - Images: Cached indefinitely
 - CSS/JS: Cached, max 50 items
 - Fonts: Cached permanently
 
 **Network-First Strategy:**
+
 - HTML pages: Fresh content, cache fallback
 - API calls: Always network
 
 **Cache Sizes:**
+
 - Static cache: Unlimited
 - Dynamic cache: 50 items max
 - Image cache: 100 items max
@@ -195,7 +208,10 @@ Cache-Control: public, s-maxage=60, stale-while-revalidate=86400
 ### Viewport Configuration
 
 ```html
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
+/>
 ```
 
 - Allows zoom (accessibility)
@@ -222,16 +238,19 @@ Cache-Control: public, s-maxage=60, stale-while-revalidate=86400
 ### Memoization
 
 **useCallback:**
+
 - `isActive` function in NavBar
 - Event handlers
 - Prevents re-renders
 
 **useMemo:**
+
 - Contrast calculation in Background
 - Expensive computations
 - Derived state
 
 **React.memo:**
+
 - Pure components
 - Prevent unnecessary renders
 
@@ -244,6 +263,7 @@ Cache-Control: public, s-maxage=60, stale-while-revalidate=86400
 ```
 
 Benefits:
+
 - Progressive rendering
 - Streaming SSR
 - Better perceived performance
@@ -257,7 +277,7 @@ Benefits:
 
 ```html
 <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 ```
 
 **Savings:** 100-300ms on font loading
@@ -283,6 +303,7 @@ Benefits:
 ### Web Vitals Tracking
 
 **Monitored Metrics:**
+
 - FCP (First Contentful Paint)
 - LCP (Largest Contentful Paint)
 - FID (First Input Delay)
@@ -291,11 +312,13 @@ Benefits:
 - INP (Interaction to Next Paint)
 
 **Implementation:**
+
 ```tsx
 <WebVitals />
 ```
 
 **Reports to:**
+
 - Development: Console logs
 - Production: `/api/vitals` endpoint
 - Vercel Analytics (automatic)
@@ -303,6 +326,7 @@ Benefits:
 ### Performance API
 
 Tracked in development:
+
 - DNS Lookup time
 - TCP Connection time
 - TLS Setup time
@@ -321,6 +345,7 @@ NODE_ENV=production pnpm build
 ```
 
 **Optimizations:**
+
 - Minification (Terser)
 - Tree shaking
 - Dead code elimination
@@ -348,6 +373,7 @@ First Load JS shared by all   180 kB
 ## 🎯 Optimization Checklist
 
 ### Images
+
 - [x] Use Next.js Image component
 - [x] Specify width/height
 - [x] Use priority for above-fold
@@ -356,6 +382,7 @@ First Load JS shared by all   180 kB
 - [x] Optimize file sizes
 
 ### JavaScript
+
 - [x] Code splitting
 - [x] Lazy loading
 - [x] Tree shaking
@@ -364,6 +391,7 @@ First Load JS shared by all   180 kB
 - [x] Remove source maps
 
 ### CSS
+
 - [x] Critical CSS inlined
 - [x] Purge unused styles
 - [x] Minimize specificity
@@ -371,6 +399,7 @@ First Load JS shared by all   180 kB
 - [x] Avoid expensive properties
 
 ### Fonts
+
 - [x] display: swap
 - [x] Preconnect to font CDN
 - [x] Subset fonts
@@ -378,6 +407,7 @@ First Load JS shared by all   180 kB
 - [x] Use variable fonts
 
 ### Caching
+
 - [x] Aggressive static asset caching
 - [x] stale-while-revalidate for HTML
 - [x] Service Worker caching
@@ -385,6 +415,7 @@ First Load JS shared by all   180 kB
 - [x] Browser caching
 
 ### Loading
+
 - [x] Resource hints (dns-prefetch, preconnect)
 - [x] Preload critical assets
 - [x] Defer non-critical scripts
@@ -392,6 +423,7 @@ First Load JS shared by all   180 kB
 - [x] Suspense boundaries
 
 ### Monitoring
+
 - [x] Web Vitals tracking
 - [x] Performance API logging
 - [x] Error tracking
@@ -402,6 +434,7 @@ First Load JS shared by all   180 kB
 ## 🚀 Deployment Checklist
 
 ### Pre-Deploy
+
 - [ ] Run Lighthouse audit (95+ score)
 - [ ] Test on 3G/4G connection
 - [ ] Test on mobile devices
@@ -411,6 +444,7 @@ First Load JS shared by all   180 kB
 - [ ] Check Web Vitals
 
 ### Post-Deploy
+
 - [ ] Monitor error rates
 - [ ] Check performance metrics
 - [ ] Verify caching headers
@@ -421,12 +455,12 @@ First Load JS shared by all   180 kB
 
 ## 📈 Performance Budget
 
-| Resource Type | Budget | Current | Status |
-|---------------|--------|---------|--------|
-| Total JS | < 200KB | 180KB | ✅ PASS |
-| Total CSS | < 50KB | 42KB | ✅ PASS |
-| Total Images | < 500KB | 280KB | ✅ PASS |
-| Total Fonts | < 100KB | 65KB | ✅ PASS |
+| Resource Type  | Budget      | Current   | Status  |
+| -------------- | ----------- | --------- | ------- |
+| Total JS       | < 200KB     | 180KB     | ✅ PASS |
+| Total CSS      | < 50KB      | 42KB      | ✅ PASS |
+| Total Images   | < 500KB     | 280KB     | ✅ PASS |
+| Total Fonts    | < 100KB     | 65KB      | ✅ PASS |
 | **Total Size** | **< 850KB** | **567KB** | ✅ PASS |
 
 ---
@@ -490,7 +524,3 @@ NODE_OPTIONS='--inspect' pnpm dev
 **Last Updated:** November 2025  
 **Version:** 1.0.0  
 **Maintained by:** CronkWaters Engineering Team
-
-
-
-

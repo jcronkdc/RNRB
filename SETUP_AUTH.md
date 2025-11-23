@@ -14,7 +14,7 @@ Create `/apps/web/.env.local` with:
 # Database - REQUIRED
 DATABASE_URL="postgresql://username:password@host:5432/database?schema=public"
 
-# NextAuth - REQUIRED  
+# NextAuth - REQUIRED
 NEXTAUTH_SECRET="generate_with: openssl rand -base64 32"
 NEXTAUTH_URL="http://localhost:3000"
 
@@ -42,6 +42,7 @@ Add the same variables in:
 **Vercel Dashboard → Project Settings → Environment Variables → Production**
 
 **IMPORTANT:** Update `NEXTAUTH_URL` to your production URL:
+
 ```bash
 NEXTAUTH_URL="https://your-domain.vercel.app"
 ```
@@ -49,19 +50,22 @@ NEXTAUTH_URL="https://your-domain.vercel.app"
 ## Database Setup
 
 1. **Apply Migrations:**
+
 ```bash
 cd packages/db
 pnpm prisma migrate deploy
 ```
 
 2. **Verify Tables Created:**
+
 ```bash
 pnpm prisma studio
 ```
 
 Check for these tables:
+
 - ✅ Account
-- ✅ Session  
+- ✅ Session
 - ✅ VerificationToken
 - ✅ User (with emailVerified field)
 
@@ -86,6 +90,7 @@ pnpm dev
 Visit: `http://localhost:3000/auth`
 
 Test flows:
+
 - ✅ Click "Continue with Google"
 - ✅ Enter email for magic link
 - ✅ Check error messages if keys missing
@@ -93,15 +98,19 @@ Test flows:
 ## Common Issues
 
 ### "No provider for email"
+
 → Add `EMAIL_SERVER_URL` and `EMAIL_FROM`
 
-### "OAuth error" 
+### "OAuth error"
+
 → Check Google Console redirect URIs match exactly
 
 ### "Database error"
+
 → Run `prisma migrate deploy` in packages/db
 
 ### "NEXTAUTH_SECRET not found"
+
 → Generate with: `openssl rand -base64 32`
 
 ## Production Checklist
@@ -112,7 +121,7 @@ Test flows:
 - [ ] Google OAuth redirect URIs include production URL
 - [ ] Prisma migrations applied to production database
 - [ ] Test sign-in flow on production
-- [ ] Test sign-out flow  
+- [ ] Test sign-out flow
 - [ ] Verify session persistence
 - [ ] Check Vercel function logs for errors
 
@@ -131,5 +140,3 @@ Test flows:
 4. Test locally: `cd apps/web && pnpm dev`
 5. Deploy to Vercel with production env vars
 6. Test auth on production
-
-

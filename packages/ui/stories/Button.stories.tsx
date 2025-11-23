@@ -5,11 +5,11 @@ const meta: Meta<typeof Button> = {
   title: 'Primitives/Button',
   component: Button,
   parameters: {
-    layout: 'centered'
+    layout: 'centered',
   },
   args: {
-    children: 'Click me'
-  }
+    children: 'Click me',
+  },
 };
 
 export default meta;
@@ -18,18 +18,18 @@ type Story = StoryObj<typeof Button>;
 
 export const Primary: Story = {
   args: {
-    variant: 'default'
-  }
+    variant: 'default',
+  },
 };
 
 export const Secondary: Story = {
   args: {
-    variant: 'subtle'
-  }
+    variant: 'subtle',
+  },
 };
 
 export const Ghost: Story = {
   args: {
-    variant: 'ghost'
-  }
+    variant: 'ghost',
+  },
 };

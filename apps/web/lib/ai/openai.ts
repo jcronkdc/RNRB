@@ -1,6 +1,6 @@
 /**
  * OpenAI Integration for Rock N' Roll Basement
- * 
+ *
  * ETHICAL AI PRINCIPLES:
  * 1. AI assists creativity, NEVER replaces it
  * 2. All AI suggestions clearly labeled
@@ -14,7 +14,7 @@ import OpenAI from 'openai';
 // Initialize OpenAI client (runtime only)
 export function getOpenAIClient() {
   if (typeof window !== 'undefined') return null; // Client-side not allowed
-  
+
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     console.warn('OPENAI_API_KEY not configured');
@@ -65,7 +65,7 @@ Keep responses concise (2-3 sentences max). Focus on actionable suggestions.`;
       model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: userMessage }
+        { role: 'user', content: userMessage },
       ],
       max_tokens: 150,
       temperature: 0.7,
@@ -89,7 +89,7 @@ export async function transcribeSession(audioUrl: string) {
   try {
     // Use Whisper API for transcription
     const response = await client.audio.transcriptions.create({
-      file: await fetch(audioUrl).then(r => r.blob()) as any,
+      file: (await fetch(audioUrl).then((r) => r.blob())) as any,
       model: 'whisper-1',
       language: 'en',
     });
@@ -124,7 +124,7 @@ Be concise. Only extract clear decisions and actionable items.`;
       model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: transcription }
+        { role: 'user', content: transcription },
       ],
       max_tokens: 500,
       temperature: 0.3,
@@ -141,13 +141,15 @@ Be concise. Only extract clear decisions and actionable items.`;
  * AI Tour Router - Tokyo Subway Ant Model
  * Optimizes tour routing for shortest travel distances
  */
-export async function optimizeTourRoute(venues: Array<{
-  name: string;
-  city: string;
-  state: string;
-  latitude?: number;
-  longitude?: number;
-}>) {
+export async function optimizeTourRoute(
+  venues: Array<{
+    name: string;
+    city: string;
+    state: string;
+    latitude?: number;
+    longitude?: number;
+  }>
+) {
   const client = getOpenAIClient();
   if (!client) return null;
 
@@ -173,7 +175,7 @@ Include total miles and recommended rest days.`;
       model: 'gpt-4o', // Using gpt-4o for complex routing logic (better than mini)
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: JSON.stringify(venues, null, 2) }
+        { role: 'user', content: JSON.stringify(venues, null, 2) },
       ],
       max_tokens: 800,
       temperature: 0.3,
@@ -217,7 +219,7 @@ Keep suggestions practical and educational.`;
       model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: JSON.stringify(audioAnalysis, null, 2) }
+        { role: 'user', content: JSON.stringify(audioAnalysis, null, 2) },
       ],
       max_tokens: 300,
       temperature: 0.5,
@@ -234,13 +236,15 @@ Keep suggestions practical and educational.`;
  * AI Contribution Tracker
  * Suggests fair royalty splits based on logged contributions
  */
-export async function suggestRoyaltySplit(contributions: Array<{
-  collaborator: string;
-  writingSessions: number;
-  lyricsPercentage: number;
-  melodyContribution: boolean;
-  arrangementWork: boolean;
-}>) {
+export async function suggestRoyaltySplit(
+  contributions: Array<{
+    collaborator: string;
+    writingSessions: number;
+    lyricsPercentage: number;
+    melodyContribution: boolean;
+    arrangementWork: boolean;
+  }>
+) {
   const client = getOpenAIClient();
   if (!client) return null;
 
@@ -262,7 +266,7 @@ Be fair and transparent.`;
       model: 'gpt-4o', // Using gpt-4o for fairness analysis (needs reasoning)
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: JSON.stringify(contributions, null, 2) }
+        { role: 'user', content: JSON.stringify(contributions, null, 2) },
       ],
       max_tokens: 400,
       temperature: 0.3,
@@ -311,7 +315,7 @@ Keep it authentic and aligned with artist's voice.`;
       model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Generate ${type} content:\n${JSON.stringify(context, null, 2)}` }
+        { role: 'user', content: `Generate ${type} content:\n${JSON.stringify(context, null, 2)}` },
       ],
       max_tokens: 500,
       temperature: 0.8,
@@ -323,4 +327,3 @@ Keep it authentic and aligned with artist's voice.`;
     return null;
   }
 }
-

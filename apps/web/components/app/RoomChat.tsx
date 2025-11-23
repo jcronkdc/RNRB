@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
@@ -37,7 +37,7 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!newMessage.trim() || isSending) return;
 
     const messageContent = newMessage.trim();
@@ -64,11 +64,11 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto p-4">
         <AnimatePresence initial={false}>
           {messages.map((message) => {
             const isOwnMessage = message.userId === currentUser.id;
-            
+
             return (
               <motion.div
                 key={message.id}
@@ -86,17 +86,24 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
                       className="h-8 w-8 rounded-full"
                     />
                   ) : (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-sm font-semibold text-primary">
+                    <div className="bg-primary/20 text-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
                       {message.userName.charAt(0).toUpperCase()}
                     </div>
                   )}
                 </div>
 
                 {/* Message Bubble */}
-                <div className={`flex flex-col gap-1 max-w-[70%] ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+                <div
+                  className={`flex max-w-[70%] flex-col gap-1 ${isOwnMessage ? 'items-end' : 'items-start'}`}
+                >
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="font-medium">{isOwnMessage ? 'You' : message.userName}</span>
-                    <span>{message.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span>
+                      {message.createdAt.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
                   </div>
                   <div
                     className={`rounded-2xl px-4 py-2 ${
@@ -105,7 +112,7 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
                         : 'bg-muted text-foreground'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                    <p className="whitespace-pre-wrap break-words text-sm">{message.content}</p>
                   </div>
                 </div>
               </motion.div>
@@ -140,11 +147,3 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
     </div>
   );
 }
-
-
-
-
-
-
-
-

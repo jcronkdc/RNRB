@@ -6,10 +6,7 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/shows/[id]/setlist
  * Get the setlist for a show
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -18,10 +15,7 @@ export async function GET(
 
     const show = await db.show.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
       select: {
         id: true,
@@ -76,10 +70,7 @@ export async function GET(
     return NextResponse.json({ setlist });
   } catch (error) {
     console.error('Setlist GET error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch setlist' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch setlist' }, { status: 500 });
   }
 }
 
@@ -87,10 +78,7 @@ export async function GET(
  * POST /api/shows/[id]/setlist
  * Create or update setlist for a show
  */
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -102,10 +90,7 @@ export async function POST(
 
     const show = await db.show.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
     });
 
@@ -196,10 +181,7 @@ export async function POST(
     return NextResponse.json({ setlist: updatedSetlist }, { status: setlist ? 200 : 201 });
   } catch (error) {
     console.error('Setlist POST error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create/update setlist' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create/update setlist' }, { status: 500 });
   }
 }
 
@@ -207,10 +189,7 @@ export async function POST(
  * PATCH /api/shows/[id]/setlist
  * Update setlist items (for drag-drop reordering)
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -222,10 +201,7 @@ export async function PATCH(
 
     const show = await db.show.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
     });
 
@@ -289,10 +265,6 @@ export async function PATCH(
     return NextResponse.json({ setlist: updatedSetlist });
   } catch (error) {
     console.error('Setlist PATCH error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update setlist' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update setlist' }, { status: 500 });
   }
 }
-

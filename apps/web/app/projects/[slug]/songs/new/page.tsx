@@ -9,7 +9,10 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
 // Dynamically import collaborative visual builder
-const CollaborativeVisualBuilder = dynamic(() => import('@/components/songwriting').then(m => m.CollaborativeVisualBuilder), { ssr: false });
+const CollaborativeVisualBuilder = dynamic(
+  () => import('@/components/songwriting').then((m) => m.CollaborativeVisualBuilder),
+  { ssr: false }
+);
 
 export default function NewSongPage() {
   const params = useParams();
@@ -19,25 +22,27 @@ export default function NewSongPage() {
   const [project, setProject] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  
+
   const [songData, setSongData] = useState({
     title: '',
     key: '',
     tempo: '',
     time_signature: '4/4',
-    songStructure: [] as any[]
+    songStructure: [] as any[],
   });
 
   useEffect(() => {
     const loadProject = async () => {
-      const { data: { user } } = await supabase!.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase!.auth.getUser();
       if (!user) {
         router.push('/auth');
         return;
       }
-      
+
       setUser(user);
-      
+
       // Load project from API
       try {
         const response = await fetch(`/api/projects/${slug}?userId=${user.id}`);
@@ -45,7 +50,7 @@ export default function NewSongPage() {
           router.push('/projects');
           return;
         }
-        
+
         const foundProject = await response.json();
         setProject(foundProject);
       } catch (error) {
@@ -53,7 +58,7 @@ export default function NewSongPage() {
         router.push('/projects');
       }
     };
-    
+
     loadProject();
   }, [router, slug]);
 
@@ -112,65 +117,68 @@ export default function NewSongPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container max-w-7xl">
-        
-        <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-brand-primary hover:text-brand-primary/80 mb-6 transition">
-          <ArrowLeft className="w-4 h-4" />
+        <Link
+          href={`/projects/${slug}`}
+          className="mb-6 inline-flex items-center gap-2 text-brand-primary transition hover:text-brand-primary/80"
+        >
+          <ArrowLeft className="h-4 w-4" />
           Back to Project
         </Link>
 
         {/* Song Title & Metadata (Always Visible) */}
-        <Card className="p-6 rnrb-card mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="rnrb-card mb-6 p-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2">Song Title *</label>
+              <label className="mb-2 block text-sm font-medium">Song Title *</label>
               <input
                 type="text"
                 value={songData.title}
                 onChange={(e) => setSongData({ ...songData, title: e.target.value })}
                 placeholder="Untitled Song"
-                className="w-full px-4 py-3 bg-surface border-2 border-border rounded-xl text-foreground text-lg font-semibold focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition"
+                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-lg font-semibold text-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Key</label>
+              <label className="mb-2 block text-sm font-medium">Key</label>
               <input
                 type="text"
                 value={songData.key}
                 onChange={(e) => setSongData({ ...songData, key: e.target.value })}
                 placeholder="C Major"
-                className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition"
+                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Tempo</label>
+              <label className="mb-2 block text-sm font-medium">Tempo</label>
               <input
                 type="number"
                 value={songData.tempo}
                 onChange={(e) => setSongData({ ...songData, tempo: e.target.value })}
                 placeholder="120"
-                className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition"
+                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               />
             </div>
           </div>
         </Card>
 
         <div className="mb-6">
-          <h1 className="text-3xl font-display font-bold mb-2">
-            Build Your Song Visually
-          </h1>
+          <h1 className="font-display mb-2 text-3xl font-bold">Build Your Song Visually</h1>
           <p className="text-muted-foreground">
-            Drag blocks from the left palette to create your song structure. Add verses, choruses, bridges, and chords.
+            Drag blocks from the left palette to create your song structure. Add verses, choruses,
+            bridges, and chords.
           </p>
         </div>
 
         {message && (
-          <div className={`mb-6 p-4 rounded-lg border ${
-            message.type === 'success'
-              ? 'bg-green-500/10 border-green-500/20 text-green-400'
-              : 'bg-red-500/10 border-red-500/20 text-red-400'
-          }`}>
+          <div
+            className={`mb-6 rounded-lg border p-4 ${
+              message.type === 'success'
+                ? 'border-green-500/20 bg-green-500/10 text-green-400'
+                : 'border-red-500/20 bg-red-500/10 text-red-400'
+            }`}
+          >
             {message.text}
           </div>
         )}
@@ -188,23 +196,25 @@ export default function NewSongPage() {
         )}
 
         {/* Save Button (Always Visible) */}
-        <div className="flex items-center justify-between mt-8 sticky bottom-4 bg-background/80 backdrop-blur-sm border border-border rounded-xl p-4 shadow-lg">
+        <div className="sticky bottom-4 mt-8 flex items-center justify-between rounded-xl border border-border bg-background/80 p-4 shadow-lg backdrop-blur-sm">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <HelpCircle className="w-4 h-4" />
-            <span>Drag blocks from left palette to build song • Changes save when you click Create Song</span>
+            <HelpCircle className="h-4 w-4" />
+            <span>
+              Drag blocks from left palette to build song • Changes save when you click Create Song
+            </span>
           </div>
           <div className="flex gap-4">
             <Link href={`/projects/${slug}`}>
-              <Button variant="secondary" className="px-6 py-3 rounded-xl">
+              <Button variant="secondary" className="rounded-xl px-6 py-3">
                 Cancel
               </Button>
             </Link>
             <Button
               onClick={handleSave}
               disabled={saving || !songData.title.trim()}
-              className="rnrb-button-primary px-8 py-3 rounded-xl font-semibold flex items-center gap-2 disabled:opacity-50"
+              className="rnrb-button-primary flex items-center gap-2 rounded-xl px-8 py-3 font-semibold disabled:opacity-50"
             >
-              <Save className="w-5 h-5" />
+              <Save className="h-5 w-5" />
               {saving ? 'Creating...' : 'Create Song'}
             </Button>
           </div>

@@ -2,13 +2,47 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Card, Button } from '@cronkwaters/ui';
-import { 
-  Music, Sparkles, GripVertical, Plus, X, Users, Save, Download, 
-  History, Undo, Redo, Video, MessageSquare, ChevronUp, ChevronDown,
-  Tag, Copy, Check, Mail, UserPlus, Clock, Keyboard, CheckCircle, XCircle, AlertCircle
+import {
+  Music,
+  Sparkles,
+  GripVertical,
+  Plus,
+  X,
+  Users,
+  Save,
+  Download,
+  History,
+  Undo,
+  Redo,
+  Video,
+  MessageSquare,
+  ChevronUp,
+  ChevronDown,
+  Tag,
+  Copy,
+  Check,
+  Mail,
+  UserPlus,
+  Clock,
+  Keyboard,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
 } from 'lucide-react';
-import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import {
+  DndContext,
+  DragOverlay,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import dynamic from 'next/dynamic';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
@@ -19,7 +53,9 @@ import { KeyAnalyzer } from './key-analyzer';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Dynamically import chat
-const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then(m => m.ChatRoom), { ssr: false });
+const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {
+  ssr: false,
+});
 
 type ChordPlacement = {
   wordIndex: number;
@@ -41,49 +77,61 @@ const PALETTE_BLOCKS = [
   { type: 'bridge' as const, label: 'Bridge', icon: '🌉', color: 'purple' },
 ];
 
-function SortableBlock({ 
-  block, 
-  onEdit, 
+function SortableBlock({
+  block,
+  onEdit,
   onRemove,
   onChordsChange,
-}: { 
-  block: SongBlock; 
-  onEdit: (content: string) => void; 
+}: {
+  block: SongBlock;
+  onEdit: (content: string) => void;
   onRemove: () => void;
   onChordsChange: (chordPlacements: ChordPlacement[]) => void;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: block.id });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: block.id,
+  });
 
   const getColor = () => {
-    switch(block.type) {
-      case 'verse': return 'from-blue-500/10 to-blue-500/5 border-blue-500/30';
-      case 'chorus': return 'from-brand-primary/10 to-brand-primary/5 border-brand-primary/30';
-      case 'bridge': return 'from-purple-500/10 to-purple-500/5 border-purple-500/30';
-      default: return 'from-gray-500/10 to-gray-500/5 border-gray-500/30';
+    switch (block.type) {
+      case 'verse':
+        return 'from-blue-500/10 to-blue-500/5 border-blue-500/30';
+      case 'chorus':
+        return 'from-brand-primary/10 to-brand-primary/5 border-brand-primary/30';
+      case 'bridge':
+        return 'from-purple-500/10 to-purple-500/5 border-purple-500/30';
+      default:
+        return 'from-gray-500/10 to-gray-500/5 border-gray-500/30';
     }
   };
 
   // Use granular chord editor for verse, chorus, and bridge types
-  const useGranularEditor = block.type === 'verse' || block.type === 'chorus' || block.type === 'bridge';
+  const useGranularEditor =
+    block.type === 'verse' || block.type === 'chorus' || block.type === 'bridge';
 
   return (
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`mb-4 rnrb-card p-4 bg-gradient-to-br ${getColor()} border-2 hover:shadow-xl transition-all group`}
+      className={`rnrb-card mb-4 bg-gradient-to-br p-4 ${getColor()} group border-2 transition-all hover:shadow-xl`}
     >
       <div className="flex gap-3">
-        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing pt-1">
-          <GripVertical className="w-5 h-5 text-muted-foreground" />
+        <div {...attributes} {...listeners} className="cursor-grab pt-1 active:cursor-grabbing">
+          <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wide text-brand-primary">{block.type}</span>
-            <button onClick={onRemove} className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600">
-              <X className="w-4 h-4" />
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wide text-brand-primary">
+              {block.type}
+            </span>
+            <button
+              onClick={onRemove}
+              className="text-red-500 opacity-0 hover:text-red-600 group-hover:opacity-100"
+            >
+              <X className="h-4 w-4" />
             </button>
           </div>
-          
+
           {useGranularEditor ? (
             <GranularChordEditor
               content={block.content}
@@ -97,7 +145,7 @@ function SortableBlock({
               value={block.content}
               onChange={(e) => onEdit(e.target.value)}
               placeholder={`Write your ${block.type}...`}
-              className="w-full px-3 py-2 bg-surface/50 border border-border/50 rounded-lg text-foreground text-sm resize-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none"
+              className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-3 py-2 text-sm text-foreground outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               rows={3}
             />
           )}
@@ -107,12 +155,12 @@ function SortableBlock({
   );
 }
 
-export function CollaborativeVisualBuilder({ 
-  projectSlug, 
+export function CollaborativeVisualBuilder({
+  projectSlug,
   onSongChange,
   currentUser,
   isOwner = true, // Whether current user owns the song (can accept/reject)
-}: { 
+}: {
   projectSlug: string;
   onSongChange?: (blocks: SongBlock[]) => void;
   currentUser: {
@@ -170,8 +218,10 @@ export function CollaborativeVisualBuilder({
 
   // Count total pending suggestions
   const pendingSuggestionsCount = useMemo(() => {
-    return suggestions.filter(s => s.status === 'pending').length + 
-           chordSuggestions.filter(s => s.status === 'pending').length;
+    return (
+      suggestions.filter((s) => s.status === 'pending').length +
+      chordSuggestions.filter((s) => s.status === 'pending').length
+    );
   }, [suggestions, chordSuggestions]);
 
   // Keyboard shortcuts
@@ -221,7 +271,7 @@ export function CollaborativeVisualBuilder({
     const newBlock: SongBlock = {
       id: `block-${Date.now()}`,
       type,
-      content: ''
+      content: '',
     };
     const updated = [...blocks, newBlock];
     setBlocks(updated);
@@ -235,8 +285,8 @@ export function CollaborativeVisualBuilder({
     if (!over || active.id === over.id) return;
 
     setBlocks((items) => {
-      const oldIndex = items.findIndex(b => b.id === active.id);
-      const newIndex = items.findIndex(b => b.id === over.id);
+      const oldIndex = items.findIndex((b) => b.id === active.id);
+      const newIndex = items.findIndex((b) => b.id === over.id);
       const reordered = arrayMove(items, oldIndex, newIndex);
       onSongChange?.(reordered);
       saveToHistory(reordered);
@@ -245,14 +295,14 @@ export function CollaborativeVisualBuilder({
   };
 
   const editBlock = (id: string, content: string) => {
-    const updated = blocks.map(b => b.id === id ? { ...b, content } : b);
+    const updated = blocks.map((b) => (b.id === id ? { ...b, content } : b));
     setBlocks(updated);
     onSongChange?.(updated);
     // Don't save to history on every keystroke - only on significant changes
   };
 
   const updateBlockChords = (id: string, chordPlacements: ChordPlacement[]) => {
-    const updated = blocks.map(b => b.id === id ? { ...b, chordPlacements } : b);
+    const updated = blocks.map((b) => (b.id === id ? { ...b, chordPlacements } : b));
     setBlocks(updated);
     onSongChange?.(updated);
     saveToHistory(updated);
@@ -261,9 +311,9 @@ export function CollaborativeVisualBuilder({
   // Extract all unique chords from all blocks for key detection
   const allChords = useMemo(() => {
     const chordSet = new Set<string>();
-    blocks.forEach(block => {
+    blocks.forEach((block) => {
       if (block.chordPlacements) {
-        block.chordPlacements.forEach(placement => {
+        block.chordPlacements.forEach((placement) => {
           chordSet.add(placement.chord);
         });
       }
@@ -272,14 +322,14 @@ export function CollaborativeVisualBuilder({
   }, [blocks]);
 
   const removeBlock = (id: string) => {
-    const updated = blocks.filter(b => b.id !== id);
+    const updated = blocks.filter((b) => b.id !== id);
     setBlocks(updated);
     onSongChange?.(updated);
     saveToHistory(updated);
   };
 
   const exportToClipboard = () => {
-    const text = blocks.map(b => `[${b.type.toUpperCase()}]\n${b.content}`).join('\n\n');
+    const text = blocks.map((b) => `[${b.type.toUpperCase()}]\n${b.content}`).join('\n\n');
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -311,7 +361,9 @@ export function CollaborativeVisualBuilder({
   const sendInvite = () => {
     if (!inviteEmail.trim()) return;
     // TODO: Integrate with actual invite API
-    alert(`Invitation sent to ${inviteEmail}! They'll receive an email to collaborate on this song.`);
+    alert(
+      `Invitation sent to ${inviteEmail}! They'll receive an email to collaborate on this song.`
+    );
     setInviteEmail('');
     setShowCollaborators(false);
   };
@@ -328,74 +380,76 @@ export function CollaborativeVisualBuilder({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <Card className="p-4 rnrb-card">
-        <div className="flex items-center justify-between flex-wrap gap-3">
+      <Card className="rnrb-card p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Button size="sm" variant="secondary" onClick={() => setShowCollaborators(true)}>
-              <Users className="w-4 h-4 mr-2" />
+              <Users className="mr-2 h-4 w-4" />
               Collaborators
             </Button>
             <Button size="sm" variant="secondary" onClick={() => setShowHistory(true)}>
-              <History className="w-4 h-4 mr-2" />
+              <History className="mr-2 h-4 w-4" />
               History
             </Button>
             {isOwner && pendingSuggestionsCount > 0 && (
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="secondary"
                 onClick={() => setShowSuggestions(true)}
-                className="bg-yellow-500/10 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20"
+                className="border-yellow-500/30 bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20"
               >
-                <AlertCircle className="w-4 h-4 mr-2" />
+                <AlertCircle className="mr-2 h-4 w-4" />
                 {pendingSuggestionsCount} Suggestion{pendingSuggestionsCount !== 1 ? 's' : ''}
               </Button>
             )}
             <Button size="sm" variant="secondary" onClick={exportToClipboard}>
-              {copied ? <Check className="w-4 h-4 mr-2" /> : <Download className="w-4 h-4 mr-2" />}
+              {copied ? <Check className="mr-2 h-4 w-4" /> : <Download className="mr-2 h-4 w-4" />}
               {copied ? 'Copied!' : 'Export'}
             </Button>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               variant="ghost"
               onClick={() => setShowKeyboardHelp(true)}
               title="Keyboard shortcuts (⌘K)"
             >
-              <Keyboard className="w-4 h-4" />
+              <Keyboard className="h-4 w-4" />
             </Button>
           </div>
           <div className="flex items-center gap-2">
             {/* Connection Status */}
             <div className="flex items-center gap-2 text-xs">
-              <div className={`w-2 h-2 rounded-full ${cursorsConnected && suggestionsConnected ? 'bg-green-400' : 'bg-yellow-400'}`} />
+              <div
+                className={`h-2 w-2 rounded-full ${cursorsConnected && suggestionsConnected ? 'bg-green-400' : 'bg-yellow-400'}`}
+              />
               <span className="text-muted-foreground">
                 {cursorsConnected && suggestionsConnected ? 'Live' : 'Connecting...'}
               </span>
             </div>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               variant="secondary"
               onClick={undo}
               disabled={historyIndex <= 0}
               title="Undo last change"
             >
-              <Undo className="w-4 h-4" />
+              <Undo className="h-4 w-4" />
             </Button>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               variant="secondary"
               onClick={redo}
               disabled={historyIndex >= history.length - 1}
               title="Redo last undone change"
             >
-              <Redo className="w-4 h-4" />
+              <Redo className="h-4 w-4" />
             </Button>
-            <Button 
-              size="sm" 
-              className="bg-purple-600 hover:bg-purple-700 text-white"
+            <Button
+              size="sm"
+              className="bg-purple-600 text-white hover:bg-purple-700"
               onClick={() => window.open(`/projects/${projectSlug}/collaborate`, '_blank')}
               title="Open video collaboration in new tab"
             >
-              <Video className="w-4 h-4 mr-2" />
+              <Video className="mr-2 h-4 w-4" />
               Video
             </Button>
           </div>
@@ -404,12 +458,14 @@ export function CollaborativeVisualBuilder({
 
       {/* Error Banner */}
       {suggestionsError && (
-        <Card className="p-4 bg-red-500/10 border-red-500/20">
+        <Card className="border-red-500/20 bg-red-500/10 p-4">
           <div className="flex items-center gap-3">
-            <XCircle className="w-5 h-5 text-red-400" />
+            <XCircle className="h-5 w-5 text-red-400" />
             <div>
               <p className="text-sm font-medium text-red-400">Collaboration Error</p>
-              <p className="text-xs text-red-300">Real-time suggestions unavailable: {suggestionsError}</p>
+              <p className="text-xs text-red-300">
+                Real-time suggestions unavailable: {suggestionsError}
+              </p>
             </div>
           </div>
         </Card>
@@ -418,11 +474,11 @@ export function CollaborativeVisualBuilder({
       {/* Main Layout */}
       <div className="grid grid-cols-12 gap-4">
         {/* Left Palette */}
-        <div className="col-span-12 lg:col-span-3 space-y-4">
-          <div className="lg:sticky lg:top-4 space-y-4">
-            <Card className="p-6 rnrb-card">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-purple-400" />
+        <div className="col-span-12 space-y-4 lg:col-span-3">
+          <div className="space-y-4 lg:sticky lg:top-4">
+            <Card className="rnrb-card p-6">
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                <Sparkles className="h-5 w-5 text-purple-400" />
                 Building Blocks
               </h3>
               <div className="space-y-3">
@@ -430,7 +486,7 @@ export function CollaborativeVisualBuilder({
                   <button
                     key={item.type}
                     onClick={() => addBlock(item.type)}
-                    className="w-full rnrb-card p-4 bg-gradient-to-r from-brand-primary/10 to-transparent border-2 border-dashed border-brand-primary/30 hover:border-brand-primary/50 hover:shadow-lg transition-all text-left"
+                    className="rnrb-card w-full border-2 border-dashed border-brand-primary/30 bg-gradient-to-r from-brand-primary/10 to-transparent p-4 text-left transition-all hover:border-brand-primary/50 hover:shadow-lg"
                   >
                     <div className="flex items-center gap-3">
                       <div className="text-2xl">{item.icon}</div>
@@ -451,25 +507,36 @@ export function CollaborativeVisualBuilder({
 
         {/* Right Canvas */}
         <div className="col-span-12 lg:col-span-9">
-          <Card className="p-8 rnrb-card min-h-[600px]">
-            <h2 className="text-2xl font-display font-bold mb-6">Your Song Structure</h2>
-            
+          <Card className="rnrb-card min-h-[600px] p-8">
+            <h2 className="font-display mb-6 text-2xl font-bold">Your Song Structure</h2>
+
             {blocks.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-24 border-2 border-dashed border-border rounded-2xl">
-                <Music className="w-20 h-20 text-muted-foreground/50 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Start Building</h3>
-                <p className="text-muted-foreground">Click blocks on the left to add them to your song</p>
+              <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border py-24">
+                <Music className="mb-4 h-20 w-20 text-muted-foreground/50" />
+                <h3 className="mb-2 text-xl font-semibold">Start Building</h3>
+                <p className="text-muted-foreground">
+                  Click blocks on the left to add them to your song
+                </p>
               </div>
             ) : (
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={blocks.map((b) => b.id)}
+                  strategy={verticalListSortingStrategy}
+                >
                   {blocks.map((block) => (
                     <SortableBlock
                       key={block.id}
                       block={block}
                       onEdit={(content) => editBlock(block.id, content)}
                       onRemove={() => removeBlock(block.id)}
-                      onChordsChange={(chordPlacements) => updateBlockChords(block.id, chordPlacements)}
+                      onChordsChange={(chordPlacements) =>
+                        updateBlockChords(block.id, chordPlacements)
+                      }
                     />
                   ))}
                 </SortableContext>
@@ -483,17 +550,17 @@ export function CollaborativeVisualBuilder({
       <Card className={`rnrb-card transition-all ${chatExpanded ? 'h-auto' : 'h-16'}`}>
         <button
           onClick={() => setChatExpanded(!chatExpanded)}
-          className="w-full p-4 flex items-center justify-between hover:bg-surface-muted/50 transition"
+          className="flex w-full items-center justify-between p-4 transition hover:bg-surface-muted/50"
         >
           <div className="flex items-center gap-3">
-            <MessageSquare className="w-5 h-5 text-brand-primary" />
+            <MessageSquare className="h-5 w-5 text-brand-primary" />
             <span className="font-semibold">Team Chat</span>
             <span className="text-xs text-muted-foreground">• 2 online</span>
           </div>
-          {chatExpanded ? <ChevronDown className="w-5 h-5" /> : <ChevronUp className="w-5 h-5" />}
+          {chatExpanded ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
         </button>
         {chatExpanded && (
-          <div className="p-4 border-t border-border">
+          <div className="border-t border-border p-4">
             <ChatRoom channelName={`song-builder-${projectSlug}`} />
           </div>
         )}
@@ -501,51 +568,50 @@ export function CollaborativeVisualBuilder({
 
       {/* TOKYO SUBWAY MODAL: Collaborators & Invite (Max 3 clicks to invite someone) */}
       {showCollaborators && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setShowCollaborators(false)}
         >
-          <Card 
-            className="rnrb-card p-8 max-w-md w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-6">
+          <Card className="rnrb-card w-full max-w-md p-8" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-6 flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-display font-bold flex items-center gap-2">
-                  <Users className="w-6 h-6 text-brand-primary" />
+                <h3 className="font-display flex items-center gap-2 text-2xl font-bold">
+                  <Users className="h-6 w-6 text-brand-primary" />
                   Collaborators
                 </h3>
-                <p className="text-sm text-muted-foreground mt-1">Invite friends to write together</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Invite friends to write together
+                </p>
               </div>
               <button
                 onClick={() => setShowCollaborators(false)}
-                className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Current Collaborators */}
             <div className="mb-6">
-              <h4 className="text-sm font-semibold mb-3 text-muted-foreground">CURRENT TEAM</h4>
+              <h4 className="mb-3 text-sm font-semibold text-muted-foreground">CURRENT TEAM</h4>
               <div className="space-y-2">
-                <div className="flex items-center gap-3 p-3 bg-surface-muted rounded-lg">
-                  <div className="w-10 h-10 rounded-full bg-brand-primary/20 flex items-center justify-center">
+                <div className="flex items-center gap-3 rounded-lg bg-surface-muted p-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20">
                     <span className="font-bold text-brand-primary">Y</span>
                   </div>
                   <div className="flex-1">
                     <p className="font-medium">You</p>
                     <p className="text-xs text-muted-foreground">Creator • Full Access</p>
                   </div>
-                  <div className="w-2 h-2 bg-green-400 rounded-full" title="Online now" />
+                  <div className="h-2 w-2 rounded-full bg-green-400" title="Online now" />
                 </div>
               </div>
             </div>
 
             {/* TOKYO RULE: Invite form = 2 clicks (type email, click send) */}
             <div className="border-t border-border pt-6">
-              <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <UserPlus className="w-4 h-4 text-purple-400" />
+              <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+                <UserPlus className="h-4 w-4 text-purple-400" />
                 INVITE COLLABORATOR
               </h4>
               <div className="flex gap-2">
@@ -555,19 +621,19 @@ export function CollaborativeVisualBuilder({
                   onChange={(e) => setInviteEmail(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && sendInvite()}
                   placeholder="friend@email.com"
-                  className="flex-1 px-4 py-3 bg-surface border-2 border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 outline-none transition"
+                  className="flex-1 rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
                 />
                 <Button
                   onClick={sendInvite}
                   disabled={!inviteEmail.trim()}
-                  className="px-6 py-3 bg-brand-primary hover:bg-brand-primary/90 text-brand-primary-foreground rounded-xl font-semibold"
+                  className="rounded-xl bg-brand-primary px-6 py-3 font-semibold text-brand-primary-foreground hover:bg-brand-primary/90"
                 >
-                  <Mail className="w-4 h-4 mr-2" />
+                  <Mail className="mr-2 h-4 w-4" />
                   Send
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-purple-400" />
+              <p className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
+                <Sparkles className="h-3 w-3 text-purple-400" />
                 They'll get an email invite to join this songwriting session
               </p>
             </div>
@@ -577,60 +643,62 @@ export function CollaborativeVisualBuilder({
 
       {/* TOKYO SUBWAY MODAL: Version History (1 click to restore) */}
       {showHistory && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setShowHistory(false)}
         >
-          <Card 
-            className="rnrb-card p-8 max-w-lg w-full max-h-[600px] overflow-hidden flex flex-col"
+          <Card
+            className="rnrb-card flex max-h-[600px] w-full max-w-lg flex-col overflow-hidden p-8"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6 flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-display font-bold flex items-center gap-2">
-                  <History className="w-6 h-6 text-brand-primary" />
+                <h3 className="font-display flex items-center gap-2 text-2xl font-bold">
+                  <History className="h-6 w-6 text-brand-primary" />
                   Version History
                 </h3>
-                <p className="text-sm text-muted-foreground mt-1">Restore previous versions with 1 click</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Restore previous versions with 1 click
+                </p>
               </div>
               <button
                 onClick={() => setShowHistory(false)}
-                className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             {history.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Clock className="w-16 h-16 text-muted-foreground/50 mb-4" />
-                <h4 className="text-lg font-semibold mb-2">No History Yet</h4>
+                <Clock className="mb-4 h-16 w-16 text-muted-foreground/50" />
+                <h4 className="mb-2 text-lg font-semibold">No History Yet</h4>
                 <p className="text-sm text-muted-foreground">
                   Make some changes and they'll be saved here automatically
                 </p>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+              <div className="flex-1 space-y-2 overflow-y-auto pr-2">
                 {history.map((version, index) => {
                   const isCurrent = index === historyIndex;
                   const timestamp = version.timestamp.toLocaleTimeString();
                   const blockCount = version.blocks.length;
-                  
+
                   return (
                     <button
                       key={index}
                       onClick={() => restoreVersion(index)}
-                      className={`w-full p-4 rounded-xl text-left transition-all ${
+                      className={`w-full rounded-xl p-4 text-left transition-all ${
                         isCurrent
-                          ? 'bg-brand-primary/10 border-2 border-brand-primary/50 shadow-lg'
-                          : 'bg-surface-muted hover:bg-surface border-2 border-transparent hover:border-brand-primary/30'
+                          ? 'border-2 border-brand-primary/50 bg-brand-primary/10 shadow-lg'
+                          : 'border-2 border-transparent bg-surface-muted hover:border-brand-primary/30 hover:bg-surface'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Clock className="w-4 h-4 text-brand-primary" />
-                            <span className="font-semibold text-sm">
+                          <div className="mb-1 flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-brand-primary" />
+                            <span className="text-sm font-semibold">
                               {isCurrent ? 'Current Version' : `Version ${history.length - index}`}
                             </span>
                           </div>
@@ -638,13 +706,13 @@ export function CollaborativeVisualBuilder({
                             {timestamp} • {blockCount} {blockCount === 1 ? 'block' : 'blocks'}
                           </p>
                           {version.blocks.length > 0 && (
-                            <p className="text-xs text-brand-primary mt-2 font-medium">
-                              {version.blocks.map(b => b.type).join(' → ')}
+                            <p className="mt-2 text-xs font-medium text-brand-primary">
+                              {version.blocks.map((b) => b.type).join(' → ')}
                             </p>
                           )}
                         </div>
                         {!isCurrent && (
-                          <div className="text-xs font-medium text-brand-primary opacity-0 group-hover:opacity-100 transition">
+                          <div className="text-xs font-medium text-brand-primary opacity-0 transition group-hover:opacity-100">
                             Click to restore →
                           </div>
                         )}
@@ -663,181 +731,207 @@ export function CollaborativeVisualBuilder({
 
       {/* Suggestions Review Modal (Owner Only) */}
       {showSuggestions && isOwner && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setShowSuggestions(false)}
         >
-          <Card 
-            className="rnrb-card p-8 max-w-2xl w-full max-h-[600px] overflow-hidden flex flex-col"
+          <Card
+            className="rnrb-card flex max-h-[600px] w-full max-w-2xl flex-col overflow-hidden p-8"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="mb-6 flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-display font-bold flex items-center gap-2">
-                  <AlertCircle className="w-6 h-6 text-yellow-400" />
+                <h3 className="font-display flex items-center gap-2 text-2xl font-bold">
+                  <AlertCircle className="h-6 w-6 text-yellow-400" />
                   Pending Suggestions
                 </h3>
-                <p className="text-sm text-muted-foreground mt-1">Review and accept/reject changes from collaborators</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Review and accept/reject changes from collaborators
+                </p>
               </div>
               <button
                 onClick={() => setShowSuggestions(false)}
-                className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
             {pendingSuggestionsCount === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <CheckCircle className="w-16 h-16 text-green-400/50 mb-4" />
-                <h4 className="text-lg font-semibold mb-2">All Clear!</h4>
+                <CheckCircle className="mb-4 h-16 w-16 text-green-400/50" />
+                <h4 className="mb-2 text-lg font-semibold">All Clear!</h4>
                 <p className="text-sm text-muted-foreground">
                   No pending suggestions at the moment
                 </p>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+              <div className="flex-1 space-y-3 overflow-y-auto pr-2">
                 {/* Lyric Suggestions */}
-                {suggestions.filter(s => s.status === 'pending').map((suggestion) => {
-                  const block = blocks.find(b => b.id === suggestion.blockId);
-                  if (!block) return null;
+                {suggestions
+                  .filter((s) => s.status === 'pending')
+                  .map((suggestion) => {
+                    const block = blocks.find((b) => b.id === suggestion.blockId);
+                    if (!block) return null;
 
-                  return (
-                    <div
-                      key={suggestion.id}
-                      className="p-4 rounded-xl bg-yellow-500/10 border-2 border-yellow-500/30"
-                    >
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-bold uppercase text-yellow-400">{block.type}</span>
-                            <span className="text-xs text-muted-foreground">• by {suggestion.userName}</span>
-                          </div>
-                          <div className="space-y-2 text-sm">
-                            <div>
-                              <span className="text-muted-foreground">Original: </span>
-                              <span className="line-through text-red-400">{suggestion.originalValue}</span>
+                    return (
+                      <div
+                        key={suggestion.id}
+                        className="rounded-xl border-2 border-yellow-500/30 bg-yellow-500/10 p-4"
+                      >
+                        <div className="mb-3 flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="mb-1 flex items-center gap-2">
+                              <span className="text-xs font-bold uppercase text-yellow-400">
+                                {block.type}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                • by {suggestion.userName}
+                              </span>
                             </div>
-                            <div>
-                              <span className="text-muted-foreground">Suggested: </span>
-                              <span className="text-green-400 font-medium">{suggestion.suggestedValue}</span>
+                            <div className="space-y-2 text-sm">
+                              <div>
+                                <span className="text-muted-foreground">Original: </span>
+                                <span className="text-red-400 line-through">
+                                  {suggestion.originalValue}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">Suggested: </span>
+                                <span className="font-medium text-green-400">
+                                  {suggestion.suggestedValue}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              const accepted = acceptSuggestion(suggestion.id);
+                              if (accepted) {
+                                // Apply the suggestion to master
+                                const updated = blocks.map((b) => {
+                                  if (b.id === accepted.blockId) {
+                                    return {
+                                      ...b,
+                                      content: b.content.replace(
+                                        accepted.originalValue,
+                                        accepted.suggestedValue
+                                      ),
+                                    };
+                                  }
+                                  return b;
+                                });
+                                setBlocks(updated);
+                                onSongChange?.(updated);
+                                saveToHistory(updated);
+                              }
+                            }}
+                            className="flex-1 bg-green-600 text-white hover:bg-green-700"
+                          >
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            Accept
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => rejectSuggestion(suggestion.id)}
+                            variant="secondary"
+                            className="flex-1 bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                          >
+                            <XCircle className="mr-2 h-4 w-4" />
+                            Reject
+                          </Button>
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => {
-                            const accepted = acceptSuggestion(suggestion.id);
-                            if (accepted) {
-                              // Apply the suggestion to master
-                              const updated = blocks.map(b => {
-                                if (b.id === accepted.blockId) {
-                                  return {
-                                    ...b,
-                                    content: b.content.replace(accepted.originalValue, accepted.suggestedValue)
-                                  };
-                                }
-                                return b;
-                              });
-                              setBlocks(updated);
-                              onSongChange?.(updated);
-                              saveToHistory(updated);
-                            }
-                          }}
-                          className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                        >
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Accept
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => rejectSuggestion(suggestion.id)}
-                          variant="secondary"
-                          className="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400"
-                        >
-                          <XCircle className="w-4 h-4 mr-2" />
-                          Reject
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
 
                 {/* Chord Suggestions */}
-                {chordSuggestions.filter(s => s.status === 'pending').map((suggestion) => {
-                  const block = blocks.find(b => b.id === suggestion.blockId);
-                  if (!block) return null;
+                {chordSuggestions
+                  .filter((s) => s.status === 'pending')
+                  .map((suggestion) => {
+                    const block = blocks.find((b) => b.id === suggestion.blockId);
+                    if (!block) return null;
 
-                  return (
-                    <div
-                      key={suggestion.id}
-                      className="p-4 rounded-xl bg-blue-500/10 border-2 border-blue-500/30"
-                    >
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-bold uppercase text-blue-400">{block.type} - CHORD</span>
-                            <span className="text-xs text-muted-foreground">• by {suggestion.userName}</span>
-                          </div>
-                          <div className="text-sm">
-                            <span className="text-muted-foreground">Add chord: </span>
-                            <span className="text-blue-400 font-mono font-bold">{suggestion.chord}</span>
-                            <span className="text-muted-foreground"> at line {suggestion.lineIndex + 1}, word {suggestion.wordIndex + 1}</span>
+                    return (
+                      <div
+                        key={suggestion.id}
+                        className="rounded-xl border-2 border-blue-500/30 bg-blue-500/10 p-4"
+                      >
+                        <div className="mb-3 flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="mb-1 flex items-center gap-2">
+                              <span className="text-xs font-bold uppercase text-blue-400">
+                                {block.type} - CHORD
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                • by {suggestion.userName}
+                              </span>
+                            </div>
+                            <div className="text-sm">
+                              <span className="text-muted-foreground">Add chord: </span>
+                              <span className="font-mono font-bold text-blue-400">
+                                {suggestion.chord}
+                              </span>
+                              <span className="text-muted-foreground">
+                                {' '}
+                                at line {suggestion.lineIndex + 1}, word {suggestion.wordIndex + 1}
+                              </span>
+                            </div>
                           </div>
                         </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              const accepted = acceptChordSuggestion(suggestion.id);
+                              if (accepted) {
+                                // Apply chord to master
+                                const updated = blocks.map((b) => {
+                                  if (b.id === accepted.blockId) {
+                                    const newPlacement = {
+                                      lineIndex: accepted.lineIndex,
+                                      wordIndex: accepted.wordIndex,
+                                      chord: accepted.chord,
+                                    };
+                                    return {
+                                      ...b,
+                                      chordPlacements: [...(b.chordPlacements || []), newPlacement],
+                                    };
+                                  }
+                                  return b;
+                                });
+                                setBlocks(updated);
+                                onSongChange?.(updated);
+                                saveToHistory(updated);
+                              }
+                            }}
+                            className="flex-1 bg-green-600 text-white hover:bg-green-700"
+                          >
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            Accept
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => rejectChordSuggestion(suggestion.id)}
+                            variant="secondary"
+                            className="flex-1 bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                          >
+                            <XCircle className="mr-2 h-4 w-4" />
+                            Reject
+                          </Button>
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => {
-                            const accepted = acceptChordSuggestion(suggestion.id);
-                            if (accepted) {
-                              // Apply chord to master
-                              const updated = blocks.map(b => {
-                                if (b.id === accepted.blockId) {
-                                  const newPlacement = {
-                                    lineIndex: accepted.lineIndex,
-                                    wordIndex: accepted.wordIndex,
-                                    chord: accepted.chord
-                                  };
-                                  return {
-                                    ...b,
-                                    chordPlacements: [...(b.chordPlacements || []), newPlacement]
-                                  };
-                                }
-                                return b;
-                              });
-                              setBlocks(updated);
-                              onSongChange?.(updated);
-                              saveToHistory(updated);
-                            }
-                          }}
-                          className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                        >
-                          <CheckCircle className="w-4 h-4 mr-2" />
-                          Accept
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={() => rejectChordSuggestion(suggestion.id)}
-                          variant="secondary"
-                          className="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400"
-                        >
-                          <XCircle className="w-4 h-4 mr-2" />
-                          Reject
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             )}
 
-            <div className="mt-6 pt-6 border-t border-border">
-              <p className="text-xs text-muted-foreground text-center">
-                <Sparkles className="w-3 h-3 inline mr-1 text-purple-400" />
+            <div className="mt-6 border-t border-border pt-6">
+              <p className="text-center text-xs text-muted-foreground">
+                <Sparkles className="mr-1 inline h-3 w-3 text-purple-400" />
                 Suggestions keep your song organized while letting everyone contribute
               </p>
             </div>
@@ -852,7 +946,7 @@ export function CollaborativeVisualBuilder({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
             onClick={() => setShowKeyboardHelp(false)}
           >
             <motion.div
@@ -860,23 +954,23 @@ export function CollaborativeVisualBuilder({
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="rnrb-card p-8 max-w-lg w-full bg-surface border-2 border-border rounded-2xl"
+              className="rnrb-card w-full max-w-lg rounded-2xl border-2 border-border bg-surface p-8"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between mb-6">
+              <div className="mb-6 flex items-center justify-between">
                 <div>
-                  <h3 className="text-2xl font-display font-bold flex items-center gap-2">
-                    <Keyboard className="w-6 h-6 text-brand-primary" />
+                  <h3 className="font-display flex items-center gap-2 text-2xl font-bold">
+                    <Keyboard className="h-6 w-6 text-brand-primary" />
                     Keyboard Shortcuts
                   </h3>
-                  <p className="text-sm text-muted-foreground mt-1">Work faster with shortcuts</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Work faster with shortcuts</p>
                 </div>
                 <button
                   onClick={() => setShowKeyboardHelp(false)}
-                  className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
                   aria-label="Close keyboard shortcuts"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
@@ -893,17 +987,17 @@ export function CollaborativeVisualBuilder({
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between p-3 bg-surface-muted rounded-lg"
+                    className="flex items-center justify-between rounded-lg bg-surface-muted p-3"
                   >
                     <span className="text-foreground">{shortcut.action}</span>
                     <div className="flex items-center gap-1">
                       {shortcut.keys.map((key, i) => (
                         <span key={i} className="flex items-center gap-1">
-                          <kbd className="px-2 py-1 rounded bg-background border border-border text-xs font-medium">
+                          <kbd className="rounded border border-border bg-background px-2 py-1 text-xs font-medium">
                             {key}
                           </kbd>
                           {i < shortcut.keys.length - 1 && (
-                            <span className="text-muted-foreground text-xs">+</span>
+                            <span className="text-xs text-muted-foreground">+</span>
                           )}
                         </span>
                       ))}
@@ -912,9 +1006,9 @@ export function CollaborativeVisualBuilder({
                 ))}
               </div>
 
-              <div className="mt-6 pt-6 border-t border-border">
-                <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-2">
-                  <Sparkles className="w-3 h-3 text-purple-400" />
+              <div className="mt-6 border-t border-border pt-6">
+                <p className="flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
+                  <Sparkles className="h-3 w-3 text-purple-400" />
                   Pro tip: Click any word in lyrics to add chords instantly!
                 </p>
               </div>
@@ -925,4 +1019,3 @@ export function CollaborativeVisualBuilder({
     </div>
   );
 }
-

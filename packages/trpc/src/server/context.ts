@@ -15,9 +15,8 @@ export async function createContext({ session, headers }: CreateContextOptions) 
     memberships: session?.memberships ?? [],
     activeMembership: session?.activeMembership ?? null,
     session: session?.session ?? null,
-    viewerId: sessionUser?.id ?? null
+    viewerId: sessionUser?.id ?? null,
   };
 }
 
 export type Context = Awaited<ReturnType<typeof createContext>>;
-

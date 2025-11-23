@@ -13,10 +13,7 @@ export async function POST(req: NextRequest) {
 
     if (!signature) {
       console.error('No Stripe signature found in headers');
-      return NextResponse.json(
-        { error: 'No signature provided' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'No signature provided' }, { status: 400 });
     }
 
     // Verify webhook signature
@@ -25,10 +22,7 @@ export async function POST(req: NextRequest) {
       event = verifyWebhookSignature(body, signature);
     } catch (err) {
       console.error('Webhook signature verification failed:', err);
-      return NextResponse.json(
-        { error: 'Invalid signature' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
     }
 
     console.log('✅ Stripe webhook received:', event.type);
@@ -63,10 +57,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Webhook handler error:', error);
-    return NextResponse.json(
-      { error: 'Webhook handler failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 });
   }
 }
 
@@ -246,4 +237,5 @@ async function handleTrialEnding(subscription: Stripe.Subscription) {
     throw error;
   }
 }
+
 

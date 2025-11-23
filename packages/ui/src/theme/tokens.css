@@ -1,149 +1,149 @@
 :root {
-    /* Light theme - Warm, inviting, creative */
-    --sf-color-background: 28 40% 98%;
-    --sf-color-surface: 27 32% 96%;
-    --sf-color-surface-muted: 28 28% 92%;
-    --sf-color-surface-elevated: 26 24% 90%;
-    --sf-color-foreground: 26 30% 18%;
-    --sf-color-muted: 26 16% 42%;
-    --sf-color-muted-foreground: 26 14% 34%;
-    --sf-color-border: 27 18% 78%;
-    --sf-color-overlay: 28 30% 16%;
+  /* Light theme - Warm, inviting, creative */
+  --sf-color-background: 28 40% 98%;
+  --sf-color-surface: 27 32% 96%;
+  --sf-color-surface-muted: 28 28% 92%;
+  --sf-color-surface-elevated: 26 24% 90%;
+  --sf-color-foreground: 26 30% 18%;
+  --sf-color-muted: 26 16% 42%;
+  --sf-color-muted-foreground: 26 14% 34%;
+  --sf-color-border: 27 18% 78%;
+  --sf-color-overlay: 28 30% 16%;
 
-    /* Brand colors - Expressive orange/amber, warm and energetic */
-    --sf-color-brand-primary: 21 88% 52%;
-    --sf-color-brand-primary-foreground: 32 64% 98%;
-    --sf-color-brand-secondary: 25 34% 34%;
-    --sf-color-brand-secondary-foreground: 35 58% 94%;
-    --sf-color-brand-muted: 27 22% 82%;
-    --sf-color-brand-muted-foreground: 26 24% 32%;
-    --sf-color-brand-foreground: 26 30% 18%;
+  /* Brand colors - Expressive orange/amber, warm and energetic */
+  --sf-color-brand-primary: 21 88% 52%;
+  --sf-color-brand-primary-foreground: 32 64% 98%;
+  --sf-color-brand-secondary: 25 34% 34%;
+  --sf-color-brand-secondary-foreground: 35 58% 94%;
+  --sf-color-brand-muted: 27 22% 82%;
+  --sf-color-brand-muted-foreground: 26 24% 32%;
+  --sf-color-brand-foreground: 26 30% 18%;
 
-    /* Accent - Complementary warm tones */
-    --sf-color-accent: 19 92% 52%;
-    --sf-color-accent-foreground: 28 32% 16%;
-    --sf-color-accent-subtle: 20 88% 88%;
+  /* Accent - Complementary warm tones */
+  --sf-color-accent: 19 92% 52%;
+  --sf-color-accent-foreground: 28 32% 16%;
+  --sf-color-accent-subtle: 20 88% 88%;
 
-    /* Semantic colors - Expressive but accessible */
-    --sf-color-success: 142 42% 42%;
-    --sf-color-success-foreground: 32 58% 96%;
-    --sf-color-warning: 36 94% 56%;
-    --sf-color-warning-foreground: 28 40% 16%;
-    --sf-color-danger: 5 78% 50%;
-    --sf-color-danger-foreground: 26 62% 96%;
+  /* Semantic colors - Expressive but accessible */
+  --sf-color-success: 142 42% 42%;
+  --sf-color-success-foreground: 32 58% 96%;
+  --sf-color-warning: 36 94% 56%;
+  --sf-color-warning-foreground: 28 40% 16%;
+  --sf-color-danger: 5 78% 50%;
+  --sf-color-danger-foreground: 26 62% 96%;
 
-    --sf-ring: 21 88% 52%;
-    --sf-outline: 26 18% 80%;
-    --sf-ring-offset: 28 38% 96%;
+  --sf-ring: 21 88% 52%;
+  --sf-outline: 26 18% 80%;
+  --sf-ring-offset: 28 38% 96%;
 
-    /* Spacing - Generous, breathing room */
-    --sf-space-2xs: 0.25rem;
-    --sf-space-xs: 0.5rem;
-    --sf-space-sm: 0.75rem;
-    --sf-space-md: 1rem;
-    --sf-space-lg: 1.5rem;
-    --sf-space-xl: 2rem;
-    --sf-space-2xl: 3rem;
-    --sf-space-3xl: 4rem;
-    --sf-space-4xl: 6rem;
+  /* Spacing - Generous, breathing room */
+  --sf-space-2xs: 0.25rem;
+  --sf-space-xs: 0.5rem;
+  --sf-space-sm: 0.75rem;
+  --sf-space-md: 1rem;
+  --sf-space-lg: 1.5rem;
+  --sf-space-xl: 2rem;
+  --sf-space-2xl: 3rem;
+  --sf-space-3xl: 4rem;
+  --sf-space-4xl: 6rem;
 
-    /* Radius - Softer, more organic */
-    --sf-radius-none: 0px;
-    --sf-radius-xs: 6px;
-    --sf-radius-sm: 12px;
-    --sf-radius-md: 18px;
-    --sf-radius-lg: 28px;
-    --sf-radius-xl: 40px;
-    --sf-radius-full: 9999px;
+  /* Radius - Softer, more organic */
+  --sf-radius-none: 0px;
+  --sf-radius-xs: 6px;
+  --sf-radius-sm: 12px;
+  --sf-radius-md: 18px;
+  --sf-radius-lg: 28px;
+  --sf-radius-xl: 40px;
+  --sf-radius-full: 9999px;
 
-    /* Shadows - Deeper, more expressive */
-    --sf-shadow-soft: 0 28px 60px -32px rgb(56 34 20 / 0.28);
-    --sf-shadow-elevated: 0 22px 48px -28px rgb(56 34 20 / 0.24);
-    --sf-shadow-outline: 0 0 0 1px rgb(70 50 38 / 0.2);
-    --sf-shadow-glow: 0 0 40px -8px hsl(var(--sf-color-brand-primary) / 0.4);
+  /* Shadows - Deeper, more expressive */
+  --sf-shadow-soft: 0 28px 60px -32px rgb(56 34 20 / 0.28);
+  --sf-shadow-elevated: 0 22px 48px -28px rgb(56 34 20 / 0.24);
+  --sf-shadow-outline: 0 0 0 1px rgb(70 50 38 / 0.2);
+  --sf-shadow-glow: 0 0 40px -8px hsl(var(--sf-color-brand-primary) / 0.4);
 
-    /* Transitions - Smooth, musical */
-    --sf-transition-fast: 140ms ease-out;
-    --sf-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-    --sf-transition-emphasized: 280ms cubic-bezier(0.65, 0, 0.35, 1);
-    --sf-transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
+  /* Transitions - Smooth, musical */
+  --sf-transition-fast: 140ms ease-out;
+  --sf-transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --sf-transition-emphasized: 280ms cubic-bezier(0.65, 0, 0.35, 1);
+  --sf-transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
 
-  [data-theme='dark'] {
-    /* Dark theme - Rich, deep, studio-like */
-    --sf-color-background: 26 28% 10%;
-    --sf-color-surface: 26 26% 14%;
-    --sf-color-surface-muted: 26 24% 19%;
-    --sf-color-surface-elevated: 25 20% 24%;
-    --sf-color-foreground: 38 60% 94%;
-    --sf-color-muted: 28 16% 68%;
-    --sf-color-muted-foreground: 28 18% 82%;
-    --sf-color-border: 27 18% 32%;
-    --sf-color-overlay: 26 26% 8%;
+[data-theme='dark'] {
+  /* Dark theme - Rich, deep, studio-like */
+  --sf-color-background: 26 28% 10%;
+  --sf-color-surface: 26 26% 14%;
+  --sf-color-surface-muted: 26 24% 19%;
+  --sf-color-surface-elevated: 25 20% 24%;
+  --sf-color-foreground: 38 60% 94%;
+  --sf-color-muted: 28 16% 68%;
+  --sf-color-muted-foreground: 28 18% 82%;
+  --sf-color-border: 27 18% 32%;
+  --sf-color-overlay: 26 26% 8%;
 
-    --sf-color-brand-primary: 21 92% 64%;
-    --sf-color-brand-primary-foreground: 33 70% 98%;
-    --sf-color-brand-secondary: 26 28% 68%;
-    --sf-color-brand-secondary-foreground: 26 22% 12%;
-    --sf-color-brand-muted: 26 20% 36%;
-    --sf-color-brand-muted-foreground: 28 26% 78%;
-    --sf-color-brand-foreground: 38 60% 94%;
+  --sf-color-brand-primary: 21 92% 64%;
+  --sf-color-brand-primary-foreground: 33 70% 98%;
+  --sf-color-brand-secondary: 26 28% 68%;
+  --sf-color-brand-secondary-foreground: 26 22% 12%;
+  --sf-color-brand-muted: 26 20% 36%;
+  --sf-color-brand-muted-foreground: 28 26% 78%;
+  --sf-color-brand-foreground: 38 60% 94%;
 
-    --sf-color-accent: 20 88% 60%;
-    --sf-color-accent-foreground: 26 28% 12%;
-    --sf-color-accent-subtle: 19 62% 28%;
+  --sf-color-accent: 20 88% 60%;
+  --sf-color-accent-foreground: 26 28% 12%;
+  --sf-color-accent-subtle: 19 62% 28%;
 
-    --sf-color-success: 141 52% 52%;
-    --sf-color-success-foreground: 36 58% 8%;
-    --sf-color-warning: 38 94% 62%;
-    --sf-color-warning-foreground: 28 38% 12%;
-    --sf-color-danger: 6 82% 58%;
-    --sf-color-danger-foreground: 28 74% 12%;
+  --sf-color-success: 141 52% 52%;
+  --sf-color-success-foreground: 36 58% 8%;
+  --sf-color-warning: 38 94% 62%;
+  --sf-color-warning-foreground: 28 38% 12%;
+  --sf-color-danger: 6 82% 58%;
+  --sf-color-danger-foreground: 28 74% 12%;
 
-    --sf-ring: 21 92% 64%;
-    --sf-outline: 28 24% 40%;
-    --sf-ring-offset: 26 28% 12%;
+  --sf-ring: 21 92% 64%;
+  --sf-outline: 28 24% 40%;
+  --sf-ring-offset: 26 28% 12%;
 
-    --sf-shadow-soft: 0 32px 70px -30px rgb(8 6 4 / 0.62);
-    --sf-shadow-elevated: 0 26px 60px -32px rgb(8 6 4 / 0.5);
-    --sf-shadow-outline: 0 0 0 1px rgb(198 180 168 / 0.18);
-    --sf-shadow-glow: 0 0 40px -8px hsl(var(--sf-color-brand-primary) / 0.5);
-  }
+  --sf-shadow-soft: 0 32px 70px -30px rgb(8 6 4 / 0.62);
+  --sf-shadow-elevated: 0 26px 60px -32px rgb(8 6 4 / 0.5);
+  --sf-shadow-outline: 0 0 0 1px rgb(198 180 168 / 0.18);
+  --sf-shadow-glow: 0 0 40px -8px hsl(var(--sf-color-brand-primary) / 0.5);
+}
 
-  [data-theme='warm'] {
-    /* Warm theme - Cozy studio, golden hour */
-    --sf-color-background: 32 60% 96%;
-    --sf-color-surface: 30 52% 94%;
-    --sf-color-surface-muted: 28 46% 90%;
-    --sf-color-surface-elevated: 26 40% 86%;
-    --sf-color-foreground: 24 30% 16%;
-    --sf-color-muted: 24 20% 38%;
-    --sf-color-muted-foreground: 24 16% 30%;
-    --sf-color-border: 26 32% 78%;
-    --sf-color-overlay: 24 24% 12%;
+[data-theme='warm'] {
+  /* Warm theme - Cozy studio, golden hour */
+  --sf-color-background: 32 60% 96%;
+  --sf-color-surface: 30 52% 94%;
+  --sf-color-surface-muted: 28 46% 90%;
+  --sf-color-surface-elevated: 26 40% 86%;
+  --sf-color-foreground: 24 30% 16%;
+  --sf-color-muted: 24 20% 38%;
+  --sf-color-muted-foreground: 24 16% 30%;
+  --sf-color-border: 26 32% 78%;
+  --sf-color-overlay: 24 24% 12%;
 
-    --sf-color-brand-primary: 18 86% 52%;
-    --sf-color-brand-primary-foreground: 28 60% 98%;
-    --sf-color-brand-secondary: 23 36% 32%;
-    --sf-color-brand-secondary-foreground: 32 68% 94%;
-    --sf-color-brand-muted: 20 26% 82%;
-    --sf-color-brand-muted-foreground: 24 26% 28%;
-    --sf-color-brand-foreground: 24 30% 16%;
+  --sf-color-brand-primary: 18 86% 52%;
+  --sf-color-brand-primary-foreground: 28 60% 98%;
+  --sf-color-brand-secondary: 23 36% 32%;
+  --sf-color-brand-secondary-foreground: 32 68% 94%;
+  --sf-color-brand-muted: 20 26% 82%;
+  --sf-color-brand-muted-foreground: 24 26% 28%;
+  --sf-color-brand-foreground: 24 30% 16%;
 
-    --sf-color-accent: 16 92% 54%;
-    --sf-color-accent-foreground: 26 34% 14%;
-    --sf-color-accent-subtle: 16 86% 88%;
+  --sf-color-accent: 16 92% 54%;
+  --sf-color-accent-foreground: 26 34% 14%;
+  --sf-color-accent-subtle: 16 86% 88%;
 
-    --sf-color-success: 142 42% 42%;
-    --sf-color-success-foreground: 32 58% 96%;
-    --sf-color-warning: 35 94% 58%;
-    --sf-color-warning-foreground: 26 42% 18%;
-    --sf-color-danger: 4 78% 50%;
-    --sf-color-danger-foreground: 24 62% 96%;
+  --sf-color-success: 142 42% 42%;
+  --sf-color-success-foreground: 32 58% 96%;
+  --sf-color-warning: 35 94% 58%;
+  --sf-color-warning-foreground: 26 42% 18%;
+  --sf-color-danger: 4 78% 50%;
+  --sf-color-danger-foreground: 24 62% 96%;
 
-    --sf-ring: 16 92% 54%;
-    --sf-outline: 26 28% 78%;
-    --sf-ring-offset: 32 60% 96%;
+  --sf-ring: 16 92% 54%;
+  --sf-outline: 26 28% 78%;
+  --sf-ring-offset: 32 60% 96%;
 
-    --sf-shadow-glow: 0 0 40px -8px hsl(var(--sf-color-brand-primary) / 0.35);
-  }
+  --sf-shadow-glow: 0 0 40px -8px hsl(var(--sf-color-brand-primary) / 0.35);
+}

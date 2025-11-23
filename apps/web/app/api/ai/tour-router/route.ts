@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
       await requireFeatureAccess('aiTourRouter');
     } catch (error: any) {
       return NextResponse.json(
-        { 
+        {
           error: error.message || 'Upgrade to Creator or Studio plan to access AI tour routing',
           requiresUpgrade: true,
           currentTier: error.tier || 'free',
@@ -44,19 +44,13 @@ export async function POST(request: NextRequest) {
     const { venues } = body;
 
     if (!venues || !Array.isArray(venues) || venues.length < 2) {
-      return NextResponse.json(
-        { error: 'At least 2 venues required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'At least 2 venues required' }, { status: 400 });
     }
 
     const optimizedRoute = await optimizeTourRoute(venues);
 
     if (!optimizedRoute) {
-      return NextResponse.json(
-        { error: 'Tour routing service unavailable' },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: 'Tour routing service unavailable' }, { status: 503 });
     }
 
     // 📊 Track successful usage (tour routing counts as 2 requests)
@@ -68,14 +62,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       optimizedRoute,
       method: 'AI ant colony optimization (Tokyo subway model)',
-      disclaimer: 'AI-suggested routing - verify travel times and logistics'
+      disclaimer: 'AI-suggested routing - verify travel times and logistics',
     });
   } catch (error: any) {
     console.error('AI tour router error:', error);
-    return NextResponse.json(
-      { error: 'Failed to optimize tour route' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to optimize tour route' }, { status: 500 });
   }
 }
-

@@ -58,7 +58,7 @@ export async function hasFeatureAccess(
   try {
     // Get current authenticated user
     const supabaseUser = await getCurrentUser();
-    
+
     if (!supabaseUser || !supabaseUser.email) {
       return {
         hasAccess: false,
@@ -97,7 +97,9 @@ export async function hasFeatureAccess(
     return {
       hasAccess,
       tier,
-      reason: hasAccess ? undefined : `Feature requires ${tier === 'free' ? 'Creator or Studio' : 'Studio'} plan`,
+      reason: hasAccess
+        ? undefined
+        : `Feature requires ${tier === 'free' ? 'Creator or Studio' : 'Studio'} plan`,
     };
   } catch (error) {
     console.error('Error checking feature access:', error);
@@ -145,11 +147,9 @@ export async function requireFeatureAccess(
   featureName: FeatureName
 ): Promise<{ tier: SubscriptionTier }> {
   const result = await hasFeatureAccess(featureName);
-  
+
   if (!result.hasAccess) {
-    const error: any = new Error(
-      result.reason || 'You do not have access to this feature'
-    );
+    const error: any = new Error(result.reason || 'You do not have access to this feature');
     error.statusCode = 403;
     error.tier = result.tier;
     throw error;
@@ -164,7 +164,7 @@ export async function requireFeatureAccess(
 export async function getUserTier(): Promise<SubscriptionTier> {
   try {
     const supabaseUser = await getCurrentUser();
-    
+
     if (!supabaseUser || !supabaseUser.email) {
       return 'free';
     }
@@ -248,4 +248,3 @@ export async function canCreateProject(
     return { canCreate: false, limit: 3, tier: 'free' };
   }
 }
-

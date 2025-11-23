@@ -29,7 +29,7 @@ export interface UpdateProjectInput {
 export async function createProject(input: CreateProjectInput): Promise<Project> {
   // Validate slug uniqueness
   const existing = await prisma.project.findUnique({
-    where: { slug: input.slug }
+    where: { slug: input.slug },
   });
 
   if (existing) {
@@ -38,7 +38,7 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
 
   // Validate org exists
   const org = await prisma.org.findUnique({
-    where: { id: input.orgId }
+    where: { id: input.orgId },
   });
 
   if (!org) {
@@ -54,8 +54,8 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
       tagline: input.tagline,
       coverImage: input.coverImage,
       visibility: input.visibility ?? 'private',
-      status: input.status ?? 'active'
-    }
+      status: input.status ?? 'active',
+    },
   });
 }
 
@@ -68,7 +68,7 @@ export async function updateProject(
 ): Promise<Project> {
   // Check if project exists
   const existing = await prisma.project.findUnique({
-    where: { id: projectId }
+    where: { id: projectId },
   });
 
   if (!existing) {
@@ -78,7 +78,7 @@ export async function updateProject(
   // If slug is being changed, check uniqueness
   if (input.slug && input.slug !== existing.slug) {
     const slugConflict = await prisma.project.findUnique({
-      where: { slug: input.slug }
+      where: { slug: input.slug },
     });
 
     if (slugConflict) {
@@ -90,8 +90,8 @@ export async function updateProject(
     where: { id: projectId },
     data: {
       ...input,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -102,7 +102,7 @@ export async function getProjectBySlug(slug: string, orgId?: string) {
   return prisma.project.findFirst({
     where: {
       slug,
-      ...(orgId ? { orgId } : {})
+      ...(orgId ? { orgId } : {}),
     },
     include: {
       org: {
@@ -114,32 +114,32 @@ export async function getProjectBySlug(slug: string, orgId?: string) {
                   id: true,
                   name: true,
                   email: true,
-                  image: true
-                }
-              }
-            }
-          }
-        }
+                  image: true,
+                },
+              },
+            },
+          },
+        },
       },
       songs: {
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
       },
       assets: {
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
       },
       splitSheets: {
         include: {
-          contributors: true
+          contributors: true,
         },
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
       },
       licenses: {
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
       },
       events: {
-        orderBy: { startDate: 'asc' }
-      }
-    }
+        orderBy: { startDate: 'asc' },
+      },
+    },
   });
 }
 
@@ -158,7 +158,7 @@ export async function listProjects(
   const where = {
     orgId,
     ...(options?.visibility ? { visibility: options.visibility } : {}),
-    ...(options?.status ? { status: options.status } : {})
+    ...(options?.status ? { status: options.status } : {}),
   };
 
   const [projects, total] = await Promise.all([
@@ -173,18 +173,18 @@ export async function listProjects(
             songs: true,
             assets: true,
             splitSheets: true,
-            licenses: true
-          }
-        }
-      }
+            licenses: true,
+          },
+        },
+      },
     }),
-    prisma.project.count({ where })
+    prisma.project.count({ where }),
   ]);
 
   return {
     projects,
     total,
-    hasMore: (options?.offset ?? 0) + projects.length < total
+    hasMore: (options?.offset ?? 0) + projects.length < total,
   };
 }
 
@@ -194,7 +194,7 @@ export async function listProjects(
 export async function deleteProject(projectId: string, orgId: string): Promise<void> {
   // Verify ownership
   const project = await prisma.project.findUnique({
-    where: { id: projectId }
+    where: { id: projectId },
   });
 
   if (!project) {
@@ -206,7 +206,6 @@ export async function deleteProject(projectId: string, orgId: string): Promise<v
   }
 
   await prisma.project.delete({
-    where: { id: projectId }
+    where: { id: projectId },
   });
 }
-

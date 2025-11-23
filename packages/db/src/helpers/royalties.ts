@@ -1,4 +1,3 @@
-
 import { prisma } from '../index';
 
 export interface RoyaltyCalculation {
@@ -36,9 +35,9 @@ export async function calculateRoyaltyWaterfall(
     where: { id: splitSheetId },
     include: {
       contributors: {
-        orderBy: { percentage: 'desc' }
-      }
-    }
+        orderBy: { percentage: 'desc' },
+      },
+    },
   });
 
   if (!splitSheet) {
@@ -57,7 +56,9 @@ export async function calculateRoyaltyWaterfall(
   // Validate contributors total 100%
   const totalPercentage = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
   if (Math.abs(totalPercentage - 100) > 0.001) {
-    throw new Error(`Split sheet contributors total ${totalPercentage.toFixed(2)}%, must be exactly 100%`);
+    throw new Error(
+      `Split sheet contributors total ${totalPercentage.toFixed(2)}%, must be exactly 100%`
+    );
   }
 
   // Calculate royalties with proper rounding
@@ -71,7 +72,7 @@ export async function calculateRoyaltyWaterfall(
       contributorName: contributor.name,
       percentage: contributor.percentage,
       amount,
-      roundedAmount
+      roundedAmount,
     };
   });
 
@@ -83,7 +84,7 @@ export async function calculateRoyaltyWaterfall(
     totalRevenue: revenue,
     totalDistributed,
     roundingDifference,
-    royalties
+    royalties,
   };
 }
 
@@ -100,7 +101,7 @@ export async function calculateAggregatedRoyalties(
 
   // Calculate for each split sheet
   const results = await Promise.all(
-    splitSheetIds.map(id => calculateRoyaltyWaterfall(id, revenue))
+    splitSheetIds.map((id) => calculateRoyaltyWaterfall(id, revenue))
   );
 
   // Aggregate results
@@ -128,12 +129,6 @@ export async function calculateAggregatedRoyalties(
     totalRevenue: revenue,
     totalDistributed,
     roundingDifference,
-    royalties: Array.from(aggregatedRoyalties.values())
+    royalties: Array.from(aggregatedRoyalties.values()),
   };
 }
-
-
-
-
-
-

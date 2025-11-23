@@ -11,6 +11,7 @@
 **Why:** Musicians have 50-100 songs in Spotify playlists. Typing them manually sucks.
 
 **What to Build:**
+
 ```
 "Import from Spotify" button
   → Spotify OAuth login
@@ -31,6 +32,7 @@
 **Why:** Every band needs printed setlists for stage/crew/venue.
 
 **What to Build:**
+
 ```
 "Export PDF" button
   → Generate professional PDF:
@@ -52,6 +54,7 @@
 **Why:** Bands need to link setlists to actual gigs (date, venue, time).
 
 **What to Build:**
+
 ```
 API Routes:
   - POST /api/shows (create show with date, venue, notes)
@@ -78,6 +81,7 @@ UI Updates:
 **Why:** "I have 50 songs, need a 90-minute set, what should I play?"
 
 **What to Build:**
+
 ```
 "Generate Setlist" button
   → User inputs:
@@ -106,15 +110,19 @@ UI Updates:
 ## 🏆 COMPETITIVE ADVANTAGE AFTER PHASE 1
 
 ### We Beat SimpleSetlist
+
 - ✅ All their features + real-time collaboration + key detection
 
 ### We Beat Setlix
+
 - ✅ All their features + better collaboration + video integration
 
 ### We Compete with SetFlow Pro
+
 - ✅ Feature parity + video collaboration + integrated songwriting
 
 ### We Challenge BandHelper
+
 - ✅ Better UX + real-time collab + web-first (no app install)
 - ⚠️ They still have more admin features (finances, contacts)
 - 🎯 But we target creative collaboration, not band admin
@@ -124,20 +132,26 @@ UI Updates:
 ## 💡 PHASE 2: DIFFERENTIATION (Week 2 - If We Want Market Dominance)
 
 ### 5️⃣ Setlist Templates (4-6 hours)
+
 Pre-built smart templates:
+
 - "Festival Set" (45-60 min, high energy only)
 - "Club Tour" (90 min, mixed energy)
 - "Acoustic Set" (slow, intimate songs only)
 - "Wedding/Corporate" (client-friendly, no explicit content)
 
 ### 6️⃣ Client Setlist Builder (6-8 hours)
+
 For cover bands taking requests:
+
 - Public form: Client selects songs from your repertoire
 - Band reviews and approves/rejects
 - Merge approved songs into setlist
 
 ### 7️⃣ Mobile Performer Mode (6-8 hours)
+
 Full-screen mobile view for stage:
+
 - Large fonts, dark mode
 - Swipe to next song
 - Tap song → view lyrics + chords (from Songwriting Studio)
@@ -148,15 +162,18 @@ Full-screen mobile view for stage:
 ## 🚨 BRUTAL TRUTH
 
 **What We Have Today:**
+
 - ✅ BEST real-time collaboration (Ably + multi-cursors)
 - ✅ BEST user experience (modern, beautiful, 60fps)
 - ✅ UNIQUE key change detection
 - ✅ UNIQUE integration with songwriting + video
 
 **What We're Missing:**
+
 - ❌ 4 industry-standard features (Spotify, PDF, Show/Venue, Generator)
 
 **Time to Market Leader:**
+
 - **1 week:** Feature parity with best competitors
 - **2 weeks:** Market leader (better collab + all standard features)
 - **3 weeks:** Uncontested #1 (add AI + analytics)
@@ -166,11 +183,13 @@ Full-screen mobile view for stage:
 ## 🎸 GO/NO-GO DECISION
 
 ### GO if:
+
 - ✅ We want to dominate setlist management market
 - ✅ We have 3-4 days for Phase 1 implementation
 - ✅ We believe real-time collaboration is our moat
 
 ### NO-GO if:
+
 - ❌ Setlist is just a "nice-to-have" feature (not core product)
 - ❌ We can't commit 1 week to reach parity
 - ❌ We prefer to focus on other features (AI, monetization, etc.)
@@ -182,6 +201,7 @@ Full-screen mobile view for stage:
 **DO IT.**
 
 **Reasoning:**
+
 1. Database models already exist (50% of work done)
 2. Real-time collab already best-in-class (unique advantage)
 3. Phase 1 features are all high-impact, low-complexity
@@ -189,11 +209,13 @@ Full-screen mobile view for stage:
 5. Cover bands are underserved market (willing to pay)
 
 **ROI:**
+
 - **Investment:** 20-26 hours (3-4 days)
 - **Payoff:** Market-leading setlist tool, new user segment (cover bands), sticky feature (bands use setlists weekly)
 - **Risk:** Low (database foundation solid, Ably working perfectly)
 
 **Mycelial Flow:**
+
 ```
 Write Song → Save in Project → Add to Setlist → Link to Show → Rehearse (Video) → Perform (Mobile) → Track (Analytics)
 ```
@@ -205,4 +227,3 @@ Write Song → Save in Project → Add to Setlist → Link to Show → Rehearse 
 **DECISION:** Build Phase 1 (4 features, 3-4 days). Evaluate Phase 2 based on user feedback.
 
 🎸 **Let's dominate this market.** 🍄
-

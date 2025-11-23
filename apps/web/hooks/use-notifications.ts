@@ -1,9 +1,9 @@
 /**
  * Notifications Hook
- * 
+ *
  * Alert system for the mycelial network
  * Like Tokyo subway notifications for incoming trains
- * 
+ *
  * Notification types:
  * - mention - Someone mentioned you in chat
  * - invite - You were invited to a project
@@ -16,7 +16,7 @@
 import { useEffect, useState } from 'react';
 import { Realtime, Types } from 'ably';
 
-export type NotificationType = 
+export type NotificationType =
   | 'mention'
   | 'invite'
   | 'comment'
@@ -85,8 +85,8 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
             timestamp: message.timestamp || Date.now(),
           };
 
-          setNotifications(prev => [notification, ...prev]);
-          setUnreadCount(prev => prev + 1);
+          setNotifications((prev) => [notification, ...prev]);
+          setUnreadCount((prev) => prev + 1);
 
           // Trigger callback if provided
           onNewNotification?.(notification);
@@ -118,7 +118,6 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
         }
 
         setIsConnected(true);
-
       } catch (err) {
         console.error('Ably notifications error:', err);
         if (mounted) {
@@ -146,28 +145,26 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
 
   // Mark notification as read
   const markAsRead = (notificationId: string) => {
-    setNotifications(prev => 
-      prev.map(n => 
-        n.id === notificationId ? { ...n, read: true } : n
-      )
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
     );
-    setUnreadCount(prev => Math.max(0, prev - 1));
+    setUnreadCount((prev) => Math.max(0, prev - 1));
   };
 
   // Mark all as read
   const markAllAsRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnreadCount(0);
   };
 
   // Delete notification
   const deleteNotification = (notificationId: string) => {
-    setNotifications(prev => {
-      const notif = prev.find(n => n.id === notificationId);
+    setNotifications((prev) => {
+      const notif = prev.find((n) => n.id === notificationId);
       if (notif && !notif.read) {
-        setUnreadCount(count => Math.max(0, count - 1));
+        setUnreadCount((count) => Math.max(0, count - 1));
       }
-      return prev.filter(n => n.id !== notificationId);
+      return prev.filter((n) => n.id !== notificationId);
     });
   };
 
@@ -181,7 +178,10 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
   };
 
   // Send notification to another user (for components to use)
-  const sendNotification = async (toUserId: string, notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) => {
+  const sendNotification = async (
+    toUserId: string,
+    notification: Omit<Notification, 'id' | 'timestamp' | 'read'>
+  ) => {
     if (!ably || !isConnected) {
       console.error('Cannot send notification: Ably not connected');
       return;
@@ -224,25 +224,38 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
 
 export function getNotificationIcon(type: NotificationType): string {
   switch (type) {
-    case 'mention': return '💬';
-    case 'invite': return '✉️';
-    case 'comment': return '💭';
-    case 'upload': return '🎧';
-    case 'video_start': return '📹';
-    case 'collab_request': return '🤝';
-    default: return '🔔';
+    case 'mention':
+      return '💬';
+    case 'invite':
+      return '✉️';
+    case 'comment':
+      return '💭';
+    case 'upload':
+      return '🎧';
+    case 'video_start':
+      return '📹';
+    case 'collab_request':
+      return '🤝';
+    default:
+      return '🔔';
   }
 }
 
 export function getNotificationColor(type: NotificationType): string {
   switch (type) {
-    case 'mention': return 'text-cyan-400';
-    case 'invite': return 'text-yellow-400';
-    case 'comment': return 'text-purple-400';
-    case 'upload': return 'text-orange-400';
-    case 'video_start': return 'text-pink-400';
-    case 'collab_request': return 'text-green-400';
-    default: return 'text-gray-400';
+    case 'mention':
+      return 'text-cyan-400';
+    case 'invite':
+      return 'text-yellow-400';
+    case 'comment':
+      return 'text-purple-400';
+    case 'upload':
+      return 'text-orange-400';
+    case 'video_start':
+      return 'text-pink-400';
+    case 'collab_request':
+      return 'text-green-400';
+    default:
+      return 'text-gray-400';
   }
 }
-

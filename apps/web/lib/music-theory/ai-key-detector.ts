@@ -10,13 +10,13 @@ export interface AIKeyAnalysis {
   confidence: number;
   mode: string;
   reasons: string[];
-  
+
   // Advanced analysis
   modalAnalysis?: {
     mode: 'Ionian' | 'Dorian' | 'Phrygian' | 'Lydian' | 'Mixolydian' | 'Aeolian' | 'Locrian';
     confidence: number;
   };
-  
+
   secondaryDominants?: string[];
   borrowedChords?: string[];
   modulations?: {
@@ -24,10 +24,10 @@ export interface AIKeyAnalysis {
     toKey: string;
     atChord: number;
   }[];
-  
+
   progressionType?: string; // "I-IV-V-vi pop progression", "ii-V-I jazz", etc.
   suggestedNextChords?: string[];
-  
+
   // Chord substitutions for each chord in the progression
   chordAlternatives?: {
     originalChord: string;
@@ -37,13 +37,15 @@ export interface AIKeyAnalysis {
       vibe: 'similar' | 'jazzier' | 'mellower' | 'brighter' | 'darker';
     }[];
   }[];
-  
+
   // AI insights
   aiInsights: string[];
   musicalCharacter?: string; // "Melancholic", "Uplifting", "Jazzy", etc.
 }
 
-const AI_ANALYSIS_PROMPT = (chords: string[]) => `You are an expert music theorist and composer. Analyze this chord progression with deep musical knowledge:
+const AI_ANALYSIS_PROMPT = (
+  chords: string[]
+) => `You are an expert music theorist and composer. Analyze this chord progression with deep musical knowledge:
 
 Chords: ${chords.join(' → ')}
 
@@ -109,7 +111,7 @@ async function callAIAnalysis(chords: string[]): Promise<AIKeyAnalysis | null> {
   try {
     // Use OpenRouter or direct API
     const apiKey = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || process.env.OPENAI_API_KEY;
-    
+
     if (!apiKey) {
       console.warn('No AI API key configured for key detection');
       return null;
@@ -119,9 +121,10 @@ async function callAIAnalysis(chords: string[]): Promise<AIKeyAnalysis | null> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : 'https://cronkwaters.com',
-        'X-Title': 'Rock N\' Roll Basement - AI Key Detection',
+        Authorization: `Bearer ${apiKey}`,
+        'HTTP-Referer':
+          typeof window !== 'undefined' ? window.location.origin : 'https://cronkwaters.com',
+        'X-Title': "Rock N' Roll Basement - AI Key Detection",
       },
       body: JSON.stringify({
         model: 'anthropic/claude-3.5-sonnet', // Best for reasoning
@@ -142,22 +145,22 @@ async function callAIAnalysis(chords: string[]): Promise<AIKeyAnalysis | null> {
 
     const data = await response.json();
     const content = data.choices[0]?.message?.content;
-    
+
     if (!content) {
       throw new Error('No content in AI response');
     }
 
     // Extract JSON from response (handle markdown code blocks)
-    const jsonMatch = content.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/) || content.match(/(\{[\s\S]*\})/);
-    
+    const jsonMatch =
+      content.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/) || content.match(/(\{[\s\S]*\})/);
+
     if (!jsonMatch) {
       throw new Error('Could not parse AI response as JSON');
     }
 
     const analysis = JSON.parse(jsonMatch[1]);
-    
-    return analysis as AIKeyAnalysis;
 
+    return analysis as AIKeyAnalysis;
   } catch (error) {
     console.error('AI key detection failed:', error);
     return null;
@@ -177,7 +180,7 @@ export async function detectKeyWithAI(chords: string[]): Promise<{
 
   // Run AI analysis in parallel (if API key available)
   let aiAnalysis: AIKeyAnalysis | null = null;
-  
+
   // Only use AI for 3+ chords (better context)
   if (chords.length >= 3) {
     aiAnalysis = await callAIAnalysis(chords);
@@ -191,16 +194,13 @@ export async function detectKeyWithAI(chords: string[]): Promise<{
     const aiSuggestion: KeySuggestion = {
       key: aiAnalysis.primaryKey,
       confidence: aiAnalysis.confidence,
-      reasons: [
-        ...aiAnalysis.reasons,
-        ...(aiAnalysis.aiInsights?.slice(0, 2) || []),
-      ],
+      reasons: [...aiAnalysis.reasons, ...(aiAnalysis.aiInsights?.slice(0, 2) || [])],
       mode: aiAnalysis.primaryKey.toLowerCase().includes('minor') ? 'minor' : 'major',
     };
 
     // Remove duplicate if exists
     combinedResults = combinedResults.filter(
-      r => r.key.toLowerCase() !== aiAnalysis!.primaryKey.toLowerCase()
+      (r) => r.key.toLowerCase() !== aiAnalysis!.primaryKey.toLowerCase()
     );
 
     // Add AI result at top
@@ -221,4 +221,3 @@ export async function getMainKeyWithAI(chords: string[]): Promise<string | null>
   const result = await detectKeyWithAI(chords);
   return result.combined.length > 0 ? result.combined[0].key : null;
 }
-

@@ -22,7 +22,7 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
 
   const getAIHelp = async () => {
     if (!query.trim()) return;
-    
+
     setLoading(true);
     setSuggestion(null);
 
@@ -32,8 +32,8 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: query,
-          context: projectContext
-        })
+          context: projectContext,
+        }),
       });
 
       if (!response.ok) throw new Error('AI service unavailable');
@@ -61,25 +61,28 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
       <Button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 border border-purple-500/30"
+        className="border border-purple-500/30 bg-purple-600/20 text-purple-400 hover:bg-purple-600/30"
         title="AI Collaboration Assistant"
       >
-        <Sparkles className="w-4 h-4" />
+        <Sparkles className="h-4 w-4" />
       </Button>
 
       {isOpen && (
-        <div className="absolute bottom-full right-0 mb-2 w-96 bg-surface border border-border rounded-lg shadow-2xl p-4 z-50">
-          <div className="flex items-center justify-between mb-3">
+        <div className="absolute bottom-full right-0 z-50 mb-2 w-96 rounded-lg border border-border bg-surface p-4 shadow-2xl">
+          <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-400" />
+              <Sparkles className="h-5 w-5 text-purple-400" />
               <h4 className="font-semibold text-foreground">AI Assistant</h4>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
-              <X className="w-4 h-4" />
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
             </button>
           </div>
 
-          <p className="text-xs text-muted-foreground mb-3">
+          <p className="mb-3 text-xs text-muted-foreground">
             Ask about chords, song structure, lyrics, or music theory
           </p>
 
@@ -88,31 +91,35 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="What chord goes after Am in this progression?"
-              className="w-full px-3 py-2 bg-surface-muted border border-border rounded text-sm text-foreground resize-none focus:border-brand-primary focus:outline-none"
+              className="w-full resize-none rounded border border-border bg-surface-muted px-3 py-2 text-sm text-foreground focus:border-brand-primary focus:outline-none"
               rows={3}
             />
 
             <Button
               onClick={getAIHelp}
               disabled={loading || !query.trim()}
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+              className="w-full bg-purple-600 text-white hover:bg-purple-700"
             >
               {loading ? (
-                <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Thinking...</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Thinking...
+                </>
               ) : (
-                <><Sparkles className="w-4 h-4 mr-2" /> Get AI Suggestion</>
+                <>
+                  <Sparkles className="mr-2 h-4 w-4" /> Get AI Suggestion
+                </>
               )}
             </Button>
 
             {suggestion && (
-              <div className="bg-purple-500/10 border border-purple-500/20 rounded p-3">
-                <p className="text-xs text-purple-400 font-semibold mb-2">AI SUGGESTION:</p>
-                <p className="text-sm text-foreground mb-3">{suggestion}</p>
+              <div className="rounded border border-purple-500/20 bg-purple-500/10 p-3">
+                <p className="mb-2 text-xs font-semibold text-purple-400">AI SUGGESTION:</p>
+                <p className="mb-3 text-sm text-foreground">{suggestion}</p>
                 <div className="flex gap-2">
                   <Button
                     onClick={useSuggestion}
                     size="sm"
-                    className="bg-purple-600 hover:bg-purple-700 text-white text-xs"
+                    className="bg-purple-600 text-xs text-white hover:bg-purple-700"
                   >
                     Use This Suggestion
                   </Button>
@@ -129,7 +136,7 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
             )}
           </div>
 
-          <div className="mt-3 pt-3 border-t border-border">
+          <div className="mt-3 border-t border-border pt-3">
             <p className="text-xs text-muted-foreground">
               ✨ <span className="text-purple-400">Ethical AI</span> - Suggestions only, you create
             </p>
@@ -139,4 +146,3 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
     </div>
   );
 }
-

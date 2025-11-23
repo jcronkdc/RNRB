@@ -9,26 +9,26 @@
 
 ### Competition Overview
 
-| Feature | BandHelper | SetFlow Pro | Setlix | SimpleSetlist | **CronkWaters** |
-|---------|------------|-------------|--------|---------------|-----------------|
-| **Web-Based** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Real-Time Collaboration** | ⚠️ Basic | ✅ | ⚠️ Basic | ❌ | ✅ **Superior** |
-| **Drag-Drop Reordering** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Key Change Detection** | ✅ | ❌ | ❌ | ❌ | ✅ |
-| **Duration Calculator** | ✅ | ✅ | ⚠️ Basic | ❌ | ✅ |
-| **Spotify Import** | ❌ | ❌ | ✅ | ❌ | ❌ **NEEDS** |
-| **Instant Setlist Generator** | ⚠️ Manual | ✅ | ✅ | ❌ | ❌ **NEEDS** |
-| **Client Setlist Builder** | ❌ | ⚠️ Basic | ✅ | ❌ | ❌ **NEEDS** |
-| **Templates Library** | ⚠️ Limited | ⚠️ Limited | ❌ | ❌ | ❌ **NEEDS** |
-| **Show/Venue Management** | ✅ **Full Suite** | ❌ | ❌ | ❌ | ⚠️ **Partial** |
-| **PDF/Print Export** | ✅ | ✅ | ✅ | ✅ | ❌ **NEEDS** |
-| **Mobile Performer Mode** | ✅ Apps | ⚠️ Web-only | ⚠️ Web-only | ❌ | ❌ **NEEDS** |
-| **Lyrics/Chords On Stage** | ✅ | ❌ | ❌ | ❌ | ⚠️ **In Songwriting** |
-| **Band Communication** | ✅ | ✅ | ⚠️ Basic | ❌ | ✅ **Chat** |
-| **Video Collaboration** | ❌ | ❌ | ❌ | ❌ | ✅ **Daily.co** |
-| **Multi-Cursor Editing** | ❌ | ⚠️ Basic | ❌ | ❌ | ✅ **Ably** |
-| **Presence Awareness** | ❌ | ✅ | ❌ | ❌ | ✅ |
-| **AI-Powered** | ❌ | ❌ | ❌ | ❌ | ✅ **Potential** |
+| Feature                       | BandHelper        | SetFlow Pro | Setlix      | SimpleSetlist | **CronkWaters**       |
+| ----------------------------- | ----------------- | ----------- | ----------- | ------------- | --------------------- |
+| **Web-Based**                 | ✅                | ✅          | ✅          | ✅            | ✅                    |
+| **Real-Time Collaboration**   | ⚠️ Basic          | ✅          | ⚠️ Basic    | ❌            | ✅ **Superior**       |
+| **Drag-Drop Reordering**      | ✅                | ✅          | ✅          | ✅            | ✅                    |
+| **Key Change Detection**      | ✅                | ❌          | ❌          | ❌            | ✅                    |
+| **Duration Calculator**       | ✅                | ✅          | ⚠️ Basic    | ❌            | ✅                    |
+| **Spotify Import**            | ❌                | ❌          | ✅          | ❌            | ❌ **NEEDS**          |
+| **Instant Setlist Generator** | ⚠️ Manual         | ✅          | ✅          | ❌            | ❌ **NEEDS**          |
+| **Client Setlist Builder**    | ❌                | ⚠️ Basic    | ✅          | ❌            | ❌ **NEEDS**          |
+| **Templates Library**         | ⚠️ Limited        | ⚠️ Limited  | ❌          | ❌            | ❌ **NEEDS**          |
+| **Show/Venue Management**     | ✅ **Full Suite** | ❌          | ❌          | ❌            | ⚠️ **Partial**        |
+| **PDF/Print Export**          | ✅                | ✅          | ✅          | ✅            | ❌ **NEEDS**          |
+| **Mobile Performer Mode**     | ✅ Apps           | ⚠️ Web-only | ⚠️ Web-only | ❌            | ❌ **NEEDS**          |
+| **Lyrics/Chords On Stage**    | ✅                | ❌          | ❌          | ❌            | ⚠️ **In Songwriting** |
+| **Band Communication**        | ✅                | ✅          | ⚠️ Basic    | ❌            | ✅ **Chat**           |
+| **Video Collaboration**       | ❌                | ❌          | ❌          | ❌            | ✅ **Daily.co**       |
+| **Multi-Cursor Editing**      | ❌                | ⚠️ Basic    | ❌          | ❌            | ✅ **Ably**           |
+| **Presence Awareness**        | ❌                | ✅          | ❌          | ❌            | ✅                    |
+| **AI-Powered**                | ❌                | ❌          | ❌          | ❌            | ✅ **Potential**      |
 
 ---
 
@@ -67,6 +67,7 @@
 ### 🔴 Priority 1: Core Setlist Features (Week 1)
 
 **1. Show/Venue/Tour Integration** ⚠️ **PARTIAL**
+
 - **Status:** Database models exist (Show, Venue, Tour, Setlist, SetlistItem)
 - **Gap:** Not wired to setlist page
 - **Competitor Strength:** BandHelper excels here
@@ -78,6 +79,7 @@
   - Calendar view of upcoming shows
 
 **2. Spotify Playlist Import** ❌ **MISSING**
+
 - **Competitor Strength:** Setlix has this
 - **User Pain:** Manually typing 15-20 song titles is tedious
 - **What We Need:**
@@ -87,6 +89,7 @@
   - Quick setlist population
 
 **3. Print/PDF Export** ❌ **MISSING**
+
 - **Competitor Strength:** Everyone has this
 - **User Pain:** Need physical setlists for stage/band/crew
 - **What We Need:**
@@ -96,6 +99,7 @@
   - Email/download options
 
 **4. Instant Setlist Generator** ❌ **MISSING**
+
 - **Competitor Strength:** SetFlow Pro, Setlix
 - **User Pain:** "I have 50 songs, need a 90-min set, what do I play?"
 - **What We Need:**
@@ -112,6 +116,7 @@
 ### 🟡 Priority 2: Advanced Features (Week 2)
 
 **5. Setlist Templates Library** ❌ **MISSING**
+
 - **Use Cases:**
   - "Festival Set" (45-60 min, high energy, no slow songs)
   - "Club Tour" (90 min, mix of energy levels)
@@ -123,6 +128,7 @@
   - One-click apply to new setlist
 
 **6. Client Setlist Builder** ❌ **MISSING**
+
 - **Competitor Strength:** Setlix has "client setlist builder"
 - **Use Case:** Wedding bands, cover bands taking requests
 - **What We Need:**
@@ -132,6 +138,7 @@
   - Merge into master setlist
 
 **7. Mobile Performer Mode** ❌ **MISSING**
+
 - **Competitor Strength:** BandHelper has dedicated apps
 - **User Pain:** Need setlist on stage, but also lyrics/chords
 - **What We Need:**
@@ -147,6 +154,7 @@
 ### 🟢 Priority 3: Differentiation Features (Week 3+)
 
 **8. AI-Powered Setlist Optimization** ✨ **GAME CHANGER**
+
 - **No competitor has this**
 - **What AI Could Do:**
   - Analyze past shows: Which songs got best crowd response?
@@ -156,6 +164,7 @@
   - Venue-specific recommendations: "This venue likes slower songs"
 
 **9. Setlist Analytics Dashboard** ✨ **UNIQUE**
+
 - **Metrics:**
   - Most played songs (last 30/90 days)
   - Average set duration
@@ -165,12 +174,14 @@
 - **Visualization:** Charts, heatmaps, trends
 
 **10. Crowd Interaction Features** ✨ **BOLD**
+
 - **Live Voting:** Audience scans QR code, votes on next song
 - **Request Queue:** Fans submit requests during show
 - **Post-Show Engagement:** "Which song was your favorite?"
 - **Email Capture:** Build mailing list via setlist sharing
 
 **11. Setlist History & Versions** ⚠️ **PARTIAL**
+
 - **Current:** Can create multiple setlists
 - **Gap:** No versioning or comparison
 - **What We Need:**
@@ -180,6 +191,7 @@
   - Clone setlist with modifications
 
 **12. Rehearsal Mode** ✨ **UNIQUE**
+
 - **Integration with Video Collab:**
   - Start rehearsal → auto-load setlist
   - Play through songs in order
@@ -194,6 +206,7 @@
 ### ✅ What's Already Built (Production-Ready)
 
 **Component:** `CollaborativeSetlistBuilder` (495 lines)
+
 - ✅ Drag-drop reordering with @dnd-kit
 - ✅ Real-time sync via Ably (song-added, song-removed, songs-reordered)
 - ✅ Presence tracking (active collaborators count)
@@ -207,6 +220,7 @@
 - ✅ Beautiful UI (Rock n' Roll Basement design system)
 
 **Database Models:** (Prisma schema already has these)
+
 - ✅ `Tour` - tour management with dates, status, poster
 - ✅ `Venue` - venue info with capacity, address, contact
 - ✅ `Show` - show details with date, venue, setlist link
@@ -214,6 +228,7 @@
 - ✅ `SetlistItem` - individual songs in setlist with position, duration, notes
 
 **Page:** `apps/web/app/projects/[slug]/setlists/page.tsx`
+
 - ✅ Setlist list view
 - ✅ Create new setlist
 - ✅ Edit setlist (loads CollaborativeSetlistBuilder)
@@ -225,6 +240,7 @@
 ## 🍄 MYCELIAL PATHWAY ANALYSIS
 
 ### Current Flow (Working)
+
 ```
 User → /projects/[slug]/setlists
   → Create Setlist
@@ -238,6 +254,7 @@ User → /projects/[slug]/setlists
 ```
 
 ### Blocked Pathways (Need Wiring)
+
 ```
 ❌ Show Management → Setlist
 ❌ Venue Database → Show
@@ -256,12 +273,14 @@ User → /projects/[slug]/setlists
 ### How We Beat BandHelper (Current Market Leader)
 
 **BandHelper Strengths:**
+
 - Full band management suite (schedules, contacts, finances)
 - Mobile apps (iOS, Android, Mac)
 - Mature product (years of development)
 - Large feature set
 
 **Our Advantages:**
+
 1. **Web-First:** No app install required, works everywhere
 2. **Real-Time Collaboration:** Better than BandHelper's sync
 3. **Modern UX:** BandHelper looks dated (early 2010s design)
@@ -270,6 +289,7 @@ User → /projects/[slug]/setlists
 6. **Faster Onboarding:** Create account → build setlist in 2 minutes
 
 **Our Strategy:**
+
 - **Target:** Bands who value collaboration over admin features
 - **Positioning:** "BandHelper for the real-time collaboration era"
 - **Marketing:** "Your band doesn't need a filing system, you need a creative tool"
@@ -277,11 +297,13 @@ User → /projects/[slug]/setlists
 ### How We Beat SetFlow/Setlix (Modern Competitors)
 
 **Their Strengths:**
+
 - Modern web design
 - Fast onboarding
 - Simple UX
 
 **Our Advantages:**
+
 1. **Deeper Integration:** We're not just setlists, we're full songwriting platform
 2. **Real-Time Quality:** Ably + multi-cursors beats their sync
 3. **Video Collaboration:** Neither has this
@@ -289,6 +311,7 @@ User → /projects/[slug]/setlists
 5. **Better Collaboration:** Presence, chat, video, cursors all together
 
 **Our Strategy:**
+
 - **Target:** Solo artists + bands who want collaboration + songwriting
 - **Positioning:** "SetFlow + Songwriting Studio in one"
 - **Marketing:** "Write songs, build setlists, rehearse together - all in one place"
@@ -428,6 +451,7 @@ User → /projects/[slug]/setlists
 ## 🚨 BRUTAL TRUTH - CURRENT STATUS
 
 ### Strengths (What Works Today)
+
 - ✅ **Real-time collaboration:** Best in class
 - ✅ **User experience:** Beautiful, modern, smooth
 - ✅ **Integration:** Songwriting + Projects + Setlists unified
@@ -435,6 +459,7 @@ User → /projects/[slug]/setlists
 - ✅ **Technical stack:** Ably, Prisma, Next.js - rock solid
 
 ### Weaknesses (What's Missing)
+
 - ❌ **Show/Venue/Tour management:** Not wired to UI
 - ❌ **Spotify import:** Competitors have this, we don't
 - ❌ **PDF export:** Industry standard, we lack it
@@ -442,6 +467,7 @@ User → /projects/[slug]/setlists
 - ❌ **AI features:** Not leveraging our OpenRouter integration
 
 ### Competitive Position
+
 - **Currently:** Mid-tier (good collaboration, missing key features)
 - **After Phase 1:** Top-tier (parity with best competitors)
 - **After Phase 2:** Market leader (better collaboration + advanced features)
@@ -452,9 +478,11 @@ User → /projects/[slug]/setlists
 ## 🎯 GO-TO-MARKET POSITIONING
 
 ### Primary Message
+
 **"The only setlist manager built for real-time collaboration"**
 
 ### Secondary Messages
+
 - "Write songs, build setlists, rehearse together - all in one platform"
 - "BandHelper for the modern era - web-first, real-time, beautiful"
 - "See your bandmates edit the setlist in real-time, like Google Docs for musicians"
@@ -462,16 +490,19 @@ User → /projects/[slug]/setlists
 ### Target Audiences
 
 **1. Cover Bands (Highest Priority)**
+
 - **Pain:** Managing 100+ song repertoire, client requests, frequent setlist changes
 - **Our Solution:** Client setlist builder, templates, Spotify import, instant generator
 - **Marketing Channel:** Facebook groups, wedding band forums
 
 **2. Original Bands (Medium Priority)**
+
 - **Pain:** Collaborating on setlist order, remembering key changes, printing for stage
 - **Our Solution:** Real-time collaboration, key change detection, PDF export
 - **Marketing Channel:** Reddit r/bandmembers, music subreddits
 
 **3. Solo Artists (Lower Priority - but easy wins)**
+
 - **Pain:** Simple setlist creation for gigs
 - **Our Solution:** Fast onboarding, mobile performer mode, PDF export
 - **Marketing Channel:** Instagram, TikTok (solo musician hashtags)
@@ -481,6 +512,7 @@ User → /projects/[slug]/setlists
 ## 📈 SUCCESS METRICS
 
 ### Phase 1 Success (Core Parity)
+
 - ✅ 100% feature parity with SimpleSetlist
 - ✅ 80% feature parity with SetFlow
 - ✅ Spotify import working (fastest way to populate setlist)
@@ -488,16 +520,19 @@ User → /projects/[slug]/setlists
 - ✅ Show/Venue management functional
 
 ### Phase 2 Success (Advanced)
+
 - ✅ Templates library (5+ pre-built templates)
 - ✅ Client setlist builder (unique feature vs competitors)
 - ✅ Mobile performer mode (replace BandHelper apps)
 
 ### Phase 3 Success (Market Leader)
+
 - ✅ AI setlist optimization (no competitor has this)
 - ✅ Analytics dashboard (unique insights)
 - ✅ Crowd interaction (live voting, requests)
 
 ### User Adoption Metrics
+
 - **Week 1-2:** 10+ test users trying setlist features
 - **Month 1:** 50+ active setlists created
 - **Month 3:** 200+ setlists, 5+ bands using regularly
@@ -536,6 +571,7 @@ FEEDBACK LOOP → Optimize future setlists with AI
 **Next Agent:** Pick up Phase 1 tasks and start building. Database models exist, just wire them up.
 
 **Priority Order:**
+
 1. Show/Venue/Tour API routes + database wiring
 2. Spotify import (biggest user pain point)
 3. PDF export (industry standard)
@@ -544,4 +580,3 @@ FEEDBACK LOOP → Optimize future setlists with AI
 **Estimated Time to Market Leader:** 2-3 weeks of focused development
 
 🎸 **Let's dominate this market.** 🍄
-

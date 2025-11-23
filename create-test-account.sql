@@ -168,3 +168,5 @@ SELECT
   '3. Replace "test-user-id-replace-after-supabase" with real ID in this script' as step_3,
   '4. Run this SQL script in your database' as step_4;
 
+
+

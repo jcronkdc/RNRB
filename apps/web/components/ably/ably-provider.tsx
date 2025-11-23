@@ -21,7 +21,9 @@ export function AblyProvider({ children, lazy = true }: Props) {
     const checkAuth = async () => {
       try {
         const supabase = createBrowserClient();
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         setIsAuthenticated(!!session);
       } catch (error) {
         console.warn('Auth check failed:', error);
@@ -33,7 +35,9 @@ export function AblyProvider({ children, lazy = true }: Props) {
 
     // Listen for auth changes
     const supabase = createBrowserClient();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(!!session);
     });
 
@@ -107,4 +111,3 @@ export function AblyProvider({ children, lazy = true }: Props) {
 
   return <ReactAblyProvider client={client}>{children}</ReactAblyProvider>;
 }
-

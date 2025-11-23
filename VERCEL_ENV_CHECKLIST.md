@@ -16,11 +16,13 @@
 ## 📋 REQUIRED ENVIRONMENT VARIABLES
 
 ### Database & Core
+
 - [ ] **DATABASE_URL** - Neon PostgreSQL connection string
   - Format: `postgresql://user:pass@host/dbname?sslmode=require`
   - Must point to Neon database
 
 ### Authentication
+
 - [ ] **NEXTAUTH_SECRET** - Encryption key for sessions
   - Generate with: `openssl rand -base64 32`
   - Must be 32+ characters
@@ -38,6 +40,7 @@
   - Keep secure!
 
 ### Collaboration Services
+
 - [ ] **DAILY_API_KEY** - Daily.co API key for video rooms
   - From: https://dashboard.daily.co
   - Format: Usually starts with `d_`
@@ -47,6 +50,7 @@
   - Format: `AppID.KeyID:KeySecret`
 
 ### Public Environment Variables
+
 - [ ] **NEXT_PUBLIC_SITE_URL** - Public site URL
   - **Must be:** `https://www.cronkwaters.com`
   - Used for metadata, sitemaps, Open Graph
@@ -56,6 +60,7 @@
   - Can be any string
 
 ### Optional (Email Features)
+
 - [ ] **EMAIL_SERVER_URL** - SMTP server for magic links (optional)
   - Format: `smtp://user:pass@smtp.example.com:587`
   - Required only if using email authentication
@@ -65,6 +70,7 @@
   - Required only if using email authentication
 
 ### Optional (AI Features)
+
 - [ ] **OPENAI_API_KEY** - For GPT-4 lyrics generation (optional)
   - Format: `sk-...`
   - Required only if using AI songwriting
@@ -96,10 +102,13 @@ After updating any environment variable in Vercel:
 ## 🚨 Common Issues
 
 ### Issue: "NEXTAUTH_URL has trailing newline"
+
 **Fix:** Edit the variable, remove ANY spaces/newlines at end, save
 
 ### Issue: "redirect_uri_mismatch" on Google OAuth
-**Fix:** 
+
+**Fix:**
+
 1. Go to: https://console.cloud.google.com/apis/credentials
 2. Edit OAuth 2.0 Client ID
 3. Add to "Authorized redirect URIs":
@@ -108,13 +117,17 @@ After updating any environment variable in Vercel:
    - `http://localhost:3000/api/auth/callback/google` (for dev)
 
 ### Issue: Daily.co rooms fail to create
+
 **Check:**
+
 - `DAILY_API_KEY` is set in Vercel
 - API key is valid (not expired)
 - Daily.co account has available room quota
 
 ### Issue: Ably chat not working
+
 **Check:**
+
 - `ABLY_API_KEY` is set in Vercel
 - API key format is correct: `AppID.KeyID:KeySecret`
 - Ably account is active
@@ -133,4 +146,3 @@ After updating any environment variable in Vercel:
 ---
 
 **Last Updated:** 2025-11-20 @ Agent 42
-

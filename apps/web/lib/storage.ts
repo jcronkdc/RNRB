@@ -35,9 +35,18 @@ export async function uploadAudioFile(
 
   try {
     // Validate file type
-    const validTypes = ['audio/mpeg', 'audio/wav', 'audio/aiff', 'audio/flac', 'audio/ogg', 'audio/x-m4a'];
+    const validTypes = [
+      'audio/mpeg',
+      'audio/wav',
+      'audio/aiff',
+      'audio/flac',
+      'audio/ogg',
+      'audio/x-m4a',
+    ];
     if (!validTypes.includes(file.type) && !file.name.match(/\.(mp3|wav|aiff|flac|ogg|m4a)$/i)) {
-      throw new Error('Invalid file type. Please upload audio files only (MP3, WAV, AIFF, FLAC, OGG, M4A)');
+      throw new Error(
+        'Invalid file type. Please upload audio files only (MP3, WAV, AIFF, FLAC, OGG, M4A)'
+      );
     }
 
     // Validate file size (max 500MB)
@@ -52,12 +61,10 @@ export async function uploadAudioFile(
     const filePath = `${projectSlug}/${songId}/${timestamp}-${sanitizedFileName}`;
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
-      .from('audio-files')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false,
-      });
+    const { data, error } = await supabase.storage.from('audio-files').upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
 
     if (error) {
       console.error('Upload error:', error);
@@ -65,9 +72,7 @@ export async function uploadAudioFile(
     }
 
     // Get public URL
-    const { data: urlData } = supabase.storage
-      .from('audio-files')
-      .getPublicUrl(filePath);
+    const { data: urlData } = supabase.storage.from('audio-files').getPublicUrl(filePath);
 
     return {
       url: urlData.publicUrl,
@@ -89,9 +94,7 @@ export async function deleteAudioFile(filePath: string): Promise<boolean> {
   }
 
   try {
-    const { error } = await supabase.storage
-      .from('audio-files')
-      .remove([filePath]);
+    const { error } = await supabase.storage.from('audio-files').remove([filePath]);
 
     if (error) {
       console.error('Delete error:', error);
@@ -108,10 +111,7 @@ export async function deleteAudioFile(filePath: string): Promise<boolean> {
 /**
  * List all audio files for a song
  */
-export async function listSongAudioFiles(
-  projectSlug: string,
-  songId: string
-): Promise<string[]> {
+export async function listSongAudioFiles(projectSlug: string, songId: string): Promise<string[]> {
   if (!supabase) {
     console.error('Supabase client not initialized');
     return [];
@@ -144,9 +144,7 @@ export async function getAudioFileUrl(filePath: string): Promise<string | null> 
   }
 
   try {
-    const { data } = supabase.storage
-      .from('audio-files')
-      .getPublicUrl(filePath);
+    const { data } = supabase.storage.from('audio-files').getPublicUrl(filePath);
 
     return data.publicUrl;
   } catch (error) {
@@ -154,4 +152,3 @@ export async function getAudioFileUrl(filePath: string): Promise<string | null> 
     return null;
   }
 }
-

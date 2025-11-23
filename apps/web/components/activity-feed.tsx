@@ -5,7 +5,12 @@
  * Real-time activity stream with Ably integration
  */
 
-import { useActivityFeed, getActivityMessage, getActivityIcon, getActivityColor } from '@/hooks/use-activity-feed';
+import {
+  useActivityFeed,
+  getActivityMessage,
+  getActivityIcon,
+  getActivityColor,
+} from '@/hooks/use-activity-feed';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, AlertCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
@@ -17,9 +22,9 @@ interface ActivityFeedProps {
   limit?: number;
 }
 
-export function ActivityFeed({ 
-  channelName, 
-  showHeader = true, 
+export function ActivityFeed({
+  channelName,
+  showHeader = true,
   maxHeight = '500px',
   limit = 50,
 }: ActivityFeedProps) {
@@ -28,9 +33,9 @@ export function ActivityFeed({
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
-        <AlertCircle className="w-8 h-8 text-danger mb-2" />
-        <p className="text-sm text-danger-foreground">Activity feed offline</p>
-        <p className="text-xs text-muted-foreground mt-1">{error}</p>
+        <AlertCircle className="text-danger mb-2 h-8 w-8" />
+        <p className="text-danger-foreground text-sm">Activity feed offline</p>
+        <p className="mt-1 text-xs text-muted-foreground">{error}</p>
       </div>
     );
   }
@@ -40,13 +45,13 @@ export function ActivityFeed({
       {/* Header */}
       {showHeader && (
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <Activity className="w-5 h-5 text-primary" />
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+            <Activity className="text-primary h-5 w-5" />
             Activity Stream
           </h3>
           <div className="flex items-center gap-2">
             <motion.div
-              className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}
+              className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}
               animate={isConnected ? { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] } : {}}
               transition={{ duration: 2, repeat: Infinity }}
             />
@@ -58,15 +63,15 @@ export function ActivityFeed({
       )}
 
       {/* Activity List */}
-      <div 
-        className="space-y-2 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
+      <div
+        className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent space-y-2 overflow-y-auto pr-2"
         style={{ maxHeight }}
       >
         {activities.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Activity className="w-12 h-12 text-muted-foreground/30 mb-3" />
+            <Activity className="mb-3 h-12 w-12 text-muted-foreground/30" />
             <p className="text-sm text-muted-foreground">No activity yet</p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="mt-1 text-xs text-muted-foreground">
               Start collaborating to see updates here
             </p>
           </div>
@@ -78,19 +83,19 @@ export function ActivityFeed({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className="flex items-start gap-3 p-3 rounded-2xl bg-surface/50 border border-border/50 hover:bg-surface transition-colors"
+                className="flex items-start gap-3 rounded-2xl border border-border/50 bg-surface/50 p-3 transition-colors hover:bg-surface"
               >
                 {/* Icon */}
-                <div className="shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-lg">
+                <div className="bg-primary/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg">
                   {getActivityIcon(activity.type)}
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className={`text-sm font-medium ${getActivityColor(activity.type)}`}>
                     {getActivityMessage(activity)}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="mt-0.5 text-xs text-muted-foreground">
                     {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
                   </p>
                 </div>
@@ -102,8 +107,8 @@ export function ActivityFeed({
 
       {/* Footer */}
       {activities.length > 0 && (
-        <div className="pt-2 border-t border-border/50">
-          <p className="text-xs text-muted-foreground text-center">
+        <div className="border-t border-border/50 pt-2">
+          <p className="text-center text-xs text-muted-foreground">
             Showing {activities.length} recent {activities.length === 1 ? 'activity' : 'activities'}
           </p>
         </div>
@@ -112,7 +117,13 @@ export function ActivityFeed({
   );
 }
 
-export function CompactActivityFeed({ channelName, limit = 5 }: { channelName: string; limit?: number }) {
+export function CompactActivityFeed({
+  channelName,
+  limit = 5,
+}: {
+  channelName: string;
+  limit?: number;
+}) {
   const { activities, isConnected } = useActivityFeed({ channelName, limit });
 
   return (
@@ -127,7 +138,7 @@ export function CompactActivityFeed({ channelName, limit = 5 }: { channelName: s
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="text-xs text-muted-foreground flex items-center gap-2"
+              className="flex items-center gap-2 text-xs text-muted-foreground"
             >
               <span>{getActivityIcon(activity.type)}</span>
               <span className="truncate">{getActivityMessage(activity)}</span>
@@ -135,9 +146,7 @@ export function CompactActivityFeed({ channelName, limit = 5 }: { channelName: s
           ))}
         </AnimatePresence>
       )}
-      {isConnected && (
-        <p className="text-xs text-muted-foreground/60">🍄 Live updates active</p>
-      )}
+      {isConnected && <p className="text-xs text-muted-foreground/60">🍄 Live updates active</p>}
     </div>
   );
 }

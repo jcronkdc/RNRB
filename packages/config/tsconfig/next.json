@@ -7,8 +7,10 @@
     "incremental": true,
     "moduleResolution": "Bundler",
     "module": "ESNext",
-    "plugins": [{
-      "name": "next"
-    }]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   }
 }

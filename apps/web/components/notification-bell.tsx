@@ -2,12 +2,17 @@
 
 /**
  * Notification Bell Component
- * 
+ *
  * Shows notification count badge and dropdown
  * Like Tokyo subway alert system - instant, clear, actionable
  */
 
-import { useNotifications, getNotificationIcon, getNotificationColor, type Notification } from '@/hooks/use-notifications';
+import {
+  useNotifications,
+  getNotificationIcon,
+  getNotificationColor,
+  type Notification,
+} from '@/hooks/use-notifications';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Check, CheckCheck, Trash2, X, Settings } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -62,17 +67,17 @@ export function NotificationBell() {
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-lg hover:bg-muted/50 transition-colors"
+        className="relative rounded-lg p-2 transition-colors hover:bg-muted/50"
         title="Notifications"
       >
-        <Bell className="w-5 h-5" />
-        
+        <Bell className="h-5 w-5" />
+
         {/* Unread Badge */}
         {unreadCount > 0 && (
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center"
+            className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white"
           >
             {unreadCount > 9 ? '9+' : unreadCount}
           </motion.div>
@@ -81,7 +86,7 @@ export function NotificationBell() {
         {/* Connection Status */}
         {isConnected && (
           <motion.div
-            className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-green-500"
+            className="absolute bottom-0 right-0 h-2 w-2 rounded-full bg-green-500"
             animate={{ opacity: [1, 0.5, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
@@ -93,10 +98,7 @@ export function NotificationBell() {
         {isOpen && (
           <>
             {/* Backdrop */}
-            <div
-              className="fixed inset-0 z-40"
-              onClick={() => setIsOpen(false)}
-            />
+            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
 
             {/* Notification Panel */}
             <motion.div
@@ -104,15 +106,15 @@ export function NotificationBell() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 top-full mt-2 w-96 max-h-[600px] bg-card border border-border rounded-lg shadow-2xl overflow-hidden z-50"
+              className="bg-card absolute right-0 top-full z-50 mt-2 max-h-[600px] w-96 overflow-hidden rounded-lg border border-border shadow-2xl"
             >
               {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-border bg-muted/30">
+              <div className="flex items-center justify-between border-b border-border bg-muted/30 p-4">
                 <div className="flex items-center gap-2">
-                  <Bell className="w-5 h-5" />
+                  <Bell className="h-5 w-5" />
                   <h3 className="font-semibold">Notifications</h3>
                   {unreadCount > 0 && (
-                    <span className="px-2 py-0.5 text-xs font-bold bg-red-500 text-white rounded-full">
+                    <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
                       {unreadCount}
                     </span>
                   )}
@@ -122,35 +124,35 @@ export function NotificationBell() {
                   {notifications.length > 0 && (
                     <button
                       onClick={markAllAsRead}
-                      className="p-1.5 rounded hover:bg-muted transition-colors"
+                      className="rounded p-1.5 transition-colors hover:bg-muted"
                       title="Mark all as read"
                     >
-                      <CheckCheck className="w-4 h-4" />
+                      <CheckCheck className="h-4 w-4" />
                     </button>
                   )}
                   <button
                     onClick={requestPermission}
-                    className="p-1.5 rounded hover:bg-muted transition-colors"
+                    className="rounded p-1.5 transition-colors hover:bg-muted"
                     title="Enable browser notifications"
                   >
-                    <Settings className="w-4 h-4" />
+                    <Settings className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-1.5 rounded hover:bg-muted transition-colors"
+                    className="rounded p-1.5 transition-colors hover:bg-muted"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
               {/* Notifications List */}
-              <div className="overflow-y-auto max-h-[500px]">
+              <div className="max-h-[500px] overflow-y-auto">
                 {notifications.length === 0 ? (
                   <div className="p-12 text-center text-muted-foreground">
-                    <Bell className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <Bell className="mx-auto mb-3 h-12 w-12 opacity-50" />
                     <p>No notifications yet</p>
-                    <p className="text-sm mt-1">We'll notify you when something happens</p>
+                    <p className="mt-1 text-sm">We'll notify you when something happens</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-border">
@@ -161,24 +163,17 @@ export function NotificationBell() {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.03 }}
                         onClick={() => handleNotificationClick(notification)}
-                        className={`
-                          p-4 cursor-pointer transition-colors relative
-                          ${!notification.read ? 'bg-brand-primary/5' : ''}
-                          hover:bg-muted/50
-                        `}
+                        className={`relative cursor-pointer p-4 transition-colors ${!notification.read ? 'bg-brand-primary/5' : ''} hover:bg-muted/50`}
                       >
                         {/* Unread Indicator */}
                         {!notification.read && (
-                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-primary" />
+                          <div className="absolute bottom-0 left-0 top-0 w-1 bg-brand-primary" />
                         )}
 
-                        <div className="flex items-start gap-3 ml-2">
+                        <div className="ml-2 flex items-start gap-3">
                           {/* Icon */}
-                          <div 
-                            className={`
-                              w-10 h-10 rounded-full flex items-center justify-center shrink-0
-                              ${getNotificationColor(notification.type).replace('text-', 'bg-').replace('400', '500/20')}
-                            `}
+                          <div
+                            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${getNotificationColor(notification.type).replace('text-', 'bg-').replace('400', '500/20')} `}
                           >
                             <span className="text-lg">
                               {getNotificationIcon(notification.type)}
@@ -186,11 +181,9 @@ export function NotificationBell() {
                           </div>
 
                           {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm mb-1">
-                              {notification.title}
-                            </p>
-                            <p className="text-sm text-muted-foreground mb-2">
+                          <div className="min-w-0 flex-1">
+                            <p className="mb-1 text-sm font-medium">{notification.title}</p>
+                            <p className="mb-2 text-sm text-muted-foreground">
                               {notification.message}
                             </p>
                             <div className="flex items-center gap-2">
@@ -198,25 +191,23 @@ export function NotificationBell() {
                                 {formatTimestamp(notification.timestamp)}
                               </span>
                               {notification.link && (
-                                <span className="text-xs text-brand-primary">
-                                  → Click to view
-                                </span>
+                                <span className="text-xs text-brand-primary">→ Click to view</span>
                               )}
                             </div>
                           </div>
 
                           {/* Actions */}
-                          <div className="flex items-center gap-1 shrink-0">
+                          <div className="flex shrink-0 items-center gap-1">
                             {!notification.read && (
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   markAsRead(notification.id);
                                 }}
-                                className="p-1.5 rounded hover:bg-muted transition-colors"
+                                className="rounded p-1.5 transition-colors hover:bg-muted"
                                 title="Mark as read"
                               >
-                                <Check className="w-3.5 h-3.5" />
+                                <Check className="h-3.5 w-3.5" />
                               </button>
                             )}
                             <button
@@ -224,10 +215,10 @@ export function NotificationBell() {
                                 e.stopPropagation();
                                 deleteNotification(notification.id);
                               }}
-                              className="p-1.5 rounded hover:bg-red-500/20 text-red-500 transition-colors"
+                              className="rounded p-1.5 text-red-500 transition-colors hover:bg-red-500/20"
                               title="Delete"
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
+                              <Trash2 className="h-3.5 w-3.5" />
                             </button>
                           </div>
                         </div>
@@ -239,10 +230,10 @@ export function NotificationBell() {
 
               {/* Footer */}
               {notifications.length > 0 && (
-                <div className="p-3 border-t border-border bg-muted/30">
+                <div className="border-t border-border bg-muted/30 p-3">
                   <button
                     onClick={clearAll}
-                    className="w-full py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="w-full py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     Clear all notifications
                   </button>
@@ -268,7 +259,6 @@ function formatTimestamp(timestamp: number): string {
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days < 7) return `${days}d ago`;
-  
+
   return new Date(timestamp).toLocaleDateString();
 }
-

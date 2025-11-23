@@ -1,9 +1,9 @@
 /**
  * Activity Feed Hook
- * 
+ *
  * Tracks all real-time activity across the platform
  * Like the nervous system of the mycelial network
- * 
+ *
  * Activity types:
  * - user_joined - User joined project
  * - song_created - New song added
@@ -18,7 +18,7 @@
 import { useEffect, useState } from 'react';
 import { Realtime, Types } from 'ably';
 
-export type ActivityType = 
+export type ActivityType =
   | 'user_joined'
   | 'song_created'
   | 'song_updated'
@@ -85,7 +85,7 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
             timestamp: message.timestamp || Date.now(),
           };
 
-          setActivities(prev => {
+          setActivities((prev) => {
             // Add new activity at the start
             const updated = [activity, ...prev];
             // Limit to max items
@@ -102,7 +102,7 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
 
           if (!mounted || !resultPage) return;
 
-          const historicalActivities: ActivityEvent[] = resultPage.items.map(message => ({
+          const historicalActivities: ActivityEvent[] = resultPage.items.map((message) => ({
             id: message.id || `activity_${message.timestamp}`,
             ...message.data,
             timestamp: message.timestamp || Date.now(),
@@ -113,7 +113,6 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
         });
 
         setIsConnected(true);
-
       } catch (err) {
         console.error('Ably activity feed error:', err);
         if (mounted) {
@@ -186,15 +185,24 @@ export function getActivityMessage(activity: ActivityEvent): string {
  */
 export function getActivityIcon(type: ActivityType): string {
   switch (type) {
-    case 'user_joined': return '👋';
-    case 'song_created': return '🎵';
-    case 'song_updated': return '✏️';
-    case 'audio_uploaded': return '🎧';
-    case 'chat_message': return '💬';
-    case 'video_started': return '📹';
-    case 'invite_sent': return '✉️';
-    case 'presence_active': return '✨';
-    default: return '📌';
+    case 'user_joined':
+      return '👋';
+    case 'song_created':
+      return '🎵';
+    case 'song_updated':
+      return '✏️';
+    case 'audio_uploaded':
+      return '🎧';
+    case 'chat_message':
+      return '💬';
+    case 'video_started':
+      return '📹';
+    case 'invite_sent':
+      return '✉️';
+    case 'presence_active':
+      return '✨';
+    default:
+      return '📌';
   }
 }
 
@@ -203,15 +211,23 @@ export function getActivityIcon(type: ActivityType): string {
  */
 export function getActivityColor(type: ActivityType): string {
   switch (type) {
-    case 'user_joined': return 'text-green-400';
-    case 'song_created': return 'text-purple-400';
-    case 'song_updated': return 'text-blue-400';
-    case 'audio_uploaded': return 'text-orange-400';
-    case 'chat_message': return 'text-cyan-400';
-    case 'video_started': return 'text-pink-400';
-    case 'invite_sent': return 'text-yellow-400';
-    case 'presence_active': return 'text-emerald-400';
-    default: return 'text-gray-400';
+    case 'user_joined':
+      return 'text-green-400';
+    case 'song_created':
+      return 'text-purple-400';
+    case 'song_updated':
+      return 'text-blue-400';
+    case 'audio_uploaded':
+      return 'text-orange-400';
+    case 'chat_message':
+      return 'text-cyan-400';
+    case 'video_started':
+      return 'text-pink-400';
+    case 'invite_sent':
+      return 'text-yellow-400';
+    case 'presence_active':
+      return 'text-emerald-400';
+    default:
+      return 'text-gray-400';
   }
 }
-

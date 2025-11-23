@@ -6,16 +6,18 @@ export default function PricingPage() {
       <section className="page-section">
         <div className="container">
           <div className="section-header">
-            <h1 className="text-5xl font-bold mb-4">Simple Pricing</h1>
+            <h1 className="mb-4 text-5xl font-bold">Simple Pricing</h1>
             <p className="section-subtitle">Start free, upgrade when you're ready</p>
-        </div>
-        
-          <div className="feature-grid max-w-5xl mx-auto">
+          </div>
+
+          <div className="feature-grid mx-auto max-w-5xl">
             <div className="card text-center">
-              <h3 className="text-2xl font-semibold mb-2">Free</h3>
-              <p className="mb-6" style={{ color: 'var(--muted)' }}>Perfect for getting started</p>
-              <div className="text-4xl font-bold mb-6">$0</div>
-              <ul className="text-left space-y-3 mb-8" style={{ color: 'var(--text)' }}>
+              <h3 className="mb-2 text-2xl font-semibold">Free</h3>
+              <p className="mb-6" style={{ color: 'var(--muted)' }}>
+                Perfect for getting started
+              </p>
+              <div className="mb-6 text-4xl font-bold">$0</div>
+              <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
                   <span>3 active projects</span>
@@ -37,29 +39,31 @@ export default function PricingPage() {
                 Start Free
               </Link>
             </div>
-            
-            <div 
-              className="card text-center relative" 
-              style={{ 
+
+            <div
+              className="card relative text-center"
+              style={{
                 borderColor: 'var(--accent)',
-                borderWidth: '2px' 
+                borderWidth: '2px',
               }}
             >
-              <div 
-                className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-4 py-1 text-sm font-semibold rounded-full"
-                style={{ 
+              <div
+                className="absolute -top-3 left-1/2 -translate-x-1/2 transform rounded-full px-4 py-1 text-sm font-semibold"
+                style={{
                   background: 'var(--accent)',
-                  color: '#0B0B0C'
+                  color: '#0B0B0C',
                 }}
               >
                 MOST POPULAR
               </div>
-              <h3 className="text-2xl font-semibold mb-2">Professional</h3>
-              <p className="mb-6" style={{ color: 'var(--muted)' }}>For serious musicians</p>
-              <div className="text-4xl font-bold mb-6">
+              <h3 className="mb-2 text-2xl font-semibold">Professional</h3>
+              <p className="mb-6" style={{ color: 'var(--muted)' }}>
+                For serious musicians
+              </p>
+              <div className="mb-6 text-4xl font-bold">
                 $19<span className="text-base font-normal">/month</span>
               </div>
-              <ul className="text-left space-y-3 mb-8" style={{ color: 'var(--text)' }}>
+              <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
                   <span>Unlimited projects</span>
@@ -83,16 +87,18 @@ export default function PricingPage() {
               </ul>
               <Link href="/auth?signup=true" className="button w-full">
                 Start Free Trial
-                </Link>
+              </Link>
             </div>
-            
+
             <div className="card text-center">
-              <h3 className="text-2xl font-semibold mb-2">Studio Pro</h3>
-              <p className="mb-6" style={{ color: 'var(--muted)' }}>For studios & labels</p>
-              <div className="text-4xl font-bold mb-6">
+              <h3 className="mb-2 text-2xl font-semibold">Studio Pro</h3>
+              <p className="mb-6" style={{ color: 'var(--muted)' }}>
+                For studios & labels
+              </p>
+              <div className="mb-6 text-4xl font-bold">
                 $49<span className="text-base font-normal">/month</span>
               </div>
-              <ul className="text-left space-y-3 mb-8" style={{ color: 'var(--text)' }}>
+              <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
                   <span style={{ color: 'var(--accent)' }}>✓</span>
                   <span>Everything in Pro</span>
@@ -117,45 +123,59 @@ export default function PricingPage() {
                   <span style={{ color: 'var(--accent)' }}>✓</span>
                   <span>Team management</span>
                 </li>
-                </ul>
+              </ul>
               <Link href="/contact" className="button secondary w-full">
                 Contact Sales
               </Link>
             </div>
           </div>
-          
+
           <div className="mt-16 text-center">
-            <h2 className="text-3xl font-semibold mb-8">All plans include</h2>
-            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <h2 className="mb-8 text-3xl font-semibold">All plans include</h2>
+            <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
               <div>
-                <h3 className="text-xl font-semibold mb-2">Secure Storage</h3>
-                <p style={{ color: 'var(--muted)' }}>Your music is encrypted and backed up automatically</p>
+                <h3 className="mb-2 text-xl font-semibold">Secure Storage</h3>
+                <p style={{ color: 'var(--muted)' }}>
+                  Your music is encrypted and backed up automatically
+                </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">Full Ownership</h3>
-                <p style={{ color: 'var(--muted)' }}>You retain 100% rights to all your creative work</p>
+                <h3 className="mb-2 text-xl font-semibold">Full Ownership</h3>
+                <p style={{ color: 'var(--muted)' }}>
+                  You retain 100% rights to all your creative work
+                </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">Export Anytime</h3>
-                <p style={{ color: 'var(--muted)' }}>Download your projects in industry-standard formats</p>
+                <h3 className="mb-2 text-xl font-semibold">Export Anytime</h3>
+                <p style={{ color: 'var(--muted)' }}>
+                  Download your projects in industry-standard formats
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
-      
+
       {/* Footer */}
       <footer style={{ borderTop: '1px solid var(--border)', padding: 'var(--space-6) 0' }}>
         <div className="container">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-sm" style={{ color: 'var(--muted)' }}>
               © 2024 Rock N' Roll Basement. All rights reserved.
             </div>
             <div className="flex gap-6 text-sm">
-              <Link href="/about" className="nav-link">About</Link>
-              <Link href="/terms" className="nav-link">Terms</Link>
-              <Link href="/privacy" className="nav-link">Privacy</Link>
-              <Link href="/contact" className="nav-link">Contact</Link>
+              <Link href="/about" className="nav-link">
+                About
+              </Link>
+              <Link href="/terms" className="nav-link">
+                Terms
+              </Link>
+              <Link href="/privacy" className="nav-link">
+                Privacy
+              </Link>
+              <Link href="/contact" className="nav-link">
+                Contact
+              </Link>
             </div>
           </div>
         </div>

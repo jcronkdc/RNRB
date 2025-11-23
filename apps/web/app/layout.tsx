@@ -12,7 +12,7 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: dark)', color: '#1e1e1e' },
-    { media: '(prefers-color-scheme: light)', color: '#1e1e1e' }
+    { media: '(prefers-color-scheme: light)', color: '#1e1e1e' },
   ],
 };
 
@@ -83,11 +83,7 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
@@ -101,4 +97,3 @@ export default function RootLayout({
     </html>
   );
 }
-

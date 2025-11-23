@@ -6,9 +6,7 @@ type GlobalWithPrisma = typeof globalThis & {
 
 const globalForPrisma = globalThis as GlobalWithPrisma;
 
-const prisma =
-  globalForPrisma.__cronkwatersPrisma ??
-  new PrismaClient();
+const prisma = globalForPrisma.__cronkwatersPrisma ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.__cronkwatersPrisma = prisma;
@@ -26,21 +24,3 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export { prisma };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

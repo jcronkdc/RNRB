@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
     });
 
     // Transform to match frontend expectations
-    const transformedProjects = projects.map(project => ({
+    const transformedProjects = projects.map((project) => ({
       id: project.id,
       name: project.name,
       slug: project.slug,
@@ -77,10 +77,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(transformedProjects);
   } catch (error) {
     console.error('GET /api/projects error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch projects' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 });
   }
 }
 
@@ -91,7 +88,17 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { userId, orgId, name, description, tagline, visibility, coverImage, genre, targetReleaseDate } = body;
+    const {
+      userId,
+      orgId,
+      name,
+      description,
+      tagline,
+      visibility,
+      coverImage,
+      genre,
+      targetReleaseDate,
+    } = body;
 
     if (!userId) {
       return NextResponse.json({ error: 'User ID required' }, { status: 400 });
@@ -123,7 +130,7 @@ export async function POST(req: NextRequest) {
     async function createProject(finalSlug: string) {
       // If no orgId provided, create or get user's personal org
       let finalOrgId = orgId;
-      
+
       if (!finalOrgId) {
         // Try to find user's personal org
         const user = await db.user.findUnique({
@@ -217,9 +224,11 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('POST /api/projects error:', error);
     return NextResponse.json(
-      { error: 'Failed to create project', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to create project',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
-

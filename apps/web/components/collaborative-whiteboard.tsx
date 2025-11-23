@@ -76,12 +76,12 @@ export function CollaborativeWhiteboard({
       // Get drawing history
       whiteboardChannel.history({ limit: 100 }, (err, resultPage) => {
         if (err || !resultPage) return;
-        
+
         const historicalElements: DrawingElement[] = resultPage.items
           .reverse()
           .filter((msg) => msg.name === 'draw')
           .map((msg) => msg.data);
-        
+
         setElements(historicalElements);
       });
 
@@ -223,36 +223,36 @@ export function CollaborativeWhiteboard({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex items-center gap-4 p-4 bg-surface-muted border border-border rounded-xl">
+      <div className="flex items-center gap-4 rounded-xl border border-border bg-surface-muted p-4">
         {/* Tools */}
         <div className="flex items-center gap-2">
           <Button
             variant={currentTool === 'pen' ? 'default' : 'secondary'}
             size="sm"
             onClick={() => setCurrentTool('pen')}
-            className="w-10 h-10 p-0"
+            className="h-10 w-10 p-0"
           >
-            <Palette className="w-4 h-4" />
+            <Palette className="h-4 w-4" />
           </Button>
           <Button
             variant={currentTool === 'rect' ? 'default' : 'secondary'}
             size="sm"
             onClick={() => setCurrentTool('rect')}
-            className="w-10 h-10 p-0"
+            className="h-10 w-10 p-0"
           >
-            <Square className="w-4 h-4" />
+            <Square className="h-4 w-4" />
           </Button>
           <Button
             variant={currentTool === 'circle' ? 'default' : 'secondary'}
             size="sm"
             onClick={() => setCurrentTool('circle')}
-            className="w-10 h-10 p-0"
+            className="h-10 w-10 p-0"
           >
-            <Circle className="w-4 h-4" />
+            <Circle className="h-4 w-4" />
           </Button>
         </div>
 
-        <div className="w-px h-8 bg-border" />
+        <div className="h-8 w-px bg-border" />
 
         {/* Colors */}
         <div className="flex items-center gap-2">
@@ -260,19 +260,19 @@ export function CollaborativeWhiteboard({
             <button
               key={color}
               onClick={() => setCurrentColor(color)}
-              className={`w-8 h-8 rounded-full border-2 ${
-                currentColor === color ? 'border-brand-primary scale-110' : 'border-border'
+              className={`h-8 w-8 rounded-full border-2 ${
+                currentColor === color ? 'scale-110 border-brand-primary' : 'border-border'
               } transition-transform`}
               style={{ backgroundColor: color }}
             />
           ))}
         </div>
 
-        <div className="w-px h-8 bg-border" />
+        <div className="h-8 w-px bg-border" />
 
         {/* Stroke Width */}
         <div className="flex items-center gap-2">
-          <Minus className="w-4 h-4 text-muted-foreground" />
+          <Minus className="h-4 w-4 text-muted-foreground" />
           <input
             type="range"
             min="1"
@@ -287,17 +287,17 @@ export function CollaborativeWhiteboard({
 
         {/* Actions */}
         <Button variant="secondary" size="sm" onClick={handleDownload}>
-          <Download className="w-4 h-4 mr-2" />
+          <Download className="mr-2 h-4 w-4" />
           Save
         </Button>
         <Button variant="secondary" size="sm" onClick={handleClear}>
-          <Trash2 className="w-4 h-4 mr-2" />
+          <Trash2 className="mr-2 h-4 w-4" />
           Clear
         </Button>
       </div>
 
       {/* Canvas */}
-      <div className="border-2 border-border rounded-xl overflow-hidden">
+      <div className="overflow-hidden rounded-xl border-2 border-border">
         <canvas
           ref={canvasRef}
           width={width}
@@ -310,7 +310,7 @@ export function CollaborativeWhiteboard({
         />
       </div>
 
-      <p className="text-xs text-muted-foreground text-center">
+      <p className="text-center text-xs text-muted-foreground">
         All team members can see your drawings in real-time • Changes sync via Ably
       </p>
     </div>

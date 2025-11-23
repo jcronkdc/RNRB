@@ -11,9 +11,9 @@ export async function GET(request: Request) {
       const orgSession = await getOrgSessionFromSession();
       return createContext({
         orgSession,
-        headers: request.headers
+        headers: request.headers,
       });
-    }
+    },
   });
 }
 
@@ -26,9 +26,8 @@ export async function POST(request: Request) {
       const orgSession = await getOrgSessionFromSession();
       return createContext({
         orgSession,
-        headers: request.headers
+        headers: request.headers,
       });
-    }
+    },
   });
 }
-

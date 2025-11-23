@@ -19,7 +19,7 @@ export function useAutoSnapshot({
   songId,
   currentData,
   intervalMinutes = 5,
-  onSnapshot
+  onSnapshot,
 }: AutoSnapshotOptions) {
   const lastSnapshotRef = useRef<string>('');
   const intervalRef = useRef<NodeJS.Timeout>();
@@ -32,22 +32,28 @@ export function useAutoSnapshot({
   }, [currentData]);
 
   // Create snapshot
-  const createSnapshot = useCallback(async (reason: string) => {
-    if (!currentData) return;
+  const createSnapshot = useCallback(
+    async (reason: string) => {
+      if (!currentData) return;
 
-    try {
-      await onSnapshot(reason);
-      lastSnapshotRef.current = JSON.stringify(currentData);
-      lastSnapshotTime.current = new Date();
-    } catch (error) {
-      console.error('Snapshot error:', error);
-    }
-  }, [currentData, onSnapshot]);
+      try {
+        await onSnapshot(reason);
+        lastSnapshotRef.current = JSON.stringify(currentData);
+        lastSnapshotTime.current = new Date();
+      } catch (error) {
+        console.error('Snapshot error:', error);
+      }
+    },
+    [currentData, onSnapshot]
+  );
 
   // Manual snapshot (call before major operations)
-  const manualSnapshot = useCallback((reason: string) => {
-    return createSnapshot(reason);
-  }, [createSnapshot]);
+  const manualSnapshot = useCallback(
+    (reason: string) => {
+      return createSnapshot(reason);
+    },
+    [createSnapshot]
+  );
 
   // Auto-snapshot interval
   useEffect(() => {
@@ -57,11 +63,14 @@ export function useAutoSnapshot({
     }
 
     // Set up new interval
-    intervalRef.current = setInterval(() => {
-      if (hasChanged()) {
-        createSnapshot('Auto-save snapshot');
-      }
-    }, intervalMinutes * 60 * 1000);
+    intervalRef.current = setInterval(
+      () => {
+        if (hasChanged()) {
+          createSnapshot('Auto-save snapshot');
+        }
+      },
+      intervalMinutes * 60 * 1000
+    );
 
     return () => {
       if (intervalRef.current) {

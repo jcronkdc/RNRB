@@ -2,10 +2,10 @@
 
 /**
  * Waveform Audio Player
- * 
+ *
  * Professional audio player with visual waveform
  * Perfect for music collaboration - see the song structure visually
- * 
+ *
  * Features:
  * - Waveform visualization
  * - Click to seek
@@ -17,16 +17,16 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
-  VolumeX, 
-  SkipBack, 
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  SkipBack,
   SkipForward,
   Download,
   Share2,
-  Repeat
+  Repeat,
 } from 'lucide-react';
 
 type WaveformPlayerProps = {
@@ -35,11 +35,7 @@ type WaveformPlayerProps = {
   onTimeUpdate?: (currentTime: number, duration: number) => void;
 };
 
-export function WaveformPlayer({ 
-  audioUrl, 
-  audioName,
-  onTimeUpdate 
-}: WaveformPlayerProps) {
+export function WaveformPlayer({ audioUrl, audioName, onTimeUpdate }: WaveformPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,10 +56,10 @@ export function WaveformPlayer({
         setLoading(true);
         const response = await fetch(audioUrl);
         const arrayBuffer = await response.arrayBuffer();
-        
+
         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
         const buffer = await audioContext.decodeAudioData(arrayBuffer);
-        
+
         setAudioBuffer(buffer);
         setLoading(false);
       } catch (err) {
@@ -125,7 +121,6 @@ export function WaveformPlayer({
     ctx.moveTo(progressX, 0);
     ctx.lineTo(progressX, height);
     ctx.stroke();
-
   }, [audioBuffer, currentTime, duration]);
 
   // Audio event handlers
@@ -243,17 +238,17 @@ export function WaveformPlayer({
         <div className="flex items-center gap-2">
           <button
             onClick={downloadAudio}
-            className="p-2 hover:bg-muted rounded-lg transition-colors"
+            className="rounded-lg p-2 transition-colors hover:bg-muted"
             title="Download"
           >
-            <Download className="w-4 h-4" />
+            <Download className="h-4 w-4" />
           </button>
           <button
             onClick={shareTimestamp}
-            className="p-2 hover:bg-muted rounded-lg transition-colors"
+            className="rounded-lg p-2 transition-colors hover:bg-muted"
             title="Share current timestamp"
           >
-            <Share2 className="w-4 h-4" />
+            <Share2 className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -261,12 +256,12 @@ export function WaveformPlayer({
       {/* Waveform */}
       <div
         ref={containerRef}
-        className="relative bg-surface border border-border rounded-lg overflow-hidden cursor-pointer"
+        className="relative cursor-pointer overflow-hidden rounded-lg border border-border bg-surface"
         style={{ height: '120px' }}
       >
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent" />
           </div>
         ) : (
           <canvas
@@ -274,12 +269,12 @@ export function WaveformPlayer({
             width={800}
             height={120}
             onClick={seek}
-            className="w-full h-full"
+            className="h-full w-full"
           />
         )}
 
         {/* Time Display Overlay */}
-        <div className="absolute bottom-2 left-2 px-2 py-1 bg-black/70 rounded text-xs text-white font-mono">
+        <div className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 font-mono text-xs text-white">
           {formatTime(currentTime)} / {formatTime(duration)}
         </div>
       </div>
@@ -290,53 +285,50 @@ export function WaveformPlayer({
         <div className="flex items-center gap-2">
           <button
             onClick={() => skip(-10)}
-            className="p-2 hover:bg-muted rounded-lg transition-colors"
+            className="rounded-lg p-2 transition-colors hover:bg-muted"
             title="Skip back 10s"
           >
-            <SkipBack className="w-4 h-4" />
+            <SkipBack className="h-4 w-4" />
           </button>
 
           <button
             onClick={togglePlay}
-            className="p-3 bg-brand-primary hover:bg-brand-primary/90 rounded-full transition-colors"
+            className="rounded-full bg-brand-primary p-3 transition-colors hover:bg-brand-primary/90"
             title={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? (
-              <Pause className="w-5 h-5 text-white" />
+              <Pause className="h-5 w-5 text-white" />
             ) : (
-              <Play className="w-5 h-5 text-white" />
+              <Play className="h-5 w-5 text-white" />
             )}
           </button>
 
           <button
             onClick={() => skip(10)}
-            className="p-2 hover:bg-muted rounded-lg transition-colors"
+            className="rounded-lg p-2 transition-colors hover:bg-muted"
             title="Skip forward 10s"
           >
-            <SkipForward className="w-4 h-4" />
+            <SkipForward className="h-4 w-4" />
           </button>
 
           <button
             onClick={toggleLoop}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`rounded-lg p-2 transition-colors ${
               isLooping ? 'bg-brand-primary text-white' : 'hover:bg-muted'
             }`}
             title={isLooping ? 'Disable loop' : 'Enable loop'}
           >
-            <Repeat className="w-4 h-4" />
+            <Repeat className="h-4 w-4" />
           </button>
         </div>
 
         {/* Right: Volume Control */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={toggleMute}
-            className="p-2 hover:bg-muted rounded-lg transition-colors"
-          >
+          <button onClick={toggleMute} className="rounded-lg p-2 transition-colors hover:bg-muted">
             {isMuted || volume === 0 ? (
-              <VolumeX className="w-4 h-4" />
+              <VolumeX className="h-4 w-4" />
             ) : (
-              <Volume2 className="w-4 h-4" />
+              <Volume2 className="h-4 w-4" />
             )}
           </button>
           <input
@@ -353,4 +345,3 @@ export function WaveformPlayer({
     </div>
   );
 }
-

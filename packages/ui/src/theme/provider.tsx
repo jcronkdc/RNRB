@@ -21,7 +21,7 @@ export function ThemeProvider({
   theme = 'light',
   attribute = 'data-theme',
   onThemeChange,
-  children
+  children,
 }: ThemeProviderProps) {
   useEffect(() => {
     const root = typeof document !== 'undefined' ? document.documentElement : null;

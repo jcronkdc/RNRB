@@ -19,7 +19,7 @@ export function useSongAutoSave(initialData?: SongData, autoSaveDelay = 2000) {
   const [songData, setSongData] = useState<SongData>(initialData || {});
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [error, setError] = useState<string | null>(null);
-  
+
   const debouncedData = useDebounce(songData, autoSaveDelay);
   const lastSavedDataRef = useRef<string>(JSON.stringify(initialData || {}));
   const isMountedRef = useRef(true);
@@ -27,7 +27,7 @@ export function useSongAutoSave(initialData?: SongData, autoSaveDelay = 2000) {
   // Auto-save effect
   useEffect(() => {
     const currentDataString = JSON.stringify(debouncedData);
-    
+
     // Skip if no changes or no song ID yet
     if (!debouncedData.id || currentDataString === lastSavedDataRef.current) {
       return;
@@ -53,7 +53,7 @@ export function useSongAutoSave(initialData?: SongData, autoSaveDelay = 2000) {
         if (isMountedRef.current) {
           setSaveStatus('saved');
           lastSavedDataRef.current = currentDataString;
-          
+
           // Reset to idle after 2 seconds
           setTimeout(() => {
             if (isMountedRef.current) {
@@ -98,12 +98,12 @@ export function useSongAutoSave(initialData?: SongData, autoSaveDelay = 2000) {
       }
 
       const { song } = await response.json();
-      
+
       if (isMountedRef.current) {
         setSongData(song);
         lastSavedDataRef.current = JSON.stringify(song);
         setSaveStatus('saved');
-        
+
         setTimeout(() => {
           if (isMountedRef.current) {
             setSaveStatus('idle');
@@ -149,12 +149,12 @@ export function useSongAutoSave(initialData?: SongData, autoSaveDelay = 2000) {
       }
 
       const { song } = await response.json();
-      
+
       if (isMountedRef.current) {
         setSongData(song);
         lastSavedDataRef.current = JSON.stringify(song);
         setSaveStatus('saved');
-        
+
         setTimeout(() => {
           if (isMountedRef.current) {
             setSaveStatus('idle');
@@ -185,4 +185,5 @@ export function useSongAutoSave(initialData?: SongData, autoSaveDelay = 2000) {
     hasError: saveStatus === 'error',
   };
 }
+
 

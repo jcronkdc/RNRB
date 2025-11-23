@@ -15,48 +15,49 @@ interface AppLayoutProps {
   currentTrack?: any; // Track type from transport-bar
 }
 
-export function AppLayout({ 
-  children, 
+export function AppLayout({
+  children,
   showBreadcrumbs = true,
-  currentTrack = null 
+  currentTrack = null,
 }: AppLayoutProps) {
   const pathname = usePathname();
   const showTransport = !!currentTrack;
-  
+
   // Don't use app layout for marketing pages
-  const isMarketingPage = pathname === '/' || 
-                         pathname.startsWith('/auth') || 
-                         pathname.startsWith('/pricing') ||
-                         pathname.startsWith('/about') ||
-                         pathname.startsWith('/contact');
-  
+  const isMarketingPage =
+    pathname === '/' ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/pricing') ||
+    pathname.startsWith('/about') ||
+    pathname.startsWith('/contact');
+
   if (isMarketingPage) {
     return <>{children}</>;
   }
-  
+
   return (
     <AblyProvider>
       <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
         {/* Command Palette (Global) */}
         <CommandPalette />
-        
+
         {/* Keyboard Shortcuts Help (Global) */}
         <KeyboardShortcutsHelp />
-        
+
         {/* Sidebar */}
         <SidebarNav />
-        
+
         {/* Top Bar */}
         <TopBar />
-        
+
         {/* Main Content Area */}
-        <main 
+        <main
           style={{
             marginLeft: '260px',
             marginTop: '56px',
             marginBottom: showTransport ? '72px' : '0',
             minHeight: 'calc(100vh - 56px)',
-            transition: 'all 0.3s ease'
+            transition: 'all 0.3s ease',
           }}
         >
           {/* Breadcrumbs */}
@@ -67,21 +68,14 @@ export function AppLayout({
               </div>
             </div>
           )}
-          
+
           {/* Page Content */}
-          <div className="p-8">
-            {children}
-          </div>
+          <div className="p-8">{children}</div>
         </main>
-        
+
         {/* Transport Bar */}
-        {showTransport && (
-          <TransportBar 
-            currentTrack={currentTrack}
-            isVisible={true}
-          />
-        )}
-        
+        {showTransport && <TransportBar currentTrack={currentTrack} isVisible={true} />}
+
         {/* Mobile Overlay for Sidebar */}
         <style jsx global>{`
           @media (max-width: 1024px) {

@@ -9,10 +9,10 @@ const config: StorybookConfig = {
   addons: ['@storybook/addon-essentials', '@storybook/addon-interactions'],
   framework: {
     name: '@storybook/react-vite',
-    options: {}
+    options: {},
   },
   docs: {
-    autodocs: 'tag'
+    autodocs: 'tag',
   },
   viteFinal: async (baseConfig) => {
     const merged = baseConfig;
@@ -20,7 +20,7 @@ const config: StorybookConfig = {
     merged.resolve.alias ??= {};
     merged.resolve.alias['@cronkwaters/ui'] = resolve(__dirname, '../src');
     return merged;
-  }
+  },
 };
 
 export default config;

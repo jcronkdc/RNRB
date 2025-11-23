@@ -59,7 +59,7 @@ function validateContributors(contributors: CreateSplitContributorInput[]): void
   }
 
   // Check for duplicate names
-  const names = contributors.map(c => c.name.toLowerCase().trim());
+  const names = contributors.map((c) => c.name.toLowerCase().trim());
   const uniqueNames = new Set(names);
   if (uniqueNames.size !== names.length) {
     throw new Error('Contributor names must be unique');
@@ -72,7 +72,7 @@ function validateContributors(contributors: CreateSplitContributorInput[]): void
 export async function createSplitSheet(input: CreateSplitSheetInput): Promise<SplitSheet> {
   // Validate project exists
   const project = await prisma.project.findUnique({
-    where: { id: input.projectId }
+    where: { id: input.projectId },
   });
 
   if (!project) {
@@ -88,8 +88,8 @@ export async function createSplitSheet(input: CreateSplitSheetInput): Promise<Sp
       data: {
         projectId: input.projectId,
         title: input.title,
-        notes: input.notes
-      }
+        notes: input.notes,
+      },
     });
 
     await tx.splitContributor.createMany({
@@ -101,8 +101,8 @@ export async function createSplitSheet(input: CreateSplitSheetInput): Promise<Sp
         pro: c.pro,
         ipi: c.ipi,
         publisher: c.publisher,
-        email: c.email
-      }))
+        email: c.email,
+      })),
     });
 
     return splitSheet;
@@ -122,10 +122,10 @@ export async function updateSplitSheet(
     include: {
       project: {
         select: {
-          orgId: true
-        }
-      }
-    }
+          orgId: true,
+        },
+      },
+    },
   });
 
   if (!existing) {
@@ -145,8 +145,8 @@ export async function updateSplitSheet(
     where: { id: splitSheetId },
     data: {
       ...input,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -159,7 +159,7 @@ export async function addContributor(
 ): Promise<SplitContributor> {
   const splitSheet = await prisma.splitSheet.findUnique({
     where: { id: splitSheetId },
-    include: { contributors: true }
+    include: { contributors: true },
   });
 
   if (!splitSheet) {
@@ -183,11 +183,13 @@ export async function addContributor(
   const newTotal = currentTotal + input.percentage;
 
   if (newTotal > 100.001) {
-    throw new Error(`Adding this contributor would exceed 100%. Current: ${currentTotal.toFixed(2)}%, Adding: ${input.percentage}%`);
+    throw new Error(
+      `Adding this contributor would exceed 100%. Current: ${currentTotal.toFixed(2)}%, Adding: ${input.percentage}%`
+    );
   }
 
   // Check for duplicate names
-  const existingNames = splitSheet.contributors.map(c => c.name.toLowerCase().trim());
+  const existingNames = splitSheet.contributors.map((c) => c.name.toLowerCase().trim());
   if (existingNames.includes(input.name.toLowerCase().trim())) {
     throw new Error(`Contributor with name "${input.name}" already exists`);
   }
@@ -195,8 +197,8 @@ export async function addContributor(
   return prisma.splitContributor.create({
     data: {
       splitSheetId,
-      ...input
-    }
+      ...input,
+    },
   });
 }
 
@@ -209,7 +211,7 @@ export async function updateContributor(
 ): Promise<SplitContributor> {
   const contributor = await prisma.splitContributor.findUnique({
     where: { id: contributorId },
-    include: { splitSheet: { include: { contributors: true } } }
+    include: { splitSheet: { include: { contributors: true } } },
   });
 
   if (!contributor) {
@@ -229,12 +231,16 @@ export async function updateContributor(
       throw new Error(`Percentage cannot exceed 100%. Got: ${input.percentage}%`);
     }
 
-    const otherContributors = contributor.splitSheet.contributors.filter((c) => c.id !== contributorId);
+    const otherContributors = contributor.splitSheet.contributors.filter(
+      (c) => c.id !== contributorId
+    );
     const otherTotal = otherContributors.reduce((sum, c) => sum + c.percentage, 0);
     const newTotal = otherTotal + input.percentage;
 
     if (newTotal > 100.001) {
-      throw new Error(`Updating percentage would exceed 100%. Current others: ${otherTotal.toFixed(2)}%, New: ${input.percentage}%`);
+      throw new Error(
+        `Updating percentage would exceed 100%. Current others: ${otherTotal.toFixed(2)}%, New: ${input.percentage}%`
+      );
     }
   }
 
@@ -242,8 +248,8 @@ export async function updateContributor(
     where: { id: contributorId },
     data: {
       ...input,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -253,7 +259,7 @@ export async function updateContributor(
 export async function removeContributor(contributorId: string): Promise<void> {
   const contributor = await prisma.splitContributor.findUnique({
     where: { id: contributorId },
-    include: { splitSheet: true }
+    include: { splitSheet: true },
   });
 
   if (!contributor) {
@@ -265,7 +271,7 @@ export async function removeContributor(contributorId: string): Promise<void> {
   }
 
   await prisma.splitContributor.delete({
-    where: { id: contributorId }
+    where: { id: contributorId },
   });
 }
 
@@ -278,7 +284,7 @@ export async function finalizeSplitSheet(
 ): Promise<SplitSheet> {
   const splitSheet = await prisma.splitSheet.findUnique({
     where: { id: splitSheetId },
-    include: { contributors: true }
+    include: { contributors: true },
   });
 
   if (!splitSheet) {
@@ -292,13 +298,17 @@ export async function finalizeSplitSheet(
   // Validate contributors total exactly 100% with tight tolerance
   const total = splitSheet.contributors.reduce((sum, c) => sum + c.percentage, 0);
   if (Math.abs(total - 100) > 0.001) {
-    throw new Error(`Cannot finalize: Contributors total ${total.toFixed(2)}%, must be exactly 100%`);
+    throw new Error(
+      `Cannot finalize: Contributors total ${total.toFixed(2)}%, must be exactly 100%`
+    );
   }
 
   // Ensure all contributors have valid percentages
   for (const contributor of splitSheet.contributors) {
     if (contributor.percentage <= 0 || contributor.percentage > 100) {
-      throw new Error(`Cannot finalize: Invalid percentage ${contributor.percentage}% for contributor ${contributor.name}`);
+      throw new Error(
+        `Cannot finalize: Invalid percentage ${contributor.percentage}% for contributor ${contributor.name}`
+      );
     }
   }
 
@@ -306,7 +316,7 @@ export async function finalizeSplitSheet(
   await prisma.$transaction(async (tx) => {
     await tx.splitContributor.updateMany({
       where: { splitSheetId },
-      data: { finalized: true }
+      data: { finalized: true },
     });
 
     return tx.splitSheet.update({
@@ -314,14 +324,14 @@ export async function finalizeSplitSheet(
       data: {
         finalized: true,
         finalizedAt: new Date(),
-        pdfKey
-      }
+        pdfKey,
+      },
     });
   });
 
   return prisma.splitSheet.findUniqueOrThrow({
     where: { id: splitSheetId },
-    include: { contributors: true }
+    include: { contributors: true },
   });
 }
 
@@ -333,16 +343,16 @@ export async function getSplitSheetById(splitSheetId: string) {
     where: { id: splitSheetId },
     include: {
       contributors: {
-        orderBy: { percentage: 'desc' }
+        orderBy: { percentage: 'desc' },
       },
       project: {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   });
 }
 
@@ -354,10 +364,9 @@ export async function listSplitSheets(projectId: string) {
     where: { projectId },
     include: {
       contributors: {
-        orderBy: { percentage: 'desc' }
-      }
+        orderBy: { percentage: 'desc' },
+      },
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
 }
-

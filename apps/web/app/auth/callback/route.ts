@@ -41,4 +41,3 @@ export async function GET(request: NextRequest) {
   // Redirect to dashboard instead of homepage for better UX
   return NextResponse.redirect(new URL('/dashboard', requestUrl.origin));
 }
-

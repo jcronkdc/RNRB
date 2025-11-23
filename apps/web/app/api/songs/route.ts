@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { db } from '@/lib/db';
-import { authOptions } from '@/auth';
+import { auth } from '@/auth';
 
 /**
  * GET /api/songs
@@ -9,8 +8,8 @@ import { authOptions } from '@/auth';
  */
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -43,10 +42,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ songs });
   } catch (error) {
     console.error('GET /api/songs error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch songs' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch songs' }, { status: 500 });
   }
 }
 
@@ -56,8 +52,8 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    
+    const session = await auth();
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -92,10 +88,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ song }, { status: 201 });
   } catch (error) {
     console.error('POST /api/songs error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create song' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create song' }, { status: 500 });
   }
 }
-

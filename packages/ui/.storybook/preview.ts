@@ -7,11 +7,11 @@ const preview: Preview = {
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/
-      }
+        date: /Date$/,
+      },
     },
-    actions: { argTypesRegex: '^on[A-Z].*' }
-  }
+    actions: { argTypesRegex: '^on[A-Z].*' },
+  },
 };
 
 export default preview;

@@ -1,21 +1,17 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { 
-  useRecording,
-  useDaily,
-  useParticipantCounts,
-} from '@daily-co/daily-react';
-import { 
-  Disc, 
-  Square, 
-  Pause, 
+import { useRecording, useDaily, useParticipantCounts } from '@daily-co/daily-react';
+import {
+  Disc,
+  Square,
+  Pause,
   Play,
   Download,
   Settings,
   Loader2,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react';
 import { Card, Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,23 +22,17 @@ interface RecordingControlsProps {
 
 export function RecordingControls({ onRecordingComplete }: RecordingControlsProps) {
   const daily = useDaily();
-  const { 
-    isRecording, 
-    startRecording, 
-    stopRecording, 
-    updateRecording,
-    error 
-  } = useRecording();
-  
+  const { isRecording, startRecording, stopRecording, updateRecording, error } = useRecording();
+
   const participantCounts = useParticipantCounts();
   const [recordingConfig, setRecordingConfig] = useState({
     showParticipantLabels: true,
     videoBitrate: 1500,
     audioBitrate: 128,
     backgroundColor: '#000000',
-    layout: 'default' as 'default' | 'single-participant' | 'active-speaker' | 'portrait'
+    layout: 'default' as 'default' | 'single-participant' | 'active-speaker' | 'portrait',
   });
-  
+
   const [isPaused, setIsPaused] = useState(false);
   const [recordingStartTime, setRecordingStartTime] = useState<Date | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
@@ -66,7 +56,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    
+
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
@@ -81,7 +71,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
           preset: recordingConfig.layout,
           composition_params: {
             showParticipantLabels: recordingConfig.showParticipantLabels,
-          }
+          },
         },
         videoBitrate: recordingConfig.videoBitrate,
         audioBitrate: recordingConfig.audioBitrate,
@@ -102,7 +92,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
       setRecordingStartTime(null);
       setRecordingDuration(0);
       setIsPaused(false);
-      
+
       // Handle recording completion
       if (result && onRecordingComplete) {
         onRecordingComplete(result);
@@ -117,8 +107,8 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
     try {
       await updateRecording({
         layout: {
-          preset: isPaused ? recordingConfig.layout : 'none'
-        }
+          preset: isPaused ? recordingConfig.layout : 'none',
+        },
       });
       setIsPaused(!isPaused);
     } catch (err) {
@@ -131,16 +121,12 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-lg font-semibold">
             <Disc className="h-5 w-5" />
             Recording Controls
           </h3>
-          
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setShowSettings(!showSettings)}
-          >
+
+          <Button variant="ghost" size="icon" onClick={() => setShowSettings(!showSettings)}>
             <Settings className="h-4 w-4" />
           </Button>
         </div>
@@ -154,16 +140,18 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <div className="space-y-3 pt-4 border-t">
+              <div className="space-y-3 border-t pt-4">
                 <div>
                   <label className="text-sm font-medium">Layout</label>
                   <select
                     value={recordingConfig.layout}
-                    onChange={(e) => setRecordingConfig({
-                      ...recordingConfig,
-                      layout: e.target.value as any
-                    })}
-                    className="w-full mt-1 px-3 py-2 border rounded-md"
+                    onChange={(e) =>
+                      setRecordingConfig({
+                        ...recordingConfig,
+                        layout: e.target.value as any,
+                      })
+                    }
+                    className="mt-1 w-full rounded-md border px-3 py-2"
                     disabled={isRecording}
                   >
                     <option value="default">Default Grid</option>
@@ -177,11 +165,13 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
                   <label className="text-sm font-medium">Video Quality</label>
                   <select
                     value={recordingConfig.videoBitrate}
-                    onChange={(e) => setRecordingConfig({
-                      ...recordingConfig,
-                      videoBitrate: parseInt(e.target.value)
-                    })}
-                    className="w-full mt-1 px-3 py-2 border rounded-md"
+                    onChange={(e) =>
+                      setRecordingConfig({
+                        ...recordingConfig,
+                        videoBitrate: parseInt(e.target.value),
+                      })
+                    }
+                    className="mt-1 w-full rounded-md border px-3 py-2"
                     disabled={isRecording}
                   >
                     <option value="1000">Standard (1 Mbps)</option>
@@ -195,10 +185,12 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
                     type="checkbox"
                     id="showLabels"
                     checked={recordingConfig.showParticipantLabels}
-                    onChange={(e) => setRecordingConfig({
-                      ...recordingConfig,
-                      showParticipantLabels: e.target.checked
-                    })}
+                    onChange={(e) =>
+                      setRecordingConfig({
+                        ...recordingConfig,
+                        showParticipantLabels: e.target.checked,
+                      })
+                    }
                     disabled={isRecording}
                   />
                   <label htmlFor="showLabels" className="text-sm">
@@ -212,27 +204,26 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
 
         {/* Recording Status */}
         {isRecording && (
-          <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4">
+          <div className="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                  <div className="absolute inset-0 w-3 h-3 bg-red-500 rounded-full animate-ping" />
+                  <div className="h-3 w-3 animate-pulse rounded-full bg-red-500" />
+                  <div className="absolute inset-0 h-3 w-3 animate-ping rounded-full bg-red-500" />
                 </div>
                 <div>
                   <p className="font-medium text-red-900 dark:text-red-100">
                     Recording in Progress
                   </p>
                   <p className="text-sm text-red-700 dark:text-red-300">
-                    {formatDuration(recordingDuration)} • {participantCounts.present} participant{participantCounts.present !== 1 ? 's' : ''}
+                    {formatDuration(recordingDuration)} • {participantCounts.present} participant
+                    {participantCounts.present !== 1 ? 's' : ''}
                   </p>
                 </div>
               </div>
-              
+
               {isPaused && (
-                <span className="text-sm text-yellow-600 dark:text-yellow-400">
-                  Paused
-                </span>
+                <span className="text-sm text-yellow-600 dark:text-yellow-400">Paused</span>
               )}
             </div>
           </div>
@@ -240,16 +231,12 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-4">
+          <div className="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
             <div className="flex items-start gap-2">
-              <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
+              <AlertCircle className="mt-0.5 h-5 w-5 text-red-500" />
               <div>
-                <p className="font-medium text-red-900 dark:text-red-100">
-                  Recording Error
-                </p>
-                <p className="text-sm text-red-700 dark:text-red-300">
-                  {error}
-                </p>
+                <p className="font-medium text-red-900 dark:text-red-100">Recording Error</p>
+                <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
               </div>
             </div>
           </div>
@@ -268,11 +255,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
             </Button>
           ) : (
             <>
-              <Button
-                variant="secondary"
-                onClick={handlePauseResume}
-                className="gap-2"
-              >
+              <Button variant="secondary" onClick={handlePauseResume} className="gap-2">
                 {isPaused ? (
                   <>
                     <Play className="h-4 w-4" />
@@ -285,12 +268,8 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
                   </>
                 )}
               </Button>
-              
-              <Button
-                variant="destructive"
-                onClick={handleStopRecording}
-                className="flex-1 gap-2"
-              >
+
+              <Button variant="destructive" onClick={handleStopRecording} className="flex-1 gap-2">
                 <Square className="h-4 w-4" />
                 Stop Recording
               </Button>
@@ -300,7 +279,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
 
         {/* Info */}
         {!isRecording && participantCounts.present === 0 && (
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="text-center text-sm text-muted-foreground">
             Join the session to start recording
           </p>
         )}

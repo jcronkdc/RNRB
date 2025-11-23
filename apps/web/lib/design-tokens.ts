@@ -46,7 +46,7 @@ export const designTokens = {
       progress: '#FF6B6B',
     },
   },
-  
+
   // Typography
   typography: {
     fontFamily: {
@@ -79,7 +79,7 @@ export const designTokens = {
       relaxed: '1.75',
     },
   },
-  
+
   // Spacing (8pt grid)
   spacing: {
     0: '0',
@@ -94,7 +94,7 @@ export const designTokens = {
     12: '96px',
     16: '128px',
   },
-  
+
   // Border radius
   borderRadius: {
     none: '0',
@@ -105,7 +105,7 @@ export const designTokens = {
     xl: '24px',
     full: '9999px',
   },
-  
+
   // Shadows (subtle for dark theme)
   shadows: {
     none: 'none',
@@ -116,7 +116,7 @@ export const designTokens = {
     xl: '0 20px 40px -8px rgba(0, 0, 0, 0.7)',
     glow: '0 0 20px rgba(255, 107, 107, 0.3)', // Brand color glow
   },
-  
+
   // Z-index scale
   zIndex: {
     dropdown: 1000,
@@ -128,7 +128,7 @@ export const designTokens = {
     tooltip: 1070,
     notification: 1080,
   },
-  
+
   // Animation
   animation: {
     duration: {
@@ -145,7 +145,7 @@ export const designTokens = {
       elastic: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
     },
   },
-  
+
   // Layout
   layout: {
     sidebarWidth: {
@@ -176,10 +176,13 @@ export const tailwindExtend = {
     'muted-foreground': designTokens.colors.text.muted,
   },
   fontFamily: designTokens.typography.fontFamily,
-  fontSize: Object.entries(designTokens.typography.fontSize).reduce((acc, [key, value]) => {
-    acc[key] = [value, { lineHeight: designTokens.typography.lineHeight.normal }];
-    return acc;
-  }, {} as Record<string, [string, { lineHeight: string }]>),
+  fontSize: Object.entries(designTokens.typography.fontSize).reduce(
+    (acc, [key, value]) => {
+      acc[key] = [value, { lineHeight: designTokens.typography.lineHeight.normal }];
+      return acc;
+    },
+    {} as Record<string, [string, { lineHeight: string }]>
+  ),
   spacing: designTokens.spacing,
   borderRadius: designTokens.borderRadius,
   boxShadow: designTokens.shadows,

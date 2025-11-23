@@ -11,7 +11,9 @@ export function ThemeToggle() {
     setMounted(true);
     // Check localStorage or system preference
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
     const initialTheme = savedTheme || systemTheme;
     setTheme(initialTheme);
     document.documentElement.classList.toggle('dark', initialTheme === 'dark');
@@ -25,21 +27,20 @@ export function ThemeToggle() {
   };
 
   if (!mounted) {
-    return <div className="w-10 h-10" />; // Placeholder to prevent hydration mismatch
+    return <div className="h-10 w-10" />; // Placeholder to prevent hydration mismatch
   }
 
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-surface hover:bg-surface-muted transition-colors border border-border/50"
+      className="rounded-lg border border-border/50 bg-surface p-2 transition-colors hover:bg-surface-muted"
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {theme === 'dark' ? (
-        <Sun className="w-5 h-5 text-yellow-500" />
+        <Sun className="h-5 w-5 text-yellow-500" />
       ) : (
-        <Moon className="w-5 h-5 text-purple-600" />
+        <Moon className="h-5 w-5 text-purple-600" />
       )}
     </button>
   );
 }
-

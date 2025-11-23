@@ -2,29 +2,42 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Music2, Sparkles, Users, MessageSquare, Video, Save, Check, Loader2, AlertCircle } from 'lucide-react';
+import {
+  Music2,
+  Sparkles,
+  Users,
+  MessageSquare,
+  Video,
+  Save,
+  Check,
+  Loader2,
+  AlertCircle,
+} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSongAutoSave } from '@/hooks/use-song-auto-save';
 
 // Import the drag-drop collaborative songwriting components
 const CollaborativeVisualBuilder = dynamic(
-  () => import('@/components/songwriting/collaborative-visual-builder').then(m => m.CollaborativeVisualBuilder),
+  () =>
+    import('@/components/songwriting/collaborative-visual-builder').then(
+      (m) => m.CollaborativeVisualBuilder
+    ),
   { ssr: false }
 );
 
 const ChordBuilder = dynamic(
-  () => import('@/components/songwriting/chord-builder').then(m => m.ChordBuilder),
+  () => import('@/components/songwriting/chord-builder').then((m) => m.ChordBuilder),
   { ssr: false }
 );
 
 const LyricsAssistant = dynamic(
-  () => import('@/components/songwriting/lyrics-assistant').then(m => m.LyricsAssistant),
+  () => import('@/components/songwriting/lyrics-assistant').then((m) => m.LyricsAssistant),
   { ssr: false }
 );
 
 const PresenceIndicator = dynamic(
-  () => import('@/components/presence-indicator').then(m => m.PresenceIndicator),
+  () => import('@/components/presence-indicator').then((m) => m.PresenceIndicator),
   { ssr: false }
 );
 
@@ -76,9 +89,7 @@ export default function SongwritingPage() {
   useEffect(() => {
     if (songData.id && songBlocks.length > 0) {
       updateSong({
-        lyrics: songBlocks
-          .map((b) => `[${b.type.toUpperCase()}]\n${b.content}`)
-          .join('\n\n'),
+        lyrics: songBlocks.map((b) => `[${b.type.toUpperCase()}]\n${b.content}`).join('\n\n'),
       });
     }
   }, [songBlocks, songData.id]);
@@ -102,28 +113,28 @@ export default function SongwritingPage() {
     if (!user || !songData.id) return null;
 
     return (
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-800/50 border border-gray-700 rounded-full text-sm">
+      <div className="flex items-center gap-2 rounded-full border border-gray-700 bg-gray-800/50 px-3 py-1.5 text-sm">
         {isSaving && (
           <>
-            <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
             <span className="text-gray-300">Saving...</span>
           </>
         )}
         {isSaved && (
           <>
-            <Check className="w-4 h-4 text-green-400" />
+            <Check className="h-4 w-4 text-green-400" />
             <span className="text-gray-300">Saved</span>
           </>
         )}
         {hasError && (
           <>
-            <AlertCircle className="w-4 h-4 text-red-400" />
+            <AlertCircle className="h-4 w-4 text-red-400" />
             <span className="text-gray-300">Error saving</span>
           </>
         )}
         {!isSaving && !isSaved && !hasError && (
           <>
-            <Save className="w-4 h-4 text-gray-400" />
+            <Save className="h-4 w-4 text-gray-400" />
             <span className="text-gray-400">Auto-save active</span>
           </>
         )}
@@ -133,38 +144,38 @@ export default function SongwritingPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="max-w-7xl mx-auto py-8 px-4">
+      <div className="mx-auto max-w-7xl px-4 py-8">
         {/* BADASS Header with Orange Gradient */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative mb-8 rounded-2xl overflow-hidden bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 border border-orange-500/20 p-8"
+          className="relative mb-8 overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-8"
         >
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/50">
-                <Music2 className="w-8 h-8 text-white" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-500/50">
+                <Music2 className="h-8 w-8 text-white" />
               </div>
               <div>
-                <div className="flex items-center gap-3 mb-2">
+                <div className="mb-2 flex items-center gap-3">
                   <input
                     type="text"
                     value={songTitle}
                     onChange={(e) => setSongTitle(e.target.value)}
-                    className="text-4xl font-bold text-white bg-transparent border-none outline-none focus:ring-0 px-0"
+                    className="border-none bg-transparent px-0 text-4xl font-bold text-white outline-none focus:ring-0"
                     placeholder="Untitled Song"
                     disabled={!user}
                   />
                   <SaveStatusIndicator />
                 </div>
-                <p className="text-gray-300 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-orange-500" />
+                <p className="flex items-center gap-2 text-gray-300">
+                  <Sparkles className="h-4 w-4 text-orange-500" />
                   Drag-and-drop builder with real-time collaboration & auto-save
                 </p>
               </div>
             </div>
             {user && (
-              <div className="px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full">
+              <div className="rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2">
                 <PresenceIndicator
                   channelName="songwriting:studio"
                   currentUser={{
@@ -187,41 +198,37 @@ export default function SongwritingPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-8 bg-purple-500/10 border border-purple-500/30 rounded-xl p-4"
+          className="mb-8 rounded-xl border border-purple-500/30 bg-purple-500/10 p-4"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-purple-400" />
-                <span className="text-white font-medium">Chat</span>
+                <MessageSquare className="h-5 w-5 text-purple-400" />
+                <span className="font-medium text-white">Chat</span>
               </div>
               <div className="flex items-center gap-2">
-                <Video className="w-5 h-5 text-purple-400" />
-                <span className="text-white font-medium">Video</span>
+                <Video className="h-5 w-5 text-purple-400" />
+                <span className="font-medium text-white">Video</span>
               </div>
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-purple-400" />
-                <span className="text-white font-medium">Multi-Cursor</span>
+                <Users className="h-5 w-5 text-purple-400" />
+                <span className="font-medium text-white">Multi-Cursor</span>
               </div>
               <div className="flex items-center gap-2">
-                <Save className="w-5 h-5 text-purple-400" />
-                <span className="text-white font-medium">Auto-Save</span>
+                <Save className="h-5 w-5 text-purple-400" />
+                <span className="font-medium text-white">Auto-Save</span>
               </div>
             </div>
-            <div className="text-sm text-purple-300">
-              ✨ All collaboration features active
-            </div>
+            <div className="text-sm text-purple-300">✨ All collaboration features active</div>
           </div>
         </motion.div>
 
         {/* View Tabs */}
-        <div className="flex gap-2 mb-8 border-b border-gray-800">
+        <div className="mb-8 flex gap-2 border-b border-gray-800">
           <button
             onClick={() => setActiveView('structure')}
-            className={`px-6 py-3 font-semibold transition-all relative ${
-              activeView === 'structure'
-                ? 'text-orange-500'
-                : 'text-gray-400 hover:text-white'
+            className={`relative px-6 py-3 font-semibold transition-all ${
+              activeView === 'structure' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
             }`}
           >
             Song Structure
@@ -234,10 +241,8 @@ export default function SongwritingPage() {
           </button>
           <button
             onClick={() => setActiveView('chords')}
-            className={`px-6 py-3 font-semibold transition-all relative ${
-              activeView === 'chords'
-                ? 'text-orange-500'
-                : 'text-gray-400 hover:text-white'
+            className={`relative px-6 py-3 font-semibold transition-all ${
+              activeView === 'chords' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
             }`}
           >
             Chord Progressions
@@ -250,10 +255,8 @@ export default function SongwritingPage() {
           </button>
           <button
             onClick={() => setActiveView('lyrics')}
-            className={`px-6 py-3 font-semibold transition-all relative ${
-              activeView === 'lyrics'
-                ? 'text-orange-500'
-                : 'text-gray-400 hover:text-white'
+            className={`relative px-6 py-3 font-semibold transition-all ${
+              activeView === 'lyrics' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
             }`}
           >
             Lyrics Assistant
@@ -273,9 +276,9 @@ export default function SongwritingPage() {
           transition={{ delay: 0.2 }}
         >
           {activeView === 'structure' && loading && (
-            <div className="flex items-center justify-center min-h-[500px] bg-gray-900 border border-gray-800 rounded-2xl">
+            <div className="flex min-h-[500px] items-center justify-center rounded-2xl border border-gray-800 bg-gray-900">
               <div className="text-center">
-                <Music2 className="w-12 h-12 text-orange-500 animate-pulse mx-auto mb-4" />
+                <Music2 className="mx-auto mb-4 h-12 w-12 animate-pulse text-orange-500" />
                 <p className="text-gray-400">Loading authentication...</p>
               </div>
             </div>
@@ -295,18 +298,19 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'structure' && !loading && !user && (
-            <div className="flex items-center justify-center min-h-[500px] bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 border border-orange-500/20 rounded-2xl p-12">
-              <div className="text-center max-w-md">
-                <div className="w-20 h-20 rounded-2xl bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/50 mx-auto mb-6">
-                  <Music2 className="w-10 h-10 text-white" />
+            <div className="flex min-h-[500px] items-center justify-center rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-12">
+              <div className="max-w-md text-center">
+                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-500/50">
+                  <Music2 className="h-10 w-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">Sign In to Collaborate</h3>
-                <p className="text-gray-300 mb-6">
-                  The collaborative song structure builder requires authentication to track your changes and enable real-time collaboration with other musicians.
+                <h3 className="mb-3 text-2xl font-bold text-white">Sign In to Collaborate</h3>
+                <p className="mb-6 text-gray-300">
+                  The collaborative song structure builder requires authentication to track your
+                  changes and enable real-time collaboration with other musicians.
                 </p>
                 <a
                   href="/auth"
-                  className="inline-block px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors"
+                  className="inline-block rounded-lg bg-orange-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-orange-600"
                 >
                   Sign In to Continue
                 </a>
@@ -315,14 +319,14 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'chords' && (
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+            <div className="rounded-2xl border border-gray-800 bg-gray-900 p-8">
               <ChordBuilder
                 onChange={(progression) => {
                   setChordProgression(
                     progression.map((chord, i) => ({
                       id: `chord_${i}`,
                       chord,
-                      duration: '1 bar'
+                      duration: '1 bar',
                     }))
                   );
                   // Auto-save chord progression
@@ -337,7 +341,7 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'lyrics' && (
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+            <div className="rounded-2xl border border-gray-800 bg-gray-900 p-8">
               <LyricsAssistant
                 currentLyrics={lyrics}
                 onInsert={(text) => setLyrics(lyrics ? lyrics + '\n' + text : text)}
@@ -351,38 +355,38 @@ export default function SongwritingPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-8 bg-gray-900 border border-gray-800 rounded-xl p-6"
+          className="mt-8 rounded-xl border border-gray-800 bg-gray-900 p-6"
         >
-          <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-            <Users className="w-5 h-5 text-orange-500" />
+          <h3 className="mb-3 flex items-center gap-2 font-semibold text-white">
+            <Users className="h-5 w-5 text-orange-500" />
             Collaborative Features Active
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
+          <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-4">
             <div className="flex items-start gap-3">
-              <MessageSquare className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+              <MessageSquare className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
               <div>
-                <p className="text-white font-medium">Real-time Chat</p>
+                <p className="font-medium text-white">Real-time Chat</p>
                 <p className="text-gray-400">Message your collaborators while writing</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <Video className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+              <Video className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
               <div>
-                <p className="text-white font-medium">Video Sessions</p>
+                <p className="font-medium text-white">Video Sessions</p>
                 <p className="text-gray-400">Face-to-face collaboration with screen share</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <Users className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+              <Users className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
               <div>
-                <p className="text-white font-medium">Multi-Cursor</p>
+                <p className="font-medium text-white">Multi-Cursor</p>
                 <p className="text-gray-400">See everyone&apos;s cursor in real-time</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <Save className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+              <Save className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
               <div>
-                <p className="text-white font-medium">Auto-Save</p>
+                <p className="font-medium text-white">Auto-Save</p>
                 <p className="text-gray-400">Your work is saved automatically every 2 seconds</p>
               </div>
             </div>

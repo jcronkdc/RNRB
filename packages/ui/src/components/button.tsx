@@ -10,7 +10,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        solid: 'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]',
+        solid:
+          'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]',
         secondary:
           'bg-secondary text-secondary-foreground shadow-soft hover:bg-secondary/90 hover:shadow-elevated motion-safe:active:scale-[0.99]',
         outline:
@@ -23,19 +24,19 @@ const buttonVariants = cva(
           'bg-danger text-danger-foreground shadow-soft hover:bg-danger/90 hover:shadow-elevated motion-safe:active:scale-[0.99]',
         link: 'text-brand-secondary underline-offset-4 hover:underline motion-safe:active:scale-100',
         default:
-          'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]'
+          'bg-brand-primary text-brand-primary-foreground shadow-soft hover:bg-brand-primary/92 hover:shadow-elevated motion-safe:active:scale-[0.99]',
       },
       size: {
         sm: 'h-9 rounded-lg px-3',
         md: 'h-10 px-4',
         lg: 'h-12 px-6 text-base',
-        icon: 'h-10 w-10 rounded-full p-0'
-      }
+        icon: 'h-10 w-10 rounded-full p-0',
+      },
     },
     defaultVariants: {
       variant: 'solid',
-      size: 'md'
-    }
+      size: 'md',
+    },
   }
 );
 
@@ -71,19 +72,29 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <>
         {showLeading && LeadingIcon && (
           <span
-            className={cn('inline-flex items-center justify-center', size === 'icon' ? 'mx-auto' : '')}
+            className={cn(
+              'inline-flex items-center justify-center',
+              size === 'icon' ? 'mx-auto' : ''
+            )}
             aria-hidden="true"
           >
-            {React.createElement(LeadingIcon as React.ComponentType<{ className?: string }>, { className: cn('h-4 w-4', iconClassName) })}
+            {React.createElement(LeadingIcon as React.ComponentType<{ className?: string }>, {
+              className: cn('h-4 w-4', iconClassName),
+            })}
           </span>
         )}
         {children && <span className="whitespace-nowrap">{children}</span>}
         {showTrailing && TrailingIcon && (
           <span
-            className={cn('inline-flex items-center justify-center', size === 'icon' ? 'mx-auto' : '')}
+            className={cn(
+              'inline-flex items-center justify-center',
+              size === 'icon' ? 'mx-auto' : ''
+            )}
             aria-hidden="true"
           >
-            {React.createElement(TrailingIcon as React.ComponentType<{ className?: string }>, { className: cn('h-4 w-4', iconClassName) })}
+            {React.createElement(TrailingIcon as React.ComponentType<{ className?: string }>, {
+              className: cn('h-4 w-4', iconClassName),
+            })}
           </span>
         )}
       </>
@@ -91,11 +102,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Comp
-        className={cn(
-          buttonVariants({ variant, size }),
-          size === 'icon' && 'gap-0',
-          className
-        )}
+        className={cn(buttonVariants({ variant, size }), size === 'icon' && 'gap-0', className)}
         ref={ref as React.Ref<HTMLButtonElement>}
         {...props}
       >

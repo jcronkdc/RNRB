@@ -3,17 +3,19 @@
 **Created:** 2025-11-22  
 **Priority:** 🔴 **CRITICAL - PROTECTS PROFIT MARGINS**  
 **Time to Deploy:** ~4 hours  
-**Impact:** Prevents $40+/month losses per power user  
+**Impact:** Prevents $40+/month losses per power user
 
 ---
 
 ## 🎯 WHAT WAS BUILT
 
 ### **New Files:**
+
 1. `apps/web/lib/usage-tracking.ts` - Complete rate limiting system (251 lines)
 2. `packages/db/prisma/migrations/add_usage_tracking.sql` - Database migration
 
 ### **Modified Files:**
+
 3. `packages/db/prisma/schema.prisma` - Added 4 usage tracking fields
 
 ---
@@ -21,6 +23,7 @@
 ## ⚠️ THE PROBLEM
 
 **Without rate limits, you're at risk:**
+
 - Creator user ($9.99/mo) makes 1,000 AI requests → **Cost: $15** → **Loss: $5.01**
 - Studio user ($29.99/mo) uses 80 hours video/month → **Cost: $57.60** → **Loss: $27.61**
 
@@ -32,13 +35,14 @@
 
 ### **Tier Limits (Monthly):**
 
-| Tier | AI Requests | Video Minutes | Monthly Cost | Profit Margin |
-|------|-------------|---------------|--------------|---------------|
-| **Free** | 0 | 0 | $0 | N/A |
-| **Creator** | 100 | 0 | $0.15 | 97% |
-| **Studio** | 500 | 1,200 (20 hrs) | $3.00 | 90% |
+| Tier        | AI Requests | Video Minutes  | Monthly Cost | Profit Margin |
+| ----------- | ----------- | -------------- | ------------ | ------------- |
+| **Free**    | 0           | 0              | $0           | N/A           |
+| **Creator** | 100         | 0              | $0.15        | 97%           |
+| **Studio**  | 500         | 1,200 (20 hrs) | $3.00        | 90%           |
 
 ### **What Happens When Limit Reached:**
+
 1. API returns `429 Too Many Requests`
 2. Response includes:
    - Current usage
@@ -67,6 +71,7 @@ psql $DATABASE_URL
 ```
 
 **Expected Output:**
+
 ```
 aiRequestsUsed       | integer     | default 0
 videoMinutesUsed     | integer     | default 0
@@ -81,6 +86,7 @@ storageUsedGB        | decimal     | default 0
 **Already done!** ✅ Schema updated in this session.
 
 Run Prisma generate to sync types:
+
 ```bash
 cd packages/db
 pnpm prisma generate
@@ -115,7 +121,6 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ response });
-
   } catch (error: any) {
     // Handle quota exceeded errors
     if (error.code === 'QUOTA_EXCEEDED') {
@@ -142,16 +147,19 @@ export async function POST(request: NextRequest) {
 ### **Step 4: Apply to All AI Routes (60 minutes)**
 
 **Routes to update:**
+
 - ✅ `/api/ai/chat-assist/route.ts`
 - ✅ `/api/ai/transcribe/route.ts`
 - ✅ `/api/ai/generate-content/route.ts`
 - ✅ `/api/ai/tour-router/route.ts`
 
 **Video routes (Studio only):**
+
 - ✅ `/api/daily/rooms/route.ts` (track video minutes on join)
 - ✅ `/api/daily/rooms/[roomName]/route.ts`
 
 **Pattern:**
+
 1. Add `requireUsageQuota()` before API call
 2. Add `trackUsage()` after successful response
 3. Handle `QUOTA_EXCEEDED` error with 429 status
@@ -175,7 +183,7 @@ export default async function UsagePage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1>Usage & Limits</h1>
-      
+
       {/* AI Requests */}
       <UsageCard
         title="AI Requests"
@@ -215,6 +223,7 @@ export default async function UsagePage() {
 ```
 
 **Add navigation link in settings sidebar:**
+
 - `/settings/billing` → "Billing & Subscription"
 - `/settings/usage` → "Usage & Limits" ← NEW
 
@@ -223,6 +232,7 @@ export default async function UsagePage() {
 ### **Step 6: Test the System (30 minutes)**
 
 **Test Scenario 1: Enforce AI Limit**
+
 ```bash
 # As Creator user (limit: 100 requests)
 # Make 100 AI chat requests
@@ -241,9 +251,10 @@ curl -X POST https://cronkwaters.com/api/ai/chat-assist \
 ```
 
 **Test Scenario 2: Verify Reset**
+
 ```sql
 -- Manually reset usage period (simulate next month)
-UPDATE "User" 
+UPDATE "User"
 SET "usagePeriodStart" = NOW() - INTERVAL '31 days',
     "aiRequestsUsed" = 0
 WHERE id = 'user_id_here';
@@ -252,6 +263,7 @@ WHERE id = 'user_id_here';
 ```
 
 **Test Scenario 3: Check Dashboard**
+
 - Visit `/settings/usage`
 - Verify bars show correct usage
 - Verify reset date displays
@@ -262,12 +274,14 @@ WHERE id = 'user_id_here';
 ## 🚀 OPTIONAL ENHANCEMENTS
 
 ### **Phase 2 (Next Sprint):**
+
 1. **Email Warnings at 80% usage**
 2. **In-app notifications when limit reached**
 3. **"Buy More Credits" one-time purchases ($5 for +100 AI requests)**
 4. **Usage analytics dashboard (admin view)**
 
 ### **Phase 3 (Future):**
+
 5. **AI model optimization** (switch to gpt-4o-mini for 67× cost savings)
 6. **Response caching** (save 20-30% on duplicate queries)
 7. **Usage predictions** ("At this rate, you'll hit limit in 5 days")
@@ -277,16 +291,19 @@ WHERE id = 'user_id_here';
 ## 📊 EXPECTED IMPACT
 
 ### **Before Rate Limits:**
+
 - **Risk:** Power users cost $40+/month
 - **Loss:** 1 power user = -$30 profit
 - **Margin:** 75-80% (vulnerable to abuse)
 
 ### **After Rate Limits:**
+
 - **Protected:** Max cost per user = $3/month
 - **Profit:** Every user profitable from day 1
 - **Margin:** 90-97% (protected and scalable)
 
 ### **At Scale (100 Studio users):**
+
 - **Revenue:** $2,999/month
 - **Costs:** $300/month (with limits)
 - **Profit:** $2,699/month ✅
@@ -321,8 +338,9 @@ export async function requireUsageQuota() {
 Or remove the `requireUsageQuota()` calls from routes.
 
 **Database rollback:**
+
 ```sql
-ALTER TABLE "User" 
+ALTER TABLE "User"
   DROP COLUMN "aiRequestsUsed",
   DROP COLUMN "videoMinutesUsed",
   DROP COLUMN "usagePeriodStart",
@@ -334,6 +352,7 @@ ALTER TABLE "User"
 ## 🎯 SUCCESS METRICS
 
 **Track these after deployment:**
+
 - 429 error rate (should be <5% of requests)
 - Upgrade rate from quota prompts (target: 10%)
 - Average usage per tier
@@ -350,4 +369,3 @@ ALTER TABLE "User"
 ---
 
 **END OF GUIDE** | 2025-11-22
-

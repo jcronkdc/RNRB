@@ -11,10 +11,10 @@ const t = initTRPC.context<Context>().create({
       ...shape,
       data: {
         ...shape.data,
-        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null
-      }
+        zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+      },
     };
-  }
+  },
 });
 
 export const router = t.router;
@@ -29,13 +29,9 @@ const isAuthed = t.middleware(({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
-      viewerId: ctx.viewerId
-    }
+      viewerId: ctx.viewerId,
+    },
   });
 });
 
 export const protectedProcedure = t.procedure.use(isAuthed);
-
-
-
-

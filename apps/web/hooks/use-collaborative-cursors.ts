@@ -1,16 +1,16 @@
 /**
  * Collaborative Cursors Hook
- * 
+ *
  * Real-time cursor tracking across collaborative spaces
  * Shows where each user is pointing/interacting
- * 
+ *
  * Features:
  * - Position broadcasting (throttled to 60fps)
  * - User identification (name + color)
  * - Idle cursor hiding (after 5s of no movement)
  * - Smooth cursor animations
  * - Cursor click/interaction indicators
- * 
+ *
  * Used in:
  * - Collaborative Whiteboard
  * - Songwriting Studio
@@ -50,7 +50,7 @@ export function useCollaborativeCursors({
   const [remoteCursors, setRemoteCursors] = useState<Map<string, CursorPosition>>(new Map());
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   const ablyRef = useRef<Realtime | null>(null);
   const channelRef = useRef<Types.RealtimeChannelCallbacks | null>(null);
   const lastPositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -60,66 +60,75 @@ export function useCollaborativeCursors({
   const color = userColor || generateUserColor(userId);
 
   // Broadcast cursor position (throttled to ~60fps)
-  const broadcastPosition = useCallback((x: number, y: number, isClick = false) => {
-    if (!channelRef.current || !enabled) return;
+  const broadcastPosition = useCallback(
+    (x: number, y: number, isClick = false) => {
+      if (!channelRef.current || !enabled) return;
 
-    const position: CursorPosition = {
-      x,
-      y,
-      userId,
-      userName,
-      userColor: color,
-      timestamp: Date.now(),
-      isClick,
-      isIdle: false,
-    };
-
-    // Publish cursor position
-    channelRef.current.publish('cursor-move', position);
-
-    // Reset idle timer
-    if (idleTimerRef.current) {
-      clearTimeout(idleTimerRef.current);
-    }
-
-    // Set idle after 5 seconds of no movement
-    idleTimerRef.current = setTimeout(() => {
-      if (!channelRef.current) return;
-      
-      channelRef.current.publish('cursor-move', {
-        ...position,
-        isIdle: true,
+      const position: CursorPosition = {
+        x,
+        y,
+        userId,
+        userName,
+        userColor: color,
         timestamp: Date.now(),
-      });
-    }, 5000);
+        isClick,
+        isIdle: false,
+      };
 
-    lastPositionRef.current = { x, y };
-  }, [channelName, userId, userName, color, enabled]);
+      // Publish cursor position
+      channelRef.current.publish('cursor-move', position);
+
+      // Reset idle timer
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+      }
+
+      // Set idle after 5 seconds of no movement
+      idleTimerRef.current = setTimeout(() => {
+        if (!channelRef.current) return;
+
+        channelRef.current.publish('cursor-move', {
+          ...position,
+          isIdle: true,
+          timestamp: Date.now(),
+        });
+      }, 5000);
+
+      lastPositionRef.current = { x, y };
+    },
+    [channelName, userId, userName, color, enabled]
+  );
 
   // Throttle cursor broadcasts to 60fps (16ms)
   const throttledBroadcast = useThrottle(broadcastPosition, 16);
 
   // Handle mouse move
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!enabled) return;
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!enabled) return;
 
-    // Get position relative to viewport
-    const x = e.clientX;
-    const y = e.clientY;
+      // Get position relative to viewport
+      const x = e.clientX;
+      const y = e.clientY;
 
-    throttledBroadcast(x, y, false);
-  }, [throttledBroadcast, enabled]);
+      throttledBroadcast(x, y, false);
+    },
+    [throttledBroadcast, enabled]
+  );
 
   // Handle mouse click (visual feedback)
-  const handleMouseClick = useCallback((e: MouseEvent) => {
-    if (!enabled) return;
+  const handleMouseClick = useCallback(
+    (e: MouseEvent) => {
+      if (!enabled) return;
 
-    const x = e.clientX;
-    const y = e.clientY;
+      const x = e.clientX;
+      const y = e.clientY;
 
-    // Send immediate click event (not throttled)
-    broadcastPosition(x, y, true);
-  }, [broadcastPosition, enabled]);
+      // Send immediate click event (not throttled)
+      broadcastPosition(x, y, true);
+    },
+    [broadcastPosition, enabled]
+  );
 
   // Initialize Ably connection
   useEffect(() => {
@@ -131,13 +140,13 @@ export function useCollaborativeCursors({
       try {
         // Get token from API
         const response = await fetch('/api/ably/token');
-        
+
         // If Ably is not configured (503), fail silently - cursors will be disabled
         if (response.status === 503) {
           console.info('Ably not configured - collaborative cursors disabled');
           return;
         }
-        
+
         if (!response.ok) throw new Error('Failed to get Ably token');
 
         // Create Ably client
@@ -160,19 +169,19 @@ export function useCollaborativeCursors({
         // Subscribe to cursor movements
         channel.subscribe('cursor-move', (message) => {
           if (!mounted) return;
-          
+
           const cursor = message.data as CursorPosition;
-          
+
           // Don't show our own cursor
           if (cursor.userId === userId) return;
 
-          setRemoteCursors(prev => {
+          setRemoteCursors((prev) => {
             const newMap = new Map(prev);
-            
+
             if (cursor.isIdle) {
               // Remove idle cursors after a delay
               setTimeout(() => {
-                setRemoteCursors(current => {
+                setRemoteCursors((current) => {
                   const updated = new Map(current);
                   updated.delete(cursor.userId);
                   return updated;
@@ -181,13 +190,12 @@ export function useCollaborativeCursors({
             } else {
               newMap.set(cursor.userId, cursor);
             }
-            
+
             return newMap;
           });
         });
 
         setIsConnected(true);
-
       } catch (err) {
         console.error('Cursor tracking error:', err);
         if (mounted) {
@@ -201,14 +209,14 @@ export function useCollaborativeCursors({
     // Cleanup
     return () => {
       mounted = false;
-      
+
       if (idleTimerRef.current) {
         clearTimeout(idleTimerRef.current);
       }
 
       channelRef.current?.unsubscribe();
       ablyRef.current?.close();
-      
+
       setRemoteCursors(new Map());
       setIsConnected(false);
     };
@@ -236,20 +244,20 @@ export function useCollaborativeCursors({
 }
 
 // Throttle utility
-function useThrottle<T extends (...args: any[]) => any>(
-  callback: T,
-  delay: number
-): T {
+function useThrottle<T extends (...args: any[]) => any>(callback: T, delay: number): T {
   const lastRun = useRef(Date.now());
 
-  return useCallback((...args: Parameters<T>) => {
-    const now = Date.now();
-    
-    if (now - lastRun.current >= delay) {
-      callback(...args);
-      lastRun.current = now;
-    }
-  }, [callback, delay]) as T;
+  return useCallback(
+    (...args: Parameters<T>) => {
+      const now = Date.now();
+
+      if (now - lastRun.current >= delay) {
+        callback(...args);
+        lastRun.current = now;
+      }
+    },
+    [callback, delay]
+  ) as T;
 }
 
 // Generate consistent color from userId
@@ -275,4 +283,3 @@ function generateUserColor(userId: string): string {
 
   return colors[Math.abs(hash) % colors.length];
 }
-

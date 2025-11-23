@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { useRequireAuth } from '@/hooks/use-require-auth';
-import { 
+import {
   MessageSquare,
   Search,
   Send,
@@ -14,17 +14,17 @@ import {
   Smile,
   Plus,
   Check,
-  Zap
+  Zap,
 } from 'lucide-react';
 
 // Dynamically import Ably ChatRoom
-const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then(m => m.ChatRoom), {
+const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center h-full">
+    <div className="flex h-full items-center justify-center">
       <p className="text-muted-foreground">Loading chat...</p>
     </div>
-  )
+  ),
 });
 
 type Conversation = {
@@ -64,20 +64,22 @@ export default function MessagesPage() {
     if (!newUserEmail.trim() || !user) return;
 
     const channelName = generateChannelName(user.email, newUserEmail);
-    
+
     const newConversation: Conversation = {
       id: `conv_${Date.now()}`,
       otherUserEmail: newUserEmail,
       otherUserName: newUserEmail.split('@')[0],
       channelName,
       lastMessage: 'Start chatting...',
-      lastMessageTime: new Date().toISOString()
+      lastMessageTime: new Date().toISOString(),
     };
 
     const existingConversations = user.user_metadata?.dm_conversations || [];
-    
+
     // Check if conversation already exists
-    const exists = existingConversations.find((c: Conversation) => c.otherUserEmail === newUserEmail);
+    const exists = existingConversations.find(
+      (c: Conversation) => c.otherUserEmail === newUserEmail
+    );
     if (exists) {
       setSelectedConversation(exists);
       setShowNewConversation(false);
@@ -89,8 +91,8 @@ export default function MessagesPage() {
     await supabase!.auth.updateUser({
       data: {
         ...user.user_metadata,
-        dm_conversations: [...existingConversations, newConversation]
-      }
+        dm_conversations: [...existingConversations, newConversation],
+      },
     });
 
     setConversations([...existingConversations, newConversation]);
@@ -101,36 +103,36 @@ export default function MessagesPage() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="flex h-screen items-center justify-center">
         <p className="text-muted-foreground">Loading messages...</p>
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex bg-background">
+    <div className="flex h-screen bg-background">
       {/* Conversations List */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-80 border-r flex flex-col border-border"
+        className="flex w-80 flex-col border-r border-border"
       >
         {/* Header */}
-        <div className="p-4 border-b border-border">
-          <h1 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <MessageSquare className="w-6 h-6 text-brand-primary" />
+        <div className="border-b border-border p-4">
+          <h1 className="mb-4 flex items-center gap-2 text-2xl font-bold">
+            <MessageSquare className="h-6 w-6 text-brand-primary" />
             Direct Messages
           </h1>
-          
+
           {/* Search - Coming Soon */}
-          <div className="relative opacity-50 cursor-not-allowed">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <div className="relative cursor-not-allowed opacity-50">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
             <input
               type="text"
               placeholder="Search (coming soon)..."
               disabled
-              className="w-full pl-10 pr-4 py-2 rounded-lg bg-surface border border-border text-foreground"
+              className="w-full rounded-lg border border-border bg-surface py-2 pl-10 pr-4 text-foreground"
             />
           </div>
         </div>
@@ -138,33 +140,29 @@ export default function MessagesPage() {
         {/* Conversations */}
         <div className="flex-1 overflow-y-auto p-4">
           {conversations.length === 0 ? (
-            <div className="text-center py-8">
-              <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-50 text-brand-primary" />
-              <p className="font-medium mb-2">No conversations yet</p>
-              <p className="text-sm text-muted-foreground">
-                Start messaging your collaborators
-              </p>
+            <div className="py-8 text-center">
+              <MessageSquare className="mx-auto mb-3 h-12 w-12 text-brand-primary opacity-50" />
+              <p className="mb-2 font-medium">No conversations yet</p>
+              <p className="text-sm text-muted-foreground">Start messaging your collaborators</p>
             </div>
           ) : (
-            conversations.map(conv => (
+            conversations.map((conv) => (
               <button
                 key={conv.id}
                 onClick={() => setSelectedConversation(conv)}
-                className={`w-full p-3 rounded-lg mb-2 text-left transition-all ${
-                  selectedConversation?.id === conv.id 
-                    ? 'bg-brand-primary/10 border border-brand-primary/20' 
-                    : 'hover:bg-surface-muted border border-transparent'
+                className={`mb-2 w-full rounded-lg p-3 text-left transition-all ${
+                  selectedConversation?.id === conv.id
+                    ? 'border border-brand-primary/20 bg-brand-primary/10'
+                    : 'border border-transparent hover:bg-surface-muted'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500 font-semibold text-white">
                     {conv.otherUserName[0].toUpperCase()}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">{conv.otherUserName}</p>
-                    <p className="text-xs truncate text-muted-foreground">
-                      {conv.otherUserEmail}
-                    </p>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{conv.otherUserName}</p>
+                    <p className="truncate text-xs text-muted-foreground">{conv.otherUserEmail}</p>
                   </div>
                 </div>
               </button>
@@ -173,7 +171,7 @@ export default function MessagesPage() {
         </div>
 
         {/* Start New Conversation */}
-        <div className="p-4 border-t border-border">
+        <div className="border-t border-border p-4">
           {showNewConversation ? (
             <div className="space-y-2">
               <input
@@ -181,16 +179,16 @@ export default function MessagesPage() {
                 value={newUserEmail}
                 onChange={(e) => setNewUserEmail(e.target.value)}
                 placeholder="colleague@example.com"
-                className="w-full px-3 py-2 rounded-lg bg-surface border border-border text-foreground text-sm"
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground"
                 onKeyPress={(e) => e.key === 'Enter' && startNewConversation()}
                 autoFocus
               />
               <div className="flex gap-2">
                 <button
                   onClick={startNewConversation}
-                  className="flex-1 px-3 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-1"
+                  className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-brand-primary px-3 py-2 text-sm font-medium text-white hover:bg-brand-primary/90"
                 >
-                  <Check className="w-4 h-4" />
+                  <Check className="h-4 w-4" />
                   Start
                 </button>
                 <button
@@ -198,7 +196,7 @@ export default function MessagesPage() {
                     setShowNewConversation(false);
                     setNewUserEmail('');
                   }}
-                  className="px-3 py-2 bg-surface hover:bg-surface-muted border border-border rounded-lg text-sm"
+                  className="rounded-lg border border-border bg-surface px-3 py-2 text-sm hover:bg-surface-muted"
                 >
                   Cancel
                 </button>
@@ -207,9 +205,9 @@ export default function MessagesPage() {
           ) : (
             <button
               onClick={() => setShowNewConversation(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-lg font-medium"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-brand-primary px-4 py-2 font-medium text-white hover:bg-brand-primary/90"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="h-4 w-4" />
               New Conversation
             </button>
           )}
@@ -221,19 +219,21 @@ export default function MessagesPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="flex-1 flex flex-col"
+        className="flex flex-1 flex-col"
       >
         {selectedConversation ? (
-          <div className="flex-1 flex flex-col h-full">
+          <div className="flex h-full flex-1 flex-col">
             {/* Chat Header */}
-            <div className="p-4 border-b border-border bg-surface">
+            <div className="border-b border-border bg-surface p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-semibold">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500 font-semibold text-white">
                   {selectedConversation.otherUserName[0].toUpperCase()}
                 </div>
                 <div>
                   <p className="font-semibold">{selectedConversation.otherUserName}</p>
-                  <p className="text-xs text-muted-foreground">{selectedConversation.otherUserEmail}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {selectedConversation.otherUserEmail}
+                  </p>
                 </div>
               </div>
             </div>
@@ -244,53 +244,58 @@ export default function MessagesPage() {
             </div>
 
             {/* Info Footer */}
-            <div className="p-3 border-t border-border bg-surface/50">
-              <p className="text-xs text-muted-foreground flex items-center gap-2">
-                <Zap className="w-3 h-3 text-brand-primary" />
+            <div className="border-t border-border bg-surface/50 p-3">
+              <p className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Zap className="h-3 w-3 text-brand-primary" />
                 Real-time messaging powered by Ably • Messages sync instantly
               </p>
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center p-8">
-            <div className="text-center max-w-md">
-              <div 
-                className="w-24 h-24 rounded-full mx-auto mb-6 flex items-center justify-center"
-                style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(236,72,153,0.05) 100%)' }}
+          <div className="flex flex-1 items-center justify-center p-8">
+            <div className="max-w-md text-center">
+              <div
+                className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(236,72,153,0.05) 100%)',
+                }}
               >
-                <MessageSquare className="w-12 h-12 text-purple-400" />
+                <MessageSquare className="h-12 w-12 text-purple-400" />
               </div>
-              <h2 className="text-2xl font-semibold mb-3">Direct Messaging</h2>
+              <h2 className="mb-3 text-2xl font-semibold">Direct Messaging</h2>
               <p className="mb-6 text-muted-foreground">
-                Chat 1-on-1 with your collaborators in real-time. Powered by Ably for instant, 
+                Chat 1-on-1 with your collaborators in real-time. Powered by Ably for instant,
                 reliable messaging with typing indicators and presence.
               </p>
               <div className="space-y-3">
-                <div className="flex items-start gap-3 p-3 bg-surface border border-border rounded-lg text-left">
-                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center flex-shrink-0">
-                    <Users className="w-5 h-5 text-blue-400" />
+                <div className="flex items-start gap-3 rounded-lg border border-border bg-surface p-3 text-left">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-500/10">
+                    <Users className="h-5 w-5 text-blue-400" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">1-on-1 Conversations</p>
+                    <p className="text-sm font-medium">1-on-1 Conversations</p>
                     <p className="text-xs text-muted-foreground">Private chats with band members</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 p-3 bg-surface border border-border rounded-lg text-left">
-                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-5 h-5 text-green-400" />
+                <div className="flex items-start gap-3 rounded-lg border border-border bg-surface p-3 text-left">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-500/10">
+                    <Zap className="h-5 w-5 text-green-400" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">Instant Sync</p>
+                    <p className="text-sm font-medium">Instant Sync</p>
                     <p className="text-xs text-muted-foreground">Messages appear in real-time</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 p-3 bg-surface border border-border rounded-lg text-left">
-                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center flex-shrink-0">
-                    <Music2 className="w-5 h-5 text-purple-400" />
+                <div className="flex items-start gap-3 rounded-lg border border-border bg-surface p-3 text-left">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-500/10">
+                    <Music2 className="h-5 w-5 text-purple-400" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">Music Collaboration</p>
-                    <p className="text-xs text-muted-foreground">Discuss tracks, lyrics, and ideas</p>
+                    <p className="text-sm font-medium">Music Collaboration</p>
+                    <p className="text-xs text-muted-foreground">
+                      Discuss tracks, lyrics, and ideas
+                    </p>
                   </div>
                 </div>
               </div>

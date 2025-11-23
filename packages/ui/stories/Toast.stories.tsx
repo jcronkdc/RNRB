@@ -10,7 +10,7 @@ function DemoToasts() {
         onClick={() =>
           notify({
             title: 'Song exported',
-            description: 'Your latest mix is ready to share.'
+            description: 'Your latest mix is ready to share.',
           })
         }
       >
@@ -22,7 +22,7 @@ function DemoToasts() {
           notify({
             title: 'Invite sent',
             description: 'An invitation email was sent to alex@cronkwaters.dev.',
-            duration: 6000
+            duration: 6000,
           })
         }
       >
@@ -34,7 +34,7 @@ function DemoToasts() {
           notify({
             title: 'Export failed',
             description: 'The mixdown service returned an error. Try again shortly.',
-            variant: 'destructive'
+            variant: 'destructive',
           })
         }
       >
@@ -52,11 +52,11 @@ const meta: Meta = {
       <ToastProvider>
         <Story />
       </ToastProvider>
-    )
+    ),
   ],
   parameters: {
-    layout: 'centered'
-  }
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -64,6 +64,5 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
-  render: () => <DemoToasts />
+  render: () => <DemoToasts />,
 };
-

@@ -24,33 +24,33 @@ export async function GET() {
           users: false,
           projects: false,
           songs: false,
-        }
+        },
       },
       services: {
         oauth: !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET,
         video: !!process.env.DAILY_API_KEY,
         chat: !!process.env.ABLY_API_KEY,
         ai: !!process.env.OPENROUTER_API_KEY,
-      }
-    }
+      },
+    },
   };
 
   // Check database connection and tables
   try {
     await prisma.$queryRaw`SELECT 1`;
     diagnostics.checks.database.connected = true;
-    
+
     // Test critical tables exist
     try {
       await prisma.user.count();
       diagnostics.checks.database.tables.users = true;
     } catch (e) {}
-    
+
     try {
       await prisma.project.count();
       diagnostics.checks.database.tables.projects = true;
     } catch (e) {}
-    
+
     try {
       await prisma.song.count();
       diagnostics.checks.database.tables.songs = true;
@@ -63,7 +63,7 @@ export async function GET() {
   // Calculate overall health percentage
   const totalChecks = 10; // DB + OAuth + Video + Chat + AI + 3 core env vars + 3 tables
   let healthyChecks = 0;
-  
+
   if (diagnostics.checks.database.connected) healthyChecks++;
   if (diagnostics.checks.database.tables.users) healthyChecks++;
   if (diagnostics.checks.database.tables.projects) healthyChecks++;
@@ -73,34 +73,40 @@ export async function GET() {
   if (diagnostics.checks.services.oauth) healthyChecks += 2; // OAuth counts double (critical)
   if (diagnostics.checks.services.video) healthyChecks++;
   if (diagnostics.checks.services.chat) healthyChecks++;
-  
+
   const healthPercentage = Math.round((healthyChecks / totalChecks) * 100);
 
   // Overall status
-  const tablesHealthy = diagnostics.checks.database.tables.users && 
-                        diagnostics.checks.database.tables.projects &&
-                        diagnostics.checks.database.tables.songs;
-  
-  diagnostics.status = diagnostics.checks.database.connected && 
-                       diagnostics.checks.services.oauth &&
-                       tablesHealthy ? 'healthy' : 'degraded';
+  const tablesHealthy =
+    diagnostics.checks.database.tables.users &&
+    diagnostics.checks.database.tables.projects &&
+    diagnostics.checks.database.tables.songs;
 
-  return NextResponse.json({
-    ...diagnostics,
-    healthPercentage,
-    summary: {
-      coreInfrastructure: diagnostics.checks.database.connected && 
-                          diagnostics.checks.env.DATABASE_URL && 
-                          diagnostics.checks.env.NEXTAUTH_SECRET &&
-                          tablesHealthy,
-      authentication: diagnostics.checks.services.oauth,
-      collaboration: diagnostics.checks.services.video && diagnostics.checks.services.chat,
-      apis: {
-        projects: diagnostics.checks.database.tables.projects,
-        songs: diagnostics.checks.database.tables.songs,
-      }
+  diagnostics.status =
+    diagnostics.checks.database.connected && diagnostics.checks.services.oauth && tablesHealthy
+      ? 'healthy'
+      : 'degraded';
+
+  return NextResponse.json(
+    {
+      ...diagnostics,
+      healthPercentage,
+      summary: {
+        coreInfrastructure:
+          diagnostics.checks.database.connected &&
+          diagnostics.checks.env.DATABASE_URL &&
+          diagnostics.checks.env.NEXTAUTH_SECRET &&
+          tablesHealthy,
+        authentication: diagnostics.checks.services.oauth,
+        collaboration: diagnostics.checks.services.video && diagnostics.checks.services.chat,
+        apis: {
+          projects: diagnostics.checks.database.tables.projects,
+          songs: diagnostics.checks.database.tables.songs,
+        },
+      },
+    },
+    {
+      status: diagnostics.status === 'healthy' ? 200 : 206, // 206 = Partial Content (degraded)
     }
-  }, {
-    status: diagnostics.status === 'healthy' ? 200 : 206 // 206 = Partial Content (degraded)
-  });
+  );
 }

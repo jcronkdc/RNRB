@@ -22,13 +22,18 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
 
   useChannel(channelName, (message) => {
     if (message.name === 'notification') {
-      setNotifications((prev) => [{
-        id: message.id || Date.now().toString(),
-        title: message.data.title || 'Notification',
-        message: message.data.message || '',
-        timestamp: message.timestamp || Date.now(),
-        type: message.data.type || 'info'
-      }, ...prev].slice(0, 50)); // Keep last 50 notifications
+      setNotifications((prev) =>
+        [
+          {
+            id: message.id || Date.now().toString(),
+            title: message.data.title || 'Notification',
+            message: message.data.message || '',
+            timestamp: message.timestamp || Date.now(),
+            type: message.data.type || 'info',
+          },
+          ...prev,
+        ].slice(0, 50)
+      ); // Keep last 50 notifications
     }
   });
 
@@ -36,7 +41,7 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
-  const unreadCount = notifications.filter(n => !n.id.startsWith('read-')).length;
+  const unreadCount = notifications.filter((n) => !n.id.startsWith('read-')).length;
 
   return (
     <div className="relative">
@@ -46,7 +51,7 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-600 text-xs font-bold text-white">
+          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-600 text-xs font-bold text-white">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -60,7 +65,7 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 ? (
               <div className="p-8 text-center">
-                <Bell className="mx-auto h-8 w-8 text-gray-600 mb-2" />
+                <Bell className="mx-auto mb-2 h-8 w-8 text-gray-600" />
                 <p className="text-sm text-gray-500">No notifications</p>
               </div>
             ) : (
@@ -76,7 +81,7 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
                     </div>
                     <button
                       onClick={() => clearNotification(notif.id)}
-                      className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 text-gray-500 transition hover:text-white"
+                      className="absolute right-4 top-4 text-gray-500 opacity-0 transition hover:text-white group-hover:opacity-100"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -90,4 +95,3 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
     </div>
   );
 }
-

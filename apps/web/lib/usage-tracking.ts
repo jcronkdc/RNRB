@@ -1,8 +1,8 @@
 /**
  * Usage Tracking & Rate Limiting for Rock N' Roll Basement
- * 
+ *
  * CRITICAL: Protects profit margins by enforcing tier-based usage limits
- * 
+ *
  * Features:
  * - Monthly AI request tracking
  * - Video call minute tracking
@@ -23,17 +23,17 @@ export const TIER_LIMITS = {
     storageGB: 1,
   },
   creator: {
-    aiRequests: 100,  // ~$0.15/month at optimized model rates
-    videoMinutes: 0,   // No video for Creator tier
+    aiRequests: 100, // ~$0.15/month at optimized model rates
+    videoMinutes: 0, // No video for Creator tier
     collaborators: 5,
     projects: 10,
     storageGB: 10,
   },
   studio: {
-    aiRequests: 500,   // ~$0.75/month at optimized model rates
+    aiRequests: 500, // ~$0.75/month at optimized model rates
     videoMinutes: 1200, // 20 hours/month (~$2.40 at scale pricing)
     collaborators: -1, // Unlimited
-    projects: -1,      // Unlimited
+    projects: -1, // Unlimited
     storageGB: 100,
   },
 } as const;
@@ -72,9 +72,9 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
     }
 
     // Determine effective tier (expired subscriptions fall back to free)
-    const tier = (user.subscriptionStatus === 'active' 
-      ? user.subscriptionTier 
-      : 'free') as TierName;
+    const tier = (
+      user.subscriptionStatus === 'active' ? user.subscriptionTier : 'free'
+    ) as TierName;
 
     // Check if usage period needs reset (monthly)
     const now = new Date();
@@ -105,9 +105,7 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
     }
 
     // Get current usage
-    const used = type === 'aiRequests' 
-      ? (user.aiRequestsUsed || 0)
-      : (user.videoMinutesUsed || 0);
+    const used = type === 'aiRequests' ? user.aiRequestsUsed || 0 : user.videoMinutesUsed || 0;
 
     const limit = TIER_LIMITS[tier][type];
     const remaining = limit - used;
@@ -140,23 +138,21 @@ export async function requireUsageQuota(type: UsageType, amount: number = 1): Pr
   const usage = await getUserUsage(user.id, type);
 
   if (!usage.allowed || usage.remaining < amount) {
-    const upgradeMessage = usage.tier === 'free' 
-      ? 'Upgrade to Creator or Studio plan'
-      : usage.tier === 'creator' 
-        ? 'Upgrade to Studio plan'
-        : 'Purchase additional credits';
+    const upgradeMessage =
+      usage.tier === 'free'
+        ? 'Upgrade to Creator or Studio plan'
+        : usage.tier === 'creator'
+          ? 'Upgrade to Studio plan'
+          : 'Purchase additional credits';
 
-    throw Object.assign(
-      new Error(`${type} quota exceeded. ${upgradeMessage} for more.`),
-      {
-        code: 'QUOTA_EXCEEDED',
-        tier: usage.tier,
-        used: usage.used,
-        limit: usage.limit,
-        resetDate: usage.resetDate,
-        requiresUpgrade: true,
-      }
-    );
+    throw Object.assign(new Error(`${type} quota exceeded. ${upgradeMessage} for more.`), {
+      code: 'QUOTA_EXCEEDED',
+      tier: usage.tier,
+      used: usage.used,
+      limit: usage.limit,
+      resetDate: usage.resetDate,
+      requiresUpgrade: true,
+    });
   }
 }
 
@@ -164,14 +160,15 @@ export async function requireUsageQuota(type: UsageType, amount: number = 1): Pr
  * Track usage after successful request
  */
 export async function trackUsage(
-  userId: string, 
-  type: UsageType, 
+  userId: string,
+  type: UsageType,
   amount: number = 1
 ): Promise<void> {
   try {
-    const updateData = type === 'aiRequests'
-      ? { aiRequestsUsed: { increment: amount } }
-      : { videoMinutesUsed: { increment: amount } };
+    const updateData =
+      type === 'aiRequests'
+        ? { aiRequestsUsed: { increment: amount } }
+        : { videoMinutesUsed: { increment: amount } };
 
     await db.user.update({
       where: { id: userId },
@@ -201,9 +198,7 @@ export async function getUsageSummary(userId: string) {
     },
   });
 
-  const tier = (user?.subscriptionStatus === 'active' 
-    ? user.subscriptionTier 
-    : 'free') as TierName;
+  const tier = (user?.subscriptionStatus === 'active' ? user.subscriptionTier : 'free') as TierName;
 
   return {
     tier,
@@ -220,12 +215,12 @@ export async function getUsageSummary(userId: string) {
       percentage: videoUsage.limit > 0 ? (videoUsage.used / videoUsage.limit) * 100 : 0,
     },
     storage: {
-      used: user?.storageUsedGB || 0,
+      used: Number(user?.storageUsedGB) || 0,
       limit: TIER_LIMITS[tier].storageGB,
-      remaining: TIER_LIMITS[tier].storageGB - (user?.storageUsedGB || 0),
-      percentage: ((user?.storageUsedGB || 0) / TIER_LIMITS[tier].storageGB) * 100,
+      remaining: TIER_LIMITS[tier].storageGB - (Number(user?.storageUsedGB) || 0),
+      percentage:
+        ((Number(user?.storageUsedGB) || 0) / TIER_LIMITS[tier].storageGB) * 100,
     },
     resetDate: aiUsage.resetDate,
   };
 }
-

@@ -35,7 +35,7 @@ The Prisma schema has new subscription fields that need to be added to your prod
 
 ```sql
 -- Add subscription fields to User table
-ALTER TABLE "User" 
+ALTER TABLE "User"
   ADD COLUMN IF NOT EXISTS "stripeCustomerId" TEXT UNIQUE,
   ADD COLUMN IF NOT EXISTS "stripeSubscriptionId" TEXT UNIQUE,
   ADD COLUMN IF NOT EXISTS "subscriptionTier" TEXT NOT NULL DEFAULT 'free',
@@ -90,12 +90,12 @@ pnpm prisma migrate deploy
 1. Go to https://vercel.com/cronkwaters/settings/environment-variables
 2. Add these 3 variables:
 
-| Name | Value | Environment |
-|------|-------|-------------|
-| `STRIPE_SECRET_KEY` | `sk_test_...` (from Step 2) | Production |
-| `STRIPE_WEBHOOK_SECRET` | `whsec_...` (from Step 2) | Production |
-| `STRIPE_PRICE_ID_CREATOR` | *(from Step 4)* | Production |
-| `STRIPE_PRICE_ID_STUDIO` | *(from Step 4)* | Production |
+| Name                      | Value                       | Environment |
+| ------------------------- | --------------------------- | ----------- |
+| `STRIPE_SECRET_KEY`       | `sk_test_...` (from Step 2) | Production  |
+| `STRIPE_WEBHOOK_SECRET`   | `whsec_...` (from Step 2)   | Production  |
+| `STRIPE_PRICE_ID_CREATOR` | _(from Step 4)_             | Production  |
+| `STRIPE_PRICE_ID_STUDIO`  | _(from Step 4)_             | Production  |
 
 3. Click "Save" for each
 
@@ -106,6 +106,7 @@ pnpm prisma migrate deploy
 1. Go to https://dashboard.stripe.com/test/products/create
 
 **Product 1: Creator Plan**
+
 - Name: `Creator`
 - Description: `Professional music creation tools`
 - Pricing:
@@ -116,6 +117,7 @@ pnpm prisma migrate deploy
 - **Copy the Price ID** (starts with `price_...`) and add to Vercel as `STRIPE_PRICE_ID_CREATOR`
 
 **Product 2: Studio Plan**
+
 - Name: `Studio`
 - Description: `Full studio capabilities with collaboration`
 - Pricing:
@@ -182,11 +184,11 @@ git push origin main
 
 The system supports 3 tiers (configured in code):
 
-| Tier | Price | Features |
-|------|-------|----------|
-| **Free** | $0/mo | Basic songwriting, limited collaboration |
-| **Creator** | $9.99/mo | Pro tools, unlimited collaboration |
-| **Studio** | $29.99/mo | Full studio, video calls, priority support |
+| Tier        | Price     | Features                                   |
+| ----------- | --------- | ------------------------------------------ |
+| **Free**    | $0/mo     | Basic songwriting, limited collaboration   |
+| **Creator** | $9.99/mo  | Pro tools, unlimited collaboration         |
+| **Studio**  | $29.99/mo | Full studio, video calls, priority support |
 
 ---
 
@@ -202,6 +204,7 @@ The system supports 3 tiers (configured in code):
 ## 📊 HOW IT WORKS
 
 ### **User Upgrades:**
+
 ```
 1. User clicks "Upgrade" button
 2. Server action creates Stripe Customer (if needed)
@@ -214,6 +217,7 @@ The system supports 3 tiers (configured in code):
 ```
 
 ### **Subscription Updates:**
+
 ```
 1. Stripe sends webhook: customer.subscription.updated
 2. Webhook handler updates User record (status, tier, renewal date)
@@ -221,6 +225,7 @@ The system supports 3 tiers (configured in code):
 ```
 
 ### **User Cancels:**
+
 ```
 1. User clicks "Manage Subscription"
 2. Opens Stripe Customer Portal
@@ -237,20 +242,24 @@ The system supports 3 tiers (configured in code):
 ## 🐛 TROUBLESHOOTING
 
 ### **Build Errors**
+
 - ✅ Already fixed - build compiles cleanly
 - If you see errors, run: `cd apps/web && pnpm install && pnpm run build`
 
 ### **Database Migration Fails**
+
 - Check `DATABASE_URL` is correct
 - Verify Neon database is accessible
 - Run migration manually using SQL (Option A above)
 
 ### **Webhook Not Working**
+
 - Verify `STRIPE_WEBHOOK_SECRET` in Vercel matches Stripe Dashboard
 - Check webhook logs in Stripe Dashboard
 - Test webhook locally: Use Stripe CLI `stripe listen --forward-to localhost:3000/api/webhooks/stripe`
 
 ### **Checkout Session Fails**
+
 - Verify `STRIPE_SECRET_KEY` is correct
 - Check `STRIPE_PRICE_ID_*` variables match your Stripe products
 - Look for errors in Vercel logs
@@ -260,15 +269,18 @@ The system supports 3 tiers (configured in code):
 ## 📁 KEY FILES
 
 ### **Backend:**
+
 - `apps/web/lib/stripe-subscriptions.ts` - Stripe SDK wrapper (225 lines)
 - `apps/web/lib/actions/subscriptions.ts` - Server actions (372 lines)
 - `apps/web/app/api/webhooks/stripe/route.ts` - Webhook handler (250 lines)
 
 ### **Frontend:**
+
 - `apps/web/app/(app)/settings/billing/page.tsx` - Billing page
 - `apps/web/app/(app)/settings/billing/BillingDashboard.tsx` - UI component
 
 ### **Database:**
+
 - `packages/db/prisma/schema.prisma` - User model with subscription fields
 
 ---
@@ -320,4 +332,5 @@ Before launching subscriptions:
 **END OF SETUP GUIDE** | Agent 58 | 2025-11-22
 
 **Status:** 🎉 Infrastructure complete - ready for 15-minute Stripe setup!
+
 

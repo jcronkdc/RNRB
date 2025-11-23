@@ -48,10 +48,7 @@ export async function GET(
     return NextResponse.json(song);
   } catch (error) {
     console.error('GET /api/projects/[id]/songs/[songId] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch song' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch song' }, { status: 500 });
   }
 }
 
@@ -128,10 +125,7 @@ export async function PATCH(
     return NextResponse.json(updatedSong);
   } catch (error) {
     console.error('PATCH /api/projects/[id]/songs/[songId] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update song' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update song' }, { status: 500 });
   }
 }
 
@@ -189,10 +183,8 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('DELETE /api/projects/[id]/songs/[songId] error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete song' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete song' }, { status: 500 });
   }
 }
+
 

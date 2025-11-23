@@ -7,7 +7,7 @@ export const organizationRouter = router({
     return ctx.prisma.membership.findMany({
       where: { userId: ctx.viewerId! },
       include: { org: true },
-      orderBy: { createdAt: 'asc' }
+      orderBy: { createdAt: 'asc' },
     });
   }),
   current: protectedProcedure.query(({ ctx }) => ctx.activeMembership),
@@ -15,11 +15,7 @@ export const organizationRouter = router({
     .input(z.object({ slug: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
       return ctx.prisma.org.findUnique({
-        where: { slug: input.slug }
+        where: { slug: input.slug },
       });
-    })
+    }),
 });
-
-
-
-

@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       select: { orgId: true },
     });
 
-    const userOrgIds = memberships.map(m => m.orgId);
+    const userOrgIds = memberships.map((m) => m.orgId);
 
     if (userOrgIds.length === 0) {
       return NextResponse.json({ shows: [] });
@@ -104,19 +104,14 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      orderBy: [
-        { date: upcoming === 'false' ? 'desc' : 'asc' },
-      ],
+      orderBy: [{ date: upcoming === 'false' ? 'desc' : 'asc' }],
       take: 50,
     });
 
     return NextResponse.json({ shows });
   } catch (error) {
     console.error('Shows GET error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch shows' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch shows' }, { status: 500 });
   }
 }
 
@@ -227,10 +222,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ show }, { status: 201 });
   } catch (error) {
     console.error('Shows POST error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create show' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create show' }, { status: 500 });
   }
 }
-

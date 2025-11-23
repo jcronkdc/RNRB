@@ -9,33 +9,33 @@ export function FABQuickActions() {
   const [isOpen, setIsOpen] = useState(false);
 
   const quickActions = [
-    { 
-      icon: Folder, 
-      label: 'New Project', 
+    {
+      icon: Folder,
+      label: 'New Project',
       href: '/projects/new',
       color: 'text-brand-primary',
-      bg: 'bg-brand-primary/10'
+      bg: 'bg-brand-primary/10',
     },
-    { 
-      icon: Music, 
-      label: 'Write Song', 
+    {
+      icon: Music,
+      label: 'Write Song',
       href: '/projects',
       color: 'text-purple-400',
-      bg: 'bg-purple-500/10'
+      bg: 'bg-purple-500/10',
     },
-    { 
-      icon: Mic2, 
-      label: 'Record', 
+    {
+      icon: Mic2,
+      label: 'Record',
       href: '/studio',
       color: 'text-pink-400',
-      bg: 'bg-pink-500/10'
+      bg: 'bg-pink-500/10',
     },
-    { 
-      icon: Users, 
-      label: 'Find Musicians', 
+    {
+      icon: Users,
+      label: 'Find Musicians',
       href: '/discover',
       color: 'text-blue-400',
-      bg: 'bg-blue-500/10'
+      bg: 'bg-blue-500/10',
     },
   ];
 
@@ -61,12 +61,14 @@ export function FABQuickActions() {
                 <Link href={action.href}>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="w-full px-4 py-3 bg-surface hover:bg-surface-muted border border-border rounded-xl flex items-center gap-3 transition-all shadow-lg hover:shadow-xl group"
+                    className="group flex w-full items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 shadow-lg transition-all hover:bg-surface-muted hover:shadow-xl"
                   >
-                    <div className={`w-10 h-10 rounded-lg ${action.bg} flex items-center justify-center`}>
-                      <action.icon className={`w-5 h-5 ${action.color}`} />
+                    <div
+                      className={`h-10 w-10 rounded-lg ${action.bg} flex items-center justify-center`}
+                    >
+                      <action.icon className={`h-5 w-5 ${action.color}`} />
                     </div>
-                    <span className="font-medium text-foreground group-hover:text-brand-primary transition-colors">
+                    <span className="font-medium text-foreground transition-colors group-hover:text-brand-primary">
                       {action.label}
                     </span>
                   </button>
@@ -82,7 +84,7 @@ export function FABQuickActions() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="w-16 h-16 bg-brand-primary hover:bg-brand-primary/90 rounded-full shadow-2xl flex items-center justify-center transition-colors group"
+        className="group flex h-16 w-16 items-center justify-center rounded-full bg-brand-primary shadow-2xl transition-colors hover:bg-brand-primary/90"
         title="Quick actions"
       >
         <AnimatePresence mode="wait">
@@ -94,7 +96,7 @@ export function FABQuickActions() {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <X className="w-7 h-7 text-brand-primary-foreground" />
+              <X className="h-7 w-7 text-brand-primary-foreground" />
             </motion.div>
           ) : (
             <motion.div
@@ -104,7 +106,7 @@ export function FABQuickActions() {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Plus className="w-7 h-7 text-brand-primary-foreground" />
+              <Plus className="h-7 w-7 text-brand-primary-foreground" />
             </motion.div>
           )}
         </AnimatePresence>
@@ -112,4 +114,3 @@ export function FABQuickActions() {
     </div>
   );
 }
-

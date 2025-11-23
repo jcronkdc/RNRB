@@ -6,10 +6,7 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/venues/[id]
  * Get a single venue by ID or slug
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -18,10 +15,7 @@ export async function GET(
 
     const venue = await db.venue.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
       include: {
         shows: {
@@ -44,10 +38,7 @@ export async function GET(
     return NextResponse.json({ venue });
   } catch (error) {
     console.error('Venue GET error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch venue' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch venue' }, { status: 500 });
   }
 }
 
@@ -55,10 +46,7 @@ export async function GET(
  * PATCH /api/venues/[id]
  * Update a venue
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -87,10 +75,7 @@ export async function PATCH(
     // Check if venue exists
     const existingVenue = await db.venue.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
     });
 
@@ -99,7 +84,7 @@ export async function PATCH(
     }
 
     const updateData: any = {};
-    
+
     if (name !== undefined) {
       updateData.name = name;
       // Regenerate slug if name changed
@@ -131,10 +116,7 @@ export async function PATCH(
     return NextResponse.json({ venue });
   } catch (error) {
     console.error('Venue PATCH error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update venue' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update venue' }, { status: 500 });
   }
 }
 
@@ -142,10 +124,7 @@ export async function PATCH(
  * DELETE /api/venues/[id]
  * Delete a venue
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -155,10 +134,7 @@ export async function DELETE(
     // Check if venue exists
     const existingVenue = await db.venue.findFirst({
       where: {
-        OR: [
-          { id: params.id },
-          { slug: params.id },
-        ],
+        OR: [{ id: params.id }, { slug: params.id }],
       },
       include: {
         shows: true,
@@ -184,10 +160,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Venue DELETE error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete venue' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete venue' }, { status: 500 });
   }
 }
-

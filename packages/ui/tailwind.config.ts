@@ -15,7 +15,7 @@ const config: Config = {
         surface: {
           DEFAULT: withAlpha('--sf-color-surface'),
           muted: withAlpha('--sf-color-surface-muted'),
-          elevated: withAlpha('--sf-color-surface-elevated')
+          elevated: withAlpha('--sf-color-surface-elevated'),
         },
         brand: {
           foreground: withAlpha('--sf-color-brand-foreground'),
@@ -24,34 +24,34 @@ const config: Config = {
           secondary: withAlpha('--sf-color-brand-secondary'),
           'secondary-foreground': withAlpha('--sf-color-brand-secondary-foreground'),
           muted: withAlpha('--sf-color-brand-muted'),
-          'muted-foreground': withAlpha('--sf-color-brand-muted-foreground')
+          'muted-foreground': withAlpha('--sf-color-brand-muted-foreground'),
         },
         accent: {
           DEFAULT: withAlpha('--sf-color-accent'),
           foreground: withAlpha('--sf-color-accent-foreground'),
-          subtle: withAlpha('--sf-color-accent-subtle')
+          subtle: withAlpha('--sf-color-accent-subtle'),
         },
         muted: {
           DEFAULT: withAlpha('--sf-color-muted'),
-          foreground: withAlpha('--sf-color-muted-foreground')
+          foreground: withAlpha('--sf-color-muted-foreground'),
         },
         success: {
           DEFAULT: withAlpha('--sf-color-success'),
-          foreground: withAlpha('--sf-color-success-foreground')
+          foreground: withAlpha('--sf-color-success-foreground'),
         },
         warning: {
           DEFAULT: withAlpha('--sf-color-warning'),
-          foreground: withAlpha('--sf-color-warning-foreground')
+          foreground: withAlpha('--sf-color-warning-foreground'),
         },
         danger: {
           DEFAULT: withAlpha('--sf-color-danger'),
-          foreground: withAlpha('--sf-color-danger-foreground')
+          foreground: withAlpha('--sf-color-danger-foreground'),
         },
-        ring: withAlpha('--sf-color-brand-primary')
+        ring: withAlpha('--sf-color-brand-primary'),
       },
       fontFamily: {
         sans: ['var(--sf-font-sans)', ...defaultTheme.fontFamily.sans],
-        mono: ['var(--sf-font-mono)', ...defaultTheme.fontFamily.mono]
+        mono: ['var(--sf-font-mono)', ...defaultTheme.fontFamily.mono],
       },
       borderRadius: {
         none: 'var(--sf-radius-none)',
@@ -60,24 +60,24 @@ const config: Config = {
         md: 'var(--sf-radius-md)',
         lg: 'var(--sf-radius-lg)',
         xl: 'var(--sf-radius-xl)',
-        full: 'var(--sf-radius-full)'
+        full: 'var(--sf-radius-full)',
       },
       boxShadow: {
         soft: 'var(--sf-shadow-soft)',
         elevated: 'var(--sf-shadow-elevated)',
-        outline: 'var(--sf-shadow-outline)'
+        outline: 'var(--sf-shadow-outline)',
       },
       transitionDuration: {
         base: 'var(--sf-transition-base-duration)',
-        emphasize: 'var(--sf-transition-emphasis-duration)'
+        emphasize: 'var(--sf-transition-emphasis-duration)',
       },
       transitionTimingFunction: {
         base: 'var(--sf-transition-base-timing)',
-        emphasize: 'var(--sf-transition-emphasis-timing)'
-      }
-    }
+        emphasize: 'var(--sf-transition-emphasis-timing)',
+      },
+    },
   },
-  plugins: [tailwindcssAnimate]
+  plugins: [tailwindcssAnimate],
 };
 
 export default config;

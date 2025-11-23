@@ -5,10 +5,7 @@ import { db } from '@/lib/db';
  * GET /api/projects/[id]/songs
  * Get all songs for a project
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const { searchParams } = new URL(req.url);
@@ -21,10 +18,7 @@ export async function GET(
     // Find project (by ID or slug)
     const project = await db.project.findFirst({
       where: {
-        OR: [
-          { id },
-          { slug: id },
-        ],
+        OR: [{ id }, { slug: id }],
       },
       select: {
         id: true,
@@ -69,10 +63,7 @@ export async function GET(
     return NextResponse.json(songs);
   } catch (error) {
     console.error('GET /api/projects/[id]/songs error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch songs' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch songs' }, { status: 500 });
   }
 }
 
@@ -80,10 +71,7 @@ export async function GET(
  * POST /api/projects/[id]/songs
  * Create a new song in a project
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const body = await req.json();
@@ -100,10 +88,7 @@ export async function POST(
     // Find project
     const project = await db.project.findFirst({
       where: {
-        OR: [
-          { id },
-          { slug: id },
-        ],
+        OR: [{ id }, { slug: id }],
       },
       include: {
         members: {
@@ -157,9 +142,13 @@ export async function POST(
   } catch (error) {
     console.error('POST /api/projects/[id]/songs error:', error);
     return NextResponse.json(
-      { error: 'Failed to create song', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to create song',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }
 }
+
 

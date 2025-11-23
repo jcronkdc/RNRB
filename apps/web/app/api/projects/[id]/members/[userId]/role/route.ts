@@ -53,10 +53,7 @@ export async function PATCH(
     });
 
     if (targetMembership?.role === 'owner' && requesterMembership.role !== 'owner') {
-      return NextResponse.json(
-        { error: 'Only owners can change owner roles' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Only owners can change owner roles' }, { status: 403 });
     }
 
     // Update role
@@ -73,10 +70,7 @@ export async function PATCH(
     return NextResponse.json({ success: true, role });
   } catch (error) {
     console.error('Error updating role:', error);
-    return NextResponse.json(
-      { error: 'Failed to update role' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update role' }, { status: 500 });
   }
 }
 
@@ -125,10 +119,7 @@ export async function DELETE(
     });
 
     if (targetMembership?.role === 'owner' && user.id !== targetUserId) {
-      return NextResponse.json(
-        { error: 'Cannot remove project owner' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Cannot remove project owner' }, { status: 403 });
     }
 
     // Remove member
@@ -144,10 +135,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error removing member:', error);
-    return NextResponse.json(
-      { error: 'Failed to remove member' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to remove member' }, { status: 500 });
   }
 }
-

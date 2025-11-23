@@ -9,6 +9,7 @@ Your magic links currently use **Supabase's default SMTP** which has limitations
 ## 🎯 **RECOMMENDED: Resend (Best for Modern Apps)**
 
 ### **Why Resend?**
+
 - ✅ **Free tier:** 100 emails/day, 3,000/month
 - ✅ **Lightning fast:** Sub-second delivery
 - ✅ **Developer-friendly:** Simple API, great DX
@@ -43,6 +44,7 @@ Your magic links currently use **Supabase's default SMTP** which has limitations
 **With domain:** Emails sent from `noreply@cronkwaters.com` (better!)
 
 #### To Add Domain:
+
 1. In Resend Dashboard, click **Domains**
 2. Click **Add Domain**
 3. Enter: `cronkwaters.com`
@@ -89,9 +91,11 @@ Still in **Email Templates** section:
 
 <p>Click the button below to sign in to your account:</p>
 
-<a href="{{ .ConfirmationURL }}" 
-   style="background: #ea580c; color: white; padding: 12px 24px; 
-          text-decoration: none; border-radius: 8px; display: inline-block;">
+<a
+  href="{{ .ConfirmationURL }}"
+  style="background: #ea580c; color: white; padding: 12px 24px; 
+          text-decoration: none; border-radius: 8px; display: inline-block;"
+>
   🔐 Sign In to Rock N' Roll Basement
 </a>
 
@@ -112,6 +116,7 @@ Still in **Email Templates** section:
 ## 📊 **OPTION 2: SendGrid (Great Alternative)**
 
 ### **Why SendGrid?**
+
 - ✅ **Free tier:** 100 emails/day forever
 - ✅ **Trusted by millions:** Established service
 - ✅ **Advanced analytics:** Open rates, click tracking
@@ -125,6 +130,7 @@ Still in **Email Templates** section:
 4. Copy the API key
 
 **Supabase SMTP Settings:**
+
 ```
 Host: smtp.sendgrid.net
 Port: 587
@@ -138,6 +144,7 @@ Encryption: STARTTLS
 ## 🔐 **OPTION 3: AWS SES (Most Scalable)**
 
 ### **Why AWS SES?**
+
 - ✅ **Ultra cheap:** $0.10 per 1,000 emails
 - ✅ **Unlimited scale:** Handle millions of emails
 - ✅ **AWS integration:** If you already use AWS
@@ -151,6 +158,7 @@ Encryption: STARTTLS
 4. Request production access (starts in sandbox)
 
 **Supabase SMTP Settings:**
+
 ```
 Host: email-smtp.[region].amazonaws.com
       (e.g., email-smtp.us-east-1.amazonaws.com)
@@ -165,6 +173,7 @@ Encryption: STARTTLS
 ## 💎 **OPTION 4: Postmark (Premium Choice)**
 
 ### **Why Postmark?**
+
 - ✅ **Best deliverability:** 99%+ inbox rate
 - ✅ **Transactional focus:** Built for app emails
 - ✅ **Amazing support:** Real humans, fast response
@@ -177,6 +186,7 @@ Encryption: STARTTLS
 3. Add **Server** → Get **Server API Token**
 
 **Supabase SMTP Settings:**
+
 ```
 Host: smtp.postmarkapp.com
 Port: 587
@@ -192,6 +202,7 @@ Encryption: STARTTLS
 ### **For Rock N' Roll Basement: Use Resend**
 
 **Why?**
+
 1. **Perfect fit:** Modern SaaS apps
 2. **Generous free tier:** 3,000 emails/month
 3. **Easy setup:** 5 minutes to production
@@ -200,6 +211,7 @@ Encryption: STARTTLS
 6. **Webhook support:** Track everything
 
 **Cost Analysis:**
+
 - **Free:** Up to 3,000 emails/month
 - **Pay-as-you-go:** $1 per 1,000 emails after free tier
 - **Your usage:** Likely well under free tier for now
@@ -227,10 +239,12 @@ Encryption: STARTTLS
 After setup, verify everything works:
 
 ### **1. Supabase Test Email**
+
 - In Supabase SMTP settings, click **Send Test Email**
 - Check inbox (should arrive in < 5 seconds)
 
 ### **2. Production Test**
+
 - Go to: https://www.cronkwaters.com/auth
 - Enter your email
 - Click "Send Magic Link"
@@ -238,6 +252,7 @@ After setup, verify everything works:
 - Click the link (should redirect to dashboard)
 
 ### **3. Check Deliverability**
+
 - Email should be in **Inbox** (not Spam)
 - Sender should show your custom domain
 - Links should work perfectly
@@ -246,13 +261,13 @@ After setup, verify everything works:
 
 ## 📊 **EMAIL PROVIDER COMPARISON**
 
-| Provider | Free Tier | Price After | Setup Time | Deliverability | Best For |
-|----------|-----------|-------------|------------|----------------|----------|
-| **Resend** | 3K/month | $1/1K | ⚡ 5 min | ⭐⭐⭐⭐⭐ | Modern apps |
-| **SendGrid** | 100/day | $20/mo | ⚡ 10 min | ⭐⭐⭐⭐ | Established apps |
-| **AWS SES** | None | $0.10/1K | 🕐 30 min | ⭐⭐⭐⭐ | AWS users |
-| **Postmark** | None | $15/mo | ⚡ 10 min | ⭐⭐⭐⭐⭐ | Premium apps |
-| **Supabase Default** | ✅ Free | Free | ✅ 0 min | ⭐⭐ | Testing only |
+| Provider             | Free Tier | Price After | Setup Time | Deliverability | Best For         |
+| -------------------- | --------- | ----------- | ---------- | -------------- | ---------------- |
+| **Resend**           | 3K/month  | $1/1K       | ⚡ 5 min   | ⭐⭐⭐⭐⭐     | Modern apps      |
+| **SendGrid**         | 100/day   | $20/mo      | ⚡ 10 min  | ⭐⭐⭐⭐       | Established apps |
+| **AWS SES**          | None      | $0.10/1K    | 🕐 30 min  | ⭐⭐⭐⭐       | AWS users        |
+| **Postmark**         | None      | $15/mo      | ⚡ 10 min  | ⭐⭐⭐⭐⭐     | Premium apps     |
+| **Supabase Default** | ✅ Free   | Free        | ✅ 0 min   | ⭐⭐           | Testing only     |
 
 ---
 
@@ -265,17 +280,20 @@ Once you have custom SMTP set up, you can create branded emails:
 #### **Magic Link Email Template Ideas:**
 
 1. **Rock N' Roll Theme:**
+
 ```html
 <div style="background: #000; color: #fff; padding: 40px; font-family: Arial;">
   <div style="max-width: 600px; margin: 0 auto;">
     <h1 style="color: #ea580c;">🎸 Rock N' Roll Basement</h1>
     <p>Hey there, rockstar!</p>
     <p>Click below to access your musical HQ:</p>
-    <a href="{{ .ConfirmationURL }}" 
-       style="background: linear-gradient(135deg, #ea580c, #c2410c);
+    <a
+      href="{{ .ConfirmationURL }}"
+      style="background: linear-gradient(135deg, #ea580c, #c2410c);
               color: white; padding: 16px 32px; text-decoration: none; 
               border-radius: 12px; display: inline-block; margin: 20px 0;
-              font-weight: bold;">
+              font-weight: bold;"
+    >
       🔥 Let's Rock!
     </a>
     <p style="color: #888; font-size: 14px;">
@@ -286,14 +304,12 @@ Once you have custom SMTP set up, you can create branded emails:
 ```
 
 2. **Minimalist Clean:**
+
 ```html
 <div style="max-width: 600px; margin: 0 auto; padding: 40px;">
   <h2>Sign in to Rock N' Roll Basement</h2>
   <p>Click the link below to continue:</p>
-  <a href="{{ .ConfirmationURL }}" 
-     style="color: #ea580c; font-size: 18px;">
-    Sign In →
-  </a>
+  <a href="{{ .ConfirmationURL }}" style="color: #ea580c; font-size: 18px;"> Sign In → </a>
 </div>
 ```
 
@@ -302,16 +318,19 @@ Once you have custom SMTP set up, you can create branded emails:
 ## 🚀 **NEXT STEPS**
 
 ### **Immediate (Recommended):**
+
 1. **Sign up for Resend** (5 min)
 2. **Configure Supabase SMTP** (2 min)
 3. **Test magic links** (1 min)
 
 ### **This Week:**
+
 1. **Add custom domain to Resend** (better branding)
 2. **Customize email template** (better UX)
 3. **Set up webhooks** (optional - track email events)
 
 ### **Optional:**
+
 1. **Add React Email templates** (beautiful emails with code)
 2. **Set up email tracking** (opens, clicks, bounces)
 3. **Configure SPF/DKIM/DMARC** (maximum deliverability)
@@ -321,24 +340,29 @@ Once you have custom SMTP set up, you can create branded emails:
 ## 📞 **NEED HELP?**
 
 ### **Resend Support:**
+
 - Docs: https://resend.com/docs
 - Support: support@resend.com
 - Discord: https://resend.com/discord
 
 ### **Issues?**
+
 Common problems and solutions:
 
 **❌ Emails not sending:**
+
 - Check API key is correct
 - Verify SMTP settings in Supabase
 - Check Resend dashboard for errors
 
 **❌ Emails in spam:**
+
 - Add domain instead of using resend.dev
 - Configure SPF/DKIM/DMARC records
 - Warm up domain (send slowly at first)
 
 **❌ Slow delivery:**
+
 - Check Resend status page
 - Verify DNS records
 - Try different SMTP port (465 vs 587)
@@ -348,11 +372,13 @@ Common problems and solutions:
 ## 📊 **ESTIMATED COSTS**
 
 ### **Your Current Scale:**
+
 - Active users: ~10
 - Magic links per month: ~50-100 (estimated)
 - **Cost with Resend: $0/month** (well under free tier)
 
 ### **Growth Projections:**
+
 - 100 users: ~500 emails/month = **$0**
 - 1,000 users: ~5,000 emails/month = **$2/month**
 - 10,000 users: ~50,000 emails/month = **$47/month**
@@ -378,4 +404,5 @@ Common problems and solutions:
 **Guide Created:** 2025-11-22 @ Agent 56  
 **Status:** Ready to implement  
 **Next Step:** Sign up for Resend and upgrade your email game! 🚀
+
 

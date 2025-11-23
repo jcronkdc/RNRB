@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
+import {
   Play,
   Pause,
   Download,
@@ -15,7 +15,7 @@ import {
   Music2,
   Copy,
   Trash2,
-  Edit
+  Edit,
 } from 'lucide-react';
 import Image from 'next/image';
 
@@ -52,23 +52,22 @@ export function TrackCard({
   onRemix,
   onDownload,
   isPlaying = false,
-  progress = 0
+  progress = 0,
 }: TrackCardProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [liked, setLiked] = useState(isLiked);
-  
+
   // Format duration MM:SS
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
-  
+
   // Generate fake waveform if not provided
-  const waveform = waveformData || 
-    Array.from({ length: 40 }, () => Math.random() * 0.6 + 0.4);
-  
+  const waveform = waveformData || Array.from({ length: 40 }, () => Math.random() * 0.6 + 0.4);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -76,214 +75,146 @@ export function TrackCard({
       transition={{ duration: 0.2 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="
-        relative group bg-surface rounded-lg border border-border
-        hover:border-border-strong hover:shadow-lg
-        transition-all duration-200
-      "
+      className="group relative rounded-lg border border-border bg-surface transition-all duration-200 hover:border-border-strong hover:shadow-lg"
     >
       {/* Album Art Section */}
       <div className="relative aspect-square overflow-hidden rounded-t-lg bg-surface-hover">
         {coverUrl ? (
-          <Image
-            src={coverUrl}
-            alt={title}
-            fill
-            className="object-cover"
-          />
+          <Image src={coverUrl} alt={title} fill className="object-cover" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <Music2 className="w-16 h-16 text-foreground-muted opacity-50" />
+          <div className="flex h-full w-full items-center justify-center">
+            <Music2 className="h-16 w-16 text-foreground-muted opacity-50" />
           </div>
         )}
-        
+
         {/* Play Overlay */}
         <motion.div
           initial={false}
           animate={{ opacity: isHovered ? 1 : 0 }}
-          className="
-            absolute inset-0 bg-background/60 backdrop-blur-sm
-            flex items-center justify-center
-            pointer-events-none
-          "
+          className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-sm"
         >
           <button
             onClick={onPlay}
-            className="
-              pointer-events-auto
-              w-16 h-16 rounded-full
-              bg-brand-primary text-background
-              flex items-center justify-center
-              hover:scale-110 active:scale-100
-              transition-transform duration-200
-              shadow-xl
-            "
+            className="pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand-primary text-background shadow-xl transition-transform duration-200 hover:scale-110 active:scale-100"
           >
-            {isPlaying ? (
-              <Pause className="w-6 h-6" />
-            ) : (
-              <Play className="w-6 h-6 ml-1" />
-            )}
+            {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="ml-1 h-6 w-6" />}
           </button>
         </motion.div>
-        
+
         {/* Like Button */}
         <button
           onClick={() => setLiked(!liked)}
-          className="
-            absolute top-3 right-3
-            w-8 h-8 rounded-full
-            bg-background/80 backdrop-blur-sm
-            flex items-center justify-center
-            hover:bg-background
-            transition-all duration-200
-          "
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm transition-all duration-200 hover:bg-background"
         >
-          <Heart 
-            className={`w-4 h-4 transition-colors ${
+          <Heart
+            className={`h-4 w-4 transition-colors ${
               liked ? 'fill-brand-primary text-brand-primary' : 'text-foreground'
             }`}
           />
         </button>
-        
+
         {/* Duration Badge */}
-        <div className="
-          absolute bottom-3 left-3
-          px-2 py-1 rounded-md
-          bg-background/80 backdrop-blur-sm
-          text-xs font-medium
-        ">
+        <div className="absolute bottom-3 left-3 rounded-md bg-background/80 px-2 py-1 text-xs font-medium backdrop-blur-sm">
           {formatDuration(duration)}
         </div>
       </div>
-      
+
       {/* Info Section */}
-      <div className="p-4 space-y-3">
+      <div className="space-y-3 p-4">
         {/* Title & Artist */}
         <div>
-          <h3 className="font-medium text-foreground truncate">
-            {title}
-          </h3>
-          <p className="text-sm text-foreground-muted truncate">
-            {artist}
-          </p>
+          <h3 className="truncate font-medium text-foreground">{title}</h3>
+          <p className="truncate text-sm text-foreground-muted">{artist}</p>
         </div>
-        
+
         {/* Mini Waveform */}
-        <div className="relative h-8 flex items-end gap-0.5">
+        <div className="relative flex h-8 items-end gap-0.5">
           {waveform.map((height, i) => {
             const isPassed = (i / waveform.length) * 100 <= progress;
             return (
               <div
                 key={i}
-                className={`
-                  flex-1 rounded-t transition-all duration-200
-                  ${isPlaying && isPassed 
-                    ? 'bg-brand-primary' 
-                    : 'bg-surface-hover'
-                  }
-                `}
+                className={`flex-1 rounded-t transition-all duration-200 ${
+                  isPlaying && isPassed ? 'bg-brand-primary' : 'bg-surface-hover'
+                } `}
                 style={{ height: `${height * 100}%` }}
               />
             );
           })}
         </div>
-        
+
         {/* Stats & Actions */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-xs text-foreground-muted">
             <span className="flex items-center gap-1">
-              <Play className="w-3 h-3" />
+              <Play className="h-3 w-3" />
               {plays}
             </span>
             <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
+              <Clock className="h-3 w-3" />
               {createdAt}
             </span>
           </div>
-          
+
           {/* Action Buttons */}
           <div className="flex items-center gap-1">
             <button
               onClick={onExtend}
-              className="btn-icon w-8 h-8 hover:bg-surface-hover"
+              className="btn-icon h-8 w-8 hover:bg-surface-hover"
               title="Extend"
             >
-              <Wand2 className="w-4 h-4" />
+              <Wand2 className="h-4 w-4" />
             </button>
-            
+
             <button
               onClick={onRemix}
-              className="btn-icon w-8 h-8 hover:bg-surface-hover"
+              className="btn-icon h-8 w-8 hover:bg-surface-hover"
               title="Get Stems"
             >
-              <Layers className="w-4 h-4" />
+              <Layers className="h-4 w-4" />
             </button>
-            
+
             <button
               onClick={onDownload}
-              className="btn-icon w-8 h-8 hover:bg-surface-hover"
+              className="btn-icon h-8 w-8 hover:bg-surface-hover"
               title="Download"
             >
-              <Download className="w-4 h-4" />
+              <Download className="h-4 w-4" />
             </button>
-            
+
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="btn-icon w-8 h-8 hover:bg-surface-hover"
+                className="btn-icon h-8 w-8 hover:bg-surface-hover"
               >
-                <MoreVertical className="w-4 h-4" />
+                <MoreVertical className="h-4 w-4" />
               </button>
-              
+
               {/* Dropdown Menu */}
               {showMenu && (
                 <>
-                  <div 
-                    className="fixed inset-0 z-40" 
-                    onClick={() => setShowMenu(false)}
-                  />
+                  <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95, y: -10 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                    className="
-                      absolute right-0 top-full mt-1 z-50
-                      w-48 bg-surface rounded-lg border border-border
-                      shadow-xl py-1
-                    "
+                    className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border bg-surface py-1 shadow-xl"
                   >
-                    <button className="
-                      w-full px-3 py-2 text-sm text-left
-                      hover:bg-surface-hover transition-colors
-                      flex items-center gap-2
-                    ">
-                      <Share2 className="w-4 h-4" />
+                    <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-hover">
+                      <Share2 className="h-4 w-4" />
                       Share
                     </button>
-                    <button className="
-                      w-full px-3 py-2 text-sm text-left
-                      hover:bg-surface-hover transition-colors
-                      flex items-center gap-2
-                    ">
-                      <Copy className="w-4 h-4" />
+                    <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-hover">
+                      <Copy className="h-4 w-4" />
                       Duplicate
                     </button>
-                    <button className="
-                      w-full px-3 py-2 text-sm text-left
-                      hover:bg-surface-hover transition-colors
-                      flex items-center gap-2
-                    ">
-                      <Edit className="w-4 h-4" />
+                    <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-hover">
+                      <Edit className="h-4 w-4" />
                       Rename
                     </button>
                     <hr className="my-1 border-border" />
-                    <button className="
-                      w-full px-3 py-2 text-sm text-left
-                      hover:bg-surface-hover transition-colors
-                      flex items-center gap-2 text-error
-                    ">
-                      <Trash2 className="w-4 h-4" />
+                    <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-error transition-colors hover:bg-surface-hover">
+                      <Trash2 className="h-4 w-4" />
                       Delete
                     </button>
                   </motion.div>

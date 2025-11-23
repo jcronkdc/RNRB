@@ -12,6 +12,7 @@
 **For:** The 15-year-old who wants to make music but doesn't know where to start. Who spends hours on the internet trying to piece it all together. **This is what pieces it all together.**
 
 ### Core Values:
+
 1. **Ethical Pricing** - Fair price based on actual costs + standard profit. No greed.
 2. **Maximum Accessibility** - THE easiest tool for musicians/artists. Period.
 3. **Tokyo Subway Efficiency** - Every feature ≤3 clicks away. No dead ends.
@@ -25,6 +26,7 @@
 ### ✅ WHAT EXISTS AND IS LIVE:
 
 **Infrastructure (Verified Working):**
+
 - ✅ Site deployed: https://www.cronkwaters.com (HTTP/2 200 OK, SSL active)
 - ✅ Database: Neon PostgreSQL connected via Prisma ORM
 - ✅ Auth: NextAuth v4 with Google OAuth + Email magic links
@@ -33,6 +35,7 @@
 - ✅ Build: Zero errors, 74+ routes compiled
 
 **API Endpoints (Coded and Ready):**
+
 - ✅ `/api/health` - Health check + database status
 - ✅ `/api/auth/[...nextauth]` - NextAuth handlers
 - ✅ `/api/daily/rooms` - Daily.co video room creation (50 participants)
@@ -41,6 +44,7 @@
 - ✅ `/api/elevenlabs-voice` - Voice synthesis
 
 **Core User Flows (Pages Exist):**
+
 - ✅ `/auth` - Sign in with Google or email magic link
 - ✅ `/projects` - Project dashboard
 - ✅ `/projects/new` - Create new project form
@@ -51,6 +55,7 @@
 - ✅ `/dashboard` - Main dashboard after login
 
 **Collaboration Stack (Infrastructure Ready):**
+
 - ✅ Daily.co integration: Video calls, screen sharing, recording (up to 50 people)
 - ✅ Ably integration: Real-time chat, presence, end-to-end encrypted
 - ✅ Project permissions: Owner, editor, viewer roles
@@ -87,6 +92,7 @@ Station 10: Does email arrive? Can they join?
 ### ⚠️ ENVIRONMENT VARIABLES STATUS:
 
 **Verified in Vercel (from memory [[memory:11211767]]):**
+
 - ✅ `DATABASE_URL` - Neon PostgreSQL connection string
 - ✅ `NEXTAUTH_SECRET` - Auth encryption key
 - ✅ `NEXTAUTH_URL` - https://www.cronkwaters.com
@@ -103,6 +109,7 @@ Station 10: Does email arrive? Can they join?
 ## 📂 CODEBASE STRUCTURE
 
 ### The Real Production Codebase:
+
 ```
 /song-forge/                          ← THE REAL ONE (monorepo)
 ├── apps/web/                         ← Main Next.js app
@@ -124,6 +131,7 @@ Station 10: Does email arrive? Can they join?
 ```
 
 ### The Other Directory (Not Deployed):
+
 ```
 /apps/web/                            ← SIMPLER VERSION, NOT IN PRODUCTION
 ```
@@ -176,6 +184,7 @@ Station 10: Does email arrive? Can they join?
 ### Priority 2: FIX WHAT'S BROKEN (Based on Step 1 Results)
 
 **After human test, fix only what actually broke:**
+
 - If auth fails → Fix OAuth configuration
 - If projects don't save → Fix database queries
 - If video doesn't work → Fix Daily.co API key or integration
@@ -187,6 +196,7 @@ Station 10: Does email arrive? Can they join?
 ### Priority 3: VERIFY ENVIRONMENT VARIABLES
 
 **Check Vercel dashboard:**
+
 1. Go to https://vercel.com/dashboard
 2. Select the project
 3. Settings → Environment Variables
@@ -208,6 +218,7 @@ Station 10: Does email arrive? Can they join?
 **After critical path works, create `/pricing` page:**
 
 Calculate actual monthly costs:
+
 - Vercel Pro: $20/month
 - Neon PostgreSQL: $19/month (Pro tier)
 - Daily.co: $9/month (Starter) + usage
@@ -217,6 +228,7 @@ Calculate actual monthly costs:
 Add 30-40% standard profit margin → ~$100-110/month for base tier
 
 **Make it transparent:**
+
 - Show breakdown of costs
 - Explain what each service does
 - "Here's what it costs us + fair profit"
@@ -225,6 +237,7 @@ Add 30-40% standard profit margin → ~$100-110/month for base tier
 ### Priority 5: POLISH THE UX (Tokyo Subway Level)
 
 **Make it the easiest tool ever:**
+
 - Every feature ≤3 clicks from dashboard
 - Clear onboarding flow for new users
 - Intuitive navigation (no hunting for features)
@@ -236,7 +249,9 @@ Add 30-40% standard profit margin → ~$100-110/month for base tier
 ## 🗂️ CLEANUP STATUS
 
 ### Files to Archive (Already in `_ARCHIVE_AGENT_SESSIONS/`):
+
 These 50+ session markdown files can be deleted from root:
+
 - `AGENT_*_*.md`
 - `*_TEST.md`
 - `*_STATUS.md`
@@ -246,6 +261,7 @@ These 50+ session markdown files can be deleted from root:
 - Old `MASTER_TRUTH.md` (superseded by this document)
 
 **Action:** Archive these so root directory only has:
+
 - `THE_BIBLE.md` (this file)
 - Technical docs (`DESIGN_SYSTEM.md`, `COLLABORATIVE_ARCHITECTURE.md`, etc.)
 - Configuration files (`.gitignore`, `package.json`, etc.)
@@ -272,18 +288,21 @@ Before marking ANYTHING as complete:
 ### ✅ What's Coded (Infrastructure Complete):
 
 **Authentication:**
+
 - Google OAuth sign-in
 - Email magic link sign-in
 - Session management (JWT)
 - Protected routes
 
 **Projects:**
+
 - Create/read/update/delete projects
 - Project slugs for clean URLs
 - Project descriptions and metadata
 - Permissions (owner, editor, viewer)
 
 **Collaboration:**
+
 - Daily.co video rooms (up to 50 participants)
 - Screen sharing enabled
 - Recording enabled
@@ -293,12 +312,14 @@ Before marking ANYTHING as complete:
 - Multi-cursor support (coded)
 
 **AI Features:**
+
 - GPT-4 lyrics generation
 - Chord progression generator
 - Song structure assistant
 - ElevenLabs voice synthesis
 
 **Data Management:**
+
 - Songs, Albums, Projects
 - Split sheets & royalties
 - Tour scheduling
@@ -314,6 +335,7 @@ Everything above exists in code. But **code existing ≠ feature working.** Ever
 ## 🎨 DESIGN PHILOSOPHY
 
 **Tokyo Subway Ants:**
+
 - Optimal pathways, minimal friction
 - No dead ends, every link works
 - Clear signage (labels, tooltips)
@@ -321,6 +343,7 @@ Everything above exists in code. But **code existing ≠ feature working.** Ever
 - Maximum 2-3 clicks to any feature
 
 **Mycelium Network:**
+
 - Everything connected
 - No isolated features
 - Information flows seamlessly
@@ -328,6 +351,7 @@ Everything above exists in code. But **code existing ≠ feature working.** Ever
 - Detect and remove rot immediately
 
 **Ethical Foundation:**
+
 - Fair pricing (costs + standard profit)
 - Transparent about what we charge and why
 - No dark patterns, no tricks
@@ -339,6 +363,7 @@ Everything above exists in code. But **code existing ≠ feature working.** Ever
 ## 📝 DEPLOYMENT HISTORY
 
 **Latest Deployment:**
+
 - **Date:** 2025-11-20
 - **Commit:** `b971a159` - "fix: Force Vercel CSS bundle regeneration"
 - **Build:** Success, 74+ routes
@@ -346,6 +371,7 @@ Everything above exists in code. But **code existing ≠ feature working.** Ever
 - **URL:** https://www.cronkwaters.com
 
 **Verified Working:**
+
 - ✅ Homepage loads (HTTP/2 200)
 - ✅ SSL certificate active
 - ✅ CSP headers deployed
@@ -353,6 +379,7 @@ Everything above exists in code. But **code existing ≠ feature working.** Ever
 - ✅ Build has zero errors
 
 **Not Yet Verified:**
+
 - ⚠️ Google OAuth flow
 - ⚠️ Project creation → database save
 - ⚠️ Video collaboration
@@ -364,18 +391,21 @@ Everything above exists in code. But **code existing ≠ feature working.** Ever
 ## 🐛 KNOWN ISSUES (VERIFIED)
 
 ### Issue 1: Dual Codebase Confusion
+
 - **Problem:** Two `/apps/web/` directories exist (root and `/song-forge/`)
 - **Impact:** Confusing which code is actually deployed
 - **Truth:** `/song-forge/` is production (verified in vercel.json)
 - **Fix:** Consider consolidating or clearly documenting
 
 ### Issue 2: Domain Hardcoded Fallback
+
 - **Location:** `song-forge/apps/web/app/layout.tsx:39`
 - **Code:** `metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://rocknrollbasement.com')`
 - **Problem:** Falls back to wrong domain if env var missing
 - **Fix:** Should fallback to `https://www.cronkwaters.com`
 
 ### Issue 3: Environment Variables Not Verified
+
 - **Problem:** Code references `GOOGLE_CLIENT_ID`, `ABLY_API_KEY`, `DAILY_API_KEY` but we haven't verified they're set in Vercel
 - **Impact:** Features may silently fail
 - **Fix:** Human must verify in Vercel dashboard
@@ -387,6 +417,7 @@ Everything above exists in code. But **code existing ≠ feature working.** Ever
 **If you're reading this, you're part of the mycelium now.**
 
 Your job:
+
 1. Read this entire document first
 2. Test the critical path (or get human to test)
 3. Fix what's broken (with proof it's fixed)
@@ -394,6 +425,7 @@ Your job:
 5. Mark your changes with date + agent ID
 
 **What NOT to do:**
+
 - ❌ Don't create new "master" documents
 - ❌ Don't assume code working = feature working
 - ❌ Don't add features before critical path works
@@ -408,11 +440,13 @@ This is for the 15-year-old trying to make music. Every decision should serve th
 ## 🔑 KEY CONTACTS / LINKS
 
 **Production:**
+
 - Site: https://www.cronkwaters.com
 - Vercel Dashboard: https://vercel.com/dashboard
 - Google Cloud Console: https://console.cloud.google.com
 
 **Services:**
+
 - Database: Neon PostgreSQL
 - Auth: NextAuth v4
 - Video: Daily.co
@@ -420,6 +454,7 @@ This is for the 15-year-old trying to make music. Every decision should serve th
 - AI: OpenAI GPT-4 + ElevenLabs
 
 **Support Emails (in app):**
+
 - Legal: legal@cronkwaters.com
 - Privacy: privacy@cronkwaters.com
 - Support: support@cronkwaters.com
@@ -429,4 +464,3 @@ This is for the 15-year-old trying to make music. Every decision should serve th
 **End of The Bible**
 
 **Next Agent: Test the critical path. Document truth. Update this file. Make it work for that 15-year-old musician. 🍄**
-

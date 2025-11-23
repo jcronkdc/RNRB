@@ -3,11 +3,13 @@
 ## 🎯 USER INSIGHT: "They Won't All Edit Simultaneously"
 
 **Agent 31 Was Overthinking:**
+
 - Assumed: 4 people typing on same song at same time
 - Built: Complex suggestion workflow for simultaneous editing
 - Reality: People work separately, then compare versions
 
 **User's Actual Workflow:**
+
 - Each person makes their own version
 - They compare versions in a dashboard
 - Discuss via group chat (voice messages)
@@ -23,6 +25,7 @@
 ### MODEL: "FORK AND COMPARE" (Like Git Branches)
 
 **Workflow:**
+
 ```
 1. Original Song: "Midnight Blues" (master version)
 
@@ -52,6 +55,7 @@
 ```
 
 **Benefits:**
+
 - ✅ NO conflicts (everyone has their own copy)
 - ✅ NO simultaneous edit chaos
 - ✅ NO complex suggestion workflow needed
@@ -65,19 +69,22 @@
 ### GAP #1: VOICE MESSAGES IN CHAT ❌ **USER SAID "PRETTY CRITICAL"**
 
 **Current:**
+
 - Text chat only (Ably)
 - Can't leave voice notes
 
 **Needed:**
+
 - Record voice message
 - Attach to chat
 - Play in chat feed
 - Like WhatsApp voice messages
 
 **Use Case:**
+
 ```
 Mike can't type out complex thought:
-"Hey Sarah, I was thinking for the chorus melody, 
+"Hey Sarah, I was thinking for the chorus melody,
 it should go up on 'lonely' and down on 'road'..."
 
 Instead:
@@ -93,11 +100,13 @@ Instead:
 ### GAP #2: VOICE-ONLY CALLS ❌ **"LIKE GAMERS"**
 
 **Current:**
+
 - Video calls only (Daily.co)
 - Requires camera
 - Heavy bandwidth
 
 **Needed:**
+
 - Voice-only option (Discord/TeamSpeak style)
 - No camera required
 - Lighter bandwidth
@@ -105,6 +114,7 @@ Instead:
 - Background while editing
 
 **Use Case:**
+
 ```
 Sarah: "Let's jump on voice to discuss the bridge"
 Mike: Clicks "JOIN VOICE" (no video setup)
@@ -141,6 +151,7 @@ Lower bandwidth
 ```
 
 **Features:**
+
 - Side-by-side comparison (4 columns max)
 - Highlight differences (yellow = changed)
 - Select best parts (checkbox per section)
@@ -152,12 +163,14 @@ Lower bandwidth
 ## 🎮 SIMPLIFIED COMMUNICATION OPTIONS:
 
 ### OPTION 1: GROUP CHAT (Already Have)
+
 ✅ Ably real-time messaging
 ✅ Text messages
 ❌ Need: Voice messages
 ❌ Need: Audio recording button
 
 ### OPTION 2: VOICE-ONLY CALL (Need to Build)
+
 - Join voice room (like Discord)
 - Talk while editing
 - No video overhead
@@ -165,12 +178,14 @@ Lower bandwidth
 - Quick join/leave
 
 ### OPTION 3: VIDEO CALL (Already Have)
+
 ✅ Daily.co HD video
 ✅ Screen sharing
 ✅ Cursor control
 ✅ Up to 32 participants
 
 ### OPTION 4: ASYNC VOICE NOTES (Need to Build)
+
 - Record voice note
 - Leave for specific collaborator
 - They listen when ready
@@ -181,11 +196,13 @@ Lower bandwidth
 ## 🔧 SIMPLER CONFLICT MANAGEMENT:
 
 **Old Approach (Complex):**
+
 - Real-time simultaneous editing
 - Suggestion workflow for every change
 - Overwhelming approval queue
 
 **New Approach (Simple):**
+
 1. Everyone makes their own version independently
 2. NO conflicts (separate copies)
 3. Compare versions when ready
@@ -194,11 +211,13 @@ Lower bandwidth
 6. Create final master
 
 **Benefits:**
+
 - ✅ No technical complexity
 - ✅ Natural workflow
 - ✅ No overwr
 
 ites possible
+
 - ✅ Clear ownership per version
 
 ---
@@ -208,18 +227,21 @@ ites possible
 ### TIER 1: COMMUNICATION (CRITICAL GAPS)
 
 **1. Voice Messages in Chat** ❌ **USER SAID CRITICAL**
+
 - Record button in chat
 - Audio waveform display
 - Play inline
 - Download option
 
 **2. Voice-Only Calls** ❌ **USER REQUESTED**
+
 - "Join Voice" button (separate from video)
 - Discord-style always-on voice
 - No camera needed
 - Background while editing
 
 **3. Version Comparison Dashboard** ❌ **CORE WORKFLOW**
+
 - Side-by-side view (2-4 versions)
 - Highlight differences
 - Select best parts
@@ -250,11 +272,13 @@ ites possible
 ## 🎸 REALISTIC COLLABORATION SCENARIO:
 
 **Monday 2pm - Sarah creates song "Midnight Blues"**
+
 - Writes initial version
 - Invites Mike, Alex, Jordan to collaborate
 - Shares via email invite
 
 **Tuesday 10am - Mike opens song**
+
 - Sees Sarah's version
 - Clicks "CREATE MY VERSION"
 - Makes his changes independently
@@ -262,6 +286,7 @@ ites possible
 - Leaves voice message in chat: "Changed the chorus, listen to my idea"
 
 **Tuesday 2pm - Alex opens song**
+
 - Sees: Original, Mike's Version
 - Clicks "CREATE MY VERSION"
 - Makes his changes
@@ -269,10 +294,12 @@ ites possible
 - Texts in chat: "What do you all think about starting with the chorus?"
 
 **Wednesday - Jordan opens song**
+
 - Creates "Jordan's Version"
-- Leaves voice note: *records 30 seconds explaining his changes*
+- Leaves voice note: _records 30 seconds explaining his changes_
 
 **Thursday - Sarah reviews all versions**
+
 - Opens "Version Comparison Dashboard"
 - Sees all 4 versions side-by-side
 - Likes Mike's chorus
@@ -309,12 +336,14 @@ ites possible
 ### BUILD IMMEDIATELY (CRITICAL):
 
 **1. Voice Messages in Chat** (3-4 hours)
+
 - Audio recording in chat interface
 - Waveform display
 - Play button
 - User specifically requested
 
 **2. Voice-Only Calls** (2-3 hours)
+
 - Daily.co audio-only mode
 - "Join Voice" button
 - No camera toggle
@@ -322,18 +351,21 @@ ites possible
 - User specifically requested
 
 **3. Version Forking** (4-5 hours)
+
 - "Save as My Version" button
 - Fork copies current state
 - Independent editing
 - No conflicts
 
 **4. Version Comparison** (6-8 hours)
+
 - Side-by-side layout (2-4 versions)
 - Difference highlighting
 - Selection tools
 - Merge into master
 
 **5. Undo/Redo** (3-4 hours)
+
 - Action history
 - Undo button (Ctrl+Z)
 - Essential safety feature
@@ -352,17 +384,20 @@ ites possible
 ## 💡 AGENT 31 REALIZATION:
 
 **I WAS WRONG ABOUT:**
+
 - Simultaneous editing being the main use case
 - Need for complex suggestion workflow for every keystroke
 - Assumption that everyone edits at the same time
 
 **USER WAS RIGHT:**
+
 - People work separately, then compare
 - Communication is via chat/voice (not inline suggestions)
 - Simpler is better
 - Version-based is more natural
 
 **NEW APPROACH:**
+
 - Fork/version model (like Git)
 - Voice messages (critical gap)
 - Voice-only calls (gamer-style)
@@ -374,6 +409,7 @@ ites possible
 ## 🔥 WHAT TO BUILD NEXT:
 
 **USER'S PRIORITY (THEIR WORDS):**
+
 1. ✅ Voice messages in chat ("pretty critical")
 2. ✅ Voice calls ("like gamers do")
 3. ✅ Version comparison ("all 4 versions")

@@ -5,11 +5,11 @@ const meta: Meta<typeof Input> = {
   title: 'Primitives/Input',
   component: Input,
   args: {
-    placeholder: 'Search tracks...'
+    placeholder: 'Search tracks...',
   },
   parameters: {
-    layout: 'centered'
-  }
+    layout: 'centered',
+  },
 };
 
 export default meta;
@@ -21,7 +21,6 @@ export const Default: Story = {};
 export const Disabled: Story = {
   args: {
     disabled: true,
-    value: 'Read-only input'
-  }
+    value: 'Read-only input',
+  },
 };
-

@@ -17,12 +17,14 @@ Verify that the songwriting page properly detects authenticated users and shows/
 ### **Test 1: Unauthenticated User Flow**
 
 **Steps:**
+
 1. Open browser in incognito/private mode
 2. Navigate to https://www.cronkwaters.com/songwriting
 3. Open Developer Console (F12)
 4. Click "Song Structure" tab
 
 **Expected Console Output:**
+
 ```
 🔐 useRequireAuth: Starting auth check
 🔐 useRequireAuth: Getting session from Supabase
@@ -36,6 +38,7 @@ Verify that the songwriting page properly detects authenticated users and shows/
 ```
 
 **Expected UI:**
+
 - ✅ Loading indicator shows briefly ("Loading authentication...")
 - ✅ Auth prompt appears with "Sign In to Collaborate" message
 - ✅ Orange button "Sign In to Continue" is visible
@@ -46,12 +49,14 @@ Verify that the songwriting page properly detects authenticated users and shows/
 ### **Test 2: Authenticated User Flow**
 
 **Steps:**
+
 1. Sign in at https://www.cronkwaters.com/auth
 2. Navigate to /songwriting
 3. Open Developer Console (F12)
 4. Click "Song Structure" tab
 
 **Expected Console Output:**
+
 ```
 🔐 useRequireAuth: Starting auth check
 🔐 useRequireAuth: Getting session from Supabase
@@ -68,6 +73,7 @@ Verify that the songwriting page properly detects authenticated users and shows/
 ```
 
 **Expected UI:**
+
 - ✅ Loading indicator shows briefly ("Loading authentication...")
 - ✅ CollaborativeVisualBuilder loads and displays
 - ✅ Building blocks palette visible (Verse, Chorus, Bridge)
@@ -80,12 +86,14 @@ Verify that the songwriting page properly detects authenticated users and shows/
 ### **Test 3: Session Expiry During Use**
 
 **Steps:**
+
 1. Sign in and go to /songwriting
 2. In another tab, sign out at /auth
 3. Return to /songwriting tab
 4. Refresh the page
 
 **Expected Behavior:**
+
 - ✅ Page refreshes and detects no session
 - ✅ Console shows "No session found"
 - ✅ Auth prompt appears
@@ -96,16 +104,19 @@ Verify that the songwriting page properly detects authenticated users and shows/
 ### **Test 4: Supabase Client Initialization**
 
 **Steps:**
+
 1. Check console on page load
 2. Look for any Supabase errors
 
 **Expected Console Output (if properly configured):**
+
 ```
 🔐 useRequireAuth: Starting auth check
 🔐 useRequireAuth: Getting session from Supabase
 ```
 
 **If Supabase NOT configured:**
+
 ```
 🔐 useRequireAuth: Supabase client not initialized
 Missing Supabase environment variables
@@ -116,6 +127,7 @@ Missing Supabase environment variables
 ### **Test 5: Cache Performance**
 
 **Steps:**
+
 1. Sign in and visit /songwriting
 2. Note page load time
 3. Navigate to /dashboard
@@ -123,6 +135,7 @@ Missing Supabase environment variables
 5. Observe loading behavior
 
 **Expected Behavior:**
+
 - ✅ First load: Shows loading indicator briefly
 - ✅ Return within 30s: Instant load (cache hit)
 - ✅ Console shows auth check completing quickly
@@ -135,17 +148,21 @@ Missing Supabase environment variables
 
 **Diagnosis:**
 Check console for these logs:
+
 ```
 🎸 Songwriting Page - Auth State
 ```
 
 **If you see:**
+
 - `loading: true` (stuck) → Auth hook not completing
 - `user: null` when signed in → Session not being retrieved
 - No logs → Page not rendering at all
 
 **Solutions:**
+
 1. Check Supabase environment variables (`.env.local`):
+
    ```bash
    NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
@@ -164,12 +181,14 @@ Check console for these logs:
 
 **Diagnosis:**
 Check console for:
+
 ```
 🔐 useRequireAuth: Supabase client not initialized
 Missing Supabase environment variables
 ```
 
 **Solutions:**
+
 1. Verify `.env.local` has correct values
 2. Restart dev server: `pnpm dev` in `apps/web`
 3. Check `apps/web/lib/supabase.ts` for URL correction logic
@@ -182,11 +201,13 @@ Missing Supabase environment variables
 This means `user` is null despite being authenticated.
 
 **Check:**
+
 1. Console logs show "No session found"
 2. localStorage has no session token
 3. Session may have expired
 
 **Solutions:**
+
 1. Sign out completely and sign in again
 2. Clear browser cookies and localStorage
 3. Check Supabase dashboard for user status
@@ -209,11 +230,13 @@ Authentication pathways are working correctly if:
 ## 🚀 Next Steps After Testing
 
 **If all tests pass:**
+
 1. Remove verbose console logging (optional, helps with debugging)
 2. Consider adding error boundary for auth failures
 3. Add retry logic for failed auth checks
 
 **If tests fail:**
+
 1. Share console logs with specific error messages
 2. Check Supabase dashboard for user and project status
 3. Verify environment variables in Vercel dashboard
@@ -237,4 +260,3 @@ Before testing, verify:
 **Last Updated:** 2025-11-22  
 **Status:** Ready for testing  
 **Commit:** `54adb570` - Auth debugging and loading states added
-

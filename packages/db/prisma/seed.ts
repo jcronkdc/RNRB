@@ -10,24 +10,24 @@ async function main() {
   const user = await prisma.user.create({
     data: {
       email: 'demo@cronkwaters.dev',
-      name: 'CronkWaters Demo'
-    }
+      name: 'CronkWaters Demo',
+    },
   });
 
   const org = await prisma.org.create({
     data: {
       name: 'CronkWaters Collective',
       slug: 'cronkwaters-collective',
-      type: 'band'
-    }
+      type: 'band',
+    },
   });
 
   await prisma.membership.create({
     data: {
       userId: user.id,
       orgId: org.id,
-      role: 'owner'
-    }
+      role: 'owner',
+    },
   });
 
   console.log('✅ Seed data created successfully.');

@@ -1,10 +1,10 @@
 /**
  * Collaborative Project Settings Hook
- * 
+ *
  * Real-time settings sync with optimistic UI updates
  * Field-level locking to prevent conflicts
  * Ably presence + change broadcasting
- * 
+ *
  * Mycelial Pathway:
  * User edits field → Optimistic update → Ably broadcasts → Server saves → Other clients update
  */
@@ -56,7 +56,9 @@ export function useCollaborativeSettings({
   const [isConnected, setIsConnected] = useState(false);
   const [activeEditors, setActiveEditors] = useState<Map<string, string>>(new Map()); // userId -> userName
   const [fieldLocks, setFieldLocks] = useState<Map<keyof ProjectSettings, FieldLock>>(new Map());
-  const [pendingChanges, setPendingChanges] = useState<Map<keyof ProjectSettings, SettingsChange>>(new Map());
+  const [pendingChanges, setPendingChanges] = useState<Map<keyof ProjectSettings, SettingsChange>>(
+    new Map()
+  );
 
   const ablyRef = useRef<Realtime | null>(null);
   const channelRef = useRef<Types.RealtimeChannelCallbacks | null>(null);
@@ -94,17 +96,17 @@ export function useCollaborativeSettings({
         channel.subscribe('setting-changed', (message) => {
           if (!mounted) return;
           const change: SettingsChange = message.data;
-          
+
           // Don't apply our own changes (already optimistically updated)
           if (change.userId === userId) return;
 
-          setSettings(prev => ({
+          setSettings((prev) => ({
             ...prev,
             [change.field]: change.value,
           }));
 
           // Remove pending change if it exists
-          setPendingChanges(prev => {
+          setPendingChanges((prev) => {
             const newMap = new Map(prev);
             newMap.delete(change.field);
             return newMap;
@@ -115,13 +117,13 @@ export function useCollaborativeSettings({
         channel.subscribe('field-locked', (message) => {
           if (!mounted) return;
           const lock: FieldLock = message.data;
-          setFieldLocks(prev => new Map(prev).set(lock.field, lock));
+          setFieldLocks((prev) => new Map(prev).set(lock.field, lock));
         });
 
         channel.subscribe('field-unlocked', (message) => {
           if (!mounted) return;
           const { field } = message.data;
-          setFieldLocks(prev => {
+          setFieldLocks((prev) => {
             const newMap = new Map(prev);
             newMap.delete(field);
             return newMap;
@@ -130,20 +132,22 @@ export function useCollaborativeSettings({
 
         // Presence tracking
         channel.presence.enter({ userName });
-        
+
         channel.presence.subscribe('enter', (member) => {
-          setActiveEditors(prev => new Map(prev).set(member.clientId, member.data?.userName || 'Unknown'));
+          setActiveEditors((prev) =>
+            new Map(prev).set(member.clientId, member.data?.userName || 'Unknown')
+          );
         });
 
         channel.presence.subscribe('leave', (member) => {
-          setActiveEditors(prev => {
+          setActiveEditors((prev) => {
             const newMap = new Map(prev);
             newMap.delete(member.clientId);
             return newMap;
           });
 
           // Release any field locks held by this user
-          setFieldLocks(prev => {
+          setFieldLocks((prev) => {
             const newMap = new Map(prev);
             for (const [field, lock] of newMap.entries()) {
               if (lock.userId === member.clientId) {
@@ -155,7 +159,6 @@ export function useCollaborativeSettings({
         });
 
         setIsConnected(true);
-
       } catch (error) {
         console.error('Collaborative settings error:', error);
       }
@@ -165,38 +168,41 @@ export function useCollaborativeSettings({
 
     return () => {
       mounted = false;
-      
+
       // Clear all save timers
-      saveTimerRef.current.forEach(timer => clearTimeout(timer));
-      
+      saveTimerRef.current.forEach((timer) => clearTimeout(timer));
+
       channelRef.current?.unsubscribe();
       ablyRef.current?.close();
-      
+
       setIsConnected(false);
     };
   }, [channelName, userId, userName, enabled]);
 
   // Lock field when user starts editing
-  const lockField = useCallback((field: keyof ProjectSettings) => {
-    if (!channelRef.current) return;
+  const lockField = useCallback(
+    (field: keyof ProjectSettings) => {
+      if (!channelRef.current) return;
 
-    const lock: FieldLock = {
-      field,
-      userId,
-      userName,
-      timestamp: Date.now(),
-    };
+      const lock: FieldLock = {
+        field,
+        userId,
+        userName,
+        timestamp: Date.now(),
+      };
 
-    channelRef.current.publish('field-locked', lock);
-    setFieldLocks(prev => new Map(prev).set(field, lock));
-  }, [userId, userName]);
+      channelRef.current.publish('field-locked', lock);
+      setFieldLocks((prev) => new Map(prev).set(field, lock));
+    },
+    [userId, userName]
+  );
 
   // Unlock field when user stops editing
   const unlockField = useCallback((field: keyof ProjectSettings) => {
     if (!channelRef.current) return;
 
     channelRef.current.publish('field-unlocked', { field });
-    setFieldLocks(prev => {
+    setFieldLocks((prev) => {
       const newMap = new Map(prev);
       newMap.delete(field);
       return newMap;
@@ -204,78 +210,90 @@ export function useCollaborativeSettings({
   }, []);
 
   // Update field with optimistic UI and debounced save
-  const updateField = useCallback((field: keyof ProjectSettings, value: any) => {
-    // Optimistic update
-    setSettings(prev => ({
-      ...prev,
-      [field]: value,
-    }));
+  const updateField = useCallback(
+    (field: keyof ProjectSettings, value: any) => {
+      // Optimistic update
+      setSettings((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
 
-    // Track pending change
-    const change: SettingsChange = {
-      field,
-      value,
-      userId,
-      userName,
-      timestamp: Date.now(),
-    };
-    setPendingChanges(prev => new Map(prev).set(field, change));
+      // Track pending change
+      const change: SettingsChange = {
+        field,
+        value,
+        userId,
+        userName,
+        timestamp: Date.now(),
+      };
+      setPendingChanges((prev) => new Map(prev).set(field, change));
 
-    // Clear existing save timer for this field
-    const existingTimer = saveTimerRef.current.get(field);
-    if (existingTimer) {
-      clearTimeout(existingTimer);
-    }
-
-    // Debounced save (2 seconds)
-    const timer = setTimeout(async () => {
-      try {
-        // Save to server
-        await onUpdate({ [field]: value });
-
-        // Broadcast to collaborators
-        if (channelRef.current) {
-          await channelRef.current.publish('setting-changed', change);
-        }
-
-        // Remove from pending
-        setPendingChanges(prev => {
-          const newMap = new Map(prev);
-          newMap.delete(field);
-          return newMap;
-        });
-
-        console.log(`✅ Saved ${field}:`, value);
-      } catch (error) {
-        console.error(`Failed to save ${field}:`, error);
-        
-        // Revert optimistic update on error
-        setSettings(prev => ({
-          ...prev,
-          [field]: initialSettings[field],
-        }));
+      // Clear existing save timer for this field
+      const existingTimer = saveTimerRef.current.get(field);
+      if (existingTimer) {
+        clearTimeout(existingTimer);
       }
-    }, 2000);
 
-    saveTimerRef.current.set(field, timer);
-  }, [userId, userName, onUpdate, initialSettings]);
+      // Debounced save (2 seconds)
+      const timer = setTimeout(async () => {
+        try {
+          // Save to server
+          await onUpdate({ [field]: value });
+
+          // Broadcast to collaborators
+          if (channelRef.current) {
+            await channelRef.current.publish('setting-changed', change);
+          }
+
+          // Remove from pending
+          setPendingChanges((prev) => {
+            const newMap = new Map(prev);
+            newMap.delete(field);
+            return newMap;
+          });
+
+          console.log(`✅ Saved ${field}:`, value);
+        } catch (error) {
+          console.error(`Failed to save ${field}:`, error);
+
+          // Revert optimistic update on error
+          setSettings((prev) => ({
+            ...prev,
+            [field]: initialSettings[field],
+          }));
+        }
+      }, 2000);
+
+      saveTimerRef.current.set(field, timer);
+    },
+    [userId, userName, onUpdate, initialSettings]
+  );
 
   // Check if field is locked by another user
-  const isFieldLocked = useCallback((field: keyof ProjectSettings): boolean => {
-    const lock = fieldLocks.get(field);
-    return lock !== undefined && lock.userId !== userId;
-  }, [fieldLocks, userId]);
+  const isFieldLocked = useCallback(
+    (field: keyof ProjectSettings): boolean => {
+      const lock = fieldLocks.get(field);
+      return lock !== undefined && lock.userId !== userId;
+    },
+    [fieldLocks, userId]
+  );
 
   // Get who is locking a field
-  const getFieldLocker = useCallback((field: keyof ProjectSettings): string | null => {
-    const lock = fieldLocks.get(field);
-    return lock && lock.userId !== userId ? lock.userName : null;
-  }, [fieldLocks, userId]);
+  const getFieldLocker = useCallback(
+    (field: keyof ProjectSettings): string | null => {
+      const lock = fieldLocks.get(field);
+      return lock && lock.userId !== userId ? lock.userName : null;
+    },
+    [fieldLocks, userId]
+  );
 
   // Check if field has pending changes
-  const isFieldPending = useCallback((field: keyof ProjectSettings): boolean => {
-    return pendingChanges.has(field);
-  }, [pendingChanges]);
+  const isFieldPending = useCallback(
+    (field: keyof ProjectSettings): boolean => {
+      return pendingChanges.has(field);
+    },
+    [pendingChanges]
+  );
 
   return {
     settings,
@@ -289,4 +307,3 @@ export function useCollaborativeSettings({
     isFieldPending,
   };
 }
-

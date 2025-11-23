@@ -44,7 +44,7 @@ export async function createPodcastEpisode(
 ): Promise<PodcastEpisode> {
   // Validate org exists
   const org = await prisma.org.findUnique({
-    where: { id: input.orgId }
+    where: { id: input.orgId },
   });
 
   if (!org) {
@@ -53,7 +53,7 @@ export async function createPodcastEpisode(
 
   // Validate slug uniqueness
   const existing = await prisma.podcastEpisode.findUnique({
-    where: { slug: input.slug }
+    where: { slug: input.slug },
   });
 
   if (existing) {
@@ -65,8 +65,8 @@ export async function createPodcastEpisode(
       ...input,
       guests: input.guests ? (input.guests as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
       tags: input.tags ?? [],
-      public: input.public ?? false
-    }
+      public: input.public ?? false,
+    },
   });
 }
 
@@ -78,7 +78,7 @@ export async function updatePodcastEpisode(
   input: UpdatePodcastEpisodeInput
 ): Promise<PodcastEpisode> {
   const existing = await prisma.podcastEpisode.findUnique({
-    where: { id: episodeId }
+    where: { id: episodeId },
   });
 
   if (!existing) {
@@ -88,7 +88,7 @@ export async function updatePodcastEpisode(
   // If slug is being changed, check uniqueness
   if (input.slug && input.slug !== existing.slug) {
     const slugConflict = await prisma.podcastEpisode.findUnique({
-      where: { slug: input.slug }
+      where: { slug: input.slug },
     });
 
     if (slugConflict) {
@@ -100,11 +100,14 @@ export async function updatePodcastEpisode(
     where: { id: episodeId },
     data: {
       ...input,
-      guests: input.guests !== undefined
-        ? (input.guests ? (input.guests as unknown as Prisma.InputJsonValue) : Prisma.JsonNull)
-        : undefined,
-      updatedAt: new Date()
-    }
+      guests:
+        input.guests !== undefined
+          ? input.guests
+            ? (input.guests as unknown as Prisma.InputJsonValue)
+            : Prisma.JsonNull
+          : undefined,
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -113,7 +116,7 @@ export async function updatePodcastEpisode(
  */
 export async function publishEpisode(episodeId: string): Promise<PodcastEpisode> {
   const episode = await prisma.podcastEpisode.findUnique({
-    where: { id: episodeId }
+    where: { id: episodeId },
   });
 
   if (!episode) {
@@ -129,8 +132,8 @@ export async function publishEpisode(episodeId: string): Promise<PodcastEpisode>
     data: {
       public: true,
       publishedAt: episode.publishedAt ?? new Date(),
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -142,8 +145,8 @@ export async function unpublishEpisode(episodeId: string): Promise<PodcastEpisod
     where: { id: episodeId },
     data: {
       public: false,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -158,10 +161,10 @@ export async function getEpisodeBySlug(slug: string) {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   });
 }
 
@@ -194,18 +197,18 @@ export async function listEpisodes(options?: {
           select: {
             id: true,
             name: true,
-            slug: true
-          }
-        }
-      }
+            slug: true,
+          },
+        },
+      },
     }),
-    prisma.podcastEpisode.count({ where })
+    prisma.podcastEpisode.count({ where }),
   ]);
 
   return {
     episodes,
     total,
-    hasMore: (options?.offset ?? 0) + episodes.length < total
+    hasMore: (options?.offset ?? 0) + episodes.length < total,
   };
 }
 
@@ -214,7 +217,6 @@ export async function listEpisodes(options?: {
  */
 export async function deleteEpisode(episodeId: string): Promise<void> {
   await prisma.podcastEpisode.delete({
-    where: { id: episodeId }
+    where: { id: episodeId },
   });
 }
-

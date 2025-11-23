@@ -18,11 +18,31 @@ interface ChordAlternativesPopoverProps {
 }
 
 const vibeConfig = {
-  similar: { color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-500/10 border-blue-500/30', icon: '≈' },
-  jazzier: { color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-500/10 border-purple-500/30', icon: '🎷' },
-  mellower: { color: 'text-green-600 dark:text-green-400', bg: 'bg-green-500/10 border-green-500/30', icon: '🌙' },
-  brighter: { color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-500/10 border-yellow-500/30', icon: '☀️' },
-  darker: { color: 'text-gray-600 dark:text-gray-400', bg: 'bg-gray-500/10 border-gray-500/30', icon: '🌑' },
+  similar: {
+    color: 'text-blue-600 dark:text-blue-400',
+    bg: 'bg-blue-500/10 border-blue-500/30',
+    icon: '≈',
+  },
+  jazzier: {
+    color: 'text-purple-600 dark:text-purple-400',
+    bg: 'bg-purple-500/10 border-purple-500/30',
+    icon: '🎷',
+  },
+  mellower: {
+    color: 'text-green-600 dark:text-green-400',
+    bg: 'bg-green-500/10 border-green-500/30',
+    icon: '🌙',
+  },
+  brighter: {
+    color: 'text-yellow-600 dark:text-yellow-400',
+    bg: 'bg-yellow-500/10 border-yellow-500/30',
+    icon: '☀️',
+  },
+  darker: {
+    color: 'text-gray-600 dark:text-gray-400',
+    bg: 'bg-gray-500/10 border-gray-500/30',
+    icon: '🌑',
+  },
 };
 
 export function ChordAlternativesPopover({
@@ -48,11 +68,11 @@ export function ChordAlternativesPopover({
       <button
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
-        className="relative inline-flex items-center gap-1 group"
+        className="group relative inline-flex items-center gap-1"
         aria-label={`Show alternatives for ${originalChord}`}
       >
         <span className="font-bold">{originalChord}</span>
-        <Sparkles className="w-3 h-3 text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <Sparkles className="h-3 w-3 text-purple-400 opacity-0 transition-opacity group-hover:opacity-100" />
       </button>
 
       {/* Popover */}
@@ -63,14 +83,14 @@ export function ChordAlternativesPopover({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: position === 'top' ? 10 : -10 }}
             transition={{ duration: 0.15 }}
-            className={`absolute ${positionClasses[position]} z-50 pointer-events-auto`}
+            className={`absolute ${positionClasses[position]} pointer-events-auto z-50`}
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
-            <div className="bg-surface border-2 border-border rounded-xl shadow-2xl p-4 min-w-[280px] max-w-[320px]">
+            <div className="min-w-[280px] max-w-[320px] rounded-xl border-2 border-border bg-surface p-4 shadow-2xl">
               {/* Header */}
-              <div className="flex items-center gap-2 mb-3 pb-2 border-b border-border/50">
-                <Music className="w-4 h-4 text-brand-primary" />
+              <div className="mb-3 flex items-center gap-2 border-b border-border/50 pb-2">
+                <Music className="h-4 w-4 text-brand-primary" />
                 <h4 className="text-sm font-semibold">Try instead of {originalChord}</h4>
               </div>
 
@@ -88,19 +108,21 @@ export function ChordAlternativesPopover({
                         onSelectAlternative?.(alt.chord);
                         setIsOpen(false);
                       }}
-                      className={`w-full text-left p-3 ${config.bg} border rounded-lg hover:scale-105 transition-all cursor-pointer group/alt`}
+                      className={`w-full p-3 text-left ${config.bg} group/alt cursor-pointer rounded-lg border transition-all hover:scale-105`}
                     >
-                      <div className="flex items-start justify-between gap-2 mb-1">
+                      <div className="mb-1 flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-lg font-display">{alt.chord}</span>
+                          <span className="font-display text-lg font-bold">{alt.chord}</span>
                           <span className="text-xs">{config.icon}</span>
                         </div>
-                        <ArrowRight className="w-3 h-3 opacity-0 group-hover/alt:opacity-100 transition-opacity" />
+                        <ArrowRight className="h-3 w-3 opacity-0 transition-opacity group-hover/alt:opacity-100" />
                       </div>
-                      <p className="text-xs opacity-80 mb-1">{alt.reason}</p>
+                      <p className="mb-1 text-xs opacity-80">{alt.reason}</p>
                       <div className="flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3 opacity-60" />
-                        <span className={`text-[10px] font-semibold uppercase tracking-wider ${config.color}`}>
+                        <TrendingUp className="h-3 w-3 opacity-60" />
+                        <span
+                          className={`text-[10px] font-semibold uppercase tracking-wider ${config.color}`}
+                        >
                           {alt.vibe}
                         </span>
                       </div>
@@ -110,21 +132,21 @@ export function ChordAlternativesPopover({
               </div>
 
               {/* Footer hint */}
-              <p className="text-[10px] text-muted-foreground mt-3 pt-2 border-t border-border/50 text-center">
+              <p className="mt-3 border-t border-border/50 pt-2 text-center text-[10px] text-muted-foreground">
                 Click to swap • Hover for more
               </p>
             </div>
 
             {/* Arrow pointer */}
             <div
-              className={`absolute w-3 h-3 bg-surface border-border rotate-45 ${
+              className={`absolute h-3 w-3 rotate-45 border-border bg-surface ${
                 position === 'top'
-                  ? 'bottom-[-7px] left-1/2 -translate-x-1/2 border-r-2 border-b-2'
+                  ? 'bottom-[-7px] left-1/2 -translate-x-1/2 border-b-2 border-r-2'
                   : position === 'bottom'
-                  ? 'top-[-7px] left-1/2 -translate-x-1/2 border-l-2 border-t-2'
-                  : position === 'left'
-                  ? 'right-[-7px] top-1/2 -translate-y-1/2 border-r-2 border-t-2'
-                  : 'left-[-7px] top-1/2 -translate-y-1/2 border-l-2 border-b-2'
+                    ? 'left-1/2 top-[-7px] -translate-x-1/2 border-l-2 border-t-2'
+                    : position === 'left'
+                      ? 'right-[-7px] top-1/2 -translate-y-1/2 border-r-2 border-t-2'
+                      : 'left-[-7px] top-1/2 -translate-y-1/2 border-b-2 border-l-2'
               }`}
             />
           </motion.div>
@@ -133,4 +155,3 @@ export function ChordAlternativesPopover({
     </div>
   );
 }
-

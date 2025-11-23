@@ -8,9 +8,5 @@ interface DailyProviderProps {
 }
 
 export function DailyProvider({ children }: DailyProviderProps) {
-  return (
-    <DailyReactProvider>
-      {children}
-    </DailyReactProvider>
-  );
+  return <DailyReactProvider>{children}</DailyReactProvider>;
 }

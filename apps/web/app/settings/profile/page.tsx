@@ -6,21 +6,21 @@ import { supabase } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
-import { 
-  User as UserIcon, 
-  Mail, 
-  Phone, 
-  Globe, 
-  Music, 
-  Upload, 
-  Save, 
-  Eye, 
+import {
+  User as UserIcon,
+  Mail,
+  Phone,
+  Globe,
+  Music,
+  Upload,
+  Save,
+  Eye,
   EyeOff,
   Link as LinkIcon,
   Instagram,
   Youtube,
   Twitter,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
 } from 'lucide-react';
 
 type ProfileData = {
@@ -46,7 +46,7 @@ export default function ProfileSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  
+
   const [profile, setProfile] = useState<ProfileData>({
     username: '',
     display_name: '',
@@ -61,7 +61,7 @@ export default function ProfileSettingsPage() {
     phone_public: false,
     email_public: true,
     instruments: [],
-    genres: []
+    genres: [],
   });
 
   const [uploadingPicture, setUploadingPicture] = useState(false);
@@ -89,7 +89,7 @@ export default function ProfileSettingsPage() {
             phone_public: user.user_metadata.phone_public || false,
             email_public: user.user_metadata.email_public !== false,
             instruments: user.user_metadata.instruments || [],
-            genres: user.user_metadata.genres || []
+            genres: user.user_metadata.genres || [],
           });
         }
         setLoading(false);
@@ -103,19 +103,19 @@ export default function ProfileSettingsPage() {
 
     try {
       const { error } = await supabase!.auth.updateUser({
-        data: profile
+        data: profile,
       });
 
       if (error) throw error;
 
       setMessage({
         type: 'success',
-        text: 'Profile updated successfully!'
+        text: 'Profile updated successfully!',
       });
     } catch (error: any) {
       setMessage({
         type: 'error',
-        text: error.message || 'Failed to update profile'
+        text: error.message || 'Failed to update profile',
       });
     } finally {
       setSaving(false);
@@ -132,20 +132,20 @@ export default function ProfileSettingsPage() {
       // Upload to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-      
+
       const { data, error } = await supabase!.storage
         .from('profile-pictures')
         .upload(fileName, file, {
           cacheControl: '3600',
-          upsert: false
+          upsert: false,
         });
 
       if (error) throw error;
 
       // Get public URL
-      const { data: { publicUrl } } = supabase!.storage
-        .from('profile-pictures')
-        .getPublicUrl(fileName);
+      const {
+        data: { publicUrl },
+      } = supabase!.storage.from('profile-pictures').getPublicUrl(fileName);
 
       // Update profile
       setProfile({ ...profile, profile_picture_url: publicUrl });
@@ -159,33 +159,38 @@ export default function ProfileSettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-lg">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container max-w-4xl">
-
         {message && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            message.type === 'success' 
-              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
-              : 'bg-red-500/10 border border-red-500/20 text-red-400'
-          }`}>
+          <div
+            className={`mb-6 rounded-lg p-4 ${
+              message.type === 'success'
+                ? 'border border-green-500/20 bg-green-500/10 text-green-400'
+                : 'border border-red-500/20 bg-red-500/10 text-red-400'
+            }`}
+          >
             {message.text}
           </div>
         )}
 
         {/* Profile Picture */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-4">Profile Picture</h2>
+        <Card className="mb-6 p-6">
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Profile Picture</h2>
           <div className="flex items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-foreground text-3xl font-bold overflow-hidden">
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-3xl font-bold text-foreground">
               {profile.profile_picture_url ? (
-                <img src={profile.profile_picture_url} alt="Profile" className="w-full h-full object-cover" />
+                <img
+                  src={profile.profile_picture_url}
+                  alt="Profile"
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 user?.email?.[0].toUpperCase()
               )}
@@ -198,25 +203,23 @@ export default function ProfileSettingsPage() {
                   onChange={handleProfilePictureUpload}
                   className="hidden"
                 />
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-foreground rounded-lg hover:bg-purple-700 transition">
-                  <Upload className="w-4 h-4" />
+                <div className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-foreground transition hover:bg-purple-700">
+                  <Upload className="h-4 w-4" />
                   {uploadingPicture ? 'Uploading...' : 'Upload Photo'}
                 </div>
               </label>
-              <p className="text-xs text-muted-foreground mt-2">
-                JPG, PNG or GIF. Max 5MB.
-              </p>
+              <p className="mt-2 text-xs text-muted-foreground">JPG, PNG or GIF. Max 5MB.</p>
             </div>
           </div>
         </Card>
 
         {/* Basic Info */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-4">Basic Information</h2>
-          
+        <Card className="mb-6 p-6">
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Basic Information</h2>
+
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-300">
                 Username (Alias) *
               </label>
               <input
@@ -224,38 +227,34 @@ export default function ProfileSettingsPage() {
                 value={profile.username}
                 onChange={(e) => setProfile({ ...profile, username: e.target.value })}
                 placeholder="rockstar123"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Your unique handle. Others can find you by this username.
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Display Name
-              </label>
+              <label className="mb-2 block text-sm font-medium text-gray-300">Display Name</label>
               <input
                 type="text"
                 value={profile.display_name}
                 onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
                 placeholder="John Doe"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Bio
-              </label>
+              <label className="mb-2 block text-sm font-medium text-gray-300">Bio</label>
               <textarea
                 value={profile.bio}
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                 placeholder="Tell the world about your music..."
                 rows={4}
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none resize-none"
+                className="w-full resize-none rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Describe your music style, experience, what you're working on, etc.
               </p>
             </div>
@@ -263,14 +262,14 @@ export default function ProfileSettingsPage() {
         </Card>
 
         {/* Privacy Settings */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-            {profile.is_public ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+        <Card className="mb-6 p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-foreground">
+            {profile.is_public ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
             Privacy Settings
           </h2>
-          
+
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+            <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
               <div>
                 <p className="font-medium text-foreground">Public Profile</p>
                 <p className="text-sm text-muted-foreground">
@@ -279,17 +278,19 @@ export default function ProfileSettingsPage() {
               </div>
               <button
                 onClick={() => setProfile({ ...profile, is_public: !profile.is_public })}
-                className={`relative w-14 h-7 rounded-full transition-colors ${
+                className={`relative h-7 w-14 rounded-full transition-colors ${
                   profile.is_public ? 'bg-purple-600' : 'bg-gray-600'
                 }`}
               >
-                <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                  profile.is_public ? 'right-1' : 'left-1'
-                }`} />
+                <div
+                  className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${
+                    profile.is_public ? 'right-1' : 'left-1'
+                  }`}
+                />
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+            <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
               <div>
                 <p className="font-medium text-foreground">Email Visibility</p>
                 <p className="text-sm text-muted-foreground">
@@ -298,17 +299,19 @@ export default function ProfileSettingsPage() {
               </div>
               <button
                 onClick={() => setProfile({ ...profile, email_public: !profile.email_public })}
-                className={`relative w-14 h-7 rounded-full transition-colors ${
+                className={`relative h-7 w-14 rounded-full transition-colors ${
                   profile.email_public ? 'bg-purple-600' : 'bg-gray-600'
                 }`}
               >
-                <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                  profile.email_public ? 'right-1' : 'left-1'
-                }`} />
+                <div
+                  className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${
+                    profile.email_public ? 'right-1' : 'left-1'
+                  }`}
+                />
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+            <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
               <div>
                 <p className="font-medium text-foreground">Phone Number Visibility</p>
                 <p className="text-sm text-muted-foreground">
@@ -317,26 +320,28 @@ export default function ProfileSettingsPage() {
               </div>
               <button
                 onClick={() => setProfile({ ...profile, phone_public: !profile.phone_public })}
-                className={`relative w-14 h-7 rounded-full transition-colors ${
+                className={`relative h-7 w-14 rounded-full transition-colors ${
                   profile.phone_public ? 'bg-purple-600' : 'bg-gray-600'
                 }`}
               >
-                <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                  profile.phone_public ? 'right-1' : 'left-1'
-                }`} />
+                <div
+                  className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${
+                    profile.phone_public ? 'right-1' : 'left-1'
+                  }`}
+                />
               </button>
             </div>
           </div>
         </Card>
 
         {/* Contact & Links */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-4">Contact & Links</h2>
-          
+        <Card className="mb-6 p-6">
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Contact & Links</h2>
+
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Phone className="w-4 h-4" />
+              <label className="mb-2 block flex items-center gap-2 text-sm font-medium text-gray-300">
+                <Phone className="h-4 w-4" />
                 Phone Number
               </label>
               <input
@@ -344,13 +349,13 @@ export default function ProfileSettingsPage() {
                 value={profile.phone}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 placeholder="+1 (555) 123-4567"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Globe className="w-4 h-4" />
+              <label className="mb-2 block flex items-center gap-2 text-sm font-medium text-gray-300">
+                <Globe className="h-4 w-4" />
                 Website
               </label>
               <input
@@ -358,13 +363,13 @@ export default function ProfileSettingsPage() {
                 value={profile.website}
                 onChange={(e) => setProfile({ ...profile, website: e.target.value })}
                 placeholder="https://yourwebsite.com"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Instagram className="w-4 h-4" />
+              <label className="mb-2 block flex items-center gap-2 text-sm font-medium text-gray-300">
+                <Instagram className="h-4 w-4" />
                 Instagram
               </label>
               <input
@@ -372,13 +377,13 @@ export default function ProfileSettingsPage() {
                 value={profile.instagram}
                 onChange={(e) => setProfile({ ...profile, instagram: e.target.value })}
                 placeholder="@yourhandle"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Youtube className="w-4 h-4" />
+              <label className="mb-2 block flex items-center gap-2 text-sm font-medium text-gray-300">
+                <Youtube className="h-4 w-4" />
                 YouTube Channel
               </label>
               <input
@@ -386,39 +391,39 @@ export default function ProfileSettingsPage() {
                 value={profile.youtube}
                 onChange={(e) => setProfile({ ...profile, youtube: e.target.value })}
                 placeholder="@yourchannel or channel URL"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-                <Twitter className="w-4 h-4" />
-                X (Twitter)
+              <label className="mb-2 block flex items-center gap-2 text-sm font-medium text-gray-300">
+                <Twitter className="h-4 w-4" />X (Twitter)
               </label>
               <input
                 type="text"
                 value={profile.twitter}
                 onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}
                 placeholder="@yourhandle"
-                className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-foreground focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
           </div>
         </Card>
 
         {/* Music Samples (SoundCloud-style) */}
-        <Card className="p-6 mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-            <Music className="w-5 h-5" />
+        <Card className="mb-6 p-6">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-foreground">
+            <Music className="h-5 w-5" />
             Music Samples (Coming Soon)
           </h2>
-          <p className="text-muted-foreground mb-4">
-            Upload your music to showcase your work. Others can listen directly on your profile (like SoundCloud).
+          <p className="mb-4 text-muted-foreground">
+            Upload your music to showcase your work. Others can listen directly on your profile
+            (like SoundCloud).
           </p>
-          
-          <div className="p-6 border-2 border-dashed border-white/20 rounded-lg text-center bg-white/5">
-            <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground mb-2">Music upload feature coming soon</p>
+
+          <div className="rounded-lg border-2 border-dashed border-white/20 bg-white/5 p-6 text-center">
+            <Upload className="mx-auto mb-3 h-12 w-12 text-muted-foreground" />
+            <p className="mb-2 text-muted-foreground">Music upload feature coming soon</p>
             <p className="text-xs text-muted-foreground">
               Will support: MP3, WAV, FLAC • Up to 50MB per track
             </p>
@@ -433,19 +438,19 @@ export default function ProfileSettingsPage() {
           <Button
             onClick={handleSaveProfile}
             disabled={saving}
-            className="rnrb-button-primary px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
+            className="rnrb-button-primary flex items-center gap-2 rounded-lg px-8 py-3 font-semibold"
           >
-            <Save className="w-4 h-4" />
+            <Save className="h-4 w-4" />
             {saving ? 'Saving...' : 'Save Profile'}
           </Button>
         </div>
 
         {/* Profile Preview Link */}
         {profile.username && (
-          <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+          <div className="mt-6 rounded-lg border border-blue-500/20 bg-blue-500/10 p-4">
             <p className="text-sm text-blue-400">
-              Your public profile will be at: 
-              <a href={`/u/${profile.username}`} className="font-mono ml-2 underline">
+              Your public profile will be at:
+              <a href={`/u/${profile.username}`} className="ml-2 font-mono underline">
                 www.cronkwaters.com/u/{profile.username}
               </a>
             </p>
@@ -455,4 +460,3 @@ export default function ProfileSettingsPage() {
     </div>
   );
 }
-

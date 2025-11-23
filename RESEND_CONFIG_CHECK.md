@@ -19,6 +19,7 @@ EMAIL_PROVIDER="resend"
 ## 🔧 **CURRENT SETUP STATUS**
 
 ### **Local Environment (.env.production)**
+
 - ✅ Resend API Key configured
 - ✅ SMTP server: `smtp.resend.com:587`
 - ✅ Sender: `onboarding@resend.dev`
@@ -44,13 +45,16 @@ Your magic links are handled by **Supabase Auth (GoTrue)**, not NextAuth. So the
 **Possible States:**
 
 ### **Option A: Using Supabase Default SMTP** ⚠️
+
 ```
 SMTP Provider: Supabase (default)
 Status: ⚠️ Limited (3-4 emails/hour)
 ```
+
 **Evidence:** Your emails are being sent (we verified 9 successful magic links), so Supabase is using its default SMTP.
 
 ### **Option B: Resend Already Connected** ✅
+
 ```
 SMTP Provider: Custom (Resend)
 Host: smtp.resend.com
@@ -71,6 +75,7 @@ Status: ✅ Production-ready
    - [ ] If enabled, check the Host field
 
 **If you see:**
+
 - `smtp.resend.com` → ✅ **Already using Resend!**
 - Empty or default → ⚠️ **Using Supabase default SMTP**
 
@@ -134,11 +139,13 @@ Test it:
    - Or create new one at: https://resend.com/api-keys
 
 2. **Add to Supabase:**
+
    ```
    Dashboard → Auth → Email Templates → SMTP Settings
    ```
 
 3. **Use these settings:**
+
    ```
    Host: smtp.resend.com
    Port: 587
@@ -165,6 +172,7 @@ Instead of `onboarding@resend.dev`, use `noreply@cronkwaters.com`:
    - Change Sender Email to: `noreply@cronkwaters.com`
 
 **Benefits:**
+
 - ✅ More professional
 - ✅ Better deliverability
 - ✅ Custom branding
@@ -173,14 +181,14 @@ Instead of `onboarding@resend.dev`, use `noreply@cronkwaters.com`:
 
 ## 📊 **CURRENT VS POTENTIAL**
 
-| Aspect | Current (If Supabase Default) | With Resend |
-|--------|------------------------------|-------------|
-| **Emails/day** | 3-4 | 100 (free tier) |
-| **Emails/month** | ~100 | 3,000 (free tier) |
-| **Delivery time** | 1-5 minutes | < 1 second |
-| **Spam rate** | ~50% | ~5% |
-| **Tracking** | None | Full dashboard |
-| **Cost** | Free | Free tier ✅ |
+| Aspect            | Current (If Supabase Default) | With Resend       |
+| ----------------- | ----------------------------- | ----------------- |
+| **Emails/day**    | 3-4                           | 100 (free tier)   |
+| **Emails/month**  | ~100                          | 3,000 (free tier) |
+| **Delivery time** | 1-5 minutes                   | < 1 second        |
+| **Spam rate**     | ~50%                          | ~5%               |
+| **Tracking**      | None                          | Full dashboard    |
+| **Cost**          | Free                          | Free tier ✅      |
 
 ---
 
@@ -202,4 +210,5 @@ Instead of `onboarding@resend.dev`, use `noreply@cronkwaters.com`:
 **Supabase Auth:** ❓ Need to verify
 
 Let me know what you find! 🔍
+
 

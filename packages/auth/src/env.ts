@@ -8,7 +8,7 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
   APPLE_CLIENT_ID: z.string().optional(),
-  APPLE_CLIENT_SECRET: z.string().optional()
+  APPLE_CLIENT_SECRET: z.string().optional(),
 });
 
 function getEnv() {
@@ -21,7 +21,7 @@ function getEnv() {
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
       APPLE_CLIENT_ID: process.env.APPLE_CLIENT_ID,
-      APPLE_CLIENT_SECRET: process.env.APPLE_CLIENT_SECRET
+      APPLE_CLIENT_SECRET: process.env.APPLE_CLIENT_SECRET,
     });
   } catch {
     // During build time, return a safe default
@@ -33,12 +33,9 @@ function getEnv() {
       GOOGLE_CLIENT_ID: undefined,
       GOOGLE_CLIENT_SECRET: undefined,
       APPLE_CLIENT_ID: undefined,
-      APPLE_CLIENT_SECRET: undefined
+      APPLE_CLIENT_SECRET: undefined,
     };
   }
 }
 
 export const env = getEnv();
-
-
-

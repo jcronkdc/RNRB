@@ -5,10 +5,10 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { useParams, useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
-import { 
-  Users, 
-  UserPlus, 
-  Mail, 
+import {
+  Users,
+  UserPlus,
+  Mail,
   Video,
   MessageSquare,
   Share2,
@@ -21,17 +21,31 @@ import {
   Sparkles,
   FlaskConical,
   ExternalLink,
-  Palette
+  Palette,
 } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
 // Dynamically import collaboration components
-const ProjectChat = dynamic(() => import('@/components/project-chat').then(m => m.ProjectChat), { ssr: false });
-const ProjectVideoRoom = dynamic(() => import('@/components/project-video-room').then(m => m.ProjectVideoRoom), { ssr: false });
-const PresenceIndicator = dynamic(() => import('@/components/presence-indicator').then(m => m.PresenceIndicator), { ssr: false });
-const ActivityFeed = dynamic(() => import('@/components/activity-feed').then(m => m.ActivityFeed), { ssr: false });
-const CollaborativeWhiteboard = dynamic(() => import('@/components/collaborative-whiteboard').then(m => m.CollaborativeWhiteboard), { ssr: false });
+const ProjectChat = dynamic(() => import('@/components/project-chat').then((m) => m.ProjectChat), {
+  ssr: false,
+});
+const ProjectVideoRoom = dynamic(
+  () => import('@/components/project-video-room').then((m) => m.ProjectVideoRoom),
+  { ssr: false }
+);
+const PresenceIndicator = dynamic(
+  () => import('@/components/presence-indicator').then((m) => m.PresenceIndicator),
+  { ssr: false }
+);
+const ActivityFeed = dynamic(
+  () => import('@/components/activity-feed').then((m) => m.ActivityFeed),
+  { ssr: false }
+);
+const CollaborativeWhiteboard = dynamic(
+  () => import('@/components/collaborative-whiteboard').then((m) => m.CollaborativeWhiteboard),
+  { ssr: false }
+);
 // AI Music component exists but we're showing Coming Soon with R&R Labs volunteer call
 // const CollaborativeAIMusic = dynamic(() => import('@/components/collaborative-ai-music').then(m => m.CollaborativeAIMusic), { ssr: false });
 
@@ -45,7 +59,9 @@ export default function ProjectCollaboratePage() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviting, setInviting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [activeView, setActiveView] = useState<'team' | 'chat' | 'video' | 'ai-music' | 'activity'>('team');
+  const [activeView, setActiveView] = useState<'team' | 'chat' | 'video' | 'ai-music' | 'activity'>(
+    'team'
+  );
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -53,16 +69,16 @@ export default function ProjectCollaboratePage() {
         router.push('/auth');
         return;
       }
-      
+
       setUser(user);
       const projects = user.user_metadata?.projects || [];
       const foundProject = projects.find((p: any) => p.slug === slug);
-      
+
       if (!foundProject) {
         router.push('/projects');
         return;
       }
-      
+
       setProject(foundProject);
       setLoading(false);
     });
@@ -87,8 +103,8 @@ export default function ProjectCollaboratePage() {
           projectName: project.name,
           projectSlug: slug,
           inviterName: user.user_metadata?.name,
-          inviterEmail: user.email
-        })
+          inviterEmail: user.email,
+        }),
       });
 
       const data = await response.json();
@@ -105,7 +121,7 @@ export default function ProjectCollaboratePage() {
         status: 'pending',
         invited_by: user.email,
         invited_at: new Date().toISOString(),
-        invite_link: data.inviteLink
+        invite_link: data.inviteLink,
       };
 
       const allProjects = user.user_metadata?.projects || [];
@@ -114,7 +130,7 @@ export default function ProjectCollaboratePage() {
           return {
             ...p,
             invites: [...(p.invites || []), newInvite],
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
           };
         }
         return p;
@@ -123,23 +139,23 @@ export default function ProjectCollaboratePage() {
       const { error } = await supabase!.auth.updateUser({
         data: {
           ...user.user_metadata,
-          projects: updatedProjects
-        }
+          projects: updatedProjects,
+        },
       });
 
       if (error) throw error;
 
       // Show success with invite link
-      const linkMessage = data.emailSent 
+      const linkMessage = data.emailSent
         ? `Invitation email sent to ${inviteEmail}!`
         : `Invitation created! Email not sent (EMAIL_SERVER_URL not configured). Share this link: ${data.inviteLink}`;
-      
-      setMessage({ 
-        type: 'success', 
-        text: linkMessage
+
+      setMessage({
+        type: 'success',
+        text: linkMessage,
       });
       setInviteEmail('');
-      
+
       // Reload project data
       const updated = updatedProjects.find((p: any) => p.slug === slug);
       setProject(updated);
@@ -152,11 +168,11 @@ export default function ProjectCollaboratePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <motion.div 
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <motion.div
           animate={{ opacity: [0.2, 1, 0.2] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="text-muted-foreground font-mono text-sm"
+          className="font-mono text-sm text-muted-foreground"
         >
           Loading collaboration hub...
         </motion.div>
@@ -165,40 +181,42 @@ export default function ProjectCollaboratePage() {
   }
 
   const collaborators = project.collaborators || [
-    { id: user.id, email: user.email, role: 'owner', status: 'active' }
+    { id: user.id, email: user.email, role: 'owner', status: 'active' },
   ];
   const pendingInvites = project.invites || [];
 
   return (
     <div className="min-h-screen bg-background">
-      
       {/* Premium Hero Section */}
       <div className="relative overflow-hidden border-b border-border/50">
         <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
+          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-brand-primary/5 blur-3xl" />
         </div>
-        
-        <div className="container mx-auto max-w-6xl relative z-10 py-16 px-4">
+
+        <div className="container relative z-10 mx-auto max-w-6xl px-4 py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             {/* Breadcrumb */}
-            <Link href={`/projects/${slug}`} className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-primary mb-6 transition-colors">
-              <ArrowLeft className="w-4 h-4" />
+            <Link
+              href={`/projects/${slug}`}
+              className="mb-6 inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-brand-primary"
+            >
+              <ArrowLeft className="h-4 w-4" />
               <span className="font-mono text-xs uppercase tracking-wider">Back to Project</span>
             </Link>
 
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-brand-primary/10 flex items-center justify-center">
-                <Users className="w-6 h-6 text-brand-primary" />
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
+                <Users className="h-6 w-6 text-brand-primary" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Collaborate on</p>
-                <h1 className="text-3xl md:text-4xl font-display font-bold text-foreground">
+                <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">
                   {project.name}
                 </h1>
               </div>
@@ -210,14 +228,15 @@ export default function ProjectCollaboratePage() {
         </div>
       </div>
 
-      <div className="container mx-auto max-w-6xl py-12 px-4">
-
+      <div className="container mx-auto max-w-6xl px-4 py-12">
         {message && (
-          <div className={`mb-6 p-4 rounded-lg border ${
-            message.type === 'success'
-              ? 'bg-green-500/10 border-green-500/20 text-green-400'
-              : 'bg-red-500/10 border-red-500/20 text-red-400'
-          }`}>
+          <div
+            className={`mb-6 rounded-lg border p-4 ${
+              message.type === 'success'
+                ? 'border-green-500/20 bg-green-500/10 text-green-400'
+                : 'border-red-500/20 bg-red-500/10 text-red-400'
+            }`}
+          >
             {message.text}
           </div>
         )}
@@ -227,7 +246,7 @@ export default function ProjectCollaboratePage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-lg"
+            className="mb-6 rounded-lg border border-green-500/20 bg-gradient-to-r from-green-500/10 to-emerald-500/10 p-4"
           >
             <PresenceIndicator
               channelName={`project:${slug}`}
@@ -249,63 +268,63 @@ export default function ProjectCollaboratePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex gap-2 mb-6 border-b border-border pb-2"
+          className="mb-6 flex gap-2 border-b border-border pb-2"
         >
           <button
             onClick={() => setActiveView('team')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-t-lg transition-all font-medium ${
+            className={`flex items-center gap-2 rounded-t-lg px-6 py-3 font-medium transition-all ${
               activeView === 'team'
                 ? 'bg-brand-primary text-brand-primary-foreground'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
             }`}
           >
-            <Users className="w-4 h-4" />
+            <Users className="h-4 w-4" />
             Team
           </button>
           <button
             onClick={() => setActiveView('chat')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-t-lg transition-all font-medium ${
+            className={`flex items-center gap-2 rounded-t-lg px-6 py-3 font-medium transition-all ${
               activeView === 'chat'
                 ? 'bg-brand-primary text-brand-primary-foreground'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
             }`}
           >
-            <MessageSquare className="w-4 h-4" />
+            <MessageSquare className="h-4 w-4" />
             Chat
           </button>
           <button
             onClick={() => setActiveView('video')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-t-lg transition-all font-medium ${
+            className={`flex items-center gap-2 rounded-t-lg px-6 py-3 font-medium transition-all ${
               activeView === 'video'
                 ? 'bg-brand-primary text-brand-primary-foreground'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
             }`}
           >
-            <Video className="w-4 h-4" />
+            <Video className="h-4 w-4" />
             Video
           </button>
           <button
             onClick={() => setActiveView('activity')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-t-lg transition-all font-medium ${
+            className={`flex items-center gap-2 rounded-t-lg px-6 py-3 font-medium transition-all ${
               activeView === 'activity'
                 ? 'bg-brand-primary text-brand-primary-foreground'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
             }`}
           >
-            <Share2 className="w-4 h-4" />
+            <Share2 className="h-4 w-4" />
             Activity
           </button>
           <button
             onClick={() => setActiveView('ai-music')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-t-lg transition-all font-medium relative ${
+            className={`relative flex items-center gap-2 rounded-t-lg px-6 py-3 font-medium transition-all ${
               activeView === 'ai-music'
                 ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white'
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
             }`}
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="h-4 w-4" />
             AI Music Together
-            <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-brand-primary text-white text-[10px] font-bold rounded uppercase">
+            <span className="absolute -right-1 -top-1 rounded bg-brand-primary px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">
               Beta
             </span>
           </button>
@@ -317,13 +336,13 @@ export default function ProjectCollaboratePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 gap-6 lg:grid-cols-3"
           >
-            <div className="lg:col-span-2 space-y-6">
+            <div className="space-y-6 lg:col-span-2">
               {/* Current Team */}
-              <Card className="p-6 rnrb-card">
-                <h2 className="text-2xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <Users className="w-6 h-6 text-brand-primary" />
+              <Card className="rnrb-card p-6">
+                <h2 className="mb-4 flex items-center gap-2 text-2xl font-semibold text-foreground">
+                  <Users className="h-6 w-6 text-brand-primary" />
                   Team Members ({collaborators.length})
                 </h2>
                 <div className="space-y-3">
@@ -333,18 +352,30 @@ export default function ProjectCollaboratePage() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.1 }}
-                      className="flex items-center justify-between p-4 bg-surface hover:bg-surface-muted border border-border rounded-xl transition-all"
+                      className="flex items-center justify-between rounded-xl border border-border bg-surface p-4 transition-all hover:bg-surface-muted"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-brand-primary/20 rounded-full flex items-center justify-center text-foreground font-semibold">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 font-semibold text-foreground">
                           {collab.email[0].toUpperCase()}
                         </div>
                         <div>
                           <p className="font-medium text-foreground">{collab.email}</p>
-                          <p className="text-sm text-muted-foreground flex items-center gap-2">
-                            {collab.role === 'owner' && <><Crown className="w-3 h-3 text-brand-primary" /> Owner</>}
-                            {collab.role === 'admin' && <><Shield className="w-3 h-3 text-brand-primary" /> Admin</>}
-                            {collab.role === 'member' && <><UserIcon className="w-3 h-3" /> Member</>}
+                          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                            {collab.role === 'owner' && (
+                              <>
+                                <Crown className="h-3 w-3 text-brand-primary" /> Owner
+                              </>
+                            )}
+                            {collab.role === 'admin' && (
+                              <>
+                                <Shield className="h-3 w-3 text-brand-primary" /> Admin
+                              </>
+                            )}
+                            {collab.role === 'member' && (
+                              <>
+                                <UserIcon className="h-3 w-3" /> Member
+                              </>
+                            )}
                           </p>
                         </div>
                       </div>
@@ -356,19 +387,22 @@ export default function ProjectCollaboratePage() {
               {/* Pending Invites */}
               {pendingInvites.length > 0 && (
                 <Card className="p-6">
-                  <h3 className="text-xl font-semibold text-foreground mb-4">
+                  <h3 className="mb-4 text-xl font-semibold text-foreground">
                     Pending Invitations ({pendingInvites.length})
                   </h3>
                   <div className="space-y-3">
                     {pendingInvites.map((invite: any) => (
-                      <div key={invite.id} className="flex items-center justify-between p-4 bg-surface/50 border border-border rounded-lg">
+                      <div
+                        key={invite.id}
+                        className="flex items-center justify-between rounded-lg border border-border bg-surface/50 p-4"
+                      >
                         <div>
                           <p className="font-medium text-foreground">{invite.email}</p>
                           <p className="text-sm text-muted-foreground">
                             Invited {new Date(invite.invited_at).toLocaleDateString()}
                           </p>
                         </div>
-                        <span className="px-3 py-1 bg-yellow-500/20 border border-yellow-500/30 rounded-full text-sm text-yellow-400">
+                        <span className="rounded-full border border-yellow-500/30 bg-yellow-500/20 px-3 py-1 text-sm text-yellow-400">
                           Pending
                         </span>
                       </div>
@@ -380,12 +414,12 @@ export default function ProjectCollaboratePage() {
 
             {/* Invite Panel */}
             <div>
-              <Card className="p-6 rnrb-card">
-                <h3 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <UserPlus className="w-5 h-5 text-brand-primary" />
+              <Card className="rnrb-card p-6">
+                <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold text-foreground">
+                  <UserPlus className="h-5 w-5 text-brand-primary" />
                   Invite Member
                 </h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="mb-4 text-sm text-muted-foreground">
                   Invite musicians to collaborate on this project
                 </p>
                 <div className="space-y-3">
@@ -394,28 +428,29 @@ export default function ProjectCollaboratePage() {
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="musician@example.com"
-                    className="w-full px-4 py-2 bg-surface border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition"
+                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                     onKeyPress={(e) => e.key === 'Enter' && handleInvite()}
                   />
                   <Button
                     onClick={handleInvite}
                     disabled={inviting}
-                    className="w-full rnrb-button-primary"
+                    className="rnrb-button-primary w-full"
                   >
-                    <Mail className="w-4 h-4 mr-2" />
+                    <Mail className="mr-2 h-4 w-4" />
                     {inviting ? 'Sending...' : 'Send Invitation'}
                   </Button>
                 </div>
 
-                <div className="mt-6 p-4 rnrb-card bg-surface-muted/50 border border-border">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-5 h-5 rounded-full bg-brand-primary/20 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-brand-primary" />
+                <div className="rnrb-card mt-6 border border-border bg-surface-muted/50 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-brand-primary/20">
+                      <Check className="h-3 w-3 text-brand-primary" />
                     </div>
                     <p className="text-sm font-semibold text-foreground">Invite-Only Access</p>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Only invited members can see this project. All collaboration is private by default.
+                    Only invited members can see this project. All collaboration is private by
+                    default.
                   </p>
                 </div>
               </Card>
@@ -440,14 +475,14 @@ export default function ProjectCollaboratePage() {
             {/* Collaborative Whiteboard */}
             {user && (
               <Card className="p-6">
-                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                  <Palette className="w-5 h-5 text-brand-primary" />
+                <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold">
+                  <Palette className="h-5 w-5 text-brand-primary" />
                   Collaborative Whiteboard
-                  <span className="text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded-full">
+                  <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
                     Live Sync
                   </span>
                 </h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="mb-4 text-sm text-muted-foreground">
                   Draw chord diagrams, song structures, or brainstorm ideas together in real-time
                 </p>
                 <CollaborativeWhiteboard
@@ -473,105 +508,134 @@ export default function ProjectCollaboratePage() {
             className="space-y-6"
           >
             {/* Coming Soon Banner with R&R Labs */}
-            <Card className="p-8 rnrb-card bg-gradient-to-br from-purple-500/10 via-transparent to-brand-primary/10 border-2 border-purple-500/30">
+            <Card className="rnrb-card border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-transparent to-brand-primary/10 p-8">
               <div className="flex items-start gap-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg">
-                  <FlaskConical className="w-8 h-8 text-white" />
+                <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg">
+                  <FlaskConical className="h-8 w-8 text-white" />
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h2 className="text-3xl font-display font-bold text-foreground">AI Music Together</h2>
-                    <span className="px-3 py-1 bg-purple-500/20 border border-purple-500/40 rounded-full text-sm font-bold text-purple-400">
+                  <div className="mb-3 flex items-center gap-3">
+                    <h2 className="font-display text-3xl font-bold text-foreground">
+                      AI Music Together
+                    </h2>
+                    <span className="rounded-full border border-purple-500/40 bg-purple-500/20 px-3 py-1 text-sm font-bold text-purple-400">
                       R&R Labs
                     </span>
                   </div>
-                  <p className="text-lg text-muted-foreground mb-4">
-                    Collaborative AI-assisted music creation - Generate stems together, replace with human recordings, iterate infinitely
+                  <p className="mb-4 text-lg text-muted-foreground">
+                    Collaborative AI-assisted music creation - Generate stems together, replace with
+                    human recordings, iterate infinitely
                   </p>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary/10 border border-brand-primary/30 rounded-lg">
-                    <Sparkles className="w-4 h-4 text-brand-primary" />
-                    <span className="text-sm font-semibold text-brand-primary">Coming Soon - We Need Your Help!</span>
+                  <div className="inline-flex items-center gap-2 rounded-lg border border-brand-primary/30 bg-brand-primary/10 px-4 py-2">
+                    <Sparkles className="h-4 w-4 text-brand-primary" />
+                    <span className="text-sm font-semibold text-brand-primary">
+                      Coming Soon - We Need Your Help!
+                    </span>
                   </div>
                 </div>
               </div>
             </Card>
 
             {/* R&R Labs Volunteer Section */}
-            <Card className="p-8 rnrb-card border-2 border-brand-primary/20">
+            <Card className="rnrb-card border-2 border-brand-primary/20 p-8">
               <div className="max-w-3xl">
-                <h3 className="text-2xl font-display font-bold mb-4 flex items-center gap-2">
-                  <FlaskConical className="w-6 h-6 text-purple-400" />
+                <h3 className="font-display mb-4 flex items-center gap-2 text-2xl font-bold">
+                  <FlaskConical className="h-6 w-6 text-purple-400" />
                   Help Us Build the Future - R&R Labs
                 </h3>
-                
-                <div className="space-y-4 text-muted-foreground mb-6">
+
+                <div className="mb-6 space-y-4 text-muted-foreground">
                   <p className="text-base leading-relaxed">
-                    We're building our own AI music generation model specifically designed for <strong className="text-foreground">collaborative music creation</strong>, 
-                    not solo AI replacement like Suno or Udio.
-                  </p>
-                  
-                  <p className="text-base leading-relaxed">
-                    <strong className="text-foreground">R&R Labs</strong> is our research division focused on creating AI tools that <em>assist</em> musicians 
-                    rather than replace them. We need your creativity, feedback, and musical expertise to train models that understand 
-                    real collaborative workflows.
+                    We're building our own AI music generation model specifically designed for{' '}
+                    <strong className="text-foreground">collaborative music creation</strong>, not
+                    solo AI replacement like Suno or Udio.
                   </p>
 
-                  <div className="bg-surface-muted border border-border rounded-xl p-6 my-6">
-                    <h4 className="font-semibold text-foreground mb-3">What We're Building:</h4>
+                  <p className="text-base leading-relaxed">
+                    <strong className="text-foreground">R&R Labs</strong> is our research division
+                    focused on creating AI tools that <em>assist</em> musicians rather than replace
+                    them. We need your creativity, feedback, and musical expertise to train models
+                    that understand real collaborative workflows.
+                  </p>
+
+                  <div className="my-6 rounded-xl border border-border bg-surface-muted p-6">
+                    <h4 className="mb-3 font-semibold text-foreground">What We're Building:</h4>
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                        <span><strong>Stem Generation:</strong> AI creates individual tracks (vocals, drums, bass, guitar, synth)</span>
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-400" />
+                        <span>
+                          <strong>Stem Generation:</strong> AI creates individual tracks (vocals,
+                          drums, bass, guitar, synth)
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                        <span><strong>Infinite Iteration:</strong> Regenerate any stem you don't like, keep refining</span>
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-400" />
+                        <span>
+                          <strong>Infinite Iteration:</strong> Regenerate any stem you don't like,
+                          keep refining
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                        <span><strong>Human-Over-AI:</strong> Replace any AI stem with your real recording</span>
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-400" />
+                        <span>
+                          <strong>Human-Over-AI:</strong> Replace any AI stem with your real
+                          recording
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                        <span><strong>Real-Time Collaboration:</strong> Your team sees all changes instantly via Ably</span>
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-400" />
+                        <span>
+                          <strong>Real-Time Collaboration:</strong> Your team sees all changes
+                          instantly via Ably
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                        <span><strong>Defensible Copyright:</strong> Human contribution tracking for legal ownership</span>
+                        <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-400" />
+                        <span>
+                          <strong>Defensible Copyright:</strong> Human contribution tracking for
+                          legal ownership
+                        </span>
                       </li>
                     </ul>
                   </div>
 
                   <p className="text-base leading-relaxed">
-                    <strong className="text-foreground">We need volunteers</strong> to help us understand how musicians actually want to collaborate 
-                    with AI. Your input will directly shape the tools we build.
+                    <strong className="text-foreground">We need volunteers</strong> to help us
+                    understand how musicians actually want to collaborate with AI. Your input will
+                    directly shape the tools we build.
                   </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button 
-                    className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all"
-                    onClick={() => window.open('mailto:labs@cronkwaters.com?subject=Volunteer for R&R Labs AI Music', '_blank')}
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <Button
+                    className="rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-8 py-4 font-semibold text-white shadow-lg transition-all hover:from-purple-700 hover:to-purple-600 hover:shadow-xl"
+                    onClick={() =>
+                      window.open(
+                        'mailto:labs@cronkwaters.com?subject=Volunteer for R&R Labs AI Music',
+                        '_blank'
+                      )
+                    }
                   >
-                    <Mail className="w-5 h-5 mr-2" />
+                    <Mail className="mr-2 h-5 w-5" />
                     Volunteer for R&R Labs
                   </Button>
-                  <Button 
+                  <Button
                     variant="secondary"
-                    className="px-8 py-4 rounded-xl font-semibold"
+                    className="rounded-xl px-8 py-4 font-semibold"
                     onClick={() => window.open('https://labs.cronkwaters.com', '_blank')}
                   >
-                    <ExternalLink className="w-5 h-5 mr-2" />
+                    <ExternalLink className="mr-2 h-5 w-5" />
                     Learn About R&R Labs
                   </Button>
                 </div>
 
-                <div className="mt-6 p-4 bg-purple-500/5 border border-purple-500/20 rounded-xl">
-                  <p className="text-sm text-muted-foreground flex items-start gap-2">
-                    <Sparkles className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
+                <div className="mt-6 rounded-xl border border-purple-500/20 bg-purple-500/5 p-4">
+                  <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-400" />
                     <span>
-                      <strong className="text-foreground">Why volunteer?</strong> Be part of building the first truly collaborative 
-                      AI music platform. Early access to features, direct input on tools, and recognition in our research credits.
+                      <strong className="text-foreground">Why volunteer?</strong> Be part of
+                      building the first truly collaborative AI music platform. Early access to
+                      features, direct input on tools, and recognition in our research credits.
                     </span>
                   </p>
                 </div>
@@ -579,53 +643,65 @@ export default function ProjectCollaboratePage() {
             </Card>
 
             {/* Preview: What the Interface Will Look Like */}
-            <Card className="p-8 rnrb-card border-2 border-dashed border-border">
-              <div className="text-center mb-6">
-                <h4 className="text-xl font-semibold mb-2 flex items-center justify-center gap-2">
-                  <Sparkles className="w-5 h-5 text-purple-400" />
+            <Card className="rnrb-card border-2 border-dashed border-border p-8">
+              <div className="mb-6 text-center">
+                <h4 className="mb-2 flex items-center justify-center gap-2 text-xl font-semibold">
+                  <Sparkles className="h-5 w-5 text-purple-400" />
                   Preview: How AI Music Together Will Work
                 </h4>
-                <p className="text-sm text-muted-foreground">This interface is built and ready - we just need the AI model</p>
+                <p className="text-sm text-muted-foreground">
+                  This interface is built and ready - we just need the AI model
+                </p>
               </div>
-              
-              <div className="space-y-4 max-w-2xl mx-auto">
-                <div className="flex items-start gap-4 p-4 bg-surface-muted rounded-xl">
-                  <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary font-bold flex-shrink-0">
+
+              <div className="mx-auto max-w-2xl space-y-4">
+                <div className="flex items-start gap-4 rounded-xl bg-surface-muted p-4">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary/20 font-bold text-brand-primary">
                     1
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground mb-1">Start Session</p>
-                    <p className="text-sm text-muted-foreground">Enter creative direction: "Upbeat indie rock about summer nights"</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4 p-4 bg-surface-muted rounded-xl">
-                  <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary font-bold flex-shrink-0">
-                    2
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground mb-1">AI Generates</p>
-                    <p className="text-sm text-muted-foreground">Lyrics + 5 stems (vocals, drums, bass, guitar, synth) - all team members see instantly</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4 p-4 bg-surface-muted rounded-xl">
-                  <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary font-bold flex-shrink-0">
-                    3
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground mb-1">Iterate Together</p>
-                    <p className="text-sm text-muted-foreground">Don't like the guitar? Regenerate it. Want real vocals? Upload yours. Infinite refinement.</p>
+                    <p className="mb-1 font-semibold text-foreground">Start Session</p>
+                    <p className="text-sm text-muted-foreground">
+                      Enter creative direction: "Upbeat indie rock about summer nights"
+                    </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-surface-muted rounded-xl">
-                  <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary font-bold flex-shrink-0">
+                <div className="flex items-start gap-4 rounded-xl bg-surface-muted p-4">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary/20 font-bold text-brand-primary">
+                    2
+                  </div>
+                  <div>
+                    <p className="mb-1 font-semibold text-foreground">AI Generates</p>
+                    <p className="text-sm text-muted-foreground">
+                      Lyrics + 5 stems (vocals, drums, bass, guitar, synth) - all team members see
+                      instantly
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 rounded-xl bg-surface-muted p-4">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary/20 font-bold text-brand-primary">
+                    3
+                  </div>
+                  <div>
+                    <p className="mb-1 font-semibold text-foreground">Iterate Together</p>
+                    <p className="text-sm text-muted-foreground">
+                      Don't like the guitar? Regenerate it. Want real vocals? Upload yours. Infinite
+                      refinement.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 rounded-xl bg-surface-muted p-4">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary/20 font-bold text-brand-primary">
                     4
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground mb-1">Export Final Mix</p>
-                    <p className="text-sm text-muted-foreground">Download your AI + human hybrid track with full copyright ownership</p>
+                    <p className="mb-1 font-semibold text-foreground">Export Final Mix</p>
+                    <p className="text-sm text-muted-foreground">
+                      Download your AI + human hybrid track with full copyright ownership
+                    </p>
                   </div>
                 </div>
               </div>
@@ -640,8 +716,8 @@ export default function ProjectCollaboratePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <Card className="p-6 rnrb-card">
-              <ActivityFeed 
+            <Card className="rnrb-card p-6">
+              <ActivityFeed
                 channelName={`activity:project:${slug}`}
                 showHeader={true}
                 maxHeight="700px"
@@ -653,4 +729,3 @@ export default function ProjectCollaboratePage() {
     </div>
   );
 }
-

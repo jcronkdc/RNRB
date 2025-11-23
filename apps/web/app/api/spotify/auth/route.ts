@@ -14,12 +14,9 @@ export async function GET(request: NextRequest) {
 
     const clientId = process.env.SPOTIFY_CLIENT_ID;
     const redirectUri = process.env.NEXT_PUBLIC_APP_URL + '/api/spotify/callback';
-    
+
     if (!clientId) {
-      return NextResponse.json(
-        { error: 'Spotify integration not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: 'Spotify integration not configured' }, { status: 500 });
     }
 
     const scopes = [
@@ -40,10 +37,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ authUrl: authUrl.toString() });
   } catch (error) {
     console.error('Spotify auth error:', error);
-    return NextResponse.json(
-      { error: 'Failed to initiate Spotify auth' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to initiate Spotify auth' }, { status: 500 });
   }
 }
-

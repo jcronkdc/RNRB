@@ -1,6 +1,7 @@
 # 🍄 UPTIMEROBOT MONITORING - HEALTH PULSE NETWORK
 
 ## UptimeRobot API Key
+
 ```
 u3188006-096fd6e5ba203f9539b2c1ce
 ```
@@ -8,6 +9,7 @@ u3188006-096fd6e5ba203f9539b2c1ce
 ## ✅ LIVE STATUS (Active Monitors - Agent 48 Updated)
 
 ### **Monitor 1: cronkwaters.com Homepage**
+
 - **Monitor ID:** 801838366
 - **URL:** https://cronkwaters.com
 - **Status:** ✅ UP (Status Code: 2)
@@ -19,6 +21,7 @@ u3188006-096fd6e5ba203f9539b2c1ce
 - **Performance Grade:** A+ (9x faster than target)
 
 ### **Monitor 2: cronkwaters.com - Auth Page**
+
 - **Monitor ID:** 801841793
 - **URL:** https://www.cronkwaters.com/auth
 - **Status:** ✅ ACTIVE (Status Code: 1 - Just created, will be UP shortly)
@@ -27,6 +30,7 @@ u3188006-096fd6e5ba203f9539b2c1ce
 - **Created:** 2025-11-21 (Agent 48)
 
 ### **Monitor 3: cronkwaters.com - Collaboration Features**
+
 - **Monitor ID:** 801841794
 - **URL:** https://www.cronkwaters.com/features/collaboration
 - **Status:** ✅ ACTIVE (Status Code: 1 - Just created, will be UP shortly)
@@ -35,6 +39,7 @@ u3188006-096fd6e5ba203f9539b2c1ce
 - **Created:** 2025-11-21 (Agent 48)
 
 ### **Monitor 4: cronkwaters.com - API Health**
+
 - **Monitor ID:** 801841795
 - **URL:** https://www.cronkwaters.com/api/health
 - **Status:** ✅ ACTIVE (Status Code: 1 - Just created, will be UP shortly)
@@ -49,11 +54,13 @@ u3188006-096fd6e5ba203f9539b2c1ce
 ## Monitoring Strategy
 
 ### Primary Production URL
+
 **Target:** https://www.cronkwaters.com
 
 ### Health Check Endpoints to Monitor
 
 #### 1. Homepage (Root Pathway)
+
 - **URL:** `https://www.cronkwaters.com/`
 - **Type:** HTTP(s)
 - **Interval:** 5 minutes
@@ -61,6 +68,7 @@ u3188006-096fd6e5ba203f9539b2c1ce
 - **Expected:** 200 status, <2s load time
 
 #### 2. Auth Page (Authentication Flow)
+
 - **URL:** `https://www.cronkwaters.com/auth`
 - **Type:** HTTP(s)
 - **Interval:** 5 minutes
@@ -68,6 +76,7 @@ u3188006-096fd6e5ba203f9539b2c1ce
 - **Expected:** 200 status
 
 #### 3. Collaboration Feature Page
+
 - **URL:** `https://www.cronkwaters.com/features/collaboration`
 - **Type:** HTTP(s)
 - **Interval:** 5 minutes
@@ -75,6 +84,7 @@ u3188006-096fd6e5ba203f9539b2c1ce
 - **Expected:** 200 status
 
 #### 4. API Health Endpoint (If Available)
+
 - **URL:** `https://www.cronkwaters.com/api/health`
 - **Type:** HTTP(s)
 - **Interval:** 5 minutes
@@ -82,6 +92,7 @@ u3188006-096fd6e5ba203f9539b2c1ce
 - **Expected:** 200 status with JSON response
 
 ### Alert Thresholds
+
 - **Downtime:** Alert after 2 consecutive failures (10 minutes)
 - **Response Time:** Alert if >5s for 3 consecutive checks
 - **SSL:** Alert 14 days before expiration
@@ -90,17 +101,22 @@ u3188006-096fd6e5ba203f9539b2c1ce
 ### Integration Points
 
 #### UptimeRobot Dashboard
+
 Access monitoring dashboard at: https://uptimerobot.com/
 
 #### Status Page
+
 Consider setting up a public status page showing:
+
 - Current uptime %
 - Response times
 - Incident history
 - Scheduled maintenance
 
 #### Alert Channels
+
 Configure alerts to:
+
 - Email notifications
 - Slack (if integrated)
 - Webhook to trigger automated recovery scripts
@@ -108,6 +124,7 @@ Configure alerts to:
 ## CLI Commands
 
 ### Check Monitor Status
+
 ```bash
 curl -X POST https://api.uptimerobot.com/v2/getMonitors \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -115,6 +132,7 @@ curl -X POST https://api.uptimerobot.com/v2/getMonitors \
 ```
 
 ### Get Account Details
+
 ```bash
 curl -X POST https://api.uptimerobot.com/v2/getAccountDetails \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -132,11 +150,13 @@ curl -X POST https://api.uptimerobot.com/v2/getAccountDetails \
 ## Current Coverage
 
 ### ✅ Monitored Pathways
+
 - Homepage (/)
 - Auth flow (/auth)
 - Collaboration features (/features/collaboration)
 
 ### ⚠️ Needs Monitoring (After OAuth Setup)
+
 - Dashboard (/dashboard)
 - Project creation flow
 - Invite system
@@ -145,6 +165,7 @@ curl -X POST https://api.uptimerobot.com/v2/getAccountDetails \
 ## Integration with Vercel
 
 UptimeRobot monitors the deployed production URL. When Vercel deploys:
+
 1. New deployment goes live on cronkwaters.com
 2. UptimeRobot continues monitoring the domain
 3. If deployment breaks something, UptimeRobot alerts within 10 minutes
@@ -159,6 +180,7 @@ UptimeRobot monitors the deployed production URL. When Vercel deploys:
 ## Error Detection
 
 UptimeRobot will catch:
+
 - ✅ 404 errors (missing routes)
 - ✅ 500 errors (server crashes)
 - ✅ SSL certificate issues
@@ -170,4 +192,3 @@ UptimeRobot will catch:
 
 **Status:** Monitoring key integrated, ready to configure monitors
 **Next Step:** Set up monitors in UptimeRobot dashboard for the 3 critical pathways
-

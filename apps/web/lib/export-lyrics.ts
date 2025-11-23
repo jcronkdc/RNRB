@@ -29,15 +29,18 @@ export function exportLyrics(
   switch (options.format) {
     case 'txt':
       return exportAsTxt(songTitle, lines, suggestions, metadata, options);
-    
+
     case 'json':
       return exportAsJson(songTitle, lines, suggestions, metadata);
-    
+
     case 'pdf':
       // PDF export would use jsPDF or similar
       // For now, return enhanced TXT that can be converted
-      return exportAsTxt(songTitle, lines, suggestions, metadata, { ...options, includeSuggestions: true });
-    
+      return exportAsTxt(songTitle, lines, suggestions, metadata, {
+        ...options,
+        includeSuggestions: true,
+      });
+
     default:
       return exportAsTxt(songTitle, lines, suggestions, metadata, options);
   }
@@ -51,11 +54,11 @@ function exportAsTxt(
   options: ExportOptions
 ): string {
   let output = '';
-  
+
   // Header
   output += `${songTitle}\n`;
   output += '='.repeat(songTitle.length) + '\n\n';
-  
+
   // Metadata
   if (options.includeMetadata) {
     if (metadata.key) output += `Key: ${metadata.key}\n`;
@@ -63,15 +66,15 @@ function exportAsTxt(
     if (metadata.timeSignature) output += `Time Signature: ${metadata.timeSignature}\n`;
     output += '\n';
   }
-  
+
   // Lyrics with suggestions
   lines.forEach((line, index) => {
     output += line + '\n';
-    
+
     // Add suggestions if requested
     if (options.includeSuggestions) {
-      const lineSuggestions = suggestions.filter(s => s.lineNumber === index);
-      lineSuggestions.forEach(suggestion => {
+      const lineSuggestions = suggestions.filter((s) => s.lineNumber === index);
+      lineSuggestions.forEach((suggestion) => {
         output += `  [${suggestion.status.toUpperCase()}] Alt: "${suggestion.suggestedText}"`;
         if (suggestion.reason) {
           output += ` - ${suggestion.reason}`;
@@ -80,12 +83,12 @@ function exportAsTxt(
       });
     }
   });
-  
+
   // Footer
   output += '\n---\n';
   output += `Exported from Rock N' Roll Basement\n`;
   output += `Date: ${new Date().toLocaleString()}\n`;
-  
+
   return output;
 }
 
@@ -99,18 +102,18 @@ function exportAsJson(
     title: songTitle,
     metadata,
     lyrics: lines,
-    suggestions: suggestions.map(s => ({
+    suggestions: suggestions.map((s) => ({
       lineNumber: s.lineNumber,
       original: lines[s.lineNumber],
       suggested: s.suggestedText,
       reason: s.reason,
       status: s.status,
-      suggestedBy: s.suggestedBy
+      suggestedBy: s.suggestedBy,
     })),
     exportedAt: new Date().toISOString(),
-    version: '1.0'
+    version: '1.0',
   };
-  
+
   return JSON.stringify(data, null, 2);
 }
 
@@ -124,4 +127,3 @@ export function downloadFile(content: string, filename: string, mimeType: string
   link.click();
   URL.revokeObjectURL(url);
 }
-

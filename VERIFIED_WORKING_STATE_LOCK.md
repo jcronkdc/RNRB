@@ -12,6 +12,7 @@
 **This document represents a VERIFIED WORKING STATE of the application.**
 
 Before making ANY changes to the codebase, you MUST:
+
 1. Read this entire document
 2. Run the verification checklist (below)
 3. Document what you're changing and why
@@ -72,6 +73,7 @@ Before making ANY changes to the codebase, you MUST:
 ## 🔐 VERIFIED WORKING FEATURES
 
 ### **Public Pages (No Auth Required)**
+
 - [x] ✅ Homepage (/) - 200, <500ms
 - [x] ✅ Auth page (/auth) - 200, OAuth visible
 - [x] ✅ Features - Collaboration (/features/collaboration) - 200
@@ -82,6 +84,7 @@ Before making ANY changes to the codebase, you MUST:
 **Zero 404 errors | Zero 500 errors**
 
 ### **Authenticated Pages (Auth Required)**
+
 - [x] ✅ Dashboard (/dashboard) - Full app layout
 - [x] ✅ Projects (/projects) - 200
 - [x] ✅ Collaboration (/collaboration) - UI loads
@@ -89,18 +92,21 @@ Before making ANY changes to the codebase, you MUST:
 - [x] ✅ Studio (/studio) - Full feature documentation
 
 ### **Navigation**
+
 - [x] ✅ Sidebar: 12 menu items working
 - [x] ✅ Top bar: Search, New, Credits (150), Notifications (3)
 - [x] ✅ Breadcrumbs working
 - [x] ✅ All links functional
 
 ### **Collaboration Features UI**
+
 - [x] ✅ Chat badge visible
 - [x] ✅ Video badge visible
 - [x] ✅ Multi-cursor badge visible
 - [x] ✅ "All collaboration features active" message
 
 ### **API Endpoints**
+
 - [x] ✅ /api/health - Returns 100% health
 - [x] ✅ /api/auth-debug/providers - Shows all configured
 - [x] ✅ /api/auth/[...nextauth] - OAuth working
@@ -108,18 +114,21 @@ Before making ANY changes to the codebase, you MUST:
 - [x] ✅ /api/ably/token - Ably configured
 
 ### **Database**
+
 - [x] ✅ Connection: Active
 - [x] ✅ Tables: 20/21 with RLS (95%)
 - [x] ✅ Collaboration tables: Invitation, ProjectMember
 - [x] ✅ Demo user created: demo@rockandrollbasement.com
 
 ### **Build**
+
 - [x] ✅ Production build passes (0 errors)
 - [x] ✅ Build time: ~45 seconds
 - [x] ✅ 57 routes generated
 - [x] ⚠️ 80 TypeScript errors (non-blocking)
 
 ### **Monitoring**
+
 - [x] ✅ UptimeRobot active (Monitor ID: 801838366)
 - [x] ✅ Response time: 225ms
 - [x] ✅ Downtime incidents: 0
@@ -129,11 +138,13 @@ Before making ANY changes to the codebase, you MUST:
 ## 🚨 VERIFICATION CHECKLIST (Run Before & After Changes)
 
 ### **1. Health Check API**
+
 ```bash
 curl -s https://www.cronkwaters.com/api/health | python3 -m json.tool
 ```
 
 **Expected Output:**
+
 ```json
 {
   "healthPercentage": 100,
@@ -146,11 +157,13 @@ curl -s https://www.cronkwaters.com/api/health | python3 -m json.tool
 ---
 
 ### **2. Auth Providers Check**
+
 ```bash
 curl -s https://www.cronkwaters.com/api/auth-debug/providers | python3 -m json.tool
 ```
 
 **Expected Output:**
+
 ```json
 {
   "google": {
@@ -169,6 +182,7 @@ curl -s https://www.cronkwaters.com/api/auth-debug/providers | python3 -m json.t
 ---
 
 ### **3. Public Pages Check**
+
 ```bash
 # All should return 200
 curl -s -o /dev/null -w "%{http_code}\n" https://www.cronkwaters.com/
@@ -185,6 +199,7 @@ curl -s -o /dev/null -w "%{http_code}\n" https://www.cronkwaters.com/features/pr
 ---
 
 ### **4. Build Check**
+
 ```bash
 cd /Users/justincronk/Desktop/CronkWaters/apps/web
 pnpm build 2>&1 | grep -E "(error|Error|failed)" | grep -v "TypeScript"
@@ -196,6 +211,7 @@ pnpm build 2>&1 | grep -E "(error|Error|failed)" | grep -v "TypeScript"
 ---
 
 ### **5. Database Check**
+
 ```bash
 # Via Supabase CLI or direct SQL
 psql $DATABASE_URL -c "SELECT COUNT(*) FROM \"User\" WHERE email = 'demo@rockandrollbasement.com';"
@@ -207,6 +223,7 @@ psql $DATABASE_URL -c "SELECT COUNT(*) FROM \"User\" WHERE email = 'demo@rockand
 ---
 
 ### **6. UptimeRobot Check**
+
 ```bash
 curl -s -X POST https://api.uptimerobot.com/v2/getMonitors \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -222,6 +239,7 @@ curl -s -X POST https://api.uptimerobot.com/v2/getMonitors \
 ## 🔒 LOCKED FILES (DO NOT MODIFY WITHOUT VERIFICATION)
 
 ### **Critical Infrastructure Files:**
+
 1. `apps/web/app/api/health/route.ts` - Health endpoint
 2. `apps/web/auth.ts` - Auth configuration
 3. `packages/auth/src/auth.ts` - NextAuth setup
@@ -230,6 +248,7 @@ curl -s -X POST https://api.uptimerobot.com/v2/getMonitors \
 6. `apps/web/components/ably/ably-provider.tsx` - Real-time provider
 
 ### **Environment Variables (Must Stay Configured):**
+
 - `DATABASE_URL`
 - `NEXTAUTH_SECRET`
 - `NEXTAUTH_URL`
@@ -245,18 +264,21 @@ curl -s -X POST https://api.uptimerobot.com/v2/getMonitors \
 ## 🛡️ PROTECTION RULES
 
 ### **Before Making Changes:**
+
 1. ✅ Read this document completely
 2. ✅ Run verification checklist (all 6 checks)
 3. ✅ Document what you're changing in git commit
 4. ✅ Create a backup branch: `git checkout -b backup-$(date +%Y%m%d)`
 
 ### **After Making Changes:**
+
 1. ✅ Re-run ALL 6 verification checks
 2. ✅ Test in browser (at least homepage + dashboard)
 3. ✅ Check UptimeRobot for new errors
 4. ✅ If ANY check fails → `git revert` immediately
 
 ### **NEVER:**
+
 - ❌ Delete environment variables without replacement
 - ❌ Modify auth.ts without testing OAuth flow
 - ❌ Change database schema without migration
@@ -363,6 +385,7 @@ fi
 ```
 
 **Usage:**
+
 ```bash
 chmod +x verify-working-state.sh
 ./verify-working-state.sh
@@ -375,6 +398,7 @@ chmod +x verify-working-state.sh
 **If anything breaks:**
 
 ### **1. Immediate Actions:**
+
 ```bash
 # Stop and assess
 git status
@@ -390,6 +414,7 @@ git reset --hard HEAD~1
 ```
 
 ### **2. Restore from Known Good State:**
+
 ```bash
 # Find the verified tag
 git tag -l "v1.0-verified-working"
@@ -405,6 +430,7 @@ git push origin restore-working-state --force
 ```
 
 ### **3. Verify Restoration:**
+
 ```bash
 ./verify-working-state.sh
 ```
@@ -417,24 +443,28 @@ git push origin restore-working-state --force
 ## 📊 CURRENT STATE SNAPSHOT
 
 ### **Git Information:**
+
 - Branch: `main`
 - Last Commit: "Enhanced health endpoint to check all API keys"
 - Files Changed: 61
 - Tag: `v1.0-verified-working` (to be created)
 
 ### **Deployment:**
+
 - Platform: Vercel
 - URL: https://www.cronkwaters.com
 - Status: Live & Operational
 - Last Deploy: 2025-11-21
 
 ### **Database:**
+
 - Provider: Neon (PostgreSQL)
 - Tables: 21 total
 - RLS Enabled: 20/21 (95%)
 - Demo User: demo@rockandrollbasement.com
 
 ### **Monitoring:**
+
 - Provider: UptimeRobot
 - Monitor ID: 801838366
 - API Key: u3188006-096fd6e5ba203f9539b2c1ce
@@ -454,6 +484,7 @@ git push origin restore-working-state --force
 6. Revert to last known good commit
 
 **Do NOT:**
+
 - Try experimental fixes in production
 - Disable monitoring
 - Delete environment variables
@@ -467,10 +498,10 @@ git push origin restore-working-state --force
 **Verification Date:** 2025-11-21  
 **Verification Method:** End-to-end testing in production  
 **Health Score:** 100%  
-**Status:** ✅ LOCKED & VERIFIED  
+**Status:** ✅ LOCKED & VERIFIED
 
 **Next Verification Due:** Before any code changes  
-**Re-verification Required:** After every deployment  
+**Re-verification Required:** After every deployment
 
 ---
 
@@ -483,4 +514,3 @@ git push origin restore-working-state --force
 ---
 
 **END OF VERIFIED STATE DOCUMENT**
-

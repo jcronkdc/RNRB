@@ -3,6 +3,7 @@ import type { Song } from '@prisma/client';
 import { prisma } from '../index';
 
 export interface CreateSongInput {
+  userId: string;
   projectId: string;
   title: string;
   key?: string;
@@ -29,7 +30,7 @@ export interface UpdateSongInput {
 export async function createSong(input: CreateSongInput): Promise<Song> {
   // Validate project exists
   const project = await prisma.project.findUnique({
-    where: { id: input.projectId }
+    where: { id: input.projectId },
   });
 
   if (!project) {
@@ -39,7 +40,7 @@ export async function createSong(input: CreateSongInput): Promise<Song> {
   // If ISWC provided, check uniqueness
   if (input.iswc) {
     const existing = await prisma.song.findUnique({
-      where: { iswc: input.iswc }
+      where: { iswc: input.iswc },
     });
 
     if (existing) {
@@ -48,23 +49,27 @@ export async function createSong(input: CreateSongInput): Promise<Song> {
   }
 
   return prisma.song.create({
-    data: input
+    data: input,
   });
 }
 
 /**
  * Update song with validation and org ownership check
  */
-export async function updateSong(songId: string, input: UpdateSongInput, orgId?: string): Promise<Song> {
+export async function updateSong(
+  songId: string,
+  input: UpdateSongInput,
+  orgId?: string
+): Promise<Song> {
   const existing = await prisma.song.findUnique({
     where: { id: songId },
     include: {
       project: {
         select: {
-          orgId: true
-        }
-      }
-    }
+          orgId: true,
+        },
+      },
+    },
   });
 
   if (!existing) {
@@ -72,14 +77,14 @@ export async function updateSong(songId: string, input: UpdateSongInput, orgId?:
   }
 
   // SECURITY: Verify organization ownership if orgId provided
-  if (orgId && existing.project.orgId !== orgId) {
+  if (orgId && existing.project?.orgId !== orgId) {
     throw new Error('Unauthorized: Song does not belong to this organization');
   }
 
   // If ISWC is being changed, check uniqueness
   if (input.iswc && input.iswc !== existing.iswc) {
     const iswcConflict = await prisma.song.findUnique({
-      where: { iswc: input.iswc }
+      where: { iswc: input.iswc },
     });
 
     if (iswcConflict) {
@@ -91,8 +96,8 @@ export async function updateSong(songId: string, input: UpdateSongInput, orgId?:
     where: { id: songId },
     data: {
       ...input,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -102,7 +107,7 @@ export async function updateSong(songId: string, input: UpdateSongInput, orgId?:
 export async function listSongs(projectId: string) {
   return prisma.song.findMany({
     where: { projectId },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   });
 }
 
@@ -118,10 +123,10 @@ export async function getSongById(songId: string) {
           id: true,
           name: true,
           slug: true,
-          orgId: true
-        }
-      }
-    }
+          orgId: true,
+        },
+      },
+    },
   });
 }
 
@@ -136,23 +141,22 @@ export async function deleteSong(songId: string, orgId?: string): Promise<void> 
       include: {
         project: {
           select: {
-            orgId: true
-          }
-        }
-      }
+            orgId: true,
+          },
+        },
+      },
     });
 
     if (!existing) {
       throw new Error(`Song with id "${songId}" not found`);
     }
 
-    if (existing.project.orgId !== orgId) {
+    if (existing.project?.orgId !== orgId) {
       throw new Error('Unauthorized: Song does not belong to this organization');
     }
   }
 
   await prisma.song.delete({
-    where: { id: songId }
+    where: { id: songId },
   });
 }
-

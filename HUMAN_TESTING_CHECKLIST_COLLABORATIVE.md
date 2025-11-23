@@ -22,6 +22,7 @@ User A (Browser 1) ←→ Ably Real-Time ←→ User B (Browser 2)
 ## ✅ PREPARATION (DO FIRST)
 
 ### **1. Create Test Account** (2 minutes)
+
 ```bash
 # Option 1: Semi-automated (if you have Supabase service key)
 export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
@@ -34,6 +35,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 ```
 
 ### **2. Sign In (Both Browsers)**
+
 - Browser 1: https://www.cronkwaters.com/auth
 - Browser 2: https://www.cronkwaters.com/auth (incognito/different browser)
 - Use: rockstar@cronkwaters.com / TestRock2024!
@@ -47,6 +49,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 **Critical Path:** User A types → Ably → User B sees instantly
 
 ### **Test Steps:**
+
 1. ✅ **Setup**
    - Browser 1: Go to `/projects/my-epic-album/collaborate`
    - Browser 2: Go to `/projects/my-epic-album/collaborate`
@@ -73,6 +76,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
    - Message history loads on join
 
 ### **Pass Criteria:**
+
 - [ ] Messages sync in < 1 second
 - [ ] History loads correctly
 - [ ] No errors in console
@@ -87,9 +91,10 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 **Critical Path:** User A moves mouse → Ably → User B sees cursor
 
 ### **Test Steps:**
+
 1. ✅ **Setup**
    - Browser 1: Go to `/songwriting`
-   - Browser 2: Go to `/songwriting` 
+   - Browser 2: Go to `/songwriting`
    - Both should see songwriting interface
 
 2. 🧪 **CRITICAL TEST: Cursor Visibility**
@@ -113,6 +118,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
    - **Expected:** Cursor disappears from Browser 2 within 5 seconds
 
 ### **Pass Criteria:**
+
 - [ ] Cursors visible within 500ms of movement
 - [ ] Position accuracy ±10px
 - [ ] Labels show correct user names
@@ -127,6 +133,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 **Critical Path:** User joins → Ably presence → All users see update
 
 ### **Test Steps:**
+
 1. ✅ **Single User**
    - Browser 1: Go to `/collaboration`
    - **Expected:** See yourself as "Active" with avatar
@@ -147,6 +154,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
    - **Expected:** Browser 2 shows "1 active user" within 10 seconds
 
 ### **Pass Criteria:**
+
 - [ ] Presence updates in < 2 seconds
 - [ ] Idle detection works (2 min timeout)
 - [ ] Leave detection works (< 10 sec)
@@ -161,6 +169,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 **Critical Path:** User action → Ably → Feed updates for all
 
 ### **Test Steps:**
+
 1. ✅ **Setup**
    - Browser 1: Go to `/dashboard`
    - Browser 2: Go to `/dashboard`
@@ -181,6 +190,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
    - Colors match activity type
 
 ### **Pass Criteria:**
+
 - [ ] Events broadcast to all users
 - [ ] Correct icons for each activity type
 - [ ] Timestamps format correctly
@@ -195,6 +205,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 **Critical Path:** User draws → Ably → Canvas syncs to all users
 
 ### **Test Steps:**
+
 1. ✅ **Setup**
    - Browser 1: Go to `/projects/my-epic-album/collaborate`
    - Browser 2: Go to `/projects/my-epic-album/collaborate`
@@ -217,6 +228,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
    - **Expected:** Drawing persists
 
 ### **Pass Criteria:**
+
 - [ ] Strokes sync in real-time (< 100ms per point)
 - [ ] Colors sync correctly
 - [ ] Eraser works for both users
@@ -231,6 +243,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 **Status:** ⚠️ **KNOWN ISSUE:** Auth import error
 
 ### **Test Steps:**
+
 1. ⚠️ **Known Issue:** Daily.co returns 500 error
    - Error: "a.auth is not a function"
    - Root Cause: Auth module import/export issue
@@ -252,6 +265,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
    - Leave call
 
 ### **Pass Criteria:**
+
 - [ ] Room creation works (no 500 error)
 - [ ] Both users can join
 - [ ] Audio/video streams work
@@ -266,6 +280,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 **Critical Path:** User types → 2s delay → API save → Visual feedback
 
 ### **Test Steps:**
+
 1. ✅ **Setup**
    - Browser 1: Go to `/songwriting`
    - Should see "Untitled Song" with save status indicator
@@ -288,6 +303,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
    - **Expected:** After 2 seconds, shows "Error saving" (red X)
 
 ### **Pass Criteria:**
+
 - [ ] 2-second debounce works
 - [ ] Visual feedback correct (Saving → Saved)
 - [ ] Data persists after refresh
@@ -302,6 +318,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
 **Status:** ⚠️ **NEVER TESTED** with real email flow
 
 ### **Test Steps:**
+
 1. ✅ **Send Invite**
    - Browser 1: Go to `/projects/my-epic-album/settings`
    - Click "Invite Collaborator"
@@ -324,6 +341,7 @@ export SUPABASE_SERVICE_ROLE_KEY='your-key-here'
    - **Expected:** Can view and edit (based on role)
 
 ### **Pass Criteria:**
+
 - [ ] Invite creates database record
 - [ ] Email sends (if configured)
 - [ ] Token validates correctly
@@ -347,6 +365,7 @@ After all phases, verify the **ant colony pathways** are optimal:
 ```
 
 ### **Success = All phases passing**
+
 - Real-time sync < 2 seconds
 - No console errors
 - Visual feedback correct
@@ -394,4 +413,3 @@ If any test fails, the feature is **NOT WORKING** regardless of code quality. On
 **Priority:** 🔥 P0 - MUST DO BEFORE V1 LAUNCH  
 **Time Required:** 30-45 minutes for all phases  
 **Prerequisites:** 1 test account, 2 browsers/devices
-

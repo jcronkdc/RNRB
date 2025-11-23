@@ -22,9 +22,9 @@ interface PresenceIndicatorProps {
   maxVisible?: number;
 }
 
-export function PresenceIndicator({ 
+export function PresenceIndicator({
   channelName,
-  currentUser, 
+  currentUser,
   location,
   showDetails = true,
   maxVisible = 10,
@@ -38,7 +38,7 @@ export function PresenceIndicator({
   });
 
   // Filter out current user from display
-  const otherMembers = members.filter(m => m.data.userId !== currentUser.userId);
+  const otherMembers = members.filter((m) => m.data.userId !== currentUser.userId);
   const displayMembers = otherMembers.slice(0, maxVisible);
   const hiddenCount = Math.max(0, otherMembers.length - maxVisible);
 
@@ -46,7 +46,7 @@ export function PresenceIndicator({
     return (
       <div className="text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
-          <Circle className="w-2 h-2 text-red-500" />
+          <Circle className="h-2 w-2 text-red-500" />
           <span>Presence offline</span>
         </div>
       </div>
@@ -58,7 +58,7 @@ export function PresenceIndicator({
       {/* Connection Status */}
       <div className="flex items-center gap-2">
         <motion.div
-          className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}
+          className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}
           animate={isConnected ? { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] } : {}}
           transition={{ duration: 2, repeat: Infinity }}
         />
@@ -79,24 +79,22 @@ export function PresenceIndicator({
           >
             {/* Avatar or Icon */}
             {member.data.avatar ? (
-              <img 
-                src={member.data.avatar} 
+              <img
+                src={member.data.avatar}
                 alt={member.data.userName}
-                className="w-6 h-6 rounded-full object-cover"
+                className="h-6 w-6 rounded-full object-cover"
               />
             ) : (
-              <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                <User className="w-3 h-3 text-primary" />
+              <div className="bg-primary/20 flex h-6 w-6 items-center justify-center rounded-full">
+                <User className="text-primary h-3 w-3" />
               </div>
             )}
 
             {/* User Info */}
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">
-                {member.data.userName}
-              </p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium text-foreground">{member.data.userName}</p>
               {showDetails && (
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="truncate text-xs text-muted-foreground">
                   {member.data.status === 'active' ? '🟢 Active' : '🟡 Idle'}
                 </p>
               )}
@@ -116,21 +114,21 @@ export function PresenceIndicator({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="flex items-center gap-2 pt-2 border-t border-border/50"
+        className="flex items-center gap-2 border-t border-border/50 pt-2"
       >
         {currentUser.avatar ? (
-          <img 
-            src={currentUser.avatar} 
+          <img
+            src={currentUser.avatar}
             alt={currentUser.userName}
-            className="w-6 h-6 rounded-full object-cover"
+            className="h-6 w-6 rounded-full object-cover"
           />
         ) : (
-          <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center">
-            <User className="w-3 h-3 text-primary" />
+          <div className="bg-primary/30 flex h-6 w-6 items-center justify-center rounded-full">
+            <User className="text-primary h-3 w-3" />
           </div>
         )}
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-foreground">
             {currentUser.userName} <span className="text-xs text-muted-foreground">(You)</span>
           </p>
         </div>
@@ -138,8 +136,10 @@ export function PresenceIndicator({
 
       {/* Summary (if details enabled) */}
       {showDetails && isConnected && (
-        <div className="pt-2 text-xs text-muted-foreground space-y-1">
-          <p>📊 {activeMembers} active, {idleMembers} idle</p>
+        <div className="space-y-1 pt-2 text-xs text-muted-foreground">
+          <p>
+            📊 {activeMembers} active, {idleMembers} idle
+          </p>
           <p>🍄 Mycelial network connected</p>
         </div>
       )}

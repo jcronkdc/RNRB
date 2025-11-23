@@ -1,9 +1,9 @@
 /**
  * Keyboard Shortcuts Hook
- * 
+ *
  * Express lanes for the Tokyo Subway - fastest pathways
  * Like ants finding optimal routes, these are the quickest ways to navigate
- * 
+ *
  * Global Shortcuts:
  * - Cmd/Ctrl + K: Command Palette
  * - Cmd/Ctrl + /: Search
@@ -99,7 +99,7 @@ export function useKeyboardShortcuts() {
       // Handle two-key sequences (like Gmail's "g d")
       if (lastKey === 'g') {
         const shortcut = shortcuts.find(
-          s => s.keys.length === 2 && s.keys[0] === 'g' && s.keys[1] === e.key
+          (s) => s.keys.length === 2 && s.keys[0] === 'g' && s.keys[1] === e.key
         );
 
         if (shortcut) {
@@ -148,7 +148,7 @@ export function useKeyboardShortcuts() {
  */
 export function formatShortcutKeys(keys: string[]): string {
   return keys
-    .map(k => {
+    .map((k) => {
       if (k === 'meta') return '⌘';
       if (k === 'ctrl') return 'Ctrl';
       if (k === 'shift') return '⇧';
@@ -182,4 +182,3 @@ export function isShortcutPressed(
 
   return keyMatch && metaMatch && ctrlMatch && shiftMatch && altMatch;
 }
-

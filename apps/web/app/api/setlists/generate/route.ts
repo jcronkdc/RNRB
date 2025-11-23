@@ -31,10 +31,7 @@ export async function POST(request: NextRequest) {
     const { projectId, targetDuration = 90, energyLevel = 'mixed' } = body;
 
     if (!projectId) {
-      return NextResponse.json(
-        { error: 'Project ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Project ID is required' }, { status: 400 });
     }
 
     // Verify user has access to project
@@ -51,10 +48,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!project || project.members.length === 0) {
-      return NextResponse.json(
-        { error: 'Project not found or access denied' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: 'Project not found or access denied' }, { status: 403 });
     }
 
     if (project.songs.length === 0) {
@@ -73,32 +67,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ songs: generatedSongs });
   } catch (error) {
     console.error('Setlist generation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate setlist' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate setlist' }, { status: 500 });
   }
 }
 
 /**
  * Smart setlist generation algorithm
  */
-function generateSetlist(
-  availableSongs: Song[],
-  options: GeneratorOptions
-): Song[] {
+function generateSetlist(availableSongs: Song[], options: GeneratorOptions): Song[] {
   const { targetDuration, energyLevel } = options;
   const targetSeconds = targetDuration * 60;
 
   // Categorize songs by tempo (energy level)
-  const highEnergySongs = availableSongs.filter(s => s.tempo && s.tempo >= 130);
-  const mediumEnergySongs = availableSongs.filter(s => s.tempo && s.tempo >= 90 && s.tempo < 130);
-  const lowEnergySongs = availableSongs.filter(s => s.tempo && s.tempo < 90);
-  const unknownTempoSongs = availableSongs.filter(s => !s.tempo);
+  const highEnergySongs = availableSongs.filter((s) => s.tempo && s.tempo >= 130);
+  const mediumEnergySongs = availableSongs.filter((s) => s.tempo && s.tempo >= 90 && s.tempo < 130);
+  const lowEnergySongs = availableSongs.filter((s) => s.tempo && s.tempo < 90);
+  const unknownTempoSongs = availableSongs.filter((s) => !s.tempo);
 
   // Build song pool based on energy preference
   let songPool: Song[] = [];
-  
+
   switch (energyLevel) {
     case 'high':
       songPool = [
@@ -133,16 +121,16 @@ function generateSetlist(
   let currentDuration = 0;
 
   // Strategy: Start high energy, dip middle, end high
-  const flowPattern = energyLevel === 'mixed' 
-    ? ['high', 'high', 'medium', 'low', 'medium', 'high', 'high']
-    : null;
+  const flowPattern =
+    energyLevel === 'mixed' ? ['high', 'high', 'medium', 'low', 'medium', 'high', 'high'] : null;
 
   for (const song of songPool) {
     // Use default duration if not set (assume 3 minutes)
     const songDuration = song.duration || 180;
 
     // Check if adding this song would exceed target
-    if (currentDuration + songDuration > targetSeconds + 300) { // +5 min buffer
+    if (currentDuration + songDuration > targetSeconds + 300) {
+      // +5 min buffer
       continue;
     }
 
@@ -150,7 +138,8 @@ function generateSetlist(
     currentDuration += songDuration;
 
     // Stop if we've hit target duration
-    if (currentDuration >= targetSeconds - 300) { // -5 min buffer
+    if (currentDuration >= targetSeconds - 300) {
+      // -5 min buffer
       break;
     }
   }
@@ -160,7 +149,7 @@ function generateSetlist(
     setlist.sort((a, b) => {
       const aEnergy = getEnergyLevel(a);
       const bEnergy = getEnergyLevel(b);
-      
+
       // Prioritize songs with matching energy patterns
       const aIndex = setlist.indexOf(a);
       const bIndex = setlist.indexOf(b);
@@ -169,7 +158,7 @@ function generateSetlist(
 
       if (aEnergy === aTargetEnergy && bEnergy !== bTargetEnergy) return -1;
       if (bEnergy === bTargetEnergy && aEnergy !== aTargetEnergy) return 1;
-      
+
       return 0;
     });
   }
@@ -195,7 +184,7 @@ function getEnergyLevel(song: Song): 'high' | 'medium' | 'low' {
  */
 function optimizeKeyVariety(setlist: Song[]): Song[] {
   const optimized = [...setlist];
-  
+
   for (let i = 0; i < optimized.length - 2; i++) {
     const currentKey = optimized[i]?.key;
     const nextKey = optimized[i + 1]?.key;
@@ -228,4 +217,3 @@ function shuffleArray<T>(array: T[]): T[] {
   }
   return shuffled;
 }
-

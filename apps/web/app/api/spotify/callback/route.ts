@@ -13,9 +13,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       // User denied access
-      return NextResponse.redirect(
-        new URL('/projects?spotify_error=access_denied', request.url)
-      );
+      return NextResponse.redirect(new URL('/projects?spotify_error=access_denied', request.url));
     }
 
     if (!code || !state) {
@@ -29,9 +27,7 @@ export async function GET(request: NextRequest) {
     const redirectUri = process.env.NEXT_PUBLIC_APP_URL + '/api/spotify/callback';
 
     if (!clientId || !clientSecret) {
-      return NextResponse.redirect(
-        new URL('/projects?spotify_error=not_configured', request.url)
-      );
+      return NextResponse.redirect(new URL('/projects?spotify_error=not_configured', request.url));
     }
 
     // Exchange code for access token
@@ -39,7 +35,7 @@ export async function GET(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64'),
+        Authorization: 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64'),
       },
       body: new URLSearchParams({
         grant_type: 'authorization_code',
@@ -65,9 +61,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   } catch (error) {
     console.error('Spotify callback error:', error);
-    return NextResponse.redirect(
-      new URL('/projects?spotify_error=unknown', request.url)
-    );
+    return NextResponse.redirect(new URL('/projects?spotify_error=unknown', request.url));
   }
 }
-

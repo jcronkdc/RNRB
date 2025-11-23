@@ -47,7 +47,7 @@ export interface UpdateEventInput {
 export async function createEvent(input: CreateEventInput): Promise<Event> {
   // Validate slug uniqueness
   const existing = await prisma.event.findUnique({
-    where: { slug: input.slug }
+    where: { slug: input.slug },
   });
 
   if (existing) {
@@ -62,7 +62,7 @@ export async function createEvent(input: CreateEventInput): Promise<Event> {
   // Validate project exists if provided
   if (input.projectId) {
     const project = await prisma.project.findUnique({
-      where: { id: input.projectId }
+      where: { id: input.projectId },
     });
 
     if (!project) {
@@ -73,7 +73,7 @@ export async function createEvent(input: CreateEventInput): Promise<Event> {
   // Validate org exists if provided
   if (input.orgId) {
     const org = await prisma.org.findUnique({
-      where: { id: input.orgId }
+      where: { id: input.orgId },
     });
 
     if (!org) {
@@ -85,8 +85,8 @@ export async function createEvent(input: CreateEventInput): Promise<Event> {
     data: {
       ...input,
       lineup: input.lineup ? (input.lineup as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
-      public: input.public ?? false
-    }
+      public: input.public ?? false,
+    },
   });
 }
 
@@ -95,7 +95,7 @@ export async function createEvent(input: CreateEventInput): Promise<Event> {
  */
 export async function updateEvent(eventId: string, input: UpdateEventInput): Promise<Event> {
   const existing = await prisma.event.findUnique({
-    where: { id: eventId }
+    where: { id: eventId },
   });
 
   if (!existing) {
@@ -105,7 +105,7 @@ export async function updateEvent(eventId: string, input: UpdateEventInput): Pro
   // If slug is being changed, check uniqueness
   if (input.slug && input.slug !== existing.slug) {
     const slugConflict = await prisma.event.findUnique({
-      where: { slug: input.slug }
+      where: { slug: input.slug },
     });
 
     if (slugConflict) {
@@ -117,11 +117,14 @@ export async function updateEvent(eventId: string, input: UpdateEventInput): Pro
     where: { id: eventId },
     data: {
       ...input,
-      lineup: input.lineup !== undefined 
-        ? (input.lineup ? (input.lineup as unknown as Prisma.InputJsonValue) : Prisma.JsonNull)
-        : undefined,
-      updatedAt: new Date()
-    }
+      lineup:
+        input.lineup !== undefined
+          ? input.lineup
+            ? (input.lineup as unknown as Prisma.InputJsonValue)
+            : Prisma.JsonNull
+          : undefined,
+      updatedAt: new Date(),
+    },
   });
 }
 
@@ -136,17 +139,17 @@ export async function getEventBySlug(slug: string) {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
+          slug: true,
+        },
       },
       org: {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   });
 }
 
@@ -183,25 +186,25 @@ export async function listEvents(options?: {
           select: {
             id: true,
             name: true,
-            slug: true
-          }
+            slug: true,
+          },
         },
         org: {
           select: {
             id: true,
             name: true,
-            slug: true
-          }
-        }
-      }
+            slug: true,
+          },
+        },
+      },
     }),
-    prisma.event.count({ where })
+    prisma.event.count({ where }),
   ]);
 
   return {
     events,
     total,
-    hasMore: (options?.offset ?? 0) + events.length < total
+    hasMore: (options?.offset ?? 0) + events.length < total,
   };
 }
 
@@ -210,7 +213,6 @@ export async function listEvents(options?: {
  */
 export async function deleteEvent(eventId: string): Promise<void> {
   await prisma.event.delete({
-    where: { id: eventId }
+    where: { id: eventId },
   });
 }
-

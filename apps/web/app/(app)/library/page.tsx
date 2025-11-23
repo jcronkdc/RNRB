@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAudioUpload } from '@/hooks/use-audio-upload';
 import { useRequireAuth } from '@/hooks/use-require-auth';
-import { 
-  Music, 
-  Upload, 
-  Download, 
+import {
+  Music,
+  Upload,
+  Download,
   Play,
   Pause,
   Trash2,
@@ -23,7 +23,7 @@ import {
   Sparkles,
   Share2,
   MoreVertical,
-  Folder
+  Folder,
 } from 'lucide-react';
 
 type LibraryFile = {
@@ -55,7 +55,10 @@ export default function LibraryPage() {
     }
   }, [user]);
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, type: LibraryFile['type']) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    type: LibraryFile['type']
+  ) => {
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
@@ -70,7 +73,7 @@ export default function LibraryPage() {
         size: file.size,
         type,
         uploadedAt: new Date().toISOString(),
-        uploadedBy: user.email || 'Unknown'
+        uploadedBy: user.email || 'Unknown',
       };
 
       const updatedFiles = [...files, newFile];
@@ -80,8 +83,8 @@ export default function LibraryPage() {
       await supabase!.auth.updateUser({
         data: {
           ...user.user_metadata,
-          library_files: updatedFiles
-        }
+          library_files: updatedFiles,
+        },
       });
     }
 
@@ -91,14 +94,14 @@ export default function LibraryPage() {
   const handleDelete = async (fileId: string) => {
     if (!confirm('Delete this file from your library?')) return;
 
-    const updatedFiles = files.filter(f => f.id !== fileId);
+    const updatedFiles = files.filter((f) => f.id !== fileId);
     setFiles(updatedFiles);
 
     await supabase!.auth.updateUser({
       data: {
         ...user.user_metadata,
-        library_files: updatedFiles
-      }
+        library_files: updatedFiles,
+      },
     });
   };
 
@@ -107,30 +110,35 @@ export default function LibraryPage() {
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
-  const filteredFiles = files.filter(file => {
+  const filteredFiles = files.filter((file) => {
     const matchesSearch = file.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = filterType === 'all' || file.type === filterType;
     return matchesSearch && matchesType;
   });
 
   const getTypeIcon = (type: string) => {
-    switch(type) {
-      case 'stem': return <Disc className="w-5 h-5 text-orange-500" />;
-      case 'demo': return <Music className="w-5 h-5 text-orange-500" />;
-      case 'sample': return <Mic2 className="w-5 h-5 text-orange-500" />;
-      case 'loop': return <Radio className="w-5 h-5 text-orange-500" />;
-      default: return <FileAudio className="w-5 h-5 text-orange-500" />;
+    switch (type) {
+      case 'stem':
+        return <Disc className="h-5 w-5 text-orange-500" />;
+      case 'demo':
+        return <Music className="h-5 w-5 text-orange-500" />;
+      case 'sample':
+        return <Mic2 className="h-5 w-5 text-orange-500" />;
+      case 'loop':
+        return <Radio className="h-5 w-5 text-orange-500" />;
+      default:
+        return <FileAudio className="h-5 w-5 text-orange-500" />;
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-orange-500/30 border-t-orange-500 rounded-full animate-spin"></div>
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-orange-500/30 border-t-orange-500"></div>
           <p className="text-gray-400">Loading your library...</p>
         </div>
       </div>
@@ -139,45 +147,43 @@ export default function LibraryPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="max-w-7xl mx-auto py-12 px-4">
+      <div className="mx-auto max-w-7xl px-4 py-12">
         {/* Header with Orange Gradient */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative mb-12 rounded-2xl overflow-hidden bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 border border-orange-500/20 p-10"
+          className="relative mb-12 overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-10"
         >
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center">
-                  <Folder className="w-6 h-6 text-orange-500" />
+              <div className="mb-3 flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10">
+                  <Folder className="h-6 w-6 text-orange-500" />
                 </div>
                 <h1 className="text-4xl font-bold text-white">My Library</h1>
               </div>
-              <p className="text-xl text-gray-300">
-                Your music assets, ready to collaborate
-              </p>
+              <p className="text-xl text-gray-300">Your music assets, ready to collaborate</p>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-3 rounded-xl transition-all ${
+                className={`rounded-xl p-3 transition-all ${
                   viewMode === 'grid'
                     ? 'bg-orange-500 text-white'
                     : 'bg-gray-900 text-gray-400 hover:bg-gray-800'
                 }`}
               >
-                <Grid3x3 className="w-5 h-5" />
+                <Grid3x3 className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-3 rounded-xl transition-all ${
+                className={`rounded-xl p-3 transition-all ${
                   viewMode === 'list'
                     ? 'bg-orange-500 text-white'
                     : 'bg-gray-900 text-gray-400 hover:bg-gray-800'
                 }`}
               >
-                <List className="w-5 h-5" />
+                <List className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -188,17 +194,17 @@ export default function LibraryPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-8 flex flex-col md:flex-row gap-4"
+          className="mb-8 flex flex-col gap-4 md:flex-row"
         >
           {/* Search */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-500" />
             <input
               type="text"
               placeholder="Search your library..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-900 border border-gray-800 rounded-xl text-white placeholder:text-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-none transition-all"
+              className="w-full rounded-xl border border-gray-800 bg-gray-900 py-3 pl-12 pr-4 text-white transition-all placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
             />
           </div>
 
@@ -208,10 +214,10 @@ export default function LibraryPage() {
               <button
                 key={type}
                 onClick={() => setFilterType(type)}
-                className={`px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                className={`rounded-xl px-4 py-3 text-sm font-medium transition-all ${
                   filterType === type
                     ? 'bg-orange-500 text-white'
-                    : 'bg-gray-900 text-gray-400 hover:bg-gray-800 border border-gray-800'
+                    : 'border border-gray-800 bg-gray-900 text-gray-400 hover:bg-gray-800'
                 }`}
               >
                 {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -227,20 +233,20 @@ export default function LibraryPage() {
           transition={{ delay: 0.2 }}
           className="mb-8"
         >
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
             {[
               { type: 'stem' as const, label: 'Upload Stem', icon: Disc },
               { type: 'demo' as const, label: 'Upload Demo', icon: Music },
               { type: 'sample' as const, label: 'Upload Sample', icon: Mic2 },
               { type: 'loop' as const, label: 'Upload Loop', icon: Radio },
-              { type: 'other' as const, label: 'Upload File', icon: FileAudio }
+              { type: 'other' as const, label: 'Upload File', icon: FileAudio },
             ].map((uploadType) => (
               <label
                 key={uploadType.type}
-                className="group cursor-pointer bg-gray-900 border-2 border-dashed border-gray-800 hover:border-orange-500 rounded-xl p-6 flex flex-col items-center gap-3 transition-all hover:bg-gray-800/50"
+                className="group flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-gray-800 bg-gray-900 p-6 transition-all hover:border-orange-500 hover:bg-gray-800/50"
               >
-                <uploadType.icon className="w-8 h-8 text-gray-500 group-hover:text-orange-500 transition-colors" />
-                <span className="text-sm font-medium text-gray-400 group-hover:text-white transition-colors text-center">
+                <uploadType.icon className="h-8 w-8 text-gray-500 transition-colors group-hover:text-orange-500" />
+                <span className="text-center text-sm font-medium text-gray-400 transition-colors group-hover:text-white">
                   {uploadType.label}
                 </span>
                 <input
@@ -255,14 +261,14 @@ export default function LibraryPage() {
           </div>
 
           {uploading && (
-            <div className="mt-4 bg-gray-900 border border-gray-800 rounded-xl p-4">
-              <div className="flex items-center gap-3 mb-2">
-                <Loader2 className="w-5 h-5 text-orange-500 animate-spin" />
+            <div className="mt-4 rounded-xl border border-gray-800 bg-gray-900 p-4">
+              <div className="mb-2 flex items-center gap-3">
+                <Loader2 className="h-5 w-5 animate-spin text-orange-500" />
                 <span className="text-white">Uploading... {progress}%</span>
               </div>
-              <div className="w-full bg-gray-800 rounded-full h-2">
+              <div className="h-2 w-full rounded-full bg-gray-800">
                 <div
-                  className="bg-orange-500 h-2 rounded-full transition-all duration-300"
+                  className="h-2 rounded-full bg-orange-500 transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -270,7 +276,7 @@ export default function LibraryPage() {
           )}
 
           {uploadError && (
-            <div className="mt-4 bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+            <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
               <p className="text-red-400">{uploadError}</p>
             </div>
           )}
@@ -282,15 +288,15 @@ export default function LibraryPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-gray-900 border border-gray-800 rounded-2xl p-12 text-center"
+            className="rounded-2xl border border-gray-800 bg-gray-900 p-12 text-center"
           >
-            <div className="w-24 h-24 bg-orange-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Folder className="w-12 h-12 text-orange-500" />
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-orange-500/10">
+              <Folder className="h-12 w-12 text-orange-500" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="mb-2 text-2xl font-bold text-white">
               {searchQuery || filterType !== 'all' ? 'No files found' : 'Your Library is Empty'}
             </h2>
-            <p className="text-gray-400 mb-6">
+            <p className="mb-6 text-gray-400">
               {searchQuery || filterType !== 'all'
                 ? 'Try adjusting your search or filter'
                 : 'Upload your first audio file to get started'}
@@ -301,7 +307,11 @@ export default function LibraryPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-2'}
+            className={
+              viewMode === 'grid'
+                ? 'grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'
+                : 'space-y-2'
+            }
           >
             {filteredFiles.map((file, index) => (
               <motion.div
@@ -309,18 +319,20 @@ export default function LibraryPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + index * 0.05 }}
-                className={`group bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10 transition-all ${
+                className={`group rounded-xl border border-gray-800 bg-gray-900 p-6 transition-all hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10 ${
                   viewMode === 'list' ? 'flex items-center gap-4' : ''
                 }`}
               >
                 {/* Icon */}
-                <div className={`${viewMode === 'grid' ? 'mb-4' : 'shrink-0'} w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center`}>
+                <div
+                  className={`${viewMode === 'grid' ? 'mb-4' : 'shrink-0'} flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10`}
+                >
                   {getTypeIcon(file.type)}
                 </div>
 
                 {/* Info */}
                 <div className="flex-1">
-                  <h3 className="text-white font-semibold mb-1 truncate group-hover:text-orange-500 transition-colors">
+                  <h3 className="mb-1 truncate font-semibold text-white transition-colors group-hover:text-orange-500">
                     {file.name}
                   </h3>
                   <div className="flex items-center gap-2 text-sm text-gray-400">
@@ -331,25 +343,25 @@ export default function LibraryPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 mt-4 md:mt-0">
+                <div className="mt-4 flex items-center gap-2 md:mt-0">
                   <button
                     onClick={() => setPlayingId(playingId === file.id ? null : file.id)}
-                    className="p-2 bg-orange-500/10 hover:bg-orange-500 text-orange-500 hover:text-white rounded-lg transition-all"
+                    className="rounded-lg bg-orange-500/10 p-2 text-orange-500 transition-all hover:bg-orange-500 hover:text-white"
                   >
                     {playingId === file.id ? (
-                      <Pause className="w-4 h-4" />
+                      <Pause className="h-4 w-4" />
                     ) : (
-                      <Play className="w-4 h-4" />
+                      <Play className="h-4 w-4" />
                     )}
                   </button>
-                  <button className="p-2 bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white rounded-lg transition-all">
-                    <Share2 className="w-4 h-4" />
+                  <button className="rounded-lg bg-gray-800 p-2 text-gray-400 transition-all hover:bg-gray-700 hover:text-white">
+                    <Share2 className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(file.id)}
-                    className="p-2 bg-gray-800 hover:bg-red-500/20 text-gray-400 hover:text-red-500 rounded-lg transition-all"
+                    className="rounded-lg bg-gray-800 p-2 text-gray-400 transition-all hover:bg-red-500/20 hover:text-red-500"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </motion.div>

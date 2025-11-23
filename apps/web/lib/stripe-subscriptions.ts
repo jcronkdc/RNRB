@@ -27,7 +27,7 @@ export async function createStripeCustomer(
 ): Promise<Stripe.Customer> {
   try {
     const stripe = getStripe();
-    
+
     const customer = await stripe.customers.create({
       email,
       name: name || undefined,
@@ -115,12 +115,10 @@ export async function createCustomerPortalSession(
 /**
  * Get subscription details
  */
-export async function getSubscription(
-  subscriptionId: string
-): Promise<Stripe.Subscription> {
+export async function getSubscription(subscriptionId: string): Promise<Stripe.Subscription> {
   try {
     const stripe = getStripe();
-    
+
     const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
       expand: ['default_payment_method', 'customer'],
     });
@@ -135,9 +133,7 @@ export async function getSubscription(
 /**
  * Cancel subscription at period end
  */
-export async function cancelSubscription(
-  subscriptionId: string
-): Promise<Stripe.Subscription> {
+export async function cancelSubscription(subscriptionId: string): Promise<Stripe.Subscription> {
   try {
     const stripe = getStripe();
 
@@ -159,9 +155,7 @@ export async function cancelSubscription(
 /**
  * Reactivate a canceled subscription
  */
-export async function reactivateSubscription(
-  subscriptionId: string
-): Promise<Stripe.Subscription> {
+export async function reactivateSubscription(subscriptionId: string): Promise<Stripe.Subscription> {
   try {
     const stripe = getStripe();
 
@@ -195,10 +189,7 @@ export async function getCustomer(
 /**
  * Verify webhook signature
  */
-export function verifyWebhookSignature(
-  payload: string | Buffer,
-  signature: string
-): Stripe.Event {
+export function verifyWebhookSignature(payload: string | Buffer, signature: string): Stripe.Event {
   try {
     const stripe = getStripe();
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -207,11 +198,7 @@ export function verifyWebhookSignature(
       throw new Error('STRIPE_WEBHOOK_SECRET is not configured');
     }
 
-    const event = stripe.webhooks.constructEvent(
-      payload,
-      signature,
-      webhookSecret
-    );
+    const event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
 
     return event;
   } catch (error) {
@@ -222,4 +209,3 @@ export function verifyWebhookSignature(
 
 // Export stripe instance for advanced use cases
 export { getStripe as stripe };
-

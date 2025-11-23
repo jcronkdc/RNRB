@@ -19,35 +19,37 @@ export function useUndoRedo<T>({ initialState, maxHistory = 50, onSave }: UseUnd
   const currentState = history[currentIndex];
 
   // Set new state and add to history
-  const setState = useCallback((newState: T | ((prev: T) => T)) => {
-    setHistory((prevHistory) => {
-      const current = prevHistory[currentIndex];
-      const next = typeof newState === 'function' 
-        ? (newState as (prev: T) => T)(current)
-        : newState;
+  const setState = useCallback(
+    (newState: T | ((prev: T) => T)) => {
+      setHistory((prevHistory) => {
+        const current = prevHistory[currentIndex];
+        const next =
+          typeof newState === 'function' ? (newState as (prev: T) => T)(current) : newState;
 
-      // Don't add if same as current
-      if (JSON.stringify(next) === JSON.stringify(current)) {
-        return prevHistory;
-      }
+        // Don't add if same as current
+        if (JSON.stringify(next) === JSON.stringify(current)) {
+          return prevHistory;
+        }
 
-      // Remove any future history (user made change after undo)
-      const newHistory = prevHistory.slice(0, currentIndex + 1);
-      
-      // Add new state
-      newHistory.push(next);
+        // Remove any future history (user made change after undo)
+        const newHistory = prevHistory.slice(0, currentIndex + 1);
 
-      // Limit history size
-      if (newHistory.length > maxHistory) {
-        newHistory.shift();
-        setCurrentIndex(newHistory.length - 1);
-      } else {
-        setCurrentIndex(newHistory.length - 1);
-      }
+        // Add new state
+        newHistory.push(next);
 
-      return newHistory;
-    });
-  }, [currentIndex, maxHistory]);
+        // Limit history size
+        if (newHistory.length > maxHistory) {
+          newHistory.shift();
+          setCurrentIndex(newHistory.length - 1);
+        } else {
+          setCurrentIndex(newHistory.length - 1);
+        }
+
+        return newHistory;
+      });
+    },
+    [currentIndex, maxHistory]
+  );
 
   // Undo
   const undo = useCallback(() => {
