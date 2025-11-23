@@ -5,13 +5,14 @@ import { Card, Button } from '@cronkwaters/ui';
 import { 
   Music, Sparkles, GripVertical, Plus, X, Users, Save, Download, 
   History, Undo, Redo, Video, MessageSquare, ChevronUp, ChevronDown,
-  Tag, Copy, Check, Mail, UserPlus, Clock, Keyboard
+  Tag, Copy, Check, Mail, UserPlus, Clock, Keyboard, CheckCircle, XCircle, AlertCircle
 } from 'lucide-react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import dynamic from 'next/dynamic';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
+import { useSongSuggestions } from '@/hooks/use-song-suggestions';
 import { CursorOverlay } from '@/components/cursor-overlay';
 import { GranularChordEditor, type ChordPlacement } from './granular-chord-editor';
 import { KeyAnalyzer } from './key-analyzer';
@@ -110,6 +111,7 @@ export function CollaborativeVisualBuilder({
   projectSlug, 
   onSongChange,
   currentUser,
+  isOwner = true, // Whether current user owns the song (can accept/reject)
 }: { 
   projectSlug: string;
   onSongChange?: (blocks: SongBlock[]) => void;
@@ -119,6 +121,7 @@ export function CollaborativeVisualBuilder({
     userEmail?: string;
     avatar?: string;
   };
+  isOwner?: boolean;
 }) {
   const [blocks, setBlocks] = useState<SongBlock[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -126,6 +129,7 @@ export function CollaborativeVisualBuilder({
   const [showCollaborators, setShowCollaborators] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [copied, setCopied] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [history, setHistory] = useState<{ blocks: SongBlock[]; timestamp: Date }[]>([]);
@@ -134,12 +138,41 @@ export function CollaborativeVisualBuilder({
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   // Collaborative cursors
-  const { remoteCursors } = useCollaborativeCursors({
+  const { remoteCursors, isConnected: cursorsConnected } = useCollaborativeCursors({
     channelName: `songwriting:${projectSlug}-cursors`,
     userId: currentUser.userId,
     userName: currentUser.userName,
     enabled: true,
   });
+
+  // Collaborative suggestions
+  const {
+    suggestions,
+    chordSuggestions,
+    isConnected: suggestionsConnected,
+    error: suggestionsError,
+    isOwner: canManageSuggestions,
+    suggestLyricChange,
+    suggestChord,
+    acceptSuggestion,
+    rejectSuggestion,
+    acceptChordSuggestion,
+    rejectChordSuggestion,
+    getSuggestionsForBlock,
+    getChordSuggestionsForBlock,
+  } = useSongSuggestions({
+    channelName: `songwriting:${projectSlug}-suggestions`,
+    userId: currentUser.userId,
+    userName: currentUser.userName,
+    isOwner,
+    enabled: true,
+  });
+
+  // Count total pending suggestions
+  const pendingSuggestionsCount = useMemo(() => {
+    return suggestions.filter(s => s.status === 'pending').length + 
+           chordSuggestions.filter(s => s.status === 'pending').length;
+  }, [suggestions, chordSuggestions]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -306,6 +339,17 @@ export function CollaborativeVisualBuilder({
               <History className="w-4 h-4 mr-2" />
               History
             </Button>
+            {isOwner && pendingSuggestionsCount > 0 && (
+              <Button 
+                size="sm" 
+                variant="secondary"
+                onClick={() => setShowSuggestions(true)}
+                className="bg-yellow-500/10 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20"
+              >
+                <AlertCircle className="w-4 h-4 mr-2" />
+                {pendingSuggestionsCount} Suggestion{pendingSuggestionsCount !== 1 ? 's' : ''}
+              </Button>
+            )}
             <Button size="sm" variant="secondary" onClick={exportToClipboard}>
               {copied ? <Check className="w-4 h-4 mr-2" /> : <Download className="w-4 h-4 mr-2" />}
               {copied ? 'Copied!' : 'Export'}
@@ -320,6 +364,13 @@ export function CollaborativeVisualBuilder({
             </Button>
           </div>
           <div className="flex items-center gap-2">
+            {/* Connection Status */}
+            <div className="flex items-center gap-2 text-xs">
+              <div className={`w-2 h-2 rounded-full ${cursorsConnected && suggestionsConnected ? 'bg-green-400' : 'bg-yellow-400'}`} />
+              <span className="text-muted-foreground">
+                {cursorsConnected && suggestionsConnected ? 'Live' : 'Connecting...'}
+              </span>
+            </div>
             <Button 
               size="sm" 
               variant="secondary"
@@ -350,6 +401,19 @@ export function CollaborativeVisualBuilder({
           </div>
         </div>
       </Card>
+
+      {/* Error Banner */}
+      {suggestionsError && (
+        <Card className="p-4 bg-red-500/10 border-red-500/20">
+          <div className="flex items-center gap-3">
+            <XCircle className="w-5 h-5 text-red-400" />
+            <div>
+              <p className="text-sm font-medium text-red-400">Collaboration Error</p>
+              <p className="text-xs text-red-300">Real-time suggestions unavailable: {suggestionsError}</p>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* Main Layout */}
       <div className="grid grid-cols-12 gap-4">
@@ -596,6 +660,190 @@ export function CollaborativeVisualBuilder({
 
       {/* Collaborative Cursors Overlay */}
       <CursorOverlay cursors={remoteCursors} />
+
+      {/* Suggestions Review Modal (Owner Only) */}
+      {showSuggestions && isOwner && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setShowSuggestions(false)}
+        >
+          <Card 
+            className="rnrb-card p-8 max-w-2xl w-full max-h-[600px] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-2xl font-display font-bold flex items-center gap-2">
+                  <AlertCircle className="w-6 h-6 text-yellow-400" />
+                  Pending Suggestions
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">Review and accept/reject changes from collaborators</p>
+              </div>
+              <button
+                onClick={() => setShowSuggestions(false)}
+                className="w-8 h-8 rounded-lg hover:bg-surface-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {pendingSuggestionsCount === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <CheckCircle className="w-16 h-16 text-green-400/50 mb-4" />
+                <h4 className="text-lg font-semibold mb-2">All Clear!</h4>
+                <p className="text-sm text-muted-foreground">
+                  No pending suggestions at the moment
+                </p>
+              </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+                {/* Lyric Suggestions */}
+                {suggestions.filter(s => s.status === 'pending').map((suggestion) => {
+                  const block = blocks.find(b => b.id === suggestion.blockId);
+                  if (!block) return null;
+
+                  return (
+                    <div
+                      key={suggestion.id}
+                      className="p-4 rounded-xl bg-yellow-500/10 border-2 border-yellow-500/30"
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-bold uppercase text-yellow-400">{block.type}</span>
+                            <span className="text-xs text-muted-foreground">• by {suggestion.userName}</span>
+                          </div>
+                          <div className="space-y-2 text-sm">
+                            <div>
+                              <span className="text-muted-foreground">Original: </span>
+                              <span className="line-through text-red-400">{suggestion.originalValue}</span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">Suggested: </span>
+                              <span className="text-green-400 font-medium">{suggestion.suggestedValue}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            const accepted = acceptSuggestion(suggestion.id);
+                            if (accepted) {
+                              // Apply the suggestion to master
+                              const updated = blocks.map(b => {
+                                if (b.id === accepted.blockId) {
+                                  return {
+                                    ...b,
+                                    content: b.content.replace(accepted.originalValue, accepted.suggestedValue)
+                                  };
+                                }
+                                return b;
+                              });
+                              setBlocks(updated);
+                              onSongChange?.(updated);
+                              saveToHistory(updated);
+                            }
+                          }}
+                          className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Accept
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => rejectSuggestion(suggestion.id)}
+                          variant="secondary"
+                          className="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400"
+                        >
+                          <XCircle className="w-4 h-4 mr-2" />
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Chord Suggestions */}
+                {chordSuggestions.filter(s => s.status === 'pending').map((suggestion) => {
+                  const block = blocks.find(b => b.id === suggestion.blockId);
+                  if (!block) return null;
+
+                  return (
+                    <div
+                      key={suggestion.id}
+                      className="p-4 rounded-xl bg-blue-500/10 border-2 border-blue-500/30"
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-bold uppercase text-blue-400">{block.type} - CHORD</span>
+                            <span className="text-xs text-muted-foreground">• by {suggestion.userName}</span>
+                          </div>
+                          <div className="text-sm">
+                            <span className="text-muted-foreground">Add chord: </span>
+                            <span className="text-blue-400 font-mono font-bold">{suggestion.chord}</span>
+                            <span className="text-muted-foreground"> at line {suggestion.lineIndex + 1}, word {suggestion.wordIndex + 1}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            const accepted = acceptChordSuggestion(suggestion.id);
+                            if (accepted) {
+                              // Apply chord to master
+                              const updated = blocks.map(b => {
+                                if (b.id === accepted.blockId) {
+                                  const newPlacement = {
+                                    lineIndex: accepted.lineIndex,
+                                    wordIndex: accepted.wordIndex,
+                                    chord: accepted.chord
+                                  };
+                                  return {
+                                    ...b,
+                                    chordPlacements: [...(b.chordPlacements || []), newPlacement]
+                                  };
+                                }
+                                return b;
+                              });
+                              setBlocks(updated);
+                              onSongChange?.(updated);
+                              saveToHistory(updated);
+                            }
+                          }}
+                          className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Accept
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => rejectChordSuggestion(suggestion.id)}
+                          variant="secondary"
+                          className="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400"
+                        >
+                          <XCircle className="w-4 h-4 mr-2" />
+                          Reject
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            <div className="mt-6 pt-6 border-t border-border">
+              <p className="text-xs text-muted-foreground text-center">
+                <Sparkles className="w-3 h-3 inline mr-1 text-purple-400" />
+                Suggestions keep your song organized while letting everyone contribute
+              </p>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Keyboard Shortcuts Help Modal */}
       <AnimatePresence>
