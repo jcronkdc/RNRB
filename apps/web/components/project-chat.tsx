@@ -16,6 +16,12 @@ type Message = {
   avatar?: string;
 };
 
+type TypingUser = {
+  userId: string;
+  userName: string;
+  timestamp: number;
+};
+
 interface ProjectChatProps {
   projectSlug: string;
   projectName: string;
@@ -28,7 +34,9 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [ably, setAbly] = useState<Ably.Realtime | null>(null);
   const [channel, setChannel] = useState<Ably.RealtimeChannel | null>(null);
+  const [typingUsers, setTypingUsers] = useState<Map<string, TypingUser>>(new Map());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Initialize Ably and current user
   useEffect(() => {
@@ -77,6 +85,53 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
         };
         
         setMessages((prev) => [...prev, newMessage]);
+        
+        // Clear typing indicator for this user when they send a message
+        setTypingUsers((prev) => {
+          const newMap = new Map(prev);
+          newMap.delete(message.clientId || '');
+          return newMap;
+        });
+      });
+
+      // Listen for typing indicators
+      chatChannel.subscribe('typing', (message) => {
+        const typingUser: TypingUser = {
+          userId: message.clientId || 'unknown',
+          userName: message.data.userName || 'Unknown',
+          timestamp: Date.now(),
+        };
+        
+        // Don't show own typing indicator
+        if (typingUser.userId === user.id) return;
+        
+        setTypingUsers((prev) => {
+          const newMap = new Map(prev);
+          newMap.set(typingUser.userId, typingUser);
+          return newMap;
+        });
+        
+        // Auto-remove typing indicator after 3 seconds
+        setTimeout(() => {
+          setTypingUsers((prev) => {
+            const newMap = new Map(prev);
+            // Only remove if timestamp hasn't been updated (no new typing events)
+            const current = newMap.get(typingUser.userId);
+            if (current && current.timestamp === typingUser.timestamp) {
+              newMap.delete(typingUser.userId);
+            }
+            return newMap;
+          });
+        }, 3000);
+      });
+
+      // Listen for typing stopped
+      chatChannel.subscribe('typing-stop', (message) => {
+        setTypingUsers((prev) => {
+          const newMap = new Map(prev);
+          newMap.delete(message.clientId || '');
+          return newMap;
+        });
       });
 
       // Get message history (last 50 messages)
@@ -105,6 +160,9 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
     initChat();
 
     return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
       if (channel) {
         channel.unsubscribe();
       }
@@ -124,6 +182,11 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
 
     setSending(true);
     try {
+      // Send typing-stop event
+      await channel.publish('typing-stop', {
+        userName: currentUser.name,
+      });
+      
       await channel.publish('message', {
         content: inputValue.trim(),
         userName: currentUser.name,
@@ -136,6 +199,31 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
       console.error('Error sending message:', error);
     } finally {
       setSending(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    
+    // Broadcast typing indicator
+    if (value.trim() && channel && currentUser) {
+      // Clear previous timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      
+      // Send typing event
+      channel.publish('typing', {
+        userName: currentUser.name,
+      });
+      
+      // Auto-stop typing after 2 seconds of no input
+      typingTimeoutRef.current = setTimeout(() => {
+        channel.publish('typing-stop', {
+          userName: currentUser.name,
+        });
+      }, 2000);
     }
   };
 
@@ -221,6 +309,42 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
             );
           })}
         </AnimatePresence>
+        
+        {/* Typing Indicators */}
+        <AnimatePresence>
+          {typingUsers.size > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="flex items-center gap-2 px-3 py-2"
+            >
+              <div className="flex gap-1">
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 1, delay: 0 }}
+                  className="w-2 h-2 rounded-full bg-brand-primary"
+                />
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 1, delay: 0.2 }}
+                  className="w-2 h-2 rounded-full bg-brand-primary"
+                />
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ repeat: Infinity, duration: 1, delay: 0.4 }}
+                  className="w-2 h-2 rounded-full bg-brand-primary"
+                />
+              </div>
+              <span className="text-sm text-muted-foreground">
+                {Array.from(typingUsers.values()).length === 1
+                  ? `${Array.from(typingUsers.values())[0].userName} is typing...`
+                  : `${Array.from(typingUsers.values()).length} people are typing...`}
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
         <div ref={messagesEndRef} />
       </div>
 
@@ -233,7 +357,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
           <div className="flex-1 relative">
             <textarea
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={handleInputChange}
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
