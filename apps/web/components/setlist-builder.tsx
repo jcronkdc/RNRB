@@ -23,7 +23,10 @@ import {
   Users,
   Sparkles,
   Play,
-  Pause
+  Pause,
+  Download,
+  Printer,
+  FileText
 } from 'lucide-react';
 import { DndContext, DragOverlay, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
@@ -31,6 +34,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { CursorOverlay } from '@/components/cursor-overlay';
 import { Realtime } from 'ably';
+import { exportSetlistToPDF, printSetlist } from '@/lib/setlist-pdf-export';
 
 type Song = {
   id: string;
@@ -247,6 +251,9 @@ export function CollaborativeSetlistBuilder({
   initialSongs = [],
   onUpdate,
   currentUser,
+  showName = 'Live Performance',
+  venueName,
+  showDate,
 }: {
   setlistId: string;
   projectSlug: string;
@@ -257,10 +264,14 @@ export function CollaborativeSetlistBuilder({
     userId: string;
     userName: string;
   };
+  showName?: string;
+  venueName?: string;
+  showDate?: string;
 }) {
   const [songs, setSongs] = useState<SetlistSong[]>(initialSongs);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showSongPicker, setShowSongPicker] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
@@ -375,6 +386,26 @@ export function CollaborativeSetlistBuilder({
     onUpdate(updated);
   };
 
+  const handleExportPDF = (layout: 'full' | 'compact' | 'stage') => {
+    exportSetlistToPDF(songs, {
+      showName,
+      venueName,
+      date: showDate,
+      layout,
+    });
+    setShowExportMenu(false);
+  };
+
+  const handlePrint = () => {
+    printSetlist(songs, {
+      showName,
+      venueName,
+      date: showDate,
+      layout: 'full',
+    });
+    setShowExportMenu(false);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header Stats */}
@@ -412,13 +443,60 @@ export function CollaborativeSetlistBuilder({
           <Card className="p-6 rnrb-card">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-display font-bold">Setlist Order</h2>
-              <Button
-                onClick={() => setShowSongPicker(true)}
-                className="flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Add Song
-              </Button>
+              <div className="flex items-center gap-2">
+                {/* Export Menu */}
+                <div className="relative">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowExportMenu(!showExportMenu)}
+                    className="flex items-center gap-2"
+                    disabled={songs.length === 0}
+                  >
+                    <Download className="w-4 h-4" />
+                    Export
+                  </Button>
+                  {showExportMenu && (
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-surface border border-border rounded-lg shadow-xl z-10">
+                      <button
+                        onClick={() => handleExportPDF('full')}
+                        className="w-full px-4 py-2 text-left hover:bg-surface-muted transition flex items-center gap-2 text-sm"
+                      >
+                        <FileText className="w-4 h-4" />
+                        PDF (Full Detail)
+                      </button>
+                      <button
+                        onClick={() => handleExportPDF('compact')}
+                        className="w-full px-4 py-2 text-left hover:bg-surface-muted transition flex items-center gap-2 text-sm"
+                      >
+                        <FileText className="w-4 h-4" />
+                        PDF (Compact)
+                      </button>
+                      <button
+                        onClick={() => handleExportPDF('stage')}
+                        className="w-full px-4 py-2 text-left hover:bg-surface-muted transition flex items-center gap-2 text-sm"
+                      >
+                        <FileText className="w-4 h-4" />
+                        PDF (Stage View)
+                      </button>
+                      <hr className="border-border my-1" />
+                      <button
+                        onClick={handlePrint}
+                        className="w-full px-4 py-2 text-left hover:bg-surface-muted transition flex items-center gap-2 text-sm rounded-b-lg"
+                      >
+                        <Printer className="w-4 h-4" />
+                        Print
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <Button
+                  onClick={() => setShowSongPicker(true)}
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Add Song
+                </Button>
+              </div>
             </div>
 
             {songs.length === 0 ? (
