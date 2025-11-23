@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { getCurrentUser } from '@/lib/supabase';
 import { requireFeatureAccess } from '@/lib/subscription-access';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
@@ -7,9 +7,9 @@ const DAILY_API_URL = 'https://api.daily.co/v1';
 
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication
-    const session = await auth();
-    if (!session?.user) {
+    // Check authentication using Supabase
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -79,8 +79,8 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         properties: {
           room_name: room.name,
-          user_name: session.user.name || 'User',
-          user_id: session.user.id,
+          user_name: user.name || user.email || 'User',
+          user_id: user.id,
           enable_recording: true,
           start_video_off: false,
           start_audio_off: false,
@@ -116,9 +116,9 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication
-    const session = await auth();
-    if (!session?.user) {
+    // Check authentication using Supabase
+    const user = await getCurrentUser();
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
