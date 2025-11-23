@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Music2, Sparkles, Users, MessageSquare, Video } from 'lucide-react';
+import { Music2, Sparkles, Users, MessageSquare, Video, Save, Check, Loader2, AlertCircle } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useRequireAuth } from '@/hooks/use-require-auth';
+import { useSongAutoSave } from '@/hooks/use-song-auto-save';
 
 // Import the drag-drop collaborative songwriting components
 const CollaborativeVisualBuilder = dynamic(
@@ -45,17 +46,90 @@ export default function SongwritingPage() {
   const [songBlocks, setSongBlocks] = useState<SongBlock[]>([]);
   const [chordProgression, setChordProgression] = useState<ChordBlock[]>([]);
   const [lyrics, setLyrics] = useState('');
+  const [songTitle, setSongTitle] = useState('Untitled Song');
   const { user, loading } = useRequireAuth({ redirectIfNoUser: false });
 
-  // Debug logging
+  // Initialize auto-save
+  const {
+    songData,
+    updateSong,
+    createSong,
+    saveStatus,
+    error: saveError,
+    isSaving,
+    isSaved,
+    hasError,
+  } = useSongAutoSave();
+
+  // Create song on first load if user is authenticated
   useEffect(() => {
-    console.log('🎸 Songwriting Page - Auth State:', {
-      user: user ? { id: user.id, email: user.email } : null,
-      loading,
-      hasUser: !!user,
-      activeView
-    });
-  }, [user, loading, activeView]);
+    if (user && !songData.id) {
+      createSong({
+        title: songTitle,
+        status: 'draft',
+        visibility: 'private',
+      }).catch(console.error);
+    }
+  }, [user, songData.id]);
+
+  // Auto-save blocks when they change
+  useEffect(() => {
+    if (songData.id && songBlocks.length > 0) {
+      updateSong({
+        lyrics: songBlocks
+          .map((b) => `[${b.type.toUpperCase()}]\n${b.content}`)
+          .join('\n\n'),
+      });
+    }
+  }, [songBlocks, songData.id]);
+
+  // Auto-save lyrics when they change
+  useEffect(() => {
+    if (songData.id && lyrics) {
+      updateSong({ lyrics });
+    }
+  }, [lyrics, songData.id]);
+
+  // Auto-save title when it changes
+  useEffect(() => {
+    if (songData.id && songTitle !== songData.title) {
+      updateSong({ title: songTitle });
+    }
+  }, [songTitle, songData.id, songData.title]);
+
+  // Save Status Indicator
+  const SaveStatusIndicator = () => {
+    if (!user || !songData.id) return null;
+
+    return (
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-800/50 border border-gray-700 rounded-full text-sm">
+        {isSaving && (
+          <>
+            <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
+            <span className="text-gray-300">Saving...</span>
+          </>
+        )}
+        {isSaved && (
+          <>
+            <Check className="w-4 h-4 text-green-400" />
+            <span className="text-gray-300">Saved</span>
+          </>
+        )}
+        {hasError && (
+          <>
+            <AlertCircle className="w-4 h-4 text-red-400" />
+            <span className="text-gray-300">Error saving</span>
+          </>
+        )}
+        {!isSaving && !isSaved && !hasError && (
+          <>
+            <Save className="w-4 h-4 text-gray-400" />
+            <span className="text-gray-400">Auto-save active</span>
+          </>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -72,10 +146,20 @@ export default function SongwritingPage() {
                 <Music2 className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-white mb-2">Collaborative Songwriting Studio</h1>
+                <div className="flex items-center gap-3 mb-2">
+                  <input
+                    type="text"
+                    value={songTitle}
+                    onChange={(e) => setSongTitle(e.target.value)}
+                    className="text-4xl font-bold text-white bg-transparent border-none outline-none focus:ring-0 px-0"
+                    placeholder="Untitled Song"
+                    disabled={!user}
+                  />
+                  <SaveStatusIndicator />
+                </div>
                 <p className="text-gray-300 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-orange-500" />
-                  Drag-and-drop builder with real-time collaboration
+                  Drag-and-drop builder with real-time collaboration & auto-save
                 </p>
               </div>
             </div>
@@ -118,6 +202,10 @@ export default function SongwritingPage() {
               <div className="flex items-center gap-2">
                 <Users className="w-5 h-5 text-purple-400" />
                 <span className="text-white font-medium">Multi-Cursor</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Save className="w-5 h-5 text-purple-400" />
+                <span className="text-white font-medium">Auto-Save</span>
               </div>
             </div>
             <div className="text-sm text-purple-300">
@@ -237,6 +325,12 @@ export default function SongwritingPage() {
                       duration: '1 bar'
                     }))
                   );
+                  // Auto-save chord progression
+                  if (songData.id) {
+                    updateSong({
+                      chords: progression,
+                    });
+                  }
                 }}
               />
             </div>
@@ -263,7 +357,7 @@ export default function SongwritingPage() {
             <Users className="w-5 h-5 text-orange-500" />
             Collaborative Features Active
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
             <div className="flex items-start gap-3">
               <MessageSquare className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
               <div>
@@ -283,6 +377,13 @@ export default function SongwritingPage() {
               <div>
                 <p className="text-white font-medium">Multi-Cursor</p>
                 <p className="text-gray-400">See everyone&apos;s cursor in real-time</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Save className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-white font-medium">Auto-Save</p>
+                <p className="text-gray-400">Your work is saved automatically every 2 seconds</p>
               </div>
             </div>
           </div>

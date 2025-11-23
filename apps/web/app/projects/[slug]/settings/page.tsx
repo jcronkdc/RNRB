@@ -18,24 +18,33 @@ export default function ProjectSettingsPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
+    const loadProject = async () => {
+      const { data: { user } } = await supabase!.auth.getUser();
       if (!user) {
         router.push('/auth');
         return;
       }
       
       setUser(user);
-      const projects = user.user_metadata?.projects || [];
-      const foundProject = projects.find((p: any) => p.slug === slug);
       
-      if (!foundProject) {
+      // Load project from API
+      try {
+        const response = await fetch(`/api/projects/${slug}?userId=${user.id}`);
+        if (!response.ok) {
+          router.push('/projects');
+          return;
+        }
+        
+        const foundProject = await response.json();
+        setProject(foundProject);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading project:', error);
         router.push('/projects');
-        return;
       }
-      
-      setProject(foundProject);
-      setLoading(false);
-    });
+    };
+    
+    loadProject();
   }, [router, slug]);
 
   const handleSave = async () => {
@@ -43,20 +52,27 @@ export default function ProjectSettingsPage() {
     setMessage(null);
 
     try {
-      const projects = user.user_metadata?.projects || [];
-      const updatedProjects = projects.map((p: any) => 
-        p.slug === slug ? { ...project, updated_at: new Date().toISOString() } : p
-      );
-
-      const { error } = await supabase!.auth.updateUser({
-        data: {
-          ...user.user_metadata,
-          projects: updatedProjects
-        }
+      // Update via API
+      const response = await fetch(`/api/projects/${slug}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          name: project.name,
+          description: project.description,
+          tagline: project.tagline,
+          coverImage: project.cover_image,
+          visibility: project.visibility,
+        }),
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to update project');
+      }
 
+      const updatedProject = await response.json();
+      setProject(updatedProject);
       setMessage({ type: 'success', text: 'Project updated!' });
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message });
@@ -66,18 +82,18 @@ export default function ProjectSettingsPage() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Delete this project? This cannot be undone.')) return;
+    if (!confirm('Delete this project? This cannot be undone. All songs and data will be lost.')) return;
 
     try {
-      const projects = user.user_metadata?.projects || [];
-      const updatedProjects = projects.filter((p: any) => p.slug !== slug);
-
-      await supabase!.auth.updateUser({
-        data: {
-          ...user.user_metadata,
-          projects: updatedProjects
-        }
+      // Delete via API
+      const response = await fetch(`/api/projects/${slug}?userId=${user.id}`, {
+        method: 'DELETE',
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete project');
+      }
 
       router.push('/projects');
     } catch (error: any) {

@@ -16,6 +16,7 @@
  */
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
   Users, 
@@ -37,6 +38,7 @@ const PresenceIndicator = dynamic(() => import('@/components/presence-indicator'
 
 export default function CollaborationDashboard() {
   const { user, loading } = useRequireAuth();
+  const router = useRouter();
 
   if (loading) {
     return (

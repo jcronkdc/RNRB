@@ -64,27 +64,30 @@ export default function NewProjectPage() {
     setMessage(null);
 
     try {
-      const newProject = {
-        id: `proj_${Date.now()}`,
-        ...projectData,
-        slug: generateSlug(projectData.name),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        song_count: 0,
-        collaborator_count: 1,
-        session_count: 0
-      };
-
-      // Save to user metadata for now (will connect to database later)
-      const existingProjects = user?.user_metadata?.projects || [];
-      const { error } = await supabase!.auth.updateUser({
-        data: {
-          ...user?.user_metadata,
-          projects: [...existingProjects, newProject]
-        }
+      // Create project via API
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+          name: projectData.name,
+          description: projectData.description,
+          tagline: projectData.tagline,
+          visibility: projectData.visibility,
+          coverImage: projectData.cover_image,
+          genre: projectData.genre,
+          targetReleaseDate: projectData.target_release_date,
+        }),
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create project');
+      }
+
+      const newProject = await response.json();
 
       setMessage({ type: 'success', text: 'Project created! Redirecting...' });
       

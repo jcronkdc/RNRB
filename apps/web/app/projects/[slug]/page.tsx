@@ -37,7 +37,7 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
+    supabase?.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) {
         router.push('/auth');
         return;
@@ -45,17 +45,21 @@ export default function ProjectDetailPage() {
       
       setUser(user);
       
-      // Find project from user metadata
-      const projects = user.user_metadata?.projects || [];
-      const foundProject = projects.find((p: any) => p.slug === slug);
-      
-      if (!foundProject) {
+      // Load project from API
+      try {
+        const response = await fetch(`/api/projects/${slug}?userId=${user.id}`);
+        if (!response.ok) {
+          router.push('/projects');
+          return;
+        }
+        
+        const foundProject = await response.json();
+        setProject(foundProject);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading project:', error);
         router.push('/projects');
-        return;
       }
-      
-      setProject(foundProject);
-      setLoading(false);
     });
   }, [router, slug]);
 

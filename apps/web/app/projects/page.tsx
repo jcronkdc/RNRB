@@ -40,9 +40,21 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     if (user) {
-      // Load projects from user_metadata for now (will connect to database later)
-      const userProjects = user.user_metadata?.projects || [];
-      setProjects(userProjects);
+      // Load projects from database via API
+      const loadProjects = async () => {
+        try {
+          const response = await fetch(`/api/projects?userId=${user.id}`);
+          if (response.ok) {
+            const data = await response.json();
+            setProjects(data);
+          } else {
+            console.error('Failed to load projects:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error loading projects:', error);
+        }
+      };
+      loadProjects();
     }
   }, [user]);
 

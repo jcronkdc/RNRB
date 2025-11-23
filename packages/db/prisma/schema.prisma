@@ -48,58 +48,59 @@ model VerificationToken {
 }
 
 model User {
-  id                      String                  @id @default(cuid())
-  email                   String                  @unique
+  id                      String    @id @default(cuid())
+  email                   String    @unique
   emailVerified           DateTime?
   name                    String?
   image                   String?
   pro                     String?
-  mlcMember               Boolean                 @default(false)
-  soundExchangeRegistered Boolean                 @default(false)
-  createdAt               DateTime                @default(now())
-  updatedAt               DateTime                @updatedAt
-  
+  mlcMember               Boolean   @default(false)
+  soundExchangeRegistered Boolean   @default(false)
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
   // Stripe Subscription Fields
-  stripeCustomerId        String?                 @unique
-  stripeSubscriptionId    String?                 @unique
-  subscriptionTier        String                  @default("free") // free, creator, studio
-  subscriptionStatus      String?                 // active, canceled, past_due, trialing, incomplete
-  subscriptionStartedAt   DateTime?
-  subscriptionEndsAt      DateTime?
-  subscriptionCanceledAt  DateTime?
-  subscriptionRenewsAt    DateTime?
-  
+  stripeCustomerId       String?   @unique
+  stripeSubscriptionId   String?   @unique
+  subscriptionTier       String    @default("free") // free, creator, studio
+  subscriptionStatus     String? // active, canceled, past_due, trialing, incomplete
+  subscriptionStartedAt  DateTime?
+  subscriptionEndsAt     DateTime?
+  subscriptionCanceledAt DateTime?
+  subscriptionRenewsAt   DateTime?
+
   // Usage Tracking Fields (Protects profit margins)
-  aiRequestsUsed          Int                     @default(0)
-  videoMinutesUsed        Int                     @default(0)
-  usagePeriodStart        DateTime?               @default(now())
-  storageUsedGB           Decimal                 @default(0) @db.Decimal(10,2)
-  
-  accounts                Account[]
-  sessions                Session[]
-  uploadedAssets          Asset[]
-  assetShares             AssetShare[]
-  collaborationRequests   CollaborationRequest[]
-  collaborationResponses  CollaborationResponse[]
-  comments                Comment[]
-  connectedTo             Connection[]            @relation("ConnectedToUser")
-  connections             Connection[]            @relation("UserConnections")
-  forumPosts              ForumPost[]
-  forumReplies            ForumReply[]
-  memberships             Membership[]
-  receivedMessages        Message[]               @relation("ReceivedMessages")
-  sentMessages            Message[]               @relation("SentMessages")
-  musicianProfile         MusicianProfile?
-  orgInvites              OrgInvite[]
-  sessionAttendances      SessionAttendee[]
-  skills                  Skill[]
-  songSplits              SongSplit[]
-  studioSessions          StudioSession[]
-  subscriptions           Subscription[]
-  songs                   Song[] // Owned songs
-  songCollaborations      SongCollaborator[] // Songs shared with user
-  sentInvitations         Invitation[]        @relation("SentInvitations")
-  projectMemberships      ProjectMember[]
+  aiRequestsUsed   Int       @default(0)
+  videoMinutesUsed Int       @default(0)
+  usagePeriodStart DateTime? @default(now())
+  storageUsedGB    Decimal   @default(0) @db.Decimal(10, 2)
+
+  accounts               Account[]
+  sessions               Session[]
+  uploadedAssets         Asset[]
+  assetShares            AssetShare[]
+  collaborationRequests  CollaborationRequest[]
+  collaborationResponses CollaborationResponse[]
+  comments               Comment[]
+  connectedTo            Connection[]            @relation("ConnectedToUser")
+  connections            Connection[]            @relation("UserConnections")
+  forumPosts             ForumPost[]
+  forumReplies           ForumReply[]
+  memberships            Membership[]
+  receivedMessages       Message[]               @relation("ReceivedMessages")
+  sentMessages           Message[]               @relation("SentMessages")
+  musicianProfile        MusicianProfile?
+  orgInvites             OrgInvite[]
+  sessionAttendances     SessionAttendee[]
+  skills                 Skill[]
+  songSplits             SongSplit[]
+  studioSessions         StudioSession[]
+  subscriptions          Subscription[]
+  songs                  Song[] // Owned songs
+  songCollaborations     SongCollaborator[] // Songs shared with user
+  sentInvitations        Invitation[]            @relation("SentInvitations")
+  receivedInvitations    Invitation[]            @relation("ReceivedInvitations")
+  projectMemberships     ProjectMember[]
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -869,19 +870,22 @@ model Invitation {
   orgId      String?
   projectId  String?
   senderId   String
+  receiverId String? // User who accepted the invitation
   expiresAt  DateTime
   acceptedAt DateTime?
   createdAt  DateTime  @default(now())
-  
-  sender  User     @relation("SentInvitations", fields: [senderId], references: [id])
-  org     Org?     @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  sender   User     @relation("SentInvitations", fields: [senderId], references: [id])
+  receiver User?    @relation("ReceivedInvitations", fields: [receiverId], references: [id])
+  org      Org?     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  project  Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@index([email])
   @@index([token])
   @@index([orgId])
   @@index([projectId])
   @@index([status])
+  @@index([receiverId])
 }
 
 // Project membership/collaboration model
@@ -891,7 +895,7 @@ model ProjectMember {
   role      String   @default("member") // owner, admin, member, viewer
   status    String   @default("active")
   joinedAt  DateTime @default(now())
-  
+
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
@@ -982,6 +986,7 @@ enum OrgType {
   foundation
   studio
   band
+  solo
 }
 
 enum OrgRole {

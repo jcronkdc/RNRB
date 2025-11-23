@@ -2,17 +2,22 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Music, Sparkles } from 'lucide-react';
+import { Suspense } from 'react';
 
-export default function SignInPage() {
+function AuthForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  
+  // Check if this is signup flow
+  const isSignup = searchParams.get('signup') === 'true';
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,7 +135,9 @@ export default function SignInPage() {
           </h1>
             
             <p className="text-2xl font-semibold mb-4 text-orange-100">
-              Where Your Music Finds Its Voice
+              {isSignup 
+                ? 'Your Music Creation Journey Starts Here'
+                : 'Where Your Music Finds Its Voice'}
             </p>
 
             <div className="flex items-center justify-center gap-8 text-white/80 mt-12">
@@ -155,19 +162,31 @@ export default function SignInPage() {
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <Music className="w-4 h-4" />
                 </div>
-                <span className="text-white/90">Real-time collaboration with your band</span>
+                <span className="text-white/90">
+                  {isSignup 
+                    ? 'Start creating with AI-powered songwriting tools'
+                    : 'Real-time collaboration with your band'}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <Sparkles className="w-4 h-4" />
                 </div>
-                <span className="text-white/90">AI-powered songwriting tools</span>
+                <span className="text-white/90">
+                  {isSignup
+                    ? 'Collaborate with musicians worldwide'
+                    : 'AI-powered songwriting tools'}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <Music className="w-4 h-4" />
                 </div>
-                <span className="text-white/90">Invite-only private projects</span>
+                <span className="text-white/90">
+                  {isSignup
+                    ? 'Invite-only private projects for your work'
+                    : 'Invite-only private projects'}
+                </span>
               </div>
             </div>
           </motion.div>
@@ -201,10 +220,12 @@ export default function SignInPage() {
 
           <div className="text-center lg:text-left">
             <h2 className="text-4xl font-bold text-white mb-2">
-              Welcome Back
+              {isSignup ? 'Get Started' : 'Welcome Back'}
             </h2>
             <p className="text-gray-400">
-              Sign in to continue building your music empire
+              {isSignup 
+                ? 'Create your account and start building your music empire' 
+                : 'Sign in to continue building your music empire'}
           </p>
         </div>
 
@@ -227,6 +248,22 @@ export default function SignInPage() {
         )}
 
         <div className="space-y-4">
+          {/* Signup Context Message */}
+          {isSignup && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-4 bg-green-500/10 border border-green-500/30 rounded-xl"
+            >
+              <p className="text-sm text-green-300 font-semibold flex items-center gap-2">
+                🎸 Free Plan Included
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                Start with 3 projects, 1 collaborator, and all basic tools. Upgrade anytime!
+              </p>
+            </motion.div>
+          )}
+
           {/* Email Magic Link - PRIMARY METHOD */}
             <form onSubmit={handleEmailSignIn} className="space-y-4">
               <div className="p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
@@ -254,11 +291,17 @@ export default function SignInPage() {
                 disabled={loading}
                 className="w-full rounded-xl bg-orange-500 hover:bg-orange-600 px-4 py-3 text-base font-semibold text-white shadow-lg shadow-orange-500/20 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
               >
-                {loading ? 'Sending Magic Link...' : '✉️ Send Magic Link to My Email'}
+                {loading 
+                  ? 'Sending Magic Link...' 
+                  : isSignup 
+                    ? '✉️ Send Magic Link to Get Started'
+                    : '✉️ Send Magic Link to My Email'}
               </button>
               
               <p className="text-xs text-gray-500 text-center">
-                Check your inbox after clicking above!
+                {isSignup
+                  ? 'Check your inbox after clicking! No password needed.'
+                  : 'Check your inbox after clicking above!'}
               </p>
           </form>
 
@@ -303,5 +346,17 @@ export default function SignInPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
+      </div>
+    }>
+      <AuthForm />
+    </Suspense>
   );
 }

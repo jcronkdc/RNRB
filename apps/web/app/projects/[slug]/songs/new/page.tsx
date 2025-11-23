@@ -29,23 +29,32 @@ export default function NewSongPage() {
   });
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
+    const loadProject = async () => {
+      const { data: { user } } = await supabase!.auth.getUser();
       if (!user) {
         router.push('/auth');
         return;
       }
       
       setUser(user);
-      const projects = user.user_metadata?.projects || [];
-      const foundProject = projects.find((p: any) => p.slug === slug);
       
-      if (!foundProject) {
+      // Load project from API
+      try {
+        const response = await fetch(`/api/projects/${slug}?userId=${user.id}`);
+        if (!response.ok) {
+          router.push('/projects');
+          return;
+        }
+        
+        const foundProject = await response.json();
+        setProject(foundProject);
+      } catch (error) {
+        console.error('Error loading project:', error);
         router.push('/projects');
-        return;
       }
-      
-      setProject(foundProject);
-    });
+    };
+    
+    loadProject();
   }, [router, slug]);
 
   const handleSave = async () => {
@@ -64,41 +73,33 @@ export default function NewSongPage() {
         .filter((c: string) => c.trim())
         .join('\n\n');
 
-      const newSong = {
-        id: `song_${Date.now()}`,
-        title: songData.title,
-        key: songData.key || null,
-        tempo: songData.tempo ? parseInt(songData.tempo) : null,
-        time_signature: songData.time_signature,
-        lyrics,
-        songStructure: songData.songStructure,
-        collaborators: 1,
-        has_lyrics: !!lyrics,
-        has_audio: false,
-        created_at: new Date().toISOString()
-      };
+      // Extract chords from song structure
+      const chords = songData.songStructure
+        .flatMap((block: any) => block.chords || [])
+        .filter((c: any) => c);
 
-      const allProjects = user.user_metadata?.projects || [];
-      const updatedProjects = allProjects.map((p: any) => {
-        if (p.slug === slug) {
-          return {
-            ...p,
-            songs: [...(p.songs || []), newSong],
-            song_count: (p.song_count || 0) + 1,
-            updated_at: new Date().toISOString()
-          };
-        }
-        return p;
+      // Create song via API
+      const response = await fetch(`/api/projects/${slug}/songs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          title: songData.title,
+          key: songData.key || null,
+          tempo: songData.tempo || null,
+          timeSignature: songData.time_signature,
+          lyrics,
+          chords: chords.length > 0 ? chords : null,
+          songStructure: songData.songStructure,
+        }),
       });
 
-      const { error } = await supabase!.auth.updateUser({
-        data: {
-          ...user.user_metadata,
-          projects: updatedProjects
-        }
-      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create song');
+      }
 
-      if (error) throw error;
+      const newSong = await response.json();
 
       setMessage({ type: 'success', text: 'Song created! Redirecting...' });
       setTimeout(() => {
