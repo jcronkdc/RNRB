@@ -3,6 +3,7 @@
 import * as Ably from 'ably';
 import { AblyProvider as ReactAblyProvider } from 'ably/react';
 import { useEffect, useState, type ReactNode } from 'react';
+import { createBrowserClient } from '@/lib/supabase';
 
 interface Props {
   children: ReactNode;
@@ -13,9 +14,37 @@ export function AblyProvider({ children, lazy = true }: Props) {
   const [client, setClient] = useState<Ably.Realtime | null>(null);
   const [shouldInit, setShouldInit] = useState(!lazy);
   const [hasError, setHasError] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check authentication status before initializing Ably
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const supabase = createBrowserClient();
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsAuthenticated(!!session);
+      } catch (error) {
+        console.warn('Auth check failed:', error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const supabase = createBrowserClient();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !shouldInit) {
+    // Only initialize if authenticated and shouldInit is true
+    if (typeof window === 'undefined' || !shouldInit || !isAuthenticated) {
       return;
     }
 
@@ -56,19 +85,19 @@ export function AblyProvider({ children, lazy = true }: Props) {
       // App continues without real-time features
       return undefined;
     }
-  }, [shouldInit]);
+  }, [shouldInit, isAuthenticated]);
 
   // Lazy initialization: only connect when user interacts or after delay
   useEffect(() => {
-    if (lazy && !shouldInit) {
-      // Delay Ably connection until after initial render
+    if (lazy && !shouldInit && isAuthenticated) {
+      // Delay Ably connection until after initial render (only if authenticated)
       const timer = setTimeout(() => {
         setShouldInit(true);
       }, 2000); // Initialize after 2 seconds or user interaction
 
       return () => clearTimeout(timer);
     }
-  }, [lazy, shouldInit]);
+  }, [lazy, shouldInit, isAuthenticated]);
 
   // Always render children immediately - don't block app
   // This makes the app resilient and fast
