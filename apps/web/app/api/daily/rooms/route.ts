@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json().catch(() => ({ error: 'Failed to create room' }));
       return NextResponse.json(
         { error: error.error || 'Failed to create room' },
         { status: response.status }
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!tokenResponse.ok) {
-      const error = await tokenResponse.json();
+      const error = await tokenResponse.json().catch(() => ({ error: 'Failed to create meeting token' }));
       return NextResponse.json(
         { error: error.error || 'Failed to create meeting token' },
         { status: tokenResponse.status }
@@ -105,7 +105,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating Daily room:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
@@ -117,6 +120,21 @@ export async function GET(request: NextRequest) {
     const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // ✅ SECURITY: Video calls are Studio-tier only (check access before API call)
+    try {
+      await requireFeatureAccess('videoCalls');
+    } catch (error: any) {
+      return NextResponse.json(
+        { 
+          error: error.message || 'Upgrade to Studio plan to access video calls',
+          requiresUpgrade: true,
+          currentTier: error.tier || 'free',
+          requiredTier: 'studio',
+        },
+        { status: 403 }
+      );
     }
 
     if (!DAILY_API_KEY) {
@@ -135,7 +153,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json().catch(() => ({ error: 'Failed to fetch rooms' }));
       return NextResponse.json(
         { error: error.error || 'Failed to fetch rooms' },
         { status: response.status }
@@ -147,7 +165,10 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching Daily rooms:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
