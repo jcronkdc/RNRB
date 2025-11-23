@@ -143,13 +143,49 @@
 - Components load correctly (verified via browser automation)
 
 **🧪 FEATURES AWAITING 2-BROWSER TEST:**
-1. **Project Chat (267 lines)** - Ably integrated, needs 2-user message sync test
-2. **Video Rooms (122 lines)** - Daily.co fixed (401), needs auth + Studio tier test
-3. **Presence Indicators (135 lines)** - Ably real-time, needs join/leave detection test
-4. **Activity Feed (145 lines)** - Event broadcasting, needs 2-user activity test
-5. **Collaborative Whiteboard (293 lines)** - Canvas sync, needs 2-user drawing test
-6. **Real-Time Cursors (229 lines)** - Multi-cursor, needs 2-user movement test
-7. **Invite System** - Token-based, needs email delivery + acceptance test
+
+1. **💬 Project Chat (267 lines)** - Real-time messaging via Ably
+   - Features: Auto-scroll, timestamps, avatars, message history
+   - Test: Send message in Browser 1, verify appears in Browser 2 < 1s
+   - File: `apps/web/components/project-chat.tsx`
+
+2. **🎥 Video Rooms (122 lines + CollaborativeRoom.tsx)** - Daily.co Studio-tier feature
+   - Features Confirmed in Code:
+     - ✅ Screen Sharing (`enable_screenshare: true`)
+     - ✅ Recording (`enable_recording: true`)
+     - ✅ Live Streaming (`enable_live_streaming: true`)
+     - ✅ 50 Participants (`max_participants: 50`)
+     - ✅ Video/Audio toggle controls
+   - Cursor Control Note: Daily.co itself doesn't have built-in cursor control, BUT our separate Ably-based cursor system (`use-collaborative-cursors.ts`) shows cursors during screen sharing sessions
+   - Test: Create room, join from 2 browsers, test screen share + controls
+   - Files: `apps/web/components/project-video-room.tsx`, `apps/web/components/app/CollaborativeRoom.tsx`
+
+3. **🖱️ Real-Time Cursors (229 lines)** - Ably-based multi-user cursor tracking
+   - Features: User colors, labels, idle detection, 60fps animations
+   - Integration: Songwriting builder + setlist builder
+   - Use Case: Shows where collaborators are looking/editing in real-time
+   - Test: Move mouse in Browser 1, verify cursor appears in Browser 2
+   - Files: `apps/web/hooks/use-collaborative-cursors.ts`, `apps/web/components/cursor-overlay.tsx`
+
+4. **👥 Presence Indicators (135 lines)** - Who's online via Ably presence
+   - Features: Join/leave detection, idle status (2 min timeout), online count
+   - Test: Join in Browser 2, verify Browser 1 shows "2 active users"
+   - File: `apps/web/components/presence-indicator.tsx`
+
+5. **📢 Activity Feed (145 lines)** - Real-time event broadcasting via Ably
+   - Events: Project created, song added, member joined, etc.
+   - Test: Create project in Browser 1, verify feed updates in Browser 2 < 2s
+   - File: `apps/web/components/activity-feed.tsx`
+
+6. **🎨 Collaborative Whiteboard (293 lines)** - Real-time drawing sync via Ably
+   - Features: Pen, eraser, colors, save/load, real-time stroke sync
+   - Test: Draw in Browser 1, verify appears in Browser 2 in real-time
+   - File: `apps/web/components/collaborative-whiteboard.tsx`
+
+7. **✉️ Invite System** - Token-based collaboration invites
+   - Features: 7-day expiry, role-based permissions, email matching
+   - Test: Send invite, check email delivery, accept and verify access
+   - Files: `/api/invitations/send/route.ts`, `/invite/[token]/page.tsx`
 
 **📋 TESTING PROCESS (30-45 minutes required):**
 1. Browser 1: Sign in to https://www.cronkwaters.com/auth
