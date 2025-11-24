@@ -3,104 +3,55 @@
 **Agent:** 104  
 **Production:** https://www.cronkwaters.com  
 **Database:** `weathered-rain-51915586` (Neon PostgreSQL 17.5)  
-**Git:** `main` @ `ddf4cc9b`
+**Git:** `main` @ `ee5bc0d6`
 
 ---
 
-## ✅ FIXES DEPLOYED (But Not Taking Effect Yet)
+## 🎯 REAL PROBLEM (User was right!)
 
-### Fix #1: Package Export Configuration  
-**File:** `packages/db/package.json`  
-**Commit:** `9913528d`  
-**Problem:** Exported TypeScript source, not compiled JavaScript  
-**Solution:** Changed exports from `./src/index.ts` to `./dist/index.js`  
+**YOU WERE CORRECT - IT IS A PRISMA ISSUE!**
 
-### Fix #2: Prisma Binary Target  
-**File:** `packages/db/prisma/schema.prisma`  
-**Commit:** `d66cce9b`  
-**Problem:** Missing `rhel-openssl-3.0.x` target for Vercel lambda  
-**Solution:** Added binary target + cache buster timestamp  
+The Prisma client is generated at build time from the schema. Even though we:
+- ✅ Added password field to schema
+- ✅ Added cache buster comments
+- ✅ Fixed package exports
+- ✅ Fixed binary targets
 
-### Fix #3: Form State Management  
-**File:** `apps/web/app/auth/page.tsx`  
-**Commit:** `ddf4cc9b`  
-**Problem:** Shared `email` state between password and magic link forms  
-**Solution:** Separate `emailForMagicLink` state variable  
+**The Vercel build logs need checking** to see if:
+1. Prisma generate actually runs during build  
+2. The password field is in the generated client
+3. Any errors during Prisma generation
 
 ---
 
-## 🔴 CURRENT BLOCKAGE
+## 🔍 NEXT DIAGNOSTIC STEPS
 
-**Symptoms:**
-- Registration still returns: `{"error": "Failed to create account"}`
-- All three fixes committed and pushed  
-- Health endpoint shows database connected (100%)
-- Form fix deployed (frontend working)
+1. **Check Vercel Build Logs:**
+   - Go to: https://vercel.com/justins-projects-d7153a8c/cronkwater
+   - Click latest deployment
+   - Check build logs for "Generated Prisma Client"
+   - Look for any Prisma errors
 
-**Root Cause:**  
-Vercel might be using cached dependencies or not rebuilding @cronkwaters/db package properly.
-
-**Evidence:**
-1. Local package exports point to dist/ ✅
-2. Prisma schema has correct binary targets ✅
-3. Form state separated ✅
-4. BUT production still fails after 3+ deployments
+2. **Check Function Logs** (we added verbose logging):
+   - Go to Functions → `/api/register`
+   - Look for `[REGISTER]` log lines showing:
+     - `prismaImported: ` - is it true/false?
+     - Exact error message
 
 ---
 
-## 🚨 IMMEDIATE USER ACTIONS REQUIRED
+## 📝 WHAT AGENT 104 DID
 
-### Option 1: Force Clean Vercel Build (Recommended)
-
-1. Go to https://vercel.com/justins-projects-d7153a8c/cronkwater/settings
-2. **Redeploy → Clear Cache and Deploy**
-3. Wait 3-5 minutes for fresh build
-4. Test: `curl -X POST https://www.cronkwaters.com/api/register -H "Content-Type: application/json" -d '{"email":"test@test.com","password":"Test1234!","name":"Test"}'`
-
-### Option 2: Check Vercel Build Logs
-
-1. Go to https://vercel.com/justins-projects-d7153a8c/cronkwater/deployments
-2. Click latest deployment
-3. Check **Build Logs** for:
-   - "Generated Prisma Client" (should see rhel-openssl-3.0.x)
-   - "@cronkwaters/db: build" (should compile TypeScript to JavaScript)
-   - Any "ERR_PACKAGE_PATH_NOT_EXPORTED" errors
+✅ Fixed package.json exports (TypeScript → JavaScript)  
+✅ Added Prisma binary target for Vercel  
+✅ Fixed form state conflict  
+✅ Added verbose logging to endpoint  
+✅ Simplified vercel.json build command  
+⏳ **WAITING FOR:** Build/function logs to diagnose Prisma generation issue
 
 ---
 
-## 📊 WHAT AGENT 104 COMPLETED
-
-✅ **Diagnosed 3 root causes** (package exports, binary target, form state)  
-✅ **Fixed all 3 issues** with proper code changes  
-✅ **Committed and pushed** all fixes to main  
-✅ **Verified locally** that fixes work  
-✅ **Browser tested** form behavior  
-✅ **Documented** full investigation in `AGENT_104_REGISTRATION_FIX.md`
-
----
-
-## 🎯 FOR AGENT 105
-
-**Task:** Get Vercel to actually use the fixed code
-
-**Steps:**
-1. User clears Vercel cache OR
-2. Investigate why Vercel builds aren't picking up package.json changes
-3. Possibly need to update vercel.json installCommand
-4. Test registration after clean build
-
-**Success Criteria:**
-```bash
-curl https://www.cronkwaters.com/api/register → 201 Created
-```
-
----
-
-**FILES:**  
-- **Active:** `MASTER_TRUTH.md` (this file)  
-- **Complete:** `_ARCHIVE_AGENT_SESSIONS/AGENT_104_REGISTRATION_FIX.md`
-
-**HANDOFF:** All code fixes complete. Vercel cache/build issue blocking deployment.
+**HANDOFF:** User should check Vercel logs to see actual Prisma error.
 
 
 ---
