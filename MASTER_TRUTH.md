@@ -16,14 +16,19 @@
 - Endpoints: `/api/register`, all community APIs
 - Auth: Google OAuth + Email Magic Links
 
-### 🔴 Blockage #1: Update Vercel DATABASE_URL (3 mins)
+### 🔴 Blockage #1: Registration Still Failing (Investigating)
 
-**Action:** Paste this into Vercel env vars:
-```
-postgresql://neondb_owner:npg_8vPmNto5nDip@ep-sparkling-boat-af13jmny-pooler.c-2.us-west-2.aws.neon.tech/neondb?channel_binding=require&sslmode=require
-```
+**Status:** DATABASE_URL set in all Vercel environments  
+**Neon:** Operational (0 users, ready)  
+**Issue:** POST /api/register returns 500 "Failed to create account"
 
-**URL:** https://vercel.com/justins-projects-d7153a8c/cronkwater/settings/environment-variables
+**Actions Taken:**
+- ✅ Set DATABASE_URL in production/preview/development
+- ✅ Removed conflicting DATABASE_URL_UNPOOLED
+- ✅ Triggered 3 redeployments
+- ✅ Verified Neon connection works directly
+
+**Next Step:** Manual check via Vercel dashboard logs or browser dev tools
 
 ### 🚨 Blockage #2: Rotate Exposed Credentials
 
