@@ -43,6 +43,11 @@ const SetlistGeneratorModal = dynamic(
   { ssr: false }
 );
 
+const SetlistTemplatesModal = dynamic(
+  () => import('@/components/setlist-templates-modal').then((m) => m.SetlistTemplatesModal),
+  { ssr: false }
+);
+
 type Setlist = {
   id: string;
   name: string;
@@ -88,6 +93,7 @@ export default function SetlistsPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [showSpotifyImport, setShowSpotifyImport] = useState(false);
   const [showGenerator, setShowGenerator] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
   const [shows, setShows] = useState<Show[]>([]);
   const [loadingShows, setLoadingShows] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
@@ -149,6 +155,12 @@ export default function SetlistsPage() {
   const handleGenerateSetlist = (generatedSongs: any[]) => {
     console.log('Generated setlist:', generatedSongs);
     // Would create new setlist with generated songs
+  };
+
+  const handleApplyTemplate = (songs: any[], template: any) => {
+    console.log(`Applied template "${template.name}" with ${songs.length} songs`);
+    // Would create new setlist with template songs
+    setShowTemplates(false);
   };
 
   const loadShows = async () => {
@@ -443,6 +455,14 @@ export default function SetlistsPage() {
           </div>
           <div className="flex items-center gap-3">
             <Button
+              onClick={() => setShowTemplates(true)}
+              className="flex items-center gap-2 rounded-xl px-4 py-2"
+              variant="outline"
+            >
+              <Sparkles className="h-4 w-4" />
+              Templates
+            </Button>
+            <Button
               onClick={() => setShowSpotifyImport(true)}
               className="flex items-center gap-2 rounded-xl px-4 py-2"
               variant="outline"
@@ -577,6 +597,15 @@ export default function SetlistsPage() {
             projectId={project.id || `temp_${slug}`}
             onClose={() => setShowGenerator(false)}
             onGenerated={handleGenerateSetlist}
+          />
+        )}
+
+        {/* Setlist Templates Modal */}
+        {showTemplates && user && (
+          <SetlistTemplatesModal
+            projectId={project.id || `temp_${slug}`}
+            onClose={() => setShowTemplates(false)}
+            onApply={handleApplyTemplate}
           />
         )}
 
