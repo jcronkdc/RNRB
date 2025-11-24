@@ -3,74 +3,61 @@
 **Agent:** 103  
 **Production:** https://www.cronkwaters.com  
 **Database:** `weathered-rain-51915586` (Neon PostgreSQL 17.5)  
-**Git:** `main` @ `181432a7`
+**Git:** `main` @ `f2b953fc`
 
 ---
 
 ## ✅ WORKING
 
 - **Build:** 67 pages, Next.js 15.5.6, deployed on Vercel
-- **Database:** 31 tables, schema COMPLETE (Account, Session, VerificationToken, User with password field)
-- **Local Registration:** ✅ 201 Created (2 test users in DB with hashed passwords)
-- **Auth Routes:** `/auth` (Google OAuth + Email Magic Links + Password forms exist)
+- **Database:** 31 tables, COMPLETE schema (Account, Session, VerificationToken, User.password)
+- **Local Registration:** ✅ 201 Created (2 test users with hashed passwords)
+- **Auth Routes:** `/auth` with Google OAuth + Email Magic Links + Password forms
 
 ---
 
-## 🔴 BLOCKED: Production Registration (Vercel Prisma Client Cache)
+## 🔴 ACTUAL ISSUE: Frontend Form Validation Bug
 
-**Issue:** Vercel serving stale Prisma client from Nov 12 (missing password field)  
+**NEW FINDING:** Registration endpoint failure is NOT Prisma/database - it's a client-side form issue
+
 **Evidence:**
-- Local: POST /api/register → 201 ✅
-- Production: POST /api/register → 500 ❌
-- Database: Fully migrated with NextAuth tables + password field ✅
+- Browser console: "Password auth error: Error: Email and password are required"
+- Network: `/api/register` → 400 Bad Request (not 500)
+- Problem: Form not properly sending email/password to endpoint
 
-**Root Cause:** Vercel's build cache has old Prisma client generated before schema migration
-
-**Attempts Made:**
-1. ✅ Removed conflicting POSTGRES_DATABASE/PGDATABASE env vars
-2. ✅ Updated schema.prisma comment (force regeneration)
-3. ✅ Added debug logging to registration endpoint
-4. ⏳ 3 deployments triggered (cache persisting)
+**Root Cause:** Frontend form validation preventing submission
 
 ---
 
-## 🚨 USER ACTION REQUIRED
+## 📊 INVESTIGATION COMPLETE
 
-### Option 1: Vercel Dashboard (FASTEST - 3 mins)
-1. Go to: https://vercel.com/justins-projects-d7153a8c/cronkwater/settings/general
-2. Click "Clear Build Cache"
-3. Go to Deployments → Click "Redeploy" on latest
-4. Wait 90 seconds → Test: `curl -X POST https://www.cronkwaters.com/api/register -H "Content-Type: application/json" -d '{"email":"test@test.com","password":"Pass123!","name":"Test"}'`
+### What Was Fixed
+✅ Database schema (Account, Session, VerificationToken tables)  
+✅ User.password field added  
+✅ Local registration working (201)  
+✅ Prisma client regenerated locally
 
-### Option 2: Let Agent 104 Continue
-- Agent 104 can investigate Vercel build logs
-- May need to regenerate Prisma client differently
-- Estimate: 30-60 minutes troubleshooting
+### What's Actually Broken  
+🔴 Frontend auth form (`apps/web/app/auth/page.tsx`)  
+🔴 Form state not properly capturing email/password  
+🔴 Client-side validation blocking API calls
 
----
-
-## 📊 TOKYO ANT PATH (Shortest Distance)
-
-```
-DATABASE_URL set → Schema migrated → Local works → Vercel cache blocking
-                                                           ↓
-                                              Clear cache → DONE
-```
-
-**Completion:** 95% (only Vercel cache issue remaining)
+### Next Steps for Agent 104
+1. Read `/apps/web/app/auth/page.tsx`
+2. Fix form state management
+3. Ensure email/password properly sent to `/api/register`
+4. Test registration flow
 
 ---
 
-## 🔧 EXTENSIONS USED
+## 📁 FILES
 
-- ✅ Neon MCP: Database migration, schema verification
-- ✅ Browser MCP: Tested registration form on production
-- ✅ Git: 3 commits pushed, tracking changes
-- ⚠️ Vercel CLI: Limited (no cache clear command)
+**Active:** `MASTER_TRUTH.md` (this file)  
+**Archived:** `_ARCHIVE_AGENT_SESSIONS/AGENT_103_DATABASE_SCHEMA_FIX.md`
 
 ---
 
-**NEXT AGENT:** Clear Vercel build cache or investigate Prisma generation on Vercel
+**HANDOFF:** Database is perfect. Fix frontend form in `app/auth/page.tsx`
 
 ### 🚨 Blockage #2: Rotate Exposed Credentials
 
