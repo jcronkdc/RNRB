@@ -3,63 +3,71 @@
 **Agent:** 105  
 **Production:** https://www.cronkwaters.com  
 **Database:** `weathered-rain-51915586` (Neon PostgreSQL 17.5)  
-**Git:** `main` @ `012a16b0`
+**Git:** `main` @ `f487115f`
 
 ---
 
-## 🎯 CLEAN BUILD + LONG-TERM FIX COMPLETE
+## 🎯 ROOT CAUSE DISCOVERED! (Build Log Analysis)
 
-**User was right - it WAS too complicated!**
-
-### What Was Wrong:
-- Prisma generate scattered across 3 different places
-- Build commands duplicating work
-- Unclear execution order
-- Monorepo complexity causing cache issues
-
-### The Simplification (Agent 105):
-
-✅ **ONE PLACE for Prisma generate**: `packages/db/package.json`  
-✅ **Turbo dependency chain handles order**: `db → web`  
-✅ **Removed duplicate commands** from root & web packages  
-✅ **Verified locally**: Prisma client has password field  
-✅ **Pushed clean build**: Vercel rebuilding now
-
-### New Build Flow:
+**THE SMOKING GUN** (from Vercel build logs):
 ```
-pnpm build (Vercel)
-  ├─> turbo run build
-  ├─> @cronkwaters/db: prisma generate && tsc -b ← GENERATES PRISMA
-  └─> @rnrb/web: next build ← IMPORTS FRESH CLIENT
+23:38:42.888 > Detected Turbo. Adjusting default settings...
+23:38:47.117 > @rnrb/web@0.1.0 build /vercel/path0/apps/web
+23:38:47.117 > next build
+```
+
+**PROBLEM:** Vercel detected Turbo and "adjusted" to run `apps/web` build DIRECTLY  
+**RESULT:** Bypassed Turbo dependency chain → skipped `@cronkwaters/db` build → Prisma never generated → password field missing → registration fails
+
+---
+
+## 🔧 THE FIX (In Progress)
+
+✅ Added `vercel-build` script to `apps/web/package.json`  
+✅ Script explicitly builds db package (prisma generate) BEFORE web app  
+✅ Updated `vercel.json` with custom buildCommand  
+✅ Set `framework: null` to prevent Vercel's Turbo shortcut  
+⏳ **TESTING:** Latest deployment build (fixing install command)
+
+### Build Flow (Fixed):
+```
+vercel.json → pnpm install && cd apps/web && pnpm run vercel-build
+  ├─> cd ../../packages/db && pnpm run build
+  │   └─> prisma generate && tsc -b
+  └─> cd ../../apps/web && next build
 ```
 
 ---
 
-## ⏳ TESTING NOW
+## 📝 WHY LOGIN WAS SO COMPLICATED
 
-**Deployment:** `012a16b0` rebuilding on Vercel  
-**Expected:** Registration endpoint returns `201 Created` instead of `Failed to create account`
+**You were right to be frustrated!** Here's what happened:
 
-**Test Command (after 90 sec):**
+1. **Monorepo + Turbo + Vercel** = 3 build systems fighting each other
+2. **Vercel "optimizations"** bypassed our carefully designed build chain
+3. **Code generation timing** - Prisma must generate BEFORE Next.js imports it
+4. **Silent failures** - Vercel cached stale Prisma client, no clear errors
+5. **Scattered commands** - 3 different places trying to generate Prisma
+
+**The Lesson:** Even "simple" auth gets complex when build tooling fights you.
+
+---
+
+## ⏳ NEXT TEST
+
+**Command after deploy:**
 ```bash
 curl -X POST https://www.cronkwaters.com/api/register \
   -H "Content-Type: application/json" \
-  -d '{"email":"victory-'$(date +%s)'@cronkwaters.com","password":"Victory2024!","name":"Victory Test"}'
+  -d '{"email":"test@test.com","password":"Test1234!","name":"Test"}'
 ```
 
----
-
-## 📝 WHAT AGENT 105 DID
-
-✅ Simplified build system (removed complexity)  
-✅ Verified password field in local Prisma client  
-✅ Consolidated Prisma generation to single location  
-✅ Forced Vercel clean rebuild  
-⏳ **WAITING FOR:** Vercel deployment + registration test
+**Expected:** `201 Created` with user object  
+**If fails:** Check Vercel function logs for `[REGISTER]` lines
 
 ---
 
-**HANDOFF:** Wait 90 seconds, test registration, verify 201 response.
+**HANDOFF:** Deploying fix now. Watch for `● Ready` status on Vercel.
 
 
 ---
