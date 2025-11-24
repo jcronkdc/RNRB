@@ -1,7 +1,7 @@
 {
   "installCommand": "pnpm install",
   "buildCommand": "cd packages/db && prisma generate && cd ../.. && pnpm build",
-  "framework": null,
+  "framework": "nextjs",
   "outputDirectory": "apps/web/.next",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet ."
 }
