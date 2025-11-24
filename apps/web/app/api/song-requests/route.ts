@@ -15,6 +15,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Setlist ID required' }, { status: 400 });
     }
 
+    // Debug: Log available models
+    console.log('🔍 Available db models:', Object.keys(db).filter(k => !k.startsWith('_') && !k.startsWith('$')));
+    console.log('🔍 Checking songRequest accessor:', typeof db.songRequest);
+
     const requests = await db.songRequest.findMany({
       where: { setlistId },
       orderBy: [
@@ -26,10 +30,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ requests });
   } catch (error) {
     console.error('Song requests GET error:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ 
       error: 'Failed to fetch song requests',
-      details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      details: errorMessage,
+      availableModels: Object.keys(db).filter(k => !k.startsWith('_') && !k.startsWith('$'))
     }, { status: 500 });
   }
 }
