@@ -1,5 +1,4 @@
 import { prisma } from '@cronkwaters/db';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import NextAuth, { type NextAuthOptions, type Session } from 'next-auth';

@@ -1,9 +1,10 @@
 import { prisma } from '@cronkwaters/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   try {
     const session = await auth();
@@ -64,4 +65,3 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ error: 'Failed to toggle like' }, { status: 500 });
   }
 }
-

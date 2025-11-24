@@ -1,8 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { User, Music, Heart, Users, Loader2 } from 'lucide-react';
+import { Loader2, Music, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
 import { TrackCard } from '@/components/track-card';
 
 interface UserProfile {
@@ -16,14 +17,15 @@ interface UserProfile {
   isFollowing: boolean;
 }
 
-export default function CommunityUserPage({ params }: { params: { id: string } }) {
+export default function CommunityUserPage({ params }: { params: Promise<{ id: string }> }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await fetch(`/api/community/users/${params.id}`);
+        const resolvedParams = await params;
+        const response = await fetch(`/api/community/users/${resolvedParams.id}`);
         if (response.ok) {
           const data = await response.json();
           setProfile(data.user);
@@ -35,7 +37,7 @@ export default function CommunityUserPage({ params }: { params: { id: string } }
       }
     }
     fetchProfile();
-  }, [params.id]);
+  }, [params]);
 
   if (loading) {
     return (
@@ -69,7 +71,11 @@ export default function CommunityUserPage({ params }: { params: { id: string } }
             {/* Avatar */}
             <div className="flex h-24 w-24 items-center justify-center rounded-full bg-orange-500/10">
               {profile.image ? (
-                <img src={profile.image} alt={profile.name || 'User'} className="h-full w-full rounded-full" />
+                <img
+                  src={profile.image}
+                  alt={profile.name || 'User'}
+                  className="h-full w-full rounded-full"
+                />
               ) : (
                 <User className="h-12 w-12 text-orange-500" />
               )}
@@ -77,7 +83,9 @@ export default function CommunityUserPage({ params }: { params: { id: string } }
 
             {/* Info */}
             <div className="flex-1 text-center md:text-left">
-              <h1 className="mb-2 text-3xl font-bold text-white">{profile.name || 'Unknown Artist'}</h1>
+              <h1 className="mb-2 text-3xl font-bold text-white">
+                {profile.name || 'Unknown Artist'}
+              </h1>
               <p className="text-gray-400">{profile.email}</p>
 
               {/* Stats */}
@@ -141,4 +149,3 @@ export default function CommunityUserPage({ params }: { params: { id: string } }
     </div>
   );
 }
-

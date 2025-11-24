@@ -1,166 +1,197 @@
-# 🔐 Google OAuth Configuration Guide
+# 🔑 Google OAuth Configuration Guide
 
-## ⚡ Quick Setup (5 minutes)
-
-### Step 1: Get Google OAuth Credentials
-
-1. **Go to Google Cloud Console:**
-   - Visit: https://console.cloud.google.com
-
-2. **Create/Select Project:**
-   - Click project dropdown (top left)
-   - Create new project: "Rock N' Roll Basement" (or use existing)
-
-3. **Enable Google+ API:**
-   - Go to "APIs & Services" → "Library"
-   - Search for "Google+ API" or "Google Identity"
-   - Click "Enable"
-
-4. **Create OAuth 2.0 Credentials:**
-   - Go to "APIs & Services" → "Credentials"
-   - Click "+ CREATE CREDENTIALS" → "OAuth client ID"
-   - Application type: "Web application"
-   - Name: "Rock N' Roll Basement - Production"
-
-5. **Add Authorized Redirect URIs:**
-
-   ```
-   https://www.cronkwaters.com/api/auth/callback/google
-   https://cronkwaters.com/api/auth/callback/google
-   ```
-
-6. **Copy Credentials:**
-   - Client ID: (starts with something like `1234567890-abc...apps.googleusercontent.com`)
-   - Client Secret: (random string like `GOCSPX-abc123...`)
-
-### Step 2: Set Environment Variables in Vercel
-
-1. **Go to Vercel Dashboard:**
-   - Visit: https://vercel.com/justins-projects-d7153a8c/cronkwater/settings/environment-variables
-
-2. **Add Variables:**
-
-   **Variable 1:**
-   - Key: `GOOGLE_CLIENT_ID`
-   - Value: (paste your Client ID)
-   - Environments: ✅ Production, ✅ Preview, ✅ Development
-
-   **Variable 2:**
-   - Key: `GOOGLE_CLIENT_SECRET`
-   - Value: (paste your Client Secret)
-   - Environments: ✅ Production, ✅ Preview, ✅ Development
-
-3. **Click "Save"**
-
-### Step 3: Redeploy
-
-```bash
-# Trigger redeploy to pick up new env vars
-git commit --allow-empty -m "config: Add Google OAuth credentials"
-git push origin main
-```
-
-Or use Vercel Dashboard:
-
-- Go to "Deployments"
-- Click "..." on latest deployment
-- Click "Redeploy"
+**Vercel Project:** `prj_IVRXSJT78FdVy8E5Sj51440HAuu3`  
+**Production URL:** https://www.cronkwaters.com  
+**Date:** 2025-11-24
 
 ---
 
-## ✅ Verification
+## 🎯 Quick Setup Steps
 
-After deployment completes:
+### 1. Go to Google Cloud Console
+https://console.cloud.google.com/apis/credentials
 
-1. **Visit:** https://www.cronkwaters.com/auth
-2. **Click:** "Sign in with Google" button
-3. **Expected:** Google OAuth consent screen appears
-4. **After consent:** Redirects back to your dashboard
+### 2. Create or Edit OAuth 2.0 Client ID
 
----
-
-## 🔍 Troubleshooting
-
-### Error: "redirect_uri_mismatch"
-
-**Fix:** Double-check redirect URIs in Google Console match exactly:
+#### Authorized Redirect URIs (Add ALL of these):
 
 ```
 https://www.cronkwaters.com/api/auth/callback/google
+https://cronkwaters.com/api/auth/callback/google
+https://web-cronkwaters.vercel.app/api/auth/callback/google
+https://web-git-main-cronkwaters.vercel.app/api/auth/callback/google
 ```
 
-### Error: "OAuth client not configured"
-
-**Fix:** Verify environment variables are set in Vercel and redeploy
-
-### Error: "Access blocked: This app's request is invalid"
-
-**Fix:** Enable Google+ API in Google Cloud Console
-
----
-
-## 🧪 Current Status
-
-**Build Output Shows:**
-
-```javascript
-{
-  hasGoogleClientId: false,    // ← Currently missing
-  hasGoogleClientSecret: false, // ← Currently missing
-  hasEmailServer: false,
-  hasEmailFrom: false
-}
+**For Preview Deployments (Optional but recommended):**
+```
+https://*.vercel.app/api/auth/callback/google
 ```
 
-**After Fix:**
+#### Authorized JavaScript Origins:
 
-```javascript
-{
-  hasGoogleClientId: true,     // ✅ Fixed
-  hasGoogleClientSecret: true, // ✅ Fixed
-  hasEmailServer: false,       // Optional (magic links)
-  hasEmailFrom: false          // Optional (magic links)
-}
+```
+https://www.cronkwaters.com
+https://cronkwaters.com
+https://web-cronkwaters.vercel.app
+```
+
+**For Preview Deployments (Optional):**
+```
+https://*.vercel.app
 ```
 
 ---
 
-## 📋 Complete Environment Variables Checklist
+## 🔐 After Creating OAuth Client
 
-**Required for Auth:**
+### 3. Copy Your Credentials
 
-- ✅ `DATABASE_URL` (already set - Neon/PostgreSQL)
-- ✅ `NEXTAUTH_SECRET` (already set)
-- ✅ `NEXTAUTH_URL` (should be `https://www.cronkwaters.com`)
-- ❌ `GOOGLE_CLIENT_ID` **← NEED TO ADD**
-- ❌ `GOOGLE_CLIENT_SECRET` **← NEED TO ADD**
+You'll get:
+- **Client ID:** `251126367330-xxxxx.apps.googleusercontent.com`
+- **Client Secret:** `GOCSPX-xxxxx`
 
-**Optional (for other features):**
+### 4. Add to Vercel Environment Variables
 
-- `NEXT_PUBLIC_ABLY_CLIENT_ID` (real-time chat)
-- `DAILY_API_KEY` (video calls)
-- `EMAIL_SERVER` (magic links)
-- `EMAIL_FROM` (magic links)
+**Go to:** https://vercel.com/cronkwaters/web/settings/environment-variables
+
+**Or via Vercel project ID:**
+```
+https://vercel.com/team_WeBoOSXWzKGtRgHXfRURkxyZ/prj_IVRXSJT78FdVy8E5Sj51440HAuu3/settings/environment-variables
+```
+
+**Add these variables for ALL environments (Production, Preview, Development):**
+
+```bash
+GOOGLE_CLIENT_ID=251126367330-xxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-xxxxx
+```
+
+### 5. Verify NEXTAUTH_URL is Correct
+
+Make sure this is set in Vercel:
+
+```bash
+NEXTAUTH_URL=https://www.cronkwaters.com
+```
+
+### 6. Trigger Deployment
+
+```bash
+git commit --allow-empty -m "chore: update OAuth config"
+git push origin main
+```
+
+Or in Vercel dashboard: **Deployments** → **Redeploy** (top right)
 
 ---
 
-## 🎯 Next Steps After OAuth Config
+## ✅ Testing Your OAuth Setup
 
-1. ✅ Configure OAuth (this guide)
-2. Test sign-in flow: https://www.cronkwaters.com/auth
-3. Verify user record created in database
-4. Test dashboard access after sign-in
-5. Test sign-out
+### Test on Production:
+
+1. Go to: https://www.cronkwaters.com/signin
+2. Click "Sign in with Google"
+3. Should redirect to Google OAuth consent screen
+4. After approval, should redirect back to your app
+5. Should create session and redirect to dashboard
+
+### Debug if it Fails:
+
+Check these URLs for errors:
+
+```bash
+# Health check
+curl https://www.cronkwaters.com/api/health | jq '.'
+
+# Auth providers check
+curl https://www.cronkwaters.com/api/auth/debug/providers | jq '.'
+
+# Should show: "google": { "clientIdPresent": true, "clientSecretPresent": true }
+```
 
 ---
 
-## 🔒 Security Notes
+## 🐛 Common Issues
 
-- **Never commit credentials to Git**
-- **Use different OAuth clients for dev/staging/production**
-- **Rotate secrets if accidentally exposed**
-- **Monitor OAuth usage in Google Console**
+### Error: "redirect_uri_mismatch"
+
+**Problem:** The redirect URI in Google Console doesn't match the one your app is sending.
+
+**Solution:** 
+1. Copy the EXACT URL from the error message
+2. Add it to "Authorized Redirect URIs" in Google Console
+3. Wait 5 minutes for Google's cache to update
+4. Try again
+
+### Error: "invalid_client"
+
+**Problem:** Client ID or Client Secret is wrong in Vercel.
+
+**Solution:**
+1. Double-check GOOGLE_CLIENT_ID in Vercel matches Google Console
+2. Double-check GOOGLE_CLIENT_SECRET in Vercel matches Google Console
+3. Redeploy after updating
+
+### Error: "access_denied"
+
+**Problem:** OAuth consent screen not configured properly.
+
+**Solution:**
+1. Go to: https://console.cloud.google.com/apis/credentials/consent
+2. Fill in all required fields (App name, Support email, etc.)
+3. Add test users if in "Testing" mode
+4. Save and try again
 
 ---
 
-**READY TO PROCEED:** Follow Step 1-3 above to complete OAuth setup!
+## 📋 OAuth Consent Screen Settings
+
+### Application Type: **Web Application**
+
+### Application Information:
+- **App name:** CronkWaters (or your preferred name)
+- **User support email:** Your email
+- **App logo:** Upload your logo (optional)
+
+### Authorized Domains:
+```
+cronkwaters.com
+vercel.app
+```
+
+### Scopes:
+```
+.../auth/userinfo.email
+.../auth/userinfo.profile
+openid
+```
+
+### Publishing Status:
+- **Testing:** Only allows specific test users
+- **Production:** Requires Google verification (7-14 days)
+
+**For now, use "Testing" mode and add yourself as a test user.**
+
+---
+
+## 🔄 Security Best Practices
+
+1. **Never commit OAuth credentials to git** (already exposed once, don't do it again!)
+2. **Rotate credentials quarterly** or after any suspected breach
+3. **Use different OAuth clients for dev/staging/prod** (optional but recommended)
+4. **Monitor Google Cloud audit logs** for unauthorized access
+5. **Keep NEXTAUTH_SECRET strong and secret** (32+ random characters)
+
+---
+
+## 🎸 Current Status
+
+✅ **Vercel Project ID Updated:** `prj_IVRXSJT78FdVy8E5Sj51440HAuu3`  
+✅ **Production URL:** https://www.cronkwaters.com  
+⏳ **Waiting for:** You to complete Google OAuth setup steps above  
+⏳ **Next:** Test authentication flow on production  
+
+---
+
+**Need help?** Check the `🚨_SECURITY_BREACH_IMMEDIATE_ACTION_REQUIRED.md` file for full security rotation instructions.
+

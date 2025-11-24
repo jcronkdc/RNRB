@@ -1,9 +1,10 @@
 import { prisma } from '@cronkwaters/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   try {
     // Check if track exists
@@ -65,8 +66,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   try {
     const session = await auth();
@@ -83,7 +84,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     }
 
     if (content.length > 5000) {
-      return NextResponse.json({ error: 'Comment too long (max 5000 characters)' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Comment too long (max 5000 characters)' },
+        { status: 400 }
+      );
     }
 
     // Check if track exists
@@ -108,7 +112,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       }
 
       if (parentComment.communityTrackId !== id) {
-        return NextResponse.json({ error: 'Parent comment belongs to different track' }, { status: 400 });
+        return NextResponse.json(
+          { error: 'Parent comment belongs to different track' },
+          { status: 400 }
+        );
       }
     }
 
@@ -137,4 +144,3 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ error: 'Failed to create comment' }, { status: 500 });
   }
 }
-

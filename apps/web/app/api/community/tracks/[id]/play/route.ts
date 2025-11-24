@@ -1,9 +1,10 @@
-import { prisma} from '@cronkwaters/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   try {
     const body = await request.json();
@@ -25,7 +26,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       data: {
         communityTrackId: id,
         userId: session?.user?.id || null,
-        ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null,
+        ipAddress:
+          request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || null,
         duration: duration || null,
         completedAt: completed ? new Date() : null,
       },
@@ -45,4 +47,3 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ error: 'Failed to record play' }, { status: 500 });
   }
 }
-
