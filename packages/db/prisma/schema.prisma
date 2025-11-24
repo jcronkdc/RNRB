@@ -1182,4 +1182,5 @@ enum TransactionStatus {
   cancelled
 }
 
-// Schema last updated: Sun Nov 23 21:06:43 CST 2025
+// Force Prisma regeneration: 2025-11-24-03:30:00 UTC
+// SongRequest table migration applied to Supabase successfully
