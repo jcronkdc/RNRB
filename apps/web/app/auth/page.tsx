@@ -2,23 +2,86 @@
 
 import { motion } from 'framer-motion';
 import { Music, Sparkles } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState , Suspense } from 'react';
-import { signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
+import { Suspense, useState } from 'react';
 
 import { supabase } from '@/lib/supabase';
 
 function AuthForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Check if this is signup flow
   const isSignup = searchParams.get('signup') === 'true';
+
+  const handlePasswordAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      if (isSignup) {
+        // Registration
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, name }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Registration failed');
+        }
+
+        setMessage({
+          type: 'success',
+          text: 'Account created! Signing you in...',
+        });
+
+        // Auto sign-in after registration
+        setTimeout(async () => {
+          const result = await signIn('credentials', {
+            email,
+            password,
+            callbackUrl: '/dashboard',
+            redirect: true,
+          });
+
+          if (result?.error) {
+            throw new Error(result.error);
+          }
+        }, 1000);
+      } else {
+        // Sign in
+        const result = await signIn('credentials', {
+          email,
+          password,
+          callbackUrl: '/dashboard',
+          redirect: true,
+        });
+
+        if (result?.error) {
+          throw new Error(result.error);
+        }
+      }
+    } catch (error) {
+      console.error('Password auth error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
+      setMessage({
+        type: 'error',
+        text: errorMessage,
+      });
+      setLoading(false);
+    }
+  };
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +99,7 @@ function AuthForm() {
     }
 
     try {
-      const { data, error } = await supabase.auth.signInWithOtp({
+      const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
@@ -50,11 +113,12 @@ function AuthForm() {
         text: 'Check your email! We sent you a magic link to sign in.',
       });
       setEmail('');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Email sign-in error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
       setMessage({
         type: 'error',
-        text: error.message || 'Failed to send magic link. Please try again.',
+        text: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -75,11 +139,12 @@ function AuthForm() {
       if (result?.error) {
         throw new Error(result.error);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Google sign-in error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Google sign-in failed';
       setMessage({
         type: 'error',
-        text: error.message || 'Google sign-in failed. Please try again.',
+        text: errorMessage,
       });
       setLoading(false);
     }
@@ -258,17 +323,18 @@ function AuthForm() {
               </motion.div>
             )}
 
-            {/* Email Magic Link - PRIMARY METHOD */}
-            <form onSubmit={handleEmailSignIn} className="space-y-4">
-              <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
-                <p className="flex items-center gap-2 text-sm font-semibold text-purple-300">
-                  <Sparkles className="h-4 w-4" />
-                  Recommended: Email Magic Link
-                </p>
-                <p className="mt-1 text-xs text-gray-400">
-                  Powered by Supabase + Resend. No password needed!
-                </p>
-              </div>
+            {/* Password Authentication - PRIMARY METHOD */}
+            <form onSubmit={handlePasswordAuth} className="space-y-4">
+              {isSignup && (
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your Name (optional)"
+                  disabled={loading}
+                  className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-3 text-white transition-all placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+                />
+              )}
 
               <input
                 type="email"
@@ -280,22 +346,37 @@ function AuthForm() {
                 className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-3 text-white transition-all placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
               />
 
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password (min. 8 characters)"
+                required
+                minLength={8}
+                disabled={loading}
+                className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-3 text-white transition-all placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+              />
+
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full transform rounded-xl bg-orange-500 px-4 py-3 text-base font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02] hover:bg-orange-600 disabled:opacity-50 disabled:hover:scale-100"
               >
                 {loading
-                  ? 'Sending Magic Link...'
+                  ? 'Processing...'
                   : isSignup
-                    ? '✉️ Send Magic Link to Get Started'
-                    : '✉️ Send Magic Link to My Email'}
+                    ? '🚀 Create Account & Sign In'
+                    : '🎸 Sign In'}
               </button>
 
               <p className="text-center text-xs text-gray-500">
-                {isSignup
-                  ? 'Check your inbox after clicking! No password needed.'
-                  : 'Check your inbox after clicking above!'}
+                {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
+                <Link
+                  href={isSignup ? '/auth' : '/auth?signup=true'}
+                  className="text-orange-500 hover:text-orange-400 hover:underline"
+                >
+                  {isSignup ? 'Sign in here' : 'Create one here'}
+                </Link>
               </p>
             </form>
 
@@ -304,7 +385,7 @@ function AuthForm() {
                 <div className="w-full border-t border-gray-800" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="bg-black px-3 text-gray-500">or</span>
+                <span className="bg-black px-3 text-gray-500">or continue with</span>
               </div>
             </div>
 
@@ -336,6 +417,39 @@ function AuthForm() {
                 {loading ? 'Loading...' : 'Continue with Google'}
               </div>
             </button>
+
+            {/* Email Magic Link - Tertiary Option */}
+            <form onSubmit={handleEmailSignIn} className="space-y-4">
+              <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
+                <p className="flex items-center gap-2 text-sm font-semibold text-purple-300">
+                  <Sparkles className="h-4 w-4" />
+                  Or use Magic Link (No password)
+                </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  We'll send a sign-in link to your email
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  required
+                  disabled={loading}
+                  className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-4 py-2 text-sm text-white transition-all placeholder:text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 disabled:opacity-50"
+                />
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="transform rounded-xl bg-purple-500 px-6 py-2 text-sm font-semibold text-white transition-all hover:scale-[1.02] hover:bg-purple-600 disabled:opacity-50 disabled:hover:scale-100"
+                >
+                  {loading ? '...' : 'Send'}
+                </button>
+              </div>
+            </form>
           </div>
 
           <p className="text-center text-xs text-gray-500">

@@ -1,11 +1,13 @@
 import { prisma } from '@cronkwaters/db';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import NextAuth, { type NextAuthOptions, type Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import AppleProvider from 'next-auth/providers/apple';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
-import crypto from 'crypto';
 
 import { env } from './env';
 
@@ -26,6 +28,52 @@ function getAuthConfig(): NextAuthOptions {
       strategy: 'jwt',
     },
     providers: [
+      // Password-based authentication
+      CredentialsProvider({
+        name: 'Password',
+        credentials: {
+          email: { label: 'Email', type: 'email' },
+          password: { label: 'Password', type: 'password' },
+        },
+        async authorize(credentials) {
+          // Validate credentials presence
+          if (!credentials?.email || !credentials?.password) {
+            return null; // Invalid credentials format
+          }
+
+          try {
+            // Find user by email
+            const user = await prisma.user.findUnique({
+              where: { email: credentials.email },
+            });
+
+            // Check if user exists and has a password set
+            if (!user || !user.password) {
+              return null; // Invalid credentials
+            }
+
+            // Verify password
+            const isValid = await bcrypt.compare(credentials.password, user.password);
+
+            if (!isValid) {
+              return null; // Invalid credentials
+            }
+
+            // Return user object (must have id, email)
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              image: user.image,
+            };
+          } catch (error) {
+            // Only log and return null for database errors
+            // This prevents exposing internal errors to the client
+            console.error('Authorization error:', error);
+            return null;
+          }
+        },
+      }),
       ...(env.EMAIL_FROM && env.EMAIL_SERVER_URL
         ? [
             EmailProvider({

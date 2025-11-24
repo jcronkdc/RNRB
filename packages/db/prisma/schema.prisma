@@ -52,6 +52,7 @@ model User {
   id                      String    @id @default(cuid())
   email                   String    @unique
   emailVerified           DateTime?
+  password                String?   // For password-based authentication
   name                    String?
   image                   String?
   pro                     String?
