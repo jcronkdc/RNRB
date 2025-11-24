@@ -14,13 +14,13 @@ Production API credentials were exposed in multiple documentation files and **co
 
 ### 1. Google OAuth Client Secret
 - **Type:** Google Cloud Platform OAuth 2.0 Client
-- **Client ID:** `251126367330-hgh5kfe785k7pmbi1rgvdsos4jisdllv.apps.googleusercontent.com`
-- **Client Secret:** `GOCSPX-***` (REDACTED - exposed in commit)
+- **Client ID:** `251126367330-***` (REDACTED)
+- **Client Secret:** `GOCSPX-***` (REDACTED - was exposed in commit)
 - **Files:** MASTER_TRUTH.md, AGENT_94_AUTH_RESTORED.md, FIX_AUTH_NOW.md
 
 ### 2. Resend API Key
 - **Type:** Resend Email Service API Key
-- **API Key:** `re_ZmH***` (REDACTED - exposed in commit)
+- **API Key:** `re_ZmH***` (REDACTED - was exposed in commit)
 - **Files:** MASTER_TRUTH.md, AGENT_94_AUTH_RESTORED.md, RESEND_CONFIG_CHECK.md
 
 ---
@@ -83,8 +83,8 @@ git push origin main
 ```bash
 # Option 1: Use BFG Repo-Cleaner (recommended)
 # Install: brew install bfg
-bfg --replace-text <(echo "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==>REDACTED_GOOGLE_SECRET")
-bfg --replace-text <(echo "re_ZmHYNEjV_A7QDySQJXSM1fS6XKVQLdrcx==>REDACTED_RESEND_KEY")
+bfg --replace-text <(echo "GOCSPX-***==>REDACTED_GOOGLE_SECRET")
+bfg --replace-text <(echo "re_ZmH***==>REDACTED_RESEND_KEY")
 git reflog expire --expire=now --all
 git gc --prune=now --aggressive
 
