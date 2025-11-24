@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase';
 function AuthForm() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
+  const [emailForMagicLink, setEmailForMagicLink] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -100,7 +101,7 @@ function AuthForm() {
 
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        email: email,
+        email: emailForMagicLink,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
@@ -112,7 +113,7 @@ function AuthForm() {
         type: 'success',
         text: 'Check your email! We sent you a magic link to sign in.',
       });
-      setEmail('');
+      setEmailForMagicLink('');
     } catch (error) {
       console.error('Email sign-in error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
@@ -433,8 +434,8 @@ function AuthForm() {
               <div className="flex gap-2">
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={emailForMagicLink}
+                  onChange={(e) => setEmailForMagicLink(e.target.value)}
                   placeholder="your@email.com"
                   required
                   disabled={loading}

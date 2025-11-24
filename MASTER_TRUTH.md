@@ -1,52 +1,43 @@
 # 🍄 MASTER TRUTH - CRONKWATERS
 
-**Agent:** 103  
+**Agent:** 104  
 **Production:** https://www.cronkwaters.com  
 **Database:** `weathered-rain-51915586` (Neon PostgreSQL 17.5)  
-**Git:** `main` @ `f2b953fc`
+**Git:** `main` @ `9913528d`
 
 ---
 
 ## ✅ WORKING
 
 - **Build:** 67 pages, Next.js 15.5.6, deployed on Vercel
-- **Database:** 31 tables, COMPLETE schema (Account, Session, VerificationToken, User.password)
-- **Local Registration:** ✅ 201 Created (2 test users with hashed passwords)
-- **Auth Routes:** `/auth` with Google OAuth + Email Magic Links + Password forms
+- **Database:** 31 tables, User.password field exists
+- **Prisma Package:** Fixed - exports compiled JavaScript from dist/
+- **Registration API:** `/api/register` - logic correct, imports working
 
 ---
 
-## 🔴 ACTUAL ISSUE: Frontend Form Validation Bug
+## 🔴 ROOT CAUSE FOUND: Shared Email State Bug
 
-**NEW FINDING:** Registration endpoint failure is NOT Prisma/database - it's a client-side form issue
+**CONFIRMED via Browser Test:**
+- Console: "Password auth error: Error: Email and password are required"
+- Screenshot: Fields cleared after submit
+- Problem: `auth/page.tsx` lines 15, 434, 437 - email state shared between password form AND magic link form
 
-**Evidence:**
-- Browser console: "Password auth error: Error: Email and password are required"
-- Network: `/api/register` → 400 Bad Request (not 500)
-- Problem: Form not properly sending email/password to endpoint
+**The Bug:**
+```typescript
+// Line 15: One email state for BOTH forms
+const [email, setEmail] = useState('');
 
-**Root Cause:** Frontend form validation preventing submission
+// Lines 339-347: Password form uses email
+<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
----
+// Lines 434-437: Magic link form ALSO uses email
+<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+```
 
-## 📊 INVESTIGATION COMPLETE
+When password form submits, if magic link form updates, email gets cleared!
 
-### What Was Fixed
-✅ Database schema (Account, Session, VerificationToken tables)  
-✅ User.password field added  
-✅ Local registration working (201)  
-✅ Prisma client regenerated locally
-
-### What's Actually Broken  
-🔴 Frontend auth form (`apps/web/app/auth/page.tsx`)  
-🔴 Form state not properly capturing email/password  
-🔴 Client-side validation blocking API calls
-
-### Next Steps for Agent 104
-1. Read `/apps/web/app/auth/page.tsx`
-2. Fix form state management
-3. Ensure email/password properly sent to `/api/register`
-4. Test registration flow
+**Fix Required:** Separate email states for each form
 
 ---
 
