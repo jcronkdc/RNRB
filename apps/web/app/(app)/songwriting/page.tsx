@@ -13,8 +13,9 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
+import { ToastNotification, useToast } from '@/components/toast-notification';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSongAutoSave } from '@/hooks/use-song-auto-save';
 
@@ -61,7 +62,10 @@ export default function SongwritingPage() {
   const [chordProgression, setChordProgression] = useState<ChordBlock[]>([]);
   const [lyrics, setLyrics] = useState('');
   const [songTitle, setSongTitle] = useState('Untitled Song');
+  const [isFirstSave, setIsFirstSave] = useState(true);
   const { user, loading } = useRequireAuth({ redirectIfNoUser: false });
+  const { toasts, removeToast, success, error: showError } = useToast();
+  const previousSavedRef = useRef(false);
 
   // Initialize auto-save
   const {
@@ -74,6 +78,26 @@ export default function SongwritingPage() {
     isSaved,
     hasError,
   } = useSongAutoSave();
+
+  // Show toast notifications for save events
+  useEffect(() => {
+    if (isSaved && !previousSavedRef.current && songData.id) {
+      if (isFirstSave) {
+        success('Song created and saved!', 3000);
+        setIsFirstSave(false);
+      } else {
+        success('Changes saved', 2000);
+      }
+    }
+    previousSavedRef.current = isSaved;
+  }, [isSaved, songData.id, isFirstSave, success]);
+
+  // Show error toast
+  useEffect(() => {
+    if (hasError && saveError) {
+      showError(saveError, 3000);
+    }
+  }, [hasError, saveError, showError]);
 
   // Create song on first load if user is authenticated
   useEffect(() => {
@@ -109,12 +133,16 @@ export default function SongwritingPage() {
     }
   }, [songTitle, songData.id, songData.title]);
 
-  // Save Status Indicator
+  // Save Status Indicator with animation
   const SaveStatusIndicator = () => {
     if (!user || !songData.id) return null;
 
     return (
-      <div className="flex items-center gap-2 rounded-full border border-gray-700 bg-gray-800/50 px-3 py-1.5 text-sm">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="flex items-center gap-2 rounded-full border border-gray-700 bg-gray-800/50 px-3 py-1.5 text-sm"
+      >
         {isSaving && (
           <>
             <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
@@ -122,10 +150,21 @@ export default function SongwritingPage() {
           </>
         )}
         {isSaved && (
-          <>
-            <Check className="h-4 w-4 text-green-400" />
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: [0.8, 1.2, 1] }}
+            transition={{ duration: 0.3 }}
+            className="flex items-center gap-2"
+          >
+            <motion.div
+              initial={{ rotate: 0 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Check className="h-4 w-4 text-green-400" />
+            </motion.div>
             <span className="text-gray-300">Saved</span>
-          </>
+          </motion.div>
         )}
         {hasError && (
           <>
@@ -139,7 +178,7 @@ export default function SongwritingPage() {
             <span className="text-gray-400">Auto-save active</span>
           </>
         )}
-      </div>
+      </motion.div>
     );
   };
 
@@ -406,6 +445,9 @@ export default function SongwritingPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Toast Notifications */}
+      <ToastNotification toasts={toasts} onRemove={removeToast} />
     </div>
   );
 }

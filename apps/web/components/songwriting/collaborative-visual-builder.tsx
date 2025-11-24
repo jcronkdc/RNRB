@@ -48,6 +48,7 @@ import { KeyAnalyzer } from './key-analyzer';
 import { CursorOverlay } from '@/components/cursor-overlay';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { useSongSuggestions } from '@/hooks/use-song-suggestions';
+import { useBlockEditing } from '@/hooks/use-block-editing';
 
 
 // Dynamically import chat
@@ -80,11 +81,17 @@ function SortableBlock({
   onEdit,
   onRemove,
   onChordsChange,
+  editor,
+  onFocus,
+  onBlur,
 }: {
   block: SongBlock;
   onEdit: (content: string) => void;
   onRemove: () => void;
   onChordsChange: (chordPlacements: ChordPlacement[]) => void;
+  editor?: { userName: string; userColor: string };
+  onFocus?: () => void;
+  onBlur?: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: block.id,
@@ -111,8 +118,35 @@ function SortableBlock({
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`rnrb-card mb-4 bg-gradient-to-br p-4 ${getColor()} group border-2 transition-all hover:shadow-xl`}
+      className={`rnrb-card group relative mb-4 bg-gradient-to-br p-4 transition-all hover:shadow-xl ${getColor()} border-2 ${
+        editor ? 'ring-2 ring-offset-2 ring-offset-black' : ''
+      }`}
+      style={{
+        ...{ transform: CSS.Transform.toString(transform), transition },
+        ...(editor && { borderColor: editor.userColor, ringColor: editor.userColor }),
+      }}
     >
+      {/* Active Editor Indicator */}
+      {editor && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute -top-3 left-4 flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium shadow-lg backdrop-blur-sm"
+          style={{
+            borderColor: editor.userColor,
+            backgroundColor: `${editor.userColor}20`,
+            color: editor.userColor,
+          }}
+        >
+          <div
+            className="h-2 w-2 animate-pulse rounded-full"
+            style={{ backgroundColor: editor.userColor }}
+          />
+          <span>{editor.userName} is editing</span>
+        </motion.div>
+      )}
+
       <div className="flex gap-3">
         <div {...attributes} {...listeners} className="cursor-grab pt-1 active:cursor-grabbing">
           <GripVertical className="text-muted-foreground h-5 w-5" />
@@ -142,6 +176,8 @@ function SortableBlock({
             <textarea
               value={block.content}
               onChange={(e) => onEdit(e.target.value)}
+              onFocus={onFocus}
+              onBlur={onBlur}
               placeholder={`Write your ${block.type}...`}
               className="border-border/50 bg-surface/50 text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
               rows={3}
@@ -186,6 +222,19 @@ export function CollaborativeVisualBuilder({
   // Collaborative cursors
   const { remoteCursors, isConnected: cursorsConnected } = useCollaborativeCursors({
     channelName: `songwriting:${projectSlug}-cursors`,
+    userId: currentUser.userId,
+    userName: currentUser.userName,
+    enabled: true,
+  });
+
+  // Block editing tracking
+  const {
+    activeEditors,
+    userColor,
+    notifyEditing,
+    notifyStopEditing,
+  } = useBlockEditing({
+    channelName: `songwriting:${projectSlug}-editing`,
     userId: currentUser.userId,
     userName: currentUser.userName,
     enabled: true,
@@ -296,6 +345,8 @@ export function CollaborativeVisualBuilder({
     const updated = blocks.map((b) => (b.id === id ? { ...b, content } : b));
     setBlocks(updated);
     onSongChange?.(updated);
+    // Notify editing
+    notifyEditing(id);
     // Don't save to history on every keystroke - only on significant changes
   };
 
@@ -304,6 +355,8 @@ export function CollaborativeVisualBuilder({
     setBlocks(updated);
     onSongChange?.(updated);
     saveToHistory(updated);
+    // Notify editing
+    notifyEditing(id);
   };
 
   // Extract all unique chords from all blocks for key detection
@@ -526,17 +579,23 @@ export function CollaborativeVisualBuilder({
                   items={blocks.map((b) => b.id)}
                   strategy={verticalListSortingStrategy}
                 >
-                  {blocks.map((block) => (
-                    <SortableBlock
-                      key={block.id}
-                      block={block}
-                      onEdit={(content) => editBlock(block.id, content)}
-                      onRemove={() => removeBlock(block.id)}
-                      onChordsChange={(chordPlacements) =>
-                        updateBlockChords(block.id, chordPlacements)
-                      }
-                    />
-                  ))}
+                  {blocks.map((block) => {
+                    const editor = activeEditors[block.id];
+                    return (
+                      <SortableBlock
+                        key={block.id}
+                        block={block}
+                        onEdit={(content) => editBlock(block.id, content)}
+                        onRemove={() => removeBlock(block.id)}
+                        onChordsChange={(chordPlacements) =>
+                          updateBlockChords(block.id, chordPlacements)
+                        }
+                        editor={editor}
+                        onFocus={() => notifyEditing(block.id)}
+                        onBlur={() => notifyStopEditing(block.id)}
+                      />
+                    );
+                  })}
                 </SortableContext>
               </DndContext>
             )}
