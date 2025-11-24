@@ -1,7 +1,7 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "darwin-arm64"]
-  // Cache buster: 2025-11-24T22:00:00Z
+  binaryTargets = ["native", "darwin-arm64", "rhel-openssl-3.0.x"]
+  // Cache buster: 2025-11-24T22:28:00Z - Force regeneration with password field
 }
 
 datasource db {
