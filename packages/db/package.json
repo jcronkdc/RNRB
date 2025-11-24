@@ -22,7 +22,7 @@
     "db:up": "docker compose up -d postgres",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev --name init_schema",
-    "build": "pnpm prisma:generate && tsc -b",
+    "build": "prisma generate && tsc -b",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "typecheck": "tsc --noEmit"
   },
