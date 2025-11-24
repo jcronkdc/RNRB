@@ -185,53 +185,82 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3">
+      {/* Improved Tool Selector with Better Visual Hierarchy */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <button
           onClick={() => setMode('rhyme')}
-          className={`rounded-xl px-6 py-3.5 text-left font-semibold transition-all ${
+          className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
             mode === 'rhyme'
-              ? 'border-brand-primary bg-brand-primary text-brand-primary-foreground border-2 shadow-lg'
-              : 'border-border bg-surface-muted text-foreground hover:border-brand-primary/30 hover:bg-surface border-2'
+              ? 'border-2 border-blue-500 bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30'
+              : 'border-2 border-gray-700 bg-gray-800/50 text-gray-300 hover:border-blue-500/50 hover:bg-gray-700'
           }`}
         >
-          <Book className="mr-3 inline-block h-5 w-5" />
-          Find Rhymes
+          <div className="flex items-center gap-3">
+            <div className={`rounded-lg p-2 ${mode === 'rhyme' ? 'bg-white/20' : 'bg-blue-500/10'}`}>
+              <Book className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <div className="font-bold">Rhyme Dictionary</div>
+              <div className="text-xs opacity-80">Perfect, near, sounds-like</div>
+            </div>
+          </div>
         </button>
         
         <button
           onClick={() => setMode('thesaurus')}
-          className={`rounded-xl px-6 py-3.5 text-left font-semibold transition-all ${
+          className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
             mode === 'thesaurus'
-              ? 'border-brand-primary bg-brand-primary text-brand-primary-foreground border-2 shadow-lg'
-              : 'border-border bg-surface-muted text-foreground hover:border-brand-primary/30 hover:bg-surface border-2'
+              ? 'border-2 border-indigo-500 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-500/30'
+              : 'border-2 border-gray-700 bg-gray-800/50 text-gray-300 hover:border-indigo-500/50 hover:bg-gray-700'
           }`}
         >
-          <Book className="mr-3 inline-block h-5 w-5" />
-          Thesaurus
+          <div className="flex items-center gap-3">
+            <div className={`rounded-lg p-2 ${mode === 'thesaurus' ? 'bg-white/20' : 'bg-indigo-500/10'}`}>
+              <TrendingUp className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <div className="font-bold">Thesaurus</div>
+              <div className="text-xs opacity-80">Synonyms & word power</div>
+            </div>
+          </div>
         </button>
         
         <button
           onClick={() => setMode('syllables')}
-          className={`rounded-xl px-6 py-3.5 text-left font-semibold transition-all ${
+          className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
             mode === 'syllables'
-              ? 'border-2 border-green-500 bg-gradient-to-r from-green-600 to-green-500 text-white shadow-lg'
-              : 'border-border bg-surface-muted text-foreground hover:bg-surface border-2 hover:border-green-500/30'
+              ? 'border-2 border-green-500 bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg shadow-green-500/30'
+              : 'border-2 border-gray-700 bg-gray-800/50 text-gray-300 hover:border-green-500/50 hover:bg-gray-700'
           }`}
         >
-          <Hash className="mr-3 inline-block h-5 w-5" />
-          Syllable Counter
+          <div className="flex items-center gap-3">
+            <div className={`rounded-lg p-2 ${mode === 'syllables' ? 'bg-white/20' : 'bg-green-500/10'}`}>
+              <Hash className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <div className="font-bold">Syllable Counter</div>
+              <div className="text-xs opacity-80">Meter & flow analysis</div>
+            </div>
+          </div>
         </button>
         
         <button
           onClick={() => setMode('ai')}
-          className={`rounded-xl px-6 py-3.5 text-left font-semibold transition-all ${
+          className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
             mode === 'ai'
-              ? 'border-2 border-purple-500 bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg'
-              : 'border-border bg-surface-muted text-foreground hover:bg-surface border-2 hover:border-purple-500/30'
+              ? 'border-2 border-purple-500 bg-gradient-to-br from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-500/30'
+              : 'border-2 border-gray-700 bg-gray-800/50 text-gray-300 hover:border-purple-500/50 hover:bg-gray-700'
           }`}
         >
-          <Sparkles className="mr-3 inline-block h-5 w-5" />
-          AI Suggestions
+          <div className="flex items-center gap-3">
+            <div className={`rounded-lg p-2 ${mode === 'ai' ? 'bg-white/20' : 'bg-purple-500/10'}`}>
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <div className="font-bold">AI Assistant</div>
+              <div className="text-xs opacity-80">Smart lyric help</div>
+            </div>
+          </div>
         </button>
       </div>
       

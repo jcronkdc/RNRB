@@ -464,6 +464,45 @@ export default function SongDetailPage() {
 
           {activeTab === 'share' && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              {/* Publish to Community Section */}
+              <Card className="rnrb-card mb-6 p-8">
+                <div className="mb-6">
+                  <h3 className="mb-2 flex items-center gap-2 text-2xl font-semibold">
+                    <Music className="h-6 w-6 text-blue-400" />
+                    Publish to Community
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Share "{song.title}" with the Rock N' Roll Basement community. Get feedback,
+                    collaborate with other artists, and build your fanbase.
+                  </p>
+                </div>
+                <Button
+                  onClick={() => {
+                    // TODO: Open publish modal
+                    alert('Publish to Community modal - Coming next!');
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <Upload className="h-4 w-4" />
+                  Publish to Explore
+                </Button>
+                <div className="mt-4 space-y-2 text-sm text-muted-foreground">
+                  <p className="flex items-center gap-2">
+                    ✓ Share your music with thousands of artists
+                  </p>
+                  <p className="flex items-center gap-2">
+                    ✓ Get real-time feedback and comments
+                  </p>
+                  <p className="flex items-center gap-2">
+                    ✓ Track plays, likes, and engagement
+                  </p>
+                  <p className="flex items-center gap-2">
+                    ✓ Connect with collaborators
+                  </p>
+                </div>
+              </Card>
+
+              {/* AI Social Media Section */}
               <Card className="rnrb-card p-8">
                 <div className="mb-6">
                   <h3 className="mb-2 flex items-center gap-2 text-2xl font-semibold">

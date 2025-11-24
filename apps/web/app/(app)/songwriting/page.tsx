@@ -14,11 +14,13 @@ import {
   Undo2,
   Redo2,
   LayoutTemplate,
+  Mic,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect, useRef } from 'react';
 
 import { ToastNotification, useToast } from '@/components/toast-notification';
+import { FeatureTooltip, OnboardingTour } from '@/components/feature-tooltip';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSongAutoSave } from '@/hooks/use-song-auto-save';
 
@@ -43,6 +45,11 @@ const ChordBuilder = dynamic(
 
 const LyricsAssistant = dynamic(
   () => import('@/components/songwriting/lyrics-assistant').then((m) => m.LyricsAssistant),
+  { ssr: false }
+);
+
+const VoiceMemoRecorder = dynamic(
+  () => import('@/components/songwriting/voice-memo-recorder').then((m) => m.VoiceMemoRecorder),
   { ssr: false }
 );
 
@@ -72,6 +79,7 @@ export default function SongwritingPage() {
   const [songTitle, setSongTitle] = useState('Untitled Song');
   const [isFirstSave, setIsFirstSave] = useState(true);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   
   // Undo/Redo state management
   const [history, setHistory] = useState<Array<{ blocks: SongBlock[]; lyrics: string }>>([]);
@@ -244,8 +252,59 @@ export default function SongwritingPage() {
     );
   };
 
+  // Show onboarding tour on first visit
+  useEffect(() => {
+    const hasSeenTour = localStorage.getItem('songwriting-tour-completed');
+    if (!hasSeenTour && user) {
+      setShowOnboarding(true);
+    }
+  }, [user]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
+      {/* Onboarding Tour */}
+      {showOnboarding && (
+        <OnboardingTour
+          steps={[
+            {
+              id: 'welcome',
+              title: 'Welcome to World-Class Songwriting!',
+              description: 'We\'ve transformed the songwriting tool with 7 powerful new features. Let me show you what\'s new!',
+            },
+            {
+              id: 'rhyme-dictionary',
+              title: 'Rhyme Dictionary',
+              description: 'Find perfect rhymes, near rhymes, and sounds-like words instantly. Grouped by syllable count for perfect flow.',
+            },
+            {
+              id: 'syllable-counter',
+              title: 'Syllable Counter',
+              description: 'Automatic meter analysis detects flow issues in your lyrics. Get word-by-word syllable breakdowns.',
+            },
+            {
+              id: 'chord-analyzer',
+              title: 'Smart Chord Analyzer',
+              description: 'Automatic key detection, Roman numeral analysis, and AI-powered next chord suggestions.',
+            },
+            {
+              id: 'templates',
+              title: 'Song Templates',
+              description: 'Start with proven structures: Pop, Rock, Country, R&B. One-click apply to save 15 minutes of setup.',
+            },
+            {
+              id: 'voice-memos',
+              title: 'Voice Memos',
+              description: 'Record melody ideas directly in your browser. Save, play, and download for later reference.',
+            },
+            {
+              id: 'undo-redo',
+              title: 'Undo/Redo',
+              description: 'Full history stack lets you experiment fearlessly. Use Cmd+Z to undo, Cmd+Shift+Z to redo.',
+            },
+          ]}
+        />
+      )}
+      
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         {/* Improved Header with Better Visual Hierarchy */}
         <motion.div
@@ -270,53 +329,82 @@ export default function SongwritingPage() {
                   />
                   <SaveStatusIndicator />
                 </div>
-                <div className="flex flex-wrap items-center gap-2 text-sm">
+                <div className="flex flex-wrap items-center gap-3 text-sm">
                   <p className="flex items-center gap-2 text-gray-300">
                     <Sparkles className="h-4 w-4 shrink-0 text-orange-500" />
-                    <span>Collaborative songwriting with real-time auto-save</span>
+                    <span>World-class songwriting tools</span>
                   </p>
                   
-                  {/* Undo/Redo Buttons */}
+                  {/* Enhanced Action Buttons */}
                   {user && (
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={undo}
-                        disabled={historyIndex <= 0}
-                        className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-medium transition ${
-                          historyIndex > 0
-                            ? 'border-gray-700 bg-gray-800/50 text-gray-300 hover:bg-gray-700'
-                            : 'border-gray-800 bg-gray-900/50 text-gray-600 cursor-not-allowed'
-                        }`}
-                        title="Undo (Cmd+Z)"
+                    <div className="flex flex-wrap items-center gap-2">
+                      {/* Undo/Redo Buttons - More Prominent */}
+                      <div className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800/50 p-1">
+                        <button
+                          onClick={undo}
+                          disabled={historyIndex <= 0}
+                          className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition ${
+                            historyIndex > 0
+                              ? 'bg-gray-700 text-white hover:bg-gray-600'
+                              : 'text-gray-600 cursor-not-allowed'
+                          }`}
+                          title="Undo (Cmd+Z)"
+                        >
+                          <Undo2 className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Undo</span>
+                        </button>
+                        <button
+                          onClick={redo}
+                          disabled={historyIndex >= history.length - 1}
+                          className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition ${
+                            historyIndex < history.length - 1
+                              ? 'bg-gray-700 text-white hover:bg-gray-600'
+                              : 'text-gray-600 cursor-not-allowed'
+                          }`}
+                          title="Redo (Cmd+Shift+Z)"
+                        >
+                          <Redo2 className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Redo</span>
+                        </button>
+                      </div>
+                      
+                      {/* Template Picker Button - More Prominent with Tooltip */}
+                      {activeView === 'structure' && (
+                        <FeatureTooltip
+                          id="song-templates"
+                          title="Song Templates"
+                          description="Quick-start with proven song structures! Try Pop, Rock, Country, or R&B templates."
+                          position="bottom"
+                        >
+                          <button
+                            onClick={() => setShowTemplatePicker(true)}
+                            className="group relative flex items-center gap-2 overflow-hidden rounded-lg border-2 border-blue-500/50 bg-gradient-to-r from-blue-500/20 to-blue-600/20 px-3 py-1.5 text-xs font-bold text-blue-300 transition hover:border-blue-500 hover:from-blue-500/30 hover:to-blue-600/30 hover:shadow-lg hover:shadow-blue-500/20"
+                          >
+                            <LayoutTemplate className="h-3.5 w-3.5" />
+                            <span>Templates</span>
+                            <span className="ml-1 rounded-full bg-blue-500 px-1.5 py-0.5 text-[10px] text-white">NEW</span>
+                          </button>
+                        </FeatureTooltip>
+                      )}
+                      
+                      {/* Voice Memo Quick Access - When on any tab with Tooltip */}
+                      <FeatureTooltip
+                        id="voice-memos"
+                        title="Voice Memos"
+                        description="Capture melody ideas instantly! Record directly in your browser, no external tools needed."
+                        position="bottom"
                       >
-                        <Undo2 className="h-3 w-3" />
-                        <span className="hidden sm:inline">Undo</span>
-                      </button>
-                      <button
-                        onClick={redo}
-                        disabled={historyIndex >= history.length - 1}
-                        className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-medium transition ${
-                          historyIndex < history.length - 1
-                            ? 'border-gray-700 bg-gray-800/50 text-gray-300 hover:bg-gray-700'
-                            : 'border-gray-800 bg-gray-900/50 text-gray-600 cursor-not-allowed'
-                        }`}
-                        title="Redo (Cmd+Shift+Z)"
-                      >
-                        <Redo2 className="h-3 w-3" />
-                        <span className="hidden sm:inline">Redo</span>
-                      </button>
+                        <button
+                          onClick={() => setActiveView('lyrics')} // Switch to lyrics tab where voice memos are
+                          className="group relative flex items-center gap-2 overflow-hidden rounded-lg border-2 border-red-500/50 bg-gradient-to-r from-red-500/20 to-red-600/20 px-3 py-1.5 text-xs font-bold text-red-300 transition hover:border-red-500 hover:from-red-500/30 hover:to-red-600/30 hover:shadow-lg hover:shadow-red-500/20"
+                          title="Record voice memos"
+                        >
+                          <Mic className="h-3.5 w-3.5" />
+                          <span className="hidden sm:inline">Record</span>
+                          <span className="ml-1 rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] text-white">NEW</span>
+                        </button>
+                      </FeatureTooltip>
                     </div>
-                  )}
-                  
-                  {/* Template Picker Button */}
-                  {user && activeView === 'structure' && (
-                    <button
-                      onClick={() => setShowTemplatePicker(true)}
-                      className="flex items-center gap-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-300 transition hover:bg-blue-500/20"
-                    >
-                      <LayoutTemplate className="h-3 w-3" />
-                      <span className="hidden sm:inline">Use Template</span>
-                    </button>
                   )}
                 </div>
               </div>
@@ -492,11 +580,28 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'lyrics' && (
-            <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
-              <LyricsAssistant
-                currentLyrics={lyrics}
-                onInsert={(text) => setLyrics(lyrics ? lyrics + '\n' + text : text)}
-              />
+            <div className="space-y-6">
+              {/* Voice Memo Recorder - Integrated at Top */}
+              <div className="rounded-2xl border-2 border-red-500/30 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
+                <div className="mb-6 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20">
+                    <Mic className="h-6 w-6 text-red-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Voice Memos</h3>
+                    <p className="text-sm text-gray-400">Capture melody ideas & vocal demos</p>
+                  </div>
+                </div>
+                <VoiceMemoRecorder songId={songData.id} />
+              </div>
+              
+              {/* Lyrics Assistant - Below Voice Memos */}
+              <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
+                <LyricsAssistant
+                  currentLyrics={lyrics}
+                  onInsert={(text) => setLyrics(lyrics ? lyrics + '\n' + text : text)}
+                />
+              </div>
             </div>
           )}
         </motion.div>
