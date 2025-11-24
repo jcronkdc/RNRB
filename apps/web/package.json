@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "cd ../../packages/db && prisma generate && cd ../../apps/web && next build",
+    "build": "pnpm --filter @cronkwaters/db run build && next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
