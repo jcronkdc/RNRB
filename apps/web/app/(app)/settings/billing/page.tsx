@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation';
+
+import { BillingDashboard } from './BillingDashboard';
+
 import { getUserSubscription } from '@/lib/actions/subscriptions';
 import { getCurrentUser } from '@/lib/supabase';
-import { BillingDashboard } from './BillingDashboard';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,5 +27,9 @@ export default async function BillingPage() {
     </div>
   );
 }
+
+
+
+
 
 

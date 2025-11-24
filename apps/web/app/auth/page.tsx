@@ -1,13 +1,13 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Music, Sparkles } from 'lucide-react';
-import { Suspense } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState , Suspense } from 'react';
+
+import { supabase } from '@/lib/supabase';
 
 function AuthForm() {
   const router = useRouter();

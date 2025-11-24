@@ -11,9 +11,9 @@
  * - Video rooms (who's connected)
  */
 
-import { useEffect, useState } from 'react';
 import { Realtime } from 'ably';
-import type * as Ably from 'ably';
+import type { RealtimeChannel, PresenceMessage, ErrorInfo } from 'ably';
+import { useEffect, useState } from 'react';
 
 type PresenceMember = {
   clientId: string;
@@ -46,7 +46,7 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
 
   useEffect(() => {
     let mounted = true;
-    let channel: Ably.Types.RealtimeChannelCallbacks | null = null;
+    let channel: RealtimeChannel | null = null;
 
     const initAbly = async () => {
       try {
@@ -86,16 +86,11 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
         setIsConnected(true);
 
         // Listen for presence updates
-        channel.presence.subscribe((update) => {
+        channel.presence.subscribe((update: PresenceMessage) => {
           if (!mounted) return;
 
           // Get current members
-          channel?.presence.get((err: Ably.Types.ErrorInfo | null, members?: Ably.Types.PresenceMessage[]) => {
-            if (err) {
-              console.error('Error getting presence members:', err);
-              return;
-            }
-
+          channel?.presence.get().then((members: PresenceMessage[]) => {
             if (!mounted) return;
 
             const presenceMembers = (members || []).map((member) => ({
@@ -104,16 +99,13 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
             }));
 
             setMembers(presenceMembers);
+          }).catch((err: ErrorInfo) => {
+            console.error('Error getting presence members:', err);
           });
         });
 
         // Get initial members
-        channel.presence.get((err: Ably.Types.ErrorInfo | null, members?: Ably.Types.PresenceMessage[]) => {
-          if (err) {
-            console.error('Error getting initial presence:', err);
-            return;
-          }
-
+        channel.presence.get().then((members: PresenceMessage[]) => {
           if (!mounted) return;
 
           const presenceMembers = (members || []).map((member) => ({
@@ -122,6 +114,8 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
           }));
 
           setMembers(presenceMembers);
+        }).catch((err: ErrorInfo) => {
+          console.error('Error getting initial presence:', err);
         });
       } catch (err) {
         console.error('Ably presence error:', err);

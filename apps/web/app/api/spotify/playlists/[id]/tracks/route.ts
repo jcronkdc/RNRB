@@ -1,12 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { getCurrentUser } from '@/lib/session';
 
 /**
  * GET /api/spotify/playlists/[id]/tracks
  * Fetch tracks from a Spotify playlist
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -20,7 +22,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 
     // Fetch playlist tracks
-    const tracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${params.id}/tracks`, {
+    const tracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { Card, Button } from '@cronkwaters/ui';
 import {
   useDaily,
   useLocalParticipant,
@@ -11,6 +11,7 @@ import {
   DailyVideo,
   DailyAudio,
 } from '@daily-co/daily-react';
+import { motion } from 'framer-motion';
 import {
   Video,
   VideoOff,
@@ -23,12 +24,9 @@ import {
   Disc,
   Square,
   Users,
-  Settings,
-  Phone,
   PhoneOff,
 } from 'lucide-react';
-import { Card, Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
 
 interface StudioSessionProps {
   roomUrl: string;
@@ -109,9 +107,6 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
       await startRecording({
         layout: {
           preset: 'default',
-          composition_params: {
-            showParticipantLabels: true,
-          },
         },
       });
     } catch (error) {
@@ -182,7 +177,7 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
           {remoteParticipantIds.map((id) => (
             <div key={id} className="relative aspect-video overflow-hidden rounded-lg bg-black">
               <DailyVideo sessionId={id} type="video" />
-              <DailyAudio sessionId={id} type="audio" />
+              <DailyAudio />
             </div>
           ))}
 
@@ -225,18 +220,18 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
           <Button
             variant={isSharingScreen ? 'default' : 'secondary'}
             size="icon"
-            onClick={isSharingScreen ? stopScreenShare : startScreenShare}
+            onClick={() => isSharingScreen ? stopScreenShare() : startScreenShare()}
             title={isSharingScreen ? 'Stop screen share' : 'Share screen'}
           >
             {isSharingScreen ? <MonitorX className="h-4 w-4" /> : <MonitorUp className="h-4 w-4" />}
           </Button>
 
-          <div className="mx-2 h-8 w-px bg-border" />
+          <div className="bg-border mx-2 h-8 w-px" />
 
           {/* Recording */}
           <Button
             variant={isRecording ? 'destructive' : 'default'}
-            onClick={isRecording ? stopRecording : handleStartRecording}
+            onClick={() => isRecording ? stopRecording() : handleStartRecording()}
             className="gap-2"
           >
             {isRecording ? (
@@ -270,13 +265,13 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
           )}
 
           {isLiveStreaming && (
-            <Button variant="destructive" onClick={stopLiveStreaming} className="gap-2">
+            <Button variant="destructive" onClick={() => stopLiveStreaming()} className="gap-2">
               <X className="h-4 w-4" />
               Stop Streaming
             </Button>
           )}
 
-          <div className="mx-2 h-8 w-px bg-border" />
+          <div className="bg-border mx-2 h-8 w-px" />
 
           {/* Leave Call */}
           <Button variant="destructive" onClick={leaveCall} className="gap-2">

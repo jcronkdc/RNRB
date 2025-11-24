@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     createContext: async () => {
       const orgSession = await getOrgSessionFromSession();
       return createContext({
-        orgSession,
+        session: orgSession,
         headers: request.headers,
       });
     },
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     createContext: async () => {
       const orgSession = await getOrgSessionFromSession();
       return createContext({
-        orgSession,
+        session: orgSession,
         headers: request.headers,
       });
     },

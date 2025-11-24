@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function HomePage() {
   return (
@@ -201,7 +201,7 @@ export default function HomePage() {
             {/* HD Video Calls - Links to Collaboration */}
             <Link
               href="/features/collaboration"
-              className="tile group cursor-pointer transition-colors hover:border-accent/30"
+              className="tile hover:border-accent/30 group cursor-pointer transition-colors"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -242,7 +242,7 @@ export default function HomePage() {
             {/* Screen Sharing - Links to Collaboration */}
             <Link
               href="/features/collaboration"
-              className="tile group cursor-pointer transition-colors hover:border-accent/30"
+              className="tile hover:border-accent/30 group cursor-pointer transition-colors"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -283,7 +283,7 @@ export default function HomePage() {
             {/* Instant Messaging - Links to Collaboration */}
             <Link
               href="/features/collaboration"
-              className="tile group cursor-pointer transition-colors hover:border-accent/30"
+              className="tile hover:border-accent/30 group cursor-pointer transition-colors"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -324,7 +324,7 @@ export default function HomePage() {
             {/* AI Songwriting - Links to Songwriting */}
             <Link
               href="/features/songwriting"
-              className="tile group cursor-pointer transition-colors hover:border-accent/30"
+              className="tile hover:border-accent/30 group cursor-pointer transition-colors"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -366,7 +366,7 @@ export default function HomePage() {
             {/* Project Management - Links to Project Management */}
             <Link
               href="/features/project-management"
-              className="tile group cursor-pointer transition-colors hover:border-accent/30"
+              className="tile hover:border-accent/30 group cursor-pointer transition-colors"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -408,7 +408,7 @@ export default function HomePage() {
             {/* AI Music Generation - Links to AI Music */}
             <Link
               href="/features/ai-music"
-              className="tile group cursor-pointer transition-colors hover:border-accent/30"
+              className="tile hover:border-accent/30 group cursor-pointer transition-colors"
             >
               <div className="flex items-start gap-3">
                 <div

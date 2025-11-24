@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useParams, useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
 import { ArrowLeft, Save, HelpCircle } from 'lucide-react';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { supabase } from '@/lib/supabase';
 
 // Dynamically import collaborative visual builder
 const CollaborativeVisualBuilder = dynamic(
@@ -117,11 +118,11 @@ export default function NewSongPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="bg-background min-h-screen px-4 py-12">
       <div className="rnrb-container max-w-7xl">
         <Link
           href={`/projects/${slug}`}
-          className="mb-6 inline-flex items-center gap-2 text-brand-primary transition hover:text-brand-primary/80"
+          className="text-brand-primary hover:text-brand-primary/80 mb-6 inline-flex items-center gap-2 transition"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Project
@@ -137,7 +138,7 @@ export default function NewSongPage() {
                 value={songData.title}
                 onChange={(e) => setSongData({ ...songData, title: e.target.value })}
                 placeholder="Untitled Song"
-                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-lg font-semibold text-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+                className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-3 text-lg font-semibold outline-none transition focus:ring-4"
               />
             </div>
             <div>
@@ -147,7 +148,7 @@ export default function NewSongPage() {
                 value={songData.key}
                 onChange={(e) => setSongData({ ...songData, key: e.target.value })}
                 placeholder="C Major"
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border px-4 py-3 outline-none transition focus:ring-2"
               />
             </div>
             <div>
@@ -157,7 +158,7 @@ export default function NewSongPage() {
                 value={songData.tempo}
                 onChange={(e) => setSongData({ ...songData, tempo: e.target.value })}
                 placeholder="120"
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border px-4 py-3 outline-none transition focus:ring-2"
               />
             </div>
           </div>
@@ -196,8 +197,8 @@ export default function NewSongPage() {
         )}
 
         {/* Save Button (Always Visible) */}
-        <div className="sticky bottom-4 mt-8 flex items-center justify-between rounded-xl border border-border bg-background/80 p-4 shadow-lg backdrop-blur-sm">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="border-border bg-background/80 sticky bottom-4 mt-8 flex items-center justify-between rounded-xl border p-4 shadow-lg backdrop-blur-sm">
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <HelpCircle className="h-4 w-4" />
             <span>
               Drag blocks from left palette to build song • Changes save when you click Create Song

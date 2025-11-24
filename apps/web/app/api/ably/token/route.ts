@@ -1,5 +1,6 @@
 import Ably from 'ably';
 import { NextResponse } from 'next/server';
+
 import { getCurrentUser } from '@/lib/supabase';
 
 const ablyApiKey = process.env.ABLY_API_KEY;

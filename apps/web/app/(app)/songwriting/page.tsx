@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Music2,
@@ -14,6 +13,8 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
+
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSongAutoSave } from '@/hooks/use-song-auto-save';
 
@@ -322,13 +323,8 @@ export default function SongwritingPage() {
             <div className="rounded-2xl border border-gray-800 bg-gray-900 p-8">
               <ChordBuilder
                 onChange={(progression) => {
-                  setChordProgression(
-                    progression.map((chord, i) => ({
-                      id: `chord_${i}`,
-                      chord,
-                      duration: '1 bar',
-                    }))
-                  );
+                  // progression is already ChordBlock[], just update it directly
+                  setChordProgression(progression);
                   // Auto-save chord progression
                   if (songData.id) {
                     updateSong({

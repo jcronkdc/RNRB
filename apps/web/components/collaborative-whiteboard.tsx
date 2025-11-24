@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Trash2, Download, Palette, Square, Circle, Type as TypeIcon, Minus } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
 import Ably from 'ably';
+import { Trash2, Download, Palette, Square, Circle, Minus } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 interface CollaborativeWhiteboardProps {
   channelName: string;
@@ -74,16 +73,15 @@ export function CollaborativeWhiteboard({
       });
 
       // Get drawing history
-      whiteboardChannel.history({ limit: 100 }, (err, resultPage) => {
-        if (err || !resultPage) return;
-
-        const historicalElements: DrawingElement[] = resultPage.items
+      const result = await whiteboardChannel.history({ limit: 100 });
+      if (result) {
+        const historicalElements: DrawingElement[] = result.items
           .reverse()
-          .filter((msg) => msg.name === 'draw')
-          .map((msg) => msg.data);
+          .filter((msg: any) => msg.name === 'draw')
+          .map((msg: any) => msg.data);
 
         setElements(historicalElements);
-      });
+      }
 
       return () => {
         whiteboardChannel.unsubscribe();
@@ -223,7 +221,7 @@ export function CollaborativeWhiteboard({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex items-center gap-4 rounded-xl border border-border bg-surface-muted p-4">
+      <div className="border-border bg-surface-muted flex items-center gap-4 rounded-xl border p-4">
         {/* Tools */}
         <div className="flex items-center gap-2">
           <Button
@@ -252,7 +250,7 @@ export function CollaborativeWhiteboard({
           </Button>
         </div>
 
-        <div className="h-8 w-px bg-border" />
+        <div className="bg-border h-8 w-px" />
 
         {/* Colors */}
         <div className="flex items-center gap-2">
@@ -261,18 +259,18 @@ export function CollaborativeWhiteboard({
               key={color}
               onClick={() => setCurrentColor(color)}
               className={`h-8 w-8 rounded-full border-2 ${
-                currentColor === color ? 'scale-110 border-brand-primary' : 'border-border'
+                currentColor === color ? 'border-brand-primary scale-110' : 'border-border'
               } transition-transform`}
               style={{ backgroundColor: color }}
             />
           ))}
         </div>
 
-        <div className="h-8 w-px bg-border" />
+        <div className="bg-border h-8 w-px" />
 
         {/* Stroke Width */}
         <div className="flex items-center gap-2">
-          <Minus className="h-4 w-4 text-muted-foreground" />
+          <Minus className="text-muted-foreground h-4 w-4" />
           <input
             type="range"
             min="1"
@@ -297,7 +295,7 @@ export function CollaborativeWhiteboard({
       </div>
 
       {/* Canvas */}
-      <div className="overflow-hidden rounded-xl border-2 border-border">
+      <div className="border-border overflow-hidden rounded-xl border-2">
         <canvas
           ref={canvasRef}
           width={width}
@@ -310,7 +308,7 @@ export function CollaborativeWhiteboard({
         />
       </div>
 
-      <p className="text-center text-xs text-muted-foreground">
+      <p className="text-muted-foreground text-center text-xs">
         All team members can see your drawings in real-time • Changes sync via Ably
       </p>
     </div>

@@ -9,9 +9,9 @@
  * User suggests edit → Ably broadcasts → All see suggestion → Owner accepts → Master updates → All sync
  */
 
+import Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Realtime } from 'ably';
-import type * as Ably from 'ably';
 
 export type LyricSuggestion = {
   id: string;
@@ -59,8 +59,8 @@ export function useSongSuggestions({
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const ablyRef = useRef<Realtime | null>(null);
-  const channelRef = useRef<Types.RealtimeChannelCallbacks | null>(null);
+  const ablyRef = useRef<Ably.Realtime | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
 
   // Initialize Ably connection
   useEffect(() => {
@@ -78,7 +78,7 @@ export function useSongSuggestions({
 
         if (!response.ok) throw new Error('Failed to get Ably token');
 
-        const ablyClient = new Realtime({
+        const ablyClient = new Ably.Realtime({
           authUrl: '/api/ably/token',
           clientId: userId,
         });
@@ -93,14 +93,14 @@ export function useSongSuggestions({
         channelRef.current = channel;
 
         // Subscribe to suggestion events
-        channel.subscribe('suggestion-created', (message) => {
+        channel.subscribe('suggestion-created', (message: Ably.Message) => {
           if (!mounted) return;
           const suggestion: LyricSuggestion = message.data;
 
           setSuggestions((prev) => new Map(prev).set(suggestion.id, suggestion));
         });
 
-        channel.subscribe('suggestion-accepted', (message) => {
+        channel.subscribe('suggestion-accepted', (message: Ably.Message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 
@@ -123,7 +123,7 @@ export function useSongSuggestions({
           }, 2000);
         });
 
-        channel.subscribe('suggestion-rejected', (message) => {
+        channel.subscribe('suggestion-rejected', (message: Ably.Message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 
@@ -147,13 +147,13 @@ export function useSongSuggestions({
         });
 
         // Chord suggestions
-        channel.subscribe('chord-suggested', (message) => {
+        channel.subscribe('chord-suggested', (message: Ably.Message) => {
           if (!mounted) return;
           const suggestion: ChordSuggestion = message.data;
           setChordSuggestions((prev) => new Map(prev).set(suggestion.id, suggestion));
         });
 
-        channel.subscribe('chord-accepted', (message) => {
+        channel.subscribe('chord-accepted', (message: Ably.Message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 
@@ -166,7 +166,7 @@ export function useSongSuggestions({
           }, 2000);
         });
 
-        channel.subscribe('chord-rejected', (message) => {
+        channel.subscribe('chord-rejected', (message: Ably.Message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 

@@ -5,9 +5,10 @@
  * Shows real-time presence tracking with Ably integration
  */
 
-import { usePresence } from '@/hooks/use-presence';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Circle } from 'lucide-react';
+
+import { usePresence } from '@/hooks/use-presence';
 
 interface PresenceIndicatorProps {
   channelName: string;
@@ -44,7 +45,7 @@ export function PresenceIndicator({
 
   if (error) {
     return (
-      <div className="text-xs text-muted-foreground">
+      <div className="text-muted-foreground text-xs">
         <div className="flex items-center gap-2">
           <Circle className="h-2 w-2 text-red-500" />
           <span>Presence offline</span>
@@ -62,7 +63,7 @@ export function PresenceIndicator({
           animate={isConnected ? { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] } : {}}
           transition={{ duration: 2, repeat: Infinity }}
         />
-        <span className="text-xs font-medium text-muted-foreground">
+        <span className="text-muted-foreground text-xs font-medium">
           {isConnected ? `${activeMembers} active` : 'Connecting...'}
         </span>
       </div>
@@ -92,9 +93,9 @@ export function PresenceIndicator({
 
             {/* User Info */}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-foreground">{member.data.userName}</p>
+              <p className="text-foreground truncate text-sm font-medium">{member.data.userName}</p>
               {showDetails && (
-                <p className="truncate text-xs text-muted-foreground">
+                <p className="text-muted-foreground truncate text-xs">
                   {member.data.status === 'active' ? '🟢 Active' : '🟡 Idle'}
                 </p>
               )}
@@ -105,7 +106,7 @@ export function PresenceIndicator({
 
       {/* Hidden Count */}
       {hiddenCount > 0 && (
-        <p className="text-xs text-muted-foreground">
+        <p className="text-muted-foreground text-xs">
           + {hiddenCount} more {hiddenCount === 1 ? 'person' : 'people'}
         </p>
       )}
@@ -114,7 +115,7 @@ export function PresenceIndicator({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="flex items-center gap-2 border-t border-border/50 pt-2"
+        className="border-border/50 flex items-center gap-2 border-t pt-2"
       >
         {currentUser.avatar ? (
           <img
@@ -128,15 +129,15 @@ export function PresenceIndicator({
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-foreground">
-            {currentUser.userName} <span className="text-xs text-muted-foreground">(You)</span>
+          <p className="text-foreground truncate text-sm font-medium">
+            {currentUser.userName} <span className="text-muted-foreground text-xs">(You)</span>
           </p>
         </div>
       </motion.div>
 
       {/* Summary (if details enabled) */}
       {showDetails && isConnected && (
-        <div className="space-y-1 pt-2 text-xs text-muted-foreground">
+        <div className="text-muted-foreground space-y-1 pt-2 text-xs">
           <p>
             📊 {activeMembers} active, {idleMembers} idle
           </p>

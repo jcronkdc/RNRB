@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
@@ -8,16 +9,16 @@ import { getCurrentUser } from '@/lib/session';
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string; userId: string } }
+  { params }: { params: Promise<{ id: string; userId: string }> }
 ) {
   try {
+    const { id, userId: targetUserId } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const projectId = params.id;
-    const targetUserId = params.userId;
+    const projectId = id;
     const body = await request.json();
     const { role } = body;
 
@@ -80,16 +81,16 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string; userId: string } }
+  { params }: { params: Promise<{ id: string; userId: string }> }
 ) {
   try {
+    const { id, userId: targetUserId } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const projectId = params.id;
-    const targetUserId = params.userId;
+    const projectId = id;
 
     // Check if requester has permission
     const requesterMembership = await db.projectMember.findUnique({

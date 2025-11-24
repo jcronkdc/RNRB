@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
@@ -6,14 +7,15 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/projects/[id]/members
  * List all members of a project
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const projectId = params.id;
+    const projectId = id;
 
     // Check if user has access to this project
     const membership = await db.projectMember.findUnique({
@@ -38,7 +40,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             id: true,
             name: true,
             email: true,
-            avatar: true,
+            image: true,
           },
         },
       },
@@ -52,7 +54,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       userId: m.user.id,
       userName: m.user.name || m.user.email?.split('@')[0] || 'User',
       userEmail: m.user.email,
-      avatar: m.user.avatar,
+      avatar: m.user.image,
       role: m.role,
       joinedAt: m.joinedAt.toISOString(),
       status: m.status,

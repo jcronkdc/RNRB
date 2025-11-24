@@ -1,14 +1,14 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { Card, Button } from '@cronkwaters/ui';
 import {
   useLiveStreaming,
   useDaily,
   useParticipantCounts,
   useLocalParticipant,
   DailyVideo,
-  DailyAudio,
 } from '@daily-co/daily-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Radio,
   X,
@@ -18,13 +18,11 @@ import {
   Heart,
   Share2,
   Settings,
-  Loader2,
   AlertCircle,
   Wifi,
   WifiOff,
 } from 'lucide-react';
-import { Card, Button } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useCallback, useEffect } from 'react';
 
 interface LivePerformanceProps {
   performanceName: string;
@@ -133,9 +131,6 @@ export function LivePerformance({
         rtmpUrl,
         layout: {
           preset: 'default',
-          composition_params: {
-            showParticipantLabels: false,
-          },
         },
         videoBitrate:
           streamConfig.quality === 'ultra'
@@ -175,7 +170,7 @@ export function LivePerformance({
         <div className="flex items-start justify-between">
           <div>
             <h2 className="mb-2 text-2xl font-bold">{performanceName}</h2>
-            {description && <p className="mb-4 text-muted-foreground">{description}</p>}
+            {description && <p className="text-muted-foreground mb-4">{description}</p>}
             {scheduledTime && !isLiveStreaming && (
               <p className="text-sm">Scheduled for: {scheduledTime.toLocaleString()}</p>
             )}
@@ -425,19 +420,19 @@ export function LivePerformance({
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Peak Viewers</span>
+                <span className="text-muted-foreground text-sm">Peak Viewers</span>
                 <span className="font-semibold">
                   {Math.max(viewerCount, Math.floor(viewerCount * 1.3)).toLocaleString()}
                 </span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Chat Messages</span>
+                <span className="text-muted-foreground text-sm">Chat Messages</span>
                 <span className="font-semibold">{chatMessages.length}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Reactions</span>
+                <span className="text-muted-foreground text-sm">Reactions</span>
                 <span className="font-semibold">
                   {Math.floor(viewerCount * 8.2).toLocaleString()}
                 </span>

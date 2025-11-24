@@ -1,14 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { type User } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   LogOut,
-  User as UserIcon,
   Settings,
   Music2,
   CreditCard,
@@ -16,6 +11,12 @@ import {
   Sparkles,
   FolderOpen,
 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { supabase } from '@/lib/supabase';
+
 
 export function UserMenu() {
   const router = useRouter();

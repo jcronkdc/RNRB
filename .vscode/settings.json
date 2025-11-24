@@ -128,5 +128,9 @@
   "editor.minimap.enabled": true,
   "editor.minimap.showSlider": "always",
   "breadcrumbs.enabled": true,
-  "problems.showInStatusBar": true
+  "problems.showInStatusBar": true,
+  "vitest.enable": true,
+  "vitest.commandLine": "pnpm vitest",
+  "vitest.include": ["**/tests/unit/**/*.test.ts"],
+  "vitest.exclude": ["**/tests/e2e/**", "**/*.spec.ts", "**/node_modules/**"]
 }

@@ -1,13 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 
 /**
  * GET /api/projects/[id]
  * Get a single project by ID or slug
  */
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 
@@ -90,7 +91,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       collaborator_count: project._count.members,
       session_count: project._count.studioSessions,
       members: project.members.map((m) => ({
-        id: m.id,
+        userId: m.userId,
         role: m.role,
         user: m.user,
       })),
@@ -108,9 +109,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
  * PATCH /api/projects/[id]
  * Update a project
  */
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
     const { userId, name, description, tagline, coverImage, visibility } = body;
 
@@ -189,9 +190,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
  * DELETE /api/projects/[id]
  * Delete a project (owner only)
  */
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 

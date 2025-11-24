@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
@@ -60,13 +61,12 @@ export async function POST(request: NextRequest) {
     // Create songs in batch
     const createdSongs = await db.song.createMany({
       data: newSongs.map((song: any) => ({
+        userId: user.id,
         projectId,
         title: song.title,
         description: song.artist ? `By ${song.artist}` : null,
-        duration: song.duration || null,
         tempo: song.tempo || null,
         key: song.key || null,
-        structure: null,
         lyrics: null,
         chords: null,
       })),

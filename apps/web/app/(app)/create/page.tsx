@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Card } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
@@ -15,6 +15,7 @@ import {
   Info,
   Loader2,
 } from 'lucide-react';
+import { useState } from 'react';
 
 // Style chips for genre/mood/tempo
 const styleOptions = {
@@ -150,7 +151,7 @@ export default function CreatePage() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="E.g., A driving rock anthem with powerful electric guitars and thunderous drums..."
-                  className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-none transition focus:ring-2"
                   rows={4}
                   disabled={isGenerating}
                 />
@@ -158,7 +159,7 @@ export default function CreatePage() {
                   onClick={() =>
                     setPrompt(examplePrompts[Math.floor(Math.random() * examplePrompts.length)])
                   }
-                  className="absolute bottom-3 right-3 rounded-lg p-2 text-muted-foreground transition hover:bg-surface/50 hover:text-foreground"
+                  className="text-muted-foreground hover:bg-surface/50 hover:text-foreground absolute bottom-3 right-3 rounded-lg p-2 transition"
                   title="Get random prompt"
                 >
                   <RefreshCw className="h-4 w-4" />
@@ -167,13 +168,13 @@ export default function CreatePage() {
 
               {/* Example prompts */}
               <div className="mt-3 flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Try:</span>
+                <span className="text-muted-foreground text-xs">Try:</span>
                 <div className="flex flex-wrap gap-2">
                   {examplePrompts.slice(0, 3).map((example, i) => (
                     <button
                       key={i}
                       onClick={() => setPrompt(example)}
-                      className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs transition-all hover:border-brand-primary/50 hover:bg-surface/80"
+                      className="border-border bg-surface hover:border-brand-primary/50 hover:bg-surface/80 rounded-lg border px-3 py-1.5 text-xs transition-all"
                     >
                       {example.substring(0, 30)}...
                     </button>
@@ -195,7 +196,7 @@ export default function CreatePage() {
                       className={`rounded-xl px-4 py-2 font-medium transition ${
                         selectedGenres.includes(genre)
                           ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border border-border bg-surface hover:border-brand-primary/50'
+                          : 'border-border bg-surface hover:border-brand-primary/50 border'
                       }`}
                       disabled={isGenerating}
                     >
@@ -216,7 +217,7 @@ export default function CreatePage() {
                       className={`rounded-xl px-4 py-2 font-medium transition ${
                         selectedMoods.includes(mood)
                           ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border border-border bg-surface hover:border-brand-primary/50'
+                          : 'border-border bg-surface hover:border-brand-primary/50 border'
                       }`}
                       disabled={isGenerating}
                     >
@@ -239,7 +240,7 @@ export default function CreatePage() {
                       className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition ${
                         selectedInstruments.includes(instrument)
                           ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border border-border bg-surface hover:border-brand-primary/50'
+                          : 'border-border bg-surface hover:border-brand-primary/50 border'
                       }`}
                       disabled={isGenerating}
                     >
@@ -298,7 +299,7 @@ export default function CreatePage() {
             <div>
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors"
               >
                 <Sliders className="h-4 w-4" />
                 Advanced Options
@@ -316,7 +317,7 @@ export default function CreatePage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-4 rounded-xl border border-border bg-surface/50 p-6">
+                    <div className="border-border bg-surface/50 mt-4 rounded-xl border p-6">
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                           <label className="mb-2 block flex items-center gap-2 text-sm font-medium">
@@ -326,14 +327,14 @@ export default function CreatePage() {
                           <input
                             type="text"
                             placeholder="Enter seed for consistent results"
-                            className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none"
+                            className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 transition focus:outline-none"
                             disabled={isGenerating}
                           />
                         </div>
                         <div>
                           <label className="mb-2 block text-sm font-medium">Key Signature</label>
                           <select
-                            className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none"
+                            className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 transition focus:outline-none"
                             disabled={isGenerating}
                           >
                             <option>Auto</option>
@@ -352,8 +353,8 @@ export default function CreatePage() {
             </div>
 
             {/* Generate Button */}
-            <div className="flex items-center justify-between border-t border-border pt-4">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="border-border flex items-center justify-between border-t pt-4">
+              <div className="text-muted-foreground flex items-center gap-2 text-sm">
                 <Info className="h-4 w-4" />
                 <span>Generation uses 10 credits</span>
               </div>
@@ -387,7 +388,7 @@ export default function CreatePage() {
             className="mt-8"
           >
             <Card className="rnrb-card p-12 text-center">
-              <Music2 className="rnrb-pulse mx-auto mb-4 h-16 w-16 text-brand-primary" />
+              <Music2 className="rnrb-pulse text-brand-primary mx-auto mb-4 h-16 w-16" />
               <h3 className="mb-2 text-xl font-semibold">Creating your track...</h3>
               <p className="text-muted-foreground">This usually takes 20-30 seconds</p>
             </Card>

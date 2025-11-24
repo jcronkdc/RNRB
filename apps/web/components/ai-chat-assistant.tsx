@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Sparkles, Loader2, X } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
+import { Sparkles, Loader2, X } from 'lucide-react';
+import { useState } from 'react';
 
 type AIChatAssistantProps = {
   onSuggestion: (suggestion: string) => void;
@@ -68,11 +68,11 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
       </Button>
 
       {isOpen && (
-        <div className="absolute bottom-full right-0 z-50 mb-2 w-96 rounded-lg border border-border bg-surface p-4 shadow-2xl">
+        <div className="border-border bg-surface absolute bottom-full right-0 z-50 mb-2 w-96 rounded-lg border p-4 shadow-2xl">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-purple-400" />
-              <h4 className="font-semibold text-foreground">AI Assistant</h4>
+              <h4 className="text-foreground font-semibold">AI Assistant</h4>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -82,7 +82,7 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
             </button>
           </div>
 
-          <p className="mb-3 text-xs text-muted-foreground">
+          <p className="text-muted-foreground mb-3 text-xs">
             Ask about chords, song structure, lyrics, or music theory
           </p>
 
@@ -91,7 +91,7 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="What chord goes after Am in this progression?"
-              className="w-full resize-none rounded border border-border bg-surface-muted px-3 py-2 text-sm text-foreground focus:border-brand-primary focus:outline-none"
+              className="border-border bg-surface-muted text-foreground focus:border-brand-primary w-full resize-none rounded border px-3 py-2 text-sm focus:outline-none"
               rows={3}
             />
 
@@ -114,7 +114,7 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
             {suggestion && (
               <div className="rounded border border-purple-500/20 bg-purple-500/10 p-3">
                 <p className="mb-2 text-xs font-semibold text-purple-400">AI SUGGESTION:</p>
-                <p className="mb-3 text-sm text-foreground">{suggestion}</p>
+                <p className="text-foreground mb-3 text-sm">{suggestion}</p>
                 <div className="flex gap-2">
                   <Button
                     onClick={useSuggestion}
@@ -136,8 +136,8 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
             )}
           </div>
 
-          <div className="mt-3 border-t border-border pt-3">
-            <p className="text-xs text-muted-foreground">
+          <div className="border-border mt-3 border-t pt-3">
+            <p className="text-muted-foreground text-xs">
               ✨ <span className="text-purple-400">Ethical AI</span> - Suggestions only, you create
             </p>
           </div>

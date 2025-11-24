@@ -43,9 +43,11 @@
   },
   "devDependencies": {
     "@cronkwaters/config": "workspace:*",
+    "@rollup/rollup-darwin-arm64": "4.53.2",
     "@types/node": "^22.15.3",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "@vitest/coverage-v8": "^4.0.8",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.39.1",
     "eslint-plugin-import": "^2.29.1",
@@ -60,6 +62,7 @@
     "tailwindcss": "^3.4.14",
     "tailwindcss-animate": "^1.0.7",
     "turbo": "^2.6.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^4.0.8"
   }
 }

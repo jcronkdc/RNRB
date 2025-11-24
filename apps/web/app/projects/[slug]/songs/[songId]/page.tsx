@@ -1,33 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { useParams, useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
+import { motion } from 'framer-motion';
 import {
-  ArrowLeft,
   Music,
   Edit,
   Save,
   Users,
   MessageSquare,
   Upload,
-  Download,
-  Play,
   Sparkles,
   FileText,
   Mic2,
-  Instagram,
-  Facebook,
-  Twitter,
-  Copy,
-  Check,
   Loader2,
 } from 'lucide-react';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import { useAudioUpload } from '@/hooks/use-audio-upload';
+import { supabase } from '@/lib/supabase';
 
 // Dynamically import chat for song-level collaboration
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {
@@ -165,11 +158,11 @@ export default function SongDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="bg-background flex min-h-screen items-center justify-center">
         <motion.div
           animate={{ opacity: [0.2, 1, 0.2] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="font-mono text-sm text-muted-foreground"
+          className="text-muted-foreground font-mono text-sm"
         >
           Loading song...
         </motion.div>
@@ -178,15 +171,15 @@ export default function SongDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="bg-background min-h-screen px-4 py-12">
       <div className="rnrb-container max-w-6xl">
         {/* Breadcrumb */}
-        <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/projects" className="transition hover:text-brand-primary">
+        <div className="text-muted-foreground mb-6 flex items-center gap-2 text-sm">
+          <Link href="/projects" className="hover:text-brand-primary transition">
             Projects
           </Link>
           <span>/</span>
-          <Link href={`/projects/${slug}`} className="transition hover:text-brand-primary">
+          <Link href={`/projects/${slug}`} className="hover:text-brand-primary transition">
             {project.name}
           </Link>
           <span>/</span>
@@ -197,7 +190,7 @@ export default function SongDetailPage() {
         <div className="mb-8 flex items-start justify-between">
           <div>
             <h1 className="font-display mb-2 text-4xl font-bold">{song.title}</h1>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-4 text-sm">
               {song.key && <span>Key: {song.key}</span>}
               {song.tempo && <span>• {song.tempo} BPM</span>}
               {song.time_signature && <span>• {song.time_signature}</span>}
@@ -243,14 +236,14 @@ export default function SongDetailPage() {
         )}
 
         {/* Tabs */}
-        <div className="mb-6 flex gap-2 border-b border-border">
+        <div className="border-border mb-6 flex gap-2 border-b">
           {['details', 'lyrics', 'audio', 'share', 'chat'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
               className={`px-6 py-3 font-medium capitalize transition ${
                 activeTab === tab
-                  ? 'border-b-2 border-brand-primary text-brand-primary'
+                  ? 'border-brand-primary text-brand-primary border-b-2'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -278,7 +271,7 @@ export default function SongDetailPage() {
                         type="text"
                         value={song.key || ''}
                         disabled={!editing}
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:opacity-50"
+                        className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-2 outline-none transition focus:ring-2 disabled:opacity-50"
                       />
                     </div>
                     <div>
@@ -287,7 +280,7 @@ export default function SongDetailPage() {
                         type="number"
                         value={song.tempo || ''}
                         disabled={!editing}
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:opacity-50"
+                        className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-2 outline-none transition focus:ring-2 disabled:opacity-50"
                       />
                     </div>
                     <div>
@@ -296,7 +289,7 @@ export default function SongDetailPage() {
                         type="text"
                         value={song.time_signature || '4/4'}
                         disabled={!editing}
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:opacity-50"
+                        className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-2 outline-none transition focus:ring-2 disabled:opacity-50"
                       />
                     </div>
                   </div>
@@ -304,7 +297,7 @@ export default function SongDetailPage() {
                   {song.notes && (
                     <div>
                       <label className="mb-2 block text-sm font-medium">Notes</label>
-                      <p className="rounded-lg bg-surface-muted p-4 text-muted-foreground">
+                      <p className="bg-surface-muted text-muted-foreground rounded-lg p-4">
                         {song.notes}
                       </p>
                     </div>
@@ -335,9 +328,9 @@ export default function SongDetailPage() {
                   value={song.lyrics || ''}
                   disabled={!editing}
                   placeholder="Write your lyrics here... (AI suggestions coming soon)"
-                  className="h-96 w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 font-mono text-base leading-relaxed text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:opacity-50"
+                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 h-96 w-full resize-none rounded-lg border px-4 py-3 font-mono text-base leading-relaxed outline-none transition focus:ring-2 disabled:opacity-50"
                 />
-                <p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+                <p className="text-muted-foreground mt-2 flex items-center gap-1 text-xs">
                   <Sparkles className="h-3 w-3 text-purple-400" />
                   AI lyric assistant coming soon - get rhyme suggestions, meter improvements, and
                   more
@@ -351,7 +344,7 @@ export default function SongDetailPage() {
               <Card className="rnrb-card p-8">
                 <div className="mb-6 flex items-center justify-between">
                   <h3 className="text-2xl font-semibold">Audio Files</h3>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-muted-foreground text-sm">
                     Max 500MB per file • WAV, MP3, AIFF, FLAC
                   </div>
                 </div>
@@ -361,24 +354,24 @@ export default function SongDetailPage() {
                   className={`rounded-xl border-2 border-dashed p-12 text-center transition ${
                     uploading
                       ? 'border-brand-primary bg-brand-primary/5'
-                      : 'cursor-pointer border-border hover:border-brand-primary/50'
+                      : 'border-border hover:border-brand-primary/50 cursor-pointer'
                   }`}
                 >
                   {uploading ? (
                     <>
-                      <Loader2 className="mx-auto mb-4 h-16 w-16 animate-spin text-brand-primary" />
+                      <Loader2 className="text-brand-primary mx-auto mb-4 h-16 w-16 animate-spin" />
                       <h4 className="mb-2 text-lg font-semibold">
                         Uploading to Supabase Storage...
                       </h4>
                       {progress && (
                         <div className="mx-auto max-w-md">
-                          <div className="mb-2 h-2 w-full rounded-full bg-surface-muted">
+                          <div className="bg-surface-muted mb-2 h-2 w-full rounded-full">
                             <div
-                              className="h-2 rounded-full bg-brand-primary transition-all duration-300"
+                              className="bg-brand-primary h-2 rounded-full transition-all duration-300"
                               style={{ width: `${progress.percentage}%` }}
                             />
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-muted-foreground text-sm">
                             {Math.round(progress.percentage)}% • {formatFileSize(progress.loaded)} /{' '}
                             {formatFileSize(progress.total)}
                           </p>
@@ -387,9 +380,9 @@ export default function SongDetailPage() {
                     </>
                   ) : (
                     <>
-                      <Mic2 className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+                      <Mic2 className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
                       <h4 className="mb-2 text-lg font-semibold">Upload Your Recording</h4>
-                      <p className="mx-auto mb-4 max-w-md text-muted-foreground">
+                      <p className="text-muted-foreground mx-auto mb-4 max-w-md">
                         Share stems, demos, or final mixes with your collaborators. Files stored
                         securely in Supabase.
                       </p>
@@ -407,7 +400,7 @@ export default function SongDetailPage() {
                           Choose Audio File
                         </Button>
                       </label>
-                      <p className="mt-4 text-xs text-muted-foreground">
+                      <p className="text-muted-foreground mt-4 text-xs">
                         Max 500MB • Supports MP3, WAV, AIFF, FLAC, OGG, M4A
                       </p>
                     </>
@@ -422,12 +415,12 @@ export default function SongDetailPage() {
                 {/* Uploaded Files List */}
                 <div className="mt-6">
                   <h4 className="mb-3 flex items-center gap-2 font-semibold">
-                    <Music className="h-5 w-5 text-brand-primary" />
+                    <Music className="text-brand-primary h-5 w-5" />
                     Uploaded Files ({audioFiles.length})
                   </h4>
                   {audioFiles.length === 0 ? (
                     <div className="rnrb-card bg-surface-muted/50 p-6 text-center">
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         No files uploaded yet. Upload your first recording above.
                       </p>
                     </div>
@@ -443,12 +436,12 @@ export default function SongDetailPage() {
                         >
                           {/* File Info Header */}
                           <div className="mb-4 flex items-center gap-4">
-                            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-brand-primary/10">
-                              <Music className="h-6 w-6 text-brand-primary" />
+                            <div className="bg-brand-primary/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg">
+                              <Music className="text-brand-primary h-6 w-6" />
                             </div>
                             <div className="min-w-0 flex-1">
                               <p className="font-semibold">{file.name}</p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-muted-foreground text-sm">
                                 {formatFileSize(file.size)} • Uploaded{' '}
                                 {new Date(file.uploadedAt).toLocaleDateString()}
                               </p>
@@ -489,9 +482,9 @@ export default function SongDetailPage() {
                   key={song.key}
                   tempo={song.tempo}
                 />
-                <div className="rnrb-card mt-6 bg-brand-primary/5 p-4">
-                  <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MessageSquare className="h-4 w-4 text-brand-primary" />
+                <div className="rnrb-card bg-brand-primary/5 mt-6 p-4">
+                  <p className="text-muted-foreground flex items-center gap-2 text-sm">
+                    <MessageSquare className="text-brand-primary h-4 w-4" />
                     <strong>Collaborative:</strong> Share drafts in project chat for team feedback
                     before posting
                   </p>
@@ -505,10 +498,10 @@ export default function SongDetailPage() {
               <div className="rnrb-card p-6">
                 <div className="mb-4">
                   <h3 className="mb-2 flex items-center gap-2 text-2xl font-semibold">
-                    <MessageSquare className="h-6 w-6 text-brand-primary" />
+                    <MessageSquare className="text-brand-primary h-6 w-6" />
                     Song-Level Chat
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Collaborate on "{song.title}" with your team. Discuss lyrics, chords, and
                     production ideas.
                   </p>
@@ -523,7 +516,7 @@ export default function SongDetailPage() {
         <Card className="rnrb-card mt-6 p-6">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <Users className="h-5 w-5 text-brand-primary" />
+              <Users className="text-brand-primary h-5 w-5" />
               Collaborators on This Song
             </h3>
             <Button size="sm" variant="secondary">
@@ -531,17 +524,17 @@ export default function SongDetailPage() {
             </Button>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 font-semibold text-brand-primary">
+            <div className="bg-brand-primary/20 text-brand-primary flex h-10 w-10 items-center justify-center rounded-full font-semibold">
               {user?.email?.[0]?.toUpperCase() || 'U'}
             </div>
             <div>
               <p className="font-medium">
                 {user?.user_metadata?.name || user?.email?.split('@')[0] || 'You'}
               </p>
-              <p className="text-xs text-muted-foreground">Creator • Full Access</p>
+              <p className="text-muted-foreground text-xs">Creator • Full Access</p>
             </div>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">
+          <p className="text-muted-foreground mt-4 text-xs">
             💡 Invite collaborators to this specific song for focused collaboration on lyrics,
             production, and recording
           </p>

@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { optimizeTourRoute } from '@/lib/ai/openai';
 import { requireFeatureAccess } from '@/lib/subscription-access';
-import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 import { getCurrentUser } from '@/lib/supabase';
+import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 
 export async function POST(request: NextRequest) {
   try {

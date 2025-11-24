@@ -15,8 +15,6 @@
  * - Share timestamp links
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import {
   Play,
   Pause,
@@ -28,6 +26,7 @@ import {
   Share2,
   Repeat,
 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 type WaveformPlayerProps = {
   audioUrl: string;
@@ -234,18 +233,18 @@ export function WaveformPlayer({ audioUrl, audioName, onTimeUpdate }: WaveformPl
 
       {/* Song Info */}
       <div className="flex items-center justify-between">
-        <h4 className="font-medium text-foreground">{audioName}</h4>
+        <h4 className="text-foreground font-medium">{audioName}</h4>
         <div className="flex items-center gap-2">
           <button
             onClick={downloadAudio}
-            className="rounded-lg p-2 transition-colors hover:bg-muted"
+            className="hover:bg-muted rounded-lg p-2 transition-colors"
             title="Download"
           >
             <Download className="h-4 w-4" />
           </button>
           <button
             onClick={shareTimestamp}
-            className="rounded-lg p-2 transition-colors hover:bg-muted"
+            className="hover:bg-muted rounded-lg p-2 transition-colors"
             title="Share current timestamp"
           >
             <Share2 className="h-4 w-4" />
@@ -256,12 +255,12 @@ export function WaveformPlayer({ audioUrl, audioName, onTimeUpdate }: WaveformPl
       {/* Waveform */}
       <div
         ref={containerRef}
-        className="relative cursor-pointer overflow-hidden rounded-lg border border-border bg-surface"
+        className="border-border bg-surface relative cursor-pointer overflow-hidden rounded-lg border"
         style={{ height: '120px' }}
       >
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent" />
+            <div className="border-brand-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
           </div>
         ) : (
           <canvas
@@ -285,7 +284,7 @@ export function WaveformPlayer({ audioUrl, audioName, onTimeUpdate }: WaveformPl
         <div className="flex items-center gap-2">
           <button
             onClick={() => skip(-10)}
-            className="rounded-lg p-2 transition-colors hover:bg-muted"
+            className="hover:bg-muted rounded-lg p-2 transition-colors"
             title="Skip back 10s"
           >
             <SkipBack className="h-4 w-4" />
@@ -293,7 +292,7 @@ export function WaveformPlayer({ audioUrl, audioName, onTimeUpdate }: WaveformPl
 
           <button
             onClick={togglePlay}
-            className="rounded-full bg-brand-primary p-3 transition-colors hover:bg-brand-primary/90"
+            className="bg-brand-primary hover:bg-brand-primary/90 rounded-full p-3 transition-colors"
             title={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? (
@@ -305,7 +304,7 @@ export function WaveformPlayer({ audioUrl, audioName, onTimeUpdate }: WaveformPl
 
           <button
             onClick={() => skip(10)}
-            className="rounded-lg p-2 transition-colors hover:bg-muted"
+            className="hover:bg-muted rounded-lg p-2 transition-colors"
             title="Skip forward 10s"
           >
             <SkipForward className="h-4 w-4" />
@@ -324,7 +323,7 @@ export function WaveformPlayer({ audioUrl, audioName, onTimeUpdate }: WaveformPl
 
         {/* Right: Volume Control */}
         <div className="flex items-center gap-2">
-          <button onClick={toggleMute} className="rounded-lg p-2 transition-colors hover:bg-muted">
+          <button onClick={toggleMute} className="hover:bg-muted rounded-lg p-2 transition-colors">
             {isMuted || volume === 0 ? (
               <VolumeX className="h-4 w-4" />
             ) : (

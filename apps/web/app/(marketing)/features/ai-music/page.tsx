@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import {
   Music,
@@ -11,14 +11,14 @@ import {
   ArrowRight,
   CheckCircle,
 } from 'lucide-react';
-import { Card, Button } from '@cronkwaters/ui';
+import Link from 'next/link';
 
 export default function AIMusicFeaturePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       {/* Hero */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+      <div className="border-border/50 relative overflow-hidden border-b">
+        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
         <div className="absolute inset-0">
           <div className="absolute right-1/3 top-0 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
         </div>
@@ -38,7 +38,7 @@ export default function AIMusicFeaturePage() {
             <h1 className="font-display mb-6 text-5xl font-bold md:text-6xl">
               AI Music Generation
             </h1>
-            <p className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-muted-foreground">
+            <p className="text-muted-foreground mx-auto mb-8 max-w-3xl text-xl leading-relaxed">
               Create full instrumental tracks with AI, then replace stems with your own recordings.
               Perfect for demos, songwriting sessions, or learning production.
             </p>
@@ -99,16 +99,16 @@ export default function AIMusicFeaturePage() {
             >
               <Card className="rnrb-card h-full p-6">
                 <div
-                  className={`mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-${feature.color.split('-')[0]}-500/10`}
+                  className={`bg- mb-4 flex h-12 w-12 items-center justify-center rounded-lg${feature.color.split('-')[0]}-500/10`}
                 >
-                  <feature.icon className={`h-6 w-6 text-${feature.color}`} />
+                  <feature.icon className={`text- h-6 w-6${feature.color}`} />
                 </div>
                 <h3 className="mb-3 text-xl font-semibold">{feature.title}</h3>
-                <p className="mb-4 text-muted-foreground">{feature.description}</p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mb-4">{feature.description}</p>
+                <ul className="text-muted-foreground space-y-2 text-sm">
                   {feature.features.map((item) => (
                     <li key={item} className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 flex-shrink-0 text-brand-primary" />
+                      <CheckCircle className="text-brand-primary h-4 w-4 flex-shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -119,7 +119,7 @@ export default function AIMusicFeaturePage() {
         </div>
 
         {/* How It Works */}
-        <div id="how-it-works" className="border-t border-border/50 pt-20">
+        <div id="how-it-works" className="border-border/50 border-t pt-20">
           <h2 className="font-display mb-12 text-center text-4xl font-bold">How It Works</h2>
 
           <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-4">
@@ -156,13 +156,13 @@ export default function AIMusicFeaturePage() {
                 transition={{ duration: 0.5, delay: 0.15 * (index + 1) }}
                 className="text-center"
               >
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-primary/30 bg-brand-primary/10">
-                  <span className="font-display text-3xl font-bold text-brand-primary">
+                <div className="border-brand-primary/30 bg-brand-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2">
+                  <span className="font-display text-brand-primary text-3xl font-bold">
                     {step.step}
                   </span>
                 </div>
                 <h3 className="mb-2 text-lg font-semibold">{step.title}</h3>
-                <p className="text-sm text-muted-foreground">{step.description}</p>
+                <p className="text-muted-foreground text-sm">{step.description}</p>
               </motion.div>
             ))}
           </div>
@@ -170,7 +170,7 @@ export default function AIMusicFeaturePage() {
       </div>
 
       {/* Use Cases */}
-      <div className="border-t border-border/50 bg-surface/30">
+      <div className="border-border/50 bg-surface/30 border-t">
         <div className="rnrb-container max-w-6xl px-4 py-20">
           <h2 className="font-display mb-12 text-center text-4xl font-bold">Perfect For</h2>
 
@@ -219,16 +219,16 @@ export default function AIMusicFeaturePage() {
       </div>
 
       {/* CTA */}
-      <div className="border-t border-border/50">
+      <div className="border-border/50 border-t">
         <div className="rnrb-container max-w-3xl px-4 py-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Sparkles className="mx-auto mb-6 h-12 w-12 text-brand-primary" />
+            <Sparkles className="text-brand-primary mx-auto mb-6 h-12 w-12" />
             <h2 className="font-display mb-4 text-4xl font-bold">Join the Beta</h2>
-            <p className="mb-8 text-xl text-muted-foreground">
+            <p className="text-muted-foreground mb-8 text-xl">
               AI Music Generation is in active development. Join the waitlist to get early access
               and help shape the feature with your feedback.
             </p>

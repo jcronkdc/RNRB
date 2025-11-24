@@ -12,11 +12,10 @@
  * 5. Import (auto-creates songs in project)
  */
 
-import { useState, useEffect } from 'react';
-import { Button } from '@cronkwaters/ui';
-import { Card } from '@cronkwaters/ui';
+import { Button , Card } from '@cronkwaters/ui';
+import { motion } from 'framer-motion';
 import { Music, X, Check, AlertCircle, Loader2, ExternalLink } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 type SpotifyPlaylist = {
   id: string;
@@ -206,7 +205,7 @@ export function SpotifyImportModal({
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold">Import from Spotify</h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Add songs from your Spotify playlists to this project
                 </p>
               </div>
@@ -234,7 +233,7 @@ export function SpotifyImportModal({
                 <Music className="h-10 w-10 text-green-400" />
               </div>
               <h3 className="mb-2 text-xl font-semibold">Connect to Spotify</h3>
-              <p className="mx-auto mb-6 max-w-md text-muted-foreground">
+              <p className="text-muted-foreground mx-auto mb-6 max-w-md">
                 We'll access your playlists to help you quickly populate this project with songs. We
                 won't modify your Spotify account.
               </p>
@@ -270,7 +269,7 @@ export function SpotifyImportModal({
                       setSelectedPlaylist(playlist);
                       fetchPlaylistTracks(playlist.id);
                     }}
-                    className="rounded-lg border border-transparent bg-surface-muted p-4 text-left transition-all hover:border-brand-primary/30 hover:bg-surface"
+                    className="bg-surface-muted hover:border-brand-primary/30 hover:bg-surface rounded-lg border border-transparent p-4 text-left transition-all"
                   >
                     <div className="flex gap-3">
                       {playlist.images[0] ? (
@@ -280,13 +279,13 @@ export function SpotifyImportModal({
                           className="h-16 w-16 rounded object-cover"
                         />
                       ) : (
-                        <div className="flex h-16 w-16 items-center justify-center rounded bg-brand-primary/20">
-                          <Music className="h-8 w-8 text-brand-primary" />
+                        <div className="bg-brand-primary/20 flex h-16 w-16 items-center justify-center rounded">
+                          <Music className="text-brand-primary h-8 w-8" />
                         </div>
                       )}
                       <div className="min-w-0 flex-1">
                         <h4 className="truncate font-semibold">{playlist.name}</h4>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                           {playlist.tracks.total} songs
                         </p>
                       </div>
@@ -303,7 +302,7 @@ export function SpotifyImportModal({
               <div className="mb-4 flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-semibold">Select Songs to Import</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     {selectedSongs.size} of {songs.length} songs selected
                   </p>
                 </div>
@@ -329,7 +328,7 @@ export function SpotifyImportModal({
                     className={`w-full rounded-lg border p-3 text-left transition-all ${
                       selectedSongs.has(song.spotifyId)
                         ? 'border-brand-primary/30 bg-brand-primary/10'
-                        : 'border-transparent bg-surface-muted hover:border-border'
+                        : 'bg-surface-muted hover:border-border border-transparent'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -346,9 +345,9 @@ export function SpotifyImportModal({
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="truncate font-medium">{song.title}</div>
-                        <div className="truncate text-sm text-muted-foreground">{song.artist}</div>
+                        <div className="text-muted-foreground truncate text-sm">{song.artist}</div>
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-muted-foreground text-sm">
                         {formatDuration(song.duration)}
                       </div>
                     </div>
@@ -374,7 +373,7 @@ export function SpotifyImportModal({
           {/* Step: Importing */}
           {step === 'importing' && (
             <div className="py-12 text-center">
-              <Loader2 className="mx-auto mb-6 h-16 w-16 animate-spin text-brand-primary" />
+              <Loader2 className="text-brand-primary mx-auto mb-6 h-16 w-16 animate-spin" />
               <h3 className="mb-2 text-xl font-semibold">Importing Songs...</h3>
               <p className="text-muted-foreground">This will only take a moment</p>
             </div>
@@ -387,7 +386,7 @@ export function SpotifyImportModal({
                 <Check className="h-10 w-10 text-green-400" />
               </div>
               <h3 className="mb-2 text-xl font-semibold">Import Complete!</h3>
-              <p className="mb-4 text-muted-foreground">
+              <p className="text-muted-foreground mb-4">
                 {importResult.imported} songs added to your project
                 {importResult.skipped > 0 && ` (${importResult.skipped} duplicates skipped)`}
               </p>

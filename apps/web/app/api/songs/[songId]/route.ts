@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
+import { db } from '@/lib/db';
 
 type RouteContext = {
-  params: {
+  params: Promise<{
     songId: string;
-  };
+  }>;
 };
 
 /**
@@ -14,6 +15,7 @@ type RouteContext = {
  */
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
+    const { songId } = await params;
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -22,7 +24,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 
     const song = await db.song.findUnique({
       where: {
-        id: params.songId,
+        id: songId,
       },
       include: {
         user: {
@@ -57,6 +59,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
  */
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
+    const { songId } = await params;
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -65,7 +68,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 
     // Verify ownership
     const existing = await db.song.findUnique({
-      where: { id: params.songId },
+      where: { id: songId },
       select: { userId: true },
     });
 
@@ -81,7 +84,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     const { title, key, tempo, timeSignature, lyrics, chords, status, visibility } = body;
 
     const song = await db.song.update({
-      where: { id: params.songId },
+      where: { id: songId },
       data: {
         ...(title !== undefined && { title }),
         ...(key !== undefined && { key }),
@@ -110,6 +113,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
  */
 export async function DELETE(req: NextRequest, { params }: RouteContext) {
   try {
+    const { songId } = await params;
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -118,7 +122,7 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
 
     // Verify ownership
     const existing = await db.song.findUnique({
-      where: { id: params.songId },
+      where: { id: songId },
       select: { userId: true },
     });
 
@@ -132,7 +136,7 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
 
     // Soft delete by archiving
     await db.song.update({
-      where: { id: params.songId },
+      where: { id: songId },
       data: { archived: true },
     });
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import {
   Music,
@@ -13,7 +14,6 @@ import {
   XCircle,
   ArrowRight,
 } from 'lucide-react';
-import { Card, Button } from '@cronkwaters/ui';
 import Link from 'next/link';
 
 const competitors = [
@@ -113,7 +113,7 @@ export default function WhyRNRBPage() {
           <h1 className="mb-6 text-5xl font-bold md:text-6xl">
             The Only Platform That Does It All
           </h1>
-          <p className="mx-auto mb-8 max-w-3xl text-xl text-muted-foreground">
+          <p className="text-muted-foreground mx-auto mb-8 max-w-3xl text-xl">
             Rock N' Roll Basement is the world's first and only platform that combines professional
             studio recording, live streaming, tour management, rights tracking, and revenue
             management in one integrated system.
@@ -155,7 +155,7 @@ export default function WhyRNRBPage() {
                     <td className="py-4 pr-4">
                       <div>
                         <p className="font-semibold">{competitor.name}</p>
-                        <p className="text-sm text-muted-foreground">{competitor.examples}</p>
+                        <p className="text-muted-foreground text-sm">{competitor.examples}</p>
                       </div>
                     </td>
                     {features.map((feature) => (
@@ -190,7 +190,7 @@ export default function WhyRNRBPage() {
             </table>
           </div>
 
-          <p className="mt-8 text-center text-muted-foreground">
+          <p className="text-muted-foreground mt-8 text-center">
             Stop juggling multiple subscriptions. Get everything in one place.
           </p>
         </Card>
@@ -207,7 +207,7 @@ export default function WhyRNRBPage() {
                 </div>
                 <div>
                   <h3 className="mb-3 text-xl font-semibold">Integrated Workflow</h3>
-                  <p className="mb-4 text-muted-foreground">
+                  <p className="text-muted-foreground mb-4">
                     Record a song, stream the session, schedule the tour, track the royalties, and
                     manage the revenue—all without switching platforms.
                   </p>
@@ -236,7 +236,7 @@ export default function WhyRNRBPage() {
                 </div>
                 <div>
                   <h3 className="mb-3 text-xl font-semibold">Built for Modern Musicians</h3>
-                  <p className="mb-4 text-muted-foreground">
+                  <p className="text-muted-foreground mb-4">
                     Today's artists are creators, performers, and entrepreneurs. Our platform
                     reflects that reality.
                   </p>
@@ -265,7 +265,7 @@ export default function WhyRNRBPage() {
                 </div>
                 <div>
                   <h3 className="mb-3 text-xl font-semibold">Financial Transparency</h3>
-                  <p className="mb-4 text-muted-foreground">
+                  <p className="text-muted-foreground mb-4">
                     See exactly where your money comes from and where it goes, all in real-time.
                   </p>
                   <ul className="space-y-2 text-sm">
@@ -293,7 +293,7 @@ export default function WhyRNRBPage() {
                 </div>
                 <div>
                   <h3 className="mb-3 text-xl font-semibold">Industry-Grade Security</h3>
-                  <p className="mb-4 text-muted-foreground">
+                  <p className="text-muted-foreground mb-4">
                     Your music, your data, your revenue—protected with the same security used by
                     major labels.
                   </p>
@@ -324,24 +324,24 @@ export default function WhyRNRBPage() {
             <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-3">
               <div>
                 <div className="mb-2 text-4xl font-bold text-red-500">7+</div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Average number of apps musicians use daily
                 </p>
               </div>
               <div>
                 <div className="mb-2 text-4xl font-bold text-red-500">$180</div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Average monthly cost for all subscriptions
                 </p>
               </div>
               <div>
                 <div className="mb-2 text-4xl font-bold text-red-500">40%</div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Time wasted switching between platforms
                 </p>
               </div>
             </div>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Musicians shouldn't need a degree in software engineering to manage their career. We
               built Rock N' Roll Basement to solve this once and for all.
             </p>
@@ -356,7 +356,7 @@ export default function WhyRNRBPage() {
             <Card className="p-6 text-center">
               <Music className="mx-auto mb-3 h-8 w-8 text-purple-500" />
               <h3 className="mb-2 font-semibold">Built by Musicians</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 We understand your workflow because we've lived it
               </p>
             </Card>
@@ -364,7 +364,7 @@ export default function WhyRNRBPage() {
             <Card className="p-6 text-center">
               <Zap className="mx-auto mb-3 h-8 w-8 text-yellow-500" />
               <h3 className="mb-2 font-semibold">Always Improving</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Regular updates based on your feedback
               </p>
             </Card>
@@ -372,7 +372,7 @@ export default function WhyRNRBPage() {
             <Card className="p-6 text-center">
               <Users className="mx-auto mb-3 h-8 w-8 text-blue-500" />
               <h3 className="mb-2 font-semibold">Community First</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Join thousands of artists already on the platform
               </p>
             </Card>
@@ -380,7 +380,7 @@ export default function WhyRNRBPage() {
             <Card className="p-6 text-center">
               <Shield className="mx-auto mb-3 h-8 w-8 text-green-500" />
               <h3 className="mb-2 font-semibold">Your Rights Protected</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 You own your music, data, and creative work
               </p>
             </Card>
@@ -390,7 +390,7 @@ export default function WhyRNRBPage() {
         {/* Call to Action */}
         <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-12 text-center">
           <h2 className="mb-4 text-3xl font-bold">Ready to Simplify Your Music Career?</h2>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
+          <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg">
             Join the revolution. One platform, unlimited possibilities. No credit card required to
             start.
           </p>
@@ -407,7 +407,7 @@ export default function WhyRNRBPage() {
               </Button>
             </Link>
           </div>
-          <p className="mt-6 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-6 text-sm">
             Free for 14 days • No credit card required • Cancel anytime
           </p>
         </Card>

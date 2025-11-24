@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { Card, Button } from '@cronkwaters/ui';
 import { Book, Sparkles, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 type LyricsAssistantProps = {
   currentLyrics: string;
@@ -92,8 +92,8 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           onClick={() => setMode('rhyme')}
           className={`rounded-xl px-6 py-3.5 text-left font-semibold transition-all ${
             mode === 'rhyme'
-              ? 'border-2 border-brand-primary bg-brand-primary text-brand-primary-foreground shadow-lg'
-              : 'border-2 border-border bg-surface-muted text-foreground hover:border-brand-primary/30 hover:bg-surface'
+              ? 'border-brand-primary bg-brand-primary text-brand-primary-foreground border-2 shadow-lg'
+              : 'border-border bg-surface-muted text-foreground hover:border-brand-primary/30 hover:bg-surface border-2'
           }`}
         >
           <Book className="mr-3 inline-block h-5 w-5" />
@@ -103,8 +103,8 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           onClick={() => setMode('thesaurus')}
           className={`rounded-xl px-6 py-3.5 text-left font-semibold transition-all ${
             mode === 'thesaurus'
-              ? 'border-2 border-brand-primary bg-brand-primary text-brand-primary-foreground shadow-lg'
-              : 'border-2 border-border bg-surface-muted text-foreground hover:border-brand-primary/30 hover:bg-surface'
+              ? 'border-brand-primary bg-brand-primary text-brand-primary-foreground border-2 shadow-lg'
+              : 'border-border bg-surface-muted text-foreground hover:border-brand-primary/30 hover:bg-surface border-2'
           }`}
         >
           <Book className="mr-3 inline-block h-5 w-5" />
@@ -115,7 +115,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           className={`rounded-xl px-6 py-3.5 text-left font-semibold transition-all ${
             mode === 'ai'
               ? 'border-2 border-purple-500 bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg'
-              : 'border-2 border-border bg-surface-muted text-foreground hover:border-purple-500/30 hover:bg-surface'
+              : 'border-border bg-surface-muted text-foreground hover:bg-surface border-2 hover:border-purple-500/30'
           }`}
         >
           <Sparkles className="mr-3 inline-block h-5 w-5" />
@@ -136,7 +136,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
                 ? 'Enter a word to find synonyms...'
                 : 'Ask AI for lyric help (e.g., "help with chorus about heartbreak")'
           }
-          className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 pr-32 text-base text-foreground placeholder-muted-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+          className="border-border bg-surface text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-4 pr-32 text-base outline-none transition focus:ring-4"
         />
         <Button
           onClick={handleSearch}
@@ -151,18 +151,18 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
 
       {suggestions.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <h4 className="text-muted-foreground text-sm font-semibold uppercase tracking-wide">
             {mode === 'ai' ? 'AI Suggestions' : mode === 'rhyme' ? 'Rhymes' : 'Synonyms'}
           </h4>
           {suggestions.map((suggestion, index) => (
             <Card
               key={index}
-              className="rnrb-card group cursor-pointer border-2 border-border bg-gradient-to-br from-surface-muted to-surface p-5 transition-all duration-200 hover:border-brand-primary/40 hover:from-brand-primary/5 hover:to-transparent"
+              className="rnrb-card border-border from-surface-muted to-surface hover:border-brand-primary/40 hover:from-brand-primary/5 group cursor-pointer border-2 bg-gradient-to-br p-5 transition-all duration-200 hover:to-transparent"
               onClick={() => onInsert(suggestion)}
             >
               <div className="flex items-start justify-between gap-4">
-                <p className="flex-1 text-sm leading-relaxed text-foreground">{suggestion}</p>
-                <div className="text-xs font-medium text-brand-primary opacity-0 transition group-hover:opacity-100">
+                <p className="text-foreground flex-1 text-sm leading-relaxed">{suggestion}</p>
+                <div className="text-brand-primary text-xs font-medium opacity-0 transition group-hover:opacity-100">
                   Click to insert →
                 </div>
               </div>

@@ -15,8 +15,8 @@
  * - ?: Show shortcuts help
  */
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type Shortcut = {
   keys: string[];

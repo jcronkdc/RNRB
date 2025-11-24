@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+
 import { AblyProvider } from '@/components/ably/ably-provider';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { NavBar } from '@/components/NavBar';

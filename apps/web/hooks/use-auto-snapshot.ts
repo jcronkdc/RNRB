@@ -10,7 +10,7 @@ import { useEffect, useRef, useCallback } from 'react';
 
 interface AutoSnapshotOptions {
   songId: string;
-  currentData: any;
+  currentData: unknown;
   intervalMinutes?: number;
   onSnapshot: (reason: string) => Promise<void>;
 }
@@ -22,7 +22,7 @@ export function useAutoSnapshot({
   onSnapshot,
 }: AutoSnapshotOptions) {
   const lastSnapshotRef = useRef<string>('');
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const lastSnapshotTime = useRef<Date>(new Date());
 
   // Check if data has changed

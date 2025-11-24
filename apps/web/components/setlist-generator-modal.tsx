@@ -10,11 +10,10 @@
  * - Tempo flow
  */
 
-import { useState } from 'react';
-import { Button } from '@cronkwaters/ui';
-import { Card } from '@cronkwaters/ui';
-import { Sparkles, X, Loader2, AlertCircle, Wand2, Check } from 'lucide-react';
+import { Button , Card } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
+import { Sparkles, X, Loader2, AlertCircle, Wand2 } from 'lucide-react';
+import { useState } from 'react';
 
 export function SetlistGeneratorModal({
   projectId,
@@ -77,7 +76,7 @@ export function SetlistGeneratorModal({
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold">Generate Setlist</h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   AI-powered setlist builder with smart song selection
                 </p>
               </div>
@@ -115,19 +114,19 @@ export function SetlistGeneratorModal({
                     }`}
                   >
                     <div className="text-2xl font-bold">{duration}</div>
-                    <div className="text-xs text-muted-foreground">minutes</div>
+                    <div className="text-muted-foreground text-xs">minutes</div>
                   </button>
                 ))}
               </div>
               <div className="mt-3">
-                <label className="text-xs text-muted-foreground">Custom duration (minutes)</label>
+                <label className="text-muted-foreground text-xs">Custom duration (minutes)</label>
                 <input
                   type="number"
                   value={targetDuration}
                   onChange={(e) => setTargetDuration(parseInt(e.target.value) || 90)}
                   min={15}
                   max={240}
-                  className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface focus:border-brand-primary focus:ring-brand-primary/20 mt-1 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
                 />
               </div>
             </div>
@@ -145,7 +144,7 @@ export function SetlistGeneratorModal({
                   }`}
                 >
                   <div className="mb-1 text-lg font-semibold">🔥 High Energy</div>
-                  <div className="text-xs text-muted-foreground">Fast tempo, upbeat songs</div>
+                  <div className="text-muted-foreground text-xs">Fast tempo, upbeat songs</div>
                 </button>
                 <button
                   onClick={() => setEnergyLevel('mixed')}
@@ -156,7 +155,7 @@ export function SetlistGeneratorModal({
                   }`}
                 >
                   <div className="mb-1 text-lg font-semibold">🎵 Mixed</div>
-                  <div className="text-xs text-muted-foreground">Balanced energy flow</div>
+                  <div className="text-muted-foreground text-xs">Balanced energy flow</div>
                 </button>
                 <button
                   onClick={() => setEnergyLevel('mellow')}
@@ -167,7 +166,7 @@ export function SetlistGeneratorModal({
                   }`}
                 >
                   <div className="mb-1 text-lg font-semibold">🌙 Mellow</div>
-                  <div className="text-xs text-muted-foreground">Slower, intimate songs</div>
+                  <div className="text-muted-foreground text-xs">Slower, intimate songs</div>
                 </button>
               </div>
             </div>
@@ -178,7 +177,7 @@ export function SetlistGeneratorModal({
                 <Sparkles className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
                 <div className="text-sm">
                   <p className="mb-1 font-medium text-purple-300">How it works:</p>
-                  <ul className="space-y-1 text-muted-foreground">
+                  <ul className="text-muted-foreground space-y-1">
                     <li>• Analyzes tempo and key of all songs in your project</li>
                     <li>• Builds optimal flow: strong start, varied middle, powerful end</li>
                     <li>• Avoids too many songs in the same key consecutively</li>

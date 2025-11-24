@@ -1,7 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+import type Stripe from 'stripe';
+
 import { verifyWebhookSignature } from '@/lib/stripe-subscriptions';
-import Stripe from 'stripe';
+
 
 // Disable body parsing - we need the raw body for signature verification
 export const runtime = 'nodejs';
@@ -237,5 +239,9 @@ async function handleTrialEnding(subscription: Stripe.Subscription) {
     throw error;
   }
 }
+
+
+
+
 
 

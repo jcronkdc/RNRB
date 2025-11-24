@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 
 /**
@@ -35,7 +35,6 @@ export async function GET(req: NextRequest) {
       include: {
         members: {
           select: {
-            id: true,
             userId: true,
             role: true,
           },

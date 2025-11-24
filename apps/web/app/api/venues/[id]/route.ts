@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
@@ -6,8 +7,9 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/venues/[id]
  * Get a single venue by ID or slug
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     const venue = await db.venue.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
       include: {
         shows: {
@@ -46,8 +48,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * PATCH /api/venues/[id]
  * Update a venue
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -75,7 +78,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     // Check if venue exists
     const existingVenue = await db.venue.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
     });
 
@@ -124,8 +127,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  * DELETE /api/venues/[id]
  * Delete a venue
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -134,7 +138,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     // Check if venue exists
     const existingVenue = await db.venue.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
       include: {
         shows: true,

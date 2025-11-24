@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -12,7 +12,7 @@ export default function SettingsPage() {
   }, [router]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div className="bg-background flex min-h-screen items-center justify-center">
       <div className="text-lg">Redirecting to settings...</div>
     </div>
   );

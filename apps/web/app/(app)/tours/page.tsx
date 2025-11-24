@@ -1,23 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Card, Button } from '@cronkwaters/ui';
+import Daily from '@daily-co/daily-js';
+import { DailyProvider } from '@daily-co/daily-react';
 import { motion } from 'framer-motion';
 import {
   MapPin,
   Calendar,
   Ticket,
   Radio,
-  Users,
-  Clock,
   TrendingUp,
   Globe,
   Music,
   DollarSign,
   CheckCircle,
 } from 'lucide-react';
-import { Card, Button } from '@cronkwaters/ui';
-import { DailyProvider } from '@daily-co/daily-react';
-import Daily from '@daily-co/daily-js';
+import { useState, useEffect } from 'react';
+
 import { LivePerformance } from '@/components/daily/live-performance';
 
 // Tour management features - shows will appear here once you create them
@@ -49,12 +48,12 @@ export default function ToursPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+      <div className="border-border/50 relative overflow-hidden border-b">
+        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
         <div className="absolute inset-0">
-          <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
+          <div className="bg-brand-primary/10 absolute left-1/4 top-0 h-96 w-96 rounded-full blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-7xl px-4 py-16">
@@ -64,15 +63,15 @@ export default function ToursPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
-                <Radio className="h-6 w-6 text-brand-primary" />
+              <div className="bg-brand-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
+                <Radio className="text-brand-primary h-6 w-6" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Live Performance</p>
+                <p className="text-muted-foreground text-sm">Live Performance</p>
                 <h1 className="font-display text-3xl font-bold md:text-4xl">Tours & Shows</h1>
               </div>
             </div>
-            <p className="max-w-2xl text-lg text-muted-foreground">
+            <p className="text-muted-foreground max-w-2xl text-lg">
               Manage your live shows, venues, and virtual performances
             </p>
           </motion.div>
@@ -111,53 +110,53 @@ export default function ToursPage() {
               <h2 className="font-display mb-4 text-3xl font-bold">
                 Tour Management - In Development
               </h2>
-              <p className="mb-6 text-lg text-muted-foreground">
+              <p className="text-muted-foreground mb-6 text-lg">
                 We're building comprehensive tour management tools. Here's what's planned (not built
                 yet):
               </p>
 
               <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="rounded-lg border border-green-500/20 bg-green-500/5 p-4">
-                  <Radio className="mb-3 h-8 w-8 text-brand-primary" />
-                  <h4 className="mb-2 font-semibold text-brand-primary">
+                  <Radio className="text-brand-primary mb-3 h-8 w-8" />
+                  <h4 className="text-brand-primary mb-2 font-semibold">
                     ✓ AVAILABLE NOW: Virtual Concerts
                   </h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Use Daily.co integration to stream live performances to YouTube, Twitch,
                     Facebook via RTMP. Up to 32 participants.
                   </p>
                 </div>
                 <div className="rounded-lg border border-orange-500/20 bg-orange-500/5 p-4">
-                  <MapPin className="mb-3 h-8 w-8 text-muted-foreground" />
+                  <MapPin className="text-muted-foreground mb-3 h-8 w-8" />
                   <h4 className="mb-2 font-semibold">Coming Soon: Venue Database</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Store venue contacts, capacity, load-in times (not built yet).
                   </p>
                 </div>
                 <div className="rounded-lg border border-orange-500/20 bg-orange-500/5 p-4">
-                  <Calendar className="mb-3 h-8 w-8 text-muted-foreground" />
+                  <Calendar className="text-muted-foreground mb-3 h-8 w-8" />
                   <h4 className="mb-2 font-semibold">Coming Soon: Show Scheduling</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Visual calendar with routing optimization (not built yet).
                   </p>
                 </div>
                 <div className="rounded-lg border border-orange-500/20 bg-orange-500/5 p-4">
-                  <Ticket className="mb-3 h-8 w-8 text-muted-foreground" />
+                  <Ticket className="text-muted-foreground mb-3 h-8 w-8" />
                   <h4 className="mb-2 font-semibold">Coming Soon: Ticketing Integration</h4>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Connect to ticket platforms, track sales (not built yet).
                   </p>
                 </div>
               </div>
 
-              <div className="rounded-lg border border-brand-primary/20 bg-background/30 p-6">
+              <div className="border-brand-primary/20 bg-background/30 rounded-lg border p-6">
                 <h3 className="mb-4 text-xl font-semibold">Planned Features (Not Built Yet)</h3>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="flex items-start gap-3">
                     <CheckCircle className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
                     <div>
                       <p className="font-medium">All Tour Data in One Place</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         No more spreadsheets, email chains, or scattered information. Venues, dates,
                         contracts, setlists, and revenue all organized in one platform accessible to
                         your entire team.
@@ -168,7 +167,7 @@ export default function ToursPage() {
                     <CheckCircle className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
                     <div>
                       <p className="font-medium">Real-Time Team Collaboration</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Tour manager, band members, crew, and booking agents all see the same
                         information. Changes sync instantly across all devices.
                       </p>
@@ -178,7 +177,7 @@ export default function ToursPage() {
                     <CheckCircle className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
                     <div>
                       <p className="font-medium">Hybrid Tours (Physical + Virtual)</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Play physical venues AND stream to fans worldwide. Expand your reach and
                         revenue by offering virtual tickets to shows that would otherwise be limited
                         by venue capacity.
@@ -189,7 +188,7 @@ export default function ToursPage() {
                     <CheckCircle className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
                     <div>
                       <p className="font-medium">Financial Tracking</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Track ticket sales, merch revenue, and expenses per show. Automated split
                         calculations ensure everyone gets paid correctly according to your
                         agreements.
@@ -211,7 +210,7 @@ export default function ToursPage() {
                     </div>
                     <div>
                       <p className="mb-1 font-semibold">Comprehensive Venue Profiles</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Store everything: stage dimensions, backline gear available, load-in
                         procedures, parking info, hospitality rider, technical contact info, payment
                         terms. Access all details from your phone backstage.
@@ -224,7 +223,7 @@ export default function ToursPage() {
                     </div>
                     <div>
                       <p className="mb-1 font-semibold">Smart Routing & Scheduling</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Automatically suggests optimal tour routing to minimize travel time and
                         costs. Flags impossible routing (like coast-to-coast overnight drives).
                         Integrates with Google Maps for drive time estimates.
@@ -237,7 +236,7 @@ export default function ToursPage() {
                     </div>
                     <div>
                       <p className="mb-1 font-semibold">Dynamic Setlist Management</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Create setlists, shuffle songs, add encore sections. Band members see the
                         setlist on their phones during the show. Mark songs as played to track what
                         you've performed.
@@ -256,7 +255,7 @@ export default function ToursPage() {
                     </div>
                     <div>
                       <p className="mb-1 font-semibold">Real-Time Ticket Sales Tracking</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         See how many tickets sold, revenue per show, and sell-through rates.
                         Integrates with major ticketing platforms or use our built-in ticketing
                         system.
@@ -269,7 +268,7 @@ export default function ToursPage() {
                     </div>
                     <div>
                       <p className="mb-1 font-semibold">Tour Analytics Dashboard</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Compare performance across venues and cities. Which markets love you? Where
                         should you play larger venues? Data-driven decisions for routing your next
                         tour.
@@ -282,7 +281,7 @@ export default function ToursPage() {
                     </div>
                     <div>
                       <p className="mb-1 font-semibold">Revenue Split Automation</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Configure payout percentages once. System automatically calculates each
                         member's share after expenses. Transparent financial reports keep everyone
                         aligned.
@@ -300,8 +299,8 @@ export default function ToursPage() {
               </h3>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <div>
-                  <h4 className="mb-3 font-semibold text-brand-primary">Streaming Destinations</h4>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
+                  <h4 className="text-brand-primary mb-3 font-semibold">Streaming Destinations</h4>
+                  <ul className="text-muted-foreground space-y-2 text-sm">
                     <li>• YouTube Live (auto-archive to channel)</li>
                     <li>• Twitch (gaming & music communities)</li>
                     <li>• Facebook Live (direct to fan page)</li>
@@ -310,8 +309,8 @@ export default function ToursPage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="mb-3 font-semibold text-brand-primary">Virtual Venue Features</h4>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
+                  <h4 className="text-brand-primary mb-3 font-semibold">Virtual Venue Features</h4>
+                  <ul className="text-muted-foreground space-y-2 text-sm">
                     <li>• Ticketed virtual shows</li>
                     <li>• VIP backstage access rooms</li>
                     <li>• Live chat moderation</li>
@@ -320,8 +319,8 @@ export default function ToursPage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="mb-3 font-semibold text-brand-primary">Fan Engagement</h4>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
+                  <h4 className="text-brand-primary mb-3 font-semibold">Fan Engagement</h4>
+                  <ul className="text-muted-foreground space-y-2 text-sm">
                     <li>• Real-time song requests (paid)</li>
                     <li>• Shoutouts & dedications</li>
                     <li>• Interactive polls between songs</li>
@@ -336,27 +335,27 @@ export default function ToursPage() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <Card className="p-6">
                 <h3 className="mb-4 text-lg font-semibold">Virtual Performances</h3>
-                <p className="mb-4 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mb-4 text-sm">
                   Stream live performances to fans worldwide. Perfect for intimate sessions,
                   behind-the-scenes content, or full virtual concerts.
                 </p>
 
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <Globe className="mt-0.5 h-5 w-5 text-muted-foreground" />
+                    <Globe className="text-muted-foreground mt-0.5 h-5 w-5" />
                     <div>
                       <p className="font-medium">Global Reach</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Connect with fans anywhere in the world
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-3">
-                    <Music className="mt-0.5 h-5 w-5 text-muted-foreground" />
+                    <Music className="text-muted-foreground mt-0.5 h-5 w-5" />
                     <div>
                       <p className="font-medium">High-Quality Audio</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-muted-foreground text-sm">
                         Crystal clear sound for the best experience
                       </p>
                     </div>
@@ -373,17 +372,17 @@ export default function ToursPage() {
 
                 <div className="space-y-3">
                   {pastStreams.map((stream) => (
-                    <div key={stream.id} className="rounded-lg bg-muted/50 p-3">
+                    <div key={stream.id} className="bg-muted/50 rounded-lg p-3">
                       <div className="flex items-start justify-between">
                         <div>
                           <h5 className="text-sm font-medium">{stream.title}</h5>
-                          <p className="mt-1 text-xs text-muted-foreground">
+                          <p className="text-muted-foreground mt-1 text-xs">
                             {stream.date.toLocaleDateString()} • {stream.duration}
                           </p>
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-semibold">{stream.viewers.toLocaleString()}</p>
-                          <p className="text-xs text-muted-foreground">viewers</p>
+                          <p className="text-muted-foreground text-xs">viewers</p>
                         </div>
                       </div>
                     </div>

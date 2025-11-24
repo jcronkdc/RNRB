@@ -10,14 +10,15 @@
     "rangav.vscode-thunder-client",
     "Gruntfuggly.todo-tree",
     "eamodio.gitlens",
-    "burkeholland.simple-react-snippets",
     "formulahendry.auto-rename-tag",
-    "dsznajder.es7-react-js-snippets"
+    "dsznajder.es7-react-js-snippets",
+    "vitest.explorer"
   ],
   "unwantedRecommendations": [
     "hookyqr.beautify",
     "octref.vetur",
-    "ms-python.python"
+    "ms-python.python",
+    "burkeholland.simple-react-snippets"
   ]
 }
 

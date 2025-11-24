@@ -1,7 +1,7 @@
 'use client';
 
 import { DailyProvider as DailyReactProvider } from '@daily-co/daily-react';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 interface DailyProviderProps {
   children: ReactNode;

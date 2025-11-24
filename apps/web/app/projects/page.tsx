@@ -1,23 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Card, Button } from '@cronkwaters/ui';
 import {
   Plus,
   Music,
   Users,
   Calendar,
   TrendingUp,
-  MoreVertical,
   Folder,
   Lock,
   Globe,
-  Eye,
   ArrowRight,
-  Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
 type Project = {

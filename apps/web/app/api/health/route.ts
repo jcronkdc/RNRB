@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   const diagnostics = {

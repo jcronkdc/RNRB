@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 
 /**
@@ -7,10 +8,10 @@ import { db } from '@/lib/db';
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string; songId: string } }
+  { params }: { params: Promise<{ id: string; songId: string }> }
 ) {
   try {
-    const { id, songId } = params;
+    const { id, songId } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 
@@ -58,10 +59,10 @@ export async function GET(
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string; songId: string } }
+  { params }: { params: Promise<{ id: string; songId: string }> }
 ) {
   try {
-    const { songId } = params;
+    const { songId } = await params;
     const body = await req.json();
     const { userId, title, key, tempo, timeSignature, lyrics, chords, status } = body;
 
@@ -135,10 +136,10 @@ export async function PATCH(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string; songId: string } }
+  { params }: { params: Promise<{ id: string; songId: string }> }
 ) {
   try {
-    const { songId } = params;
+    const { songId } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 
@@ -186,5 +187,9 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete song' }, { status: 500 });
   }
 }
+
+
+
+
 
 

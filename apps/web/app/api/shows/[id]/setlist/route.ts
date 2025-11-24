@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
@@ -6,8 +7,9 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/shows/[id]/setlist
  * Get the setlist for a show
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     const show = await db.show.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
       select: {
         id: true,
@@ -53,7 +55,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
                 title: true,
                 key: true,
                 tempo: true,
-                duration: true,
                 description: true,
               },
             },
@@ -78,8 +79,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * POST /api/shows/[id]/setlist
  * Create or update setlist for a show
  */
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -90,7 +92,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     const show = await db.show.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
     });
 
@@ -169,7 +171,6 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
                 title: true,
                 key: true,
                 tempo: true,
-                duration: true,
               },
             },
           },
@@ -189,8 +190,9 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
  * PATCH /api/shows/[id]/setlist
  * Update setlist items (for drag-drop reordering)
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -201,7 +203,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     const show = await db.show.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
     });
 
@@ -253,7 +255,6 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
                 title: true,
                 key: true,
                 tempo: true,
-                duration: true,
               },
             },
           },

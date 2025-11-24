@@ -3,6 +3,7 @@
 import * as Ably from 'ably';
 import { AblyProvider as ReactAblyProvider } from 'ably/react';
 import { useEffect, useState, type ReactNode } from 'react';
+
 import { createBrowserClient } from '@/lib/supabase';
 
 interface Props {
@@ -21,6 +22,10 @@ export function AblyProvider({ children, lazy = true }: Props) {
     const checkAuth = async () => {
       try {
         const supabase = createBrowserClient();
+        if (!supabase) {
+          setIsAuthenticated(false);
+          return;
+        }
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -35,6 +40,8 @@ export function AblyProvider({ children, lazy = true }: Props) {
 
     // Listen for auth changes
     const supabase = createBrowserClient();
+    if (!supabase) return;
+    
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {

@@ -12,8 +12,8 @@
  * - Navigation (jump to any page)
  */
 
-import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react';
 
 export type CommandAction = 'navigate' | 'create' | 'open' | 'send' | 'start' | 'toggle';
 

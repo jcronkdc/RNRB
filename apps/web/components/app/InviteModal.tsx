@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { Button, Input, Label } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import { Mail, Loader2, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface InviteModalProps {
   isOpen: boolean;
@@ -78,12 +78,12 @@ export default function InviteModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="relative w-full max-w-md rounded-3xl border border-border bg-surface p-8 shadow-xl"
+        className="border-border bg-surface relative w-full max-w-md rounded-3xl border p-8 shadow-xl"
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-full p-2 transition-colors hover:bg-muted"
+          className="hover:bg-muted absolute right-4 top-4 rounded-full p-2 transition-colors"
         >
           <X className="h-4 w-4" />
         </button>
@@ -93,10 +93,10 @@ export default function InviteModal({
           <div className="bg-primary/20 mb-2 flex h-12 w-12 items-center justify-center rounded-full">
             <Mail className="text-primary h-6 w-6" />
           </div>
-          <h2 className="text-2xl font-semibold text-foreground">
+          <h2 className="text-foreground text-2xl font-semibold">
             Invite to {type === 'org' ? 'Organization' : 'Project'}
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Send an invitation link via email. They'll need to sign in to accept.
           </p>
         </div>
@@ -124,7 +124,7 @@ export default function InviteModal({
               value={role}
               onChange={(e) => setRole(e.target.value)}
               disabled={isSending || success}
-              className="focus:border-primary focus:ring-primary/20 h-12 w-full rounded-2xl border border-border bg-surface px-4 text-base focus:outline-none focus:ring-2"
+              className="focus:border-primary focus:ring-primary/20 border-border bg-surface h-12 w-full rounded-2xl border px-4 text-base focus:outline-none focus:ring-2"
             >
               <option value="member">Member</option>
               <option value="admin">Admin</option>
@@ -149,7 +149,7 @@ export default function InviteModal({
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-success-foreground rounded-2xl border border-success/60 bg-success/10 px-4 py-3 text-sm"
+              className="text-success-foreground border-success/60 bg-success/10 rounded-2xl border px-4 py-3 text-sm"
             >
               Invitation sent successfully!
             </motion.div>
@@ -190,7 +190,7 @@ export default function InviteModal({
         </form>
 
         {/* Info */}
-        <div className="mt-6 rounded-2xl border border-border/60 bg-muted/50 p-4 text-xs text-muted-foreground">
+        <div className="border-border/60 bg-muted/50 text-muted-foreground mt-6 rounded-2xl border p-4 text-xs">
           <p>
             <strong>Note:</strong> Invitations expire after 7 days. The recipient must have a
             CronkWaters account to accept the invitation.

@@ -1,11 +1,12 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { UserMenu } from './UserMenu';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+
+import { UserMenu } from './UserMenu';
 
 // Dynamically import NotificationBell to avoid SSR issues
 const NotificationBell = dynamic(

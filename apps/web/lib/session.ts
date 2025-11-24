@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
-import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+
+import { auth } from '@/auth';
 
 export async function currentUser() {
   const session = await auth();

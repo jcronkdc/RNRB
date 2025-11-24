@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Compass, TrendingUp, Clock, Heart, Play, Filter, Search } from 'lucide-react';
+import { Compass, TrendingUp, Clock, Heart, Search } from 'lucide-react';
+import { useState } from 'react';
+
 import { TrackCard } from '@/components/track-card';
 
 // Mock trending tracks
@@ -14,7 +15,7 @@ const mockTrendingTracks = [
     duration: 225,
     createdAt: '1 hour ago',
     plays: 1234,
-    coverUrl: null,
+    coverUrl: undefined,
     isLiked: true,
   },
   {
@@ -24,7 +25,7 @@ const mockTrendingTracks = [
     duration: 180,
     createdAt: '3 hours ago',
     plays: 892,
-    coverUrl: null,
+    coverUrl: undefined,
   },
   {
     id: '3',
@@ -33,7 +34,7 @@ const mockTrendingTracks = [
     duration: 195,
     createdAt: '5 hours ago',
     plays: 567,
-    coverUrl: null,
+    coverUrl: undefined,
   },
   {
     id: '4',
@@ -42,7 +43,7 @@ const mockTrendingTracks = [
     duration: 240,
     createdAt: 'Yesterday',
     plays: 445,
-    coverUrl: null,
+    coverUrl: undefined,
   },
 ];
 
@@ -79,12 +80,12 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+      <div className="border-border/50 relative overflow-hidden border-b">
+        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
         <div className="absolute inset-0">
-          <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
+          <div className="bg-brand-primary/10 absolute left-1/4 top-0 h-96 w-96 rounded-full blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-7xl px-4 py-16">
@@ -94,15 +95,15 @@ export default function ExplorePage() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
-                <Compass className="h-6 w-6 text-brand-primary" />
+              <div className="bg-brand-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
+                <Compass className="text-brand-primary h-6 w-6" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Community Tracks</p>
+                <p className="text-muted-foreground text-sm">Community Tracks</p>
                 <h1 className="font-display text-3xl font-bold md:text-4xl">Explore</h1>
               </div>
             </div>
-            <p className="max-w-2xl text-lg text-muted-foreground">
+            <p className="text-muted-foreground max-w-2xl text-lg">
               Discover trending tracks and find inspiration from the community
             </p>
           </motion.div>
@@ -113,13 +114,13 @@ export default function ExplorePage() {
         {/* Search and Filters */}
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+            <Search className="text-muted-foreground absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search tracks, styles, or moods..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-xl border border-border bg-surface py-3 pl-11 pr-4 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border py-3 pl-11 pr-4 outline-none transition focus:ring-2"
             />
           </div>
 
@@ -129,7 +130,7 @@ export default function ExplorePage() {
               className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition ${
                 filter === 'trending'
                   ? 'bg-brand-primary text-brand-primary-foreground'
-                  : 'border border-border bg-surface hover:border-brand-primary/50'
+                  : 'border-border bg-surface hover:border-brand-primary/50 border'
               }`}
             >
               <TrendingUp className="h-4 w-4" />
@@ -140,7 +141,7 @@ export default function ExplorePage() {
               className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition ${
                 filter === 'recent'
                   ? 'bg-brand-primary text-brand-primary-foreground'
-                  : 'border border-border bg-surface hover:border-brand-primary/50'
+                  : 'border-border bg-surface hover:border-brand-primary/50 border'
               }`}
             >
               <Clock className="h-4 w-4" />
@@ -151,7 +152,7 @@ export default function ExplorePage() {
               className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition ${
                 filter === 'top'
                   ? 'bg-brand-primary text-brand-primary-foreground'
-                  : 'border border-border bg-surface hover:border-brand-primary/50'
+                  : 'border-border bg-surface hover:border-brand-primary/50 border'
               }`}
             >
               <Heart className="h-4 w-4" />
@@ -163,7 +164,7 @@ export default function ExplorePage() {
         {/* Trending Tracks */}
         <div>
           <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
-            <TrendingUp className="h-5 w-5 text-brand-primary" />
+            <TrendingUp className="text-brand-primary h-5 w-5" />
             {filter === 'trending'
               ? 'Trending Now'
               : filter === 'recent'
@@ -198,7 +199,7 @@ export default function ExplorePage() {
           <div className="space-y-6">
             {examplePrompts.map((category) => (
               <div key={category.category}>
-                <h3 className="mb-3 text-sm font-medium uppercase tracking-wider text-muted-foreground">
+                <h3 className="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wider">
                   {category.category}
                 </h3>
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -207,7 +208,7 @@ export default function ExplorePage() {
                       key={i}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="cursor-pointer rounded-xl border border-border bg-surface p-4 transition-all duration-200 hover:border-brand-primary/50 hover:bg-surface/80"
+                      className="border-border bg-surface hover:border-brand-primary/50 hover:bg-surface/80 cursor-pointer rounded-xl border p-4 transition-all duration-200"
                       onClick={() => {
                         // Would copy to clipboard or navigate to create page
                         console.log('Use prompt:', prompt);

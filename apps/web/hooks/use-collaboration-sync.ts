@@ -13,10 +13,8 @@
  * This creates the living, breathing network effect!
  */
 
-import { useEffect } from 'react';
 import { useActivityFeed, type ActivityEvent } from './use-activity-feed';
-import { useNotifications, type Notification } from './use-notifications';
-import { usePresence } from './use-presence';
+import { useNotifications } from './use-notifications';
 
 type CollaborationEvent = {
   type:
@@ -34,7 +32,7 @@ type CollaborationEvent = {
   songId?: string;
   songName?: string;
   message?: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 };
 
 type UseCollaborationSyncOptions = {
@@ -67,9 +65,19 @@ export function useCollaborationSync({
   const broadcastEvent = async (event: CollaborationEvent) => {
     const timestamp = Date.now();
 
+    // Map collaboration event types to activity types
+    const activityTypeMap: Record<CollaborationEvent['type'], ActivityEvent['type']> = {
+      audio_upload: 'audio_uploaded',
+      video_start: 'video_started',
+      user_join: 'user_joined',
+      chat_mention: 'chat_message',
+      song_create: 'song_created',
+      invite_sent: 'invite_sent',
+    };
+
     // 1. Publish to Activity Feed (visible to all)
     await publishActivity({
-      type: event.type,
+      type: activityTypeMap[event.type],
       userId: event.userId,
       userName: event.userName,
       userAvatar: event.userAvatar,
@@ -183,7 +191,7 @@ export function useCollaborationSync({
       });
 
       await publishGlobal({
-        type: event.type,
+        type: activityTypeMap[event.type],
         userId: event.userId,
         userName: event.userName,
         userAvatar: event.userAvatar,

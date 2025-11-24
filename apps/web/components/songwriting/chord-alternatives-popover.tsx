@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Music, Sparkles, TrendingUp, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Music, Sparkles, TrendingUp, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
 
 interface ChordAlternative {
   chord: string;
@@ -87,10 +87,10 @@ export function ChordAlternativesPopover({
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
-            <div className="min-w-[280px] max-w-[320px] rounded-xl border-2 border-border bg-surface p-4 shadow-2xl">
+            <div className="border-border bg-surface min-w-[280px] max-w-[320px] rounded-xl border-2 p-4 shadow-2xl">
               {/* Header */}
-              <div className="mb-3 flex items-center gap-2 border-b border-border/50 pb-2">
-                <Music className="h-4 w-4 text-brand-primary" />
+              <div className="border-border/50 mb-3 flex items-center gap-2 border-b pb-2">
+                <Music className="text-brand-primary h-4 w-4" />
                 <h4 className="text-sm font-semibold">Try instead of {originalChord}</h4>
               </div>
 
@@ -132,14 +132,14 @@ export function ChordAlternativesPopover({
               </div>
 
               {/* Footer hint */}
-              <p className="mt-3 border-t border-border/50 pt-2 text-center text-[10px] text-muted-foreground">
+              <p className="border-border/50 text-muted-foreground mt-3 border-t pt-2 text-center text-[10px]">
                 Click to swap • Hover for more
               </p>
             </div>
 
             {/* Arrow pointer */}
             <div
-              className={`absolute h-3 w-3 rotate-45 border-border bg-surface ${
+              className={`border-border bg-surface absolute h-3 w-3 rotate-45 ${
                 position === 'top'
                   ? 'bottom-[-7px] left-1/2 -translate-x-1/2 border-b-2 border-r-2'
                   : position === 'bottom'

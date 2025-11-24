@@ -1,4 +1,5 @@
 import { prisma } from '@cronkwaters/db';
+
 import { getCurrentUser } from '@/lib/supabase';
 
 /**
@@ -149,7 +150,10 @@ export async function requireFeatureAccess(
   const result = await hasFeatureAccess(featureName);
 
   if (!result.hasAccess) {
-    const error: any = new Error(result.reason || 'You do not have access to this feature');
+    const error = new Error(result.reason || 'You do not have access to this feature') as Error & {
+      statusCode: number;
+      tier: SubscriptionTier;
+    };
     error.statusCode = 403;
     error.tier = result.tier;
     throw error;

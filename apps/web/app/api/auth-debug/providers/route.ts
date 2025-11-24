@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { env } from '@cronkwaters/auth';
+import { NextResponse } from 'next/server';
 
 export function GET() {
   return NextResponse.json({

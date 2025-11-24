@@ -1,6 +1,6 @@
 #!/bin/bash
 # 🍄 Rock N' Roll Basement - Extension Auto-Installer
-# Last Updated: 2025-11-23 @ Agent 72
+# Last Updated: 2025-11-23 @ Agent 75
 
 echo "🍄 INSTALLING VSCODE EXTENSIONS FOR ROCK N' ROLL BASEMENT..."
 echo ""
@@ -55,9 +55,13 @@ install_extension "eamodio.gitlens" "GitLens"
 echo ""
 echo "🎯 BONUS: NEXT.JS SPECIFIC"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-install_extension "burkeholland.simple-react-snippets" "Simple React Snippets"
 install_extension "formulahendry.auto-rename-tag" "Auto Rename Tag"
 install_extension "dsznajder.es7-react-js-snippets" "ES7+ React Snippets"
+
+echo ""
+echo "🧪 TESTING: VITEST INTEGRATION"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+install_extension "vitest.explorer" "Vitest"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -86,5 +90,6 @@ else
 fi
 
 echo "🍄 Extension setup complete!"
+
 
 

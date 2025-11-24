@@ -1,9 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
 import {
   Home,
   Sparkles,
@@ -22,6 +19,10 @@ import {
   MessageSquare,
   LogOut,
 } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
+
 import { supabase } from '@/lib/supabase';
 
 interface NavItem {
@@ -266,9 +267,9 @@ export function SidebarNav() {
             className="pointer-events-auto absolute bottom-20 left-0 right-0 px-4"
           >
             <div className="rounded-lg border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3">
-              <p className="text-center text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-center text-xs">
                 Press{' '}
-                <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">?</kbd> for
+                <kbd className="bg-muted rounded px-1.5 py-0.5 text-[10px] font-medium">?</kbd> for
                 shortcuts
               </p>
             </div>

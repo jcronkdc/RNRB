@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
@@ -6,8 +7,9 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/shows/[id]
  * Get a single show by ID or slug
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     const show = await db.show.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
       include: {
         venue: true,
@@ -44,7 +46,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
                     title: true,
                     key: true,
                     tempo: true,
-                    duration: true,
                   },
                 },
               },
@@ -84,8 +85,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * PATCH /api/shows/[id]
  * Update a show
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -96,7 +98,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     // Check if show exists
     const existingShow = await db.show.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
     });
 
@@ -169,8 +171,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  * DELETE /api/shows/[id]
  * Delete a show (cascades to setlist)
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -179,7 +182,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     // Check if show exists
     const existingShow = await db.show.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
     });
 

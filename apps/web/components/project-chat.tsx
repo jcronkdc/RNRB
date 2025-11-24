@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Smile, Paperclip, MoreVertical } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
 import Ably from 'ably';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Send, Smile, Paperclip, MoreVertical } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 
 type Message = {
   id: string;
@@ -36,13 +36,14 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
   const [channel, setChannel] = useState<Ably.RealtimeChannel | null>(null);
   const [typingUsers, setTypingUsers] = useState<Map<string, TypingUser>>(new Map());
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize Ably and current user
   useEffect(() => {
     const initChat = async () => {
       // Get current user from Supabase
-      const { supabase } = await import('@/lib/supabase');
+      const { createBrowserClient } = await import('@/lib/supabase');
+      const supabase = createBrowserClient();
       const {
         data: { user },
       } = await supabase!.auth.getUser();
@@ -137,26 +138,20 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
       });
 
       // Get message history (last 50 messages)
-      chatChannel.history({ limit: 50 }, (err, resultPage) => {
-        if (err) {
-          console.error('Error fetching chat history:', err);
-          return;
-        }
+      const history = await chatChannel.history({ limit: 50 });
+      if (history && history.items.length > 0) {
+        const historicalMessages: Message[] = history.items.reverse().map((msg: any) => ({
+          id: msg.id || `${Date.now()}-${Math.random()}`,
+          userId: msg.clientId || 'unknown',
+          userName: msg.data.userName || 'Unknown',
+          userEmail: msg.data.userEmail || '',
+          content: msg.data.content,
+          timestamp: new Date(msg.timestamp || Date.now()),
+          avatar: msg.data.avatar,
+        }));
 
-        if (resultPage && resultPage.items.length > 0) {
-          const historicalMessages: Message[] = resultPage.items.reverse().map((msg) => ({
-            id: msg.id || `${Date.now()}-${Math.random()}`,
-            userId: msg.clientId || 'unknown',
-            userName: msg.data.userName || 'Unknown',
-            userEmail: msg.data.userEmail || '',
-            content: msg.data.content,
-            timestamp: new Date(msg.timestamp || Date.now()),
-            avatar: msg.data.avatar,
-          }));
-
-          setMessages(historicalMessages);
-        }
-      });
+        setMessages(historicalMessages);
+      }
     };
 
     initChat();
@@ -247,10 +242,10 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
   return (
     <div className="flex h-[600px] flex-col">
       {/* Chat Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
+      <div className="border-border flex items-center justify-between border-b pb-4">
         <div>
-          <h3 className="text-xl font-semibold text-foreground">Project Chat</h3>
-          <p className="text-sm text-muted-foreground">{projectName}</p>
+          <h3 className="text-foreground text-xl font-semibold">Project Chat</h3>
+          <p className="text-muted-foreground text-sm">{projectName}</p>
         </div>
         <Button variant="secondary" size="sm">
           <MoreVertical className="h-4 w-4" />
@@ -275,7 +270,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                 {/* Avatar */}
                 <div className="flex-shrink-0">
                   {showAvatar ? (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
+                    <div className="bg-brand-primary/20 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
                       {message.avatar ? (
                         <img
                           src={message.avatar}
@@ -297,10 +292,10 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                 >
                   {showAvatar && (
                     <div className="mb-1 flex items-center gap-2">
-                      <span className="text-sm font-medium text-foreground">
+                      <span className="text-foreground text-sm font-medium">
                         {message.userName}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {message.timestamp.toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',
@@ -312,7 +307,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                     className={`rounded-2xl px-4 py-2 ${
                       isOwnMessage
                         ? 'bg-brand-primary text-brand-primary-foreground'
-                        : 'border border-border bg-surface text-foreground'
+                        : 'border-border bg-surface text-foreground border'
                     }`}
                   >
                     <p className="whitespace-pre-wrap break-words text-sm">{message.content}</p>
@@ -336,20 +331,20 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1, delay: 0 }}
-                  className="h-2 w-2 rounded-full bg-brand-primary"
+                  className="bg-brand-primary h-2 w-2 rounded-full"
                 />
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1, delay: 0.2 }}
-                  className="h-2 w-2 rounded-full bg-brand-primary"
+                  className="bg-brand-primary h-2 w-2 rounded-full"
                 />
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1, delay: 0.4 }}
-                  className="h-2 w-2 rounded-full bg-brand-primary"
+                  className="bg-brand-primary h-2 w-2 rounded-full"
                 />
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 {Array.from(typingUsers.values()).length === 1
                   ? `${Array.from(typingUsers.values())[0].userName} is typing...`
                   : `${Array.from(typingUsers.values()).length} people are typing...`}
@@ -362,7 +357,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-border pt-4">
+      <div className="border-border border-t pt-4">
         <div className="flex items-end gap-2">
           <Button variant="secondary" size="sm" className="mb-2">
             <Paperclip className="h-4 w-4" />
@@ -374,7 +369,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
-              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-none focus:ring-2"
               style={{ minHeight: '48px', maxHeight: '120px' }}
             />
           </div>
@@ -384,12 +379,12 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || sending}
-            className="mb-2 bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90"
+            className="bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90 mb-2"
           >
             <Send className="h-4 w-4" />
           </Button>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="text-muted-foreground mt-2 text-xs">
           Press Enter to send, Shift+Enter for new line
         </p>
       </div>

@@ -1,18 +1,26 @@
 import { useState, useCallback } from 'react';
 
+interface RoomConfig {
+  enable_screenshare?: boolean;
+  enable_recording?: boolean;
+  enable_live_streaming?: boolean;
+  max_participants?: number;
+  [key: string]: unknown;
+}
+
 interface Room {
   id: string;
   name: string;
   url: string;
   privacy: string;
   created_at: string;
-  config: any;
+  config: RoomConfig;
 }
 
 interface CreateRoomOptions {
   name?: string;
   privacy?: 'private' | 'public';
-  properties?: Record<string, any>;
+  properties?: Record<string, unknown>;
 }
 
 export function useDailyRoom() {

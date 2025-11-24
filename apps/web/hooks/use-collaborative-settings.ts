@@ -9,8 +9,9 @@
  * User edits field → Optimistic update → Ably broadcasts → Server saves → Other clients update
  */
 
+import Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Realtime, Types } from 'ably';
 
 export type ProjectSettings = {
   name: string;
@@ -29,7 +30,7 @@ type FieldLock = {
 
 type SettingsChange = {
   field: keyof ProjectSettings;
-  value: any;
+  value: unknown;
   userId: string;
   userName: string;
   timestamp: number;
@@ -60,8 +61,8 @@ export function useCollaborativeSettings({
     new Map()
   );
 
-  const ablyRef = useRef<Realtime | null>(null);
-  const channelRef = useRef<Types.RealtimeChannelCallbacks | null>(null);
+  const ablyRef = useRef<Ably.Realtime | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
   const saveTimerRef = useRef<Map<keyof ProjectSettings, NodeJS.Timeout>>(new Map());
 
   // Initialize Ably connection
@@ -78,7 +79,7 @@ export function useCollaborativeSettings({
           return;
         }
 
-        const ablyClient = new Realtime({
+        const ablyClient = new Ably.Realtime({
           authUrl: '/api/ably/token',
           clientId: userId,
         });
@@ -93,7 +94,7 @@ export function useCollaborativeSettings({
         channelRef.current = channel;
 
         // Subscribe to settings changes
-        channel.subscribe('setting-changed', (message) => {
+        channel.subscribe('setting-changed', (message: Ably.Message) => {
           if (!mounted) return;
           const change: SettingsChange = message.data;
 
@@ -114,13 +115,13 @@ export function useCollaborativeSettings({
         });
 
         // Subscribe to field locks
-        channel.subscribe('field-locked', (message) => {
+        channel.subscribe('field-locked', (message: Ably.Message) => {
           if (!mounted) return;
           const lock: FieldLock = message.data;
           setFieldLocks((prev) => new Map(prev).set(lock.field, lock));
         });
 
-        channel.subscribe('field-unlocked', (message) => {
+        channel.subscribe('field-unlocked', (message: Ably.Message) => {
           if (!mounted) return;
           const { field } = message.data;
           setFieldLocks((prev) => {
@@ -133,13 +134,13 @@ export function useCollaborativeSettings({
         // Presence tracking
         channel.presence.enter({ userName });
 
-        channel.presence.subscribe('enter', (member) => {
+        channel.presence.subscribe('enter', (member: Ably.PresenceMessage) => {
           setActiveEditors((prev) =>
             new Map(prev).set(member.clientId, member.data?.userName || 'Unknown')
           );
         });
 
-        channel.presence.subscribe('leave', (member) => {
+        channel.presence.subscribe('leave', (member: Ably.PresenceMessage) => {
           setActiveEditors((prev) => {
             const newMap = new Map(prev);
             newMap.delete(member.clientId);
@@ -211,7 +212,7 @@ export function useCollaborativeSettings({
 
   // Update field with optimistic UI and debounced save
   const updateField = useCallback(
-    (field: keyof ProjectSettings, value: any) => {
+    (field: keyof ProjectSettings, value: unknown) => {
       // Optimistic update
       setSettings((prev) => ({
         ...prev,

@@ -1,8 +1,8 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { ChevronRight, Home, ArrowLeft, Folder } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 
 // Custom labels for known routes
 const routeLabels: Record<string, string> = {
@@ -75,7 +75,7 @@ export function Breadcrumbs() {
       {isInProject && (
         <button
           onClick={() => router.push('/projects')}
-          className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-foreground-muted transition-all duration-200 hover:bg-surface hover:text-foreground"
+          className="text-foreground-muted hover:bg-surface hover:text-foreground flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-200"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Projects
@@ -87,7 +87,7 @@ export function Breadcrumbs() {
         {/* Home/Dashboard link */}
         <Link
           href="/dashboard"
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-foreground-muted transition-all duration-200 hover:bg-surface hover:text-foreground"
+          className="text-foreground-muted hover:bg-surface hover:text-foreground flex items-center gap-1 rounded-md px-2 py-1 transition-all duration-200"
         >
           <Home className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Home</span>
@@ -96,11 +96,11 @@ export function Breadcrumbs() {
         {/* Breadcrumb segments */}
         {breadcrumbs.map((crumb, index) => (
           <div key={crumb.href} className="flex items-center gap-1.5">
-            <ChevronRight className="h-3.5 w-3.5 text-foreground-muted opacity-50" />
+            <ChevronRight className="text-foreground-muted h-3.5 w-3.5 opacity-50" />
 
             {index === breadcrumbs.length - 1 ? (
               // Current page (non-clickable)
-              <span className="flex items-center gap-1.5 px-2 py-1 font-medium text-foreground">
+              <span className="text-foreground flex items-center gap-1.5 px-2 py-1 font-medium">
                 {crumb.segment === 'projects' && <Folder className="h-3.5 w-3.5" />}
                 {crumb.label}
               </span>
@@ -108,7 +108,7 @@ export function Breadcrumbs() {
               // Clickable parent segments
               <Link
                 href={crumb.href}
-                className="flex items-center gap-1.5 rounded-md px-2 py-1 text-foreground-muted transition-all duration-200 hover:bg-surface hover:text-foreground"
+                className="text-foreground-muted hover:bg-surface hover:text-foreground flex items-center gap-1.5 rounded-md px-2 py-1 transition-all duration-200"
               >
                 {crumb.segment === 'projects' && <Folder className="h-3.5 w-3.5" />}
                 {crumb.label}

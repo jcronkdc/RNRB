@@ -1,8 +1,6 @@
 'use client';
 
-import { useState } from 'react';
 import { Card } from '@cronkwaters/ui';
-import { Plus, X, Music, Sparkles, GripVertical, LayoutGrid, List } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -16,11 +14,11 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-  horizontalListSortingStrategy,
   rectSortingStrategy,
-} from '@dnd-kit/sortable';
-import { useSortable } from '@dnd-kit/sortable';
+ useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { Plus, X, Music, Sparkles, GripVertical, LayoutGrid, List } from 'lucide-react';
+import { useState } from 'react';
 
 type ChordBlock = {
   id: string;
@@ -79,25 +77,25 @@ function SortableChordBlock({
       style={style}
       {...attributes}
       {...listeners}
-      className="rnrb-card group relative cursor-move border-2 border-brand-primary/30 bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 p-6 transition-all duration-300 hover:border-brand-primary/50 hover:shadow-2xl"
+      className="rnrb-card border-brand-primary/30 from-brand-primary/10 to-brand-primary/5 hover:border-brand-primary/50 group relative cursor-move border-2 bg-gradient-to-br p-6 transition-all duration-300 hover:shadow-2xl"
     >
       {/* Grip Indicator */}
       <div className="absolute left-2 top-1/2 -translate-y-1/2 opacity-30 transition group-hover:opacity-60">
         <div className="flex flex-col gap-0.5">
-          <div className="h-1 w-1 rounded-full bg-brand-primary"></div>
-          <div className="h-1 w-1 rounded-full bg-brand-primary"></div>
-          <div className="h-1 w-1 rounded-full bg-brand-primary"></div>
+          <div className="bg-brand-primary h-1 w-1 rounded-full"></div>
+          <div className="bg-brand-primary h-1 w-1 rounded-full"></div>
+          <div className="bg-brand-primary h-1 w-1 rounded-full"></div>
         </div>
       </div>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/20">
-            <Music className="h-6 w-6 text-brand-primary" />
+          <div className="bg-brand-primary/20 flex h-12 w-12 items-center justify-center rounded-xl">
+            <Music className="text-brand-primary h-6 w-6" />
           </div>
           <div>
-            <p className="font-display mb-0.5 text-2xl font-bold text-brand-primary">{chord}</p>
-            {duration && <p className="text-xs font-medium text-muted-foreground">{duration}</p>}
+            <p className="font-display text-brand-primary mb-0.5 text-2xl font-bold">{chord}</p>
+            {duration && <p className="text-muted-foreground text-xs font-medium">{duration}</p>}
           </div>
         </div>
         <button
@@ -113,7 +111,7 @@ function SortableChordBlock({
 
       {/* Visual Connector */}
       <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 opacity-50">
-        <div className="h-6 w-0.5 bg-brand-primary/30"></div>
+        <div className="bg-brand-primary/30 h-6 w-0.5"></div>
       </div>
     </div>
   );
@@ -133,7 +131,7 @@ function SortableChordButton({ id, chord, onRemove }: ChordBlock & { onRemove: (
       <div
         {...attributes}
         {...listeners}
-        className="font-display relative cursor-move rounded-xl border-2 border-brand-primary/40 bg-gradient-to-br from-brand-primary/20 to-brand-primary/10 px-4 py-3 text-lg font-bold text-brand-primary transition-all duration-200 hover:scale-105 hover:border-brand-primary/60 hover:shadow-lg"
+        className="font-display border-brand-primary/40 from-brand-primary/20 to-brand-primary/10 text-brand-primary hover:border-brand-primary/60 relative cursor-move rounded-xl border-2 bg-gradient-to-br px-4 py-3 text-lg font-bold transition-all duration-200 hover:scale-105 hover:shadow-lg"
       >
         <GripVertical className="absolute left-1 top-1/2 h-3 w-3 -translate-y-1/2 opacity-0 transition group-hover:opacity-40" />
         <span className="px-1">{chord}</span>
@@ -200,10 +198,10 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h3 className="mb-1 flex items-center gap-2 text-xl font-semibold">
-            <Music className="h-5 w-5 text-brand-primary" />
+            <Music className="text-brand-primary h-5 w-5" />
             Chord Progression Builder
           </h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {viewMode === 'compact'
               ? 'Drag chord buttons to reorder • Click to add more'
               : 'Drag blocks to reorder • Click chord to edit'}
@@ -211,7 +209,7 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
         </div>
         <div className="flex items-center gap-2">
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-1 rounded-lg border border-border/60 bg-surface/80 p-1">
+          <div className="border-border/60 bg-surface/80 flex items-center gap-1 rounded-lg border p-1">
             <button
               onClick={() => setViewMode('compact')}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
@@ -249,17 +247,17 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
 
       {/* Chord Palette */}
       {showChordPalette && (
-        <Card className="rnrb-card border-2 border-brand-primary/20 bg-gradient-to-br from-brand-primary/5 to-transparent p-8 shadow-2xl">
+        <Card className="rnrb-card border-brand-primary/20 from-brand-primary/5 border-2 bg-gradient-to-br to-transparent p-8 shadow-2xl">
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h4 className="font-display mb-1 text-xl font-bold">Choose Your Chord</h4>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Click to add • 28 common chords available
               </p>
             </div>
             <button
               onClick={() => setShowChordPalette(false)}
-              className="text-muted-foreground transition hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground transition"
             >
               <X className="h-5 w-5" />
             </button>
@@ -269,14 +267,14 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
               <button
                 key={chord}
                 onClick={() => addChord(chord)}
-                className="font-display rounded-xl border-2 border-brand-primary/30 bg-brand-primary/10 px-4 py-4 text-lg font-bold text-brand-primary shadow-md transition-all duration-200 hover:scale-105 hover:border-brand-primary/50 hover:bg-brand-primary/20 hover:shadow-xl"
+                className="font-display border-brand-primary/30 bg-brand-primary/10 text-brand-primary hover:border-brand-primary/50 hover:bg-brand-primary/20 rounded-xl border-2 px-4 py-4 text-lg font-bold shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl"
               >
                 {chord}
               </button>
             ))}
           </div>
           <div className="rnrb-card mt-4 border-purple-500/20 bg-purple-500/5 p-3">
-            <p className="flex items-center gap-1 text-xs text-muted-foreground">
+            <p className="text-muted-foreground flex items-center gap-1 text-xs">
               <Sparkles className="h-3 w-3 text-purple-400" />
               Need suggestions? Ask AI in chat: "What chord goes after{' '}
               {chords[chords.length - 1]?.chord || 'Am'}?"
@@ -286,17 +284,17 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
       )}
 
       {/* Chord Progression Workspace */}
-      <Card className="rnrb-card min-h-[400px] bg-gradient-to-b from-surface to-surface-muted/50 p-8">
+      <Card className="rnrb-card from-surface to-surface-muted/50 min-h-[400px] bg-gradient-to-b p-8">
         {chords.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center py-16 text-center">
-            <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-brand-primary/10">
-              <Music className="h-12 w-12 text-brand-primary" />
+            <div className="bg-brand-primary/10 mb-6 flex h-24 w-24 items-center justify-center rounded-2xl">
+              <Music className="text-brand-primary h-12 w-12" />
             </div>
             <h3 className="font-display mb-3 text-2xl font-bold">Your Canvas Awaits</h3>
-            <p className="mb-4 max-w-md text-lg text-muted-foreground">
+            <p className="text-muted-foreground mb-4 max-w-md text-lg">
               Click "Add Chord" above to start building your progression.
             </p>
-            <p className="text-sm font-medium italic text-brand-primary">
+            <p className="text-brand-primary text-sm font-medium italic">
               "Every song starts with a single chord"
             </p>
           </div>
@@ -339,17 +337,17 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
       </Card>
 
       {chords.length > 0 && (
-        <div className="rnrb-card border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 to-brand-primary/5 p-6">
+        <div className="rnrb-card to-brand-primary/5 border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 p-6">
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-500/10">
               <Music className="h-5 w-5 text-green-500" />
             </div>
             <div className="flex-1">
-              <p className="mb-2 text-sm font-semibold text-brand-primary">Your Progression:</p>
-              <p className="font-display text-2xl font-bold leading-relaxed text-foreground">
+              <p className="text-brand-primary mb-2 text-sm font-semibold">Your Progression:</p>
+              <p className="font-display text-foreground text-2xl font-bold leading-relaxed">
                 {chords.map((c) => c.chord).join(' → ')}
               </p>
-              <p className="mt-2 text-xs text-muted-foreground">
+              <p className="text-muted-foreground mt-2 text-xs">
                 {chords.length} {chords.length === 1 ? 'chord' : 'chords'} •
                 {viewMode === 'compact'
                   ? ' Drag buttons to reorder'

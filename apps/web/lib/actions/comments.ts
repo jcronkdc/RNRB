@@ -1,8 +1,9 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { db } from '@/lib/db';
 import { currentUser } from '@/lib/session';
-import { revalidatePath } from 'next/cache';
 
 export async function getComments(entityType: 'project' | 'song', entityId: string) {
   try {
@@ -64,11 +65,9 @@ export async function createComment(
       const project = await db.project.findFirst({
         where: {
           id: entityId,
-          organization: {
-            members: {
-              some: {
-                userId: user.id,
-              },
+          members: {
+            some: {
+              userId: user.id,
             },
           },
         },
@@ -82,11 +81,9 @@ export async function createComment(
         where: {
           id: entityId,
           project: {
-            organization: {
-              members: {
-                some: {
-                  userId: user.id,
-                },
+            members: {
+              some: {
+                userId: user.id,
               },
             },
           },
@@ -200,14 +197,14 @@ export async function updateComment(commentId: string, text: string) {
       const song = await db.song.findUnique({
         where: { id: comment.entityId },
         select: {
-          slug: true,
+          id: true,
           project: {
             select: { slug: true },
           },
         },
       });
-      if (song) {
-        revalidatePath(`/projects/${song.project.slug}/songs/${song.slug}`);
+      if (song && song.project) {
+        revalidatePath(`/projects/${song.project.slug}/songs/${song.id}`);
       }
     }
 

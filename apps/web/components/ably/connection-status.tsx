@@ -2,13 +2,14 @@
 
 import { useConnectionStateListener } from 'ably/react';
 import { Wifi, WifiOff } from 'lucide-react';
+import { useState } from 'react';
 
 export function ConnectionStatus() {
-  const connectionState = useConnectionStateListener();
+  const [isConnected, setIsConnected] = useState(false);
 
-  if (!connectionState) return null;
-
-  const isConnected = connectionState.current.state === 'connected';
+  useConnectionStateListener((stateChange) => {
+    setIsConnected(stateChange.current === 'connected');
+  });
 
   return (
     <div className="flex items-center gap-2">

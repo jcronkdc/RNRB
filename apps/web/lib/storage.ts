@@ -78,7 +78,7 @@ export async function uploadAudioFile(
       url: urlData.publicUrl,
       path: filePath,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Upload error:', error);
     throw error;
   }

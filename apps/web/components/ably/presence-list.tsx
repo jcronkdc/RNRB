@@ -1,6 +1,6 @@
 'use client';
 
-import { usePresence } from 'ably/react';
+import { usePresenceListener } from 'ably/react';
 import { Circle } from 'lucide-react';
 
 interface PresenceListProps {
@@ -8,7 +8,7 @@ interface PresenceListProps {
 }
 
 export function PresenceList({ channelName }: PresenceListProps) {
-  const { presenceData } = usePresence(channelName);
+  const { presenceData } = usePresenceListener(channelName);
 
   if (!presenceData || presenceData.length === 0) {
     return (
@@ -25,7 +25,7 @@ export function PresenceList({ channelName }: PresenceListProps) {
         Online Users ({presenceData.length})
       </h3>
       <ul className="space-y-2">
-        {presenceData.map((member) => (
+        {presenceData.map((member: any) => (
           <li key={member.clientId} className="flex items-center gap-2 text-sm">
             <Circle className="h-2 w-2 fill-green-500 text-green-500" />
             <span className="text-white">{member.data?.name || member.clientId}</span>

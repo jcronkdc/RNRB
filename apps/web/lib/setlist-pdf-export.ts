@@ -44,14 +44,14 @@ export function exportSetlistToPDF(songs: SetlistSong[], options: SetlistExportO
 
   // Header
   doc.setFontSize(layout === 'stage' ? 24 : 18);
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.text(showName || 'Setlist', pageWidth / 2, y, { align: 'center' });
   y += 10;
 
   // Venue and date
   if (venueName || date) {
     doc.setFontSize(layout === 'stage' ? 14 : 12);
-    doc.setFont(undefined, 'normal');
+    doc.setFont('helvetica', 'normal');
     const subtitle: string[] = [];
     if (venueName) subtitle.push(venueName);
     if (date) subtitle.push(new Date(date).toLocaleDateString());
@@ -102,7 +102,7 @@ export function exportSetlistToPDF(songs: SetlistSong[], options: SetlistExportO
 
       // Position number
       doc.setFontSize(16);
-      doc.setFont(undefined, 'bold');
+      doc.setFont('helvetica', 'bold');
       doc.setTextColor(100);
       doc.text(`${index + 1}.`, 15, y);
 
@@ -116,7 +116,7 @@ export function exportSetlistToPDF(songs: SetlistSong[], options: SetlistExportO
       // Key and tempo (if available)
       if (song.key || song.tempo) {
         doc.setFontSize(14);
-        doc.setFont(undefined, 'normal');
+        doc.setFont('helvetica', 'normal');
         doc.setTextColor(80);
         const meta: string[] = [];
         if (song.key) meta.push(`Key: ${song.key}`);
@@ -235,13 +235,13 @@ export function printSetlist(songs: SetlistSong[], options: SetlistExportOptions
 
   // Header
   doc.setFontSize(18);
-  doc.setFont(undefined, 'bold');
+  doc.setFont('helvetica', 'bold');
   doc.text(showName || 'Setlist', pageWidth / 2, y, { align: 'center' });
   y += 10;
 
   if (venueName || date) {
     doc.setFontSize(12);
-    doc.setFont(undefined, 'normal');
+    doc.setFont('helvetica', 'normal');
     const subtitle: string[] = [];
     if (venueName) subtitle.push(venueName);
     if (date) subtitle.push(new Date(date).toLocaleDateString());

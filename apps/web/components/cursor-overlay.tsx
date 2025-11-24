@@ -18,8 +18,9 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { CursorPosition } from '@/hooks/use-collaborative-cursors';
 import { MousePointer2 } from 'lucide-react';
+
+import { type CursorPosition } from '@/hooks/use-collaborative-cursors';
 
 type CursorOverlayProps = {
   cursors: CursorPosition[];

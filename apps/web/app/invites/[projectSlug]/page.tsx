@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
+import { motion } from 'framer-motion';
 import { Music, Users, Check, X, Loader2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { supabase } from '@/lib/supabase';
 
 export default function InviteAcceptPage() {
   const params = useParams();
@@ -101,14 +102,14 @@ export default function InviteAcceptPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+      <div className="bg-background flex min-h-screen items-center justify-center">
+        <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-6">
+    <div className="bg-background flex min-h-screen items-center justify-center p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -130,12 +131,12 @@ export default function InviteAcceptPage() {
           </div>
 
           {/* Project Info */}
-          <div className="mb-6 rounded-xl border border-border bg-surface-muted p-6">
+          <div className="border-border bg-surface-muted mb-6 rounded-xl border p-6">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
-              <Users className="h-5 w-5 text-brand-primary" />
+              <Users className="text-brand-primary h-5 w-5" />
               {projectSlug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
             </h2>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <p className="text-muted-foreground mb-4 text-sm">
               Join this project to collaborate with your team using:
             </p>
             <ul className="space-y-2 text-sm">
@@ -157,9 +158,9 @@ export default function InviteAcceptPage() {
               </li>
             </ul>
             {inviteEmail && (
-              <div className="mt-4 rounded-lg border border-border bg-surface p-3">
-                <p className="text-xs text-muted-foreground">
-                  Invited: <span className="font-medium text-foreground">{inviteEmail}</span>
+              <div className="border-border bg-surface mt-4 rounded-lg border p-3">
+                <p className="text-muted-foreground text-xs">
+                  Invited: <span className="text-foreground font-medium">{inviteEmail}</span>
                 </p>
               </div>
             )}
@@ -236,7 +237,7 @@ export default function InviteAcceptPage() {
 
           {/* Footer */}
           <div className="mt-6 text-center">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               Rock N' Roll Basement • Collaborative Music Creation
             </p>
           </div>

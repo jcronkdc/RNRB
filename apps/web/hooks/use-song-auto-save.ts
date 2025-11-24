@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+
 import { useDebounce } from './use-debounce';
 
 export type SongData = {
@@ -8,7 +9,7 @@ export type SongData = {
   tempo?: number | string;
   timeSignature?: string;
   lyrics?: string;
-  chords?: any;
+  chords?: unknown;
   status?: 'draft' | 'in_progress' | 'needs_review' | 'complete';
   visibility?: 'private' | 'org' | 'public';
 };
@@ -185,5 +186,9 @@ export function useSongAutoSave(initialData?: SongData, autoSaveDelay = 2000) {
     hasError: saveStatus === 'error',
   };
 }
+
+
+
+
 
 

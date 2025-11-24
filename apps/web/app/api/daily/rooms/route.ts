@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/supabase';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { requireFeatureAccess } from '@/lib/subscription-access';
+import { getCurrentUser } from '@/lib/supabase';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
 const DAILY_API_URL = 'https://api.daily.co/v1';
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         properties: {
           room_name: room.name,
-          user_name: user.name || user.email || 'User',
+          user_name: user.user_metadata?.name || user.email || 'User',
           user_id: user.id,
           enable_recording: true,
           start_video_off: false,

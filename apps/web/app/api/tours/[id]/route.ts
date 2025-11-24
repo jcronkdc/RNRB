@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
@@ -6,8 +7,9 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/tours/[id]
  * Get a single tour by ID or slug
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -15,7 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     const tour = await db.tour.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
       include: {
         org: {
@@ -76,8 +78,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * PATCH /api/tours/[id]
  * Update a tour
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -87,7 +90,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     const existingTour = await db.tour.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
     });
 
@@ -150,8 +153,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  * DELETE /api/tours/[id]
  * Delete a tour
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -159,7 +163,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     const existingTour = await db.tour.findFirst({
       where: {
-        OR: [{ id: params.id }, { slug: params.id }],
+        OR: [{ id }, { slug: id }],
       },
       include: {
         shows: true,

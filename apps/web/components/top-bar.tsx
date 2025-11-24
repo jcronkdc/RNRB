@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { type User as SupabaseUser } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
@@ -16,8 +15,11 @@ import {
   Zap,
   Music,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+
 import { supabase } from '@/lib/supabase';
-import { User as SupabaseUser } from '@supabase/supabase-js';
+
 
 export function TopBar() {
   const router = useRouter();

@@ -1,8 +1,8 @@
 import { useState } from 'react';
+
 import {
   uploadAudioFile,
   deleteAudioFile,
-  type AudioFile,
   type UploadProgress,
 } from '@/lib/storage';
 
@@ -33,8 +33,9 @@ export function useAudioUpload() {
       setUploading(false);
       setProgress(null);
       return result;
-    } catch (err: any) {
-      setError(err.message || 'Upload failed');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Upload failed';
+      setError(errorMessage);
       setUploading(false);
       setProgress(null);
       return null;
@@ -45,8 +46,9 @@ export function useAudioUpload() {
     try {
       const success = await deleteAudioFile(filePath);
       return success;
-    } catch (err: any) {
-      setError(err.message || 'Delete failed');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Delete failed';
+      setError(errorMessage);
       return false;
     }
   };

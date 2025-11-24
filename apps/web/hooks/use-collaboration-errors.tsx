@@ -60,8 +60,11 @@ export function useCollaborationErrorTracking() {
       console.error(`[Collaboration ${severity.toUpperCase()}] ${feature}:`, error);
 
       // Send to monitoring service (if configured)
-      if (typeof window !== 'undefined' && (window as any).logRocket) {
-        (window as any).logRocket.captureException(new Error(`Collaboration ${feature}: ${error}`));
+      if (typeof window !== 'undefined') {
+        const win = window as Window & { logRocket?: { captureException: (error: Error) => void } };
+        if (win.logRocket) {
+          win.logRocket.captureException(new Error(`Collaboration ${feature}: ${error}`));
+        }
       }
     },
     []
@@ -210,13 +213,13 @@ export function CollaborationErrorBanner({
             >
               {statusMessage}
             </span>
-            <span className="rounded-full bg-surface-muted px-2 py-0.5 text-xs font-medium">
+            <span className="bg-surface-muted rounded-full px-2 py-0.5 text-xs font-medium">
               Health: {healthScore}%
             </span>
           </div>
 
           {latestError && (
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className="text-muted-foreground mt-2 text-xs">
               {latestError.feature}: {latestError.error}
             </p>
           )}
@@ -232,7 +235,7 @@ export function CollaborationErrorBanner({
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="text-muted-foreground transition hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground transition"
           >
             <X className="h-4 w-4" />
           </button>

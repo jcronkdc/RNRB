@@ -14,10 +14,11 @@
  * - Shortcuts display
  */
 
-import { useCommandPalette } from '@/hooks/use-command-palette';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Command as CommandIcon, ArrowRight } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+
+import { useCommandPalette } from '@/hooks/use-command-palette';
 
 export function CommandPalette() {
   const { isOpen, search, setSearch, filteredCommands, groupedCommands, close } =
@@ -103,23 +104,23 @@ export function CommandPalette() {
               className="mx-4 w-full max-w-2xl"
             >
               <div
-                className="bg-card overflow-hidden rounded-xl border border-border shadow-2xl"
+                className="bg-card border-border overflow-hidden rounded-xl border shadow-2xl"
                 style={{
                   boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
                 }}
               >
                 {/* Search Input */}
-                <div className="flex items-center gap-3 border-b border-border p-4">
-                  <Search className="h-5 w-5 text-muted-foreground" />
+                <div className="border-border flex items-center gap-3 border-b p-4">
+                  <Search className="text-muted-foreground h-5 w-5" />
                   <input
                     ref={inputRef}
                     type="text"
                     placeholder="Search for anything..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="flex-1 bg-transparent text-foreground outline-none placeholder:text-muted-foreground"
+                    className="text-foreground placeholder:text-muted-foreground flex-1 bg-transparent outline-none"
                   />
-                  <div className="flex items-center gap-1 rounded bg-muted/50 px-2 py-1 text-xs text-muted-foreground">
+                  <div className="bg-muted/50 text-muted-foreground flex items-center gap-1 rounded px-2 py-1 text-xs">
                     <CommandIcon className="h-3 w-3" />
                     <span>K</span>
                   </div>
@@ -128,7 +129,7 @@ export function CommandPalette() {
                 {/* Results */}
                 <div className="max-h-[500px] overflow-y-auto">
                   {filteredCommands.length === 0 ? (
-                    <div className="p-12 text-center text-muted-foreground">
+                    <div className="text-muted-foreground p-12 text-center">
                       <Search className="mx-auto mb-3 h-12 w-12 opacity-50" />
                       <p>No results found</p>
                       <p className="mt-1 text-sm">Try a different search term</p>
@@ -138,7 +139,7 @@ export function CommandPalette() {
                       {Object.entries(groupedCommands).map(([category, commands]) => (
                         <div key={category} className="mb-4 last:mb-0">
                           {/* Category Header */}
-                          <div className="px-3 py-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                          <div className="text-muted-foreground px-3 py-2 text-xs font-medium uppercase tracking-wide">
                             {getCategoryLabel(category)}
                           </div>
 
@@ -204,19 +205,19 @@ export function CommandPalette() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between border-t border-border bg-muted/30 px-4 py-3 text-xs text-muted-foreground">
+                <div className="border-border bg-muted/30 text-muted-foreground flex items-center justify-between border-t px-4 py-3 text-xs">
                   <div className="flex items-center gap-4">
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-muted px-1.5 py-0.5">↑</kbd>
-                      <kbd className="rounded bg-muted px-1.5 py-0.5">↓</kbd>
+                      <kbd className="bg-muted rounded px-1.5 py-0.5">↑</kbd>
+                      <kbd className="bg-muted rounded px-1.5 py-0.5">↓</kbd>
                       Navigate
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-muted px-1.5 py-0.5">Enter</kbd>
+                      <kbd className="bg-muted rounded px-1.5 py-0.5">Enter</kbd>
                       Select
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-muted px-1.5 py-0.5">Esc</kbd>
+                      <kbd className="bg-muted rounded px-1.5 py-0.5">Esc</kbd>
                       Close
                     </span>
                   </div>
@@ -241,12 +242,12 @@ export function CommandPaletteTrigger() {
   return (
     <button
       onClick={open}
-      className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
+      className="text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors"
       title="Open command palette (Cmd+K)"
     >
       <Search className="h-4 w-4" />
       <span className="hidden md:inline">Search...</span>
-      <div className="hidden items-center gap-0.5 rounded bg-muted px-1.5 py-0.5 text-xs md:flex">
+      <div className="bg-muted hidden items-center gap-0.5 rounded px-1.5 py-0.5 text-xs md:flex">
         <CommandIcon className="h-3 w-3" />
         <span>K</span>
       </div>

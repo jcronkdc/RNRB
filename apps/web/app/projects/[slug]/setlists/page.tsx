@@ -1,25 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { useParams, useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
+import { motion } from 'framer-motion';
 import {
   Music,
   Plus,
-  GripVertical,
-  Clock,
   MapPin,
   Calendar,
   Users,
   Share2,
-  Download,
   Sparkles,
   Edit,
 } from 'lucide-react';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { supabase } from '@/lib/supabase';
 
 // Dynamically import setlist builder
 const CollaborativeSetlistBuilder = dynamic(
@@ -77,7 +75,7 @@ export default function SetlistsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="bg-background flex min-h-screen items-center justify-center">
         <div className="text-lg">Loading setlists...</div>
       </div>
     );
@@ -104,7 +102,7 @@ export default function SetlistsPage() {
   // If viewing/editing a setlist
   if (selectedSetlist) {
     return (
-      <div className="min-h-screen bg-background px-4 py-12">
+      <div className="bg-background min-h-screen px-4 py-12">
         <div className="rnrb-container max-w-7xl">
           {/* Header */}
           <div className="mb-8 flex items-center justify-between">
@@ -158,15 +156,15 @@ export default function SetlistsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="bg-background min-h-screen px-4 py-12">
       <div className="rnrb-container max-w-7xl">
         {/* Breadcrumb */}
-        <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/projects" className="transition hover:text-brand-primary">
+        <div className="text-muted-foreground mb-6 flex items-center gap-2 text-sm">
+          <Link href="/projects" className="hover:text-brand-primary transition">
             Projects
           </Link>
           <span>/</span>
-          <Link href={`/projects/${slug}`} className="transition hover:text-brand-primary">
+          <Link href={`/projects/${slug}`} className="hover:text-brand-primary transition">
             {project.name}
           </Link>
           <span>/</span>
@@ -177,7 +175,7 @@ export default function SetlistsPage() {
         <div className="mb-8 flex items-start justify-between">
           <div>
             <h1 className="font-display mb-2 text-4xl font-bold">Setlists</h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-muted-foreground text-xl">
               Organize your songs for live performances
             </p>
           </div>
@@ -193,9 +191,9 @@ export default function SetlistsPage() {
         {/* Empty State or Setlist Grid */}
         {setlists.length === 0 ? (
           <Card className="rnrb-card p-16 text-center">
-            <Music className="mx-auto mb-6 h-20 w-20 text-muted-foreground/50" />
+            <Music className="text-muted-foreground/50 mx-auto mb-6 h-20 w-20" />
             <h2 className="font-display mb-4 text-3xl font-bold">Ready for Your First Show?</h2>
-            <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
+            <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-lg">
               Whether you're playing an intimate coffee shop or a packed venue, a great setlist
               builds energy and tells your story. Create your first setlist to organize songs, plan
               transitions, and share with your band.
@@ -203,7 +201,7 @@ export default function SetlistsPage() {
 
             {projectSongs.length === 0 ? (
               <div className="rnrb-card mx-auto mb-6 max-w-md border-yellow-500/20 bg-yellow-500/5 p-6">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   You need songs first! Add some songs to {project.name}, then come back to build
                   your setlist.
                 </p>
@@ -226,29 +224,29 @@ export default function SetlistsPage() {
 
             <div className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-4 text-left md:grid-cols-3">
               <div className="rnrb-card bg-surface-muted p-4">
-                <Music className="mb-3 h-8 w-8 text-brand-primary" />
+                <Music className="text-brand-primary mb-3 h-8 w-8" />
                 <h3 className="mb-2 text-sm font-semibold">Smart Organization</h3>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Drag-drop reordering, key change indicators, set duration calculator
                 </p>
               </div>
               <div className="rnrb-card bg-surface-muted p-4">
-                <Users className="mb-3 h-8 w-8 text-brand-primary" />
+                <Users className="text-brand-primary mb-3 h-8 w-8" />
                 <h3 className="mb-2 text-sm font-semibold">Collaborative</h3>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Your whole band sees the setlist. Make changes together in real-time.
                 </p>
               </div>
               <div className="rnrb-card bg-surface-muted p-4">
-                <Share2 className="mb-3 h-8 w-8 text-brand-primary" />
+                <Share2 className="text-brand-primary mb-3 h-8 w-8" />
                 <h3 className="mb-2 text-sm font-semibold">Export & Share</h3>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   Print for your bandmates or export for sound engineers
                 </p>
               </div>
             </div>
 
-            <p className="mt-8 text-sm italic text-muted-foreground">
+            <p className="text-muted-foreground mt-8 text-sm italic">
               "Every great show starts with a great setlist."
             </p>
           </Card>
@@ -260,21 +258,21 @@ export default function SetlistsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <Card className="rnrb-card cursor-pointer p-6 transition hover:border-brand-primary/30">
+                <Card className="rnrb-card hover:border-brand-primary/30 cursor-pointer p-6 transition">
                   <h3 className="mb-3 text-xl font-semibold">{setlist.name}</h3>
                   {setlist.venue && (
-                    <p className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                    <p className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
                       <MapPin className="h-4 w-4" />
                       {setlist.venue}
                     </p>
                   )}
                   {setlist.date && (
-                    <p className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                    <p className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
                       <Calendar className="h-4 w-4" />
                       {new Date(setlist.date).toLocaleDateString()}
                     </p>
                   )}
-                  <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <p className="text-muted-foreground flex items-center gap-2 text-sm">
                     <Music className="h-4 w-4" />
                     {setlist.songs.length} songs
                   </p>
@@ -286,11 +284,11 @@ export default function SetlistsPage() {
 
         {/* Helpful Note */}
         <Card className="rnrb-card mt-8 border-purple-500/20 bg-purple-500/5 p-6">
-          <p className="mb-1 flex items-center gap-2 text-sm font-medium text-brand-primary">
+          <p className="text-brand-primary mb-1 flex items-center gap-2 text-sm font-medium">
             <Sparkles className="h-4 w-4 text-purple-400" />
             Pro Tip: Building Your Set
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             Start strong, dip in the middle for intimacy, build to your biggest song. Watch key
             changes (too many can tire your voice). Share your setlist in project chat for band
             feedback!

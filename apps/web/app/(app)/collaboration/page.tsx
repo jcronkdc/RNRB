@@ -15,13 +15,10 @@
  * This demonstrates the power of the interconnected network!
  */
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Users,
   Activity,
-  Bell,
   Video,
   MessageSquare,
   TrendingUp,
@@ -30,6 +27,8 @@ import {
   Eye,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
 // Dynamically import components
@@ -58,7 +57,7 @@ export default function CollaborationDashboard() {
             className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-4 border-t-transparent"
             style={{ borderColor: 'var(--accent) transparent var(--accent) var(--accent)' }}
           />
-          <p className="text-lg text-muted">Loading collaboration dashboard...</p>
+          <p className="text-muted text-lg">Loading collaboration dashboard...</p>
         </motion.div>
       </div>
     );
@@ -71,10 +70,10 @@ export default function CollaborationDashboard() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="mb-2 flex items-center gap-3 text-4xl font-bold">
-              <Globe className="h-10 w-10 text-brand-primary" />
+              <Globe className="text-brand-primary h-10 w-10" />
               Collaboration Dashboard
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Real-time view of your entire collaborative network
             </p>
           </div>
@@ -140,7 +139,7 @@ export default function CollaborationDashboard() {
             </div>
             <p className="mb-1 text-3xl font-bold">{stat.value}</p>
             <p className="mb-1 text-sm font-medium">{stat.label}</p>
-            <p className="text-xs text-muted-foreground">{stat.description}</p>
+            <p className="text-muted-foreground text-xs">{stat.description}</p>
           </motion.div>
         ))}
       </motion.div>
@@ -156,7 +155,7 @@ export default function CollaborationDashboard() {
         >
           <div className="card h-full p-6">
             <div className="mb-4 flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-brand-primary" />
+              <TrendingUp className="text-brand-primary h-5 w-5" />
               <h2 className="text-xl font-semibold">Global Activity Stream</h2>
             </div>
             <ActivityFeed channelName="activity:global" showHeader={false} maxHeight="700px" />
@@ -200,25 +199,25 @@ export default function CollaborationDashboard() {
             </div>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Ably Connection</span>
+                <span className="text-muted-foreground text-sm">Ably Connection</span>
                 <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
                   Connected
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Daily.co Video</span>
+                <span className="text-muted-foreground text-sm">Daily.co Video</span>
                 <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
                   Ready
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Supabase Storage</span>
+                <span className="text-muted-foreground text-sm">Supabase Storage</span>
                 <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
                   Online
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Presence Tracking</span>
+                <span className="text-muted-foreground text-sm">Presence Tracking</span>
                 <span className="rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
                   Active
                 </span>
@@ -232,19 +231,19 @@ export default function CollaborationDashboard() {
             <div className="space-y-2">
               <button
                 onClick={() => router.push('/projects/new')}
-                className="w-full rounded-lg bg-brand-primary px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+                className="bg-brand-primary w-full rounded-lg px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
               >
                 Create New Project
               </button>
               <button
                 onClick={() => router.push('/songwriting')}
-                className="w-full rounded-lg bg-muted px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/80"
+                className="bg-muted hover:bg-muted/80 w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors"
               >
                 Open Songwriting Studio
               </button>
               <button
                 onClick={() => router.push('/studio')}
-                className="w-full rounded-lg bg-muted px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/80"
+                className="bg-muted hover:bg-muted/80 w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors"
               >
                 Start Video Session
               </button>
@@ -264,7 +263,7 @@ export default function CollaborationDashboard() {
           <Zap className="mt-1 h-6 w-6 shrink-0 text-purple-400" />
           <div>
             <h3 className="mb-2 font-semibold">🍄 The Mycelial Network is Alive!</h3>
-            <p className="mb-3 text-sm text-muted-foreground">
+            <p className="text-muted-foreground mb-3 text-sm">
               This dashboard shows real-time data from all connected systems: Presence tracking
               (who's where), Activity feeds (what's happening), Notifications (alerts), Video
               sessions (Daily.co), and Chat messages (Ably). Everything pulses together as one

@@ -44,9 +44,6 @@ export default tseslint.config(
       'unused-imports': pluginUnusedImports
     },
     settings: {
-      'import/resolver': {
-        typescript: true
-      },
       tailwindcss: {
         callees: ['cn', 'classnames', 'ctl'],
         config: 'tailwind.config.ts',

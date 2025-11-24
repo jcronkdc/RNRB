@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { getCurrentUser } from '@/lib/supabase';
 
 // Email sending via Resend (configured in environment)

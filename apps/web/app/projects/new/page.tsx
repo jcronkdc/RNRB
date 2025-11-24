@@ -1,23 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
-import { useRouter } from 'next/navigation';
 import { Card, Button } from '@cronkwaters/ui';
+import { type User } from '@supabase/supabase-js';
+import { motion } from 'framer-motion';
 import {
-  Music,
-  Upload,
   Lock,
   Users,
   Globe,
-  Building,
   Sparkles,
   ArrowLeft,
   Folder,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { supabase } from '@/lib/supabase';
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -102,11 +100,11 @@ export default function NewProjectPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="bg-background flex min-h-screen items-center justify-center">
         <motion.div
           animate={{ opacity: [0.2, 1, 0.2] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="font-mono text-sm text-muted-foreground"
+          className="text-muted-foreground font-mono text-sm"
         >
           Loading...
         </motion.div>
@@ -115,13 +113,13 @@ export default function NewProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       {/* Premium Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+      <div className="border-border/50 relative overflow-hidden border-b">
+        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
         <div className="absolute inset-0">
-          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-brand-primary/5 blur-3xl" />
+          <div className="bg-brand-primary/10 absolute right-1/4 top-0 h-96 w-96 rounded-full blur-3xl" />
+          <div className="bg-brand-primary/5 absolute bottom-0 left-1/4 h-96 w-96 rounded-full blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-4xl px-4 py-16">
@@ -132,22 +130,22 @@ export default function NewProjectPage() {
           >
             <Link
               href="/projects"
-              className="mb-6 inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-brand-primary"
+              className="text-muted-foreground hover:text-brand-primary mb-6 inline-flex items-center gap-2 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               <span className="font-mono text-xs uppercase tracking-wider">Back to Projects</span>
             </Link>
 
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
-                <Folder className="h-6 w-6 text-brand-primary" />
+              <div className="bg-brand-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
+                <Folder className="text-brand-primary h-6 w-6" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Create New</p>
+                <p className="text-muted-foreground text-sm">Create New</p>
                 <h1 className="font-display text-3xl font-bold md:text-4xl">Project</h1>
               </div>
             </div>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Organize your songs, collaborate with your team, and build your music career
             </p>
           </motion.div>
@@ -176,7 +174,7 @@ export default function NewProjectPage() {
           <Card className="rnrb-card mb-6 p-8">
             <div className="space-y-6">
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-2 block text-sm font-medium">
                   Project Name *
                 </label>
                 <input
@@ -184,26 +182,26 @@ export default function NewProjectPage() {
                   value={projectData.name}
                   onChange={(e) => setProjectData({ ...projectData, name: e.target.value })}
                   placeholder="My Debut Album"
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-lg text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-3 text-lg transition focus:outline-none focus:ring-2"
                 />
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="text-muted-foreground mt-1 text-xs">
                   {projectData.name && `URL: /projects/${generateSlug(projectData.name)}`}
                 </p>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">Tagline</label>
+                <label className="text-foreground mb-2 block text-sm font-medium">Tagline</label>
                 <input
                   type="text"
                   value={projectData.tagline}
                   onChange={(e) => setProjectData({ ...projectData, tagline: e.target.value })}
                   placeholder="The album that changed everything"
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-2 transition focus:outline-none focus:ring-2"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-2 block text-sm font-medium">
                   Description
                 </label>
                 <textarea
@@ -211,24 +209,24 @@ export default function NewProjectPage() {
                   onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
                   placeholder="Describe your project, its vision, the story behind it..."
                   rows={4}
-                  className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-lg border px-4 py-2 transition focus:outline-none focus:ring-2"
                 />
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-foreground">Genre</label>
+                  <label className="text-foreground mb-2 block text-sm font-medium">Genre</label>
                   <input
                     type="text"
                     value={projectData.genre}
                     onChange={(e) => setProjectData({ ...projectData, genre: e.target.value })}
                     placeholder="Rock, Jazz, Hip-Hop..."
-                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                    className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-2 transition focus:outline-none focus:ring-2"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-foreground">
+                  <label className="text-foreground mb-2 block text-sm font-medium">
                     Target Release Date
                   </label>
                   <input
@@ -237,7 +235,7 @@ export default function NewProjectPage() {
                     onChange={(e) =>
                       setProjectData({ ...projectData, target_release_date: e.target.value })
                     }
-                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                    className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-2 transition focus:outline-none focus:ring-2"
                   />
                 </div>
               </div>
@@ -272,8 +270,8 @@ export default function NewProjectPage() {
                     }`}
                   />
                   <div>
-                    <p className="mb-1 font-semibold text-foreground">Private</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-foreground mb-1 font-semibold">Private</p>
+                    <p className="text-muted-foreground text-sm">
                       Only you can see this project. Perfect for works in progress.
                     </p>
                   </div>
@@ -297,8 +295,8 @@ export default function NewProjectPage() {
                     }`}
                   />
                   <div>
-                    <p className="mb-1 font-semibold text-foreground">Band/Organization</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-foreground mb-1 font-semibold">Band/Organization</p>
+                    <p className="text-muted-foreground text-sm">
                       Shared with your band or organization members only.
                     </p>
                   </div>
@@ -322,8 +320,8 @@ export default function NewProjectPage() {
                     }`}
                   />
                   <div>
-                    <p className="mb-1 font-semibold text-foreground">Public</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-foreground mb-1 font-semibold">Public</p>
+                    <p className="text-muted-foreground text-sm">
                       Anyone can discover and listen. Great for released albums.
                     </p>
                   </div>

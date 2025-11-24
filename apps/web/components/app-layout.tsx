@@ -1,13 +1,17 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
+
+import { Breadcrumbs } from './breadcrumbs';
+import { CommandPalette } from './command-palette';
+import { KeyboardShortcutsHelp } from './keyboard-shortcuts-help';
 import { SidebarNav } from './sidebar-nav';
 import { TopBar } from './top-bar';
 import { TransportBar } from './transport-bar';
-import { Breadcrumbs } from './breadcrumbs';
+
 import { AblyProvider } from '@/components/ably';
-import { CommandPalette } from './command-palette';
-import { KeyboardShortcutsHelp } from './keyboard-shortcuts-help';
-import { usePathname } from 'next/navigation';
+
+
 
 interface AppLayoutProps {
   children: React.ReactNode;

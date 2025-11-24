@@ -13,8 +13,9 @@
  * - collab_request - Collaboration request received
  */
 
+import { Realtime } from 'ably';
+import type { RealtimeChannel, Message } from 'ably';
 import { useEffect, useState } from 'react';
-import { Realtime, Types } from 'ably';
 
 export type NotificationType =
   | 'mention'
@@ -35,7 +36,7 @@ export type Notification = {
   link?: string; // Where to navigate when clicked
   read: boolean;
   timestamp: number;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 };
 
 type UseNotificationsOptions = {
@@ -54,7 +55,7 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
     if (!userId) return;
 
     let mounted = true;
-    let channel: Types.RealtimeChannelCallbacks | null = null;
+    let channel: RealtimeChannel | null = null;
 
     const initAbly = async () => {
       try {
@@ -75,7 +76,7 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
         channel = ablyClient.channels.get(`notifications:user:${userId}`);
 
         // Subscribe to notifications
-        channel.subscribe('notification', (message) => {
+        channel.subscribe('notification', (message: Message) => {
           if (!mounted) return;
 
           const notification: Notification = {

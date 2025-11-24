@@ -33,13 +33,13 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flex min-h-screen items-center justify-center bg-background p-4">
-          <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-8 text-center">
+        <div className="bg-background flex min-h-screen items-center justify-center p-4">
+          <div className="border-border bg-surface w-full max-w-md rounded-2xl border p-8 text-center">
             <div className="bg-danger/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
               <span className="text-2xl">⚠️</span>
             </div>
-            <h2 className="mb-2 text-xl font-semibold text-foreground">Something went wrong</h2>
-            <p className="mb-6 text-sm text-muted-foreground">
+            <h2 className="text-foreground mb-2 text-xl font-semibold">Something went wrong</h2>
+            <p className="text-muted-foreground mb-6 text-sm">
               Don't worry - your work is safe. Try refreshing the page.
             </p>
             <button
@@ -50,10 +50,10 @@ export class ErrorBoundary extends Component<Props, State> {
             </button>
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="mt-4 text-left">
-                <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground">
+                <summary className="text-muted-foreground hover:text-foreground cursor-pointer text-xs">
                   Error Details
                 </summary>
-                <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs">
+                <pre className="bg-muted mt-2 overflow-auto rounded p-2 text-xs">
                   {this.state.error.toString()}
                 </pre>
               </details>

@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 import {
   Music2,
   Sparkles,
@@ -12,9 +11,10 @@ import {
   Compass,
   FileMusic,
   Share2,
-  Zap,
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
+
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
 // Dynamically import activity feed

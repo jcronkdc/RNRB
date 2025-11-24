@@ -1,30 +1,28 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useAudioUpload } from '@/hooks/use-audio-upload';
-import { useRequireAuth } from '@/hooks/use-require-auth';
 import {
   Music,
-  Upload,
-  Download,
   Play,
   Pause,
   Trash2,
   Grid3x3,
   List,
   Search,
-  Filter,
   FileAudio,
   Disc,
   Mic2,
   Radio,
   Loader2,
-  Sparkles,
   Share2,
-  MoreVertical,
   Folder,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+import { useAudioUpload } from '@/hooks/use-audio-upload';
+import { useRequireAuth } from '@/hooks/use-require-auth';
+import { createBrowserClient } from '@/lib/supabase';
+
 
 type LibraryFile = {
   id: string;
@@ -62,8 +60,14 @@ export default function LibraryPage() {
     const file = event.target.files?.[0];
     if (!file || !user) return;
 
+    // Map library types to upload types
+    const uploadType: 'demo' | 'stem' | 'final' | 'reference' =
+      type === 'other' || type === 'loop' || type === 'sample'
+        ? 'demo'
+        : type;
+
     // Upload to library folder in Supabase Storage
-    const result = await upload(file, 'library', user.id, type);
+    const result = await upload(file, 'library', user.id, uploadType);
     if (result) {
       const newFile: LibraryFile = {
         id: `lib_${Date.now()}`,
@@ -80,12 +84,15 @@ export default function LibraryPage() {
       setFiles(updatedFiles);
 
       // Save to user metadata
-      await supabase!.auth.updateUser({
-        data: {
-          ...user.user_metadata,
-          library_files: updatedFiles,
-        },
-      });
+      const supabase = createBrowserClient();
+      if (user && supabase) {
+        await supabase.auth.updateUser({
+          data: {
+            ...(user.user_metadata || {}),
+            library_files: updatedFiles,
+          },
+        });
+      }
     }
 
     event.target.value = '';
@@ -97,12 +104,15 @@ export default function LibraryPage() {
     const updatedFiles = files.filter((f) => f.id !== fileId);
     setFiles(updatedFiles);
 
-    await supabase!.auth.updateUser({
-      data: {
-        ...user.user_metadata,
-        library_files: updatedFiles,
-      },
-    });
+    const supabase = createBrowserClient();
+    if (user && supabase) {
+      await supabase.auth.updateUser({
+        data: {
+          ...(user.user_metadata || {}),
+          library_files: updatedFiles,
+        },
+      });
+    }
   };
 
   const formatFileSize = (bytes: number): string => {
@@ -264,12 +274,12 @@ export default function LibraryPage() {
             <div className="mt-4 rounded-xl border border-gray-800 bg-gray-900 p-4">
               <div className="mb-2 flex items-center gap-3">
                 <Loader2 className="h-5 w-5 animate-spin text-orange-500" />
-                <span className="text-white">Uploading... {progress}%</span>
+                <span className="text-white">Uploading... {progress?.percentage || 0}%</span>
               </div>
               <div className="h-2 w-full rounded-full bg-gray-800">
                 <div
                   className="h-2 rounded-full bg-orange-500 transition-all duration-300"
-                  style={{ width: `${progress}%` }}
+                  style={{ width: `${progress?.percentage || 0}%` }}
                 />
               </div>
             </div>

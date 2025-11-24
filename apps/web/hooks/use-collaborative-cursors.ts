@@ -18,8 +18,9 @@
  * - Any shared workspace
  */
 
+import Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Realtime, Types } from 'ably';
 
 export type CursorPosition = {
   x: number;
@@ -51,10 +52,10 @@ export function useCollaborativeCursors({
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const ablyRef = useRef<Realtime | null>(null);
-  const channelRef = useRef<Types.RealtimeChannelCallbacks | null>(null);
+  const ablyRef = useRef<Ably.Realtime | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
   const lastPositionRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const idleTimerRef = useRef<NodeJS.Timeout>();
+  const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Generate consistent color for user if not provided
   const color = userColor || generateUserColor(userId);
@@ -150,7 +151,7 @@ export function useCollaborativeCursors({
         if (!response.ok) throw new Error('Failed to get Ably token');
 
         // Create Ably client
-        const ablyClient = new Realtime({
+        const ablyClient = new Ably.Realtime({
           authUrl: '/api/ably/token',
           clientId: userId,
         });
@@ -167,7 +168,7 @@ export function useCollaborativeCursors({
         channelRef.current = channel;
 
         // Subscribe to cursor movements
-        channel.subscribe('cursor-move', (message) => {
+        channel.subscribe('cursor-move', (message: Ably.Message) => {
           if (!mounted) return;
 
           const cursor = message.data as CursorPosition;
@@ -244,7 +245,7 @@ export function useCollaborativeCursors({
 }
 
 // Throttle utility
-function useThrottle<T extends (...args: any[]) => any>(callback: T, delay: number): T {
+function useThrottle<T extends (...args: unknown[]) => unknown>(callback: T, delay: number): T {
   const lastRun = useRef(Date.now());
 
   return useCallback(

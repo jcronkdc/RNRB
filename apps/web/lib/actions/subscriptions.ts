@@ -1,9 +1,9 @@
 'use server';
 
-import type Stripe from 'stripe';
 import { prisma } from '@cronkwaters/db';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import type Stripe from 'stripe';
+
 import {
   createStripeCustomer,
   createCheckoutSession,

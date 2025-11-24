@@ -15,8 +15,9 @@
  * - presence_active - User became active
  */
 
-import { useEffect, useState } from 'react';
-import { Realtime, Types } from 'ably';
+import type { Message, RealtimeChannel } from 'ably';
+import Ably from 'ably';
+import { useEffect, useRef, useState } from 'react';
 
 export type ActivityType =
   | 'user_joined'
@@ -39,7 +40,7 @@ export type ActivityEvent = {
   songId?: string;
   songName?: string;
   message?: string;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
   timestamp: number;
 };
 
@@ -52,16 +53,16 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
   const [activities, setActivities] = useState<ActivityEvent[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [ably, setAbly] = useState<Realtime | null>(null);
+  const ablyRef = useRef<Ably.Realtime | null>(null);
 
   useEffect(() => {
     let mounted = true;
-    let channel: Types.RealtimeChannelCallbacks | null = null;
+    let channel: RealtimeChannel | null = null;
 
     const initAbly = async () => {
       try {
         // Create Ably client
-        const ablyClient = new Realtime({
+        const ablyClient = new Ably.Realtime({
           authUrl: '/api/ably/token',
         });
 
@@ -70,13 +71,13 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
           return;
         }
 
-        setAbly(ablyClient);
+        ablyRef.current = ablyClient;
 
         // Get channel
         channel = ablyClient.channels.get(channelName);
 
         // Subscribe to all activity events
-        channel.subscribe((message) => {
+        channel.subscribe((message: Message) => {
           if (!mounted) return;
 
           const activity: ActivityEvent = {
@@ -94,23 +95,25 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
         });
 
         // Get recent history (last 50 messages)
-        channel.history({ limit }, (err, resultPage) => {
-          if (err) {
-            console.error('Error fetching activity history:', err);
-            return;
-          }
+        try {
+          const resultPage = await channel.history({ limit });
 
           if (!mounted || !resultPage) return;
 
-          const historicalActivities: ActivityEvent[] = resultPage.items.map((message) => ({
-            id: message.id || `activity_${message.timestamp}`,
-            ...message.data,
-            timestamp: message.timestamp || Date.now(),
-          }));
+          const historicalActivities: ActivityEvent[] = resultPage.items.map(
+            (message: Message) => ({
+              id: message.id || `activity_${message.timestamp}`,
+              ...message.data,
+              timestamp: message.timestamp || Date.now(),
+            })
+          );
 
-          // Reverse so newest is first
-          setActivities(historicalActivities.reverse());
-        });
+          // Set activities in reverse order so newest is first
+          const reversedActivities = [...historicalActivities].reverse();
+          setActivities(reversedActivities);
+        } catch (error_) {
+          console.error('Error fetching activity history:', error_);
+        }
 
         setIsConnected(true);
       } catch (err) {
@@ -126,20 +129,24 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
     // Cleanup
     return () => {
       mounted = false;
-      channel?.unsubscribe();
-      ably?.close();
+      if (channel) {
+        channel.unsubscribe();
+      }
+      if (ablyRef.current) {
+        ablyRef.current.close();
+      }
     };
   }, [channelName, limit]);
 
   // Function to publish activity (for components to use)
   const publishActivity = async (activity: Omit<ActivityEvent, 'id' | 'timestamp'>) => {
-    if (!ably || !isConnected) {
+    if (!ablyRef.current || !isConnected) {
       console.error('Cannot publish: Ably not connected');
       return;
     }
 
     try {
-      const channel = ably.channels.get(channelName);
+      const channel = ablyRef.current.channels.get(channelName);
       await channel.publish('activity', activity);
     } catch (err) {
       console.error('Error publishing activity:', err);
@@ -172,7 +179,7 @@ export function getActivityMessage(activity: ActivityEvent): string {
     case 'video_started':
       return `${activity.userName} started a video session`;
     case 'invite_sent':
-      return `${activity.userName} invited ${activity.metadata?.inviteeEmail || 'someone'}`;
+      return `${activity.userName} invited ${String(activity.metadata?.inviteeEmail) || 'someone'}`;
     case 'presence_active':
       return `${activity.userName} is now active`;
     default:

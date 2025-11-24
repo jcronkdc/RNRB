@@ -5,9 +5,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['tests/unit/**/*.test.ts'],
-    exclude: ['tests/e2e/**', '**/*.spec.ts'],
-    setupFiles: ['tests/setup-vitest.ts'],
+    include: ['song-forge/tests/unit/**/*.test.ts'],
+    exclude: ['song-forge/tests/e2e/**', '**/*.spec.ts'],
+    setupFiles: ['song-forge/tests/setup-vitest.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

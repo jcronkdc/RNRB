@@ -6,10 +6,10 @@ export default function OrganizationOnboardingPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-semibold text-brand-foreground">
+        <h1 className="text-brand-foreground text-3xl font-semibold">
           Choose or Create an Organization
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Your active organization determines which projects, splits, and sessions you can access.
           Selecting one here will set your SongForge organization cookie.
         </p>
@@ -22,7 +22,7 @@ export default function OrganizationOnboardingPage() {
           Join with Invite (Coming Soon)
         </Button>
       </div>
-      <p className="text-xs text-muted-foreground">
+      <p className="text-muted-foreground text-xs">
         These actions are placeholders. In a future update, they will create or join an organization
         and set the active org cookie securely.
       </p>

@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
 import { randomBytes } from 'crypto';
+import { NextResponse } from 'next/server';
+
+import { auth } from '@/auth';
 
 export async function POST(request: Request) {
   try {

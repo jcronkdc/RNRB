@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { type User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
+
 
 interface UseRequireAuthOptions {
   redirectTo?: string;

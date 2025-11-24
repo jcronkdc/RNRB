@@ -1,8 +1,8 @@
 'use client';
 
 import { useChannel } from 'ably/react';
-import { useState } from 'react';
 import { Bell, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface Notification {
   id: string;

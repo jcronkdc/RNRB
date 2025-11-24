@@ -1,13 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 
 /**
  * GET /api/projects/[id]/songs
  * Get all songs for a project
  */
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 
@@ -71,9 +72,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
  * POST /api/projects/[id]/songs
  * Create a new song in a project
  */
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
     const { userId, title, key, tempo, timeSignature, lyrics, chords, songStructure } = body;
 
@@ -150,5 +151,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     );
   }
 }
+
+
+
+
 
 
