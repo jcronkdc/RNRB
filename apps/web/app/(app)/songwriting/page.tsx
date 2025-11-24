@@ -144,39 +144,39 @@ export default function SongwritingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
-      <div className="mx-auto max-w-7xl px-4 py-8">
-        {/* BADASS Header with Orange Gradient */}
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        {/* Improved Header with Better Visual Hierarchy */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative mb-8 overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-8"
+          className="relative mb-6 overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-6 shadow-xl lg:mb-8 lg:p-8"
         >
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-500/50">
-                <Music2 className="h-8 w-8 text-white" />
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex flex-1 items-start gap-4">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-500/50 lg:h-16 lg:w-16">
+                <Music2 className="h-7 w-7 text-white lg:h-8 lg:w-8" />
               </div>
-              <div>
-                <div className="mb-2 flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="mb-2 flex flex-wrap items-center gap-2 lg:gap-3">
                   <input
                     type="text"
                     value={songTitle}
                     onChange={(e) => setSongTitle(e.target.value)}
-                    className="border-none bg-transparent px-0 text-4xl font-bold text-white outline-none focus:ring-0"
+                    className="min-w-0 flex-1 border-none bg-transparent px-0 text-2xl font-bold text-white outline-none placeholder:text-gray-500 focus:ring-0 sm:text-3xl lg:text-4xl"
                     placeholder="Untitled Song"
                     disabled={!user}
                   />
                   <SaveStatusIndicator />
                 </div>
-                <p className="flex items-center gap-2 text-gray-300">
-                  <Sparkles className="h-4 w-4 text-orange-500" />
-                  Drag-and-drop builder with real-time collaboration & auto-save
+                <p className="flex flex-wrap items-center gap-2 text-sm text-gray-300">
+                  <Sparkles className="h-4 w-4 shrink-0 text-orange-500" />
+                  <span>Collaborative songwriting with real-time auto-save</span>
                 </p>
               </div>
             </div>
             {user && (
-              <div className="rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2">
+              <div className="shrink-0 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2">
                 <PresenceIndicator
                   channelName="songwriting:studio"
                   currentUser={{
@@ -194,41 +194,41 @@ export default function SongwritingPage() {
           </div>
         </motion.div>
 
-        {/* Collaboration Features Banner */}
+        {/* Improved Collaboration Features Banner - More Compact */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mb-8 rounded-xl border border-purple-500/30 bg-purple-500/10 p-4"
+          className="mb-6 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3 lg:mb-8 lg:p-4"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:flex sm:gap-6">
               <div className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-purple-400" />
-                <span className="font-medium text-white">Chat</span>
+                <MessageSquare className="h-4 w-4 shrink-0 text-purple-400 lg:h-5 lg:w-5" />
+                <span className="text-sm font-medium text-white">Chat</span>
               </div>
               <div className="flex items-center gap-2">
-                <Video className="h-5 w-5 text-purple-400" />
-                <span className="font-medium text-white">Video</span>
+                <Video className="h-4 w-4 shrink-0 text-purple-400 lg:h-5 lg:w-5" />
+                <span className="text-sm font-medium text-white">Video</span>
               </div>
               <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-purple-400" />
-                <span className="font-medium text-white">Multi-Cursor</span>
+                <Users className="h-4 w-4 shrink-0 text-purple-400 lg:h-5 lg:w-5" />
+                <span className="text-sm font-medium text-white">Live Cursors</span>
               </div>
               <div className="flex items-center gap-2">
-                <Save className="h-5 w-5 text-purple-400" />
-                <span className="font-medium text-white">Auto-Save</span>
+                <Save className="h-4 w-4 shrink-0 text-purple-400 lg:h-5 lg:w-5" />
+                <span className="text-sm font-medium text-white">Auto-Save</span>
               </div>
             </div>
-            <div className="text-sm text-purple-300">✨ All collaboration features active</div>
+            <div className="text-xs text-purple-300 sm:text-sm">✨ All features active</div>
           </div>
         </motion.div>
 
-        {/* View Tabs */}
-        <div className="mb-8 flex gap-2 border-b border-gray-800">
+        {/* Improved View Tabs - Better Mobile UX */}
+        <div className="mb-6 flex gap-1 overflow-x-auto border-b border-gray-800 lg:mb-8 lg:gap-2">
           <button
             onClick={() => setActiveView('structure')}
-            className={`relative px-6 py-3 font-semibold transition-all ${
+            className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-all sm:px-6 lg:text-base ${
               activeView === 'structure' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -242,7 +242,7 @@ export default function SongwritingPage() {
           </button>
           <button
             onClick={() => setActiveView('chords')}
-            className={`relative px-6 py-3 font-semibold transition-all ${
+            className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-all sm:px-6 lg:text-base ${
               activeView === 'chords' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -256,7 +256,7 @@ export default function SongwritingPage() {
           </button>
           <button
             onClick={() => setActiveView('lyrics')}
-            className={`relative px-6 py-3 font-semibold transition-all ${
+            className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-all sm:px-6 lg:text-base ${
               activeView === 'lyrics' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -270,17 +270,19 @@ export default function SongwritingPage() {
           </button>
         </div>
 
-        {/* Content */}
+        {/* Content - Improved Loading and Empty States */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
+          className="min-h-[500px]"
         >
           {activeView === 'structure' && loading && (
-            <div className="flex min-h-[500px] items-center justify-center rounded-2xl border border-gray-800 bg-gray-900">
+            <div className="flex min-h-[500px] items-center justify-center rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black">
               <div className="text-center">
                 <Music2 className="mx-auto mb-4 h-12 w-12 animate-pulse text-orange-500" />
-                <p className="text-gray-400">Loading authentication...</p>
+                <p className="text-lg font-medium text-white">Loading songwriting studio...</p>
+                <p className="mt-2 text-sm text-gray-400">Preparing your collaborative workspace</p>
               </div>
             </div>
           )}
@@ -299,28 +301,35 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'structure' && !loading && !user && (
-            <div className="flex min-h-[500px] items-center justify-center rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-12">
+            <div className="flex min-h-[500px] items-center justify-center rounded-2xl border-2 border-orange-500/30 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-8 shadow-xl lg:p-12">
               <div className="max-w-md text-center">
                 <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-500/50">
                   <Music2 className="h-10 w-10 text-white" />
                 </div>
-                <h3 className="mb-3 text-2xl font-bold text-white">Sign In to Collaborate</h3>
-                <p className="mb-6 text-gray-300">
-                  The collaborative song structure builder requires authentication to track your
-                  changes and enable real-time collaboration with other musicians.
+                <h3 className="mb-3 text-2xl font-bold text-white lg:text-3xl">
+                  Sign In to Start Writing
+                </h3>
+                <p className="mb-6 text-base text-gray-300">
+                  The collaborative song builder requires authentication to save your work and
+                  enable real-time collaboration with other musicians.
                 </p>
-                <a
-                  href="/auth"
-                  className="inline-block rounded-lg bg-orange-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-orange-600"
-                >
-                  Sign In to Continue
-                </a>
+                <div className="space-y-4">
+                  <a
+                    href="/auth"
+                    className="inline-block w-full rounded-lg bg-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:bg-orange-600 hover:shadow-orange-500/50 sm:w-auto"
+                  >
+                    Sign In to Continue
+                  </a>
+                  <p className="text-sm text-gray-400">
+                    or <a href="/auth" className="text-orange-400 hover:underline">create a free account</a>
+                  </p>
+                </div>
               </div>
             </div>
           )}
 
           {activeView === 'chords' && (
-            <div className="rounded-2xl border border-gray-800 bg-gray-900 p-8">
+            <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
               <ChordBuilder
                 onChange={(progression) => {
                   // progression is already ChordBlock[], just update it directly
@@ -337,7 +346,7 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'lyrics' && (
-            <div className="rounded-2xl border border-gray-800 bg-gray-900 p-8">
+            <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
               <LyricsAssistant
                 currentLyrics={lyrics}
                 onInsert={(text) => setLyrics(lyrics ? lyrics + '\n' + text : text)}
@@ -346,44 +355,52 @@ export default function SongwritingPage() {
           )}
         </motion.div>
 
-        {/* Collaboration Info */}
+        {/* Improved Collaboration Info - Better Mobile Layout */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-8 rounded-xl border border-gray-800 bg-gray-900 p-6"
+          className="mt-6 rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-5 lg:mt-8 lg:p-6"
         >
-          <h3 className="mb-3 flex items-center gap-2 font-semibold text-white">
+          <h3 className="mb-4 flex items-center gap-2 text-base font-semibold text-white lg:text-lg">
             <Users className="h-5 w-5 text-orange-500" />
-            Collaborative Features Active
+            Collaborative Features
           </h3>
-          <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-4">
-            <div className="flex items-start gap-3">
+          <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+            <div className="flex items-start gap-3 rounded-lg border border-gray-800/50 bg-gray-900/50 p-3">
               <MessageSquare className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
               <div>
                 <p className="font-medium text-white">Real-time Chat</p>
-                <p className="text-gray-400">Message your collaborators while writing</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Message collaborators while writing
+                </p>
               </div>
             </div>
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 rounded-lg border border-gray-800/50 bg-gray-900/50 p-3">
               <Video className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
               <div>
                 <p className="font-medium text-white">Video Sessions</p>
-                <p className="text-gray-400">Face-to-face collaboration with screen share</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Face-to-face with screen share
+                </p>
               </div>
             </div>
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 rounded-lg border border-gray-800/50 bg-gray-900/50 p-3">
               <Users className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
               <div>
-                <p className="font-medium text-white">Multi-Cursor</p>
-                <p className="text-gray-400">See everyone&apos;s cursor in real-time</p>
+                <p className="font-medium text-white">Live Cursors</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  See everyone's cursor in real-time
+                </p>
               </div>
             </div>
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 rounded-lg border border-gray-800/50 bg-gray-900/50 p-3">
               <Save className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
               <div>
                 <p className="font-medium text-white">Auto-Save</p>
-                <p className="text-gray-400">Your work is saved automatically every 2 seconds</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Work saved every 2 seconds
+                </p>
               </div>
             </div>
           </div>
