@@ -30,6 +30,16 @@ const PresenceIndicator = dynamic(
   { ssr: false }
 );
 
+const SpotifyImportModal = dynamic(
+  () => import('@/components/spotify-import-modal').then((m) => m.SpotifyImportModal),
+  { ssr: false }
+);
+
+const SetlistGeneratorModal = dynamic(
+  () => import('@/components/setlist-generator-modal').then((m) => m.SetlistGeneratorModal),
+  { ssr: false }
+);
+
 type Setlist = {
   id: string;
   name: string;
@@ -50,6 +60,8 @@ export default function SetlistsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedSetlist, setSelectedSetlist] = useState<Setlist | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [showSpotifyImport, setShowSpotifyImport] = useState(false);
+  const [showGenerator, setShowGenerator] = useState(false);
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -97,6 +109,16 @@ export default function SetlistsPage() {
   const saveSetlist = async (songs: any[]) => {
     // Would save to Supabase in production
     console.log('Saving setlist with songs:', songs);
+  };
+
+  const handleSpotifyImport = (importedSongs: any[]) => {
+    console.log('Imported songs from Spotify:', importedSongs);
+    // Would integrate with setlist builder to add songs
+  };
+
+  const handleGenerateSetlist = (generatedSongs: any[]) => {
+    console.log('Generated setlist:', generatedSongs);
+    // Would create new setlist with generated songs
   };
 
   // If viewing/editing a setlist
@@ -179,13 +201,31 @@ export default function SetlistsPage() {
               Organize your songs for live performances
             </p>
           </div>
-          <Button
-            onClick={createNewSetlist}
-            className="rnrb-button-primary flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
-          >
-            <Plus className="h-5 w-5" />
-            Create Setlist
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => setShowSpotifyImport(true)}
+              className="flex items-center gap-2 rounded-xl px-4 py-2"
+              variant="outline"
+            >
+              <Music className="h-4 w-4" />
+              Import from Spotify
+            </Button>
+            <Button
+              onClick={() => setShowGenerator(true)}
+              className="flex items-center gap-2 rounded-xl px-4 py-2"
+              variant="outline"
+            >
+              <Sparkles className="h-4 w-4" />
+              Generate Setlist
+            </Button>
+            <Button
+              onClick={createNewSetlist}
+              className="rnrb-button-primary flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
+            >
+              <Plus className="h-5 w-5" />
+              Create Setlist
+            </Button>
+          </div>
         </div>
 
         {/* Empty State or Setlist Grid */}
@@ -280,6 +320,25 @@ export default function SetlistsPage() {
               </motion.div>
             ))}
           </div>
+        )}
+
+        {/* Spotify Import Modal */}
+        {showSpotifyImport && user && (
+          <SpotifyImportModal
+            projectId={project.id || `temp_${slug}`}
+            onClose={() => setShowSpotifyImport(false)}
+            onImport={handleSpotifyImport}
+          />
+        )}
+
+        {/* Setlist Generator Modal */}
+        {showGenerator && user && (
+          <SetlistGeneratorModal
+            projectSlug={slug}
+            projectSongs={projectSongs}
+            onClose={() => setShowGenerator(false)}
+            onGenerate={handleGenerateSetlist}
+          />
         )}
 
         {/* Helpful Note */}
