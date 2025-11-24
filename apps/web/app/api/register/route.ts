@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const { email, password, name } = await request.json();
+    
+    console.log('[REGISTER] Request received:', { email: email?.substring(0, 3) + '***', hasPassword: !!password, hasName: !!name });
 
     // Validation
     if (!email || !password) {
