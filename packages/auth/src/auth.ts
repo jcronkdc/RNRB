@@ -23,7 +23,8 @@ function getAuthConfig(): NextAuthOptions {
   });
 
   return {
-    adapter: PrismaAdapter(prisma),
+    // Note: PrismaAdapter is not compatible with JWT strategy + Credentials provider
+    // OAuth providers (Google, Apple) will still work without adapter when using JWT
     session: {
       strategy: 'jwt',
     },
