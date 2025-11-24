@@ -1,0 +1,53 @@
+'use client';
+
+import { useEffect } from 'react';
+import posthog from 'posthog-js';
+
+export function PostHogProvider({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    // Only initialize PostHog in the browser
+    if (typeof window === 'undefined') return;
+
+    const apiKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com';
+
+    if (!apiKey) {
+      console.warn('PostHog: Missing NEXT_PUBLIC_POSTHOG_KEY');
+      return;
+    }
+
+    // Initialize PostHog
+    if (!posthog.__loaded) {
+      posthog.init(apiKey, {
+        api_host: host,
+        person_profiles: 'identified_only', // Only create profiles for identified users
+        loaded: (ph) => {
+          // Enable debug mode in development
+          if (process.env.NODE_ENV === 'development') {
+            ph.debug();
+          }
+        },
+        capture_pageview: true, // Auto-capture page views
+        capture_pageleave: true, // Auto-capture page exits
+        autocapture: {
+          dom_event_allowlist: ['click', 'change', 'submit'], // Capture key interactions
+        },
+      });
+    }
+  }, []);
+
+  return <>{children}</>;
+}
+
+// Export a utility hook for user identification
+export function usePostHogIdentify(
+  userId: string | null | undefined,
+  userProperties?: Record<string, any>
+) {
+  useEffect(() => {
+    if (userId && posthog.__loaded) {
+      posthog.identify(userId, userProperties);
+    }
+  }, [userId, userProperties]);
+}
+
