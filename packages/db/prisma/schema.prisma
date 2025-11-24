@@ -113,41 +113,41 @@ model User {
 }
 
 model Org {
-  id              String           @id @default(cuid())
-  name            String
-  slug            String           @unique
-  type            OrgType
-  brandColor      String?
-  description     String?
-  website         String?
-  bio             String?
-  location        String?
-  genre           String[]
-  influences      String[]
-  founded         Int?
-  socialLinks     Json?
-  contactEmail    String?
-  bookingEmail    String?
-  pressKitUrl     String?
-  epkData         Json?
-  achievements    Json?
-  spotifyArtistId String?
-  appleMusicId    String?
-  images          Json?
-  verified        Boolean          @default(false)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  awards          Award[]
-  bandMembers     BandMember[]
-  events          Event[]
-  memberships     Membership[]
-  orgInvites      OrgInvite[]
-  episodes        PodcastEpisode[]
-  pressReleases   PressRelease[]
-  projects        Project[]        @relation("OrgProjects")
-  shows           Show[]
-  tours           Tour[]
-  invitations     Invitation[]
+  id               String            @id @default(cuid())
+  name             String
+  slug             String            @unique
+  type             OrgType
+  brandColor       String?
+  description      String?
+  website          String?
+  bio              String?
+  location         String?
+  genre            String[]
+  influences       String[]
+  founded          Int?
+  socialLinks      Json?
+  contactEmail     String?
+  bookingEmail     String?
+  pressKitUrl      String?
+  epkData          Json?
+  achievements     Json?
+  spotifyArtistId  String?
+  appleMusicId     String?
+  images           Json?
+  verified         Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  awards           Award[]
+  bandMembers      BandMember[]
+  events           Event[]
+  memberships      Membership[]
+  orgInvites       OrgInvite[]
+  episodes         PodcastEpisode[]
+  pressReleases    PressRelease[]
+  projects         Project[]         @relation("OrgProjects")
+  shows            Show[]
+  tours            Tour[]
+  invitations      Invitation[]
   setlistTemplates SetlistTemplate[]
 
   @@index([slug])
@@ -595,20 +595,20 @@ model SongRequest {
 }
 
 model SetlistTemplate {
-  id             String    @id @default(cuid())
+  id             String   @id @default(cuid())
   name           String
   description    String?
   targetDuration Int // Target duration in minutes
   energyLevel    String? // high, mixed, mellow
   filters        Json? // Custom filters (genre, exclude explicit, etc.)
   songIds        String[] // Specific songs to include (optional)
-  isBuiltIn      Boolean   @default(false) // Built-in templates vs user-created
+  isBuiltIn      Boolean  @default(false) // Built-in templates vs user-created
   orgId          String
   createdById    String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  org            Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  createdBy      User      @relation(fields: [createdById], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  org            Org      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  createdBy      User     @relation(fields: [createdById], references: [id])
 
   @@index([orgId])
   @@index([createdById])

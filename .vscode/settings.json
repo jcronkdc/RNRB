@@ -132,5 +132,10 @@
   "vitest.enable": true,
   "vitest.commandLine": "pnpm vitest",
   "vitest.include": ["**/tests/unit/**/*.test.ts"],
-  "vitest.exclude": ["**/tests/e2e/**", "**/*.spec.ts", "**/node_modules/**"]
+  "vitest.exclude": [
+    "**/tests/e2e/**",
+    "**/*.spec.ts",
+    "**/node_modules/**"
+  ],
+  "prisma.pinToPrisma6": false
 }
