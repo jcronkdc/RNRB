@@ -15,6 +15,7 @@ export async function GET() {
         GOOGLE_CLIENT_SECRET: !!process.env.GOOGLE_CLIENT_SECRET,
         DAILY_API_KEY: !!process.env.DAILY_API_KEY,
         ABLY_API_KEY: !!process.env.ABLY_API_KEY,
+        OPENAI_API_KEY: !!process.env.OPENAI_API_KEY,
         OPENROUTER_API_KEY: !!process.env.OPENROUTER_API_KEY,
       },
       database: {
@@ -30,7 +31,7 @@ export async function GET() {
         oauth: !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET,
         video: !!process.env.DAILY_API_KEY,
         chat: !!process.env.ABLY_API_KEY,
-        ai: !!process.env.OPENROUTER_API_KEY,
+        ai: !!process.env.OPENAI_API_KEY || !!process.env.OPENROUTER_API_KEY,
       },
     },
   };
