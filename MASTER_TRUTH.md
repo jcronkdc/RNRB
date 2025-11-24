@@ -2950,3 +2950,74 @@ GROUP BY p.id, pm.role;
 - ✅ Real-time chat & whiteboard
 - ✅ 100 GB storage
 - ✅ All premium features
+
+---
+
+## 🚀 AGENT 81 - SONG REQUESTS DATABASE MIGRATION (2025-11-24)
+
+**Status:** ✅ **DATABASE MIGRATIONS APPLIED**
+
+### **What Was Done:**
+
+1. ✅ **Applied Tour Management Migration**
+   - Created `Tour`, `Venue`, `Show`, `Setlist`, `SetlistItem`, `FanEngagement` tables
+   - All foreign keys and indexes created successfully
+   - Migration: `add_tour_management.sql`
+
+2. ✅ **Applied Song Requests Migration**
+   - Created `SongRequest` table with `SongRequestStatus` enum
+   - Foreign key to `Setlist` table
+   - Indexes on `setlistId`, `status`, `createdAt`
+   - Migration: `add_song_requests.sql`
+
+3. ✅ **Regenerated Prisma Client Locally**
+   - Ran `pnpm prisma generate` in `packages/db`
+   - Client now includes `SongRequest` and related models
+
+4. ✅ **Added Error Logging to API Route**
+   - Enhanced `/api/song-requests` with detailed error messages
+   - Committed and pushed to trigger Vercel deployment
+
+### **Current Status:**
+
+**Database:** ✅ Fully migrated and operational  
+**API Route:** ⚠️ Still returning 500 error
+
+**Issue:** The Vercel deployment hasn't picked up the new Prisma schema yet. The Prisma client on Vercel doesn't know about the new `SongRequest` and `Setlist` models.
+
+### **Next Steps Required:**
+
+1. **Wait for Full Prisma Regeneration on Vercel** - The postinstall hook should trigger `prisma generate` during deployment
+2. **Verify Prisma Build Step** - Check Vercel build logs to confirm Prisma generation runs
+3. **Test API Endpoint** - Once deployed, the endpoint should work: `GET /api/song-requests?setlistId={id}`
+
+### **Files Changed:**
+
+- `packages/db/prisma/migrations/add_tour_management.sql` ✅ Applied to production DB
+- `packages/db/prisma/migrations/add_song_requests.sql` ✅ Applied to production DB
+- `apps/web/app/api/song-requests/route.ts` ✅ Enhanced error logging
+- `README_DEPLOYMENT.md` ✅ Created (trigger file)
+
+### **Verification Commands:**
+
+```bash
+# Check if tables exist in database
+SELECT tablename FROM pg_tables WHERE schemaname = 'public' 
+AND (tablename = 'SongRequest' OR tablename = 'Setlist' OR tablename = 'Show');
+# ✅ Returns all three tables
+
+# Test API endpoint (after Vercel rebuild)
+curl "https://www.cronkwaters.com/api/song-requests?setlistId=test123"
+# Expected: {"requests": []} (empty array for non-existent setlist)
+```
+
+### **Database Schema Verified:**
+
+- ✅ `Show` table exists
+- ✅ `Setlist` table exists with `showId` FK
+- ✅ `SetlistItem` table exists
+- ✅ `SongRequest` table exists with `setlistId` FK
+- ✅ All indexes created
+- ✅ All enums created (`TourStatus`, `ShowStatus`, `VenueType`, `SongRequestStatus`)
+
+**Agent 81 - Database Migrations Complete, Awaiting Vercel Prisma Sync** 🍄⚡✅
