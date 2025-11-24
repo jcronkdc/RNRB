@@ -1,6 +1,6 @@
 {
-  "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "cd packages/db && prisma migrate deploy && prisma generate && cd ../.. && pnpm build",
+  "installCommand": "pnpm install",
+  "buildCommand": "cd packages/db && prisma generate && cd ../.. && pnpm build",
   "framework": null,
   "outputDirectory": "apps/web/.next",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet ."
