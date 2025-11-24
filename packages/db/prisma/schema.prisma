@@ -1,6 +1,7 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "darwin-arm64"]
+  // Force regeneration: 2025-11-24T14:30:00Z
 }
 
 datasource db {
