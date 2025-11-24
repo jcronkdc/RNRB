@@ -1,9 +1,0 @@
-{
-  "extends": "@cronkwaters/config/tsconfig/base",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "dist"
-  },
-  "include": ["src"],
-  "exclude": ["dist", "node_modules"]
-}

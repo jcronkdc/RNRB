@@ -1,5 +1,0 @@
-{
-  "buildCommand": "turbo run build --filter=@cronkwaters/web",
-  "installCommand": "pnpm install",
-  "outputDirectory": "apps/web/.next"
-}
