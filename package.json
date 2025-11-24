@@ -5,7 +5,7 @@
   "packageManager": "pnpm@9.11.0",
   "scripts": {
     "dev": "turbo run dev",
-    "build": "pnpm prisma:generate && turbo run build",
+    "build": "cd packages/db && prisma generate && cd ../.. && turbo run build",
     "start": "turbo run start",
     "prisma:generate": "cd packages/db && prisma generate",
     "prisma:studio": "cd packages/db && prisma studio",
