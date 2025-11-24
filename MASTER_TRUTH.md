@@ -19,20 +19,28 @@
 
 ### Active Blockages 🔴
 ```
-#1: Password registration 500 → Unknown database or Prisma error
+#1: DATABASE_URL has INVALID CREDENTIALS (ep-placeholder database)
 #2: Security breach - OAuth + Resend keys exposed (commit c79c7354)
 ```
 
-**Blockage #1 Detail - PARTIALLY FIXED:**
-- ✅ DATABASE_URL confirmed present in Vercel (user verified)
-- ✅ Moved `/api/auth/register` → `/api/register` (NextAuth conflict resolved)
-- ✅ Fixed PostHog version `1.297.3` → `1.298.0` (deployment blocker resolved)
-- ✅ Deployment READY (commit `a7afcb3b`)
-- ✅ Endpoint accessible (`x-matched-path: /api/register`)
-- 🔴 POST request still returns 500 with `{"error":"Failed to create account"}`
-- 🔴 Production logs not accessible via Vercel CLI (timeout after 5mins)
-- 🔴 Error is caught by try-catch, real cause unknown (Prisma? bcryptjs? Database connection?)
-- **Next step:** Need to check Vercel dashboard logs or add more detailed error logging
+**Blockage #1 Detail - ROOT CAUSE IDENTIFIED:**
+- ❌ DATABASE_URL exists but points to `ep-placeholder.us-east-2.aws.neon.tech` 
+- ❌ Database credentials are invalid: "Authentication failed"
+- ✅ Endpoint working (`/api/register` accessible)
+- ✅ Code working (tested locally, returns proper error)
+- 🔴 **User must update DATABASE_URL in Vercel with valid Neon connection string**
+
+**Error Message:**
+```
+Authentication failed against database server at ep-placeholder.us-east-2.aws.neon.tech, 
+the provided database credentials for (not available) are not valid.
+```
+
+**Solution:**
+1. Go to Neon Dashboard: https://console.neon.tech
+2. Get correct DATABASE_URL with valid credentials
+3. Update in Vercel: Settings → Environment Variables → DATABASE_URL
+4. Redeploy
 
 ### Auth Pathways 🟡
 ```
