@@ -102,14 +102,22 @@ function getAuthConfig(): NextAuthOptions {
     callbacks: {
       async jwt({ token, user, trigger, session, account }) {
         // Session fixation protection: Regenerate token ID on sign in
-        if (user && account) {
-          // Generate new session token ID to prevent session fixation
-          token.jti = crypto.randomBytes(32).toString('hex');
-          token.iat = Math.floor(Date.now() / 1000);
+        if (user) {
+          // Set user ID (required for all auth providers)
           (token as JWT & { userId?: string }).userId = user.id;
 
-          // Store session rotation timestamp
-          (token as JWT & { rotatedAt?: number }).rotatedAt = Date.now();
+          // Generate new session token ID to prevent session fixation
+          if (account) {
+            token.jti = crypto.randomBytes(32).toString('hex');
+            token.iat = Math.floor(Date.now() / 1000);
+            // Store session rotation timestamp
+            (token as JWT & { rotatedAt?: number }).rotatedAt = Date.now();
+          } else {
+            // For credentials provider (no account object)
+            token.jti = crypto.randomBytes(32).toString('hex');
+            token.iat = Math.floor(Date.now() / 1000);
+            (token as JWT & { rotatedAt?: number }).rotatedAt = Date.now();
+          }
         }
 
         // Session rotation: Regenerate token periodically
