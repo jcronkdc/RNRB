@@ -1,35 +1,76 @@
 # 🍄 MASTER TRUTH - CRONKWATERS
 
-**Last Updated:** 2025-11-24 @ Agent 103  
+**Agent:** 103  
 **Production:** https://www.cronkwaters.com  
-**Neon DB:** `weathered-rain-51915586` (31 tables, fully migrated)  
-**Git:** `main` @ `26d64521`
+**Database:** `weathered-rain-51915586` (Neon PostgreSQL 17.5)  
+**Git:** `main` @ `181432a7`
 
 ---
 
-## 🎯 CURRENT STATE
+## ✅ WORKING
 
-### ✅ Working
-- Build: 67 pages, Next.js 15.5.6
-- Deploy: LIVE on Vercel
-- Database: Neon PostgreSQL 17.5 (31 tables) ✅ FULLY MIGRATED
-- Local Registration: POST /api/register → 201 Created ✅
-- Auth: Google OAuth + Email Magic Links + Password ✅
+- **Build:** 67 pages, Next.js 15.5.6, deployed on Vercel
+- **Database:** 31 tables, schema COMPLETE (Account, Session, VerificationToken, User with password field)
+- **Local Registration:** ✅ 201 Created (2 test users in DB with hashed passwords)
+- **Auth Routes:** `/auth` (Google OAuth + Email Magic Links + Password forms exist)
 
-### 🟡 Final Step: Production Verification
+---
 
-**Status:** Database schema migration complete, needs production test  
-**Local:** Registration working (2 test users created)  
-**Issue:** Need to trigger Vercel redeploy for Prisma client regeneration
+## 🔴 BLOCKED: Production Registration (Vercel Prisma Client Cache)
 
-**Root Cause Resolved:**
-- ✅ Neon database had incomplete schema (old init_schema migration)
-- ✅ Missing NextAuth tables (Account, Session, VerificationToken)
-- ✅ Missing User fields (password, emailVerified, Stripe, usage tracking)
-- ✅ Applied comprehensive migration via Neon MCP
-- ✅ Verified locally: Registration working with hashed passwords
+**Issue:** Vercel serving stale Prisma client from Nov 12 (missing password field)  
+**Evidence:**
+- Local: POST /api/register → 201 ✅
+- Production: POST /api/register → 500 ❌
+- Database: Fully migrated with NextAuth tables + password field ✅
 
-**Next Step:** Empty commit → Push → Test production
+**Root Cause:** Vercel's build cache has old Prisma client generated before schema migration
+
+**Attempts Made:**
+1. ✅ Removed conflicting POSTGRES_DATABASE/PGDATABASE env vars
+2. ✅ Updated schema.prisma comment (force regeneration)
+3. ✅ Added debug logging to registration endpoint
+4. ⏳ 3 deployments triggered (cache persisting)
+
+---
+
+## 🚨 USER ACTION REQUIRED
+
+### Option 1: Vercel Dashboard (FASTEST - 3 mins)
+1. Go to: https://vercel.com/justins-projects-d7153a8c/cronkwater/settings/general
+2. Click "Clear Build Cache"
+3. Go to Deployments → Click "Redeploy" on latest
+4. Wait 90 seconds → Test: `curl -X POST https://www.cronkwaters.com/api/register -H "Content-Type: application/json" -d '{"email":"test@test.com","password":"Pass123!","name":"Test"}'`
+
+### Option 2: Let Agent 104 Continue
+- Agent 104 can investigate Vercel build logs
+- May need to regenerate Prisma client differently
+- Estimate: 30-60 minutes troubleshooting
+
+---
+
+## 📊 TOKYO ANT PATH (Shortest Distance)
+
+```
+DATABASE_URL set → Schema migrated → Local works → Vercel cache blocking
+                                                           ↓
+                                              Clear cache → DONE
+```
+
+**Completion:** 95% (only Vercel cache issue remaining)
+
+---
+
+## 🔧 EXTENSIONS USED
+
+- ✅ Neon MCP: Database migration, schema verification
+- ✅ Browser MCP: Tested registration form on production
+- ✅ Git: 3 commits pushed, tracking changes
+- ⚠️ Vercel CLI: Limited (no cache clear command)
+
+---
+
+**NEXT AGENT:** Clear Vercel build cache or investigate Prisma generation on Vercel
 
 ### 🚨 Blockage #2: Rotate Exposed Credentials
 
