@@ -366,3 +366,210 @@ rollup.darwin-arm64.node  # 1.9MB ✅
 **🎸 Vitest extension is now fully operational!**
 
 **Agent - Mycelium Network - All Pathways Clear** 🍄⚡✅
+
+---
+
+# 🗄️ DATABASE MIGRATION - SONG REQUESTS (2025-11-24)
+
+## 🚨 **MIGRATION STATUS**
+
+**Migration File:** `packages/db/prisma/migrations/add_song_requests.sql`  
+**Status:** ⚠️ **READY BUT NOT APPLIED**  
+**Reason:** DATABASE_URL not configured in local environment
+
+## 📋 **MIGRATION DETAILS**
+
+### **What It Does:**
+
+Creates the `SongRequest` table for the client song request feature (Setlist Phase 2).
+
+```sql
+CREATE TYPE "SongRequestStatus" AS ENUM ('pending', 'approved', 'rejected');
+
+CREATE TABLE "SongRequest" (
+    "id" TEXT NOT NULL,
+    "setlistId" TEXT NOT NULL,
+    "songTitle" TEXT NOT NULL,
+    "requestedBy" TEXT NOT NULL,
+    "email" TEXT,
+    "message" TEXT,
+    "dedication" TEXT,
+    "status" "SongRequestStatus" NOT NULL DEFAULT 'pending',
+    "responseMessage" TEXT,
+    "respondedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "SongRequest_pkey" PRIMARY KEY ("id")
+);
+```
+
+### **Features Enabled:**
+
+- ✅ Public song request form (`/request/[setlist]`)
+- ✅ Admin approval workflow
+- ✅ Email/message/dedication support
+- ✅ Status tracking (pending/approved/rejected)
+
+## 🔧 **HOW TO APPLY MIGRATION**
+
+### **Option 1: Automatic (Vercel Deployment)**
+
+Migration will run automatically on next Vercel deployment:
+
+```bash
+git push origin main
+# Vercel will run: prisma migrate deploy
+```
+
+### **Option 2: Manual (Local with DATABASE_URL)**
+
+If you have `DATABASE_URL` configured:
+
+```bash
+cd packages/db
+pnpm prisma migrate deploy
+```
+
+### **Option 3: Direct SQL (Supabase/Neon Dashboard)**
+
+Run the SQL from `packages/db/prisma/migrations/add_song_requests.sql` in your database dashboard.
+
+## ⚠️ **BLOCKER IDENTIFIED**
+
+**Issue:** `DATABASE_URL` environment variable not set locally  
+**Impact:** Cannot run migration from local machine  
+**Solution:** Migration will auto-run on Vercel deployment OR user can run manually with proper env setup
+
+---
+
+## 🧪 **HUMAN TESTING CHECKLIST**
+
+Once migration is applied, test these scenarios:
+
+### **1. Public Song Request Form** (`/request/[setlist]`)
+
+- [ ] Navigate to a valid setlist URL
+- [ ] Fill out song request form (no auth required)
+- [ ] Submit request
+- [ ] Verify request appears in admin view
+
+### **2. Admin Approval Workflow**
+
+- [ ] Navigate to setlist with pending requests
+- [ ] Open SongRequestManager component
+- [ ] Approve a request
+- [ ] Reject a request
+- [ ] Add response message
+
+### **3. API Endpoints**
+
+Test all 3 endpoints:
+
+```bash
+# Get requests for a setlist
+GET /api/song-requests?setlistId={id}
+
+# Create new request (public)
+POST /api/song-requests
+{
+  "setlistId": "...",
+  "songTitle": "Wonderwall",
+  "requestedBy": "John Doe",
+  "email": "john@example.com",
+  "message": "Please play this!",
+  "dedication": "For my wife Sarah"
+}
+
+# Update request status (admin only)
+PATCH /api/song-requests/[id]
+{
+  "status": "approved",
+  "responseMessage": "We'll play it tonight!"
+}
+```
+
+### **4. Error Cases**
+
+- [ ] Try accessing admin functions without auth (should 401)
+- [ ] Try submitting invalid data (should validate)
+- [ ] Try accessing non-existent setlist (should 404)
+
+## 📊 **FILES INVOLVED**
+
+**Migration:**
+
+- `packages/db/prisma/migrations/add_song_requests.sql` ✅ Created
+- `packages/db/prisma/schema.prisma` ✅ Updated (SongRequest model)
+
+**API Routes:**
+
+- `apps/web/app/api/song-requests/route.ts` ✅ GET/POST handlers
+- `apps/web/app/api/song-requests/[id]/route.ts` ✅ PATCH/DELETE handlers
+
+**Components:**
+
+- `apps/web/app/request/[setlist]/page.tsx` ✅ Public request form
+- `apps/web/components/SongRequestManager.tsx` ✅ Admin approval UI
+
+**Status:** 🟡 **MIGRATION PENDING APPLICATION**
+
+## 🧪 **HUMAN TESTING RESULTS**
+
+### **Test Environment: Production**
+
+**URL:** https://www.cronkwaters.com  
+**Status:** ✅ Site is live and accessible  
+**Auth Page:** ✅ Loads correctly (`/auth`)
+
+### **🚨 BLOCKER: Cannot Complete Full Testing**
+
+**Reason:** Database migration not yet applied to production
+
+**What I Tested:**
+
+✅ **Site Availability:**
+
+- Homepage loads correctly
+- Navigation works
+- Auth page accessible
+
+❌ **Cannot Test (Migration Required):**
+
+- Song request form (`/request/[setlist]`)
+- API endpoints (`/api/song-requests`)
+- Admin approval workflow
+- Database operations
+
+### **Next Steps for User:**
+
+1. **Apply Migration to Production:**
+
+```bash
+# Option A: Deploy to Vercel (migration runs automatically)
+git push origin main
+
+# Option B: Manual SQL execution via database dashboard
+# Run: packages/db/prisma/migrations/add_song_requests.sql
+```
+
+2. **After Migration, Test:**
+
+```bash
+# Create a test setlist first, then test:
+# - Public request form: /request/[setlist-id]
+# - Admin approval: /projects/[slug]/setlists (with auth)
+# - API endpoints (use Thunder Client or Postman)
+```
+
+### **Files Ready for Testing:**
+
+- ✅ Migration SQL: `packages/db/prisma/migrations/add_song_requests.sql`
+- ✅ API Routes: `apps/web/app/api/song-requests/...`
+- ✅ Public Form: `apps/web/app/request/[setlist]/page.tsx`
+- ✅ Admin UI: `apps/web/components/SongRequestManager.tsx`
+
+---
+
+**Status:** 🟡 **MIGRATION PENDING - TESTING BLOCKED**  
+**Recommendation:** Push to Vercel to trigger auto-migration, then test live
+
+**Agent 80 - Mycelium Network - Migration Prepared for Deployment** 🍄⚡
