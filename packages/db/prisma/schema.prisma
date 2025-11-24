@@ -101,6 +101,7 @@ model User {
   sentInvitations        Invitation[]            @relation("SentInvitations")
   receivedInvitations    Invitation[]            @relation("ReceivedInvitations")
   projectMemberships     ProjectMember[]
+  setlistTemplates       SetlistTemplate[]
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -146,6 +147,7 @@ model Org {
   shows           Show[]
   tours           Tour[]
   invitations     Invitation[]
+  setlistTemplates SetlistTemplate[]
 
   @@index([slug])
   @@index([type])
@@ -569,6 +571,27 @@ model SetlistItem {
 
   @@index([setlistId])
   @@index([songId])
+}
+
+model SetlistTemplate {
+  id             String    @id @default(cuid())
+  name           String
+  description    String?
+  targetDuration Int // Target duration in minutes
+  energyLevel    String? // high, mixed, mellow
+  filters        Json? // Custom filters (genre, exclude explicit, etc.)
+  songIds        String[] // Specific songs to include (optional)
+  isBuiltIn      Boolean   @default(false) // Built-in templates vs user-created
+  orgId          String
+  createdById    String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  org            Org       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  createdBy      User      @relation(fields: [createdById], references: [id])
+
+  @@index([orgId])
+  @@index([createdById])
+  @@index([isBuiltIn])
 }
 
 model FanEngagement {
