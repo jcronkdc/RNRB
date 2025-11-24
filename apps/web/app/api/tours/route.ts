@@ -2,16 +2,37 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
+import { requireFeatureAccess, SubscriptionError } from '@/lib/subscription';
 
 /**
  * GET /api/tours
  * List all tours for user's organizations
+ * REQUIRES: Creator or Studio subscription
  */
 export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Check subscription access - FEATURE GATE
+    try {
+      await requireFeatureAccess(user.id, 'toursAndGigs');
+    } catch (error) {
+      if (error instanceof SubscriptionError) {
+        return NextResponse.json(
+          {
+            error: 'Subscription required',
+            message: error.message,
+            feature: error.feature,
+            requiredTier: error.requiredTier,
+            upgradeUrl: '/settings/billing?upgrade=creator',
+          },
+          { status: 403 }
+        );
+      }
+      throw error;
     }
 
     const { searchParams } = new URL(request.url);
@@ -79,12 +100,32 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/tours
  * Create a new tour
+ * REQUIRES: Creator or Studio subscription
  */
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Check subscription access - FEATURE GATE
+    try {
+      await requireFeatureAccess(user.id, 'toursAndGigs');
+    } catch (error) {
+      if (error instanceof SubscriptionError) {
+        return NextResponse.json(
+          {
+            error: 'Subscription required',
+            message: error.message,
+            feature: error.feature,
+            requiredTier: error.requiredTier,
+            upgradeUrl: '/settings/billing?upgrade=creator',
+          },
+          { status: 403 }
+        );
+      }
+      throw error;
     }
 
     const body = await request.json();

@@ -11,6 +11,10 @@ import {
   Compass,
   FileMusic,
   Share2,
+  ListMusic,
+  Radio,
+  Calendar,
+  Lock,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -23,8 +27,18 @@ const CompactActivityFeed = dynamic(
   { ssr: false }
 );
 
+// Dynamically import upgrade modal to avoid SSR issues
+const UpgradeModal = dynamic(
+  () => import('@/components/upgrade-modal').then((m) => m.UpgradeModal),
+  { ssr: false }
+);
+
+// Import the hook separately (it's just a hook, safe for SSR)
+import { useUpgradeModal } from '@/components/upgrade-modal';
+
 export default function DashboardPage() {
   const { user, loading } = useRequireAuth();
+  const { isOpen, showUpgradeModal, hideUpgradeModal, modalProps } = useUpgradeModal();
 
   // Optimistic rendering: Show UI immediately, update user name when ready
   const userName = loading
@@ -286,6 +300,95 @@ export default function DashboardPage() {
           </div>
         </motion.div>
 
+        {/* Premium Features Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="mb-12"
+        >
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-2xl font-semibold text-white">Premium Tools</h2>
+            <span className="rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-3 py-1 text-xs font-bold text-white">
+              UPGRADE TO UNLOCK
+            </span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {[
+              {
+                title: 'Smart Setlists',
+                description: 'AI-powered setlist generation & performance mode',
+                icon: ListMusic,
+                feature: 'setlistManagement',
+                gradient: 'from-blue-500 to-cyan-500',
+              },
+              {
+                title: 'Tour Management',
+                description: 'Track shows, venues & tour schedules',
+                icon: Radio,
+                feature: 'toursAndGigs',
+                gradient: 'from-purple-500 to-pink-500',
+              },
+              {
+                title: 'Gig Calendar',
+                description: 'Manage load-ins, soundchecks & setlists',
+                icon: Calendar,
+                feature: 'toursAndGigs',
+                gradient: 'from-green-500 to-emerald-500',
+              },
+            ].map((tool, index) => (
+              <motion.button
+                key={tool.title}
+                onClick={() =>
+                  showUpgradeModal({
+                    feature: tool.feature,
+                    requiredTier: 'creator',
+                  })
+                }
+                whileHover={{ y: -4, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 + index * 0.05 }}
+                className="group relative h-full cursor-pointer overflow-hidden rounded-xl border border-gray-800 bg-gray-900 p-6 text-left transition-all duration-300 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10"
+              >
+                {/* Lock Badge */}
+                <div className="absolute right-3 top-3 rounded-full bg-gray-800 p-2">
+                  <Lock className="h-4 w-4 text-gray-400" />
+                </div>
+
+                {/* Gradient Overlay */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-10`}
+                />
+
+                <div className="relative z-10">
+                  {/* Icon */}
+                  <div
+                    className={`mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} bg-opacity-10`}
+                  >
+                    <tool.icon className={`h-7 w-7 bg-gradient-to-r ${tool.gradient} bg-clip-text text-transparent`} />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="mb-2 text-lg font-semibold text-white transition-colors group-hover:text-orange-500">
+                    {tool.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 transition-colors group-hover:text-gray-300">
+                    {tool.description}
+                  </p>
+
+                  {/* Upgrade Prompt */}
+                  <div className="mt-4 flex items-center gap-2 text-xs font-medium text-orange-500">
+                    <span>Click to learn more</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
+
         {/* Recent Activity Feed - Only show when user is loaded */}
         {user && (
           <motion.div
@@ -300,6 +403,9 @@ export default function DashboardPage() {
           </motion.div>
         )}
       </div>
+
+      {/* Upgrade Modal */}
+      <UpgradeModal isOpen={isOpen} onClose={hideUpgradeModal} {...modalProps} />
     </div>
   );
 }

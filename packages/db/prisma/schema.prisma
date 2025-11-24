@@ -104,6 +104,14 @@ model User {
   projectMemberships     ProjectMember[]
   setlistTemplates       SetlistTemplate[]
 
+  // Community Features
+  communityTracks CommunityTrack[]
+  trackLikes      TrackLike[]
+  trackPlays      TrackPlay[]
+  trackComments   TrackComment[]
+  followers       UserFollow[]     @relation("UserFollowers")
+  following       UserFollow[]     @relation("UserFollowing")
+
   @@index([email])
   @@index([stripeCustomerId])
   @@index([stripeSubscriptionId])
@@ -222,12 +230,13 @@ model Song {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
-  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project       Project?           @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  setlistItems  SetlistItem[]
-  songSplits    SongSplit[]
-  transactions  Transaction[]
-  collaborators SongCollaborator[]
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project        Project?           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  setlistItems   SetlistItem[]
+  songSplits     SongSplit[]
+  transactions   Transaction[]
+  collaborators  SongCollaborator[]
+  communityTrack CommunityTrack? // Song published to community
 
   @@index([userId])
   @@index([projectId])
@@ -1186,3 +1195,106 @@ enum TransactionStatus {
 // Force Prisma regeneration: 2025-11-24-03:30:00 UTC
 // SongRequest table migration applied to Supabase successfully
 // Force Prisma regeneration - Sun Nov 23 21:54:49 CST 2025
+
+// ====================================
+// COMMUNITY FEATURES - Added Agent 89
+// ====================================
+
+model CommunityTrack {
+  id            String   @id @default(cuid())
+  songId        String   @unique // Links to Song model
+  userId        String // Who published to community
+  audioUrl      String // Supabase Storage URL
+  audioPath     String // Storage path
+  coverUrl      String? // Optional cover art
+  waveformData  Json? // Waveform visualization data
+  genre         String? // Electronic, Rock, Hip Hop, etc.
+  mood          String? // Upbeat, Chill, Dark, etc.
+  bpm           Int?
+  duration      Int // Duration in seconds
+  isExplicit    Boolean  @default(false)
+  allowDownload Boolean  @default(true)
+  allowRemix    Boolean  @default(true)
+  publishedAt   DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  song     Song           @relation(fields: [songId], references: [id], onDelete: Cascade)
+  likes    TrackLike[]
+  plays    TrackPlay[]
+  comments TrackComment[]
+
+  @@index([userId])
+  @@index([songId])
+  @@index([publishedAt])
+  @@index([genre])
+  @@index([mood])
+}
+
+model TrackLike {
+  id               String   @id @default(cuid())
+  communityTrackId String
+  userId           String
+  createdAt        DateTime @default(now())
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  communityTrack CommunityTrack @relation(fields: [communityTrackId], references: [id], onDelete: Cascade)
+
+  @@unique([communityTrackId, userId])
+  @@index([communityTrackId])
+  @@index([userId])
+}
+
+model TrackPlay {
+  id               String    @id @default(cuid())
+  communityTrackId String
+  userId           String? // Optional - can track anonymous plays
+  ipAddress        String? // For anonymous play tracking
+  duration         Int? // How long did they listen (seconds)
+  completedAt      DateTime? // Did they finish the track?
+  createdAt        DateTime  @default(now())
+
+  user           User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  communityTrack CommunityTrack @relation(fields: [communityTrackId], references: [id], onDelete: Cascade)
+
+  @@index([communityTrackId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model TrackComment {
+  id               String   @id @default(cuid())
+  communityTrackId String
+  userId           String
+  content          String   @db.Text
+  parentId         String? // For threaded replies
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  communityTrack CommunityTrack @relation(fields: [communityTrackId], references: [id], onDelete: Cascade)
+  parent         TrackComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies        TrackComment[] @relation("CommentReplies")
+
+  @@index([communityTrackId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([createdAt])
+}
+
+model UserFollow {
+  id          String   @id @default(cuid())
+  followerId  String // User who is following
+  followingId String // User being followed
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+// Force Prisma regeneration: 2025-11-24-community-features

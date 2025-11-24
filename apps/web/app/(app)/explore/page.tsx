@@ -1,83 +1,123 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Compass, TrendingUp, Clock, Heart, Search } from 'lucide-react';
-import { useState } from 'react';
+import { Compass, TrendingUp, Clock, Heart, Search, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 import { TrackCard } from '@/components/track-card';
+import { AudioPlayer } from '@/components/audio-player';
 
-// Mock trending tracks
-const mockTrendingTracks = [
-  {
-    id: '1',
-    title: 'Neon Dreams',
-    artist: 'Community',
-    duration: 225,
-    createdAt: '1 hour ago',
-    plays: 1234,
-    coverUrl: undefined,
-    isLiked: true,
-  },
-  {
-    id: '2',
-    title: 'Cosmic Journey',
-    artist: 'Community',
-    duration: 180,
-    createdAt: '3 hours ago',
-    plays: 892,
-    coverUrl: undefined,
-  },
-  {
-    id: '3',
-    title: 'Urban Pulse',
-    artist: 'Community',
-    duration: 195,
-    createdAt: '5 hours ago',
-    plays: 567,
-    coverUrl: undefined,
-  },
-  {
-    id: '4',
-    title: 'Digital Rain',
-    artist: 'Community',
-    duration: 240,
-    createdAt: 'Yesterday',
-    plays: 445,
-    coverUrl: undefined,
-  },
-];
-
-// Example prompts
-const examplePrompts = [
-  {
-    category: 'Electronic',
-    prompts: [
-      'Synthwave track with retro 80s vibes',
-      'Dark techno with heavy bass and industrial sounds',
-      'Ambient electronic with ethereal pads',
-    ],
-  },
-  {
-    category: 'Rock',
-    prompts: [
-      'Classic rock anthem with powerful guitar solos',
-      'Progressive rock with complex time signatures',
-      'Indie rock with dreamy vocals',
-    ],
-  },
-  {
-    category: 'Hip Hop',
-    prompts: [
-      'Lo-fi hip hop beat for studying',
-      'Trap beat with heavy 808s',
-      'Boom bap with jazzy samples',
-    ],
-  },
-];
+interface CommunityTrack {
+  id: string;
+  audioUrl: string;
+  coverUrl?: string;
+  waveformData?: number[];
+  duration: number;
+  publishedAt: string;
+  song: {
+    id: string;
+    title: string;
+    description?: string;
+  };
+  user: {
+    id: string;
+    name?: string;
+    image?: string;
+  };
+  _count: {
+    likes: number;
+    plays: number;
+    comments: number;
+  };
+  isLikedByCurrentUser: boolean;
+}
 
 export default function ExplorePage() {
   const [filter, setFilter] = useState<'trending' | 'recent' | 'top'>('trending');
   const [searchQuery, setSearchQuery] = useState('');
+  const [tracks, setTracks] = useState<CommunityTrack[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedTrack, setSelectedTrack] = useState<CommunityTrack | null>(null);
+
+  // Fetch tracks
+  useEffect(() => {
+    async function fetchTracks() {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams({
+          filter,
+          limit: '20',
+        });
+
+        if (searchQuery) {
+          params.append('search', searchQuery);
+        }
+
+        const response = await fetch(`/api/community/tracks?${params}`);
+        const data = await response.json();
+
+        if (data.tracks) {
+          setTracks(data.tracks);
+        }
+      } catch (error) {
+        console.error('Error fetching tracks:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    // Debounce search
+    const timer = setTimeout(() => {
+      fetchTracks();
+    }, searchQuery ? 500 : 0);
+
+    return () => clearTimeout(timer);
+  }, [filter, searchQuery]);
+
+  // Handle like toggle
+  const handleLike = async (trackId: string) => {
+    try {
+      const response = await fetch(`/api/community/tracks/${trackId}/like`, {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Update local state
+        setTracks((prev) =>
+          prev.map((track) =>
+            track.id === trackId
+              ? {
+                  ...track,
+                  isLikedByCurrentUser: data.isLiked,
+                  _count: {
+                    ...track._count,
+                    likes: data.likeCount,
+                  },
+                }
+              : track
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
+
+  // Calculate relative time
+  const getRelativeTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+    if (diffInDays < 30) return `${Math.floor(diffInDays / 7)}w ago`;
+    return `${Math.floor(diffInDays / 30)}mo ago`;
+  };
 
   return (
     <div className="bg-background min-h-screen">
@@ -161,67 +201,91 @@ export default function ExplorePage() {
           </div>
         </div>
 
-        {/* Trending Tracks */}
-        <div>
-          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
-            <TrendingUp className="text-brand-primary h-5 w-5" />
-            {filter === 'trending'
-              ? 'Trending Now'
-              : filter === 'recent'
-                ? 'Recently Added'
-                : 'Top Rated'}
-          </h2>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {mockTrendingTracks.map((track, index) => (
-              <motion.div
-                key={track.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-              >
-                <TrackCard
-                  {...track}
-                  onPlay={() => console.log('Play', track.id)}
-                  onExtend={() => console.log('Extend', track.id)}
-                  onRemix={() => console.log('Remix', track.id)}
-                  onDownload={() => console.log('Download', track.id)}
-                />
-              </motion.div>
-            ))}
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
           </div>
-        </div>
+        )}
 
-        {/* Example Prompts */}
-        <div>
-          <h2 className="font-display mb-6 text-2xl font-bold">Popular Prompts</h2>
-
-          <div className="space-y-6">
-            {examplePrompts.map((category) => (
-              <div key={category.category}>
-                <h3 className="text-muted-foreground mb-3 text-sm font-medium uppercase tracking-wider">
-                  {category.category}
-                </h3>
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-                  {category.prompts.map((prompt, i) => (
-                    <motion.div
-                      key={i}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="border-border bg-surface hover:border-brand-primary/50 hover:bg-surface/80 cursor-pointer rounded-xl border p-4 transition-all duration-200"
-                      onClick={() => {
-                        // Would copy to clipboard or navigate to create page
-                        console.log('Use prompt:', prompt);
-                      }}
-                    >
-                      <p className="text-sm">{prompt}</p>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            ))}
+        {/* Empty State */}
+        {!loading && tracks.length === 0 && (
+          <div className="border-border bg-surface rounded-xl border p-12 text-center">
+            <Compass className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+            <h3 className="text-foreground mb-2 text-lg font-semibold">No tracks found</h3>
+            <p className="text-muted-foreground">
+              {searchQuery
+                ? 'Try adjusting your search query'
+                : 'Be the first to share your music with the community!'}
+            </p>
           </div>
-        </div>
+        )}
+
+        {/* Tracks Grid */}
+        {!loading && tracks.length > 0 && (
+          <div>
+            <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
+              <TrendingUp className="text-brand-primary h-5 w-5" />
+              {filter === 'trending'
+                ? 'Trending Now'
+                : filter === 'recent'
+                  ? 'Recently Added'
+                  : 'Top Rated'}
+            </h2>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {tracks.map((track, index) => (
+                <motion.div
+                  key={track.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                >
+                  <TrackCard
+                    id={track.id}
+                    title={track.song.title}
+                    artist={track.user.name || 'Unknown Artist'}
+                    duration={track.duration}
+                    coverUrl={track.coverUrl}
+                    waveformData={track.waveformData as number[] | undefined}
+                    createdAt={getRelativeTime(track.publishedAt)}
+                    plays={track._count.plays}
+                    isLiked={track.isLikedByCurrentUser}
+                    onPlay={() => setSelectedTrack(track)}
+                    onLike={() => handleLike(track.id)}
+                    onExtend={() => console.log('Extend', track.id)}
+                    onRemix={() => console.log('Remix', track.id)}
+                    onDownload={() => window.open(track.audioUrl, '_blank')}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Audio Player (Fixed at bottom when track selected) */}
+        {selectedTrack && (
+          <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 p-4 backdrop-blur-lg">
+            <div className="mx-auto max-w-4xl">
+              <AudioPlayer
+                trackId={selectedTrack.id}
+                audioUrl={selectedTrack.audioUrl}
+                title={selectedTrack.song.title}
+                artist={selectedTrack.user.name || 'Unknown Artist'}
+                coverUrl={selectedTrack.coverUrl}
+                waveformData={selectedTrack.waveformData as number[] | undefined}
+                duration={selectedTrack.duration}
+                onPlayComplete={() => {
+                  // Auto-play next track
+                  const currentIndex = tracks.findIndex((t) => t.id === selectedTrack.id);
+                  if (currentIndex < tracks.length - 1) {
+                    setSelectedTrack(tracks[currentIndex + 1]);
+                  }
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

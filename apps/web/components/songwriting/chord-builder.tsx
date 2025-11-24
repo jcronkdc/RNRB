@@ -15,10 +15,11 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
   rectSortingStrategy,
- useSortable } from '@dnd-kit/sortable';
+  useSortable,
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Plus, X, Music, Sparkles, GripVertical, LayoutGrid, List } from 'lucide-react';
-import { useState } from 'react';
+import { Plus, X, Music, Sparkles, GripVertical, LayoutGrid, List, Zap, TrendingUp } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
 
 type ChordBlock = {
   id: string;
@@ -153,6 +154,13 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
   const [chords, setChords] = useState<ChordBlock[]>([]);
   const [showChordPalette, setShowChordPalette] = useState(false);
   const [viewMode, setViewMode] = useState<'compact' | 'blocks'>('compact'); // Default to compact
+  const [analysis, setAnalysis] = useState<{
+    mostLikelyKey?: string;
+    confidence?: number;
+    analysis?: Array<{ chord: string; numeral: string; function: string }>;
+    suggestions?: { nextChords: string[]; reason: string };
+  } | null>(null);
+  const [analyzingChords, setAnalyzingChords] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -160,6 +168,37 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+  
+  const analyzeProgression = useCallback(async () => {
+    if (chords.length < 2) return;
+    
+    setAnalyzingChords(true);
+    try {
+      const response = await fetch('/api/chord-analyzer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chords: chords.map((c) => c.chord) }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAnalysis(data);
+      }
+    } catch (error) {
+      console.error('Chord analysis failed:', error);
+    } finally {
+      setAnalyzingChords(false);
+    }
+  }, [chords]);
+  
+  // Auto-analyze chords when progression changes
+  useEffect(() => {
+    if (chords.length >= 2) {
+      analyzeProgression();
+    } else {
+      setAnalysis(null);
+    }
+  }, [chords, analyzeProgression]);
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -337,25 +376,88 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
       </Card>
 
       {chords.length > 0 && (
-        <div className="rnrb-card to-brand-primary/5 border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-500/10">
-              <Music className="h-5 w-5 text-green-500" />
-            </div>
-            <div className="flex-1">
-              <p className="text-brand-primary mb-2 text-sm font-semibold">Your Progression:</p>
-              <p className="font-display text-foreground text-2xl font-bold leading-relaxed">
-                {chords.map((c) => c.chord).join(' → ')}
-              </p>
-              <p className="text-muted-foreground mt-2 text-xs">
-                {chords.length} {chords.length === 1 ? 'chord' : 'chords'} •
-                {viewMode === 'compact'
-                  ? ' Drag buttons to reorder'
-                  : ' Drag blocks above to reorder'}
-              </p>
+        <>
+          <div className="rnrb-card to-brand-primary/5 border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 p-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-500/10">
+                <Music className="h-5 w-5 text-green-500" />
+              </div>
+              <div className="flex-1">
+                <p className="text-brand-primary mb-2 text-sm font-semibold">Your Progression:</p>
+                <p className="font-display text-foreground text-2xl font-bold leading-relaxed">
+                  {chords.map((c) => c.chord).join(' → ')}
+                </p>
+                <p className="text-muted-foreground mt-2 text-xs">
+                  {chords.length} {chords.length === 1 ? 'chord' : 'chords'} •
+                  {viewMode === 'compact'
+                    ? ' Drag buttons to reorder'
+                    : ' Drag blocks above to reorder'}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+          
+          {/* Chord Analysis */}
+          {analysis && analysis.mostLikelyKey && (
+            <div className="rnrb-card border-2 border-purple-500/20 bg-gradient-to-r from-purple-500/5 to-blue-500/5 p-6 space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-500/10">
+                  <Zap className="h-5 w-5 text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-purple-400 mb-2 text-sm font-semibold">AI Analysis</p>
+                  <p className="text-foreground text-lg font-bold">
+                    Key: {analysis.mostLikelyKey}
+                    <span className="ml-2 text-sm text-gray-400">
+                      ({analysis.confidence}% confidence)
+                    </span>
+                  </p>
+                  
+                  {/* Chord Functions */}
+                  {analysis.analysis && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {analysis.analysis.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-purple-500/10 border border-purple-500/30 rounded-lg px-3 py-1.5"
+                        >
+                          <span className="text-purple-300 font-bold">{item.chord}</span>
+                          <span className="text-gray-400 text-xs ml-2">
+                            ({item.numeral} - {item.function})
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Next Chord Suggestions */}
+              {analysis.suggestions && analysis.suggestions.nextChords.length > 0 && (
+                <div className="border-t border-purple-500/20 pt-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <TrendingUp className="h-4 w-4 text-blue-400" />
+                    <p className="text-blue-400 text-sm font-semibold">
+                      Suggested Next Chords:
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {analysis.suggestions.nextChords.map((suggestion, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => addChord(suggestion)}
+                        className="font-display border-blue-500/40 bg-blue-500/10 text-blue-300 hover:border-blue-500/60 hover:bg-blue-500/20 rounded-lg border-2 px-4 py-2 text-base font-bold shadow-md transition-all duration-200 hover:scale-105"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-gray-500 text-xs mt-2">{analysis.suggestions.reason}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

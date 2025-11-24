@@ -11,6 +11,9 @@ import {
   Check,
   Loader2,
   AlertCircle,
+  Undo2,
+  Redo2,
+  LayoutTemplate,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect, useRef } from 'react';
@@ -25,6 +28,11 @@ const CollaborativeVisualBuilder = dynamic(
     import('@/components/songwriting/collaborative-visual-builder').then(
       (m) => m.CollaborativeVisualBuilder
     ),
+  { ssr: false }
+);
+
+const SongTemplatePicker = dynamic(
+  () => import('@/components/songwriting/song-template-picker').then((m) => m.SongTemplatePicker),
   { ssr: false }
 );
 
@@ -63,10 +71,64 @@ export default function SongwritingPage() {
   const [lyrics, setLyrics] = useState('');
   const [songTitle, setSongTitle] = useState('Untitled Song');
   const [isFirstSave, setIsFirstSave] = useState(true);
+  const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  
+  // Undo/Redo state management
+  const [history, setHistory] = useState<Array<{ blocks: SongBlock[]; lyrics: string }>>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+  
   const { user, loading } = useRequireAuth({ redirectIfNoUser: false });
   const { toasts, removeToast, success, error: showError } = useToast();
   const previousSavedRef = useRef(false);
 
+  // Save to history when blocks or lyrics change
+  const saveToHistory = () => {
+    const newState = { blocks: songBlocks, lyrics };
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(newState);
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  };
+  
+  // Undo function
+  const undo = () => {
+    if (historyIndex > 0) {
+      const newIndex = historyIndex - 1;
+      setHistoryIndex(newIndex);
+      const state = history[newIndex];
+      setSongBlocks(state.blocks);
+      setLyrics(state.lyrics);
+    }
+  };
+  
+  // Redo function
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      const newIndex = historyIndex + 1;
+      setHistoryIndex(newIndex);
+      const state = history[newIndex];
+      setSongBlocks(state.blocks);
+      setLyrics(state.lyrics);
+    }
+  };
+  
+  // Keyboard shortcuts for undo/redo
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          redo();
+        } else {
+          undo();
+        }
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [historyIndex, history]);
+  
   // Initialize auto-save
   const {
     songData,
@@ -208,10 +270,55 @@ export default function SongwritingPage() {
                   />
                   <SaveStatusIndicator />
                 </div>
-                <p className="flex flex-wrap items-center gap-2 text-sm text-gray-300">
-                  <Sparkles className="h-4 w-4 shrink-0 text-orange-500" />
-                  <span>Collaborative songwriting with real-time auto-save</span>
-                </p>
+                <div className="flex flex-wrap items-center gap-2 text-sm">
+                  <p className="flex items-center gap-2 text-gray-300">
+                    <Sparkles className="h-4 w-4 shrink-0 text-orange-500" />
+                    <span>Collaborative songwriting with real-time auto-save</span>
+                  </p>
+                  
+                  {/* Undo/Redo Buttons */}
+                  {user && (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={undo}
+                        disabled={historyIndex <= 0}
+                        className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-medium transition ${
+                          historyIndex > 0
+                            ? 'border-gray-700 bg-gray-800/50 text-gray-300 hover:bg-gray-700'
+                            : 'border-gray-800 bg-gray-900/50 text-gray-600 cursor-not-allowed'
+                        }`}
+                        title="Undo (Cmd+Z)"
+                      >
+                        <Undo2 className="h-3 w-3" />
+                        <span className="hidden sm:inline">Undo</span>
+                      </button>
+                      <button
+                        onClick={redo}
+                        disabled={historyIndex >= history.length - 1}
+                        className={`flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs font-medium transition ${
+                          historyIndex < history.length - 1
+                            ? 'border-gray-700 bg-gray-800/50 text-gray-300 hover:bg-gray-700'
+                            : 'border-gray-800 bg-gray-900/50 text-gray-600 cursor-not-allowed'
+                        }`}
+                        title="Redo (Cmd+Shift+Z)"
+                      >
+                        <Redo2 className="h-3 w-3" />
+                        <span className="hidden sm:inline">Redo</span>
+                      </button>
+                    </div>
+                  )}
+                  
+                  {/* Template Picker Button */}
+                  {user && activeView === 'structure' && (
+                    <button
+                      onClick={() => setShowTemplatePicker(true)}
+                      className="flex items-center gap-1.5 rounded-lg border border-blue-500/30 bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-300 transition hover:bg-blue-500/20"
+                    >
+                      <LayoutTemplate className="h-3 w-3" />
+                      <span className="hidden sm:inline">Use Template</span>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
             {user && (
@@ -445,6 +552,17 @@ export default function SongwritingPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Song Template Picker Modal */}
+      {showTemplatePicker && (
+        <SongTemplatePicker
+          onSelectTemplate={(blocks) => {
+            setSongBlocks(blocks);
+            saveToHistory();
+          }}
+          onClose={() => setShowTemplatePicker(false)}
+        />
+      )}
 
       {/* Toast Notifications */}
       <ToastNotification toasts={toasts} onRemove={removeToast} />

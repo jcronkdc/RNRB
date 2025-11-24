@@ -30,6 +30,7 @@ interface TrackCardProps {
   plays?: number;
   isLiked?: boolean;
   onPlay?: () => void;
+  onLike?: () => void;
   onExtend?: () => void;
   onRemix?: () => void;
   onDownload?: () => void;
@@ -48,6 +49,7 @@ export function TrackCard({
   plays = 0,
   isLiked = false,
   onPlay,
+  onLike,
   onExtend,
   onRemix,
   onDownload,
@@ -103,7 +105,10 @@ export function TrackCard({
 
         {/* Like Button */}
         <button
-          onClick={() => setLiked(!liked)}
+          onClick={() => {
+            setLiked(!liked);
+            onLike?.();
+          }}
           className="bg-background/80 hover:bg-background absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-sm transition-all duration-200"
         >
           <Heart
