@@ -547,14 +547,15 @@ model Show {
 }
 
 model Setlist {
-  id        String        @id @default(cuid())
-  showId    String        @unique
-  name      String?
-  notes     String?
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  show      Show          @relation(fields: [showId], references: [id], onDelete: Cascade)
-  items     SetlistItem[]
+  id           String        @id @default(cuid())
+  showId       String        @unique
+  name         String?
+  notes        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  show         Show          @relation(fields: [showId], references: [id], onDelete: Cascade)
+  items        SetlistItem[]
+  songRequests SongRequest[]
 }
 
 model SetlistItem {
@@ -571,6 +572,25 @@ model SetlistItem {
 
   @@index([setlistId])
   @@index([songId])
+}
+
+model SongRequest {
+  id              String            @id @default(cuid())
+  setlistId       String
+  songTitle       String
+  requestedBy     String
+  email           String?
+  message         String?
+  dedication      String?
+  status          SongRequestStatus @default(pending)
+  responseMessage String?
+  respondedAt     DateTime?
+  createdAt       DateTime          @default(now())
+  setlist         Setlist           @relation(fields: [setlistId], references: [id], onDelete: Cascade)
+
+  @@index([setlistId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model SetlistTemplate {
@@ -1146,6 +1166,12 @@ enum TransactionType {
   ticket_sales
   donation
   other
+}
+
+enum SongRequestStatus {
+  pending
+  approved
+  rejected
 }
 
 enum TransactionStatus {

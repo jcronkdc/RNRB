@@ -22,19 +22,29 @@ type Venue = {
   state?: string;
 };
 
+type Tour = {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+};
+
 export default function NewShowPage() {
   const { user, loading } = useRequireAuth();
   const router = useRouter();
   const { toasts, removeToast, success, error } = useToast();
 
   const [venues, setVenues] = useState<Venue[]>([]);
+  const [tours, setTours] = useState<Tour[]>([]);
   const [loadingVenues, setLoadingVenues] = useState(false);
+  const [loadingTours, setLoadingTours] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
     date: '',
     venueId: '',
+    tourId: '',
     doors_time: '',
     soundcheck_time: '',
     show_time: '',
@@ -48,6 +58,7 @@ export default function NewShowPage() {
   useEffect(() => {
     if (user) {
       loadVenues();
+      loadTours();
     }
   }, [user]);
 
@@ -66,6 +77,25 @@ export default function NewShowPage() {
     }
   };
 
+  const loadTours = async () => {
+    setLoadingTours(true);
+    try {
+      const response = await fetch('/api/tours');
+      if (response.ok) {
+        const data = await response.json();
+        // Only show active/planning tours
+        const activeTours = data.filter(
+          (tour: Tour) => !['completed', 'cancelled'].includes(tour.status)
+        );
+        setTours(activeTours);
+      }
+    } catch (err) {
+      console.error('Error loading tours:', err);
+    } finally {
+      setLoadingTours(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -75,6 +105,7 @@ export default function NewShowPage() {
         name: formData.name,
         date: formData.date,
         venueId: formData.venueId || undefined,
+        tourId: formData.tourId || undefined,
         doors_time: formData.doors_time || undefined,
         soundcheck_time: formData.soundcheck_time || undefined,
         show_time: formData.show_time || undefined,
@@ -226,6 +257,28 @@ export default function NewShowPage() {
                 <Link href="/venues" className="text-brand-primary hover:underline">
                   Add a new venue
                 </Link>
+              </p>
+            </div>
+
+            {/* Tour */}
+            <div>
+              <label className="mb-2 block text-sm font-medium">Tour (Optional)</label>
+              <select
+                value={formData.tourId}
+                onChange={(e) => setFormData({ ...formData, tourId: e.target.value })}
+                className="rnrb-input w-full rounded-xl"
+                disabled={loadingTours}
+              >
+                <option value="">Not part of a tour</option>
+                {tours.map((tour) => (
+                  <option key={tour.id} value={tour.id}>
+                    {tour.name} ({new Date(tour.startDate).toLocaleDateString()} -{' '}
+                    {new Date(tour.endDate).toLocaleDateString()})
+                  </option>
+                ))}
+              </select>
+              <p className="text-muted-foreground mt-1 text-xs">
+                Link this show to a multi-show tour for better organization
               </p>
             </div>
 

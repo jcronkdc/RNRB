@@ -48,6 +48,11 @@ const SetlistTemplatesModal = dynamic(
   { ssr: false }
 );
 
+const SongRequestManager = dynamic(
+  () => import('@/components/SongRequestManager').then((m) => m.SongRequestManager),
+  { ssr: false }
+);
+
 type Setlist = {
   id: string;
   name: string;
@@ -98,6 +103,7 @@ export default function SetlistsPage() {
   const [loadingShows, setLoadingShows] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [linkingShow, setLinkingShow] = useState(false);
+  const [showRequestManager, setShowRequestManager] = useState(false);
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -325,11 +331,33 @@ export default function SetlistsPage() {
               </div>
             )}
 
-            <Button className="flex items-center gap-2">
-              <Edit className="h-4 w-4" />
-              Rename Setlist
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowRequestManager(!showRequestManager)}
+                className="flex items-center gap-2"
+              >
+                <Users className="h-4 w-4" />
+                Song Requests
+              </Button>
+              <Button className="flex items-center gap-2">
+                <Edit className="h-4 w-4" />
+                Rename Setlist
+              </Button>
+            </div>
           </div>
+
+          {/* Song Request Manager (when toggled) */}
+          {showRequestManager && (
+            <div className="mb-8">
+              <Card className="rnrb-card p-6">
+                <SongRequestManager
+                  setlistId={selectedSetlist.id}
+                  projectId={project.id || `temp_${slug}`}
+                />
+              </Card>
+            </div>
+          )}
 
           {/* Collaborative Builder */}
           <CollaborativeSetlistBuilder
