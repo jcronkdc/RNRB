@@ -19,17 +19,20 @@
 
 ### Active Blockages 🔴
 ```
-#1: Password registration 500 → NextAuth routing error (NOT DATABASE_URL)
+#1: Password registration 500 → Unknown database or Prisma error
 #2: Security breach - OAuth + Resend keys exposed (commit c79c7354)
 ```
 
-**Blockage #1 Detail:**
-- `DATABASE_URL` ✅ CONFIRMED present in Vercel (user verified)
-- `POST /api/auth/register` → 500 error
-- Vercel logs show: "Cannot read properties of undefined (reading 'POST')"
-- Location: `.next/server/chunks/5647.js:1:4055`
-- **Root cause:** NextAuth catch-all route `/api/auth/[...nextauth]` conflicts with `/api/auth/register`
-- **Solution:** Move registration endpoint outside `/api/auth` path (e.g., `/api/register`)
+**Blockage #1 Detail - PARTIALLY FIXED:**
+- ✅ DATABASE_URL confirmed present in Vercel (user verified)
+- ✅ Moved `/api/auth/register` → `/api/register` (NextAuth conflict resolved)
+- ✅ Fixed PostHog version `1.297.3` → `1.298.0` (deployment blocker resolved)
+- ✅ Deployment READY (commit `a7afcb3b`)
+- ✅ Endpoint accessible (`x-matched-path: /api/register`)
+- 🔴 POST request still returns 500 with `{"error":"Failed to create account"}`
+- 🔴 Production logs not accessible via Vercel CLI (timeout after 5mins)
+- 🔴 Error is caught by try-catch, real cause unknown (Prisma? bcryptjs? Database connection?)
+- **Next step:** Need to check Vercel dashboard logs or add more detailed error logging
 
 ### Auth Pathways 🟡
 ```
