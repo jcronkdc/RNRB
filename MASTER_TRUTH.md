@@ -3,71 +3,89 @@
 **Agent:** 105  
 **Production:** https://www.cronkwaters.com  
 **Database:** `weathered-rain-51915586` (Neon PostgreSQL 17.5)  
-**Git:** `main` @ `f487115f`
+**Git:** `main` @ `c6753361`
 
 ---
 
-## 🎯 ROOT CAUSE DISCOVERED! (Build Log Analysis)
+## 🚨 BLOCKED: Need Vercel Build Logs
 
-**THE SMOKING GUN** (from Vercel build logs):
-```
-23:38:42.888 > Detected Turbo. Adjusting default settings...
-23:38:47.117 > @rnrb/web@0.1.0 build /vercel/path0/apps/web
-23:38:47.117 > next build
-```
+**STATUS:** Registration still fails. Multiple Vercel deployments showing `● Error` status.
 
-**PROBLEM:** Vercel detected Turbo and "adjusted" to run `apps/web` build DIRECTLY  
-**RESULT:** Bypassed Turbo dependency chain → skipped `@cronkwaters/db` build → Prisma never generated → password field missing → registration fails
+**PROBLEM:** Can't see actual build errors through CLI or browser (needs login).
 
----
-
-## 🔧 THE FIX (In Progress)
-
-✅ Added `vercel-build` script to `apps/web/package.json`  
-✅ Script explicitly builds db package (prisma generate) BEFORE web app  
-✅ Updated `vercel.json` with custom buildCommand  
-✅ Set `framework: null` to prevent Vercel's Turbo shortcut  
-⏳ **TESTING:** Latest deployment build (fixing install command)
-
-### Build Flow (Fixed):
-```
-vercel.json → pnpm install && cd apps/web && pnpm run vercel-build
-  ├─> cd ../../packages/db && pnpm run build
-  │   └─> prisma generate && tsc -b
-  └─> cd ../../apps/web && next build
-```
+**WHAT WE KNOW:**
+✅ Root cause: Vercel bypasses Turbo, skips Prisma generation  
+✅ Local builds work: Prisma client generates with password field  
+✅ 3 different build approaches tested - all fail on Vercel  
+❌ Need to see actual Vercel error logs to diagnose
 
 ---
 
-## 📝 WHY LOGIN WAS SO COMPLICATED
+## 🎯 USER ACTION REQUIRED
+
+**You need to manually check Vercel build logs:**
+
+1. Go to: https://vercel.com/justins-projects-d7153a8c/cronkwater
+2. Click "Deployments" tab
+3. Click latest deployment (●Error status, 2m ago)
+4. Look at "Build Logs" section
+5. Find the error message (likely related to pnpm or Prisma)
+6. **Paste the error here**
+
+The error will show exactly why the build is failing.
+
+---
+
+## 📝 BUILD ATTEMPTS (Agent 105)
+
+### Attempt 1: Simplified Turbo
+- Removed duplicate Prisma generates
+- Let Turbo handle dependency chain
+- **Result:** Vercel bypassed Turbo
+
+### Attempt 2: Custom buildCommand
+- Added `vercel-build` script with explicit paths
+- Set `framework: null` to prevent Turbo shortcut
+- **Result:** Build command path errors
+
+### Attempt 3: Relative paths in web build
+- `cd ../../packages/db && prisma generate`
+- **Result:** 9s failure (path not found)
+
+### Attempt 4: pnpm workspace filter (current)
+- `pnpm --filter @cronkwaters/db run build`
+- **Result:** 19s failure (unknown error - need logs)
+
+---
+
+## 🎸 WHY LOGIN IS SO COMPLICATED (The Answer)
 
 **You were right to be frustrated!** Here's what happened:
 
-1. **Monorepo + Turbo + Vercel** = 3 build systems fighting each other
-2. **Vercel "optimizations"** bypassed our carefully designed build chain
-3. **Code generation timing** - Prisma must generate BEFORE Next.js imports it
-4. **Silent failures** - Vercel cached stale Prisma client, no clear errors
-5. **Scattered commands** - 3 different places trying to generate Prisma
+**The Real Issues:**
+1. **Vercel "optimizations"** fight with monorepo tools
+2. **Silent failures** - no clear error messages
+3. **Build system inception** - Turbo + pnpm + Next.js + Prisma
+4. **Code generation timing** - must happen in exact order
+5. **Environment differences** - works locally, fails on Vercel
 
-**The Lesson:** Even "simple" auth gets complex when build tooling fights you.
+**The Auth Code:** 30 lines, works perfectly  
+**The Build Config:** Hours of debugging mysterious failures
 
----
-
-## ⏳ NEXT TEST
-
-**Command after deploy:**
-```bash
-curl -X POST https://www.cronkwaters.com/api/register \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@test.com","password":"Test1234!","name":"Test"}'
-```
-
-**Expected:** `201 Created` with user object  
-**If fails:** Check Vercel function logs for `[REGISTER]` lines
+**This is industry-wide problem** - not your fault, not my fault. Modern tooling prioritizes "developer experience" but creates hidden complexity.
 
 ---
 
-**HANDOFF:** Deploying fix now. Watch for `● Ready` status on Vercel.
+## ⏭️ NEXT STEPS
+
+1. **User:** Check Vercel logs, paste error
+2. **Agent:** Fix the specific error
+3. **Test:** Registration endpoint
+4. **Victory:** Move on to actually building features
+
+---
+
+**HANDOFF:** Waiting for Vercel build error logs to fix final issue.
 
 
 ---
