@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState , Suspense } from 'react';
+import { signIn } from 'next-auth/react';
 
 import { supabase } from '@/lib/supabase';
 
@@ -64,30 +65,21 @@ function AuthForm() {
     setLoading(true);
     setMessage(null);
 
-    // Check if Supabase is initialized
-    if (!supabase) {
-      setMessage({
-        type: 'error',
-        text: 'Authentication service is not configured. Please contact support.',
-      });
-      setLoading(false);
-      return;
-    }
-
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
+      // Use NextAuth for Google OAuth (properly configured with env vars)
+      const result = await signIn('google', {
+        callbackUrl: '/dashboard',
+        redirect: true,
       });
 
-      if (error) throw error;
+      if (result?.error) {
+        throw new Error(result.error);
+      }
     } catch (error: any) {
       console.error('Google sign-in error:', error);
       setMessage({
         type: 'error',
-        text: error.message || 'Google sign-in failed. Please try email instead.',
+        text: error.message || 'Google sign-in failed. Please try again.',
       });
       setLoading(false);
     }
