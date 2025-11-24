@@ -1181,4 +1181,5 @@ enum TransactionStatus {
   failed
   cancelled
 }
-# Prisma schema last updated: Sun Nov 23 21:06:43 CST 2025
+
+// Schema last updated: Sun Nov 23 21:06:43 CST 2025
