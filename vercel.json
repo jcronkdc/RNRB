@@ -1,5 +1,5 @@
 {
-  "installCommand": "pnpm install --no-frozen-lockfile",
+  "installCommand": "pnpm install",
   "buildCommand": "cd packages/db && prisma migrate deploy && prisma generate && cd ../.. && pnpm build",
   "framework": null,
   "ignoreCommand": "git diff HEAD^ HEAD --quiet ."
