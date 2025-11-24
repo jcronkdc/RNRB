@@ -11,6 +11,9 @@ import {
   Share2,
   Sparkles,
   Edit,
+  Link as LinkIcon,
+  ExternalLink,
+  X,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -48,6 +51,29 @@ type Setlist = {
   songs: string[]; // Array of song IDs
   notes?: string;
   created_at: string;
+  showId?: string;
+  show?: {
+    id: string;
+    name: string;
+    date: string;
+    venue?: {
+      name: string;
+      city?: string;
+    };
+  };
+};
+
+type Show = {
+  id: string;
+  name: string;
+  date: string;
+  venue?: {
+    id: string;
+    name: string;
+    city?: string;
+    state?: string;
+  };
+  status: string;
 };
 
 export default function SetlistsPage() {
@@ -62,6 +88,10 @@ export default function SetlistsPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [showSpotifyImport, setShowSpotifyImport] = useState(false);
   const [showGenerator, setShowGenerator] = useState(false);
+  const [shows, setShows] = useState<Show[]>([]);
+  const [loadingShows, setLoadingShows] = useState(false);
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [linkingShow, setLinkingShow] = useState(false);
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -111,15 +141,103 @@ export default function SetlistsPage() {
     console.log('Saving setlist with songs:', songs);
   };
 
-  const handleSpotifyImport = (importedSongs: any[]) => {
-    console.log('Imported songs from Spotify:', importedSongs);
-    // Would integrate with setlist builder to add songs
+  const handleSpotifyImport = (importedCount: number) => {
+    console.log(`Imported ${importedCount} songs from Spotify`);
+    // Would refresh project songs list
   };
 
   const handleGenerateSetlist = (generatedSongs: any[]) => {
     console.log('Generated setlist:', generatedSongs);
     // Would create new setlist with generated songs
   };
+
+  const loadShows = async () => {
+    setLoadingShows(true);
+    try {
+      const response = await fetch('/api/shows');
+      if (response.ok) {
+        const data = await response.json();
+        // Only show upcoming shows (future dates)
+        const upcoming = data.filter((show: Show) => {
+          const showDate = new Date(show.date);
+          return showDate >= new Date() && show.status !== 'cancelled';
+        });
+        setShows(upcoming);
+      }
+    } catch (err) {
+      console.error('Error loading shows:', err);
+    } finally {
+      setLoadingShows(false);
+    }
+  };
+
+  const handleLinkToShow = async (showId: string) => {
+    if (!selectedSetlist) return;
+    
+    setLinkingShow(true);
+    try {
+      const response = await fetch(`/api/shows/${showId}/setlist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          setlistId: selectedSetlist.id,
+        }),
+      });
+
+      if (response.ok) {
+        const show = shows.find((s) => s.id === showId);
+        if (show) {
+          setSelectedSetlist({
+            ...selectedSetlist,
+            showId: show.id,
+            show: {
+              id: show.id,
+              name: show.name,
+              date: show.date,
+              venue: show.venue,
+            },
+          });
+        }
+        setShowLinkModal(false);
+      } else {
+        alert('Failed to link setlist to show');
+      }
+    } catch (err) {
+      console.error('Error linking to show:', err);
+      alert('Error linking setlist to show');
+    } finally {
+      setLinkingShow(false);
+    }
+  };
+
+  const handleUnlinkShow = async () => {
+    if (!selectedSetlist?.showId) return;
+
+    try {
+      const response = await fetch(`/api/shows/${selectedSetlist.showId}/setlist`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setSelectedSetlist({
+          ...selectedSetlist,
+          showId: undefined,
+          show: undefined,
+        });
+      } else {
+        alert('Failed to unlink show');
+      }
+    } catch (err) {
+      console.error('Error unlinking show:', err);
+      alert('Error unlinking show');
+    }
+  };
+
+  useEffect(() => {
+    if (selectedSetlist && !showLinkModal) {
+      loadShows();
+    }
+  }, [selectedSetlist]);
 
   // If viewing/editing a setlist
   if (selectedSetlist) {
@@ -134,6 +252,47 @@ export default function SetlistsPage() {
               </Button>
               <h1 className="font-display mb-2 text-4xl font-bold">{selectedSetlist.name}</h1>
               <p className="text-muted-foreground">Collaborative setlist builder</p>
+              
+              {/* Linked Show Display */}
+              {selectedSetlist.show ? (
+                <div className="mt-4 inline-flex items-center gap-2 rounded-xl border border-brand-primary/30 bg-brand-primary/10 px-4 py-2">
+                  <Calendar className="h-4 w-4 text-brand-primary" />
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/shows`}
+                      className="text-sm font-medium hover:text-brand-primary transition"
+                    >
+                      {selectedSetlist.show.name}
+                    </Link>
+                    <span className="text-muted-foreground text-xs">
+                      •{' '}
+                      {new Date(selectedSetlist.show.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                      {selectedSetlist.show.venue && ` • ${selectedSetlist.show.venue.name}`}
+                    </span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleUnlinkShow}
+                    className="ml-2 h-6 w-6 p-0 hover:text-red-500"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => setShowLinkModal(true)}
+                  className="mt-4 flex items-center gap-2"
+                >
+                  <LinkIcon className="h-4 w-4" />
+                  Link to Show
+                </Button>
+              )}
             </div>
 
             {/* Presence Indicator */}
@@ -173,6 +332,87 @@ export default function SetlistsPage() {
             }}
           />
         </div>
+
+        {/* Link to Show Modal */}
+        {showLinkModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full max-w-2xl"
+            >
+              <Card className="rnrb-card p-6">
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="font-display text-2xl font-bold">Link Setlist to Show</h2>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowLinkModal(false)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {loadingShows ? (
+                  <div className="py-12 text-center">
+                    <p className="text-muted-foreground">Loading upcoming shows...</p>
+                  </div>
+                ) : shows.length === 0 ? (
+                  <div className="py-12 text-center">
+                    <Calendar className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
+                    <p className="text-muted-foreground mb-4">No upcoming shows scheduled</p>
+                    <Link href="/shows/new">
+                      <Button className="rnrb-button-primary">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Create a Show
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="max-h-96 space-y-3 overflow-y-auto">
+                    {shows.map((show) => (
+                      <button
+                        key={show.id}
+                        onClick={() => handleLinkToShow(show.id)}
+                        disabled={linkingShow}
+                        className="rnrb-card hover:border-brand-primary/50 w-full p-4 text-left transition disabled:opacity-50"
+                      >
+                        <div className="mb-2 flex items-start justify-between">
+                          <h3 className="font-semibold">{show.name}</h3>
+                          <LinkIcon className="text-muted-foreground h-4 w-4 shrink-0" />
+                        </div>
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-3.5 w-3.5" />
+                            <span>
+                              {new Date(show.date).toLocaleDateString('en-US', {
+                                weekday: 'short',
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                              })}
+                            </span>
+                          </div>
+                          {show.venue && (
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-3.5 w-3.5" />
+                              <span>
+                                {show.venue.name}
+                                {show.venue.city && ` • ${show.venue.city}`}
+                                {show.venue.state && `, ${show.venue.state}`}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </Card>
+            </motion.div>
+          </div>
+        )}
       </div>
     );
   }
@@ -327,17 +567,16 @@ export default function SetlistsPage() {
           <SpotifyImportModal
             projectId={project.id || `temp_${slug}`}
             onClose={() => setShowSpotifyImport(false)}
-            onImport={handleSpotifyImport}
+            onImportComplete={handleSpotifyImport}
           />
         )}
 
         {/* Setlist Generator Modal */}
         {showGenerator && user && (
           <SetlistGeneratorModal
-            projectSlug={slug}
-            projectSongs={projectSongs}
+            projectId={project.id || `temp_${slug}`}
             onClose={() => setShowGenerator(false)}
-            onGenerate={handleGenerateSetlist}
+            onGenerated={handleGenerateSetlist}
           />
         )}
 
