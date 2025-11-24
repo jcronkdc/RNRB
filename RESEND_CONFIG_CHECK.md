@@ -7,12 +7,14 @@
 I found your Resend configuration in `.env.production`:
 
 ```bash
-EMAIL_SERVER_URL="smtp://resend:re_ZmHYNEjV_***@smtp.resend.com:587"
+EMAIL_SERVER_URL="smtp://resend:REDACTED_API_KEY@smtp.resend.com:587"
 EMAIL_FROM="onboarding@resend.dev"
 EMAIL_SERVER_HOST="smtp.resend.com"
 EMAIL_SERVER_USER="resend"
 EMAIL_PROVIDER="resend"
 ```
+
+⚠️ **SECURITY NOTE:** Original API key exposed in git history - has been redacted. See `🚨_SECURITY_BREACH_IMMEDIATE_ACTION_REQUIRED.md` for instructions.
 
 ---
 
@@ -114,9 +116,10 @@ Sender Name: Rock N' Roll Basement
 Host: smtp.resend.com
 Port: 587 (or 465)
 Username: resend
-Password: re_ZmHYNEjV_A7QDySQJXSM1fS6XKVQLdrcx
-Encryption: STARTTLS (for 587) or SSL/TLS (for 465)
+Password: [your API key]
 ```
+
+⚠️ **SECURITY NOTE:** Use NEW API key, not the exposed one. Generate at https://resend.com/api-keys
 
 ### **Step 2B: If Resend IS configured**
 
@@ -135,8 +138,9 @@ Test it:
 ### **Quick Setup:**
 
 1. **Get your Resend API Key:**
-   - From your `.env.production`: `re_ZmHYNEjV_A7QDySQJXSM1fS6XKVQLdrcx`
-   - Or create new one at: https://resend.com/api-keys
+   - ⚠️ **Previous API key exposed - generate NEW key at:** https://resend.com/api-keys
+   - Delete exposed key: `re_ZmH***` (REDACTED)
+   - Create new API key and use that instead
 
 2. **Add to Supabase:**
 

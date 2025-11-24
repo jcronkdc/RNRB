@@ -4,6 +4,7 @@ import { AblyProvider } from '@/components/ably/ably-provider';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { NavBar } from '@/components/NavBar';
 import { PostHogProvider } from '@/components/posthog';
+import { SessionProvider } from '@/components/session-provider';
 import './globals.css';
 
 export const viewport: Viewport = {
@@ -90,12 +91,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <ErrorBoundary>
-          <PostHogProvider>
-            <AblyProvider>
-              <NavBar />
-              {children}
-            </AblyProvider>
-          </PostHogProvider>
+          <SessionProvider>
+            <PostHogProvider>
+              <AblyProvider>
+                <NavBar />
+                {children}
+              </AblyProvider>
+            </PostHogProvider>
+          </SessionProvider>
         </ErrorBoundary>
       </body>
     </html>
