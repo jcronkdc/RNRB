@@ -1,6 +1,6 @@
 {
-  "buildCommand": "pnpm install && pnpm build",
-  "framework": "nextjs",
+  "buildCommand": "cd apps/web && pnpm run vercel-build",
+  "framework": null,
   "outputDirectory": "apps/web/.next",
   "ignoreCommand": "git diff HEAD^ HEAD --quiet ."
 }
