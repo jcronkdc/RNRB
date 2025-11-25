@@ -46,7 +46,8 @@ export default function ProjectsPage() {
       const loadProjects = async () => {
         setLoadingProjects(true);
         try {
-          const response = await fetch(`/api/projects?userId=${user.id}`);
+          // No need to send userId - server gets it from NextAuth session
+          const response = await fetch('/api/projects');
           if (response.ok) {
             const data = await response.json();
             setProjects(data);

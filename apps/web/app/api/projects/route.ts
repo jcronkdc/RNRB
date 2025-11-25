@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
 /**
@@ -8,20 +9,13 @@ import { db } from '@/lib/db';
  */
 export async function GET(req: NextRequest) {
   try {
-    // Get user from Supabase auth
-    const authHeader = req.headers.get('authorization');
-    if (!authHeader) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Get authenticated user from NextAuth
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    // Extract user ID from token (Supabase format)
-    // For now, we'll use a simpler approach - get from cookie
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
-    }
+    const userId = session.user.id;
 
     // Get all projects where user is a member
     const projects = await db.project.findMany({
@@ -86,9 +80,16 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
+    // Get authenticated user from NextAuth
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
+    const userId = session.user.id;
+
     const body = await req.json();
     const {
-      userId,
       orgId,
       name,
       description,
@@ -98,10 +99,6 @@ export async function POST(req: NextRequest) {
       genre,
       targetReleaseDate,
     } = body;
-
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
-    }
 
     if (!name || !name.trim()) {
       return NextResponse.json({ error: 'Project name is required' }, { status: 400 });
