@@ -190,10 +190,10 @@ function getAuthConfig(): NextAuthOptions {
   };
 }
 
-// Export handlers and auth functions directly from NextAuth instance
-// In NextAuth v4, NextAuth() returns { handlers: { GET, POST }, auth, signIn, signOut }
+// Export auth functions directly from NextAuth instance
+// In NextAuth v4, NextAuth() returns { GET, POST, auth, signIn, signOut } directly
 const authInstance = NextAuth(getAuthConfig());
-export const handlers = authInstance.handlers;
+export const handlers = { GET: authInstance.GET, POST: authInstance.POST };
 export const auth = authInstance.auth;
 export const signIn = authInstance.signIn;
 export const signOut = authInstance.signOut;
