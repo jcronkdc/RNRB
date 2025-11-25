@@ -1,9 +1,10 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { Shield, Users, FileCheck, AlertCircle, Check, Plus, X, PieChart } from 'lucide-react';
+import { Shield, Users, FileCheck, AlertCircle, Check, Plus, X, PieChart, Music } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { SplitSheetGenerator } from './split-sheet-generator';
+import { AudioUploader } from './audio-uploader';
 
 export type PRO = 
   | 'ASCAP' 
@@ -54,8 +55,12 @@ export type CopyrightInfo = {
 type CopyrightManagerProps = {
   songId?: string;
   songTitle?: string;
+  audioUrl?: string;
+  audioPath?: string;
   initialData?: CopyrightInfo;
   onUpdate: (info: CopyrightInfo) => void;
+  onAudioUpdate?: (url: string, path: string) => void;
+  onAudioRemove?: () => void;
 };
 
 const PRO_OPTIONS: Array<{ value: PRO; label: string; country: string }> = [
@@ -76,7 +81,16 @@ const ROLE_OPTIONS = [
   { value: 'arranger', label: 'Arranger' },
 ] as const;
 
-export function CopyrightManager({ songId, songTitle = 'Untitled Song', initialData, onUpdate }: CopyrightManagerProps) {
+export function CopyrightManager({ 
+  songId, 
+  songTitle = 'Untitled Song', 
+  audioUrl,
+  audioPath,
+  initialData, 
+  onUpdate,
+  onAudioUpdate,
+  onAudioRemove,
+}: CopyrightManagerProps) {
   const [copyrightInfo, setCopyrightInfo] = useState<CopyrightInfo>(
     initialData || {
       splits: [],
@@ -524,6 +538,28 @@ export function CopyrightManager({ songId, songTitle = 'Untitled Song', initialD
           songTitle={songTitle}
           songId={songId}
           copyrightInfo={copyrightInfo}
+        />
+      </Card>
+
+      {/* Audio Upload */}
+      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
+          <Music className="h-5 w-5 text-purple-400" />
+          Audio Track
+        </h3>
+        <p className="mb-4 text-sm text-gray-400">
+          Upload an instrumental, demo, or reference track for this song
+        </p>
+        <AudioUploader
+          songId={songId}
+          currentAudioUrl={audioUrl}
+          onUploadComplete={(url, path) => {
+            if (onAudioUpdate) onAudioUpdate(url, path);
+          }}
+          onRemove={() => {
+            if (onAudioRemove) onAudioRemove();
+          }}
+          maxSizeMB={50}
         />
       </Card>
     </div>

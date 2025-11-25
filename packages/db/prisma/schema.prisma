@@ -112,6 +112,8 @@ model User {
   trackComments   TrackComment[]
   followers       UserFollow[]     @relation("UserFollowers")
   following       UserFollow[]     @relation("UserFollowing")
+  SongVersion     SongVersion[]
+  SongTrack       SongTrack[]
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -201,6 +203,10 @@ model Project {
   transactions   Transaction[]
   invitations    Invitation[]
   members        ProjectMember[]
+  milestones     ProjectMilestone[] // Timeline & roadmap
+  views          ProjectView[] // Smart folders & filters
+  references     ProjectReference[] // Mood boards & inspiration
+  insights       ProjectInsight? // AI analysis
 
   @@index([orgId])
   @@index([slug])
@@ -231,7 +237,7 @@ model Song {
   lastSavedAt   DateTime?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
-  
+
   // Copyright & Publishing Information
   copyrightInfo Json? // Copyright, PRO, splits, publishing details
   audioUrl      String? // URL to uploaded audio file
@@ -244,6 +250,8 @@ model Song {
   transactions   Transaction[]
   collaborators  SongCollaborator[]
   communityTrack CommunityTrack? // Song published to community
+  versions       SongVersion[] // Version history
+  tracks         SongTrack[] // Multi-track stems
 
   @@index([userId])
   @@index([projectId])
@@ -281,6 +289,98 @@ model SongCollaborator {
   @@unique([songId, email])
   @@index([songId])
   @@index([userId])
+}
+
+// ====================================
+// VERSION CONTROL - Time Machine for Music
+// ====================================
+model SongVersion {
+  id          String  @id @default(cuid())
+  songId      String
+  versionNum  Int // v1, v2, v3...
+  label       String? // "Demo", "Final Mix", "Radio Edit", "Acoustic Version"
+  description String? // "Added bridge, changed chorus melody"
+
+  // Snapshot of song state at this version
+  title         String
+  lyrics        String? @db.Text
+  chords        String? @db.Text
+  key           String?
+  tempo         Int?
+  timeSignature String?
+  audioUrl      String? // Audio snapshot for this version
+  audioPath     String?
+
+  // Metadata
+  createdById String
+  createdAt   DateTime @default(now())
+  isPublished Boolean  @default(false) // Is this the "live" version?
+
+  song      Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+  createdBy User @relation(fields: [createdById], references: [id])
+
+  @@unique([songId, versionNum])
+  @@index([songId, versionNum])
+  @@index([createdAt])
+}
+
+// ====================================
+// STEMS & MULTI-TRACK MANAGEMENT
+// ====================================
+model SongTrack {
+  id        String    @id @default(cuid())
+  songId    String
+  versionId String? // Optional: Link to specific version
+  trackName String // "Lead Vocal", "Bass", "Drums", "Guitar"
+  trackType TrackType
+
+  // Audio file
+  audioUrl  String
+  audioPath String
+  duration  Float? // Duration in seconds
+
+  // Waveform data for visualization
+  waveformData Json? // Array of amplitude values
+
+  // Mixing parameters
+  volume Float   @default(1.0) // 0.0 to 2.0
+  pan    Float   @default(0.0) // -1.0 (left) to 1.0 (right)
+  solo   Boolean @default(false)
+  mute   Boolean @default(false)
+
+  // Track organization
+  order Int
+  color String? // Hex color for UI
+
+  // Metadata
+  uploadedById String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  song       Song  @relation(fields: [songId], references: [id], onDelete: Cascade)
+  uploadedBy User? @relation(fields: [uploadedById], references: [id])
+
+  @@index([songId, order])
+  @@index([trackType])
+}
+
+enum TrackType {
+  vocal_lead
+  vocal_harmony
+  vocal_backing
+  guitar_electric
+  guitar_acoustic
+  guitar_bass
+  drums
+  percussion
+  piano
+  synth
+  strings
+  brass
+  woodwind
+  fx
+  master
+  other
 }
 
 model Asset {
@@ -983,22 +1083,66 @@ model AssetShare {
 }
 
 model SongSplit {
-  id          String    @id @default(cuid())
-  songId      String
-  userId      String
-  percentage  Float
-  role        String
-  confirmed   Boolean   @default(false)
-  confirmedAt DateTime?
-  notes       String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  song        Song      @relation(fields: [songId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id])
+  id         String @id @default(cuid())
+  songId     String
+  userId     String
+  percentage Float
+  role       String // writer, producer, performer, engineer
+
+  // Enhanced split information
+  splitType      SplitType // writing, production, performance, master
+  proAffiliation String? // BMI, ASCAP, SESAC, SOCAN, PRS, etc.
+  ipiNumber      String? // Interested Parties Information number
+  publisherName  String?
+  publisherSplit Float? // Publisher takes X% of writer's share (typically 50%)
+
+  // Payment tracking
+  totalEarned  Decimal   @default(0) @db.Decimal(10, 2)
+  lastPayoutAt DateTime?
+  payoutMethod String? // paypal, stripe, wire, check
+  paypalEmail  String?
+
+  // Legal verification
+  confirmed      Boolean   @default(false)
+  confirmedAt    DateTime?
+  signedAt       DateTime?
+  signatureHash  String? // For digital signature verification
+  signedDocument String? // URL to signed split sheet PDF
+
+  // Dispute resolution
+  disputeStatus     DisputeStatus? @default(none)
+  disputeNotes      String?
+  disputeOpenedAt   DateTime?
+  disputeResolvedAt DateTime?
+
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  song Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
 
   @@unique([songId, userId])
   @@index([songId])
   @@index([userId])
+  @@index([confirmed])
+  @@index([disputeStatus])
+}
+
+enum SplitType {
+  writing // Songwriting royalties
+  production // Producer points
+  performance // Performance royalties
+  master // Master recording ownership
+  publishing // Publishing rights
+}
+
+enum DisputeStatus {
+  none
+  pending
+  in_review
+  resolved
+  escalated
 }
 
 model Transaction {
@@ -1304,4 +1448,145 @@ model UserFollow {
   @@index([followingId])
 }
 
-// Force Prisma regeneration: 2025-11-24-community-features
+// ====================================
+// PROJECT MANAGEMENT - Timeline & Roadmap
+// ====================================
+model ProjectMilestone {
+  id           String            @id @default(cuid())
+  projectId    String
+  title        String
+  description  String?
+  dueDate      DateTime
+  status       MilestoneStatus   @default(not_started)
+  priority     MilestonePriority @default(medium)
+  assignedTo   String[] // Array of user IDs
+  dependencies String[] // Milestone IDs that must complete first
+  
+  // Progress tracking
+  progress     Int               @default(0) // 0-100
+  startedAt    DateTime?
+  completedAt  DateTime?
+  
+  // Blocking info
+  blockingIssue String?
+  blockedSince  DateTime?
+  
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User    @relation("CreatedMilestones", fields: [createdById], references: [id])
+  
+  @@index([projectId, dueDate])
+  @@index([status])
+  @@index([dueDate])
+}
+
+enum MilestoneStatus {
+  not_started
+  in_progress
+  completed
+  blocked
+  cancelled
+}
+
+enum MilestonePriority {
+  low
+  medium
+  high
+  critical
+}
+
+// ====================================
+// SMART FILE ORGANIZATION
+// ====================================
+model ProjectView {
+  id        String  @id @default(cuid())
+  projectId String
+  name      String // "All Instrumentals", "Ready to Mix", "Published Tracks"
+  filters   Json // { tempo: { min: 120, max: 140 }, key: ["C", "G"], status: ["complete"] }
+  sortBy    String  @default("updatedAt") // updatedAt, tempo, completeness, title
+  sortOrder String  @default("desc") // asc, desc
+  isDefault Boolean @default(false)
+  
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User    @relation("CreatedViews", fields: [createdById], references: [id])
+  
+  @@index([projectId])
+  @@index([isDefault])
+}
+
+// ====================================
+// REFERENCE TRACKS & MOOD BOARDS
+// ====================================
+model ProjectReference {
+  id          String   @id @default(cuid())
+  projectId   String
+  type        ReferenceType
+  url         String
+  title       String
+  artist      String?
+  notes       String?
+  tags        String[] // mood, genre, production style
+  
+  // For audio references
+  spotifyId   String?
+  youtubeId   String?
+  
+  createdById String
+  createdAt   DateTime @default(now())
+  
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdBy User    @relation("CreatedReferences", fields: [createdById], references: [id])
+  
+  @@index([projectId])
+  @@index([type])
+}
+
+enum ReferenceType {
+  audio
+  video
+  image
+  link
+  document
+}
+
+// ====================================
+// AI PROJECT INSIGHTS
+// ====================================
+model ProjectInsight {
+  id              String   @id @default(cuid())
+  projectId       String   @unique
+  
+  // AI-generated analysis
+  completionScore Float? // 0-100, how "done" is this project?
+  blockers        String[] // AI-detected issues
+  suggestions     String[] // AI recommendations
+  estimatedDays   Int? // Estimated days to completion
+  
+  // Pattern detection
+  mostActiveDay   String? // Monday, Tuesday, etc.
+  averageSession  Float? // Average session length in hours
+  velocityTrend   String? // increasing, decreasing, stable
+  
+  // Quality metrics
+  audioQuality    Float? // 0-100 based on uploaded files
+  lyricsComplete  Float? // 0-100 percentage
+  mixReady        Boolean  @default(false)
+  
+  lastAnalyzedAt  DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@index([completionScore])
+  @@index([lastAnalyzedAt])
+}
+
+// Force Prisma regeneration: 2025-11-25-WORLD-CLASS-FEATURES

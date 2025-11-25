@@ -629,6 +629,8 @@ export default function SongwritingPage() {
             <CopyrightManager
               songId={songData.id}
               songTitle={songTitle}
+              audioUrl={songData.audioUrl}
+              audioPath={songData.audioPath}
               initialData={songData.copyrightInfo ? JSON.parse(songData.copyrightInfo as any) : undefined}
               onUpdate={(info) => {
                 if (songData.id) {
@@ -636,6 +638,22 @@ export default function SongwritingPage() {
                     copyrightInfo: JSON.stringify(info) as any,
                     isrc: info.isrc,
                     iswc: info.iswc,
+                  });
+                }
+              }}
+              onAudioUpdate={(url, path) => {
+                if (songData.id) {
+                  updateSong({
+                    audioUrl: url,
+                    audioPath: path,
+                  });
+                }
+              }}
+              onAudioRemove={() => {
+                if (songData.id) {
+                  updateSong({
+                    audioUrl: null,
+                    audioPath: null,
                   });
                 }
               }}
