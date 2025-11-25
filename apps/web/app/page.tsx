@@ -17,7 +17,7 @@ export default function HomePage() {
                 style={{
                   left: `${15 + i * 15}%`,
                   animationDelay: `${i * 0.5}s`,
-                  fontSize: `${20 + Math.random() * 20}px`,
+                  fontSize: `${24 + i * 4}px`,
                 }}
               >
                 ♪
