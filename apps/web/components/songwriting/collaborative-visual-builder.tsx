@@ -72,9 +72,9 @@ type SongBlock = {
 };
 
 const PALETTE_BLOCKS = [
-  { type: 'verse' as const, label: 'Verse', icon: '📝', color: 'blue' },
-  { type: 'chorus' as const, label: 'Chorus', icon: '🎵', color: 'gold' },
-  { type: 'bridge' as const, label: 'Bridge', icon: '🌉', color: 'purple' },
+  { type: 'verse' as const, label: 'Verse', icon: '', color: 'blue' },
+  { type: 'chorus' as const, label: 'Chorus', icon: '', color: 'gold' },
+  { type: 'bridge' as const, label: 'Bridge', icon: '', color: 'purple' },
 ];
 
 function SortableBlock({
@@ -101,13 +101,13 @@ function SortableBlock({
   const getColor = () => {
     switch (block.type) {
       case 'verse':
-        return 'from-blue-500/10 to-blue-500/5 border-blue-500/30';
+        return 'bg-zinc-900/50 border-zinc-800';
       case 'chorus':
-        return 'from-brand-primary/10 to-brand-primary/5 border-brand-primary/30';
+        return 'bg-zinc-900/50 border-zinc-700';
       case 'bridge':
-        return 'from-purple-500/10 to-purple-500/5 border-purple-500/30';
+        return 'bg-zinc-900/50 border-zinc-800';
       default:
-        return 'from-gray-500/10 to-gray-500/5 border-gray-500/30';
+        return 'bg-zinc-900/50 border-zinc-800';
     }
   };
 
@@ -123,7 +123,7 @@ function SortableBlock({
         transition,
         ...(editor && { borderColor: editor.userColor, outlineColor: editor.userColor }),
       }}
-      className={`rnrb-card group relative mb-4 bg-gradient-to-br p-4 transition-all hover:shadow-xl ${getColor()} border-2 ${
+      className={`rnrb-card group relative mb-4 rounded p-4 transition-all hover:shadow-xl ${getColor()} border ${
         editor ? 'outline outline-2 outline-offset-2' : ''
       }`}
     >
@@ -538,7 +538,7 @@ export function CollaborativeVisualBuilder({
                   <button
                     key={item.type}
                     onClick={() => addBlock(item.type)}
-                    className="rnrb-card border-brand-primary/30 from-brand-primary/10 hover:border-brand-primary/50 w-full border-2 border-dashed bg-gradient-to-r to-transparent p-4 text-left transition-all hover:shadow-lg"
+                    className="rnrb-card w-full rounded border border-zinc-800 bg-zinc-900/50 p-4 text-left transition-all hover:border-zinc-700 hover:shadow-lg"
                   >
                     <div className="flex items-center gap-3">
                       <div className="text-2xl">{item.icon}</div>
@@ -563,11 +563,10 @@ export function CollaborativeVisualBuilder({
             <h2 className="font-display mb-6 text-2xl font-bold">Your Song Structure</h2>
 
             {blocks.length === 0 ? (
-              <div className="border-border flex flex-col items-center justify-center rounded-2xl border-2 border-dashed py-24">
-                <Music className="text-muted-foreground/50 mb-4 h-20 w-20" />
-                <h3 className="mb-2 text-xl font-semibold">Start Building</h3>
-                <p className="text-muted-foreground">
-                  Click blocks on the left to add them to your song
+              <div className="flex flex-col items-center justify-center rounded border border-zinc-800 bg-zinc-900/50 py-24">
+                <Music className="mb-4 h-12 w-12 text-zinc-600" />
+                <p className="font-mono text-sm uppercase tracking-wider text-zinc-400">
+                  Click a block above to start
                 </p>
               </div>
             ) : (

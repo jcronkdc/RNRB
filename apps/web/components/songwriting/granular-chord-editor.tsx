@@ -162,13 +162,13 @@ export const GranularChordEditor = memo(function GranularChordEditor({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="border-brand-primary/30 bg-brand-primary/10 flex items-start gap-2 rounded-lg border p-3 text-sm"
+            className="flex items-start gap-2 rounded border border-zinc-800 bg-zinc-900/50 p-3 text-sm"
           >
-            <Info className="text-brand-primary mt-0.5 h-4 w-4 shrink-0" />
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />
             <div>
-              <p className="text-brand-primary font-medium">💡 Pro Tip</p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                Click any word below to add a chord above it. Perfect for precise chord placement!
+              <p className="font-mono text-xs uppercase tracking-wider text-zinc-300">Tip</p>
+              <p className="mt-1 text-xs text-zinc-400">
+                Click any word below to add a chord above it.
               </p>
             </div>
           </motion.div>
@@ -225,8 +225,8 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                         onClick={() => handleWordClick(lineIndex, actualWordIndex)}
                         className={`rounded px-1 py-0.5 transition-all ${
                           hasChord
-                            ? 'bg-green-500/10 font-medium text-green-700 hover:scale-105 hover:bg-green-500/20 dark:text-green-300'
-                            : 'text-foreground hover:bg-brand-primary/10 hover:scale-105'
+                            ? 'bg-zinc-800 font-medium text-white hover:scale-105 hover:bg-zinc-700'
+                            : 'text-white hover:bg-zinc-800 hover:scale-105'
                         }`}
                         title={hasChord ? `${chord} - Click to remove` : 'Click to add chord'}
                         aria-label={hasChord ? `Remove ${chord} chord` : 'Add chord'}
@@ -278,7 +278,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="border-border bg-surface w-full max-w-md rounded-2xl border-2 p-6 shadow-2xl"
+              className="bg-zinc-900 border border-zinc-800 w-full max-w-md rounded p-6 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-4 flex items-center justify-between">
