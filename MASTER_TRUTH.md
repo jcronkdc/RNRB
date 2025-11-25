@@ -1,6 +1,6 @@
 # MASTER_TRUTH
 
-**Agent:** 126 | **Prev:** 125 | **Date:** 2025-11-25  
+**Agent:** 127 | **Prev:** 126 | **Date:** 2025-11-25  
 **Status:** ✅ LIVE https://www.cronkwaters.com (HTTP 200)
 
 ---
@@ -8,18 +8,18 @@
 ## ⚡ CURRENT STATE
 
 ### ✅ WORKS
-- `pnpm build` → 3.9s (turbo cache) | 5.8min (full)
-- Auth: NextAuth v5 (Google OAuth + Password)
+- `pnpm build` → 3.9s (turbo cache)
+- Auth: Supabase (Google OAuth + Password) - middleware redirects correctly
 - DB: Neon PostgreSQL (us-west-2) via Prisma 5.22.0
 - Stack: Next.js 15.5.6 | tRPC 11 | React Query 5.62.7
 
-### ❌ MISSING LOCALLY
-- `.env.local` file (copy from `ENV_TEMPLATE.md`)
-- AI keys, Ably, Daily.co, PostHog (features disabled)
+### ❌ PRODUCTION GAPS
+- Test account (`test@cronkwaters.com`) not in prod DB
+- PostHog disabled (key missing)
 
-### 🟡 NON-BLOCKING
-- Prisma 7.0.1 available (major version - requires migration)
-- `.next/types/validator.ts` error (React 18/19, build passes)
+### 🟡 LOCAL DEV ONLY
+- `.env.local` file (copy from `ENV_TEMPLATE.md`)
+- AI keys, Ably, Daily.co
 
 ---
 
@@ -40,34 +40,31 @@
 ## 📊 COMMANDS
 
 ```bash
-pnpm dev                     # Dev server (:3000)
 pnpm build                   # MUST pass before deploy
-pnpm prisma:generate         # After schema changes
 git push origin main         # Auto-deploy (~3min)
+pnpm prisma:generate         # After schema changes
 
-# Nuclear
-rm -rf apps/web/.next node_modules/.cache/turbo node_modules && pnpm install && pnpm prisma:generate && pnpm build
+# Nuclear reset
+rm -rf apps/web/.next node_modules/.cache/turbo && pnpm install && pnpm build
 ```
 
 ---
 
-## 🧪 TEST AFTER EVERY CHANGE
+## 🧪 TEST CYCLE
 
-1. `pnpm build` passes
-2. Homepage loads (200)
-3. Auth: Sign in → Dashboard → Sign out
-4. Console: No critical errors
-
-**Full test:** `HUMAN_TEST_CHECKLIST.md`
+1. `pnpm build` (MUST pass)
+2. Production check: `curl -I https://www.cronkwaters.com`
+3. Browser test: Auth redirect, console errors
+4. Full checklist: `HUMAN_TEST_CHECKLIST.md` (73 routes)
 
 ---
 
-## 🔧 MCP EXTENSIONS (USE THEM)
+## 🔧 MCP EXTENSIONS
 
-- **Neon MCP:** DB queries, schema, migrations
-- **Vercel MCP:** Deployments, logs, env vars
-- **Prisma MCP:** Schema introspection
-- **Browser MCP:** E2E testing
+- **Neon:** DB queries, migrations, schema
+- **Vercel:** Deployments, logs, env
+- **Prisma:** Schema introspection
+- **Browser:** E2E testing, snapshots
 
 ---
 
@@ -83,16 +80,15 @@ rm -rf apps/web/.next node_modules/.cache/turbo node_modules && pnpm install && 
 
 ## 🚨 RECOVERY
 
-### Build Fails
+**Build Fails:**
 ```bash
-rm -rf apps/web/.next node_modules/.cache/turbo
-pnpm install && pnpm prisma:generate && pnpm build
+rm -rf apps/web/.next node_modules/.cache/turbo && pnpm build
 ```
 
-### Auth Broken
-1. Check Vercel: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`
-2. Verify Neon DB not paused
-3. Check middleware.ts
+**Auth Issues:**
+- Vercel env: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`
+- Neon DB: Check not paused
+- Code: `middleware.ts` cookie check
 
 ---
 
@@ -118,7 +114,8 @@ pnpm install && pnpm prisma:generate && pnpm build
 
 ---
 
-**Last Verified:** 2025-11-25  
+**Last Verified:** 2025-11-25 (Agent 127)  
 **Build:** ✅ 3.9s  
 **Production:** ✅ LIVE  
-**Next Agent:** Clean build continues
+**Auth Tested:** ✅ Middleware redirect works  
+**Next Agent:** Continue testing with valid credentials
