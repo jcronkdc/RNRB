@@ -1,63 +1,75 @@
 # 🍄 MASTER TRUTH - CRONKWATERS
 
-**Agent:** 105 - TWO DATABASES DISCOVERED!  
+**Agent:** 106 - BLOCKED ON PRISMA CACHE  
 **Production:** https://www.cronkwaters.com  
-**Git:** `main` @ `2ea59822`
+**Git:** `main` @ `556e61df`
 
 ---
 
-## 🔥 ROOT CAUSE - TWO DIFFERENT NEON DATABASES!
+## 🔥 BRUTAL TRUTH - PRISMA CAN'T SEE PASSWORD COLUMN
 
-### Database 1: us-west-2 (OLD - Vercel connects here)
-- Endpoint: `ep-sparkling-boat-af13jmny-pooler`
-- Region: **us-west-2** 
-- Password column: ❌ **MISSING**
-- **THIS IS WHAT VERCEL USES**
+###✅ FACTS VERIFIED VIA DIRECT SQL:
+1. **Password column EXISTS in us-west-2 database**
+   - Verified: `SELECT column_name FROM information_schema.columns WHERE table_name = 'User' AND column_name = 'password';`
+   - Result: `{"column_name": "password", "data_type": "text"}`
+   - Project: `weathered-rain-51915586`
+   - Endpoint: `ep-sparkling-boat-af13jmny-pooler.c-2.us-west-2.aws.neon.tech`
+   
+2. **DATABASE_URL points to us-west-2**
+   - Current: `postgresql://neondb_owner:npg_8vPmNto5nDip@ep-sparkling-boat-af13jmny-pooler.c-2.us-west-2.aws.neon.tech/neondb`
+   
+3. **Prisma schema HAS password field**
+   - Defined in `packages/db/prisma/schema.prisma` line 55: `password String?`
+   
+4. **Only ONE branch exists**: `main` (br-long-poetry-af15cvd0)
 
-### Database 2: us-east-1 (NEW - Where you added password)
-- Endpoint: `ep-morning-shadow-ahxokvi8-pooler`
-- Region: **us-east-1**
-- Password column: ✅ **EXISTS** 
-- This is the one you're looking at in Neon console
+### ❌ THE PROBLEM:
+**Every deployment fails with:** `"The column password does not exist in the current database."`
 
-**YOU ADDED THE PASSWORD COLUMN TO THE WRONG DATABASE!**
-
----
-
-## 🎯 THE FIX - UPDATE VERCEL DATABASE_URL
-
-Run these commands:
-
-```bash
-cd /Users/justincronk/Desktop/CronkWaters
-
-# Remove old DATABASE_URL
-vercel env rm DATABASE_URL production
-
-# Add new DATABASE_URL (us-east-1 with password column)
-vercel env add DATABASE_URL production
-# Paste this when prompted:
-# postgresql://neondb_owner:npg_HlRo2FZ6mGYM@ep-morning-shadow-ahxokvi8-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
-
-# Force redeploy
-git commit --allow-empty -m "chore: redeploy with updated DATABASE_URL"
-git push
-```
-
-Then registration will work!
+Even though:
+- Password column EXISTS (verified via SQL)
+- Prisma schema DEFINES it  
+- Fresh deployments with forced regeneration
+- Tried 8+ different approaches
 
 ---
 
-## 📝 WHY LOGIN WAS SO COMPLICATED (Final Answer)
+## 🔍 WHAT WE'VE TRIED:
 
-**The layers of problems:**
-1. ✅ Build system (Vercel + Turbo fighting) - FIXED
-2. ✅ Package exports (TypeScript source) - FIXED  
-3. ✅ Database schema (password column) - FIXED in us-east-1
-4. 🔥 **TWO DATABASES** - You migrated the wrong one!
-
-**This is why it was so hard:** Each layer hid the next problem. We couldn't see the database issue until we fixed the build. We couldn't see we had TWO databases until we checked both.
+1. ✅ Added password column to us-west-2 via `ALTER TABLE "User" ADD COLUMN IF NOT EXISTS password TEXT;`
+2. ✅ Updated DATABASE_URL env var (tried both us-west-2 and us-east-1)
+3. ✅ Forced Prisma regeneration with schema comment updates
+4. ✅ Multiple fresh deployments
+5. ✅ Verified no branch confusion (only `main` branch exists)
+6. ❌ **STILL FAILS**
 
 ---
 
-**HANDOFF:** Update Vercel DATABASE_URL to us-east-1 endpoint, redeploy, test.
+## 💭 HYPOTHESIS:
+
+**Prisma might be using a DIFFERENT connection than DATABASE_URL at runtime.**
+
+Possible issues:
+1. **Connection pooling cache** at Neon level
+2. **Prisma's prepared statement cache** not seeing new column
+3. **Vercel environment variable** not propagating to functions
+4. **Multiple DATABASE_URLs** in environment (DATABASE_URL_UNPOOLED, POSTGRES_URL, etc.)
+
+---
+
+## 🎯 NEXT STEPS FOR NEXT AGENT:
+
+1. **Check Vercel Function Logs** for actual DATABASE_URL being used at runtime
+2. **Try removing ALL database env vars** except one clean DATABASE_URL
+3. **Check if DATABASE_URL_UNPOOLED is overriding** DATABASE_URL
+4. **Consider Prisma Migrate** instead of raw ALTER TABLE  
+5. **Test with direct Prisma CLI** connection to verify column visibility
+
+---
+
+##Documented Actions:
+- Agent 105: Discovered two Neon databases (us-west-2 and us-east-1)
+- Agent 106: Added password column to us-west-2, verified existence via SQL
+- Agent 106: Blocked - Prisma cannot see the column despite multiple verification methods
+
+**HANDOFF:** Investigate why Prisma runtime can't see a column that provably exists in the database.
