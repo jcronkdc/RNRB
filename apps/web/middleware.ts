@@ -32,9 +32,6 @@ const authPaths = ['/auth'];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Get the session using NextAuth v5 auth()
-  const session = await auth();
-
   // Check if the current path is protected
   const isProtectedPath = protectedPaths.some((path) => 
     pathname.startsWith(path)
@@ -44,6 +41,14 @@ export async function middleware(request: NextRequest) {
   const isAuthPath = authPaths.some((path) => 
     pathname.startsWith(path)
   );
+
+  // Skip middleware for non-protected, non-auth paths (like homepage)
+  if (!isProtectedPath && !isAuthPath) {
+    return NextResponse.next();
+  }
+
+  // Only call auth() when needed (for protected or auth paths)
+  const session = await auth();
 
   // Redirect to /auth if accessing protected path without session
   if (isProtectedPath && !session?.user) {
