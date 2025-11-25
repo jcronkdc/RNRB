@@ -1,6 +1,8 @@
-import { auth } from '@/auth';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+
+// CRITICAL: Do NOT import auth() in middleware - it uses Node.js modules not available in Edge Runtime
+// Instead, we check for the session cookie directly
 
 // Routes that require authentication
 const protectedPaths = [
@@ -47,18 +49,24 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Only call auth() when needed (for protected or auth paths)
-  const session = await auth();
+  // Check for NextAuth session cookie (works in Edge Runtime)
+  const sessionCookie = request.cookies.get(
+    process.env.NODE_ENV === 'production'
+      ? '__Secure-next-auth.session-token'
+      : 'next-auth.session-token'
+  );
+
+  const hasSession = !!sessionCookie;
 
   // Redirect to /auth if accessing protected path without session
-  if (isProtectedPath && !session?.user) {
+  if (isProtectedPath && !hasSession) {
     const url = new URL('/auth', request.url);
     url.searchParams.set('from', pathname);
     return NextResponse.redirect(url);
   }
 
   // Redirect to /dashboard if accessing auth page with valid session
-  if (isAuthPath && session?.user) {
+  if (isAuthPath && hasSession) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

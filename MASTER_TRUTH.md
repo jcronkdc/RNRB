@@ -3,7 +3,32 @@
 **Agent:** 121 (Current)  
 **Production:** https://www.cronkwaters.com  
 **Date:** 2025-11-25  
-**Status:** 🟢 **OPERATIONAL - BUILD PASSES**
+**Status:** 🔴 **PRODUCTION DOWN - 500 ERROR**
+
+---
+
+## 🚨 CRITICAL ISSUE (ACTIVE)
+
+**Problem:** Production showing "500: INTERNAL_SERVER_ERROR"  
+**Error Code:** `MIDDLEWARE_INVOCATION_FAILED`  
+**Cause:** `apps/web/middleware.ts` calling `await auth()` is failing  
+**Impact:** ENTIRE SITE IS DOWN  
+**Started:** Unknown (discovered 2025-11-25 by Agent 121)  
+**Fix Attempted:** Optimized middleware to skip auth on public routes (deployed)  
+**Status:** Still failing - deeper issue suspected  
+
+**Possible Root Causes:**
+1. Missing `DATABASE_URL` in Vercel env vars
+2. Missing `NEXTAUTH_SECRET` in Vercel env vars  
+3. Prisma client not generated in production
+4. Neon database connectivity issue
+5. NextAuth configuration error in production
+
+**Next Steps:**
+1. Verify all env vars set in Vercel dashboard
+2. Check Vercel deployment logs for specific error
+3. May need to rollback to last working deployment
+4. Consider temporarily disabling middleware
 
 ---
 
