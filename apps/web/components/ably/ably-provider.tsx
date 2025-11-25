@@ -2,9 +2,8 @@
 
 import * as Ably from 'ably';
 import { AblyProvider as ReactAblyProvider } from 'ably/react';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState, type ReactNode } from 'react';
-
-import { createBrowserClient } from '@/lib/supabase';
 
 interface Props {
   children: ReactNode;
@@ -15,43 +14,10 @@ export function AblyProvider({ children, lazy = true }: Props) {
   const [client, setClient] = useState<Ably.Realtime | null>(null);
   const [shouldInit, setShouldInit] = useState(!lazy);
   const [hasError, setHasError] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Check authentication status before initializing Ably
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const supabase = createBrowserClient();
-        if (!supabase) {
-          setIsAuthenticated(false);
-          return;
-        }
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        setIsAuthenticated(!!session);
-      } catch (error) {
-        console.warn('Auth check failed:', error);
-        setIsAuthenticated(false);
-      }
-    };
-
-    checkAuth();
-
-    // Listen for auth changes
-    const supabase = createBrowserClient();
-    if (!supabase) return;
-    
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  
+  // Use NextAuth session instead of Supabase
+  const { data: session, status } = useSession();
+  const isAuthenticated = status === 'authenticated' && !!session?.user;
 
   useEffect(() => {
     // Only initialize if authenticated and shouldInit is true
