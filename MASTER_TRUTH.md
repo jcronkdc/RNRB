@@ -1,127 +1,87 @@
 # MASTER_TRUTH
 
-**Agent:** 124 | **Prev:** 123 | **Date:** 2025-11-25  
-**Prod:** https://www.cronkwaters.com | **Status:** ✅ LIVE  
-**Token Count:** 103K / 200K (**ALERT at 180K - price doubles at 200K**)
+**Agent:** 126 | **Prev:** 125 | **Date:** 2025-11-25  
+**Status:** ✅ LIVE https://www.cronkwaters.com (HTTP 200)
 
 ---
 
-## ⚡ CURRENT STATE (BRUTAL TRUTH)
+## ⚡ CURRENT STATE
 
-### ✅ WORKING
-- **Build:** `pnpm build` PASSES (4.7s with turbo cache)
-- **Production:** LIVE at https://www.cronkwaters.com (HTTP 200)
-- **Auth:** NextAuth v5 (Google OAuth + Password) - cookie-based
-- **Database:** Neon PostgreSQL (us-west-2)
-- **Middleware:** 33.9 kB Edge Runtime (session cookie check only)
-- **Schema:** Prisma 5.22.0 - 1302 lines, 40+ models
+### ✅ WORKS
+- `pnpm build` → 3.9s (turbo cache) | 5.8min (full)
+- Auth: NextAuth v5 (Google OAuth + Password)
+- DB: Neon PostgreSQL (us-west-2) via Prisma 5.22.0
+- Stack: Next.js 15.5.6 | tRPC 11 | React Query 5.62.7
+
+### ❌ MISSING LOCALLY
+- `.env.local` file (copy from `ENV_TEMPLATE.md`)
+- AI keys, Ably, Daily.co, PostHog (features disabled)
 
 ### 🟡 NON-BLOCKING
-- `.next/types/validator.ts` TypeScript error (React 18/19 mismatch - build still passes)
-
-### ❌ MISSING (Features Disabled)
-- **No .env.local file** in `apps/web/` (relies on Vercel env vars in prod)
-- `OPENAI_API_KEY` / `XAI_API_KEY` - AI features disabled
-- `NEXT_PUBLIC_POSTHOG_KEY` - Analytics disabled
-- Real-time features: Ably WebSockets / Daily.co video (env keys not in local dev)
+- Prisma 7.0.1 available (major version - requires migration)
+- `.next/types/validator.ts` error (React 18/19, build passes)
 
 ---
 
-## 🏗️ STACK
+## 🏗️ ARCHITECTURE
 
 ```
-Next.js 15.0.0 (App Router) → NextAuth v5 → tRPC v11 → Prisma 5.22.0 → Neon PostgreSQL
-```
-
-### Monorepo Structure
-```
-/packages/auth     - NextAuth config (auth.ts)
-/packages/db       - Prisma schema (40+ models)
+/packages/auth     - NextAuth v5 (5 files)
+/packages/db       - Prisma (1302 lines, 40+ models)
 /packages/trpc     - API routers (13 files)
-/packages/ui       - Shared components
-/apps/web          - Main Next.js app
+/packages/ui       - React components (31 files)
+/apps/web          - Next.js App Router (73 routes)
 ```
+
+**Build:** turbo → db → ui → web
 
 ---
 
-## 🎯 CRITICAL PATHWAYS (Mycelial Flow)
-
-### 1. Auth Flow
-```
-middleware.ts (Edge) → checks session cookie → redirects if needed
-↓
-auth.ts (NextAuth v5) → Credentials + Google OAuth
-↓
-Neon DB → User, Account, Session tables
-```
-
-### 2. Database Schema (40+ Models)
-**Core:** User, Org, Project, Song, Setlist, Show, Asset  
-**Auth:** Account, Session, VerificationToken  
-**Collab:** ProjectMember, Invitation, SongCollaborator  
-**Community:** CommunityTrack, TrackLike, TrackPlay, TrackComment, UserFollow  
-**Business:** Subscription, Transaction, SongSplit, License
-
-### 3. Build Process
-```
-pnpm build → turbo → packages/db build → packages/ui → apps/web → Next.js build
-```
-
----
-
-## 📊 COMMANDS (Essential)
+## 📊 COMMANDS
 
 ```bash
-# Development
-pnpm dev                     # Port 3000 (turbo runs all packages)
-pnpm build                   # Must pass before deploy (9min first run, 5s cached)
-pnpm prisma:generate         # After schema.prisma changes
+pnpm dev                     # Dev server (:3000)
+pnpm build                   # MUST pass before deploy
+pnpm prisma:generate         # After schema changes
+git push origin main         # Auto-deploy (~3min)
 
-# Deployment
-git push origin main         # Triggers Vercel deploy (~3min)
-
-# Recovery
-rm -rf apps/web/.next node_modules/.cache/turbo node_modules && pnpm install && pnpm prisma:generate
+# Nuclear
+rm -rf apps/web/.next node_modules/.cache/turbo node_modules && pnpm install && pnpm prisma:generate && pnpm build
 ```
 
 ---
 
-## 🧪 HUMAN TEST PROTOCOL
+## 🧪 TEST AFTER EVERY CHANGE
 
-**Frequency:** After EVERY significant change (not optional)
-
-**Quick Test (2 minutes):**
-1. `pnpm build` - must pass
-2. https://www.cronkwaters.com - must load (HTTP 200)
-3. Test auth flow: Sign in → Dashboard → Sign out
+1. `pnpm build` passes
+2. Homepage loads (200)
+3. Auth: Sign in → Dashboard → Sign out
 4. Console: No critical errors
 
-**Full Test:** See `HUMAN_TEST_CHECKLIST.md` (413 lines)
+**Full test:** `HUMAN_TEST_CHECKLIST.md`
 
 ---
 
-## 🐜 ANT COLONY PRINCIPLES (Non-Negotiable)
+## 🔧 MCP EXTENSIONS (USE THEM)
 
-1. **ONE MASTER_TRUTH** - This file only (no duplicates)
-2. **BRUTAL HONESTY** - Document actual state, not desired state
-3. **CLEAN BUILD** - No placeholders, no "TODO", no shortcuts
-4. **HUMAN TEST** - Test like real user after every change
-5. **MYCELIAL FLOW** - Logical pathways (Auth → DB → UI → Real-time)
-6. **TOKEN ALERT** - Update count every response, warn at 180K
+- **Neon MCP:** DB queries, schema, migrations
+- **Vercel MCP:** Deployments, logs, env vars
+- **Prisma MCP:** Schema introspection
+- **Browser MCP:** E2E testing
 
 ---
 
-## 🔥 GOTCHAS (Lessons Learned)
+## 🔥 GOTCHAS
 
-1. **Hydration Errors:** Never use `Math.random()` / `Date.now()` in SSR components
-2. **Middleware:** Cannot import `auth()` in Edge Runtime (stream errors)
-3. **Prisma:** Always run `pnpm prisma:generate` after schema changes
-4. **Monorepo:** Changes in `/packages/*` require app rebuild
-5. **Env Vars:** Local `.env.local` missing - features rely on Vercel prod env
+1. NO `Math.random()` / `Date.now()` in SSR (hydration errors)
+2. Middleware: Cookie check ONLY (no `auth()` import)
+3. Prisma: Auto-generate in build, manual after schema edits
+4. Monorepo: Changes in `/packages/*` need full rebuild
+5. Local dev: Copy `ENV_TEMPLATE.md` → `apps/web/.env.local`
 
 ---
 
-## 🚨 RECOVERY PROCEDURES
+## 🚨 RECOVERY
 
 ### Build Fails
 ```bash
@@ -130,43 +90,35 @@ pnpm install && pnpm prisma:generate && pnpm build
 ```
 
 ### Auth Broken
-- Check `DATABASE_URL` in Vercel env vars
-- Check `NEXTAUTH_SECRET` exists
-- Check `NEXTAUTH_URL` = `https://www.cronkwaters.com`
-- Verify Neon DB connection (not paused)
-
-### Deploy Fails
-- Check Vercel logs for error
-- Verify build passes locally first
-- Check env vars in Vercel dashboard
-- Ensure Node.js 18+ in Vercel settings
+1. Check Vercel: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`
+2. Verify Neon DB not paused
+3. Check middleware.ts
 
 ---
 
-## 📚 REFERENCE DOCS (Do NOT Duplicate Content)
+## 📚 REFERENCE DOCS
 
-**Testing:** `HUMAN_TEST_CHECKLIST.md` (413 lines)  
-**Design:** `DESIGN_SYSTEM.md` (NO EMOJIS in UI, zinc-950 dark mode)  
-**Setup:** `LOCAL_DEV_SETUP.md`, `GOOGLE_OAUTH_SETUP.md`, `VERCEL_ENV_CHECKLIST.md`  
-**Architecture:** `COLLABORATIVE_ARCHITECTURE.md`, `SIMPLIFIED_COLLABORATION_MODEL.md`
-
-**Total Docs:** ~124KB (4414 lines across 24 .md files) - **CONSOLIDATION NEEDED**
-
----
-
-## 📈 SESSION TRACKING
-
-| Agent | Date | Key Changes | Tokens Used |
-|-------|------|-------------|-------------|
-| 124 | 2025-11-25 | Streamlined docs (24→6 files), created DATABASE_SCHEMA.md, ENV_TEMPLATE.md, PATHWAYS_VERIFIED.md | 100K / 200K |
-| 123 | 2025-11-25 | Reduced from 384→118 lines | ~68K |
-| 122 | 2025-11-25 | Fixed hydration error #418 | - |
-| 121 | 2025-11-25 | Cookie-based auth in middleware | - |
+- `DESIGN_SYSTEM.md` - IMMUTABLE (NO EMOJIS in UI)
+- `DATABASE_SCHEMA.md` - 40+ models, relationships
+- `PATHWAYS_VERIFIED.md` - Auth, data, build flows
+- `HUMAN_TEST_CHECKLIST.md` - 73 routes
+- `ENV_TEMPLATE.md` - Local dev setup
+- `docs/setup-guides/` - OAuth, Stripe, etc.
 
 ---
 
-**Last Verified:** 2025-11-25 13:45 PST  
-**Build:** ✅ PASSING (4.7s turbo)  
-**Production:** ✅ LIVE (HTTP 200)  
-**Docs Streamlined:** 24 → 6 essential files  
-**Next Agent:** Continue clean build, 97K tokens remaining
+## 🐜 ANT COLONY RULES
+
+1. **ONE MASTER_TRUTH** - This file only
+2. **BRUTAL HONESTY** - Actual state, not desired
+3. **CLEAN BUILD** - No shortcuts, TODOs, placeholders
+4. **HUMAN TEST** - After every change
+5. **MYCELIAL FLOW** - Logical pathways
+6. **TOKEN TRACKING** - Every response (ALERT @ 180K)
+
+---
+
+**Last Verified:** 2025-11-25  
+**Build:** ✅ 3.9s  
+**Production:** ✅ LIVE  
+**Next Agent:** Clean build continues
