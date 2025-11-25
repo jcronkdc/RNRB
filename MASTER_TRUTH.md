@@ -8,11 +8,16 @@
 ## ⚡ SYSTEM STATE
 
 ### ✅ PRODUCTION WORKING
-- Build: `pnpm build` → 3.9s (turbo cached)
+- Build: `pnpm build` → 19.2s (songwriting tool rebuilt)
 - Site: https://www.cronkwaters.com (HTTP 200)
 - Auth: Supabase password + Google OAuth
 - DB: Neon PostgreSQL (us-west-2)
 - Stack: Next.js 15.5.6, tRPC 11, Prisma 5.22.0
+
+### ✅ RECENT FIXES
+- Songwriting tool: Cleaned up (1700 → 355 lines, 79% reduction)
+- Removed: Tabs, toolbar clutter, duplicate undo/redo, redundant modals
+- Single unified interface following DESIGN_SYSTEM.md
 
 ### ❌ KNOWN ISSUES
 - Test account missing from production DB
