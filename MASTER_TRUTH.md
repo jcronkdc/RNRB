@@ -1,43 +1,48 @@
 # 🍄 MASTER TRUTH - CRONKWATERS
 
-**Agent:** 108 - 🚨 **CRITICAL BLOCKER - AUTHENTICATION BROKEN**  
+**Agent:** 109 - 🚨 **CRITICAL BLOCKER - NextAuth v4 + App Router Incompatibility**  
 **Production:** https://www.cronkwaters.com  
-**Git:** `main` @ `9d2f1d47`
+**Git:** `main` @ `c6768cfd`
 
 ---
 
-## 🚨 CRITICAL BLOCKER - AUTHENTICATION FAILURE
+## 🚨 CRITICAL BLOCKER - NEXTAUTH V4 NOT WORKING WITH APP ROUTER
 
-**Password registration works, but LOGIN IS BROKEN!**
+**ROOT CAUSE IDENTIFIED: NextAuth v4 is NOT designed for App Router!**
 
 ### The Problem
 - Registration API (`/api/register`) works perfectly ✅
 - Users can be created in database ✅  
-- **Login form fails with "Authentication service error"** ❌
-- NextAuth handlers are throwing exceptions ❌
-- All login attempts redirect to `/api/auth/error` ❌
+- **Login form fails - redirects to `/api/auth/error`** ❌
+- NextAuth v4 handlers incompatible with App Router ❌
 
-### What I Tested
-1. ✅ Registration: Created test users via API - WORKS
-2. ✅ Database: User records exist with hashed passwords - WORKS
-3. ❌ Browser login form: Always fails with generic error
-4. ❌ Auto-login endpoint: Attempted fix, still broken
+### What Agent 108 Tried (All Failed)
+1. ❌ `authInstance.handlers.GET` - NextAuth v4 has no `handlers` property
+2. ❌ `authInstance.GET` - NextAuth v4 has no `GET` property
+3. ❌ `{ GET: authInstance.GET }` - authInstance is a function, not an object
 
-### Root Cause
-The NextAuth authentication handlers (`/api/auth/[...nextauth]`) are catching exceptions and returning generic 400 errors. The actual error is logged server-side but not visible to client.
+### What Agent 109 Discovered
+**NextAuth v4.24.7 returns an ASYNC FUNCTION, not an object:**
+- `NextAuth(config)` returns `async function handler(req, res)`
+- This function expects Pages API format (req, res)
+- App Router uses different format (NextRequest, NextResponse)
+- **NextAuth v4 was designed for Pages Router, NOT App Router**
 
-From `packages/auth/src/auth.ts` lines 298-345:
-- Exception is caught in POST handler
-- Generic error message returned: "Authentication service error"
-- Actual error logged to console: `console.error('NextAuth POST error:', error);`
+### Attempted Fix (Still Failed)
+```typescript
+// Tried: Export same function for both GET and POST
+const handler = NextAuth(getAuthConfig());
+export const handlers = { GET: handler, POST: handler };
+```
 
-**To debug:** Need to check Vercel function logs during login attempt to see actual exception.
+**Result:** Still redirects to `/api/auth/error` ❌
 
-### Possible Causes
-1. **Database Connection**: Prisma client might not be connecting properly
-2. **Bcrypt Comparison**: Password hashing/comparison could be failing
-3. **NextAuth Config**: JWT signing or provider configuration issue
-4. **Environment Variables**: Missing or incorrect vars (though NEXTAUTH_SECRET exists)
+### The Solution Path
+Two options:
+1. **Upgrade to NextAuth v5 (Auth.js)** - Has native App Router support
+2. **Create custom wrapper** - Adapt NextAuth v4 function to App Router format
+
+**BLOCKER:** Need to decide which approach and implement correctly.
 
 ---
 

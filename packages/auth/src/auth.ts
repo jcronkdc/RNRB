@@ -190,12 +190,54 @@ function getAuthConfig(): NextAuthOptions {
   };
 }
 
-// NextAuth v4 returns a FUNCTION, not an object with handlers
-// Create the NextAuth handler function
-const handler = NextAuth(getAuthConfig());
+// NextAuth v4 returns a FUNCTION designed for Pages API (req, res)
+// We need to adapt it for App Router (NextRequest, NextResponse)
+import { NextRequest, NextResponse } from 'next/server';
+import type { IncomingMessage, ServerResponse } from 'http';
 
-// Export the handler for both GET and POST (NextAuth v4 pattern for App Router)
-export const handlers = { GET: handler, POST: handler };
+// Create the NextAuth handler function
+const nextAuthHandler = NextAuth(getAuthConfig());
+
+// Create wrapper functions that convert App Router format to Pages API format
+async function createHandler(req: NextRequest) {
+  // Convert NextRequest to IncomingMessage-like object for NextAuth v4
+  const mockReq: Partial<IncomingMessage> = {
+    method: req.method,
+    url: req.url,
+    headers: Object.fromEntries(req.headers.entries()) as any,
+  };
+
+  // Create a mock response object
+  const chunks: Uint8Array[] = [];
+  const mockRes: Partial<ServerResponse> = {
+    statusCode: 200,
+    setHeader: () => mockRes as ServerResponse,
+    getHeaders: () => ({}),
+    end: (data?: any) => {
+      if (data) chunks.push(typeof data === 'string' ? Buffer.from(data) : data);
+    },
+    write: (chunk: any) => {
+      chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+      return true;
+    },
+  };
+
+  // Call the NextAuth handler
+  await nextAuthHandler(mockReq as IncomingMessage, mockRes as ServerResponse);
+
+  // Convert the response back to NextResponse format
+  const body = chunks.length > 0 ? Buffer.concat(chunks).toString() : '';
+  return new NextResponse(body, {
+    status: mockRes.statusCode || 200,
+    headers: mockRes.getHeaders?.() as HeadersInit,
+  });
+}
+
+// Export the handlers for App Router
+export const handlers = {
+  GET: (req: NextRequest) => createHandler(req),
+  POST: (req: NextRequest) => createHandler(req),
+};
 
 // For server-side session access, create a wrapper that uses getServerSession
 import { getServerSession } from 'next-auth/next';
