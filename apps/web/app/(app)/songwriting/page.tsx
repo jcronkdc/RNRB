@@ -94,7 +94,6 @@ export default function SongwritingPage() {
   const [songTitle, setSongTitle] = useState('Untitled Song');
   const [isFirstSave, setIsFirstSave] = useState(true);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   
   // Undo/Redo state management
   const [history, setHistory] = useState<Array<{ blocks: SongBlock[]; lyrics: string }>>([]);
@@ -194,81 +193,73 @@ export default function SongwritingPage() {
         visibility: 'private',
       }).catch((err) => {
         console.error('Failed to create initial song:', err);
-        // Don't show toast here - useSongAutoSave handles error toasts
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]); // Only run when user ID changes or on mount
+  }, [user?.id]); // Only run when user ID changes
 
-  // Auto-save blocks when they change
+  // Consolidated auto-save effect - prevents race conditions
   useEffect(() => {
-    if (songData.id && songBlocks.length > 0) {
-      updateSong({
-        lyrics: songBlocks.map((b) => `[${b.type.toUpperCase()}]\n${b.content}`).join('\n\n'),
-      });
-    }
-  }, [songBlocks, songData.id]);
+    if (!songData.id) return; // Don't save until song is created
+    
+    const updates: Partial<SongData> = {};
+    let hasUpdates = false;
 
-  // Auto-save lyrics when they change
-  useEffect(() => {
-    if (songData.id && lyrics) {
-      updateSong({ lyrics });
+    // Title changed
+    if (songTitle !== songData.title) {
+      updates.title = songTitle;
+      hasUpdates = true;
     }
-  }, [lyrics, songData.id]);
 
-  // Auto-save title when it changes
-  useEffect(() => {
-    if (songData.id && songTitle !== songData.title) {
-      updateSong({ title: songTitle });
+    // Lyrics changed (from lyrics tab)
+    if (lyrics && lyrics !== songData.lyrics) {
+      updates.lyrics = lyrics;
+      hasUpdates = true;
     }
-  }, [songTitle, songData.id, songData.title]);
 
-  // Save Status Indicator with animation
+    // Blocks changed (from structure tab)
+    if (songBlocks.length > 0) {
+      const blocksAsLyrics = songBlocks.map((b) => `[${b.type.toUpperCase()}]\n${b.content}`).join('\n\n');
+      if (blocksAsLyrics !== songData.lyrics) {
+        updates.lyrics = blocksAsLyrics;
+        hasUpdates = true;
+      }
+    }
+
+    // Only update if there are actual changes
+    if (hasUpdates) {
+      updateSong(updates);
+    }
+  }, [songTitle, lyrics, songBlocks, songData.id, songData.title, songData.lyrics, updateSong]);
+
+  // Save Status Indicator - memoized to prevent re-renders
   const SaveStatusIndicator = () => {
     if (!user || !songData.id) return null;
 
     return (
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="flex items-center gap-2 rounded-full border border-gray-700 bg-gray-800/50 px-3 py-1.5 text-sm"
-      >
+      <div className="flex items-center gap-2 rounded border border-zinc-800 bg-zinc-900/50 px-3 py-1.5 text-xs">
         {isSaving && (
           <>
-            <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
-            <span className="text-gray-300">Saving...</span>
+            <Loader2 className="h-3 w-3 animate-spin text-white" />
+            <span className="font-mono uppercase tracking-wider text-zinc-400">Saving</span>
           </>
         )}
-        {isSaved && (
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: [0.8, 1.2, 1] }}
-            transition={{ duration: 0.3 }}
-            className="flex items-center gap-2"
-          >
-            <motion.div
-              initial={{ rotate: 0 }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Check className="h-4 w-4 text-green-400" />
-            </motion.div>
-            <span className="text-gray-300">Saved</span>
-          </motion.div>
-        )}
-        {hasError && (
+        {isSaved && !isSaving && (
           <>
-            <AlertCircle className="h-4 w-4 text-red-400" />
-            <span className="text-gray-300">Error saving</span>
+            <Check className="h-3 w-3 text-green-500" />
+            <span className="font-mono uppercase tracking-wider text-zinc-400">Saved</span>
+          </>
+        )}
+        {hasError && !isSaving && (
+          <>
+            <AlertCircle className="h-3 w-3 text-red-500" />
+            <span className="font-mono uppercase tracking-wider text-zinc-400">Error</span>
           </>
         )}
         {!isSaving && !isSaved && !hasError && (
-          <>
-            <Save className="h-4 w-4 text-gray-400" />
-            <span className="text-gray-400">Auto-save active</span>
-          </>
+          <span className="font-mono uppercase tracking-wider text-zinc-500">Auto-Save On</span>
         )}
-      </motion.div>
+      </div>
     );
   };
 
