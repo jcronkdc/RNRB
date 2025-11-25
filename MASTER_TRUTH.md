@@ -16,14 +16,16 @@
 
 ### 🚨 KNOWN ISSUES
 
-1. **Ably Connection Timeout** (Non-Blocking)
+1. **Ably Connection Timeout** (Investigating - Non-Blocking)
    - Console: "Auth.requestToken() timeout after 10 seconds"
    - Impact: Real-time collaboration disabled (chat, cursors, presence)
-   - Root Cause: `ABLY_API_KEY` not set in Vercel production
+   - ABLY_API_KEY confirmed set in Vercel by user
+   - Added enhanced logging to diagnose (commit a8f1d6ef)
+   - Check Vercel logs for `[Ably Token]` entries after deployment
    - User Impact: LOW - App functions normally without real-time features
-   - Fix: Add ABLY_API_KEY to Vercel environment variables
+   - Next: Review logs to identify root cause
 
-2. **Song Creation Dependency** - ✅ FIXED
+2. **Song Creation Dependency** - ✅ FIXED (commit 87dd9827)
    - Was: Multiple creation attempts due to dependency array
    - Now: Only runs on user ID change (line 189-197 in songwriting/page.tsx)
 
@@ -148,19 +150,22 @@ pnpm build
 ## 📊 CURRENT SESSION PROGRESS (Agent 130)
 
 **Completed:**
-- ✅ Fixed song creation dependency array (songwriting/page.tsx)
+- ✅ Fixed song creation dependency array (commit 87dd9827)
 - ✅ Streamlined MASTER_TRUTH.md
-- ✅ Build test passed (1m29s, clean)
+- ✅ Build test passed (28s cached)
 - ✅ Partial human testing completed
 - ✅ Created SONGWRITING_CURRENT_STATE.md
-- ✅ Confirmed Ably timeout issue (needs ABLY_API_KEY in Vercel)
+- ✅ Created AGENT_130_FINAL_REPORT.md
+- ✅ Enhanced Ably token logging (commit a8f1d6ef)
 - ✅ Confirmed "missing 's' characters" is browser tool bug (not real)
+- ✅ Deployed to production (2 commits pushed)
 
 **Next Agent Should:**
-1. Add ABLY_API_KEY to Vercel environment
-2. Complete full human test checklist
-3. Test real-time collaboration once Ably connected
-4. Consider adding test account to production DB
+1. Check Vercel logs for `[Ably Token]` entries to diagnose timeout
+2. Complete full human test checklist (`HUMAN_TEST_CHECKLIST.md`)
+3. Test songwriting tool interactivity (add blocks, undo/redo)
+4. Verify auto-save works correctly
+5. Once Ably working, test real-time collaboration
 
 ---
 
@@ -175,4 +180,6 @@ pnpm build
 ---
 
 **Last Updated:** 2025-11-25 by Agent 130  
-**Token Count:** ~100K / 200K (50% used, 100K remaining)
+**Token Count:** ~114K / 200K (57% used, 86K remaining)  
+**Latest Commit:** a8f1d6ef (Enhanced Ably logging)  
+**Status:** ✅ Clean build, deployed, ready for testing
