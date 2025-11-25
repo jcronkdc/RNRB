@@ -12,11 +12,13 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     const host = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com';
 
     if (!apiKey) {
-      console.warn('PostHog: Missing NEXT_PUBLIC_POSTHOG_KEY');
+      // PostHog is optional - silently skip initialization if not configured
+      // Suppress the warning by not attempting to use posthog at all
+      console.debug('PostHog: API key not configured, analytics disabled');
       return;
     }
 
-    // Initialize PostHog
+    // Initialize PostHog only if we have a valid API key
     if (!posthog.__loaded) {
       posthog.init(apiKey, {
         api_host: host,
