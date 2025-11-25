@@ -224,12 +224,18 @@ model Song {
   tempo         Int?
   timeSignature String?
   iswc          String?    @unique
+  isrc          String? // International Standard Recording Code
   description   String?
   lyrics        String?    @db.Text
   chords        String?    @db.Text // JSON array of ChordPosition objects
   lastSavedAt   DateTime?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  
+  // Copyright & Publishing Information
+  copyrightInfo Json? // Copyright, PRO, splits, publishing details
+  audioUrl      String? // URL to uploaded audio file
+  audioPath     String? // Storage path for audio
 
   user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   project        Project?           @relation(fields: [projectId], references: [id], onDelete: Cascade)

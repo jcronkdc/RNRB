@@ -58,6 +58,11 @@ const PresenceIndicator = dynamic(
   { ssr: false }
 );
 
+const CopyrightManager = dynamic(
+  () => import('@/components/songwriting/copyright-manager').then((m) => m.CopyrightManager),
+  { ssr: false }
+);
+
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
@@ -72,7 +77,7 @@ type ChordBlock = {
 };
 
 export default function SongwritingPage() {
-  const [activeView, setActiveView] = useState<'structure' | 'chords' | 'lyrics'>('structure');
+  const [activeView, setActiveView] = useState<'structure' | 'chords' | 'lyrics' | 'copyright'>('structure');
   const [songBlocks, setSongBlocks] = useState<SongBlock[]>([]);
   const [chordProgression, setChordProgression] = useState<ChordBlock[]>([]);
   const [lyrics, setLyrics] = useState('');
@@ -503,6 +508,20 @@ export default function SongwritingPage() {
               />
             )}
           </button>
+          <button
+            onClick={() => setActiveView('copyright')}
+            className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-all sm:px-6 lg:text-base ${
+              activeView === 'copyright' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Copyright & Publishing
+            {activeView === 'copyright' && (
+              <motion.div
+                layoutId="activeTab"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
+              />
+            )}
+          </button>
         </div>
 
         {/* Content - Improved Loading and Empty States */}
@@ -604,6 +623,22 @@ export default function SongwritingPage() {
                 />
               </div>
             </div>
+          )}
+
+          {activeView === 'copyright' && (
+            <CopyrightManager
+              songId={songData.id}
+              initialData={songData.copyrightInfo ? JSON.parse(songData.copyrightInfo as any) : undefined}
+              onUpdate={(info) => {
+                if (songData.id) {
+                  updateSong({
+                    copyrightInfo: JSON.stringify(info) as any,
+                    isrc: info.isrc,
+                    iswc: info.iswc,
+                  });
+                }
+              }}
+            />
           )}
         </motion.div>
 
