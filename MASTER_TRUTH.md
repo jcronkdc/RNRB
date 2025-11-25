@@ -1,23 +1,62 @@
 # MASTER_TRUTH
 
 **Agent:** 129 | **Prev:** 128 | **Date:** 2025-11-25  
-**Status:** ✅ LIVE https://www.cronkwaters.com (HTTP 200)
+**Status:** 🚧 BUILDING WORLD-CLASS FEATURES
 
 ---
 
 ## ⚡ SYSTEM STATE
 
-### ✅ PRODUCTION WORKING
-- Build: `pnpm build` → 2m15s (clean, all 73 routes)
+### ✅ PRODUCTION STABLE
+- Build: `pnpm build` → Working (all 73 routes)
 - Site: https://www.cronkwaters.com (HTTP 200)
 - Auth: Supabase password + Google OAuth ✅
 - DB: Neon PostgreSQL (us-west-2) ✅
 - Stack: Next.js 15.5.6, tRPC 11, Prisma 5.22.0
 
-### ✅ AGENT 129 FIXES
-- **Project Feature Fixed**: Created missing `/api/projects/[slug]` endpoint
-- **Clean Build**: Prisma regenerated, full cache clear completed
-- **All routes building**: 73 routes, middleware 33.9 kB
+### 🚀 PHASE 1: DATABASE FOUNDATION - COMPLETE
+**Goal:** Build the best music project tool in the world
+
+#### ✅ NEW MODELS ADDED (2025-11-25)
+1. **SongVersion** - Git-like version control for songs
+   - Track v1, v2, v3... with labels ("Demo", "Final Mix")
+   - Snapshot lyrics, chords, audio at each version
+   - Compare versions, rollback, cherry-pick changes
+   
+2. **SongTrack** - Professional multi-track/stems management
+   - Separate tracks (vocals, guitar, drums, bass)
+   - Waveform visualization data
+   - Mix controls (volume, pan, solo, mute)
+   - 16 track types (vocal_lead, guitar_electric, drums, etc.)
+   
+3. **Enhanced SongSplit** - Smart revenue & copyright
+   - PRO affiliation (BMI, ASCAP, SESAC)
+   - IPI numbers, publisher info
+   - Payment tracking ($earned, payout methods)
+   - Digital signatures & dispute resolution
+   - 5 split types (writing, production, performance, master, publishing)
+   
+4. **ProjectMilestone** - Timeline & roadmap
+   - Gantt-style project management
+   - Dependencies, blocking issues
+   - Progress tracking (0-100%)
+   - Priority levels
+   
+5. **ProjectView** - Smart file organization
+   - Saved filters ("All in C major >120 BPM")
+   - Custom sorting
+   - Like email filters for songs
+   
+6. **ProjectReference** - Mood boards & inspiration
+   - Attach Spotify links, YouTube videos
+   - Reference tracks for "the vibe"
+   - Tagging system
+   
+7. **ProjectInsight** - AI analysis
+   - Completion score (0-100)
+   - Blockers detection
+   - Velocity trends
+   - Quality metrics
 
 ### ❌ KNOWN ISSUES
 - Test account (test@cronkwaters.com) missing from production DB  

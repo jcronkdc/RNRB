@@ -112,8 +112,13 @@ model User {
   trackComments   TrackComment[]
   followers       UserFollow[]     @relation("UserFollowers")
   following       UserFollow[]     @relation("UserFollowing")
-  SongVersion     SongVersion[]
-  SongTrack       SongTrack[]
+  songVersions    SongVersion[]
+  uploadedTracks  SongTrack[]
+  
+  // Project Management
+  createdMilestones ProjectMilestone[] @relation("CreatedMilestones")
+  createdViews      ProjectView[]      @relation("CreatedViews")
+  createdReferences ProjectReference[] @relation("CreatedReferences")
 
   @@index([email])
   @@index([stripeCustomerId])

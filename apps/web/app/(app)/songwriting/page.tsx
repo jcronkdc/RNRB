@@ -63,6 +63,11 @@ const CopyrightManager = dynamic(
   { ssr: false }
 );
 
+const BatchSuggestionReview = dynamic(
+  () => import('@/components/songwriting/batch-suggestion-review').then((m) => m.BatchSuggestionReview),
+  { ssr: false }
+);
+
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
