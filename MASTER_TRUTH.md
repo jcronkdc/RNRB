@@ -2,26 +2,48 @@
 
 **Agent:** 117 (Current)  
 **Production:** https://www.cronkwaters.com  
-**Git:** `main` @ latest  
+**Git:** `main` @ `7483879f`  
 **Date:** 2025-11-25  
-**Status:** 🟢 **DEV SERVER RUNNING** - All systems operational
+**Status:** 🟡 **AUTH BUG IN PRODUCTION** - Fix committed but still failing in production
+
+---
+
+## ⚠️ CRITICAL ISSUE
+
+**Authentication is BROKEN in production:**
+- Error: "Server Components render" error when signing in
+- Cause: `signInWithCredentials()` server action returns `{success, error}` for failures, but throws for successful redirects
+- Fix attempted: Updated client code to check `result.success` before assuming redirect
+- Status: **DEPLOYED BUT STILL FAILING** (commit `7483879f`)
+- Next step: Verify Vercel build completed, check server action behavior
+
+**Root Cause Analysis:**
+The server action (`apps/web/app/actions/auth.ts`) correctly:
+1. Returns `{success: false, error}` for auth failures
+2. Throws redirect error for auth success
+
+The client (`apps/web/app/auth/page.tsx`) NOW correctly:
+1. Checks `result.success` for failures
+2. Catches redirect errors for success
+
+But production is still showing the error. Possible causes:
+1. Vercel build cache not cleared
+2. Server action not being called correctly
+3. NextAuth configuration issue in production
 
 ---
 
 ## 🎯 CURRENT STATUS
 
-### ✅ Working Systems
-- **Auth**: NextAuth v5 with password + OAuth + magic link
-- **Database**: Neon PostgreSQL via Prisma
-- **Real-time**: Ably WebSocket with NextAuth integration
-- **API**: All routes secured with server-side `auth()`
-- **Build**: Storybook (port 6006) + Next.js dev server operational
+### ✅ Working Locally
+- **Dev Server**: Running on `pnpm dev` (Storybook :6006)
+- **Build**: Storybook ESM/CommonJS conflict resolved (.cjs configs)
+- **Code**: Auth fix committed and pushed
 
-### 🔧 Recent Fixes (Agent 116-117)
-- Storybook ESM/CommonJS conflict resolved (used .cjs configs)
-- Removed conflicting postcss.config.cjs file
-- Auth redirect error handling improved
-- Hydration fixes deployed (23 files updated with SSR-safe date formatting)
+### ❌ Broken in Production
+- **Auth**: Login failing with Server Components render error
+- **Console**: Shows auth attempt but catches generic error instead of checking result
+- **Deployment**: Latest code deployed but error persists
 
 ---
 
@@ -30,151 +52,126 @@
 ```
 USER → Next.js 15 App
   ↓
-🔐 AUTH: /auth → signIn() → NextAuth validates → Session
-  ↓
+🔐 AUTH: /auth → signInWithCredentials() → Should return {success} or {error}
+  ↓  (Currently failing here in production)
 🗄️ DATABASE: Neon PostgreSQL (Prisma ORM)
   ↓
-⚡ REALTIME (optional): /api/ably/token → Ably WebSocket
+⚡ REALTIME: /api/ably/token → Ably WebSocket
   ↓
 🎵 FEATURES: Projects, Songs, Collaboration, AI Tools
 ```
 
-**Critical Rules:**
-1. NextAuth for ALL authentication (never Supabase auth)
-2. Always validate session server-side: `await auth()`
-3. Never trust client-provided user IDs
-4. Use SSR-safe date formatting from `/lib/format-date.ts`
-
 ---
 
-## 📋 KEY PATTERNS
+## 📋 HUMAN TEST RESULTS
 
-### Auth API Pattern (ALWAYS FOLLOW)
-```typescript
-import { auth } from '@/auth';
+**Test Date:** 2025-11-25  
+**Test URL:** https://www.cronkwaters.com/auth  
+**Credentials:** test@cronkwaters.com / TestRock2024!
 
-export async function GET(req: Request) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-  const userId = session.user.id; // NEVER from query params!
-  // ... your code
-}
+### ❌ Auth Test FAILED
+- Page loads correctly
+- Form submits
+- Console shows: `[AUTH] Starting sign-in...`
+- **ERROR:** `[AUTH] Password auth error: Error: An error occurred in the Server Components render`
+- No redirect to /dashboard
+- Session not created
+
+### Console Messages:
 ```
-
-### SSR-Safe Date Formatting
-```typescript
-import { formatDate, formatTime, formatDateTime } from '@/lib/format-date';
-
-// ✅ USE THESE:
-formatDate(date)       // YYYY-MM-DD
-formatDateLong(date)   // Jan 15, 2024
-formatTime(date)       // 3:45 PM  
-formatDateTime(date)   // Jan 15, 2024 at 3:45 PM
-
-// ❌ NEVER USE (causes hydration errors):
-date.toLocaleDateString()
-date.toLocaleTimeString()
+✅ PostHog: API key not configured (expected, harmless)
+⚠️ [AUTH] Button clicked
+⚠️ [AUTH] Form submitted
+⚠️ [AUTH] Starting sign-in...
+❌ [AUTH] Password auth error: Error: Server Components render...
 ```
-
----
-
-## 🧪 HUMAN TEST PROTOCOL
-
-Run regularly (especially after changes):
-
-### 1. Auth Test (3 mins)
-```
-1. Visit: https://www.cronkwaters.com/auth  
-2. Login: test@cronkwaters.com / TestRock2024!
-3. Should redirect to /dashboard
-4. Refresh - session persists?
-5. Console - any errors?
-```
-
-### 2. Projects API Test (1 min)
-```
-1. Navigate to /projects  
-2. Console: Look for 401 on /api/projects
-3. Projects load successfully?
-```
-
-### 3. Real-time Test (1 min)
-```
-1. Open DevTools Console
-2. Look for Ably connection messages  
-3. Should NOT see 401 or 403 errors
-```
-
-**Expected Console:**
-- PostHog: "API key not configured" (harmless)
-- NO 401/403 errors
 
 ---
 
 ## 🚀 PRIORITIES FOR NEXT AGENT
 
-### IMMEDIATE
-1. Run Human Test on production
-2. Verify all auth flows working
-3. Check for any console errors
+### IMMEDIATE (BLOCKING PRODUCTION)
+1. **Debug auth flow** - Why is the fix not working in production?
+2. **Check Vercel logs** - Look for build errors or runtime issues
+3. **Verify server action** - Test signInWithCredentials directly
+4. **Consider rollback** - If fix doesn't work soon, revert to last working state
 
-### HIGH PRIORITY
-1. Archive old agent session docs (keep last 3 only)
+### HIGH PRIORITY (After Auth Fixed)
+1. Archive old agent session docs
 2. Security audit - rotate exposed OAuth keys
 3. Test mobile responsiveness
 
 ### MEDIUM PRIORITY
 1. Add error monitoring (Sentry/LogRocket)
 2. Performance optimization
-3. Upgrade Storybook to v10 (currently v8.6.14, v10 available)
+3. Upgrade Storybook to v10
 
 ---
 
-## 📚 FILE STRUCTURE
+## 📚 KEY FILES
 
-**Keep in Root:**
-- `MASTER_TRUTH.md` (this file - single source of truth)
-- `LOCAL_DEV_SETUP.md`
-- `GOOGLE_OAUTH_SETUP.md`
-- Last 3 agent session docs for context
+**Auth Server Action:**
+```typescript
+// apps/web/app/actions/auth.ts
+export async function signInWithCredentials(formData: { email: string; password: string }) {
+  try {
+    await signIn('credentials', { email, password, redirectTo: '/dashboard' });
+    return { success: true };
+  } catch (error: any) {
+    if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error; // Let redirect happen
+    }
+    if (error instanceof AuthError) {
+      return { success: false, error: 'Invalid email or password' };
+    }
+    return { success: false, error: 'An unexpected error occurred' };
+  }
+}
+```
 
-**Archive Rest:**
-- Move older `AGENT_*` docs to `_ARCHIVE_AGENT_SESSIONS/`
+**Auth Client Page:**
+```typescript
+// apps/web/app/auth/page.tsx (lines 78-98)
+const result = await signInWithCredentials({ email, password });
+if (result && !result.success) {
+  throw new Error(result.error || 'Sign in failed');
+}
+// If we get here, redirect should happen
+```
 
 ---
 
-## ⚠️ KNOWN ISSUES
+## 🤝 BRUTAL HONEST HANDOFF TO NEXT AGENT
 
-**None currently blocking development**
+**What Worked:**
+- Fixed Storybook ESM/CommonJS conflict (dev server now runs)
+- Streamlined MASTER_TRUTH documentation
+- Committed proper auth error handling
 
-Minor warnings:
-- Storybook: CommonJS deprecated with Vite (works fine, can upgrade later)
-- Storybook: No .mdx story files found (expected, we use .tsx)
+**What's Broken:**
+- **Production auth is completely non-functional**
+- Multiple attempts to fix have failed
+- The code looks correct but production disagrees
 
----
+**What's Suspicious:**
+- Vercel may be caching old builds
+- Server action behavior differs between dev and production
+- NextAuth redirect detection may work differently in production
 
-## 🤝 HANDOFF TO NEXT AGENT
+**Recommended Approach:**
+1. Check Vercel dashboard for build logs/errors
+2. Add more detailed logging to server action
+3. Test with a completely new user account
+4. Consider using NextAuth's built-in redirect handling instead of manual digest checking
+5. If all else fails, revert to last known working commit
 
-**Current State:**
-- Dev server running successfully (Storybook on :6006)
-- All core systems operational
-- Clean codebase, no blocking issues
-
-**Immediate Actions:**
-1. Run Human Test on https://www.cronkwaters.com
-2. Verify production auth working
-3. Check console for errors
-4. Archive old documentation
-
-**When in Doubt:**
-- Run Human Test first
-- Check this MASTER_TRUTH
-- Don't break what's working
+**Git Status:**
+- Branch: `main`
+- Commit: `7483879f` - "fix: properly handle signInWithCredentials return value"
+- Clean working tree (no uncommitted changes)
 
 ---
 
 **Last Updated:** 2025-11-25 by Agent 117  
-**Token Budget:** ~67K / 200K used (133K remaining)  
-**Status:** 🟢 All systems go
+**Token Budget:** ~106K / 200K used (94K remaining)  
+**Status:** 🔴 **PRODUCTION AUTH BROKEN - NEEDS IMMEDIATE FIX**
