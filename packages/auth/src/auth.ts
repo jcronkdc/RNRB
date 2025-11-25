@@ -190,11 +190,14 @@ function getAuthConfig(): NextAuthOptions {
   };
 }
 
-// Export auth functions directly from NextAuth instance
-// In NextAuth v4, NextAuth() returns { GET, POST, auth, signIn, signOut } directly
-const authInstance = NextAuth(getAuthConfig());
-export const handlers = { GET: authInstance.GET, POST: authInstance.POST };
-export const auth = authInstance.auth;
-export const signIn = authInstance.signIn;
-export const signOut = authInstance.signOut;
+// NextAuth v4 returns a FUNCTION, not an object with handlers
+// Create the NextAuth handler function
+const handler = NextAuth(getAuthConfig());
+
+// Export the handler for both GET and POST (NextAuth v4 pattern for App Router)
+export const handlers = { GET: handler, POST: handler };
+
+// For server-side session access, create a wrapper that uses getServerSession
+import { getServerSession } from 'next-auth/next';
+export const auth = () => getServerSession(getAuthConfig());
 export const authConfig = getAuthConfig();
