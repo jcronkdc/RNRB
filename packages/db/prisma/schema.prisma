@@ -1,7 +1,7 @@
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "darwin-arm64", "rhel-openssl-3.0.x"]
-  // FORCE REGENERATION AFTER DB MIGRATION: 2025-11-25T03:15:00Z
+  // FORCE REGENERATION - password column added to us-west-2: 2025-11-25T03:42:00Z
 }
 
 datasource db {
