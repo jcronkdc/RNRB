@@ -24,19 +24,25 @@ function AuthForm() {
 
   const handlePasswordAuth = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    console.log('[AUTH] Form submitted', { isSignup, email: email?.substring(0, 3) + '***', hasPassword: !!password, hasName: !!name });
+    
     setLoading(true);
     setMessage(null);
 
     try {
       if (isSignup) {
         // Registration
+        console.log('[AUTH] Starting registration...');
         const response = await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, name }),
         });
 
+        console.log('[AUTH] Registration response:', response.status);
         const data = await response.json();
+        console.log('[AUTH] Registration data:', { success: response.ok, hasUser: !!data.user });
 
         if (!response.ok) {
           throw new Error(data.error || 'Registration failed');
@@ -49,6 +55,7 @@ function AuthForm() {
 
         // Auto sign-in after registration
         setTimeout(async () => {
+          console.log('[AUTH] Auto-signing in...');
           const result = await signIn('credentials', {
             email,
             password,
@@ -57,11 +64,14 @@ function AuthForm() {
           });
 
           if (result?.error) {
+            console.error('[AUTH] Sign-in error:', result.error);
             throw new Error(result.error);
           }
+          console.log('[AUTH] Sign-in successful');
         }, 1000);
       } else {
         // Sign in
+        console.log('[AUTH] Starting sign-in...');
         const result = await signIn('credentials', {
           email,
           password,
@@ -70,11 +80,13 @@ function AuthForm() {
         });
 
         if (result?.error) {
+          console.error('[AUTH] Sign-in error:', result.error);
           throw new Error(result.error);
         }
+        console.log('[AUTH] Sign-in successful');
       }
     } catch (error) {
-      console.error('Password auth error:', error);
+      console.error('[AUTH] Password auth error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
       setMessage({
         type: 'error',
@@ -361,6 +373,9 @@ function AuthForm() {
               <button
                 type="submit"
                 disabled={loading}
+                onClick={(e) => {
+                  console.log('[AUTH] Button clicked!', { isSubmit: true, loading, email: email?.substring(0, 3) + '***' });
+                }}
                 className="w-full transform rounded-xl bg-orange-500 px-4 py-3 text-base font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02] hover:bg-orange-600 disabled:opacity-50 disabled:hover:scale-100"
               >
                 {loading
