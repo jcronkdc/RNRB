@@ -5,6 +5,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { NavBar } from '@/components/NavBar';
 import { PostHogProvider } from '@/components/posthog';
 import { SessionProvider } from '@/components/session-provider';
+import { auth } from '@/auth';
 import './globals.css';
 
 export const viewport: Viewport = {
@@ -86,12 +87,14 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  
   return (
     <html lang="en">
       <body>
         <ErrorBoundary>
-          <SessionProvider>
+          <SessionProvider session={session}>
             <PostHogProvider>
               <AblyProvider>
                 <NavBar />
