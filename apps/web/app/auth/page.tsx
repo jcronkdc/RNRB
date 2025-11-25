@@ -5,12 +5,14 @@ import { Music, Sparkles } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 
+import { signInWithCredentials, signInWithGoogle } from '@/app/actions/auth';
 import { supabase } from '@/lib/supabase';
 
 function AuthForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [emailForMagicLink, setEmailForMagicLink] = useState('');
@@ -53,37 +55,46 @@ function AuthForm() {
           text: 'Account created! Signing you in...',
         });
 
-        // Auto sign-in after registration
+        // Auto sign-in after registration using server action
         setTimeout(async () => {
           console.log('[AUTH] Auto-signing in...');
-          const result = await signIn('credentials', {
-            email,
-            password,
-            callbackUrl: '/dashboard',
-            redirect: true,
-          });
-
-          if (result?.error) {
-            console.error('[AUTH] Sign-in error:', result.error);
-            throw new Error(result.error);
+          try {
+            await signInWithCredentials({ email, password });
+            // If we reach here, there was an error (no redirect happened)
+            console.log('[AUTH] No redirect occurred after auto-signin');
+          } catch (error) {
+            // Check if this is a redirect error (success case)
+            if (error && typeof error === 'object' && 'digest' in error) {
+              const digest = (error as { digest?: string }).digest;
+              if (digest?.includes('NEXT_REDIRECT')) {
+                console.log('[AUTH] Redirect detected, auto-signin successful');
+                // Let the redirect happen
+                return;
+              }
+            }
+            console.error('[AUTH] Sign-in error:', error);
+            throw error;
           }
-          console.log('[AUTH] Sign-in successful');
         }, 1000);
       } else {
-        // Sign in
+        // Sign in using server action
         console.log('[AUTH] Starting sign-in...');
-        const result = await signIn('credentials', {
-          email,
-          password,
-          callbackUrl: '/dashboard',
-          redirect: true,
-        });
-
-        if (result?.error) {
-          console.error('[AUTH] Sign-in error:', result.error);
-          throw new Error(result.error);
+        try {
+          await signInWithCredentials({ email, password });
+          // If we reach here, there was an error (no redirect happened)
+          console.log('[AUTH] No redirect occurred, assuming error');
+        } catch (error) {
+          // Check if this is a redirect error (success case)
+          if (error && typeof error === 'object' && 'digest' in error) {
+            const digest = (error as { digest?: string }).digest;
+            if (digest?.includes('NEXT_REDIRECT')) {
+              console.log('[AUTH] Redirect detected, sign-in successful');
+              // Let the redirect happen
+              return;
+            }
+          }
+          throw error;
         }
-        console.log('[AUTH] Sign-in successful');
       }
     } catch (error) {
       console.error('[AUTH] Password auth error:', error);
@@ -143,15 +154,8 @@ function AuthForm() {
     setMessage(null);
 
     try {
-      // Use NextAuth for Google OAuth (properly configured with env vars)
-      const result = await signIn('google', {
-        callbackUrl: '/dashboard',
-        redirect: true,
-      });
-
-      if (result?.error) {
-        throw new Error(result.error);
-      }
+      // Use server action for Google OAuth
+      await signInWithGoogle();
     } catch (error) {
       console.error('Google sign-in error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Google sign-in failed';
