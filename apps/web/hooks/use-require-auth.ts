@@ -35,9 +35,18 @@ export function useRequireAuth(options: UseRequireAuthOptions = {}): UseRequireA
       return; // Still loading, don't redirect yet
     }
 
+    // Add a small delay to allow session cookie to be set after redirect
+    // This prevents race conditions where we check session before cookie is readable
     if (status === 'unauthenticated' && redirectIfNoUser) {
-      console.log('🔐 useRequireAuth: No session, redirecting to', redirectTo);
-      router.push(redirectTo);
+      const timer = setTimeout(() => {
+        // Double-check status after delay
+        if (status === 'unauthenticated') {
+          console.log('🔐 useRequireAuth: No session after delay, redirecting to', redirectTo);
+          router.push(redirectTo);
+        }
+      }, 100); // 100ms delay to allow cookie to be set
+      
+      return () => clearTimeout(timer);
     } else if (session?.user) {
       console.log('🔐 useRequireAuth: User authenticated', {
         id: session.user.id,
