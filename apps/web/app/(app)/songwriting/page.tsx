@@ -85,7 +85,8 @@ export default function SongwritingPage() {
   const [history, setHistory] = useState<Array<{ blocks: SongBlock[]; lyrics: string }>>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   
-  const { user, loading } = useRequireAuth({ redirectIfNoUser: false });
+  // Note: Route protection is handled by middleware.ts, not by this hook
+  const { user, loading } = useRequireAuth();
   const { toasts, removeToast, success, error: showError } = useToast();
   const previousSavedRef = useRef(false);
 

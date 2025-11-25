@@ -67,6 +67,8 @@ export function UserMenu() {
     window.location.href = '/';
   };
 
+  // Show loading skeleton while fetching user data
+  // This renders consistently on both server and client (loading = true initially)
   if (loading) {
     return (
       <div className="flex items-center gap-2">

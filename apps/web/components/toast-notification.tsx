@@ -100,11 +100,14 @@ export function ToastNotification({ toasts, onRemove }: ToastNotificationProps) 
 // Hook for managing toasts
 export function useToast() {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [counter, setCounter] = useState(0);
 
   const addToast = (type: ToastType, message: string, duration?: number) => {
-    const id = `toast-${Date.now()}-${Math.random()}`;
+    // Generate ID using current counter value
+    setCounter(prev => prev + 1);
+    const id = `toast-${counter + 1}`;
     const newToast: Toast = { id, type, message, duration };
-    setToasts((prev) => [...prev, newToast]);
+    setToasts((prevToasts) => [...prevToasts, newToast]);
   };
 
   const removeToast = (id: string) => {

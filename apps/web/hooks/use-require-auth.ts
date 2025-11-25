@@ -1,9 +1,13 @@
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+/**
+ * @deprecated These options are no longer used. Auth protection is handled by middleware.ts
+ */
 interface UseRequireAuthOptions {
+  /** @deprecated No longer used - middleware handles all redirects */
   redirectTo?: string;
+  /** @deprecated No longer used - middleware handles all redirects */
   redirectIfNoUser?: boolean;
 }
 
@@ -14,46 +18,47 @@ interface UseRequireAuthReturn {
 }
 
 /**
- * Custom hook to require authentication on a page.
+ * Custom hook to check authentication status on a page.
  * Uses NextAuth session for authentication.
+ * 
+ * ⚠️ IMPORTANT: This hook NO LONGER handles redirects or route protection.
+ * 
+ * Auth protection is now handled by middleware.ts at the server level.
+ * This hook is ONLY for getting the current user and loading state in client components.
+ * 
+ * All protected routes are defined in middleware.ts. If you need a page to be:
+ * - Protected: Add it to the middleware matcher
+ * - Public: Remove it from the middleware matcher or add to publicRoutes array
  *
- * @param options - Configuration options
- * @param options.redirectTo - Where to redirect if not authenticated (default: '/auth')
- * @param options.redirectIfNoUser - Whether to redirect if no user found (default: true)
+ * @param options - DEPRECATED - Options no longer have any effect
  * @returns Object containing user, loading state, and error
  */
 export function useRequireAuth(options: UseRequireAuthOptions = {}): UseRequireAuthReturn {
-  const { redirectTo = '/auth', redirectIfNoUser = true } = options;
-  const router = useRouter();
   const { data: session, status } = useSession();
   const [error] = useState<Error | null>(null);
 
+  // Warn about deprecated usage
   useEffect(() => {
-    console.log('🔐 useRequireAuth: Checking NextAuth session', { status, hasUser: !!session?.user });
-    
-    if (status === 'loading') {
-      return; // Still loading, don't redirect yet
+    if (options.redirectTo || options.redirectIfNoUser !== undefined) {
+      console.warn(
+        '⚠️ useRequireAuth: The options you passed (redirectTo, redirectIfNoUser) are DEPRECATED and have no effect.\n' +
+        'Auth protection is now handled by middleware.ts.\n' +
+        'Please remove these options from your useRequireAuth() call.\n' +
+        'To change route protection, edit apps/web/middleware.ts instead.'
+      );
     }
+  }, []); // Only run once on mount
 
-    // Add a small delay to allow session cookie to be set after redirect
-    // This prevents race conditions where we check session before cookie is readable
-    if (status === 'unauthenticated' && redirectIfNoUser) {
-      const timer = setTimeout(() => {
-        // Double-check status after delay
-        if (status === 'unauthenticated') {
-          console.log('🔐 useRequireAuth: No session after delay, redirecting to', redirectTo);
-          router.push(redirectTo);
-        }
-      }, 100); // 100ms delay to allow cookie to be set
-      
-      return () => clearTimeout(timer);
-    } else if (session?.user) {
-      console.log('🔐 useRequireAuth: User authenticated', {
-        id: session.user.id,
-        email: session.user.email,
+  useEffect(() => {
+    if (status !== 'loading') {
+      console.log('🔐 useRequireAuth: Session check', { 
+        status, 
+        hasUser: !!session?.user,
+        userId: session?.user?.id,
+        email: session?.user?.email,
       });
     }
-  }, [session, status, router, redirectTo, redirectIfNoUser]);
+  }, [session, status]);
 
   return { 
     user: session?.user || null, 
