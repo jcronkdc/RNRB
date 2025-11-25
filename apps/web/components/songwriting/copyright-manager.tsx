@@ -3,6 +3,7 @@
 import { Card, Button } from '@cronkwaters/ui';
 import { Shield, Users, FileCheck, AlertCircle, Check, Plus, X, PieChart } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { SplitSheetGenerator } from './split-sheet-generator';
 
 export type PRO = 
   | 'ASCAP' 
@@ -52,6 +53,7 @@ export type CopyrightInfo = {
 
 type CopyrightManagerProps = {
   songId?: string;
+  songTitle?: string;
   initialData?: CopyrightInfo;
   onUpdate: (info: CopyrightInfo) => void;
 };
@@ -74,7 +76,7 @@ const ROLE_OPTIONS = [
   { value: 'arranger', label: 'Arranger' },
 ] as const;
 
-export function CopyrightManager({ songId, initialData, onUpdate }: CopyrightManagerProps) {
+export function CopyrightManager({ songId, songTitle = 'Untitled Song', initialData, onUpdate }: CopyrightManagerProps) {
   const [copyrightInfo, setCopyrightInfo] = useState<CopyrightInfo>(
     initialData || {
       splits: [],
@@ -510,6 +512,19 @@ export function CopyrightManager({ songId, initialData, onUpdate }: CopyrightMan
             </div>
           )}
         </div>
+      </Card>
+
+      {/* Split Sheet Generator */}
+      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
+          <FileCheck className="h-5 w-5 text-blue-400" />
+          Generate Split Sheet
+        </h3>
+        <SplitSheetGenerator
+          songTitle={songTitle}
+          songId={songId}
+          copyrightInfo={copyrightInfo}
+        />
       </Card>
     </div>
   );

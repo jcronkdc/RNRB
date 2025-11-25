@@ -628,6 +628,7 @@ export default function SongwritingPage() {
           {activeView === 'copyright' && (
             <CopyrightManager
               songId={songData.id}
+              songTitle={songTitle}
               initialData={songData.copyrightInfo ? JSON.parse(songData.copyrightInfo as any) : undefined}
               onUpdate={(info) => {
                 if (songData.id) {
