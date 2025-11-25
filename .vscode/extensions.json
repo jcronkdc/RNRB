@@ -1,25 +1,9 @@
 {
   "recommendations": [
-    "Prisma.prisma",
-    "usernamehw.errorlens",
-    "yoavbls.pretty-ts-errors",
-    "bradlc.vscode-tailwindcss",
-    "dbaeumer.vscode-eslint",
-    "wix.vscode-import-cost",
     "esbenp.prettier-vscode",
-    "rangav.vscode-thunder-client",
-    "Gruntfuggly.todo-tree",
-    "eamodio.gitlens",
-    "formulahendry.auto-rename-tag",
-    "dsznajder.es7-react-js-snippets",
-    "vitest.explorer"
-  ],
-  "unwantedRecommendations": [
-    "hookyqr.beautify",
-    "octref.vetur",
-    "ms-python.python",
-    "burkeholland.simple-react-snippets"
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "prisma.prisma",
+    "ms-vscode.vscode-typescript-next"
   ]
 }
-
-

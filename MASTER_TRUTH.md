@@ -1,85 +1,77 @@
-# 🍄 MASTER_TRUTH - CRONKWATERS
+# MASTER_TRUTH - CRONKWATERS
 
-**Agent:** 122 (Current)  
+**Agent:** 123 (Current) | **Previous:** 122  
 **Production:** https://www.cronkwaters.com  
 **Date:** 2025-11-25  
-**Status:** 🟢 **PRODUCTION LIVE - CLEAN BUILD VERIFIED**
+**Status:** 🟢 PRODUCTION LIVE | ✅ BUILD PASSING
 
 ---
 
-## ⚡ CURRENT STATE (BRUTAL HONESTY)
+## ⚡ CURRENT STATE
 
-### ✅ CONFIRMED WORKING
-- **Build:** `pnpm build` ✅ PASSES (Next.js skips TS in production)
-- **Production:** ✅ Live on Vercel
-- **Auth:** ✅ NextAuth v5 (Google OAuth + Password)
-- **Database:** ✅ Neon PostgreSQL + Prisma ORM
-- **Real-time:** ✅ Ably WebSockets
-- **Middleware:** ✅ Cookie-based auth (33.9 kB, Edge Runtime compatible)
+### ✅ WORKING
+- **Build:** `pnpm build` PASSES (8.4s turbo cached)
+- **Production:** LIVE at https://www.cronkwaters.com
+- **Auth:** NextAuth v5 (Google OAuth + Password) via `packages/auth`
+- **Database:** Neon PostgreSQL + Prisma 5.22.0
+- **Real-time:** Ably WebSockets configured
+- **Video:** Daily.co configured
+- **Middleware:** 33.9 kB edge-compatible
 
-### 🚨 KNOWN ISSUES
-1. **TypeScript Error** (NON-BLOCKING):
-   - `.next/types/validator.ts` - React 18/19 version mismatch
-   - Build succeeds, app works perfectly
-   - Cosmetic only
+### 🟡 KNOWN ISSUES
+- **1 TypeScript error:** `.next/types/validator.ts` (React 18/19 mismatch) - NON-BLOCKING, build passes
 
 ### ✅ AGENT 122 FIXES
-1. **React Hydration Error #418 FIXED**
-   - **Problem:** `Math.random()` on line 20 of `apps/web/app/page.tsx`
-   - **Solution:** Changed to deterministic value `${24 + i * 4}px`
-   - **Result:** Clean server/client render match
+- **Hydration Error #418:** Fixed `Math.random()` in `apps/web/app/page.tsx` → deterministic values
 
 ---
 
-## 🏗️ ARCHITECTURE
+## 🏗️ STACK
 
 ```
-Next.js 15.5.6 (App Router)
+Next.js 15.0.0 (App Router)
   ↓
-NextAuth v5.0.0-beta.30 (JWT + Database Sessions)
+NextAuth v5.0.0-beta.30
   ↓
-tRPC v11 (API Layer)
+tRPC v11.0.0-rc.502
   ↓
 Prisma 5.22.0 → Neon PostgreSQL
   ↓
-Ably (Real-time) + Daily.co (Video)
+Ably + Daily.co
 ```
 
-**Stack:**
-- **Framework:** Next.js 15.5.6, React 18.3.1, TypeScript 5.6.3
-- **Database:** Neon PostgreSQL, Prisma 5.22.0
-- **Auth:** NextAuth v5 (Google OAuth, Email/Password)
-- **Real-time:** Ably WebSockets
-- **Video:** Daily.co
-- **Monorepo:** Turborepo + pnpm workspaces
-- **UI:** Tailwind CSS, Framer Motion, Radix UI
-- **AI:** OpenAI (optional), x.ai (optional)
-- **Payments:** Stripe (configured)
+**Core:**
+- Next.js 15.0.0 | React 18.3.1 | TypeScript 5.6.3
+- Turborepo + pnpm@9.11.0
+- Tailwind 3.4.14 + Framer Motion 11.0.5
+
+**Workspace Packages:**
+- `@cronkwaters/auth` - NextAuth v5 config
+- `@cronkwaters/db` - Prisma client + schema
+- `@cronkwaters/trpc` - tRPC routers
+- `@cronkwaters/ui` - Shared components
+- `@rnrb/web` - Main Next.js app
 
 ---
 
-## 📂 MYCELIAL NETWORK (KEY FILES)
+## 🎯 KEY FILES
 
-**🔑 Auth:**
+**Auth:**
 - `packages/auth/src/auth.ts` - NextAuth config
-- `apps/web/middleware.ts` - Cookie-based auth check (Edge Runtime)
-- `apps/web/app/auth/page.tsx` - Auth UI
+- `apps/web/middleware.ts` - Edge auth check (33.9 kB)
 
-**💾 Database:**
-- `packages/db/prisma/schema.prisma` - DB schema (1300+ lines)
-- `packages/db/src/index.ts` - Prisma client export
+**Database:**
+- `packages/db/prisma/schema.prisma` - DB schema
 
-**🎨 Core App:**
-- `apps/web/app/layout.tsx` - Root layout (providers)
-- `apps/web/app/page.tsx` - Homepage (HYDRATION FIXED)
+**App:**
+- `apps/web/app/layout.tsx` - Root layout
+- `apps/web/app/page.tsx` - Homepage (hydration fixed)
 - `apps/web/components/app-layout.tsx` - App shell
 
-**🎵 Features:**
+**Features:**
 - `apps/web/app/songwriting/` - Collaborative songwriting
 - `apps/web/app/projects/` - Project management
-- `apps/web/app/discover/` - Community discovery
 - `apps/web/components/setlist-builder.tsx` - Setlist generator
-- `apps/web/components/ai-chat-assistant.tsx` - AI assistant
 
 ---
 
@@ -87,32 +79,32 @@ Ably (Real-time) + Daily.co (Video)
 
 ```bash
 # Development
-pnpm dev              # Start dev server (:3000)
+pnpm dev              # Port 3000
 
-# Build & Test
-pnpm build            # ✅ Production build (PASSES)
+# Production
+pnpm build            # ✅ PASSING
 pnpm typecheck        # 🟡 1 non-blocking error
 pnpm lint             # ⚠️ Warnings (non-blocking)
 
 # Database
-pnpm prisma:generate  # Regenerate Prisma client
-pnpm prisma:studio    # Prisma Studio GUI
+pnpm prisma:generate  # After schema changes
+pnpm prisma:studio    # DB GUI
 
 # Deploy
-git push origin main  # Auto-deploys to Vercel
+git push origin main  # Auto-deploys to Vercel (~2-3min)
 ```
 
 ---
 
-## 🔄 ENVIRONMENT VARIABLES
+## 🔐 ENV VARS (REQUIRED)
 
-**Auth (Required):**
+**Auth:**
 - `NEXTAUTH_SECRET` ✅
 - `NEXTAUTH_URL` ✅
 - `GOOGLE_CLIENT_ID` ✅
 - `GOOGLE_CLIENT_SECRET` ✅
 
-**Database (Required):**
+**Database:**
 - `DATABASE_URL` ✅
 
 **Real-time (Optional):**
@@ -120,265 +112,174 @@ git push origin main  # Auto-deploys to Vercel
 - `DAILY_API_KEY` ✅
 
 **AI (Optional):**
-- `OPENAI_API_KEY`
-- `XAI_API_KEY`
+- `OPENAI_API_KEY` ❌
+- `XAI_API_KEY` ❌
 
 **Analytics (Optional):**
-- `NEXT_PUBLIC_POSTHOG_KEY` (missing - analytics disabled)
+- `NEXT_PUBLIC_POSTHOG_KEY` ❌
 
-**Payments (Optional):**
+**Payments:**
 - `STRIPE_SECRET_KEY` ✅
 
 ---
 
-## 🧪 HUMAN TEST CHECKLIST
+## 🧪 HUMAN TEST
 
-**Location:** `HUMAN_TEST_CHECKLIST.md`
+**Before Work:**
+1. `pnpm build` → verify passing
+2. Check production → https://www.cronkwaters.com
+3. Test auth flow → sign in/out
+4. Check console → no critical errors
 
-**Before Starting Work:**
-1. Run `pnpm build` ✅
-2. Check production: https://www.cronkwaters.com ✅
-3. Test auth flow: sign in/sign out ✅
-4. Check browser console for errors ✅
+**After Work:**
+1. `pnpm build` → verify still passing
+2. Deploy → `git push origin main`
+3. Wait 3min → check production
+4. Update MASTER_TRUTH
 
-**After Changes:**
-1. Run `pnpm build` again ✅
-2. Deploy to Vercel ✅
-3. Verify in production ✅
-4. Update MASTER_TRUTH ✅
-
----
-
-## 🚀 DEPLOYMENT
-
-```bash
-git add -A
-git commit -m "fix: description"
-git push origin main
-```
-
-- Vercel auto-deploys (~2-3 minutes)
-- Check Vercel logs for errors
-- Visit https://www.cronkwaters.com to verify
+**Detailed Checklist:** `HUMAN_TEST_CHECKLIST.md`
 
 ---
 
-## 🐜 TOKYO ANT PRINCIPLES
+## 🐜 ANT PRINCIPLES
 
-**1. ONE MASTER_TRUTH**  
-This is the only source of truth. Never create new master documents.
-
-**2. BRUTAL HONESTY**  
-If broken, say it. If hacky, say it. No sugarcoating.
-
-**3. CLEAN BUILD**  
-No shortcuts. No placeholders. Proper fixes only.
-
-**4. HUMAN TEST**  
-Test like a real user regularly. Console logs, clicks, flows.
-
-**5. MYCELIAL FLOW**  
-Everything connects logically: Auth → DB → UI → Real-time.
-
-**6. TOKEN AWARENESS**  
-Track usage. Alert at 180K tokens. Fresh agent at 200K.
+1. **ONE MASTER_TRUTH** - This file only, never duplicate
+2. **BRUTAL HONESTY** - Say what's broken, no sugarcoating
+3. **CLEAN BUILD** - No shortcuts, no placeholders
+4. **HUMAN TEST** - Test like a real user, regularly
+5. **MYCELIAL FLOW** - Auth → DB → UI → Real-time
+6. **TOKEN TRACKING** - Alert at 180K, switch at 200K
 
 ---
 
-## 📌 CRITICAL FACTS FOR NEXT AGENT
+## 📌 CRITICAL FACTS
 
-**What Works:**
-- Build passes (Next.js ignores TS in prod)
-- Auth works (Google + Password)
-- Database connected (Prisma + Neon)
-- Production deployed and live
-- Hydration error FIXED (Agent 122)
+**Works:**
+- Production live, build passing, auth functional, DB connected
+- Hydration fixed (Agent 122)
 
-**What Doesn't:**
-- 1 TypeScript error (cosmetic, non-blocking)
+**Broken:**
+- Nothing production-blocking
 
-**What's Optional:**
-- PostHog analytics (needs API key)
+**Optional/Missing:**
+- PostHog (needs key)
 - AI features (needs OpenAI/XAI keys)
+- Subscription enforcement (Stripe configured but not enforced)
 
 **Next Steps:**
-1. Run full human test checklist
-2. Test songwriting tool end-to-end
-3. Test project creation flow
+1. Full human test checklist
+2. Test songwriting end-to-end
+3. Test project creation
 4. Verify subscription gating
 5. Test community discovery
 
 ---
 
-## 🧬 DATABASE SCHEMA
-
-**Location:** `packages/db/prisma/schema.prisma`
-
-**Core Models:**
-- `User` - Auth, subscription, usage
-- `Account` / `Session` - NextAuth
-- `Org` - Organizations (bands, studios)
-- `Project` - Projects within orgs
-- `Song` - Songs (lyrics, chords, status)
-- `SongCollaborator` - Song sharing
-- `CommunityTrack` - Published songs
-- `Setlist` / `SetlistItem` - Setlist management
-- `Show` / `Venue` / `Tour` - Live performance
-- `Asset` - File storage
-- `Subscription` - Stripe subscriptions
-- `Message` / `Connection` - User messaging
-
-**Prisma Version:** 5.22.0 (upgrade available: 7.0.1)
-
----
-
-## 🎨 UI DESIGN RULES (IMMUTABLE)
+## 🎨 UI RULES (IMMUTABLE)
 
 **Source:** `DESIGN_SYSTEM.md`
 
-**Principles:**
-1. **NO EMOJIS** in UI (docs only)
-2. **NO ICONS** unless necessary
-3. **NO CHEESY ELEMENTS**
-4. **TYPOGRAPHY FIRST**
-5. **DARK MODE ONLY** (#1e1e1e background)
+**Non-Negotiable:**
+1. NO EMOJIS in UI (docs only)
+2. NO ICONS unless necessary
+3. NO CHEESY ELEMENTS
+4. TYPOGRAPHY FIRST
+5. DARK MODE (#09090b background)
 
 **Colors:**
-- Background: `#1e1e1e`
-- Primary: `#3b82f6` (blue-500)
-- Text: `white` / `neutral-300`
+- zinc-950 (#09090b) - Primary background
+- zinc-900 (#18181b) - Cards
+- zinc-800 (#27272a) - Borders
+- white / zinc-300 - Text
+- blue-500 (#3b82f6) - Accents
+
+**Fonts:**
+- Oswald - Headings
+- Permanent Marker - Brand/user names
+- Inter - Body
+- JetBrains Mono - Technical
 
 ---
 
-## 🔐 AUTH FLOW
+## 🧬 DATABASE
 
-**Config:** `packages/auth/src/auth.ts`
+**Schema:** `packages/db/prisma/schema.prisma`
 
-**Providers:**
-1. Google OAuth ✅
-2. Email/Password ✅
-3. Magic Link (via Resend) ✅
+**Core Models:**
+- `User` - Auth + subscription
+- `Account` / `Session` - NextAuth
+- `Org` - Organizations
+- `Project` - Projects
+- `Song` - Songs (lyrics, chords)
+- `Setlist` - Setlists
+- `Show` / `Venue` / `Tour` - Live performance
+- `CommunityTrack` - Published songs
+- `Subscription` - Stripe
+- `Message` - User messaging
 
-**Session:** Database + JWT hybrid
-
-**Routes:**
-- `/auth` - Sign in/sign up
-- `/api/auth/[...nextauth]` - Auth API
-
-**Protected Routes:**
-- `/dashboard/*`
-- `/projects/*`
-- `/songwriting`
-- `/settings`
-
-**Middleware:** Cookie-based auth (no Node.js modules)
+**Version:** Prisma 5.22.0 (upgrade available: 7.0.1)
 
 ---
 
-## 🎵 FEATURE STATUS
+## 🔥 GOTCHAS
 
-**✅ Working:**
-- Authentication (Google + Password)
-- Project Management
-- Song Library (CRUD)
-- Songwriting Tool
-- Setlist Builder
-- Community Discovery
-- Real-time Presence (Ably)
-- Video Rooms (Daily.co)
-
-**🚧 Partial:**
-- AI Chat (needs OpenAI key)
-- Analytics (needs PostHog key)
-- Subscription Gating (Stripe configured, not enforced)
-
-**❌ Not Started:**
-- Mobile apps
-- Offline mode
-- Advanced audio editing
+1. **Hydration:** Watch `Math.random()` / `Date.now()` in SSR
+2. **TypeScript:** `.next/types/validator.ts` error is cosmetic
+3. **Prisma:** Run `pnpm prisma:generate` after schema changes
+4. **Monorepo:** Changes to `packages/*` need rebuild
+5. **Env Vars:** Local in `apps/web/.env.local`, prod in Vercel
 
 ---
 
-## 🔥 KNOWN GOTCHAS
+## 🚨 RECOVERY
 
-**1. React Hydration:**
-- FIXED by Agent 122 (homepage `Math.random()`)
-- Watch for `Date.now()` or `Math.random()` in SSR components
+**Build Breaks:**
+```bash
+rm -rf apps/web/.next node_modules/.cache/turbo
+rm -rf node_modules && pnpm install
+pnpm prisma:generate
+```
 
-**2. TypeScript:**
-- `.next/types/validator.ts` error is cosmetic (React 18/19 mismatch)
-- Build succeeds
+**Auth Breaks:**
+- Check `DATABASE_URL`, `NEXTAUTH_SECRET`
+- Verify Prisma client generated
+- Check Neon DB reachable
 
-**3. Prisma:**
-- Run `pnpm prisma:generate` after schema changes
-- Restart dev server after generation
-
-**4. Monorepo:**
-- Changes to `packages/*` require rebuild
-- Clear Turbo cache: `rm -rf node_modules/.cache/turbo`
-
-**5. Environment Variables:**
-- Local: `apps/web/.env.local`
-- Production: Vercel dashboard
-- Changes require server restart
-
----
-
-## 🚨 EMERGENCY RECOVERY
-
-**If Build Breaks:**
-1. `rm -rf apps/web/.next`
-2. `rm -rf node_modules/.cache/turbo`
-3. `rm -rf node_modules && pnpm install`
-4. `pnpm prisma:generate`
-
-**If Auth Breaks:**
-1. Check `DATABASE_URL`
-2. Check `NEXTAUTH_SECRET`
-3. Verify Prisma client generated
-4. Check Neon database reachable
-
-**If Deploy Fails:**
-1. Check Vercel logs
-2. Verify all env vars in Vercel
-3. Check build command: `pnpm build`
-4. Check Node version: 18.x or higher
+**Deploy Fails:**
+- Check Vercel logs
+- Verify env vars in Vercel dashboard
+- Check Node version (18.x+)
 
 ---
 
 ## 📊 TOKEN TRACKING
 
-**Current Session:** Agent 122  
-**Tokens Used:** ~68K / 200K  
-**Remaining:** ~132K  
-**Alert Threshold:** 180K tokens  
+**Agent:** 123  
+**Tokens Used:** ~54K / 200K  
+**Remaining:** ~146K  
+**Alert:** 180K  
 
-**When approaching 200K:**
-1. Alert user immediately
-2. Prepare handoff summary
-3. Update MASTER_TRUTH
-4. List incomplete tasks
+**Approaching 200K:**
+1. Alert user IMMEDIATELY
+2. Update MASTER_TRUTH
+3. List incomplete tasks
+4. Prepare handoff
 
 ---
 
-## 📚 SUPPORTING DOCS (REFERENCE ONLY)
+## 📚 SUPPORTING DOCS
 
-**These files contain setup details - DO NOT duplicate into MASTER_TRUTH:**
-
-- `LOCAL_DEV_SETUP.md` - Environment setup
-- `GOOGLE_OAUTH_SETUP.md` - OAuth config
-- `DESIGN_SYSTEM.md` - UI rules
+**Reference Only (DO NOT duplicate):**
 - `HUMAN_TEST_CHECKLIST.md` - Testing guide
-- `COLLABORATIVE_ARCHITECTURE.md` - Multi-user architecture
-- `VERCEL_ENV_CHECKLIST.md` - Vercel variables
-- `SETUP_AUTH.md` - Auth setup
-- `SUBSCRIPTION_SETUP_GUIDE.md` - Stripe setup
-- `DAILY_CO_SETUP_GUIDE.md` - Video setup
-- `RESEND_QUICK_START.md` - Email setup
-- `PERFORMANCE_GUIDE.md` - Performance optimization
-- `README_DEPLOYMENT.md` - Deployment guide
+- `DESIGN_SYSTEM.md` - UI rules (IMMUTABLE)
+- `LOCAL_DEV_SETUP.md` - Env setup
+- `GOOGLE_OAUTH_SETUP.md` - OAuth config
+- `VERCEL_ENV_CHECKLIST.md` - Vercel vars
+- `COLLABORATIVE_ARCHITECTURE.md` - Multi-user
+- `PERFORMANCE_GUIDE.md` - Performance
+- `README_DEPLOYMENT.md` - Deployment
 
 ---
 
-**Last Updated:** 2025-11-25 by Agent 122  
-**Status:** 🟢 **BUILD PASSES** | 🟢 **PRODUCTION LIVE** | 🟢 **HYDRATION FIXED**
+**Last Updated:** 2025-11-25 by Agent 123  
+**Build:** ✅ PASSING | **Production:** ✅ LIVE | **Hydration:** ✅ FIXED
