@@ -1,11 +1,7 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import type { StorybookConfig } from '@storybook/react-vite';
+const path = require('node:path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const config: StorybookConfig = {
+/** @type { import('@storybook/react-vite').StorybookConfig } */
+const config = {
   stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-essentials', '@storybook/addon-interactions'],
   framework: {
@@ -24,4 +20,4 @@ const config: StorybookConfig = {
   },
 };
 
-export default config;
+module.exports = config;

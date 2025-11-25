@@ -61,9 +61,12 @@ function AuthForm() {
         setTimeout(async () => {
           console.log('[AUTH] Auto-signing in...');
           try {
-            await signInWithCredentials({ email, password });
-            // If we reach here, there was an error (no redirect happened)
-            console.log('[AUTH] No redirect occurred after auto-signin');
+            const result = await signInWithCredentials({ email, password });
+            // Check if the result indicates an error
+            if (result && !result.success) {
+              throw new Error(result.error || 'Auto sign-in failed');
+            }
+            console.log('[AUTH] Auto-signin successful, waiting for redirect');
           } catch (error: any) {
             // Check if this is a redirect error (success case)
             if (error?.digest?.startsWith(NEXT_REDIRECT)) {
@@ -79,9 +82,13 @@ function AuthForm() {
         // Sign in using server action
         console.log('[AUTH] Starting sign-in...');
         try {
-          await signInWithCredentials({ email, password });
-          // If we reach here, there was an error (no redirect happened)
-          console.log('[AUTH] No redirect occurred, assuming error');
+          const result = await signInWithCredentials({ email, password });
+          // Check if the result indicates an error
+          if (result && !result.success) {
+            throw new Error(result.error || 'Sign in failed');
+          }
+          // If we get a success result, redirect should happen automatically
+          console.log('[AUTH] Sign-in successful, waiting for redirect');
         } catch (error: any) {
           // Check if this is a redirect error (success case)
           if (error?.digest?.startsWith(NEXT_REDIRECT)) {

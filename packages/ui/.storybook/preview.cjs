@@ -1,7 +1,7 @@
-import type { Preview } from '@storybook/react';
-import '../src/styles.css';
+require('../src/styles.css');
 
-const preview: Preview = {
+/** @type { import('@storybook/react').Preview } */
+const preview = {
   parameters: {
     layout: 'centered',
     controls: {
@@ -14,4 +14,5 @@ const preview: Preview = {
   },
 };
 
-export default preview;
+module.exports = preview;
+
