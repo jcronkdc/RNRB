@@ -1,84 +1,83 @@
 # MASTER_TRUTH
 
-**Agent:** 127 | **Prev:** 126 | **Date:** 2025-11-25  
+**Agent:** 128 | **Prev:** 127 | **Date:** 2025-11-25  
 **Status:** ✅ LIVE https://www.cronkwaters.com (HTTP 200)
 
 ---
 
-## ⚡ CURRENT STATE
+## ⚡ SYSTEM STATE
 
-### ✅ WORKS
-- `pnpm build` → 3.9s (turbo cache)
-- Auth: Supabase (Google OAuth + Password) - middleware redirects correctly
-- DB: Neon PostgreSQL (us-west-2) via Prisma 5.22.0
-- Stack: Next.js 15.5.6 | tRPC 11 | React Query 5.62.7
+### ✅ PRODUCTION WORKING
+- Build: `pnpm build` → 3.9s (turbo cached)
+- Site: https://www.cronkwaters.com (HTTP 200)
+- Auth: Supabase password + Google OAuth
+- DB: Neon PostgreSQL (us-west-2)
+- Stack: Next.js 15.5.6, tRPC 11, Prisma 5.22.0
 
-### ❌ PRODUCTION GAPS
-- Test account (`test@cronkwaters.com`) not in prod DB
-- PostHog disabled (key missing)
-
-### 🟡 LOCAL DEV ONLY
-- `.env.local` file (copy from `ENV_TEMPLATE.md`)
-- AI keys, Ably, Daily.co
+### ❌ KNOWN ISSUES
+- Test account missing from production DB
+- PostHog analytics disabled (no key)
 
 ---
 
-## 🏗️ ARCHITECTURE
+## 🏗️ STACK
 
 ```
-/packages/auth     - NextAuth v5 (5 files)
-/packages/db       - Prisma (1302 lines, 40+ models)
-/packages/trpc     - API routers (13 files)
-/packages/ui       - React components (31 files)
-/apps/web          - Next.js App Router (73 routes)
+/packages/db    → Prisma 5.22.0 (1302 lines, 40+ models)
+/packages/trpc  → API layer (13 routers)
+/packages/ui    → React components (31 files)
+/apps/web       → Next.js App Router (73 routes)
 ```
 
-**Build:** turbo → db → ui → web
+**Build Order:** db → ui → web (turbo)
 
 ---
 
-## 📊 COMMANDS
+## 📊 CORE COMMANDS
 
 ```bash
-pnpm build                   # MUST pass before deploy
-git push origin main         # Auto-deploy (~3min)
-pnpm prisma:generate         # After schema changes
+pnpm build              # Must pass before deploy
+git push origin main    # Auto-deploy (~3min)
+pnpm prisma:generate    # After schema changes
+```
 
-# Nuclear reset
-rm -rf apps/web/.next node_modules/.cache/turbo && pnpm install && pnpm build
+**Nuclear Reset:**
+```bash
+rm -rf apps/web/.next node_modules/.cache/turbo && pnpm build
 ```
 
 ---
 
-## 🧪 TEST CYCLE
+## 🧪 TEST PROTOCOL
 
-1. `pnpm build` (MUST pass)
-2. Production check: `curl -I https://www.cronkwaters.com`
-3. Browser test: Auth redirect, console errors
-4. Full checklist: `HUMAN_TEST_CHECKLIST.md` (73 routes)
+1. `pnpm build` → Must pass
+2. `curl -I https://www.cronkwaters.com` → HTTP 200
+3. Browser test: Auth page, console errors
+4. Full suite: `HUMAN_TEST_CHECKLIST.md`
 
 ---
 
-## 🔧 MCP EXTENSIONS
+## 🔧 MCP TOOLS AVAILABLE
 
 - **Neon:** DB queries, migrations, schema
-- **Vercel:** Deployments, logs, env
+- **Vercel:** Deployments, logs, env vars
 - **Prisma:** Schema introspection
 - **Browser:** E2E testing, snapshots
+- **Supabase:** Auth, database operations
 
 ---
 
-## 🔥 GOTCHAS
+## 🔥 CRITICAL RULES
 
-1. NO `Math.random()` / `Date.now()` in SSR (hydration errors)
-2. Middleware: Cookie check ONLY (no `auth()` import)
-3. Prisma: Auto-generate in build, manual after schema edits
+1. NO `Math.random()` / `Date.now()` in SSR
+2. Middleware: Cookie check only (no `auth()` import)
+3. Prisma: Auto-generates in build
 4. Monorepo: Changes in `/packages/*` need full rebuild
-5. Local dev: Copy `ENV_TEMPLATE.md` → `apps/web/.env.local`
+5. Design: Follow `DESIGN_SYSTEM.md` (IMMUTABLE)
 
 ---
 
-## 🚨 RECOVERY
+## 🚨 RECOVERY PROCEDURES
 
 **Build Fails:**
 ```bash
@@ -86,36 +85,35 @@ rm -rf apps/web/.next node_modules/.cache/turbo && pnpm build
 ```
 
 **Auth Issues:**
-- Vercel env: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`
-- Neon DB: Check not paused
-- Code: `middleware.ts` cookie check
+- Check Vercel env: `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`
+- Check Neon DB not paused
+- Review `middleware.ts` cookie logic
 
 ---
 
-## 📚 REFERENCE DOCS
+## 📚 DOCS
 
-- `DESIGN_SYSTEM.md` - IMMUTABLE (NO EMOJIS in UI)
-- `DATABASE_SCHEMA.md` - 40+ models, relationships
-- `PATHWAYS_VERIFIED.md` - Auth, data, build flows
-- `HUMAN_TEST_CHECKLIST.md` - 73 routes
+- `DESIGN_SYSTEM.md` - Immutable UI rules
+- `DATABASE_SCHEMA.md` - Schema reference
+- `HUMAN_TEST_CHECKLIST.md` - Test suite
 - `ENV_TEMPLATE.md` - Local dev setup
-- `docs/setup-guides/` - OAuth, Stripe, etc.
 
 ---
 
-## 🐜 ANT COLONY RULES
+## 🐜 ANT COLONY PROTOCOL
 
-1. **ONE MASTER_TRUTH** - This file only
-2. **BRUTAL HONESTY** - Actual state, not desired
-3. **CLEAN BUILD** - No shortcuts, TODOs, placeholders
-4. **HUMAN TEST** - After every change
-5. **MYCELIAL FLOW** - Logical pathways
-6. **TOKEN TRACKING** - Every response (ALERT @ 180K)
+1. **ONE TRUTH** - This file is the only source
+2. **BRUTAL HONESTY** - Document actual state only
+3. **NO SHORTCUTS** - Clean builds, no placeholders
+4. **HUMAN TEST FIRST** - Verify before coding
+5. **MYCELIAL FLOW** - Logical, connected paths
+6. **TOKEN WATCH** - Track usage, alert @ 180K
 
 ---
 
-**Last Verified:** 2025-11-25 (Agent 127)  
-**Build:** ✅ 3.9s  
-**Production:** ✅ LIVE  
-**Auth Tested:** ✅ Middleware redirect works  
-**Next Agent:** Continue testing with valid credentials
+**Verified:** 2025-11-25 17:33 UTC  
+**Build:** ✅ 3.9s cached  
+**Live:** ✅ HTTP 200  
+**Auth:** ✅ Page renders  
+**Console:** ✅ Clean (PostHog warning expected)  
+**Next:** Create test account in prod DB
