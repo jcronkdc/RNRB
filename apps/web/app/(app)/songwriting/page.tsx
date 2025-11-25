@@ -281,156 +281,62 @@ export default function SongwritingPage() {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
-      {/* Onboarding Tour */}
-      {showOnboarding && (
-        <OnboardingTour
-          steps={[
-            {
-              id: 'welcome',
-              title: 'Welcome to World-Class Songwriting!',
-              description: 'We\'ve transformed the songwriting tool with 7 powerful new features. Let me show you what\'s new!',
-            },
-            {
-              id: 'rhyme-dictionary',
-              title: 'Rhyme Dictionary',
-              description: 'Find perfect rhymes, near rhymes, and sounds-like words instantly. Grouped by syllable count for perfect flow.',
-            },
-            {
-              id: 'syllable-counter',
-              title: 'Syllable Counter',
-              description: 'Automatic meter analysis detects flow issues in your lyrics. Get word-by-word syllable breakdowns.',
-            },
-            {
-              id: 'chord-analyzer',
-              title: 'Smart Chord Analyzer',
-              description: 'Automatic key detection, Roman numeral analysis, and AI-powered next chord suggestions.',
-            },
-            {
-              id: 'templates',
-              title: 'Song Templates',
-              description: 'Start with proven structures: Pop, Rock, Country, R&B. One-click apply to save 15 minutes of setup.',
-            },
-            {
-              id: 'voice-memos',
-              title: 'Voice Memos',
-              description: 'Record melody ideas directly in your browser. Save, play, and download for later reference.',
-            },
-            {
-              id: 'undo-redo',
-              title: 'Undo/Redo',
-              description: 'Full history stack lets you experiment fearlessly. Use Cmd+Z to undo, Cmd+Shift+Z to redo.',
-            },
-          ]}
-        />
-      )}
-      
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-        {/* Improved Header with Better Visual Hierarchy */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="relative mb-6 overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-6 shadow-xl lg:mb-8 lg:p-8"
-        >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex flex-1 items-start gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-500/50 lg:h-16 lg:w-16">
-                <Music2 className="h-7 w-7 text-white lg:h-8 lg:w-8" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="mb-2 flex flex-wrap items-center gap-2 lg:gap-3">
-                  <input
-                    type="text"
-                    value={songTitle}
-                    onChange={(e) => setSongTitle(e.target.value)}
-                    className="min-w-0 flex-1 border-none bg-transparent px-0 text-2xl font-bold text-white outline-none placeholder:text-gray-500 focus:ring-0 sm:text-3xl lg:text-4xl"
-                    placeholder="Untitled Song"
-                    disabled={!user}
-                  />
-                  <SaveStatusIndicator />
-                </div>
-                <div className="flex flex-wrap items-center gap-3 text-sm">
-                  <p className="flex items-center gap-2 text-gray-300">
-                    <Sparkles className="h-4 w-4 shrink-0 text-orange-500" />
-                    <span>World-class songwriting tools</span>
-                  </p>
-                  
-                  {/* Enhanced Action Buttons */}
-                  {user && (
-                    <div className="flex flex-wrap items-center gap-2">
-                      {/* Undo/Redo Buttons - More Prominent */}
-                      <div className="flex items-center gap-1 rounded-lg border border-gray-700 bg-gray-800/50 p-1">
-                        <button
-                          onClick={undo}
-                          disabled={historyIndex <= 0}
-                          className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition ${
-                            historyIndex > 0
-                              ? 'bg-gray-700 text-white hover:bg-gray-600'
-                              : 'text-gray-600 cursor-not-allowed'
-                          }`}
-                          title="Undo (Cmd+Z)"
-                        >
-                          <Undo2 className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">Undo</span>
-                        </button>
-                        <button
-                          onClick={redo}
-                          disabled={historyIndex >= history.length - 1}
-                          className={`flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs font-medium transition ${
-                            historyIndex < history.length - 1
-                              ? 'bg-gray-700 text-white hover:bg-gray-600'
-                              : 'text-gray-600 cursor-not-allowed'
-                          }`}
-                          title="Redo (Cmd+Shift+Z)"
-                        >
-                          <Redo2 className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">Redo</span>
-                        </button>
-                      </div>
-                      
-                      {/* Template Picker Button - More Prominent with Tooltip */}
-                      {activeView === 'structure' && (
-                        <FeatureTooltip
-                          id="song-templates"
-                          title="Song Templates"
-                          description="Quick-start with proven song structures! Try Pop, Rock, Country, or R&B templates."
-                          position="bottom"
-                        >
-                          <button
-                            onClick={() => setShowTemplatePicker(true)}
-                            className="group relative flex items-center gap-2 overflow-hidden rounded-lg border-2 border-blue-500/50 bg-gradient-to-r from-blue-500/20 to-blue-600/20 px-3 py-1.5 text-xs font-bold text-blue-300 transition hover:border-blue-500 hover:from-blue-500/30 hover:to-blue-600/30 hover:shadow-lg hover:shadow-blue-500/20"
-                          >
-                            <LayoutTemplate className="h-3.5 w-3.5" />
-                            <span>Templates</span>
-                            <span className="ml-1 rounded-full bg-blue-500 px-1.5 py-0.5 text-[10px] text-white">NEW</span>
-                          </button>
-                        </FeatureTooltip>
-                      )}
-                      
-                      {/* Voice Memo Quick Access - When on any tab with Tooltip */}
-                      <FeatureTooltip
-                        id="voice-memos"
-                        title="Voice Memos"
-                        description="Capture melody ideas instantly! Record directly in your browser, no external tools needed."
-                        position="bottom"
-                      >
-                        <button
-                          onClick={() => setActiveView('lyrics')} // Switch to lyrics tab where voice memos are
-                          className="group relative flex items-center gap-2 overflow-hidden rounded-lg border-2 border-red-500/50 bg-gradient-to-r from-red-500/20 to-red-600/20 px-3 py-1.5 text-xs font-bold text-red-300 transition hover:border-red-500 hover:from-red-500/30 hover:to-red-600/30 hover:shadow-lg hover:shadow-red-500/20"
-                          title="Record voice memos"
-                        >
-                          <Mic className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">Record</span>
-                          <span className="ml-1 rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] text-white">NEW</span>
-                        </button>
-                      </FeatureTooltip>
-                    </div>
-                  )}
-                </div>
+    <div className="min-h-screen bg-zinc-950">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* Clean Professional Header */}
+        <div className="mb-8 border-b border-zinc-800 pb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <input
+                type="text"
+                value={songTitle}
+                onChange={(e) => setSongTitle(e.target.value)}
+                className="w-full border-none bg-transparent px-0 text-3xl font-bold text-white outline-none placeholder:text-zinc-600 focus:ring-0 lg:text-4xl"
+                placeholder="Untitled Song"
+                disabled={!user}
+              />
+              <div className="mt-2 flex items-center gap-4">
+                <SaveStatusIndicator />
+                {user && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={undo}
+                      disabled={historyIndex <= 0}
+                      className={`rounded px-3 py-1 text-xs font-mono uppercase tracking-wider transition ${
+                        historyIndex > 0
+                          ? 'bg-zinc-800 text-white hover:bg-zinc-700'
+                          : 'text-zinc-600 cursor-not-allowed'
+                      }`}
+                      title="Undo (⌘Z)"
+                    >
+                      Undo
+                    </button>
+                    <button
+                      onClick={redo}
+                      disabled={historyIndex >= history.length - 1}
+                      className={`rounded px-3 py-1 text-xs font-mono uppercase tracking-wider transition ${
+                        historyIndex < history.length - 1
+                          ? 'bg-zinc-800 text-white hover:bg-zinc-700'
+                          : 'text-zinc-600 cursor-not-allowed'
+                      }`}
+                      title="Redo (⌘⇧Z)"
+                    >
+                      Redo
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
             {user && (
-              <div className="shrink-0 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2">
+              <div className="ml-4 flex items-center gap-2">
+                {activeView === 'structure' && (
+                  <button
+                    onClick={() => setShowTemplatePicker(true)}
+                    className="rounded bg-zinc-800 px-4 py-2 text-xs font-mono uppercase tracking-wider text-white transition hover:bg-zinc-700"
+                  >
+                    Templates
+                  </button>
+                )}
                 <PresenceIndicator
                   channelName="songwriting:studio"
                   currentUser={{
@@ -441,116 +347,64 @@ export default function SongwritingPage() {
                   }}
                   location={`songwriting:${activeView}`}
                   showDetails={false}
-                  maxVisible={5}
+                  maxVisible={3}
                 />
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
 
-        {/* Improved Collaboration Features Banner - More Compact */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3 lg:mb-8 lg:p-4"
-        >
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:flex sm:gap-6">
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 shrink-0 text-purple-400 lg:h-5 lg:w-5" />
-                <span className="text-sm font-medium text-white">Chat</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Video className="h-4 w-4 shrink-0 text-purple-400 lg:h-5 lg:w-5" />
-                <span className="text-sm font-medium text-white">Video</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 shrink-0 text-purple-400 lg:h-5 lg:w-5" />
-                <span className="text-sm font-medium text-white">Live Cursors</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Save className="h-4 w-4 shrink-0 text-purple-400 lg:h-5 lg:w-5" />
-                <span className="text-sm font-medium text-white">Auto-Save</span>
-              </div>
-            </div>
-            <div className="text-xs text-purple-300 sm:text-sm">✨ All features active</div>
-          </div>
-        </motion.div>
-
-        {/* Improved View Tabs - Better Mobile UX */}
-        <div className="mb-6 flex gap-1 overflow-x-auto border-b border-gray-800 lg:mb-8 lg:gap-2">
+        {/* Clean Tab Navigation */}
+        <div className="mb-8 flex gap-1 border-b border-zinc-800">
           <button
             onClick={() => setActiveView('structure')}
-            className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-all sm:px-6 lg:text-base ${
-              activeView === 'structure' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
+            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider transition-colors ${
+              activeView === 'structure' 
+                ? 'border-b-2 border-white text-white' 
+                : 'text-zinc-400 hover:text-white'
             }`}
           >
-            Song Structure
-            {activeView === 'structure' && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
-              />
-            )}
+            Structure
           </button>
           <button
             onClick={() => setActiveView('chords')}
-            className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-all sm:px-6 lg:text-base ${
-              activeView === 'chords' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
+            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider transition-colors ${
+              activeView === 'chords' 
+                ? 'border-b-2 border-white text-white' 
+                : 'text-zinc-400 hover:text-white'
             }`}
           >
-            Chord Progressions
-            {activeView === 'chords' && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
-              />
-            )}
+            Chords
           </button>
           <button
             onClick={() => setActiveView('lyrics')}
-            className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-all sm:px-6 lg:text-base ${
-              activeView === 'lyrics' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
+            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider transition-colors ${
+              activeView === 'lyrics' 
+                ? 'border-b-2 border-white text-white' 
+                : 'text-zinc-400 hover:text-white'
             }`}
           >
-            Lyrics Assistant
-            {activeView === 'lyrics' && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
-              />
-            )}
+            Lyrics
           </button>
           <button
             onClick={() => setActiveView('copyright')}
-            className={`relative shrink-0 px-4 py-3 text-sm font-semibold transition-all sm:px-6 lg:text-base ${
-              activeView === 'copyright' ? 'text-orange-500' : 'text-gray-400 hover:text-white'
+            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider transition-colors ${
+              activeView === 'copyright' 
+                ? 'border-b-2 border-white text-white' 
+                : 'text-zinc-400 hover:text-white'
             }`}
           >
-            Copyright & Publishing
-            {activeView === 'copyright' && (
-              <motion.div
-                layoutId="activeTab"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
-              />
-            )}
+            Copyright
           </button>
         </div>
 
-        {/* Content - Improved Loading and Empty States */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="min-h-[500px]"
-        >
+        {/* Content Area */}
+        <div className="min-h-[600px]">
           {activeView === 'structure' && loading && (
-            <div className="flex min-h-[500px] items-center justify-center rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black">
+            <div className="flex min-h-[600px] items-center justify-center rounded border border-zinc-800 bg-zinc-900/50">
               <div className="text-center">
-                <Music2 className="mx-auto mb-4 h-12 w-12 animate-pulse text-orange-500" />
-                <p className="text-lg font-medium text-white">Loading songwriting studio...</p>
-                <p className="mt-2 text-sm text-gray-400">Preparing your collaborative workspace</p>
+                <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin text-white" />
+                <p className="font-mono text-sm uppercase tracking-wider text-zinc-400">Loading Studio</p>
               </div>
             </div>
           )}
@@ -569,37 +423,27 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'structure' && !loading && !user && (
-            <div className="flex min-h-[500px] items-center justify-center rounded-2xl border-2 border-orange-500/30 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-8 shadow-xl lg:p-12">
+            <div className="flex min-h-[600px] items-center justify-center rounded border border-zinc-800 bg-zinc-900/50 p-12">
               <div className="max-w-md text-center">
-                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-500/50">
-                  <Music2 className="h-10 w-10 text-white" />
-                </div>
-                <h3 className="mb-3 text-2xl font-bold text-white lg:text-3xl">
-                  Sign In to Start Writing
+                <h3 className="mb-4 font-mono text-2xl uppercase tracking-wider text-white">
+                  Sign In Required
                 </h3>
-                <p className="mb-6 text-base text-gray-300">
-                  The collaborative song builder requires authentication to save your work and
-                  enable real-time collaboration with other musicians.
+                <p className="mb-8 text-zinc-400">
+                  Authentication required to access collaborative songwriting features.
                 </p>
-                <div className="space-y-4">
-                  <a
-                    href="/auth"
-                    className="inline-block w-full rounded-lg bg-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:bg-orange-600 hover:shadow-orange-500/50 sm:w-auto"
-                  >
-                    Sign In to Continue
-                  </a>
-                  <p className="text-sm text-gray-400">
-                    or <a href="/auth" className="text-orange-400 hover:underline">create a free account</a>
-                  </p>
-                </div>
+                <a
+                  href="/auth"
+                  className="inline-block rounded bg-white px-8 py-3 font-mono text-sm uppercase tracking-wider text-black transition hover:bg-zinc-100"
+                >
+                  Sign In
+                </a>
               </div>
             </div>
           )}
 
           {activeView === 'chords' && (
             <div className="space-y-6">
-              {/* Chord Builder */}
-              <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
+              <div className="rounded border border-zinc-800 bg-zinc-900/50 p-6">
                 <ChordBuilder
                   onChange={(progression) => {
                     setChordProgression(progression);
@@ -611,8 +455,6 @@ export default function SongwritingPage() {
                   }}
                 />
               </div>
-
-              {/* Metronome */}
               <Metronome
                 initialBpm={songData.tempo || 120}
                 initialTimeSignature={songData.timeSignature || '4/4'}
@@ -632,22 +474,13 @@ export default function SongwritingPage() {
 
           {activeView === 'lyrics' && (
             <div className="space-y-6">
-              {/* Voice Memo Recorder - Integrated at Top */}
-              <div className="rounded-2xl border-2 border-red-500/30 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
-                <div className="mb-6 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20">
-                    <Mic className="h-6 w-6 text-red-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Voice Memos</h3>
-                    <p className="text-sm text-gray-400">Capture melody ideas & vocal demos</p>
-                  </div>
+              <div className="rounded border border-zinc-800 bg-zinc-900/50 p-6">
+                <div className="mb-6 border-b border-zinc-800 pb-4">
+                  <h3 className="font-mono text-sm uppercase tracking-wider text-zinc-400">Voice Memos</h3>
                 </div>
                 <VoiceMemoRecorder songId={songData.id} />
               </div>
-              
-              {/* Lyrics Assistant - Below Voice Memos */}
-              <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
+              <div className="rounded border border-zinc-800 bg-zinc-900/50 p-6">
                 <LyricsAssistant
                   currentLyrics={lyrics}
                   onInsert={(text) => setLyrics(lyrics ? lyrics + '\n' + text : text)}
@@ -657,91 +490,42 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'copyright' && (
-            <CopyrightManager
-              songId={songData.id}
-              songTitle={songTitle}
-              audioUrl={songData.audioUrl}
-              audioPath={songData.audioPath}
-              initialData={songData.copyrightInfo ? JSON.parse(songData.copyrightInfo as any) : undefined}
-              onUpdate={(info) => {
-                if (songData.id) {
-                  updateSong({
-                    copyrightInfo: JSON.stringify(info) as any,
-                    isrc: info.isrc,
-                    iswc: info.iswc,
-                  });
-                }
-              }}
-              onAudioUpdate={(url, path) => {
-                if (songData.id) {
-                  updateSong({
-                    audioUrl: url,
-                    audioPath: path,
-                  });
-                }
-              }}
-              onAudioRemove={() => {
-                if (songData.id) {
-                  updateSong({
-                    audioUrl: null,
-                    audioPath: null,
-                  });
-                }
-              }}
-            />
+            <div className="rounded border border-zinc-800 bg-zinc-900/50 p-6">
+              <CopyrightManager
+                songId={songData.id}
+                songTitle={songTitle}
+                audioUrl={songData.audioUrl}
+                audioPath={songData.audioPath}
+                initialData={songData.copyrightInfo ? JSON.parse(songData.copyrightInfo as any) : undefined}
+                onUpdate={(info) => {
+                  if (songData.id) {
+                    updateSong({
+                      copyrightInfo: JSON.stringify(info) as any,
+                      isrc: info.isrc,
+                      iswc: info.iswc,
+                    });
+                  }
+                }}
+                onAudioUpdate={(url, path) => {
+                  if (songData.id) {
+                    updateSong({
+                      audioUrl: url,
+                      audioPath: path,
+                    });
+                  }
+                }}
+                onAudioRemove={() => {
+                  if (songData.id) {
+                    updateSong({
+                      audioUrl: null,
+                      audioPath: null,
+                    });
+                  }
+                }}
+              />
+            </div>
           )}
-        </motion.div>
-
-        {/* Improved Collaboration Info - Better Mobile Layout */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="mt-6 rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-5 lg:mt-8 lg:p-6"
-        >
-          <h3 className="mb-4 flex items-center gap-2 text-base font-semibold text-white lg:text-lg">
-            <Users className="h-5 w-5 text-orange-500" />
-            Collaborative Features
-          </h3>
-          <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
-            <div className="flex items-start gap-3 rounded-lg border border-gray-800/50 bg-gray-900/50 p-3">
-              <MessageSquare className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
-              <div>
-                <p className="font-medium text-white">Real-time Chat</p>
-                <p className="mt-1 text-xs text-gray-400">
-                  Message collaborators while writing
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg border border-gray-800/50 bg-gray-900/50 p-3">
-              <Video className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
-              <div>
-                <p className="font-medium text-white">Video Sessions</p>
-                <p className="mt-1 text-xs text-gray-400">
-                  Face-to-face with screen share
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg border border-gray-800/50 bg-gray-900/50 p-3">
-              <Users className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
-              <div>
-                <p className="font-medium text-white">Live Cursors</p>
-                <p className="mt-1 text-xs text-gray-400">
-                  See everyone's cursor in real-time
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 rounded-lg border border-gray-800/50 bg-gray-900/50 p-3">
-              <Save className="mt-0.5 h-5 w-5 shrink-0 text-purple-400" />
-              <div>
-                <p className="font-medium text-white">Auto-Save</p>
-                <p className="mt-1 text-xs text-gray-400">
-                  Work saved every 2 seconds
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Song Template Picker Modal */}
