@@ -16,6 +16,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // Use Prisma adapter (compatible with JWT + Credentials in v5)
   adapter: PrismaAdapter(prisma) as Adapter,
   
+  // Define basePath for API routes (CRITICAL for v5!)
+  basePath: '/api/auth',
+  
   session: {
     strategy: 'jwt',
   },
