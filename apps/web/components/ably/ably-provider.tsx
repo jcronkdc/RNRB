@@ -21,7 +21,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
 
   useEffect(() => {
     // Only initialize if authenticated and shouldInit is true
-    if (typeof window === 'undefined' || !shouldInit || !isAuthenticated) {
+    if (typeof window === 'undefined' || !shouldInit || !isAuthenticated || !session?.user?.id) {
       return;
     }
 
@@ -29,7 +29,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
       const ablyClient = new Ably.Realtime({
         authUrl: '/api/ably/token',
         authMethod: 'GET',
-        clientId: process.env.NEXT_PUBLIC_ABLY_CLIENT_ID ?? 'rnrb-web',
+        clientId: session.user.id, // Use actual user ID to match token
         echoMessages: false,
         closeOnUnload: true,
         transportParams: {
