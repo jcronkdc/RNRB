@@ -6,11 +6,12 @@ import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { isRedirectError } from 'next/dist/client/components/redirect';
 import { Suspense, useState } from 'react';
 
 import { signInWithCredentials, signInWithGoogle } from '@/app/actions/auth';
 import { supabase } from '@/lib/supabase';
+
+const NEXT_REDIRECT = 'NEXT_REDIRECT';
 
 function AuthForm() {
   const router = useRouter();
@@ -63,9 +64,9 @@ function AuthForm() {
             await signInWithCredentials({ email, password });
             // If we reach here, there was an error (no redirect happened)
             console.log('[AUTH] No redirect occurred after auto-signin');
-          } catch (error) {
+          } catch (error: any) {
             // Check if this is a redirect error (success case)
-            if (isRedirectError(error)) {
+            if (error?.digest?.startsWith(NEXT_REDIRECT)) {
               console.log('[AUTH] Redirect detected, auto-signin successful');
               // Let the redirect happen
               return;
@@ -81,9 +82,9 @@ function AuthForm() {
           await signInWithCredentials({ email, password });
           // If we reach here, there was an error (no redirect happened)
           console.log('[AUTH] No redirect occurred, assuming error');
-        } catch (error) {
+        } catch (error: any) {
           // Check if this is a redirect error (success case)
-          if (isRedirectError(error)) {
+          if (error?.digest?.startsWith(NEXT_REDIRECT)) {
             console.log('[AUTH] Redirect detected, sign-in successful');
             // Let the redirect happen
             return;

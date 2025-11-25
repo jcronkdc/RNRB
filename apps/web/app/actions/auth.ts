@@ -2,7 +2,8 @@
 
 import { signIn } from '@cronkwaters/auth';
 import { AuthError } from 'next-auth';
-import { isRedirectError } from 'next/dist/client/components/redirect';
+
+const NEXT_REDIRECT = 'NEXT_REDIRECT';
 
 export async function signInWithCredentials(formData: { email: string; password: string }) {
   try {
@@ -16,10 +17,10 @@ export async function signInWithCredentials(formData: { email: string; password:
     
     // If we get here, sign-in was successful (redirect will happen automatically)
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     // NextAuth v5 throws NEXT_REDIRECT error on successful auth
-    // We need to check if it's a redirect (success) or actual error
-    if (isRedirectError(error)) {
+    // Check if this is a redirect (success case)
+    if (error?.digest?.startsWith(NEXT_REDIRECT)) {
       // This is actually a successful redirect, rethrow it
       throw error;
     }
@@ -44,9 +45,9 @@ export async function signInWithCredentials(formData: { email: string; password:
 export async function signInWithGoogle() {
   try {
     await signIn('google', { redirectTo: '/dashboard' });
-  } catch (error) {
+  } catch (error: any) {
     // Check for redirect errors (which are actually success)
-    if (isRedirectError(error)) {
+    if (error?.digest?.startsWith(NEXT_REDIRECT)) {
       throw error;
     }
     
