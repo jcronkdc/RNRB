@@ -1595,3 +1595,412 @@ model ProjectInsight {
 }
 
 // Force Prisma regeneration: 2025-11-25-WORLD-CLASS-FEATURES
+
+// ====================================
+// WORLD-CLASS COLLABORATION FEATURES
+// Added: 2025-11-25
+// ====================================
+
+// Real-time chat messages with voice/video support
+model ChatMessage {
+  id          String          @id @default(cuid())
+  channelId   String // chat:project:{id} or chat:song:{id}
+  channelType ChatChannelType
+  senderId    String
+  senderName  String
+  senderEmail String
+  senderAvatar String?
+  
+  // Message content
+  messageType ChatMessageType @default(text)
+  content     String?         @db.Text // Text content
+  
+  // Voice message fields
+  audioUrl      String? // Supabase Storage URL
+  audioPath     String? // Storage path
+  audioDuration Int? // Duration in seconds
+  waveformData  Json? // Array of amplitudes for visualization
+  
+  // Video message fields
+  videoUrl      String?
+  videoPath     String?
+  videoDuration Int?
+  videoThumbnail String?
+  
+  // Attachments
+  attachments Json? // Array of file attachments
+  
+  // Metadata
+  isEdited    Boolean   @default(false)
+  editedAt    DateTime?
+  isDeleted   Boolean   @default(false)
+  deletedAt   DateTime?
+  
+  // Threading
+  threadId  String? // Reply to another message
+  replyTo   ChatMessage?  @relation("MessageThread", fields: [threadId], references: [id])
+  replies   ChatMessage[] @relation("MessageThread")
+  
+  // Reactions
+  reactions Json? // { "👍": ["userId1", "userId2"], "❤️": ["userId3"] }
+  
+  // Mentions
+  mentions String[] // Array of user IDs mentioned
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([channelId, createdAt])
+  @@index([senderId])
+  @@index([channelType])
+  @@index([messageType])
+  @@index([threadId])
+}
+
+enum ChatChannelType {
+  project
+  song
+  direct
+  group
+  voice_room
+}
+
+enum ChatMessageType {
+  text
+  voice
+  video
+  file
+  system // System messages like "User joined"
+}
+
+// Voice/Video Rooms for real-time collaboration
+model CollaborationRoom {
+  id          String         @id @default(cuid())
+  name        String
+  type        RoomType
+  channelId   String // Links to project or song
+  dailyRoomId String?        @unique // Daily.co room ID
+  
+  // Room settings
+  maxParticipants Int            @default(32)
+  requireAuth     Boolean        @default(true)
+  enableVideo     Boolean        @default(true)
+  enableAudio     Boolean        @default(true)
+  enableScreenShare Boolean      @default(true)
+  spatialAudio    Boolean        @default(false)
+  
+  // Recording
+  recordingEnabled Boolean        @default(false)
+  recordingUrl     String?
+  recordingPath    String?
+  recordingDuration Int?
+  
+  // Status
+  status       RoomStatus     @default(active)
+  startedAt    DateTime?
+  endedAt      DateTime?
+  
+  // Metadata
+  createdById String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  sessions    RoomSession[]
+  
+  @@index([channelId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum RoomType {
+  voice_only
+  video_call
+  screen_share
+  jam_session // Music collaboration
+  listening_party // Synchronized playback
+}
+
+enum RoomStatus {
+  active
+  paused
+  ended
+  archived
+}
+
+// Track individual room sessions
+model RoomSession {
+  id               String    @id @default(cuid())
+  roomId           String
+  userId           String
+  userName         String
+  userAvatar       String?
+  
+  // Session details
+  joinedAt         DateTime  @default(now())
+  leftAt           DateTime?
+  duration         Int? // Seconds
+  
+  // Participation
+  videoEnabled     Boolean   @default(false)
+  audioEnabled     Boolean   @default(true)
+  screenSharing    Boolean   @default(false)
+  
+  // Quality metrics
+  networkQuality   String? // excellent, good, poor
+  audioQuality     String?
+  videoQuality     String?
+  
+  room CollaborationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  
+  @@index([roomId, joinedAt])
+  @@index([userId])
+}
+
+// Pinned comments on specific parts of content
+model PinnedComment {
+  id          String        @id @default(cuid())
+  entityId    String // Song ID, project ID, etc
+  entityType  EntityType
+  
+  // Location in content
+  lineNumber  Int? // For lyrics
+  timestamp   Int? // For audio (milliseconds)
+  selection   Json? // { start: 10, end: 25 } for text selection
+  
+  // Comment
+  userId      String
+  userName    String
+  userAvatar  String?
+  content     String        @db.Text
+  
+  // Status
+  isResolved  Boolean       @default(false)
+  resolvedAt  DateTime?
+  resolvedBy  String?
+  
+  // Threading
+  threadId    String?
+  parent      PinnedComment? @relation("CommentThread", fields: [threadId], references: [id])
+  replies     PinnedComment[] @relation("CommentThread")
+  
+  // Reactions
+  reactions   Json? // { "👍": ["userId1"], "✅": ["userId2"] }
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  @@index([entityId, entityType])
+  @@index([userId])
+  @@index([isResolved])
+  @@index([threadId])
+}
+
+enum EntityType {
+  song
+  project
+  lyric_line
+  audio_track
+  video
+  document
+}
+
+// Collaborative editing sessions with CRDT support
+model EditSession {
+  id                String    @id @default(cuid())
+  entityId          String // Song ID, lyric ID, etc
+  entityType        EntityType
+  
+  // Yjs document data (CRDT)
+  yjsStateVector    Bytes? // Y.js state vector for sync
+  yjsUpdate         Bytes? // Latest Y.js update
+  yjsDocumentState  Bytes? // Compressed Y.js document
+  
+  // Session metadata
+  activeUsers       String[] // User IDs currently editing
+  lastActivity      DateTime @default(now())
+  version           Int      @default(1)
+  
+  // Performance tracking
+  editCount         Int      @default(0)
+  conflictCount     Int      @default(0)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  changes           EditChange[]
+  
+  @@unique([entityId, entityType])
+  @@index([lastActivity])
+}
+
+// Individual edit changes for history/analytics
+model EditChange {
+  id            String      @id @default(cuid())
+  sessionId     String
+  userId        String
+  userName      String
+  
+  // Change details
+  changeType    ChangeType
+  field         String? // Which field was changed
+  oldValue      String?     @db.Text
+  newValue      String?     @db.Text
+  deltaJson     Json? // Y.js change delta
+  
+  // Location
+  position      Int? // Cursor/selection position
+  selection     Json? // { start, end }
+  
+  // Metadata
+  deviceInfo    String? // Browser, OS
+  latencyMs     Int? // How long this change took
+  
+  timestamp     DateTime    @default(now())
+  
+  session EditSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@index([sessionId, timestamp])
+  @@index([userId])
+  @@index([changeType])
+}
+
+enum ChangeType {
+  insert
+  delete
+  update
+  format
+  move
+  merge
+  split
+}
+
+// Enhanced presence tracking
+model PresenceState {
+  id          String          @id @default(cuid())
+  userId      String
+  userName    String
+  userEmail   String
+  userAvatar  String?
+  
+  // Location
+  channelId   String // where they are
+  channelType String // project, song, room
+  
+  // Activity
+  status      PresenceStatus  @default(active)
+  activity    String? // "Editing verse 2", "Listening to demo"
+  
+  // Viewport tracking
+  viewport    Json? // { scroll: 100, zoom: 1.2, section: "chorus" }
+  
+  // Cursor/selection
+  cursorPosition Int?
+  selection      Json? // { start, end, text }
+  
+  // Device info
+  deviceType  String? // desktop, mobile, tablet
+  browser     String?
+  
+  // Timestamps
+  lastActive  DateTime        @default(now())
+  joinedAt    DateTime        @default(now())
+  
+  // Expires after 5 minutes of inactivity
+  expiresAt   DateTime
+  
+  @@unique([userId, channelId])
+  @@index([channelId, status])
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([lastActive])
+}
+
+enum PresenceStatus {
+  active
+  idle
+  away
+  dnd // Do not disturb
+  offline
+}
+
+// Collaboration analytics and insights
+model CollaborationMetrics {
+  id          String   @id @default(cuid())
+  entityId    String
+  entityType  EntityType
+  
+  // Time-based metrics
+  date        DateTime @default(now())
+  
+  // Activity metrics
+  activeUsers     Int      @default(0)
+  totalEdits      Int      @default(0)
+  totalMessages   Int      @default(0)
+  totalVoiceMinutes Int    @default(0)
+  totalVideoMinutes Int    @default(0)
+  
+  // Conflict/resolution metrics
+  conflicts       Int      @default(0)
+  autoResolved    Int      @default(0)
+  manualResolved  Int      @default(0)
+  
+  // Engagement metrics
+  commentsAdded   Int      @default(0)
+  commentsResolved Int     @default(0)
+  reactionsAdded  Int      @default(0)
+  
+  // User breakdown
+  userMetrics     Json? // { userId: { edits: 10, messages: 5 } }
+  
+  // Heatmap data
+  editHeatmap     Json? // Areas of most activity
+  timeHeatmap     Json? // When most activity happens
+  
+  createdAt       DateTime @default(now())
+  
+  @@unique([entityId, entityType, date])
+  @@index([entityId, entityType])
+  @@index([date])
+}
+
+// Conflict resolution suggestions (AI-powered)
+model ConflictSuggestion {
+  id          String           @id @default(cuid())
+  sessionId   String
+  conflictId  String           @unique
+  
+  // Conflict details
+  field       String
+  user1Id     String
+  user1Value  String           @db.Text
+  user2Id     String
+  user2Value  String           @db.Text
+  
+  // AI suggestion
+  suggestion  String           @db.Text
+  confidence  Float // 0-1
+  reasoning   String?          @db.Text
+  
+  // Resolution
+  status      ConflictStatus   @default(pending)
+  resolvedBy  String?
+  resolution  String? // "accepted_ai", "accepted_user1", "accepted_user2", "manual_merge"
+  finalValue  String?          @db.Text
+  
+  createdAt   DateTime         @default(now())
+  resolvedAt  DateTime?
+  
+  @@index([sessionId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum ConflictStatus {
+  pending
+  reviewing
+  resolved
+  ignored
+}
+
+// Force Prisma regeneration: 2025-11-25-WORLD-CLASS-COLLAB-V1

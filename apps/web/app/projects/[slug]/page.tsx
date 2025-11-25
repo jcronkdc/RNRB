@@ -18,8 +18,14 @@ import {
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 
 import { supabase } from '@/lib/supabase';
+
+const MilestoneTimeline = dynamic(
+  () => import('@/components/milestone-timeline').then((m) => m.MilestoneTimeline),
+  { ssr: false }
+);
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -301,6 +307,17 @@ export default function ProjectDetailPage() {
                   ))}
                 </div>
               )}
+            </Card>
+
+            {/* Project Roadmap / Milestones */}
+            <Card className="rnrb-card p-6">
+              <MilestoneTimeline 
+                projectSlug={slug}
+                onMilestoneClick={(milestoneId) => {
+                  // Could navigate to milestone detail or open modal
+                  console.log('Milestone clicked:', milestoneId);
+                }}
+              />
             </Card>
           </motion.div>
 

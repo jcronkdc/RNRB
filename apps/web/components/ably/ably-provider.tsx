@@ -25,6 +25,12 @@ export function AblyProvider({ children, lazy = true }: Props) {
       return;
     }
 
+    // Add connection timeout to prevent infinite "Connecting..."
+    const connectionTimeout = setTimeout(() => {
+      console.warn('Ably connection timeout - continuing without real-time features');
+      setHasError(true);
+    }, 15000); // 15 second timeout
+
     try {
       const ablyClient = new Ably.Realtime({
         authUrl: '/api/ably/token',
@@ -37,8 +43,15 @@ export function AblyProvider({ children, lazy = true }: Props) {
         },
       });
 
+      // Handle connection success - clear timeout
+      ablyClient.connection.on('connected', () => {
+        clearTimeout(connectionTimeout);
+        setHasError(false);
+      });
+
       // Handle connection errors gracefully
       ablyClient.connection.on('failed', () => {
+        clearTimeout(connectionTimeout);
         console.warn('Ably connection failed - real-time features disabled');
         setHasError(true);
       });
@@ -47,22 +60,20 @@ export function AblyProvider({ children, lazy = true }: Props) {
         console.warn('Ably disconnected - attempting reconnect...');
       });
 
-      ablyClient.connection.on('connected', () => {
-        setHasError(false);
-      });
-
       setClient(ablyClient);
 
       return () => {
+        clearTimeout(connectionTimeout);
         ablyClient.close();
       };
     } catch (error) {
+      clearTimeout(connectionTimeout);
       console.warn('Ably client initialization failed:', error);
       setHasError(true);
       // App continues without real-time features
       return undefined;
     }
-  }, [shouldInit, isAuthenticated]);
+  }, [shouldInit, isAuthenticated, session?.user?.id]);
 
   // Lazy initialization: only connect when user interacts or after delay
   useEffect(() => {

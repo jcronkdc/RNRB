@@ -68,6 +68,11 @@ const BatchSuggestionReview = dynamic(
   { ssr: false }
 );
 
+const Metronome = dynamic(
+  () => import('@/components/songwriting/metronome').then((m) => m.Metronome),
+  { ssr: false }
+);
+
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
@@ -182,14 +187,18 @@ export default function SongwritingPage() {
 
   // Create song on first load if user is authenticated
   useEffect(() => {
-    if (user && !songData.id) {
+    if (user?.id && !songData.id) {
       createSong({
         title: songTitle,
         status: 'draft',
         visibility: 'private',
-      }).catch(console.error);
+      }).catch((err) => {
+        console.error('Failed to create initial song:', err);
+        // Don't show toast here - useSongAutoSave handles error toasts
+      });
     }
-  }, [user, songData.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]); // Only run when user ID changes or on mount
 
   // Auto-save blocks when they change
   useEffect(() => {
@@ -588,16 +597,33 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'chords' && (
-            <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
-              <ChordBuilder
-                onChange={(progression) => {
-                  // progression is already ChordBlock[], just update it directly
-                  setChordProgression(progression);
-                  // Auto-save chord progression
+            <div className="space-y-6">
+              {/* Chord Builder */}
+              <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 lg:p-8">
+                <ChordBuilder
+                  onChange={(progression) => {
+                    setChordProgression(progression);
+                    if (songData.id) {
+                      updateSong({
+                        chords: progression,
+                      });
+                    }
+                  }}
+                />
+              </div>
+
+              {/* Metronome */}
+              <Metronome
+                initialBpm={songData.tempo || 120}
+                initialTimeSignature={songData.timeSignature || '4/4'}
+                onBpmChange={(bpm) => {
                   if (songData.id) {
-                    updateSong({
-                      chords: progression,
-                    });
+                    updateSong({ tempo: bpm });
+                  }
+                }}
+                onTimeSignatureChange={(sig) => {
+                  if (songData.id) {
+                    updateSong({ timeSignature: sig });
                   }
                 }}
               />

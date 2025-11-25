@@ -43,6 +43,18 @@ const PublishToCommunityModal = dynamic(
   () => import('@/components/publish-to-community-modal').then((m) => m.PublishToCommunityModal),
   { ssr: false }
 );
+const VersionHistory = dynamic(
+  () => import('@/components/version-history').then((m) => m.VersionHistory),
+  { ssr: false }
+);
+const StemsMixer = dynamic(
+  () => import('@/components/stems-mixer').then((m) => m.StemsMixer),
+  { ssr: false }
+);
+const CopyrightManager = dynamic(
+  () => import('@/components/copyright-manager').then((m) => m.CopyrightManager),
+  { ssr: false }
+);
 
 type AudioFileInfo = {
   id: string;
@@ -66,7 +78,7 @@ export default function SongDetailPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'details' | 'lyrics' | 'audio' | 'chat' | 'share'>(
+  const [activeTab, setActiveTab] = useState<'details' | 'lyrics' | 'audio' | 'versions' | 'stems' | 'copyright' | 'chat' | 'share'>(
     'details'
   );
   const [audioFiles, setAudioFiles] = useState<AudioFileInfo[]>([]);
@@ -242,12 +254,12 @@ export default function SongDetailPage() {
         )}
 
         {/* Tabs */}
-        <div className="mb-6 flex gap-2 border-b border-border">
-          {['details', 'lyrics', 'audio', 'share', 'chat'].map((tab) => (
+        <div className="mb-6 flex gap-2 border-b border-border overflow-x-auto">
+          {['details', 'lyrics', 'audio', 'versions', 'stems', 'copyright', 'share', 'chat'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
-              className={`px-6 py-3 font-medium capitalize transition ${
+              className={`px-6 py-3 font-medium capitalize transition whitespace-nowrap ${
                 activeTab === tab
                   ? 'border-b-2 border-brand-primary text-brand-primary'
                   : 'text-muted-foreground hover:text-foreground'
@@ -465,6 +477,40 @@ export default function SongDetailPage() {
                   )}
                 </div>
               </Card>
+            </motion.div>
+          )}
+
+          {activeTab === 'versions' && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <VersionHistory 
+                songId={songId}
+                onRestore={async (versionId) => {
+                  // Reload song data after restore
+                  window.location.reload();
+                }}
+              />
+            </motion.div>
+          )}
+
+          {activeTab === 'stems' && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <StemsMixer 
+                songId={songId}
+                onTrackUpload={() => {
+                  // Could open a modal or navigate to upload
+                  alert('Track upload UI coming soon! Use the Audio tab to upload for now.');
+                }}
+              />
+            </motion.div>
+          )}
+
+          {activeTab === 'copyright' && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <CopyrightManager 
+                songId={songId}
+                songTitle={song?.title}
+                currentCopyright={song?.copyrightInfo}
+              />
             </motion.div>
           )}
 

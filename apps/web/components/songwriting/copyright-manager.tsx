@@ -5,6 +5,13 @@ import { Shield, Users, FileCheck, AlertCircle, Check, Plus, X, PieChart, Music 
 import { useState, useEffect } from 'react';
 import { SplitSheetGenerator } from './split-sheet-generator';
 import { AudioUploader } from './audio-uploader';
+import { CollaborationAgreementGenerator } from './collaboration-agreement';
+import dynamic from 'next/dynamic';
+
+const WaveformPlayer = dynamic(
+  () => import('./waveform-player').then((m) => m.WaveformPlayer),
+  { ssr: false }
+);
 
 export type PRO = 
   | 'ASCAP' 
@@ -541,6 +548,12 @@ export function CopyrightManager({
         />
       </Card>
 
+      {/* Collaboration Agreement */}
+      <CollaborationAgreementGenerator
+        songTitle={songTitle}
+        copyrightInfo={copyrightInfo}
+      />
+
       {/* Audio Upload */}
       <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
@@ -550,17 +563,35 @@ export function CopyrightManager({
         <p className="mb-4 text-sm text-gray-400">
           Upload an instrumental, demo, or reference track for this song
         </p>
-        <AudioUploader
-          songId={songId}
-          currentAudioUrl={audioUrl}
-          onUploadComplete={(url, path) => {
-            if (onAudioUpdate) onAudioUpdate(url, path);
-          }}
-          onRemove={() => {
-            if (onAudioRemove) onAudioRemove();
-          }}
-          maxSizeMB={50}
-        />
+        
+        {!audioUrl ? (
+          <AudioUploader
+            songId={songId}
+            currentAudioUrl={audioUrl}
+            onUploadComplete={(url, path) => {
+              if (onAudioUpdate) onAudioUpdate(url, path);
+            }}
+            onRemove={() => {
+              if (onAudioRemove) onAudioRemove();
+            }}
+            maxSizeMB={50}
+          />
+        ) : (
+          <div className="space-y-4">
+            {/* Waveform Player with Sync */}
+            <WaveformPlayer audioUrl={audioUrl} />
+            
+            {/* Remove Audio Button */}
+            <button
+              onClick={() => {
+                if (onAudioRemove) onAudioRemove();
+              }}
+              className="w-full rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-500/20"
+            >
+              Remove Audio Track
+            </button>
+          </div>
+        )}
       </Card>
     </div>
   );

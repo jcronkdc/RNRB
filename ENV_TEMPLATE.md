@@ -41,7 +41,7 @@ XAI_API_KEY="xai-..."
 # ============================================
 # Ably WebSockets (multi-cursor, presence, chat)
 # Get from: https://ably.com/dashboard
-NEXT_PUBLIC_ABLY_KEY="your-ably-key"
+ABLY_API_KEY="your-ably-key-here"
 
 # Daily.co Video (HD video calls, screen sharing)
 # Get from: https://dashboard.daily.co
