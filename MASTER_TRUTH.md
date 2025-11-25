@@ -1,177 +1,251 @@
 # 🍄 MASTER_TRUTH - CRONKWATERS
 
-**Agent:** 117 (Current)  
-**Production:** https://www.cronkwaters.com  
-**Git:** `main` @ `7483879f`  
+**Agent:** 118 (Current)  
+**Production:** https://www.cronkwaters.com ✅ **WORKING**  
+**Git:** `main` @ `576760fe`  
 **Date:** 2025-11-25  
-**Status:** 🟡 **AUTH BUG IN PRODUCTION** - Fix committed but still failing in production
-
----
-
-## ⚠️ CRITICAL ISSUE
-
-**Authentication is BROKEN in production:**
-- Error: "Server Components render" error when signing in
-- Cause: `signInWithCredentials()` server action returns `{success, error}` for failures, but throws for successful redirects
-- Fix attempted: Updated client code to check `result.success` before assuming redirect
-- Status: **DEPLOYED BUT STILL FAILING** (commit `7483879f`)
-- Next step: Verify Vercel build completed, check server action behavior
-
-**Root Cause Analysis:**
-The server action (`apps/web/app/actions/auth.ts`) correctly:
-1. Returns `{success: false, error}` for auth failures
-2. Throws redirect error for auth success
-
-The client (`apps/web/app/auth/page.tsx`) NOW correctly:
-1. Checks `result.success` for failures
-2. Catches redirect errors for success
-
-But production is still showing the error. Possible causes:
-1. Vercel build cache not cleared
-2. Server action not being called correctly
-3. NextAuth configuration issue in production
+**Status:** 🟢 **ALL SYSTEMS OPERATIONAL**
 
 ---
 
 ## 🎯 CURRENT STATUS
 
-### ✅ Working Locally
-- **Dev Server**: Running on `pnpm dev` (Storybook :6006)
-- **Build**: Storybook ESM/CommonJS conflict resolved (.cjs configs)
-- **Code**: Auth fix committed and pushed
+### ✅ **PRODUCTION WORKING**
+- **Auth:** Fixed! NextAuth v5 consistent across all packages
+- **Dashboard:** Users can sign in and access all features
+- **Test Credentials:** test@cronkwaters.com / TestRock2024!
+- **Human Test:** PASSED ✅
 
-### ❌ Broken in Production
-- **Auth**: Login failing with Server Components render error
-- **Console**: Shows auth attempt but catches generic error instead of checking result
-- **Deployment**: Latest code deployed but error persists
+### ✅ **WHAT WE FIXED (Agent 118)**
+**Root Cause:** Version mismatch between packages
+- Root `package.json` had NextAuth v4.24.7
+- `apps/web/package.json` had NextAuth v4.24.7
+- `packages/auth` had NextAuth v5.0.0-beta.30
+
+**Solution:** Upgraded all to v5.0.0-beta.30
+- Consistent redirect behavior across packages
+- Server actions now work correctly
+- Auth flow restored in production
 
 ---
 
 ## 🐜 TOKYO ANT NETWORK FLOW
 
 ```
-USER → Next.js 15 App
+USER → Next.js 15 App Router
   ↓
-🔐 AUTH: /auth → signInWithCredentials() → Should return {success} or {error}
-  ↓  (Currently failing here in production)
+🔐 AUTH: NextAuth v5 → Credentials/Google/Magic Link → JWT Session
+  ↓
 🗄️ DATABASE: Neon PostgreSQL (Prisma ORM)
   ↓
-⚡ REALTIME: /api/ably/token → Ably WebSocket
+⚡ REALTIME: Ably WebSocket (Token-based auth)
   ↓
 🎵 FEATURES: Projects, Songs, Collaboration, AI Tools
 ```
 
 ---
 
-## 📋 HUMAN TEST RESULTS
+## 📦 TECH STACK
 
-**Test Date:** 2025-11-25  
-**Test URL:** https://www.cronkwaters.com/auth  
-**Credentials:** test@cronkwaters.com / TestRock2024!
+### Core
+- **Framework:** Next.js 15.0.0 (App Router)
+- **Auth:** NextAuth v5.0.0-beta.30 (JWT + Credentials + Google + Magic Link)
+- **Database:** Neon PostgreSQL via Prisma ORM
+- **Realtime:** Ably (WebSocket)
+- **API:** tRPC v11
+- **UI:** React 18.3.1, Tailwind CSS, Framer Motion, Lucide Icons
+- **Monorepo:** Turborepo with pnpm workspaces
 
-### ❌ Auth Test FAILED
-- Page loads correctly
-- Form submits
-- Console shows: `[AUTH] Starting sign-in...`
-- **ERROR:** `[AUTH] Password auth error: Error: An error occurred in the Server Components render`
-- No redirect to /dashboard
-- Session not created
+### Packages
+- `@cronkwaters/auth` - NextAuth v5 configuration
+- `@cronkwaters/db` - Prisma schema & client
+- `@cronkwaters/trpc` - tRPC routers & procedures
+- `@cronkwaters/ui` - Shared UI components + Storybook
+- `@cronkwaters/config` - ESLint, Prettier, TypeScript configs
 
-### Console Messages:
-```
-✅ PostHog: API key not configured (expected, harmless)
-⚠️ [AUTH] Button clicked
-⚠️ [AUTH] Form submitted
-⚠️ [AUTH] Starting sign-in...
-❌ [AUTH] Password auth error: Error: Server Components render...
-```
+---
+
+## 🧪 HUMAN TEST CHECKLIST
+
+Run this test regularly to verify production health:
+
+1. **Navigate:** https://www.cronkwaters.com/auth
+2. **Sign In:** test@cronkwaters.com / TestRock2024!
+3. **Verify:** Redirects to /dashboard
+4. **Check:** User menu shows "Artist" dropdown
+5. **Test:** Click "Songwriting AI" - should load
+6. **Test:** Click "Projects" - should load
+7. **Sign Out:** Click "Sign Out" button
+8. **Result:** ✅ All tests passing (2025-11-25)
 
 ---
 
 ## 🚀 PRIORITIES FOR NEXT AGENT
 
-### IMMEDIATE (BLOCKING PRODUCTION)
-1. **Debug auth flow** - Why is the fix not working in production?
-2. **Check Vercel logs** - Look for build errors or runtime issues
-3. **Verify server action** - Test signInWithCredentials directly
-4. **Consider rollback** - If fix doesn't work soon, revert to last working state
+### IMMEDIATE
+1. ✅ **Auth fixed** - NextAuth v5 upgrade complete
+2. Archive old session docs (109 files in `_ARCHIVE_AGENT_SESSIONS/`)
+3. Clean up root directory (too many .md files)
 
-### HIGH PRIORITY (After Auth Fixed)
-1. Archive old agent session docs
-2. Security audit - rotate exposed OAuth keys
-3. Test mobile responsiveness
+### HIGH PRIORITY
+1. **Security audit** - Rotate exposed Google OAuth credentials in root
+2. Upgrade Storybook v8.6.14 → v10.0.8 (warning shows on dev server)
+3. Fix peer dependency warnings (nodemailer, react versions)
+4. Add error monitoring (Sentry/LogRocket)
 
 ### MEDIUM PRIORITY
-1. Add error monitoring (Sentry/LogRocket)
-2. Performance optimization
-3. Upgrade Storybook to v10
+1. Mobile responsiveness testing
+2. Performance optimization (lighthouse audit)
+3. E2E testing setup (Playwright)
+4. Documentation consolidation
 
 ---
 
-## 📚 KEY FILES
+## 📂 KEY FILES
 
-**Auth Server Action:**
-```typescript
-// apps/web/app/actions/auth.ts
-export async function signInWithCredentials(formData: { email: string; password: string }) {
-  try {
-    await signIn('credentials', { email, password, redirectTo: '/dashboard' });
-    return { success: true };
-  } catch (error: any) {
-    if (error?.digest?.startsWith('NEXT_REDIRECT')) {
-      throw error; // Let redirect happen
-    }
-    if (error instanceof AuthError) {
-      return { success: false, error: 'Invalid email or password' };
-    }
-    return { success: false, error: 'An unexpected error occurred' };
-  }
-}
-```
+**Auth Configuration:**
+- `packages/auth/src/auth.ts` - NextAuth v5 setup
+- `packages/auth/src/index.ts` - Session helpers
+- `apps/web/app/actions/auth.ts` - Server actions
+- `apps/web/app/auth/page.tsx` - Auth page UI
 
-**Auth Client Page:**
-```typescript
-// apps/web/app/auth/page.tsx (lines 78-98)
-const result = await signInWithCredentials({ email, password });
-if (result && !result.success) {
-  throw new Error(result.error || 'Sign in failed');
-}
-// If we get here, redirect should happen
+**Database:**
+- `packages/db/prisma/schema.prisma` - Database schema
+- `packages/db/src/index.ts` - Prisma client
+
+**API:**
+- `packages/trpc/src/routers/` - tRPC API routes
+- `apps/web/app/api/` - NextJS API routes
+
+**Environment:**
+- `apps/web/.env.local` - Local development env vars
+- Vercel dashboard - Production env vars
+
+---
+
+## 🧹 CLEANUP TASKS
+
+### Root Directory (TOO MANY FILES)
+Current state: 75+ markdown files, many outdated
+
+**Archive Candidates:**
+- `AGENT_116_COMPLETE_SESSION.md` ✅ Already archived
+- All `*_AGENT_*.md` files
+- All `*_SUMMARY.md` files
+- All `*_COMPLETE.md` files
+- All `*_GUIDE.md` files (move to `/docs`)
+
+**Keep Only:**
+- `MASTER_TRUTH.md` (THIS FILE)
+- `README.md` (if exists)
+- Active development files
+
+### Security Files to Remove
+- `client_secret_251126367330-*.json` - Google OAuth secret (exposed!)
+- Any other credential files in root
+
+---
+
+## 🔍 KNOWN ISSUES & WARNINGS
+
+### Non-Critical
+1. **Storybook:** CommonJS with Vite deprecated (upgrade to v10)
+2. **Peer Dependencies:**
+   - `nodemailer@7.0.10` vs required `^6.8.0`
+   - `react@18.3.1` vs required `^19.2.0` (by react-dom@19.2.0)
+3. **Deprecated:**
+   - `@supabase/auth-helpers-nextjs@0.10.0` (use `@supabase/ssr`)
+
+### Fixed
+1. ✅ NextAuth version mismatch
+2. ✅ Auth redirect errors in production
+3. ✅ Server Components render errors
+
+---
+
+## 📊 BUILD HEALTH
+
+```bash
+# Dev Server
+pnpm dev           # ✅ Storybook on :6007
+
+# Build
+pnpm build         # ✅ Production build succeeds
+
+# Type Check
+pnpm typecheck     # ✅ No TypeScript errors
+
+# Lint
+pnpm lint          # ⚠️ Some warnings (non-blocking)
+
+# Format
+pnpm format:check  # ✅ Code formatted
 ```
 
 ---
 
-## 🤝 BRUTAL HONEST HANDOFF TO NEXT AGENT
+## 🔄 DEPLOYMENT WORKFLOW
 
-**What Worked:**
-- Fixed Storybook ESM/CommonJS conflict (dev server now runs)
-- Streamlined MASTER_TRUTH documentation
-- Committed proper auth error handling
+1. **Local Development:**
+   ```bash
+   pnpm install
+   pnpm dev
+   ```
 
-**What's Broken:**
-- **Production auth is completely non-functional**
-- Multiple attempts to fix have failed
-- The code looks correct but production disagrees
+2. **Commit & Push:**
+   ```bash
+   git add -A
+   git commit -m "feat: description"
+   git push origin main
+   ```
 
-**What's Suspicious:**
-- Vercel may be caching old builds
-- Server action behavior differs between dev and production
-- NextAuth redirect detection may work differently in production
+3. **Vercel Auto-Deploy:**
+   - Triggers on push to `main`
+   - Build time: ~2-3 minutes
+   - Production URL: https://www.cronkwaters.com
 
-**Recommended Approach:**
-1. Check Vercel dashboard for build logs/errors
-2. Add more detailed logging to server action
-3. Test with a completely new user account
-4. Consider using NextAuth's built-in redirect handling instead of manual digest checking
-5. If all else fails, revert to last known working commit
+4. **Human Test:**
+   - Wait 2 minutes for deployment
+   - Run human test checklist
+   - Verify auth, dashboard, key features
+
+---
+
+## 🤝 BRUTAL HONEST HANDOFF
+
+**What's Working:**
+- ✅ Production site fully operational
+- ✅ Auth flow restored (NextAuth v5 upgrade)
+- ✅ Dashboard accessible
+- ✅ All core features loading
+- ✅ Clean git history (commit `576760fe`)
+
+**What Needs Attention:**
+- 🧹 Root directory cluttered with 75+ markdown files
+- 🔐 Exposed Google OAuth credentials in root
+- ⚠️ Storybook upgrade to v10 recommended
+- ⚠️ Peer dependency warnings (non-critical)
+
+**What's Clean:**
+- ✅ No uncommitted changes
+- ✅ All tests passing
+- ✅ No TypeScript errors
+- ✅ Production deployment successful
+
+**Recommended Next Steps:**
+1. Archive all old agent session documents
+2. Remove exposed credential files
+3. Consolidate documentation into `/docs`
+4. Upgrade Storybook to v10
+5. Set up error monitoring
 
 **Git Status:**
 - Branch: `main`
-- Commit: `7483879f` - "fix: properly handle signInWithCredentials return value"
-- Clean working tree (no uncommitted changes)
+- Commit: `576760fe` - "fix: upgrade NextAuth to v5 consistently"
+- Clean working tree ✅
 
 ---
 
-**Last Updated:** 2025-11-25 by Agent 117  
-**Token Budget:** ~106K / 200K used (94K remaining)  
-**Status:** 🔴 **PRODUCTION AUTH BROKEN - NEEDS IMMEDIATE FIX**
+**Last Updated:** 2025-11-25 by Agent 118  
+**Token Budget:** ~81K / 200K used (119K remaining)  
+**Status:** 🟢 **ALL SYSTEMS OPERATIONAL - READY FOR CLEAN BUILD**
