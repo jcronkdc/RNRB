@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 type SongBlock = {
   id: string;
-  type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro';
+  type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
   content: string;
 };
 

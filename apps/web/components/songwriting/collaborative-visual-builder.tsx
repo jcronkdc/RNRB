@@ -118,14 +118,14 @@ function SortableBlock({
   return (
     <div
       ref={setNodeRef}
-      style={{ transform: CSS.Transform.toString(transform), transition }}
-      className={`rnrb-card group relative mb-4 bg-gradient-to-br p-4 transition-all hover:shadow-xl ${getColor()} border-2 ${
-        editor ? 'ring-2 ring-offset-2 ring-offset-black' : ''
-      }`}
       style={{
-        ...{ transform: CSS.Transform.toString(transform), transition },
-        ...(editor && { borderColor: editor.userColor, ringColor: editor.userColor }),
+        transform: CSS.Transform.toString(transform),
+        transition,
+        ...(editor && { borderColor: editor.userColor, outlineColor: editor.userColor }),
       }}
+      className={`rnrb-card group relative mb-4 bg-gradient-to-br p-4 transition-all hover:shadow-xl ${getColor()} border-2 ${
+        editor ? 'outline outline-2 outline-offset-2' : ''
+      }`}
     >
       {/* Active Editor Indicator */}
       {editor && (

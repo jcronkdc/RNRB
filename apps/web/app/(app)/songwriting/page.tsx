@@ -60,7 +60,7 @@ const PresenceIndicator = dynamic(
 
 type SongBlock = {
   id: string;
-  type: 'verse' | 'chorus' | 'bridge' | 'chord';
+  type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
   content: string;
   chord?: string;
 };

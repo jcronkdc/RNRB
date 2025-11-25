@@ -245,7 +245,7 @@ export function useCollaborativeCursors({
 }
 
 // Throttle utility
-function useThrottle<T extends (...args: unknown[]) => unknown>(callback: T, delay: number): T {
+function useThrottle<T extends (...args: any[]) => any>(callback: T, delay: number): T {
   const lastRun = useRef(Date.now());
 
   return useCallback(

@@ -55,14 +55,13 @@ export async function POST(
       where: { id: projectId },
       include: {
         songs: {
-          where: { deletedAt: null },
+          where: { archived: false },
           select: {
             id: true,
             title: true,
-            artist: true,
+            writer: true,
             key: true,
             tempo: true,
-            duration: true,
           },
         },
       },
@@ -122,7 +121,7 @@ export async function POST(
     const shuffled = [...selectedSongs].sort(() => Math.random() - 0.5);
 
     for (const song of shuffled) {
-      const songDuration = song.duration || 240; // Default 4 minutes
+      const songDuration = 240; // Default 4 minutes (duration is tracked per SetlistItem, not Song)
       if (totalDuration + songDuration <= targetDuration) {
         setlistSongs.push(song);
         totalDuration += songDuration;

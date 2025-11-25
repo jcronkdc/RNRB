@@ -16,6 +16,14 @@
 import { useActivityFeed, type ActivityEvent } from './use-activity-feed';
 import { useNotifications } from './use-notifications';
 
+type CollaborationMetadata = {
+  collaboratorIds?: string[];
+  mentionedUserId?: string;
+  inviteeEmail?: string;
+  link?: string;
+  [key: string]: unknown;
+};
+
 type CollaborationEvent = {
   type:
     | 'audio_upload'
@@ -32,7 +40,7 @@ type CollaborationEvent = {
   songId?: string;
   songName?: string;
   message?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: CollaborationMetadata;
 };
 
 type UseCollaborationSyncOptions = {

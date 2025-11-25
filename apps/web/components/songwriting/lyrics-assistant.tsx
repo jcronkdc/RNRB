@@ -338,7 +338,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
               onClick={handleSearch}
               disabled={loading || !query.trim()}
               className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-6 py-2.5 ${
-                mode === 'ai' ? 'bg-purple-600 hover:bg-purple-700' : mode === 'syllables' ? 'bg-green-600 hover:bg-green-700' : ''
+                mode === 'ai' ? 'bg-purple-600 hover:bg-purple-700' : ''
               }`}
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Search'}

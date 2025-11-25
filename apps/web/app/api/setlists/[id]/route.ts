@@ -64,7 +64,6 @@ export async function GET(
                 title: true,
                 key: true,
                 tempo: true,
-                duration: true,
                 lyrics: true,
                 chords: true,
               },
@@ -101,7 +100,7 @@ export async function GET(
               title: item.song.title,
               key: item.song.key,
               tempo: item.song.tempo,
-              duration: item.song.duration,
+              duration: item.duration, // Duration comes from SetlistItem, not Song
               lyrics: item.song.lyrics,
               chords: item.song.chords,
             }

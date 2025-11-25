@@ -3,6 +3,8 @@
  * Follows mycelial principle: Clean, simple, no dependencies
  */
 
+import { formatDateTime } from '@/lib/format-date';
+
 interface Suggestion {
   lineNumber: number;
   suggestedText: string;

@@ -28,6 +28,7 @@ type Tour = {
   name: string;
   startDate: string;
   endDate: string;
+  status: string;
 };
 
 export default function NewShowPage() {
@@ -153,14 +154,7 @@ export default function NewShowPage() {
     <div className="bg-background min-h-screen px-4 py-12">
       <div className="rnrb-container mx-auto max-w-3xl">
         {/* Toast Notifications */}
-        {toasts.map((toast) => (
-          <ToastNotification
-            key={toast.id}
-            message={toast.message}
-            type={toast.type}
-            onClose={() => removeToast(toast.id)}
-          />
-        ))}
+        <ToastNotification toasts={toasts} onRemove={removeToast} />
 
         {/* Header */}
         <div className="mb-8">

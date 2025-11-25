@@ -34,7 +34,7 @@ export async function PATCH(
       include: {
         setlist: {
           include: {
-            project: true,
+            show: true,
           },
         },
       },
@@ -44,11 +44,11 @@ export async function PATCH(
       return NextResponse.json({ error: 'Song request not found' }, { status: 404 });
     }
 
-    // Verify user is member of the project's org
+    // Verify user is member of the show's org
     const membership = await db.membership.findFirst({
       where: {
         userId: user.id,
-        orgId: songRequest.setlist.project.orgId,
+        orgId: songRequest.setlist.show.orgId,
       },
     });
 
@@ -97,7 +97,7 @@ export async function DELETE(
       include: {
         setlist: {
           include: {
-            project: true,
+            show: true,
           },
         },
       },
@@ -107,11 +107,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Song request not found' }, { status: 404 });
     }
 
-    // Verify user is member of the project's org
+    // Verify user is member of the show's org
     const membership = await db.membership.findFirst({
       where: {
         userId: user.id,
-        orgId: songRequest.setlist.project.orgId,
+        orgId: songRequest.setlist.show.orgId,
       },
     });
 
