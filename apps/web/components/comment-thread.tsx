@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Reply, Loader2, Send, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+import { formatRelativeTime } from '@/lib/format-date';
+
 interface Comment {
   id: string;
   content: string;
@@ -70,15 +72,7 @@ export function CommentThread({ trackId, currentUserId }: CommentThreadProps) {
   }
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    const days = Math.floor(diffInHours / 24);
-    if (days < 7) return `${days}d ago`;
-    return date.toLocaleDateString();
+    return formatRelativeTime(dateString);
   };
 
   const CommentItem = ({ comment, depth = 0 }: { comment: Comment; depth?: number }) => (

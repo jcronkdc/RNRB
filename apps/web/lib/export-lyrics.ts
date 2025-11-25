@@ -87,7 +87,7 @@ function exportAsTxt(
   // Footer
   output += '\n---\n';
   output += `Exported from Rock N' Roll Basement\n`;
-  output += `Date: ${new Date().toLocaleString()}\n`;
+  output += `Date: ${formatDateTime(new Date())}\n`;
 
   return output;
 }

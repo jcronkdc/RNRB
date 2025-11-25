@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
+import { formatTime } from '@/lib/format-date';
 import {
   DndContext,
   closestCenter,
@@ -738,7 +739,7 @@ export function CollaborativeVisualBuilder({
               <div className="flex-1 space-y-2 overflow-y-auto pr-2">
                 {history.map((version, index) => {
                   const isCurrent = index === historyIndex;
-                  const timestamp = version.timestamp.toLocaleTimeString();
+                  const timestamp = formatTime(version.timestamp);
                   const blockCount = version.blocks.length;
 
                   return (

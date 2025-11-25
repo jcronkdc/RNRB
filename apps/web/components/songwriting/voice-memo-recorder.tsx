@@ -3,6 +3,8 @@
 import { Mic, Square, Play, Pause, Trash2, Download, Upload } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
+import { formatDate } from '@/lib/format-date';
+
 type VoiceMemo = {
   id: string;
   name: string;
@@ -256,7 +258,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
                 <div>
                   <p className="font-medium text-white">{memo.name}</p>
                   <p className="text-xs text-gray-500">
-                    {formatDuration(memo.duration)} • {new Date(memo.createdAt).toLocaleDateString()}
+                    {formatDuration(memo.duration)} • {formatDate(memo.createdAt)}
                   </p>
                 </div>
               </div>

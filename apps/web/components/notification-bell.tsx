@@ -19,6 +19,7 @@ import {
   type Notification,
 } from '@/hooks/use-notifications';
 import { supabase } from '@/lib/supabase';
+import { formatRelativeTime } from '@/lib/format-date';
 
 export function NotificationBell() {
   const [user, setUser] = useState<any>(null);
@@ -251,15 +252,5 @@ export function NotificationBell() {
 // Helper functions
 
 function formatTimestamp(timestamp: number): string {
-  const diff = Date.now() - timestamp;
-  const minutes = Math.floor(diff / (1000 * 60));
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-  if (minutes < 1) return 'Just now';
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 7) return `${days}d ago`;
-
-  return new Date(timestamp).toLocaleDateString();
+  return formatRelativeTime(timestamp);
 }

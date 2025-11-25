@@ -7,6 +7,7 @@
  */
 
 import { Button, Card } from '@cronkwaters/ui';
+import { formatDateLong } from '@/lib/format-date';
 import { Calendar, MapPin, Clock, Music, DollarSign, FileText, ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -272,8 +273,8 @@ export default function NewShowPage() {
                 <option value="">Not part of a tour</option>
                 {tours.map((tour) => (
                   <option key={tour.id} value={tour.id}>
-                    {tour.name} ({new Date(tour.startDate).toLocaleDateString()} -{' '}
-                    {new Date(tour.endDate).toLocaleDateString()})
+                    {tour.name} ({formatDateLong(tour.startDate)} -{' '}
+                    {formatDateLong(tour.endDate)})
                   </option>
                 ))}
               </select>

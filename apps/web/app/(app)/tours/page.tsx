@@ -4,6 +4,7 @@ import { Card, Button } from '@cronkwaters/ui';
 import Daily from '@daily-co/daily-js';
 import { DailyProvider } from '@daily-co/daily-react';
 import { motion } from 'framer-motion';
+import { formatDateLong, formatNumber } from '@/lib/format-date';
 import {
   MapPin,
   Calendar,
@@ -375,15 +376,15 @@ export default function ToursPage() {
                     <div key={stream.id} className="bg-muted/50 rounded-lg p-3">
                       <div className="flex items-start justify-between">
                         <div>
-                          <h5 className="text-sm font-medium">{stream.title}</h5>
-                          <p className="text-muted-foreground mt-1 text-xs">
-                            {stream.date.toLocaleDateString()} • {stream.duration}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-semibold">{stream.viewers.toLocaleString()}</p>
-                          <p className="text-muted-foreground text-xs">viewers</p>
-                        </div>
+                            <h5 className="text-sm font-medium">{stream.title}</h5>
+                            <p className="text-muted-foreground mt-1 text-xs">
+                              {formatDateLong(stream.date)} • {stream.duration}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-semibold">{formatNumber(stream.viewers)}</p>
+                            <p className="text-muted-foreground text-xs">viewers</p>
+                          </div>
                       </div>
                     </div>
                   ))}

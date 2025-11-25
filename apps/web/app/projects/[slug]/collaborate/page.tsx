@@ -2,6 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
+import { formatDateLong } from '@/lib/format-date';
 import {
   Users,
   UserPlus,
@@ -405,10 +406,10 @@ export default function ProjectCollaboratePage() {
                         className="flex flex-col gap-2 rounded-lg border border-gray-800 bg-gray-900/50 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
                       >
                         <div>
-                          <p className="text-sm font-medium text-white sm:text-base">{invite.email}</p>
-                          <p className="text-xs text-gray-400 sm:text-sm">
-                            Invited {new Date(invite.invited_at).toLocaleDateString()}
-                          </p>
+                            <p className="text-sm font-medium text-white sm:text-base">{invite.email}</p>
+                            <p className="text-xs text-gray-400 sm:text-sm">
+                              Invited {formatDateLong(invite.invited_at)}
+                            </p>
                         </div>
                         <span className="self-start rounded-full border border-yellow-500/30 bg-yellow-500/20 px-2 py-1 text-xs text-yellow-400 sm:px-3 sm:text-sm">
                           Pending

@@ -4,6 +4,8 @@ import { useChannel, usePresence } from 'ably/react';
 import { Send, Users, Sparkles, X , MessageSquare } from 'lucide-react';
 import { useState } from 'react';
 
+import { formatTime } from '@/lib/format-date';
+
 interface Message {
   id: string;
   text: string;
@@ -129,7 +131,7 @@ export function ChatRoom({ channelName, userName: providedUserName }: ChatRoomPr
                 {msg.name || msg.clientId}
               </span>
               <span className="text-muted-foreground text-xs">
-                {new Date(msg.timestamp).toLocaleTimeString()}
+                {formatTime(msg.timestamp)}
               </span>
             </div>
             <p className="text-foreground text-sm">{msg.text}</p>

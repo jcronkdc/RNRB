@@ -417,7 +417,7 @@ export function TeamMemberManager({
                   </div>
                   <p className="text-muted-foreground text-sm">{member.userEmail}</p>
                   <p className="text-muted-foreground mt-1 text-xs">
-                    Joined {new Date(member.joinedAt).toLocaleDateString()}
+                    Joined {formatDateLong(member.joinedAt)}
                   </p>
                 </div>
 

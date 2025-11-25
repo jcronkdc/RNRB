@@ -448,7 +448,7 @@ export default function SongDetailPage() {
                               <p className="font-semibold">{file.name}</p>
                               <p className="text-sm text-muted-foreground">
                                 {formatFileSize(file.size)} • Uploaded{' '}
-                                {new Date(file.uploadedAt).toLocaleDateString()}
+                                {formatDateLong(file.uploadedAt)}
                               </p>
                             </div>
                             <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium capitalize text-green-400">

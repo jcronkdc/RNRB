@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { isRedirectError } from 'next/dist/client/components/redirect';
 import { Suspense, useState } from 'react';
 
 import { signInWithCredentials, signInWithGoogle } from '@/app/actions/auth';
@@ -64,13 +65,10 @@ function AuthForm() {
             console.log('[AUTH] No redirect occurred after auto-signin');
           } catch (error) {
             // Check if this is a redirect error (success case)
-            if (error && typeof error === 'object' && 'digest' in error) {
-              const digest = (error as { digest?: string }).digest;
-              if (digest?.includes('NEXT_REDIRECT')) {
-                console.log('[AUTH] Redirect detected, auto-signin successful');
-                // Let the redirect happen
-                return;
-              }
+            if (isRedirectError(error)) {
+              console.log('[AUTH] Redirect detected, auto-signin successful');
+              // Let the redirect happen
+              return;
             }
             console.error('[AUTH] Sign-in error:', error);
             throw error;
@@ -85,13 +83,10 @@ function AuthForm() {
           console.log('[AUTH] No redirect occurred, assuming error');
         } catch (error) {
           // Check if this is a redirect error (success case)
-          if (error && typeof error === 'object' && 'digest' in error) {
-            const digest = (error as { digest?: string }).digest;
-            if (digest?.includes('NEXT_REDIRECT')) {
-              console.log('[AUTH] Redirect detected, sign-in successful');
-              // Let the redirect happen
-              return;
-            }
+          if (isRedirectError(error)) {
+            console.log('[AUTH] Redirect detected, sign-in successful');
+            // Let the redirect happen
+            return;
           }
           throw error;
         }

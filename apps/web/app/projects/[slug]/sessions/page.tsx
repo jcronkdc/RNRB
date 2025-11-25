@@ -2,6 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
+import { formatDateLong } from '@/lib/format-date';
 import {
   Calendar,
   Clock,
@@ -251,10 +252,10 @@ export default function ProjectSessionsPage() {
                           <Clock className="h-3 w-3" />
                           {session.duration_minutes} minutes
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(session.date).toLocaleDateString()}
-                        </span>
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {formatDateLong(session.date)}
+                          </span>
                         <span className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
                           {session.participants.length} participant

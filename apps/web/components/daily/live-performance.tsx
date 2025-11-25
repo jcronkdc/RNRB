@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
+import { formatDateTime, formatNumber } from '@/lib/format-date';
 import {
   useLiveStreaming,
   useDaily,
@@ -172,7 +173,7 @@ export function LivePerformance({
             <h2 className="mb-2 text-2xl font-bold">{performanceName}</h2>
             {description && <p className="text-muted-foreground mb-4">{description}</p>}
             {scheduledTime && !isLiveStreaming && (
-              <p className="text-sm">Scheduled for: {scheduledTime.toLocaleString()}</p>
+              <p className="text-sm">Scheduled for: {formatDateTime(scheduledTime)}</p>
             )}
           </div>
 
@@ -196,7 +197,7 @@ export function LivePerformance({
 
             <div className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
-              <span>{viewerCount.toLocaleString()} viewers</span>
+              <span>{formatNumber(viewerCount)} viewers</span>
             </div>
 
             <div className="flex items-center gap-2">
@@ -391,7 +392,7 @@ export function LivePerformance({
                 <div className="flex items-center gap-2">
                   <Heart className="h-5 w-5 text-red-500" />
                   <span className="font-semibold">
-                    {Math.floor(viewerCount * 2.5).toLocaleString()}
+                    {formatNumber(Math.floor(viewerCount * 2.5))}
                   </span>
                 </div>
               </div>
@@ -422,7 +423,7 @@ export function LivePerformance({
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-sm">Peak Viewers</span>
                 <span className="font-semibold">
-                  {Math.max(viewerCount, Math.floor(viewerCount * 1.3)).toLocaleString()}
+                  {formatNumber(Math.max(viewerCount, Math.floor(viewerCount * 1.3)))}
                 </span>
               </div>
 
@@ -434,7 +435,7 @@ export function LivePerformance({
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-sm">Reactions</span>
                 <span className="font-semibold">
-                  {Math.floor(viewerCount * 8.2).toLocaleString()}
+                  {formatNumber(Math.floor(viewerCount * 8.2))}
                 </span>
               </div>
             </div>

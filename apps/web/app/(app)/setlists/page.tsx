@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { formatDateWithDay } from '@/lib/format-date';
 import {
   ListMusic,
   Plus,
@@ -416,14 +417,10 @@ export default function SetlistsPage() {
                       {/* Details */}
                       <div className="mb-4 space-y-3">
                         {setlist.showDate && (
-                          <div className="flex items-center gap-2 text-sm text-gray-400">
-                            <Calendar className="h-4 w-4 text-orange-500" />
-                            <span>{setlist.showDate.toLocaleDateString('en-US', { 
-                              weekday: 'short', 
-                              month: 'short', 
-                              day: 'numeric' 
-                            })}</span>
-                          </div>
+                            <div className="flex items-center gap-2 text-sm text-gray-400">
+                              <Calendar className="h-4 w-4 text-orange-500" />
+                              <span>{formatDateWithDay(setlist.showDate)}</span>
+                            </div>
                         )}
                         <div className="flex items-center gap-2 text-sm text-gray-400">
                           <Clock className="h-4 w-4 text-orange-500" />

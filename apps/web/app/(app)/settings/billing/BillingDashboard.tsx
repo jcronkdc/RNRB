@@ -23,6 +23,7 @@ import {
   cancelUserSubscription,
   reactivateUserSubscription,
 } from '@/lib/actions/subscriptions';
+import { formatDateFull } from '@/lib/format-date';
 
 
 interface BillingDashboardProps {
@@ -229,11 +230,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
               {subscription.subscriptionEndsAt && (
                 <p className="mt-2 text-sm text-gray-400">
                   {isCanceled ? 'Access until' : 'Renews on'}{' '}
-                  {new Date(subscription.subscriptionEndsAt).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
+                  {formatDateFull(subscription.subscriptionEndsAt)}
                 </p>
               )}
             </div>
@@ -521,7 +518,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             <p className="mb-6 text-gray-400">
               You'll continue to have access until{' '}
               {subscription.subscriptionEndsAt &&
-                new Date(subscription.subscriptionEndsAt).toLocaleDateString()}
+                formatDateFull(subscription.subscriptionEndsAt)}
               . After that, you'll be moved to the Explorer (Free) plan.
             </p>
             <div className="flex gap-3">

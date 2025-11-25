@@ -1,8 +1,9 @@
-import { dirname, resolve } from 'node:path';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-vite';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const config: StorybookConfig = {
   stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(ts|tsx)'],
@@ -18,7 +19,7 @@ const config: StorybookConfig = {
     const merged = baseConfig;
     merged.resolve ??= {};
     merged.resolve.alias ??= {};
-    merged.resolve.alias['@cronkwaters/ui'] = resolve(__dirname, '../src');
+    merged.resolve.alias['@cronkwaters/ui'] = path.resolve(__dirname, '../src');
     return merged;
   },
 };

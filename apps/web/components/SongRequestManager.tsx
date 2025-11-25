@@ -9,6 +9,7 @@
 
 import { Button, Card } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
+import { formatDateLong } from '@/lib/format-date';
 import {
   Music,
   User,
@@ -325,9 +326,9 @@ function RequestCard({
 
         {/* Timestamp */}
         <p className="mt-2 text-xs text-muted-foreground">
-          Requested {new Date(request.createdAt).toLocaleDateString()}
+          Requested {formatDateLong(request.createdAt)}
           {request.respondedAt &&
-            ` • Reviewed ${new Date(request.respondedAt).toLocaleDateString()}`}
+            ` • Reviewed ${formatDateLong(request.respondedAt)}`}
         </p>
       </Card>
     </motion.div>

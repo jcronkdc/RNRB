@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
+import { formatTime } from '@/lib/format-date';
+
 interface Message {
   id: string;
   content: string;
@@ -99,10 +101,7 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
                   <div className="text-muted-foreground flex items-center gap-2 text-xs">
                     <span className="font-medium">{isOwnMessage ? 'You' : message.userName}</span>
                     <span>
-                      {message.createdAt.toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
+                      {formatTime(message.createdAt)}
                     </span>
                   </div>
                   <div

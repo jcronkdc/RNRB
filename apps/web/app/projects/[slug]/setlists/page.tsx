@@ -2,6 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
+import { formatDateLong, formatDateWithDay } from '@/lib/format-date';
 import {
   Music,
   Plus,
@@ -284,11 +285,7 @@ export default function SetlistsPage() {
                     </Link>
                     <span className="text-muted-foreground text-xs">
                       •{' '}
-                      {new Date(selectedSetlist.show.date).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
+                      {formatDateLong(selectedSetlist.show.date)}
                       {selectedSetlist.show.venue && ` • ${selectedSetlist.show.venue.name}`}
                     </span>
                   </div>
@@ -426,12 +423,7 @@ export default function SetlistsPage() {
                           <div className="flex items-center gap-2">
                             <Calendar className="h-3.5 w-3.5" />
                             <span>
-                              {new Date(show.date).toLocaleDateString('en-US', {
-                                weekday: 'short',
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })}
+                              {formatDateWithDay(show.date)}
                             </span>
                           </div>
                           {show.venue && (
@@ -597,7 +589,7 @@ export default function SetlistsPage() {
                   {setlist.date && (
                     <p className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
                       <Calendar className="h-4 w-4" />
-                      {new Date(setlist.date).toLocaleDateString()}
+                      {formatDateLong(setlist.date)}
                     </p>
                   )}
                   <p className="text-muted-foreground flex items-center gap-2 text-sm">

@@ -8,6 +8,7 @@
  */
 
 import { Button, Card } from '@cronkwaters/ui';
+import { formatNumber } from '@/lib/format-date';
 import { motion } from 'framer-motion';
 import {
   MapPin,
@@ -271,7 +272,7 @@ function VenueCard({
           {venue.capacity && (
             <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <Users className="h-4 w-4 shrink-0" />
-              <span>Capacity: {venue.capacity.toLocaleString()}</span>
+              <span>Capacity: {formatNumber(venue.capacity)}</span>
             </div>
           )}
 

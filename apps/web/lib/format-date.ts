@@ -105,9 +105,9 @@ export function formatTime(date: Date | string | number | null | undefined): str
  * Format date and time as "MMM DD, YYYY at HH:MM AM/PM"
  * Safe for SSR - combines formatDateLong and formatTime
  */
-export function formatDateTime(date: Date | string | null | undefined): string {
-  if (!date) return '';
-  const d = typeof date === 'string' ? new Date(date) : date;
+export function formatDateTime(date: Date | string | number | null | undefined): string {
+  if (date === null || date === undefined) return '';
+  const d = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
   if (isNaN(d.getTime())) return 'Invalid DateTime';
   
   return `${formatDateLong(d)} at ${formatTime(d)}`;

@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Smile, Paperclip, MoreVertical } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 
+import { formatTime } from '@/lib/format-date';
+
 type Message = {
   id: string;
   userId: string;
@@ -296,10 +298,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                         {message.userName}
                       </span>
                       <span className="text-muted-foreground text-xs">
-                        {message.timestamp.toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
+                        {formatTime(message.timestamp)}
                       </span>
                     </div>
                   )}

@@ -4,6 +4,8 @@ import { useChannel } from 'ably/react';
 import { Bell, X } from 'lucide-react';
 import { useState } from 'react';
 
+import { formatDateTime } from '@/lib/format-date';
+
 interface Notification {
   id: string;
   title: string;
@@ -76,7 +78,7 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
                       <h4 className="text-sm font-semibold text-white">{notif.title}</h4>
                       <p className="mt-1 text-sm text-gray-400">{notif.message}</p>
                       <span className="mt-1 text-xs text-gray-500">
-                        {new Date(notif.timestamp).toLocaleString()}
+                        {formatDateTime(notif.timestamp)}
                       </span>
                     </div>
                     <button

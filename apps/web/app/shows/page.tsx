@@ -9,6 +9,7 @@
 
 import { Button, Card } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
+import { formatDateWithDay, formatNumber } from '@/lib/format-date';
 import {
   Calendar,
   MapPin,
@@ -331,12 +332,7 @@ function ShowCard({
         <div className="space-y-2">
           <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 shrink-0" />
-            <span>{new Date(show.date).toLocaleDateString('en-US', {
-              weekday: 'short',
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            })}</span>
+            <span>{formatDateWithDay(show.date)}</span>
           </div>
 
           {show.venue && (
@@ -386,7 +382,7 @@ function ShowCard({
             {show.guarantee && (
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <DollarSign className="h-3.5 w-3.5" />
-                <span>${show.guarantee.toLocaleString()} guarantee</span>
+                <span>${formatNumber(show.guarantee)} guarantee</span>
               </div>
             )}
           </div>
