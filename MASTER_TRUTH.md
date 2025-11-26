@@ -1,16 +1,17 @@
 # MASTER_TRUTH
 
 **Agent:** 132 | **Prev:** 131 | **Date:** 2025-11-26  
-**Status:** ✅ PRODUCTION LIVE - BUILD CLEAN
+**Status:** 🔄 DEPLOYMENT IN PROGRESS
 
 ---
 
 ## ⚡ CURRENT STATE (VERIFIED)
 
-### ✅ PRODUCTION STATUS
+### 🔄 PRODUCTION STATUS
 - **Site:** https://www.cronkwaters.com → ✅ LIVE (HTTP 200)
-- **Deployment:** `e8d60b2d` (READY state, deployed Nov 26)
-- **Build:** ✅ Clean (65s build time)
+- **Latest Commit:** `e6be26dd` (pushed, building)
+- **Previous Issue:** Production was pointing to broken `e8d60b2d` 
+- **Fix:** Triggered new deployment - all fixes already in codebase
 - **Auth:** Supabase + Google OAuth → ✅ Working
 - **DB:** Neon PostgreSQL (us-west-2) → ✅ Connected
 - **Stack:** Next.js 15.5.6, tRPC 11, Prisma 5.22.0, Turbo 2.3.0
@@ -19,6 +20,12 @@
 
 1. **Ably Real-Time** - Connection timeout (app works without it)
 2. **PostHog Analytics** - Disabled (no key set)
+
+### 🔧 RECENT FIX (Agent 132)
+- **Problem:** Production URL pointing to old broken deployment
+- **Root Cause:** Commit `e8d60b2d` (docs only) deployed after fixes
+- **Solution:** Triggered fresh deployment with `e6be26dd`
+- **Status:** Building (~3min)
 
 ### 📋 FEATURES LIVE
 - Songwriting Tool (4 tabs: Structure, Chords, Lyrics, Copyright)
