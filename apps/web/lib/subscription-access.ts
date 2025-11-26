@@ -7,7 +7,7 @@ import { getCurrentUser } from '@/lib/session';
  */
 /**
  * SINGLE SOURCE OF TRUTH FOR SUBSCRIPTION TIERS
- * 
+ *
  * Pricing (for good margins):
  * - Free: $0/mo → Cost: $0 → 100% margin
  * - Creator: $9.99/mo → Cost: ~$0.28/user → 97% margin
@@ -35,7 +35,7 @@ export const SUBSCRIPTION_TIERS = {
   },
   creator: {
     name: 'Creator',
-    price: 9.99,
+    price: 14.99,
     features: {
       aiChatAssist: true,
       aiTranscription: true,

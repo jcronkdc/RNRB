@@ -1,6 +1,7 @@
 'use client';
 
 import { useChannel } from 'ably/react';
+import { formatDateTime } from '@/lib/format-date';
 import { Bell, X } from 'lucide-react';
 import { useState } from 'react';
 

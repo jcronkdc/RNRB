@@ -29,23 +29,38 @@ export default function PricingPage() {
               </p>
               <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>3 active projects</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>1 GB storage</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>Basic songwriting tools</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>Community access (view only)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>1 collaborator per project</span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -87,42 +102,71 @@ export default function PricingPage() {
                 For serious musicians & songwriters
               </p>
               <div className="mb-2 text-4xl font-bold">
-                $9.99<span className="text-base font-normal" style={{ color: 'var(--muted)' }}>/month</span>
+                $14.99
+                <span className="text-base font-normal" style={{ color: 'var(--muted)' }}>
+                  /month
+                </span>
               </div>
               <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
-                Less than 2 lattes ☕
+                Less than 3 lattes ☕
               </p>
               <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>10 active projects</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>10 GB storage</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
-                  <span><strong>100 AI assists/month</strong></span>
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
+                  <span>
+                    <strong>100 AI assists/month</strong>
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>Copyright split sheets (PDF)</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>Tour & gig management</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>5 collaborators per project</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>Community publishing</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <Check
+                    className="mt-0.5 h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span>Version control for music</span>
                 </li>
                 <li className="flex items-start gap-2">
@@ -145,7 +189,10 @@ export default function PricingPage() {
                 For bands, studios & professionals
               </p>
               <div className="mb-2 text-4xl font-bold">
-                $29.99<span className="text-base font-normal" style={{ color: 'var(--muted)' }}>/month</span>
+                $29.99
+                <span className="text-base font-normal" style={{ color: 'var(--muted)' }}>
+                  /month
+                </span>
               </div>
               <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
                 Price of 1 pizza 🍕
@@ -153,19 +200,27 @@ export default function PricingPage() {
               <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500" />
-                  <span><strong>Unlimited projects</strong></span>
+                  <span>
+                    <strong>Unlimited projects</strong>
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500" />
-                  <span><strong>100 GB storage</strong></span>
+                  <span>
+                    <strong>100 GB storage</strong>
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500" />
-                  <span><strong>500 AI assists/month</strong> (5×)</span>
+                  <span>
+                    <strong>500 AI assists/month</strong> (5×)
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500" />
-                  <span><strong>20+ hours HD video/month</strong></span>
+                  <span>
+                    <strong>20+ hours HD video/month</strong>
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500" />
@@ -188,7 +243,11 @@ export default function PricingPage() {
                   <span>API access (coming soon)</span>
                 </li>
               </ul>
-              <Link href="/auth?signup=true" className="button w-full" style={{ background: 'linear-gradient(to right, #8b5cf6, #ec4899)' }}>
+              <Link
+                href="/auth?signup=true"
+                className="button w-full"
+                style={{ background: 'linear-gradient(to right, #8b5cf6, #ec4899)' }}
+              >
                 Start Free Trial
               </Link>
             </div>
@@ -202,65 +261,82 @@ export default function PricingPage() {
                 <thead>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <th className="pb-4 pr-8 font-semibold">Feature</th>
-                    <th className="pb-4 px-4 text-center font-semibold">Explorer</th>
-                    <th className="pb-4 px-4 text-center font-semibold" style={{ color: 'var(--accent)' }}>Creator</th>
+                    <th className="px-4 pb-4 text-center font-semibold">Explorer</th>
+                    <th
+                      className="px-4 pb-4 text-center font-semibold"
+                      style={{ color: 'var(--accent)' }}
+                    >
+                      Creator
+                    </th>
                     <th className="pb-4 pl-4 text-center font-semibold text-purple-500">Studio</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm" style={{ color: 'var(--muted)' }}>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">Projects</td>
-                    <td className="py-3 px-4 text-center">3</td>
-                    <td className="py-3 px-4 text-center">10</td>
+                    <td className="px-4 py-3 text-center">3</td>
+                    <td className="px-4 py-3 text-center">10</td>
                     <td className="py-3 pl-4 text-center">Unlimited</td>
                   </tr>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">Storage</td>
-                    <td className="py-3 px-4 text-center">1 GB</td>
-                    <td className="py-3 px-4 text-center">10 GB</td>
+                    <td className="px-4 py-3 text-center">1 GB</td>
+                    <td className="px-4 py-3 text-center">10 GB</td>
                     <td className="py-3 pl-4 text-center">100 GB</td>
                   </tr>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">AI Assists</td>
-                    <td className="py-3 px-4 text-center">—</td>
-                    <td className="py-3 px-4 text-center">100/mo</td>
+                    <td className="px-4 py-3 text-center">—</td>
+                    <td className="px-4 py-3 text-center">100/mo</td>
                     <td className="py-3 pl-4 text-center">500/mo</td>
                   </tr>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">Video Collaboration</td>
-                    <td className="py-3 px-4 text-center">—</td>
-                    <td className="py-3 px-4 text-center">—</td>
+                    <td className="px-4 py-3 text-center">—</td>
+                    <td className="px-4 py-3 text-center">—</td>
                     <td className="py-3 pl-4 text-center">3,600 min†</td>
                   </tr>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">Collaborators</td>
-                    <td className="py-3 px-4 text-center">1</td>
-                    <td className="py-3 px-4 text-center">5</td>
+                    <td className="px-4 py-3 text-center">1</td>
+                    <td className="px-4 py-3 text-center">5</td>
                     <td className="py-3 pl-4 text-center">Unlimited</td>
                   </tr>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">Copyright Split Sheets</td>
-                    <td className="py-3 px-4 text-center">—</td>
-                    <td className="py-3 px-4 text-center"><Check className="mx-auto h-4 w-4" style={{ color: 'var(--accent)' }} /></td>
-                    <td className="py-3 pl-4 text-center"><Check className="mx-auto h-4 w-4 text-purple-500" /></td>
+                    <td className="px-4 py-3 text-center">—</td>
+                    <td className="px-4 py-3 text-center">
+                      <Check className="mx-auto h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    </td>
+                    <td className="py-3 pl-4 text-center">
+                      <Check className="mx-auto h-4 w-4 text-purple-500" />
+                    </td>
                   </tr>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">Tour Management</td>
-                    <td className="py-3 px-4 text-center">—</td>
-                    <td className="py-3 px-4 text-center"><Check className="mx-auto h-4 w-4" style={{ color: 'var(--accent)' }} /></td>
-                    <td className="py-3 pl-4 text-center"><Check className="mx-auto h-4 w-4 text-purple-500" /></td>
+                    <td className="px-4 py-3 text-center">—</td>
+                    <td className="px-4 py-3 text-center">
+                      <Check className="mx-auto h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    </td>
+                    <td className="py-3 pl-4 text-center">
+                      <Check className="mx-auto h-4 w-4 text-purple-500" />
+                    </td>
                   </tr>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">Real-time Collaboration</td>
-                    <td className="py-3 px-4 text-center">—</td>
-                    <td className="py-3 px-4 text-center">—</td>
-                    <td className="py-3 pl-4 text-center"><Check className="mx-auto h-4 w-4 text-purple-500" /></td>
+                    <td className="px-4 py-3 text-center">—</td>
+                    <td className="px-4 py-3 text-center">—</td>
+                    <td className="py-3 pl-4 text-center">
+                      <Check className="mx-auto h-4 w-4 text-purple-500" />
+                    </td>
                   </tr>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-3 pr-8">Priority Support</td>
-                    <td className="py-3 px-4 text-center">—</td>
-                    <td className="py-3 px-4 text-center">—</td>
-                    <td className="py-3 pl-4 text-center"><Check className="mx-auto h-4 w-4 text-purple-500" /></td>
+                    <td className="px-4 py-3 text-center">—</td>
+                    <td className="px-4 py-3 text-center">—</td>
+                    <td className="py-3 pl-4 text-center">
+                      <Check className="mx-auto h-4 w-4 text-purple-500" />
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -299,33 +375,39 @@ export default function PricingPage() {
               <div className="card">
                 <h3 className="mb-2 font-semibold">Can I switch plans anytime?</h3>
                 <p style={{ color: 'var(--muted)' }}>
-                  Yes! Upgrade or downgrade at any time. When you upgrade, you'll get immediate access to new features. When you downgrade, you'll keep your current features until the end of your billing period.
+                  Yes! Upgrade or downgrade at any time. When you upgrade, you'll get immediate
+                  access to new features. When you downgrade, you'll keep your current features
+                  until the end of your billing period.
                 </p>
               </div>
               <div className="card">
                 <h3 className="mb-2 font-semibold">What happens to my projects if I downgrade?</h3>
                 <p style={{ color: 'var(--muted)' }}>
-                  Your projects are safe. If you exceed the new plan's limits, you'll need to archive some projects before creating new ones, but nothing is deleted.
+                  Your projects are safe. If you exceed the new plan's limits, you'll need to
+                  archive some projects before creating new ones, but nothing is deleted.
                 </p>
               </div>
               <div className="card">
                 <h3 className="mb-2 font-semibold">Is there a free trial?</h3>
                 <p style={{ color: 'var(--muted)' }}>
-                  Yes! All paid plans come with a 14-day free trial. No credit card required to start exploring.
+                  Yes! All paid plans come with a 14-day free trial. No credit card required to
+                  start exploring.
                 </p>
               </div>
               <div className="card">
                 <h3 className="mb-2 font-semibold">What payment methods do you accept?</h3>
                 <p style={{ color: 'var(--muted)' }}>
-                  We accept all major credit cards through Stripe. Annual billing options coming soon with 2 months free!
+                  We accept all major credit cards through Stripe. Annual billing options coming
+                  soon with 2 months free!
                 </p>
               </div>
               <div className="card">
                 <h3 className="mb-2 font-semibold">† How does video time work?</h3>
                 <p style={{ color: 'var(--muted)' }}>
-                  Video time is measured in participant-minutes. A 60-minute call with 3 people uses 180 minutes. 
-                  Studio tier includes 3,600 participant-minutes/month — enough for 20+ hours of band rehearsals 
-                  or 60 hours of 1-on-1 sessions. Need more? Contact us for custom plans.
+                  Video time is measured in participant-minutes. A 60-minute call with 3 people uses
+                  180 minutes. Studio tier includes 3,600 participant-minutes/month — enough for 20+
+                  hours of band rehearsals or 60 hours of 1-on-1 sessions. Need more? Contact us for
+                  custom plans.
                 </p>
               </div>
             </div>

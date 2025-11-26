@@ -25,7 +25,6 @@ import {
 } from '@/lib/actions/subscriptions';
 import { formatDateFull } from '@/lib/format-date';
 
-
 interface BillingDashboardProps {
   subscription: {
     id: string;
@@ -83,7 +82,7 @@ const PLAN_INFO = {
   },
   creator: {
     name: 'Creator',
-    price: '$9.99',
+    price: '$14.99',
     period: '/month',
     icon: Zap,
     color: 'from-orange-500 to-red-500',
@@ -192,7 +191,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="border-border rounded-xl border bg-gradient-to-r from-gray-900 to-black p-8"
+        className="rounded-xl border border-border bg-gradient-to-r from-gray-900 to-black p-8"
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -287,7 +286,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             className={`rounded-xl p-6 ${
               currentTier === 'free'
                 ? 'border-2 border-orange-500 bg-gradient-to-br from-orange-500/10 to-red-500/10'
-                : 'border-border border bg-gray-900'
+                : 'border border-border bg-gray-900'
             }`}
           >
             <div className="mb-4 flex items-center gap-2">
@@ -321,7 +320,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             className={`relative rounded-xl p-6 ${
               currentTier === 'creator'
                 ? 'border-2 border-orange-500 bg-gradient-to-br from-orange-500/10 to-red-500/10'
-                : 'border-border border bg-gray-900'
+                : 'border border-border bg-gray-900'
             }`}
           >
             {currentTier !== 'creator' && (
@@ -386,7 +385,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             className={`rounded-xl p-6 ${
               currentTier === 'studio'
                 ? 'border-2 border-purple-500 bg-gradient-to-br from-purple-500/10 to-pink-500/10'
-                : 'border-border border bg-gray-900'
+                : 'border border-border bg-gray-900'
             }`}
           >
             <div className="mb-4 flex items-center gap-2">
@@ -441,7 +440,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="border-border rounded-xl border bg-gray-900 p-6"
+          className="rounded-xl border border-border bg-gray-900 p-6"
         >
           <h2 className="mb-4 text-xl font-semibold text-white">Manage Your Subscription</h2>
           <p className="mb-6 text-gray-400">
@@ -506,14 +505,13 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             initial={{ scale: 0.95, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="border-border w-full max-w-md rounded-xl border bg-gray-900 p-6"
+            className="w-full max-w-md rounded-xl border border-border bg-gray-900 p-6"
           >
             <h3 className="mb-4 text-xl font-bold text-white">Cancel Your Subscription?</h3>
             <p className="mb-6 text-gray-400">
               You'll continue to have access until{' '}
-              {subscription.subscriptionEndsAt &&
-                formatDateFull(subscription.subscriptionEndsAt)}
-              . After that, you'll be moved to the Explorer (Free) plan.
+              {subscription.subscriptionEndsAt && formatDateFull(subscription.subscriptionEndsAt)}.
+              After that, you'll be moved to the Explorer (Free) plan.
             </p>
             <div className="flex gap-3">
               <Button
@@ -584,9 +582,3 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
     </div>
   );
 }
-
-
-
-
-
-
