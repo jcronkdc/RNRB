@@ -134,29 +134,52 @@ export function ActivityFeed({
   );
 }
 
-// Compact version with improved performance
-const CompactActivityItem = memo(({ activity }: { activity: ActivityEvent }) => (
-  <motion.div
-    key={activity.id}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="text-muted-foreground flex items-center gap-2 text-xs"
-  >
-    <span>{getActivityIcon(activity.type)}</span>
-    <span className="truncate">{getActivityMessage(activity)}</span>
-  </motion.div>
-));
+// Compact version with CSS variables for dashboard consistency
+const CompactActivityItem = memo(({ activity }: { activity: ActivityEvent }) => {
+  const formattedTime = useMemo(
+    () => formatDistanceToNow(activity.timestamp, { addSuffix: true }),
+    [activity.timestamp]
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      className="flex items-start gap-3 rounded-xl p-3 transition-all duration-200 hover:translate-x-1"
+      style={{ 
+        background: 'rgba(255, 255, 255, 0.02)',
+        borderBottom: '1px solid var(--border)',
+      }}
+    >
+      <div 
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base"
+        style={{ background: 'rgba(255, 99, 71, 0.1)' }}
+      >
+        {getActivityIcon(activity.type)}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium" style={{ color: 'var(--text)' }}>
+          {getActivityMessage(activity)}
+        </p>
+        <p className="text-xs" style={{ color: 'var(--muted)' }}>
+          {formattedTime}
+        </p>
+      </div>
+    </motion.div>
+  );
+});
 CompactActivityItem.displayName = 'CompactActivityItem';
 
 export const CompactActivityFeed = memo(({
   channelName,
-  limit = 5,
+  limit = 8,
 }: {
   channelName: string;
   limit?: number;
 }) => {
-  const { activities, isConnected } = useActivityFeed({ channelName, limit });
+  const { activities, isConnected, error } = useActivityFeed({ channelName, limit });
 
   // Memoize sliced activities
   const displayedActivities = useMemo(
@@ -164,10 +187,42 @@ export const CompactActivityFeed = memo(({
     [activities, limit]
   );
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8 text-center">
+        <AlertCircle className="mb-2 h-8 w-8" style={{ color: 'var(--muted)' }} />
+        <p className="text-sm" style={{ color: 'var(--muted)' }}>Feed temporarily unavailable</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
+      {/* Connection status */}
+      <div className="mb-3 flex items-center gap-2">
+        <motion.div
+          className="h-2 w-2 rounded-full"
+          style={{ background: isConnected ? '#22c55e' : 'var(--muted)' }}
+          animate={isConnected ? { scale: [1, 1.3, 1], opacity: [1, 0.6, 1] } : {}}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+        <span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+          {isConnected ? 'Live' : 'Connecting...'}
+        </span>
+      </div>
+
       {displayedActivities.length === 0 ? (
-        <p className="text-muted-foreground text-xs">No recent activity</p>
+        <motion.div 
+          className="flex flex-col items-center justify-center py-8 text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <Activity className="mb-3 h-10 w-10" style={{ color: 'var(--muted)', opacity: 0.3 }} />
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>No recent activity</p>
+          <p className="mt-1 text-xs" style={{ color: 'var(--muted)', opacity: 0.7 }}>
+            Start creating to see updates here
+          </p>
+        </motion.div>
       ) : (
         <AnimatePresence mode="popLayout">
           {displayedActivities.map((activity) => (
@@ -175,7 +230,6 @@ export const CompactActivityFeed = memo(({
           ))}
         </AnimatePresence>
       )}
-      {isConnected && <p className="text-muted-foreground/60 text-xs">🍄 Live updates active</p>}
     </div>
   );
 });

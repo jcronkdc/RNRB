@@ -145,7 +145,7 @@ const PrimaryActionCard = memo(({
 ));
 PrimaryActionCard.displayName = 'PrimaryActionCard';
 
-// Feature tile (smaller, grid item)
+// Feature tile (smaller, grid item) with keyboard accessibility
 const FeatureTile = memo(({ 
   title, 
   icon: Icon, 
@@ -156,32 +156,50 @@ const FeatureTile = memo(({
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   href: string;
   description?: string;
-}) => (
-  <Link href={href}>
-    <div 
-      className="group flex h-full cursor-pointer flex-col items-center rounded-2xl p-5 text-center transition-all duration-200 hover:translate-y-[-2px]"
-      style={{ 
-        background: 'var(--panel)',
-        border: '1px solid var(--border)',
-        boxShadow: 'var(--shadow)',
-      }}
-    >
+}) => {
+  const router = useRouter();
+  
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      router.push(href);
+    }
+  };
+
+  return (
+    <Link href={href} tabIndex={-1}>
       <div 
-        className="mb-3 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-200 group-hover:scale-110"
+        role="button"
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        className="group flex h-full cursor-pointer flex-col items-center rounded-2xl p-5 text-center transition-all duration-200 hover:translate-y-[-2px] focus:outline-none focus:ring-2 focus:ring-offset-2"
         style={{ 
-          background: 'rgba(255, 99, 71, 0.1)',
-          border: '1px solid rgba(255, 99, 71, 0.15)',
+          background: 'var(--panel)',
+          border: '1px solid var(--border)',
+          boxShadow: 'var(--shadow)',
+          // @ts-expect-error CSS custom properties
+          '--tw-ring-color': 'var(--accent)',
+          '--tw-ring-offset-color': 'var(--bg)',
         }}
+        aria-label={`Navigate to ${title}`}
       >
-        <Icon className="h-7 w-7" style={{ color: 'var(--accent)' }} />
+        <div 
+          className="mb-3 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-200 group-hover:scale-110"
+          style={{ 
+            background: 'rgba(255, 99, 71, 0.1)',
+            border: '1px solid rgba(255, 99, 71, 0.15)',
+          }}
+        >
+          <Icon className="h-7 w-7" style={{ color: 'var(--accent)' }} />
+        </div>
+        <h4 className="mb-1 font-semibold" style={{ color: 'var(--text)' }}>{title}</h4>
+        {description && (
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>{description}</p>
+        )}
       </div>
-      <h4 className="mb-1 font-semibold" style={{ color: 'var(--text)' }}>{title}</h4>
-      {description && (
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>{description}</p>
-      )}
-    </div>
-  </Link>
-));
+    </Link>
+  );
+});
 FeatureTile.displayName = 'FeatureTile';
 
 // Recent project card
@@ -219,18 +237,99 @@ const RecentProjectCard = memo(({
 ));
 RecentProjectCard.displayName = 'RecentProjectCard';
 
-// Loading skeleton
+// Skeleton components for progressive loading
+const StatsSkeleton = memo(() => (
+  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+    {[...Array(4)].map((_, i) => (
+      <div 
+        key={i} 
+        className="flex animate-pulse items-center gap-4 rounded-2xl p-4"
+        style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+      >
+        <div className="h-12 w-12 rounded-xl" style={{ background: 'rgba(255, 99, 71, 0.1)' }} />
+        <div className="flex-1">
+          <div className="mb-2 h-4 w-16 rounded" style={{ background: 'var(--border)' }} />
+          <div className="h-6 w-10 rounded" style={{ background: 'var(--border)' }} />
+        </div>
+      </div>
+    ))}
+  </div>
+));
+StatsSkeleton.displayName = 'StatsSkeleton';
+
+const ActionsSkeleton = memo(() => (
+  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {[...Array(3)].map((_, i) => (
+      <div 
+        key={i} 
+        className="h-56 animate-pulse rounded-2xl"
+        style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+      >
+        <div className="p-6">
+          <div className="mb-4 h-16 w-16 rounded-2xl" style={{ background: 'rgba(255, 99, 71, 0.1)' }} />
+          <div className="mb-2 h-6 w-32 rounded" style={{ background: 'var(--border)' }} />
+          <div className="mb-2 h-4 w-full rounded" style={{ background: 'var(--border)' }} />
+          <div className="h-4 w-2/3 rounded" style={{ background: 'var(--border)' }} />
+        </div>
+      </div>
+    ))}
+  </div>
+));
+ActionsSkeleton.displayName = 'ActionsSkeleton';
+
+const ProjectsSkeleton = memo(() => (
+  <div className="space-y-3">
+    {[...Array(4)].map((_, i) => (
+      <div 
+        key={i} 
+        className="flex animate-pulse items-center gap-4 rounded-xl p-4"
+        style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+      >
+        <div className="h-12 w-12 rounded-xl" style={{ background: 'rgba(255, 99, 71, 0.1)' }} />
+        <div className="flex-1">
+          <div className="mb-2 h-4 w-32 rounded" style={{ background: 'var(--border)' }} />
+          <div className="h-3 w-20 rounded" style={{ background: 'var(--border)' }} />
+        </div>
+      </div>
+    ))}
+  </div>
+));
+ProjectsSkeleton.displayName = 'ProjectsSkeleton';
+
+// Full page skeleton for initial load
 const DashboardSkeleton = () => (
   <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
-    <div className="mx-auto max-w-7xl px-6 py-12">
-      <div className="mb-12 animate-pulse">
-        <div className="mb-4 h-12 w-2/3 rounded-lg" style={{ background: 'var(--panel)' }} />
-        <div className="h-6 w-1/3 rounded-lg" style={{ background: 'var(--panel)' }} />
+    <div className="mx-auto max-w-7xl px-6 py-10">
+      {/* Header skeleton */}
+      <div className="mb-10 animate-pulse">
+        <div className="mb-3 h-12 w-80 rounded-lg" style={{ background: 'var(--panel)' }} />
+        <div className="h-5 w-48 rounded-lg" style={{ background: 'var(--panel)' }} />
       </div>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-48 animate-pulse rounded-2xl" style={{ background: 'var(--panel)' }} />
-        ))}
+      
+      {/* Stats skeleton */}
+      <div className="mb-10">
+        <StatsSkeleton />
+      </div>
+      
+      {/* Actions skeleton */}
+      <div className="mb-10">
+        <div className="mb-6 h-4 w-32 rounded" style={{ background: 'var(--panel)' }} />
+        <ActionsSkeleton />
+      </div>
+      
+      {/* Two column skeleton */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div>
+          <div className="mb-4 h-4 w-36 rounded" style={{ background: 'var(--panel)' }} />
+          <ProjectsSkeleton />
+        </div>
+        <div>
+          <div className="mb-4 h-4 w-32 rounded" style={{ background: 'var(--panel)' }} />
+          <div 
+            className="h-80 animate-pulse rounded-2xl"
+            style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -342,8 +441,10 @@ function DashboardContent() {
         </header>
 
         {/* ==================== QUICK STATS ==================== */}
-        {dashboardStats && (
-          <section className="mb-10">
+        <section className="mb-10">
+          {statsLoading && !dashboardStats ? (
+            <StatsSkeleton />
+          ) : dashboardStats ? (
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               <StatCard
                 icon={Folder}
@@ -364,12 +465,12 @@ function DashboardContent() {
               />
               <StatCard
                 icon={TrendingUp}
-                label="Activity"
+                label="This Week"
                 value={dashboardStats.recentActivity}
               />
             </div>
-          </section>
-        )}
+          ) : null}
+        </section>
 
         {/* ==================== PRIMARY ACTIONS ==================== */}
         <section className="mb-10">
@@ -424,9 +525,7 @@ function DashboardContent() {
             </div>
             <div className="space-y-3">
               {loadingProjects ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--muted)' }} />
-                </div>
+                <ProjectsSkeleton />
               ) : recentProjects.length > 0 ? (
                 recentProjects.map((project) => (
                   <RecentProjectCard

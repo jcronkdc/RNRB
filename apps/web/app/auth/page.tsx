@@ -1,10 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Music, Sparkles, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Suspense, useState, useEffect } from 'react';
 
 import { signInWithCredentials } from '@/app/actions/auth';
@@ -12,7 +12,6 @@ import { signInWithCredentials } from '@/app/actions/auth';
 const NEXT_REDIRECT = 'NEXT_REDIRECT';
 
 function AuthForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,11 +19,9 @@ function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Check if this is signup flow
   const isSignup = searchParams.get('signup') === 'true';
   const errorParam = searchParams.get('error');
 
-  // Show error from URL params (e.g., from callback)
   useEffect(() => {
     if (errorParam) {
       const errorMessages: Record<string, string> = {
@@ -48,7 +45,6 @@ function AuthForm() {
 
     try {
       if (isSignup) {
-        // Registration
         const response = await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -66,7 +62,6 @@ function AuthForm() {
           text: 'Account created! Signing you in...',
         });
 
-        // Auto sign-in after registration
         setTimeout(async () => {
           try {
             const result = await signInWithCredentials({ email, password });
@@ -74,7 +69,6 @@ function AuthForm() {
               throw new Error(result.error || 'Auto sign-in failed');
             }
           } catch (error: unknown) {
-            // Check if this is a redirect error (success case)
             if (error && typeof error === 'object' && 'digest' in error) {
               const err = error as { digest?: string };
               if (err.digest?.startsWith(NEXT_REDIRECT)) {
@@ -86,14 +80,12 @@ function AuthForm() {
           }
         }, 1000);
       } else {
-        // Sign in using server action
         try {
           const result = await signInWithCredentials({ email, password });
           if (result && !result.success) {
             throw new Error(result.error || 'Sign in failed');
           }
         } catch (error: unknown) {
-          // Check if this is a redirect error (success case)
           if (error && typeof error === 'object' && 'digest' in error) {
             const err = error as { digest?: string };
             if (err.digest?.startsWith(NEXT_REDIRECT)) {
@@ -115,234 +107,251 @@ function AuthForm() {
   };
 
   return (
-    <div className="flex min-h-screen bg-black">
-      {/* LEFT SIDE - BRANDING (Hidden on mobile, shown on desktop) */}
-      <div className="relative hidden overflow-hidden lg:flex lg:w-1/2">
-        {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-orange-500 to-red-600" />
+    <div className="relative flex min-h-screen overflow-hidden bg-zinc-950">
+      {/* Full-screen animated background */}
+      <div className="absolute inset-0">
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950" />
+        
+        {/* Accent glow - top left */}
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full bg-orange-600/20 blur-[120px]"
+        />
+        
+        {/* Accent glow - bottom right */}
+        <motion.div
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.2, 0.4, 0.2],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute -bottom-32 -right-32 h-[600px] w-[600px] rounded-full bg-red-600/15 blur-[150px]"
+        />
 
-        {/* Animated Overlay Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute left-0 top-0 h-full w-full bg-[url('/noise.png')] opacity-50" />
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-white/20 blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-white/10 blur-3xl delay-1000" />
-        </div>
+        {/* Subtle grid overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '64px 64px',
+          }}
+        />
+      </div>
 
-        {/* Content */}
-        <div className="relative z-10 flex w-full flex-col items-center justify-center p-12 text-white">
+      {/* LEFT SIDE - HERO BRANDING */}
+      <div className="relative z-10 hidden w-1/2 flex-col items-center justify-center p-16 lg:flex">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+          className="flex flex-col items-center"
+        >
+          {/* MASSIVE LOGO - No container, no background */}
+          <motion.div
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative mb-8"
+          >
+            {/* Glow behind logo */}
+            <div className="absolute inset-0 scale-110 blur-3xl">
+              <Image
+                src="/rnrdark.png"
+                alt=""
+                width={320}
+                height={320}
+                className="h-full w-full object-contain opacity-50"
+              />
+            </div>
+            
+            {/* Main logo */}
+            <Image
+              src="/rnrdark.png"
+              alt="Rock N' Roll Basement"
+              width={320}
+              height={320}
+              className="relative h-64 w-64 object-contain drop-shadow-2xl"
+              priority
+            />
+          </motion.div>
+
+          {/* Brand name - dramatic typography */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             className="text-center"
           >
-            {/* Logo */}
-            <div className="mb-8 flex justify-center">
-              <div className="relative h-32 w-32 rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-sm">
-                <Image
-                  src="/rnrdark.png"
-                  alt="Rock N' Roll Basement Logo"
-                  width={128}
-                  height={128}
-                  className="h-full w-full object-contain"
-                  priority
-                />
-              </div>
-            </div>
-
-            {/* Title */}
-            <h1 className="mb-6 text-6xl font-black tracking-tight">
-              ROCK N' ROLL
-              <br />
-              BASEMENT
+            <h1 className="font-black tracking-tight text-white">
+              <span className="block text-7xl">ROCK N' ROLL</span>
+              <span className="block text-7xl text-orange-500">BASEMENT</span>
             </h1>
-
-            <p className="mb-4 text-2xl font-semibold text-orange-100">
-              {isSignup
-                ? 'Your Music Creation Journey Starts Here'
-                : 'Where Your Music Finds Its Voice'}
+            
+            <p className="mt-6 text-xl font-light tracking-wide text-zinc-400">
+              Where musicians create together
             </p>
+          </motion.div>
 
-            <div className="mt-12 flex items-center justify-center gap-8 text-white/80">
-              <div className="text-center">
-                <div className="text-3xl font-bold">50+</div>
-                <div className="text-sm">Participants</div>
-              </div>
-              <div className="h-12 w-px bg-white/20" />
-              <div className="text-center">
-                <div className="text-3xl font-bold">HD</div>
-                <div className="text-sm">Video Calls</div>
-              </div>
-              <div className="h-12 w-px bg-white/20" />
-              <div className="text-center">
-                <div className="text-3xl font-bold">AI</div>
-                <div className="text-sm">Powered</div>
-              </div>
+          {/* Stats - minimal, clean */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="mt-16 flex items-center gap-12 text-zinc-500"
+          >
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">50+</div>
+              <div className="text-xs uppercase tracking-widest">Participants</div>
             </div>
-
-            <div className="mx-auto mt-12 max-w-md space-y-3 text-left">
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20">
-                  <Music className="h-4 w-4" />
-                </div>
-                <span className="text-white/90">
-                  {isSignup
-                    ? 'Start creating with AI-powered songwriting tools'
-                    : 'Real-time collaboration with your band'}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20">
-                  <Sparkles className="h-4 w-4" />
-                </div>
-                <span className="text-white/90">
-                  {isSignup
-                    ? 'Collaborate with musicians worldwide'
-                    : 'AI-powered songwriting tools'}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20">
-                  <Music className="h-4 w-4" />
-                </div>
-                <span className="text-white/90">
-                  {isSignup
-                    ? 'Invite-only private projects for your work'
-                    : 'Invite-only private projects'}
-                </span>
-              </div>
+            <div className="h-8 w-px bg-zinc-800" />
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">HD</div>
+              <div className="text-xs uppercase tracking-widest">Video</div>
+            </div>
+            <div className="h-8 w-px bg-zinc-800" />
+            <div className="text-center">
+              <div className="text-3xl font-bold text-white">AI</div>
+              <div className="text-xs uppercase tracking-widest">Powered</div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
 
       {/* RIGHT SIDE - AUTH FORM */}
-      <div className="flex w-full items-center justify-center p-8 lg:w-1/2">
+      <div className="relative z-10 flex w-full items-center justify-center p-8 lg:w-1/2">
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="w-full max-w-md space-y-8"
+          transition={{ duration: 0.8 }}
+          className="w-full max-w-md"
         >
           {/* Mobile Logo */}
-          <div className="mb-8 text-center lg:hidden">
-            <div className="mb-4 inline-flex h-20 w-20 items-center justify-center rounded-xl bg-orange-500/10 p-4 backdrop-blur-sm">
-              <Image
-                src="/rnrdark.png"
-                alt="Rock N' Roll Basement Logo"
-                width={80}
-                height={80}
-                className="h-full w-full object-contain brightness-0 invert"
-                priority
-              />
-            </div>
-            <h1 className="text-3xl font-black tracking-tight text-white">ROCK N' ROLL BASEMENT</h1>
+          <div className="mb-12 text-center lg:hidden">
+            <Image
+              src="/rnrdark.png"
+              alt="Rock N' Roll Basement"
+              width={120}
+              height={120}
+              className="mx-auto mb-6 h-24 w-24 object-contain"
+              priority
+            />
+            <h1 className="text-3xl font-black tracking-tight text-white">
+              ROCK N' ROLL <span className="text-orange-500">BASEMENT</span>
+            </h1>
           </div>
 
-          <div className="text-center lg:text-left">
-            <h2 className="mb-2 text-4xl font-bold text-white">
-              {isSignup ? 'Create Account' : 'Welcome Back'}
-            </h2>
-            <p className="text-gray-400">
-              {isSignup
-                ? 'Sign up to start building your music empire'
-                : 'Sign in to continue building your music empire'}
-            </p>
-          </div>
-
-          {message && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`rounded-xl border p-4 ${
-                message.type === 'success'
-                  ? 'border-green-500/30 bg-green-500/10'
-                  : 'border-red-500/30 bg-red-500/10'
-              }`}
-            >
-              <p
-                className={`text-sm ${
-                  message.type === 'success' ? 'text-green-400' : 'text-red-400'
-                }`}
-              >
-                {message.text}
+          {/* Form Card */}
+          <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/50 p-8 backdrop-blur-xl">
+            <div className="mb-8 text-center">
+              <h2 className="text-3xl font-bold text-white">
+                {isSignup ? 'Create Account' : 'Welcome Back'}
+              </h2>
+              <p className="mt-2 text-zinc-500">
+                {isSignup
+                  ? 'Start your music journey'
+                  : 'Sign in to continue'}
               </p>
-            </motion.div>
-          )}
+            </div>
 
-          <div className="space-y-4">
-            {/* Signup Context Message */}
-            {isSignup && (
+            {message && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-xl border border-green-500/30 bg-green-500/10 p-4"
+                className={`mb-6 rounded-lg border p-4 ${
+                  message.type === 'success'
+                    ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
+                    : 'border-red-500/30 bg-red-500/10 text-red-400'
+                }`}
               >
-                <p className="flex items-center gap-2 text-sm font-semibold text-green-300">
-                  🎸 Free Plan Included
-                </p>
-                <p className="mt-1 text-xs text-gray-400">
-                  Start with 3 projects, 1 collaborator, and all basic tools. Upgrade anytime!
-                </p>
+                <p className="text-sm">{message.text}</p>
               </motion.div>
             )}
 
-            {/* Email/Password Form */}
+            {isSignup && (
+              <div className="mb-6 rounded-lg border border-zinc-700/50 bg-zinc-800/30 p-4">
+                <p className="text-sm font-medium text-zinc-300">Free Plan Included</p>
+                <p className="mt-1 text-xs text-zinc-500">
+                  3 projects, 1 collaborator, all basic tools
+                </p>
+              </div>
+            )}
+
             <form onSubmit={handlePasswordAuth} className="space-y-4">
               {isSignup && (
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your Name (optional)"
-                  disabled={loading}
-                  className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-3 text-white transition-all placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
-                />
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name (optional)"
+                    disabled={loading}
+                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+                  />
+                </div>
               )}
 
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                required
-                disabled={loading}
-                className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-3 text-white transition-all placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
-              />
+              <div>
+                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                  disabled={loading}
+                  className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+                />
+              </div>
 
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password (min. 8 characters)"
-                required
-                minLength={8}
-                disabled={loading}
-                className="w-full rounded-xl border border-gray-800 bg-gray-900 px-4 py-3 text-white transition-all placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
-              />
+              <div>
+                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Min. 8 characters"
+                  required
+                  minLength={8}
+                  disabled={loading}
+                  className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+                />
+              </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full transform rounded-xl bg-orange-500 px-4 py-3 text-base font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02] hover:bg-orange-600 disabled:opacity-50 disabled:hover:scale-100"
+                className="mt-2 w-full rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:from-orange-600 hover:to-orange-700 hover:shadow-orange-500/40 disabled:opacity-50"
               >
                 {loading ? (
-                  <span className="inline-flex items-center gap-2">
+                  <span className="inline-flex items-center justify-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     {isSignup ? 'Creating Account...' : 'Signing In...'}
                   </span>
                 ) : isSignup ? (
-                  '🚀 Create Account'
+                  'Create Account'
                 ) : (
-                  '🎸 Sign In'
+                  'Sign In'
                 )}
               </button>
 
-              <p className="text-center text-sm text-gray-500">
+              <p className="pt-4 text-center text-sm text-zinc-500">
                 {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <Link
                   href={isSignup ? '/auth' : '/auth?signup=true'}
-                  className="font-medium text-orange-500 hover:text-orange-400 hover:underline"
+                  className="font-medium text-orange-500 transition-colors hover:text-orange-400"
                 >
                   {isSignup ? 'Sign in' : 'Create one'}
                 </Link>
@@ -350,22 +359,15 @@ function AuthForm() {
             </form>
           </div>
 
-          <p className="text-center text-xs text-gray-500">
+          <p className="mt-8 text-center text-xs text-zinc-600">
             By continuing, you agree to our{' '}
-            <Link
-              href="/terms"
-              className="text-orange-500 transition-colors hover:text-orange-400 hover:underline"
-            >
-              Terms of Service
+            <Link href="/terms" className="text-zinc-500 hover:text-zinc-400">
+              Terms
             </Link>{' '}
             and{' '}
-            <Link
-              href="/privacy"
-              className="text-orange-500 transition-colors hover:text-orange-400 hover:underline"
-            >
+            <Link href="/privacy" className="text-zinc-500 hover:text-zinc-400">
               Privacy Policy
             </Link>
-            .
           </p>
         </motion.div>
       </div>
@@ -377,8 +379,8 @@ export default function SignInPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-black">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
+        <div className="flex min-h-screen items-center justify-center bg-zinc-950">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
         </div>
       }
     >

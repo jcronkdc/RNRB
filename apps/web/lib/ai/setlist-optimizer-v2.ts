@@ -465,3 +465,4 @@ function getKeyDistance(key1: string, key2: string): number {
   return Math.min(distance, 12 - distance);
 }
 
+

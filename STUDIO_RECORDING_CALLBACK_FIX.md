@@ -292,3 +292,4 @@ The recording-to-project workflow is now fully functional. Users can:
 
 This completes the missing piece of the Studio → Project integration.
 
+
