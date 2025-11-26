@@ -575,28 +575,28 @@ function DashboardContent() {
                 border: '1px solid var(--border)',
               }}
             >
-              {user && !loading && (
-                <SilentErrorBoundary
+              <SilentErrorBoundary
+                fallback={
+                  <div className="py-8 text-center" style={{ color: 'var(--muted)' }}>
+                    Activity feed temporarily unavailable
+                  </div>
+                }
+              >
+                <Suspense
                   fallback={
-                    <div className="py-8 text-center" style={{ color: 'var(--muted)' }}>
-                      Activity feed temporarily unavailable
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--muted)' }} />
                     </div>
                   }
                 >
-                  <Suspense
-                    fallback={
-                      <div className="flex items-center justify-center py-8">
-                        <Loader2
-                          className="h-6 w-6 animate-spin"
-                          style={{ color: 'var(--muted)' }}
-                        />
-                      </div>
-                    }
-                  >
-                    <CompactActivityFeed channelName="activity:global" limit={8} />
-                  </Suspense>
-                </SilentErrorBoundary>
-              )}
+                  {/* Always render with consistent hooks, use enabled prop to control behavior */}
+                  <CompactActivityFeed
+                    channelName="activity:global"
+                    limit={8}
+                    enabled={!!user && !loading}
+                  />
+                </Suspense>
+              </SilentErrorBoundary>
             </div>
           </div>
         </section>

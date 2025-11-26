@@ -47,15 +47,25 @@ export type ActivityEvent = {
 type UseActivityFeedOptions = {
   channelName: string; // e.g., 'activity:project:{slug}' or 'activity:global'
   limit?: number;
+  enabled?: boolean; // Whether to connect to Ably (prevents connection when auth is loading)
 };
 
-export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOptions) {
+export function useActivityFeed({
+  channelName,
+  limit = 50,
+  enabled = true,
+}: UseActivityFeedOptions) {
   const [activities, setActivities] = useState<ActivityEvent[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const ablyRef = useRef<Ably.Realtime | null>(null);
 
   useEffect(() => {
+    // Skip connection if not enabled (e.g., auth still loading)
+    if (!enabled) {
+      return;
+    }
+
     let mounted = true;
     let channel: RealtimeChannel | null = null;
 
@@ -67,7 +77,12 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
         });
 
         if (!mounted) {
-          ablyClient.close();
+          // Safely close the client - wrap in try/catch to handle "Connection closed" errors
+          try {
+            ablyClient.close();
+          } catch {
+            // Ignore close errors when component unmounted
+          }
           return;
         }
 
@@ -115,7 +130,9 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
           console.error('Error fetching activity history:', error_);
         }
 
-        setIsConnected(true);
+        if (mounted) {
+          setIsConnected(true);
+        }
       } catch (err) {
         console.error('Ably activity feed error:', err);
         if (mounted) {
@@ -126,17 +143,26 @@ export function useActivityFeed({ channelName, limit = 50 }: UseActivityFeedOpti
 
     initAbly();
 
-    // Cleanup
+    // Cleanup - wrap in try/catch to prevent unhandled promise rejections
     return () => {
       mounted = false;
       if (channel) {
-        channel.unsubscribe();
+        try {
+          channel.unsubscribe();
+        } catch {
+          // Ignore unsubscribe errors during cleanup
+        }
       }
       if (ablyRef.current) {
-        ablyRef.current.close();
+        try {
+          ablyRef.current.close();
+        } catch {
+          // Ignore close errors during cleanup (prevents "Connection closed" unhandled rejection)
+        }
+        ablyRef.current = null;
       }
     };
-  }, [channelName, limit]);
+  }, [channelName, limit, enabled]);
 
   // Function to publish activity (for components to use)
   const publishActivity = async (activity: Omit<ActivityEvent, 'id' | 'timestamp'>) => {

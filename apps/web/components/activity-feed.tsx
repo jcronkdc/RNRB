@@ -39,7 +39,7 @@ const ActivityItem = memo(({ activity }: { activity: ActivityEvent }) => {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className="border-border/50 bg-surface/50 hover:bg-surface flex items-start gap-3 rounded-2xl border p-3 transition-colors"
+      className="flex items-start gap-3 rounded-2xl border border-border/50 bg-surface/50 p-3 transition-colors hover:bg-surface"
     >
       {/* Icon */}
       <div className="bg-primary/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg">
@@ -51,9 +51,7 @@ const ActivityItem = memo(({ activity }: { activity: ActivityEvent }) => {
         <p className={`text-sm font-medium ${getActivityColor(activity.type)}`}>
           {getActivityMessage(activity)}
         </p>
-        <p className="text-muted-foreground mt-0.5 text-xs">
-          {formattedTime}
-        </p>
+        <p className="mt-0.5 text-xs text-muted-foreground">{formattedTime}</p>
       </div>
     </motion.div>
   );
@@ -73,7 +71,7 @@ export function ActivityFeed({
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <AlertCircle className="text-danger mb-2 h-8 w-8" />
         <p className="text-danger-foreground text-sm">Activity feed offline</p>
-        <p className="text-muted-foreground mt-1 text-xs">{error}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{error}</p>
       </div>
     );
   }
@@ -83,7 +81,7 @@ export function ActivityFeed({
       {/* Header */}
       {showHeader && (
         <div className="flex items-center justify-between">
-          <h3 className="text-foreground flex items-center gap-2 text-lg font-semibold">
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
             <Activity className="text-primary h-5 w-5" />
             Activity Stream
           </h3>
@@ -93,7 +91,7 @@ export function ActivityFeed({
               animate={isConnected ? { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] } : {}}
               transition={{ duration: 2, repeat: Infinity }}
             />
-            <span className="text-muted-foreground text-xs">
+            <span className="text-xs text-muted-foreground">
               {isConnected ? 'Live' : 'Connecting...'}
             </span>
           </div>
@@ -107,9 +105,9 @@ export function ActivityFeed({
       >
         {activities.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Activity className="text-muted-foreground/30 mb-3 h-12 w-12" />
-            <p className="text-muted-foreground text-sm">No activity yet</p>
-            <p className="text-muted-foreground mt-1 text-xs">
+            <Activity className="mb-3 h-12 w-12 text-muted-foreground/30" />
+            <p className="text-sm text-muted-foreground">No activity yet</p>
+            <p className="mt-1 text-xs text-muted-foreground">
               Start collaborating to see updates here
             </p>
           </div>
@@ -124,8 +122,8 @@ export function ActivityFeed({
 
       {/* Footer */}
       {activities.length > 0 && (
-        <div className="border-border/50 border-t pt-2">
-          <p className="text-muted-foreground text-center text-xs">
+        <div className="border-t border-border/50 pt-2">
+          <p className="text-center text-xs text-muted-foreground">
             Showing {activities.length} recent {activities.length === 1 ? 'activity' : 'activities'}
           </p>
         </div>
@@ -148,12 +146,12 @@ const CompactActivityItem = memo(({ activity }: { activity: ActivityEvent }) => 
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2 }}
       className="flex items-start gap-3 rounded-xl p-3 transition-all duration-200 hover:translate-x-1"
-      style={{ 
+      style={{
         background: 'rgba(255, 255, 255, 0.02)',
         borderBottom: '1px solid var(--border)',
       }}
     >
-      <div 
+      <div
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-base"
         style={{ background: 'rgba(255, 99, 71, 0.1)' }}
       >
@@ -172,65 +170,108 @@ const CompactActivityItem = memo(({ activity }: { activity: ActivityEvent }) => 
 });
 CompactActivityItem.displayName = 'CompactActivityItem';
 
-export const CompactActivityFeed = memo(({
-  channelName,
-  limit = 8,
-}: {
-  channelName: string;
-  limit?: number;
-}) => {
-  const { activities, isConnected, error } = useActivityFeed({ channelName, limit });
+// Inner component that always renders with consistent hooks
+const CompactActivityFeedInner = memo(
+  ({
+    channelName,
+    limit = 8,
+    enabled = true,
+  }: {
+    channelName: string;
+    limit?: number;
+    enabled?: boolean;
+  }) => {
+    // IMPORTANT: Always call hooks unconditionally to prevent React error #300
+    // The enabled flag is passed to useActivityFeed to control behavior
+    const { activities, isConnected, error } = useActivityFeed({
+      channelName,
+      limit,
+      enabled, // Pass enabled down so the hook can skip connecting when not needed
+    });
 
-  // Memoize sliced activities
-  const displayedActivities = useMemo(
-    () => activities.slice(0, limit),
-    [activities, limit]
-  );
+    // Memoize sliced activities - always call useMemo regardless of enabled state
+    const displayedActivities = useMemo(
+      () => (enabled ? activities.slice(0, limit) : []),
+      [activities, limit, enabled]
+    );
 
-  if (error) {
+    // If not enabled, render minimal placeholder
+    if (!enabled) {
+      return (
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <Activity className="mb-3 h-10 w-10" style={{ color: 'var(--muted)', opacity: 0.3 }} />
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+            Loading activity feed...
+          </p>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <AlertCircle className="mb-2 h-8 w-8" style={{ color: 'var(--muted)' }} />
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+            Feed temporarily unavailable
+          </p>
+        </div>
+      );
+    }
+
     return (
-      <div className="flex flex-col items-center justify-center py-8 text-center">
-        <AlertCircle className="mb-2 h-8 w-8" style={{ color: 'var(--muted)' }} />
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>Feed temporarily unavailable</p>
+      <div className="space-y-1">
+        {/* Connection status */}
+        <div className="mb-3 flex items-center gap-2">
+          <motion.div
+            className="h-2 w-2 rounded-full"
+            style={{ background: isConnected ? '#22c55e' : 'var(--muted)' }}
+            animate={isConnected ? { scale: [1, 1.3, 1], opacity: [1, 0.6, 1] } : {}}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          <span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+            {isConnected ? 'Live' : 'Connecting...'}
+          </span>
+        </div>
+
+        {displayedActivities.length === 0 ? (
+          <motion.div
+            className="flex flex-col items-center justify-center py-8 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <Activity className="mb-3 h-10 w-10" style={{ color: 'var(--muted)', opacity: 0.3 }} />
+            <p className="text-sm" style={{ color: 'var(--muted)' }}>
+              No recent activity
+            </p>
+            <p className="mt-1 text-xs" style={{ color: 'var(--muted)', opacity: 0.7 }}>
+              Start creating to see updates here
+            </p>
+          </motion.div>
+        ) : (
+          <AnimatePresence mode="popLayout">
+            {displayedActivities.map((activity) => (
+              <CompactActivityItem key={activity.id} activity={activity} />
+            ))}
+          </AnimatePresence>
+        )}
       </div>
     );
   }
+);
+CompactActivityFeedInner.displayName = 'CompactActivityFeedInner';
 
-  return (
-    <div className="space-y-1">
-      {/* Connection status */}
-      <div className="mb-3 flex items-center gap-2">
-        <motion.div
-          className="h-2 w-2 rounded-full"
-          style={{ background: isConnected ? '#22c55e' : 'var(--muted)' }}
-          animate={isConnected ? { scale: [1, 1.3, 1], opacity: [1, 0.6, 1] } : {}}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-          {isConnected ? 'Live' : 'Connecting...'}
-        </span>
-      </div>
-
-      {displayedActivities.length === 0 ? (
-        <motion.div 
-          className="flex flex-col items-center justify-center py-8 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <Activity className="mb-3 h-10 w-10" style={{ color: 'var(--muted)', opacity: 0.3 }} />
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>No recent activity</p>
-          <p className="mt-1 text-xs" style={{ color: 'var(--muted)', opacity: 0.7 }}>
-            Start creating to see updates here
-          </p>
-        </motion.div>
-      ) : (
-        <AnimatePresence mode="popLayout">
-          {displayedActivities.map((activity) => (
-            <CompactActivityItem key={activity.id} activity={activity} />
-          ))}
-        </AnimatePresence>
-      )}
-    </div>
-  );
-});
+// Exported wrapper that accepts enabled prop for auth state
+export const CompactActivityFeed = memo(
+  ({
+    channelName,
+    limit = 8,
+    enabled = true,
+  }: {
+    channelName: string;
+    limit?: number;
+    enabled?: boolean;
+  }) => {
+    return <CompactActivityFeedInner channelName={channelName} limit={limit} enabled={enabled} />;
+  }
+);
 CompactActivityFeed.displayName = 'CompactActivityFeed';
