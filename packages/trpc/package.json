@@ -19,6 +19,10 @@
     "./client": {
       "types": "./src/client/index.ts",
       "import": "./src/client/index.ts"
+    },
+    "./client/react": {
+      "types": "./src/client/react.ts",
+      "import": "./src/client/react.ts"
     }
   },
   "scripts": {

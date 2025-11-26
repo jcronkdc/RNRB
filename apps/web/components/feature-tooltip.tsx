@@ -104,13 +104,21 @@ export function FeatureTooltip({ id, title, description, position = 'top', child
 
 // Onboarding Tour Component
 type TourStep = {
-  id: string;
+  id?: string;
   title: string;
-  description: string;
+  description?: string;
+  content?: string;
+  target?: string;
   element?: string; // CSS selector
 };
 
-export function OnboardingTour({ steps }: { steps: TourStep[] }) {
+type OnboardingTourProps = {
+  steps: TourStep[];
+  onComplete?: () => void;
+  onSkip?: () => void;
+};
+
+export function OnboardingTour({ steps, onComplete, onSkip }: OnboardingTourProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [show, setShow] = useState(false);
 
@@ -133,11 +141,13 @@ export function OnboardingTour({ steps }: { steps: TourStep[] }) {
   const handleSkip = () => {
     setShow(false);
     localStorage.setItem('onboarding-tour-completed', 'true');
+    onSkip?.();
   };
 
   const handleComplete = () => {
     setShow(false);
     localStorage.setItem('onboarding-tour-completed', 'true');
+    onComplete?.();
   };
 
   if (!show) return null;
@@ -167,7 +177,7 @@ export function OnboardingTour({ steps }: { steps: TourStep[] }) {
             </button>
           </div>
           
-          <p className="mb-6 text-lg text-blue-100">{step.description}</p>
+          <p className="mb-6 text-lg text-blue-100">{step.description || step.content || ''}</p>
           
           {/* Progress */}
           <div className="mb-6 flex gap-2">
@@ -212,5 +222,7 @@ export function OnboardingTour({ steps }: { steps: TourStep[] }) {
     </>
   );
 }
+
+
 
 

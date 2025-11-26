@@ -10,7 +10,7 @@ import {
   Upload,
   Maximize2,
   Music,
-  Slider,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -189,7 +189,7 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Slider className="h-5 w-5 text-brand-primary" />
+          <SlidersHorizontal className="h-5 w-5 text-brand-primary" />
           <h2 className="text-xl font-semibold">Multi-Track Mixer</h2>
           <span className="text-muted-foreground text-sm">({tracks.length} tracks)</span>
         </div>
@@ -356,4 +356,6 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
     </div>
   );
 }
+
+
 

@@ -41,7 +41,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback, memo } from 'react';
 
 import { GranularChordEditor } from './granular-chord-editor';
 import { KeyAnalyzer } from './key-analyzer';
@@ -52,9 +52,10 @@ import { useSongSuggestions } from '@/hooks/use-song-suggestions';
 import { useBlockEditing } from '@/hooks/use-block-editing';
 
 
-// Dynamically import chat
+// Dynamically import chat with loading state
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {
   ssr: false,
+  loading: () => <div className="flex items-center justify-center p-4"><div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>,
 });
 
 type ChordPlacement = {
@@ -77,7 +78,8 @@ const PALETTE_BLOCKS = [
   { type: 'bridge' as const, label: 'Bridge', icon: '', color: 'purple' },
 ];
 
-function SortableBlock({
+// Memoized sortable block component for better performance
+const SortableBlock = memo(function SortableBlock({
   block,
   onEdit,
   onRemove,
@@ -188,7 +190,7 @@ function SortableBlock({
       </div>
     </div>
   );
-}
+});
 
 export function CollaborativeVisualBuilder({
   projectSlug,
@@ -218,7 +220,12 @@ export function CollaborativeVisualBuilder({
   const [history, setHistory] = useState<{ blocks: SongBlock[]; timestamp: Date }[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+  // Memoize sensors to prevent recreation on every render
+  const sensors = useSensors(
+    useSensor(PointerSensor, { 
+      activationConstraint: { distance: 8 } 
+    })
+  );
 
   // Collaborative cursors
   const { remoteCursors, isConnected: cursorsConnected } = useCollaborativeCursors({
@@ -307,27 +314,31 @@ export function CollaborativeVisualBuilder({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [historyIndex, history.length, blocks]);
 
-  // Save to history whenever blocks change
-  const saveToHistory = (newBlocks: SongBlock[]) => {
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push({ blocks: newBlocks, timestamp: new Date() });
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
-  };
+  // Memoize callbacks to prevent recreation
+  const saveToHistory = useCallback((newBlocks: SongBlock[]) => {
+    setHistory(prev => {
+      const newHistory = prev.slice(0, historyIndex + 1);
+      newHistory.push({ blocks: newBlocks, timestamp: new Date() });
+      return newHistory;
+    });
+    setHistoryIndex(prev => prev + 1);
+  }, [historyIndex]);
 
-  const addBlock = (type: SongBlock['type']) => {
+  const addBlock = useCallback((type: SongBlock['type']) => {
     const newBlock: SongBlock = {
-      id: `block-${Date.now()}`,
+      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type,
       content: '',
     };
-    const updated = [...blocks, newBlock];
-    setBlocks(updated);
-    onSongChange?.(updated);
-    saveToHistory(updated);
-  };
+    setBlocks(prev => {
+      const updated = [...prev, newBlock];
+      onSongChange?.(updated);
+      saveToHistory(updated);
+      return updated;
+    });
+  }, [onSongChange, saveToHistory]);
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = useCallback((event: any) => {
     const { active, over } = event;
     setActiveId(null);
     if (!over || active.id === over.id) return;
@@ -340,7 +351,7 @@ export function CollaborativeVisualBuilder({
       saveToHistory(reordered);
       return reordered;
     });
-  };
+  }, [onSongChange, saveToHistory]);
 
   const editBlock = (id: string, content: string) => {
     const updated = blocks.map((b) => (b.id === id ? { ...b, content } : b));
