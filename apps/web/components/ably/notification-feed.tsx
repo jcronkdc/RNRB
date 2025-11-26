@@ -5,8 +5,6 @@ import { formatDateTime } from '@/lib/format-date';
 import { Bell, X } from 'lucide-react';
 import { useState } from 'react';
 
-import { formatDateTime } from '@/lib/format-date';
-
 interface Notification {
   id: string;
   title: string;
