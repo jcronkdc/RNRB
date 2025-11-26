@@ -3,10 +3,14 @@
 /**
  * Presence Indicator Component - FULLY WIRED
  * Shows real-time presence tracking with Ably integration
+ *
+ * Note: Wrapped in error boundary to gracefully handle missing ChannelProvider
  */
 
+import { ChannelProvider } from 'ably/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Circle } from 'lucide-react';
+import { Component, type ReactNode } from 'react';
 
 import { usePresence } from '@/hooks/use-presence';
 
@@ -23,7 +27,43 @@ interface PresenceIndicatorProps {
   maxVisible?: number;
 }
 
-export function PresenceIndicator({
+// Error boundary to catch ChannelProvider errors gracefully
+class PresenceErrorBoundary extends Component<
+  { children: ReactNode; fallback?: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    // Silently log the error - this is expected when Ably isn't connected
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Presence unavailable:', error.message);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        this.props.fallback || (
+          <div className="text-xs text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Circle className="h-2 w-2 text-zinc-500" />
+              <span>Presence offline</span>
+            </div>
+          </div>
+        )
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// Inner component that uses the presence hook
+function PresenceIndicatorInner({
   channelName,
   currentUser,
   location,
@@ -45,7 +85,7 @@ export function PresenceIndicator({
 
   if (error) {
     return (
-      <div className="text-muted-foreground text-xs">
+      <div className="text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
           <Circle className="h-2 w-2 text-red-500" />
           <span>Presence offline</span>
@@ -63,7 +103,7 @@ export function PresenceIndicator({
           animate={isConnected ? { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] } : {}}
           transition={{ duration: 2, repeat: Infinity }}
         />
-        <span className="text-muted-foreground text-xs font-medium">
+        <span className="text-xs font-medium text-muted-foreground">
           {isConnected ? `${activeMembers} active` : 'Connecting...'}
         </span>
       </div>
@@ -93,9 +133,9 @@ export function PresenceIndicator({
 
             {/* User Info */}
             <div className="min-w-0 flex-1">
-              <p className="text-foreground truncate text-sm font-medium">{member.data.userName}</p>
+              <p className="truncate text-sm font-medium text-foreground">{member.data.userName}</p>
               {showDetails && (
-                <p className="text-muted-foreground truncate text-xs">
+                <p className="truncate text-xs text-muted-foreground">
                   {member.data.status === 'active' ? '🟢 Active' : '🟡 Idle'}
                 </p>
               )}
@@ -106,7 +146,7 @@ export function PresenceIndicator({
 
       {/* Hidden Count */}
       {hiddenCount > 0 && (
-        <p className="text-muted-foreground text-xs">
+        <p className="text-xs text-muted-foreground">
           + {hiddenCount} more {hiddenCount === 1 ? 'person' : 'people'}
         </p>
       )}
@@ -115,7 +155,7 @@ export function PresenceIndicator({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="border-border/50 flex items-center gap-2 border-t pt-2"
+        className="flex items-center gap-2 border-t border-border/50 pt-2"
       >
         {currentUser.avatar ? (
           <img
@@ -129,15 +169,15 @@ export function PresenceIndicator({
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <p className="text-foreground truncate text-sm font-medium">
-            {currentUser.userName} <span className="text-muted-foreground text-xs">(You)</span>
+          <p className="truncate text-sm font-medium text-foreground">
+            {currentUser.userName} <span className="text-xs text-muted-foreground">(You)</span>
           </p>
         </div>
       </motion.div>
 
       {/* Summary (if details enabled) */}
       {showDetails && isConnected && (
-        <div className="text-muted-foreground space-y-1 pt-2 text-xs">
+        <div className="space-y-1 pt-2 text-xs text-muted-foreground">
           <p>
             📊 {activeMembers} active, {idleMembers} idle
           </p>
@@ -145,5 +185,16 @@ export function PresenceIndicator({
         </div>
       )}
     </div>
+  );
+}
+
+// Main exported component - wraps with ChannelProvider and error boundary
+export function PresenceIndicator(props: PresenceIndicatorProps) {
+  return (
+    <PresenceErrorBoundary>
+      <ChannelProvider channelName={props.channelName}>
+        <PresenceIndicatorInner {...props} />
+      </ChannelProvider>
+    </PresenceErrorBoundary>
   );
 }
