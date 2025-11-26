@@ -45,8 +45,28 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const query = searchParams.get('q');
     const searchType = searchParams.get('type') || 'username';
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 50); // Max 50 results per page
+    
+    // Parse and validate pagination parameters
+    const pageParam = parseInt(searchParams.get('page') || '1');
+    const limitParam = parseInt(searchParams.get('limit') || '20');
+    
+    // Validate parsed values are valid positive integers
+    if (isNaN(pageParam) || pageParam < 1) {
+      return NextResponse.json(
+        { error: 'Invalid page parameter: must be a positive integer' },
+        { status: 400 }
+      );
+    }
+    
+    if (isNaN(limitParam) || limitParam < 1) {
+      return NextResponse.json(
+        { error: 'Invalid limit parameter: must be a positive integer' },
+        { status: 400 }
+      );
+    }
+    
+    const page = pageParam;
+    const limit = Math.min(limitParam, 50); // Max 50 results per page
 
     if (!query || query.trim().length < 2) {
       return NextResponse.json({ users: [], total: 0, page, limit });

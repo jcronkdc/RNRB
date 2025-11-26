@@ -28,13 +28,24 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const channelId = searchParams.get('channelId');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100); // Max 100 messages
     const cursor = searchParams.get('cursor'); // Cursor for pagination (message ID)
     const messageType = searchParams.get('type'); // Filter by type
 
     if (!channelId) {
       return NextResponse.json({ error: 'channelId required' }, { status: 400 });
     }
+    
+    // Parse and validate pagination parameters
+    const limitParam = parseInt(searchParams.get('limit') || '50');
+    
+    if (isNaN(limitParam) || limitParam < 1) {
+      return NextResponse.json(
+        { error: 'Invalid limit parameter: must be a positive integer' },
+        { status: 400 }
+      );
+    }
+    
+    const limit = Math.min(limitParam, 100); // Max 100 messages
 
     // Build optimized query with cursor-based pagination
     const where: any = {

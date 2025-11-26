@@ -20,8 +20,28 @@ export async function GET(request: NextRequest) {
     const tourId = searchParams.get('tourId');
     const status = searchParams.get('status');
     const upcoming = searchParams.get('upcoming'); // 'true' or 'false'
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100);
+    
+    // Parse and validate pagination parameters
+    const pageParam = parseInt(searchParams.get('page') || '1');
+    const limitParam = parseInt(searchParams.get('limit') || '50');
+    
+    // Validate parsed values are valid positive integers
+    if (isNaN(pageParam) || pageParam < 1) {
+      return NextResponse.json(
+        { error: 'Invalid page parameter: must be a positive integer' },
+        { status: 400 }
+      );
+    }
+    
+    if (isNaN(limitParam) || limitParam < 1) {
+      return NextResponse.json(
+        { error: 'Invalid limit parameter: must be a positive integer' },
+        { status: 400 }
+      );
+    }
+    
+    const page = pageParam;
+    const limit = Math.min(limitParam, 100); // Cap at 100
     const skip = (page - 1) * limit;
     const includeSetlist = searchParams.get('includeSetlist') === 'true';
 

@@ -19,11 +19,13 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 import { StudioSession } from '@/components/daily/studio-session';
 import { useDailyRoom } from '@/hooks/use-daily-room';
+import { ProjectSelector } from '@/components/project-selector';
 
 export default function StudioPage() {
   const [activeSession, setActiveSession] = useState(false);
   const [callObject, setCallObject] = useState<any>(null);
   const [roomData, setRoomData] = useState<{ room: any; token: string } | null>(null);
+  const [recordingId, setRecordingId] = useState<string | null>(null);
   const { createRoom, isLoading, error } = useDailyRoom();
   const callObjectRef = useRef<any>(null);
 
@@ -190,17 +192,34 @@ export default function StudioPage() {
           {/* Active Session or Session List */}
           {activeSession && roomData ? (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-center justify-between gap-4">
                 <h2 className="text-2xl font-semibold">Live Studio Session</h2>
-                <Button
-                  variant="secondary"
-                  onClick={endSession}
-                >
-                  End Session
-                </Button>
+                <div className="flex items-center gap-2">
+                  {recordingId && (
+                    <ProjectSelector 
+                      songId={recordingId}
+                      onProjectAdded={(slug) => {
+                        console.log('Recording added to project:', slug);
+                      }}
+                    />
+                  )}
+                  <Button
+                    variant="secondary"
+                    onClick={endSession}
+                  >
+                    End Session
+                  </Button>
+                </div>
               </div>
 
-              <StudioSession roomUrl={roomData.room.url} token={roomData.token} />
+              <StudioSession 
+                roomUrl={roomData.room.url} 
+                token={roomData.token}
+                onRecordingComplete={(id) => {
+                  setRecordingId(id);
+                  console.log('Recording complete:', id);
+                }}
+              />
             </div>
           ) : (
             <>

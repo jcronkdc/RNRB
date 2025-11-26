@@ -20,6 +20,7 @@ import {
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { ProjectSelector } from '@/components/project-selector';
 
 // Style chips for genre/mood/tempo
 const styleOptions = {
@@ -95,8 +96,10 @@ export default function CreatePage() {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [generatedTrackId, setGeneratedTrackId] = useState<string | null>(null);
+  const [generatedSongId, setGeneratedSongId] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [estimatedCredits, setEstimatedCredits] = useState(10);
+  const [showProjectSelector, setShowProjectSelector] = useState(false);
 
   // Calculate estimated credits based on parameters
   useEffect(() => {
@@ -181,13 +184,15 @@ export default function CreatePage() {
       setProgress(100);
       setStatus('success');
       setGeneratedTrackId(data.trackId);
+      setGeneratedSongId(data.songId); // Assume API returns songId
+      setShowProjectSelector(true); // Show project selector after success
 
-      // Redirect to track page after 2 seconds
-      setTimeout(() => {
-        if (data.trackId) {
-          router.push(`/tracks/${data.trackId}`);
-        }
-      }, 2000);
+      // Don't auto-redirect - let user add to project first
+      // setTimeout(() => {
+      //   if (data.trackId) {
+      //     router.push(`/tracks/${data.trackId}`);
+      //   }
+      // }, 2000);
     } catch (err: any) {
       console.error('Generation error:', err);
       setStatus('error');
@@ -626,8 +631,44 @@ export default function CreatePage() {
                 <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500" />
                 <h3 className="mb-2 text-xl font-semibold text-green-400">Track Generated!</h3>
                 <p className="text-muted-foreground mb-4">
-                  Redirecting you to your new track...
+                  Your AI-generated track is ready. Add it to a project or view it now.
                 </p>
+
+                {/* Action buttons */}
+                <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                  {generatedSongId && (
+                    <ProjectSelector 
+                      songId={generatedSongId}
+                      onProjectAdded={(slug) => {
+                        console.log('Added to project:', slug);
+                      }}
+                      className="w-full sm:w-auto"
+                    />
+                  )}
+                  
+                  <button
+                    onClick={() => generatedTrackId && router.push(`/tracks/${generatedTrackId}`)}
+                    className="rnrb-button-primary w-full rounded-xl px-6 py-3 sm:w-auto"
+                  >
+                    View Track
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setStatus('idle');
+                      setGeneratedTrackId(null);
+                      setGeneratedSongId(null);
+                      setShowProjectSelector(false);
+                      setPrompt('');
+                      setSelectedGenres([]);
+                      setSelectedMoods([]);
+                      setSelectedInstruments([]);
+                    }}
+                    className="rnrb-button-secondary w-full rounded-xl px-6 py-3 sm:w-auto"
+                  >
+                    Generate Another
+                  </button>
+                </div>
               </Card>
             </motion.div>
           )}

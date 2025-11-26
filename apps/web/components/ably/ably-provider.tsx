@@ -106,7 +106,9 @@ export function AblyProvider({ children, lazy = true }: Props) {
           authMethod: 'GET',
           clientId: session.user.id,
           echoMessages: false,
-          closeOnUnload: true,
+          // FIX: closeOnUnload and recover() are mutually exclusive
+          // Use recover() for better connection persistence
+          closeOnUnload: false,
           // Optimized transport params
           transportParams: {
             remainPresentFor: 30, // Reduced from 60 for faster cleanup

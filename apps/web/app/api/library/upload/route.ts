@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { createBrowserClient } from '@/lib/supabase';
 import { prisma } from '@cronkwaters/db';
+import { getUsageSummary } from '@/lib/usage-tracking';
 
 /**
  * POST /api/library/upload
@@ -41,12 +42,37 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate file size (max 500MB)
-    const maxSize = 500 * 1024 * 1024;
-    if (file.size > maxSize) {
+    // Validate file size (max 500MB for Studio, 100MB for Creator, 50MB for Free)
+    const usage = await getUsageSummary(session.user.id);
+    const tierMaxSize = 
+      usage.tier === 'studio' ? 500 * 1024 * 1024 : // 500MB
+      usage.tier === 'creator' ? 100 * 1024 * 1024 : // 100MB
+      50 * 1024 * 1024; // 50MB for free
+    
+    if (file.size > tierMaxSize) {
       return NextResponse.json(
-        { error: 'File too large. Maximum size is 500MB.' },
-        { status: 400 }
+        { 
+          error: `File too large. Maximum size for ${usage.tier} tier is ${tierMaxSize / (1024 * 1024)}MB.`,
+          requiresUpgrade: usage.tier !== 'studio',
+          currentTier: usage.tier,
+        },
+        { status: 413 } // Payload Too Large
+      );
+    }
+
+    // 🔒 CHECK STORAGE QUOTA
+    const fileSizeGB = file.size / (1024 * 1024 * 1024);
+    if (usage.storage.remaining < fileSizeGB) {
+      return NextResponse.json(
+        {
+          error: `Storage quota exceeded. You have ${usage.storage.remaining.toFixed(2)}GB remaining, but need ${fileSizeGB.toFixed(2)}GB.`,
+          requiresUpgrade: true,
+          currentTier: usage.tier,
+          used: usage.storage.used,
+          limit: usage.storage.limit,
+          percentage: usage.storage.percentage,
+        },
+        { status: 413 } // Payload Too Large
       );
     }
 
@@ -100,6 +126,16 @@ export async function POST(req: NextRequest) {
         mimeType: file.type,
         type: type || 'other',
         tags: parsedTags,
+      },
+    });
+
+    // 📊 UPDATE STORAGE USAGE
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: {
+        storageUsedGB: {
+          increment: fileSizeGB,
+        },
       },
     });
 

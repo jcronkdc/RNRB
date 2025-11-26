@@ -1,228 +1,104 @@
-'use client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Info, X } from 'lucide-react';
+import { useState, ReactNode } from 'react';
 
-import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-
-type TooltipProps = {
-  id: string;
+interface FeatureTooltipProps {
   title: string;
   description: string;
-  position?: 'top' | 'bottom' | 'left' | 'right';
-  children: React.ReactNode;
-};
+  children: ReactNode;
+  icon?: ReactNode;
+  placement?: 'top' | 'bottom' | 'left' | 'right';
+}
 
-export function FeatureTooltip({ id, title, description, position = 'top', children }: TooltipProps) {
-  const [show, setShow] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+/**
+ * Feature Tooltip Component
+ * Provides contextual help for dashboard actions and features
+ */
+export function FeatureTooltip({
+  title,
+  description,
+  children,
+  icon,
+  placement = 'top',
+}: FeatureTooltipProps) {
+  const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    // Check if this tooltip has been dismissed before
-    const dismissedTooltips = JSON.parse(localStorage.getItem('dismissed-tooltips') || '[]');
-    if (dismissedTooltips.includes(id)) {
-      setDismissed(true);
-      return;
-    }
-
-    // Show tooltip after a short delay on first visit
-    const timer = setTimeout(() => {
-      setShow(true);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [id]);
-
-  const handleDismiss = () => {
-    setShow(false);
-    setDismissed(true);
-    
-    // Save to localStorage
-    const dismissedTooltips = JSON.parse(localStorage.getItem('dismissed-tooltips') || '[]');
-    dismissedTooltips.push(id);
-    localStorage.setItem('dismissed-tooltips', JSON.stringify(dismissedTooltips));
-  };
-
-  if (dismissed || !show) {
-    return <>{children}</>;
-  }
-
-  const positionClasses = {
+  const placementStyles = {
     top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
     bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
     left: 'right-full top-1/2 -translate-y-1/2 mr-2',
     right: 'left-full top-1/2 -translate-y-1/2 ml-2',
   };
 
-  const arrowClasses = {
-    top: 'top-full left-1/2 -translate-x-1/2 border-t-blue-600',
-    bottom: 'bottom-full left-1/2 -translate-x-1/2 border-b-blue-600',
-    left: 'left-full top-1/2 -translate-y-1/2 border-l-blue-600',
-    right: 'right-full top-1/2 -translate-y-1/2 border-r-blue-600',
-  };
-
   return (
-    <div className="relative">
+    <div
+      className="group relative inline-block"
+      onMouseEnter={() => setIsVisible(true)}
+      onMouseLeave={() => setIsVisible(false)}
+    >
       {children}
-      
-      {/* Tooltip */}
-      <div
-        className={`absolute z-50 ${positionClasses[position]} w-72 rounded-lg border-2 border-blue-500 bg-blue-600 p-4 shadow-2xl shadow-blue-500/50 animate-in fade-in slide-in-from-bottom-2 duration-300`}
-      >
-        {/* Arrow */}
-        <div
-          className={`absolute h-0 w-0 border-8 border-transparent ${arrowClasses[position]}`}
-        />
-        
-        {/* Content */}
-        <div className="relative">
-          <button
-            onClick={handleDismiss}
-            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-white transition hover:bg-white/30"
+
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: placement === 'top' ? 10 : -10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: placement === 'top' ? 10 : -10 }}
+            transition={{ duration: 0.15 }}
+            className={`absolute z-50 ${placementStyles[placement]} pointer-events-none w-80`}
           >
-            <X className="h-3 w-3" />
-          </button>
-          
-          <div className="mb-2 flex items-center gap-2">
-            <span className="rounded-full bg-yellow-400 px-2 py-0.5 text-xs font-bold text-blue-900">
-              NEW
-            </span>
-            <h4 className="font-bold text-white">{title}</h4>
-          </div>
-          
-          <p className="text-sm text-blue-100">{description}</p>
-          
-          <button
-            onClick={handleDismiss}
-            className="mt-3 w-full rounded-lg bg-white/20 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-white/30"
-          >
-            Got it!
-          </button>
-        </div>
-      </div>
+            <div className="rounded-xl border border-orange-500/30 bg-zinc-900/95 p-4 shadow-xl backdrop-blur-sm">
+              <div className="mb-2 flex items-start gap-2">
+                {icon && (
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-500/10">
+                    {icon}
+                  </div>
+                )}
+                <div className="flex-1">
+                  <h4 className="mb-1 font-semibold text-white">{title}</h4>
+                  <p className="text-sm leading-relaxed text-zinc-400">{description}</p>
+                </div>
+              </div>
+              
+              {/* Arrow */}
+              <div
+                className={`absolute h-3 w-3 rotate-45 border border-orange-500/30 bg-zinc-900/95 ${
+                  placement === 'top'
+                    ? 'bottom-[-6px] left-1/2 -translate-x-1/2 border-b border-r'
+                    : placement === 'bottom'
+                    ? 'top-[-6px] left-1/2 -translate-x-1/2 border-l border-t'
+                    : placement === 'left'
+                    ? 'right-[-6px] top-1/2 -translate-y-1/2 border-r border-t'
+                    : 'left-[-6px] top-1/2 -translate-y-1/2 border-b border-l'
+                }`}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-// Onboarding Tour Component
-type TourStep = {
-  id?: string;
+interface InfoButtonProps {
   title: string;
-  description?: string;
-  content?: string;
-  target?: string;
-  element?: string; // CSS selector
-};
-
-type OnboardingTourProps = {
-  steps: TourStep[];
-  onComplete?: () => void;
-  onSkip?: () => void;
-};
-
-export function OnboardingTour({ steps, onComplete, onSkip }: OnboardingTourProps) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    // Check if tour has been completed
-    const tourCompleted = localStorage.getItem('onboarding-tour-completed');
-    if (!tourCompleted) {
-      setShow(true);
-    }
-  }, []);
-
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      handleComplete();
-    }
-  };
-
-  const handleSkip = () => {
-    setShow(false);
-    localStorage.setItem('onboarding-tour-completed', 'true');
-    onSkip?.();
-  };
-
-  const handleComplete = () => {
-    setShow(false);
-    localStorage.setItem('onboarding-tour-completed', 'true');
-    onComplete?.();
-  };
-
-  if (!show) return null;
-
-  const step = steps[currentStep];
-
-  return (
-    <>
-      {/* Backdrop */}
-      <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" />
-      
-      {/* Tour Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="relative w-full max-w-2xl rounded-2xl border-2 border-blue-500 bg-gradient-to-br from-blue-600 to-blue-700 p-8 shadow-2xl">
-          <div className="mb-4 flex items-start justify-between">
-            <div>
-              <span className="mb-2 inline-block rounded-full bg-yellow-400 px-3 py-1 text-xs font-bold text-blue-900">
-                NEW FEATURES
-              </span>
-              <h2 className="text-3xl font-bold text-white">{step.title}</h2>
-            </div>
-            <button
-              onClick={handleSkip}
-              className="text-white/60 hover:text-white"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-          
-          <p className="mb-6 text-lg text-blue-100">{step.description || step.content || ''}</p>
-          
-          {/* Progress */}
-          <div className="mb-6 flex gap-2">
-            {steps.map((_, index) => (
-              <div
-                key={index}
-                className={`h-2 flex-1 rounded-full ${
-                  index <= currentStep ? 'bg-white' : 'bg-white/30'
-                }`}
-              />
-            ))}
-          </div>
-          
-          {/* Actions */}
-          <div className="flex items-center justify-between">
-            <button
-              onClick={handleSkip}
-              className="rounded-lg px-4 py-2 text-sm font-semibold text-white/80 transition hover:text-white"
-            >
-              Skip Tour
-            </button>
-            
-            <div className="flex gap-3">
-              {currentStep > 0 && (
-                <button
-                  onClick={() => setCurrentStep(currentStep - 1)}
-                  className="rounded-lg border-2 border-white/30 bg-white/10 px-6 py-2 font-semibold text-white transition hover:bg-white/20"
-                >
-                  Back
-                </button>
-              )}
-              <button
-                onClick={handleNext}
-                className="rounded-lg bg-white px-6 py-2 font-semibold text-blue-600 transition hover:bg-blue-50"
-              >
-                {currentStep === steps.length - 1 ? 'Get Started' : 'Next'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+  description: string;
+  icon?: ReactNode;
 }
 
-
-
-
+/**
+ * Inline Info Button with Tooltip
+ * For use inside action cards and buttons
+ */
+export function InfoButton({ title, description, icon }: InfoButtonProps) {
+  return (
+    <FeatureTooltip title={title} description={description} icon={icon}>
+      <button
+        className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
+        onClick={(e) => e.preventDefault()}
+      >
+        <Info className="h-3 w-3" />
+      </button>
+    </FeatureTooltip>
+  );
+}

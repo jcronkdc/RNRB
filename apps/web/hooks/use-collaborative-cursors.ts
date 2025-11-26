@@ -1,8 +1,10 @@
 /**
- * Collaborative Cursors Hook (OPTIMIZED)
+ * Collaborative Cursors Hook (OPTIMIZED v3)
  *
  * Real-time cursor tracking across collaborative spaces
  * Shows where each user is pointing/interacting
+ *
+ * NOW USES: Official Ably React hooks (uses shared client from provider)
  *
  * Features:
  * - Position broadcasting (adaptive throttling: 16ms-100ms)
@@ -19,7 +21,7 @@
  * - Position delta compression (only send if moved >5px)
  * - Batch updates every 50ms when moving fast
  * - RequestAnimationFrame for smooth rendering
- * - WeakMap for cursor cleanup
+ * - Shared Ably connection (no duplicate clients)
  *
  * Used in:
  * - Collaborative Whiteboard
@@ -28,8 +30,8 @@
  * - Any shared workspace
  */
 
-import Ably from 'ably';
-import type { RealtimeChannel } from 'ably';
+import type { Message } from 'ably';
+import { useChannel, useConnectionStateListener } from 'ably/react';
 import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 
 export type CursorPosition = {
@@ -59,11 +61,8 @@ export function useCollaborativeCursors({
   enabled = true,
 }: UseCursorOptions) {
   const [remoteCursors, setRemoteCursors] = useState<Map<string, CursorPosition>>(new Map());
-  const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const ablyRef = useRef<Ably.Realtime | null>(null);
-  const channelRef = useRef<RealtimeChannel | null>(null);
   const lastPositionRef = useRef<{ x: number; y: number; timestamp: number }>({ 
     x: 0, 
     y: 0, 
@@ -79,10 +78,81 @@ export function useCollaborativeCursors({
   // Generate consistent color for user if not provided (memoized)
   const color = useMemo(() => userColor || generateUserColor(userId), [userId, userColor]);
 
+  // Monitor connection state
+  const [isConnected, setIsConnected] = useState(false);
+  useConnectionStateListener((stateChange) => {
+    setIsConnected(stateChange.current === 'connected');
+    
+    if (stateChange.current === 'failed') {
+      setError('Connection failed');
+    } else if (stateChange.current === 'connected') {
+      setError(null);
+    }
+  });
+
+  // Use official Ably React hook for channel subscriptions
+  const { channel, publish } = useChannel(channelName, 'cursor-move', (message: Message) => {
+    if (!enabled) return;
+
+    const cursor = message.data as CursorPosition;
+
+    // Don't show our own cursor
+    if (cursor.userId === userId) return;
+
+    setRemoteCursors((prev) => {
+      const newMap = new Map(prev);
+
+      if (cursor.isIdle) {
+        // Remove idle cursors after a delay
+        const staleTimer = setTimeout(() => {
+          setRemoteCursors((current) => {
+            const updated = new Map(current);
+            updated.delete(cursor.userId);
+            return updated;
+          });
+          staleTimersRef.current.delete(cursor.userId);
+        }, 1000);
+        
+        // Clear any existing stale timer for this user
+        const existingTimer = staleTimersRef.current.get(cursor.userId);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+        }
+        staleTimersRef.current.set(cursor.userId, staleTimer);
+      } else {
+        newMap.set(cursor.userId, cursor);
+        
+        // Clear stale timer if cursor is active again
+        const existingTimer = staleTimersRef.current.get(cursor.userId);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+          staleTimersRef.current.delete(cursor.userId);
+        }
+        
+        // Auto-remove stale cursors after 10s of no updates
+        const autoRemoveTimer = setTimeout(() => {
+          setRemoteCursors((current) => {
+            const updated = new Map(current);
+            const existingCursor = updated.get(cursor.userId);
+            // Only remove if timestamp is still old
+            if (existingCursor && existingCursor.timestamp === cursor.timestamp) {
+              updated.delete(cursor.userId);
+            }
+            return updated;
+          });
+        }, 10000);
+        
+        staleTimersRef.current.set(cursor.userId, autoRemoveTimer);
+      }
+
+      return newMap;
+    });
+  });
+
   // Optimized broadcast with delta compression and batching
   const broadcastPosition = useCallback(
     (x: number, y: number, isClick = false) => {
-      if (!channelRef.current || !enabled) return;
+      if (!publish || !enabled) return;
 
       const now = Date.now();
       const lastPos = lastSentPositionRef.current;
@@ -107,7 +177,7 @@ export function useCollaborativeCursors({
 
       // Immediate send for clicks
       if (isClick) {
-        channelRef.current.publish('cursor-move', position);
+        publish(position);
         lastSentPositionRef.current = { x, y };
       } else {
         // Batch position updates (send every 50ms max)
@@ -115,9 +185,9 @@ export function useCollaborativeCursors({
         
         if (!batchTimerRef.current) {
           batchTimerRef.current = setTimeout(() => {
-            if (pendingPositionRef.current && channelRef.current) {
+            if (pendingPositionRef.current && publish) {
               const { x: px, y: py } = pendingPositionRef.current;
-              channelRef.current.publish('cursor-move', {
+              publish({
                 x: px,
                 y: py,
                 userId,
@@ -142,9 +212,9 @@ export function useCollaborativeCursors({
 
       // Set idle after 5 seconds of no movement
       idleTimerRef.current = setTimeout(() => {
-        if (!channelRef.current) return;
+        if (!publish) return;
 
-        channelRef.current.publish('cursor-move', {
+        publish({
           ...position,
           isIdle: true,
           timestamp: Date.now(),
@@ -153,7 +223,7 @@ export function useCollaborativeCursors({
 
       lastPositionRef.current = { x, y, timestamp: now };
     },
-    [userId, userName, color, enabled]
+    [userId, userName, color, enabled, publish]
   );
 
   // Adaptive throttling based on movement speed
@@ -218,116 +288,18 @@ export function useCollaborativeCursors({
     [adaptiveThrottle, enabled]
   );
 
-  // Initialize Ably connection
+  // Attach mouse listeners with passive flag for performance
   useEffect(() => {
     if (!enabled) return;
 
-    let mounted = true;
+    // Use passive listeners for better scroll performance
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('click', handleMouseClick);
 
-    const initAbly = async () => {
-      try {
-        // Get token from API
-        const response = await fetch('/api/ably/token');
-
-        // If Ably is not configured (503), fail silently - cursors will be disabled
-        if (response.status === 503) {
-          console.info('Ably not configured - collaborative cursors disabled');
-          return;
-        }
-
-        if (!response.ok) throw new Error('Failed to get Ably token');
-
-        // Create Ably client
-        const ablyClient = new Ably.Realtime({
-          authUrl: '/api/ably/token',
-          clientId: userId,
-        });
-
-        if (!mounted) {
-          ablyClient.close();
-          return;
-        }
-
-        ablyRef.current = ablyClient;
-
-        // Get channel for cursor tracking
-        const channel = ablyClient.channels.get(channelName);
-        channelRef.current = channel;
-
-        // Subscribe to cursor movements
-        channel.subscribe('cursor-move', (message: Ably.Message) => {
-          if (!mounted) return;
-
-          const cursor = message.data as CursorPosition;
-
-          // Don't show our own cursor
-          if (cursor.userId === userId) return;
-
-          setRemoteCursors((prev) => {
-            const newMap = new Map(prev);
-
-            if (cursor.isIdle) {
-              // Remove idle cursors after a delay
-              const staleTimer = setTimeout(() => {
-                setRemoteCursors((current) => {
-                  const updated = new Map(current);
-                  updated.delete(cursor.userId);
-                  return updated;
-                });
-                staleTimersRef.current.delete(cursor.userId);
-              }, 1000);
-              
-              // Clear any existing stale timer for this user
-              const existingTimer = staleTimersRef.current.get(cursor.userId);
-              if (existingTimer) {
-                clearTimeout(existingTimer);
-              }
-              staleTimersRef.current.set(cursor.userId, staleTimer);
-            } else {
-              newMap.set(cursor.userId, cursor);
-              
-              // Clear stale timer if cursor is active again
-              const existingTimer = staleTimersRef.current.get(cursor.userId);
-              if (existingTimer) {
-                clearTimeout(existingTimer);
-                staleTimersRef.current.delete(cursor.userId);
-              }
-              
-              // Auto-remove stale cursors after 10s of no updates
-              const autoRemoveTimer = setTimeout(() => {
-                setRemoteCursors((current) => {
-                  const updated = new Map(current);
-                  const existingCursor = updated.get(cursor.userId);
-                  // Only remove if timestamp is still old
-                  if (existingCursor && existingCursor.timestamp === cursor.timestamp) {
-                    updated.delete(cursor.userId);
-                  }
-                  return updated;
-                });
-              }, 10000);
-              
-              staleTimersRef.current.set(cursor.userId, autoRemoveTimer);
-            }
-
-            return newMap;
-          });
-        });
-
-        setIsConnected(true);
-      } catch (err) {
-        console.error('Cursor tracking error:', err);
-        if (mounted) {
-          setError(err instanceof Error ? err.message : 'Failed to connect');
-        }
-      }
-    };
-
-    initAbly();
-
-    // Cleanup
     return () => {
-      mounted = false;
-
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('click', handleMouseClick);
+      
       // Clear all timers
       if (idleTimerRef.current) {
         clearTimeout(idleTimerRef.current);
@@ -343,25 +315,7 @@ export function useCollaborativeCursors({
       staleTimersRef.current.forEach(timer => clearTimeout(timer));
       staleTimersRef.current.clear();
 
-      channelRef.current?.unsubscribe();
-      ablyRef.current?.close();
-
       setRemoteCursors(new Map());
-      setIsConnected(false);
-    };
-  }, [channelName, userId, enabled]);
-
-  // Attach mouse listeners with passive flag for performance
-  useEffect(() => {
-    if (!enabled) return;
-
-    // Use passive listeners for better scroll performance
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('click', handleMouseClick);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('click', handleMouseClick);
     };
   }, [handleMouseMove, handleMouseClick, enabled]);
 

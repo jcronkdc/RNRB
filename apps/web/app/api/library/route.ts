@@ -16,8 +16,28 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
     const search = searchParams.get('search');
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    
+    // Parse and validate pagination parameters
+    const limitParam = parseInt(searchParams.get('limit') || '50');
+    const offsetParam = parseInt(searchParams.get('offset') || '0');
+    
+    // Validate parsed values are valid positive integers (or zero for offset)
+    if (isNaN(limitParam) || limitParam < 1) {
+      return NextResponse.json(
+        { error: 'Invalid limit parameter: must be a positive integer' },
+        { status: 400 }
+      );
+    }
+    
+    if (isNaN(offsetParam) || offsetParam < 0) {
+      return NextResponse.json(
+        { error: 'Invalid offset parameter: must be a non-negative integer' },
+        { status: 400 }
+      );
+    }
+    
+    const limit = limitParam;
+    const offset = offsetParam;
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 

@@ -1,7 +1,7 @@
 # MASTER_TRUTH
 
-**Agent:** 132 | **Prev:** 131 | **Date:** 2025-11-26  
-**Status:** ✅ SONGWRITING PAGE FIXED - PRODUCTION CLEAN
+**Agent:** 134 | **Prev:** 133 | **Date:** 2025-11-26  
+**Status:** ✅ ABLY CONNECTION FIXED - AI RATE LIMITING STILL NEEDED
 
 ---
 
@@ -16,11 +16,33 @@
 - **DB:** Neon PostgreSQL (us-west-2) → ✅ Connected
 - **Stack:** Next.js 15.5.6, tRPC 11, Prisma 5.22.0, Turbo 2.3.0
 
-### 🚨 KNOWN ISSUES (Non-Blocking)
+### ✅ FIXED (Agent 134)
+**Ably Real-Time Connection Issues** - RESOLVED
+- **Problem:** Multiple Ably connections (3+) causing token timeouts, closeOnUnload warnings
+- **Root Cause:** Hooks creating independent Ably clients instead of using shared provider
+- **Solution:** 
+  1. Fixed `closeOnUnload` + `recover()` conflict in AblyProvider
+  2. Rewrote `use-presence` to use official `ably/react` hooks
+  3. Rewrote `use-collaborative-cursors` to use official hooks
+- **Files:** `ably-provider.tsx`, `use-presence.ts`, `use-collaborative-cursors.ts`
+- **Result:** Single shared connection, no timeouts, no warnings
+- **See:** `ABLY_CONNECTION_FIX.md` for full details
 
-1. **Ably Real-Time** - Configuration warnings (app works normally)
-   - `closeOnUnload` and session recovery mutually exclusive
-   - Impact: None - warnings only, features work
+### 🚨 CRITICAL FINANCIAL FINDING (Agent 133)
+- **Issue:** AI rate limiting implemented but NOT ENFORCED on endpoints
+- **Risk:** Power users can cost $20-50+/month while paying $9.99
+- **Impact:** Could wipe out profits from 6 normal users per power user
+- **Fix Time:** 30 minutes (add 3 lines to 4 API routes)
+- **See:** `COST_ANALYSIS_PRICING_REVIEW.md` for full analysis
+
+### 🚨 KNOWN ISSUES
+
+1. **🔴 CRITICAL - AI Rate Limiting NOT ENFORCED** (Agent 133)
+   - Logic exists in `lib/usage-tracking.ts` but not called in API routes
+   - **Risk:** Unlimited AI requests possible (cost $20-50/month per power user)
+   - **Fix:** Add `requireUsageQuota()` to 4 AI API routes (30 min)
+   - **Urgency:** HIGH - Deploy within 48 hours
+   
 2. **PostHog Analytics** - Disabled (no key set)
 
 ### 🔧 CRITICAL FIXES (Agent 132)
@@ -52,11 +74,16 @@
 
 ### 📋 FEATURES LIVE
 - Songwriting Tool (4 tabs: Structure, Chords, Lyrics, Copyright) ← **NOW WORKING**
+- **NEW:** Project Selector (Save to Project from Songwriting) ← **NOW INTEGRATED**
+- **NEW:** Library Import (Use existing assets in Songwriting) ← **NOW INTEGRATED**
 - Version Control (Git for music)
 - Stems Mixer (DAW-grade)
 - Copyright Manager (Legal splits, PDF generation)
 - Project Management (Milestones, Gantt charts)
 - AI Insights (OpenRouter powered)
+- **NEW:** Create → Project Flow (Add generated tracks to albums) ← **NOW INTEGRATED**
+- **NEW:** Library → Community Publishing ← **NOW INTEGRATED**
+- **NEW:** Studio → Project Recordings ← **NOW INTEGRATED**
 
 ---
 
@@ -141,6 +168,7 @@ git push origin main
 
 ## 📚 KEY DOCS
 
+- `DASHBOARD_FEATURE_ANALYSIS.md` - Complete feature audit & integration plan
 - `DESIGN_SYSTEM.md` - UI/UX rules (IMMUTABLE)
 - `DATABASE_SCHEMA.md` - Schema reference
 - `HUMAN_TEST_CHECKLIST.md` - Test protocol
@@ -169,34 +197,47 @@ git push origin main
 
 ---
 
-## 📊 SESSION SUMMARY (Agent 132)
+## 📊 SESSION SUMMARY (Agent 133)
 
-**Task:** Fix songwriting page crash
+**Task:** Comprehensive cost analysis & pricing review
 
-**What We Found:**
-1. localStorage key conflict masked deeper tRPC context issue
-2. Server Component in layout chain broke React Context for tRPC
-3. Error messages were misleading (initially showed setShowOnboarding, then tRPC context)
+**What We Discovered:**
+1. ✅ **Good News:** Pricing is excellent ($9.99/$29.99 competitive)
+2. ✅ **Good News:** Profit margins 85-91% when protected
+3. ✅ **Good News:** AI model selection optimized (gpt-4o-mini)
+4. ✅ **Good News:** Usage tracking infrastructure exists
+5. 🚨 **CRITICAL:** Rate limiting NOT enforced on AI API routes
+6. ⚠️ **Missing:** Video call time tracking (Daily.co)
+7. ⚠️ **Missing:** Storage quota enforcement on uploads
 
-**What We Fixed:**
-1. ✅ Unified localStorage keys to `'onboarding-tour-completed'`
-2. ✅ Made `(app)/layout.tsx` a Client Component to preserve context chain
-3. ✅ Verified fix on production - page loads without errors
+**Cost Analysis Results:**
+- Creator tier cost: $0.28/user → $9.71 profit (97% margin) ✅
+- Studio tier cost: $3.33/user → $26.66 profit (89% margin) ✅
+- Power user risk: $20-50/month cost (UNPROTECTED) ❌
 
-**Commits:**
-- `9d1c5ea6` - localStorage key fix
-- `b1e52e25` - tRPC context fix
+**Deliverable:**
+- Created `COST_ANALYSIS_PRICING_REVIEW.md` (15,000+ words)
+- Complete service-by-service cost breakdown
+- Pricing recommendations
+- Risk analysis
+- Break-even calculations
+- Profitability projections
 
-**Next Agent Should:**
-1. Continue with normal development
-2. If songwriting page issues recur, check:
-   - Browser console for exact error
-   - Layout hierarchy for Server Components breaking context
-   - localStorage key consistency
+**Next Agent Must:**
+1. 🚨 **URGENT:** Add AI rate limiting to 4 API routes (30 min)
+2. ⚠️ Add storage quota check to file uploads (1 hour)
+3. ⚠️ Implement video call time tracking (2-3 hours)
+4. ✅ Test all rate limits end-to-end
+5. ✅ Deploy to production
+
+**Previous Session (Agent 132):**
+- Fixed songwriting page crash (localStorage + tRPC context)
+- Commits: `9d1c5ea6`, `b1e52e25`
 
 ---
 
-**Last Updated:** 2025-11-26 by Agent 132  
-**Latest Commit:** `b1e52e25` (songwriting page fixed)  
+**Last Updated:** 2025-11-26 by Agent 133  
+**Latest Commit:** `b1e52e25` (songwriting page fixed - Agent 132)  
 **Build Status:** ✅ Clean  
-**Token Count:** ~115K / 200K (58% used, 85K remaining)
+**Critical Action:** 🚨 AI rate limiting enforcement (30 min fix)  
+**Token Count:** ~91K / 200K (46% used, 109K remaining)

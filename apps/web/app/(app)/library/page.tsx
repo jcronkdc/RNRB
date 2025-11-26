@@ -21,6 +21,7 @@ import {
   X,
   Upload,
   AlertCircle,
+  Globe,
 } from 'lucide-react';
 import { useState, useCallback, useMemo } from 'react';
 
@@ -38,6 +39,7 @@ export default function LibraryPage() {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
   const [isSelectionMode, setIsSelectionMode] = useState(false);
+  const [publishingFile, setPublishingFile] = useState<string | null>(null);
 
   // Use optimized hook with caching
   const {
@@ -147,6 +149,29 @@ export default function LibraryPage() {
   const clearSelection = useCallback(() => {
     setSelectedFiles(new Set());
     setIsSelectionMode(false);
+  }, []);
+
+  // Handle publish to community
+  const handlePublish = useCallback(async (fileId: string) => {
+    if (!confirm('Publish this file to the community? It will be visible to all users.')) return;
+
+    setPublishingFile(fileId);
+    try {
+      const response = await fetch(`/api/library/${fileId}/publish`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to publish file');
+      }
+
+      alert('File published successfully!');
+    } catch (err) {
+      console.error('Publish failed:', err);
+      alert('Failed to publish file');
+    } finally {
+      setPublishingFile(null);
+    }
   }, []);
 
   // Get type icon
@@ -532,6 +557,14 @@ export default function LibraryPage() {
                           ) : (
                             <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                           )}
+                        </button>
+                        <button
+                          onClick={() => handlePublish(file.id)}
+                          disabled={publishingFile === file.id}
+                          className="rounded-lg bg-gray-800 p-1.5 text-gray-400 transition-all hover:bg-green-500/20 hover:text-green-500 sm:p-2 disabled:opacity-50"
+                          title="Publish to Community"
+                        >
+                          <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </button>
                         <a
                           href={file.url}

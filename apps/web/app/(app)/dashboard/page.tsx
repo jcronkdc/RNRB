@@ -10,6 +10,7 @@ import { useRequireAuth } from '@/hooks/use-require-auth';
 import { ErrorBoundary, SilentErrorBoundary } from '@/components/error-boundary';
 import { usePerformanceMonitor } from '@/hooks/use-performance-monitor';
 import { useDashboardData, formatStorageSize, getStoragePercentage } from '@/hooks/use-dashboard-data';
+import { FeatureTooltip } from '@/components/feature-tooltip';
 
 // Dynamically import activity feed with loading fallback
 const CompactActivityFeed = dynamic(
@@ -36,6 +37,7 @@ import { useUpgradeModal } from '@/components/upgrade-modal';
 interface QuickAction {
   title: string;
   description: string;
+  tooltip?: string;
   icon: React.ComponentType<{ className?: string }>;
   href: string;
   gradient?: string;
@@ -61,19 +63,26 @@ interface PremiumTool {
 
 // Memoized action card component to prevent re-renders
 const ActionCard = memo(({ action }: { action: QuickAction }) => (
-  <Link key={action.href} href={action.href} prefetch={action.prefetch !== false}>
-    <div className={`group h-full rounded-xl border border-zinc-800/50 p-6 transition-all hover:scale-[1.02] hover:border-zinc-700 ${action.gradient || 'bg-gradient-to-br from-zinc-900/50 to-zinc-900/30'} backdrop-blur-sm`}>
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 shadow-lg">
-        <action.icon className="h-7 w-7 text-white" />
+  <FeatureTooltip
+    title={action.title}
+    description={action.tooltip || action.description}
+    icon={<action.icon className="h-4 w-4 text-orange-500" />}
+    placement="top"
+  >
+    <Link key={action.href} href={action.href} prefetch={action.prefetch !== false}>
+      <div className={`group h-full rounded-xl border border-zinc-800/50 p-6 transition-all hover:scale-[1.02] hover:border-zinc-700 ${action.gradient || 'bg-gradient-to-br from-zinc-900/50 to-zinc-900/30'} backdrop-blur-sm`}>
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 shadow-lg">
+          <action.icon className="h-7 w-7 text-white" />
+        </div>
+        <h3 className="mb-2 text-lg font-semibold text-white">
+          {action.title}
+        </h3>
+        <p className="text-sm leading-relaxed text-zinc-400">
+          {action.description}
+        </p>
       </div>
-      <h3 className="mb-2 text-lg font-semibold text-white">
-        {action.title}
-      </h3>
-      <p className="text-sm leading-relaxed text-zinc-400">
-        {action.description}
-      </p>
-    </div>
-  </Link>
+    </Link>
+  </FeatureTooltip>
 ));
 ActionCard.displayName = 'ActionCard';
 
@@ -209,6 +218,7 @@ function DashboardContent() {
     {
       title: 'Songwriting Studio',
       description: 'AI-powered chord progressions & lyrics',
+      tooltip: 'Write songs manually with AI assistance. Perfect for crafting lyrics, building chord progressions, and collaborating in real-time with your band.',
       icon: Music2,
       href: '/songwriting',
       gradient: 'bg-gradient-to-br from-purple-900/30 to-zinc-900/30',
@@ -217,6 +227,7 @@ function DashboardContent() {
     {
       title: 'Create Track',
       description: 'Generate full songs with AI',
+      tooltip: 'Generate complete AI music tracks instantly. Just describe your sound (genre, mood, instruments) and get a finished audio file in 30 seconds.',
       icon: FileMusic,
       href: '/create',
       gradient: 'bg-gradient-to-br from-blue-900/30 to-zinc-900/30',
@@ -225,6 +236,7 @@ function DashboardContent() {
     {
       title: 'New Project',
       description: 'Start an album or EP',
+      tooltip: 'Organize songs into albums, EPs, or collections. Collaborate with band members, track milestones, and manage your entire release from one place.',
       icon: Folder,
       href: '/projects/new',
       gradient: 'bg-gradient-to-br from-green-900/30 to-zinc-900/30',
@@ -233,6 +245,7 @@ function DashboardContent() {
     {
       title: 'My Library',
       description: 'View your music assets',
+      tooltip: 'Store and manage audio files (stems, demos, samples, loops). Think of it as Dropbox for your music assets - upload once, use everywhere.',
       icon: Music2,
       href: '/library',
       gradient: 'bg-gradient-to-br from-orange-900/30 to-zinc-900/30',
@@ -241,6 +254,7 @@ function DashboardContent() {
     {
       title: 'Explore Community',
       description: 'Discover tracks & musicians',
+      tooltip: 'Browse trending music from the community. Find inspiration, discover new artists, and engage with tracks through likes and comments.',
       icon: Compass,
       href: '/explore',
       gradient: 'bg-gradient-to-br from-pink-900/30 to-zinc-900/30',

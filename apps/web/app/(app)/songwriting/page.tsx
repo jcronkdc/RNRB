@@ -23,6 +23,9 @@ import { ToastNotification, useToast } from '@/components/toast-notification';
 import { FeatureTooltip, OnboardingTour } from '@/components/feature-tooltip';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSongAutoSave } from '@/hooks/use-song-auto-save';
+import { ProjectSelector } from '@/components/project-selector';
+import { LibraryImportModal } from '@/components/library-import-modal';
+import type { LibraryFile } from '@/hooks/use-library';
 
 // Import the drag-drop collaborative songwriting components
 const CollaborativeVisualBuilder = dynamic(
@@ -109,6 +112,7 @@ export default function SongwritingPage() {
   const [isFirstSave, setIsFirstSave] = useState(true);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showLibraryImport, setShowLibraryImport] = useState(false);
   
   // Undo/Redo state management
   const [history, setHistory] = useState<Array<{ blocks: SongBlock[]; lyrics: string }>>([]);
@@ -286,6 +290,14 @@ export default function SongwritingPage() {
     }
   }, [user]);
 
+  // Handle library import
+  const handleLibraryImport = (file: LibraryFile) => {
+    // For now, add a link to the file in the lyrics
+    const importText = `\n\n[Imported: ${file.name}]\nFile URL: ${file.url}\n`;
+    setLyrics((prev) => prev + importText);
+    success(`Imported ${file.name}`, 2000);
+  };
+
   return (
     <div className="min-h-screen bg-zinc-950">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -301,47 +313,61 @@ export default function SongwritingPage() {
                 placeholder="Untitled Song"
                 disabled={!user}
               />
-              <div className="mt-2 flex items-center gap-4">
+              <div className="mt-2 flex flex-wrap items-center gap-2 sm:gap-4">
                 <SaveStatusIndicator />
                 {user && (
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={undo}
-                      disabled={historyIndex <= 0}
-                      className={`rounded px-3 py-1 text-xs font-mono uppercase tracking-wider transition ${
-                        historyIndex > 0
-                          ? 'bg-zinc-800 text-white hover:bg-zinc-700'
-                          : 'text-zinc-600 cursor-not-allowed'
-                      }`}
-                      title="Undo (⌘Z)"
-                    >
-                      Undo
-                    </button>
-                    <button
-                      onClick={redo}
-                      disabled={historyIndex >= history.length - 1}
-                      className={`rounded px-3 py-1 text-xs font-mono uppercase tracking-wider transition ${
-                        historyIndex < history.length - 1
-                          ? 'bg-zinc-800 text-white hover:bg-zinc-700'
-                          : 'text-zinc-600 cursor-not-allowed'
-                      }`}
-                      title="Redo (⌘⇧Z)"
-                    >
-                      Redo
-                    </button>
-                  </div>
+                  <>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={undo}
+                        disabled={historyIndex <= 0}
+                        className={`rounded px-3 py-1 text-xs font-mono uppercase tracking-wider transition ${
+                          historyIndex > 0
+                            ? 'bg-zinc-800 text-white hover:bg-zinc-700'
+                            : 'text-zinc-600 cursor-not-allowed'
+                        }`}
+                        title="Undo (⌘Z)"
+                      >
+                        Undo
+                      </button>
+                      <button
+                        onClick={redo}
+                        disabled={historyIndex >= history.length - 1}
+                        className={`rounded px-3 py-1 text-xs font-mono uppercase tracking-wider transition ${
+                          historyIndex < history.length - 1
+                            ? 'bg-zinc-800 text-white hover:bg-zinc-700'
+                            : 'text-zinc-600 cursor-not-allowed'
+                        }`}
+                        title="Redo (⌘⇧Z)"
+                      >
+                        Redo
+                      </button>
+                    </div>
+                    <ProjectSelector 
+                      songId={songData.id} 
+                      onProjectAdded={(slug) => success(`Added to project`, 2000)}
+                    />
+                  </>
                 )}
               </div>
             </div>
             {user && (
               <div className="ml-4 flex items-center gap-2">
                 {activeView === 'structure' && (
-                  <button
-                    onClick={() => setShowTemplatePicker(true)}
-                    className="rounded bg-zinc-800 px-4 py-2 text-xs font-mono uppercase tracking-wider text-white transition hover:bg-zinc-700"
-                  >
-                    Templates
-                  </button>
+                  <>
+                    <button
+                      onClick={() => setShowTemplatePicker(true)}
+                      className="rounded bg-zinc-800 px-4 py-2 text-xs font-mono uppercase tracking-wider text-white transition hover:bg-zinc-700"
+                    >
+                      Templates
+                    </button>
+                    <button
+                      onClick={() => setShowLibraryImport(true)}
+                      className="rounded bg-zinc-800 px-4 py-2 text-xs font-mono uppercase tracking-wider text-white transition hover:bg-zinc-700"
+                    >
+                      Import from Library
+                    </button>
+                  </>
                 )}
                 <PresenceIndicator
                   channelName="songwriting:studio"
@@ -542,6 +568,16 @@ export default function SongwritingPage() {
             saveToHistory();
           }}
           onClose={() => setShowTemplatePicker(false)}
+        />
+      )}
+
+      {/* Library Import Modal */}
+      {showLibraryImport && (
+        <LibraryImportModal
+          isOpen={showLibraryImport}
+          onClose={() => setShowLibraryImport(false)}
+          onImport={handleLibraryImport}
+          acceptTypes={['demo', 'sample', 'loop', 'stem']}
         />
       )}
 

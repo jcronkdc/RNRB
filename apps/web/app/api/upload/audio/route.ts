@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { getCurrentUser } from '@/lib/supabase';
+import { getUsageSummary } from '@/lib/usage-tracking';
 
 /**
  * Audio Upload Endpoint
@@ -46,14 +47,44 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 500MB)
-    const maxSize = 500 * 1024 * 1024; // 500MB
-    if (file.size > maxSize) {
-      return NextResponse.json({ error: 'File too large. Maximum size: 500MB' }, { status: 400 });
+    // 🔒 CHECK STORAGE QUOTA
+    const usage = await getUsageSummary(user.id);
+    const fileSizeGB = file.size / (1024 * 1024 * 1024);
+    
+    // Validate file size based on tier
+    const tierMaxSize = 
+      usage.tier === 'studio' ? 500 * 1024 * 1024 : // 500MB
+      usage.tier === 'creator' ? 100 * 1024 * 1024 : // 100MB
+      50 * 1024 * 1024; // 50MB for free
+
+    if (file.size > tierMaxSize) {
+      return NextResponse.json(
+        { 
+          error: `File too large. Maximum size for ${usage.tier} tier is ${tierMaxSize / (1024 * 1024)}MB.`,
+          requiresUpgrade: usage.tier !== 'studio',
+          currentTier: usage.tier,
+        },
+        { status: 413 } // Payload Too Large
+      );
     }
 
-    // TODO: Check storage quota against subscription tier
+    // Check if user has enough storage quota
+    if (usage.storage.remaining < fileSizeGB) {
+      return NextResponse.json(
+        {
+          error: `Storage quota exceeded. You have ${usage.storage.remaining.toFixed(2)}GB remaining, but need ${fileSizeGB.toFixed(2)}GB.`,
+          requiresUpgrade: true,
+          currentTier: usage.tier,
+          used: usage.storage.used,
+          limit: usage.storage.limit,
+          percentage: usage.storage.percentage,
+        },
+        { status: 413 } // Payload Too Large
+      );
+    }
+
     // TODO: Upload to Supabase Storage
+    // TODO: Update user storage usage
     // For now, return placeholder response
     return NextResponse.json({
       success: true,
@@ -62,6 +93,12 @@ export async function POST(request: NextRequest) {
         name: file.name,
         size: file.size,
         type: file.type,
+      },
+      storageQuota: {
+        used: usage.storage.used,
+        limit: usage.storage.limit,
+        remaining: usage.storage.remaining,
+        percentageUsed: usage.storage.percentage,
       },
       note: 'Supabase Storage integration coming in next phase',
     });

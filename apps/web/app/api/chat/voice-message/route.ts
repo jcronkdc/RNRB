@@ -165,11 +165,22 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const channelId = searchParams.get('channelId');
-    const limit = parseInt(searchParams.get('limit') || '50');
-
+    
     if (!channelId) {
       return NextResponse.json({ error: 'channelId required' }, { status: 400 });
     }
+    
+    // Parse and validate pagination parameters
+    const limitParam = parseInt(searchParams.get('limit') || '50');
+    
+    if (isNaN(limitParam) || limitParam < 1) {
+      return NextResponse.json(
+        { error: 'Invalid limit parameter: must be a positive integer' },
+        { status: 400 }
+      );
+    }
+    
+    const limit = limitParam;
 
     // Get messages from database
     const messages = await db.chatMessage.findMany({
