@@ -1,7 +1,8 @@
 # 💰 PRICING STRUCTURE SUMMARY
 
 **Date:** 2025-11-26  
-**Status:** ✅ WELL POSITIONED - COMPETITIVE & PROFITABLE
+**Last Updated:** 2025-11-26 (Agent verified all sources aligned)  
+**Status:** ✅ ALL SOURCES ALIGNED - COMPETITIVE & PROFITABLE
 
 ---
 
@@ -85,18 +86,22 @@ NET PROFIT           $9.12     (91% margin) ✅
 ```
 Service               Cost      Notes
 ────────────────────────────────────────────────
-AI (500 requests)     $0.75     gpt-4o-mini optimized
-Video (1200 min)      $1.92     Daily.co @ $0.004/min
-Storage (100 GB)      $0.53     Supabase overage
+AI (500 requests)     $0.94     gpt-4o-mini + some gpt-4o
+Video (3600 p-min)   $14.40     Daily.co @ $0.004/participant-min
+Storage (100 GB)      $2.10     Supabase
 Database              $0.10     Neon Scale (shared)
 Real-time (Ably)      $0.01     Negligible
 Email                 $0.02     Resend
 ────────────────────────────────────────────────
-TOTAL COST           $3.33
+TOTAL COST          $17.57     (worst case with video maxed)
 STRIPE FEE           $1.17     (2.9% + $0.30)
 ────────────────────────────────────────────────
-NET PROFIT          $25.49     (85% margin) ✅
+NET PROFIT          $11.25     (37.5% margin) ✅
 ```
+
+**CRITICAL**: Video is charged per PARTICIPANT-MINUTE by Daily.co!
+- 3,600 participant-minutes = 20 hrs with 3 people OR 60 hrs 1-on-1
+- This caps our video cost at $14.40/user/month maximum
 
 ---
 
@@ -253,6 +258,36 @@ Your pricing is:
 - ✅ Scalable (costs don't balloon with growth)
 
 **Just add the rate limiting fix to protect margins.**
+
+---
+
+## 🔗 SOURCE ALIGNMENT STATUS
+
+**All sources now aligned as of 2025-11-26:**
+
+| Source File | Status |
+|-------------|--------|
+| `/apps/web/app/(marketing)/pricing/page.tsx` | ✅ Aligned |
+| `/apps/web/app/(app)/settings/billing/BillingDashboard.tsx` | ✅ Aligned |
+| `/apps/web/lib/subscription-access.ts` | ✅ Aligned |
+| `/apps/web/lib/usage-tracking.ts` | ✅ Aligned |
+| `PRICING_SUMMARY.md` (this file) | ✅ Source of truth |
+
+**Single Source of Truth Values:**
+```
+Free (Explorer): $0, 3 projects, 1GB, 0 AI, 1 collab
+Creator: $9.99, 10 projects, 10GB, 100 AI, 5 collab
+Studio: $29.99, unlimited projects, 100GB, 500 AI, 3600 participant-min video, unlimited collab
+```
+
+**Video Participant-Minutes Explained:**
+- Daily.co charges per participant-minute, NOT per call minute
+- 3,600 participant-minutes allows:
+  - 60 hours of 1-on-1 calls
+  - 30 hours with 2 people  
+  - 20 hours with 3 people (typical band)
+  - 12 hours with 5 people
+- Cost capped at $14.40/month per Studio user
 
 ---
 

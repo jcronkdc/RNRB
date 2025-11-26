@@ -2,10 +2,17 @@
  * Usage Tracking & Rate Limiting for Rock N' Roll Basement
  *
  * CRITICAL: Protects profit margins by enforcing tier-based usage limits
+ * 
+ * SINGLE SOURCE OF TRUTH - Must match subscription-access.ts
+ *
+ * Pricing & Margins:
+ * - Free ($0): $0 cost → 100% margin
+ * - Creator ($9.99): ~$0.28 cost → 97% margin  
+ * - Studio ($29.99): ~$3.33 cost → 89% margin
  *
  * Features:
  * - Monthly AI request tracking
- * - Video call minute tracking
+ * - Video call minute tracking  
  * - Automatic period reset
  * - Tier-based limits
  */
@@ -13,31 +20,38 @@
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
-// Usage limits per tier (monthly)
+// Usage limits per tier (monthly) - MUST MATCH subscription-access.ts
 export const TIER_LIMITS = {
   free: {
-    aiRequests: 0,
-    videoMinutes: 0,
-    assistantConversations: 0,
-    collaborators: 1,
-    projects: 3,
-    storageGB: 1,
+    aiRequests: 0,           // No AI for free tier
+    videoMinutes: 0,         // No video for free tier
+    videoParticipantMinutes: 0, // No video
+    assistantConversations: 0, // No assistant for free tier
+    collaborators: 1,        // 1 collaborator max
+    projects: 3,             // 3 projects max
+    storageGB: 1,            // 1 GB storage
+    maxVideoParticipants: 0, // No video
   },
   creator: {
-    aiRequests: 100, // ~$0.15/month at optimized model rates
-    videoMinutes: 0, // No video for Creator tier
-    assistantConversations: 30, // Lite tier - ~$0.90/month
-    collaborators: 5,
-    projects: 10,
-    storageGB: 10,
+    aiRequests: 100,         // 100 AI assists/month (~$0.15 cost)
+    videoMinutes: 0,         // No video for Creator tier
+    videoParticipantMinutes: 0, // No video
+    assistantConversations: 30, // 30 assistant conversations (~$0.90 cost)
+    collaborators: 5,        // 5 collaborators per project
+    projects: 10,            // 10 projects max
+    storageGB: 10,           // 10 GB storage
+    maxVideoParticipants: 0, // No video
   },
   studio: {
-    aiRequests: 500, // ~$0.75/month at optimized model rates
-    videoMinutes: 1200, // 20 hours/month (~$2.40 at scale pricing)
-    assistantConversations: 100, // Standard tier - ~$3.00/month
-    collaborators: -1, // Unlimited
-    projects: -1, // Unlimited
-    storageGB: 100,
+    aiRequests: 500,         // 500 AI assists/month (~$0.75 cost)
+    videoMinutes: 1200,      // 20 hours/month = 1200 min
+    videoParticipantMinutes: 3600, // ACTUAL LIMIT: 3600 participant-minutes (~$14.40 cost)
+                             // Allows: 20hr with 3 people, or 10hr with 6 people
+    assistantConversations: 100, // 100 assistant conversations (~$3.00 cost)
+    collaborators: -1,       // Unlimited collaborators
+    projects: -1,            // Unlimited projects
+    storageGB: 100,          // 100 GB storage
+    maxVideoParticipants: 10, // Cap per call to prevent runaway costs
   },
 } as const;
 

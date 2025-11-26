@@ -7,9 +7,16 @@ const DAILY_WEBHOOK_SECRET = process.env.DAILY_WEBHOOK_SECRET;
  * POST /api/webhooks/daily
  * Daily.co webhook for tracking video call usage
  * 
+ * COST PROTECTION:
+ * Daily.co charges $0.004/participant-minute, NOT per call-minute!
+ * A 60-min call with 5 people = 300 participant-minutes = $1.20
+ * 
+ * We track PARTICIPANT-MINUTES to match actual Daily.co billing.
+ * Studio tier limit: 3,600 participant-minutes/month (~$14.40 cost cap)
+ * 
  * Events we track:
  * - participant.joined: Start tracking time
- * - participant.left: Calculate and record minutes used
+ * - participant.left: Calculate and record participant-minutes used
  * - meeting.ended: Final cleanup
  * 
  * Setup in Daily.co dashboard:

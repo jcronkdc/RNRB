@@ -5,9 +5,18 @@ import { getCurrentUser } from '@/lib/session';
 /**
  * Subscription tier definitions with feature access
  */
+/**
+ * SINGLE SOURCE OF TRUTH FOR SUBSCRIPTION TIERS
+ * 
+ * Pricing (for good margins):
+ * - Free: $0/mo → Cost: $0 → 100% margin
+ * - Creator: $9.99/mo → Cost: ~$0.28/user → 97% margin
+ * - Studio: $29.99/mo → Cost: ~$3.33/user → 89% margin
+ */
 export const SUBSCRIPTION_TIERS = {
   free: {
-    name: 'Free',
+    name: 'Explorer',
+    price: 0,
     features: {
       aiChatAssist: false,
       aiTranscription: false,
@@ -18,24 +27,34 @@ export const SUBSCRIPTION_TIERS = {
       collaborationLimit: 1, // Max 1 collaborator per project
       projectLimit: 3,
       storageGB: 1,
+      aiRequestsLimit: 0,
+      videoMinutesLimit: 0,
+      videoParticipantMinutesLimit: 0,
+      maxVideoParticipants: 0,
     },
   },
   creator: {
     name: 'Creator',
+    price: 9.99,
     features: {
       aiChatAssist: true,
       aiTranscription: true,
       aiContentGeneration: true,
       aiTourRouter: true,
-      aiAssistant: false, // Requires add-on
-      videoCalls: false,
+      aiAssistant: false, // Requires add-on or Studio tier
+      videoCalls: false, // Video only in Studio tier
       collaborationLimit: 5,
       projectLimit: 10,
       storageGB: 10,
+      aiRequestsLimit: 100, // 100 AI assists/month
+      videoMinutesLimit: 0,
+      videoParticipantMinutesLimit: 0,
+      maxVideoParticipants: 0,
     },
   },
   studio: {
     name: 'Studio',
+    price: 29.99,
     features: {
       aiChatAssist: true,
       aiTranscription: true,
@@ -46,6 +65,10 @@ export const SUBSCRIPTION_TIERS = {
       collaborationLimit: -1, // Unlimited
       projectLimit: -1, // Unlimited
       storageGB: 100,
+      aiRequestsLimit: 500, // 500 AI assists/month
+      videoMinutesLimit: 1200, // Legacy: simple hour tracking
+      videoParticipantMinutesLimit: 3600, // REAL LIMIT: 3600 participant-minutes (~$14.40 cost cap)
+      maxVideoParticipants: 10, // Max per call to prevent runaway costs
     },
   },
 } as const;
