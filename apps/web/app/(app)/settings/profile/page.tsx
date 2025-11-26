@@ -19,7 +19,6 @@ import { useEffect, useState } from 'react';
 
 import { createBrowserClient } from '@/lib/supabase';
 
-
 type ProfileData = {
   username: string;
   display_name: string;
@@ -71,7 +70,7 @@ export default function ProfileSettingsPage() {
       router.push('/auth');
     } else if (user) {
       // Set display name from session
-      setProfile(prev => ({
+      setProfile((prev) => ({
         ...prev,
         display_name: user.name || user.email?.split('@')[0] || '',
         profile_picture_url: user.image || '',
@@ -124,12 +123,10 @@ export default function ProfileSettingsPage() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
 
-      const { error } = await supabase.storage
-        .from('profile-pictures')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false,
-        });
+      const { error } = await supabase.storage.from('profile-pictures').upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
 
       if (error) throw error;
 
@@ -150,14 +147,14 @@ export default function ProfileSettingsPage() {
 
   if (loading) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-lg">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-background min-h-screen px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container max-w-4xl">
         {message && (
           <div
@@ -173,9 +170,9 @@ export default function ProfileSettingsPage() {
 
         {/* Profile Picture */}
         <Card className="mb-6 p-6">
-          <h2 className="text-foreground mb-4 text-xl font-semibold">Profile Picture</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Profile Picture</h2>
           <div className="flex items-center gap-6">
-            <div className="text-foreground flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-3xl font-bold">
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-3xl font-bold text-foreground">
               {profile.profile_picture_url ? (
                 <img
                   src={profile.profile_picture_url}
@@ -194,19 +191,19 @@ export default function ProfileSettingsPage() {
                   onChange={handleProfilePictureUpload}
                   className="hidden"
                 />
-                <div className="text-foreground inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 transition hover:bg-purple-700">
+                <div className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-foreground transition hover:bg-purple-700">
                   <Upload className="h-4 w-4" />
                   {uploadingPicture ? 'Uploading...' : 'Upload Photo'}
                 </div>
               </label>
-              <p className="text-muted-foreground mt-2 text-xs">JPG, PNG or GIF. Max 5MB.</p>
+              <p className="mt-2 text-xs text-muted-foreground">JPG, PNG or GIF. Max 5MB.</p>
             </div>
           </div>
         </Card>
 
         {/* Basic Info */}
         <Card className="mb-6 p-6">
-          <h2 className="text-foreground mb-4 text-xl font-semibold">Basic Information</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Basic Information</h2>
 
           <div className="space-y-4">
             <div>
@@ -218,9 +215,9 @@ export default function ProfileSettingsPage() {
                 value={profile.username}
                 onChange={(e) => setProfile({ ...profile, username: e.target.value })}
                 placeholder="rockstar123"
-                className="text-foreground w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Your unique handle. Others can find you by this username.
               </p>
             </div>
@@ -232,7 +229,7 @@ export default function ProfileSettingsPage() {
                 value={profile.display_name}
                 onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
                 placeholder="John Doe"
-                className="text-foreground w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -243,9 +240,9 @@ export default function ProfileSettingsPage() {
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                 placeholder="Tell the world about your music..."
                 rows={4}
-                className="text-foreground w-full resize-none rounded-lg border border-white/10 bg-white/5 px-4 py-2 focus:border-purple-500 focus:outline-none"
+                className="w-full resize-none rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Describe your music style, experience, what you're working on, etc.
               </p>
             </div>
@@ -254,7 +251,7 @@ export default function ProfileSettingsPage() {
 
         {/* Privacy Settings */}
         <Card className="mb-6 p-6">
-          <h2 className="text-foreground mb-4 flex items-center gap-2 text-xl font-semibold">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-foreground">
             {profile.is_public ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
             Privacy Settings
           </h2>
@@ -262,8 +259,8 @@ export default function ProfileSettingsPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
               <div>
-                <p className="text-foreground font-medium">Public Profile</p>
-                <p className="text-muted-foreground text-sm">
+                <p className="font-medium text-foreground">Public Profile</p>
+                <p className="text-sm text-muted-foreground">
                   Allow others to find and view your profile
                 </p>
               </div>
@@ -283,8 +280,8 @@ export default function ProfileSettingsPage() {
 
             <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
               <div>
-                <p className="text-foreground font-medium">Email Visibility</p>
-                <p className="text-muted-foreground text-sm">
+                <p className="font-medium text-foreground">Email Visibility</p>
+                <p className="text-sm text-muted-foreground">
                   Show email on public profile (searchable)
                 </p>
               </div>
@@ -304,8 +301,8 @@ export default function ProfileSettingsPage() {
 
             <div className="flex items-center justify-between rounded-lg bg-white/5 p-4">
               <div>
-                <p className="text-foreground font-medium">Phone Number Visibility</p>
-                <p className="text-muted-foreground text-sm">
+                <p className="font-medium text-foreground">Phone Number Visibility</p>
+                <p className="text-sm text-muted-foreground">
                   Show phone on public profile (searchable)
                 </p>
               </div>
@@ -327,7 +324,7 @@ export default function ProfileSettingsPage() {
 
         {/* Contact & Links */}
         <Card className="mb-6 p-6">
-          <h2 className="text-foreground mb-4 text-xl font-semibold">Contact & Links</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Contact & Links</h2>
 
           <div className="space-y-4">
             <div>
@@ -340,7 +337,7 @@ export default function ProfileSettingsPage() {
                 value={profile.phone}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 placeholder="+1 (555) 123-4567"
-                className="text-foreground w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -354,7 +351,7 @@ export default function ProfileSettingsPage() {
                 value={profile.website}
                 onChange={(e) => setProfile({ ...profile, website: e.target.value })}
                 placeholder="https://yourwebsite.com"
-                className="text-foreground w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -368,7 +365,7 @@ export default function ProfileSettingsPage() {
                 value={profile.instagram}
                 onChange={(e) => setProfile({ ...profile, instagram: e.target.value })}
                 placeholder="@yourhandle"
-                className="text-foreground w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -382,7 +379,7 @@ export default function ProfileSettingsPage() {
                 value={profile.youtube}
                 onChange={(e) => setProfile({ ...profile, youtube: e.target.value })}
                 placeholder="@yourchannel or channel URL"
-                className="text-foreground w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
 
@@ -395,7 +392,7 @@ export default function ProfileSettingsPage() {
                 value={profile.twitter}
                 onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}
                 placeholder="@yourhandle"
-                className="text-foreground w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 focus:border-purple-500 focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-foreground focus:border-purple-500 focus:outline-none"
               />
             </div>
           </div>
@@ -403,19 +400,19 @@ export default function ProfileSettingsPage() {
 
         {/* Music Samples (SoundCloud-style) */}
         <Card className="mb-6 p-6">
-          <h2 className="text-foreground mb-4 flex items-center gap-2 text-xl font-semibold">
+          <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-foreground">
             <Music className="h-5 w-5" />
             Music Samples (Coming Soon)
           </h2>
-          <p className="text-muted-foreground mb-4">
+          <p className="mb-4 text-muted-foreground">
             Upload your music to showcase your work. Others can listen directly on your profile
             (like SoundCloud).
           </p>
 
           <div className="rounded-lg border-2 border-dashed border-white/20 bg-white/5 p-6 text-center">
-            <Upload className="text-muted-foreground mx-auto mb-3 h-12 w-12" />
-            <p className="text-muted-foreground mb-2">Music upload feature coming soon</p>
-            <p className="text-muted-foreground text-xs">
+            <Upload className="mx-auto mb-3 h-12 w-12 text-muted-foreground" />
+            <p className="mb-2 text-muted-foreground">Music upload feature coming soon</p>
+            <p className="text-xs text-muted-foreground">
               Will support: MP3, WAV, FLAC • Up to 50MB per track
             </p>
           </div>
@@ -423,7 +420,7 @@ export default function ProfileSettingsPage() {
 
         {/* Save Button */}
         <div className="flex items-center justify-between">
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-muted-foreground">
             {profile.is_public ? 'Your profile is public' : 'Your profile is private'}
           </p>
           <Button

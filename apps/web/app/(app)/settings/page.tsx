@@ -12,7 +12,7 @@ export default function SettingsPage() {
   }, [router]);
 
   return (
-    <div className="bg-background flex min-h-screen items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="text-lg">Redirecting to settings...</div>
     </div>
   );
