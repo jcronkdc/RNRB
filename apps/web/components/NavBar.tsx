@@ -103,13 +103,16 @@ function Dropdown({ label, items, isScrolled }: DropdownProps) {
   }, []);
 
   // Handle keyboard navigation
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') setIsOpen(false);
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      setIsOpen(!isOpen);
-    }
-  }, [isOpen]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setIsOpen(!isOpen);
+      }
+    },
+    [isOpen]
+  );
 
   // Hover handlers with delay
   const handleMouseEnter = () => {
@@ -153,9 +156,7 @@ function Dropdown({ label, items, isScrolled }: DropdownProps) {
         role="menu"
         aria-orientation="vertical"
         className={`absolute left-0 z-50 mt-2 w-72 origin-top-left rounded-xl transition-all duration-200 ${
-          isOpen
-            ? 'visible translate-y-0 opacity-100'
-            : 'invisible -translate-y-2 opacity-0'
+          isOpen ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-2 opacity-0'
         }`}
         style={{
           background: 'var(--panel)',
@@ -343,6 +344,31 @@ export function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
+  // App routes that should NOT show the marketing NavBar
+  // These routes use the AppLayout with its own TopBar/SidebarNav
+  const isAppRoute =
+    pathname?.startsWith('/dashboard') ||
+    pathname?.startsWith('/songwriting') ||
+    pathname?.startsWith('/create') ||
+    pathname?.startsWith('/projects') ||
+    pathname?.startsWith('/studio') ||
+    pathname?.startsWith('/tours') ||
+    pathname?.startsWith('/shows') ||
+    pathname?.startsWith('/setlists') ||
+    pathname?.startsWith('/library') ||
+    pathname?.startsWith('/explore') ||
+    pathname?.startsWith('/messages') ||
+    pathname?.startsWith('/collaboration') ||
+    pathname?.startsWith('/credits') ||
+    pathname?.startsWith('/settings') ||
+    pathname?.startsWith('/onboarding') ||
+    pathname?.startsWith('/community');
+
+  // Don't render NavBar on app routes - they have their own navigation
+  if (isAppRoute) {
+    return null;
+  }
+
   // Track scroll position for styling
   useEffect(() => {
     const handleScroll = () => {
@@ -385,11 +411,8 @@ export function NavBar() {
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-1 md:flex">
           <Dropdown label="Features" items={FEATURES} isScrolled={isScrolled} />
-          
-          <Link
-            href="/#how"
-            className={`nav-link px-4 py-2 transition-colors duration-200`}
-          >
+
+          <Link href="/#how" className={`nav-link px-4 py-2 transition-colors duration-200`}>
             How It Works
           </Link>
 

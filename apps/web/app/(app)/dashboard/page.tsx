@@ -1,9 +1,5 @@
 'use client';
 
-import { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   Calendar,
   ChevronRight,
@@ -12,16 +8,20 @@ import {
   Folder,
   HardDrive,
   Library,
+  ListMusic,
   Loader2,
   Mic2,
   Music2,
   Plus,
-  ListMusic,
   TrendingUp,
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ErrorBoundary, SilentErrorBoundary } from '@/components/error-boundary';
-import { useDashboardData, getStoragePercentage } from '@/hooks/use-dashboard-data';
+import { getStoragePercentage, useDashboardData } from '@/hooks/use-dashboard-data';
 import { usePerformanceMonitor } from '@/hooks/use-performance-monitor';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
