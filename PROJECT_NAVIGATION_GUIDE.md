@@ -8,9 +8,11 @@
 ## ✅ YES to Both Questions!
 
 ### Question 1: "Can I select a specific project to go to?"
+
 **Answer:** ✅ **YES!** - Multiple ways to navigate to projects
 
 ### Question 2: "Will projects be separated on the projects page?"
+
 **Answer:** ✅ **YES!** - Each project is a separate card with its own detail page
 
 ---
@@ -18,6 +20,7 @@
 ## 🗺️ Complete Navigation Map
 
 ### Method 1: Projects Page → Project Detail
+
 ```
 /dashboard
   ↓ Click "Projects" in sidebar
@@ -32,6 +35,7 @@
 ```
 
 ### Method 2: ProjectSelector Dropdown → Navigate
+
 ```
 /songwriting (or /create or /studio)
   ↓ Click "Add to Project" dropdown
@@ -41,6 +45,7 @@
 ```
 
 ### Method 3: Direct URL Navigation
+
 ```
 You can bookmark or share direct links:
 /projects/my-album-name
@@ -72,6 +77,7 @@ You can bookmark or share direct links:
 ```
 
 **Each project card shows:**
+
 - ✅ Cover image (or folder icon)
 - ✅ Project name
 - ✅ Description
@@ -111,6 +117,7 @@ When you click a project card, you go to `/projects/[slug]`:
 ```
 
 **Each project has its OWN:**
+
 - ✅ Song list (separated)
 - ✅ Collaborators (specific to this project)
 - ✅ Milestones & Gantt charts
@@ -147,6 +154,7 @@ When you use "Add to Project" dropdown anywhere in the app:
 ```
 
 **Two actions per project:**
+
 1. **Click the main area** → Adds song to project
 2. **Hover & click arrow (↗)** → Navigates to project page
 
@@ -155,6 +163,7 @@ When you use "Add to Project" dropdown anywhere in the app:
 ## 🚀 Complete User Workflows
 
 ### Workflow 1: Browse Projects & Navigate
+
 ```
 1. Dashboard → Click "Projects" in sidebar
 2. /projects page loads
@@ -165,6 +174,7 @@ When you use "Add to Project" dropdown anywhere in the app:
 ```
 
 ### Workflow 2: Add Song & View Project
+
 ```
 1. Songwriting → Write a song
 2. Click "Add to Project" dropdown
@@ -175,6 +185,7 @@ When you use "Add to Project" dropdown anywhere in the app:
 ```
 
 ### Workflow 3: Direct Navigation
+
 ```
 1. Bookmark: https://cronkwaters.com/projects/my-album
 2. Share link with bandmate
@@ -188,21 +199,22 @@ When you use "Add to Project" dropdown anywhere in the app:
 
 Each project is COMPLETELY separated:
 
-| Feature | Separated by Project? |
-|---------|----------------------|
-| **Songs** | ✅ YES - Each project has its own song list |
-| **Collaborators** | ✅ YES - Invite different people per project |
-| **Permissions** | ✅ YES - Private/Public per project |
-| **Milestones** | ✅ YES - Track progress per project |
-| **Sessions** | ✅ YES - Recording sessions per project |
-| **Settings** | ✅ YES - Configure each project independently |
-| **Activity** | ✅ YES - See what's happening per project |
+| Feature           | Separated by Project?                         |
+| ----------------- | --------------------------------------------- |
+| **Songs**         | ✅ YES - Each project has its own song list   |
+| **Collaborators** | ✅ YES - Invite different people per project  |
+| **Permissions**   | ✅ YES - Private/Public per project           |
+| **Milestones**    | ✅ YES - Track progress per project           |
+| **Sessions**      | ✅ YES - Recording sessions per project       |
+| **Settings**      | ✅ YES - Configure each project independently |
+| **Activity**      | ✅ YES - See what's happening per project     |
 
 ---
 
 ## 📱 Visual Examples
 
 ### Projects List Page
+
 ```
 ┌─────────────────────────────────────────┐
 │  Your Projects                           │
@@ -252,5 +264,3 @@ Each card is CLICKABLE and takes you to that specific project.
 ---
 
 **Token Count: 139,000 / 200,000 (70% used)**
-
-

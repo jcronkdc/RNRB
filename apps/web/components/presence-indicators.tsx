@@ -108,11 +108,11 @@ export function PresenceIndicators({
 
   if (members.length === 0) {
     return (
-      <div className={`border-border bg-surface rounded-lg border p-4 ${className}`}>
+      <div className={`rounded-lg border border-border bg-surface p-4 ${className}`}>
         <div className="text-center">
-          <Moon className="text-muted-foreground mx-auto mb-2 h-8 w-8 opacity-50" />
-          <p className="text-muted-foreground text-sm">No one else is here right now</p>
-          <p className="text-muted-foreground mt-1 text-xs">
+          <Moon className="mx-auto mb-2 h-8 w-8 text-muted-foreground opacity-50" />
+          <p className="text-sm text-muted-foreground">No one else is here right now</p>
+          <p className="mt-1 text-xs text-muted-foreground">
             Invite collaborators to work together
           </p>
         </div>
@@ -121,24 +121,19 @@ export function PresenceIndicators({
   }
 
   return (
-    <div className={`border-border bg-surface rounded-lg border ${className}`}>
+    <div className={`rounded-lg border border-border bg-surface ${className}`}>
       {/* Header */}
-      <div className="border-border flex items-center justify-between border-b p-4">
+      <div className="flex items-center justify-between border-b border-border p-4">
         <div>
-          <h3 className="text-foreground flex items-center gap-2 text-lg font-semibold">
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
             <div className={`h-2 w-2 animate-pulse rounded-full ${getStatusColor('active')}`} />
             Online Now
           </h3>
-          <p className="text-muted-foreground text-sm">
-            {members.filter((m) => m.status === 'active').length} active •{' '}
-            {members.length} total
+          <p className="text-sm text-muted-foreground">
+            {members.filter((m) => m.status === 'active').length} active • {members.length} total
           </p>
         </div>
-        <Button
-          onClick={() => setExpanded(!expanded)}
-          variant="secondary"
-          size="sm"
-        >
+        <Button onClick={() => setExpanded(!expanded)} variant="secondary" size="sm">
           {expanded ? <Minus className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </Button>
       </div>
@@ -159,7 +154,7 @@ export function PresenceIndicators({
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  className={`border-border rounded-lg border p-3 transition ${
+                  className={`rounded-lg border border-border p-3 transition ${
                     followingUserId === member.userId
                       ? 'border-brand-primary bg-brand-primary/5'
                       : 'bg-surface-muted hover:bg-surface'
@@ -168,7 +163,7 @@ export function PresenceIndicators({
                   <div className="flex items-start gap-3">
                     {/* Avatar with status */}
                     <div className="relative flex-shrink-0">
-                      <div className="bg-brand-primary/20 text-foreground flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
                         {member.userAvatar ? (
                           <img
                             src={member.userAvatar}
@@ -188,21 +183,21 @@ export function PresenceIndicators({
                     </div>
 
                     {/* User info */}
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-foreground truncate text-sm font-medium">
+                        <span className="truncate text-sm font-medium text-foreground">
                           {member.userName}
                         </span>
 
                         {/* Device icon */}
-                        <div className="text-muted-foreground flex-shrink-0">
+                        <div className="flex-shrink-0 text-muted-foreground">
                           {getDeviceIcon(member.deviceType)}
                         </div>
                       </div>
 
                       {/* Activity */}
                       {member.activity && (
-                        <div className="text-muted-foreground mt-1 flex items-center gap-1.5 text-xs">
+                        <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
                           {getActivityIcon(member.activity)}
                           <span className="truncate">{member.activity}</span>
                         </div>
@@ -210,14 +205,14 @@ export function PresenceIndicators({
 
                       {/* Viewport info */}
                       {member.viewport && (
-                        <div className="text-muted-foreground mt-1 text-xs">
+                        <div className="mt-1 text-xs text-muted-foreground">
                           Viewing: <span className="font-medium">{member.viewport.section}</span>
                         </div>
                       )}
 
                       {/* Selection info */}
                       {member.selection && (
-                        <div className="text-muted-foreground mt-1 text-xs">
+                        <div className="mt-1 text-xs text-muted-foreground">
                           Selected {member.selection.end - member.selection.start} characters
                         </div>
                       )}
@@ -231,9 +226,7 @@ export function PresenceIndicators({
                           className="mt-2"
                         >
                           <Eye className="h-3 w-3" />
-                          <span>
-                            {followingUserId === member.userId ? 'Following' : 'Follow'}
-                          </span>
+                          <span>{followingUserId === member.userId ? 'Following' : 'Follow'}</span>
                         </Button>
                       )}
                     </div>
@@ -247,8 +240,3 @@ export function PresenceIndicators({
     </div>
   );
 }
-
-
-
-
-

@@ -2,17 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import {
-  Clock,
-  GitBranch,
-  Play,
-  RotateCcw,
-  Star,
-  Trash2,
-  Music,
-  Check,
-  X,
-} from 'lucide-react';
+import { Clock, GitBranch, Play, RotateCcw, Star, Trash2, Music, Check, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 type Version = {
@@ -74,7 +64,7 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
       });
 
       if (!response.ok) throw new Error('Failed to create version');
-      
+
       await loadVersions();
     } catch (err: any) {
       alert(`Error: ${err.message}`);
@@ -92,7 +82,7 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
       });
 
       if (!response.ok) throw new Error('Failed to restore version');
-      
+
       alert('Version restored successfully!');
       onRestore?.(versionId);
     } catch (err: any) {
@@ -109,7 +99,7 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
       });
 
       if (!response.ok) throw new Error('Failed to publish version');
-      
+
       await loadVersions();
     } catch (err: any) {
       alert(`Error: ${err.message}`);
@@ -125,7 +115,7 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
       });
 
       if (!response.ok) throw new Error('Failed to delete version');
-      
+
       await loadVersions();
     } catch (err: any) {
       alert(`Error: ${err.message}`);
@@ -172,8 +162,8 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
         {versions.length === 0 ? (
           <Card className="p-8 text-center">
             <GitBranch className="mx-auto mb-3 h-12 w-12 text-muted-foreground/50" />
-            <p className="text-muted-foreground mb-2">No versions saved yet</p>
-            <p className="text-muted-foreground text-sm">
+            <p className="mb-2 text-muted-foreground">No versions saved yet</p>
+            <p className="text-sm text-muted-foreground">
               Click "Save Version" to create a snapshot of your current work
             </p>
           </Card>
@@ -196,13 +186,17 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
                 <div className="flex items-start justify-between gap-4">
                   {/* Left: Version Info */}
                   <div className="flex items-start gap-3">
-                    <div className="bg-brand-primary/10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full">
-                      <span className="text-brand-primary font-semibold">v{version.versionNum}</span>
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary/10">
+                      <span className="font-semibold text-brand-primary">
+                        v{version.versionNum}
+                      </span>
                     </div>
 
                     <div className="flex-1">
                       <div className="mb-1 flex items-center gap-2">
-                        <h3 className="font-semibold">{version.label || `Version ${version.versionNum}`}</h3>
+                        <h3 className="font-semibold">
+                          {version.label || `Version ${version.versionNum}`}
+                        </h3>
                         {version.isPublished && (
                           <span className="flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-500">
                             <Star className="h-3 w-3 fill-current" />
@@ -212,10 +206,10 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
                       </div>
 
                       {version.description && (
-                        <p className="text-muted-foreground mb-2 text-sm">{version.description}</p>
+                        <p className="mb-2 text-sm text-muted-foreground">{version.description}</p>
                       )}
 
-                      <div className="text-muted-foreground flex items-center gap-3 text-xs">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {new Date(version.createdAt).toLocaleDateString()} at{' '}
@@ -298,8 +292,3 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
     </div>
   );
 }
-
-
-
-
-

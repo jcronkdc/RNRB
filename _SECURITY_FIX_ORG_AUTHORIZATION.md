@@ -9,6 +9,7 @@
 A critical authorization bypass vulnerability was discovered in the Shows and Tours API endpoints. The vulnerability allowed authenticated users to query shows and tours from **any organization**, not just the organizations they are members of.
 
 ### Affected Endpoints
+
 - `GET /api/shows`
 - `GET /api/tours`
 
@@ -18,7 +19,7 @@ The code initially performed proper authorization by filtering organizations:
 
 ```typescript
 const where: any = {
-  orgId: { in: userOrgIds },  // Correct: Only user's orgs
+  orgId: { in: userOrgIds }, // Correct: Only user's orgs
 };
 ```
 
@@ -26,7 +27,7 @@ However, when a user provided an `orgId` query parameter, the code would **repla
 
 ```typescript
 if (orgId) {
-  where.orgId = orgId;  // ⚠️ VULNERABILITY: Replaces authorization
+  where.orgId = orgId; // ⚠️ VULNERABILITY: Replaces authorization
 }
 ```
 
@@ -42,6 +43,7 @@ This effectively allowed users to bypass the `userOrgIds` restriction and query 
 ## Fix Implementation
 
 ### Solution
+
 Validate that the provided `orgId` is actually in the user's authorized organizations before using it:
 
 ```typescript
@@ -62,6 +64,7 @@ if (orgId) {
 ```
 
 ### Files Modified
+
 - `apps/web/app/api/shows/route.ts` (lines 44-53)
 - `apps/web/app/api/tours/route.ts` (lines 62-71)
 
@@ -86,19 +89,21 @@ if (orgId) {
 ### Pattern to Avoid
 
 ❌ **DANGEROUS PATTERN:**
+
 ```typescript
 const where = { field: { in: authorizedValues } };
 if (userProvidedValue) {
-  where.field = userProvidedValue;  // BYPASSES authorization!
+  where.field = userProvidedValue; // BYPASSES authorization!
 }
 ```
 
 ✅ **SECURE PATTERN:**
+
 ```typescript
 const where = { field: { in: authorizedValues } };
 if (userProvidedValue) {
   if (!authorizedValues.includes(userProvidedValue)) {
-    return error403();  // Validate first!
+    return error403(); // Validate first!
   }
   where.field = userProvidedValue;
 }
@@ -107,6 +112,7 @@ if (userProvidedValue) {
 ## Testing Recommendations
 
 ### Manual Testing
+
 1. Create two organizations (Org A and Org B)
 2. Create a user who is only a member of Org A
 3. Create shows in both organizations
@@ -118,12 +124,14 @@ if (userProvidedValue) {
    - Expected: 200 Success with Org A's shows
 
 ### Automated Testing
+
 Consider adding integration tests:
+
 ```typescript
 describe('API Authorization', () => {
   it('should prevent cross-org data access', async () => {
     const response = await fetch('/api/shows?orgId=unauthorized-org-id', {
-      headers: { Authorization: 'Bearer <valid-token>' }
+      headers: { Authorization: 'Bearer <valid-token>' },
     });
     expect(response.status).toBe(403);
   });
@@ -155,10 +163,7 @@ describe('API Authorization', () => {
 
 ---
 
-**Fix Verified:** ✅ 
-**Code Review:** ✅ 
-**Documentation:** ✅ 
+**Fix Verified:** ✅
+**Code Review:** ✅
+**Documentation:** ✅
 **Ready for Deployment:** ✅
-
-
-

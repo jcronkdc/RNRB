@@ -25,14 +25,14 @@ export type PresenceMember = {
   status: PresenceStatus;
   activity?: string; // "Editing verse 2", "Listening to demo"
   location: string; // "project:my-album", "song:track-1"
-  
+
   // Rich context
   viewport?: {
     scroll: number; // Scroll position
     zoom: number; // Zoom level
     section: string; // "chorus", "verse-2", etc.
   };
-  
+
   // Selection/cursor
   cursorPosition?: number;
   selection?: {
@@ -40,11 +40,11 @@ export type PresenceMember = {
     end: number;
     text?: string;
   };
-  
+
   // Device info
   deviceType?: 'desktop' | 'mobile' | 'tablet';
   browser?: string;
-  
+
   // Timestamps
   lastActive: Date;
   joinedAt: Date;
@@ -79,12 +79,16 @@ export function useEnhancedPresence({
   // Detect device type
   const getDeviceType = (): 'desktop' | 'mobile' | 'tablet' => {
     if (typeof window === 'undefined') return 'desktop';
-    
+
     const ua = navigator.userAgent;
     if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
       return 'tablet';
     }
-    if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+    if (
+      /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+        ua
+      )
+    ) {
       return 'mobile';
     }
     return 'desktop';
@@ -93,7 +97,7 @@ export function useEnhancedPresence({
   // Detect browser
   const getBrowser = (): string => {
     if (typeof window === 'undefined') return 'unknown';
-    
+
     const ua = navigator.userAgent;
     if (ua.includes('Firefox')) return 'Firefox';
     if (ua.includes('Chrome')) return 'Chrome';
@@ -157,11 +161,45 @@ export function useEnhancedPresence({
           if (!mounted) return;
 
           // Get all current members
-          channel.presence.get().then((presenceMembers) => {
+          channel.presence
+            .get()
+            .then((presenceMembers) => {
+              if (!mounted) return;
+
+              const formattedMembers: PresenceMember[] = (presenceMembers || [])
+                .filter((m) => m.clientId !== userData.userId) // Exclude self
+                .map((member) => ({
+                  userId: member.data.userId || member.clientId,
+                  userName: member.data.userName,
+                  userEmail: member.data.userEmail,
+                  userAvatar: member.data.userAvatar,
+                  status: member.data.status || 'active',
+                  activity: member.data.activity,
+                  location: member.data.location,
+                  viewport: member.data.viewport,
+                  cursorPosition: member.data.cursorPosition,
+                  selection: member.data.selection,
+                  deviceType: member.data.deviceType,
+                  browser: member.data.browser,
+                  lastActive: new Date(member.data.lastActive || Date.now()),
+                  joinedAt: new Date(member.data.joinedAt || Date.now()),
+                }));
+
+              setMembers(formattedMembers);
+            })
+            .catch((err) => {
+              console.error('Error getting presence members:', err);
+            });
+        });
+
+        // Get initial members
+        channel.presence
+          .get()
+          .then((presenceMembers) => {
             if (!mounted) return;
 
             const formattedMembers: PresenceMember[] = (presenceMembers || [])
-              .filter((m) => m.clientId !== userData.userId) // Exclude self
+              .filter((m) => m.clientId !== userData.userId)
               .map((member) => ({
                 userId: member.data.userId || member.clientId,
                 userName: member.data.userName,
@@ -180,38 +218,10 @@ export function useEnhancedPresence({
               }));
 
             setMembers(formattedMembers);
-          }).catch((err) => {
-            console.error('Error getting presence members:', err);
+          })
+          .catch((err) => {
+            console.error('Error getting initial presence:', err);
           });
-        });
-
-        // Get initial members
-        channel.presence.get().then((presenceMembers) => {
-          if (!mounted) return;
-
-          const formattedMembers: PresenceMember[] = (presenceMembers || [])
-            .filter((m) => m.clientId !== userData.userId)
-            .map((member) => ({
-              userId: member.data.userId || member.clientId,
-              userName: member.data.userName,
-              userEmail: member.data.userEmail,
-              userAvatar: member.data.userAvatar,
-              status: member.data.status || 'active',
-              activity: member.data.activity,
-              location: member.data.location,
-              viewport: member.data.viewport,
-              cursorPosition: member.data.cursorPosition,
-              selection: member.data.selection,
-              deviceType: member.data.deviceType,
-              browser: member.data.browser,
-              lastActive: new Date(member.data.lastActive || Date.now()),
-              joinedAt: new Date(member.data.joinedAt || Date.now()),
-            }));
-
-          setMembers(formattedMembers);
-        }).catch((err) => {
-          console.error('Error getting initial presence:', err);
-        });
       } catch (err) {
         console.error('Enhanced presence error:', err);
         if (mounted) {
@@ -310,12 +320,14 @@ export function useEnhancedPresence({
 
   // Update presence data
   const updatePresence = useCallback(
-    (updates: Partial<{
-      activity: string;
-      viewport: { scroll: number; zoom: number; section: string };
-      cursorPosition: number;
-      selection: { start: number; end: number; text?: string };
-    }>) => {
+    (
+      updates: Partial<{
+        activity: string;
+        viewport: { scroll: number; zoom: number; section: string };
+        cursorPosition: number;
+        selection: { start: number; end: number; text?: string };
+      }>
+    ) => {
       if (!channelRef.current || !isConnected) return;
 
       channelRef.current.presence.update({
@@ -386,7 +398,7 @@ export function useEnhancedPresence({
     updateCursor,
     updateSelection,
     updatePresence,
-    
+
     // Computed stats
     totalMembers: members.length,
     activeMembers: members.filter((m) => m.status === 'active').length,
@@ -394,8 +406,3 @@ export function useEnhancedPresence({
     awayMembers: members.filter((m) => m.status === 'away').length,
   };
 }
-
-
-
-
-

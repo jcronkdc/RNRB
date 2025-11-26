@@ -323,11 +323,11 @@ export function EnhancedChat({
     const mentionRegex = /@(\w+)/g;
     const mentions: string[] = [];
     let match;
-    
+
     while ((match = mentionRegex.exec(text)) !== null) {
       mentions.push(match[1]);
     }
-    
+
     return mentions;
   };
 
@@ -339,10 +339,10 @@ export function EnhancedChat({
   return (
     <div className="flex h-[700px] flex-col">
       {/* Chat Header */}
-      <div className="border-border flex items-center justify-between border-b pb-4">
+      <div className="flex items-center justify-between border-b border-border pb-4">
         <div>
-          <h3 className="text-foreground text-xl font-semibold">Project Chat</h3>
-          <p className="text-muted-foreground text-sm">{projectName}</p>
+          <h3 className="text-xl font-semibold text-foreground">Project Chat</h3>
+          <p className="text-sm text-muted-foreground">{projectName}</p>
         </div>
         <Button variant="secondary" size="sm">
           <MoreVertical className="h-4 w-4" />
@@ -367,7 +367,7 @@ export function EnhancedChat({
                 {/* Avatar */}
                 <div className="flex-shrink-0">
                   {showAvatar ? (
-                    <div className="bg-brand-primary/20 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
                       {message.senderAvatar ? (
                         <img
                           src={message.senderAvatar}
@@ -389,10 +389,10 @@ export function EnhancedChat({
                 >
                   {showAvatar && (
                     <div className="mb-1 flex items-center gap-2">
-                      <span className="text-foreground text-sm font-medium">
+                      <span className="text-sm font-medium text-foreground">
                         {message.senderName}
                       </span>
-                      <span className="text-muted-foreground text-xs">
+                      <span className="text-xs text-muted-foreground">
                         {formatTime(message.timestamp)}
                       </span>
                     </div>
@@ -404,7 +404,7 @@ export function EnhancedChat({
                       className={`rounded-2xl px-4 py-2 ${
                         isOwnMessage
                           ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border-border bg-surface text-foreground border'
+                          : 'border border-border bg-surface text-foreground'
                       }`}
                     >
                       <p className="whitespace-pre-wrap break-words text-sm">{message.content}</p>
@@ -441,11 +441,11 @@ export function EnhancedChat({
                     key={i}
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
-                    className="bg-brand-primary h-2 w-2 rounded-full"
+                    className="h-2 w-2 rounded-full bg-brand-primary"
                   />
                 ))}
               </div>
-              <span className="text-muted-foreground text-sm">
+              <span className="text-sm text-muted-foreground">
                 {Array.from(typingUsers.values()).length === 1
                   ? `${Array.from(typingUsers.values())[0].userName} is typing...`
                   : `${Array.from(typingUsers.values()).length} people are typing...`}
@@ -458,7 +458,7 @@ export function EnhancedChat({
       </div>
 
       {/* Input Area */}
-      <div className="border-border space-y-3 border-t pt-4">
+      <div className="space-y-3 border-t border-border pt-4">
         {/* Voice Recorder */}
         {showVoiceRecorder && (
           <VoiceMessageRecorder
@@ -470,18 +470,14 @@ export function EnhancedChat({
 
         {/* Reply indicator */}
         {replyingTo && (
-          <div className="border-border bg-surface flex items-center justify-between rounded-lg border p-2">
+          <div className="flex items-center justify-between rounded-lg border border-border bg-surface p-2">
             <div className="flex items-center gap-2">
               <Reply className="h-4 w-4 text-brand-primary" />
-              <span className="text-muted-foreground text-sm">
+              <span className="text-sm text-muted-foreground">
                 Replying to {replyingTo.senderName}
               </span>
             </div>
-            <Button
-              onClick={() => setReplyingTo(null)}
-              variant="secondary"
-              size="sm"
-            >
+            <Button onClick={() => setReplyingTo(null)} variant="secondary" size="sm">
               Cancel
             </Button>
           </div>
@@ -504,27 +500,22 @@ export function EnhancedChat({
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
-              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-none focus:ring-2"
+              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               style={{ minHeight: '48px', maxHeight: '120px' }}
             />
           </div>
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || sending}
-            className="bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90 mb-2"
+            className="mb-2 bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90"
           >
             <Send className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-muted-foreground text-xs">
+        <p className="text-xs text-muted-foreground">
           Press Enter to send, Shift+Enter for new line • Type @ to mention someone
         </p>
       </div>
     </div>
   );
 }
-
-
-
-
-

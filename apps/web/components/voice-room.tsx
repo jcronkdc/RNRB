@@ -18,15 +18,7 @@
 import { Button } from '@cronkwaters/ui';
 import { DailyProvider } from '@daily-co/daily-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Mic,
-  MicOff,
-  PhoneOff,
-  Users,
-  Volume2,
-  VolumeX,
-  Settings,
-} from 'lucide-react';
+import { Mic, MicOff, PhoneOff, Users, Volume2, VolumeX, Settings } from 'lucide-react';
 import { useState } from 'react';
 
 import { useVoiceRoom } from '@/hooks/use-voice-room';
@@ -71,13 +63,13 @@ export function VoiceRoom({
 
   if (!isJoined) {
     return (
-      <div className={`border-border bg-surface rounded-lg border p-6 ${className}`}>
+      <div className={`rounded-lg border border-border bg-surface p-6 ${className}`}>
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h3 className="text-foreground text-lg font-semibold">Voice Room</h3>
-            <p className="text-muted-foreground text-sm">{projectName}</p>
+            <h3 className="text-lg font-semibold text-foreground">Voice Room</h3>
+            <p className="text-sm text-muted-foreground">{projectName}</p>
           </div>
-          <div className="bg-surface-muted flex h-10 w-10 items-center justify-center rounded-full">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-muted">
             <Volume2 className="h-5 w-5 text-brand-primary" />
           </div>
         </div>
@@ -88,24 +80,18 @@ export function VoiceRoom({
           </div>
         )}
 
-        <p className="text-muted-foreground mb-4 text-sm">
-          Join the voice room to collaborate in real-time while working on the project. Your
-          audio stays on in the background - just like Discord!
+        <p className="mb-4 text-sm text-muted-foreground">
+          Join the voice room to collaborate in real-time while working on the project. Your audio
+          stays on in the background - just like Discord!
         </p>
 
-        <Button
-          onClick={joinRoom}
-          disabled={isConnecting}
-          className="w-full"
-          size="lg"
-        >
+        <Button onClick={joinRoom} disabled={isConnecting} className="w-full" size="lg">
           {isConnecting ? 'Connecting...' : 'Join Voice Room'}
         </Button>
 
         {pushToTalk && (
-          <p className="text-muted-foreground mt-3 text-center text-xs">
-            Press and hold <kbd className="rounded bg-surface-muted px-2 py-1">Space</kbd> to
-            talk
+          <p className="mt-3 text-center text-xs text-muted-foreground">
+            Press and hold <kbd className="rounded bg-surface-muted px-2 py-1">Space</kbd> to talk
           </p>
         )}
       </div>
@@ -114,15 +100,15 @@ export function VoiceRoom({
 
   return (
     <DailyProvider>
-      <div className={`border-border bg-surface rounded-lg border ${className}`}>
+      <div className={`rounded-lg border border-border bg-surface ${className}`}>
         {/* Header */}
-        <div className="border-border flex items-center justify-between border-b p-4">
+        <div className="flex items-center justify-between border-b border-border p-4">
           <div>
-            <h3 className="text-foreground flex items-center gap-2 text-lg font-semibold">
+            <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
               <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
               Voice Room
             </h3>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               {participants.length} {participants.length === 1 ? 'person' : 'people'}
             </p>
           </div>
@@ -140,7 +126,7 @@ export function VoiceRoom({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className={`border-border flex items-center gap-3 rounded-lg border p-3 transition ${
+                className={`flex items-center gap-3 rounded-lg border border-border p-3 transition ${
                   participant.isSpeaking
                     ? 'border-brand-primary bg-brand-primary/5'
                     : 'bg-surface-muted'
@@ -148,7 +134,7 @@ export function VoiceRoom({
               >
                 {/* Avatar */}
                 <div className="relative flex-shrink-0">
-                  <div className="bg-brand-primary/20 text-foreground flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
                     {userAvatar && participant.id === 'local' ? (
                       <img
                         src={userAvatar}
@@ -175,16 +161,16 @@ export function VoiceRoom({
                 {/* Name and status */}
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-foreground text-sm font-medium">
+                    <span className="text-sm font-medium text-foreground">
                       {participant.userName}
                       {participant.id === 'local' && ' (You)'}
                     </span>
                   </div>
 
                   {/* Audio level bar */}
-                  <div className="bg-surface-muted mt-1 h-1.5 overflow-hidden rounded-full">
+                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-muted">
                     <motion.div
-                      className="bg-brand-primary h-full rounded-full"
+                      className="h-full rounded-full bg-brand-primary"
                       style={{
                         width: `${participant.audioLevel * 100}%`,
                       }}
@@ -205,7 +191,7 @@ export function VoiceRoom({
         </div>
 
         {/* Controls */}
-        <div className="border-border border-t p-4">
+        <div className="border-t border-border p-4">
           <div className="flex gap-2">
             {/* Mute/Unmute or Push-to-Talk */}
             {pushToTalk ? (
@@ -259,9 +245,9 @@ export function VoiceRoom({
           </div>
 
           {pushToTalk && (
-            <p className="text-muted-foreground mt-3 text-center text-xs">
-              Press and hold <kbd className="rounded bg-surface-muted px-2 py-1">Space</kbd> or
-              the button to talk
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              Press and hold <kbd className="rounded bg-surface-muted px-2 py-1">Space</kbd> or the
+              button to talk
             </p>
           )}
         </div>
@@ -269,8 +255,3 @@ export function VoiceRoom({
     </DailyProvider>
   );
 }
-
-
-
-
-

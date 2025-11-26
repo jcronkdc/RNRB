@@ -18,38 +18,38 @@ async function addOptimizedIndexes() {
       CREATE INDEX IF NOT EXISTS "ChatMessage_channelId_createdAt_idx" 
       ON "ChatMessage"("channelId", "createdAt" DESC)
     `);
-    
+
     await prisma.$executeRawUnsafe(`
       CREATE INDEX IF NOT EXISTS "ChatMessage_channelId_messageType_createdAt_idx" 
       ON "ChatMessage"("channelId", "messageType", "createdAt" DESC)
     `);
-    
+
     await prisma.$executeRawUnsafe(`
       CREATE INDEX IF NOT EXISTS "ChatMessage_senderId_createdAt_idx" 
       ON "ChatMessage"("senderId", "createdAt" DESC)
     `);
-    
+
     await prisma.$executeRawUnsafe(`
       CREATE INDEX IF NOT EXISTS "ChatMessage_channelType_channelId_idx" 
       ON "ChatMessage"("channelType", "channelId")
     `);
-    
+
     await prisma.$executeRawUnsafe(`
       CREATE INDEX IF NOT EXISTS "ChatMessage_threadId_createdAt_idx" 
       ON "ChatMessage"("threadId", "createdAt")
     `);
-    
+
     await prisma.$executeRawUnsafe(`
       CREATE INDEX IF NOT EXISTS "ChatMessage_isDeleted_channelId_createdAt_idx" 
       ON "ChatMessage"("isDeleted", "channelId", "createdAt")
     `);
-    
+
     // Add GIN index for mentions array
     await prisma.$executeRawUnsafe(`
       CREATE INDEX IF NOT EXISTS "ChatMessage_mentions_idx" 
       ON "ChatMessage" USING GIN ("mentions")
     `);
-    
+
     // Analyze table
     await prisma.$executeRawUnsafe(`ANALYZE "ChatMessage"`);
 
@@ -63,8 +63,3 @@ async function addOptimizedIndexes() {
 }
 
 addOptimizedIndexes();
-
-
-
-
-

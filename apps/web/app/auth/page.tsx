@@ -8,8 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense, useState, useEffect } from 'react';
 
 import { signInWithCredentials } from '@/app/actions/auth';
-
-const NEXT_REDIRECT = 'NEXT_REDIRECT';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
 function AuthForm() {
   const searchParams = useSearchParams();
@@ -62,40 +61,29 @@ function AuthForm() {
           text: 'Account created! Signing you in...',
         });
 
-        setTimeout(async () => {
-          try {
-            const result = await signInWithCredentials({ email, password });
-            if (result && !result.success) {
-              throw new Error(result.error || 'Auto sign-in failed');
-            }
-          } catch (error: unknown) {
-            if (error && typeof error === 'object' && 'digest' in error) {
-              const err = error as { digest?: string };
-              if (err.digest?.startsWith(NEXT_REDIRECT)) {
-                return;
-              }
-            }
-            console.error('[AUTH] Sign-in error:', error);
-            throw error;
-          }
-        }, 1000);
-      } else {
-        try {
-          const result = await signInWithCredentials({ email, password });
-          if (result && !result.success) {
-            throw new Error(result.error || 'Sign in failed');
-          }
-        } catch (error: unknown) {
-          if (error && typeof error === 'object' && 'digest' in error) {
-            const err = error as { digest?: string };
-            if (err.digest?.startsWith(NEXT_REDIRECT)) {
-              return;
-            }
-          }
-          throw error;
+        // Auto sign-in immediately (no setTimeout to avoid async boundary issues)
+        const result = await signInWithCredentials({ email, password });
+        if (result && !result.success) {
+          throw new Error(result.error || 'Auto sign-in failed. Please sign in manually.');
         }
+        // If successful, redirect will happen automatically (via thrown redirect error)
+      } else {
+        // Sign in flow
+        const result = await signInWithCredentials({ email, password });
+        if (result && !result.success) {
+          throw new Error(result.error || 'Sign in failed');
+        }
+        // If successful, redirect will happen automatically (via thrown redirect error)
       }
     } catch (error) {
+      // Redirect errors are successful auth - silently return to allow server redirect
+      if (isRedirectError(error)) {
+        // Keep loading state active during redirect to prevent UI flash
+        // The page will be unmounted during navigation, so no need to reset
+        return; // Don't re-throw; let Next.js handle the server-side redirect
+      }
+
+      // Handle actual errors
       console.error('[AUTH] Password auth error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
       setMessage({
@@ -112,7 +100,7 @@ function AuthForm() {
       <div className="absolute inset-0">
         {/* Base gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950" />
-        
+
         {/* Accent glow - top left */}
         <motion.div
           animate={{
@@ -122,7 +110,7 @@ function AuthForm() {
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full bg-orange-600/20 blur-[120px]"
         />
-        
+
         {/* Accent glow - bottom right */}
         <motion.div
           animate={{
@@ -134,7 +122,7 @@ function AuthForm() {
         />
 
         {/* Subtle grid overlay */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
             backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
@@ -169,7 +157,7 @@ function AuthForm() {
                 className="h-full w-full object-contain opacity-50"
               />
             </div>
-            
+
             {/* Main logo */}
             <Image
               src="/rnrdark.png"
@@ -192,7 +180,7 @@ function AuthForm() {
               <span className="block text-7xl">ROCK N' ROLL</span>
               <span className="block text-7xl text-orange-500">BASEMENT</span>
             </h1>
-            
+
             <p className="mt-6 text-xl font-light tracking-wide text-zinc-400">
               Where musicians create together
             </p>
@@ -253,9 +241,7 @@ function AuthForm() {
                 {isSignup ? 'Create Account' : 'Welcome Back'}
               </h2>
               <p className="mt-2 text-zinc-500">
-                {isSignup
-                  ? 'Start your music journey'
-                  : 'Sign in to continue'}
+                {isSignup ? 'Start your music journey' : 'Sign in to continue'}
               </p>
             </div>
 

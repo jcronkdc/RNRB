@@ -35,15 +35,13 @@ export default function Error({
         </p>
 
         {error.digest && (
-          <p className="mb-4 text-xs text-muted-foreground">
-            Error ID: {error.digest}
-          </p>
+          <p className="mb-4 text-xs text-muted-foreground">Error ID: {error.digest}</p>
         )}
 
-        <div className="flex gap-3 justify-center">
+        <div className="flex justify-center gap-3">
           <button
             onClick={reset}
-            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium"
           >
             <RefreshCw className="h-4 w-4" />
             Try Again
@@ -60,9 +58,3 @@ export default function Error({
     </div>
   );
 }
-
-
-
-
-
-

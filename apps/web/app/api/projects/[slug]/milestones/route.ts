@@ -7,10 +7,7 @@ import { db } from '@/lib/db';
  * GET /api/projects/[slug]/milestones
  * Get all milestones for a project
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -83,10 +80,7 @@ export async function GET(
  * POST /api/projects/[slug]/milestones
  * Create a new milestone
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -153,8 +147,3 @@ export async function POST(
     return NextResponse.json({ error: 'Failed to create milestone' }, { status: 500 });
   }
 }
-
-
-
-
-

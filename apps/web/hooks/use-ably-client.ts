@@ -1,15 +1,15 @@
 /**
  * Shared Ably Client Hook
- * 
+ *
  * SOLVES: Multiple simultaneous Ably connections causing token timeouts
- * 
+ *
  * Problem:
- * - Each component (PresenceIndicator, useCollaborativeCursors, ChatRoom) 
+ * - Each component (PresenceIndicator, useCollaborativeCursors, ChatRoom)
  *   was creating its own Ably connection
  * - This caused 3+ simultaneous token requests
  * - Token endpoint timeout after 10 seconds
  * - Browser console filled with Ably errors
- * 
+ *
  * Solution:
  * - Single shared Ably instance across all components
  * - Token request happens once, reused by all
@@ -45,7 +45,7 @@ async function getSharedAblyClient(userId: string): Promise<Realtime | null> {
   ablyInitPromise = (async () => {
     try {
       console.log('[Ably] Initializing shared client...');
-      
+
       // Check if Ably is available
       const response = await fetch('/api/ably/token', {
         method: 'GET',
@@ -100,7 +100,7 @@ async function getSharedAblyClient(userId: string): Promise<Realtime | null> {
       sharedAblyClient = client;
       connectionRefCount = 1;
       console.log('[Ably] ✅ Shared client connected');
-      
+
       return client;
     } catch (error) {
       console.error('[Ably] Failed to initialize:', error);
@@ -117,7 +117,7 @@ async function getSharedAblyClient(userId: string): Promise<Realtime | null> {
  */
 function releaseSharedAblyClient() {
   connectionRefCount--;
-  
+
   // Close connection when last user disconnects
   if (connectionRefCount <= 0 && sharedAblyClient) {
     console.log('[Ably] Closing shared client (no active users)');
@@ -166,7 +166,7 @@ export function useAblyClient(userId: string | undefined) {
           if (!mountedRef.current) return;
 
           console.log('[Ably] Connection state:', stateChange.current);
-          
+
           switch (stateChange.current) {
             case 'connected':
               setStatus('connected');
@@ -229,5 +229,3 @@ export function closeSharedAblyClient() {
     connectionRefCount = 0;
   }
 }
-
-

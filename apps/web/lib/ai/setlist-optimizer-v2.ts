@@ -1,17 +1,17 @@
 /**
  * SETLIST OPTIMIZER - Honest & Effective
- * 
+ *
  * What this ACTUALLY does:
  * - Matches your target duration (±5 min)
  * - Prevents 3+ songs in same key (vocal health)
  * - Varies tempo to avoid monotony
  * - Respects your constraints (required/excluded songs)
- * 
+ *
  * What this DOESN'T do:
  * - Read the crowd (we don't have that data)
  * - Guarantee perfection (you'll likely need to tweak)
  * - Work magic with bad data (GIGO: garbage in, garbage out)
- * 
+ *
  * REQUIRES: Songs with key, tempo, and duration metadata
  */
 
@@ -87,7 +87,7 @@ export function generateOptimalSetlist(
   // Apply constraints
   let pool = [...availableSongs];
   if (options.excludedSongs) {
-    pool = pool.filter(s => !options.excludedSongs!.includes(s.id));
+    pool = pool.filter((s) => !options.excludedSongs!.includes(s.id));
   }
 
   if (pool.length === 0) {
@@ -99,14 +99,14 @@ export function generateOptimalSetlist(
     generateByTempo(pool, options, metadata),
     generateByKey(pool, options, metadata),
     generateRandom(pool, options, metadata),
-  ].filter(c => c.length > 0);
+  ].filter((c) => c.length > 0);
 
   if (candidates.length === 0) {
     return emptyResult('Could not generate setlist', 'Check song metadata (key/tempo/duration)');
   }
 
   // Score and pick best
-  const scored = candidates.map(songs => ({
+  const scored = candidates.map((songs) => ({
     songs,
     score: scoreSetlist(songs, options, metadata),
   }));
@@ -130,20 +130,22 @@ export function generateOptimalSetlist(
  */
 function analyzeSongs(songs: Song[]) {
   const missingData = {
-    noKey: songs.filter(s => !s.key).length,
-    noTempo: songs.filter(s => !s.tempo).length,
-    noDuration: songs.filter(s => !s.duration).length,
+    noKey: songs.filter((s) => !s.key).length,
+    noTempo: songs.filter((s) => !s.tempo).length,
+    noDuration: songs.filter((s) => !s.duration).length,
   };
 
   const total = songs.length * 3; // 3 fields per song
-  const present = songs.length * 3 - (missingData.noKey + missingData.noTempo + missingData.noDuration);
+  const present =
+    songs.length * 3 - (missingData.noKey + missingData.noTempo + missingData.noDuration);
   const dataQualityScore = (present / total) * 100;
 
-  const tempos = songs.filter(s => s.tempo).map(s => s.tempo!);
+  const tempos = songs.filter((s) => s.tempo).map((s) => s.tempo!);
   const avgTempo = tempos.length > 0 ? tempos.reduce((sum, t) => sum + t, 0) / tempos.length : 120;
-  
-  const durations = songs.filter(s => s.duration).map(s => s.duration!);
-  const avgDuration = durations.length > 0 ? durations.reduce((sum, d) => sum + d, 0) / durations.length : 180;
+
+  const durations = songs.filter((s) => s.duration).map((s) => s.duration!);
+  const avgDuration =
+    durations.length > 0 ? durations.reduce((sum, d) => sum + d, 0) / durations.length : 180;
 
   return {
     avgTempo,
@@ -158,12 +160,12 @@ function analyzeSongs(songs: Song[]) {
  */
 function generateByTempo(pool: Song[], options: OptimizerOptions, metadata: any): Song[] {
   const targetSeconds = options.targetDuration * 60;
-  
+
   // Sort by tempo based on energy profile
   const sorted = [...pool].sort((a, b) => {
     const tempoA = a.tempo || metadata.avgTempo;
     const tempoB = b.tempo || metadata.avgTempo;
-    
+
     if (options.energyProfile === 'high') {
       return tempoB - tempoA; // Fastest first
     } else if (options.energyProfile === 'mellow') {
@@ -195,10 +197,10 @@ function generateByKey(pool: Song[], options: OptimizerOptions, metadata: any): 
   // Greedy: pick song with closest key
   while (remaining.length > 0 && currentDuration < targetSeconds + 300) {
     const currentKey = setlist[setlist.length - 1].key;
-    
+
     // Find song with same or closest key
     const candidates = remaining
-      .map(song => ({
+      .map((song) => ({
         song,
         distance: currentKey && song.key ? getKeyDistance(currentKey, song.key) : 12,
       }))
@@ -236,7 +238,7 @@ function buildSetlist(sorted: Song[], targetSeconds: number, avgDuration: number
   for (const song of sorted) {
     const duration = song.duration || avgDuration;
     if (currentDuration + duration > targetSeconds + 300) continue;
-    
+
     setlist.push(song);
     currentDuration += duration;
 
@@ -260,11 +262,7 @@ function scoreSetlist(songs: Song[], options: OptimizerOptions, metadata: any): 
   const dataQuality = metadata.dataQualityScore;
 
   // Weighted average
-  const overall = 
-    keyVariety * 0.3 +
-    tempoVariety * 0.3 +
-    durationMatch * 0.3 +
-    dataQuality * 0.1;
+  const overall = keyVariety * 0.3 + tempoVariety * 0.3 + durationMatch * 0.3 + dataQuality * 0.1;
 
   return { overall, keyVariety, tempoVariety, durationMatch, dataQuality };
 }
@@ -299,7 +297,7 @@ function scoreKeyVariety(songs: Song[]): number {
  * Score tempo variety (avoid monotonous pacing)
  */
 function scoreTempoVariety(songs: Song[], avgTempo: number): number {
-  const tempos = songs.filter(s => s.tempo).map(s => s.tempo!);
+  const tempos = songs.filter((s) => s.tempo).map((s) => s.tempo!);
   if (tempos.length < 3) return 50; // Not enough data
 
   // Calculate standard deviation
@@ -333,17 +331,17 @@ function postProcess(songs: Song[], options: OptimizerOptions): Song[] {
 
   // Force opener
   if (options.openingSong) {
-    const opener = result.find(s => s.id === options.openingSong);
+    const opener = result.find((s) => s.id === options.openingSong);
     if (opener) {
-      result = [opener, ...result.filter(s => s.id !== options.openingSong)];
+      result = [opener, ...result.filter((s) => s.id !== options.openingSong)];
     }
   }
 
   // Force closer
   if (options.closingSong) {
-    const closer = result.find(s => s.id === options.closingSong);
+    const closer = result.find((s) => s.id === options.closingSong);
     if (closer) {
-      result = [...result.filter(s => s.id !== options.closingSong), closer];
+      result = [...result.filter((s) => s.id !== options.closingSong), closer];
     }
   }
 
@@ -372,9 +370,13 @@ function postProcess(songs: Song[], options: OptimizerOptions): Song[] {
 /**
  * Generate insights
  */
-function generateInsights(songs: Song[], score: SetlistScore, metadata: any): OptimizedSetlist['insights'] {
+function generateInsights(
+  songs: Song[],
+  score: SetlistScore,
+  metadata: any
+): OptimizedSetlist['insights'] {
   const totalDuration = songs.reduce((sum, s) => sum + (s.duration || metadata.avgDuration), 0);
-  const tempos = songs.filter(s => s.tempo).map(s => s.tempo!);
+  const tempos = songs.filter((s) => s.tempo).map((s) => s.tempo!);
   const avgTempo = tempos.length > 0 ? tempos.reduce((sum, t) => sum + t, 0) / tempos.length : 0;
 
   let keyChanges = 0;
@@ -389,7 +391,9 @@ function generateInsights(songs: Song[], score: SetlistScore, metadata: any): Op
 
   // Data quality warnings
   if (metadata.dataQualityScore < 70) {
-    warnings.push(`${metadata.missingData.noKey + metadata.missingData.noTempo + metadata.missingData.noDuration} songs missing metadata (key/tempo/duration)`);
+    warnings.push(
+      `${metadata.missingData.noKey + metadata.missingData.noTempo + metadata.missingData.noDuration} songs missing metadata (key/tempo/duration)`
+    );
     suggestions.push('Add missing metadata for better optimization');
   }
 
@@ -464,5 +468,3 @@ function getKeyDistance(key1: string, key2: string): number {
   const distance = Math.abs(idx1 - idx2);
   return Math.min(distance, 12 - distance);
 }
-
-

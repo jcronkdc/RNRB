@@ -1,6 +1,6 @@
 /**
  * STANDARDIZED ERROR HANDLING
- * 
+ *
  * Provides consistent error handling across all API routes.
  * - Never exposes internal error details to clients
  * - Structured error codes for frontend handling
@@ -61,25 +61,21 @@ export class AppError extends Error {
     return new AppError(message, 'BAD_REQUEST', 400);
   }
 
-  static subscriptionRequired(
-    feature: string,
-    requiredTier: string
-  ): AppError {
+  static subscriptionRequired(feature: string, requiredTier: string): AppError {
     return new AppError(
       `Upgrade to ${requiredTier} plan to access ${feature}`,
       'SUBSCRIPTION_REQUIRED',
       403,
       undefined,
-      { feature, requiredTier, upgradeUrl: `/settings/billing?upgrade=${requiredTier.toLowerCase()}` }
+      {
+        feature,
+        requiredTier,
+        upgradeUrl: `/settings/billing?upgrade=${requiredTier.toLowerCase()}`,
+      }
     );
   }
 
-  static quotaExceeded(
-    resource: string,
-    used: number,
-    limit: number,
-    tier: string
-  ): AppError {
+  static quotaExceeded(resource: string, used: number, limit: number, tier: string): AppError {
     return new AppError(
       `${resource} quota exceeded (${used}/${limit})`,
       'QUOTA_EXCEEDED',
@@ -212,5 +208,3 @@ export function withErrorHandler<T extends unknown[]>(
     }
   };
 }
-
-

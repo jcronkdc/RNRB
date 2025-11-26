@@ -23,7 +23,7 @@ export async function buildAssistantContext(userId: string, currentPage?: string
       usagePeriodStart: true,
       subscriptionRenewsAt: true,
       createdAt: true,
-      
+
       // Projects & collaborations
       memberships: {
         take: 5,
@@ -40,7 +40,7 @@ export async function buildAssistantContext(userId: string, currentPage?: string
           },
         },
       },
-      
+
       projectMemberships: {
         take: 5,
         orderBy: { createdAt: 'desc' },
@@ -64,7 +64,7 @@ export async function buildAssistantContext(userId: string, currentPage?: string
           },
         },
       },
-      
+
       // Recent uploads
       uploadedAssets: {
         take: 5,
@@ -77,7 +77,7 @@ export async function buildAssistantContext(userId: string, currentPage?: string
           createdAt: true,
         },
       },
-      
+
       // Tours
       studioSessions: {
         take: 3,
@@ -104,7 +104,7 @@ export async function buildAssistantContext(userId: string, currentPage?: string
   // Load platform knowledge base
   const platformKnowledgePath = path.join(process.cwd(), 'lib/ai/platform-knowledge.md');
   let platformKnowledge = '';
-  
+
   try {
     platformKnowledge = fs.readFileSync(platformKnowledgePath, 'utf-8');
   } catch (error) {
@@ -114,7 +114,7 @@ export async function buildAssistantContext(userId: string, currentPage?: string
 
   // Calculate usage quotas based on tier
   const quotas = getQuotasForTier(user.subscriptionTier);
-  
+
   // Calculate days until reset
   const daysUntilReset = user.usagePeriodStart
     ? Math.ceil(
@@ -130,9 +130,7 @@ export async function buildAssistantContext(userId: string, currentPage?: string
       name: user.name || 'there',
       tier: user.subscriptionTier,
       status: user.subscriptionStatus,
-      accountAge: Math.floor(
-        (Date.now() - user.createdAt.getTime()) / (24 * 60 * 60 * 1000)
-      ),
+      accountAge: Math.floor((Date.now() - user.createdAt.getTime()) / (24 * 60 * 60 * 1000)),
     },
     usage: {
       aiRequests: {
@@ -145,9 +143,10 @@ export async function buildAssistantContext(userId: string, currentPage?: string
         used: user.videoMinutesUsed,
         limit: quotas.videoMinutes,
         remaining: Math.max(0, quotas.videoMinutes - user.videoMinutesUsed),
-        percentage: quotas.videoMinutes > 0
-          ? Math.round((user.videoMinutesUsed / quotas.videoMinutes) * 100)
-          : 0,
+        percentage:
+          quotas.videoMinutes > 0
+            ? Math.round((user.videoMinutesUsed / quotas.videoMinutes) * 100)
+            : 0,
       },
       assistant: {
         used: user.assistantConversationsUsed,
@@ -298,5 +297,3 @@ ${platformKnowledge}
 
 Now assist the user with their question, considering their context and current page.`;
 }
-
-

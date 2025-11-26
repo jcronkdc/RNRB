@@ -32,7 +32,7 @@ export function WaveformPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(0.8);
   const [currentLyric, setCurrentLyric] = useState<LyricTimestamp | null>(null);
-  
+
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
 
@@ -187,9 +187,7 @@ export function WaveformPlayer({
       {currentLyric && (
         <div className="mb-6 rounded-lg border-2 border-orange-500/30 bg-orange-500/10 p-4 text-center">
           <p className="text-lg font-medium text-white">{currentLyric.text}</p>
-          <p className="mt-1 text-xs text-gray-400">
-            {formatTime(currentLyric.timestamp)}
-          </p>
+          <p className="mt-1 text-xs text-gray-400">{formatTime(currentLyric.timestamp)}</p>
         </div>
       )}
 
@@ -265,8 +263,3 @@ export function WaveformPlayer({
     </Card>
   );
 }
-
-
-
-
-

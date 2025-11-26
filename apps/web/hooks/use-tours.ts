@@ -105,9 +105,7 @@ export function useTours(options: UseToursOptions = {}) {
 
   // Optimistic update for updating a tour
   const updateTourOptimistic = useCallback((tourId: string, updates: Partial<Tour>) => {
-    setTours((prev) =>
-      prev.map((tour) => (tour.id === tourId ? { ...tour, ...updates } : tour))
-    );
+    setTours((prev) => prev.map((tour) => (tour.id === tourId ? { ...tour, ...updates } : tour)));
   }, []);
 
   // Optimistic update for deleting a tour
@@ -137,8 +135,3 @@ export function useTours(options: UseToursOptions = {}) {
     deleteTourOptimistic,
   };
 }
-
-
-
-
-

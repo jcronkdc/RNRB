@@ -24,14 +24,11 @@ export async function POST(req: NextRequest) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
     const userId = session.user.id;
-    
+
     // Parse and validate request body
     const body = await req.json();
     const validatedData = generateTrackSchema.parse(body);
@@ -76,7 +73,7 @@ export async function POST(req: NextRequest) {
     };
 
     const userLimit = monthlyLimits[user.subscriptionTier] || monthlyLimits.free;
-    
+
     if (user.aiRequestsUsed + creditsNeeded > userLimit) {
       return NextResponse.json(
         {
@@ -101,7 +98,7 @@ export async function POST(req: NextRequest) {
     // - Stable Audio
     // - MusicGen
     // - Custom trained model
-    
+
     // Simulate AI generation delay
     await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -142,7 +139,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error('POST /api/tracks/generate error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
@@ -221,8 +218,3 @@ function generateTrackTitle(params: z.infer<typeof generateTrackSchema>): string
 
   return `${title} - ${timestamp}`;
 }
-
-
-
-
-

@@ -13,7 +13,12 @@
  * - Spatial audio (optional)
  */
 
-import { useDaily, useParticipantIds, useLocalParticipant, useAudioTrack } from '@daily-co/daily-react';
+import {
+  useDaily,
+  useParticipantIds,
+  useLocalParticipant,
+  useAudioTrack,
+} from '@daily-co/daily-react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 
 interface VoiceRoomConfig {
@@ -233,8 +238,3 @@ export function useVoiceRoom(config: VoiceRoomConfig) {
     stopTalking, // For push-to-talk
   };
 }
-
-
-
-
-

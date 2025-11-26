@@ -15,14 +15,12 @@ import {
   Plus,
   TrendingUp,
 } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { ErrorBoundary, SilentErrorBoundary } from '@/components/error-boundary';
+import { ErrorBoundary } from '@/components/error-boundary';
 import { getStoragePercentage, useDashboardData } from '@/hooks/use-dashboard-data';
-import { usePerformanceMonitor } from '@/hooks/use-performance-monitor';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
 // Project type for recent projects
@@ -32,19 +30,6 @@ type RecentProject = {
   slug: string;
   song_count: number;
 };
-
-// Dynamically import activity feed with loading fallback
-const CompactActivityFeed = dynamic(
-  () => import('@/components/activity-feed').then((m) => m.CompactActivityFeed),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--muted)' }} />
-      </div>
-    ),
-  }
-);
 
 // Stat card component using CSS variables
 const StatCard = memo(
@@ -352,19 +337,27 @@ function DashboardContent() {
   const router = useRouter();
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Performance monitoring
-  usePerformanceMonitor('dashboard');
+  // Fix hydration mismatch - only enable data fetching after client mount
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Dashboard data with caching
   const { data: dashboardStats, loading: statsLoading } = useDashboardData({
     refreshInterval: 60000,
-    enabled: !!user && !loading,
+    enabled: isMounted && !!user && !loading,
   });
+
+  // Debug: Log dashboard stats
+  useEffect(() => {
+    console.log('[Dashboard Page] Stats:', dashboardStats);
+    console.log('[Dashboard Page] Stats Loading:', statsLoading);
+  }, [dashboardStats, statsLoading]);
 
   // Fetch recent projects
   const loadProjects = useCallback(async () => {
-    if (!user) return;
     setLoadingProjects(true);
     try {
       const response = await fetch('/api/projects');
@@ -377,13 +370,13 @@ function DashboardContent() {
     } finally {
       setLoadingProjects(false);
     }
-  }, [user]);
+  }, []); // Stable reference - no dependencies needed
 
   useEffect(() => {
     if (user && !loading) {
       loadProjects();
     }
-  }, [user, loading, loadProjects]);
+  }, [user, loading, loadProjects]); // Now includes loadProjects
 
   // Stable user name
   const userName = useMemo(() => {
@@ -397,19 +390,21 @@ function DashboardContent() {
     criticalRoutes.forEach((route) => {
       router.prefetch(route);
     });
-  }, [router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount - router.prefetch is stable
 
-  // Track dashboard view
+  // Track dashboard view (client-side only after mount)
   useEffect(() => {
-    if (user && typeof window !== 'undefined' && window.posthog) {
+    if (user && isMounted && typeof window !== 'undefined' && window.posthog) {
       window.posthog.capture('dashboard_viewed', {
         user_id: user.id,
         timestamp: Date.now(),
       });
     }
-  }, [user]);
+  }, [user, isMounted]);
 
-  if (loading && !user) {
+  // Show skeleton only during initial load or before hydration
+  if (!isMounted || (loading && !user)) {
     return <DashboardSkeleton />;
   }
 

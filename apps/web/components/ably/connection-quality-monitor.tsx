@@ -21,7 +21,10 @@ interface QualityMetrics {
   uptime: number; // seconds
 }
 
-export function ConnectionQualityMonitor({ client, showDetails = false }: ConnectionQualityMonitorProps) {
+export function ConnectionQualityMonitor({
+  client,
+  showDetails = false,
+}: ConnectionQualityMonitorProps) {
   const [metrics, setMetrics] = useState<QualityMetrics>({
     level: 'offline',
     latency: 0,
@@ -39,7 +42,7 @@ export function ConnectionQualityMonitor({ client, showDetails = false }: Connec
 
     try {
       const start = Date.now();
-      
+
       // Ping the server using connection state check
       const state = client.connection.state;
       const latency = Date.now() - start;
@@ -65,7 +68,7 @@ export function ConnectionQualityMonitor({ client, showDetails = false }: Connec
         uptime,
       });
     } catch (error) {
-      setMetrics(prev => ({
+      setMetrics((prev) => ({
         ...prev,
         level: 'offline',
         connectionState: 'failed',
@@ -79,8 +82,8 @@ export function ConnectionQualityMonitor({ client, showDetails = false }: Connec
 
     const handleConnected = () => {
       connectedAtRef[1](Date.now());
-      setMetrics(prev => ({ 
-        ...prev, 
+      setMetrics((prev) => ({
+        ...prev,
         level: 'good',
         connectionState: 'connected',
         reconnectAttempts: 0,
@@ -88,24 +91,24 @@ export function ConnectionQualityMonitor({ client, showDetails = false }: Connec
     };
 
     const handleDisconnected = () => {
-      setMetrics(prev => ({ 
-        ...prev, 
+      setMetrics((prev) => ({
+        ...prev,
         level: 'poor',
         connectionState: 'disconnected',
       }));
     };
 
     const handleSuspended = () => {
-      setMetrics(prev => ({ 
-        ...prev, 
+      setMetrics((prev) => ({
+        ...prev,
         level: 'poor',
         connectionState: 'suspended',
       }));
     };
 
     const handleFailed = () => {
-      setMetrics(prev => ({ 
-        ...prev, 
+      setMetrics((prev) => ({
+        ...prev,
         level: 'offline',
         connectionState: 'failed',
         reconnectAttempts: prev.reconnectAttempts + 1,
@@ -179,18 +182,16 @@ export function ConnectionQualityMonitor({ client, showDetails = false }: Connec
       className="fixed right-4 top-20 z-50"
     >
       <div
-        className={`border-border bg-surface/95 cursor-pointer rounded-lg border p-2 shadow-lg backdrop-blur-sm transition-all ${
+        className={`cursor-pointer rounded-lg border border-border bg-surface/95 p-2 shadow-lg backdrop-blur-sm transition-all ${
           isExpanded ? 'w-64' : 'w-auto'
         }`}
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-2">
-          <div className={getStatusColor(metrics.level)}>
-            {getStatusIcon(metrics.level)}
-          </div>
-          
+          <div className={getStatusColor(metrics.level)}>{getStatusIcon(metrics.level)}</div>
+
           {!isExpanded && (
-            <span className="text-muted-foreground text-xs font-medium">
+            <span className="text-xs font-medium text-muted-foreground">
               {metrics.level === 'offline' ? 'Offline' : `${metrics.latency}ms`}
             </span>
           )}
@@ -202,7 +203,7 @@ export function ConnectionQualityMonitor({ client, showDetails = false }: Connec
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="text-muted-foreground mt-2 space-y-1 text-xs"
+              className="mt-2 space-y-1 text-xs text-muted-foreground"
             >
               <div className="flex justify-between">
                 <span>Status:</span>
@@ -221,7 +222,7 @@ export function ConnectionQualityMonitor({ client, showDetails = false }: Connec
                 <span className="font-medium">{metrics.reconnectAttempts}</span>
               </div>
               {metrics.lastPing && (
-                <div className="text-muted-foreground/60 flex justify-between text-[10px]">
+                <div className="flex justify-between text-[10px] text-muted-foreground/60">
                   <span>Last ping:</span>
                   <span>{new Date(metrics.lastPing).toLocaleTimeString()}</span>
                 </div>
@@ -233,8 +234,3 @@ export function ConnectionQualityMonitor({ client, showDetails = false }: Connec
     </motion.div>
   );
 }
-
-
-
-
-

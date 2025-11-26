@@ -76,12 +76,16 @@ COLLABORATION AGREEMENT
 
 This Collaboration Agreement ("Agreement") is entered into on ${date}, by and between the following parties (collectively, the "Parties"):
 
-${copyrightInfo.splits.map((split, idx) => `
+${copyrightInfo.splits
+  .map(
+    (split, idx) => `
 ${idx + 1}. ${split.contributorName} (${split.percentage}% ownership)
    Role: ${split.role.charAt(0).toUpperCase() + split.role.slice(1)}
    ${split.email ? `Email: ${split.email}` : ''}
    ${split.proAffiliation ? `PRO: ${split.proAffiliation}` : ''}
-`).join('')}
+`
+  )
+  .join('')}
 
 REGARDING THE MUSICAL WORK:
 
@@ -97,23 +101,29 @@ ${copyrightInfo.copyrightHolder ? `Copyright Holder: ${copyrightInfo.copyrightHo
 
 The Parties agree that ownership of the musical work "${songTitle}" shall be divided as follows:
 
-${copyrightInfo.splits.map(split => `   • ${split.contributorName}: ${split.percentage}%`).join('\n')}
+${copyrightInfo.splits.map((split) => `   • ${split.contributorName}: ${split.percentage}%`).join('\n')}
 
 Each Party's share represents their ownership interest in all rights to the musical work, including but not limited to copyright, publishing rights, and all derivative works.
 
 2. GRANT OF RIGHTS
 
-${agreementType === 'joint' ? `
+${
+  agreementType === 'joint'
+    ? `
 This is a JOINT OWNERSHIP agreement. All Parties retain co-ownership rights and agree that:
    • No Party may exploit the work without consent of all Parties
    • All income shall be distributed according to the ownership percentages above
    • Each Party grants the others the right to administer their share
-` : agreementType === 'work-for-hire' ? `
+`
+    : agreementType === 'work-for-hire'
+      ? `
 This is a WORK FOR HIRE agreement where:
    • The hiring party retains 100% ownership of all rights
    • Contributors are compensated as agreed separately
    • Contributors waive all future claims to ownership
-` : ''}
+`
+      : ''
+}
 
 The Parties agree that the following rights are ${terms.syncRights ? 'INCLUDED' : 'EXCLUDED'}:
    • Synchronization Rights (use in TV, film, advertising)
@@ -153,13 +163,17 @@ SIGNATURES
 
 By signing below, each Party acknowledges that they have read, understood, and agree to be bound by the terms of this Agreement.
 
-${copyrightInfo.splits.map(split => `
+${copyrightInfo.splits
+  .map(
+    (split) => `
 ${split.contributorName}
 
 Signature: _________________________ Date: _____________
 
 Print Name: ${split.contributorName}
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 ---
 
@@ -192,7 +206,8 @@ DISCLAIMER: This agreement is a template and should be reviewed by a qualified m
   };
 
   const hasContributors = copyrightInfo.splits.length > 0;
-  const hasSplitsAt100 = copyrightInfo.splits.reduce((sum, split) => sum + split.percentage, 0) === 100;
+  const hasSplitsAt100 =
+    copyrightInfo.splits.reduce((sum, split) => sum + split.percentage, 0) === 100;
 
   return (
     <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
@@ -223,11 +238,15 @@ DISCLAIMER: This agreement is a template and should be reviewed by a qualified m
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <Icon className={`h-5 w-5 ${agreementType === type ? 'text-green-400' : 'text-gray-400'}`} />
+                  <Icon
+                    className={`h-5 w-5 ${agreementType === type ? 'text-green-400' : 'text-gray-400'}`}
+                  />
                   {agreementType === type && <CheckCircle className="h-4 w-4 text-green-400" />}
                 </div>
                 <div>
-                  <p className={`font-semibold ${agreementType === type ? 'text-white' : 'text-gray-300'}`}>
+                  <p
+                    className={`font-semibold ${agreementType === type ? 'text-white' : 'text-gray-300'}`}
+                  >
                     {template.name}
                   </p>
                   <p className="text-xs text-gray-500">{template.description}</p>
@@ -318,7 +337,9 @@ DISCLAIMER: This agreement is a template and should be reviewed by a qualified m
           <AlertCircle className="h-5 w-5 shrink-0 text-yellow-400" />
           <div>
             <p className="font-medium text-yellow-400">Contributors Required</p>
-            <p className="text-sm text-yellow-300">Add contributors to the Ownership Splits section first</p>
+            <p className="text-sm text-yellow-300">
+              Add contributors to the Ownership Splits section first
+            </p>
           </div>
         </div>
       )}
@@ -356,15 +377,11 @@ DISCLAIMER: This agreement is a template and should be reviewed by a qualified m
       <div className="mt-4 rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-4">
         <p className="mb-2 text-xs font-semibold uppercase text-yellow-400">Legal Notice</p>
         <p className="text-xs text-gray-400">
-          This agreement is a template and should be reviewed by a qualified music attorney before signing. 
-          It does not constitute legal advice. CronkWaters is not responsible for the legal validity of this document.
+          This agreement is a template and should be reviewed by a qualified music attorney before
+          signing. It does not constitute legal advice. CronkWaters is not responsible for the legal
+          validity of this document.
         </p>
       </div>
     </Card>
   );
 }
-
-
-
-
-

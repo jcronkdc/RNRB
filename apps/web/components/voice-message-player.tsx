@@ -119,18 +119,16 @@ export function VoiceMessagePlayer({
   const progress = duration > 0 ? currentTime / duration : 0;
 
   return (
-    <div className={`border-border bg-surface rounded-lg border p-3 ${className}`}>
+    <div className={`rounded-lg border border-border bg-surface p-3 ${className}`}>
       {/* Hidden audio element */}
       <audio ref={audioRef} src={audioUrl} />
 
       {/* Voice message header */}
       {(userName || timestamp) && (
         <div className="mb-2 flex items-center justify-between">
-          {userName && (
-            <span className="text-foreground text-sm font-medium">{userName}</span>
-          )}
+          {userName && <span className="text-sm font-medium text-foreground">{userName}</span>}
           {timestamp && (
-            <span className="text-muted-foreground text-xs">
+            <span className="text-xs text-muted-foreground">
               {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
@@ -140,17 +138,8 @@ export function VoiceMessagePlayer({
       {/* Player controls */}
       <div className="flex items-center gap-3">
         {/* Play/Pause button */}
-        <Button
-          onClick={togglePlayPause}
-          variant="secondary"
-          size="sm"
-          className="flex-shrink-0"
-        >
-          {isPlaying ? (
-            <Pause className="h-4 w-4" />
-          ) : (
-            <Play className="h-4 w-4 fill-current" />
-          )}
+        <Button onClick={togglePlayPause} variant="secondary" size="sm" className="flex-shrink-0">
+          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}
         </Button>
 
         {/* Waveform with progress */}
@@ -178,7 +167,7 @@ export function VoiceMessagePlayer({
         </div>
 
         {/* Time display */}
-        <div className="text-muted-foreground flex-shrink-0 font-mono text-xs">
+        <div className="flex-shrink-0 font-mono text-xs text-muted-foreground">
           {formatTime(currentTime)} / {formatTime(duration)}
         </div>
 
@@ -208,8 +197,3 @@ export function VoiceMessagePlayer({
     </div>
   );
 }
-
-
-
-
-

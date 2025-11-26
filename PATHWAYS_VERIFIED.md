@@ -8,6 +8,7 @@
 ## 🔐 AUTH PATHWAY (Edge → NextAuth → Database)
 
 ### Flow
+
 ```
 1. User visits /dashboard
    ↓
@@ -39,6 +40,7 @@
 ```
 
 ### Verification (2025-11-25)
+
 - ✅ Homepage loads: https://www.cronkwaters.com (HTTP 200)
 - ✅ Sign In button navigates to /auth
 - ✅ Auth page shows: Email/Password fields, Google OAuth button
@@ -50,6 +52,7 @@
 ## 🗄️ DATABASE PATHWAY (Prisma → Neon)
 
 ### Flow
+
 ```
 1. Application code
    - Import: import { prisma } from '@cronkwaters/db'
@@ -65,6 +68,7 @@
 ```
 
 ### Verification (2025-11-25)
+
 - ✅ Schema: 1302 lines, 40+ models
 - ✅ Auth tables: User, Account, Session, VerificationToken
 - ✅ Core tables: Org, Project, Song, Setlist, Show
@@ -76,6 +80,7 @@
 ## 🎨 UI PATHWAY (Next.js → React → Components)
 
 ### Flow
+
 ```
 1. Next.js 15 App Router
    - Pages: apps/web/app/**/page.tsx
@@ -102,6 +107,7 @@
 ```
 
 ### Verification (2025-11-25)
+
 - ✅ Homepage: Clean, no hydration errors
 - ✅ Auth page: Forms render correctly
 - ✅ Dashboard: Uses useRequireAuth hook
@@ -113,6 +119,7 @@
 ## 🔄 DATA FLOW (tRPC → Prisma → UI)
 
 ### Flow
+
 ```
 1. UI Component (React)
    - Uses tRPC hook: trpc.user.getProfile.useQuery()
@@ -136,6 +143,7 @@
 ```
 
 ### Verification (2025-11-25)
+
 - ✅ tRPC routers: 13 files in packages/trpc/src/
 - ✅ React Query: @tanstack/react-query@5.62.7
 - ✅ Type safety: TypeScript 5.6.3
@@ -146,6 +154,7 @@
 ## 🚀 DEPLOYMENT PATHWAY (Git → Vercel → Production)
 
 ### Flow
+
 ```
 1. Local Development
    - git add -A && git commit -m "..." && git push origin main
@@ -167,6 +176,7 @@
 ```
 
 ### Verification (2025-11-25)
+
 - ✅ Build: 4.7s with turbo cache (9m33s first run)
 - ✅ Deploy: Last deploy successful (876b4ce0)
 - ✅ Production: LIVE (HTTP 200, no hydration errors)
@@ -176,13 +186,13 @@
 
 ## 📊 VERIFICATION SUMMARY
 
-| Pathway | Status | Last Verified |
-|---------|--------|---------------|
+| Pathway                     | Status     | Last Verified    |
+| --------------------------- | ---------- | ---------------- |
 | Auth (Edge → NextAuth → DB) | ✅ WORKING | 2025-11-25 13:30 |
-| Database (Prisma → Neon) | ✅ WORKING | 2025-11-25 13:30 |
-| UI (Next.js → React) | ✅ WORKING | 2025-11-25 13:30 |
-| Data Flow (tRPC → Prisma) | ✅ WORKING | 2025-11-25 13:30 |
-| Deployment (Git → Vercel) | ✅ WORKING | 2025-11-25 13:30 |
+| Database (Prisma → Neon)    | ✅ WORKING | 2025-11-25 13:30 |
+| UI (Next.js → React)        | ✅ WORKING | 2025-11-25 13:30 |
+| Data Flow (tRPC → Prisma)   | ✅ WORKING | 2025-11-25 13:30 |
+| Deployment (Git → Vercel)   | ✅ WORKING | 2025-11-25 13:30 |
 
 ---
 
@@ -191,7 +201,6 @@
 1. **TypeScript Error:** `.next/types/validator.ts` (React 18/19 mismatch)
    - Impact: None (build still passes)
    - Root cause: Next.js 15 internal types
-   
 2. **Missing .env.local:** No local env file
    - Impact: Features disabled (AI, analytics, real-time)
    - Solution: Copy ENV_TEMPLATE.md → apps/web/.env.local
@@ -201,6 +210,7 @@
 ## 🔥 CRITICAL DEPENDENCIES
 
 ### Runtime
+
 - Next.js 15.0.0 (App Router)
 - NextAuth 5.0.0-beta.30 (Auth)
 - Prisma 5.22.0 (ORM)
@@ -208,6 +218,7 @@
 - React Query 5.62.7 (Data fetching)
 
 ### Database
+
 - Neon PostgreSQL (us-west-2)
 - Connection pooling: Yes
 - SSL: Required
@@ -215,8 +226,3 @@
 ---
 
 **All critical pathways verified working. Ready for production.**
-
-
-
-
-

@@ -17,17 +17,11 @@ export async function POST(request: Request) {
     const { songTitle, songId, recipients, pdfData } = await request.json();
 
     if (!songTitle || !recipients || !pdfData) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     if (!Array.isArray(recipients) || recipients.length === 0) {
-      return NextResponse.json(
-        { error: 'No recipients provided' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'No recipients provided' }, { status: 400 });
     }
 
     // Extract base64 data (remove data:application/pdf;base64, prefix)
@@ -37,7 +31,7 @@ export async function POST(request: Request) {
     // 1. Use a service like SendGrid, AWS SES, or Resend
     // 2. Store the PDF in S3/Cloudflare R2
     // 3. Send personalized emails to each recipient
-    
+
     // For now, we'll simulate the email sending
     console.log('Split sheet email request:', {
       songTitle,
@@ -98,8 +92,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-
-
-
-

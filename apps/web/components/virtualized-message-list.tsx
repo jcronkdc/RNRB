@@ -2,7 +2,7 @@
 
 /**
  * Virtualized Message List Component
- * 
+ *
  * High-performance message list with:
  * - Virtual scrolling for thousands of messages
  * - Automatic scroll-to-bottom on new messages
@@ -31,101 +31,95 @@ interface VirtualizedMessageListProps {
 }
 
 // Memoized message item for better performance
-const MessageItem = memo(({
-  message,
-  isOwnMessage,
-  showAvatar,
-}: {
-  message: Message;
-  isOwnMessage: boolean;
-  showAvatar: boolean;
-}) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className={`flex gap-3 px-4 py-2 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}
-    >
-      {/* Avatar */}
-      <div className="flex-shrink-0">
-        {showAvatar ? (
-          <div className="bg-brand-primary/20 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
-            {message.senderAvatar ? (
-              <img
-                src={message.senderAvatar}
-                alt={message.senderName}
-                className="h-full w-full rounded-full object-cover"
-                loading="lazy"
-              />
-            ) : (
-              message.senderName[0].toUpperCase()
-            )}
-          </div>
-        ) : (
-          <div className="h-8 w-8" />
-        )}
-      </div>
-
-      {/* Message Content */}
-      <div
-        className={`flex max-w-[70%] flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}
+const MessageItem = memo(
+  ({
+    message,
+    isOwnMessage,
+    showAvatar,
+  }: {
+    message: Message;
+    isOwnMessage: boolean;
+    showAvatar: boolean;
+  }) => {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className={`flex gap-3 px-4 py-2 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}
       >
-        {showAvatar && (
-          <div className="mb-1 flex items-center gap-2">
-            <span className="text-foreground text-sm font-medium">
-              {message.senderName}
-            </span>
-            <span className="text-muted-foreground text-xs">
-              {formatTime(message.timestamp)}
-            </span>
-          </div>
-        )}
+        {/* Avatar */}
+        <div className="flex-shrink-0">
+          {showAvatar ? (
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
+              {message.senderAvatar ? (
+                <img
+                  src={message.senderAvatar}
+                  alt={message.senderName}
+                  className="h-full w-full rounded-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                message.senderName[0].toUpperCase()
+              )}
+            </div>
+          ) : (
+            <div className="h-8 w-8" />
+          )}
+        </div>
 
-        {/* Text Message */}
-        {message.type === 'text' && (
-          <div
-            className={`rounded-2xl px-4 py-2 ${
-              isOwnMessage
-                ? 'bg-brand-primary text-brand-primary-foreground'
-                : 'border-border bg-surface text-foreground border'
-            }`}
-          >
-            <p className="whitespace-pre-wrap break-words text-sm">{message.content}</p>
-            {message.isEdited && (
-              <span className="text-xs opacity-60 mt-1 block">(edited)</span>
-            )}
-          </div>
-        )}
+        {/* Message Content */}
+        <div className={`flex max-w-[70%] flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}>
+          {showAvatar && (
+            <div className="mb-1 flex items-center gap-2">
+              <span className="text-sm font-medium text-foreground">{message.senderName}</span>
+              <span className="text-xs text-muted-foreground">{formatTime(message.timestamp)}</span>
+            </div>
+          )}
 
-        {/* Voice Message */}
-        {message.type === 'voice' && message.audioUrl && (
-          <VoiceMessagePlayer
-            audioUrl={message.audioUrl}
-            duration={message.audioDuration || 0}
-            waveformData={message.waveformData || []}
-            className="min-w-[300px]"
-          />
-        )}
+          {/* Text Message */}
+          {message.type === 'text' && (
+            <div
+              className={`rounded-2xl px-4 py-2 ${
+                isOwnMessage
+                  ? 'bg-brand-primary text-brand-primary-foreground'
+                  : 'border border-border bg-surface text-foreground'
+              }`}
+            >
+              <p className="whitespace-pre-wrap break-words text-sm">{message.content}</p>
+              {message.isEdited && <span className="mt-1 block text-xs opacity-60">(edited)</span>}
+            </div>
+          )}
 
-        {/* Reactions */}
-        {message.reactions && Object.keys(message.reactions).length > 0 && (
-          <div className="mt-1 flex gap-1">
-            {Object.entries(message.reactions).map(([emoji, users]) => (
-              <div
-                key={emoji}
-                className="bg-surface-muted border-border flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs"
-              >
-                <span>{emoji}</span>
-                <span className="text-muted-foreground">{users.length}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </motion.div>
-  );
-});
+          {/* Voice Message */}
+          {message.type === 'voice' && message.audioUrl && (
+            <VoiceMessagePlayer
+              audioUrl={message.audioUrl}
+              duration={message.audioDuration || 0}
+              waveformData={message.waveformData || []}
+              className="min-w-[300px]"
+            />
+          )}
+
+          {/* Reactions */}
+          {message.reactions && Object.keys(message.reactions).length > 0 && (
+            <div className="mt-1 flex gap-1">
+              {Object.entries(message.reactions).map(([emoji, users]) => (
+                <div
+                  key={emoji}
+                  className="flex items-center gap-1 rounded-full border border-border bg-surface-muted px-2 py-0.5 text-xs"
+                >
+                  <span>{emoji}</span>
+                  <span className="text-muted-foreground">{users.length}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    );
+  }
+);
 
 MessageItem.displayName = 'MessageItem';
 
@@ -170,12 +164,12 @@ export function VirtualizedMessageList({
   useEffect(() => {
     const newMessageCount = messages.length;
     const messagesAdded = newMessageCount > previousMessageCount.current;
-    
+
     if (messagesAdded && isAutoScrolling.current) {
       // Delay to allow rendering
       setTimeout(() => scrollToBottom(true), 100);
     }
-    
+
     previousMessageCount.current = newMessageCount;
   }, [messages.length, scrollToBottom]);
 
@@ -230,7 +224,7 @@ export function VirtualizedMessageList({
           {/* Loading indicator at top */}
           {isLoading && (
             <div className="sticky top-0 z-10 flex justify-center py-2">
-              <div className="bg-surface border-border rounded-full border px-4 py-2 text-sm">
+              <div className="rounded-full border border-border bg-surface px-4 py-2 text-sm">
                 Loading messages...
               </div>
             </div>
@@ -291,8 +285,3 @@ export function VirtualizedMessageList({
     </div>
   );
 }
-
-
-
-
-

@@ -7,10 +7,7 @@ import { db } from '@/lib/db';
  * GET /api/projects/[slug]/insights
  * Get AI-generated insights for a project
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -107,12 +104,14 @@ async function generateProjectInsights(project: any) {
   const completedMilestones = milestones.filter((m: any) => m.status === 'completed').length;
   const completionScore =
     songs.length + milestones.length > 0
-      ? Math.round(((completedSongs + completedMilestones) / (songs.length + milestones.length)) * 100)
+      ? Math.round(
+          ((completedSongs + completedMilestones) / (songs.length + milestones.length)) * 100
+        )
       : 0;
 
   // Detect blockers
   const blockers: string[] = [];
-  
+
   if (songs.filter((s: any) => s.status === 'draft').length > songs.length * 0.5) {
     blockers.push('Over 50% of songs are still in draft status');
   }
@@ -151,12 +150,15 @@ async function generateProjectInsights(project: any) {
     suggestions.push('Great progress! Consider planning your release strategy');
   }
 
-  if (songs.length >= 10 && !milestones.some((m: any) => m.title.toLowerCase().includes('release'))) {
+  if (
+    songs.length >= 10 &&
+    !milestones.some((m: any) => m.title.toLowerCase().includes('release'))
+  ) {
     suggestions.push('You have enough songs - create a release milestone');
   }
 
   // Estimate days to completion (simple heuristic)
-  const remainingTasks = (songs.length - completedSongs) + (milestones.length - completedMilestones);
+  const remainingTasks = songs.length - completedSongs + (milestones.length - completedMilestones);
   const avgTasksPerWeek = sessions.length > 0 ? Math.max(1, sessions.length / 4) : 2;
   const estimatedDays = remainingTasks > 0 ? Math.ceil((remainingTasks / avgTasksPerWeek) * 7) : 0;
 
@@ -188,9 +190,12 @@ async function generateProjectInsights(project: any) {
   const velocityTrend = recentActivity > songs.length * 0.3 ? 'increasing' : 'stable';
 
   // Quality metrics
-  const audioQuality = (songs.filter((s: any) => s.audioUrl).length / Math.max(songs.length, 1)) * 100;
+  const audioQuality =
+    (songs.filter((s: any) => s.audioUrl).length / Math.max(songs.length, 1)) * 100;
   const lyricsComplete =
-    (songs.filter((s: any) => s.lyrics && s.lyrics.length > 100).length / Math.max(songs.length, 1)) * 100;
+    (songs.filter((s: any) => s.lyrics && s.lyrics.length > 100).length /
+      Math.max(songs.length, 1)) *
+    100;
   const mixReady = songs.length > 0 && songs.every((s: any) => s.status === 'complete');
 
   return {
@@ -206,8 +211,3 @@ async function generateProjectInsights(project: any) {
     mixReady,
   };
 }
-
-
-
-
-

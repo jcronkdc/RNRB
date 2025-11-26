@@ -1,6 +1,6 @@
 /**
  * Optimized Messages Hook with SWR
- * 
+ *
  * Features:
  * - Infinite scroll with cursor-based pagination
  * - Real-time updates via Ably
@@ -101,21 +101,14 @@ export function useMessages({
   };
 
   // Use SWR Infinite for pagination
-  const {
-    data,
-    error,
-    size,
-    setSize,
-    mutate,
-    isLoading,
-    isValidating,
-  } = useSWRInfinite<MessagesResponse>(getKey, fetcher, {
-    revalidateFirstPage: false,
-    revalidateOnFocus: false,
-    dedupingInterval: 2000, // Dedupe requests within 2 seconds
-    errorRetryInterval: 5000,
-    errorRetryCount: 3,
-  });
+  const { data, error, size, setSize, mutate, isLoading, isValidating } =
+    useSWRInfinite<MessagesResponse>(getKey, fetcher, {
+      revalidateFirstPage: false,
+      revalidateOnFocus: false,
+      dedupingInterval: 2000, // Dedupe requests within 2 seconds
+      errorRetryInterval: 5000,
+      errorRetryCount: 3,
+    });
 
   // Flatten all messages from all pages
   const messages = data?.flatMap((page) => page.messages) ?? [];
@@ -138,14 +131,14 @@ export function useMessages({
     (message: Message) => {
       // Check for duplicates
       if (messageIdsRef.current.has(message.id)) return;
-      
+
       messageIdsRef.current.add(message.id);
-      
+
       // Optimistic update - add to first page
       mutate(
         (data) => {
           if (!data || data.length === 0) return data;
-          
+
           const firstPage = data[0];
           return [
             {
@@ -257,8 +250,3 @@ export function useMessages({
     addMessage,
   };
 }
-
-
-
-
-

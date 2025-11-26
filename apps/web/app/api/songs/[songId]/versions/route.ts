@@ -7,10 +7,7 @@ import { db } from '@/lib/db';
  * GET /api/songs/[songId]/versions
  * Get all versions of a song
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ songId: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ songId: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -90,10 +87,7 @@ export async function GET(
  * POST /api/songs/[songId]/versions
  * Create a new version of a song
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ songId: string }> }
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ songId: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -124,8 +118,7 @@ export async function POST(
     }
 
     // Must be owner or project member
-    const canEdit =
-      song.userId === userId || (song.project && song.project.members.length > 0);
+    const canEdit = song.userId === userId || (song.project && song.project.members.length > 0);
 
     if (!canEdit) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -197,8 +190,3 @@ export async function POST(
     return NextResponse.json({ error: 'Failed to create version' }, { status: 500 });
   }
 }
-
-
-
-
-

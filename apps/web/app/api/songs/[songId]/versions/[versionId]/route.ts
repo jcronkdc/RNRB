@@ -124,8 +124,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Song not found' }, { status: 404 });
     }
 
-    const canEdit =
-      song.userId === userId || (song.project && song.project.members.length > 0);
+    const canEdit = song.userId === userId || (song.project && song.project.members.length > 0);
 
     if (!canEdit) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -225,8 +224,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete version' }, { status: 500 });
   }
 }
-
-
-
-
-

@@ -80,7 +80,7 @@ export function useAssistant(options: UseAssistantOptions = {}): UseAssistantRet
         };
 
         setMessages((prev) => [...prev, assistantMessage]);
-        
+
         // Store conversation ID for follow-up messages
         if (data.conversationId) {
           setConversationId(data.conversationId);
@@ -88,10 +88,10 @@ export function useAssistant(options: UseAssistantOptions = {}): UseAssistantRet
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
         setError(errorMessage);
-        
+
         // Remove the user message since we couldn't get a response
         setMessages((prev) => prev.slice(0, -1));
-        
+
         if (options.onError) {
           options.onError(err instanceof Error ? err : new Error(errorMessage));
         }
@@ -124,5 +124,3 @@ export function useAssistant(options: UseAssistantOptions = {}): UseAssistantRet
     reset,
   };
 }
-
-

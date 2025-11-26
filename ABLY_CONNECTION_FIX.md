@@ -18,7 +18,7 @@ The songwriting page was experiencing **severe Ably connection issues**:
 2. **Multiple Ably Connections**
    - 3+ separate Ably Realtime clients being created simultaneously
    - `PresenceIndicator` component → new client
-   - `useCollaborativeCursors` hook → new client  
+   - `useCollaborativeCursors` hook → new client
    - `ChatRoom` component → potentially new client
 
 3. **Configuration Conflict**
@@ -44,7 +44,7 @@ The songwriting page was experiencing **severe Ably connection issues**:
 closeOnUnload: true,
 recover: (lastConnectionDetails, cb) => { ... }  // ❌ Mutually exclusive
 
-// AFTER  
+// AFTER
 closeOnUnload: false,  // ✅ Allow recover() to work
 recover: (lastConnectionDetails, cb) => { ... }  // ✅ Better connection persistence
 ```
@@ -58,6 +58,7 @@ recover: (lastConnectionDetails, cb) => { ... }  // ✅ Better connection persis
 **File:** `apps/web/hooks/use-presence.ts`
 
 **Before:**
+
 ```typescript
 // Created its own Ably.Realtime client
 const ablyClient = new Realtime({
@@ -67,6 +68,7 @@ const ablyClient = new Realtime({
 ```
 
 **After:**
+
 ```typescript
 // Uses official Ably React hooks (shared client from provider)
 import { usePresence as useAblyPresence, useConnectionStateListener } from 'ably/react';
@@ -75,6 +77,7 @@ const { presenceData, updateStatus } = useAblyPresence(channelName, userData);
 ```
 
 **Benefits:**
+
 - ✅ No duplicate Ably connections
 - ✅ Automatic connection management
 - ✅ Uses shared client from `AblyProvider`
@@ -87,6 +90,7 @@ const { presenceData, updateStatus } = useAblyPresence(channelName, userData);
 **File:** `apps/web/hooks/use-collaborative-cursors.ts`
 
 **Before:**
+
 ```typescript
 // Created its own Ably.Realtime client
 const ablyClient = new Ably.Realtime({
@@ -96,6 +100,7 @@ const ablyClient = new Ably.Realtime({
 ```
 
 **After:**
+
 ```typescript
 // Uses official Ably React hooks
 import { useChannel, useConnectionStateListener } from 'ably/react';
@@ -106,6 +111,7 @@ const { channel, publish } = useChannel(channelName, 'cursor-move', (message) =>
 ```
 
 **Benefits:**
+
 - ✅ No duplicate Ably connections
 - ✅ Automatic subscription cleanup
 - ✅ Uses shared client from `AblyProvider`
@@ -118,6 +124,7 @@ const { channel, publish } = useChannel(channelName, 'cursor-move', (message) =>
 **File:** `apps/web/hooks/use-ably-client.ts` (new)
 
 Created a singleton Ably client manager as a backup pattern:
+
 - Single shared instance across all components
 - Automatic cleanup when last subscriber disconnects
 - Graceful degradation if ABLY_API_KEY not configured
@@ -130,6 +137,7 @@ Created a singleton Ably client manager as a backup pattern:
 ## 📊 Impact
 
 ### Before Fix:
+
 ```
 ❌ 3+ Ably connections created simultaneously
 ❌ Token timeouts after 10 seconds
@@ -139,6 +147,7 @@ Created a singleton Ably client manager as a backup pattern:
 ```
 
 ### After Fix:
+
 ```
 ✅ Single shared Ably connection via AblyProvider
 ✅ Token requested once, reused by all components
@@ -152,6 +161,7 @@ Created a singleton Ably client manager as a backup pattern:
 ## 🧪 Testing Required
 
 ### Local Testing:
+
 ```bash
 # 1. Start dev server
 cd apps/web
@@ -166,6 +176,7 @@ open http://localhost:3000/songwriting
 ```
 
 ### Production Testing:
+
 ```bash
 # Deploy to Vercel
 git add .
@@ -192,6 +203,7 @@ git push origin main
 4. **Configuration Bug:** `closeOnUnload` + `recover()` conflict introduced during optimization
 
 **Prevention:**
+
 - ✅ Always use official Ably React hooks from `ably/react`
 - ✅ Never create new `Ably.Realtime()` instances in components/hooks
 - ✅ Use the shared `AblyProvider` in layout
@@ -224,10 +236,8 @@ git push origin main
 ## ✨ Clean Build Verified
 
 - ✅ No lint errors
-- ✅ No TypeScript errors  
+- ✅ No TypeScript errors
 - ✅ All imports resolved
 - ✅ Backward compatible (no breaking changes)
 
 **Status:** Ready for deployment 🚀
-
-

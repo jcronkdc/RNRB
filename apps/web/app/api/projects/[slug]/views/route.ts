@@ -7,10 +7,7 @@ import { db } from '@/lib/db';
  * GET /api/projects/[slug]/views
  * Get all saved views (smart filters) for a project
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -54,10 +51,7 @@ export async function GET(
  * POST /api/projects/[slug]/views
  * Create a new saved view (smart filter)
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -116,8 +110,3 @@ export async function POST(
     return NextResponse.json({ error: 'Failed to create view' }, { status: 500 });
   }
 }
-
-
-
-
-

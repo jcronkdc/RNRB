@@ -9,6 +9,7 @@
 ## Problem Statement
 
 The songwriting tool is completely unusable due to:
+
 1. **"Connecting..."** indicator stuck forever
 2. **6+ "Failed to create song" error toasts** spamming the UI
 3. **Ably real-time service** failing to authenticate (10s timeouts)
@@ -24,6 +25,7 @@ The songwriting tool is completely unusable due to:
 
 ```markdown
 # ENV_TEMPLATE.md (WRONG)
+
 NEXT_PUBLIC_ABLY_KEY="your-ably-key"
 ```
 
@@ -58,24 +60,27 @@ useEffect(() => {
 **Location**: `apps/web/components/ably/ably-provider.tsx` lines 29-38
 
 The Ably client tries to connect to `/api/ably/token` which returns 503 because `ABLY_API_KEY` is not set, causing:
+
 - Connection timeouts
 - Infinite retry attempts
 - "Connecting..." stuck forever
 
 ---
 
-##  THE FIX (Clean, No Shortcuts)
+## THE FIX (Clean, No Shortcuts)
 
 ### Step 1: Fix Environment Variable Documentation
 
 **File**: `ENV_TEMPLATE.md`
 
 **Change line 44 from:**
+
 ```markdown
 NEXT_PUBLIC_ABLY_KEY="your-ably-key"
 ```
 
 **To:**
+
 ```markdown
 ABLY_API_KEY="your-ably-key-here"
 ```
@@ -87,6 +92,7 @@ ABLY_API_KEY="your-ably-key-here"
 **Action**: Check if `ABLY_API_KEY` is set in Vercel production environment
 
 **If missing**:
+
 - Go to https://ably.com/dashboard
 - Get API key
 - Add to Vercel: `vercel env add ABLY_API_KEY`
@@ -224,6 +230,7 @@ export function ConnectionStatus() {
 **Problem**: The dependency array could cause multiple creation attempts
 
 **Fix**:
+
 ```typescript
 // Create song on first load if user is authenticated
 useEffect(() => {
@@ -275,11 +282,13 @@ After implementing fixes:
 ## Expected Outcome
 
 **Before Fix:**
+
 - ❌ Stuck on "Connecting..." forever
 - ❌ 6+ "Failed to create song" errors
 - ❌ Cannot use app at all
 
 **After Fix:**
+
 - ✅ Shows "Live" (if Ably works) OR "Offline Mode" (if Ably down) within 15s
 - ✅ Song creates successfully regardless of Ably status
 - ✅ App fully functional even without real-time features
@@ -290,9 +299,3 @@ After implementing fixes:
 ## Ready to Implement?
 
 All code changes identified. No shortcuts. Clean build approach. Ready for your approval to proceed with implementation.
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 /**
  * Read Receipts Manager with Batching
- * 
+ *
  * Features:
  * - Batch read receipt updates to reduce database writes
  * - Debounced updates (only when user stops scrolling)
@@ -40,9 +40,9 @@ class ReadReceiptManager {
     if (!this.pendingReceipts.has(channelId)) {
       this.pendingReceipts.set(channelId, new Set());
     }
-    
+
     this.pendingReceipts.get(channelId)!.add(messageId);
-    
+
     // Schedule sync
     this.scheduleSyncDebounced();
   }
@@ -54,10 +54,10 @@ class ReadReceiptManager {
     if (!this.pendingReceipts.has(channelId)) {
       this.pendingReceipts.set(channelId, new Set());
     }
-    
+
     const channelReceipts = this.pendingReceipts.get(channelId)!;
-    messageIds.forEach(id => channelReceipts.add(id));
-    
+    messageIds.forEach((id) => channelReceipts.add(id));
+
     // Schedule sync
     this.scheduleSyncDebounced();
   }
@@ -80,34 +80,32 @@ class ReadReceiptManager {
 
     try {
       // Batch update all channels
-      const promises = Array.from(receiptsToSync.entries()).map(
-        async ([channelId, messageIds]) => {
-          if (messageIds.size === 0) return;
+      const promises = Array.from(receiptsToSync.entries()).map(async ([channelId, messageIds]) => {
+        if (messageIds.size === 0) return;
 
-          await fetch('/api/chat/read-receipts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              channelId,
-              messageIds: Array.from(messageIds),
-            }),
-          });
-        }
-      );
+        await fetch('/api/chat/read-receipts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            channelId,
+            messageIds: Array.from(messageIds),
+          }),
+        });
+      });
 
       await Promise.allSettled(promises);
     } catch (error) {
       console.error('Failed to sync read receipts:', error);
-      
+
       // Re-add failed receipts back to queue
       receiptsToSync.forEach((messageIds, channelId) => {
         if (!this.pendingReceipts.has(channelId)) {
           this.pendingReceipts.set(channelId, new Set());
         }
         const existingReceipts = this.pendingReceipts.get(channelId)!;
-        messageIds.forEach(id => existingReceipts.add(id));
+        messageIds.forEach((id) => existingReceipts.add(id));
       });
-      
+
       // Retry after delay
       setTimeout(() => this.syncPendingReceipts(), 5000);
     }
@@ -158,7 +156,7 @@ export function useReadReceipts({ channelId, userId, onMarkAsRead }: ReadReceipt
             // Message is visible
             if (!visibleMessagesRef.current.has(messageId)) {
               visibleMessagesRef.current.add(messageId);
-              
+
               // Mark as read after 1 second of visibility
               setTimeout(() => {
                 if (visibleMessagesRef.current.has(messageId)) {
@@ -210,7 +208,7 @@ export function useReadReceipts({ channelId, userId, onMarkAsRead }: ReadReceipt
    */
   const unobserveMessage = useCallback((element: Element) => {
     if (!observerRef.current) return;
-    
+
     const messageId = observedElementsRef.current.get(element);
     if (messageId) {
       visibleMessagesRef.current.delete(messageId);
@@ -256,8 +254,3 @@ export async function batchMarkMessagesAsRead(
     throw error;
   }
 }
-
-
-
-
-

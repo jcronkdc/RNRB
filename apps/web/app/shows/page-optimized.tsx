@@ -2,7 +2,7 @@
 
 /**
  * OPTIMIZED SHOWS MANAGEMENT PAGE
- * 
+ *
  * Features:
  * - Pagination for better performance
  * - Skeleton loading states
@@ -138,10 +138,10 @@ export default function ShowsPage() {
 
   if (authLoading) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <Loader2 className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin" />
-          <p className="text-muted-foreground text-lg">Loading...</p>
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
+          <p className="text-lg text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -152,7 +152,7 @@ export default function ShowsPage() {
   }
 
   return (
-    <div className="bg-background min-h-screen px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container mx-auto max-w-7xl">
         {/* Toast Notifications */}
         <ToastNotification toasts={toasts} onRemove={removeToast} />
@@ -160,10 +160,8 @@ export default function ShowsPage() {
         {/* Header */}
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl lg:text-5xl">
-              Shows
-            </h1>
-            <p className="text-muted-foreground text-base sm:text-lg lg:text-xl">
+            <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl lg:text-5xl">Shows</h1>
+            <p className="text-base text-muted-foreground sm:text-lg lg:text-xl">
               Manage your gigs, tours, and performances
             </p>
           </div>
@@ -186,7 +184,7 @@ export default function ShowsPage() {
         {/* Search & Filter */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 sm:left-4 sm:h-5 sm:w-5" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground sm:left-4 sm:h-5 sm:w-5" />
             <input
               type="text"
               placeholder="Search shows, venues, cities..."
@@ -196,7 +194,7 @@ export default function ShowsPage() {
             />
           </div>
           <div className="flex items-center gap-2 overflow-x-auto">
-            <Filter className="text-muted-foreground h-4 w-4 shrink-0" />
+            <Filter className="h-4 w-4 shrink-0 text-muted-foreground" />
             {['all', 'scheduled', 'confirmed', 'completed', 'cancelled'].map((status) => (
               <Button
                 key={status}
@@ -214,19 +212,19 @@ export default function ShowsPage() {
         {total > 0 && (
           <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <Card className="p-4">
-              <p className="text-muted-foreground mb-1 text-sm">Total Shows</p>
+              <p className="mb-1 text-sm text-muted-foreground">Total Shows</p>
               <p className="text-2xl font-bold">{total}</p>
             </Card>
             <Card className="p-4">
-              <p className="text-muted-foreground mb-1 text-sm">Upcoming</p>
+              <p className="mb-1 text-sm text-muted-foreground">Upcoming</p>
               <p className="text-2xl font-bold">{upcomingShows.length}</p>
             </Card>
             <Card className="p-4">
-              <p className="text-muted-foreground mb-1 text-sm">Past</p>
+              <p className="mb-1 text-sm text-muted-foreground">Past</p>
               <p className="text-2xl font-bold">{pastShows.length}</p>
             </Card>
             <Card className="p-4">
-              <p className="text-muted-foreground mb-1 text-sm">Filtered</p>
+              <p className="mb-1 text-sm text-muted-foreground">Filtered</p>
               <p className="text-2xl font-bold">{filteredShows.length}</p>
             </Card>
           </div>
@@ -238,13 +236,13 @@ export default function ShowsPage() {
         {/* Empty State */}
         {!showsLoading && shows.length === 0 && (
           <Card className="rnrb-card p-12 text-center sm:p-16">
-            <Calendar className="text-muted-foreground/50 mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
+            <Calendar className="mx-auto mb-6 h-20 w-20 text-muted-foreground/50 sm:h-24 sm:w-24" />
             <h2 className="font-display mb-4 text-2xl font-bold sm:text-3xl">
               No Shows Scheduled Yet
             </h2>
-            <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-base sm:text-lg">
-              Start building your touring schedule. Add shows, link them to venues and setlists,
-              and keep your band organized for the road ahead.
+            <p className="mx-auto mb-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
+              Start building your touring schedule. Add shows, link them to venues and setlists, and
+              keep your band organized for the road ahead.
             </p>
             <Link href="/shows/new">
               <Button className="rnrb-button-primary inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold">
@@ -357,7 +355,7 @@ const ShowCard = memo(function ShowCard({
                 {show.status}
               </span>
               {show.tour && (
-                <span className="text-muted-foreground text-xs">• {show.tour.name}</span>
+                <span className="text-xs text-muted-foreground">• {show.tour.name}</span>
               )}
             </div>
           </div>
@@ -384,13 +382,13 @@ const ShowCard = memo(function ShowCard({
 
         {/* Details */}
         <div className="space-y-2">
-          <div className="text-muted-foreground flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4 shrink-0" />
             <span>{formatDateWithDay(show.date)}</span>
           </div>
 
           {show.venue && (
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 shrink-0" />
               <span className="truncate">
                 {show.venue.name}
@@ -401,18 +399,18 @@ const ShowCard = memo(function ShowCard({
           )}
 
           {show.doorsTime && (
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4 shrink-0" />
               <span>Doors at {new Date(show.doorsTime).toLocaleTimeString()}</span>
             </div>
           )}
 
           {show.setlist && (
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Music className="h-4 w-4 shrink-0" />
               <Link
                 href={`/projects/${show.setlist.id}`}
-                className="hover:text-brand-primary transition"
+                className="transition hover:text-brand-primary"
               >
                 {show.setlist.name}
               </Link>
@@ -441,8 +439,3 @@ const ShowCard = memo(function ShowCard({
     </motion.div>
   );
 });
-
-
-
-
-

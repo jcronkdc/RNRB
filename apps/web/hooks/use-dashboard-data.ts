@@ -26,7 +26,7 @@ const CACHE_TTL = 2 * 60 * 1000; // 2 minutes (shorter for real data)
 
 export function useDashboardData(options: UseDashboardDataOptions = {}) {
   const { refreshInterval = 60000, enabled = true } = options;
-  
+
   const [data, setData] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -34,11 +34,12 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
   const lastFetchRef = useRef(0);
   const mountedRef = useRef(true);
   const retryCountRef = useRef(0);
+  const dataRef = useRef<DashboardStats | null>(null);
 
   // Load from cache (browser only)
   const loadFromCache = useCallback(() => {
     if (typeof window === 'undefined') return false;
-    
+
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
@@ -47,6 +48,7 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
         if (age < CACHE_TTL) {
           if (mountedRef.current) {
             setData(cachedData);
+            dataRef.current = cachedData;
             setLoading(false);
           }
           return true;
@@ -61,7 +63,7 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
   // Save to cache (browser only)
   const saveToCache = useCallback((newData: DashboardStats) => {
     if (typeof window === 'undefined') return;
-    
+
     try {
       localStorage.setItem(
         CACHE_KEY,
@@ -76,70 +78,76 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
   }, []);
 
   // Fetch real dashboard data
-  const fetchData = useCallback(async (force = false) => {
-    if (!enabled || !mountedRef.current) return;
-    
-    // Prevent concurrent fetches
-    if (fetchingRef.current) return;
-    
-    // Rate limiting - don't fetch more than once per 3 seconds
-    const now = Date.now();
-    if (!force && now - lastFetchRef.current < 3000) return;
+  const fetchData = useCallback(
+    async (force = false) => {
+      if (!enabled || !mountedRef.current) return;
 
-    fetchingRef.current = true;
-    lastFetchRef.current = now;
+      // Prevent concurrent fetches
+      if (fetchingRef.current) return;
 
-    try {
-      const response = await fetch('/api/dashboard/stats', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+      // Rate limiting - don't fetch more than once per 3 seconds
+      const now = Date.now();
+      if (!force && now - lastFetchRef.current < 3000) return;
 
-      if (!mountedRef.current) return;
+      fetchingRef.current = true;
+      lastFetchRef.current = now;
 
-      if (!response.ok) {
-        // Handle auth errors silently (user not logged in)
-        if (response.status === 401) {
-          setLoading(false);
-          return;
+      try {
+        const response = await fetch('/api/dashboard/stats', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+
+        if (!mountedRef.current) return;
+
+        if (!response.ok) {
+          // Handle auth errors silently (user not logged in)
+          if (response.status === 401) {
+            setLoading(false);
+            return;
+          }
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
 
-      const stats: DashboardStats = await response.json();
-      
-      if (mountedRef.current) {
-        setData(stats);
-        setError(null);
-        saveToCache(stats);
-        retryCountRef.current = 0; // Reset retry count on success
-      }
-    } catch (err) {
-      console.error('[Dashboard] Fetch error:', err);
-      
-      if (mountedRef.current) {
-        // Only set error if we don't have cached data
-        if (!data) {
+        const stats: DashboardStats = await response.json();
+
+        console.log('[Dashboard] Stats received:', stats);
+
+        if (mountedRef.current) {
+          setData(stats);
+          dataRef.current = stats;
+          setError(null);
+          saveToCache(stats);
+          retryCountRef.current = 0; // Reset retry count on success
+          console.log('[Dashboard] State updated with stats');
+        }
+      } catch (err) {
+        console.error('[Dashboard] Fetch error:', err);
+
+        if (mountedRef.current) {
+          // Always set error on fetch failure, even with cached data
+          // This allows UI to show appropriate warnings (e.g., "Using cached data")
           setError(err instanceof Error ? err : new Error('Failed to fetch stats'));
+
+          // Exponential backoff retry (max 3 retries)
+          if (retryCountRef.current < 3) {
+            retryCountRef.current++;
+            const delay = Math.min(1000 * Math.pow(2, retryCountRef.current), 8000);
+            setTimeout(() => fetchData(true), delay);
+          }
         }
-        
-        // Exponential backoff retry (max 3 retries)
-        if (retryCountRef.current < 3) {
-          retryCountRef.current++;
-          const delay = Math.min(1000 * Math.pow(2, retryCountRef.current), 8000);
-          setTimeout(() => fetchData(true), delay);
+      } finally {
+        if (mountedRef.current) {
+          setLoading(false);
         }
+        fetchingRef.current = false;
       }
-    } finally {
-      if (mountedRef.current) {
-        setLoading(false);
-      }
-      fetchingRef.current = false;
-    }
-  }, [enabled, data, saveToCache]);
+    },
+    [enabled, saveToCache]
+  );
 
   // Initial load
   useEffect(() => {
@@ -149,14 +157,15 @@ export function useDashboardData(options: UseDashboardDataOptions = {}) {
 
     // Try cache first
     const hasCache = loadFromCache();
-    
+
     // Fetch fresh data (in background if cached)
     fetchData(!hasCache);
 
     return () => {
       mountedRef.current = false;
     };
-  }, [enabled, loadFromCache, fetchData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
 
   // Auto-refresh
   useEffect(() => {

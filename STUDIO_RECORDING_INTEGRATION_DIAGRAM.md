@@ -132,12 +132,13 @@ interface StudioSessionProps {
 export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   // ❌ onRecordingComplete never destructured
   // ❌ No event listener for recording completion
-  
+
   return <DailyVideo />;
 }
 ```
 
 **Result:**
+
 - ❌ Callback passed but ignored
 - ❌ Recording ID never captured
 - ❌ ProjectSelector never shows
@@ -155,9 +156,9 @@ interface StudioSessionProps {
   onRecordingComplete?: (recordingId: string) => void; // ✅ ADDED
 }
 
-export function StudioSession({ 
-  roomUrl, 
-  token, 
+export function StudioSession({
+  roomUrl,
+  token,
   onRecordingComplete // ✅ ADDED
 }: StudioSessionProps) {
 
@@ -167,7 +168,7 @@ export function StudioSession({
 
     const handleRecordingEvent = (event: any) => {
       const recordingId = event?.recordingId || event?.id || event?.recording?.id;
-      
+
       if (recordingId) {
         onRecordingComplete(recordingId); // ✅ Callback executed
       }
@@ -179,12 +180,13 @@ export function StudioSession({
       callObject.off('recording-stopped', handleRecordingEvent);
     };
   }, [callObject, onRecordingComplete]);
-  
+
   return <DailyVideo />;
 }
 ```
 
 **Result:**
+
 - ✅ Callback properly defined and received
 - ✅ Recording ID captured from Daily.co event
 - ✅ ProjectSelector appears automatically
@@ -224,6 +226,7 @@ Time    │ Component         │ Event
 ## 🎯 Integration Points
 
 ### 1. Component Props Flow
+
 ```
 Studio Page
     │
@@ -253,6 +256,7 @@ ProjectSelector Appears
 ```
 
 ### 2. State Management
+
 ```
 Studio Page State:
 ┌─────────────────────────────────────┐
@@ -276,6 +280,7 @@ Studio Page State:
 ```
 
 ### 3. Event Listener Lifecycle
+
 ```
 Component Mount
     │
@@ -413,5 +418,3 @@ callObject.off('recording-stopped', handler)
 - [x] Multiple fallback locations for recording ID
 
 **Status:** 🎉 **COMPLETE & VERIFIED**
-
-

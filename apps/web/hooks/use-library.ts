@@ -52,38 +52,42 @@ export function useLibrary(filters: LibraryFilters = {}) {
   const limit = 50;
 
   // Build query params
-  const buildQueryParams = useCallback((currentOffset: number = 0) => {
-    const params = new URLSearchParams();
-    params.append('limit', limit.toString());
-    params.append('offset', currentOffset.toString());
-    
-    if (filters.type && filters.type !== 'all') {
-      params.append('type', filters.type);
-    }
-    if (filters.search) {
-      params.append('search', filters.search);
-    }
-    if (filters.sortBy) {
-      params.append('sortBy', filters.sortBy);
-    }
-    if (filters.sortOrder) {
-      params.append('sortOrder', filters.sortOrder);
-    }
-    
-    return params.toString();
-  }, [filters, limit]);
+  const buildQueryParams = useCallback(
+    (currentOffset: number = 0) => {
+      const params = new URLSearchParams();
+      params.append('limit', limit.toString());
+      params.append('offset', currentOffset.toString());
+
+      if (filters.type && filters.type !== 'all') {
+        params.append('type', filters.type);
+      }
+      if (filters.search) {
+        params.append('search', filters.search);
+      }
+      if (filters.sortBy) {
+        params.append('sortBy', filters.sortBy);
+      }
+      if (filters.sortOrder) {
+        params.append('sortOrder', filters.sortOrder);
+      }
+
+      return params.toString();
+    },
+    [filters, limit]
+  );
 
   // Use SWR for data fetching with caching
   const queryString = buildQueryParams(offset);
-  const { data, error, isLoading, mutate: mutateLibrary } = useSWR<LibraryResponse>(
-    `/api/library?${queryString}`,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      dedupingInterval: 5000,
-      keepPreviousData: true,
-    }
-  );
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: mutateLibrary,
+  } = useSWR<LibraryResponse>(`/api/library?${queryString}`, fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 5000,
+    keepPreviousData: true,
+  });
 
   // Update local state when data changes
   useEffect(() => {
@@ -131,13 +135,13 @@ export function useLibrary(filters: LibraryFilters = {}) {
       }
 
       const newFile = await res.json();
-      
+
       // Optimistically update the local state
       setLocalFiles((prev) => [newFile, ...prev]);
-      
+
       // Revalidate to sync with server
       await mutateLibrary();
-      
+
       return newFile;
     },
     [mutateLibrary]
@@ -158,15 +162,13 @@ export function useLibrary(filters: LibraryFilters = {}) {
       }
 
       const updatedFile = await res.json();
-      
+
       // Optimistically update the local state
-      setLocalFiles((prev) =>
-        prev.map((f) => (f.id === id ? updatedFile : f))
-      );
-      
+      setLocalFiles((prev) => prev.map((f) => (f.id === id ? updatedFile : f)));
+
       // Revalidate to sync with server
       await mutateLibrary();
-      
+
       return updatedFile;
     },
     [mutateLibrary]
@@ -186,7 +188,7 @@ export function useLibrary(filters: LibraryFilters = {}) {
 
       // Optimistically update the local state
       setLocalFiles((prev) => prev.filter((f) => f.id !== id));
-      
+
       // Revalidate to sync with server
       await mutateLibrary();
     },
@@ -207,7 +209,7 @@ export function useLibrary(filters: LibraryFilters = {}) {
 
       // Optimistically update the local state
       setLocalFiles((prev) => prev.filter((f) => !ids.includes(f.id)));
-      
+
       // Revalidate to sync with server
       await mutateLibrary();
     },
@@ -237,13 +239,14 @@ export function useLibrary(filters: LibraryFilters = {}) {
 
 // Hook for a single library file
 export function useLibraryFile(id: string | null) {
-  const { data, error, isLoading, mutate: mutateFile } = useSWR<LibraryFile>(
-    id ? `/api/library/${id}` : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: mutateFile,
+  } = useSWR<LibraryFile>(id ? `/api/library/${id}` : null, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   return {
     file: data,
@@ -260,69 +263,66 @@ export function useLibraryUpload() {
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const upload = useCallback(
-    async (file: File, type: LibraryFileType, tags: string[] = []) => {
-      setUploading(true);
-      setProgress(0);
-      setError(null);
+  const upload = useCallback(async (file: File, type: LibraryFileType, tags: string[] = []) => {
+    setUploading(true);
+    setProgress(0);
+    setError(null);
 
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('type', type);
-        formData.append('tags', JSON.stringify(tags));
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', type);
+      formData.append('tags', JSON.stringify(tags));
 
-        abortControllerRef.current = new AbortController();
+      abortControllerRef.current = new AbortController();
 
-        const xhr = new XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
 
-        // Track upload progress
-        xhr.upload.addEventListener('progress', (e) => {
-          if (e.lengthComputable) {
-            const percentComplete = Math.round((e.loaded / e.total) * 100);
-            setProgress(percentComplete);
+      // Track upload progress
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+          const percentComplete = Math.round((e.loaded / e.total) * 100);
+          setProgress(percentComplete);
+        }
+      });
+
+      const uploadPromise = new Promise<LibraryFile>((resolve, reject) => {
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(JSON.parse(xhr.responseText));
+          } else {
+            const error = JSON.parse(xhr.responseText);
+            reject(new Error(error.error || 'Upload failed'));
           }
         });
 
-        const uploadPromise = new Promise<LibraryFile>((resolve, reject) => {
-          xhr.addEventListener('load', () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-              resolve(JSON.parse(xhr.responseText));
-            } else {
-              const error = JSON.parse(xhr.responseText);
-              reject(new Error(error.error || 'Upload failed'));
-            }
-          });
-
-          xhr.addEventListener('error', () => {
-            reject(new Error('Network error during upload'));
-          });
-
-          xhr.addEventListener('abort', () => {
-            reject(new Error('Upload cancelled'));
-          });
-
-          xhr.open('POST', '/api/library/upload');
-          xhr.send(formData);
+        xhr.addEventListener('error', () => {
+          reject(new Error('Network error during upload'));
         });
 
-        const result = await uploadPromise;
-        setUploading(false);
-        setProgress(100);
-        
-        // Invalidate library cache
-        await mutate((key) => typeof key === 'string' && key.startsWith('/api/library'));
-        
-        return result;
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Upload failed';
-        setError(errorMessage);
-        setUploading(false);
-        throw err;
-      }
-    },
-    []
-  );
+        xhr.addEventListener('abort', () => {
+          reject(new Error('Upload cancelled'));
+        });
+
+        xhr.open('POST', '/api/library/upload');
+        xhr.send(formData);
+      });
+
+      const result = await uploadPromise;
+      setUploading(false);
+      setProgress(100);
+
+      // Invalidate library cache
+      await mutate((key) => typeof key === 'string' && key.startsWith('/api/library'));
+
+      return result;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Upload failed';
+      setError(errorMessage);
+      setUploading(false);
+      throw err;
+    }
+  }, []);
 
   const cancel = useCallback(() => {
     if (abortControllerRef.current) {
@@ -340,8 +340,3 @@ export function useLibraryUpload() {
     error,
   };
 }
-
-
-
-
-

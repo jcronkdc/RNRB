@@ -7,10 +7,7 @@ import { db } from '@/lib/db';
  * GET /api/projects/[slug]
  * Get a single project by slug
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     // Get authenticated user from NextAuth
     const session = await auth();
@@ -111,8 +108,3 @@ export async function GET(
     return NextResponse.json({ error: 'Failed to fetch project' }, { status: 500 });
   }
 }
-
-
-
-
-

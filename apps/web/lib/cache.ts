@@ -64,11 +64,7 @@ if (typeof window === 'undefined') {
 /**
  * Helper to wrap async functions with caching
  */
-export async function withCache<T>(
-  key: string,
-  fn: () => Promise<T>,
-  ttl?: number
-): Promise<T> {
+export async function withCache<T>(key: string, fn: () => Promise<T>, ttl?: number): Promise<T> {
   const cached = cache.get<T>(key);
   if (cached !== null) {
     return cached;
@@ -78,8 +74,3 @@ export async function withCache<T>(
   cache.set(key, data, ttl);
   return data;
 }
-
-
-
-
-

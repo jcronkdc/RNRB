@@ -7,6 +7,7 @@
 ## 🎵 PLATFORM OVERVIEW
 
 CronkWaters is a comprehensive music collaboration and business management platform for musicians, bands, studios, and solo artists. It combines:
+
 - Songwriting tools with AI assistance
 - Real-time collaboration (video, chat, presence)
 - Project & tour management
@@ -28,7 +29,6 @@ CronkWaters is a comprehensive music collaboration and business management platf
    - Overview of all user's projects and activity
    - Quick access to recent songs and collaborations
    - Usage stats and subscription info
-   
 2. **Songwriting** (`/songwriting`)
    - **Structure Tab:** Define song sections (verse, chorus, bridge)
    - **Chords Tab:** Add chord progressions with AI suggestions
@@ -88,6 +88,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 ## 💎 SUBSCRIPTION TIERS
 
 ### Free Tier ($0/month)
+
 ✅ 1 project
 ✅ 1 GB storage
 ✅ Basic songwriting tools
@@ -101,6 +102,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 ---
 
 ### Creator Tier ($9.99/month)
+
 ✅ 10 projects
 ✅ 10 GB storage
 ✅ 100 AI songwriting assists/month
@@ -116,6 +118,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 ---
 
 ### Studio Tier ($29.99/month)
+
 ✅ UNLIMITED projects
 ✅ 100 GB storage
 ✅ 500 AI assists/month (5× Creator)
@@ -137,6 +140,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Purpose:** AI-powered songwriting assistance for structure, chords, lyrics, and copyright
 
 **How to Access:**
+
 1. Click "Songwriting" in sidebar
 2. Or from Dashboard → "Start Writing"
 3. Or from any Project → "Add Song"
@@ -168,6 +172,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
    - Track publishing rights
 
 **Tips for Users:**
+
 - Start with Structure to plan your song flow
 - Use AI suggestions but trust your creative judgment
 - Save to a Project to keep organized
@@ -182,6 +187,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Requirements:** Studio tier subscription
 
 **Features:**
+
 - **Multi-cursor editing:** See collaborators' cursors in real-time
 - **Presence indicators:** Green dot = online, working
 - **Video calls:** Up to 20 hours/month HD quality
@@ -189,6 +195,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 - **Conflict resolution:** Auto-merge or manual resolution
 
 **How to Start:**
+
 1. Open a Project or Song
 2. Click "Collaborate" button
 3. Invite team members (email or username)
@@ -196,6 +203,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 5. Edit simultaneously
 
 **Best Practices:**
+
 - Communicate changes before making them
 - Use comments to suggest edits, don't just change
 - Stay on video for complex sessions
@@ -208,12 +216,14 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Purpose:** Legal documentation of song ownership and royalty splits
 
 **Why This Matters:**
+
 - Prevents disputes about who owns what
 - Required for royalty distribution
 - Legal protection for your work
 - Professional standard practice
 
 **How to Create:**
+
 1. Go to Songwriting → Copyright tab
 2. Add collaborators:
    - By email (they don't need an account)
@@ -228,6 +238,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 6. Send for signatures
 
 **Common Split Examples:**
+
 - Solo songwriter: 100% writer's share
 - Co-writing 50/50: Each gets 50%
 - Writer + Producer: 60% writer, 40% producer
@@ -240,6 +251,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Purpose:** Plan, schedule, and manage live performances
 
 **Features:**
+
 - Tour creation (name, dates, locations)
 - Show scheduling (venue, time, setlist)
 - Setlist builder (drag-and-drop songs)
@@ -248,6 +260,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 - Fan song requests (collect & review)
 
 **Workflow:**
+
 1. **Create Tour:** Tours → "New Tour"
 2. **Add Shows:** Click tour → "Add Show"
 3. **Create Setlist:** Show → "Build Setlist"
@@ -256,6 +269,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 6. **Track Performance:** Mark songs as played
 
 **Pro Tips:**
+
 - Create setlist templates for different types of shows
 - Print setlists as PDF for band members
 - Use song requests to engage fans
@@ -268,12 +282,14 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Purpose:** Git-like versioning for music projects and songs
 
 **Why Use It:**
+
 - Experiment without fear of losing work
 - Roll back to previous versions
 - Compare different mixes/arrangements
 - Collaborate with confidence
 
 **How It Works:**
+
 1. Each save creates a new version
 2. View version history in Project view
 3. Compare versions side-by-side
@@ -281,6 +297,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 5. Branch for experimental work
 
 **Best Practices:**
+
 - Save version before major changes
 - Add meaningful commit messages
 - Create branch for risky experiments
@@ -293,6 +310,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Purpose:** Share your music with the CronkWaters community
 
 **How to Publish:**
+
 1. Go to Library
 2. Select a track
 3. Click "Publish to Community"
@@ -305,6 +323,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 6. Publish!
 
 **What Happens:**
+
 - Track appears in Explorer
 - Users can:
   - Listen (streaming)
@@ -318,6 +337,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
   - Geographic data
 
 **Privacy:**
+
 - You control what you publish
 - Can unpublish anytime
 - Unpublished = removed from Explorer
@@ -330,6 +350,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 ### For First-Time Users
 
 **Day 1: Setup & Exploration**
+
 1. Complete profile (Settings → Profile)
 2. Upload profile photo
 3. Explore the dashboard
@@ -337,6 +358,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 5. Browse Explorer to see what's possible
 
 **Week 1: Create Your First Project**
+
 1. Projects → "New Project"
 2. Choose type (Album, EP, Single)
 3. Add project details
@@ -344,12 +366,14 @@ CronkWaters is a comprehensive music collaboration and business management platf
 5. Upload a demo to Library
 
 **Week 2: Invite Collaborators**
+
 1. Add collaborators to your project
 2. Try real-time editing
 3. Create your first split sheet
 4. Publish a track to community
 
 **Month 1: Advanced Features**
+
 1. Start a tour (if applicable)
 2. Use AI songwriting assistance
 3. Create setlists
@@ -361,6 +385,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 ### For Solo Musicians
 
 **Best Features for You:**
+
 - Songwriting tool (all tabs)
 - AI assistance (100-500/month)
 - Copyright registration
@@ -371,6 +396,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Upgrade to Studio if:** You collaborate frequently or need video
 
 **Workflow:**
+
 1. Write → Songwriting tool
 2. Record → Upload to Library
 3. Register → Copyright splits (even if solo, for records)
@@ -382,6 +408,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 ### For Bands & Teams
 
 **Best Features for You:**
+
 - Real-time collaboration
 - Video calls
 - Project management
@@ -391,6 +418,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Recommended Tier:** Studio ($29.99)
 
 **Workflow:**
+
 1. Create Project → Invite all members
 2. Assign roles → Admin, member, contributor
 3. Collaborate → Write songs together
@@ -407,12 +435,14 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Two ways:**
 
 **Option 1: Quick Start**
+
 1. Click "Songwriting" in sidebar
 2. Start writing in any tab
 3. Save when ready
 4. Optionally add to a project later
 
 **Option 2: From a Project**
+
 1. Go to Projects
 2. Open a project (or create one)
 3. Click "Add Song"
@@ -426,6 +456,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 ### "What's the difference between Library and Projects?"
 
 **Library:**
+
 - Personal file storage (like Dropbox)
 - Raw audio files: demos, stems, masters
 - Not organized by project/album
@@ -433,6 +464,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 - Can publish individual tracks
 
 **Projects:**
+
 - Organized collections (albums, EPs, singles)
 - Contains songs + metadata + collaborators
 - Structured workflow
@@ -440,6 +472,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 - Project-level management (deadlines, milestones)
 
 **Think of it this way:**
+
 - Library = Your hard drive
 - Projects = Your album releases
 
@@ -456,6 +489,7 @@ CronkWaters is a comprehensive music collaboration and business management platf
 **Changes take effect immediately.**
 
 Your usage quotas reset and expand:
+
 - Storage increases
 - AI assists increase
 - Video minutes available (Studio)
@@ -467,15 +501,18 @@ Your usage quotas reset and expand:
 **You have 3 options:**
 
 **Option 1: Wait for Reset**
+
 - Quotas reset monthly
 - Check reset date: Settings → Usage
 - Shows "Resets in X days"
 
 **Option 2: Upgrade Tier**
+
 - Free → Creator: Get 100/month
 - Creator → Studio: Get 500/month (5×)
 
 **Option 3: Use Non-AI Features**
+
 - Songwriting still works (manual entry)
 - Upload files to Library
 - Collaborate with team
@@ -490,20 +527,24 @@ Your usage quotas reset and expand:
 **Common reasons:**
 
 **1. File too large**
+
 - Free: 50 MB limit
 - Creator: 100 MB limit
 - Studio: 500 MB limit
 - **Solution:** Compress file or upgrade
 
 **2. Storage quota exceeded**
+
 - Check Settings → Usage → Storage
 - **Solution:** Delete old files or upgrade
 
 **3. Unsupported format**
+
 - Supported: WAV, MP3, FLAC, M4A, OGG
 - **Solution:** Convert to supported format
 
 **4. Network timeout**
+
 - Large files on slow connection
 - **Solution:** Try again, use WiFi
 
@@ -514,12 +555,14 @@ Your usage quotas reset and expand:
 ### "How do I collaborate with someone without an account?"
 
 **For Copyright Splits:**
+
 1. Songwriting → Copyright tab
 2. Add collaborator by email (any email)
 3. They'll receive PDF by email
 4. Can sign electronically
 
 **For Projects (requires account):**
+
 1. Projects → Invite by email
 2. They'll receive invitation
 3. Must create account to join
@@ -534,12 +577,14 @@ Your usage quotas reset and expand:
 **No - CronkWaters requires internet connection.**
 
 **Why:**
+
 - Real-time collaboration
 - Cloud storage
 - AI features require API calls
 - Auto-save prevents data loss
 
 **Workaround:**
+
 - Download files from Library
 - Work locally in your DAW
 - Upload when back online
@@ -549,15 +594,18 @@ Your usage quotas reset and expand:
 ### "How do I export my work?"
 
 **Songs:**
+
 - Songwriting → Export as PDF (lyrics & chords)
 - Songwriting → Export chord chart
 - Copyright tab → Export split sheet PDF
 
 **Audio Files:**
+
 - Library → Click file → Download
 - Original quality preserved
 
 **Projects:**
+
 - Projects → Click project → "Export Project"
 - Downloads all songs, audio, documents as ZIP
 
@@ -570,6 +618,7 @@ Your usage quotas reset and expand:
 ### "Songwriting page won't load"
 
 **Try these steps:**
+
 1. Hard refresh: Cmd+Shift+R (Mac) or Ctrl+Shift+R (PC)
 2. Clear browser cache
 3. Try incognito/private window
@@ -581,12 +630,14 @@ Your usage quotas reset and expand:
 ### "Video call won't connect"
 
 **Requirements:**
+
 - Studio tier subscription
 - Under 20 hours/month used
 - Camera/microphone permissions
 - Modern browser (Chrome, Firefox, Safari, Edge)
 
 **Troubleshooting:**
+
 1. Check permissions: Browser → Settings → Permissions
 2. Check quota: Settings → Usage → Video Minutes
 3. Try different browser
@@ -598,6 +649,7 @@ Your usage quotas reset and expand:
 ### "Can't hear audio playback"
 
 **Check:**
+
 1. Browser volume (not muted)
 2. System volume
 3. Correct output device selected
@@ -605,6 +657,7 @@ Your usage quotas reset and expand:
 5. File not corrupted (re-upload)
 
 **Still not working?**
+
 - Try different browser
 - Download file and play locally
 - Contact support with file details
@@ -614,12 +667,14 @@ Your usage quotas reset and expand:
 ### "Changes not saving"
 
 **Possible causes:**
+
 1. Lost internet connection
 2. Session expired (re-login)
 3. Browser blocking cookies
 4. Storage quota exceeded
 
 **Solutions:**
+
 1. Check internet connection
 2. Refresh page (will prompt to re-login if needed)
 3. Enable cookies for cronkwaters.com
@@ -637,15 +692,16 @@ Your usage quotas reset and expand:
 
 **Check current usage:** Settings → Usage
 
-| Resource | Free | Creator | Studio |
-|----------|------|---------|--------|
-| Projects | 1 | 10 | Unlimited |
-| Storage | 1 GB | 10 GB | 100 GB |
-| File Size | 50 MB | 100 MB | 500 MB |
-| AI Assists | 0 | 100/mo | 500/mo |
-| Video Minutes | 0 | 0 | 1200/mo |
+| Resource      | Free  | Creator | Studio    |
+| ------------- | ----- | ------- | --------- |
+| Projects      | 1     | 10      | Unlimited |
+| Storage       | 1 GB  | 10 GB   | 100 GB    |
+| File Size     | 50 MB | 100 MB  | 500 MB    |
+| AI Assists    | 0     | 100/mo  | 500/mo    |
+| Video Minutes | 0     | 0       | 1200/mo   |
 
 **What counts as an "AI Assist":**
+
 - Chord suggestion: 1 request
 - Lyric generation: 1 request
 - Rhyme suggestions: 1 request
@@ -653,6 +709,7 @@ Your usage quotas reset and expand:
 - Transcription: 2 requests (more compute)
 
 **What counts as "Video Minutes":**
+
 - Time in video call (per participant)
 - Billed per minute, rounded up
 - Only Studio tier has access
@@ -738,6 +795,7 @@ Your usage quotas reset and expand:
 ### Your Data
 
 **What we store:**
+
 - Account info (email, name, profile)
 - Projects, songs, audio files
 - Collaboration history
@@ -745,12 +803,14 @@ Your usage quotas reset and expand:
 - Payment info (via Stripe, not on our servers)
 
 **What we DON'T do:**
+
 - Sell your data
 - Share your music without permission
 - Mine your content for AI training
 - Access your files without legal requirement
 
 **Your rights:**
+
 - Export all data anytime
 - Delete account + all data
 - Control what's public vs private
@@ -832,6 +892,7 @@ Your usage quotas reset and expand:
 **CronkWaters is continuously improving!**
 
 **Recent Updates:**
+
 - Library → Community publishing (Nov 2025)
 - Usage dashboard with real-time tracking
 - Enhanced AI songwriting (GPT-4o-mini)
@@ -839,6 +900,7 @@ Your usage quotas reset and expand:
 - Mobile-responsive design
 
 **Coming Soon:**
+
 - Annual subscription option
 - API access (Studio tier)
 - Custom integrations
@@ -846,6 +908,7 @@ Your usage quotas reset and expand:
 - Mobile apps
 
 **Stay updated:**
+
 - Release notes: cronkwaters.com/changelog
 - Email newsletter (opt-in in Settings)
 - Follow @cronkwaters on social media
@@ -876,4 +939,3 @@ Your usage quotas reset and expand:
 **END OF PLATFORM KNOWLEDGE BASE**
 
 This document is regularly updated to reflect platform changes and new features.
-

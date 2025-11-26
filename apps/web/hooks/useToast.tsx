@@ -24,7 +24,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const showToast = useCallback((message: string, type: ToastType = 'info') => {
     const id = Math.random().toString(36).substr(2, 9);
     const newToast = { id, message, type };
-    
+
     setToasts((prev) => [...prev, newToast]);
 
     // Auto-dismiss after 4 seconds
@@ -82,7 +82,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      
+
       {/* Toast Container */}
       <div className="fixed bottom-4 right-4 z-[9999] space-y-2">
         <AnimatePresence>
@@ -127,8 +127,3 @@ export function useToast() {
   }
   return context;
 }
-
-
-
-
-

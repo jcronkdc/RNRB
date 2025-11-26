@@ -25,19 +25,19 @@ export type PinnedComment = {
   entityId: string; // Song ID, project ID, etc
   entityType: 'song' | 'project' | 'lyric_line' | 'audio_track';
   location: PinnedCommentLocation;
-  
+
   userId: string;
   userName: string;
   userAvatar?: string;
   content: string;
-  
+
   isResolved: boolean;
   resolvedAt?: Date;
   resolvedBy?: string;
-  
+
   threadId?: string; // If this is a reply
   reactions?: Record<string, string[]>; // { "👍": ["userId1"], "❤️": ["userId2"] }
-  
+
   createdAt: Date;
   updatedAt: Date;
 };
@@ -143,9 +143,7 @@ export function usePinnedComments({
       const data = await response.json();
       const updatedComment: PinnedComment = data.comment;
 
-      setComments((prev) =>
-        prev.map((c) => (c.id === commentId ? updatedComment : c))
-      );
+      setComments((prev) => prev.map((c) => (c.id === commentId ? updatedComment : c)));
 
       return updatedComment;
     } catch (err) {
@@ -173,34 +171,35 @@ export function usePinnedComments({
   }, []);
 
   // Resolve comment
-  const resolveComment = useCallback(async (commentId: string) => {
-    try {
-      const response = await fetch(`/api/comments/pinned/${commentId}/resolve`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          resolved: true,
-          resolvedBy: currentUserId,
-        }),
-      });
+  const resolveComment = useCallback(
+    async (commentId: string) => {
+      try {
+        const response = await fetch(`/api/comments/pinned/${commentId}/resolve`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            resolved: true,
+            resolvedBy: currentUserId,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to resolve comment');
+        if (!response.ok) {
+          throw new Error('Failed to resolve comment');
+        }
+
+        const data = await response.json();
+        const resolvedComment: PinnedComment = data.comment;
+
+        setComments((prev) => prev.map((c) => (c.id === commentId ? resolvedComment : c)));
+
+        return resolvedComment;
+      } catch (err) {
+        console.error('Error resolving comment:', err);
+        throw err;
       }
-
-      const data = await response.json();
-      const resolvedComment: PinnedComment = data.comment;
-
-      setComments((prev) =>
-        prev.map((c) => (c.id === commentId ? resolvedComment : c))
-      );
-
-      return resolvedComment;
-    } catch (err) {
-      console.error('Error resolving comment:', err);
-      throw err;
-    }
-  }, [currentUserId]);
+    },
+    [currentUserId]
+  );
 
   // Unresolve comment
   const unresolveComment = useCallback(async (commentId: string) => {
@@ -220,9 +219,7 @@ export function usePinnedComments({
       const data = await response.json();
       const unresolvedComment: PinnedComment = data.comment;
 
-      setComments((prev) =>
-        prev.map((c) => (c.id === commentId ? unresolvedComment : c))
-      );
+      setComments((prev) => prev.map((c) => (c.id === commentId ? unresolvedComment : c)));
 
       return unresolvedComment;
     } catch (err) {
@@ -232,64 +229,66 @@ export function usePinnedComments({
   }, []);
 
   // Add reaction
-  const addReaction = useCallback(async (commentId: string, emoji: string) => {
-    try {
-      const response = await fetch(`/api/comments/pinned/${commentId}/react`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          emoji,
-          userId: currentUserId,
-        }),
-      });
+  const addReaction = useCallback(
+    async (commentId: string, emoji: string) => {
+      try {
+        const response = await fetch(`/api/comments/pinned/${commentId}/react`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            emoji,
+            userId: currentUserId,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to add reaction');
+        if (!response.ok) {
+          throw new Error('Failed to add reaction');
+        }
+
+        const data = await response.json();
+        const updatedComment: PinnedComment = data.comment;
+
+        setComments((prev) => prev.map((c) => (c.id === commentId ? updatedComment : c)));
+
+        return updatedComment;
+      } catch (err) {
+        console.error('Error adding reaction:', err);
+        throw err;
       }
-
-      const data = await response.json();
-      const updatedComment: PinnedComment = data.comment;
-
-      setComments((prev) =>
-        prev.map((c) => (c.id === commentId ? updatedComment : c))
-      );
-
-      return updatedComment;
-    } catch (err) {
-      console.error('Error adding reaction:', err);
-      throw err;
-    }
-  }, [currentUserId]);
+    },
+    [currentUserId]
+  );
 
   // Remove reaction
-  const removeReaction = useCallback(async (commentId: string, emoji: string) => {
-    try {
-      const response = await fetch(`/api/comments/pinned/${commentId}/react`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          emoji,
-          userId: currentUserId,
-        }),
-      });
+  const removeReaction = useCallback(
+    async (commentId: string, emoji: string) => {
+      try {
+        const response = await fetch(`/api/comments/pinned/${commentId}/react`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            emoji,
+            userId: currentUserId,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to remove reaction');
+        if (!response.ok) {
+          throw new Error('Failed to remove reaction');
+        }
+
+        const data = await response.json();
+        const updatedComment: PinnedComment = data.comment;
+
+        setComments((prev) => prev.map((c) => (c.id === commentId ? updatedComment : c)));
+
+        return updatedComment;
+      } catch (err) {
+        console.error('Error removing reaction:', err);
+        throw err;
       }
-
-      const data = await response.json();
-      const updatedComment: PinnedComment = data.comment;
-
-      setComments((prev) =>
-        prev.map((c) => (c.id === commentId ? updatedComment : c))
-      );
-
-      return updatedComment;
-    } catch (err) {
-      console.error('Error removing reaction:', err);
-      throw err;
-    }
-  }, [currentUserId]);
+    },
+    [currentUserId]
+  );
 
   // Get comments by location
   const getCommentsAtLine = useCallback(
@@ -331,7 +330,7 @@ export function usePinnedComments({
     comments,
     loading,
     error,
-    
+
     // Actions
     createComment,
     updateComment,
@@ -340,23 +339,18 @@ export function usePinnedComments({
     unresolveComment,
     addReaction,
     removeReaction,
-    
+
     // Queries
     getCommentsAtLine,
     getCommentsAtTimestamp,
     getThread,
-    
+
     // Stats
     unresolvedCount,
     resolvedCount,
     totalCount,
-    
+
     // Refresh
     refetch: fetchComments,
   };
 }
-
-
-
-
-

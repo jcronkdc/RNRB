@@ -128,7 +128,13 @@ const styles = StyleSheet.create({
 });
 
 // PDF Document Component
-const SplitSheetDocument = ({ songTitle, copyrightInfo }: { songTitle: string; copyrightInfo: CopyrightInfo }) => (
+const SplitSheetDocument = ({
+  songTitle,
+  copyrightInfo,
+}: {
+  songTitle: string;
+  copyrightInfo: CopyrightInfo;
+}) => (
   <Document>
     <Page size="A4" style={styles.page}>
       {/* Header */}
@@ -239,7 +245,8 @@ const SplitSheetDocument = ({ songTitle, copyrightInfo }: { songTitle: string; c
       <View style={styles.signatureSection}>
         <Text style={[styles.sectionTitle, { borderBottom: 'none' }]}>Signatures</Text>
         <Text style={{ fontSize: 9, marginBottom: 15, color: '#666' }}>
-          By signing below, all parties acknowledge and agree to the ownership percentages stated above.
+          By signing below, all parties acknowledge and agree to the ownership percentages stated
+          above.
         </Text>
         {copyrightInfo.splits.map((split, index) => (
           <View key={index} style={{ marginBottom: 20 }}>
@@ -249,9 +256,7 @@ const SplitSheetDocument = ({ songTitle, copyrightInfo }: { songTitle: string; c
             <View style={styles.signatureLine}>
               <Text style={{ fontSize: 9, color: '#666' }}>Signature</Text>
             </View>
-            <Text style={{ fontSize: 9, color: '#666', marginTop: 5 }}>
-              Date: _______________
-            </Text>
+            <Text style={{ fontSize: 9, color: '#666', marginTop: 5 }}>Date: _______________</Text>
           </View>
         ))}
       </View>
@@ -260,9 +265,10 @@ const SplitSheetDocument = ({ songTitle, copyrightInfo }: { songTitle: string; c
       <View style={styles.disclaimer}>
         <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>IMPORTANT LEGAL NOTICE:</Text>
         <Text>
-          This split sheet is a preliminary agreement between contributors. It is recommended to have this document
-          reviewed by a music attorney and registered with your Performance Rights Organization (PRO). This document
-          does not constitute a complete publishing agreement and should be supplemented with proper legal contracts.
+          This split sheet is a preliminary agreement between contributors. It is recommended to
+          have this document reviewed by a music attorney and registered with your Performance
+          Rights Organization (PRO). This document does not constitute a complete publishing
+          agreement and should be supplemented with proper legal contracts.
         </Text>
       </View>
 
@@ -275,7 +281,12 @@ const SplitSheetDocument = ({ songTitle, copyrightInfo }: { songTitle: string; c
   </Document>
 );
 
-export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailAll }: SplitSheetGeneratorProps) {
+export function SplitSheetGenerator({
+  songTitle,
+  songId,
+  copyrightInfo,
+  onEmailAll,
+}: SplitSheetGeneratorProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isEmailing, setIsEmailing] = useState(false);
 
@@ -284,7 +295,9 @@ export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailA
 
   const generatePDF = async () => {
     if (!isValid) {
-      alert('Cannot generate split sheet. Splits must total 100% and have at least one contributor.');
+      alert(
+        'Cannot generate split sheet. Splits must total 100% and have at least one contributor.'
+      );
       return;
     }
 
@@ -292,14 +305,14 @@ export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailA
     try {
       const doc = <SplitSheetDocument songTitle={songTitle} copyrightInfo={copyrightInfo} />;
       const blob = await pdf(doc).toBlob();
-      
+
       // Create download link
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = `${songTitle.replace(/[^a-z0-9]/gi, '_')}_Split_Sheet.pdf`;
       link.click();
-      
+
       // Cleanup
       URL.revokeObjectURL(url);
     } catch (error) {
@@ -316,7 +329,7 @@ export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailA
       return;
     }
 
-    const emailAddresses = copyrightInfo.splits.filter(s => s.email).map(s => s.email);
+    const emailAddresses = copyrightInfo.splits.filter((s) => s.email).map((s) => s.email);
     if (emailAddresses.length === 0) {
       alert('No email addresses found. Please add email addresses for contributors.');
       return;
@@ -327,13 +340,13 @@ export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailA
       // Generate PDF blob
       const doc = <SplitSheetDocument songTitle={songTitle} copyrightInfo={copyrightInfo} />;
       const blob = await pdf(doc).toBlob();
-      
+
       // Convert to base64 for API
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       reader.onloadend = async () => {
         const base64data = reader.result;
-        
+
         // Call API to send emails
         const response = await fetch('/api/split-sheet/email', {
           method: 'POST',
@@ -341,7 +354,7 @@ export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailA
           body: JSON.stringify({
             songTitle,
             songId,
-            recipients: copyrightInfo.splits.filter(s => s.email),
+            recipients: copyrightInfo.splits.filter((s) => s.email),
             pdfData: base64data,
           }),
         });
@@ -388,10 +401,19 @@ export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailA
       <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-4">
         <h4 className="mb-3 font-semibold text-white">Split Sheet Preview</h4>
         <div className="space-y-2 text-sm text-gray-300">
-          <p><span className="text-gray-500">Song:</span> {songTitle}</p>
-          <p><span className="text-gray-500">Contributors:</span> {copyrightInfo.splits.length}</p>
-          <p><span className="text-gray-500">Total:</span> {totalPercentage}%</p>
-          <p><span className="text-gray-500">With Emails:</span> {copyrightInfo.splits.filter(s => s.email).length}</p>
+          <p>
+            <span className="text-gray-500">Song:</span> {songTitle}
+          </p>
+          <p>
+            <span className="text-gray-500">Contributors:</span> {copyrightInfo.splits.length}
+          </p>
+          <p>
+            <span className="text-gray-500">Total:</span> {totalPercentage}%
+          </p>
+          <p>
+            <span className="text-gray-500">With Emails:</span>{' '}
+            {copyrightInfo.splits.filter((s) => s.email).length}
+          </p>
         </div>
       </div>
 
@@ -421,9 +443,11 @@ export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailA
 
         <button
           onClick={handleEmailAll}
-          disabled={!isValid || isEmailing || copyrightInfo.splits.filter(s => s.email).length === 0}
+          disabled={
+            !isValid || isEmailing || copyrightInfo.splits.filter((s) => s.email).length === 0
+          }
           className={`flex items-center justify-center gap-2 rounded-lg border-2 px-4 py-3 font-semibold transition ${
-            isValid && !isEmailing && copyrightInfo.splits.filter(s => s.email).length > 0
+            isValid && !isEmailing && copyrightInfo.splits.filter((s) => s.email).length > 0
               ? 'border-green-500/50 bg-green-500/10 text-green-400 hover:bg-green-500/20'
               : 'cursor-not-allowed border-gray-700 bg-gray-800/50 text-gray-500'
           }`}
@@ -444,14 +468,9 @@ export function SplitSheetGenerator({ songTitle, songId, copyrightInfo, onEmailA
 
       {/* Help Text */}
       <p className="text-xs text-gray-500">
-        💡 Tip: Add email addresses to contributors to enable the "Email to All" feature.
-        The PDF includes signature lines for all contributors.
+        💡 Tip: Add email addresses to contributors to enable the "Email to All" feature. The PDF
+        includes signature lines for all contributors.
       </p>
     </div>
   );
 }
-
-
-
-
-

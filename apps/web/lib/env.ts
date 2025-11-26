@@ -1,9 +1,9 @@
 /**
  * ENVIRONMENT VARIABLE VALIDATION
- * 
+ *
  * Centralized validation for all environment variables.
  * Fails fast at startup if required variables are missing or invalid.
- * 
+ *
  * Usage:
  *   import { env } from '@/lib/env';
  *   const apiKey = env.ANTHROPIC_API_KEY;
@@ -51,10 +51,7 @@ const envSchema = z.object({
   STRIPE_PUBLISHABLE_KEY: z.string().startsWith('pk_').optional(),
 
   // AI (required for AI features)
-  ANTHROPIC_API_KEY: z
-    .string()
-    .min(20, 'ANTHROPIC_API_KEY appears invalid')
-    .optional(),
+  ANTHROPIC_API_KEY: z.string().min(20, 'ANTHROPIC_API_KEY appears invalid').optional(),
 
   // Realtime (Ably)
   ABLY_API_KEY: z.string().optional(),
@@ -172,5 +169,3 @@ export const features = {
   video: !!env.DAILY_API_KEY,
   storage: !!env.NEXT_PUBLIC_SUPABASE_URL && !!env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
 };
-
-

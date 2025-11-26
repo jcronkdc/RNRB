@@ -26,7 +26,7 @@ export function AudioUploader({
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -60,7 +60,14 @@ export function AudioUploader({
     if (!file) return;
 
     // Validate file type
-    const validTypes = ['audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/m4a', 'audio/aac'];
+    const validTypes = [
+      'audio/mp3',
+      'audio/mpeg',
+      'audio/wav',
+      'audio/ogg',
+      'audio/m4a',
+      'audio/aac',
+    ];
     if (!validTypes.includes(file.type) && !file.name.match(/\.(mp3|wav|ogg|m4a|aac)$/i)) {
       setError('Invalid file type. Please upload MP3, WAV, OGG, M4A, or AAC files.');
       return;
@@ -169,7 +176,7 @@ export function AudioUploader({
             onChange={handleFileSelect}
             className="hidden"
           />
-          
+
           {!isUploading ? (
             <>
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/10">
@@ -182,10 +189,7 @@ export function AudioUploader({
               <p className="mb-4 text-xs text-gray-500">
                 MP3, WAV, OGG, M4A, AAC • Max {maxSizeMB}MB
               </p>
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                className="mx-auto"
-              >
+              <Button onClick={() => fileInputRef.current?.click()} className="mx-auto">
                 <Upload className="mr-2 h-4 w-4" />
                 Choose File
               </Button>
@@ -296,8 +300,3 @@ export function AudioUploader({
     </div>
   );
 }
-
-
-
-
-

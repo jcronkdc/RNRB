@@ -46,7 +46,7 @@ export function useVoiceRecorder({
     const checkSupport = () => {
       const hasMediaDevices = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
       const hasMediaRecorder = !!window.MediaRecorder;
-      
+
       if (!hasMediaDevices || !hasMediaRecorder) {
         setIsSupported(false);
         setError('Voice recording is not supported in this browser');
@@ -117,9 +117,7 @@ export function useVoiceRecorder({
       source.connect(analyser);
 
       // Set up MediaRecorder
-      const mimeType = MediaRecorder.isTypeSupported('audio/webm')
-        ? 'audio/webm'
-        : 'audio/mp4';
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
 
       const mediaRecorder = new MediaRecorder(stream, {
         mimeType,
@@ -281,8 +279,3 @@ export function useVoiceRecorder({
     resumeRecording,
   };
 }
-
-
-
-
-
