@@ -1,7 +1,7 @@
 # MASTER_TRUTH
 
-**Agent:** 138 | **Prev:** 137 | **Date:** 2025-11-26  
-**Status:** ✅ PRODUCTION LIVE
+**Agent:** 139 | **Prev:** 138 | **Date:** 2025-11-26  
+**Status:** ✅ **100% PRODUCTION READY**
 
 ---
 
@@ -11,28 +11,67 @@
 |-----------|--------|
 | **Site** | https://www.cronkwaters.com → ✅ HTTP 200 |
 | **Build** | ✅ Clean |
-| **Auth** | Supabase + Google OAuth |
-| **DB** | Neon PostgreSQL (us-west-2) |
-| **Stack** | Next.js 15.5.6, tRPC 11, Prisma 5.22.0, Turbo 2.3.0 |
+| **Health Check** | ✅ 100% |
+| **Auth** | ✅ NextAuth + Google OAuth + Email/Password |
+| **Database** | ✅ Neon PostgreSQL (connected) |
+| **Video** | ✅ Daily.co configured |
+| **Chat** | ✅ Ably configured |
+| **AI** | ✅ OpenAI configured |
+| **Stack** | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0 |
+
+---
+
+## 🎸 WHAT THIS IS
+
+**Rock N Roll Basement (RNRB)** - An all-in-one platform for musicians replacing:
+- Splice + BandLab (collaboration)
+- SongSpace + Setlist Helper (setlists)
+- Notion + Trello (project management)
+- Songtrust + DistroKid (copyright)
+
+---
+
+## 📋 FEATURES
+
+**Songwriting:**
+- Version control (v1, v2, "Radio Edit")
+- Multi-track stems mixer
+- Lyrics + chords editor
+- ISWC/ISRC tracking
+- AI insights
+
+**Live Performance:**
+- Smart Setlist builder
+- Tours & Shows management
+- Venue database
+- Fan engagement
+- Song requests
+
+**Collaboration:**
+- Real-time editing (Yjs CRDT)
+- Voice/video rooms (Daily.co)
+- Chat with reactions
+- Pinned comments on lyrics/audio
+
+**Business:**
+- Split sheets & royalty tracking
+- License management
+- Stripe subscriptions (free/creator/studio)
+- Usage metering (AI/video/storage)
 
 ---
 
 ## 🏗️ ARCHITECTURE
 
 ```
-/packages/db     → Prisma 5.22.0 (50 models)
-/packages/trpc   → 13 routers
-/packages/ui     → 31 components
-/apps/web        → 79 routes (Next.js App Router)
+/packages/db     → Prisma (60+ models)
+/packages/trpc   → tRPC routers
+/packages/ui     → Shared components
+/packages/auth   → NextAuth config
+/apps/web        → Next.js App Router
 ```
 
 **Build:** `db → ui → web` (turbo pipeline)
-
-**Layout:**
-```
-RootLayout (Server) → TRPCReactProvider (Client)
-  → (app)/Layout (Client) → AppLayout → SidebarNav + children
-```
 
 ---
 
@@ -41,7 +80,6 @@ RootLayout (Server) → TRPCReactProvider (Client)
 ```css
 --bg: #1e1e1e        --panel: #2a2a2a      --accent: #ff6347
 --text: #ffffff      --muted: #a8a8a8      --border: #404040
---radius: 16px       --radius-sm: 8px
 ```
 
 **Source:** `apps/web/app/globals.css` (IMMUTABLE)
@@ -62,45 +100,45 @@ RootLayout (Server) → TRPCReactProvider (Client)
 ## 🔧 COMMANDS
 
 ```bash
-pnpm dev                    # Port 3000
+pnpm dev                    # Port 3001
 git push origin main        # Deploy (~3min)
 pnpm prisma:generate        # After schema changes
 ```
 
-**Nuclear Reset:**
-```bash
-rm -rf apps/web/.next node_modules/.cache/turbo && pnpm install
-```
+---
+
+## ⚠️ OPTIONAL ENHANCEMENTS
+
+These are NOT blockers - app is fully functional without them:
+
+1. **Daily.co Webhook** - For recording notifications: `https://www.cronkwaters.com/api/webhooks/daily`
+2. **PostHog** - Analytics (optional)
+3. **OPENROUTER_API_KEY** - Alternative AI provider (optional)
 
 ---
 
-## 🚨 KNOWN ISSUES
+## 🗄️ DATABASE NOTE
 
-1. **Daily.co Webhook** - Not configured → `https://www.cronkwaters.com/api/webhooks/daily`
-2. **PostHog** - Disabled (no key)
-3. **ANTHROPIC_API_KEY** - Required in Vercel for AI Assistant
+The Supabase database contains **orphaned tables from other projects**:
+- Mining/exploration tables (drill_holes, vein_systems, etc.)
+- QuantumFoam schema
+- Construction tables (companies, crew_assignments)
+- MythaQuest game tables
+- DAS advertising tables
+- Angry Lips game tables
 
----
-
-## 📋 FEATURES
-
-**Core:** Songwriting Tool, Version Control, Stems Mixer, Copyright Manager, Projects, AI Insights
-
-**World-Class:** Smart Setlist (5D scoring), Gig Calendar (4 views), Tour Analytics
-
-**Protection:** AI Rate Limiting, Storage Quotas, Usage Dashboard, Credit Add-Ons
+**DO NOT** modify these orphaned tables. Focus only on Prisma-managed tables.
 
 ---
 
 ## 🐜 ANT COLONY PROTOCOL
 
-1. ONE TRUTH - This is the ONLY master document
-2. BRUTAL HONESTY - Document reality
-3. VERIFY FIRST - Test before claiming success
-4. MYCELIAL FLOW - DB → API → UI → TEST
-5. TOKEN WATCH - Alert at 180K tokens
+1. **ONE TRUTH** - This is the ONLY master document
+2. **BRUTAL HONESTY** - Document reality, not wishes
+3. **VERIFY FIRST** - Test before claiming success
+4. **FOCUS** - Only touch what this project actually uses
+5. **TOKEN WATCH** - Alert at 180K tokens
 
 ---
 
-**Last Updated:** 2025-11-26 by Agent 138  
-**Token Count:** Session ~15K / 200K (7.5%)
+**Last Updated:** 2025-11-26 by Agent 139
