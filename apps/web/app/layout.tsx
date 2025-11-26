@@ -4,6 +4,7 @@ import { AblyProvider } from '@/components/ably/ably-provider';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { NavBar } from '@/components/NavBar';
 import { PostHogProvider } from '@/components/posthog';
+import { TRPCReactProvider } from '@/components/providers/trpc-provider';
 import { SessionProvider } from '@/components/session-provider';
 import { ToastProvider } from '@/hooks/useToast';
 import { auth } from '@/auth';
@@ -96,14 +97,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <ErrorBoundary>
           <SessionProvider session={session}>
-            <PostHogProvider>
-              <AblyProvider>
-                <ToastProvider>
-                  <NavBar />
-                  {children}
-                </ToastProvider>
-              </AblyProvider>
-            </PostHogProvider>
+            <TRPCReactProvider>
+              <PostHogProvider>
+                <AblyProvider>
+                  <ToastProvider>
+                    <NavBar />
+                    {children}
+                  </ToastProvider>
+                </AblyProvider>
+              </PostHogProvider>
+            </TRPCReactProvider>
           </SessionProvider>
         </ErrorBoundary>
       </body>
