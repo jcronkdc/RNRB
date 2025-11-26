@@ -74,7 +74,7 @@ export function UsageHistory({
       </div>
 
       {/* Progress Bar */}
-      {data && !data.unlimited && (
+      {data && data.limit > 0 && (
         <div className="mb-4">
           <div className="mb-2 flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
@@ -98,14 +98,6 @@ export function UsageHistory({
               }`}
             />
           </div>
-        </div>
-      )}
-
-      {data?.unlimited && (
-        <div className="flex items-center justify-center rounded-lg bg-green-500/10 p-4">
-          <p className="text-sm font-medium text-green-400">
-            ∞ Unlimited {typeLabel}
-          </p>
         </div>
       )}
 
@@ -136,13 +128,13 @@ export function UsageHistory({
         <div>
           <p className="text-muted-foreground mb-1 text-xs">Available</p>
           <p className={`text-lg font-bold ${statusColor}`}>
-            {data?.unlimited ? '∞' : data?.remaining || 0}
+            {data?.limit === -1 ? '∞' : data?.remaining || 0}
           </p>
         </div>
       </div>
 
       {/* Usage Insights */}
-      {data && !data.unlimited && data.limit > 0 && (
+      {data && data.limit > 0 && (
         <div className="mt-4 rounded-lg bg-blue-500/5 p-3">
           <p className="text-xs text-blue-400">
             {percentageUsed < 50 
@@ -180,9 +172,7 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
     );
   }
 
-  const creditsColor = creditsData?.unlimited
-    ? 'text-purple-400' // Unlimited = purple
-    : !creditsData || creditsData.remaining === undefined
+  const creditsColor = !creditsData || creditsData.remaining === undefined
       ? 'text-gray-400' // Loading or no data = gray
       : creditsData.remaining < 20
         ? 'text-red-400' // Critical = red
@@ -195,7 +185,7 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
       <div className="flex items-center gap-2 rounded-lg bg-gray-800/50 px-3 py-2">
         <Zap className={`h-4 w-4 ${creditsColor}`} />
         <span className={`text-sm font-medium ${creditsColor}`}>
-          {creditsData?.unlimited ? '∞' : creditsData?.remaining ?? '...'}
+          {creditsData?.remaining ?? '...'}
         </span>
         <span className="text-xs text-gray-400">credits</span>
       </div>
@@ -211,12 +201,12 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
         <div>
           <p className="text-muted-foreground text-sm">AI Credits</p>
           <p className={`text-2xl font-bold ${creditsColor}`}>
-            {creditsData?.unlimited ? '∞' : creditsData?.remaining ?? '...'}
+            {creditsData?.remaining ?? '...'}
           </p>
         </div>
       </div>
 
-      {showDetails && creditsData && !creditsData.unlimited && (
+      {showDetails && creditsData && creditsData.limit > 0 && (
         <>
           <div className="mb-4 h-2 w-full overflow-hidden rounded-full bg-gray-800">
             <motion.div
@@ -257,12 +247,6 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
             )}
           </div>
         </>
-      )}
-
-      {creditsData?.unlimited && (
-        <div className="flex items-center justify-center rounded-lg bg-green-500/10 p-3">
-          <p className="text-sm font-medium text-green-400">Unlimited Credits</p>
-        </div>
       )}
     </Card>
   );

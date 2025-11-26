@@ -91,6 +91,46 @@ export async function createCheckoutSession(
 }
 
 /**
+ * Create one-time checkout session (for credits and add-ons)
+ */
+export async function createOneTimeCheckoutSession(
+  customerId: string,
+  priceId: string,
+  successUrl: string,
+  cancelUrl: string,
+  metadata: Record<string, string>
+): Promise<Stripe.Checkout.Session> {
+  try {
+    const stripe = getStripe();
+
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: 'payment',
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: {
+        ...metadata,
+        app: 'cronkwaters',
+      },
+      allow_promotion_codes: false,
+      billing_address_collection: 'auto',
+    });
+
+    return session;
+  } catch (error) {
+    console.error('Error creating one-time checkout session:', error);
+    throw new Error('Failed to create checkout session');
+  }
+}
+
+/**
  * Create a Customer Portal session
  */
 export async function createCustomerPortalSession(

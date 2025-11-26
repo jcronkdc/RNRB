@@ -47,6 +47,7 @@ ABLY_API_KEY="your-ably-key-here"
 # Get from: https://dashboard.daily.co
 NEXT_PUBLIC_DAILY_API_KEY="your-daily-api-key"
 NEXT_PUBLIC_DAILY_DOMAIN="your-domain.daily.co"
+DAILY_WEBHOOK_SECRET="your-daily-webhook-secret"
 
 # ============================================
 # ANALYTICS (OPTIONAL)
@@ -71,6 +72,15 @@ RESEND_API_KEY="re_..."
 STRIPE_SECRET_KEY="sk_test_..."
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 STRIPE_WEBHOOK_SECRET="whsec_..."
+STRIPE_PRICE_ID_CREATOR="price_creator_monthly"
+STRIPE_PRICE_ID_STUDIO="price_studio_monthly"
+
+# Credit Add-Ons (one-time purchases)
+STRIPE_PRICE_ID_AI_100="price_ai_100_requests"
+STRIPE_PRICE_ID_VIDEO_600="price_video_600_minutes"
+STRIPE_PRICE_ID_STORAGE_25="price_storage_25gb"
+STRIPE_PRICE_ID_STORAGE_100="price_storage_100gb"
+STRIPE_PRICE_ID_STORAGE_250="price_storage_250gb"
 
 # ============================================
 # SETUP INSTRUCTIONS

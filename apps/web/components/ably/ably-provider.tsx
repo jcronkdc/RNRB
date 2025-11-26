@@ -104,7 +104,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
         const ablyClient = new Ably.Realtime({
           authUrl: '/api/ably/token',
           authMethod: 'GET',
-          clientId: session.user.id,
+          clientId: session?.user?.id || 'anonymous',
           echoMessages: false,
           // FIX: closeOnUnload and recover() are mutually exclusive
           // Use recover() for better connection persistence

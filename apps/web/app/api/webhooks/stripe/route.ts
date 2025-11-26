@@ -1,4 +1,5 @@
 import { prisma } from '@cronkwaters/db';
+import { CreditType } from '@prisma/client';
 import { type NextRequest, NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 
@@ -50,6 +51,10 @@ export async function POST(req: NextRequest) {
 
       case 'customer.subscription.trial_will_end':
         await handleTrialEnding(event.data.object as Stripe.Subscription);
+        break;
+
+      case 'checkout.session.completed':
+        await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
         break;
 
       default:
@@ -236,6 +241,82 @@ async function handleTrialEnding(subscription: Stripe.Subscription) {
     // TODO: Send trial ending notification email
   } catch (error) {
     console.error('Error handling trial ending:', error);
+    throw error;
+  }
+}
+
+/**
+ * Handle credit purchases (one-time checkout sessions)
+ */
+async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
+  try {
+    if (session.mode !== 'payment') {
+      return;
+    }
+
+    const metadata = session.metadata || {};
+    const userId = metadata.userId;
+    const creditType = metadata.creditType as 'ai' | 'video' | 'storage' | undefined;
+    const creditAmount = Number(metadata.creditAmount || 0);
+
+    if (!userId || !creditType || !creditAmount) {
+      console.warn('Checkout session missing credit metadata', session.id);
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+
+    if (!user) {
+      console.error('User not found for credit purchase:', userId);
+      return;
+    }
+
+    // Apply credits
+    if (creditType === 'ai') {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { aiRequestsBonus: { increment: creditAmount } },
+      });
+    } else if (creditType === 'video') {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { videoMinutesBonus: { increment: creditAmount } },
+      });
+    } else if (creditType === 'storage') {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { storageBonusGB: { increment: creditAmount } },
+      });
+    }
+
+    await prisma.creditPurchase.upsert({
+      where: { stripeSessionId: session.id },
+      update: {
+        status: 'fulfilled',
+        fulfilledAt: new Date(),
+        priceCents: session.amount_total ?? 0,
+        type: creditType as CreditType,
+        unitAmount: creditAmount,
+        storageAmount: creditType === 'storage' ? creditAmount : null,
+      },
+      create: {
+        userId,
+        type: creditType as CreditType,
+        unitAmount: creditAmount,
+        storageAmount: creditType === 'storage' ? creditAmount : null,
+        priceCents: session.amount_total ?? 0,
+        stripeSessionId: session.id,
+        status: 'fulfilled',
+        fulfilledAt: new Date(),
+      },
+    });
+
+    console.log(`✅ Applied ${creditAmount} ${creditType} credits to user ${userId}`);
+  } catch (error) {
+    console.error('Error handling checkout.session.completed:', error);
     throw error;
   }
 }

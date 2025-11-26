@@ -162,13 +162,16 @@ export default function LibraryPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to publish file');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to publish file');
       }
 
-      alert('File published successfully!');
+      const data = await response.json();
+      alert('File published successfully! Check the Community page to see it.');
     } catch (err) {
       console.error('Publish failed:', err);
-      alert('Failed to publish file');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to publish file';
+      alert(errorMessage);
     } finally {
       setPublishingFile(null);
     }

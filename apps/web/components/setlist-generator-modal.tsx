@@ -1,38 +1,73 @@
 'use client';
 
 /**
- * INSTANT SETLIST GENERATOR
+ * WORLD-CLASS SETLIST GENERATOR
  *
- * Generates optimized setlists based on:
- * - Target duration
- * - Energy level preference
- * - Key variety
- * - Tempo flow
+ * Advanced AI-powered setlist optimization with:
+ * - Multi-dimensional scoring (energy, keys, vocal fatigue, pacing)
+ * - 5 energy profile options (explosive, dynamic, balanced, intimate, crescendo)
+ * - Advanced constraints (required songs, excluded songs, opener/closer)
+ * - Real-time insights & recommendations
+ * - Visual score display
  */
 
 import { Button , Card } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
-import { Sparkles, X, Loader2, AlertCircle, Wand2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Sparkles, 
+  X, 
+  Loader2, 
+  AlertCircle, 
+  Wand2, 
+  Zap,
+  Activity,
+  TrendingUp,
+  Heart,
+  Mountain,
+  ChevronDown,
+  ChevronUp,
+  Info,
+  CheckCircle,
+  XCircle,
+  Lightbulb,
+} from 'lucide-react';
 import { useState } from 'react';
+
+type EnergyProfile = 'explosive' | 'dynamic' | 'balanced' | 'intimate' | 'crescendo';
 
 export function SetlistGeneratorModal({
   projectId,
+  availableSongs,
   onClose,
   onGenerated,
 }: {
   projectId: string;
+  availableSongs: any[]; // Pass available songs for advanced UI
   onClose: () => void;
-  onGenerated: (songs: any[]) => void;
+  onGenerated: (data: any) => void;
 }) {
   const [targetDuration, setTargetDuration] = useState(90);
-  const [energyLevel, setEnergyLevel] = useState<'high' | 'mixed' | 'mellow'>('mixed');
+  const [energyProfile, setEnergyProfile] = useState<EnergyProfile>('balanced');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Advanced options (collapsible)
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [requiredSongs, setRequiredSongs] = useState<string[]>([]);
+  const [excludedSongs, setExcludedSongs] = useState<string[]>([]);
+  const [openingSong, setOpeningSong] = useState<string | null>(null);
+  const [closingSong, setClosingSong] = useState<string | null>(null);
+  const [avoidKeyJumps, setAvoidKeyJumps] = useState(true);
+  const [prioritizePopular, setPrioritizePopular] = useState(false);
+
+  // Result display
+  const [result, setResult] = useState<any | null>(null);
 
   const handleGenerate = async () => {
     try {
       setLoading(true);
       setError(null);
+      setResult(null);
 
       const response = await fetch('/api/setlists/generate', {
         method: 'POST',
@@ -40,7 +75,13 @@ export function SetlistGeneratorModal({
         body: JSON.stringify({
           projectId,
           targetDuration,
-          energyLevel,
+          energyProfile,
+          requiredSongs,
+          excludedSongs,
+          openingSong,
+          closingSong,
+          avoidKeyJumps,
+          prioritizePopular,
         }),
       });
 
@@ -50,8 +91,7 @@ export function SetlistGeneratorModal({
         throw new Error(data.error || 'Failed to generate setlist');
       }
 
-      onGenerated(data.songs);
-      onClose();
+      setResult(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
@@ -59,157 +99,447 @@ export function SetlistGeneratorModal({
     }
   };
 
+  const handleApply = () => {
+    if (result) {
+      onGenerated(result);
+      onClose();
+    }
+  };
+
+  const toggleSongRequired = (songId: string) => {
+    setRequiredSongs(prev =>
+      prev.includes(songId) ? prev.filter(id => id !== songId) : [...prev, songId]
+    );
+  };
+
+  const toggleSongExcluded = (songId: string) => {
+    setExcludedSongs(prev =>
+      prev.includes(songId) ? prev.filter(id => id !== songId) : [...prev, songId]
+    );
+  };
+
+  const energyProfiles: {
+    id: EnergyProfile;
+    name: string;
+    icon: any;
+    description: string;
+    gradient: string;
+  }[] = [
+    {
+      id: 'explosive',
+      name: 'Explosive',
+      icon: Zap,
+      description: 'High energy start, maintain intensity throughout',
+      gradient: 'from-red-500 to-orange-500',
+    },
+    {
+      id: 'dynamic',
+      name: 'Dynamic',
+      icon: Activity,
+      description: 'Peaks and valleys for dramatic show flow',
+      gradient: 'from-purple-500 to-pink-500',
+    },
+    {
+      id: 'balanced',
+      name: 'Balanced',
+      icon: TrendingUp,
+      description: 'Professional flow: strong start, dip middle, strong finish',
+      gradient: 'from-blue-500 to-cyan-500',
+    },
+    {
+      id: 'intimate',
+      name: 'Intimate',
+      icon: Heart,
+      description: 'Mellow, emotional show with gradual energy build',
+      gradient: 'from-pink-400 to-rose-400',
+    },
+    {
+      id: 'crescendo',
+      name: 'Crescendo',
+      icon: Mountain,
+      description: 'Build from low to climactic high energy finish',
+      gradient: 'from-emerald-500 to-lime-500',
+    },
+  ];
+
+  const getScoreColor = (score: number) => {
+    if (score >= 90) return 'text-green-400';
+    if (score >= 75) return 'text-yellow-400';
+    return 'text-orange-400';
+  };
+
+  const getScoreBg = (score: number) => {
+    if (score >= 90) return 'bg-green-500/20 border-green-500/50';
+    if (score >= 75) return 'bg-yellow-500/20 border-yellow-500/50';
+    return 'bg-orange-500/20 border-orange-500/50';
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="w-full max-w-2xl"
+        className="w-full max-w-4xl my-8"
       >
         <Card className="rnrb-card p-6">
           {/* Header */}
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-500/20">
-                <Wand2 className="h-5 w-5 text-purple-400" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg">
+                <Wand2 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h2 className="font-display text-2xl font-bold">Generate Setlist</h2>
+                <h2 className="font-display text-2xl font-bold">World-Class Setlist Generator</h2>
                 <p className="text-muted-foreground text-sm">
-                  AI-powered setlist builder with smart song selection
+                  AI-powered optimization with multi-dimensional scoring
                 </p>
               </div>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={onClose} disabled={loading}>
               <X className="h-5 w-5" />
             </Button>
           </div>
 
           {/* Error Display */}
           {error && (
-            <div className="mb-4 flex items-start gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 flex items-start gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4"
+            >
               <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
               <div>
-                <h4 className="font-semibold text-red-400">Error</h4>
+                <h4 className="font-semibold text-red-400">Generation Failed</h4>
                 <p className="text-sm text-red-300">{error}</p>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Results Display */}
+          {result && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 space-y-4"
+            >
+              {/* Overall Score */}
+              <div className={`rounded-xl border-2 ${getScoreBg(result.score.overall)} p-6`}>
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-bold">Setlist Quality Score</h3>
+                    <p className="text-sm text-gray-400">{result.message}</p>
+                  </div>
+                  <div className={`text-5xl font-black ${getScoreColor(result.score.overall)}`}>
+                    {Math.round(result.score.overall)}
+                  </div>
+                </div>
+
+                {/* Detailed Scores */}
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+                  {[
+                    { label: 'Energy Flow', value: result.score.energyFlow },
+                    { label: 'Key Variety', value: result.score.keyVariety },
+                    { label: 'Vocal Health', value: result.score.vocalFatigue },
+                    { label: 'Pacing', value: result.score.pacing },
+                    { label: 'Duration', value: result.score.durationMatch },
+                  ].map((metric) => (
+                    <div key={metric.label} className="text-center">
+                      <div className={`text-2xl font-bold ${getScoreColor(metric.value)}`}>
+                        {Math.round(metric.value)}
+                      </div>
+                      <div className="text-xs text-gray-400">{metric.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Insights */}
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {/* Warnings */}
+                {result.insights.warnings.length > 0 && (
+                  <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-4">
+                    <div className="mb-2 flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4 text-yellow-400" />
+                      <h4 className="font-semibold text-yellow-400">Warnings</h4>
+                    </div>
+                    <ul className="space-y-1 text-sm text-yellow-300">
+                      {result.insights.warnings.map((warning: string, i: number) => (
+                        <li key={i}>• {warning}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Suggestions */}
+                {result.insights.suggestions.length > 0 && (
+                  <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4">
+                    <div className="mb-2 flex items-center gap-2">
+                      <Lightbulb className="h-4 w-4 text-blue-400" />
+                      <h4 className="font-semibold text-blue-400">Suggestions</h4>
+                    </div>
+                    <ul className="space-y-1 text-sm text-blue-300">
+                      {result.insights.suggestions.map((suggestion: string, i: number) => (
+                        <li key={i}>• {suggestion}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div className="rounded-lg bg-gray-800/50 p-3">
+                  <div className="text-xs text-gray-400">Total Duration</div>
+                  <div className="text-lg font-bold">
+                    {Math.floor(result.insights.totalDuration / 60)}min
+                  </div>
+                </div>
+                <div className="rounded-lg bg-gray-800/50 p-3">
+                  <div className="text-xs text-gray-400">Songs</div>
+                  <div className="text-lg font-bold">{result.songs.length}</div>
+                </div>
+                <div className="rounded-lg bg-gray-800/50 p-3">
+                  <div className="text-xs text-gray-400">Avg Tempo</div>
+                  <div className="text-lg font-bold">
+                    {Math.round(result.insights.avgTempo)} BPM
+                  </div>
+                </div>
+                <div className="rounded-lg bg-gray-800/50 p-3">
+                  <div className="text-xs text-gray-400">Key Changes</div>
+                  <div className="text-lg font-bold">{result.insights.keyChanges}</div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Configuration (hidden when results shown) */}
+          {!result && (
+            <div className="space-y-6">
+              {/* Target Duration */}
+              <div>
+                <label className="mb-2 block text-sm font-medium">Target Set Length</label>
+                <div className="grid grid-cols-4 gap-3">
+                  {[45, 60, 90, 120].map((duration) => (
+                    <button
+                      key={duration}
+                      onClick={() => setTargetDuration(duration)}
+                      disabled={loading}
+                      className={`rounded-lg border-2 p-3 transition-all ${
+                        targetDuration === duration
+                          ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
+                          : 'border-border hover:border-brand-primary/30'
+                      }`}
+                    >
+                      <div className="text-2xl font-bold">{duration}</div>
+                      <div className="text-muted-foreground text-xs">minutes</div>
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-3">
+                  <label className="text-muted-foreground text-xs">Custom duration (minutes)</label>
+                  <input
+                    type="number"
+                    value={targetDuration}
+                    onChange={(e) => setTargetDuration(parseInt(e.target.value) || 90)}
+                    disabled={loading}
+                    min={15}
+                    max={240}
+                    className="border-border bg-surface focus:border-brand-primary focus:ring-brand-primary/20 mt-1 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
+                  />
+                </div>
+              </div>
+
+              {/* Energy Profile */}
+              <div>
+                <label className="mb-2 block text-sm font-medium">Energy Profile</label>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+                  {energyProfiles.map((profile) => {
+                    const Icon = profile.icon;
+                    return (
+                      <button
+                        key={profile.id}
+                        onClick={() => setEnergyProfile(profile.id)}
+                        disabled={loading}
+                        className={`rounded-lg border-2 p-4 text-left transition-all ${
+                          energyProfile === profile.id
+                            ? 'border-brand-primary bg-brand-primary/10'
+                            : 'border-border hover:border-brand-primary/30'
+                        }`}
+                      >
+                        <div className="mb-2 flex items-center gap-2">
+                          <div className={`rounded-lg bg-gradient-to-br ${profile.gradient} p-2`}>
+                            <Icon className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="font-semibold">{profile.name}</div>
+                        </div>
+                        <div className="text-muted-foreground text-xs">{profile.description}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Advanced Options */}
+              <div className="border-border rounded-lg border">
+                <button
+                  onClick={() => setShowAdvanced(!showAdvanced)}
+                  disabled={loading}
+                  className="hover:bg-surface-muted flex w-full items-center justify-between p-4 transition"
+                >
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-purple-400" />
+                    <span className="font-medium">Advanced Options</span>
+                  </div>
+                  {showAdvanced ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </button>
+
+                <AnimatePresence>
+                  {showAdvanced && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="border-border overflow-hidden border-t"
+                    >
+                      <div className="space-y-4 p-4">
+                        {/* Toggles */}
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={avoidKeyJumps}
+                              onChange={(e) => setAvoidKeyJumps(e.target.checked)}
+                              disabled={loading}
+                              className="h-4 w-4 rounded"
+                            />
+                            <span className="text-sm">Avoid large key jumps (vocalist-friendly)</span>
+                          </label>
+                          <label className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={prioritizePopular}
+                              onChange={(e) => setPrioritizePopular(e.target.checked)}
+                              disabled={loading}
+                              className="h-4 w-4 rounded"
+                            />
+                            <span className="text-sm">Prioritize popular/crowd favorite songs</span>
+                          </label>
+                        </div>
+
+                        {/* Song Selection */}
+                        {availableSongs && availableSongs.length > 0 && (
+                          <div className="space-y-2">
+                            <div className="text-sm font-medium">Song Constraints</div>
+                            <div className="max-h-40 space-y-1 overflow-y-auto rounded-lg bg-gray-900/50 p-2">
+                              {availableSongs.slice(0, 20).map((song: any) => (
+                                <div key={song.id} className="flex items-center justify-between py-1">
+                                  <span className="text-sm">{song.title}</span>
+                                  <div className="flex gap-1">
+                                    <button
+                                      onClick={() => toggleSongRequired(song.id)}
+                                      disabled={loading}
+                                      className={`rounded px-2 py-0.5 text-xs transition ${
+                                        requiredSongs.includes(song.id)
+                                          ? 'bg-green-500/20 text-green-400'
+                                          : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                                      }`}
+                                    >
+                                      {requiredSongs.includes(song.id) ? '✓ Required' : 'Require'}
+                                    </button>
+                                    <button
+                                      onClick={() => toggleSongExcluded(song.id)}
+                                      disabled={loading}
+                                      className={`rounded px-2 py-0.5 text-xs transition ${
+                                        excludedSongs.includes(song.id)
+                                          ? 'bg-red-500/20 text-red-400'
+                                          : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                                      }`}
+                                    >
+                                      {excludedSongs.includes(song.id) ? '✗ Excluded' : 'Exclude'}
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Info */}
+              <div className="rounded-lg border border-purple-500/20 bg-purple-500/5 p-4">
+                <div className="flex items-start gap-3">
+                  <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
+                  <div className="text-sm">
+                    <p className="mb-1 font-medium text-purple-300">World-Class Algorithm</p>
+                    <ul className="text-muted-foreground space-y-1">
+                      <li>• Multi-dimensional scoring (energy, keys, vocal fatigue, pacing)</li>
+                      <li>• Professional setlist design principles</li>
+                      <li>• Crowd psychology & attention curve management</li>
+                      <li>• Automatic key change warnings for vocalists</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
-          {/* Options */}
-          <div className="space-y-6">
-            {/* Target Duration */}
-            <div>
-              <label className="mb-2 block text-sm font-medium">Target Set Length</label>
-              <div className="grid grid-cols-4 gap-3">
-                {[45, 60, 90, 120].map((duration) => (
-                  <button
-                    key={duration}
-                    onClick={() => setTargetDuration(duration)}
-                    className={`rounded-lg border-2 p-3 transition-all ${
-                      targetDuration === duration
-                        ? 'border-brand-primary bg-brand-primary/10 text-brand-primary'
-                        : 'border-border hover:border-brand-primary/30'
-                    }`}
-                  >
-                    <div className="text-2xl font-bold">{duration}</div>
-                    <div className="text-muted-foreground text-xs">minutes</div>
-                  </button>
-                ))}
-              </div>
-              <div className="mt-3">
-                <label className="text-muted-foreground text-xs">Custom duration (minutes)</label>
-                <input
-                  type="number"
-                  value={targetDuration}
-                  onChange={(e) => setTargetDuration(parseInt(e.target.value) || 90)}
-                  min={15}
-                  max={240}
-                  className="border-border bg-surface focus:border-brand-primary focus:ring-brand-primary/20 mt-1 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
-                />
-              </div>
-            </div>
-
-            {/* Energy Level */}
-            <div>
-              <label className="mb-2 block text-sm font-medium">Energy Level</label>
-              <div className="grid grid-cols-3 gap-3">
-                <button
-                  onClick={() => setEnergyLevel('high')}
-                  className={`rounded-lg border-2 p-4 transition-all ${
-                    energyLevel === 'high'
-                      ? 'border-brand-primary bg-brand-primary/10'
-                      : 'border-border hover:border-brand-primary/30'
-                  }`}
-                >
-                  <div className="mb-1 text-lg font-semibold">🔥 High Energy</div>
-                  <div className="text-muted-foreground text-xs">Fast tempo, upbeat songs</div>
-                </button>
-                <button
-                  onClick={() => setEnergyLevel('mixed')}
-                  className={`rounded-lg border-2 p-4 transition-all ${
-                    energyLevel === 'mixed'
-                      ? 'border-brand-primary bg-brand-primary/10'
-                      : 'border-border hover:border-brand-primary/30'
-                  }`}
-                >
-                  <div className="mb-1 text-lg font-semibold">🎵 Mixed</div>
-                  <div className="text-muted-foreground text-xs">Balanced energy flow</div>
-                </button>
-                <button
-                  onClick={() => setEnergyLevel('mellow')}
-                  className={`rounded-lg border-2 p-4 transition-all ${
-                    energyLevel === 'mellow'
-                      ? 'border-brand-primary bg-brand-primary/10'
-                      : 'border-border hover:border-brand-primary/30'
-                  }`}
-                >
-                  <div className="mb-1 text-lg font-semibold">🌙 Mellow</div>
-                  <div className="text-muted-foreground text-xs">Slower, intimate songs</div>
-                </button>
-              </div>
-            </div>
-
-            {/* Info */}
-            <div className="rounded-lg border border-purple-500/20 bg-purple-500/5 p-4">
-              <div className="flex items-start gap-3">
-                <Sparkles className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
-                <div className="text-sm">
-                  <p className="mb-1 font-medium text-purple-300">How it works:</p>
-                  <ul className="text-muted-foreground space-y-1">
-                    <li>• Analyzes tempo and key of all songs in your project</li>
-                    <li>• Builds optimal flow: strong start, varied middle, powerful end</li>
-                    <li>• Avoids too many songs in the same key consecutively</li>
-                    <li>• Matches your target duration (within ±5 minutes)</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Actions */}
           <div className="mt-6 flex gap-3">
-            <Button variant="ghost" onClick={onClose} className="flex-1" disabled={loading}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleGenerate}
+            <Button 
+              variant="ghost" 
+              onClick={onClose} 
+              className="flex-1" 
               disabled={loading}
-              className="rnrb-button-primary flex-1"
             >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                <>
-                  <Wand2 className="mr-2 h-4 w-4" />
-                  Generate Setlist
-                </>
-              )}
+              {result ? 'Cancel' : 'Close'}
             </Button>
+            {result ? (
+              <>
+                <Button
+                  onClick={() => setResult(null)}
+                  variant="secondary"
+                  className="flex-1"
+                  disabled={loading}
+                >
+                  Try Again
+                </Button>
+                <Button
+                  onClick={handleApply}
+                  className="rnrb-button-primary flex-1"
+                  disabled={loading}
+                >
+                  <CheckCircle className="mr-2 h-4 w-4" />
+                  Apply Setlist
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={handleGenerate}
+                disabled={loading}
+                className="rnrb-button-primary flex-1"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Optimizing...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    Generate Setlist
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         </Card>
       </motion.div>

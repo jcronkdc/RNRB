@@ -180,7 +180,7 @@ export async function GET(request: NextRequest) {
       );
     }
     
-    const limit = limitParam;
+    const limit = Math.min(limitParam, 100); // Max 100 messages per request
 
     // Get messages from database
     const messages = await db.chatMessage.findMany({

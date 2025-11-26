@@ -13,6 +13,7 @@ export const SUBSCRIPTION_TIERS = {
       aiTranscription: false,
       aiContentGeneration: false,
       aiTourRouter: false,
+      aiAssistant: false,
       videoCalls: false,
       collaborationLimit: 1, // Max 1 collaborator per project
       projectLimit: 3,
@@ -26,6 +27,7 @@ export const SUBSCRIPTION_TIERS = {
       aiTranscription: true,
       aiContentGeneration: true,
       aiTourRouter: true,
+      aiAssistant: false, // Requires add-on
       videoCalls: false,
       collaborationLimit: 5,
       projectLimit: 10,
@@ -39,6 +41,7 @@ export const SUBSCRIPTION_TIERS = {
       aiTranscription: true,
       aiContentGeneration: true,
       aiTourRouter: true,
+      aiAssistant: true, // Included in Studio
       videoCalls: true,
       collaborationLimit: -1, // Unlimited
       projectLimit: -1, // Unlimited

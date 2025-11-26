@@ -1,0 +1,399 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Progress,
+} from '@cronkwaters/ui';
+import { AlertCircle, TrendingUp, Calendar, Zap } from 'lucide-react';
+import Link from 'next/link';
+
+import { BuyCreditsButton } from '@/components/billing/BuyCreditsButton';
+
+interface UsageSummary {
+  tier: 'free' | 'creator' | 'studio';
+  ai: {
+    used: number;
+    limit: number;
+    remaining: number;
+    percentage: number;
+    bonus: number;
+  };
+  video: {
+    used: number;
+    limit: number;
+    remaining: number;
+    percentage: number;
+    bonus: number;
+  };
+  storage: {
+    used: number;
+    limit: number;
+    remaining: number;
+    percentage: number;
+    bonus: number;
+  };
+  resetDate: string;
+}
+
+export default function UsagePage() {
+  const [usage, setUsage] = useState<UsageSummary | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchUsage() {
+      try {
+        const response = await fetch('/api/usage/summary');
+        if (!response.ok) throw new Error('Failed to load usage data');
+        const data = await response.json();
+        setUsage(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchUsage();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-6">Usage & Limits</h1>
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader>
+                <div className="h-6 bg-muted rounded w-1/3"></div>
+                <div className="h-4 bg-muted rounded w-1/2 mt-2"></div>
+              </CardHeader>
+              <CardContent>
+                <div className="h-2 bg-muted rounded w-full"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !usage) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <Card className="border-destructive">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertCircle className="h-5 w-5" />
+              Error Loading Usage Data
+            </CardTitle>
+            <CardDescription>{error || 'Could not load your usage information.'}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => window.location.reload()}>Retry</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const tierDisplayName =
+    usage.tier === 'free' ? 'Free' : usage.tier === 'creator' ? 'Creator' : 'Studio';
+
+  const getUsageColor = (percentage: number) => {
+    if (percentage >= 95) return 'text-destructive';
+    if (percentage >= 80) return 'text-yellow-600 dark:text-yellow-500';
+    return 'text-primary';
+  };
+
+  const getProgressColor = (percentage: number) => {
+    if (percentage >= 95) return '[&>div]:bg-destructive';
+    if (percentage >= 80) return '[&>div]:bg-yellow-500';
+    return '';
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
+  const showUpgradePrompt =
+    usage.ai.percentage > 80 || usage.video.percentage > 80 || usage.storage.percentage > 80;
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Usage & Limits</h1>
+          <p className="text-muted-foreground mt-1">Current plan: {tierDisplayName}</p>
+        </div>
+        <Link href="/settings/billing">
+          <Button>Manage Plan</Button>
+        </Link>
+      </div>
+
+      {/* Upgrade Prompt */}
+      {showUpgradePrompt && usage.tier !== 'studio' && (
+        <Card className="border-yellow-500/50 bg-yellow-50 dark:bg-yellow-950/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-yellow-700 dark:text-yellow-500">
+              <TrendingUp className="h-5 w-5" />
+              Approaching Limits
+            </CardTitle>
+            <CardDescription>
+              You're using {Math.max(usage.ai.percentage, usage.video.percentage, usage.storage.percentage).toFixed(0)}% of your monthly allowance.{' '}
+              {usage.tier === 'free' && 'Upgrade to Creator for 100 AI requests and 10 GB storage.'}
+              {usage.tier === 'creator' && 'Upgrade to Studio for 500 AI requests, video calls, and 100 GB storage.'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link href="/settings/billing">
+              <Button variant="default">
+                {usage.tier === 'free' ? 'Upgrade to Creator' : 'Upgrade to Studio'}
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Reset Date Info */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <Calendar className="h-4 w-4" />
+            Usage Period
+          </CardTitle>
+          <CardDescription>Your limits reset on {formatDate(usage.resetDate)}</CardDescription>
+        </CardHeader>
+      </Card>
+
+      {/* AI Requests Usage */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="h-5 w-5" />
+            AI Requests
+          </CardTitle>
+          <CardDescription>
+            {usage.ai.used.toLocaleString()} of {usage.ai.limit.toLocaleString()} requests used this month
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Progress value={usage.ai.percentage} className={getProgressColor(usage.ai.percentage)} />
+          <div className="flex items-center justify-between text-sm">
+            <span className={getUsageColor(usage.ai.percentage)}>
+              {usage.ai.percentage.toFixed(1)}% used
+            </span>
+            <span className="text-muted-foreground">{usage.ai.remaining} remaining</span>
+          </div>
+          {usage.ai.percentage >= 95 && (
+            <div className="flex items-start gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <AlertCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+              <div className="text-sm text-destructive">
+                <p className="font-medium">AI quota almost depleted</p>
+                <p className="text-destructive/80">
+                  Upgrade your plan or wait until {formatDate(usage.resetDate)} for reset.
+                </p>
+              </div>
+            </div>
+          )}
+          {usage.ai.bonus > 0 && (
+            <p className="text-xs text-muted-foreground">
+              Includes {usage.ai.bonus.toLocaleString()} purchased requests active this cycle.
+            </p>
+          )}
+          <div className="pt-3 border-t space-y-2">
+            <div className="text-sm text-muted-foreground">
+              Need more this month? +100 requests for $5 (expires at period reset).
+            </div>
+            <BuyCreditsButton product="ai_100" className="w-full" />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Video Minutes Usage (Studio only) */}
+      {usage.tier === 'studio' && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+              Video Call Minutes
+            </CardTitle>
+            <CardDescription>
+              {usage.video.used.toLocaleString()} of {usage.video.limit.toLocaleString()} minutes used this month (
+              {(usage.video.used / 60).toFixed(1)} hours)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Progress
+              value={usage.video.percentage}
+              className={getProgressColor(usage.video.percentage)}
+            />
+            <div className="flex items-center justify-between text-sm">
+              <span className={getUsageColor(usage.video.percentage)}>
+                {usage.video.percentage.toFixed(1)}% used
+              </span>
+              <span className="text-muted-foreground">
+                {usage.video.remaining} minutes ({(usage.video.remaining / 60).toFixed(1)} hours) remaining
+              </span>
+            </div>
+            {usage.video.percentage >= 95 && (
+              <div className="flex items-start gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <AlertCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+                <div className="text-sm text-destructive">
+                  <p className="font-medium">Video quota almost depleted</p>
+                  <p className="text-destructive/80">
+                    Calls will be disconnected when limit is reached. Resets {formatDate(usage.resetDate)}.
+                  </p>
+                </div>
+              </div>
+            )}
+            {usage.video.bonus > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Includes {(usage.video.bonus / 60).toFixed(1)} bonus hours purchased this cycle.
+              </p>
+            )}
+            <div className="pt-3 border-t space-y-2">
+              <div className="text-sm text-muted-foreground">
+                Add +10 hours for $8. Credits expire at period reset.
+              </div>
+              <BuyCreditsButton product="video_600" className="w-full" />
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Storage Usage */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
+              />
+            </svg>
+            Storage
+          </CardTitle>
+          <CardDescription>
+            {usage.storage.used.toFixed(2)} GB of {usage.storage.limit} GB used
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Progress
+            value={usage.storage.percentage}
+            className={getProgressColor(usage.storage.percentage)}
+          />
+          <div className="flex items-center justify-between text-sm">
+            <span className={getUsageColor(usage.storage.percentage)}>
+              {usage.storage.percentage.toFixed(1)}% used
+            </span>
+            <span className="text-muted-foreground">{usage.storage.remaining.toFixed(2)} GB remaining</span>
+          </div>
+          {usage.storage.percentage >= 95 && (
+            <div className="flex items-start gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <AlertCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
+              <div className="text-sm text-destructive">
+                <p className="font-medium">Storage almost full</p>
+                <p className="text-destructive/80">
+                  New uploads will be blocked. Upgrade your plan or delete old files.
+                </p>
+              </div>
+            </div>
+          )}
+          {usage.storage.bonus > 0 && (
+            <p className="text-xs text-muted-foreground">
+              You have an extra {usage.storage.bonus} GB of permanent storage capacity.
+            </p>
+          )}
+          <div className="pt-3 border-t space-y-2">
+            <div className="text-sm text-muted-foreground">
+              Storage top-ups now start at $5 for +25 GB (permanent capacity boost).
+            </div>
+            <div className="grid sm:grid-cols-2 gap-2">
+              <BuyCreditsButton product="storage_25" className="w-full" />
+              <BuyCreditsButton product="storage_100" className="w-full" />
+              <BuyCreditsButton product="storage_250" className="w-full sm:col-span-2" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tier Comparison */}
+      {usage.tier !== 'studio' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Need More?</CardTitle>
+            <CardDescription>
+              {usage.tier === 'free' && 'Upgrade to Creator or Studio for higher limits'}
+              {usage.tier === 'creator' && 'Upgrade to Studio for the highest limits'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-4">
+              {usage.tier === 'free' && (
+                <div className="p-4 border rounded-lg space-y-2">
+                  <div className="font-semibold">Creator ($9.99/mo)</div>
+                  <ul className="text-sm space-y-1 text-muted-foreground">
+                    <li>✅ 100 AI requests/month</li>
+                    <li>✅ 10 GB storage</li>
+                    <li>✅ Unlimited projects</li>
+                    <li>✅ Advanced analytics</li>
+                  </ul>
+                  <Link href="/settings/billing">
+                    <Button className="w-full mt-2" variant="outline">
+                      Upgrade to Creator
+                    </Button>
+                  </Link>
+                </div>
+              )}
+              <div className="p-4 border rounded-lg space-y-2">
+                <div className="font-semibold">Studio ($29.99/mo)</div>
+                <ul className="text-sm space-y-1 text-muted-foreground">
+                  <li>✅ 500 AI requests/month</li>
+                  <li>✅ 20 hours video calls/month</li>
+                  <li>✅ 100 GB storage</li>
+                  <li>✅ Priority support</li>
+                </ul>
+                <Link href="/settings/billing">
+                  <Button className="w-full mt-2">
+                    Upgrade to Studio
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+

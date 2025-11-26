@@ -9,7 +9,7 @@ import { deleteAudioFile } from '@/lib/storage';
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -17,9 +17,11 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const file = await prisma.libraryFile.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -50,7 +52,7 @@ export async function GET(
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -58,13 +60,14 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await req.json();
     const { name, tags, metadata } = body;
 
     // Verify file ownership
     const existingFile = await prisma.libraryFile.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -75,7 +78,7 @@ export async function PATCH(
 
     // Update file
     const updatedFile = await prisma.libraryFile.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(name && { name }),
         ...(tags && { tags }),
@@ -105,7 +108,7 @@ export async function PATCH(
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -113,10 +116,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Get file info
     const file = await prisma.libraryFile.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -135,12 +140,12 @@ export async function DELETE(
 
     // Delete from database
     await prisma.libraryFile.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({
       message: 'File deleted successfully',
-      id: params.id,
+      id,
     });
   } catch (error) {
     console.error('Error deleting library file:', error);

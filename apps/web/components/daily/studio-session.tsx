@@ -31,9 +31,10 @@ import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 interface StudioSessionProps {
   roomUrl: string;
   token?: string;
+  onRecordingComplete?: (recordingId: string) => void;
 }
 
-export function StudioSession({ roomUrl, token }: StudioSessionProps) {
+export function StudioSession({ roomUrl, token, onRecordingComplete }: StudioSessionProps) {
   const callObject = useDaily();
   const localParticipant = useLocalParticipant();
   const remoteParticipantIds = useParticipantIds({ filter: 'remote' });
@@ -55,6 +56,34 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   
   // Use ref to track if we've already attempted to join
   const hasJoinedRef = useRef(false);
+
+  // Listen for recording events to capture recording ID
+  useEffect(() => {
+    if (!callObject || !onRecordingComplete) return;
+
+    const handleRecordingEvent = (event: any) => {
+      console.log('Recording event received:', event);
+      
+      // Daily.co may provide recording ID in different formats
+      // Check multiple possible locations for the recording ID
+      const recordingId = event?.recordingId || event?.id || event?.recording?.id;
+      
+      if (recordingId) {
+        console.log('Recording stopped, ID:', recordingId);
+        onRecordingComplete(recordingId);
+      } else {
+        console.warn('Recording stopped but no ID found in event:', event);
+      }
+    };
+
+    // Subscribe to recording events
+    // Daily.co fires this when a recording stops
+    callObject.on('recording-stopped', handleRecordingEvent);
+
+    return () => {
+      callObject.off('recording-stopped', handleRecordingEvent);
+    };
+  }, [callObject, onRecordingComplete]);
 
   // Join the call
   const joinCall = useCallback(async () => {

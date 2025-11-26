@@ -136,28 +136,24 @@ export default function CreditsPage() {
                   )}
                 </div>
                 <p className="text-3xl font-bold">
-                  {isLoading ? '...' : summary?.ai.unlimited ? '∞' : summary?.ai.remaining || 0}
+                  {isLoading ? '...' : summary?.ai.remaining || 0}
                 </p>
                 <p className="text-muted-foreground mt-1 text-xs">
                   {isLoading 
                     ? 'Loading...' 
-                    : summary?.ai.unlimited 
-                      ? 'Unlimited usage' 
-                      : `${summary?.ai.used || 0} of ${summary?.ai.limit || 0} used`
+                    : `${summary?.ai.used || 0} of ${summary?.ai.limit || 0} used`
                   }
                 </p>
-                {!summary?.ai.unlimited && (
-                  <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-gray-800">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${aiPercentage}%` }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                      className={`h-full rounded-full ${
-                        nearAILimit ? 'bg-orange-500' : 'bg-gradient-to-r from-orange-500 to-orange-400'
-                      }`}
-                    />
-                  </div>
-                )}
+                <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-gray-800">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${aiPercentage}%` }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className={`h-full rounded-full ${
+                      nearAILimit ? 'bg-orange-500' : 'bg-gradient-to-r from-orange-500 to-orange-400'
+                    }`}
+                  />
+                </div>
               </div>
 
               {/* Video Minutes */}
@@ -169,19 +165,17 @@ export default function CreditsPage() {
                   )}
                 </div>
                 <p className="text-3xl font-bold">
-                  {isLoading ? '...' : summary?.video.unlimited ? '∞' : summary?.video.remaining || 0}
+                  {isLoading ? '...' : summary?.video.remaining || 0}
                 </p>
                 <p className="text-muted-foreground mt-1 text-xs">
                   {isLoading 
                     ? 'Loading...' 
-                    : summary?.video.unlimited 
-                      ? 'Unlimited usage' 
-                      : summary?.video.limit === 0
-                        ? 'Not available on your plan'
-                        : `${summary?.video.used || 0} of ${summary?.video.limit || 0} used`
+                    : summary?.video.limit === 0
+                      ? 'Not available on your plan'
+                      : `${summary?.video.used || 0} of ${summary?.video.limit || 0} used`
                   }
                 </p>
-                {!summary?.video.unlimited && summary?.video.limit > 0 && (
+                {summary?.video && summary.video.limit > 0 && (
                   <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-gray-800">
                     <motion.div
                       initial={{ width: 0 }}

@@ -18,6 +18,7 @@ export const TIER_LIMITS = {
   free: {
     aiRequests: 0,
     videoMinutes: 0,
+    assistantConversations: 0,
     collaborators: 1,
     projects: 3,
     storageGB: 1,
@@ -25,6 +26,7 @@ export const TIER_LIMITS = {
   creator: {
     aiRequests: 100, // ~$0.15/month at optimized model rates
     videoMinutes: 0, // No video for Creator tier
+    assistantConversations: 30, // Lite tier - ~$0.90/month
     collaborators: 5,
     projects: 10,
     storageGB: 10,
@@ -32,6 +34,7 @@ export const TIER_LIMITS = {
   studio: {
     aiRequests: 500, // ~$0.75/month at optimized model rates
     videoMinutes: 1200, // 20 hours/month (~$2.40 at scale pricing)
+    assistantConversations: 100, // Standard tier - ~$3.00/month
     collaborators: -1, // Unlimited
     projects: -1, // Unlimited
     storageGB: 100,
@@ -39,7 +42,7 @@ export const TIER_LIMITS = {
 } as const;
 
 export type TierName = keyof typeof TIER_LIMITS;
-export type UsageType = 'aiRequests' | 'videoMinutes';
+export type UsageType = 'aiRequests' | 'videoMinutes' | 'assistantConversations';
 
 interface UsageStatus {
   allowed: boolean;
@@ -63,6 +66,10 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
         subscriptionStatus: true,
         aiRequestsUsed: true,
         videoMinutesUsed: true,
+        assistantConversationsUsed: true,
+        aiRequestsBonus: true,
+        videoMinutesBonus: true,
+        storageBonusGB: true,
         usagePeriodStart: true,
       },
     });
@@ -90,6 +97,9 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
         data: {
           aiRequestsUsed: 0,
           videoMinutesUsed: 0,
+          assistantConversationsUsed: 0,
+          aiRequestsBonus: 0,
+          videoMinutesBonus: 0,
           usagePeriodStart: now,
         },
       });
@@ -105,9 +115,19 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
     }
 
     // Get current usage
-    const used = type === 'aiRequests' ? user.aiRequestsUsed || 0 : user.videoMinutesUsed || 0;
+    const used = 
+      type === 'aiRequests' ? user.aiRequestsUsed || 0 :
+      type === 'videoMinutes' ? user.videoMinutesUsed || 0 :
+      user.assistantConversationsUsed || 0;
 
-    const limit = TIER_LIMITS[tier][type];
+    const bonus =
+      type === 'aiRequests'
+        ? user.aiRequestsBonus || 0
+        : type === 'videoMinutes'
+          ? user.videoMinutesBonus || 0
+          : 0;
+
+    const limit = TIER_LIMITS[tier][type] + bonus;
     const remaining = limit - used;
     const allowed = remaining > 0;
 
@@ -168,7 +188,9 @@ export async function trackUsage(
     const updateData =
       type === 'aiRequests'
         ? { aiRequestsUsed: { increment: amount } }
-        : { videoMinutesUsed: { increment: amount } };
+        : type === 'videoMinutes'
+          ? { videoMinutesUsed: { increment: amount } }
+          : { assistantConversationsUsed: { increment: amount } };
 
     await db.user.update({
       where: { id: userId },
@@ -184,9 +206,10 @@ export async function trackUsage(
  * Get usage summary for dashboard display
  */
 export async function getUsageSummary(userId: string) {
-  const [aiUsage, videoUsage] = await Promise.all([
+  const [aiUsage, videoUsage, assistantUsage] = await Promise.all([
     getUserUsage(userId, 'aiRequests'),
     getUserUsage(userId, 'videoMinutes'),
+    getUserUsage(userId, 'assistantConversations'),
   ]);
 
   const user = await db.user.findUnique({
@@ -195,10 +218,17 @@ export async function getUsageSummary(userId: string) {
       subscriptionTier: true,
       subscriptionStatus: true,
       storageUsedGB: true,
+      storageBonusGB: true,
+      aiRequestsBonus: true,
+      videoMinutesBonus: true,
     },
   });
 
   const tier = (user?.subscriptionStatus === 'active' ? user.subscriptionTier : 'free') as TierName;
+  const storageBonus = Number(user?.storageBonusGB) || 0;
+  const aiBonus = user?.aiRequestsBonus || 0;
+  const videoBonus = user?.videoMinutesBonus || 0;
+  const storageLimit = TIER_LIMITS[tier].storageGB + storageBonus;
 
   return {
     tier,
@@ -207,19 +237,28 @@ export async function getUsageSummary(userId: string) {
       limit: aiUsage.limit,
       remaining: aiUsage.remaining,
       percentage: aiUsage.limit > 0 ? (aiUsage.used / aiUsage.limit) * 100 : 0,
+      bonus: aiBonus,
     },
     video: {
       used: videoUsage.used,
       limit: videoUsage.limit,
       remaining: videoUsage.remaining,
       percentage: videoUsage.limit > 0 ? (videoUsage.used / videoUsage.limit) * 100 : 0,
+      bonus: videoBonus,
+    },
+    assistant: {
+      used: assistantUsage.used,
+      limit: assistantUsage.limit,
+      remaining: assistantUsage.remaining,
+      percentage: assistantUsage.limit > 0 ? (assistantUsage.used / assistantUsage.limit) * 100 : 0,
     },
     storage: {
       used: Number(user?.storageUsedGB) || 0,
-      limit: TIER_LIMITS[tier].storageGB,
-      remaining: TIER_LIMITS[tier].storageGB - (Number(user?.storageUsedGB) || 0),
+      limit: storageLimit,
+      remaining: storageLimit - (Number(user?.storageUsedGB) || 0),
       percentage:
-        ((Number(user?.storageUsedGB) || 0) / TIER_LIMITS[tier].storageGB) * 100,
+        storageLimit > 0 ? ((Number(user?.storageUsedGB) || 0) / storageLimit) * 100 : 0,
+      bonus: storageBonus,
     },
     resetDate: aiUsage.resetDate,
   };

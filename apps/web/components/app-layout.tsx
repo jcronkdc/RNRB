@@ -8,6 +8,7 @@ import { KeyboardShortcutsHelp } from './keyboard-shortcuts-help';
 import { SidebarNav } from './sidebar-nav';
 import { TopBar } from './top-bar';
 import { TransportBar } from './transport-bar';
+import { AssistantChat } from './ai-assistant/assistant-chat';
 
 import { AblyProvider } from '@/components/ably';
 
@@ -79,6 +80,9 @@ export function AppLayout({
 
         {/* Transport Bar */}
         {showTransport && <TransportBar currentTrack={currentTrack} isVisible={true} />}
+
+        {/* AI Assistant (Floating Widget) */}
+        <AssistantChat />
 
         {/* Mobile Overlay for Sidebar */}
         <style jsx global>{`

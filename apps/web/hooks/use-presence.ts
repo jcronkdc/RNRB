@@ -45,14 +45,17 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
   const [error, setError] = useState<string | null>(null);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Extract individual fields to stabilize dependencies
+  const { userId, userName, userEmail, avatar, location } = userData;
+
   // Use official Ably React hooks (uses shared client from provider)
   const { presenceData, updateStatus } = useAblyPresence(channelName, {
-    userId: userData.userId,
-    userName: userData.userName,
-    userEmail: userData.userEmail,
-    avatar: userData.avatar,
+    userId,
+    userName,
+    userEmail,
+    avatar,
     status: 'active',
-    location: userData.location,
+    location,
     joinedAt: Date.now(),
   });
 
@@ -86,7 +89,11 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
 
       // Update to active
       updateStatus({
-        ...userData,
+        userId,
+        userName,
+        userEmail,
+        avatar,
+        location,
         status: 'active',
         lastActive: Date.now(),
       });
@@ -94,7 +101,11 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
       idleTimerRef.current = setTimeout(
         () => {
           updateStatus({
-            ...userData,
+            userId,
+            userName,
+            userEmail,
+            avatar,
+            location,
             status: 'idle',
             lastActive: Date.now(),
           });
@@ -122,18 +133,22 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
         window.removeEventListener('click', resetIdleTimer);
       }
     };
-  }, [userData, updateStatus]);
+  }, [userId, userName, userEmail, avatar, location, updateStatus]);
 
   // Update presence data when location changes
   useEffect(() => {
     if (!isConnected) return;
 
     updateStatus({
-      ...userData,
+      userId,
+      userName,
+      userEmail,
+      avatar,
+      location,
       status: 'active',
       lastActive: Date.now(),
     });
-  }, [userData.location, isConnected, updateStatus]);
+  }, [userId, userName, userEmail, avatar, location, isConnected, updateStatus]);
 
   return {
     members,

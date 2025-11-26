@@ -163,7 +163,19 @@ export default function ShowsPage() {
               Manage your gigs, tours, and performances
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/shows/today">
+              <Button variant="outline" className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                Today's Show
+              </Button>
+            </Link>
+            <Link href="/shows/calendar">
+              <Button variant="outline" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Calendar View
+              </Button>
+            </Link>
             <Link href="/venues">
               <Button variant="outline" className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
@@ -217,12 +229,20 @@ export default function ShowsPage() {
               Start building your touring schedule. Add shows, link them to venues and setlists,
               and keep your band organized for the road ahead.
             </p>
-            <Link href="/shows/new">
-              <Button className="rnrb-button-primary inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold">
-                <Plus className="h-6 w-6" />
-                Schedule Your First Show
-              </Button>
-            </Link>
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Link href="/shows/new">
+                <Button className="rnrb-button-primary inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold">
+                  <Plus className="h-6 w-6" />
+                  Schedule Your First Show
+                </Button>
+              </Link>
+              <Link href="/shows/calendar">
+                <Button variant="outline" className="inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold">
+                  <Calendar className="h-6 w-6" />
+                  View Calendar
+                </Button>
+              </Link>
+            </div>
           </Card>
         ) : (
           <>
