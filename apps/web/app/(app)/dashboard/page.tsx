@@ -168,7 +168,7 @@ const PrimaryActionCard = memo(
 );
 PrimaryActionCard.displayName = 'PrimaryActionCard';
 
-// Feature tile (smaller, grid item) with keyboard accessibility
+// Feature tile (smaller, grid item)
 const FeatureTile = memo(
   ({
     title,
@@ -181,50 +181,33 @@ const FeatureTile = memo(
     href: string;
     description?: string;
   }) => {
-    const router = useRouter();
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        router.push(href);
-      }
-    };
-
     return (
-      <Link href={href} tabIndex={-1}>
+      <Link
+        href={href}
+        className="group flex h-full cursor-pointer flex-col items-center rounded-2xl p-5 text-center transition-all duration-200 hover:translate-y-[-2px] focus:outline-none focus:ring-2 focus:ring-offset-2"
+        style={{
+          background: 'var(--panel)',
+          border: '1px solid var(--border)',
+          boxShadow: 'var(--shadow)',
+        }}
+      >
         <div
-          role="button"
-          tabIndex={0}
-          onKeyDown={handleKeyDown}
-          className="group flex h-full cursor-pointer flex-col items-center rounded-2xl p-5 text-center transition-all duration-200 hover:translate-y-[-2px] focus:outline-none focus:ring-2 focus:ring-offset-2"
+          className="mb-3 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-200 group-hover:scale-110"
           style={{
-            background: 'var(--panel)',
-            border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow)',
-            // @ts-expect-error CSS custom properties
-            '--tw-ring-color': 'var(--accent)',
-            '--tw-ring-offset-color': 'var(--bg)',
+            background: 'rgba(255, 99, 71, 0.1)',
+            border: '1px solid rgba(255, 99, 71, 0.15)',
           }}
-          aria-label={`Navigate to ${title}`}
         >
-          <div
-            className="mb-3 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-200 group-hover:scale-110"
-            style={{
-              background: 'rgba(255, 99, 71, 0.1)',
-              border: '1px solid rgba(255, 99, 71, 0.15)',
-            }}
-          >
-            <Icon className="h-7 w-7" style={{ color: 'var(--accent)' }} />
-          </div>
-          <h4 className="mb-1 font-semibold" style={{ color: 'var(--text)' }}>
-            {title}
-          </h4>
-          {description && (
-            <p className="text-sm" style={{ color: 'var(--muted)' }}>
-              {description}
-            </p>
-          )}
+          <Icon className="h-7 w-7" style={{ color: 'var(--accent)' }} />
         </div>
+        <h4 className="mb-1 font-semibold" style={{ color: 'var(--text)' }}>
+          {title}
+        </h4>
+        {description && (
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+            {description}
+          </p>
+        )}
       </Link>
     );
   }
