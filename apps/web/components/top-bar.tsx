@@ -15,18 +15,23 @@ import {
   Music,
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { trpc } from '@cronkwaters/trpc/client/react';
 
+// Dynamically import NotificationBell to avoid SSR issues
+const NotificationBell = dynamic(
+  () => import('./notification-bell').then((m) => m.NotificationBell),
+  { ssr: false }
+);
 
 export function TopBar() {
   const router = useRouter();
   const { data: session } = useSession();
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [notifications, setNotifications] = useState(3); // Mock notifications
 
   // Fetch real credits data with caching
   const { data: creditsData } = trpc.usage.getCredits.useQuery(undefined, {
@@ -47,10 +52,8 @@ export function TopBar() {
   };
 
   // Determine credits display
-  const creditsDisplay = creditsData?.unlimited 
-    ? '∞' 
-    : creditsData?.remaining ?? '...';
-  
+  const creditsDisplay = creditsData?.unlimited ? '∞' : (creditsData?.remaining ?? '...');
+
   // Determine credits color based on remaining credits
   const creditsColor = creditsData?.unlimited
     ? 'text-purple-400' // Unlimited = purple
@@ -117,30 +120,19 @@ export function TopBar() {
               border: '1px solid rgba(255, 255, 255, 0.1)',
               background: 'rgba(255, 99, 71, 0.1)',
             }}
-            title={creditsData ? `${creditsData.used} / ${creditsData.limit === -1 ? '∞' : creditsData.limit} used` : 'Loading...'}
+            title={
+              creditsData
+                ? `${creditsData.used} / ${creditsData.limit === -1 ? '∞' : creditsData.limit} used`
+                : 'Loading...'
+            }
           >
             <Zap className={`h-4 w-4 ${creditsColor}`} />
-            <span className={`text-sm font-medium ${creditsColor}`}>
-              {creditsDisplay}
-            </span>
+            <span className={`text-sm font-medium ${creditsColor}`}>{creditsDisplay}</span>
             <span className="text-xs text-gray-400">credits</span>
           </motion.button>
 
           {/* Notifications */}
-          <button
-            className="relative flex h-10 w-10 items-center justify-center rounded-xl transition-all hover:bg-white/5"
-            style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
-          >
-            <Bell className="h-5 w-5 text-gray-400" />
-            {notifications > 0 && (
-              <span
-                className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white"
-                style={{ background: '#FF6347' }}
-              >
-                {notifications}
-              </span>
-            )}
-          </button>
+          <NotificationBell />
 
           {/* Profile Dropdown */}
           <div className="relative">
@@ -191,16 +183,12 @@ export function TopBar() {
                   }}
                 >
                   <div className="border-b p-4" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
-                    <p className="text-sm font-medium text-white">
-                      {user?.name || 'Artist'}
-                    </p>
+                    <p className="text-sm font-medium text-white">{user?.name || 'Artist'}</p>
                     <p className="mt-1 text-xs text-gray-400">{user?.email}</p>
                     {creditsData && !creditsData.unlimited && (
                       <div className="mt-2 flex items-center gap-2 text-xs">
                         <Zap className={`h-3 w-3 ${creditsColor}`} />
-                        <span className={creditsColor}>
-                          {creditsData.remaining} credits left
-                        </span>
+                        <span className={creditsColor}>{creditsData.remaining} credits left</span>
                       </div>
                     )}
                   </div>
