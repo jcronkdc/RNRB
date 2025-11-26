@@ -62,11 +62,12 @@ export function useCollaborativeCursors({
 }: UseCursorOptions) {
   const [remoteCursors, setRemoteCursors] = useState<Map<string, CursorPosition>>(new Map());
   const [error, setError] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
-  const lastPositionRef = useRef<{ x: number; y: number; timestamp: number }>({ 
-    x: 0, 
-    y: 0, 
-    timestamp: 0 
+  const lastPositionRef = useRef<{ x: number; y: number; timestamp: number }>({
+    x: 0,
+    y: 0,
+    timestamp: 0,
   });
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const batchTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -79,10 +80,9 @@ export function useCollaborativeCursors({
   const color = useMemo(() => userColor || generateUserColor(userId), [userId, userColor]);
 
   // Monitor connection state
-  const [isConnected, setIsConnected] = useState(false);
   useConnectionStateListener((stateChange) => {
     setIsConnected(stateChange.current === 'connected');
-    
+
     if (stateChange.current === 'failed') {
       setError('Connection failed');
     } else if (stateChange.current === 'connected') {
@@ -112,7 +112,7 @@ export function useCollaborativeCursors({
           });
           staleTimersRef.current.delete(cursor.userId);
         }, 1000);
-        
+
         // Clear any existing stale timer for this user
         const existingTimer = staleTimersRef.current.get(cursor.userId);
         if (existingTimer) {
@@ -121,14 +121,14 @@ export function useCollaborativeCursors({
         staleTimersRef.current.set(cursor.userId, staleTimer);
       } else {
         newMap.set(cursor.userId, cursor);
-        
+
         // Clear stale timer if cursor is active again
         const existingTimer = staleTimersRef.current.get(cursor.userId);
         if (existingTimer) {
           clearTimeout(existingTimer);
           staleTimersRef.current.delete(cursor.userId);
         }
-        
+
         // Auto-remove stale cursors after 10s of no updates
         const autoRemoveTimer = setTimeout(() => {
           setRemoteCursors((current) => {
@@ -141,7 +141,7 @@ export function useCollaborativeCursors({
             return updated;
           });
         }, 10000);
-        
+
         staleTimersRef.current.set(cursor.userId, autoRemoveTimer);
       }
 
@@ -156,12 +156,12 @@ export function useCollaborativeCursors({
 
       const now = Date.now();
       const lastPos = lastSentPositionRef.current;
-      
+
       // Delta compression: only send if moved >5px (reduces network calls by ~70%)
       const deltaX = Math.abs(x - lastPos.x);
       const deltaY = Math.abs(y - lastPos.y);
       const hasMoved = deltaX > 5 || deltaY > 5;
-      
+
       if (!hasMoved && !isClick) return;
 
       const position: CursorPosition = {
@@ -182,7 +182,7 @@ export function useCollaborativeCursors({
       } else {
         // Batch position updates (send every 50ms max)
         pendingPositionRef.current = { x, y, isClick };
-        
+
         if (!batchTimerRef.current) {
           batchTimerRef.current = setTimeout(() => {
             if (pendingPositionRef.current && publish) {
@@ -234,23 +234,22 @@ export function useCollaborativeCursors({
       const now = Date.now();
       const lastPos = lastPositionRef.current;
       const timeDelta = now - lastPos.timestamp;
-      const distance = Math.sqrt(
-        Math.pow(x - lastPos.x, 2) + Math.pow(y - lastPos.y, 2)
-      );
-      
+      const distance = Math.sqrt(Math.pow(x - lastPos.x, 2) + Math.pow(y - lastPos.y, 2));
+
       // Calculate speed (pixels per ms)
       const speed = timeDelta > 0 ? distance / timeDelta : 0;
-      
+
       // Adaptive throttle: faster movement = more updates
       let throttleMs = 50; // Default: 20fps
-      if (speed > 2) throttleMs = 16; // Fast: 60fps
+      if (speed > 2)
+        throttleMs = 16; // Fast: 60fps
       else if (speed > 1) throttleMs = 33; // Medium: 30fps
-      
+
       // Use RAF for smooth updates
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
-      
+
       rafRef.current = requestAnimationFrame(() => {
         // Check if enough time has passed
         if (Date.now() - lastPos.timestamp >= throttleMs || isClick) {
@@ -299,7 +298,7 @@ export function useCollaborativeCursors({
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('click', handleMouseClick);
-      
+
       // Clear all timers
       if (idleTimerRef.current) {
         clearTimeout(idleTimerRef.current);
@@ -310,9 +309,9 @@ export function useCollaborativeCursors({
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
-      
+
       // Clear all stale cursor timers
-      staleTimersRef.current.forEach(timer => clearTimeout(timer));
+      staleTimersRef.current.forEach((timer) => clearTimeout(timer));
       staleTimersRef.current.clear();
 
       setRemoteCursors(new Map());

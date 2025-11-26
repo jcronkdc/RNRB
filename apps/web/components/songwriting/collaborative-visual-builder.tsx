@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { ChannelProvider } from 'ably/react';
 import {
   DndContext,
   closestCenter,
@@ -84,7 +83,7 @@ import { KeyAnalyzer } from './key-analyzer';
 
 import { CursorOverlay } from '@/components/cursor-overlay';
 import { useBlockEditing } from '@/hooks/use-block-editing';
-import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
+// import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { useSongSuggestions } from '@/hooks/use-song-suggestions';
 import { formatTime } from '@/lib/format-date';
 
@@ -287,13 +286,16 @@ function CollaborativeVisualBuilderInner({
     })
   );
 
-  // Collaborative cursors
-  const { remoteCursors, isConnected: cursorsConnected } = useCollaborativeCursors({
-    channelName: `songwriting:${projectSlug}-cursors`,
-    userId: currentUser.userId,
-    userName: currentUser.userName,
-    enabled: true,
-  });
+  // Collaborative cursors - disabled for now to prevent Ably context issues
+  // TODO: Re-enable when Ably context is properly available
+  const remoteCursors: Map<string, unknown> = new Map();
+  const cursorsConnected = false;
+  // const { remoteCursors, isConnected: cursorsConnected } = useCollaborativeCursors({
+  //   channelName: `songwriting:${projectSlug}-cursors`,
+  //   userId: currentUser.userId,
+  //   userName: currentUser.userName,
+  //   enabled: true,
+  // });
 
   // Block editing tracking
   const {
@@ -1183,15 +1185,12 @@ function CollaborativeVisualBuilderInner({
   );
 }
 
-// Exported component wrapped with ChannelProvider and error boundary
+// Exported component wrapped with error boundary
+// Note: Collaborative cursors are temporarily disabled
 export function CollaborativeVisualBuilder(props: CollaborativeVisualBuilderProps) {
-  const cursorChannelName = `songwriting:${props.projectSlug}-cursors`;
-
   return (
     <CollaborativeErrorBoundary>
-      <ChannelProvider channelName={cursorChannelName}>
-        <CollaborativeVisualBuilderInner {...props} />
-      </ChannelProvider>
+      <CollaborativeVisualBuilderInner {...props} />
     </CollaborativeErrorBoundary>
   );
 }
