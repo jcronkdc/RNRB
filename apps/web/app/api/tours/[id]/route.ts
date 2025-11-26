@@ -15,11 +15,29 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { searchParams } = new URL(request.url);
+    const includeShowDetails = searchParams.get('includeShowDetails') === 'true';
+
+    // Optimized query with selective field loading
     const tour = await db.tour.findFirst({
       where: {
         OR: [{ id }, { slug: id }],
       },
-      include: {
+      select: {
+        id: true,
+        orgId: true,
+        name: true,
+        slug: true,
+        description: true,
+        startDate: true,
+        endDate: true,
+        status: true,
+        posterImage: true,
+        sponsorLogos: true,
+        merch: true,
+        public: true,
+        createdAt: true,
+        updatedAt: true,
         org: {
           select: {
             id: true,
@@ -28,23 +46,52 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
           },
         },
         shows: {
-          include: {
-            venue: true,
-            project: {
-              select: {
-                id: true,
-                name: true,
-                slug: true,
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            date: true,
+            status: true,
+            doorsTime: true,
+            attendance: true,
+            grossRevenue: true,
+            ...(includeShowDetails ? {
+              venue: {
+                select: {
+                  id: true,
+                  name: true,
+                  city: true,
+                  state: true,
+                  country: true,
+                  capacity: true,
+                },
               },
-            },
-            setlist: {
-              select: {
-                id: true,
-                name: true,
+              project: {
+                select: {
+                  id: true,
+                  name: true,
+                  slug: true,
+                },
               },
-            },
+              setlist: {
+                select: {
+                  id: true,
+                  name: true,
+                  _count: {
+                    select: {
+                      items: true,
+                    },
+                  },
+                },
+              },
+            } : {}),
           },
           orderBy: { date: 'asc' },
+        },
+        _count: {
+          select: {
+            shows: true,
+          },
         },
       },
     });

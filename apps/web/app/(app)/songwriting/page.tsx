@@ -86,6 +86,20 @@ type ChordBlock = {
   duration?: string;
 };
 
+/**
+ * Safely parse JSON string with fallback to default value
+ * Prevents crashes from malformed or corrupted JSON data
+ */
+function safeParse<T>(jsonString: string | null | undefined, fallback: T): T {
+  if (!jsonString) return fallback;
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error('Failed to parse JSON:', error);
+    return fallback;
+  }
+}
+
 export default function SongwritingPage() {
   const [activeView, setActiveView] = useState<'structure' | 'chords' | 'lyrics' | 'copyright'>('structure');
   const [songBlocks, setSongBlocks] = useState<SongBlock[]>([]);
@@ -94,6 +108,7 @@ export default function SongwritingPage() {
   const [songTitle, setSongTitle] = useState('Untitled Song');
   const [isFirstSave, setIsFirstSave] = useState(true);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   
   // Undo/Redo state management
   const [history, setHistory] = useState<Array<{ blocks: SongBlock[]; lyrics: string }>>([]);
@@ -265,7 +280,7 @@ export default function SongwritingPage() {
 
   // Show onboarding tour on first visit
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem('songwriting-tour-completed');
+    const hasSeenTour = localStorage.getItem('onboarding-tour-completed');
     if (!hasSeenTour && user) {
       setShowOnboarding(true);
     }
@@ -487,7 +502,7 @@ export default function SongwritingPage() {
                 songTitle={songTitle}
                 audioUrl={songData.audioUrl}
                 audioPath={songData.audioPath}
-                initialData={songData.copyrightInfo ? JSON.parse(songData.copyrightInfo as any) : undefined}
+                initialData={safeParse(songData.copyrightInfo as any, undefined)}
                 onUpdate={(info) => {
                   if (songData.id) {
                     updateSong({
@@ -527,6 +542,42 @@ export default function SongwritingPage() {
             saveToHistory();
           }}
           onClose={() => setShowTemplatePicker(false)}
+        />
+      )}
+
+      {/* Onboarding Tour */}
+      {showOnboarding && (
+        <OnboardingTour
+          steps={[
+            {
+              target: '[data-tour="structure"]',
+              title: 'Song Structure',
+              content: 'Drag and drop blocks to build your song structure. Try verse, chorus, bridge!',
+            },
+            {
+              target: '[data-tour="chords"]',
+              title: 'Chord Progression',
+              content: 'Create chord progressions with AI assistance or build your own.',
+            },
+            {
+              target: '[data-tour="lyrics"]',
+              title: 'Lyrics Assistant',
+              content: 'Get AI-powered suggestions for lyrics, rhymes, and songwriting ideas.',
+            },
+            {
+              target: '[data-tour="collaboration"]',
+              title: 'Real-time Collaboration',
+              content: 'See who\'s online and collaborate in real-time with your bandmates.',
+            },
+          ]}
+          onComplete={() => {
+            setShowOnboarding(false);
+            localStorage.setItem('onboarding-tour-completed', 'true');
+          }}
+          onSkip={() => {
+            setShowOnboarding(false);
+            localStorage.setItem('onboarding-tour-completed', 'true');
+          }}
         />
       )}
 

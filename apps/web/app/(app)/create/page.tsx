@@ -14,8 +14,12 @@ import {
   ChevronDown,
   Info,
   Loader2,
+  AlertCircle,
+  CheckCircle2,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 // Style chips for genre/mood/tempo
 const styleOptions = {
@@ -72,42 +76,152 @@ const examplePrompts = [
   'Dark electronic track with heavy bass and glitchy effects',
 ];
 
+type GenerationStatus = 'idle' | 'validating' | 'generating' | 'success' | 'error';
+
 export default function CreatePage() {
+  const router = useRouter();
+  const { data: session } = useSession();
+  
   const [prompt, setPrompt] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
   const [selectedInstruments, setSelectedInstruments] = useState<string[]>([]);
   const [duration, setDuration] = useState(30); // seconds
   const [tempo, setTempo] = useState(120); // BPM
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [seed, setSeed] = useState('');
+  const [keySignature, setKeySignature] = useState('Auto');
+  
+  const [status, setStatus] = useState<GenerationStatus>('idle');
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const [generatedTrackId, setGeneratedTrackId] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [estimatedCredits, setEstimatedCredits] = useState(10);
+
+  // Calculate estimated credits based on parameters
+  useEffect(() => {
+    let credits = 10; // Base cost
+    if (duration > 60) credits += 5;
+    if (duration > 120) credits += 10;
+    if (selectedInstruments.length > 4) credits += 5;
+    setEstimatedCredits(credits);
+  }, [duration, selectedInstruments.length]);
+
+  const validateInputs = useCallback(() => {
+    if (!prompt.trim() && selectedGenres.length === 0 && selectedMoods.length === 0) {
+      setError('Please provide a description or select at least one genre/mood');
+      return false;
+    }
+    
+    if (prompt.length > 500) {
+      setError('Description must be less than 500 characters');
+      return false;
+    }
+    
+    if (duration < 15 || duration > 180) {
+      setError('Duration must be between 15 and 180 seconds');
+      return false;
+    }
+    
+    if (tempo < 60 || tempo > 200) {
+      setError('Tempo must be between 60 and 200 BPM');
+      return false;
+    }
+    
+    setError(null);
+    return true;
+  }, [prompt, selectedGenres, selectedMoods, duration, tempo]);
 
   const handleGenerate = async () => {
-    if (!prompt.trim() && selectedGenres.length === 0 && selectedMoods.length === 0) {
+    if (!validateInputs()) return;
+    if (!session?.user?.id) {
+      setError('Please sign in to generate tracks');
+      router.push('/auth');
       return;
     }
 
-    setIsGenerating(true);
-    // Simulate generation
-    setTimeout(() => {
-      setIsGenerating(false);
-      // Would navigate to results or show inline
-    }, 3000);
+    setStatus('generating');
+    setProgress(0);
+    setError(null);
+
+    let progressInterval: NodeJS.Timeout | null = null;
+
+    try {
+      // Simulate progress updates
+      progressInterval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 90) {
+            return prev;
+          }
+          return prev + 10;
+        });
+      }, 2000);
+
+      const response = await fetch('/api/tracks/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: prompt.trim(),
+          genres: selectedGenres,
+          moods: selectedMoods,
+          instruments: selectedInstruments,
+          duration,
+          tempo,
+          seed: seed || undefined,
+          keySignature: keySignature !== 'Auto' ? keySignature : undefined,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to generate track');
+      }
+
+      setProgress(100);
+      setStatus('success');
+      setGeneratedTrackId(data.trackId);
+
+      // Redirect to track page after 2 seconds
+      setTimeout(() => {
+        if (data.trackId) {
+          router.push(`/tracks/${data.trackId}`);
+        }
+      }, 2000);
+    } catch (err: any) {
+      console.error('Generation error:', err);
+      setStatus('error');
+      setError(err.message || 'Failed to generate track. Please try again.');
+      setProgress(0);
+    } finally {
+      // Always clear the interval to prevent memory leaks
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
+    }
   };
 
   const toggleChip = (
     value: string,
     selected: string[],
-    setSelected: (values: string[]) => void
+    setSelected: (values: string[]) => void,
+    maxSelections = 999
   ) => {
     if (selected.includes(value)) {
       setSelected(selected.filter((v) => v !== value));
     } else {
-      setSelected([...selected, value]);
+      if (selected.length < maxSelections) {
+        setSelected([...selected, value]);
+      }
     }
   };
 
-  const canGenerate = prompt.trim() || selectedGenres.length > 0 || selectedMoods.length > 0;
+  const canGenerate = 
+    (prompt.trim() || selectedGenres.length > 0 || selectedMoods.length > 0) &&
+    status !== 'generating' &&
+    status !== 'success';
+
+  const isDisabled = status === 'generating' || status === 'success';
 
   return (
     <div className="min-h-screen bg-black">
@@ -145,26 +259,45 @@ export default function CreatePage() {
         <div className="rounded-2xl border border-gray-800 bg-gray-900 p-8">
           <div className="space-y-8">
             <div>
-              <label className="mb-3 block text-sm font-medium">Describe your track</label>
+              <label className="mb-3 block text-sm font-medium">
+                Describe your track
+                <span className="text-muted-foreground ml-2 text-xs">
+                  ({prompt.length}/500 characters)
+                </span>
+              </label>
               <div className="relative">
                 <textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="E.g., A driving rock anthem with powerful electric guitars and thunderous drums..."
-                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-none transition focus:ring-2"
+                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
                   rows={4}
-                  disabled={isGenerating}
+                  maxLength={500}
+                  disabled={isDisabled}
                 />
                 <button
                   onClick={() =>
                     setPrompt(examplePrompts[Math.floor(Math.random() * examplePrompts.length)])
                   }
-                  className="text-muted-foreground hover:bg-surface/50 hover:text-foreground absolute bottom-3 right-3 rounded-lg p-2 transition"
+                  className="text-muted-foreground hover:bg-surface/50 hover:text-foreground absolute bottom-3 right-3 rounded-lg p-2 transition disabled:cursor-not-allowed disabled:opacity-50"
                   title="Get random prompt"
+                  disabled={isDisabled}
                 >
                   <RefreshCw className="h-4 w-4" />
                 </button>
               </div>
+
+              {/* Error message */}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-3 flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400"
+                >
+                  <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                  <span>{error}</span>
+                </motion.div>
+              )}
 
               {/* Example prompts */}
               <div className="mt-3 flex items-center gap-2">
@@ -174,7 +307,8 @@ export default function CreatePage() {
                     <button
                       key={i}
                       onClick={() => setPrompt(example)}
-                      className="border-border bg-surface hover:border-brand-primary/50 hover:bg-surface/80 rounded-lg border px-3 py-1.5 text-xs transition-all"
+                      className="border-border bg-surface hover:border-brand-primary/50 hover:bg-surface/80 rounded-lg border px-3 py-1.5 text-xs transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                      disabled={isDisabled}
                     >
                       {example.substring(0, 30)}...
                     </button>
@@ -187,18 +321,25 @@ export default function CreatePage() {
             <div className="space-y-6">
               {/* Genre */}
               <div>
-                <label className="mb-3 block text-sm font-medium">Genre</label>
+                <label className="mb-3 block text-sm font-medium">
+                  Genre
+                  {selectedGenres.length > 0 && (
+                    <span className="text-muted-foreground ml-2 text-xs">
+                      ({selectedGenres.length} selected)
+                    </span>
+                  )}
+                </label>
                 <div className="flex flex-wrap gap-2">
                   {styleOptions.genre.map((genre) => (
                     <button
                       key={genre}
-                      onClick={() => toggleChip(genre, selectedGenres, setSelectedGenres)}
-                      className={`rounded-xl px-4 py-2 font-medium transition ${
+                      onClick={() => toggleChip(genre, selectedGenres, setSelectedGenres, 3)}
+                      className={`rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedGenres.includes(genre)
                           ? 'bg-brand-primary text-brand-primary-foreground'
                           : 'border-border bg-surface hover:border-brand-primary/50 border'
                       }`}
-                      disabled={isGenerating}
+                      disabled={isDisabled}
                     >
                       {genre}
                     </button>
@@ -208,18 +349,25 @@ export default function CreatePage() {
 
               {/* Mood */}
               <div>
-                <label className="mb-3 block text-sm font-medium">Mood</label>
+                <label className="mb-3 block text-sm font-medium">
+                  Mood
+                  {selectedMoods.length > 0 && (
+                    <span className="text-muted-foreground ml-2 text-xs">
+                      ({selectedMoods.length} selected)
+                    </span>
+                  )}
+                </label>
                 <div className="flex flex-wrap gap-2">
                   {styleOptions.mood.map((mood) => (
                     <button
                       key={mood}
-                      onClick={() => toggleChip(mood, selectedMoods, setSelectedMoods)}
-                      className={`rounded-xl px-4 py-2 font-medium transition ${
+                      onClick={() => toggleChip(mood, selectedMoods, setSelectedMoods, 3)}
+                      className={`rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedMoods.includes(mood)
                           ? 'bg-brand-primary text-brand-primary-foreground'
                           : 'border-border bg-surface hover:border-brand-primary/50 border'
                       }`}
-                      disabled={isGenerating}
+                      disabled={isDisabled}
                     >
                       {mood}
                     </button>
@@ -229,20 +377,27 @@ export default function CreatePage() {
 
               {/* Instruments */}
               <div>
-                <label className="mb-3 block text-sm font-medium">Instruments</label>
+                <label className="mb-3 block text-sm font-medium">
+                  Instruments
+                  {selectedInstruments.length > 0 && (
+                    <span className="text-muted-foreground ml-2 text-xs">
+                      ({selectedInstruments.length} selected)
+                    </span>
+                  )}
+                </label>
                 <div className="flex flex-wrap gap-2">
                   {styleOptions.instruments.map((instrument) => (
                     <button
                       key={instrument}
                       onClick={() =>
-                        toggleChip(instrument, selectedInstruments, setSelectedInstruments)
+                        toggleChip(instrument, selectedInstruments, setSelectedInstruments, 6)
                       }
-                      className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition ${
+                      className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedInstruments.includes(instrument)
                           ? 'bg-brand-primary text-brand-primary-foreground'
                           : 'border-border bg-surface hover:border-brand-primary/50 border'
                       }`}
-                      disabled={isGenerating}
+                      disabled={isDisabled}
                     >
                       <Mic2 className="h-3 w-3" />
                       {instrument}
@@ -257,7 +412,7 @@ export default function CreatePage() {
               <div>
                 <label className="mb-3 block flex items-center gap-2 text-sm font-medium">
                   <Clock className="h-4 w-4" />
-                  Duration
+                  Duration: {duration}s
                 </label>
                 <div className="flex items-center gap-4">
                   <input
@@ -267,17 +422,19 @@ export default function CreatePage() {
                     step="15"
                     value={duration}
                     onChange={(e) => setDuration(parseInt(e.target.value))}
-                    className="flex-1"
-                    disabled={isGenerating}
+                    className="flex-1 accent-orange-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isDisabled}
                   />
-                  <span className="w-16 text-right text-sm font-medium">{duration}s</span>
+                  <span className="w-16 text-right text-sm font-medium text-gray-400">
+                    {Math.floor(duration / 60)}:{(duration % 60).toString().padStart(2, '0')}
+                  </span>
                 </div>
               </div>
 
               <div>
                 <label className="mb-3 block flex items-center gap-2 text-sm font-medium">
                   <Zap className="h-4 w-4" />
-                  Tempo (BPM)
+                  Tempo: {tempo} BPM
                 </label>
                 <div className="flex items-center gap-4">
                   <input
@@ -287,10 +444,12 @@ export default function CreatePage() {
                     step="10"
                     value={tempo}
                     onChange={(e) => setTempo(parseInt(e.target.value))}
-                    className="flex-1"
-                    disabled={isGenerating}
+                    className="flex-1 accent-orange-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isDisabled}
                   />
-                  <span className="w-16 text-right text-sm font-medium">{tempo}</span>
+                  <span className="w-16 text-right text-sm font-medium text-gray-400">
+                    {tempo >= 180 ? 'Fast' : tempo >= 120 ? 'Medium' : 'Slow'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -299,7 +458,8 @@ export default function CreatePage() {
             <div>
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors"
+                className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={isDisabled}
               >
                 <Sliders className="h-4 w-4" />
                 Advanced Options
@@ -326,23 +486,33 @@ export default function CreatePage() {
                           </label>
                           <input
                             type="text"
+                            value={seed}
+                            onChange={(e) => setSeed(e.target.value)}
                             placeholder="Enter seed for consistent results"
-                            className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 transition focus:outline-none"
-                            disabled={isGenerating}
+                            className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled={isDisabled}
                           />
+                          <p className="text-muted-foreground mt-1 text-xs">
+                            Same seed = same output
+                          </p>
                         </div>
                         <div>
                           <label className="mb-2 block text-sm font-medium">Key Signature</label>
                           <select
-                            className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 transition focus:outline-none"
-                            disabled={isGenerating}
+                            value={keySignature}
+                            onChange={(e) => setKeySignature(e.target.value)}
+                            className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled={isDisabled}
                           >
                             <option>Auto</option>
                             <option>C Major</option>
                             <option>G Major</option>
                             <option>D Major</option>
+                            <option>A Major</option>
+                            <option>E Major</option>
                             <option>A Minor</option>
                             <option>E Minor</option>
+                            <option>D Minor</option>
                           </select>
                         </div>
                       </div>
@@ -353,21 +523,41 @@ export default function CreatePage() {
             </div>
 
             {/* Generate Button */}
-            <div className="border-border flex items-center justify-between border-t pt-4">
-              <div className="text-muted-foreground flex items-center gap-2 text-sm">
-                <Info className="h-4 w-4" />
-                <span>Generation uses 10 credits</span>
+            <div className="border-border flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <Info className="h-4 w-4" />
+                  <span>Generation uses {estimatedCredits} credits</span>
+                </div>
+                {status === 'generating' && (
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-48 overflow-hidden rounded-full bg-gray-700">
+                      <motion.div
+                        className="h-full bg-orange-500"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </div>
+                    <span className="text-xs text-gray-400">{progress}%</span>
+                  </div>
+                )}
               </div>
 
               <button
                 onClick={handleGenerate}
-                disabled={!canGenerate || isGenerating}
-                className="rnrb-button-primary flex items-center gap-2 rounded-xl px-8 py-3 text-base font-semibold disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={!canGenerate}
+                className="rnrb-button-primary flex items-center justify-center gap-2 rounded-xl px-8 py-3 text-base font-semibold disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isGenerating ? (
+                {status === 'generating' ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
                     Generating...
+                  </>
+                ) : status === 'success' ? (
+                  <>
+                    <CheckCircle2 className="h-5 w-5" />
+                    Success!
                   </>
                 ) : (
                   <>
@@ -380,20 +570,92 @@ export default function CreatePage() {
           </div>
         </div>
 
-        {/* Results would appear here */}
-        {isGenerating && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-8"
-          >
-            <Card className="rnrb-card p-12 text-center">
-              <Music2 className="rnrb-pulse text-brand-primary mx-auto mb-4 h-16 w-16" />
-              <h3 className="mb-2 text-xl font-semibold">Creating your track...</h3>
-              <p className="text-muted-foreground">This usually takes 20-30 seconds</p>
-            </Card>
-          </motion.div>
-        )}
+        {/* Results */}
+        <AnimatePresence mode="wait">
+          {status === 'generating' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mt-8"
+            >
+              <Card className="rnrb-card p-12 text-center">
+                <Music2 className="rnrb-pulse text-brand-primary mx-auto mb-4 h-16 w-16" />
+                <h3 className="mb-2 text-xl font-semibold">Creating your track...</h3>
+                <p className="text-muted-foreground mb-4">
+                  This usually takes 20-30 seconds
+                </p>
+                <div className="text-muted-foreground mx-auto max-w-md space-y-2 text-sm">
+                  {progress >= 0 && progress < 30 && (
+                    <p className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Analyzing your inputs...
+                    </p>
+                  )}
+                  {progress >= 30 && progress < 60 && (
+                    <p className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Generating musical structure...
+                    </p>
+                  )}
+                  {progress >= 60 && progress < 90 && (
+                    <p className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Adding instruments and mixing...
+                    </p>
+                  )}
+                  {progress >= 90 && (
+                    <p className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Finalizing your track...
+                    </p>
+                  )}
+                </div>
+              </Card>
+            </motion.div>
+          )}
+
+          {status === 'success' && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="mt-8"
+            >
+              <Card className="rnrb-card border-green-500/20 bg-green-500/5 p-12 text-center">
+                <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500" />
+                <h3 className="mb-2 text-xl font-semibold text-green-400">Track Generated!</h3>
+                <p className="text-muted-foreground mb-4">
+                  Redirecting you to your new track...
+                </p>
+              </Card>
+            </motion.div>
+          )}
+
+          {status === 'error' && error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mt-8"
+            >
+              <Card className="rnrb-card border-red-500/20 bg-red-500/5 p-12 text-center">
+                <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
+                <h3 className="mb-2 text-xl font-semibold text-red-400">Generation Failed</h3>
+                <p className="text-muted-foreground mb-4">{error}</p>
+                <button
+                  onClick={() => {
+                    setStatus('idle');
+                    setError(null);
+                  }}
+                  className="rnrb-button-secondary rounded-xl px-6 py-2 text-sm font-semibold"
+                >
+                  Try Again
+                </button>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

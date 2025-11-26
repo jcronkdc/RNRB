@@ -76,7 +76,7 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
       });
 
       if (!response.ok) throw new Error('Failed to save');
-      alert('Copyright information saved!');
+      alert('Copyright information saved successfully!');
     } catch (err: any) {
       alert(`Error: ${err.message}`);
     } finally {

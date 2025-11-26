@@ -1,11 +1,12 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { Shield, Users, FileCheck, AlertCircle, Check, Plus, X, PieChart, Music } from 'lucide-react';
+import { Shield, Users, FileCheck, AlertCircle, Check, Plus, X, PieChart, Music, HelpCircle, ExternalLink, Info } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { SplitSheetGenerator } from './split-sheet-generator';
 import { AudioUploader } from './audio-uploader';
 import { CollaborationAgreementGenerator } from './collaboration-agreement';
+import { CopyrightGuide } from './copyright-guide';
 import dynamic from 'next/dynamic';
 
 const WaveformPlayer = dynamic(
@@ -106,6 +107,7 @@ export function CopyrightManager({
   );
   
   const [isAddingSplit, setIsAddingSplit] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const [newSplit, setNewSplit] = useState<SongSplit>({
     contributorName: '',
     role: 'writer',
@@ -167,18 +169,78 @@ export function CopyrightManager({
     <div className="space-y-6">
       {/* Header */}
       <div className="rounded-2xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-blue-500/10 p-6">
-        <div className="flex items-start gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-purple-500/20">
-            <Shield className="h-7 w-7 text-purple-400" />
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-purple-500/20">
+              <Shield className="h-7 w-7 text-purple-400" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Copyright & Publishing</h2>
+              <p className="mt-1 text-sm text-gray-300">
+                Protect your work and manage ownership splits
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-2xl font-bold text-white">Copyright & Publishing</h2>
-            <p className="mt-1 text-sm text-gray-300">
-              Protect your work and manage ownership splits
-            </p>
-          </div>
+          <Button
+            onClick={() => setShowGuide(!showGuide)}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <HelpCircle className="h-4 w-4" />
+            {showGuide ? 'Hide Guide' : 'Show Guide'}
+          </Button>
         </div>
       </div>
+
+      {/* Copyright Guide */}
+      {showGuide && (
+        <div className="animate-in slide-in-from-top">
+          <CopyrightGuide onClose={() => setShowGuide(false)} />
+        </div>
+      )}
+
+      {/* Quick Start Card - Show if user hasn't filled anything out yet */}
+      {!copyrightInfo.performingRightsOrg && copyrightInfo.splits.length === 0 && !showGuide && (
+        <Card className="border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-yellow-500/20">
+              <HelpCircle className="h-6 w-6 text-yellow-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-white">New to Music Copyright?</h3>
+              <p className="mt-2 text-sm text-gray-300">
+                Don't worry! Most of these fields are optional to start. Here's what we recommend:
+              </p>
+              <ol className="mt-3 space-y-2 text-sm text-gray-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400">1.</span>
+                  <span><strong className="text-white">Start simple:</strong> Fill in Copyright Year and Holder below</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400">2.</span>
+                  <span><strong className="text-white">Add collaborators:</strong> Set up ownership splits (must total 100%)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400">3.</span>
+                  <span><strong className="text-white">Join a PRO:</strong> Click "Show Guide" above for step-by-step instructions</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400">4.</span>
+                  <span><strong className="text-white">Get codes:</strong> ISWC, ISRC, and IPI numbers come later when you register</span>
+                </li>
+              </ol>
+              <Button
+                onClick={() => setShowGuide(true)}
+                className="mt-4"
+                variant="outline"
+              >
+                <HelpCircle className="mr-2 h-4 w-4" />
+                Show Complete Guide
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
 
       {/* Copyright Information */}
       <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
@@ -221,7 +283,15 @@ export function CopyrightManager({
           {/* ISWC */}
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300">
-              ISWC <span className="text-xs text-gray-500">(International Standard Musical Work Code)</span>
+              ISWC 
+              <span className="ml-1 text-xs text-gray-500">(International Standard Musical Work Code)</span>
+              <button
+                onClick={() => setShowGuide(true)}
+                className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
+                title="Click for help"
+              >
+                <Info className="h-3 w-3" />
+              </button>
             </label>
             <input
               type="text"
@@ -231,12 +301,31 @@ export function CopyrightManager({
               placeholder="T-123.456.789-0"
               maxLength={15}
             />
+            <p className="mt-1 text-xs text-gray-500">
+              Get from your PRO when registering this song • 
+              <a 
+                href="https://www.ascap.com/help/ace-title-registration" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="ml-1 text-blue-400 hover:text-blue-300"
+              >
+                Register with ASCAP <ExternalLink className="inline h-3 w-3" />
+              </a>
+            </p>
           </div>
 
           {/* ISRC */}
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300">
-              ISRC <span className="text-xs text-gray-500">(International Standard Recording Code)</span>
+              ISRC 
+              <span className="ml-1 text-xs text-gray-500">(International Standard Recording Code)</span>
+              <button
+                onClick={() => setShowGuide(true)}
+                className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
+                title="Click for help"
+              >
+                <Info className="h-3 w-3" />
+              </button>
             </label>
             <input
               type="text"
@@ -246,6 +335,17 @@ export function CopyrightManager({
               placeholder="US-ABC-12-34567"
               maxLength={12}
             />
+            <p className="mt-1 text-xs text-gray-500">
+              Get from your distributor (CD Baby, DistroKid) • 
+              <a 
+                href="https://usisrc.org/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="ml-1 text-blue-400 hover:text-blue-300"
+              >
+                Or register yourself <ExternalLink className="inline h-3 w-3" />
+              </a>
+            </p>
           </div>
         </div>
       </Card>
@@ -262,6 +362,13 @@ export function CopyrightManager({
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300">
               PRO Affiliation
+              <button
+                onClick={() => setShowGuide(true)}
+                className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
+                title="Click for help"
+              >
+                <Info className="h-3 w-3" />
+              </button>
             </label>
             <select
               value={copyrightInfo.performingRightsOrg || ''}
@@ -275,12 +382,39 @@ export function CopyrightManager({
                 </option>
               ))}
             </select>
+            <p className="mt-1 text-xs text-gray-500">
+              Don't have a PRO? 
+              <a 
+                href="https://www.ascap.com/join" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="ml-1 text-blue-400 hover:text-blue-300"
+              >
+                Join ASCAP (Free) <ExternalLink className="inline h-3 w-3" />
+              </a>
+              {' or '}
+              <a 
+                href="https://www.bmi.com/join" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300"
+              >
+                BMI (Free) <ExternalLink className="inline h-3 w-3" />
+              </a>
+            </p>
           </div>
 
           {/* Writer IPI Number */}
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300">
               Writer IPI Number
+              <button
+                onClick={() => setShowGuide(true)}
+                className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
+                title="Click for help"
+              >
+                <Info className="h-3 w-3" />
+              </button>
             </label>
             <input
               type="text"
@@ -290,12 +424,22 @@ export function CopyrightManager({
               placeholder="000000000"
               maxLength={11}
             />
+            <p className="mt-1 text-xs text-gray-500">
+              Automatically assigned by your PRO when you join
+            </p>
           </div>
 
           {/* Publisher IPI Number */}
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300">
               Publisher IPI Number
+              <button
+                onClick={() => setShowGuide(true)}
+                className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
+                title="Click for help"
+              >
+                <Info className="h-3 w-3" />
+              </button>
             </label>
             <input
               type="text"
@@ -305,6 +449,9 @@ export function CopyrightManager({
               placeholder="000000000"
               maxLength={11}
             />
+            <p className="mt-1 text-xs text-gray-500">
+              If you have your own publishing company (optional)
+            </p>
           </div>
         </div>
       </Card>
@@ -491,7 +638,22 @@ export function CopyrightManager({
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
           <Shield className="h-5 w-5 text-green-400" />
           Registration Status
+          <button
+            onClick={() => setShowGuide(true)}
+            className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
+            title="Click for help"
+          >
+            <Info className="h-3 w-3" />
+          </button>
         </h3>
+        
+        <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
+          <p className="text-sm text-gray-300">
+            <strong className="text-white">💡 What does "registered" mean?</strong><br />
+            Check this box when you've registered this song with your PRO (ASCAP, BMI, etc.). 
+            This is different from U.S. Copyright registration.
+          </p>
+        </div>
         
         <div className="space-y-4">
           <label className="flex items-center gap-3">
@@ -529,6 +691,9 @@ export function CopyrightManager({
                   className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 font-mono text-white"
                   placeholder="PRO-assigned number"
                 />
+                <p className="mt-1 text-xs text-gray-500">
+                  This is your PRO's tracking number for this song
+                </p>
               </div>
             </div>
           )}

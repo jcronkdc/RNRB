@@ -1,411 +1,471 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import {
-  Music2,
-  Sparkles,
-  Folder,
-  Users2,
-  Play,
-  ArrowRight,
-  Compass,
-  FileMusic,
-  Share2,
-  ListMusic,
-  Radio,
-  Calendar,
-  Lock,
-} from 'lucide-react';
+import { Music2, Folder, FileMusic, Compass, Play, Share2, ListMusic, Radio, Calendar, Lock, Loader2, TrendingUp, Clock, Zap, HardDrive, Users, FolderOpen } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useMemo, memo, Suspense, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useRequireAuth } from '@/hooks/use-require-auth';
+import { ErrorBoundary, SilentErrorBoundary } from '@/components/error-boundary';
+import { usePerformanceMonitor } from '@/hooks/use-performance-monitor';
+import { useDashboardData, formatStorageSize, getStoragePercentage } from '@/hooks/use-dashboard-data';
 
-// Dynamically import activity feed
+// Dynamically import activity feed with loading fallback
 const CompactActivityFeed = dynamic(
   () => import('@/components/activity-feed').then((m) => m.CompactActivityFeed),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="h-6 w-6 animate-spin text-zinc-600" />
+      </div>
+    )
+  }
 );
 
-// Dynamically import upgrade modal to avoid SSR issues
+// Dynamically import upgrade modal
 const UpgradeModal = dynamic(
   () => import('@/components/upgrade-modal').then((m) => m.UpgradeModal),
   { ssr: false }
 );
 
-// Import the hook separately (it's just a hook, safe for SSR)
 import { useUpgradeModal } from '@/components/upgrade-modal';
 
-export default function DashboardPage() {
-  const { user, loading } = useRequireAuth();
-  const { isOpen, showUpgradeModal, hideUpgradeModal, modalProps } = useUpgradeModal();
+// Quick action interface for type safety
+interface QuickAction {
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href: string;
+  gradient?: string;
+  prefetch?: boolean;
+}
 
-  // Optimistic rendering: Show UI immediately, update user name when ready
-  const userName = loading
-    ? 'Artist'
-    : user?.user_metadata?.name || user?.email?.split('@')[0] || 'Artist';
+// Quick guide interface
+interface QuickGuide {
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href: string;
+  prefetch?: boolean;
+}
 
-  // Welcome messages that resonate with musicians
-  const welcomeMessages = [
-    'Ready to create your next masterpiece?',
-    'Your music journey continues here.',
-    'Time to make something amazing!',
-    "Let's turn ideas into music.",
-    'Welcome to your creative space.',
-  ];
-  const randomWelcome = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+// Premium tool interface
+interface PremiumTool {
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  feature: string;
+}
 
-  // Show loading indicator only briefly at top, not full screen
-  const showLoadingBadge = loading;
+// Memoized action card component to prevent re-renders
+const ActionCard = memo(({ action }: { action: QuickAction }) => (
+  <Link key={action.href} href={action.href} prefetch={action.prefetch !== false}>
+    <div className={`group h-full rounded-xl border border-zinc-800/50 p-6 transition-all hover:scale-[1.02] hover:border-zinc-700 ${action.gradient || 'bg-gradient-to-br from-zinc-900/50 to-zinc-900/30'} backdrop-blur-sm`}>
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 shadow-lg">
+        <action.icon className="h-7 w-7 text-white" />
+      </div>
+      <h3 className="mb-2 text-lg font-semibold text-white">
+        {action.title}
+      </h3>
+      <p className="text-sm leading-relaxed text-zinc-400">
+        {action.description}
+      </p>
+    </div>
+  </Link>
+));
+ActionCard.displayName = 'ActionCard';
+
+// Memoized guide card component
+const GuideCard = memo(({ guide }: { guide: QuickGuide }) => (
+  <Link key={guide.href} href={guide.href} prefetch={guide.prefetch !== false}>
+    <div className="group flex items-center gap-4 rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-4 backdrop-blur-sm transition-all hover:border-zinc-700 hover:bg-zinc-900/50">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900">
+        <guide.icon className="h-6 w-6 text-white" />
+      </div>
+      <div className="flex-1">
+        <h3 className="font-semibold text-white">{guide.title}</h3>
+        <p className="text-sm text-zinc-400">{guide.description}</p>
+      </div>
+    </div>
+  </Link>
+));
+GuideCard.displayName = 'GuideCard';
+
+// Memoized premium tool card component
+const PremiumToolCard = memo(({ 
+  tool, 
+  onUpgrade 
+}: { 
+  tool: PremiumTool;
+  onUpgrade: (feature: string) => void;
+}) => (
+  <button
+    onClick={() => onUpgrade(tool.feature)}
+    className="group relative h-full rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-6 text-left backdrop-blur-sm transition-all hover:border-zinc-700 hover:bg-zinc-900/50"
+  >
+    <div className="absolute right-3 top-3 rounded-lg bg-zinc-800/80 p-1.5 backdrop-blur-sm">
+      <Lock className="h-3.5 w-3.5 text-zinc-400" />
+    </div>
+
+    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900">
+      <tool.icon className="h-7 w-7 text-white" />
+    </div>
+
+    <h3 className="mb-2 text-lg font-semibold text-white">
+      {tool.title}
+    </h3>
+    <p className="mb-4 text-sm text-zinc-400">
+      {tool.description}
+    </p>
+
+    <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-zinc-500">
+      <Zap className="h-3 w-3" />
+      <span>Click to unlock</span>
+    </div>
+  </button>
+));
+PremiumToolCard.displayName = 'PremiumToolCard';
+
+// Stats card component
+const StatsCard = memo(({ 
+  icon: Icon, 
+  label, 
+  value, 
+  color = 'blue' 
+}: { 
+  icon: React.ComponentType<{ className?: string }>; 
+  label: string; 
+  value: string | number;
+  color?: 'blue' | 'green' | 'purple' | 'orange';
+}) => {
+  const colorClasses = {
+    blue: 'text-blue-500',
+    green: 'text-green-500',
+    purple: 'text-purple-500',
+    orange: 'text-orange-500',
+  };
 
   return (
-    <div className="min-h-screen bg-black">
-      <div className="mx-auto max-w-7xl px-4 py-12">
-        {/* Subtle loading indicator */}
-        {showLoadingBadge && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="fixed right-6 top-20 z-50 flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-xs text-orange-400"
-          >
-            <div className="h-2 w-2 animate-pulse rounded-full bg-orange-500" />
-            Loading...
-          </motion.div>
+    <div className="flex items-center gap-3 rounded-xl border border-zinc-800/50 bg-zinc-900/30 px-4 py-3 backdrop-blur-sm">
+      <Icon className={`h-5 w-5 ${colorClasses[color]}`} />
+      <div className="flex-1">
+        <p className="text-xs text-zinc-500">{label}</p>
+        <p className="text-lg font-semibold text-white">{value}</p>
+      </div>
+    </div>
+  );
+});
+StatsCard.displayName = 'StatsCard';
+
+// Loading skeleton component
+const DashboardSkeleton = () => (
+  <div className="min-h-screen bg-zinc-950">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mb-12 animate-pulse border-b border-zinc-800 pb-8">
+        <div className="mb-2 h-12 w-2/3 rounded bg-zinc-800"></div>
+        <div className="h-6 w-1/3 rounded bg-zinc-800"></div>
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="h-40 animate-pulse rounded-xl bg-zinc-800"></div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+function DashboardContent() {
+  const { user, loading } = useRequireAuth();
+  const { isOpen, showUpgradeModal, hideUpgradeModal, modalProps } = useUpgradeModal();
+  const router = useRouter();
+  
+  // Performance monitoring
+  usePerformanceMonitor('dashboard');
+  
+  // Dashboard data with caching
+  const { data: dashboardStats, loading: statsLoading } = useDashboardData({
+    refreshInterval: 60000, // Refresh every minute
+    enabled: !!user && !loading,
+  });
+
+  // Stable user name (no loading flicker)
+  const userName = useMemo(() => {
+    if (loading || !user) return 'Artist';
+    return user.user_metadata?.name || user.email?.split('@')[0] || 'Artist';
+  }, [user, loading]);
+
+  // Memoized upgrade handler
+  const handleUpgrade = useCallback((feature: string) => {
+    showUpgradeModal({
+      feature,
+      requiredTier: 'creator',
+    });
+  }, [showUpgradeModal]);
+
+  // Memoized action items with prefetch enabled for common paths
+  const quickActions: QuickAction[] = useMemo(() => [
+    {
+      title: 'Songwriting Studio',
+      description: 'AI-powered chord progressions & lyrics',
+      icon: Music2,
+      href: '/songwriting',
+      gradient: 'bg-gradient-to-br from-purple-900/30 to-zinc-900/30',
+      prefetch: true,
+    },
+    {
+      title: 'Create Track',
+      description: 'Generate full songs with AI',
+      icon: FileMusic,
+      href: '/create',
+      gradient: 'bg-gradient-to-br from-blue-900/30 to-zinc-900/30',
+      prefetch: true,
+    },
+    {
+      title: 'New Project',
+      description: 'Start an album or EP',
+      icon: Folder,
+      href: '/projects/new',
+      gradient: 'bg-gradient-to-br from-green-900/30 to-zinc-900/30',
+      prefetch: true,
+    },
+    {
+      title: 'My Library',
+      description: 'View your music assets',
+      icon: Music2,
+      href: '/library',
+      gradient: 'bg-gradient-to-br from-orange-900/30 to-zinc-900/30',
+      prefetch: false,
+    },
+    {
+      title: 'Explore Community',
+      description: 'Discover tracks & musicians',
+      icon: Compass,
+      href: '/explore',
+      gradient: 'bg-gradient-to-br from-pink-900/30 to-zinc-900/30',
+      prefetch: false,
+    },
+  ], []);
+
+  // Memoized guide items
+  const quickGuides: QuickGuide[] = useMemo(() => [
+    {
+      title: 'Create Your First Track',
+      description: 'Use AI to generate music',
+      icon: Play,
+      href: '/create',
+      prefetch: true,
+    },
+    {
+      title: 'Start Collaborating',
+      description: 'Invite your band members',
+      icon: Share2,
+      href: '/projects',
+      prefetch: true,
+    },
+    {
+      title: 'Explore Features',
+      description: 'Tour the platform',
+      icon: Compass,
+      href: '/explore',
+      prefetch: false,
+    },
+  ], []);
+
+  // Memoized premium tools
+  const premiumTools: PremiumTool[] = useMemo(() => [
+    {
+      title: 'Smart Setlists',
+      description: 'AI-powered setlist generation',
+      icon: ListMusic,
+      feature: 'setlistManagement',
+    },
+    {
+      title: 'Tour Management',
+      description: 'Track shows & venues',
+      icon: Radio,
+      feature: 'toursAndGigs',
+    },
+    {
+      title: 'Gig Calendar',
+      description: 'Schedule & logistics',
+      icon: Calendar,
+      feature: 'toursAndGigs',
+    },
+  ], []);
+
+  // Prefetch critical routes on mount
+  useEffect(() => {
+    const criticalRoutes = ['/songwriting', '/create', '/projects'];
+    criticalRoutes.forEach(route => {
+      router.prefetch(route);
+    });
+  }, [router]);
+
+  // Track dashboard view
+  useEffect(() => {
+    if (user && typeof window !== 'undefined' && window.posthog) {
+      window.posthog.capture('dashboard_viewed', {
+        user_id: user.id,
+        user_email: user.email,
+        timestamp: Date.now(),
+      });
+    }
+  }, [user]);
+
+  // Show skeleton while loading
+  if (loading && !user) {
+    return <DashboardSkeleton />;
+  }
+
+  return (
+    <div className="min-h-screen bg-zinc-950">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        {/* Loading indicator (for data refreshes) */}
+        {(loading || statsLoading) && user && (
+          <div className="fixed right-6 top-20 z-50 flex items-center gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/95 px-3 py-2 text-xs text-zinc-400 shadow-xl backdrop-blur-sm">
+            <Loader2 className="h-3 w-3 animate-spin" />
+            <span className="font-mono uppercase tracking-wider">Syncing</span>
+          </div>
         )}
 
-        {/* Hero Section with Orange Gradient */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative mb-12 overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10"
-        >
-          {/* Animated background orbs */}
-          <div className="absolute inset-0 overflow-hidden">
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full bg-orange-500/10 blur-3xl"
-                style={{
-                  width: `${200 + i * 100}px`,
-                  height: `${200 + i * 100}px`,
-                  left: `${i * 30}%`,
-                  top: `${i * 20}%`,
-                }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.1, 0.2, 0.1],
-                }}
-                transition={{
-                  duration: 4 + i,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
+        {/* Enhanced Header with Stats */}
+        <div className="mb-12 border-b border-zinc-800/50 pb-8">
+          <div className="mb-6">
+            <h1 className="mb-2 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-4xl font-bold text-transparent lg:text-5xl">
+              Welcome back, {userName}
+            </h1>
+            <p className="text-lg text-zinc-400">Your creative workspace</p>
+          </div>
+          
+          {/* Dashboard Stats Grid */}
+          {dashboardStats && (
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
+              <StatsCard
+                icon={FolderOpen}
+                label="Projects"
+                value={dashboardStats.projectCount}
+                color="purple"
               />
-            ))}
-          </div>
+              <StatsCard
+                icon={Music2}
+                label="Songs"
+                value={dashboardStats.songCount}
+                color="blue"
+              />
+              <StatsCard
+                icon={Users}
+                label="Collaborators"
+                value={dashboardStats.collaboratorCount}
+                color="green"
+              />
+              <StatsCard
+                icon={TrendingUp}
+                label="Activity"
+                value={dashboardStats.recentActivity}
+                color="orange"
+              />
+              <StatsCard
+                icon={HardDrive}
+                label="Storage"
+                value={`${getStoragePercentage(dashboardStats.storageUsed, dashboardStats.storageTotal)}%`}
+                color="blue"
+              />
+              <StatsCard
+                icon={Clock}
+                label="Status"
+                value="Online"
+                color="green"
+              />
+            </div>
+          )}
+        </div>
 
-          <div className="relative z-10 p-10">
-            <h1 className="mb-3 text-5xl font-bold text-white">Welcome back, {userName}!</h1>
-            <p className="text-xl text-gray-300">{randomWelcome}</p>
-          </div>
-        </motion.div>
-
-        {/* Quick Actions Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-12"
-        >
-          <h2 className="mb-6 text-2xl font-semibold text-white">Start Creating</h2>
+        {/* Quick Actions with improved design */}
+        <div className="mb-12">
+          <h2 className="mb-6 flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-400">
+            <Zap className="h-4 w-4" />
+            Start Creating
+          </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                title: 'Songwriting Studio',
-                description: 'AI-powered chord progressions & lyrics',
-                icon: Music2,
-                href: '/songwriting',
-                badge: 'AI POWERED',
-              },
-              {
-                title: 'Create Track',
-                description: 'Generate full songs with AI',
-                icon: Sparkles,
-                href: '/create',
-              },
-              {
-                title: 'New Project',
-                description: 'Start an album or EP',
-                icon: Folder,
-                href: '/projects/new',
-              },
-              {
-                title: 'My Library',
-                description: 'View your music assets',
-                icon: FileMusic,
-                href: '/library',
-              },
-              {
-                title: 'Explore Community',
-                description: 'Discover trending tracks & musicians',
-                icon: Users2,
-                href: '/explore',
-              },
-            ].map((action, index) => (
-              <motion.div
-                key={action.href}
-                whileHover={{ y: -4, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + index * 0.05 }}
-              >
-                <Link href={action.href}>
-                  <div className="group relative h-full cursor-pointer overflow-hidden rounded-xl border border-gray-800 bg-gray-900 p-6 transition-all duration-300 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10">
-                    {/* Orange glow on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-                    <div className="relative z-10">
-                      {/* Badge */}
-                      {action.badge && (
-                        <span className="absolute -right-3 -top-3 rounded-full bg-orange-500 px-2 py-1 text-xs font-bold text-white">
-                          {action.badge}
-                        </span>
-                      )}
-
-                      {/* Icon */}
-                      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-orange-500/10 transition-all duration-300 group-hover:bg-orange-500/20">
-                        <action.icon className="h-7 w-7 text-orange-500" />
-                      </div>
-
-                      {/* Content */}
-                      <h3 className="mb-2 text-lg font-semibold text-white transition-colors group-hover:text-orange-500">
-                        {action.title}
-                      </h3>
-                      <p className="text-sm text-gray-400 transition-colors group-hover:text-gray-300">
-                        {action.description}
-                      </p>
-
-                      {/* Arrow indicator */}
-                      <ArrowRight className="absolute bottom-6 right-6 h-5 w-5 translate-x-2 transform text-gray-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:text-orange-500 group-hover:opacity-100" />
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
+            {quickActions.map((action) => (
+              <ActionCard key={action.href} action={action} />
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        {/* Your Progress Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-12"
-        >
-          <h2 className="mb-6 text-2xl font-semibold text-white">Your Journey So Far</h2>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {[
-              {
-                label: 'Projects Started',
-                value: '0',
-                icon: Folder,
-                subtext: 'Create your first project',
-              },
-              {
-                label: 'Tracks Created',
-                value: '0',
-                icon: Music2,
-                subtext: 'Start with AI Studio',
-              },
-              { label: 'Collaborators', value: '0', icon: Users2, subtext: 'Invite band members' },
-              { label: 'Total Plays', value: '0', icon: Play, subtext: 'Share music to get plays' },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 + index * 0.05 }}
-                className="rounded-xl border border-gray-800 bg-gray-900 p-6 text-center transition-colors hover:border-orange-500/50"
-              >
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10">
-                  <stat.icon className="h-6 w-6 text-orange-500" />
-                </div>
-                <p className="mb-1 text-3xl font-bold text-white">{stat.value}</p>
-                <p className="mb-2 text-sm text-gray-400">{stat.label}</p>
-                <p className="text-xs text-gray-500">{stat.subtext}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Learning Resources */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-12"
-        >
-          <h2 className="mb-6 text-2xl font-semibold text-white">Get Started</h2>
+        {/* Getting Started Guides with improved design */}
+        <div className="mb-12">
+          <h2 className="mb-6 flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-400">
+            <Play className="h-4 w-4" />
+            Quick Start Guides
+          </h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {[
-              {
-                title: '5-Minute Quick Start',
-                description: 'Create your first AI track',
-                icon: Play,
-                time: '5 min',
-                href: '/create',
-              },
-              {
-                title: 'Collaboration Guide',
-                description: 'Work with your band remotely',
-                icon: Share2,
-                time: '10 min',
-                href: '/projects',
-              },
-              {
-                title: 'Tour Our Features',
-                description: 'See everything we offer',
-                icon: Compass,
-                time: '3 min',
-                href: '/explore',
-              },
-            ].map((guide, index) => (
-              <motion.div
-                key={guide.title}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + index * 0.05 }}
-              >
-                <Link href={guide.href}>
-                  <div className="group flex cursor-pointer items-center gap-4 rounded-xl border border-gray-800 bg-gray-900 p-6 transition-all hover:border-orange-500/50">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 transition-colors group-hover:bg-orange-500/20">
-                      <guide.icon className="h-6 w-6 text-orange-500" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="mb-1 font-medium text-white transition-colors group-hover:text-orange-500">
-                        {guide.title}
-                      </h3>
-                      <p className="text-sm text-gray-400">{guide.description}</p>
-                    </div>
-                    <div className="text-xs text-gray-500">{guide.time}</div>
-                  </div>
-                </Link>
-              </motion.div>
+            {quickGuides.map((guide) => (
+              <GuideCard key={guide.href} guide={guide} />
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        {/* Premium Features Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.35 }}
-          className="mb-12"
-        >
+        {/* Premium Tools with improved design */}
+        <div className="mb-12">
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-2xl font-semibold text-white">Premium Tools</h2>
-            <span className="rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-3 py-1 text-xs font-bold text-white">
-              UPGRADE TO UNLOCK
+            <h2 className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-400">
+              <Lock className="h-4 w-4" />
+              Premium Tools
+            </h2>
+            <span className="rounded-lg bg-gradient-to-r from-orange-500/20 to-red-500/20 px-3 py-1 font-mono text-xs uppercase tracking-wider text-orange-400 ring-1 ring-orange-500/30">
+              Upgrade to Unlock
             </span>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {[
-              {
-                title: 'Smart Setlists',
-                description: 'AI-powered setlist generation & performance mode',
-                icon: ListMusic,
-                feature: 'setlistManagement',
-                gradient: 'from-blue-500 to-cyan-500',
-              },
-              {
-                title: 'Tour Management',
-                description: 'Track shows, venues & tour schedules',
-                icon: Radio,
-                feature: 'toursAndGigs',
-                gradient: 'from-purple-500 to-pink-500',
-              },
-              {
-                title: 'Gig Calendar',
-                description: 'Manage load-ins, soundchecks & setlists',
-                icon: Calendar,
-                feature: 'toursAndGigs',
-                gradient: 'from-green-500 to-emerald-500',
-              },
-            ].map((tool, index) => (
-              <motion.button
-                key={tool.title}
-                onClick={() =>
-                  showUpgradeModal({
-                    feature: tool.feature,
-                    requiredTier: 'creator',
-                  })
-                }
-                whileHover={{ y: -4, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35 + index * 0.05 }}
-                className="group relative h-full cursor-pointer overflow-hidden rounded-xl border border-gray-800 bg-gray-900 p-6 text-left transition-all duration-300 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10"
-              >
-                {/* Lock Badge */}
-                <div className="absolute right-3 top-3 rounded-full bg-gray-800 p-2">
-                  <Lock className="h-4 w-4 text-gray-400" />
-                </div>
-
-                {/* Gradient Overlay */}
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-10`}
-                />
-
-                <div className="relative z-10">
-                  {/* Icon */}
-                  <div
-                    className={`mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} bg-opacity-10`}
-                  >
-                    <tool.icon className={`h-7 w-7 bg-gradient-to-r ${tool.gradient} bg-clip-text text-transparent`} />
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="mb-2 text-lg font-semibold text-white transition-colors group-hover:text-orange-500">
-                    {tool.title}
-                  </h3>
-                  <p className="text-sm text-gray-400 transition-colors group-hover:text-gray-300">
-                    {tool.description}
-                  </p>
-
-                  {/* Upgrade Prompt */}
-                  <div className="mt-4 flex items-center gap-2 text-xs font-medium text-orange-500">
-                    <span>Click to learn more</span>
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </motion.button>
+            {premiumTools.map((tool) => (
+              <PremiumToolCard key={tool.title} tool={tool} onUpgrade={handleUpgrade} />
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        {/* Recent Activity Feed - Only show when user is loaded */}
-        {user && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <h2 className="mb-6 text-2xl font-semibold text-white">Recent Activity</h2>
-            <div className="rounded-xl border border-gray-800 bg-gray-900 p-6">
-              <CompactActivityFeed channelName="activity:global" />
+        {/* Recent Activity with Suspense and Error Boundary */}
+        {user && !loading && (
+          <div>
+            <h2 className="mb-6 flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-400">
+              <TrendingUp className="h-4 w-4" />
+              Recent Activity
+            </h2>
+            <div className="rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-6 backdrop-blur-sm">
+              <SilentErrorBoundary 
+                fallback={
+                  <div className="py-8 text-center text-sm text-zinc-500">
+                    Activity feed temporarily unavailable
+                  </div>
+                }
+              >
+                <Suspense 
+                  fallback={
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="h-6 w-6 animate-spin text-zinc-600" />
+                    </div>
+                  }
+                >
+                  <CompactActivityFeed channelName="activity:global" limit={10} />
+                </Suspense>
+              </SilentErrorBoundary>
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
 
       {/* Upgrade Modal */}
-      <UpgradeModal isOpen={isOpen} onClose={hideUpgradeModal} {...modalProps} />
+      {isOpen && <UpgradeModal isOpen={isOpen} onClose={hideUpgradeModal} {...modalProps} />}
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <ErrorBoundary>
+      <DashboardContent />
+    </ErrorBoundary>
   );
 }

@@ -81,7 +81,19 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     }
 
     const body = await req.json();
-    const { title, key, tempo, timeSignature, lyrics, chords, status, visibility } = body;
+    const { 
+      title, 
+      key, 
+      tempo, 
+      timeSignature, 
+      lyrics, 
+      chords, 
+      status, 
+      visibility,
+      copyrightInfo,
+      audioUrl,
+      audioPath,
+    } = body;
 
     const song = await db.song.update({
       where: { id: songId },
@@ -96,6 +108,9 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
         }),
         ...(status !== undefined && { status }),
         ...(visibility !== undefined && { visibility }),
+        ...(copyrightInfo !== undefined && { copyrightInfo }),
+        ...(audioUrl !== undefined && { audioUrl }),
+        ...(audioPath !== undefined && { audioPath }),
         lastSavedAt: new Date(),
       },
     });

@@ -18,12 +18,14 @@ import {
   Headphones,
   MessageSquare,
   LogOut,
+  Loader2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { supabase } from '@/lib/supabase';
+import { signOut } from '@/lib/supabase';
+import { useToast } from '@/hooks/useToast';
 
 interface NavItem {
   label: string;
@@ -55,8 +57,10 @@ const floatingIcons = [Music4, Mic2, Radio, Headphones];
 export function SidebarNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const { showToast } = useToast();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   // Don't show sidebar on marketing pages
   const isMarketingPage =
@@ -69,29 +73,29 @@ export function SidebarNav() {
   if (isMarketingPage) return null;
 
   const handleSignOut = async () => {
+    setSigningOut(true);
+    
     try {
-      if (!supabase) {
-        console.error('Supabase not initialized - cannot sign out');
-        router.push('/');
-        return;
+      const { success, error } = await signOut();
+      
+      if (success) {
+        showToast('Successfully signed out', 'success');
+        setTimeout(() => {
+          router.push('/');
+        }, 500);
+      } else {
+        showToast(error?.message || 'Failed to sign out, but session cleared', 'warning');
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
       }
-
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-        console.error('Sign out error:', error);
-      }
-
-      // Clear any local storage/session data
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem('supabase.auth.token');
-        window.sessionStorage.clear();
-      }
-
-      router.push('/');
     } catch (error) {
-      console.error('Unexpected sign out error:', error);
-      router.push('/');
+      showToast('An unexpected error occurred while signing out', 'error');
+      setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    } finally {
+      setSigningOut(false);
     }
   };
 
@@ -281,13 +285,18 @@ export function SidebarNav() {
       <div className="pointer-events-auto absolute bottom-4 left-0 right-0 px-3">
         <motion.button
           onClick={handleSignOut}
-          whileHover={{ x: 4 }}
-          whileTap={{ scale: 0.98 }}
-          className="group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-red-500/10"
+          disabled={signingOut}
+          whileHover={{ x: signingOut ? 0 : 4 }}
+          whileTap={{ scale: signingOut ? 1 : 0.98 }}
+          className="group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {/* Icon */}
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/5 transition-all duration-200 group-hover:bg-red-500/20">
-            <LogOut className="h-5 w-5 text-gray-400 transition-colors group-hover:text-red-400" />
+            {signingOut ? (
+              <Loader2 className="h-5 w-5 animate-spin text-red-400" />
+            ) : (
+              <LogOut className="h-5 w-5 text-gray-400 transition-colors group-hover:text-red-400" />
+            )}
           </div>
 
           {/* Label */}
@@ -299,7 +308,7 @@ export function SidebarNav() {
                 exit={{ opacity: 0, x: -10 }}
                 className="text-sm font-medium text-gray-300 transition-colors group-hover:text-red-400"
               >
-                Sign Out
+                {signingOut ? 'Signing Out...' : 'Sign Out'}
               </motion.span>
             )}
           </AnimatePresence>

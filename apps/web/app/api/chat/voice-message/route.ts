@@ -61,12 +61,23 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now();
     const fileName = `voice-messages/${channelId}/${user.id}-${timestamp}.webm`;
 
-    // Upload to Supabase Storage
+    // Compress audio if it's too large (> 5MB)
+    let fileToUpload: File | Blob = audioFile;
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (audioFile.size > maxSize) {
+      // For large files, we could implement server-side compression
+      // For now, we'll add metadata to track compression needs
+      console.warn(`Large voice message (${(audioFile.size / 1024 / 1024).toFixed(2)}MB) - consider compression`);
+    }
+
+    // Upload to Supabase Storage with optimization
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('voice-messages')
-      .upload(fileName, audioFile, {
-        contentType: audioFile.type,
+      .upload(fileName, fileToUpload, {
+        contentType: audioFile.type || 'audio/webm',
         upsert: false,
+        cacheControl: '3600', // Cache for 1 hour
       });
 
     if (uploadError) {

@@ -26,7 +26,7 @@ import {
   Users,
   PhoneOff,
 } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 
 interface StudioSessionProps {
   roomUrl: string;
@@ -52,13 +52,17 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
   const [streamingUrl, setStreamingUrl] = useState('');
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  
+  // Use ref to track if we've already attempted to join
+  const hasJoinedRef = useRef(false);
 
   // Join the call
   const joinCall = useCallback(async () => {
-    if (!callObject || !roomUrl) return;
+    if (!callObject || !roomUrl || hasJoinedRef.current) return;
 
     setIsJoining(true);
     setCallError(null);
+    hasJoinedRef.current = true;
 
     try {
       await callObject.join({
@@ -69,39 +73,51 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
     } catch (error) {
       console.error('Failed to join call:', error);
       setCallError('Failed to join the studio session');
+      hasJoinedRef.current = false; // Allow retry on error
     } finally {
       setIsJoining(false);
     }
   }, [callObject, roomUrl, token]);
 
-  // Leave the call
+  // Leave the call - Memoized
   const leaveCall = useCallback(async () => {
     if (!callObject) return;
 
     try {
       await callObject.leave();
+      hasJoinedRef.current = false; // Reset join state
     } catch (error) {
       console.error('Failed to leave call:', error);
     }
   }, [callObject]);
 
-  // Toggle video
-  const toggleVideo = useCallback(() => {
+  // Toggle video - Optimized to prevent re-renders
+  const toggleVideo = useCallback(async () => {
     if (!callObject) return;
 
-    callObject.setLocalVideo(!isVideoEnabled);
-    setIsVideoEnabled(!isVideoEnabled);
+    const newState = !isVideoEnabled;
+    try {
+      await callObject.setLocalVideo(newState);
+      setIsVideoEnabled(newState);
+    } catch (error) {
+      console.error('Failed to toggle video:', error);
+    }
   }, [callObject, isVideoEnabled]);
 
-  // Toggle audio
-  const toggleAudio = useCallback(() => {
+  // Toggle audio - Optimized to prevent re-renders
+  const toggleAudio = useCallback(async () => {
     if (!callObject) return;
 
-    callObject.setLocalAudio(!isAudioEnabled);
-    setIsAudioEnabled(!isAudioEnabled);
+    const newState = !isAudioEnabled;
+    try {
+      await callObject.setLocalAudio(newState);
+      setIsAudioEnabled(newState);
+    } catch (error) {
+      console.error('Failed to toggle audio:', error);
+    }
   }, [callObject, isAudioEnabled]);
 
-  // Start recording with configuration
+  // Start recording with configuration - Memoized
   const handleStartRecording = useCallback(async () => {
     try {
       await startRecording({
@@ -114,9 +130,9 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
     }
   }, [startRecording]);
 
-  // Start live streaming
+  // Start live streaming - Memoized with dependency
   const handleStartStreaming = useCallback(async () => {
-    if (!streamingUrl) {
+    if (!streamingUrl.trim()) {
       alert('Please enter a streaming URL');
       return;
     }
@@ -133,12 +149,25 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
     }
   }, [startLiveStreaming, streamingUrl]);
 
-  // Auto-join on mount if we have a room URL
+  // Auto-join on mount if we have a room URL - Fixed to prevent re-render loop
   useEffect(() => {
-    if (roomUrl && callObject && !localParticipant) {
+    if (roomUrl && callObject && !localParticipant && !hasJoinedRef.current && !isJoining) {
       joinCall();
     }
-  }, [roomUrl, callObject, localParticipant, joinCall]);
+  }, [roomUrl, callObject, localParticipant, isJoining]); // Removed joinCall from deps to prevent loop
+
+  // Memoize participant count to prevent re-renders
+  const participantCount = useMemo(() => {
+    return remoteParticipantIds.length + 1;
+  }, [remoteParticipantIds.length]);
+
+  // Sync video/audio state with actual call state on participant change
+  useEffect(() => {
+    if (!localParticipant) return;
+
+    setIsVideoEnabled(localParticipant.video ?? true);
+    setIsAudioEnabled(localParticipant.audio ?? true);
+  }, [localParticipant]);
 
   if (!callObject) {
     return (
@@ -314,7 +343,7 @@ export function StudioSession({ roomUrl, token }: StudioSessionProps) {
       <Card className="p-4">
         <div className="flex items-center gap-2 text-sm">
           <Users className="h-4 w-4" />
-          <span>{remoteParticipantIds.length + 1} participants in session</span>
+          <span>{participantCount} participants in session</span>
         </div>
       </Card>
     </div>

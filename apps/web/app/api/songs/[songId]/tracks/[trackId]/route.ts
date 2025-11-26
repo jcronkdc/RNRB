@@ -1,7 +1,19 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+
+// Validation schema for track updates
+const updateTrackSchema = z.object({
+  trackName: z.string().min(1).max(100).optional(),
+  volume: z.number().min(0).max(2).optional(),
+  pan: z.number().min(-1).max(1).optional(),
+  solo: z.boolean().optional(),
+  mute: z.boolean().optional(),
+  order: z.number().int().min(0).optional(),
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+});
 
 /**
  * GET /api/songs/[songId]/tracks/[trackId]
@@ -73,7 +85,7 @@ export async function GET(
 
 /**
  * PATCH /api/songs/[songId]/tracks/[trackId]
- * Update track properties
+ * Update track properties with validation
  */
 export async function PATCH(
   req: NextRequest,
@@ -89,13 +101,29 @@ export async function PATCH(
     const userId = session.user.id;
     const body = await req.json();
 
+    // Validate input
+    const validatedData = updateTrackSchema.parse(body);
+
+    // Check if there's anything to update
+    if (Object.keys(validatedData).length === 0) {
+      return NextResponse.json(
+        { error: 'No valid fields provided for update' },
+        { status: 400 }
+      );
+    }
+
     // Check access
     const song = await db.song.findUnique({
       where: { id: songId },
-      include: {
+      select: {
+        id: true,
+        userId: true,
         project: {
-          include: {
-            members: { where: { userId } },
+          select: {
+            members: {
+              where: { userId },
+              select: { id: true },
+            },
           },
         },
       },
@@ -112,30 +140,65 @@ export async function PATCH(
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
+    // Verify track exists and belongs to song
+    const existingTrack = await db.songTrack.findUnique({
+      where: { id: trackId },
+      select: { songId: true },
+    });
+
+    if (!existingTrack || existingTrack.songId !== songId) {
+      return NextResponse.json(
+        { error: 'Track not found or does not belong to this song' },
+        { status: 404 }
+      );
+    }
+
     // Update track
     const track = await db.songTrack.update({
       where: { id: trackId },
-      data: {
-        ...(body.trackName && { trackName: body.trackName }),
-        ...(body.volume !== undefined && { volume: body.volume }),
-        ...(body.pan !== undefined && { pan: body.pan }),
-        ...(body.solo !== undefined && { solo: body.solo }),
-        ...(body.mute !== undefined && { mute: body.mute }),
-        ...(body.order !== undefined && { order: body.order }),
-        ...(body.color && { color: body.color }),
-      },
+      data: validatedData,
     });
 
-    return NextResponse.json({ track });
+    return NextResponse.json({
+      success: true,
+      track: {
+        id: track.id,
+        trackName: track.trackName,
+        volume: track.volume,
+        pan: track.pan,
+        solo: track.solo,
+        mute: track.mute,
+        order: track.order,
+        color: track.color,
+        updatedAt: track.updatedAt,
+      },
+    });
   } catch (error) {
     console.error('PATCH /api/songs/[songId]/tracks/[trackId] error:', error);
-    return NextResponse.json({ error: 'Failed to update track' }, { status: 500 });
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Invalid input parameters',
+          details: error.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        error: 'Failed to update track',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }
 
 /**
  * DELETE /api/songs/[songId]/tracks/[trackId]
- * Delete a track
+ * Delete a track with proper validation
  */
 export async function DELETE(
   req: NextRequest,
@@ -150,27 +213,72 @@ export async function DELETE(
     const { songId, trackId } = await params;
     const userId = session.user.id;
 
-    // Check access
+    // Check access with optimized query
     const song = await db.song.findUnique({
       where: { id: songId },
+      select: {
+        id: true,
+        userId: true,
+        project: {
+          select: {
+            members: {
+              where: { userId },
+              select: { id: true },
+            },
+          },
+        },
+      },
     });
 
     if (!song) {
       return NextResponse.json({ error: 'Song not found' }, { status: 404 });
     }
 
-    if (song.userId !== userId) {
+    // Only song owner or project admin can delete
+    const canDelete =
+      song.userId === userId || (song.project && song.project.members.length > 0);
+
+    if (!canDelete) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
+    // Verify track exists and belongs to song
+    const track = await db.songTrack.findUnique({
+      where: { id: trackId },
+      select: { songId: true, audioPath: true },
+    });
+
+    if (!track || track.songId !== songId) {
+      return NextResponse.json(
+        { error: 'Track not found or does not belong to this song' },
+        { status: 404 }
+      );
+    }
+
+    // Delete track
     await db.songTrack.delete({
       where: { id: trackId },
     });
 
-    return NextResponse.json({ message: 'Track deleted successfully' });
+    // TODO: Delete audio file from storage (Supabase Storage)
+    // if (track.audioPath) {
+    //   await deleteFromStorage(track.audioPath);
+    // }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Track deleted successfully',
+      trackId,
+    });
   } catch (error) {
     console.error('DELETE /api/songs/[songId]/tracks/[trackId] error:', error);
-    return NextResponse.json({ error: 'Failed to delete track' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to delete track',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }
 

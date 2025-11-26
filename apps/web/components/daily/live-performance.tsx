@@ -23,7 +23,7 @@ import {
   Wifi,
   WifiOff,
 } from 'lucide-react';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 interface LivePerformanceProps {
   performanceName: string;
@@ -61,36 +61,75 @@ export function LivePerformance({
   const [chatMessages, setChatMessages] = useState<
     Array<{ id: string; user: string; message: string; timestamp: Date }>
   >([]);
+  
+  // Use refs to prevent state updates after unmount
+  const isMountedRef = useRef(true);
+  const viewerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const durationIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Simulate viewer count updates
+  // Cleanup on unmount
   useEffect(() => {
-    if (!isLiveStreaming) return;
+    return () => {
+      isMountedRef.current = false;
+      if (viewerIntervalRef.current) clearInterval(viewerIntervalRef.current);
+      if (durationIntervalRef.current) clearInterval(durationIntervalRef.current);
+    };
+  }, []);
 
-    const interval = setInterval(() => {
+  // Simulate viewer count updates - Optimized with cleanup
+  useEffect(() => {
+    if (!isLiveStreaming) {
+      if (viewerIntervalRef.current) {
+        clearInterval(viewerIntervalRef.current);
+        viewerIntervalRef.current = null;
+      }
+      return;
+    }
+
+    viewerIntervalRef.current = setInterval(() => {
+      if (!isMountedRef.current) return;
       setViewerCount((prev) => {
         const change = Math.floor(Math.random() * 10) - 5;
         return Math.max(0, prev + change);
       });
     }, 5000);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (viewerIntervalRef.current) {
+        clearInterval(viewerIntervalRef.current);
+        viewerIntervalRef.current = null;
+      }
+    };
   }, [isLiveStreaming]);
 
-  // Calculate stream duration
+  // Calculate stream duration - Optimized with cleanup
   useEffect(() => {
-    if (!isLiveStreaming || !streamStartTime) return;
+    if (!isLiveStreaming || !streamStartTime) {
+      if (durationIntervalRef.current) {
+        clearInterval(durationIntervalRef.current);
+        durationIntervalRef.current = null;
+      }
+      setStreamDuration(0);
+      return;
+    }
 
-    const interval = setInterval(() => {
+    durationIntervalRef.current = setInterval(() => {
+      if (!isMountedRef.current) return;
       const now = new Date();
       const duration = Math.floor((now.getTime() - streamStartTime.getTime()) / 1000);
       setStreamDuration(duration);
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (durationIntervalRef.current) {
+        clearInterval(durationIntervalRef.current);
+        durationIntervalRef.current = null;
+      }
+    };
   }, [isLiveStreaming, streamStartTime]);
 
-  // Format duration
-  const formatDuration = (seconds: number) => {
+  // Format duration - Memoized
+  const formatDuration = useCallback((seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
@@ -99,10 +138,26 @@ export function LivePerformance({
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
-  };
+  }, []);
 
-  // Get platform-specific RTMP URL
-  const getPlatformUrl = (platform: string) => {
+  // Memoize formatted values
+  const formattedDuration = useMemo(() => formatDuration(streamDuration), [streamDuration, formatDuration]);
+  const formattedViewerCount = useMemo(() => formatNumber(viewerCount), [viewerCount]);
+  const formattedPeakViewers = useMemo(() => 
+    formatNumber(Math.max(viewerCount, Math.floor(viewerCount * 1.3))), 
+    [viewerCount]
+  );
+  const formattedReactions = useMemo(() => 
+    formatNumber(Math.floor(viewerCount * 8.2)), 
+    [viewerCount]
+  );
+  const formattedHearts = useMemo(() => 
+    formatNumber(Math.floor(viewerCount * 2.5)), 
+    [viewerCount]
+  );
+
+  // Get platform-specific RTMP URL - Memoized
+  const getPlatformUrl = useCallback((platform: string) => {
     switch (platform) {
       case 'youtube':
         return 'rtmp://a.rtmp.youtube.com/live2';
@@ -113,11 +168,22 @@ export function LivePerformance({
       default:
         return streamConfig.rtmpUrl;
     }
-  };
+  }, [streamConfig.rtmpUrl]);
 
-  // Start live stream
+  // Memoize video bitrate calculation
+  const videoBitrate = useMemo(() => {
+    switch (streamConfig.quality) {
+      case 'ultra': return 3000;
+      case 'high': return 2000;
+      case 'medium': return 1000;
+      case 'low': return 500;
+      default: return 2000;
+    }
+  }, [streamConfig.quality]);
+
+  // Start live stream - Memoized
   const handleStartStream = useCallback(async () => {
-    if (!streamConfig.streamKey && streamConfig.platform !== 'custom') {
+    if (!streamConfig.streamKey.trim() && streamConfig.platform !== 'custom') {
       alert('Please enter your stream key');
       return;
     }
@@ -133,14 +199,7 @@ export function LivePerformance({
         layout: {
           preset: 'default',
         },
-        videoBitrate:
-          streamConfig.quality === 'ultra'
-            ? 3000
-            : streamConfig.quality === 'high'
-              ? 2000
-              : streamConfig.quality === 'medium'
-                ? 1000
-                : 500,
+        videoBitrate,
         audioBitrate: 128,
       });
 
@@ -150,9 +209,9 @@ export function LivePerformance({
     } catch (err) {
       console.error('Failed to start streaming:', err);
     }
-  }, [startLiveStreaming, streamConfig]);
+  }, [startLiveStreaming, streamConfig.streamKey, streamConfig.platform, streamConfig.rtmpUrl, getPlatformUrl, videoBitrate]);
 
-  // Stop live stream
+  // Stop live stream - Memoized
   const handleStopStream = useCallback(async () => {
     try {
       await stopLiveStreaming();
@@ -163,6 +222,47 @@ export function LivePerformance({
       console.error('Failed to stop streaming:', err);
     }
   }, [stopLiveStreaming]);
+
+  // Memoize config update handlers
+  const updatePlatform = useCallback((value: string) => {
+    setStreamConfig(prev => ({ ...prev, platform: value as any }));
+  }, []);
+
+  const updateStreamKey = useCallback((value: string) => {
+    setStreamConfig(prev => ({ ...prev, streamKey: value }));
+  }, []);
+
+  const updateRtmpUrl = useCallback((value: string) => {
+    setStreamConfig(prev => ({ ...prev, rtmpUrl: value }));
+  }, []);
+
+  const updateQuality = useCallback((value: string) => {
+    setStreamConfig(prev => ({ ...prev, quality: value as any }));
+  }, []);
+
+  const updateShowChat = useCallback((checked: boolean) => {
+    setStreamConfig(prev => ({ ...prev, showChat: checked }));
+  }, []);
+
+  const updateRecordStream = useCallback((checked: boolean) => {
+    setStreamConfig(prev => ({ ...prev, recordStream: checked }));
+  }, []);
+
+  const toggleSettings = useCallback(() => {
+    setShowSettings(prev => !prev);
+  }, []);
+
+  // Memoized chat message handler
+  const handleChatMessage = useCallback((message: string) => {
+    if (!message.trim()) return;
+    
+    setChatMessages(prev => [...prev, {
+      id: Date.now().toString(),
+      user: 'Artist',
+      message: message.trim(),
+      timestamp: new Date(),
+    }]);
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -197,7 +297,7 @@ export function LivePerformance({
 
             <div className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
-              <span>{formatNumber(viewerCount)} viewers</span>
+              <span>{formattedViewerCount} viewers</span>
             </div>
 
             <div className="flex items-center gap-2">
@@ -208,7 +308,7 @@ export function LivePerformance({
               ) : (
                 <WifiOff className="h-4 w-4 text-red-500" />
               )}
-              <span className="text-sm">{formatDuration(streamDuration)}</span>
+              <span className="text-sm">{formattedDuration}</span>
             </div>
           </div>
         )}
@@ -250,12 +350,7 @@ export function LivePerformance({
                 <div className="flex items-center gap-4">
                   <select
                     value={streamConfig.platform}
-                    onChange={(e) =>
-                      setStreamConfig({
-                        ...streamConfig,
-                        platform: e.target.value as any,
-                      })
-                    }
+                    onChange={(e) => updatePlatform(e.target.value)}
                     className="flex-1 rounded-md border px-3 py-2"
                   >
                     <option value="youtube">YouTube Live</option>
@@ -267,7 +362,7 @@ export function LivePerformance({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => setShowSettings(!showSettings)}
+                    onClick={toggleSettings}
                   >
                     <Settings className="h-4 w-4" />
                   </Button>
@@ -279,12 +374,7 @@ export function LivePerformance({
                     type="password"
                     placeholder="Enter your stream key"
                     value={streamConfig.streamKey}
-                    onChange={(e) =>
-                      setStreamConfig({
-                        ...streamConfig,
-                        streamKey: e.target.value,
-                      })
-                    }
+                    onChange={(e) => updateStreamKey(e.target.value)}
                     className="w-full rounded-md border px-3 py-2"
                   />
                 ) : (
@@ -292,12 +382,7 @@ export function LivePerformance({
                     type="text"
                     placeholder="Enter RTMP URL"
                     value={streamConfig.rtmpUrl}
-                    onChange={(e) =>
-                      setStreamConfig({
-                        ...streamConfig,
-                        rtmpUrl: e.target.value,
-                      })
-                    }
+                    onChange={(e) => updateRtmpUrl(e.target.value)}
                     className="w-full rounded-md border px-3 py-2"
                   />
                 )}
@@ -316,12 +401,7 @@ export function LivePerformance({
                           <label className="text-sm font-medium">Stream Quality</label>
                           <select
                             value={streamConfig.quality}
-                            onChange={(e) =>
-                              setStreamConfig({
-                                ...streamConfig,
-                                quality: e.target.value as any,
-                              })
-                            }
+                            onChange={(e) => updateQuality(e.target.value)}
                             className="mt-1 w-full rounded-md border px-3 py-2"
                           >
                             <option value="low">Low (480p)</option>
@@ -336,12 +416,7 @@ export function LivePerformance({
                             <input
                               type="checkbox"
                               checked={streamConfig.showChat}
-                              onChange={(e) =>
-                                setStreamConfig({
-                                  ...streamConfig,
-                                  showChat: e.target.checked,
-                                })
-                              }
+                              onChange={(e) => updateShowChat(e.target.checked)}
                             />
                             <span className="text-sm">Enable chat</span>
                           </label>
@@ -350,12 +425,7 @@ export function LivePerformance({
                             <input
                               type="checkbox"
                               checked={streamConfig.recordStream}
-                              onChange={(e) =>
-                                setStreamConfig({
-                                  ...streamConfig,
-                                  recordStream: e.target.checked,
-                                })
-                              }
+                              onChange={(e) => updateRecordStream(e.target.checked)}
                             />
                             <span className="text-sm">Record stream</span>
                           </label>
@@ -391,9 +461,7 @@ export function LivePerformance({
 
                 <div className="flex items-center gap-2">
                   <Heart className="h-5 w-5 text-red-500" />
-                  <span className="font-semibold">
-                    {formatNumber(Math.floor(viewerCount * 2.5))}
-                  </span>
+                  <span className="font-semibold">{formattedHearts}</span>
                 </div>
               </div>
             )}
@@ -422,9 +490,7 @@ export function LivePerformance({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-sm">Peak Viewers</span>
-                <span className="font-semibold">
-                  {formatNumber(Math.max(viewerCount, Math.floor(viewerCount * 1.3)))}
-                </span>
+                <span className="font-semibold">{formattedPeakViewers}</span>
               </div>
 
               <div className="flex items-center justify-between">
@@ -434,9 +500,7 @@ export function LivePerformance({
 
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground text-sm">Reactions</span>
-                <span className="font-semibold">
-                  {formatNumber(Math.floor(viewerCount * 8.2))}
-                </span>
+                <span className="font-semibold">{formattedReactions}</span>
               </div>
             </div>
           </Card>
@@ -464,15 +528,7 @@ export function LivePerformance({
                 className="w-full rounded-md border px-3 py-2 text-sm"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter' && e.currentTarget.value) {
-                    setChatMessages([
-                      ...chatMessages,
-                      {
-                        id: Date.now().toString(),
-                        user: 'Artist',
-                        message: e.currentTarget.value,
-                        timestamp: new Date(),
-                      },
-                    ]);
+                    handleChatMessage(e.currentTarget.value);
                     e.currentTarget.value = '';
                   }
                 }}

@@ -11,7 +11,7 @@ import {
   Settings,
   AlertCircle,
 } from 'lucide-react';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 
 interface RecordingControlsProps {
   onRecordingComplete?: (recordingId: string | null) => void;
@@ -35,9 +35,12 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
 
-  // Calculate recording duration
+  // Calculate recording duration - Optimized with proper cleanup
   useEffect(() => {
-    if (!isRecording || !recordingStartTime) return;
+    if (!isRecording || !recordingStartTime) {
+      setRecordingDuration(0);
+      return;
+    }
 
     const interval = setInterval(() => {
       const now = new Date();
@@ -48,8 +51,8 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
     return () => clearInterval(interval);
   }, [isRecording, recordingStartTime]);
 
-  // Format duration
-  const formatDuration = (seconds: number) => {
+  // Format duration - Memoized
+  const formatDuration = useCallback((seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
@@ -58,9 +61,18 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
-  };
+  }, []);
 
-  // Start recording with configuration
+  // Memoize formatted duration to prevent re-renders
+  const formattedDuration = useMemo(() => formatDuration(recordingDuration), [recordingDuration, formatDuration]);
+
+  // Memoize participant text
+  const participantText = useMemo(() => {
+    const count = participantCounts.present;
+    return `${count} participant${count !== 1 ? 's' : ''}`;
+  }, [participantCounts.present]);
+
+  // Start recording with configuration - Memoized with stable dependencies
   const handleStartRecording = useCallback(async () => {
     try {
       await startRecording({
@@ -74,9 +86,9 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
     } catch (err) {
       console.error('Failed to start recording:', err);
     }
-  }, [startRecording, recordingConfig]);
+  }, [startRecording, recordingConfig.videoBitrate, recordingConfig.audioBitrate, recordingConfig.backgroundColor]);
 
-  // Stop recording
+  // Stop recording - Memoized
   const handleStopRecording = useCallback(async () => {
     try {
       await stopRecording();
@@ -95,7 +107,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
     }
   }, [stopRecording, onRecordingComplete]);
 
-  // Pause/Resume recording
+  // Pause/Resume recording - Memoized
   const handlePauseResume = useCallback(async () => {
     try {
       // Note: Daily.co updateRecording has limited options
@@ -105,6 +117,24 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
       console.error('Failed to pause/resume recording:', err);
     }
   }, [isPaused]);
+
+  // Memoize config update handlers
+  const updateLayout = useCallback((value: string) => {
+    setRecordingConfig(prev => ({ ...prev, layout: value as any }));
+  }, []);
+
+  const updateVideoBitrate = useCallback((value: string) => {
+    setRecordingConfig(prev => ({ ...prev, videoBitrate: parseInt(value) }));
+  }, []);
+
+  const updateShowLabels = useCallback((checked: boolean) => {
+    setRecordingConfig(prev => ({ ...prev, showParticipantLabels: checked }));
+  }, []);
+
+  // Memoize toggle settings
+  const toggleSettings = useCallback(() => {
+    setShowSettings(prev => !prev);
+  }, []);
 
   return (
     <Card className="p-6">
@@ -116,7 +146,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
             Recording Controls
           </h3>
 
-          <Button variant="ghost" size="icon" onClick={() => setShowSettings(!showSettings)}>
+          <Button variant="ghost" size="icon" onClick={toggleSettings}>
             <Settings className="h-4 w-4" />
           </Button>
         </div>
@@ -135,12 +165,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
                   <label className="text-sm font-medium">Layout</label>
                   <select
                     value={recordingConfig.layout}
-                    onChange={(e) =>
-                      setRecordingConfig({
-                        ...recordingConfig,
-                        layout: e.target.value as any,
-                      })
-                    }
+                    onChange={(e) => updateLayout(e.target.value)}
                     className="mt-1 w-full rounded-md border px-3 py-2"
                     disabled={isRecording}
                   >
@@ -155,12 +180,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
                   <label className="text-sm font-medium">Video Quality</label>
                   <select
                     value={recordingConfig.videoBitrate}
-                    onChange={(e) =>
-                      setRecordingConfig({
-                        ...recordingConfig,
-                        videoBitrate: parseInt(e.target.value),
-                      })
-                    }
+                    onChange={(e) => updateVideoBitrate(e.target.value)}
                     className="mt-1 w-full rounded-md border px-3 py-2"
                     disabled={isRecording}
                   >
@@ -175,12 +195,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
                     type="checkbox"
                     id="showLabels"
                     checked={recordingConfig.showParticipantLabels}
-                    onChange={(e) =>
-                      setRecordingConfig({
-                        ...recordingConfig,
-                        showParticipantLabels: e.target.checked,
-                      })
-                    }
+                    onChange={(e) => updateShowLabels(e.target.checked)}
                     disabled={isRecording}
                   />
                   <label htmlFor="showLabels" className="text-sm">
@@ -206,8 +221,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
                     Recording in Progress
                   </p>
                   <p className="text-sm text-red-700 dark:text-red-300">
-                    {formatDuration(recordingDuration)} • {participantCounts.present} participant
-                    {participantCounts.present !== 1 ? 's' : ''}
+                    {formattedDuration} • {participantText}
                   </p>
                 </div>
               </div>

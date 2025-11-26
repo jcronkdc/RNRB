@@ -19,15 +19,22 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 import { supabase } from '@/lib/supabase';
+import { trpc } from '@cronkwaters/trpc/client/react';
 
 
 export function TopBar() {
   const router = useRouter();
   const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [credits, setCredits] = useState(150); // Mock credits
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifications, setNotifications] = useState(3); // Mock notifications
+
+  // Fetch real credits data with caching
+  const { data: creditsData } = trpc.usage.getCredits.useQuery(undefined, {
+    refetchInterval: 60000, // Refetch every minute
+    staleTime: 30000, // Consider data stale after 30 seconds
+    enabled: !!user, // Only fetch when user is authenticated
+  });
 
   useEffect(() => {
     supabase?.auth.getUser().then(({ data: { user } }) => {
@@ -64,6 +71,22 @@ export function TopBar() {
       router.push('/');
     }
   };
+
+  // Determine credits display
+  const creditsDisplay = creditsData?.unlimited 
+    ? '∞' 
+    : creditsData?.remaining ?? '...';
+  
+  // Determine credits color based on remaining credits
+  const creditsColor = creditsData?.unlimited
+    ? 'text-purple-400' // Unlimited = purple
+    : !creditsData || creditsData.remaining === undefined
+      ? 'text-gray-400' // Loading or no data = gray
+      : creditsData.remaining < 20
+        ? 'text-red-400' // Critical = red
+        : creditsData.remaining < 50
+          ? 'text-orange-400' // Low = orange
+          : 'text-green-400'; // Healthy = green
 
   return (
     <header
@@ -109,7 +132,7 @@ export function TopBar() {
 
         {/* Right Section - Credits, Notifications, Profile */}
         <div className="flex items-center gap-3">
-          {/* Credits Display */}
+          {/* Credits Display - Enhanced */}
           <motion.button
             whileHover={{ scale: 1.02 }}
             onClick={() => router.push('/credits')}
@@ -118,9 +141,12 @@ export function TopBar() {
               border: '1px solid rgba(255, 255, 255, 0.1)',
               background: 'rgba(255, 99, 71, 0.1)',
             }}
+            title={creditsData ? `${creditsData.used} / ${creditsData.limit === -1 ? '∞' : creditsData.limit} used` : 'Loading...'}
           >
-            <Zap className="h-4 w-4 text-orange-400" />
-            <span className="text-sm font-medium text-white">{credits}</span>
+            <Zap className={`h-4 w-4 ${creditsColor}`} />
+            <span className={`text-sm font-medium ${creditsColor}`}>
+              {creditsDisplay}
+            </span>
             <span className="text-xs text-gray-400">credits</span>
           </motion.button>
 
@@ -193,6 +219,14 @@ export function TopBar() {
                       {user?.user_metadata?.name || 'Artist'}
                     </p>
                     <p className="mt-1 text-xs text-gray-400">{user?.email}</p>
+                    {creditsData && !creditsData.unlimited && (
+                      <div className="mt-2 flex items-center gap-2 text-xs">
+                        <Zap className={`h-3 w-3 ${creditsColor}`} />
+                        <span className={creditsColor}>
+                          {creditsData.remaining} credits left
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-2">

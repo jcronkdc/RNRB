@@ -67,15 +67,41 @@ export async function getCurrentUser() {
   return user;
 }
 
-// Helper function to sign out
+// Helper function to sign out with improved error handling and cleanup
 export async function signOut() {
-  if (!supabase) {
-    console.error('Supabase client not initialized');
-    return { error: new Error('Supabase client not initialized') };
+  try {
+    if (!supabase) {
+      console.error('Supabase client not initialized');
+      // Clear storage even if client is not initialized
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('supabase.auth.token');
+        window.sessionStorage.clear();
+      }
+      return { error: new Error('Supabase client not initialized'), success: false };
+    }
+
+    // Sign out from Supabase
+    const { error } = await supabase.auth.signOut();
+
+    // Clear local storage and session storage regardless of error
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('supabase.auth.token');
+      window.sessionStorage.clear();
+    }
+
+    if (error) {
+      console.error('Error signing out:', error);
+      return { error, success: false };
+    }
+
+    return { error: null, success: true };
+  } catch (error) {
+    console.error('Unexpected sign out error:', error);
+    // Still clear storage on unexpected errors
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('supabase.auth.token');
+      window.sessionStorage.clear();
+    }
+    return { error: error as Error, success: false };
   }
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    console.error('Error signing out:', error);
-  }
-  return { error };
 }

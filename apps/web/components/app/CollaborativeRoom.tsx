@@ -6,11 +6,68 @@ import {
   useDaily,
   useLocalParticipant,
   useScreenShare,
+  useParticipantIds,
   DailyProvider,
 } from '@daily-co/daily-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Video, VideoOff, Mic, MicOff, Monitor, MonitorOff, Users } from 'lucide-react';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+
+interface CollaborativeRoomProps {
+  roomUrl: string;
+  roomName: string;
+  userName: string;
+}
+
+// Optimized video tile component with memo
+const VideoTile = React.memo(({ participant }: { participant: any }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  
+  useEffect(() => {
+    if (videoRef.current && participant.videoTrack) {
+      const stream = new MediaStream([participant.videoTrack]);
+      videoRef.current.srcObject = stream;
+    }
+  }, [participant.videoTrack]);
+
+  return (
+    <motion.div
+      key={participant.session_id}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="border-border bg-surface/50 relative aspect-video overflow-hidden rounded-2xl border"
+    >
+      {participant.video ? (
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted={participant.local}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <div className="from-primary/20 to-primary/5 flex h-full w-full items-center justify-center bg-gradient-to-br">
+          <div className="bg-primary/20 text-primary flex h-16 w-16 items-center justify-center rounded-full text-2xl font-semibold">
+            {participant.user_name?.charAt(0).toUpperCase() || '?'}
+          </div>
+        </div>
+      )}
+      <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-sm">
+        <span className="text-sm font-medium text-white">
+          {participant.user_name || 'Guest'}
+        </span>
+        {!participant.audio && <MicOff className="h-3 w-3 text-white/80" />}
+        {participant.local && <span className="text-xs text-white/60">(You)</span>}
+      </div>
+    </motion.div>
+  );
+});
+
+VideoTile.displayName = 'VideoTile';
+
+const React = { memo: (typeof window !== 'undefined' ? require('react').memo : (c: any) => c) };
 
 interface CollaborativeRoomProps {
   roomUrl: string;
@@ -22,16 +79,24 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
   const callObject = useDaily();
   const localParticipant = useLocalParticipant();
   const { isSharingScreen, startScreenShare, stopScreenShare } = useScreenShare();
-  const [participants, setParticipants] = useState<Record<string, any>>({});
+  const participantIds = useParticipantIds();
+  
+  // Use Daily's built-in participant tracking (more efficient)
+  const participants = useMemo(() => {
+    if (!callObject) return {};
+    return callObject.participants();
+  }, [callObject, participantIds]); // Re-compute only when IDs change
 
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isJoining, setIsJoining] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const joinAttemptedRef = useRef(false);
 
-  // Join room on mount
+  // Optimized join with single attempt guard
   useEffect(() => {
-    if (!callObject) return;
+    if (!callObject || joinAttemptedRef.current) return;
+    joinAttemptedRef.current = true;
 
     const joinRoom = async () => {
       try {
@@ -41,6 +106,8 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
         await callObject.join({
           url: roomUrl,
           userName,
+          videoSource: true,
+          audioSource: true,
         });
 
         setIsJoining(false);
@@ -48,7 +115,6 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
         console.error('Failed to join room:', err);
         const errorMessage = err instanceof Error ? err.message : 'Failed to join room';
 
-        // Provide helpful message if Daily.co API key is missing
         if (errorMessage.includes('401') || errorMessage.includes('unauthorized')) {
           setError(
             'Video collaboration is not configured. Please contact support or check DAILY_API_KEY.'
@@ -62,39 +128,33 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
     joinRoom();
 
-    // Track participants
-    const updateParticipants = () => {
-      const currentParticipants = callObject.participants();
-      setParticipants(currentParticipants || {});
-    };
-
-    callObject.on('participant-joined', updateParticipants);
-    callObject.on('participant-left', updateParticipants);
-    callObject.on('participant-updated', updateParticipants);
-    updateParticipants();
-
     return () => {
-      callObject.off('participant-joined', updateParticipants);
-      callObject.off('participant-left', updateParticipants);
-      callObject.off('participant-updated', updateParticipants);
-      callObject.leave();
+      // Clean leave on unmount
+      if (callObject.meetingState() !== 'left-meeting') {
+        callObject.leave().catch(console.error);
+      }
     };
   }, [callObject, roomUrl, userName]);
 
-  // Toggle video
+  // Optimized toggle functions with immediate UI feedback
   const toggleVideo = useCallback(() => {
     if (!callObject) return;
     const newState = !isVideoEnabled;
-    callObject.setLocalVideo(newState);
-    setIsVideoEnabled(newState);
+    setIsVideoEnabled(newState); // Optimistic update
+    callObject.setLocalVideo(newState).catch((err) => {
+      console.error('Video toggle error:', err);
+      setIsVideoEnabled(!newState); // Revert on error
+    });
   }, [callObject, isVideoEnabled]);
 
-  // Toggle audio
   const toggleAudio = useCallback(() => {
     if (!callObject) return;
     const newState = !isAudioEnabled;
-    callObject.setLocalAudio(newState);
-    setIsAudioEnabled(newState);
+    setIsAudioEnabled(newState); // Optimistic update
+    callObject.setLocalAudio(newState).catch((err) => {
+      console.error('Audio toggle error:', err);
+      setIsAudioEnabled(!newState); // Revert on error
+    });
   }, [callObject, isAudioEnabled]);
 
   // Toggle screen share
@@ -161,44 +221,11 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
         </Button>
       </div>
 
-      {/* Video Grid */}
+      {/* Video Grid - Optimized with React.memo */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           {Object.values(participants).map((participant) => (
-            <motion.div
-              key={participant.session_id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="border-border bg-surface/50 relative aspect-video overflow-hidden rounded-2xl border"
-            >
-              {participant.video ? (
-                <video
-                  ref={(el) => {
-                    if (el && participant.videoTrack) {
-                      el.srcObject = new MediaStream([participant.videoTrack]);
-                    }
-                  }}
-                  autoPlay
-                  playsInline
-                  muted={participant.local}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="from-primary/20 to-primary/5 flex h-full w-full items-center justify-center bg-gradient-to-br">
-                  <div className="bg-primary/20 text-primary flex h-16 w-16 items-center justify-center rounded-full text-2xl font-semibold">
-                    {participant.user_name?.charAt(0).toUpperCase() || '?'}
-                  </div>
-                </div>
-              )}
-              <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-sm">
-                <span className="text-sm font-medium text-white">
-                  {participant.user_name || 'Guest'}
-                </span>
-                {!participant.audio && <MicOff className="h-3 w-3 text-white/80" />}
-                {participant.local && <span className="text-xs text-white/60">(You)</span>}
-              </div>
-            </motion.div>
+            <VideoTile key={participant.session_id} participant={participant} />
           ))}
         </AnimatePresence>
       </div>
@@ -241,11 +268,28 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
 export default function CollaborativeRoom({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
   const [callObject, setCallObject] = useState<DailyCall | null>(null);
+  const initRef = useRef(false);
 
   useEffect(() => {
+    if (initRef.current) return;
+    initRef.current = true;
+
+    // Create call object with optimized settings
     const daily = DailyIframe.createCallObject({
-      // Configure options here
+      // Optimize video quality for collaboration
+      videoSource: {
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+        frameRate: { ideal: 24 }, // 24fps is enough for video calls
+      },
+      audioSource: true,
+      // Bandwidth optimization
+      dailyConfig: {
+        experimentalChromeVideoMuteLightOff: true,
+        useDevicePreferenceCookies: true,
+      },
     });
+    
     setCallObject(daily);
 
     return () => {

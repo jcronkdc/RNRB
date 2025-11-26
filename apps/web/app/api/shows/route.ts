@@ -20,8 +20,12 @@ export async function GET(request: NextRequest) {
     const tourId = searchParams.get('tourId');
     const status = searchParams.get('status');
     const upcoming = searchParams.get('upcoming'); // 'true' or 'false'
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100);
+    const skip = (page - 1) * limit;
+    const includeSetlist = searchParams.get('includeSetlist') === 'true';
 
-    // Get user's organizations
+    // Get user's organizations - consider caching this
     const memberships = await db.membership.findMany({
       where: { userId: user.id },
       select: { orgId: true },
@@ -30,14 +34,21 @@ export async function GET(request: NextRequest) {
     const userOrgIds = memberships.map((m) => m.orgId);
 
     if (userOrgIds.length === 0) {
-      return NextResponse.json({ shows: [] });
+      return NextResponse.json({ shows: [], total: 0, page, limit });
     }
 
     const where: any = {
       orgId: { in: userOrgIds },
     };
 
+    // Validate orgId is in user's authorized organizations
     if (orgId) {
+      if (!userOrgIds.includes(orgId)) {
+        return NextResponse.json(
+          { error: 'Unauthorized: You do not have access to this organization' },
+          { status: 403 }
+        );
+      }
       where.orgId = orgId;
     }
 
@@ -59,9 +70,30 @@ export async function GET(request: NextRequest) {
       where.date = { lt: new Date() };
     }
 
+    // Get total count
+    const total = await db.show.count({ where });
+
+    // Optimized query with selective loading
     const shows = await db.show.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        date: true,
+        doorsTime: true,
+        soundcheckTime: true,
+        setLength: true,
+        status: true,
+        ticketUrl: true,
+        ticketPrice: true,
+        ageRestriction: true,
+        notes: true,
+        posterImage: true,
+        attendance: true,
+        grossRevenue: true,
+        public: true,
         venue: {
           select: {
             id: true,
@@ -85,31 +117,47 @@ export async function GET(request: NextRequest) {
             slug: true,
           },
         },
-        setlist: {
-          select: {
-            id: true,
-            name: true,
-            items: {
-              select: {
-                id: true,
-                position: true,
-                song: {
-                  select: {
-                    id: true,
-                    title: true,
-                  },
+        ...(includeSetlist ? {
+          setlist: {
+            select: {
+              id: true,
+              name: true,
+              _count: {
+                select: {
+                  items: true,
                 },
               },
-              orderBy: { position: 'asc' },
+              items: {
+                select: {
+                  id: true,
+                  position: true,
+                  isEncore: true,
+                  song: {
+                    select: {
+                      id: true,
+                      title: true,
+                    },
+                  },
+                },
+                orderBy: { position: 'asc' },
+                take: 5, // Just show first 5 songs
+              },
             },
           },
-        },
+        } : {}),
       },
       orderBy: [{ date: upcoming === 'false' ? 'desc' : 'asc' }],
-      take: 50,
+      skip,
+      take: limit,
     });
 
-    return NextResponse.json({ shows });
+    return NextResponse.json({
+      shows,
+      total,
+      page,
+      limit,
+      hasMore: skip + shows.length < total,
+    });
   } catch (error) {
     console.error('Shows GET error:', error);
     return NextResponse.json({ error: 'Failed to fetch shows' }, { status: 500 });

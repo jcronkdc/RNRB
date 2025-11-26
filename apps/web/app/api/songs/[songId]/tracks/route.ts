@@ -1,11 +1,38 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
+// Validation schema for creating tracks
+const createTrackSchema = z.object({
+  trackName: z.string().min(1).max(100),
+  trackType: z.enum(['VOCAL', 'INSTRUMENTAL', 'BACKING', 'FULL_MIX', 'OTHER']),
+  audioUrl: z.string().url(),
+  audioPath: z.string().min(1),
+  duration: z.number().positive().optional(),
+  waveformData: z.any().optional(),
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+  versionId: z.string().optional(),
+});
+
+// Validation schema for bulk updates
+const bulkUpdateSchema = z.object({
+  updates: z.array(
+    z.object({
+      trackId: z.string(),
+      volume: z.number().min(0).max(2).optional(),
+      pan: z.number().min(-1).max(1).optional(),
+      solo: z.boolean().optional(),
+      mute: z.boolean().optional(),
+      order: z.number().int().min(0).optional(),
+    })
+  ).min(1),
+});
+
 /**
  * GET /api/songs/[songId]/tracks
- * Get all tracks (stems) for a song
+ * Get all tracks (stems) for a song with optimized queries
  */
 export async function GET(
   req: NextRequest,
@@ -20,13 +47,21 @@ export async function GET(
     const { songId } = await params;
     const userId = session.user.id;
 
-    // Check access
+    // Optimized query - only fetch what we need
     const song = await db.song.findUnique({
       where: { id: songId },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        userId: true,
+        visibility: true,
         project: {
-          include: {
-            members: { where: { userId } },
+          select: {
+            id: true,
+            members: {
+              where: { userId },
+              select: { id: true },
+            },
           },
         },
       },
@@ -45,7 +80,7 @@ export async function GET(
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
-    // Get all tracks
+    // Get all tracks with optimized query
     const tracks = await db.songTrack.findMany({
       where: { songId },
       include: {
@@ -61,9 +96,10 @@ export async function GET(
       orderBy: { order: 'asc' },
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       songId,
       songTitle: song.title,
+      trackCount: tracks.length,
       tracks: tracks.map((t) => ({
         id: t.id,
         trackName: t.trackName,
@@ -81,15 +117,26 @@ export async function GET(
         createdAt: t.createdAt,
       })),
     });
+
+    // Add cache headers for better performance (cache for 30 seconds)
+    response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60');
+
+    return response;
   } catch (error) {
     console.error('GET /api/songs/[songId]/tracks error:', error);
-    return NextResponse.json({ error: 'Failed to fetch tracks' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch tracks',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }
 
 /**
  * POST /api/songs/[songId]/tracks
- * Upload a new track (stem)
+ * Upload a new track (stem) with comprehensive validation
  */
 export async function POST(
   req: NextRequest,
@@ -104,26 +151,11 @@ export async function POST(
     const { songId } = await params;
     const userId = session.user.id;
     const body = await req.json();
-    const {
-      trackName,
-      trackType,
-      audioUrl,
-      audioPath,
-      duration,
-      waveformData,
-      color,
-      versionId,
-    } = body;
 
-    // Validate required fields
-    if (!trackName || !trackType || !audioUrl || !audioPath) {
-      return NextResponse.json(
-        { error: 'Missing required fields: trackName, trackType, audioUrl, audioPath' },
-        { status: 400 }
-      );
-    }
+    // Validate input with Zod
+    const validatedData = createTrackSchema.parse(body);
 
-    // Check access
+    // Check access to song
     const song = await db.song.findUnique({
       where: { id: songId },
       include: {
@@ -131,6 +163,9 @@ export async function POST(
           include: {
             members: { where: { userId } },
           },
+        },
+        tracks: {
+          select: { id: true },
         },
       },
     });
@@ -146,6 +181,15 @@ export async function POST(
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
+    // Check track limit (example: max 20 tracks per song)
+    const MAX_TRACKS = 20;
+    if (song.tracks.length >= MAX_TRACKS) {
+      return NextResponse.json(
+        { error: `Maximum ${MAX_TRACKS} tracks per song` },
+        { status: 400 }
+      );
+    }
+
     // Get next order number
     const lastTrack = await db.songTrack.findFirst({
       where: { songId },
@@ -159,19 +203,19 @@ export async function POST(
     const track = await db.songTrack.create({
       data: {
         songId,
-        versionId: versionId || null,
-        trackName,
-        trackType,
-        audioUrl,
-        audioPath,
-        duration: duration || null,
-        waveformData: waveformData || null,
+        versionId: validatedData.versionId || null,
+        trackName: validatedData.trackName,
+        trackType: validatedData.trackType,
+        audioUrl: validatedData.audioUrl,
+        audioPath: validatedData.audioPath,
+        duration: validatedData.duration || null,
+        waveformData: validatedData.waveformData || null,
         volume: 1.0,
         pan: 0.0,
         solo: false,
         mute: false,
         order: nextOrder,
-        color: color || null,
+        color: validatedData.color || null,
         uploadedById: userId,
       },
       include: {
@@ -195,6 +239,7 @@ export async function POST(
           audioUrl: track.audioUrl,
           duration: track.duration,
           order: track.order,
+          color: track.color,
           uploadedBy: track.uploadedBy,
           createdAt: track.createdAt,
         },
@@ -203,13 +248,30 @@ export async function POST(
     );
   } catch (error) {
     console.error('POST /api/songs/[songId]/tracks error:', error);
-    return NextResponse.json({ error: 'Failed to create track' }, { status: 500 });
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Invalid input parameters',
+          details: error.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        error: 'Failed to create track',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }
 
 /**
  * PATCH /api/songs/[songId]/tracks
- * Bulk update track mix parameters or order
+ * Bulk update track mix parameters or order with validation
  */
 export async function PATCH(
   req: NextRequest,
@@ -224,7 +286,9 @@ export async function PATCH(
     const { songId } = await params;
     const userId = session.user.id;
     const body = await req.json();
-    const { updates } = body; // Array of { trackId, volume, pan, solo, mute, order }
+
+    // Validate with Zod
+    const validatedData = bulkUpdateSchema.parse(body);
 
     // Check access
     const song = await db.song.findUnique({
@@ -249,21 +313,67 @@ export async function PATCH(
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
     }
 
-    // Bulk update tracks
-    const updatePromises = updates.map((update: any) => {
-      const { trackId, ...data } = update;
-      return db.songTrack.update({
-        where: { id: trackId },
-        data,
-      });
+    // Verify all tracks belong to this song
+    const trackIds = validatedData.updates.map((u) => u.trackId);
+    const existingTracks = await db.songTrack.findMany({
+      where: {
+        id: { in: trackIds },
+        songId,
+      },
+      select: { id: true },
     });
 
-    await Promise.all(updatePromises);
+    if (existingTracks.length !== trackIds.length) {
+      return NextResponse.json(
+        { error: 'One or more tracks not found or do not belong to this song' },
+        { status: 400 }
+      );
+    }
 
-    return NextResponse.json({ message: 'Tracks updated successfully', count: updates.length });
+    // Bulk update tracks using transaction for consistency
+    const results = await db.$transaction(
+      validatedData.updates.map((update) => {
+        const { trackId, ...data } = update;
+        return db.songTrack.update({
+          where: { id: trackId },
+          data,
+        });
+      })
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: 'Tracks updated successfully',
+      count: results.length,
+      updatedTracks: results.map((t) => ({
+        id: t.id,
+        volume: t.volume,
+        pan: t.pan,
+        solo: t.solo,
+        mute: t.mute,
+        order: t.order,
+      })),
+    });
   } catch (error) {
     console.error('PATCH /api/songs/[songId]/tracks error:', error);
-    return NextResponse.json({ error: 'Failed to update tracks' }, { status: 500 });
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        {
+          error: 'Invalid input parameters',
+          details: error.errors,
+        },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        error: 'Failed to update tracks',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }
 

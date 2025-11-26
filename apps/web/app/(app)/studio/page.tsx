@@ -15,7 +15,7 @@ import {
   Video,
   MessageSquare,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 import { StudioSession } from '@/components/daily/studio-session';
 import { useDailyRoom } from '@/hooks/use-daily-room';
@@ -25,20 +25,32 @@ export default function StudioPage() {
   const [callObject, setCallObject] = useState<any>(null);
   const [roomData, setRoomData] = useState<{ room: any; token: string } | null>(null);
   const { createRoom, isLoading, error } = useDailyRoom();
+  const callObjectRef = useRef<any>(null);
 
+  // Initialize Daily call object once
   useEffect(() => {
-    // Initialize Daily call object
+    // Only create if not already created
+    if (callObjectRef.current) return;
+
     const daily = Daily.createCallObject({
       subscribeToTracksAutomatically: true,
     });
+    callObjectRef.current = daily;
     setCallObject(daily);
 
     return () => {
-      daily.destroy();
+      // Cleanup on unmount
+      if (callObjectRef.current) {
+        callObjectRef.current.destroy();
+        callObjectRef.current = null;
+      }
     };
   }, []);
 
-  const startNewSession = async () => {
+  // Memoize room creation function
+  const startNewSession = useCallback(async () => {
+    if (isLoading) return; // Prevent double-clicks
+
     try {
       const data = await createRoom({
         name: `studio-${Date.now()}`,
@@ -54,7 +66,13 @@ export default function StudioPage() {
     } catch (err) {
       console.error('Failed to create room:', err);
     }
-  };
+  }, [createRoom, isLoading]);
+
+  // Handle session end with cleanup
+  const endSession = useCallback(() => {
+    setActiveSession(false);
+    setRoomData(null);
+  }, []);
 
   return (
     <DailyProvider callObject={callObject}>
@@ -104,6 +122,7 @@ export default function StudioPage() {
               transition={{ duration: 0.5 }}
               className="rnrb-card rnrb-hover-lift border-brand-primary/20 hover:border-brand-primary/50 cursor-pointer border-2 p-6 transition-colors"
               onClick={startNewSession}
+              style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
             >
               <div className="flex flex-col gap-4">
                 <div className="bg-brand-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
@@ -175,10 +194,7 @@ export default function StudioPage() {
                 <h2 className="text-2xl font-semibold">Live Studio Session</h2>
                 <Button
                   variant="secondary"
-                  onClick={() => {
-                    setActiveSession(false);
-                    setRoomData(null);
-                  }}
+                  onClick={endSession}
                 >
                   End Session
                 </Button>

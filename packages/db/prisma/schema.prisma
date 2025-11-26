@@ -119,6 +119,9 @@ model User {
   createdMilestones ProjectMilestone[] @relation("CreatedMilestones")
   createdViews      ProjectView[]      @relation("CreatedViews")
   createdReferences ProjectReference[] @relation("CreatedReferences")
+  
+  // Library Files
+  libraryFiles LibraryFile[]
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -1650,11 +1653,14 @@ model ChatMessage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
-  @@index([channelId, createdAt])
-  @@index([senderId])
-  @@index([channelType])
-  @@index([messageType])
-  @@index([threadId])
+  // Optimized indexes for common query patterns
+  @@index([channelId, createdAt(sort: Desc)]) // Pagination by channel
+  @@index([channelId, messageType, createdAt(sort: Desc)]) // Filter by type
+  @@index([senderId, createdAt(sort: Desc)]) // User's messages
+  @@index([channelType, channelId]) // Channel lookup
+  @@index([threadId, createdAt]) // Thread replies
+  @@index([isDeleted, channelId, createdAt]) // Active messages only
+  @@index([mentions], type: Gin) // Fast mention lookups (PostgreSQL GIN index)
 }
 
 enum ChatChannelType {
@@ -2004,3 +2010,46 @@ enum ConflictStatus {
 }
 
 // Force Prisma regeneration: 2025-11-25-WORLD-CLASS-COLLAB-V1
+
+// ====================================
+// LIBRARY FILES - Media Asset Management
+// Added: 2025-11-25
+// ====================================
+
+model LibraryFile {
+  id           String          @id @default(cuid())
+  userId       String
+  name         String // Display name
+  originalName String // Original filename
+  url          String // Public URL
+  path         String // Storage path
+  size         BigInt // File size in bytes
+  mimeType     String // audio/mpeg, audio/wav, etc.
+  type         LibraryFileType @default(other)
+  
+  // Audio metadata
+  duration      Int? // Duration in seconds
+  waveformData  Json? // Waveform visualization data
+  
+  // Organization
+  tags     String[] // Custom tags for organization
+  metadata Json? // Additional metadata
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([tags])
+}
+
+enum LibraryFileType {
+  stem
+  demo
+  sample
+  loop
+  other
+}

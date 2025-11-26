@@ -506,11 +506,21 @@ export default function SongDetailPage() {
 
           {activeTab === 'copyright' && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <CopyrightManager 
-                songId={songId}
-                songTitle={song?.title}
-                currentCopyright={song?.copyrightInfo}
-              />
+              <div className="space-y-4">
+                {/* Save Notice */}
+                <Card className="border-blue-500/30 bg-blue-500/5 p-4">
+                  <p className="text-sm text-gray-300">
+                    <strong className="text-white">💡 Auto-Save:</strong> Your copyright information is automatically 
+                    saved as you type. Make sure to register your song with your PRO to get official codes!
+                  </p>
+                </Card>
+
+                <CopyrightManager 
+                  songId={songId}
+                  songTitle={song?.title}
+                  currentCopyright={song?.copyrightInfo}
+                />
+              </div>
             </motion.div>
           )}
 

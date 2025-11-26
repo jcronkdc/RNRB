@@ -38,8 +38,12 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get('orgId');
     const status = searchParams.get('status');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100); // Max 100
+    const skip = (page - 1) * limit;
+    const includeShows = searchParams.get('includeShows') === 'true';
 
-    // Get user's organizations
+    // Get user's organizations (optimized with caching potential)
     const memberships = await db.membership.findMany({
       where: { userId: user.id },
       select: { orgId: true },
@@ -48,14 +52,21 @@ export async function GET(request: NextRequest) {
     const userOrgIds = memberships.map((m) => m.orgId);
 
     if (userOrgIds.length === 0) {
-      return NextResponse.json({ tours: [] });
+      return NextResponse.json({ tours: [], total: 0, page, limit });
     }
 
     const where: any = {
       orgId: { in: userOrgIds },
     };
 
+    // Validate orgId is in user's authorized organizations
     if (orgId) {
+      if (!userOrgIds.includes(orgId)) {
+        return NextResponse.json(
+          { error: 'Unauthorized: You do not have access to this organization' },
+          { status: 403 }
+        );
+      }
       where.orgId = orgId;
     }
 
@@ -63,22 +74,24 @@ export async function GET(request: NextRequest) {
       where.status = status;
     }
 
+    // Get total count for pagination
+    const total = await db.tour.count({ where });
+
+    // Optimized query - only load what's needed
     const tours = await db.tour.findMany({
       where,
-      include: {
-        shows: {
-          include: {
-            venue: {
-              select: {
-                id: true,
-                name: true,
-                city: true,
-                state: true,
-              },
-            },
-          },
-          orderBy: { date: 'asc' },
-        },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        startDate: true,
+        endDate: true,
+        status: true,
+        posterImage: true,
+        public: true,
+        createdAt: true,
+        updatedAt: true,
         org: {
           select: {
             id: true,
@@ -86,11 +99,44 @@ export async function GET(request: NextRequest) {
             slug: true,
           },
         },
+        ...(includeShows ? {
+          shows: {
+            select: {
+              id: true,
+              name: true,
+              date: true,
+              status: true,
+              venue: {
+                select: {
+                  id: true,
+                  name: true,
+                  city: true,
+                  state: true,
+                },
+              },
+            },
+            orderBy: { date: 'asc' },
+            take: 10, // Limit shows per tour
+          },
+        } : {}),
+        _count: {
+          select: {
+            shows: true,
+          },
+        },
       },
       orderBy: [{ startDate: 'desc' }],
+      skip,
+      take: limit,
     });
 
-    return NextResponse.json({ tours });
+    return NextResponse.json({
+      tours,
+      total,
+      page,
+      limit,
+      hasMore: skip + tours.length < total,
+    });
   } catch (error) {
     console.error('Tours GET error:', error);
     return NextResponse.json({ error: 'Failed to fetch tours' }, { status: 500 });

@@ -10,19 +10,31 @@ import {
   ChevronDown,
   Sparkles,
   FolderOpen,
+  Loader2,
+  Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { supabase } from '@/lib/supabase';
+import { supabase, signOut } from '@/lib/supabase';
+import { useToast } from '@/hooks/useToast';
+import { trpc } from '@cronkwaters/trpc/client/react';
 
 
 export function UserMenu() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  // Fetch credits data
+  const { data: creditsData } = trpc.usage.getCredits.useQuery(undefined, {
+    enabled: !!user,
+    refetchInterval: 60000,
+  });
 
   useEffect(() => {
     // Only run on client side
@@ -58,13 +70,33 @@ export function UserMenu() {
   }, []);
 
   const handleSignOut = async () => {
-    if (!supabase) {
-      console.error('Cannot sign out - Supabase not initialized');
-      window.location.href = '/';
-      return;
+    setSigningOut(true);
+    
+    try {
+      const { success, error } = await signOut();
+      
+      if (success) {
+        showToast('Successfully signed out', 'success');
+        // Small delay to show the success message before redirect
+        setTimeout(() => {
+          router.push('/');
+        }, 500);
+      } else {
+        showToast(error?.message || 'Failed to sign out, but session cleared', 'warning');
+        // Still redirect even if there's an error
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      }
+    } catch (error) {
+      showToast('An unexpected error occurred while signing out', 'error');
+      // Force redirect anyway after a short delay
+      setTimeout(() => {
+        router.push('/');
+      }, 1000);
+    } finally {
+      setSigningOut(false);
     }
-    await supabase.auth.signOut();
-    window.location.href = '/';
   };
 
   // Show loading skeleton while fetching user data
@@ -286,12 +318,30 @@ export function UserMenu() {
 
                 <Link
                   href="/credits"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-white/5"
+                  className="flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-white/5"
                   onClick={() => setMenuOpen(false)}
                   style={{ color: 'var(--muted)' }}
                 >
-                  <CreditCard className="h-4 w-4" />
-                  <span>Credits & Billing</span>
+                  <div className="flex items-center gap-3">
+                    <CreditCard className="h-4 w-4" />
+                    <span>Credits & Billing</span>
+                  </div>
+                  {creditsData && (
+                    <div className="flex items-center gap-1">
+                      <Zap className={`h-3 w-3 ${
+                        creditsData.unlimited 
+                          ? 'text-green-400' 
+                          : creditsData.remaining < 20 
+                            ? 'text-red-400' 
+                            : creditsData.remaining < 50 
+                              ? 'text-orange-400' 
+                              : 'text-green-400'
+                      }`} />
+                      <span className="text-xs font-medium">
+                        {creditsData.unlimited ? '∞' : creditsData.remaining}
+                      </span>
+                    </div>
+                  )}
                 </Link>
               </div>
 
@@ -299,10 +349,17 @@ export function UserMenu() {
               <div className="p-2" style={{ borderTop: '1px solid var(--border)' }}>
                 <button
                   onClick={handleSignOut}
-                  className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-red-500/10"
+                  disabled={signingOut}
+                  className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <LogOut className="h-4 w-4 text-red-400 group-hover:text-red-300" />
-                  <span className="text-red-400 group-hover:text-red-300">Sign Out</span>
+                  {signingOut ? (
+                    <Loader2 className="h-4 w-4 animate-spin text-red-400" />
+                  ) : (
+                    <LogOut className="h-4 w-4 text-red-400 group-hover:text-red-300" />
+                  )}
+                  <span className="text-red-400 group-hover:text-red-300">
+                    {signingOut ? 'Signing Out...' : 'Sign Out'}
+                  </span>
                 </button>
               </div>
             </motion.div>

@@ -5,6 +5,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { NavBar } from '@/components/NavBar';
 import { PostHogProvider } from '@/components/posthog';
 import { SessionProvider } from '@/components/session-provider';
+import { ToastProvider } from '@/hooks/useToast';
 import { auth } from '@/auth';
 import './globals.css';
 
@@ -97,8 +98,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SessionProvider session={session}>
             <PostHogProvider>
               <AblyProvider>
-                <NavBar />
-                {children}
+                <ToastProvider>
+                  <NavBar />
+                  {children}
+                </ToastProvider>
               </AblyProvider>
             </PostHogProvider>
           </SessionProvider>

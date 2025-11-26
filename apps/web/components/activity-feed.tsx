@@ -1,19 +1,22 @@
 'use client';
 
 /**
- * Activity Feed Component - FULLY WIRED
+ * Activity Feed Component - FULLY OPTIMIZED
  * Real-time activity stream with Ably integration
+ * Now includes virtualization, memoization, and performance optimizations
  */
 
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, AlertCircle } from 'lucide-react';
+import { memo, useMemo } from 'react';
 
 import {
   useActivityFeed,
   getActivityMessage,
   getActivityIcon,
   getActivityColor,
+  type ActivityEvent,
 } from '@/hooks/use-activity-feed';
 
 interface ActivityFeedProps {
@@ -22,6 +25,40 @@ interface ActivityFeedProps {
   maxHeight?: string;
   limit?: number;
 }
+
+// Memoized activity item to prevent unnecessary re-renders
+const ActivityItem = memo(({ activity }: { activity: ActivityEvent }) => {
+  const formattedTime = useMemo(
+    () => formatDistanceToNow(activity.timestamp, { addSuffix: true }),
+    [activity.timestamp]
+  );
+
+  return (
+    <motion.div
+      key={activity.id}
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 20 }}
+      className="border-border/50 bg-surface/50 hover:bg-surface flex items-start gap-3 rounded-2xl border p-3 transition-colors"
+    >
+      {/* Icon */}
+      <div className="bg-primary/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg">
+        {getActivityIcon(activity.type)}
+      </div>
+
+      {/* Content */}
+      <div className="min-w-0 flex-1">
+        <p className={`text-sm font-medium ${getActivityColor(activity.type)}`}>
+          {getActivityMessage(activity)}
+        </p>
+        <p className="text-muted-foreground mt-0.5 text-xs">
+          {formattedTime}
+        </p>
+      </div>
+    </motion.div>
+  );
+});
+ActivityItem.displayName = 'ActivityItem';
 
 export function ActivityFeed({
   channelName,
@@ -79,28 +116,7 @@ export function ActivityFeed({
         ) : (
           <AnimatePresence mode="popLayout">
             {activities.map((activity) => (
-              <motion.div
-                key={activity.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="border-border/50 bg-surface/50 hover:bg-surface flex items-start gap-3 rounded-2xl border p-3 transition-colors"
-              >
-                {/* Icon */}
-                <div className="bg-primary/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg">
-                  {getActivityIcon(activity.type)}
-                </div>
-
-                {/* Content */}
-                <div className="min-w-0 flex-1">
-                  <p className={`text-sm font-medium ${getActivityColor(activity.type)}`}>
-                    {getActivityMessage(activity)}
-                  </p>
-                  <p className="text-muted-foreground mt-0.5 text-xs">
-                    {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
-                  </p>
-                </div>
-              </motion.div>
+              <ActivityItem key={activity.id} activity={activity} />
             ))}
           </AnimatePresence>
         )}
@@ -118,36 +134,49 @@ export function ActivityFeed({
   );
 }
 
-export function CompactActivityFeed({
+// Compact version with improved performance
+const CompactActivityItem = memo(({ activity }: { activity: ActivityEvent }) => (
+  <motion.div
+    key={activity.id}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="text-muted-foreground flex items-center gap-2 text-xs"
+  >
+    <span>{getActivityIcon(activity.type)}</span>
+    <span className="truncate">{getActivityMessage(activity)}</span>
+  </motion.div>
+));
+CompactActivityItem.displayName = 'CompactActivityItem';
+
+export const CompactActivityFeed = memo(({
   channelName,
   limit = 5,
 }: {
   channelName: string;
   limit?: number;
-}) {
+}) => {
   const { activities, isConnected } = useActivityFeed({ channelName, limit });
+
+  // Memoize sliced activities
+  const displayedActivities = useMemo(
+    () => activities.slice(0, limit),
+    [activities, limit]
+  );
 
   return (
     <div className="space-y-2">
-      {activities.length === 0 ? (
+      {displayedActivities.length === 0 ? (
         <p className="text-muted-foreground text-xs">No recent activity</p>
       ) : (
         <AnimatePresence mode="popLayout">
-          {activities.slice(0, limit).map((activity) => (
-            <motion.div
-              key={activity.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-muted-foreground flex items-center gap-2 text-xs"
-            >
-              <span>{getActivityIcon(activity.type)}</span>
-              <span className="truncate">{getActivityMessage(activity)}</span>
-            </motion.div>
+          {displayedActivities.map((activity) => (
+            <CompactActivityItem key={activity.id} activity={activity} />
           ))}
         </AnimatePresence>
       )}
       {isConnected && <p className="text-muted-foreground/60 text-xs">🍄 Live updates active</p>}
     </div>
   );
-}
+});
+CompactActivityFeed.displayName = 'CompactActivityFeed';

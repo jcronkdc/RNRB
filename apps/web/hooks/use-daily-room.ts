@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 interface RoomConfig {
   enable_screenshare?: boolean;
@@ -26,8 +26,19 @@ interface CreateRoomOptions {
 export function useDailyRoom() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Use ref to track pending requests and prevent race conditions
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const createRoom = useCallback(async (options: CreateRoomOptions = {}) => {
+    // Abort any pending request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new abort controller for this request
+    abortControllerRef.current = new AbortController();
+    
     setIsLoading(true);
     setError(null);
 
@@ -38,21 +49,28 @@ export function useDailyRoom() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(options),
+        signal: abortControllerRef.current.signal,
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create room');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create room' }));
+        throw new Error(errorData.error || 'Failed to create room');
       }
 
       const data = await response.json();
       return data;
     } catch (err) {
+      // Don't set error if request was aborted
+      if (err instanceof Error && err.name === 'AbortError') {
+        throw err;
+      }
+      
       const message = err instanceof Error ? err.message : 'Failed to create room';
       setError(message);
       throw err;
     } finally {
       setIsLoading(false);
+      abortControllerRef.current = null;
     }
   }, []);
 
@@ -61,13 +79,13 @@ export function useDailyRoom() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/daily/rooms/${roomName}`, {
+      const response = await fetch(`/api/daily/rooms/${encodeURIComponent(roomName)}`, {
         method: 'GET',
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to fetch room');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to fetch room' }));
+        throw new Error(errorData.error || 'Failed to fetch room');
       }
 
       const data = await response.json();
@@ -91,12 +109,12 @@ export function useDailyRoom() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to fetch rooms');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to fetch rooms' }));
+        throw new Error(errorData.error || 'Failed to fetch rooms');
       }
 
       const data = await response.json();
-      return data.rooms;
+      return data.rooms || [];
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to fetch rooms';
       setError(message);
@@ -111,13 +129,13 @@ export function useDailyRoom() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/daily/rooms/${roomName}`, {
+      const response = await fetch(`/api/daily/rooms/${encodeURIComponent(roomName)}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to delete room');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete room' }));
+        throw new Error(errorData.error || 'Failed to delete room');
       }
 
       return true;

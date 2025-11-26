@@ -2,13 +2,110 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Search, Users, Mail, Phone, Music, Sparkles } from 'lucide-react';
+import { Search, Users, Mail, Phone, Music, Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { UserProfileCard, type UserProfileCardProps } from '@/components/user-profile-card';
+import { useDebounce } from '@/hooks/use-debounce';
+
+interface SearchResponse {
+  users: UserProfileCardProps[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  message?: string;
+}
 
 export default function DiscoverPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState<'username' | 'email' | 'phone'>('username');
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchResults, setSearchResults] = useState<UserProfileCardProps[]>([]);
+  const [totalResults, setTotalResults] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  // Debounce search query to avoid excessive API calls
+  const debouncedSearchQuery = useDebounce(searchQuery, 400);
+
+  // Extracted performSearch function with mount tracking
+  const performSearch = async (page: number = 1, signal?: AbortSignal) => {
+    setIsLoading(true);
+    setError(null);
+    setHasSearched(true);
+
+    try {
+      const params = new URLSearchParams({
+        q: debouncedSearchQuery,
+        type: searchType,
+        page: page.toString(),
+        limit: '12',
+      });
+
+      const response = await fetch(`/api/discover/search?${params}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal, // Pass the abort signal
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to search users');
+      }
+
+      const data: SearchResponse = await response.json();
+      
+      // Update state with search results
+      setSearchResults(data.users);
+      setTotalResults(data.total);
+      setCurrentPage(data.page);
+      setTotalPages(data.totalPages);
+
+      if (data.message) {
+        setError(data.message);
+      }
+    } catch (err) {
+      // Ignore abort errors (normal when component unmounts)
+      if (err instanceof Error && err.name === 'AbortError') {
+        return;
+      }
+      console.error('Search error:', err);
+      setError('Failed to search users. Please try again.');
+      setSearchResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Auto-search effect with proper cleanup
+  useEffect(() => {
+    const controller = new AbortController();
+
+    if (debouncedSearchQuery.trim().length >= 2) {
+      performSearch(1, controller.signal);
+    } else {
+      setSearchResults([]);
+      setTotalResults(0);
+      setHasSearched(false);
+      setError(null);
+    }
+
+    // Cleanup: Abort ongoing fetch when effect re-runs or component unmounts
+    return () => {
+      controller.abort();
+    };
+  }, [debouncedSearchQuery, searchType]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      performSearch(newPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="bg-background min-h-screen">
@@ -88,9 +185,12 @@ export default function DiscoverPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search by ${searchType}...`}
-              className="border-border bg-surface text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border py-3.5 pl-12 pr-4 outline-none transition focus:ring-2"
+              placeholder={`Search by ${searchType}... (min 2 characters)`}
+              className="border-border bg-surface text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border py-3.5 pl-12 pr-12 outline-none transition focus:ring-2"
             />
+            {isLoading && (
+              <Loader2 className="text-brand-primary absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin" />
+            )}
           </div>
 
           <div className="rnrb-card border-brand-primary/20 bg-brand-primary/5 mt-4 p-4">
@@ -101,66 +201,155 @@ export default function DiscoverPage() {
           </div>
         </Card>
 
-        {/* Coming Soon Features */}
-        <Card className="rnrb-card p-8">
-          <h2 className="font-display mb-4 text-2xl font-bold">Advanced Search Coming Soon</h2>
-          <p className="text-muted-foreground mb-8">
-            Full user database search launching soon. Here's what's coming:
-          </p>
-
-          <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="rnrb-card bg-surface-muted p-6">
-              <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                <Search className="text-brand-primary h-6 w-6" />
-              </div>
-              <h3 className="mb-2 font-semibold">Search by Username</h3>
-              <p className="text-muted-foreground text-sm">
-                Find artists by their unique handle across the platform
-              </p>
+        {/* Search Results */}
+        {error && (
+          <Card className="rnrb-card mb-8 border-destructive/50 bg-destructive/5 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-destructive" />
+              <p className="text-destructive text-sm font-medium">{error}</p>
             </div>
+          </Card>
+        )}
 
-            <div className="rnrb-card bg-surface-muted p-6">
-              <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                <Mail className="text-brand-primary h-6 w-6" />
-              </div>
-              <h3 className="mb-2 font-semibold">Search by Email</h3>
-              <p className="text-muted-foreground text-sm">
-                Find artists who have made their email address public
-              </p>
-            </div>
-
-            <div className="rnrb-card bg-surface-muted p-6">
-              <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                <Phone className="text-brand-primary h-6 w-6" />
-              </div>
-              <h3 className="mb-2 font-semibold">Search by Phone</h3>
-              <p className="text-muted-foreground text-sm">
-                Connect using phone numbers (with artist permission)
-              </p>
-            </div>
-
-            <div className="rnrb-card bg-surface-muted p-6">
-              <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                <Music className="text-brand-primary h-6 w-6" />
-              </div>
-              <h3 className="mb-2 font-semibold">Browse by Genre</h3>
-              <p className="text-muted-foreground text-sm">
-                Discover artists working in your musical style
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center">
-            <Link href="/settings/profile">
-              <Button className="rnrb-button-primary rounded-xl px-8 py-3 font-semibold">
-                Set Up Your Profile First
-              </Button>
-            </Link>
-            <p className="text-muted-foreground mt-3 text-xs">
-              Make your profile public so other artists can find and connect with you
+        {hasSearched && !isLoading && searchResults.length === 0 && !error && (
+          <Card className="rnrb-card p-12 text-center">
+            <Users className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+            <h3 className="font-display mb-2 text-xl font-semibold">No users found</h3>
+            <p className="text-muted-foreground">
+              Try adjusting your search terms or search type
             </p>
-          </div>
-        </Card>
+          </Card>
+        )}
+
+        {searchResults.length > 0 && (
+          <>
+            <div className="mb-6 flex items-center justify-between">
+              <p className="text-muted-foreground text-sm">
+                Found <span className="font-semibold text-foreground">{totalResults}</span> {totalResults === 1 ? 'user' : 'users'}
+              </p>
+            </div>
+
+            <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {searchResults.map((user) => (
+                <UserProfileCard key={user.id} {...user} />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1 || isLoading}
+                  className="rnrb-button-secondary rounded-xl px-4 py-2"
+                >
+                  Previous
+                </Button>
+
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                    let pageNum: number;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        disabled={isLoading}
+                        className={`h-10 w-10 rounded-xl font-medium transition ${
+                          currentPage === pageNum
+                            ? 'bg-brand-primary text-brand-primary-foreground shadow-lg'
+                            : 'border-border bg-surface hover:bg-surface-muted border'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <Button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages || isLoading}
+                  className="rnrb-button-secondary rounded-xl px-4 py-2"
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Coming Soon Features - Only show when not searching */}
+        {!hasSearched && (
+          <Card className="rnrb-card p-8">
+            <h2 className="font-display mb-4 text-2xl font-bold">Advanced Features</h2>
+            <p className="text-muted-foreground mb-8">
+              Start searching above or explore these upcoming features:
+            </p>
+
+            <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="rnrb-card bg-surface-muted p-6">
+                <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+                  <Search className="text-brand-primary h-6 w-6" />
+                </div>
+                <h3 className="mb-2 font-semibold">Advanced Filters</h3>
+                <p className="text-muted-foreground text-sm">
+                  Filter by genre, instrument, location, and availability
+                </p>
+              </div>
+
+              <div className="rnrb-card bg-surface-muted p-6">
+                <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+                  <Phone className="text-brand-primary h-6 w-6" />
+                </div>
+                <h3 className="mb-2 font-semibold">Phone Search</h3>
+                <p className="text-muted-foreground text-sm">
+                  Connect using phone numbers (with artist permission)
+                </p>
+              </div>
+
+              <div className="rnrb-card bg-surface-muted p-6">
+                <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+                  <Music className="text-brand-primary h-6 w-6" />
+                </div>
+                <h3 className="mb-2 font-semibold">Browse by Genre</h3>
+                <p className="text-muted-foreground text-sm">
+                  Discover artists working in your musical style
+                </p>
+              </div>
+
+              <div className="rnrb-card bg-surface-muted p-6">
+                <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
+                  <Users className="text-brand-primary h-6 w-6" />
+                </div>
+                <h3 className="mb-2 font-semibold">Recommended Artists</h3>
+                <p className="text-muted-foreground text-sm">
+                  AI-powered recommendations based on your interests
+                </p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Link href="/settings/profile">
+                <Button className="rnrb-button-primary rounded-xl px-8 py-3 font-semibold">
+                  Set Up Your Profile First
+                </Button>
+              </Link>
+              <p className="text-muted-foreground mt-3 text-xs">
+                Make your profile public so other artists can find and connect with you
+              </p>
+            </div>
+          </Card>
+        )}
       </div>
     </div>
   );
