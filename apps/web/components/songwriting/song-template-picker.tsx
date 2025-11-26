@@ -150,7 +150,7 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
                 key={template.name}
                 className={`group cursor-pointer border-2 transition-all duration-200 ${
                   isSelected
-                    ? 'border-blue-500 bg-gradient-to-br from-blue-500/10 to-purple-500/10 scale-[1.02]'
+                    ? 'scale-[1.02] border-blue-500 bg-gradient-to-br from-blue-500/10 to-purple-500/10'
                     : 'border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800 hover:border-gray-700'
                 }`}
                 onClick={() => setSelectedTemplate(template)}
@@ -211,7 +211,7 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
             className={`flex-1 rounded-xl border-2 px-6 py-3 font-semibold transition ${
               selectedTemplate
                 ? 'border-blue-500 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-500 hover:to-purple-500'
-                : 'border-gray-700 bg-gray-800 text-gray-500 cursor-not-allowed'
+                : 'cursor-not-allowed border-gray-700 bg-gray-800 text-gray-500'
             }`}
           >
             Use Template

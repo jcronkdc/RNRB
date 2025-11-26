@@ -32,11 +32,9 @@ export type OptimizerOptions = {
   openingSong?: string;
   closingSong?: string;
   avoidKeyJumps?: boolean;
-  genreBalance?: 'mixed' | 'focused' | 'progressive';
+  genreBalance?: 'mixed' | 'focused';
   minimumSongCount?: number;
   maximumSongCount?: number;
-  /** Prioritize songs marked as popular/hits */
-  prioritizePopular?: boolean;
 };
 
 export type SetlistScore = {
@@ -123,7 +121,7 @@ export function generateOptimalSetlist(
   return {
     songs: final,
     score: finalScore,
-    insights: generateInsights(final, finalScore, metadata, options),
+    insights: generateInsights(final, finalScore, metadata),
   };
 }
 
@@ -162,44 +160,19 @@ function generateByTempo(pool: Song[], options: OptimizerOptions, metadata: any)
   const targetSeconds = options.targetDuration * 60;
   
   // Sort by tempo based on energy profile
-  let sorted: Song[];
-  
-  if (options.energyProfile === 'high') {
-    // High energy: fastest first
-    sorted = [...pool].sort((a, b) => {
-      const tempoA = a.tempo || metadata.avgTempo;
-      const tempoB = b.tempo || metadata.avgTempo;
-      return tempoB - tempoA;
-    });
-  } else if (options.energyProfile === 'mellow') {
-    // Mellow: slowest first
-    sorted = [...pool].sort((a, b) => {
-      const tempoA = a.tempo || metadata.avgTempo;
-      const tempoB = b.tempo || metadata.avgTempo;
-      return tempoA - tempoB;
-    });
-  } else {
-    // Balanced: create alternating high/low tempo pattern
-    // First, sort all songs by tempo
-    const sortedByTempo = [...pool].sort((a, b) => {
-      const tempoA = a.tempo || metadata.avgTempo;
-      const tempoB = b.tempo || metadata.avgTempo;
-      return tempoB - tempoA; // High to low
-    });
+  const sorted = [...pool].sort((a, b) => {
+    const tempoA = a.tempo || metadata.avgTempo;
+    const tempoB = b.tempo || metadata.avgTempo;
     
-    // Split into high and low tempo groups
-    const midpoint = Math.floor(sortedByTempo.length / 2);
-    const highTempo = sortedByTempo.slice(0, midpoint);
-    const lowTempo = sortedByTempo.slice(midpoint);
-    
-    // Interleave: high, low, high, low...
-    sorted = [];
-    const maxLength = Math.max(highTempo.length, lowTempo.length);
-    for (let i = 0; i < maxLength; i++) {
-      if (highTempo[i]) sorted.push(highTempo[i]);
-      if (lowTempo[i]) sorted.push(lowTempo[i]);
+    if (options.energyProfile === 'high') {
+      return tempoB - tempoA; // Fastest first
+    } else if (options.energyProfile === 'mellow') {
+      return tempoA - tempoB; // Slowest first
+    } else {
+      // Balanced: alternate high/low
+      return 0;
     }
-  }
+  });
 
   return buildSetlist(sorted, targetSeconds, metadata.avgDuration);
 }
@@ -399,7 +372,7 @@ function postProcess(songs: Song[], options: OptimizerOptions): Song[] {
 /**
  * Generate insights
  */
-function generateInsights(songs: Song[], score: SetlistScore, metadata: any, options: OptimizerOptions): OptimizedSetlist['insights'] {
+function generateInsights(songs: Song[], score: SetlistScore, metadata: any): OptimizedSetlist['insights'] {
   const totalDuration = songs.reduce((sum, s) => sum + (s.duration || metadata.avgDuration), 0);
   const tempos = songs.filter(s => s.tempo).map(s => s.tempo!);
   const avgTempo = tempos.length > 0 ? tempos.reduce((sum, t) => sum + t, 0) / tempos.length : 0;
@@ -434,8 +407,7 @@ function generateInsights(songs: Song[], score: SetlistScore, metadata: any, opt
 
   // Duration warnings
   if (score.durationMatch < 80) {
-    const targetSeconds = options.targetDuration * 60;
-    if (totalDuration < targetSeconds) {
+    if (totalDuration < metadata.avgDuration * 0.9 * 60) {
       suggestions.push('Setlist is shorter than target - add 1-2 songs');
     } else {
       suggestions.push('Setlist is longer than target - remove 1-2 songs');

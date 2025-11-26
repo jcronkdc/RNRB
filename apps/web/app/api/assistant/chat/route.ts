@@ -2,100 +2,94 @@ import { type NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
 import { buildAssistantContext, formatContextForAI } from '@/lib/ai/assistant-context';
+import { handleApiError, AppError } from '@/lib/errors';
+import { env, features } from '@/lib/env';
+import { requireAuth } from '@/lib/session';
+import { assistantChatSchema, parseBody } from '@/lib/validations';
 import { requireFeatureAccess } from '@/lib/subscription-access';
-import { getCurrentUser } from '@/lib/supabase';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 import { prisma } from '@cronkwaters/db';
 
-// Initialize Claude client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+// Initialize Claude client (only if API key is available)
+const getAnthropicClient = () => {
+  if (!features.ai) {
+    throw new AppError(
+      'AI features are not available',
+      'SERVICE_UNAVAILABLE',
+      503,
+      'ANTHROPIC_API_KEY not configured'
+    );
+  }
+  return new Anthropic({
+    apiKey: env.ANTHROPIC_API_KEY,
+  });
+};
 
 export async function POST(request: NextRequest) {
   try {
-    // ✅ SECURITY: Check subscription access
+    // Require authentication
+    const user = await requireAuth();
+
+    // Check subscription access
     try {
       await requireFeatureAccess('aiAssistant');
-    } catch (error: any) {
-      return NextResponse.json(
-        {
-          error: error.message || 'Upgrade to Studio plan or add AI Assistant add-on to access this feature',
-          requiresUpgrade: true,
-          currentTier: error.tier || 'free',
-        },
-        { status: 403 }
+    } catch (error: unknown) {
+      const err = error as { message?: string; tier?: string };
+      throw new AppError(
+        err.message || 'Upgrade to access AI Assistant',
+        'SUBSCRIPTION_REQUIRED',
+        403,
+        undefined,
+        { requiresUpgrade: true, currentTier: err.tier || 'free' }
       );
     }
 
-    // 🔒 RATE LIMITING: Check usage quota
+    // Check usage quota
     try {
       await requireUsageQuota('assistantConversations', 1);
-    } catch (error: any) {
-      if (error.code === 'QUOTA_EXCEEDED') {
-        return NextResponse.json(
-          {
-            error: error.message,
-            requiresUpgrade: true,
-            tier: error.tier,
-            used: error.used,
-            limit: error.limit,
-            resetDate: error.resetDate,
-          },
-          { status: 429 } // Too Many Requests
+    } catch (error: unknown) {
+      const err = error as { code?: string; message?: string; tier?: string; used?: number; limit?: number; resetDate?: string };
+      if (err.code === 'QUOTA_EXCEEDED') {
+        throw AppError.quotaExceeded(
+          'AI conversations',
+          err.used || 0,
+          err.limit || 0,
+          err.tier || 'free'
         );
       }
       throw error;
     }
 
-    const body = await request.json();
-    const { message, conversationId, conversationHistory } = body;
+    // Validate input
+    const validated = await parseBody(request, assistantChatSchema);
 
-    if (!message || typeof message !== 'string') {
-      return NextResponse.json({ error: 'Message is required' }, { status: 400 });
-    }
-
-    // Get current user
-    const supabaseUser = await getCurrentUser();
-    if (!supabaseUser?.email) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
-    }
-
-    const dbUser = await prisma.user.findUnique({
-      where: { email: supabaseUser.email },
-      select: { id: true },
-    });
-
-    if (!dbUser) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
+    // Get Anthropic client
+    const anthropic = getAnthropicClient();
 
     // Get current page from referer
     const referer = request.headers.get('referer') || '';
-    
+
     // Build context
-    const context = await buildAssistantContext(dbUser.id, referer);
+    const context = await buildAssistantContext(user.id, referer);
     const systemPrompt = formatContextForAI(context);
 
     // Build conversation messages
     const messages: Anthropic.MessageParam[] = [];
 
     // Add conversation history if exists
-    if (conversationHistory && Array.isArray(conversationHistory)) {
-      conversationHistory.forEach((msg: any) => {
-        if (msg.role === 'user' || msg.role === 'assistant') {
-          messages.push({
-            role: msg.role,
-            content: msg.content,
-          });
-        }
+    if (validated.conversationHistory) {
+      validated.conversationHistory.forEach((msg) => {
+        messages.push({
+          role: msg.role,
+          content: msg.content,
+        });
       });
     }
 
     // Add current message
     messages.push({
       role: 'user',
-      content: message,
+      content: validated.message,
     });
 
     // Call Claude API
@@ -113,10 +107,10 @@ export async function POST(request: NextRequest) {
       .join('\n');
 
     if (!responseText) {
-      return NextResponse.json({ error: 'AI service unavailable' }, { status: 503 });
+      throw new AppError('AI service unavailable', 'SERVICE_UNAVAILABLE', 503);
     }
 
-    // Calculate cost (Claude Sonnet pricing: ~$0.003 per request average)
+    // Calculate cost (Claude Sonnet pricing)
     const inputTokens = response.usage.input_tokens;
     const outputTokens = response.usage.output_tokens;
     const cost =
@@ -125,14 +119,14 @@ export async function POST(request: NextRequest) {
 
     // Save or update conversation
     let conversation;
-    if (conversationId) {
+    if (validated.conversationId) {
       // Update existing conversation
       conversation = await prisma.assistantConversation.update({
-        where: { id: conversationId },
+        where: { id: validated.conversationId },
         data: {
           messages: [
-            ...(conversationHistory || []),
-            { role: 'user', content: message, timestamp: new Date().toISOString() },
+            ...(validated.conversationHistory || []),
+            { role: 'user', content: validated.message, timestamp: new Date().toISOString() },
             { role: 'assistant', content: responseText, timestamp: new Date().toISOString() },
           ],
           messageCount: { increment: 2 },
@@ -143,16 +137,15 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Create new conversation
-      // Detect topic from message
-      const topic = detectTopic(message, context.currentPage);
-      
+      const topic = detectTopic(validated.message, context.currentPage);
+
       conversation = await prisma.assistantConversation.create({
         data: {
-          userId: dbUser.id,
+          userId: user.id,
           topic,
           page: context.currentPage,
           messages: [
-            { role: 'user', content: message, timestamp: new Date().toISOString() },
+            { role: 'user', content: validated.message, timestamp: new Date().toISOString() },
             { role: 'assistant', content: responseText, timestamp: new Date().toISOString() },
           ],
           messageCount: 2,
@@ -166,8 +159,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // 📊 Track successful usage
-    await trackUsage(dbUser.id, 'assistantConversations', 1);
+    // Track successful usage
+    await trackUsage(user.id, 'assistantConversations', 1);
 
     return NextResponse.json({
       response: responseText,
@@ -178,21 +171,8 @@ export async function POST(request: NextRequest) {
         cost,
       },
     });
-  } catch (error: any) {
-    console.error('AI Assistant error:', error);
-    
-    // Check if it's an Anthropic API error
-    if (error.status === 429) {
-      return NextResponse.json(
-        { error: 'AI service is currently busy. Please try again in a moment.' },
-        { status: 429 }
-      );
-    }
-    
-    return NextResponse.json(
-      { error: 'Failed to get AI assistance. Please try again.' },
-      { status: 500 }
-    );
+  } catch (error) {
+    return handleApiError(error, { route: '/api/assistant/chat', method: 'POST' });
   }
 }
 
@@ -202,32 +182,26 @@ export async function POST(request: NextRequest) {
 function detectTopic(message: string, currentPage: string): string {
   const lowerMessage = message.toLowerCase();
 
-  // Navigation patterns
   if (lowerMessage.match(/how do i (get to|find|access)|where is|navigate/i)) {
     return 'navigation';
   }
 
-  // Feature help patterns
   if (lowerMessage.match(/how does|what is|explain|tell me about/i)) {
     return 'feature-help';
   }
 
-  // Troubleshooting patterns
   if (lowerMessage.match(/not working|broken|error|issue|problem|can't|won't/i)) {
     return 'troubleshooting';
   }
 
-  // Creative patterns
   if (lowerMessage.match(/suggest|idea|help me write|recommend|chord|lyric/i)) {
     return 'creative';
   }
 
-  // Support patterns
   if (lowerMessage.match(/upgrade|subscription|quota|limit|storage/i)) {
     return 'support';
   }
 
-  // Default based on current page
   if (currentPage && currentPage !== 'unknown') {
     return `${currentPage}-help`;
   }
@@ -240,9 +214,8 @@ function detectTopic(message: string, currentPage: string): string {
  */
 export async function GET() {
   return NextResponse.json({
-    status: 'ok',
-    message: 'AI Assistant endpoint is running',
+    status: features.ai ? 'ok' : 'disabled',
+    message: features.ai ? 'AI Assistant endpoint is running' : 'AI features not configured',
     model: 'claude-3-5-sonnet-20241022',
   });
 }
-

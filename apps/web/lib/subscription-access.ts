@@ -1,6 +1,6 @@
 import { prisma } from '@cronkwaters/db';
 
-import { getCurrentUser } from '@/lib/supabase';
+import { getCurrentUser } from '@/lib/session';
 
 /**
  * Subscription tier definitions with feature access
@@ -60,10 +60,10 @@ export async function hasFeatureAccess(
   featureName: FeatureName
 ): Promise<{ hasAccess: boolean; tier: SubscriptionTier; reason?: string }> {
   try {
-    // Get current authenticated user
-    const supabaseUser = await getCurrentUser();
+    // Get current authenticated user from NextAuth session
+    const user = await getCurrentUser();
 
-    if (!supabaseUser || !supabaseUser.email) {
+    if (!user?.id) {
       return {
         hasAccess: false,
         tier: 'free',
@@ -73,7 +73,7 @@ export async function hasFeatureAccess(
 
     // Get user from database with subscription info
     const dbUser = await prisma.user.findUnique({
-      where: { email: supabaseUser.email },
+      where: { id: user.id },
       select: {
         id: true,
         email: true,
@@ -170,14 +170,14 @@ export async function requireFeatureAccess(
  */
 export async function getUserTier(): Promise<SubscriptionTier> {
   try {
-    const supabaseUser = await getCurrentUser();
+    const user = await getCurrentUser();
 
-    if (!supabaseUser || !supabaseUser.email) {
+    if (!user?.id) {
       return 'free';
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { email: supabaseUser.email },
+      where: { id: user.id },
       select: {
         subscriptionTier: true,
         subscriptionStatus: true,

@@ -1,8 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { getChatAssistance } from '@/lib/ai/openai';
+import { handleApiError } from '@/lib/errors';
+import { getCurrentUserId } from '@/lib/session';
 import { requireFeatureAccess } from '@/lib/subscription-access';
-import { getCurrentUser } from '@/lib/supabase';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 
 export async function POST(request: NextRequest) {
@@ -55,9 +56,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 📊 Track successful usage
-    const user = await getCurrentUser();
-    if (user) {
-      await trackUsage(user.id, 'aiRequests', 1);
+    const userId = await getCurrentUserId();
+    if (userId) {
+      await trackUsage(userId, 'aiRequests', 1);
     }
 
     return NextResponse.json({
@@ -65,8 +66,7 @@ export async function POST(request: NextRequest) {
       isAiGenerated: true,
       disclaimer: 'AI suggestion - use your creative judgment',
     });
-  } catch (error: any) {
-    console.error('AI chat assist error:', error);
-    return NextResponse.json({ error: 'Failed to get AI assistance' }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error, { route: '/api/ai/chat-assist', method: 'POST' });
   }
 }

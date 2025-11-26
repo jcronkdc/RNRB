@@ -3,15 +3,15 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 /**
- * GET /api/projects/[id]/songs/[songId]
+ * GET /api/projects/[slug]/songs/[songId]
  * Get a single song
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string; songId: string }> }
+  { params }: { params: Promise<{ slug: string; songId: string }> }
 ) {
   try {
-    const { id, songId } = await params;
+    const { slug, songId } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 
@@ -48,18 +48,18 @@ export async function GET(
 
     return NextResponse.json(song);
   } catch (error) {
-    console.error('GET /api/projects/[id]/songs/[songId] error:', error);
+    console.error('GET /api/projects/[slug]/songs/[songId] error:', error);
     return NextResponse.json({ error: 'Failed to fetch song' }, { status: 500 });
   }
 }
 
 /**
- * PATCH /api/projects/[id]/songs/[songId]
+ * PATCH /api/projects/[slug]/songs/[songId]
  * Update a song
  */
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string; songId: string }> }
+  { params }: { params: Promise<{ slug: string; songId: string }> }
 ) {
   try {
     const { songId } = await params;
@@ -125,18 +125,18 @@ export async function PATCH(
 
     return NextResponse.json(updatedSong);
   } catch (error) {
-    console.error('PATCH /api/projects/[id]/songs/[songId] error:', error);
+    console.error('PATCH /api/projects/[slug]/songs/[songId] error:', error);
     return NextResponse.json({ error: 'Failed to update song' }, { status: 500 });
   }
 }
 
 /**
- * DELETE /api/projects/[id]/songs/[songId]
+ * DELETE /api/projects/[slug]/songs/[songId]
  * Delete a song
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string; songId: string }> }
+  { params }: { params: Promise<{ slug: string; songId: string }> }
 ) {
   try {
     const { songId } = await params;
@@ -183,7 +183,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/projects/[id]/songs/[songId] error:', error);
+    console.error('DELETE /api/projects/[slug]/songs/[songId] error:', error);
     return NextResponse.json({ error: 'Failed to delete song' }, { status: 500 });
   }
 }

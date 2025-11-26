@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { type User } from '@supabase/supabase-js';
 import { motion } from 'framer-motion';
 import {
   Lock,
@@ -11,16 +10,16 @@ import {
   ArrowLeft,
   Folder,
 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { supabase } from '@/lib/supabase';
-
 export default function NewProjectPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  const loading = status === 'loading';
   const [creating, setCreating] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -34,16 +33,12 @@ export default function NewProjectPage() {
     target_release_date: '',
   });
 
+  // Redirect to auth if not logged in
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        setUser(user);
-        setLoading(false);
-      }
-    });
-  }, [router]);
+    if (status === 'unauthenticated') {
+      router.push('/auth');
+    }
+  }, [status, router]);
 
   const generateSlug = (name: string) => {
     return name

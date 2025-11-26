@@ -11,7 +11,7 @@
  */
 
 import { db } from '@/lib/db';
-import { getCurrentUser } from '@/lib/supabase';
+import { getCurrentUser } from '@/lib/session';
 
 // Usage limits per tier (monthly)
 export const TIER_LIMITS = {
@@ -151,7 +151,7 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
  */
 export async function requireUsageQuota(type: UsageType, amount: number = 1): Promise<void> {
   const user = await getCurrentUser();
-  if (!user) {
+  if (!user?.id) {
     throw new Error('Authentication required');
   }
 

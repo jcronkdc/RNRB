@@ -6,24 +6,20 @@
  * - Optimized with single database transaction
  */
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma as db } from '@cronkwaters/db';
 
+import { auth } from '@/auth';
+
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Check authentication
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    // Use NextAuth for authentication
+    const session = await auth();
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const user = { id: session.user.id };
 
     const body = await request.json();
     const { channelId, messageIds } = body;

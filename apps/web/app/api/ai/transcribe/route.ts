@@ -1,8 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { transcribeSession, extractActionItems } from '@/lib/ai/openai';
+import { handleApiError } from '@/lib/errors';
+import { getCurrentUserId } from '@/lib/session';
 import { requireFeatureAccess } from '@/lib/subscription-access';
-import { getCurrentUser } from '@/lib/supabase';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 
 export async function POST(request: NextRequest) {
@@ -61,9 +62,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 📊 Track successful usage (transcription counts as 2 requests)
-    const user = await getCurrentUser();
-    if (user) {
-      await trackUsage(user.id, 'aiRequests', 2);
+    const userId = await getCurrentUserId();
+    if (userId) {
+      await trackUsage(userId, 'aiRequests', 2);
     }
 
     return NextResponse.json({
@@ -71,8 +72,7 @@ export async function POST(request: NextRequest) {
       actionItems,
       disclaimer: 'AI-generated transcription - verify accuracy',
     });
-  } catch (error: any) {
-    console.error('AI transcription error:', error);
-    return NextResponse.json({ error: 'Failed to transcribe session' }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error, { route: '/api/ai/transcribe', method: 'POST' });
   }
 }

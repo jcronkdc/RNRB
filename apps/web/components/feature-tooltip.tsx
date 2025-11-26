@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Info, X } from 'lucide-react';
-import { useState, ReactNode } from 'react';
+import { Info, X, ChevronRight, ChevronLeft } from 'lucide-react';
+import { useState, type ReactNode, useCallback } from 'react';
 
 interface FeatureTooltipProps {
   title: string;
@@ -66,7 +66,7 @@ export function FeatureTooltip({
                   placement === 'top'
                     ? 'bottom-[-6px] left-1/2 -translate-x-1/2 border-b border-r'
                     : placement === 'bottom'
-                    ? 'top-[-6px] left-1/2 -translate-x-1/2 border-l border-t'
+                    ? 'left-1/2 top-[-6px] -translate-x-1/2 border-l border-t'
                     : placement === 'left'
                     ? 'right-[-6px] top-1/2 -translate-y-1/2 border-r border-t'
                     : 'left-[-6px] top-1/2 -translate-y-1/2 border-b border-l'
@@ -100,5 +100,122 @@ export function InfoButton({ title, description, icon }: InfoButtonProps) {
         <Info className="h-3 w-3" />
       </button>
     </FeatureTooltip>
+  );
+}
+
+interface OnboardingStep {
+  target: string;
+  title: string;
+  content: string;
+}
+
+interface OnboardingTourProps {
+  steps: OnboardingStep[];
+  onComplete: () => void;
+  onSkip: () => void;
+}
+
+/**
+ * Onboarding Tour Component
+ * Provides a step-by-step guided tour of features
+ */
+export function OnboardingTour({ steps, onComplete, onSkip }: OnboardingTourProps) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const step = steps[currentStep];
+  const isLastStep = currentStep === steps.length - 1;
+
+  const handleNext = useCallback(() => {
+    if (isLastStep) {
+      onComplete();
+    } else {
+      setCurrentStep((prev) => prev + 1);
+    }
+  }, [isLastStep, onComplete]);
+
+  const handlePrevious = useCallback(() => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  }, [currentStep]);
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ duration: 0.2 }}
+          className="mx-4 w-full max-w-md rounded-2xl border border-orange-500/30 bg-zinc-900/95 p-6 shadow-2xl backdrop-blur-sm"
+        >
+          {/* Header */}
+          <div className="mb-4 flex items-start justify-between">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wide text-orange-400">
+                Step {currentStep + 1} of {steps.length}
+              </p>
+              <h3 className="mt-1 text-xl font-bold text-white">{step.title}</h3>
+            </div>
+            <button
+              onClick={onSkip}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Content */}
+          <p className="mb-6 leading-relaxed text-zinc-300">{step.content}</p>
+
+          {/* Progress dots */}
+          <div className="mb-6 flex justify-center gap-2">
+            {steps.map((_, index) => (
+              <div
+                key={index}
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  index === currentStep
+                    ? 'bg-orange-500'
+                    : index < currentStep
+                      ? 'bg-orange-500/50'
+                      : 'bg-zinc-700'
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handlePrevious}
+              disabled={currentStep === 0}
+              className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-zinc-400 transition-colors hover:text-white disabled:opacity-40"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={onSkip}
+                className="px-4 py-2 text-sm font-medium text-zinc-400 transition-colors hover:text-white"
+              >
+                Skip Tour
+              </button>
+              <button
+                onClick={handleNext}
+                className="flex items-center gap-1 rounded-lg bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+              >
+                {isLastStep ? 'Get Started' : 'Next'}
+                {!isLastStep && <ChevronRight className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

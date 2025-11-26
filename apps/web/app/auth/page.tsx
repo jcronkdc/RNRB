@@ -1,15 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Music, Sparkles } from 'lucide-react';
-import { signIn } from 'next-auth/react';
+import { Music, Sparkles, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 
-import { signInWithCredentials, signInWithGoogle } from '@/app/actions/auth';
-import { supabase } from '@/lib/supabase';
+import { signInWithCredentials } from '@/app/actions/auth';
 
 const NEXT_REDIRECT = 'NEXT_REDIRECT';
 
@@ -17,7 +15,6 @@ function AuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
-  const [emailForMagicLink, setEmailForMagicLink] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -25,28 +22,40 @@ function AuthForm() {
 
   // Check if this is signup flow
   const isSignup = searchParams.get('signup') === 'true';
+  const errorParam = searchParams.get('error');
+
+  // Show error from URL params (e.g., from callback)
+  useEffect(() => {
+    if (errorParam) {
+      const errorMessages: Record<string, string> = {
+        Configuration: 'Server configuration error. Please try again later.',
+        AccessDenied: 'Access denied. Please try again.',
+        Verification: 'Verification failed. Please try again.',
+        CredentialsSignin: 'Invalid email or password. Please try again.',
+        Default: 'An error occurred during sign-in. Please try again.',
+      };
+      setMessage({
+        type: 'error',
+        text: errorMessages[errorParam] || errorMessages.Default,
+      });
+    }
+  }, [errorParam]);
 
   const handlePasswordAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    console.log('[AUTH] Form submitted', { isSignup, email: email?.substring(0, 3) + '***', hasPassword: !!password, hasName: !!name });
-    
     setLoading(true);
     setMessage(null);
 
     try {
       if (isSignup) {
         // Registration
-        console.log('[AUTH] Starting registration...');
         const response = await fetch('/api/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, name }),
         });
 
-        console.log('[AUTH] Registration response:', response.status);
         const data = await response.json();
-        console.log('[AUTH] Registration data:', { success: response.ok, hasUser: !!data.user });
 
         if (!response.ok) {
           throw new Error(data.error || 'Registration failed');
@@ -57,22 +66,20 @@ function AuthForm() {
           text: 'Account created! Signing you in...',
         });
 
-        // Auto sign-in after registration using server action
+        // Auto sign-in after registration
         setTimeout(async () => {
-          console.log('[AUTH] Auto-signing in...');
           try {
             const result = await signInWithCredentials({ email, password });
-            // Check if the result indicates an error
             if (result && !result.success) {
               throw new Error(result.error || 'Auto sign-in failed');
             }
-            console.log('[AUTH] Auto-signin successful, waiting for redirect');
-          } catch (error: any) {
+          } catch (error: unknown) {
             // Check if this is a redirect error (success case)
-            if (error?.digest?.startsWith(NEXT_REDIRECT)) {
-              console.log('[AUTH] Redirect detected, auto-signin successful');
-              // Let the redirect happen
-              return;
+            if (error && typeof error === 'object' && 'digest' in error) {
+              const err = error as { digest?: string };
+              if (err.digest?.startsWith(NEXT_REDIRECT)) {
+                return;
+              }
             }
             console.error('[AUTH] Sign-in error:', error);
             throw error;
@@ -80,21 +87,18 @@ function AuthForm() {
         }, 1000);
       } else {
         // Sign in using server action
-        console.log('[AUTH] Starting sign-in...');
         try {
           const result = await signInWithCredentials({ email, password });
-          // Check if the result indicates an error
           if (result && !result.success) {
             throw new Error(result.error || 'Sign in failed');
           }
-          // If we get a success result, redirect should happen automatically
-          console.log('[AUTH] Sign-in successful, waiting for redirect');
-        } catch (error: any) {
+        } catch (error: unknown) {
           // Check if this is a redirect error (success case)
-          if (error?.digest?.startsWith(NEXT_REDIRECT)) {
-            console.log('[AUTH] Redirect detected, sign-in successful');
-            // Let the redirect happen
-            return;
+          if (error && typeof error === 'object' && 'digest' in error) {
+            const err = error as { digest?: string };
+            if (err.digest?.startsWith(NEXT_REDIRECT)) {
+              return;
+            }
           }
           throw error;
         }
@@ -102,66 +106,6 @@ function AuthForm() {
     } catch (error) {
       console.error('[AUTH] Password auth error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
-      setMessage({
-        type: 'error',
-        text: errorMessage,
-      });
-      setLoading(false);
-    }
-  };
-
-  const handleEmailSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage(null);
-
-    // Check if Supabase is initialized
-    if (!supabase) {
-      setMessage({
-        type: 'error',
-        text: 'Authentication service is not configured. Please contact support.',
-      });
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: emailForMagicLink,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (error) throw error;
-
-      setMessage({
-        type: 'success',
-        text: 'Check your email! We sent you a magic link to sign in.',
-      });
-      setEmailForMagicLink('');
-    } catch (error) {
-      console.error('Email sign-in error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to send magic link';
-      setMessage({
-        type: 'error',
-        text: errorMessage,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    setMessage(null);
-
-    try {
-      // Use server action for Google OAuth
-      await signInWithGoogle();
-    } catch (error) {
-      console.error('Google sign-in error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Google sign-in failed';
       setMessage({
         type: 'error',
         text: errorMessage,
@@ -206,7 +150,7 @@ function AuthForm() {
               </div>
             </div>
 
-            {/* Title - LOUD AND PROUD */}
+            {/* Title */}
             <h1 className="mb-6 text-6xl font-black tracking-tight">
               ROCK N' ROLL
               <br />
@@ -297,11 +241,11 @@ function AuthForm() {
 
           <div className="text-center lg:text-left">
             <h2 className="mb-2 text-4xl font-bold text-white">
-              {isSignup ? 'Get Started' : 'Welcome Back'}
+              {isSignup ? 'Create Account' : 'Welcome Back'}
             </h2>
             <p className="text-gray-400">
               {isSignup
-                ? 'Create your account and start building your music empire'
+                ? 'Sign up to start building your music empire'
                 : 'Sign in to continue building your music empire'}
             </p>
           </div>
@@ -343,7 +287,7 @@ function AuthForm() {
               </motion.div>
             )}
 
-            {/* Password Authentication - PRIMARY METHOD */}
+            {/* Email/Password Form */}
             <form onSubmit={handlePasswordAuth} className="space-y-4">
               {isSignup && (
                 <input
@@ -380,98 +324,29 @@ function AuthForm() {
               <button
                 type="submit"
                 disabled={loading}
-                onClick={(e) => {
-                  console.log('[AUTH] Button clicked!', { isSubmit: true, loading, email: email?.substring(0, 3) + '***' });
-                }}
                 className="w-full transform rounded-xl bg-orange-500 px-4 py-3 text-base font-semibold text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02] hover:bg-orange-600 disabled:opacity-50 disabled:hover:scale-100"
               >
-                {loading
-                  ? 'Processing...'
-                  : isSignup
-                    ? '🚀 Create Account & Sign In'
-                    : '🎸 Sign In'}
+                {loading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {isSignup ? 'Creating Account...' : 'Signing In...'}
+                  </span>
+                ) : isSignup ? (
+                  '🚀 Create Account'
+                ) : (
+                  '🎸 Sign In'
+                )}
               </button>
 
-              <p className="text-center text-xs text-gray-500">
+              <p className="text-center text-sm text-gray-500">
                 {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <Link
                   href={isSignup ? '/auth' : '/auth?signup=true'}
-                  className="text-orange-500 hover:text-orange-400 hover:underline"
+                  className="font-medium text-orange-500 hover:text-orange-400 hover:underline"
                 >
-                  {isSignup ? 'Sign in here' : 'Create one here'}
+                  {isSignup ? 'Sign in' : 'Create one'}
                 </Link>
               </p>
-            </form>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-800" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="bg-black px-3 text-gray-500">or continue with</span>
-              </div>
-            </div>
-
-            {/* Google OAuth - Secondary */}
-            <button
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-              className="w-full transform rounded-xl bg-white px-4 py-3 text-base font-semibold text-gray-900 shadow-lg transition-all hover:scale-[1.02] hover:bg-gray-100 disabled:opacity-50 disabled:hover:scale-100"
-            >
-              <div className="flex items-center justify-center gap-3">
-                <svg className="h-5 w-5" viewBox="0 0 24 24">
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4"
-                  />
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853"
-                  />
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05"
-                  />
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335"
-                  />
-                </svg>
-                {loading ? 'Loading...' : 'Continue with Google'}
-              </div>
-            </button>
-
-            {/* Email Magic Link - Tertiary Option */}
-            <form onSubmit={handleEmailSignIn} className="space-y-4">
-              <div className="rounded-xl border border-purple-500/30 bg-purple-500/10 p-4">
-                <p className="flex items-center gap-2 text-sm font-semibold text-purple-300">
-                  <Sparkles className="h-4 w-4" />
-                  Or use Magic Link (No password)
-                </p>
-                <p className="mt-1 text-xs text-gray-400">
-                  We'll send a sign-in link to your email
-                </p>
-              </div>
-
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  value={emailForMagicLink}
-                  onChange={(e) => setEmailForMagicLink(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                  disabled={loading}
-                  className="flex-1 rounded-xl border border-gray-800 bg-gray-900 px-4 py-2 text-sm text-white transition-all placeholder:text-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 disabled:opacity-50"
-                />
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="transform rounded-xl bg-purple-500 px-6 py-2 text-sm font-semibold text-white transition-all hover:scale-[1.02] hover:bg-purple-600 disabled:opacity-50 disabled:hover:scale-100"
-                >
-                  {loading ? '...' : 'Send'}
-                </button>
-              </div>
             </form>
           </div>
 

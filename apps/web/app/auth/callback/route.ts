@@ -1,43 +1,29 @@
-import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { type NextRequest } from 'next/server';
 
+/**
+ * AUTH CALLBACK ROUTE
+ * 
+ * This route handles OAuth callbacks.
+ * 
+ * NOTE: NextAuth v5 handles its own callbacks at /api/auth/callback/*
+ * This route exists for legacy compatibility and general auth redirects.
+ * 
+ * If you're coming from a magic link or OAuth flow, NextAuth handles it automatically.
+ * This route redirects any direct access to the dashboard.
+ */
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
+  const error = requestUrl.searchParams.get('error');
 
-  if (code) {
-    // Safety: Correct malformed URL (missing 'h' in 'https://')
-    // This handles cases where NEXT_PUBLIC_SUPABASE_URL="ttps://..." in .env
-    let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseAnonKey) {
-      return NextResponse.redirect(new URL('/auth?error=Configuration', requestUrl.origin));
-    }
-
-    // Validate and correct URL format
-    if (!supabaseUrl.startsWith('http')) {
-      // If missing protocol entirely, add https://
-      supabaseUrl = `https://${supabaseUrl}`;
-    } else if (supabaseUrl.startsWith('ttps://')) {
-      // Fix common typo: missing 'h' in https://
-      supabaseUrl = `h${supabaseUrl}`;
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-    // Bug Fix: Wrap exchangeCodeForSession in try-catch
-    // This method can throw on invalid codes, network errors, or auth failures
-    try {
-      await supabase.auth.exchangeCodeForSession(code);
-    } catch (error) {
-      console.error('Auth callback error:', error);
-      return NextResponse.redirect(new URL('/auth?error=AuthenticationFailed', requestUrl.origin));
-    }
+  // If there's an error, redirect to auth page with error
+  if (error) {
+    return NextResponse.redirect(
+      new URL(`/auth?error=${encodeURIComponent(error)}`, requestUrl.origin)
+    );
   }
 
-  // URL to redirect to after sign in process completes
-  // Redirect to dashboard instead of homepage for better UX
+  // For successful auth, redirect to dashboard
+  // NextAuth handles the session cookie automatically via /api/auth/callback/*
   return NextResponse.redirect(new URL('/dashboard', requestUrl.origin));
 }

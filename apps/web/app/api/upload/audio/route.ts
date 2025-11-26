@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { getCurrentUser } from '@/lib/supabase';
+import { handleApiError } from '@/lib/errors';
+import { requireAuth } from '@/lib/session';
 import { getUsageSummary } from '@/lib/usage-tracking';
 
 /**
@@ -17,10 +18,7 @@ import { getUsageSummary } from '@/lib/usage-tracking';
 export async function POST(request: NextRequest) {
   try {
     // ✅ SECURITY: Require authentication
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    }
+    const user = await requireAuth();
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -102,9 +100,8 @@ export async function POST(request: NextRequest) {
       },
       note: 'Supabase Storage integration coming in next phase',
     });
-  } catch (error: any) {
-    console.error('Audio upload error:', error);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error, { route: '/api/upload/audio', method: 'POST' });
   }
 }
 

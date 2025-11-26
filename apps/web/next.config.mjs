@@ -17,8 +17,6 @@ const nextConfig = {
       '@daily-co/daily-js',
       '@daily-co/daily-react'
     ],
-    // Enable faster builds with incremental cache
-    incrementalCacheHandlerPath: undefined,
   },
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -110,12 +108,8 @@ const nextConfig = {
       }
     }
 
-    // Performance optimizations
-    config.optimization.usedExports = true;
-    config.optimization.sideEffects = true;
-
-    // Module concatenation for smaller bundles
-    if (!isServer) {
+    // Module concatenation for smaller bundles (only in production)
+    if (!isServer && process.env.NODE_ENV === 'production') {
       config.optimization.concatenateModules = true;
     }
 

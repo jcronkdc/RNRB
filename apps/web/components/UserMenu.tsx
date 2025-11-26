@@ -1,6 +1,5 @@
 'use client';
 
-import { type User } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogOut,
@@ -13,11 +12,11 @@ import {
   Loader2,
   Zap,
 } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { supabase, signOut } from '@/lib/supabase';
 import { useToast } from '@/hooks/useToast';
 import { trpc } from '@cronkwaters/trpc/client/react';
 
@@ -25,10 +24,12 @@ import { trpc } from '@cronkwaters/trpc/client/react';
 export function UserMenu() {
   const router = useRouter();
   const { showToast } = useToast();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+
+  const user = session?.user;
+  const loading = status === 'loading';
 
   // Fetch credits data
   const { data: creditsData } = trpc.usage.getCredits.useQuery(undefined, {
@@ -36,58 +37,12 @@ export function UserMenu() {
     refetchInterval: 60000,
   });
 
-  useEffect(() => {
-    // Only run on client side
-    if (typeof window === 'undefined') return;
-
-    // Check if Supabase is initialized
-    if (!supabase) {
-      console.warn('Supabase client not initialized in UserMenu');
-      setLoading(false);
-      return;
-    }
-
-    // Get initial user
-    supabase.auth
-      .getUser()
-      .then(({ data: { user } }) => {
-        setUser(user);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error getting user:', err);
-        setLoading(false);
-      });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
   const handleSignOut = async () => {
     setSigningOut(true);
     
     try {
-      const { success, error } = await signOut();
-      
-      if (success) {
-        showToast('Successfully signed out', 'success');
-        // Small delay to show the success message before redirect
-        setTimeout(() => {
-          router.push('/');
-        }, 500);
-      } else {
-        showToast(error?.message || 'Failed to sign out, but session cleared', 'warning');
-        // Still redirect even if there's an error
-        setTimeout(() => {
-          router.push('/');
-        }, 1000);
-      }
+      await signOut({ callbackUrl: '/' });
+      showToast('Successfully signed out', 'success');
     } catch (error) {
       showToast('An unexpected error occurred while signing out', 'error');
       // Force redirect anyway after a short delay
@@ -165,7 +120,7 @@ export function UserMenu() {
     );
   }
 
-  const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'User';
+  const userName = user.name || user.email?.split('@')[0] || 'User';
   const userInitial = userName[0].toUpperCase();
 
   return (

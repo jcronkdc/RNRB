@@ -3,12 +3,12 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 /**
- * GET /api/projects/[id]/songs
+ * GET /api/projects/[slug]/songs
  * Get all songs for a project
  */
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { id } = await params;
+    const { slug } = await params;
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 
@@ -16,10 +16,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: 'User ID required' }, { status: 400 });
     }
 
-    // Find project (by ID or slug)
+    // Find project by slug (or ID for backward compatibility)
     const project = await db.project.findFirst({
       where: {
-        OR: [{ id }, { slug: id }],
+        OR: [{ slug }, { id: slug }],
       },
       select: {
         id: true,
@@ -63,18 +63,18 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     return NextResponse.json(songs);
   } catch (error) {
-    console.error('GET /api/projects/[id]/songs error:', error);
+    console.error('GET /api/projects/[slug]/songs error:', error);
     return NextResponse.json({ error: 'Failed to fetch songs' }, { status: 500 });
   }
 }
 
 /**
- * POST /api/projects/[id]/songs
+ * POST /api/projects/[slug]/songs
  * Create a new song in a project
  */
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { id } = await params;
+    const { slug } = await params;
     const body = await req.json();
     const { userId, title, key, tempo, timeSignature, lyrics, chords, songStructure } = body;
 
@@ -86,10 +86,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       return NextResponse.json({ error: 'Song title is required' }, { status: 400 });
     }
 
-    // Find project
+    // Find project by slug (or ID for backward compatibility)
     const project = await db.project.findFirst({
       where: {
-        OR: [{ id }, { slug: id }],
+        OR: [{ slug }, { id: slug }],
       },
       include: {
         members: {
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     return NextResponse.json(song, { status: 201 });
   } catch (error) {
-    console.error('POST /api/projects/[id]/songs error:', error);
+    console.error('POST /api/projects/[slug]/songs error:', error);
     return NextResponse.json(
       {
         error: 'Failed to create song',

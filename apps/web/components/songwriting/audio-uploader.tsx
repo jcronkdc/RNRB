@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { Upload, X, Play, Pause, Music, Loader2, Check, AlertCircle, FileAudio } from 'lucide-react';
+import { Upload, X, Play, Pause, Loader2, Check, AlertCircle, FileAudio } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
 type AudioUploaderProps = {
@@ -201,7 +201,7 @@ export function AudioUploader({
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
-                <p className="text-sm font-mono text-gray-400">{uploadProgress}%</p>
+                <p className="font-mono text-sm text-gray-400">{uploadProgress}%</p>
               </div>
             </>
           )}

@@ -312,7 +312,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
             <Button
               onClick={handleSearch}
               disabled={loading || (!query.trim() && !currentLyrics.trim())}
-              className="bg-green-600 hover:bg-green-700 w-full rounded-lg px-6 py-3"
+              className="w-full rounded-lg bg-green-600 px-6 py-3 hover:bg-green-700"
             >
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Hash className="mr-2 h-4 w-4" />}
               {loading ? 'Counting...' : 'Count Syllables'}
@@ -350,7 +350,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
       {/* Syllable breakdown display */}
       {mode === 'syllables' && syllableResults.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-muted-foreground text-sm font-semibold uppercase tracking-wide flex items-center gap-2">
+          <h4 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold uppercase tracking-wide">
             <Hash className="h-4 w-4" />
             Syllable Breakdown
           </h4>
@@ -359,9 +359,9 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
               key={index}
               className="rnrb-card border-border from-surface-muted to-surface border-2 bg-gradient-to-br p-4"
             >
-              <div className="flex items-center justify-between gap-4 mb-2">
+              <div className="mb-2 flex items-center justify-between gap-4">
                 <p className="text-foreground flex-1 text-sm font-medium">{result.line}</p>
-                <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs font-bold">
+                <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400">
                   {result.syllables} syllables
                 </span>
               </div>
@@ -369,7 +369,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
                 {result.words.map((word, idx) => (
                   <span
                     key={idx}
-                    className="bg-gray-800/50 text-gray-300 px-2 py-0.5 rounded text-xs"
+                    className="rounded bg-gray-800/50 px-2 py-0.5 text-xs text-gray-300"
                   >
                     {word.word} ({word.syllables})
                   </span>

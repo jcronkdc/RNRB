@@ -1,8 +1,10 @@
 /**
  * SETLIST TEMPLATES LIBRARY
  * 
- * Pre-configured professional setlist templates for common scenarios
- * Industry-standard configurations used by touring musicians
+ * Common setlist configurations for typical performance scenarios.
+ * 
+ * NOTE: These are starting points based on common practices,
+ * not validated by 100 professional musicians. Adjust to your needs.
  */
 
 import type { OptimizerOptions } from './setlist-optimizer';
@@ -18,7 +20,7 @@ export type SetlistTemplate = {
 };
 
 /**
- * Professional setlist templates library
+ * Common setlist templates
  */
 export const SETLIST_TEMPLATES: SetlistTemplate[] = [
   // ===========================
@@ -32,7 +34,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'festival',
     config: {
       targetDuration: 55,
-      energyProfile: 'explosive',
+      energyProfile: 'high',
       prioritizePopular: true,
       avoidKeyJumps: false, // Crowd energy > vocal health
     },
@@ -51,7 +53,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'festival',
     config: {
       targetDuration: 40,
-      energyProfile: 'dynamic',
+      energyProfile: 'balanced',
       prioritizePopular: true,
       avoidKeyJumps: true,
     },
@@ -70,7 +72,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'festival',
     config: {
       targetDuration: 25,
-      energyProfile: 'crescendo',
+      energyProfile: 'balanced',
       prioritizePopular: true,
       avoidKeyJumps: false,
       minimumSongCount: 5,
@@ -115,7 +117,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'club',
     config: {
       targetDuration: 35,
-      energyProfile: 'explosive',
+      energyProfile: 'high',
       prioritizePopular: true,
       avoidKeyJumps: true,
       minimumSongCount: 8,
@@ -136,7 +138,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'club',
     config: {
       targetDuration: 60, // Per set
-      energyProfile: 'dynamic',
+      energyProfile: 'balanced',
       prioritizePopular: false,
       avoidKeyJumps: true,
     },
@@ -159,7 +161,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'acoustic',
     config: {
       targetDuration: 70,
-      energyProfile: 'intimate',
+      energyProfile: 'mellow',
       prioritizePopular: false,
       avoidKeyJumps: true, // Vocal health crucial for acoustic
       genreBalance: 'focused',
@@ -179,7 +181,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'acoustic',
     config: {
       targetDuration: 50,
-      energyProfile: 'intimate',
+      energyProfile: 'mellow',
       prioritizePopular: false,
       avoidKeyJumps: true,
     },
@@ -221,7 +223,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'cover-band',
     config: {
       targetDuration: 45, // Per set (3 sets total)
-      energyProfile: 'dynamic',
+      energyProfile: 'balanced',
       prioritizePopular: true,
       avoidKeyJumps: false, // Variety > consistency
       genreBalance: 'mixed',
@@ -261,7 +263,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'cover-band',
     config: {
       targetDuration: 90,
-      energyProfile: 'explosive',
+      energyProfile: 'high',
       prioritizePopular: true,
       avoidKeyJumps: false,
       genreBalance: 'progressive', // Genre mashup
@@ -324,7 +326,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'special',
     config: {
       targetDuration: 18,
-      energyProfile: 'explosive',
+      energyProfile: 'high',
       prioritizePopular: true,
       avoidKeyJumps: true,
       minimumSongCount: 4,
@@ -364,7 +366,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     category: 'special',
     config: {
       targetDuration: 60,
-      energyProfile: 'dynamic',
+      energyProfile: 'balanced',
       prioritizePopular: true,
       avoidKeyJumps: true,
     },

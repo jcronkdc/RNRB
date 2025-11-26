@@ -1,16 +1,23 @@
 'use client';
 
-import { Music2, Folder, FileMusic, Compass, Play, Share2, ListMusic, Radio, Calendar, Lock, Loader2, TrendingUp, Clock, Zap, HardDrive, Users, FolderOpen } from 'lucide-react';
+import { Music2, Folder, FileMusic, Compass, ListMusic, Calendar, Loader2, TrendingUp, HardDrive, Mic2, Library, ChevronRight, Plus } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useMemo, memo, Suspense, useCallback, useEffect } from 'react';
+import { useMemo, memo, Suspense, useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { ErrorBoundary, SilentErrorBoundary } from '@/components/error-boundary';
 import { usePerformanceMonitor } from '@/hooks/use-performance-monitor';
-import { useDashboardData, formatStorageSize, getStoragePercentage } from '@/hooks/use-dashboard-data';
-import { FeatureTooltip } from '@/components/feature-tooltip';
+import { useDashboardData, getStoragePercentage } from '@/hooks/use-dashboard-data';
+
+// Project type for recent projects
+type RecentProject = {
+  id: string;
+  name: string;
+  slug: string;
+  song_count: number;
+};
 
 // Dynamically import activity feed with loading fallback
 const CompactActivityFeed = dynamic(
@@ -19,166 +26,210 @@ const CompactActivityFeed = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-zinc-600" />
+        <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--muted)' }} />
       </div>
     )
   }
 );
 
-// Dynamically import upgrade modal
-const UpgradeModal = dynamic(
-  () => import('@/components/upgrade-modal').then((m) => m.UpgradeModal),
-  { ssr: false }
-);
+// Stat card component using CSS variables
+const StatCard = memo(({ 
+  label, 
+  value, 
+  icon: Icon,
+  href 
+}: { 
+  label: string; 
+  value: string | number;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  href?: string;
+}) => {
+  const content = (
+    <div 
+      className="flex items-center gap-4 rounded-2xl p-4 transition-all duration-200 hover:translate-y-[-2px]"
+      style={{ 
+        background: 'var(--panel)',
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow)',
+      }}
+    >
+      <div 
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+        style={{ background: 'rgba(255, 99, 71, 0.1)' }}
+      >
+        <Icon className="h-6 w-6" style={{ color: 'var(--accent)' }} />
+      </div>
+      <div>
+        <p className="text-sm" style={{ color: 'var(--muted)' }}>{label}</p>
+        <p className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{value}</p>
+      </div>
+    </div>
+  );
 
-import { useUpgradeModal } from '@/components/upgrade-modal';
+  if (href) {
+    return <Link href={href}>{content}</Link>;
+  }
+  return content;
+});
+StatCard.displayName = 'StatCard';
 
-// Quick action interface for type safety
-interface QuickAction {
+// Primary action card (large, prominent)
+const PrimaryActionCard = memo(({ 
+  title, 
+  description, 
+  icon: Icon, 
+  href,
+  badge
+}: { 
   title: string;
   description: string;
-  tooltip?: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   href: string;
-  gradient?: string;
-  prefetch?: boolean;
-}
-
-// Quick guide interface
-interface QuickGuide {
-  title: string;
-  description: string;
-  icon: React.ComponentType<{ className?: string }>;
-  href: string;
-  prefetch?: boolean;
-}
-
-// Premium tool interface
-interface PremiumTool {
-  title: string;
-  description: string;
-  icon: React.ComponentType<{ className?: string }>;
-  feature: string;
-}
-
-// Memoized action card component to prevent re-renders
-const ActionCard = memo(({ action }: { action: QuickAction }) => (
-  <FeatureTooltip
-    title={action.title}
-    description={action.tooltip || action.description}
-    icon={<action.icon className="h-4 w-4 text-orange-500" />}
-    placement="top"
-  >
-    <Link key={action.href} href={action.href} prefetch={action.prefetch !== false}>
-      <div className={`group h-full rounded-xl border border-zinc-800/50 p-6 transition-all hover:scale-[1.02] hover:border-zinc-700 ${action.gradient || 'bg-gradient-to-br from-zinc-900/50 to-zinc-900/30'} backdrop-blur-sm`}>
-        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 shadow-lg">
-          <action.icon className="h-7 w-7 text-white" />
+  badge?: string;
+}) => (
+  <Link href={href}>
+    <div 
+      className="group relative h-full cursor-pointer overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:translate-y-[-4px]"
+      style={{ 
+        background: 'var(--panel)',
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow)',
+      }}
+    >
+      {/* Accent glow on hover */}
+      <div 
+        className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{ 
+          background: 'radial-gradient(ellipse at top right, rgba(255, 99, 71, 0.15), transparent 70%)'
+        }}
+      />
+      
+      {badge && (
+        <span 
+          className="absolute right-4 top-4 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider"
+          style={{ 
+            background: 'var(--accent)',
+            color: 'white',
+          }}
+        >
+          {badge}
+        </span>
+      )}
+      
+      <div className="relative z-10">
+        <div 
+          className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110"
+          style={{ 
+            background: 'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 99, 71, 0.1))',
+            border: '1px solid rgba(255, 99, 71, 0.2)',
+          }}
+        >
+          <Icon className="h-8 w-8" style={{ color: 'var(--accent)' }} />
         </div>
-        <h3 className="mb-2 text-lg font-semibold text-white">
-          {action.title}
+        <h3 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
+          {title}
         </h3>
-        <p className="text-sm leading-relaxed text-zinc-400">
-          {action.description}
+        <p className="mb-4 leading-relaxed" style={{ color: 'var(--muted)' }}>
+          {description}
         </p>
-      </div>
-    </Link>
-  </FeatureTooltip>
-));
-ActionCard.displayName = 'ActionCard';
-
-// Memoized guide card component
-const GuideCard = memo(({ guide }: { guide: QuickGuide }) => (
-  <Link key={guide.href} href={guide.href} prefetch={guide.prefetch !== false}>
-    <div className="group flex items-center gap-4 rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-4 backdrop-blur-sm transition-all hover:border-zinc-700 hover:bg-zinc-900/50">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900">
-        <guide.icon className="h-6 w-6 text-white" />
-      </div>
-      <div className="flex-1">
-        <h3 className="font-semibold text-white">{guide.title}</h3>
-        <p className="text-sm text-zinc-400">{guide.description}</p>
+        <div 
+          className="flex items-center gap-2 text-sm font-medium transition-all duration-200 group-hover:gap-3"
+          style={{ color: 'var(--accent)' }}
+        >
+          <span>Get Started</span>
+          <ChevronRight className="h-4 w-4" />
+        </div>
       </div>
     </div>
   </Link>
 ));
-GuideCard.displayName = 'GuideCard';
+PrimaryActionCard.displayName = 'PrimaryActionCard';
 
-// Memoized premium tool card component
-const PremiumToolCard = memo(({ 
-  tool, 
-  onUpgrade 
-}: { 
-  tool: PremiumTool;
-  onUpgrade: (feature: string) => void;
-}) => (
-  <button
-    onClick={() => onUpgrade(tool.feature)}
-    className="group relative h-full rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-6 text-left backdrop-blur-sm transition-all hover:border-zinc-700 hover:bg-zinc-900/50"
-  >
-    <div className="absolute right-3 top-3 rounded-lg bg-zinc-800/80 p-1.5 backdrop-blur-sm">
-      <Lock className="h-3.5 w-3.5 text-zinc-400" />
-    </div>
-
-    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900">
-      <tool.icon className="h-7 w-7 text-white" />
-    </div>
-
-    <h3 className="mb-2 text-lg font-semibold text-white">
-      {tool.title}
-    </h3>
-    <p className="mb-4 text-sm text-zinc-400">
-      {tool.description}
-    </p>
-
-    <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-zinc-500">
-      <Zap className="h-3 w-3" />
-      <span>Click to unlock</span>
-    </div>
-  </button>
-));
-PremiumToolCard.displayName = 'PremiumToolCard';
-
-// Stats card component
-const StatsCard = memo(({ 
+// Feature tile (smaller, grid item)
+const FeatureTile = memo(({ 
+  title, 
   icon: Icon, 
-  label, 
-  value, 
-  color = 'blue' 
+  href,
+  description
 }: { 
-  icon: React.ComponentType<{ className?: string }>; 
-  label: string; 
-  value: string | number;
-  color?: 'blue' | 'green' | 'purple' | 'orange';
-}) => {
-  const colorClasses = {
-    blue: 'text-blue-500',
-    green: 'text-green-500',
-    purple: 'text-purple-500',
-    orange: 'text-orange-500',
-  };
-
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-zinc-800/50 bg-zinc-900/30 px-4 py-3 backdrop-blur-sm">
-      <Icon className={`h-5 w-5 ${colorClasses[color]}`} />
-      <div className="flex-1">
-        <p className="text-xs text-zinc-500">{label}</p>
-        <p className="text-lg font-semibold text-white">{value}</p>
+  title: string;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  href: string;
+  description?: string;
+}) => (
+  <Link href={href}>
+    <div 
+      className="group flex h-full cursor-pointer flex-col items-center rounded-2xl p-5 text-center transition-all duration-200 hover:translate-y-[-2px]"
+      style={{ 
+        background: 'var(--panel)',
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow)',
+      }}
+    >
+      <div 
+        className="mb-3 flex h-14 w-14 items-center justify-center rounded-xl transition-all duration-200 group-hover:scale-110"
+        style={{ 
+          background: 'rgba(255, 99, 71, 0.1)',
+          border: '1px solid rgba(255, 99, 71, 0.15)',
+        }}
+      >
+        <Icon className="h-7 w-7" style={{ color: 'var(--accent)' }} />
       </div>
+      <h4 className="mb-1 font-semibold" style={{ color: 'var(--text)' }}>{title}</h4>
+      {description && (
+        <p className="text-sm" style={{ color: 'var(--muted)' }}>{description}</p>
+      )}
     </div>
-  );
-});
-StatsCard.displayName = 'StatsCard';
+  </Link>
+));
+FeatureTile.displayName = 'FeatureTile';
 
-// Loading skeleton component
-const DashboardSkeleton = () => (
-  <div className="min-h-screen bg-zinc-950">
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-12 animate-pulse border-b border-zinc-800 pb-8">
-        <div className="mb-2 h-12 w-2/3 rounded bg-zinc-800"></div>
-        <div className="h-6 w-1/3 rounded bg-zinc-800"></div>
+// Recent project card
+const RecentProjectCard = memo(({ 
+  project 
+}: { 
+  project: RecentProject;
+}) => (
+  <Link href={`/projects/${project.slug}`}>
+    <div 
+      className="group flex cursor-pointer items-center gap-4 rounded-xl p-4 transition-all duration-200 hover:translate-x-1"
+      style={{ 
+        background: 'var(--panel)',
+        border: '1px solid var(--border)',
+      }}
+    >
+      <div 
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+        style={{ background: 'rgba(255, 99, 71, 0.1)' }}
+      >
+        <Folder className="h-6 w-6" style={{ color: 'var(--accent)' }} />
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="flex-1 overflow-hidden">
+        <h4 className="truncate font-medium" style={{ color: 'var(--text)' }}>{project.name}</h4>
+        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+          {project.song_count} {project.song_count === 1 ? 'song' : 'songs'}
+        </p>
+      </div>
+      <ChevronRight 
+        className="h-5 w-5 opacity-0 transition-all duration-200 group-hover:opacity-100" 
+        style={{ color: 'var(--muted)' }} 
+      />
+    </div>
+  </Link>
+));
+RecentProjectCard.displayName = 'RecentProjectCard';
+
+// Loading skeleton
+const DashboardSkeleton = () => (
+  <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+    <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mb-12 animate-pulse">
+        <div className="mb-4 h-12 w-2/3 rounded-lg" style={{ background: 'var(--panel)' }} />
+        <div className="h-6 w-1/3 rounded-lg" style={{ background: 'var(--panel)' }} />
+      </div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-40 animate-pulse rounded-xl bg-zinc-800"></div>
+          <div key={i} className="h-48 animate-pulse rounded-2xl" style={{ background: 'var(--panel)' }} />
         ))}
       </div>
     </div>
@@ -187,127 +238,47 @@ const DashboardSkeleton = () => (
 
 function DashboardContent() {
   const { user, loading } = useRequireAuth();
-  const { isOpen, showUpgradeModal, hideUpgradeModal, modalProps } = useUpgradeModal();
   const router = useRouter();
+  const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
+  const [loadingProjects, setLoadingProjects] = useState(false);
   
   // Performance monitoring
   usePerformanceMonitor('dashboard');
   
   // Dashboard data with caching
   const { data: dashboardStats, loading: statsLoading } = useDashboardData({
-    refreshInterval: 60000, // Refresh every minute
+    refreshInterval: 60000,
     enabled: !!user && !loading,
   });
 
-  // Stable user name (no loading flicker)
+  // Fetch recent projects
+  const loadProjects = useCallback(async () => {
+    if (!user) return;
+    setLoadingProjects(true);
+    try {
+      const response = await fetch('/api/projects');
+      if (response.ok) {
+        const data = await response.json();
+        setRecentProjects(data.slice(0, 4)); // Only need 4 for dashboard
+      }
+    } catch (err) {
+      console.error('Error loading projects:', err);
+    } finally {
+      setLoadingProjects(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user && !loading) {
+      loadProjects();
+    }
+  }, [user, loading, loadProjects]);
+
+  // Stable user name
   const userName = useMemo(() => {
     if (loading || !user) return 'Artist';
     return user.user_metadata?.name || user.email?.split('@')[0] || 'Artist';
   }, [user, loading]);
-
-  // Memoized upgrade handler
-  const handleUpgrade = useCallback((feature: string) => {
-    showUpgradeModal({
-      feature,
-      requiredTier: 'creator',
-    });
-  }, [showUpgradeModal]);
-
-  // Memoized action items with prefetch enabled for common paths
-  const quickActions: QuickAction[] = useMemo(() => [
-    {
-      title: 'Songwriting Studio',
-      description: 'AI-powered chord progressions & lyrics',
-      tooltip: 'Write songs manually with AI assistance. Perfect for crafting lyrics, building chord progressions, and collaborating in real-time with your band.',
-      icon: Music2,
-      href: '/songwriting',
-      gradient: 'bg-gradient-to-br from-purple-900/30 to-zinc-900/30',
-      prefetch: true,
-    },
-    {
-      title: 'Create Track',
-      description: 'Generate full songs with AI',
-      tooltip: 'Generate complete AI music tracks instantly. Just describe your sound (genre, mood, instruments) and get a finished audio file in 30 seconds.',
-      icon: FileMusic,
-      href: '/create',
-      gradient: 'bg-gradient-to-br from-blue-900/30 to-zinc-900/30',
-      prefetch: true,
-    },
-    {
-      title: 'New Project',
-      description: 'Start an album or EP',
-      tooltip: 'Organize songs into albums, EPs, or collections. Collaborate with band members, track milestones, and manage your entire release from one place.',
-      icon: Folder,
-      href: '/projects/new',
-      gradient: 'bg-gradient-to-br from-green-900/30 to-zinc-900/30',
-      prefetch: true,
-    },
-    {
-      title: 'My Library',
-      description: 'View your music assets',
-      tooltip: 'Store and manage audio files (stems, demos, samples, loops). Think of it as Dropbox for your music assets - upload once, use everywhere.',
-      icon: Music2,
-      href: '/library',
-      gradient: 'bg-gradient-to-br from-orange-900/30 to-zinc-900/30',
-      prefetch: false,
-    },
-    {
-      title: 'Explore Community',
-      description: 'Discover tracks & musicians',
-      tooltip: 'Browse trending music from the community. Find inspiration, discover new artists, and engage with tracks through likes and comments.',
-      icon: Compass,
-      href: '/explore',
-      gradient: 'bg-gradient-to-br from-pink-900/30 to-zinc-900/30',
-      prefetch: false,
-    },
-  ], []);
-
-  // Memoized guide items
-  const quickGuides: QuickGuide[] = useMemo(() => [
-    {
-      title: 'Create Your First Track',
-      description: 'Use AI to generate music',
-      icon: Play,
-      href: '/create',
-      prefetch: true,
-    },
-    {
-      title: 'Start Collaborating',
-      description: 'Invite your band members',
-      icon: Share2,
-      href: '/projects',
-      prefetch: true,
-    },
-    {
-      title: 'Explore Features',
-      description: 'Tour the platform',
-      icon: Compass,
-      href: '/explore',
-      prefetch: false,
-    },
-  ], []);
-
-  // Memoized premium tools
-  const premiumTools: PremiumTool[] = useMemo(() => [
-    {
-      title: 'Smart Setlists',
-      description: 'AI-powered setlist generation',
-      icon: ListMusic,
-      feature: 'setlistManagement',
-    },
-    {
-      title: 'Tour Management',
-      description: 'Track shows & venues',
-      icon: Radio,
-      feature: 'toursAndGigs',
-    },
-    {
-      title: 'Gig Calendar',
-      description: 'Schedule & logistics',
-      icon: Calendar,
-      feature: 'toursAndGigs',
-    },
-  ], []);
 
   // Prefetch critical routes on mount
   useEffect(() => {
@@ -322,156 +293,257 @@ function DashboardContent() {
     if (user && typeof window !== 'undefined' && window.posthog) {
       window.posthog.capture('dashboard_viewed', {
         user_id: user.id,
-        user_email: user.email,
         timestamp: Date.now(),
       });
     }
   }, [user]);
 
-  // Show skeleton while loading
   if (loading && !user) {
     return <DashboardSkeleton />;
   }
 
+  const storagePercent = dashboardStats 
+    ? getStoragePercentage(dashboardStats.storageUsed, dashboardStats.storageTotal)
+    : 0;
+
   return (
-    <div className="min-h-screen bg-zinc-950">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        {/* Loading indicator (for data refreshes) */}
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        
+        {/* Loading indicator for data refresh */}
         {(loading || statsLoading) && user && (
-          <div className="fixed right-6 top-20 z-50 flex items-center gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/95 px-3 py-2 text-xs text-zinc-400 shadow-xl backdrop-blur-sm">
-            <Loader2 className="h-3 w-3 animate-spin" />
-            <span className="font-mono uppercase tracking-wider">Syncing</span>
+          <div 
+            className="fixed right-6 top-20 z-50 flex items-center gap-2 rounded-xl px-4 py-2"
+            style={{ 
+              background: 'var(--panel)',
+              border: '1px solid var(--border)',
+              boxShadow: 'var(--shadow-lg)',
+            }}
+          >
+            <Loader2 className="h-4 w-4 animate-spin" style={{ color: 'var(--accent)' }} />
+            <span className="text-sm font-medium" style={{ color: 'var(--muted)' }}>Syncing</span>
           </div>
         )}
 
-        {/* Enhanced Header with Stats */}
-        <div className="mb-12 border-b border-zinc-800/50 pb-8">
-          <div className="mb-6">
-            <h1 className="mb-2 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-4xl font-bold text-transparent lg:text-5xl">
-              Welcome back, {userName}
-            </h1>
-            <p className="text-lg text-zinc-400">Your creative workspace</p>
-          </div>
-          
-          {/* Dashboard Stats Grid */}
-          {dashboardStats && (
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
-              <StatsCard
-                icon={FolderOpen}
+        {/* ==================== HEADER ==================== */}
+        <header className="mb-10">
+          <h1 
+            className="mb-2 text-4xl font-bold lg:text-5xl"
+            style={{ 
+              color: 'var(--text)',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            Welcome back, {userName}
+          </h1>
+          <p className="text-lg" style={{ color: 'var(--muted)' }}>
+            Your creative workspace
+          </p>
+        </header>
+
+        {/* ==================== QUICK STATS ==================== */}
+        {dashboardStats && (
+          <section className="mb-10">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              <StatCard
+                icon={Folder}
                 label="Projects"
                 value={dashboardStats.projectCount}
-                color="purple"
+                href="/projects"
               />
-              <StatsCard
+              <StatCard
                 icon={Music2}
                 label="Songs"
                 value={dashboardStats.songCount}
-                color="blue"
               />
-              <StatsCard
-                icon={Users}
-                label="Collaborators"
-                value={dashboardStats.collaboratorCount}
-                color="green"
+              <StatCard
+                icon={HardDrive}
+                label="Storage"
+                value={`${storagePercent}%`}
+                href="/settings/usage"
               />
-              <StatsCard
+              <StatCard
                 icon={TrendingUp}
                 label="Activity"
                 value={dashboardStats.recentActivity}
-                color="orange"
-              />
-              <StatsCard
-                icon={HardDrive}
-                label="Storage"
-                value={`${getStoragePercentage(dashboardStats.storageUsed, dashboardStats.storageTotal)}%`}
-                color="blue"
-              />
-              <StatsCard
-                icon={Clock}
-                label="Status"
-                value="Online"
-                color="green"
               />
             </div>
-          )}
-        </div>
+          </section>
+        )}
 
-        {/* Quick Actions with improved design */}
-        <div className="mb-12">
-          <h2 className="mb-6 flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-400">
-            <Zap className="h-4 w-4" />
+        {/* ==================== PRIMARY ACTIONS ==================== */}
+        <section className="mb-10">
+          <h2 
+            className="mb-6 text-sm font-semibold uppercase tracking-widest"
+            style={{ color: 'var(--muted)' }}
+          >
             Start Creating
           </h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {quickActions.map((action) => (
-              <ActionCard key={action.href} action={action} />
-            ))}
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <PrimaryActionCard
+              title="Songwriting Studio"
+              description="Write lyrics, build chord progressions, and collaborate with AI-powered tools"
+              icon={Music2}
+              href="/songwriting"
+              badge="AI"
+            />
+            <PrimaryActionCard
+              title="Create Track"
+              description="Generate full AI-powered tracks instantly. Describe your sound and get music in seconds"
+              icon={FileMusic}
+              href="/create"
+            />
+            <PrimaryActionCard
+              title="New Project"
+              description="Start an album, EP, or single. Collaborate with your band and track milestones"
+              icon={Folder}
+              href="/projects/new"
+            />
           </div>
-        </div>
+        </section>
 
-        {/* Getting Started Guides with improved design */}
-        <div className="mb-12">
-          <h2 className="mb-6 flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-400">
-            <Play className="h-4 w-4" />
-            Quick Start Guides
-          </h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {quickGuides.map((guide) => (
-              <GuideCard key={guide.href} guide={guide} />
-            ))}
-          </div>
-        </div>
-
-        {/* Premium Tools with improved design */}
-        <div className="mb-12">
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-400">
-              <Lock className="h-4 w-4" />
-              Premium Tools
-            </h2>
-            <span className="rounded-lg bg-gradient-to-r from-orange-500/20 to-red-500/20 px-3 py-1 font-mono text-xs uppercase tracking-wider text-orange-400 ring-1 ring-orange-500/30">
-              Upgrade to Unlock
-            </span>
-          </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {premiumTools.map((tool) => (
-              <PremiumToolCard key={tool.title} tool={tool} onUpgrade={handleUpgrade} />
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Activity with Suspense and Error Boundary */}
-        {user && !loading && (
+        {/* ==================== RECENT + ACTIVITY (2 columns) ==================== */}
+        <section className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Recent Projects */}
           <div>
-            <h2 className="mb-6 flex items-center gap-2 font-mono text-sm uppercase tracking-wider text-zinc-400">
-              <TrendingUp className="h-4 w-4" />
+            <div className="mb-4 flex items-center justify-between">
+              <h2 
+                className="text-sm font-semibold uppercase tracking-widest"
+                style={{ color: 'var(--muted)' }}
+              >
+                Recent Projects
+              </h2>
+              <Link 
+                href="/projects" 
+                className="flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-80"
+                style={{ color: 'var(--accent)' }}
+              >
+                View All
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {loadingProjects ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--muted)' }} />
+                </div>
+              ) : recentProjects.length > 0 ? (
+                recentProjects.map((project) => (
+                  <RecentProjectCard
+                    key={project.id}
+                    project={project}
+                  />
+                ))
+              ) : (
+                <div 
+                  className="flex flex-col items-center justify-center rounded-2xl py-12 text-center"
+                  style={{ 
+                    background: 'var(--panel)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  <Folder className="mb-4 h-12 w-12" style={{ color: 'var(--muted)' }} />
+                  <p className="mb-4" style={{ color: 'var(--muted)' }}>No projects yet</p>
+                  <Link 
+                    href="/projects/new"
+                    className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-white transition-all hover:opacity-90"
+                    style={{ background: 'var(--accent)' }}
+                  >
+                    <Plus className="h-4 w-4" />
+                    Create Your First Project
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Activity Feed */}
+          <div>
+            <h2 
+              className="mb-4 text-sm font-semibold uppercase tracking-widest"
+              style={{ color: 'var(--muted)' }}
+            >
               Recent Activity
             </h2>
-            <div className="rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-6 backdrop-blur-sm">
-              <SilentErrorBoundary 
-                fallback={
-                  <div className="py-8 text-center text-sm text-zinc-500">
-                    Activity feed temporarily unavailable
-                  </div>
-                }
-              >
-                <Suspense 
+            <div 
+              className="rounded-2xl p-5"
+              style={{ 
+                background: 'var(--panel)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              {user && !loading && (
+                <SilentErrorBoundary 
                   fallback={
-                    <div className="flex items-center justify-center py-8">
-                      <Loader2 className="h-6 w-6 animate-spin text-zinc-600" />
+                    <div className="py-8 text-center" style={{ color: 'var(--muted)' }}>
+                      Activity feed temporarily unavailable
                     </div>
                   }
                 >
-                  <CompactActivityFeed channelName="activity:global" limit={10} />
-                </Suspense>
-              </SilentErrorBoundary>
+                  <Suspense 
+                    fallback={
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--muted)' }} />
+                      </div>
+                    }
+                  >
+                    <CompactActivityFeed channelName="activity:global" limit={8} />
+                  </Suspense>
+                </SilentErrorBoundary>
+              )}
             </div>
           </div>
-        )}
-      </div>
+        </section>
 
-      {/* Upgrade Modal */}
-      {isOpen && <UpgradeModal isOpen={isOpen} onClose={hideUpgradeModal} {...modalProps} />}
+        {/* ==================== FEATURE TILES ==================== */}
+        <section>
+          <h2 
+            className="mb-6 text-sm font-semibold uppercase tracking-widest"
+            style={{ color: 'var(--muted)' }}
+          >
+            Explore Features
+          </h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            <FeatureTile
+              title="Shows"
+              icon={Calendar}
+              href="/shows"
+              description="Gig calendar"
+            />
+            <FeatureTile
+              title="Setlists"
+              icon={ListMusic}
+              href="/setlists"
+              description="Smart builder"
+            />
+            <FeatureTile
+              title="Studio"
+              icon={Mic2}
+              href="/studio"
+              description="Record & mix"
+            />
+            <FeatureTile
+              title="Library"
+              icon={Library}
+              href="/library"
+              description="Your assets"
+            />
+            <FeatureTile
+              title="Explore"
+              icon={Compass}
+              href="/explore"
+              description="Community"
+            />
+            <FeatureTile
+              title="Tours"
+              icon={TrendingUp}
+              href="/tours"
+              description="Management"
+            />
+          </div>
+        </section>
+
+      </div>
     </div>
   );
 }

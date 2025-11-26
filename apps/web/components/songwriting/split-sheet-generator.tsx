@@ -3,7 +3,8 @@
 import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
 import { Download, FileText, Send, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import type { CopyrightInfo, SongSplit } from './copyright-manager';
+
+import type { CopyrightInfo } from './copyright-manager';
 
 type SplitSheetGeneratorProps = {
   songTitle: string;

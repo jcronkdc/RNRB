@@ -1,13 +1,13 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { formatTime } from '@/lib/format-date';
 import {
   DndContext,
   closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
+  type DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -41,21 +41,22 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useState, useMemo, useEffect, useCallback, memo } from 'react';
+import { useState, useMemo, useEffect, useCallback, memo, useRef } from 'react';
 
 import { GranularChordEditor } from './granular-chord-editor';
 import { KeyAnalyzer } from './key-analyzer';
 
 import { CursorOverlay } from '@/components/cursor-overlay';
+import { useBlockEditing } from '@/hooks/use-block-editing';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { useSongSuggestions } from '@/hooks/use-song-suggestions';
-import { useBlockEditing } from '@/hooks/use-block-editing';
+import { formatTime } from '@/lib/format-date';
 
 
 // Dynamically import chat with loading state
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {
   ssr: false,
-  loading: () => <div className="flex items-center justify-center p-4"><div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>,
+  loading: () => <div className="flex items-center justify-center p-4"><div className="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent" /></div>,
 });
 
 type ChordPlacement = {
@@ -209,7 +210,7 @@ export function CollaborativeVisualBuilder({
   isOwner?: boolean;
 }) {
   const [blocks, setBlocks] = useState<SongBlock[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [_activeId, setActiveId] = useState<string | null>(null);
   const [chatExpanded, setChatExpanded] = useState(false);
   const [showCollaborators, setShowCollaborators] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -219,6 +220,16 @@ export function CollaborativeVisualBuilder({
   const [inviteEmail, setInviteEmail] = useState('');
   const [history, setHistory] = useState<{ blocks: SongBlock[]; timestamp: Date }[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  
+  // Use refs for keyboard handlers to avoid stale closures
+  const blocksRef = useRef<SongBlock[]>(blocks);
+  const historyRef = useRef<{ blocks: SongBlock[]; timestamp: Date }[]>(history);
+  const historyIndexRef = useRef<number>(historyIndex);
+  
+  // Keep refs in sync
+  useEffect(() => { blocksRef.current = blocks; }, [blocks]);
+  useEffect(() => { historyRef.current = history; }, [history]);
+  useEffect(() => { historyIndexRef.current = historyIndex; }, [historyIndex]);
 
   // Memoize sensors to prevent recreation on every render
   const sensors = useSensors(
@@ -238,7 +249,7 @@ export function CollaborativeVisualBuilder({
   // Block editing tracking
   const {
     activeEditors,
-    userColor,
+    userColor: _userColor,
     notifyEditing,
     notifyStopEditing,
   } = useBlockEditing({
@@ -254,15 +265,15 @@ export function CollaborativeVisualBuilder({
     chordSuggestions,
     isConnected: suggestionsConnected,
     error: suggestionsError,
-    isOwner: canManageSuggestions,
-    suggestLyricChange,
-    suggestChord,
+    isOwner: _canManageSuggestions,
+    suggestLyricChange: _suggestLyricChange,
+    suggestChord: _suggestChord,
     acceptSuggestion,
     rejectSuggestion,
     acceptChordSuggestion,
     rejectChordSuggestion,
-    getSuggestionsForBlock,
-    getChordSuggestionsForBlock,
+    getSuggestionsForBlock: _getSuggestionsForBlock,
+    getChordSuggestionsForBlock: _getChordSuggestionsForBlock,
   } = useSongSuggestions({
     channelName: `songwriting:${projectSlug}-suggestions`,
     userId: currentUser.userId,
@@ -279,23 +290,38 @@ export function CollaborativeVisualBuilder({
     );
   }, [suggestions, chordSuggestions]);
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts - uses refs to avoid stale closures
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Cmd/Ctrl + Z = Undo
+      // Cmd/Ctrl + Z = Undo (using refs to get current values)
       if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
         e.preventDefault();
-        undo();
+        if (historyIndexRef.current > 0) {
+          const newIndex = historyIndexRef.current - 1;
+          setHistoryIndex(newIndex);
+          const restored = historyRef.current[newIndex].blocks;
+          setBlocks(restored);
+          onSongChange?.(restored);
+        }
       }
       // Cmd/Ctrl + Shift + Z = Redo
       if ((e.metaKey || e.ctrlKey) && e.key === 'z' && e.shiftKey) {
         e.preventDefault();
-        redo();
+        if (historyIndexRef.current < historyRef.current.length - 1) {
+          const newIndex = historyIndexRef.current + 1;
+          setHistoryIndex(newIndex);
+          const restored = historyRef.current[newIndex].blocks;
+          setBlocks(restored);
+          onSongChange?.(restored);
+        }
       }
       // Cmd/Ctrl + S = Export
       if ((e.metaKey || e.ctrlKey) && e.key === 's') {
         e.preventDefault();
-        exportToClipboard();
+        const text = blocksRef.current.map((b) => `[${b.type.toUpperCase()}]\n${b.content}`).join('\n\n');
+        navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       }
       // Cmd/Ctrl + K = Show shortcuts
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -312,7 +338,7 @@ export function CollaborativeVisualBuilder({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [historyIndex, history.length, blocks]);
+  }, [onSongChange]); // Only onSongChange callback as dependency
 
   // Memoize callbacks to prevent recreation
   const saveToHistory = useCallback((newBlocks: SongBlock[]) => {
@@ -338,7 +364,7 @@ export function CollaborativeVisualBuilder({
     });
   }, [onSongChange, saveToHistory]);
 
-  const handleDragEnd = useCallback((event: any) => {
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
     setActiveId(null);
     if (!over || active.id === over.id) return;
@@ -637,8 +663,11 @@ export function CollaborativeVisualBuilder({
       {/* TOKYO SUBWAY MODAL: Collaborators & Invite (Max 3 clicks to invite someone) */}
       {showCollaborators && (
         <div
+          role="button"
+          tabIndex={0}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setShowCollaborators(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowCollaborators(false)}
         >
           <Card className="rnrb-card w-full max-w-md p-8" onClick={(e) => e.stopPropagation()}>
             <div className="mb-6 flex items-center justify-between">
@@ -702,7 +731,7 @@ export function CollaborativeVisualBuilder({
               </div>
               <p className="text-muted-foreground mt-3 flex items-center gap-1 text-xs">
                 <Sparkles className="h-3 w-3 text-purple-400" />
-                They'll get an email invite to join this songwriting session
+                They&apos;ll get an email invite to join this songwriting session
               </p>
             </div>
           </Card>
@@ -712,8 +741,11 @@ export function CollaborativeVisualBuilder({
       {/* TOKYO SUBWAY MODAL: Version History (1 click to restore) */}
       {showHistory && (
         <div
+          role="button"
+          tabIndex={0}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setShowHistory(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowHistory(false)}
         >
           <Card
             className="rnrb-card flex max-h-[600px] w-full max-w-lg flex-col overflow-hidden p-8"
@@ -742,7 +774,7 @@ export function CollaborativeVisualBuilder({
                 <Clock className="text-muted-foreground/50 mb-4 h-16 w-16" />
                 <h4 className="mb-2 text-lg font-semibold">No History Yet</h4>
                 <p className="text-muted-foreground text-sm">
-                  Make some changes and they'll be saved here automatically
+                  Make some changes and they&apos;ll be saved here automatically
                 </p>
               </div>
             ) : (
@@ -800,8 +832,11 @@ export function CollaborativeVisualBuilder({
       {/* Suggestions Review Modal (Owner Only) */}
       {showSuggestions && isOwner && (
         <div
+          role="button"
+          tabIndex={0}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setShowSuggestions(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowSuggestions(false)}
         >
           <Card
             className="rnrb-card flex max-h-[600px] w-full max-w-2xl flex-col overflow-hidden p-8"

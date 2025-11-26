@@ -226,7 +226,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                         className={`rounded px-1 py-0.5 transition-all ${
                           hasChord
                             ? 'bg-zinc-800 font-medium text-white hover:scale-105 hover:bg-zinc-700'
-                            : 'text-white hover:bg-zinc-800 hover:scale-105'
+                            : 'text-white hover:scale-105 hover:bg-zinc-800'
                         }`}
                         title={hasChord ? `${chord} - Click to remove` : 'Click to add chord'}
                         aria-label={hasChord ? `Remove ${chord} chord` : 'Add chord'}
@@ -278,7 +278,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="bg-zinc-900 border border-zinc-800 w-full max-w-md rounded p-6 shadow-2xl"
+              className="w-full max-w-md rounded border border-zinc-800 bg-zinc-900 p-6 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-4 flex items-center justify-between">
@@ -295,14 +295,29 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                 </button>
               </div>
 
-              {/* Common Chords Grid */}
-              <div className="mb-4 grid grid-cols-5 gap-2">
-                {COMMON_CHORDS.map((chord, index) => (
+              {/* Common Chords Grid - optimized animation with group stagger */}
+              <motion.div 
+                className="mb-4 grid grid-cols-5 gap-2"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.01, // Fast 10ms stagger (was 20ms per item)
+                      delayChildren: 0.05,
+                    },
+                  },
+                }}
+              >
+                {COMMON_CHORDS.map((chord) => (
                   <motion.button
                     key={chord}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.02 }}
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.9 },
+                      visible: { opacity: 1, scale: 1 },
+                    }}
                     onClick={() => addChord(chord)}
                     className="min-w-[48px] rounded-lg border-2 border-green-500/30 bg-gradient-to-br from-green-500/10 to-green-500/5 px-2 py-2 text-sm font-bold text-green-600 transition-all hover:scale-105 hover:border-green-500/60 hover:shadow-lg dark:text-green-400"
                     aria-label={`Add ${chord} chord`}
@@ -310,7 +325,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                     {chord}
                   </motion.button>
                 ))}
-              </div>
+              </motion.div>
 
               {/* Custom Chord Input */}
               <div className="border-border border-t pt-4">

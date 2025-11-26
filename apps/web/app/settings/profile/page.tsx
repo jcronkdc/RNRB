@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { type User } from '@supabase/supabase-js';
 import {
   Phone,
   Globe,
@@ -14,10 +13,11 @@ import {
   Youtube,
   Twitter,
 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { supabase } from '@/lib/supabase';
+import { createBrowserClient } from '@/lib/supabase';
 
 
 type ProfileData = {
@@ -39,8 +39,9 @@ type ProfileData = {
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  const loading = status === 'loading';
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -64,55 +65,45 @@ export default function ProfileSettingsPage() {
   const [uploadingPicture, setUploadingPicture] = useState(false);
   const [uploadingMusic, setUploadingMusic] = useState(false);
 
+  // Redirect to auth if not logged in, and set initial profile
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-      } else {
-        setUser(user);
-        // Load existing profile from user_metadata
-        if (user.user_metadata) {
-          setProfile({
-            username: user.user_metadata.username || '',
-            display_name: user.user_metadata.display_name || user.email?.split('@')[0] || '',
-            bio: user.user_metadata.bio || '',
-            profile_picture_url: user.user_metadata.profile_picture_url || '',
-            is_public: user.user_metadata.is_public !== false,
-            website: user.user_metadata.website || '',
-            instagram: user.user_metadata.instagram || '',
-            youtube: user.user_metadata.youtube || '',
-            twitter: user.user_metadata.twitter || '',
-            phone: user.user_metadata.phone || '',
-            phone_public: user.user_metadata.phone_public || false,
-            email_public: user.user_metadata.email_public !== false,
-            instruments: user.user_metadata.instruments || [],
-            genres: user.user_metadata.genres || [],
-          });
-        }
-        setLoading(false);
-      }
-    });
-  }, [router]);
+    if (status === 'unauthenticated') {
+      router.push('/auth');
+    } else if (user) {
+      // Set display name from session
+      setProfile(prev => ({
+        ...prev,
+        display_name: user.name || user.email?.split('@')[0] || '',
+        profile_picture_url: user.image || '',
+      }));
+    }
+  }, [status, router, user]);
 
   const handleSaveProfile = async () => {
     setSaving(true);
     setMessage(null);
 
     try {
-      const { error } = await supabase!.auth.updateUser({
-        data: profile,
+      // Save profile to database via API
+      const response = await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profile),
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to update profile');
+      }
 
       setMessage({
         type: 'success',
         text: 'Profile updated successfully!',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       setMessage({
         type: 'error',
-        text: error.message || 'Failed to update profile',
+        text: error instanceof Error ? error.message : 'Failed to update profile',
       });
     } finally {
       setSaving(false);
@@ -127,10 +118,13 @@ export default function ProfileSettingsPage() {
 
     try {
       // Upload to Supabase Storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const supabase = createBrowserClient();
+      if (!supabase) throw new Error('Storage not available');
 
-      const { data, error } = await supabase!.storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+
+      const { error } = await supabase.storage
         .from('profile-pictures')
         .upload(fileName, file, {
           cacheControl: '3600',
@@ -142,13 +136,13 @@ export default function ProfileSettingsPage() {
       // Get public URL
       const {
         data: { publicUrl },
-      } = supabase!.storage.from('profile-pictures').getPublicUrl(fileName);
+      } = supabase.storage.from('profile-pictures').getPublicUrl(fileName);
 
       // Update profile
       setProfile({ ...profile, profile_picture_url: publicUrl });
       setMessage({ type: 'success', text: 'Profile picture uploaded!' });
-    } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'Upload failed' });
+    } catch (error: unknown) {
+      setMessage({ type: 'error', text: error instanceof Error ? error.message : 'Upload failed' });
     } finally {
       setUploadingPicture(false);
     }

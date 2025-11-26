@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { getCurrentUser } from '@/lib/supabase';
+import { handleApiError } from '@/lib/errors';
+import { requireAuth } from '@/lib/session';
 
 // Email sending via Resend (configured in environment)
 // Falls back to logging if EMAIL_SERVER_URL not set
@@ -8,10 +9,7 @@ import { getCurrentUser } from '@/lib/supabase';
 export async function POST(request: NextRequest) {
   try {
     // ✅ SECURITY: Require authentication to prevent spam
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    }
+    await requireAuth();
 
     const { inviteEmail, projectName, projectSlug, inviterName, inviterEmail } =
       await request.json();
@@ -121,8 +119,7 @@ If you didn't expect this invitation, you can safely ignore this email.
       inviteLink,
       message: 'Invite created. Share the link with your collaborator.',
     });
-  } catch (error: any) {
-    console.error('Invite send error:', error);
-    return NextResponse.json({ error: error.message || 'Failed to send invite' }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error, { route: '/api/invites/send', method: 'POST' });
   }
 }

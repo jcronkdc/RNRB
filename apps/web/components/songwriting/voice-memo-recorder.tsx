@@ -8,9 +8,22 @@ import { formatDate } from '@/lib/format-date';
 type VoiceMemo = {
   id: string;
   name: string;
-  url: string;
+  url: string; // Base64 data URL for persistence
   duration: number;
   createdAt: Date;
+};
+
+/**
+ * Convert a Blob to a base64 data URL for localStorage persistence
+ * Blob URLs become invalid after page refresh, so we store the actual data
+ */
+const blobToDataUrl = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 };
 
 type VoiceMemoRecorderProps = {
@@ -35,7 +48,14 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
   useEffect(() => {
     const savedMemos = localStorage.getItem(`voice-memos-${songId}`);
     if (savedMemos) {
-      setMemos(JSON.parse(savedMemos));
+      // Parse JSON and convert createdAt strings back to Date objects
+      // JSON.parse returns dates as ISO strings, not Date objects
+      const parsed = JSON.parse(savedMemos) as Array<Omit<VoiceMemo, 'createdAt'> & { createdAt: string }>;
+      const hydrated: VoiceMemo[] = parsed.map((memo) => ({
+        ...memo,
+        createdAt: new Date(memo.createdAt),
+      }));
+      setMemos(hydrated);
     }
   }, [songId]);
 
@@ -99,30 +119,42 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
     }
   };
 
-  const saveMemo = () => {
+  const saveMemo = async () => {
     if (!audioUrl || !audioBlob) return;
 
-    const newMemo: VoiceMemo = {
-      id: `memo-${Date.now()}`,
-      name: `Voice Memo ${new Date().toLocaleString()}`,
-      url: audioUrl,
-      duration,
-      createdAt: new Date(),
-    };
+    try {
+      // Convert blob to base64 data URL for persistence
+      // Blob URLs become invalid after page refresh
+      const dataUrl = await blobToDataUrl(audioBlob);
 
-    const updatedMemos = [...memos, newMemo];
-    setMemos(updatedMemos);
-    
-    // Save to localStorage
-    localStorage.setItem(`voice-memos-${songId}`, JSON.stringify(updatedMemos));
-    
-    // Reset recording state
-    setAudioUrl(null);
-    setAudioBlob(null);
-    setDuration(0);
-    
-    if (onMemoCreated) {
-      onMemoCreated(newMemo);
+      const newMemo: VoiceMemo = {
+        id: `memo-${Date.now()}`,
+        name: `Voice Memo ${new Date().toLocaleString()}`,
+        url: dataUrl, // Store as data URL, not blob URL
+        duration,
+        createdAt: new Date(),
+      };
+
+      const updatedMemos = [...memos, newMemo];
+      setMemos(updatedMemos);
+      
+      // Save to localStorage with data URL (persists across refreshes)
+      localStorage.setItem(`voice-memos-${songId}`, JSON.stringify(updatedMemos));
+      
+      // Revoke the temporary blob URL to free memory
+      URL.revokeObjectURL(audioUrl);
+      
+      // Reset recording state
+      setAudioUrl(null);
+      setAudioBlob(null);
+      setDuration(0);
+      
+      if (onMemoCreated) {
+        onMemoCreated(newMemo);
+      }
+    } catch (error) {
+      console.error('Failed to save voice memo:', error);
+      alert('Failed to save voice memo. Please try again.');
     }
   };
 
@@ -230,6 +262,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
 
         {/* Hidden audio element for playback */}
         {audioUrl && (
+          // eslint-disable-next-line jsx-a11y/media-has-caption -- Voice memos are user recordings without transcripts
           <audio
             ref={audioRef}
             src={audioUrl}

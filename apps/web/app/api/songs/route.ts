@@ -1,23 +1,20 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { handleApiError } from '@/lib/errors';
+import { requireAuth } from '@/lib/session';
 
 /**
  * GET /api/songs
  * Get all standalone songs for the authenticated user (not in projects)
  */
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const user = await requireAuth();
 
     const songs = await db.song.findMany({
       where: {
-        userId: session.user.id,
+        userId: user.id,
         projectId: null, // Standalone songs only
         archived: false,
       },
@@ -42,8 +39,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ songs });
   } catch (error) {
-    console.error('GET /api/songs error:', error);
-    return NextResponse.json({ error: 'Failed to fetch songs' }, { status: 500 });
+    return handleApiError(error, { route: '/api/songs', method: 'GET' });
   }
 }
 
@@ -53,11 +49,7 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const user = await requireAuth();
 
     const body = await req.json();
     const {
@@ -73,7 +65,7 @@ export async function POST(req: NextRequest) {
 
     const song = await db.song.create({
       data: {
-        userId: session.user.id,
+        userId: user.id,
         title,
         key,
         tempo: tempo ? parseInt(tempo) : null,
@@ -88,7 +80,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ song }, { status: 201 });
   } catch (error) {
-    console.error('POST /api/songs error:', error);
-    return NextResponse.json({ error: 'Failed to create song' }, { status: 500 });
+    return handleApiError(error, { route: '/api/songs', method: 'POST' });
   }
 }

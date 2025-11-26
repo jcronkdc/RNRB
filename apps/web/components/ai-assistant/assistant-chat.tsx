@@ -4,8 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { X, Minus, Send, Sparkles, MessageSquare } from 'lucide-react';
 
 import { useAssistant } from '@/hooks/use-assistant';
-import { Button } from '@cronkwaters/ui/components/button';
-import { cn } from '@cronkwaters/ui/lib/utils';
+import { Button, cn } from '@cronkwaters/ui';
 
 export function AssistantChat() {
   const [isOpen, setIsOpen] = useState(false);

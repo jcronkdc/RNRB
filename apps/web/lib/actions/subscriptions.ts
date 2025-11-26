@@ -4,6 +4,7 @@ import { prisma } from '@cronkwaters/db';
 import { revalidatePath } from 'next/cache';
 import type Stripe from 'stripe';
 
+import { getCurrentUser } from '@/lib/session';
 import {
   createStripeCustomer,
   createCheckoutSession,
@@ -12,7 +13,6 @@ import {
   cancelSubscription as stripeCancelSubscription,
   reactivateSubscription as stripeReactivateSubscription,
 } from '@/lib/stripe-subscriptions';
-import { getCurrentUser } from '@/lib/supabase';
 
 /**
  * Get current user's subscription details
@@ -21,12 +21,12 @@ export async function getUserSubscription() {
   try {
     const user = await getCurrentUser();
 
-    if (!user) {
+    if (!user?.id) {
       throw new Error('Not authenticated');
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { email: user.email! },
+      where: { id: user.id },
       select: {
         id: true,
         stripeCustomerId: true,
@@ -58,12 +58,12 @@ export async function getOrCreateStripeCustomer() {
   try {
     const user = await getCurrentUser();
 
-    if (!user) {
+    if (!user?.id) {
       throw new Error('Not authenticated');
     }
 
-    let dbUser = await prisma.user.findUnique({
-      where: { email: user.email! },
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
       select: {
         id: true,
         email: true,
@@ -73,20 +73,7 @@ export async function getOrCreateStripeCustomer() {
     });
 
     if (!dbUser) {
-      // Create user if doesn't exist (should rarely happen)
-      dbUser = await prisma.user.create({
-        data: {
-          email: user.email!,
-          name: user.user_metadata?.name || null,
-          emailVerified: new Date(),
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          stripeCustomerId: true,
-        },
-      });
+      throw new Error('User not found in database');
     }
 
     // If user already has Stripe customer ID, return it
@@ -117,7 +104,7 @@ export async function createSubscriptionCheckout(tier: 'creator' | 'studio'): Pr
   try {
     const user = await getCurrentUser();
 
-    if (!user) {
+    if (!user?.id) {
       throw new Error('Not authenticated');
     }
 
@@ -131,15 +118,6 @@ export async function createSubscriptionCheckout(tier: 'creator' | 'studio'): Pr
       throw new Error(`Price ID for ${tier} tier is not configured`);
     }
 
-    const dbUser = await prisma.user.findUnique({
-      where: { email: user.email! },
-      select: { id: true },
-    });
-
-    if (!dbUser) {
-      throw new Error('User not found');
-    }
-
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
     const session = await createCheckoutSession(
@@ -147,7 +125,7 @@ export async function createSubscriptionCheckout(tier: 'creator' | 'studio'): Pr
       priceId,
       `${appUrl}/settings/billing?success=true`,
       `${appUrl}/settings/billing?canceled=true`,
-      dbUser.id
+      user.id
     );
 
     if (!session.url) {
@@ -168,12 +146,12 @@ export async function createBillingPortalSession(): Promise<string> {
   try {
     const user = await getCurrentUser();
 
-    if (!user) {
+    if (!user?.id) {
       throw new Error('Not authenticated');
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { email: user.email! },
+      where: { id: user.id },
       select: { stripeCustomerId: true },
     });
 
@@ -206,12 +184,12 @@ export async function getSubscriptionDetails() {
   try {
     const user = await getCurrentUser();
 
-    if (!user) {
+    if (!user?.id) {
       throw new Error('Not authenticated');
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { email: user.email! },
+      where: { id: user.id },
       select: {
         id: true,
         stripeCustomerId: true,
@@ -257,12 +235,12 @@ export async function cancelUserSubscription() {
   try {
     const user = await getCurrentUser();
 
-    if (!user) {
+    if (!user?.id) {
       throw new Error('Not authenticated');
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { email: user.email! },
+      where: { id: user.id },
       select: {
         id: true,
         stripeSubscriptionId: true,
@@ -301,12 +279,12 @@ export async function reactivateUserSubscription() {
   try {
     const user = await getCurrentUser();
 
-    if (!user) {
+    if (!user?.id) {
       throw new Error('Not authenticated');
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { email: user.email! },
+      where: { id: user.id },
       select: {
         id: true,
         stripeSubscriptionId: true,

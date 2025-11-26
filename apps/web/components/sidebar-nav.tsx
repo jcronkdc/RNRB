@@ -20,11 +20,11 @@ import {
   LogOut,
   Loader2,
 } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import { signOut } from '@/lib/supabase';
 import { useToast } from '@/hooks/useToast';
 
 interface NavItem {
@@ -76,19 +76,8 @@ export function SidebarNav() {
     setSigningOut(true);
     
     try {
-      const { success, error } = await signOut();
-      
-      if (success) {
-        showToast('Successfully signed out', 'success');
-        setTimeout(() => {
-          router.push('/');
-        }, 500);
-      } else {
-        showToast(error?.message || 'Failed to sign out, but session cleared', 'warning');
-        setTimeout(() => {
-          router.push('/');
-        }, 1000);
-      }
+      await signOut({ callbackUrl: '/' });
+      showToast('Successfully signed out', 'success');
     } catch (error) {
       showToast('An unexpected error occurred while signing out', 'error');
       setTimeout(() => {

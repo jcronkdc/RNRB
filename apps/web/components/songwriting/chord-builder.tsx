@@ -8,6 +8,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  type DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -19,7 +20,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Plus, X, Music, Sparkles, GripVertical, LayoutGrid, List, Zap, TrendingUp } from 'lucide-react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 type ChordBlock = {
   id: string;
@@ -160,7 +161,7 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
     analysis?: Array<{ chord: string; numeral: string; function: string }>;
     suggestions?: { nextChords: string[]; reason: string };
   } | null>(null);
-  const [analyzingChords, setAnalyzingChords] = useState(false);
+  const [_analyzingChords, setAnalyzingChords] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -169,49 +170,56 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
     })
   );
   
-  const analyzeProgression = useCallback(async () => {
-    if (chords.length < 2) return;
-    
-    setAnalyzingChords(true);
-    try {
-      const response = await fetch('/api/chord-analyzer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chords: chords.map((c) => c.chord) }),
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setAnalysis(data);
-      }
-    } catch (error) {
-      console.error('Chord analysis failed:', error);
-    } finally {
-      setAnalyzingChords(false);
-    }
-  }, [chords]);
-  
   // Auto-analyze chords when progression changes
+  // Using a stable reference to chord strings to avoid infinite loops
+  const chordStrings = chords.map((c) => c.chord).join(',');
+  const chordCount = chords.length;
+  
   useEffect(() => {
-    if (chords.length >= 2) {
-      analyzeProgression();
-    } else {
+    if (chordCount < 2) {
       setAnalysis(null);
+      return;
     }
-  }, [chords, analyzeProgression]);
+    
+    // Parse chord strings back to array for API call
+    const chordsArray = chordStrings.split(',').filter(Boolean);
+    
+    // Debounce analysis to avoid rapid API calls
+    const timeoutId = setTimeout(async () => {
+      setAnalyzingChords(true);
+      try {
+        const response = await fetch('/api/chord-analyzer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chords: chordsArray }),
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setAnalysis(data);
+        }
+      } catch (error) {
+        console.error('Chord analysis failed:', error);
+      } finally {
+        setAnalyzingChords(false);
+      }
+    }, 500); // 500ms debounce
+    
+    return () => clearTimeout(timeoutId);
+  }, [chordStrings, chordCount]); // Depend on string representation to avoid object reference issues
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      setChords((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
-        const newOrder = arrayMove(items, oldIndex, newIndex);
-        onChange(newOrder);
-        return newOrder;
-      });
-    }
+    if (!over || active.id === over.id) return;
+
+    setChords((items) => {
+      const oldIndex = items.findIndex((item) => item.id === active.id);
+      const newIndex = items.findIndex((item) => item.id === over.id);
+      const newOrder = arrayMove(items, oldIndex, newIndex);
+      onChange(newOrder);
+      return newOrder;
+    });
   };
 
   const addChord = (chord: string) => {
@@ -315,8 +323,8 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
           <div className="rnrb-card mt-4 border-purple-500/20 bg-purple-500/5 p-3">
             <p className="text-muted-foreground flex items-center gap-1 text-xs">
               <Sparkles className="h-3 w-3 text-purple-400" />
-              Need suggestions? Ask AI in chat: "What chord goes after{' '}
-              {chords[chords.length - 1]?.chord || 'Am'}?"
+              Need suggestions? Ask AI in chat: &quot;What chord goes after{' '}
+              {chords[chords.length - 1]?.chord || 'Am'}?&quot;
             </p>
           </div>
         </Card>
@@ -331,10 +339,10 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
             </div>
             <h3 className="font-display mb-3 text-2xl font-bold">Your Canvas Awaits</h3>
             <p className="text-muted-foreground mb-4 max-w-md text-lg">
-              Click "Add Chord" above to start building your progression.
+              Click &quot;Add Chord&quot; above to start building your progression.
             </p>
             <p className="text-brand-primary text-sm font-medium italic">
-              "Every song starts with a single chord"
+              &quot;Every song starts with a single chord&quot;
             </p>
           </div>
         ) : (
@@ -399,13 +407,13 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
           
           {/* Chord Analysis */}
           {analysis && analysis.mostLikelyKey && (
-            <div className="rnrb-card border-2 border-purple-500/20 bg-gradient-to-r from-purple-500/5 to-blue-500/5 p-6 space-y-4">
+            <div className="rnrb-card space-y-4 border-2 border-purple-500/20 bg-gradient-to-r from-purple-500/5 to-blue-500/5 p-6">
               <div className="flex items-start gap-4">
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-500/10">
                   <Zap className="h-5 w-5 text-purple-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-purple-400 mb-2 text-sm font-semibold">AI Analysis</p>
+                  <p className="mb-2 text-sm font-semibold text-purple-400">AI Analysis</p>
                   <p className="text-foreground text-lg font-bold">
                     Key: {analysis.mostLikelyKey}
                     <span className="ml-2 text-sm text-gray-400">
@@ -419,10 +427,10 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
                       {analysis.analysis.map((item, idx) => (
                         <div
                           key={idx}
-                          className="bg-purple-500/10 border border-purple-500/30 rounded-lg px-3 py-1.5"
+                          className="rounded-lg border border-purple-500/30 bg-purple-500/10 px-3 py-1.5"
                         >
-                          <span className="text-purple-300 font-bold">{item.chord}</span>
-                          <span className="text-gray-400 text-xs ml-2">
+                          <span className="font-bold text-purple-300">{item.chord}</span>
+                          <span className="ml-2 text-xs text-gray-400">
                             ({item.numeral} - {item.function})
                           </span>
                         </div>
@@ -435,9 +443,9 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
               {/* Next Chord Suggestions */}
               {analysis.suggestions && analysis.suggestions.nextChords.length > 0 && (
                 <div className="border-t border-purple-500/20 pt-4">
-                  <div className="flex items-center gap-2 mb-3">
+                  <div className="mb-3 flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-blue-400" />
-                    <p className="text-blue-400 text-sm font-semibold">
+                    <p className="text-sm font-semibold text-blue-400">
                       Suggested Next Chords:
                     </p>
                   </div>
@@ -446,13 +454,13 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
                       <button
                         key={idx}
                         onClick={() => addChord(suggestion)}
-                        className="font-display border-blue-500/40 bg-blue-500/10 text-blue-300 hover:border-blue-500/60 hover:bg-blue-500/20 rounded-lg border-2 px-4 py-2 text-base font-bold shadow-md transition-all duration-200 hover:scale-105"
+                        className="font-display rounded-lg border-2 border-blue-500/40 bg-blue-500/10 px-4 py-2 text-base font-bold text-blue-300 shadow-md transition-all duration-200 hover:scale-105 hover:border-blue-500/60 hover:bg-blue-500/20"
                       >
                         {suggestion}
                       </button>
                     ))}
                   </div>
-                  <p className="text-gray-500 text-xs mt-2">{analysis.suggestions.reason}</p>
+                  <p className="mt-2 text-xs text-gray-500">{analysis.suggestions.reason}</p>
                 </div>
               )}
             </div>

@@ -1,8 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
+
+import { handleApiError, AppError } from '@/lib/errors';
+import { requireAuth } from '@/lib/session';
 import { createBrowserClient } from '@/lib/supabase';
-import { prisma } from '@cronkwaters/db';
+import { checkRateLimit, uploadLimiter } from '@/lib/rate-limit';
 import { getUsageSummary } from '@/lib/usage-tracking';
+import { prisma } from '@cronkwaters/db';
+import { z } from 'zod';
+
+// Valid audio MIME types
+const VALID_AUDIO_TYPES = [
+  'audio/mpeg',
+  'audio/wav',
+  'audio/aiff',
+  'audio/flac',
+  'audio/ogg',
+  'audio/x-m4a',
+  'audio/mp4',
+];
+
+// Valid file extensions (fallback for when MIME type is unreliable)
+const VALID_EXTENSIONS = /\.(mp3|wav|aiff|flac|ogg|m4a)$/i;
+
+// Library file type enum - must match Prisma LibraryFileType
+const libraryFileTypeSchema = z.enum([
+  'stem',
+  'demo',
+  'sample',
+  'loop',
+  'other',
+]);
+
+// Tags validation schema
+const tagsSchema = z.array(z.string().max(50)).max(20).default([]);
 
 /**
  * POST /api/library/upload
@@ -10,85 +40,90 @@ import { getUsageSummary } from '@/lib/usage-tracking';
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const user = await requireAuth();
+
+    // Rate limiting
+    await checkRateLimit(uploadLimiter, user.id);
 
     const formData = await req.formData();
-    const file = formData.get('file') as File;
-    const type = formData.get('type') as string;
-    const tags = formData.get('tags') as string;
+    const file = formData.get('file');
+    const typeRaw = formData.get('type');
+    const tagsRaw = formData.get('tags');
 
-    if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    // Validate file exists and is a File
+    if (!file || !(file instanceof File)) {
+      throw AppError.badRequest('No file provided or invalid file');
     }
 
     // Validate file type
-    const validTypes = [
-      'audio/mpeg',
-      'audio/wav',
-      'audio/aiff',
-      'audio/flac',
-      'audio/ogg',
-      'audio/x-m4a',
-      'audio/mp4',
-    ];
-    
-    if (!validTypes.includes(file.type) && !file.name.match(/\.(mp3|wav|aiff|flac|ogg|m4a)$/i)) {
-      return NextResponse.json(
-        { error: 'Invalid file type. Please upload audio files only.' },
-        { status: 400 }
-      );
+    const isValidMime = VALID_AUDIO_TYPES.includes(file.type);
+    const isValidExtension = VALID_EXTENSIONS.test(file.name);
+
+    if (!isValidMime && !isValidExtension) {
+      throw AppError.badRequest('Invalid file type. Please upload audio files only (mp3, wav, aiff, flac, ogg, m4a)');
     }
 
-    // Validate file size (max 500MB for Studio, 100MB for Creator, 50MB for Free)
-    const usage = await getUsageSummary(session.user.id);
-    const tierMaxSize = 
-      usage.tier === 'studio' ? 500 * 1024 * 1024 : // 500MB
-      usage.tier === 'creator' ? 100 * 1024 * 1024 : // 100MB
-      50 * 1024 * 1024; // 50MB for free
-    
+    // Validate and parse type
+    const type = libraryFileTypeSchema.safeParse(typeRaw);
+    const fileType = type.success ? type.data : 'other';
+
+    // Validate and parse tags
+    let parsedTags: string[] = [];
+    if (tagsRaw && typeof tagsRaw === 'string') {
+      try {
+        const parsed = JSON.parse(tagsRaw);
+        const validated = tagsSchema.safeParse(parsed);
+        parsedTags = validated.success ? validated.data : [];
+      } catch {
+        // Invalid JSON, ignore tags
+        parsedTags = [];
+      }
+    }
+
+    // Get usage summary for tier-based limits
+    const usage = await getUsageSummary(user.id);
+
+    // Validate file size based on tier
+    const tierMaxSize =
+      usage.tier === 'studio'
+        ? 500 * 1024 * 1024 // 500MB
+        : usage.tier === 'creator'
+          ? 100 * 1024 * 1024 // 100MB
+          : 50 * 1024 * 1024; // 50MB for free
+
     if (file.size > tierMaxSize) {
-      return NextResponse.json(
-        { 
-          error: `File too large. Maximum size for ${usage.tier} tier is ${tierMaxSize / (1024 * 1024)}MB.`,
-          requiresUpgrade: usage.tier !== 'studio',
-          currentTier: usage.tier,
-        },
-        { status: 413 } // Payload Too Large
+      throw new AppError(
+        `File too large. Maximum size for ${usage.tier} tier is ${tierMaxSize / (1024 * 1024)}MB.`,
+        'BAD_REQUEST',
+        413,
+        undefined,
+        { requiresUpgrade: usage.tier !== 'studio', currentTier: usage.tier }
       );
     }
 
-    // 🔒 CHECK STORAGE QUOTA
+    // Check storage quota
     const fileSizeGB = file.size / (1024 * 1024 * 1024);
     if (usage.storage.remaining < fileSizeGB) {
-      return NextResponse.json(
-        {
-          error: `Storage quota exceeded. You have ${usage.storage.remaining.toFixed(2)}GB remaining, but need ${fileSizeGB.toFixed(2)}GB.`,
-          requiresUpgrade: true,
-          currentTier: usage.tier,
-          used: usage.storage.used,
-          limit: usage.storage.limit,
-          percentage: usage.storage.percentage,
-        },
-        { status: 413 } // Payload Too Large
+      throw AppError.quotaExceeded(
+        'Storage',
+        usage.storage.used,
+        usage.storage.limit,
+        usage.tier
       );
     }
 
     // Create Supabase client
     const supabase = createBrowserClient();
     if (!supabase) {
-      return NextResponse.json(
-        { error: 'Storage service unavailable' },
-        { status: 503 }
-      );
+      throw new AppError('Storage service unavailable', 'SERVICE_UNAVAILABLE', 503);
     }
 
-    // Create unique filename
+    // Create unique filename (sanitize to prevent path traversal)
     const timestamp = Date.now();
-    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const filePath = `library/${session.user.id}/${timestamp}-${sanitizedFileName}`;
+    const sanitizedFileName = file.name
+      .replace(/[^a-zA-Z0-9.-]/g, '_')
+      .replace(/\.{2,}/g, '.'); // Prevent directory traversal
+    const filePath = `library/${user.id}/${timestamp}-${sanitizedFileName}`;
 
     // Upload to Supabase Storage
     const { data: uploadData, error: uploadError } = await supabase.storage
@@ -99,39 +134,35 @@ export async function POST(req: NextRequest) {
       });
 
     if (uploadError) {
-      console.error('Upload error:', uploadError);
-      return NextResponse.json(
-        { error: `Upload failed: ${uploadError.message}` },
-        { status: 500 }
+      throw new AppError(
+        'Failed to upload file. Please try again.',
+        'INTERNAL_ERROR',
+        500,
+        uploadError.message
       );
     }
 
     // Get public URL
-    const { data: urlData } = supabase.storage
-      .from('audio-files')
-      .getPublicUrl(filePath);
-
-    // Parse tags
-    const parsedTags = tags ? JSON.parse(tags) : [];
+    const { data: urlData } = supabase.storage.from('audio-files').getPublicUrl(filePath);
 
     // Create library file entry in database
     const libraryFile = await prisma.libraryFile.create({
       data: {
-        userId: session.user.id,
+        userId: user.id,
         name: file.name,
         originalName: file.name,
         url: urlData.publicUrl,
         path: filePath,
         size: BigInt(file.size),
         mimeType: file.type,
-        type: type || 'other',
+        type: fileType,
         tags: parsedTags,
       },
     });
 
-    // 📊 UPDATE STORAGE USAGE
+    // Update storage usage
     await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: user.id },
       data: {
         storageUsedGB: {
           increment: fileSizeGB,
@@ -147,11 +178,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(serializedFile, { status: 201 });
   } catch (error) {
-    console.error('Error uploading library file:', error);
-    return NextResponse.json(
-      { error: 'Failed to upload file' },
-      { status: 500 }
-    );
+    return handleApiError(error, { route: '/api/library/upload', method: 'POST' });
   }
 }
-

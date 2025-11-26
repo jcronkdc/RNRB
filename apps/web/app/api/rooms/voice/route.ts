@@ -9,27 +9,23 @@
  * DELETE /api/rooms/voice/[roomId] - End room
  */
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma as db } from '@cronkwaters/db';
+
+import { auth } from '@/auth';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
 const DAILY_API_URL = 'https://api.daily.co/v1';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Check authentication
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    // Use NextAuth for authentication
+    const session = await auth();
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const user = { id: session.user.id, email: session.user.email, name: session.user.name, image: session.user.image };
 
     if (!DAILY_API_KEY) {
       return NextResponse.json(
@@ -132,8 +128,8 @@ export async function POST(request: NextRequest) {
       data: {
         roomId: existingRoom.id,
         userId: user.id,
-        userName: user.user_metadata?.name || user.email || 'Unknown',
-        userAvatar: user.user_metadata?.avatar_url,
+        userName: user.name || user.email || 'Unknown',
+        userAvatar: user.image,
         videoEnabled: enableVideo,
         audioEnabled: true,
       },
@@ -156,13 +152,9 @@ export async function POST(request: NextRequest) {
 // Get active voice room details
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    // Use NextAuth for authentication
+    const session = await auth();
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

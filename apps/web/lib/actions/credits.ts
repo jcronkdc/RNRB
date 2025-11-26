@@ -3,8 +3,8 @@
 import { prisma } from '@cronkwaters/db';
 import { CreditType } from '@prisma/client';
 
+import { getCurrentUser } from '@/lib/session';
 import { createOneTimeCheckoutSession } from '@/lib/stripe-subscriptions';
-import { getCurrentUser } from '@/lib/supabase';
 import { getOrCreateStripeCustomer } from '@/lib/actions/subscriptions';
 
 type CreditKind = 'ai' | 'video' | 'storage';
@@ -52,7 +52,7 @@ export type CreditProductKey = keyof typeof CREDIT_PRODUCTS;
 export async function createCreditCheckout(productKey: CreditProductKey) {
   const user = await getCurrentUser();
 
-  if (!user?.email) {
+  if (!user?.id) {
     throw new Error('Authentication required');
   }
 
@@ -66,20 +66,11 @@ export async function createCreditCheckout(productKey: CreditProductKey) {
     throw new Error(`${product.priceEnv} is not configured in environment variables`);
   }
 
-  const dbUser = await prisma.user.findUnique({
-    where: { email: user.email },
-    select: { id: true },
-  });
-
-  if (!dbUser) {
-    throw new Error('User record not found');
-  }
-
   const customerId = await getOrCreateStripeCustomer();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
   const metadata: Record<string, string> = {
-    userId: dbUser.id,
+    userId: user.id,
     creditType: product.type,
     creditAmount: String(product.amount),
     creditLabel: product.label,
@@ -98,14 +89,14 @@ export async function createCreditCheckout(productKey: CreditProductKey) {
     where: { stripeSessionId: session.id },
     update: {
       status: 'pending',
-      userId: dbUser.id,
+      userId: user.id,
       type: product.type as CreditType,
       unitAmount: product.amount,
       storageAmount: product.type === 'storage' ? product.amount : null,
       priceCents: (session.amount_total ?? 0),
     },
     create: {
-      userId: dbUser.id,
+      userId: user.id,
       type: product.type as CreditType,
       unitAmount: product.amount,
       storageAmount: product.type === 'storage' ? product.amount : null,

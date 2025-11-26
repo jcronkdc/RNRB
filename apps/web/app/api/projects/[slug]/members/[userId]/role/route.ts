@@ -4,21 +4,31 @@ import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
 /**
- * PATCH /api/projects/[id]/members/[userId]/role
+ * PATCH /api/projects/[slug]/members/[userId]/role
  * Update a team member's role
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; userId: string }> }
+  { params }: { params: Promise<{ slug: string; userId: string }> }
 ) {
   try {
-    const { id, userId: targetUserId } = await params;
+    const { slug, userId: targetUserId } = await params;
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const projectId = id;
+    // Find project by slug
+    const project = await db.project.findFirst({
+      where: { OR: [{ slug }, { id: slug }] },
+      select: { id: true },
+    });
+
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    const projectId = project.id;
     const body = await request.json();
     const { role } = body;
 
@@ -76,21 +86,31 @@ export async function PATCH(
 }
 
 /**
- * DELETE /api/projects/[id]/members/[userId]
+ * DELETE /api/projects/[slug]/members/[userId]
  * Remove a team member from project
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; userId: string }> }
+  { params }: { params: Promise<{ slug: string; userId: string }> }
 ) {
   try {
-    const { id, userId: targetUserId } = await params;
+    const { slug, userId: targetUserId } = await params;
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const projectId = id;
+    // Find project by slug
+    const project = await db.project.findFirst({
+      where: { OR: [{ slug }, { id: slug }] },
+      select: { id: true },
+    });
+
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    const projectId = project.id;
 
     // Check if requester has permission
     const requesterMembership = await db.projectMember.findUnique({

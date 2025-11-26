@@ -1,31 +1,16 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import {
-  Music2,
-  Sparkles,
-  Users,
-  MessageSquare,
-  Video,
-  Save,
-  Check,
-  Loader2,
-  AlertCircle,
-  Undo2,
-  Redo2,
-  LayoutTemplate,
-  Mic,
-} from 'lucide-react';
+import { Check, Loader2, AlertCircle } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect, useRef } from 'react';
 
-import { ToastNotification, useToast } from '@/components/toast-notification';
-import { FeatureTooltip, OnboardingTour } from '@/components/feature-tooltip';
-import { useRequireAuth } from '@/hooks/use-require-auth';
-import { useSongAutoSave } from '@/hooks/use-song-auto-save';
-import { ProjectSelector } from '@/components/project-selector';
+import { OnboardingTour } from '@/components/feature-tooltip';
 import { LibraryImportModal } from '@/components/library-import-modal';
+import { ProjectSelector } from '@/components/project-selector';
+import { ToastNotification, useToast } from '@/components/toast-notification';
 import type { LibraryFile } from '@/hooks/use-library';
+import { useRequireAuth } from '@/hooks/use-require-auth';
+import { useSongAutoSave, type SongData } from '@/hooks/use-song-auto-save';
 
 // Import the drag-drop collaborative songwriting components
 const CollaborativeVisualBuilder = dynamic(
@@ -66,11 +51,6 @@ const CopyrightManager = dynamic(
   { ssr: false }
 );
 
-const BatchSuggestionReview = dynamic(
-  () => import('@/components/songwriting/batch-suggestion-review').then((m) => m.BatchSuggestionReview),
-  { ssr: false }
-);
-
 const Metronome = dynamic(
   () => import('@/components/songwriting/metronome').then((m) => m.Metronome),
   { ssr: false }
@@ -106,7 +86,7 @@ function safeParse<T>(jsonString: string | null | undefined, fallback: T): T {
 export default function SongwritingPage() {
   const [activeView, setActiveView] = useState<'structure' | 'chords' | 'lyrics' | 'copyright'>('structure');
   const [songBlocks, setSongBlocks] = useState<SongBlock[]>([]);
-  const [chordProgression, setChordProgression] = useState<ChordBlock[]>([]);
+  const [_chordProgression, setChordProgression] = useState<ChordBlock[]>([]);
   const [lyrics, setLyrics] = useState('');
   const [songTitle, setSongTitle] = useState('Untitled Song');
   const [isFirstSave, setIsFirstSave] = useState(true);
@@ -132,27 +112,45 @@ export default function SongwritingPage() {
     setHistoryIndex(newHistory.length - 1);
   };
   
-  // Undo function
+  // Refs for undo/redo to avoid stale closures
+  const historyRef = useRef(history);
+  const historyIndexRef = useRef(historyIndex);
+  
+  // Keep refs in sync with state
+  useEffect(() => {
+    historyRef.current = history;
+    historyIndexRef.current = historyIndex;
+  }, [history, historyIndex]);
+  
+  // Undo function - uses refs to avoid stale closures
   const undo = () => {
-    if (historyIndex > 0) {
-      const newIndex = historyIndex - 1;
+    if (historyIndexRef.current > 0) {
+      const newIndex = historyIndexRef.current - 1;
       setHistoryIndex(newIndex);
-      const state = history[newIndex];
+      const state = historyRef.current[newIndex];
       setSongBlocks(state.blocks);
       setLyrics(state.lyrics);
     }
   };
   
-  // Redo function
+  // Redo function - uses refs to avoid stale closures
   const redo = () => {
-    if (historyIndex < history.length - 1) {
-      const newIndex = historyIndex + 1;
+    if (historyIndexRef.current < historyRef.current.length - 1) {
+      const newIndex = historyIndexRef.current + 1;
       setHistoryIndex(newIndex);
-      const state = history[newIndex];
+      const state = historyRef.current[newIndex];
       setSongBlocks(state.blocks);
       setLyrics(state.lyrics);
     }
   };
+  
+  // Stable refs for keyboard handler (avoids stale closure issue)
+  const undoRef = useRef(undo);
+  const redoRef = useRef(redo);
+  useEffect(() => {
+    undoRef.current = undo;
+    redoRef.current = redo;
+  });
   
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
@@ -160,23 +158,23 @@ export default function SongwritingPage() {
       if ((e.metaKey || e.ctrlKey) && e.key === 'z') {
         e.preventDefault();
         if (e.shiftKey) {
-          redo();
+          redoRef.current();
         } else {
-          undo();
+          undoRef.current();
         }
       }
     };
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [historyIndex, history]);
+  }, []);
   
   // Initialize auto-save
   const {
     songData,
     updateSong,
     createSong,
-    saveStatus,
+    saveStatus: _saveStatus,
     error: saveError,
     isSaving,
     isSaved,
@@ -304,7 +302,7 @@ export default function SongwritingPage() {
         {/* Clean Professional Header */}
         <div className="mb-8 border-b border-zinc-800 pb-6">
           <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <input
                 type="text"
                 value={songTitle}
@@ -321,10 +319,10 @@ export default function SongwritingPage() {
                       <button
                         onClick={undo}
                         disabled={historyIndex <= 0}
-                        className={`rounded px-3 py-1 text-xs font-mono uppercase tracking-wider transition ${
+                        className={`rounded px-3 py-1 font-mono text-xs uppercase tracking-wider transition ${
                           historyIndex > 0
                             ? 'bg-zinc-800 text-white hover:bg-zinc-700'
-                            : 'text-zinc-600 cursor-not-allowed'
+                            : 'cursor-not-allowed text-zinc-600'
                         }`}
                         title="Undo (⌘Z)"
                       >
@@ -333,10 +331,10 @@ export default function SongwritingPage() {
                       <button
                         onClick={redo}
                         disabled={historyIndex >= history.length - 1}
-                        className={`rounded px-3 py-1 text-xs font-mono uppercase tracking-wider transition ${
+                        className={`rounded px-3 py-1 font-mono text-xs uppercase tracking-wider transition ${
                           historyIndex < history.length - 1
                             ? 'bg-zinc-800 text-white hover:bg-zinc-700'
-                            : 'text-zinc-600 cursor-not-allowed'
+                            : 'cursor-not-allowed text-zinc-600'
                         }`}
                         title="Redo (⌘⇧Z)"
                       >
@@ -345,7 +343,7 @@ export default function SongwritingPage() {
                     </div>
                     <ProjectSelector 
                       songId={songData.id} 
-                      onProjectAdded={(slug) => success(`Added to project`, 2000)}
+                      onProjectAdded={(_slug) => success(`Added to project`, 2000)}
                     />
                   </>
                 )}
@@ -357,13 +355,13 @@ export default function SongwritingPage() {
                   <>
                     <button
                       onClick={() => setShowTemplatePicker(true)}
-                      className="rounded bg-zinc-800 px-4 py-2 text-xs font-mono uppercase tracking-wider text-white transition hover:bg-zinc-700"
+                      className="rounded bg-zinc-800 px-4 py-2 font-mono text-xs uppercase tracking-wider text-white transition hover:bg-zinc-700"
                     >
                       Templates
                     </button>
                     <button
                       onClick={() => setShowLibraryImport(true)}
-                      className="rounded bg-zinc-800 px-4 py-2 text-xs font-mono uppercase tracking-wider text-white transition hover:bg-zinc-700"
+                      className="rounded bg-zinc-800 px-4 py-2 font-mono text-xs uppercase tracking-wider text-white transition hover:bg-zinc-700"
                     >
                       Import from Library
                     </button>
@@ -390,7 +388,7 @@ export default function SongwritingPage() {
         <div className="mb-8 flex gap-1 border-b border-zinc-800">
           <button
             onClick={() => setActiveView('structure')}
-            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider transition-colors ${
+            className={`px-6 py-3 font-mono text-sm uppercase tracking-wider transition-colors ${
               activeView === 'structure' 
                 ? 'border-b-2 border-white text-white' 
                 : 'text-zinc-400 hover:text-white'
@@ -400,7 +398,7 @@ export default function SongwritingPage() {
           </button>
           <button
             onClick={() => setActiveView('chords')}
-            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider transition-colors ${
+            className={`px-6 py-3 font-mono text-sm uppercase tracking-wider transition-colors ${
               activeView === 'chords' 
                 ? 'border-b-2 border-white text-white' 
                 : 'text-zinc-400 hover:text-white'
@@ -410,7 +408,7 @@ export default function SongwritingPage() {
           </button>
           <button
             onClick={() => setActiveView('lyrics')}
-            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider transition-colors ${
+            className={`px-6 py-3 font-mono text-sm uppercase tracking-wider transition-colors ${
               activeView === 'lyrics' 
                 ? 'border-b-2 border-white text-white' 
                 : 'text-zinc-400 hover:text-white'
@@ -420,7 +418,7 @@ export default function SongwritingPage() {
           </button>
           <button
             onClick={() => setActiveView('copyright')}
-            className={`px-6 py-3 text-sm font-mono uppercase tracking-wider transition-colors ${
+            className={`px-6 py-3 font-mono text-sm uppercase tracking-wider transition-colors ${
               activeView === 'copyright' 
                 ? 'border-b-2 border-white text-white' 
                 : 'text-zinc-400 hover:text-white'
@@ -526,13 +524,13 @@ export default function SongwritingPage() {
               <CopyrightManager
                 songId={songData.id}
                 songTitle={songTitle}
-                audioUrl={songData.audioUrl}
-                audioPath={songData.audioPath}
-                initialData={safeParse(songData.copyrightInfo as any, undefined)}
+                audioUrl={songData.audioUrl ?? undefined}
+                audioPath={songData.audioPath ?? undefined}
+                initialData={safeParse(songData.copyrightInfo as string | null | undefined, undefined)}
                 onUpdate={(info) => {
                   if (songData.id) {
                     updateSong({
-                      copyrightInfo: JSON.stringify(info) as any,
+                      copyrightInfo: JSON.stringify(info),
                       isrc: info.isrc,
                       iswc: info.iswc,
                     });

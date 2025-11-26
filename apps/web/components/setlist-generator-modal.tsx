@@ -1,14 +1,17 @@
 'use client';
 
 /**
- * WORLD-CLASS SETLIST GENERATOR
+ * SETLIST GENERATOR - Honest & Practical
  *
- * Advanced AI-powered setlist optimization with:
- * - Multi-dimensional scoring (energy, keys, vocal fatigue, pacing)
- * - 5 energy profile options (explosive, dynamic, balanced, intimate, crescendo)
- * - Advanced constraints (required songs, excluded songs, opener/closer)
- * - Real-time insights & recommendations
- * - Visual score display
+ * What this does:
+ * - Saves you 30+ minutes of manual setlist creation
+ * - Matches your target duration (±5 min)
+ * - Prevents 3+ consecutive songs in same key (vocal health)
+ * - Varies tempo to avoid monotony
+ * 
+ * What you'll need:
+ * - Songs with key, tempo, and duration metadata
+ * - Willingness to tweak the results (it's a tool, not magic)
  */
 
 import { Button , Card } from '@cronkwaters/ui';
@@ -20,20 +23,18 @@ import {
   AlertCircle, 
   Wand2, 
   Zap,
-  Activity,
   TrendingUp,
   Heart,
-  Mountain,
   ChevronDown,
   ChevronUp,
   Info,
   CheckCircle,
-  XCircle,
   Lightbulb,
+  AlertTriangle,
 } from 'lucide-react';
 import { useState } from 'react';
 
-type EnergyProfile = 'explosive' | 'dynamic' | 'balanced' | 'intimate' | 'crescendo';
+type EnergyProfile = 'high' | 'balanced' | 'mellow';
 
 export function SetlistGeneratorModal({
   projectId,
@@ -42,7 +43,7 @@ export function SetlistGeneratorModal({
   onGenerated,
 }: {
   projectId: string;
-  availableSongs: any[]; // Pass available songs for advanced UI
+  availableSongs: any[];
   onClose: () => void;
   onGenerated: (data: any) => void;
 }) {
@@ -51,14 +52,13 @@ export function SetlistGeneratorModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // Advanced options (collapsible)
+  // Advanced options
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [requiredSongs, setRequiredSongs] = useState<string[]>([]);
   const [excludedSongs, setExcludedSongs] = useState<string[]>([]);
   const [openingSong, setOpeningSong] = useState<string | null>(null);
   const [closingSong, setClosingSong] = useState<string | null>(null);
   const [avoidKeyJumps, setAvoidKeyJumps] = useState(true);
-  const [prioritizePopular, setPrioritizePopular] = useState(false);
 
   // Result display
   const [result, setResult] = useState<any | null>(null);
@@ -81,7 +81,6 @@ export function SetlistGeneratorModal({
           openingSong,
           closingSong,
           avoidKeyJumps,
-          prioritizePopular,
         }),
       });
 
@@ -126,51 +125,37 @@ export function SetlistGeneratorModal({
     gradient: string;
   }[] = [
     {
-      id: 'explosive',
-      name: 'Explosive',
+      id: 'high',
+      name: 'High Energy',
       icon: Zap,
-      description: 'High energy start, maintain intensity throughout',
+      description: 'Faster tempo songs (130+ BPM preferred)',
       gradient: 'from-red-500 to-orange-500',
-    },
-    {
-      id: 'dynamic',
-      name: 'Dynamic',
-      icon: Activity,
-      description: 'Peaks and valleys for dramatic show flow',
-      gradient: 'from-purple-500 to-pink-500',
     },
     {
       id: 'balanced',
       name: 'Balanced',
       icon: TrendingUp,
-      description: 'Professional flow: strong start, dip middle, strong finish',
+      description: 'Mix of tempos for variety',
       gradient: 'from-blue-500 to-cyan-500',
     },
     {
-      id: 'intimate',
-      name: 'Intimate',
+      id: 'mellow',
+      name: 'Mellow',
       icon: Heart,
-      description: 'Mellow, emotional show with gradual energy build',
+      description: 'Slower tempo songs (< 100 BPM preferred)',
       gradient: 'from-pink-400 to-rose-400',
-    },
-    {
-      id: 'crescendo',
-      name: 'Crescendo',
-      icon: Mountain,
-      description: 'Build from low to climactic high energy finish',
-      gradient: 'from-emerald-500 to-lime-500',
     },
   ];
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-400';
-    if (score >= 75) return 'text-yellow-400';
+    if (score >= 80) return 'text-green-400';
+    if (score >= 60) return 'text-yellow-400';
     return 'text-orange-400';
   };
 
   const getScoreBg = (score: number) => {
-    if (score >= 90) return 'bg-green-500/20 border-green-500/50';
-    if (score >= 75) return 'bg-yellow-500/20 border-yellow-500/50';
+    if (score >= 80) return 'bg-green-500/20 border-green-500/50';
+    if (score >= 60) return 'bg-yellow-500/20 border-yellow-500/50';
     return 'bg-orange-500/20 border-orange-500/50';
   };
 
@@ -190,9 +175,9 @@ export function SetlistGeneratorModal({
                 <Wand2 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h2 className="font-display text-2xl font-bold">World-Class Setlist Generator</h2>
+                <h2 className="font-display text-2xl font-bold">Setlist Generator</h2>
                 <p className="text-muted-foreground text-sm">
-                  AI-powered optimization with multi-dimensional scoring
+                  Algorithmic optimization for faster setlist creation
                 </p>
               </div>
             </div>
@@ -227,7 +212,7 @@ export function SetlistGeneratorModal({
               <div className={`rounded-xl border-2 ${getScoreBg(result.score.overall)} p-6`}>
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-bold">Setlist Quality Score</h3>
+                    <h3 className="text-lg font-bold">Quality Score</h3>
                     <p className="text-sm text-gray-400">{result.message}</p>
                   </div>
                   <div className={`text-5xl font-black ${getScoreColor(result.score.overall)}`}>
@@ -236,13 +221,12 @@ export function SetlistGeneratorModal({
                 </div>
 
                 {/* Detailed Scores */}
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                   {[
-                    { label: 'Energy Flow', value: result.score.energyFlow },
                     { label: 'Key Variety', value: result.score.keyVariety },
-                    { label: 'Vocal Health', value: result.score.vocalFatigue },
-                    { label: 'Pacing', value: result.score.pacing },
+                    { label: 'Tempo Variety', value: result.score.tempoVariety },
                     { label: 'Duration', value: result.score.durationMatch },
+                    { label: 'Data Quality', value: result.score.dataQuality },
                   ].map((metric) => (
                     <div key={metric.label} className="text-center">
                       <div className={`text-2xl font-bold ${getScoreColor(metric.value)}`}>
@@ -419,16 +403,6 @@ export function SetlistGeneratorModal({
                             />
                             <span className="text-sm">Avoid large key jumps (vocalist-friendly)</span>
                           </label>
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={prioritizePopular}
-                              onChange={(e) => setPrioritizePopular(e.target.checked)}
-                              disabled={loading}
-                              className="h-4 w-4 rounded"
-                            />
-                            <span className="text-sm">Prioritize popular/crowd favorite songs</span>
-                          </label>
                         </div>
 
                         {/* Song Selection */}
@@ -474,17 +448,33 @@ export function SetlistGeneratorModal({
                 </AnimatePresence>
               </div>
 
-              {/* Info */}
-              <div className="rounded-lg border border-purple-500/20 bg-purple-500/5 p-4">
+              {/* Honest Expectations */}
+              <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4">
                 <div className="flex items-start gap-3">
-                  <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
+                  <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
                   <div className="text-sm">
-                    <p className="mb-1 font-medium text-purple-300">World-Class Algorithm</p>
+                    <p className="mb-1 font-medium text-blue-300">What This Tool Does</p>
                     <ul className="text-muted-foreground space-y-1">
-                      <li>• Multi-dimensional scoring (energy, keys, vocal fatigue, pacing)</li>
-                      <li>• Professional setlist design principles</li>
-                      <li>• Crowd psychology & attention curve management</li>
-                      <li>• Automatic key change warnings for vocalists</li>
+                      <li>• Matches your target duration (±5 minutes)</li>
+                      <li>• Prevents 3+ songs in same key (vocal health)</li>
+                      <li>• Varies tempo to avoid monotony</li>
+                      <li>• Saves you 30+ minutes of manual work</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Quality Warning */}
+              <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-4">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-400" />
+                  <div className="text-sm">
+                    <p className="mb-1 font-medium text-yellow-300">Realistic Expectations</p>
+                    <ul className="text-muted-foreground space-y-1">
+                      <li>• Requires songs with key, tempo, duration metadata</li>
+                      <li>• You'll likely need to tweak the results</li>
+                      <li>• It's a time-saving tool, not magic</li>
+                      <li>• Try different settings if first result isn't perfect</li>
                     </ul>
                   </div>
                 </div>

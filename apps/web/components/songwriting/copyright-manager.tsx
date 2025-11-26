@@ -2,12 +2,13 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { Shield, Users, FileCheck, AlertCircle, Check, Plus, X, PieChart, Music, HelpCircle, ExternalLink, Info } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
-import { SplitSheetGenerator } from './split-sheet-generator';
+
 import { AudioUploader } from './audio-uploader';
 import { CollaborationAgreementGenerator } from './collaboration-agreement';
 import { CopyrightGuide } from './copyright-guide';
-import dynamic from 'next/dynamic';
+import { SplitSheetGenerator } from './split-sheet-generator';
 
 const WaveformPlayer = dynamic(
   () => import('./waveform-player').then((m) => m.WaveformPlayer),
@@ -499,7 +500,7 @@ export function CopyrightManager({
           <div className="mb-4 space-y-3">
             {copyrightInfo.splits.map((split, index) => (
               <div key={index} className="flex items-center gap-3 rounded-lg border border-gray-700 bg-gray-800/50 p-4">
-                <div className="flex-1 grid gap-3 md:grid-cols-4">
+                <div className="grid flex-1 gap-3 md:grid-cols-4">
                   <div>
                     <p className="text-xs text-gray-500">Name</p>
                     <p className="font-medium text-white">{split.contributorName}</p>

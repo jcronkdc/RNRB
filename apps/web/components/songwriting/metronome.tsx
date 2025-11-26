@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Button } from '@cronkwaters/ui';
+import { Card } from '@cronkwaters/ui';
 import { Play, Pause, Volume2, VolumeX, Activity, Timer } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
@@ -33,11 +33,26 @@ export function Metronome({
   const nextNoteTimeRef = useRef<number>(0);
   const scheduleAheadTime = 0.1; // Schedule 100ms ahead
   const tapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Use refs to avoid stale closures in scheduler
+  const bpmRef = useRef(bpm);
+  const timeSignatureRef = useRef(timeSignature);
+  const isMutedRef = useRef(isMuted);
+  const volumeRef = useRef(volume);
+  const currentBeatRef = useRef(currentBeat);
+  
+  // Keep refs in sync with state
+  useEffect(() => { bpmRef.current = bpm; }, [bpm]);
+  useEffect(() => { timeSignatureRef.current = timeSignature; }, [timeSignature]);
+  useEffect(() => { isMutedRef.current = isMuted; }, [isMuted]);
+  useEffect(() => { volumeRef.current = volume; }, [volume]);
+  useEffect(() => { currentBeatRef.current = currentBeat; }, [currentBeat]);
 
   // Initialize Web Audio API
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      audioContextRef.current = new AudioContextClass();
     }
     
     return () => {
@@ -47,9 +62,9 @@ export function Metronome({
     };
   }, []);
 
-  // Play click sound
+  // Play click sound - uses refs to avoid stale closures
   const playClick = (time: number, isAccent: boolean) => {
-    if (!audioContextRef.current || isMuted) return;
+    if (!audioContextRef.current || isMutedRef.current) return;
 
     const ctx = audioContextRef.current;
     const oscillator = ctx.createOscillator();
@@ -60,31 +75,37 @@ export function Metronome({
 
     // Accent first beat (higher pitch and volume)
     oscillator.frequency.value = isAccent ? 1200 : 800;
-    gainNode.gain.setValueAtTime(volume * (isAccent ? 1.5 : 1), time);
+    gainNode.gain.setValueAtTime(volumeRef.current * (isAccent ? 1.5 : 1), time);
     gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
 
     oscillator.start(time);
     oscillator.stop(time + 0.05);
   };
 
-  // Scheduler
+  // Scheduler - uses refs to avoid stale closures in setInterval callback
   const scheduler = () => {
     if (!audioContextRef.current) return;
 
-    const beatsPerMeasure = parseInt(timeSignature.split('/')[0]);
-    const interval = 60.0 / bpm;
+    const beatsPerMeasure = parseInt(timeSignatureRef.current.split('/')[0]);
+    const interval = 60.0 / bpmRef.current;
 
     while (nextNoteTimeRef.current < audioContextRef.current.currentTime + scheduleAheadTime) {
-      const isAccent = currentBeat % beatsPerMeasure === 0;
+      const isAccent = currentBeatRef.current % beatsPerMeasure === 0;
       playClick(nextNoteTimeRef.current, isAccent);
       nextNoteTimeRef.current += interval;
       setCurrentBeat(prev => (prev + 1) % beatsPerMeasure);
     }
   };
 
-  // Start/Stop metronome
+  // Start/Stop metronome - only depends on isPlaying
+  // Other values are read from refs to avoid unnecessary restarts
+  // Note: scheduler uses refs for all values, so it's intentionally excluded from deps
   useEffect(() => {
     if (isPlaying && audioContextRef.current) {
+      // Resume audio context if suspended (browser autoplay policy)
+      if (audioContextRef.current.state === 'suspended') {
+        audioContextRef.current.resume();
+      }
       nextNoteTimeRef.current = audioContextRef.current.currentTime;
       intervalRef.current = setInterval(scheduler, 25); // Check every 25ms
     } else {
@@ -98,9 +119,11 @@ export function Metronome({
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
-  }, [isPlaying, bpm, timeSignature, isMuted, volume]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying]); // Only restart when play state changes - scheduler uses refs
 
   const handleBpmChange = (newBpm: number) => {
     const clampedBpm = Math.max(40, Math.min(300, newBpm));
@@ -343,7 +366,7 @@ export function Metronome({
         </p>
         <button
           onClick={handleTap}
-          className="w-full rounded-lg border-2 border-blue-500 bg-blue-500/20 py-8 font-bold text-blue-400 transition active:scale-95 hover:bg-blue-500/30"
+          className="w-full rounded-lg border-2 border-blue-500 bg-blue-500/20 py-8 font-bold text-blue-400 transition hover:bg-blue-500/30 active:scale-95"
         >
           TAP HERE
           {tapTimes.length > 0 && (

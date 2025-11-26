@@ -1,18 +1,16 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { handleApiError } from '@/lib/errors';
+import { requireAuth } from '@/lib/session';
 import { requireFeatureAccess } from '@/lib/subscription-access';
-import { getCurrentUser } from '@/lib/supabase';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
 const DAILY_API_URL = 'https://api.daily.co/v1';
 
 export async function POST(request: NextRequest) {
   try {
-    // Check authentication using Supabase
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Check authentication using NextAuth
+    const user = await requireAuth();
 
     // ✅ SECURITY: Video calls are Studio-tier only
     try {
@@ -77,7 +75,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         properties: {
           room_name: room.name,
-          user_name: user.user_metadata?.name || user.email || 'User',
+          user_name: user.name || user.email || 'User',
           user_id: user.id,
           enable_recording: true,
           start_video_off: false,
@@ -103,24 +101,14 @@ export async function POST(request: NextRequest) {
       token,
     });
   } catch (error) {
-    console.error('Error creating Daily room:', error);
-    return NextResponse.json(
-      {
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, { route: '/api/daily/rooms', method: 'POST' });
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    // Check authentication using Supabase
-    const user = await getCurrentUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Check authentication using NextAuth
+    await requireAuth();
 
     // ✅ SECURITY: Video calls are Studio-tier only (check access before API call)
     try {
@@ -160,13 +148,6 @@ export async function GET(request: NextRequest) {
     const { data } = await response.json();
     return NextResponse.json({ rooms: data });
   } catch (error) {
-    console.error('Error fetching Daily rooms:', error);
-    return NextResponse.json(
-      {
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, { route: '/api/daily/rooms', method: 'GET' });
   }
 }

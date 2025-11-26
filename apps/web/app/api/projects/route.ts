@@ -1,28 +1,24 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { handleApiError, AppError } from '@/lib/errors';
+import { requireAuth } from '@/lib/session';
+import { createProjectSchema, parseBody } from '@/lib/validations';
 
 /**
  * GET /api/projects
  * Get all projects for the authenticated user
  */
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    // Get authenticated user from NextAuth
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    }
-
-    const userId = session.user.id;
+    const user = await requireAuth();
 
     // Get all projects where user is a member
     const projects = await db.project.findMany({
       where: {
         members: {
           some: {
-            userId: userId,
+            userId: user.id,
           },
         },
       },
@@ -69,8 +65,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(transformedProjects);
   } catch (error) {
-    console.error('GET /api/projects error:', error);
-    return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 });
+    return handleApiError(error, { route: '/api/projects', method: 'GET' });
   }
 }
 
@@ -80,151 +75,117 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    // Get authenticated user from NextAuth
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    }
+    const user = await requireAuth();
 
-    const userId = session.user.id;
-
-    const body = await req.json();
-    const {
-      orgId,
-      name,
-      description,
-      tagline,
-      visibility,
-      coverImage,
-      genre,
-      targetReleaseDate,
-    } = body;
-
-    if (!name || !name.trim()) {
-      return NextResponse.json({ error: 'Project name is required' }, { status: 400 });
-    }
+    // Validate input with Zod schema
+    const validated = await parseBody(req, createProjectSchema);
 
     // Generate slug from name
-    const slug = name
+    const baseSlug = validated.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
-    // Check if slug already exists
+    // Check if slug already exists and make unique if needed
     const existingProject = await db.project.findUnique({
-      where: { slug },
+      where: { slug: baseSlug },
     });
 
-    if (existingProject) {
-      // Add timestamp to make it unique
-      const uniqueSlug = `${slug}-${Date.now()}`;
-      return await createProject(uniqueSlug);
-    }
+    const finalSlug = existingProject ? `${baseSlug}-${Date.now()}` : baseSlug;
 
-    return await createProject(slug);
+    // If no orgId provided, create or get user's personal org
+    let finalOrgId = validated.orgId;
 
-    async function createProject(finalSlug: string) {
-      // If no orgId provided, create or get user's personal org
-      let finalOrgId = orgId;
-
-      if (!finalOrgId) {
-        // Try to find user's personal org
-        const user = await db.user.findUnique({
-          where: { id: userId },
-          include: {
-            memberships: {
-              where: {
-                role: 'owner',
-              },
-              include: {
-                org: true,
-              },
+    if (!finalOrgId) {
+      // Try to find user's personal org
+      const dbUser = await db.user.findUnique({
+        where: { id: user.id },
+        include: {
+          memberships: {
+            where: {
+              role: 'owner',
             },
+            include: {
+              org: true,
+            },
+          },
+        },
+      });
+
+      if (dbUser?.memberships && dbUser.memberships.length > 0) {
+        finalOrgId = dbUser.memberships[0].org.id;
+      } else {
+        // Create a personal org for the user
+        const personalOrg = await db.org.create({
+          data: {
+            name: `${dbUser?.name || 'My'} Workspace`,
+            slug: `${user.id}-workspace-${Date.now()}`,
+            type: 'solo',
           },
         });
 
-        if (user?.memberships && user.memberships.length > 0) {
-          finalOrgId = user.memberships[0].org.id;
-        } else {
-          // Create a personal org for the user
-          const personalOrg = await db.org.create({
-            data: {
-              name: `${user?.name || 'My'} Workspace`,
-              slug: `${userId}-workspace-${Date.now()}`,
-              type: 'solo',
-            },
-          });
+        // Add user as owner
+        await db.membership.create({
+          data: {
+            userId: user.id,
+            orgId: personalOrg.id,
+            role: 'owner',
+          },
+        });
 
-          // Add user as owner
-          await db.membership.create({
-            data: {
-              userId: userId,
-              orgId: personalOrg.id,
-              role: 'owner',
-            },
-          });
-
-          finalOrgId = personalOrg.id;
-        }
+        finalOrgId = personalOrg.id;
       }
+    }
 
-      // Create the project
-      const project = await db.project.create({
-        data: {
-          name: name.trim(),
-          slug: finalSlug,
-          description: description?.trim() || null,
-          tagline: tagline?.trim() || null,
-          coverImage: coverImage || null,
-          visibility: visibility || 'private',
-          orgId: finalOrgId,
-        },
-        include: {
-          _count: {
-            select: {
-              songs: true,
-              members: true,
-              studioSessions: true,
-            },
+    // Create the project
+    const project = await db.project.create({
+      data: {
+        name: validated.name,
+        slug: finalSlug,
+        description: validated.description || null,
+        tagline: validated.tagline || null,
+        coverImage: validated.coverImage || null,
+        visibility: validated.visibility,
+        orgId: finalOrgId,
+      },
+      include: {
+        _count: {
+          select: {
+            songs: true,
+            members: true,
+            studioSessions: true,
           },
         },
-      });
-
-      // Add creator as owner
-      await db.projectMember.create({
-        data: {
-          projectId: project.id,
-          userId: userId,
-          role: 'owner',
-        },
-      });
-
-      // Transform response
-      const response = {
-        id: project.id,
-        name: project.name,
-        slug: project.slug,
-        description: project.description,
-        tagline: project.tagline,
-        cover_image: project.coverImage,
-        visibility: project.visibility,
-        created_at: project.createdAt.toISOString(),
-        updated_at: project.updatedAt.toISOString(),
-        song_count: project._count.songs,
-        collaborator_count: project._count.members + 1, // +1 for creator
-        session_count: project._count.studioSessions,
-      };
-
-      return NextResponse.json(response, { status: 201 });
-    }
-  } catch (error) {
-    console.error('POST /api/projects error:', error);
-    return NextResponse.json(
-      {
-        error: 'Failed to create project',
-        details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
-    );
+    });
+
+    // Add creator as owner
+    await db.projectMember.create({
+      data: {
+        projectId: project.id,
+        userId: user.id,
+        role: 'owner',
+      },
+    });
+
+    // Transform response
+    const response = {
+      id: project.id,
+      name: project.name,
+      slug: project.slug,
+      description: project.description,
+      tagline: project.tagline,
+      cover_image: project.coverImage,
+      visibility: project.visibility,
+      created_at: project.createdAt.toISOString(),
+      updated_at: project.updatedAt.toISOString(),
+      song_count: project._count.songs,
+      collaborator_count: project._count.members + 1, // +1 for creator
+      session_count: project._count.studioSessions,
+    };
+
+    return NextResponse.json(response, { status: 201 });
+  } catch (error) {
+    return handleApiError(error, { route: '/api/projects', method: 'POST' });
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Button } from '@cronkwaters/ui';
+import { Card } from '@cronkwaters/ui';
 import { Check, X, ChevronRight, ChevronLeft, Sparkles, Loader2, Filter, AlertCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -327,7 +327,7 @@ export function BatchSuggestionReview({
           >
             <X className="h-5 w-5" />
             Reject
-            <span className="rounded bg-red-500/20 px-2 py-0.5 text-xs font-mono">R</span>
+            <span className="rounded bg-red-500/20 px-2 py-0.5 font-mono text-xs">R</span>
           </button>
 
           <button
@@ -336,7 +336,7 @@ export function BatchSuggestionReview({
           >
             <Check className="h-5 w-5" />
             Accept
-            <span className="rounded bg-green-500/20 px-2 py-0.5 text-xs font-mono">A</span>
+            <span className="rounded bg-green-500/20 px-2 py-0.5 font-mono text-xs">A</span>
           </button>
         </div>
       </Card>
@@ -354,7 +354,7 @@ export function BatchSuggestionReview({
         >
           <ChevronLeft className="h-4 w-4" />
           <span className="hidden sm:inline">Previous</span>
-          <span className="rounded bg-gray-700 px-2 py-0.5 text-xs font-mono">K / ←</span>
+          <span className="rounded bg-gray-700 px-2 py-0.5 font-mono text-xs">K / ←</span>
         </button>
 
         <div className="flex gap-2">
@@ -381,7 +381,7 @@ export function BatchSuggestionReview({
               : 'cursor-not-allowed border-gray-800 bg-gray-900 text-gray-600'
           }`}
         >
-          <span className="rounded bg-gray-700 px-2 py-0.5 text-xs font-mono">J / →</span>
+          <span className="rounded bg-gray-700 px-2 py-0.5 font-mono text-xs">J / →</span>
           <span className="hidden sm:inline">Next</span>
           <ChevronRight className="h-4 w-4" />
         </button>

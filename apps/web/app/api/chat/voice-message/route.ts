@@ -11,24 +11,33 @@
  * - Returns message object
  */
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma as db } from '@cronkwaters/db';
 
+import { auth } from '@/auth';
+
+// Server-side Supabase client for storage operations only (NOT for auth)
+function getSupabaseStorageClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase storage configuration');
+  }
+  
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Check authentication
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    // Use NextAuth for authentication
+    const session = await auth();
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const user = { id: session.user.id, email: session.user.email };
 
     // Parse form data
     const formData = await request.formData();
@@ -72,6 +81,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Upload to Supabase Storage with optimization
+    const supabase = getSupabaseStorageClient();
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('voice-messages')
       .upload(fileName, fileToUpload, {
@@ -152,14 +162,9 @@ export async function POST(request: NextRequest) {
 // Get voice messages for a channel
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
-
-    // Check authentication
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
+    // Use NextAuth for authentication
+    const session = await auth();
+    if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

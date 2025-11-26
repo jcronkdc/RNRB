@@ -311,12 +311,20 @@ export function generateDirectionsUrl(shows: Array<{
 
   if (sortedShows.length < 2) return '';
 
-  const origin = `${sortedShows[0].venue.latitude},${sortedShows[0].venue.longitude}`;
-  const destination = `${sortedShows[sortedShows.length - 1].venue.latitude},${sortedShows[sortedShows.length - 1].venue.longitude}`;
+  const firstVenue = sortedShows[0]?.venue;
+  const lastVenue = sortedShows[sortedShows.length - 1]?.venue;
+  
+  if (!firstVenue?.latitude || !firstVenue?.longitude || !lastVenue?.latitude || !lastVenue?.longitude) {
+    return '';
+  }
+
+  const origin = `${firstVenue.latitude},${firstVenue.longitude}`;
+  const destination = `${lastVenue.latitude},${lastVenue.longitude}`;
 
   const waypoints = sortedShows
     .slice(1, -1)
-    .map((show) => `${show.venue.latitude},${show.venue.longitude}`)
+    .filter((show) => show.venue?.latitude && show.venue?.longitude)
+    .map((show) => `${show.venue!.latitude},${show.venue!.longitude}`)
     .join('|');
 
   let url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;

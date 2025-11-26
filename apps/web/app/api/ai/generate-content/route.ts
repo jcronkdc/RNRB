@@ -1,8 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { generateContent } from '@/lib/ai/openai';
+import { handleApiError } from '@/lib/errors';
+import { getCurrentUserId } from '@/lib/session';
 import { requireFeatureAccess } from '@/lib/subscription-access';
-import { getCurrentUser } from '@/lib/supabase';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 
 export async function POST(request: NextRequest) {
@@ -62,9 +63,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 📊 Track successful usage
-    const user = await getCurrentUser();
-    if (user) {
-      await trackUsage(user.id, 'aiRequests', 1);
+    const userId = await getCurrentUserId();
+    if (userId) {
+      await trackUsage(userId, 'aiRequests', 1);
     }
 
     return NextResponse.json({
@@ -73,8 +74,7 @@ export async function POST(request: NextRequest) {
       isAiGenerated: true,
       disclaimer: 'AI-generated draft - edit before publishing',
     });
-  } catch (error: any) {
-    console.error('AI content generation error:', error);
-    return NextResponse.json({ error: 'Failed to generate content' }, { status: 500 });
+  } catch (error) {
+    return handleApiError(error, { route: '/api/ai/generate-content', method: 'POST' });
   }
 }

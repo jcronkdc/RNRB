@@ -9,8 +9,9 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Check, CheckCheck, Trash2, X, Settings } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import {
   useNotifications,
@@ -18,18 +19,12 @@ import {
   getNotificationColor,
   type Notification,
 } from '@/hooks/use-notifications';
-import { supabase } from '@/lib/supabase';
 import { formatRelativeTime } from '@/lib/format-date';
 
 export function NotificationBell() {
-  const [user, setUser] = useState<any>(null);
+  const { data: session } = useSession();
+  const user = session?.user;
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
-  }, []);
 
   const {
     notifications,

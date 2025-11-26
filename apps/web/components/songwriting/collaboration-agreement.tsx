@@ -3,6 +3,7 @@
 import { Card, Button } from '@cronkwaters/ui';
 import { FileCheck, Download, Users, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
+
 import type { CopyrightInfo } from './copyright-manager';
 
 type AgreementType = 'joint' | 'work-for-hire' | 'custom';
@@ -70,7 +71,7 @@ export function CollaborationAgreementGenerator({
       day: 'numeric',
     });
 
-    let agreement = `
+    const agreement = `
 COLLABORATION AGREEMENT
 
 This Collaboration Agreement ("Agreement") is entered into on ${date}, by and between the following parties (collectively, the "Parties"):

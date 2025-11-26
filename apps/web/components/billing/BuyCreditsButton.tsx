@@ -2,7 +2,7 @@
 
 import { useTransition } from 'react';
 
-import { Button } from '@cronkwaters/ui/components/button';
+import { Button } from '@cronkwaters/ui';
 
 import { createCreditCheckout, type CreditProductKey } from '@/lib/actions/credits';
 import { useToast } from '@/hooks/useToast';

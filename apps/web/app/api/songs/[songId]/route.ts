@@ -1,7 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { handleApiError, AppError } from '@/lib/errors';
+import { requireAuth } from '@/lib/session';
 
 type RouteContext = {
   params: Promise<{
@@ -16,11 +17,7 @@ type RouteContext = {
 export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
     const { songId } = await params;
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const user = await requireAuth();
 
     const song = await db.song.findUnique({
       where: {
@@ -38,18 +35,17 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
     });
 
     if (!song) {
-      return NextResponse.json({ error: 'Song not found' }, { status: 404 });
+      throw AppError.notFound('Song');
     }
 
     // Check access: owner or public song
-    if (song.userId !== session.user.id && song.visibility !== 'public') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (song.userId !== user.id && song.visibility !== 'public') {
+      throw AppError.forbidden('You do not have access to this song');
     }
 
     return NextResponse.json({ song });
   } catch (error) {
-    console.error('GET /api/songs/[songId] error:', error);
-    return NextResponse.json({ error: 'Failed to fetch song' }, { status: 500 });
+    return handleApiError(error, { route: '/api/songs/[songId]', method: 'GET' });
   }
 }
 
@@ -60,11 +56,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
     const { songId } = await params;
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const user = await requireAuth();
 
     // Verify ownership
     const existing = await db.song.findUnique({
@@ -73,11 +65,11 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     });
 
     if (!existing) {
-      return NextResponse.json({ error: 'Song not found' }, { status: 404 });
+      throw AppError.notFound('Song');
     }
 
-    if (existing.userId !== session.user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (existing.userId !== user.id) {
+      throw AppError.forbidden('You do not have permission to edit this song');
     }
 
     const body = await req.json();
@@ -117,8 +109,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 
     return NextResponse.json({ song });
   } catch (error) {
-    console.error('PATCH /api/songs/[songId] error:', error);
-    return NextResponse.json({ error: 'Failed to update song' }, { status: 500 });
+    return handleApiError(error, { route: '/api/songs/[songId]', method: 'PATCH' });
   }
 }
 
@@ -129,11 +120,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 export async function DELETE(req: NextRequest, { params }: RouteContext) {
   try {
     const { songId } = await params;
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const user = await requireAuth();
 
     // Verify ownership
     const existing = await db.song.findUnique({
@@ -142,11 +129,11 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
     });
 
     if (!existing) {
-      return NextResponse.json({ error: 'Song not found' }, { status: 404 });
+      throw AppError.notFound('Song');
     }
 
-    if (existing.userId !== session.user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (existing.userId !== user.id) {
+      throw AppError.forbidden('You do not have permission to delete this song');
     }
 
     // Soft delete by archiving
@@ -157,7 +144,6 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('DELETE /api/songs/[songId] error:', error);
-    return NextResponse.json({ error: 'Failed to delete song' }, { status: 500 });
+    return handleApiError(error, { route: '/api/songs/[songId]', method: 'DELETE' });
   }
 }

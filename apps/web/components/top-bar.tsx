@@ -1,6 +1,5 @@
 'use client';
 
-import { type User as SupabaseUser } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
@@ -15,16 +14,16 @@ import {
   Zap,
   Music,
 } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-import { supabase } from '@/lib/supabase';
 import { trpc } from '@cronkwaters/trpc/client/react';
 
 
 export function TopBar() {
   const router = useRouter();
-  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const { data: session } = useSession();
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notifications, setNotifications] = useState(3); // Mock notifications
@@ -33,40 +32,15 @@ export function TopBar() {
   const { data: creditsData } = trpc.usage.getCredits.useQuery(undefined, {
     refetchInterval: 60000, // Refetch every minute
     staleTime: 30000, // Consider data stale after 30 seconds
-    enabled: !!user, // Only fetch when user is authenticated
+    enabled: !!session?.user, // Only fetch when user is authenticated
   });
-
-  useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
-  }, []);
 
   const handleSignOut = async () => {
     try {
-      if (!supabase) {
-        console.error('Supabase not initialized - cannot sign out');
-        // Force redirect to home page anyway
-        router.push('/');
-        return;
-      }
-
-      const { error } = await supabase.auth.signOut();
-
-      if (error) {
-        console.error('Sign out error:', error);
-        // Still redirect even if there's an error
-      }
-
-      // Clear any local storage/session data
-      if (typeof window !== 'undefined') {
-        window.localStorage.removeItem('supabase.auth.token');
-        window.sessionStorage.clear();
-      }
-
-      router.push('/');
+      // Use NextAuth signOut - this handles all session cleanup
+      await signOut({ callbackUrl: '/' });
     } catch (error) {
-      console.error('Unexpected sign out error:', error);
+      console.error('Sign out error:', error);
       // Force redirect anyway
       router.push('/');
     }
@@ -87,6 +61,8 @@ export function TopBar() {
         : creditsData.remaining < 50
           ? 'text-orange-400' // Low = orange
           : 'text-green-400'; // Healthy = green
+
+  const user = session?.user;
 
   return (
     <header
@@ -173,9 +149,9 @@ export function TopBar() {
               className="flex items-center gap-2 rounded-xl px-3 py-1.5 transition-all hover:bg-white/5"
               style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
             >
-              {user?.user_metadata?.avatar_url ? (
+              {user?.image ? (
                 <img
-                  src={user.user_metadata.avatar_url}
+                  src={user.image}
                   alt="Profile"
                   className="h-8 w-8 rounded-lg"
                   style={{ border: '2px solid rgba(255, 99, 71, 0.5)' }}
@@ -192,7 +168,7 @@ export function TopBar() {
                 </div>
               )}
               <span className="max-w-[120px] truncate text-sm font-medium text-white">
-                {user?.user_metadata?.name || user?.email?.split('@')[0] || 'Artist'}
+                {user?.name || user?.email?.split('@')[0] || 'Artist'}
               </span>
               <ChevronDown
                 className={`h-4 w-4 text-gray-400 transition-transform ${profileOpen ? 'rotate-180' : ''}`}
@@ -216,7 +192,7 @@ export function TopBar() {
                 >
                   <div className="border-b p-4" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
                     <p className="text-sm font-medium text-white">
-                      {user?.user_metadata?.name || 'Artist'}
+                      {user?.name || 'Artist'}
                     </p>
                     <p className="mt-1 text-xs text-gray-400">{user?.email}</p>
                     {creditsData && !creditsData.unlimited && (

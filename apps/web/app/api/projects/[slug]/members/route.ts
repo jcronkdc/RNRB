@@ -4,18 +4,28 @@ import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
 /**
- * GET /api/projects/[id]/members
+ * GET /api/projects/[slug]/members
  * List all members of a project
  */
-export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { id } = await params;
+    const { slug } = await params;
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const projectId = id;
+    // Find project by slug first
+    const project = await db.project.findFirst({
+      where: { OR: [{ slug }, { id: slug }] },
+      select: { id: true },
+    });
+
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    const projectId = project.id;
 
     // Check if user has access to this project
     const membership = await db.projectMember.findUnique({

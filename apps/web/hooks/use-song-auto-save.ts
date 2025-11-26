@@ -6,12 +6,17 @@ export type SongData = {
   id?: string;
   title?: string;
   key?: string;
-  tempo?: number | string;
+  tempo?: number;
   timeSignature?: string;
   lyrics?: string;
   chords?: unknown;
   status?: 'draft' | 'in_progress' | 'needs_review' | 'complete';
   visibility?: 'private' | 'org' | 'public';
+  audioUrl?: string | null;
+  audioPath?: string | null;
+  copyrightInfo?: string | null;
+  isrc?: string | null;
+  iswc?: string | null;
 };
 
 export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
