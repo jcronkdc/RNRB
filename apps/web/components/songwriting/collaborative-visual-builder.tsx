@@ -288,7 +288,7 @@ function CollaborativeVisualBuilderInner({
 
   // Collaborative cursors - disabled for now to prevent Ably context issues
   // TODO: Re-enable when Ably context is properly available
-  const remoteCursors: Map<string, unknown> = new Map();
+  const remoteCursors: never[] = []; // Empty array for CursorOverlay
   const cursorsConnected = false;
   // const { remoteCursors, isConnected: cursorsConnected } = useCollaborativeCursors({
   //   channelName: `songwriting:${projectSlug}-cursors`,
