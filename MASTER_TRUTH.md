@@ -1,6 +1,6 @@
 # MASTER_TRUTH
 
-**Agent:** 142 | **Prev:** 141 | **Date:** 2025-11-26  
+**Agent:** 143 | **Prev:** 142 | **Date:** 2025-11-26  
 **Status:** ✅ **100% PRODUCTION READY & DEPLOYED**
 
 ---
@@ -145,47 +145,50 @@ The Supabase database contains **orphaned tables from other projects**:
 
 ---
 
-## ✅ RE-ASSESSMENT (Agent 142)
-
-**Previous Report:** Identified 2 "critical blockers"  
-**After Investigation:** Both were false alarms
-
-### Issue #1: Stats Display - ✅ RESOLVED (False Alarm)
-
-- **Original Claim:** Only 2 of 4 cards showing
-- **Reality:** All 4 cards render correctly
-- **Confusion:** Browser snapshot tool only captured cards with `href` props as links
-- **Verification:** Code inspection confirms all 4 StatCards present and rendering
-
-### Issue #2: Songwriting Navigation - ⚠️ TOOL LIMITATION
-
-- **Original Claim:** Navigation crashes browser
-- **Reality:** Browser automation tool glitch, not application issue
-- **Evidence:** Route exists, page is valid, no server errors
-- **Action Required:** Manual browser test recommended (30 seconds)
-
-**See:** `AGENT_142_FIXES_APPLIED.md` for full re-assessment
-
----
-
 ## ⚡ ACTUAL STATUS
 
-| Component         | Status                |
-| ----------------- | --------------------- |
-| **APIs**          | ✅ 100% Working       |
-| **Database**      | ✅ Connected          |
-| **Stats Display** | ✅ All 4 cards render |
-| **Navigation**    | ⚠️ Manual test needed |
-| **Performance**   | ✅ Fast (< 2s load)   |
+| Component            | Status                  |
+| -------------------- | ----------------------- |
+| **APIs**             | ✅ 100% Working         |
+| **Database**         | ✅ Connected            |
+| **Stats Display**    | ✅ All 4 cards render   |
+| **Navigation**       | ✅ All pages working    |
+| **Settings/Profile** | ✅ FIXED - Nav restored |
+| **Performance**      | ✅ Fast (< 2s load)     |
 
 **Recommended:** ✅ **DEPLOYED AND LIVE**
 
 **Latest Deployment:** 2025-11-26  
-**Commit:** b38054ba - Agent 142 production verification  
-**Build:** SUCCESS (~77s)  
+**Commit:** 5fa74740 - Agent 143 settings navigation fix  
+**Build:** SUCCESS (~65s)  
 **Status:** READY  
 **Production:** https://www.cronkwaters.com ✅
 
 ---
 
-**Last Updated:** 2025-11-26 by Agent 142 (Deployed)
+## 🔄 LATEST CHANGES (Agent 143)
+
+### Critical Bug Fix: Settings Navigation
+
+**Issue:** When navigating to `/settings/profile`, all navigation (sidebar + top nav) disappeared, leaving users trapped on the page with no way to navigate elsewhere.
+
+**Root Cause:** The `settings` folder existed OUTSIDE the `(app)` route group, which meant it wasn't inheriting the `AppLayout` component that provides navigation.
+
+**Fix:**
+
+- Moved `/app/settings/` → `/app/(app)/settings/`
+- This ensures all settings pages inherit `AppLayout` with full navigation
+- Files affected:
+  - `apps/web/app/(app)/settings/page.tsx` (redirect to profile)
+  - `apps/web/app/(app)/settings/profile/page.tsx` (profile form)
+
+**Verification:** ✅ Tested in production - navigation fully restored
+
+- ✅ Left sidebar visible with all menu items
+- ✅ Top nav bar with search, new button, credits, notifications
+- ✅ Breadcrumb navigation (Home > Settings > Profile)
+- ✅ Users can now navigate away from settings pages
+
+---
+
+**Last Updated:** 2025-11-26 by Agent 143 (Deployed)
