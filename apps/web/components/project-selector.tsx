@@ -1,22 +1,26 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, ChevronDown, Folder, Plus } from 'lucide-react';
+import { Check, ChevronDown, Folder, Plus, ExternalLink } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useProjects, useProjectSongActions } from '@/hooks/use-projects';
 
 interface ProjectSelectorProps {
   songId: string | undefined;
   onProjectAdded?: (projectSlug: string) => void;
   className?: string;
+  allowNavigation?: boolean; // New prop to enable "View Project" links
 }
 
 /**
  * Project Selector Component
  * Allows users to save songs to projects from anywhere in the app
+ * Now with optional navigation to project pages
  */
-export function ProjectSelector({ songId, onProjectAdded, className = '' }: ProjectSelectorProps) {
+export function ProjectSelector({ songId, onProjectAdded, className = '', allowNavigation = true }: ProjectSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProjects, setSelectedProjects] = useState<Set<string>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const { projects, isLoading, error: projectsError } = useProjects();
   const { addSongToProject, isAdding, error: addError } = useProjectSongActions();
@@ -120,39 +124,54 @@ export function ProjectSelector({ songId, onProjectAdded, className = '' }: Proj
                 const isSelected = selectedProjects.has(project.slug);
 
                 return (
-                  <button
-                    key={project.id}
-                    onClick={() => handleAddToProject(project.slug)}
-                    disabled={isSelected || isAdding}
-                    className={`flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors ${
-                      isSelected
-                        ? 'bg-orange-500/10 text-orange-400'
-                        : 'hover:bg-zinc-800 text-white'
-                    } disabled:cursor-not-allowed disabled:opacity-50`}
-                  >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-800">
-                      {project.cover_image ? (
-                        <img
-                          src={project.cover_image}
-                          alt={project.name}
-                          className="h-full w-full rounded-lg object-cover"
-                        />
-                      ) : (
-                        <Folder className="h-5 w-5 text-zinc-500" />
+                  <div key={project.id} className="group relative">
+                    <button
+                      onClick={() => handleAddToProject(project.slug)}
+                      disabled={isSelected || isAdding}
+                      className={`flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors ${
+                        isSelected
+                          ? 'bg-orange-500/10 text-orange-400'
+                          : 'hover:bg-zinc-800 text-white'
+                      } disabled:cursor-not-allowed disabled:opacity-50`}
+                    >
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-800">
+                        {project.cover_image ? (
+                          <img
+                            src={project.cover_image}
+                            alt={project.name}
+                            className="h-full w-full rounded-lg object-cover"
+                          />
+                        ) : (
+                          <Folder className="h-5 w-5 text-zinc-500" />
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="truncate font-medium">{project.name}</p>
+                        <p className="truncate text-xs text-zinc-500">
+                          {project.song_count} song{project.song_count !== 1 ? 's' : ''}
+                        </p>
+                      </div>
+
+                      {isSelected && (
+                        <Check className="h-4 w-4 shrink-0 text-orange-500" />
                       )}
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate font-medium">{project.name}</p>
-                      <p className="truncate text-xs text-zinc-500">
-                        {project.song_count} song{project.song_count !== 1 ? 's' : ''}
-                      </p>
-                    </div>
-
-                    {isSelected && (
-                      <Check className="h-4 w-4 shrink-0 text-orange-500" />
+                    </button>
+                    
+                    {/* View Project Link - appears on hover */}
+                    {allowNavigation && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/projects/${project.slug}`);
+                        }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-zinc-800/90 p-1.5 opacity-0 transition-opacity hover:bg-zinc-700 group-hover:opacity-100"
+                        title="View Project"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />
+                      </button>
                     )}
-                  </button>
+                  </div>
                 );
               })}
 
