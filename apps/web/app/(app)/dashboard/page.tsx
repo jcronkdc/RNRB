@@ -117,9 +117,9 @@ const PrimaryActionCard = memo(
           boxShadow: 'var(--shadow)',
         }}
       >
-        {/* Accent glow on hover */}
+        {/* Accent glow on hover - pointer-events-none to not block clicks */}
         <div
-          className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{
             background:
               'radial-gradient(ellipse at top right, rgba(255, 99, 71, 0.15), transparent 70%)',
