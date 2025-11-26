@@ -74,7 +74,7 @@ export function SidebarNav() {
 
   const handleSignOut = async () => {
     setSigningOut(true);
-    
+
     try {
       await signOut({ callbackUrl: '/' });
       showToast('Successfully signed out', 'success');
@@ -98,7 +98,7 @@ export function SidebarNav() {
       transition={{ duration: 0.3, ease: 'easeInOut' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="fixed left-0 top-0 z-40 h-screen"
+      className="fixed left-0 top-0 z-40 h-screen overflow-hidden"
       style={{
         background: 'linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 100%)',
         borderRight: '1px solid rgba(255, 255, 255, 0.1)',
@@ -138,7 +138,7 @@ export function SidebarNav() {
       </div>
 
       {/* Navigation Items */}
-      <nav className="space-y-1 px-3 py-6">
+      <nav className="space-y-1 overflow-hidden px-3 py-6">
         {navItems.map((item, index) => {
           if (item.divider) {
             return (
@@ -260,9 +260,9 @@ export function SidebarNav() {
             className="pointer-events-auto absolute bottom-20 left-0 right-0 px-4"
           >
             <div className="rounded-lg border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3">
-              <p className="text-muted-foreground text-center text-xs">
+              <p className="text-center text-xs text-muted-foreground">
                 Press{' '}
-                <kbd className="bg-muted rounded px-1.5 py-0.5 text-[10px] font-medium">?</kbd> for
+                <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">?</kbd> for
                 shortcuts
               </p>
             </div>
