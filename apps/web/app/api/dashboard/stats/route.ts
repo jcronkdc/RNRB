@@ -4,7 +4,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/session';
+import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
 
 // Subscription tier storage limits (in bytes)
@@ -16,7 +16,7 @@ const STORAGE_LIMITS: Record<string, number> = {
 
 export async function GET() {
   try {
-    const session = await getServerSession();
+    const session = await auth();
 
     if (!session?.user?.id) {
       return NextResponse.json(
