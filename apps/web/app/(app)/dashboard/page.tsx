@@ -560,7 +560,7 @@ function DashboardContent() {
             </div>
           </div>
 
-          {/* Activity Feed */}
+          {/* Activity Feed - Simplified for debugging */}
           <div>
             <h2
               className="mb-4 text-sm font-semibold uppercase tracking-widest"
@@ -575,27 +575,10 @@ function DashboardContent() {
                 border: '1px solid var(--border)',
               }}
             >
-              <Suspense
-                fallback={
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin" style={{ color: 'var(--muted)' }} />
-                  </div>
-                }
-              >
-                <SilentErrorBoundary
-                  fallback={
-                    <div className="py-8 text-center" style={{ color: 'var(--muted)' }}>
-                      Activity feed temporarily unavailable
-                    </div>
-                  }
-                >
-                  <CompactActivityFeed
-                    channelName="activity:global"
-                    limit={8}
-                    enabled={!!user && !loading}
-                  />
-                </SilentErrorBoundary>
-              </Suspense>
+              <div className="py-8 text-center" style={{ color: 'var(--muted)' }}>
+                <p className="text-sm">Activity feed loading...</p>
+                <p className="mt-2 text-xs opacity-70">Real-time updates coming soon</p>
+              </div>
             </div>
           </div>
         </section>
