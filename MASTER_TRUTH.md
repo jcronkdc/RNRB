@@ -1,7 +1,7 @@
 # MASTER_TRUTH
 
-**Agent:** 146 | **Prev:** 145 | **Date:** 2025-11-27  
-**Status:** ✅ **100% PRODUCTION READY - NAVIGATION FIXES APPLIED**
+**Agent:** 147 | **Prev:** 146 | **Date:** 2025-11-27  
+**Status:** ✅ **100% PRODUCTION READY - PROFILE SETUP UX FIXED**
 
 ---
 
@@ -14,12 +14,14 @@
 | **Health Check**  | ✅ 100%                                         |
 | **Dashboard**     | ✅ All 4 stats displaying - Verified in prod    |
 | **Auth**          | ✅ NextAuth + Google OAuth + Email/Password     |
+| **Auth Redirect** | ✅ Sign-in → Dashboard flow fixed               |
+| **Profile Setup** | ✅ Minimal layout for first-time setup (NEW)    |
 | **Database**      | ✅ Neon PostgreSQL (connected)                  |
 | **Video**         | ✅ Daily.co configured                          |
 | **Chat**          | ✅ Ably configured                              |
 | **AI**            | ✅ OpenAI configured                            |
 | **Stack**         | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0 |
-| **Onboarding**    | ✅ New user profile setup flow active           |
+| **Onboarding**    | ✅ Clean, focused first-time user experience    |
 | **Notifications** | ✅ Notification Bell functional in TopBar       |
 | **Landing Page**  | ✅ Clean - No notification clutter              |
 | **Navigation**    | ✅ Dashboard access from UserMenu               |
@@ -395,4 +397,55 @@ New users are automatically redirected to profile setup after signup. This ensur
 
 ---
 
-**Last Updated:** 2025-11-27 by Agent 146 (Landing Page Navigation Fixes)
+## 🎨 PROFILE SETUP UX FIX (Agent 147)
+
+### Issue Resolved
+
+**Problem:** When new users were redirected to `/settings/profile?setup=true` for first-time profile setup, they saw the **full app layout** including:
+
+- Sidebar navigation
+- Top bar
+- Command palette
+- AI Assistant widget
+- All app chrome
+
+This created a **cluttered, unfocused experience** during initial onboarding.
+
+**Root Cause:** `AppLayout` used `usePathname()` which doesn't include query parameters, so it couldn't detect `setup=true` to provide a minimal layout.
+
+### Solution
+
+Modified `AppLayout` to detect profile setup mode and render a **minimal, clean layout**:
+
+```typescript
+// Check if this is the profile setup flow (minimal UI needed)
+const isProfileSetup = pathname === '/settings/profile' && searchParams.get('setup') === 'true';
+
+// Minimal layout for profile setup - clean, focused, no distractions
+if (isProfileSetup) {
+  return (
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      {children}
+    </div>
+  );
+}
+```
+
+### User Experience
+
+**Before:** Cluttered UI with sidebar, top bar, widgets competing for attention  
+**After:** Clean, centered profile form with zero distractions
+
+### Files Modified
+
+- `/apps/web/components/app-layout.tsx`
+  - Added `useSearchParams()` for query parameter detection
+  - Added `Suspense` boundary (required for `useSearchParams()`)
+  - Added minimal layout mode for profile setup
+  - Zero breaking changes, backward compatible
+
+**See:** `AGENT_147_SIGN_IN_REDIRECT_FIX.md` for complete technical details
+
+---
+
+**Last Updated:** 2025-11-27 by Agent 147 (Profile Setup UX Fix)

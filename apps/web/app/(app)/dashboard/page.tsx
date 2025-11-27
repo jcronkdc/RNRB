@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { ErrorBoundary } from '@/components/error-boundary';
@@ -335,6 +336,7 @@ const DashboardSkeleton = () => (
 function DashboardContent() {
   const { user, loading } = useRequireAuth();
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -344,10 +346,20 @@ function DashboardContent() {
     setIsMounted(true);
   }, []);
 
-  // Dashboard data with caching
+  // Check if profile setup is complete - redirect new users to profile setup
+  useEffect(() => {
+    if (session?.user && !loading) {
+      const profileCompleted = (session.user as { profileCompleted?: boolean }).profileCompleted;
+      if (profileCompleted === false) {
+        router.push('/settings/profile?setup=true');
+      }
+    }
+  }, [session, loading, router]);
+
+  // Dashboard data with caching - ONLY enable when session is fully loaded
   const { data: dashboardStats, loading: statsLoading } = useDashboardData({
     refreshInterval: 60000,
-    enabled: isMounted && !!user && !loading,
+    enabled: isMounted && !!user && !loading && status === 'authenticated',
   });
 
   // Debug: Log dashboard stats
@@ -356,7 +368,7 @@ function DashboardContent() {
     console.log('[Dashboard Page] Stats Loading:', statsLoading);
   }, [dashboardStats, statsLoading]);
 
-  // Fetch recent projects
+  // Fetch recent projects - ONLY when session is fully loaded
   const loadProjects = useCallback(async () => {
     setLoadingProjects(true);
     try {
@@ -373,10 +385,10 @@ function DashboardContent() {
   }, []); // Stable reference - no dependencies needed
 
   useEffect(() => {
-    if (user && !loading) {
+    if (user && !loading && status === 'authenticated') {
       loadProjects();
     }
-  }, [user, loading, loadProjects]); // Now includes loadProjects
+  }, [user, loading, status, loadProjects]); // Now includes status check
 
   // Stable user name
   const userName = useMemo(() => {
@@ -404,7 +416,8 @@ function DashboardContent() {
   }, [user, isMounted]);
 
   // Show skeleton only during initial load or before hydration
-  if (!isMounted || (loading && !user)) {
+  // CRITICAL: Also wait for session to be authenticated, not just loaded
+  if (!isMounted || loading || status === 'loading' || !user) {
     return <DashboardSkeleton />;
   }
 
