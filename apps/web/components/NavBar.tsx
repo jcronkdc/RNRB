@@ -48,18 +48,18 @@ const FEATURES: NavLink[] = [
 const SOLUTIONS: NavLink[] = [
   {
     label: 'For Bands',
-    href: '/#solutions',
-    description: 'Collaborate across distances',
+    href: '/solutions/bands',
+    description: 'Collaborate across distances, tour management, smart setlists',
   },
   {
     label: 'For Songwriters',
-    href: '/#solutions',
-    description: 'Tools to craft your best songs',
+    href: '/solutions/songwriters',
+    description: 'AI-powered tools, copyright protection, find collaborators',
   },
   {
     label: 'For Studios',
-    href: '/#solutions',
-    description: 'Professional workflow tools',
+    href: '/solutions/studios',
+    description: 'Professional workflow, client portals, remote sessions',
   },
 ];
 
