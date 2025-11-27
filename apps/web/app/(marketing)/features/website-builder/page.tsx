@@ -19,6 +19,9 @@ import {
 import Link from 'next/link';
 
 export default function WebsiteBuilderFeaturePage() {
+  const templateCardClass =
+    'rnrb-card group relative w-full overflow-hidden rounded-2xl border border-white/5 p-0 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_25px_60px_rgba(0,0,0,0.45)]';
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero */}
@@ -29,7 +32,7 @@ export default function WebsiteBuilderFeaturePage() {
           <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
         </div>
 
-        <div className="rnrb-container relative z-10 max-w-6xl px-4 py-20">
+        <div className="rnrb-container relative z-10 mx-auto max-w-6xl px-4 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -69,7 +72,7 @@ export default function WebsiteBuilderFeaturePage() {
 
       {/* Templates Showcase */}
       <div id="templates" className="border-b border-border/50 bg-surface/30">
-        <div className="rnrb-container max-w-7xl px-4 py-20">
+        <div className="rnrb-container mx-auto max-w-7xl px-4 py-20">
           <h2 className="font-display mb-4 text-center text-4xl font-bold">
             8 Pro Templates Built for Musicians
           </h2>
@@ -78,14 +81,14 @@ export default function WebsiteBuilderFeaturePage() {
             in the best possible light.
           </p>
 
-          <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto mb-12 grid w-full max-w-6xl justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {/* NOIR - Cinematic dark */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.05 }}
             >
-              <Card className="rnrb-card group relative overflow-hidden p-0 transition-all hover:scale-105">
+              <Card className={templateCardClass}>
                 <div
                   className="aspect-[4/3] overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%)' }}
@@ -133,7 +136,7 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 }}
             >
-              <Card className="rnrb-card group relative overflow-hidden p-0 transition-all hover:scale-105">
+              <Card className={templateCardClass}>
                 <div
                   className="aspect-[4/3] overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #1a1612 0%, #2d2318 100%)' }}
@@ -199,7 +202,7 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.15 }}
             >
-              <Card className="rnrb-card group relative overflow-hidden p-0 transition-all hover:scale-105">
+              <Card className={templateCardClass}>
                 <div
                   className="aspect-[4/3] overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #0d0015 0%, #1a0025 100%)' }}
@@ -265,7 +268,7 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.2 }}
             >
-              <Card className="rnrb-card group relative overflow-hidden p-0 transition-all hover:scale-105">
+              <Card className={templateCardClass}>
                 <div
                   className="aspect-[4/3] overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0e8 100%)' }}
@@ -322,7 +325,7 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.25 }}
             >
-              <Card className="rnrb-card group relative overflow-hidden p-0 transition-all hover:scale-105">
+              <Card className={templateCardClass}>
                 <div
                   className="aspect-[4/3] overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #0f0f0f 0%, #1f1f1f 100%)' }}
@@ -378,7 +381,7 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.3 }}
             >
-              <Card className="rnrb-card group relative overflow-hidden p-0 transition-all hover:scale-105">
+              <Card className={templateCardClass}>
                 <div
                   className="aspect-[4/3] overflow-hidden rounded-t-xl"
                   style={{ background: '#ffffff' }}
@@ -420,7 +423,7 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.35 }}
             >
-              <Card className="rnrb-card group relative overflow-hidden p-0 transition-all hover:scale-105">
+              <Card className={templateCardClass}>
                 <div
                   className="aspect-[4/3] overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #1a1510 0%, #2a2015 100%)' }}
@@ -484,7 +487,7 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.4 }}
             >
-              <Card className="rnrb-card group relative overflow-hidden p-0 transition-all hover:scale-105">
+              <Card className={templateCardClass}>
                 <div
                   className="aspect-[4/3] overflow-hidden rounded-t-xl"
                   style={{
@@ -555,12 +558,12 @@ export default function WebsiteBuilderFeaturePage() {
       </div>
 
       {/* Features */}
-      <div id="features" className="rnrb-container max-w-7xl px-4 py-20">
+      <div id="features" className="rnrb-container mx-auto max-w-7xl px-4 py-20">
         <h2 className="font-display mb-12 text-center text-4xl font-bold">
           Everything You Need to Shine Online
         </h2>
 
-        <div className="mb-20 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto mb-20 grid w-full max-w-6xl gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[
             {
               icon: Zap,
@@ -629,7 +632,7 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 * (index + 1) }}
             >
-              <Card className="rnrb-card h-full p-6">
+              <Card className="rnrb-card h-full rounded-2xl border border-white/5 p-6 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
                 <div
                   className={`mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-${feature.color}-500/10`}
                 >
