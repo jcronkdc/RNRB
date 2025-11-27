@@ -5,7 +5,7 @@ import { auth } from '@/auth';
 export async function PATCH(request: Request) {
   try {
     const session = await auth();
-    
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -38,16 +38,17 @@ export async function PATCH(request: Request) {
     );
   } catch (error) {
     console.error('[PROFILE] ERROR:', error);
-    return NextResponse.json({ 
-      error: 'Failed to update profile',
-      details: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.message : String(error) : undefined
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to update profile',
+        details:
+          process.env.NODE_ENV === 'development'
+            ? error instanceof Error
+              ? error.message
+              : String(error)
+            : undefined,
+      },
+      { status: 500 }
+    );
   }
 }
-
-
-
-
-
-
-

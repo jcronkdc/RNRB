@@ -389,9 +389,3 @@ const TourCard = memo(function TourCard({
     </motion.div>
   );
 });
-
-
-
-
-
-

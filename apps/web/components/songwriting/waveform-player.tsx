@@ -263,9 +263,3 @@ export function WaveformPlayer({
     </Card>
   );
 }
-
-
-
-
-
-

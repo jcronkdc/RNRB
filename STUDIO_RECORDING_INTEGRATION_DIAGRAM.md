@@ -418,9 +418,3 @@ callObject.off('recording-stopped', handler)
 - [x] Multiple fallback locations for recording ID
 
 **Status:** 🎉 **COMPLETE & VERIFIED**
-
-
-
-
-
-

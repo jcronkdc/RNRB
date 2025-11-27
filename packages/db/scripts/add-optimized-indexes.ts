@@ -63,9 +63,3 @@ async function addOptimizedIndexes() {
 }
 
 addOptimizedIndexes();
-
-
-
-
-
-

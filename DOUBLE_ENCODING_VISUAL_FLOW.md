@@ -164,20 +164,24 @@
 ## 🔑 Key Difference
 
 ### ❌ Before (Broken)
+
 Manual parsing treats `+` as literal character:
+
 ```typescript
-"email=user+test@example.com".split('=')
+'email=user+test@example.com'.split('=');
 // ["email", "user+test@example.com"]
-params.set("email", "user+test@example.com")
+params.set('email', 'user+test@example.com');
 // Encodes to: email=user%2Btest%40example.com
 // Browser decodes: email=user+test@example.com
 // But + in URL query = space, so: user test@example.com ❌
 ```
 
 ### ✅ After (Fixed)
+
 URL constructor properly handles encoding context:
+
 ```typescript
-new URL("/invites/project?email=user+test@example.com", "http://dummy.com")
+new URL('/invites/project?email=user+test@example.com', 'http://dummy.com');
 // Parses as: email parameter value is "user+test@example.com"
 // .search returns: "?email=user%2Btest%40example.com"
 // Browser decodes: email=user+test@example.com
@@ -192,11 +196,10 @@ new URL("/invites/project?email=user+test@example.com", "http://dummy.com")
 
 1. **In query string keys/values:** `+` means space
    - `name=John+Doe` → `name=John Doe`
-   
 2. **When you want literal +:** Must encode as `%2B`
    - `email=user%2Btest@example.com` → `email=user+test@example.com`
 
-3. **Manual parsing breaks this:** 
+3. **Manual parsing breaks this:**
    - Can't distinguish between `+` (space) and `+` (literal)
    - Causes double-encoding issues
 
@@ -209,9 +212,11 @@ new URL("/invites/project?email=user+test@example.com", "http://dummy.com")
 **Status:** ✅ Fixed - Ready for production
 
 **Files:**
+
 - `apps/web/app/(app)/settings/profile/page.tsx` (lines 159-162)
 
 **Documentation:**
+
 - `DOUBLE_ENCODING_FIX.md`
 - `AUTH_REDIRECT_ENCODING_AUDIT.md`
 - `DOUBLE_ENCODING_VISUAL_FLOW.md` (this file)
@@ -219,4 +224,3 @@ new URL("/invites/project?email=user+test@example.com", "http://dummy.com")
 ---
 
 **Token Count:** ~68K / 200K (34% used)
-

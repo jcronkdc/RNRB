@@ -224,9 +224,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete version' }, { status: 500 });
   }
 }
-
-
-
-
-
-

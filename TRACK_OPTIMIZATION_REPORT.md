@@ -331,9 +331,3 @@ The track creation feature has been significantly enhanced with:
 - ✅ Better resource management
 
 The feature is now production-ready and provides a solid foundation for integrating actual AI music generation services.
-
-
-
-
-
-

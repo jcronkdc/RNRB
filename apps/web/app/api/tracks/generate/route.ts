@@ -218,9 +218,3 @@ function generateTrackTitle(params: z.infer<typeof generateTrackSchema>): string
 
   return `${title} - ${timestamp}`;
 }
-
-
-
-
-
-

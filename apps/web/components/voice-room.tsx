@@ -255,9 +255,3 @@ export function VoiceRoom({
     </DailyProvider>
   );
 }
-
-
-
-
-
-

@@ -285,9 +285,3 @@ export function VirtualizedMessageList({
     </div>
   );
 }
-
-
-
-
-
-

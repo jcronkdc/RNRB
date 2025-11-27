@@ -34,5 +34,3 @@ export function usePostHogTracking() {
     track: trackEvent,
   };
 }
-
-

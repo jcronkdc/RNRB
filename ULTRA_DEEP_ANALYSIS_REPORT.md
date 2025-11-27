@@ -12,6 +12,7 @@
 **Token Count: ~98,000 / 200,000 (49% used)**
 
 ### Critical Findings:
+
 - 🔴 **23 TypeScript Errors** - Build blocking issues
 - 🔴 **1 Memory Leak** - Rate limiter setInterval not cleared
 - 🟡 **137 API Routes** - Rate limiting not consistently applied
@@ -31,6 +32,7 @@
 #### Error Categories:
 
 **A. NextAuth Route Handler Type Mismatch**
+
 - **File:** `.next/types/validator.ts:603`
 - **Issue:** NextAuth route handler type incompatibility between React 18 and React 19
 - **Impact:** Type checking fails, potential runtime issues
@@ -38,7 +40,8 @@
 - **Fix Required:** Update NextAuth configuration or align React versions
 
 **B. Missing Required Properties**
-- **Files:** 
+
+- **Files:**
   - `app/(app)/explore/page.tsx:271` - `trackId` prop doesn't exist
   - `app/(app)/shows/calendar/page.tsx:358` - `Show` type mismatch (missing `slug`)
   - `app/(app)/tours/page-optimized.tsx:188` - Type `string` not assignable to `Date`
@@ -47,24 +50,28 @@
 - **Priority:** HIGH
 
 **C. Implicit `any` Types**
+
 - **File:** `app/api/projects/[slug]/insights/route.ts:193`
 - **Issue:** Parameters `a` and `b` implicitly have `any` type
 - **Impact:** Type safety lost
 - **Priority:** MEDIUM
 
 **D. Undefined Variable Usage**
+
 - **File:** `app/api/rooms/voice/route.ts:140`
 - **Issue:** Variable `dailyRoomUrl` used before assignment
 - **Impact:** Runtime error
 - **Priority:** HIGH
 
 **E. String | undefined Not Assignable to string**
+
 - **Files:** Multiple API routes (setlist-templates, shows, etc.)
 - **Issue:** 15+ instances of `string | undefined` not properly handled
 - **Impact:** Runtime errors possible
 - **Priority:** MEDIUM
 
 **F. Unknown Property**
+
 - **File:** `app/api/setlists/generate/route.ts:67`
 - **Issue:** `allowedDeviation` doesn't exist in `OptimizerOptions`
 - **Impact:** Runtime error
@@ -81,15 +88,20 @@
 **File:** `apps/web/lib/rate-limit.ts:36-47`
 
 **Issue:**
+
 ```typescript
 if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
-    // Cleanup code
-  }, 5 *43 * 60 * 1000);
+  setInterval(
+    () => {
+      // Cleanup code
+    },
+    5 * 43 * 60 * 1000
+  );
 }
 ```
 
 **Problem:**
+
 - `setInterval` ID not stored
 - Never cleared, causing memory leak in serverless environments
 - Same issue as `cache.ts` that was fixed
@@ -99,6 +111,7 @@ if (typeof setInterval !== 'undefined') {
 **Fix Required:** Store interval ID and clear on process exit
 
 **Similar Pattern Found:**
+
 - ✅ `apps/web/lib/cache.ts` - **FIXED** (Agent 148)
 - 🔴 `apps/web/lib/rate-limit.ts` - **NOT FIXED**
 
@@ -109,11 +122,13 @@ if (typeof setInterval !== 'undefined') {
 **Finding:** Rate limiting library exists but not used consistently
 
 **Analysis:**
+
 - **Total API Routes:** 137
 - **Routes Using Rate Limiting:** ~10 (7%)
 - **Routes Missing Rate Limiting:** ~127 (93%)
 
 **Critical Routes Without Rate Limiting:**
+
 - `/api/register` - Account creation spam
 - `/api/projects/[slug]/insights` - Expensive computation
 - `/api/library/upload` - File upload abuse
@@ -134,11 +149,13 @@ if (typeof setInterval !== 'undefined') {
 **Finding:** Fetch calls without timeout protection
 
 **Analysis:**
+
 - **Total Fetch Calls:** 13 found in API routes
 - **With Timeout:** 0 (0%)
 - **Without Timeout:** 13 (100%)
 
 **Files Affected:**
+
 - `apps/web/app/api/daily/rooms/[roomName]/route.ts`
 - `apps/web/app/api/rooms/voice/route.ts`
 - `apps/web/app/api/daily/rooms/route.ts`
@@ -151,6 +168,7 @@ if (typeof setInterval !== 'undefined') {
 **Fix Required:** Add AbortController with timeout to all fetch calls
 
 **Example Fix:**
+
 ```typescript
 const controller = new AbortController();
 const timeout = setTimeout(() => controller.abort(), 30000);
@@ -173,11 +191,13 @@ try {
 **Finding:** 67 files use JSON.parse - need verification of security measures
 
 **Files Already Secured (Verified):**
+
 - ✅ `apps/web/lib/validations.ts` - Has size/depth limits, prototype pollution protection
 - ✅ `apps/web/components/songwriting/voice-memo-recorder.tsx` - Has size/array limits
 - ✅ `apps/web/hooks/use-notifications.ts` - Has size/array limits
 
 **Files Needing Verification:**
+
 - 🔍 `apps/web/components/songwriting/audio-uploader.tsx:107` - No visible security measures
 - 🔍 `apps/web/hooks/use-library.ts:292,294` - No visible security measures
 - 🔍 64 other files - Need manual review
@@ -193,12 +213,14 @@ try {
 **Finding:** 167 timer operations found - need cleanup verification
 
 **Breakdown:**
+
 - `setInterval`: ~52 instances
 - `setTimeout`: ~115 instances
 - `clearInterval`: ~30 instances
 - `clearTimeout`: ~20 instances
 
 **Files Already Fixed:**
+
 - ✅ `apps/web/lib/cache.ts` - Fixed (Agent 148)
 - ✅ `apps/web/lib/read-receipts.ts` - Fixed (Agent 148)
 - ✅ `apps/web/hooks/use-song-suggestions.ts` - Fixed (Agent 148)
@@ -206,6 +228,7 @@ try {
 - ✅ `apps/web/app/invites/[projectSlug]/page.tsx` - Fixed (Agent 148)
 
 **Files Needing Verification:**
+
 - 🔍 `apps/web/components/enhanced-project-chat.tsx` - 4 timers
 - 🔍 `apps/web/hooks/use-song-suggestions.ts` - 8 timers (partially fixed)
 - 🔍 `apps/web/components/songwriting/voice-memo-recorder.tsx` - 2 timers
@@ -223,12 +246,14 @@ try {
 **Finding:** Error boundaries exist but coverage incomplete
 
 **Current Implementation:**
+
 - ✅ `apps/web/components/error-boundary.tsx` - Full error boundary component
 - ✅ `apps/web/app/layout.tsx` - Root-level error boundary
 - ✅ `apps/web/app/(app)/dashboard/page.tsx` - Dashboard error boundary
 - ✅ `apps/web/components/songwriting/collaborative-visual-builder.tsx` - Component-level boundary
 
 **Missing Coverage:**
+
 - 🔴 Route-level boundaries for all pages
 - 🔴 Feature-level boundaries (chat, songwriting, projects)
 - 🔴 Critical component boundaries (audio players, editors)
@@ -244,11 +269,13 @@ try {
 **Finding:** 265 instances of type safety issues
 
 **Breakdown:**
+
 - `any` types: ~273 instances
 - Non-null assertions (`!`): ~17 instances
 - Type assertions (`as`): ~50 instances
 
 **Most Critical Files:**
+
 - `app/api/projects/[slug]/insights/route.ts` - 16 `any` types
 - `app/(app)/shows/calendar/page.tsx` - 3 `any` types
 - `app/invites/[projectSlug]/page.tsx` - 2 `any` types + assertions
@@ -266,12 +293,14 @@ try {
 **Finding:** 16 localStorage operations found
 
 **Files Already Fixed:**
+
 - ✅ `apps/web/components/songwriting/voice-memo-recorder.tsx` - Fixed (Agent 148)
 - ✅ `apps/web/components/theme/ThemeToggle.tsx` - Fixed (Agent 148)
 - ✅ `apps/web/components/first-time-onboarding.tsx` - Fixed (Agent 148)
 - ✅ `apps/web/hooks/use-notifications.ts` - Fixed (Agent 148)
 
 **Files Needing Verification:**
+
 - 🔍 `apps/web/hooks/use-dashboard-data.ts` - 2 operations
 - 🔍 `apps/web/app/(app)/songwriting/page.tsx` - 3 operations
 
@@ -286,6 +315,7 @@ try {
 **Finding:** 5+ useEffect hooks with potential dependency issues
 
 **Files Needing Review:**
+
 - 🔍 `apps/web/components/songwriting/metronome.tsx` - 5 useEffect hooks
 
 **Risk:** LOW - Stale closures, unnecessary re-renders  
@@ -297,17 +327,20 @@ try {
 ## 📋 SUMMARY STATISTICS
 
 ### Issues by Priority:
+
 - 🔴 **Critical:** 4 issues (TypeScript errors, memory leak, rate limiting, timeouts)
 - 🟡 **High:** 4 issues (JSON.parse, timers, error boundaries, type safety)
 - 🟢 **Medium:** 2 issues (localStorage, useEffect)
 
 ### Issues by Category:
+
 - **Type Safety:** 23 TypeScript errors + 265 type issues = 288 total
 - **Security:** Rate limiting (93% routes unprotected), JSON.parse (64 files unverified)
 - **Performance:** Memory leaks (1), timer cleanup (48 files unverified)
 - **Architecture:** Error boundaries (incomplete), request timeouts (missing)
 
 ### Files Affected:
+
 - **TypeScript Errors:** 15 files
 - **Rate Limiting:** 127 API routes
 - **Request Timeouts:** 13 fetch calls
@@ -320,18 +353,21 @@ try {
 ## 🎯 PRIORITY RECOMMENDATIONS
 
 ### Immediate (This Week):
+
 1. 🔴 **Fix TypeScript Errors** (23 errors) - Blocking type safety
 2. 🔴 **Fix Rate Limiter Memory Leak** - Critical production issue
 3. 🔴 **Add Rate Limiting to Critical Routes** - Security vulnerability
 4. 🔴 **Add Request Timeouts** - Resource exhaustion prevention
 
 ### High Priority (This Month):
+
 5. 🟡 **Verify JSON.parse Security** - Audit 64 files
 6. 🟡 **Verify Timer Cleanup** - Audit 48 files
 7. 🟡 **Add Error Boundaries** - Route and feature level
 8. 🟡 **Fix Type Safety Issues** - Replace `any` types gradually
 
 ### Medium Priority (Next Sprint):
+
 9. 🟢 **Verify localStorage Error Handling** - Remaining 2 files
 10. 🟢 **Review useEffect Dependencies** - Manual review
 
@@ -342,40 +378,50 @@ try {
 ### TypeScript Error Details
 
 **1. NextAuth Type Mismatch**
+
 ```
 .next/types/validator.ts(603,31): error TS2344
 Type 'typeof import(".../route")' does not satisfy constraint
 Types of property 'GET' are incompatible
 ```
+
 **Root Cause:** React version mismatch (18 vs 19)  
 **Fix:** Align React versions or update NextAuth config
 
 **2. Missing Properties**
+
 ```
 app/(app)/explore/page.tsx(271,17): error TS2322
 Property 'trackId' does not exist on type 'AudioPlayerProps'
 ```
+
 **Fix:** Add `trackId` prop to `AudioPlayerProps` or remove prop type
 
 **3. Type Mismatches**
+
 ```
 app/(app)/tours/page-optimized.tsx(188,17): error TS2322
 Type 'string' is not assignable to type 'Date'
 ```
+
 **Fix:** Convert string to Date: `new Date(dateString)`
 
 **4. Implicit Any**
+
 ```
 app/api/projects/[slug]/insights/route.ts(193,34): error TS7006
 Parameter 'a' implicitly has an 'any' type
 ```
+
 **Fix:** Add type annotations: `(a: number, b: number) => number`
 
 **5. Undefined Variables**
+
 ```
 app/api/rooms/voice/route.ts(140,16): error TS2454
 Variable 'dailyRoomUrl' is used before being assigned
 ```
+
 **Fix:** Initialize variable or add null check
 
 ---
@@ -383,6 +429,7 @@ Variable 'dailyRoomUrl' is used before being assigned
 ### Rate Limiting Analysis
 
 **Current Usage:**
+
 - ✅ `app/api/ai/transcribe/route.ts` - Uses `aiLimiter`
 - ✅ `app/api/ai/tour-router/route.ts` - Uses `aiLimiter`
 - ✅ `app/api/ai/generate-content/route.ts` - Uses `aiLimiter`
@@ -391,6 +438,7 @@ Variable 'dailyRoomUrl' is used before being assigned
 - ✅ `app/api/rhyme/route.ts` - Uses `standardLimiter`
 
 **Missing Rate Limiting:**
+
 - 🔴 `/api/register` - Account creation spam
 - 🔴 `/api/projects/*` - Project operations (20+ routes)
 - 🔴 `/api/songs/*` - Song operations (10+ routes)
@@ -412,6 +460,7 @@ Variable 'dailyRoomUrl' is used before being assigned
 ### Request Timeout Analysis
 
 **Files Without Timeouts:**
+
 1. `apps/web/app/api/daily/rooms/[roomName]/route.ts` - 3 fetch calls
 2. `apps/web/app/api/rooms/voice/route.ts` - 2 fetch calls
 3. `apps/web/app/api/daily/rooms/route.ts` - 3 fetch calls
@@ -428,6 +477,7 @@ Variable 'dailyRoomUrl' is used before being assigned
 ## ✅ VERIFICATION CHECKLIST
 
 ### Security:
+
 - [ ] All JSON.parse calls have size/depth limits
 - [ ] All API routes have rate limiting
 - [ ] All fetch calls have timeouts
@@ -435,18 +485,21 @@ Variable 'dailyRoomUrl' is used before being assigned
 - [ ] All error messages sanitized
 
 ### Performance:
+
 - [ ] All timers have cleanup
 - [ ] All intervals cleared on unmount
 - [ ] All memory leaks fixed
 - [ ] All race conditions resolved
 
 ### Type Safety:
+
 - [ ] All TypeScript errors fixed
 - [ ] All `any` types replaced
 - [ ] All non-null assertions validated
 - [ ] All type assertions safe
 
 ### Architecture:
+
 - [ ] Error boundaries at route level
 - [ ] Error boundaries at feature level
 - [ ] Error boundaries at critical component level
@@ -458,6 +511,7 @@ Variable 'dailyRoomUrl' is used before being assigned
 ## 📊 COMPARISON TO PREVIOUS ANALYSIS
 
 **Agent 148 Round 3 (Ultra-Deep) Found:**
+
 - 29 critical/high/medium priority issues
 - Security vulnerabilities (JSON.parse DoS, input size limits)
 - Performance bottlenecks (inefficient array operations)
@@ -465,6 +519,7 @@ Variable 'dailyRoomUrl' is used before being assigned
 - Architectural issues (error boundaries, rate limiting, timeouts)
 
 **This Analysis (Ultra-Deep Round 2) Found:**
+
 - 10 NEW critical/high/medium priority issues
 - 23 TypeScript compilation errors (NEW)
 - 1 memory leak in rate limiter (NEW)
@@ -493,4 +548,3 @@ Variable 'dailyRoomUrl' is used before being assigned
 **Token Count: ~98,000 / 200,000 (49% used)**  
 **Analysis Complete:** 2025-11-27  
 **Next Review:** After fixes applied
-

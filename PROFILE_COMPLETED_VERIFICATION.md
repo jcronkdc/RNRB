@@ -17,7 +17,7 @@ The migration `add_profile_completed` was applied on **2025-11-26 at 23:26:21** 
 
 ```sql
 -- Add column with NOT NULL constraint and DEFAULT false
-ALTER TABLE "User" 
+ALTER TABLE "User"
 ADD COLUMN IF NOT EXISTS "profileCompleted" BOOLEAN NOT NULL DEFAULT false;
 
 -- Update all existing users to have completed profiles
@@ -27,6 +27,7 @@ UPDATE "User" SET "profileCompleted" = true WHERE "createdAt" < NOW();
 ### ✅ Database State Verified
 
 **Query Results:**
+
 - Total users: 7
 - Users with `profileCompleted = true`: 7
 - Users with `profileCompleted = false`: 0
@@ -34,15 +35,15 @@ UPDATE "User" SET "profileCompleted" = true WHERE "createdAt" < NOW();
 
 **All existing users created before the feature (before 2025-11-26 23:26:21):**
 
-| Email | Created At | Profile Completed | Status |
-|-------|-----------|-------------------|---------|
-| demo@rockandrollbasement.com | 2025-11-21 | ✅ true | Existing user |
-| rockstar@cronkwaters.com | 2025-11-22 | ✅ true | Existing user |
-| aiagent@cronkwaters.test | 2025-11-24 | ✅ true | Existing user |
-| demo@testingsongwriting.com | 2025-11-24 | ✅ true | Existing user |
-| test@cronkwaters.com | 2025-11-24 | ✅ true | Existing user |
-| direct-db-test@example.com | 2025-11-26 | ✅ true | Existing user |
-| justin@cronkwaters.com | 2025-11-26 | ✅ true | Existing user |
+| Email                        | Created At | Profile Completed | Status        |
+| ---------------------------- | ---------- | ----------------- | ------------- |
+| demo@rockandrollbasement.com | 2025-11-21 | ✅ true           | Existing user |
+| rockstar@cronkwaters.com     | 2025-11-22 | ✅ true           | Existing user |
+| aiagent@cronkwaters.test     | 2025-11-24 | ✅ true           | Existing user |
+| demo@testingsongwriting.com  | 2025-11-24 | ✅ true           | Existing user |
+| test@cronkwaters.com         | 2025-11-24 | ✅ true           | Existing user |
+| direct-db-test@example.com   | 2025-11-26 | ✅ true           | Existing user |
+| justin@cronkwaters.com       | 2025-11-26 | ✅ true           | Existing user |
 
 ### ✅ Schema Configuration
 
@@ -61,13 +62,15 @@ column_default: "false"     -- New users default to false
 ### For New Users (Sign Up After Migration)
 
 1. **Registration** (`apps/web/app/api/register/route.ts:55`)
+
    ```typescript
-   profileCompleted: false  // Explicitly set for new users
+   profileCompleted: false; // Explicitly set for new users
    ```
 
 2. **Auto Sign-In** (`apps/web/app/auth/page.tsx`)
+
    ```typescript
-   signInWithCredentials({ email, password, isNewUser: true })
+   signInWithCredentials({ email, password, isNewUser: true });
    ```
 
 3. **Auth Action** (`apps/web/app/actions/auth.ts:14-24`)
@@ -89,8 +92,8 @@ column_default: "false"     -- New users default to false
 
 1. **Database State**
    - Migration set `profileCompleted = true` for all existing users
-   
 2. **JWT Callback** (`packages/auth/src/auth.ts:119-126`)
+
    ```typescript
    const dbUser = await prisma.user.findUnique({
      where: { id: user.id },
@@ -98,16 +101,19 @@ column_default: "false"     -- New users default to false
    });
    token.profileCompleted = dbUser?.profileCompleted ?? false;
    ```
+
    - Queries database, gets `true`
    - No NULL values exist due to NOT NULL constraint
 
 3. **Dashboard** (`apps/web/app/(app)/dashboard/page.tsx:352-353`)
    ```typescript
    const profileCompleted = session.user.profileCompleted;
-   if (profileCompleted === false) {  // Strict equality check
+   if (profileCompleted === false) {
+     // Strict equality check
      router.push('/settings/profile?setup=true');
    }
    ```
+
    - `profileCompleted` is `true` for existing users
    - Condition evaluates to `false`
    - User stays on dashboard ✅
@@ -119,6 +125,7 @@ column_default: "false"     -- New users default to false
 ### Files Involved
 
 1. **packages/db/prisma/schema.prisma:61**
+
    ```prisma
    profileCompleted Boolean @default(false)
    ```
@@ -158,20 +165,24 @@ column_default: "false"     -- New users default to false
 The implementation includes multiple safety layers:
 
 ### ✅ Database Level
+
 - NOT NULL constraint prevents NULL values
 - DEFAULT false ensures new rows have a value
 
 ### ✅ Migration Level
+
 - Updates all existing users before enforcing NOT NULL
 - Uses `WHERE "createdAt" < NOW()` to catch all existing users
 
 ### ✅ Application Level
+
 - JWT callback uses `dbUser?.profileCompleted ?? false` (defensive)
 - Dashboard uses strict equality `=== false` (not just falsy check)
 - Auth action queries database for new users
 - Profile page explicitly sets to `true` on save
 
 ### ✅ Multiple Redirect Points
+
 1. Auth action during sign-in (for new users)
 2. Dashboard on mount (failsafe for all users)
 
@@ -186,7 +197,7 @@ The implementation includes multiple safety layers:
 ✅ No NULL values exist in database  
 ✅ NOT NULL constraint prevents future NULL values  
 ✅ Code logic is correct and defensive  
-✅ Multiple safety layers protect against edge cases  
+✅ Multiple safety layers protect against edge cases
 
 **Existing users will NOT be redirected to profile setup.**  
 **Only new users (created after the migration) will be prompted to complete their profile.**
@@ -196,18 +207,21 @@ The implementation includes multiple safety layers:
 ## Testing Scenarios
 
 ### Scenario 1: Existing User Login ✅
+
 - User: `justin@cronkwaters.com` (created 2025-11-26)
 - `profileCompleted`: `true`
 - Expected: Stay on dashboard
 - Result: ✅ PASS
 
 ### Scenario 2: New User Sign Up (Future)
+
 - User: New registration
 - `profileCompleted`: `false` (set by registration)
 - Expected: Redirect to profile setup
 - Result: ✅ Logic correct
 
 ### Scenario 3: Edge Case - Null Handling
+
 - User: Hypothetical NULL value
 - `profileCompleted`: NULL (impossible due to NOT NULL)
 - Expected: Would default to `false` via `?? false`
@@ -228,6 +242,3 @@ The implementation includes multiple safety layers:
 **Verification completed by:** AI Assistant  
 **Verification date:** November 27, 2025  
 **Next review:** Not needed unless user reports issues
-
-
-

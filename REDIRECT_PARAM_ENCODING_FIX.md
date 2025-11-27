@@ -20,22 +20,22 @@ In `apps/web/app/auth/page.tsx`, the sign-in/sign-up toggle link was placing the
 
 ```typescript
 // Example 1: Multiple query parameters
-redirectParam = "/dashboard?tab=overview"
+redirectParam = '/dashboard?tab=overview';
 // Broken href: /auth?redirect=/dashboard?tab=overview  ❌ (two ? characters)
 // Fixed href:  /auth?redirect=%2Fdashboard%3Ftab%3Doverview  ✅
 
 // Example 2: Spaces
-redirectParam = "/projects/my project"
+redirectParam = '/projects/my project';
 // Broken href: /auth?redirect=/projects/my project  ❌ (space breaks URL)
 // Fixed href:  /auth?redirect=%2Fprojects%2Fmy%20project  ✅
 
 // Example 3: Plus signs
-redirectParam = "/users/john+doe@example.com"
+redirectParam = '/users/john+doe@example.com';
 // Broken href: /auth?redirect=/users/john+doe@example.com  ❌ (+ decoded as space)
 // Fixed href:  /auth?redirect=%2Fusers%2Fjohn%2Bdoe%40example.com  ✅
 
 // Example 4: Ampersands
-redirectParam = "/search?q=rock&roll"
+redirectParam = '/search?q=rock&roll';
 // Broken href: /auth?signup=true&redirect=/search?q=rock&roll  ❌ (multiple params collide)
 // Fixed href:  /auth?signup=true&redirect=%2Fsearch%3Fq%3Drock%26roll  ✅
 ```
@@ -47,7 +47,7 @@ redirectParam = "/search?q=rock&roll"
 ```typescript
 // BEFORE ❌
 <Link
-  href={isSignup 
+  href={isSignup
     ? `/auth${redirectParam ? `?redirect=${redirectParam}` : ''}`
     : `/auth?signup=true${redirectParam ? `&redirect=${redirectParam}` : ''}`
   }
@@ -55,7 +55,7 @@ redirectParam = "/search?q=rock&roll"
 
 // AFTER ✅
 <Link
-  href={isSignup 
+  href={isSignup
     ? `/auth${redirectParam ? `?redirect=${encodeURIComponent(redirectParam)}` : ''}`
     : `/auth?signup=true${redirectParam ? `&redirect=${encodeURIComponent(redirectParam)}` : ''}`
   }
@@ -172,7 +172,7 @@ const testRedirects = [
   '/users/john+doe@example.com',
 ];
 
-testRedirects.forEach(redirect => {
+testRedirects.forEach((redirect) => {
   const encoded = encodeURIComponent(redirect);
   const href = `/auth?signup=true&redirect=${encoded}`;
   console.log(`Original: ${redirect}`);
@@ -193,4 +193,3 @@ testRedirects.forEach(redirect => {
 ---
 
 **Token Count: ~53,000 / 200,000**
-

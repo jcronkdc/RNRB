@@ -211,9 +211,3 @@ pnpm prisma:studio
 
 **Last Updated:** 2025-11-25  
 **Maintainer:** Development Team
-
-
-
-
-
-

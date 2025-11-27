@@ -13,6 +13,7 @@ User reported getting a "Something went wrong" error screen after signing in, re
 ## 🔧 ROOT CAUSE
 
 Race condition in authentication flow:
+
 - Dashboard was rendering before session status reached `'authenticated'`
 - Components tried to access session data before it was available
 - ErrorBoundary caught the errors and displayed error screen
@@ -22,6 +23,7 @@ Race condition in authentication flow:
 ### 1. Dashboard Page (`apps/web/app/(app)/dashboard/page.tsx`)
 
 **Added session status checks:**
+
 ```typescript
 const { data: session, status } = useSession();
 
@@ -46,6 +48,7 @@ if (!isMounted || loading || status === 'loading' || !user) {
 ### 2. App Layout (`apps/web/components/app-layout.tsx`)
 
 **Added loading screen while session loads:**
+
 ```typescript
 const { status } = useSession();
 
@@ -75,7 +78,7 @@ if (status === 'loading') {
 Once deployment completes, test:
 
 - [ ] Sign in with email/password → Should see loading screen → Dashboard displays
-- [ ] Sign in with Google OAuth → Should see loading screen → Dashboard displays  
+- [ ] Sign in with Google OAuth → Should see loading screen → Dashboard displays
 - [ ] Refresh dashboard while logged in → Should work without error
 - [ ] Sign out and sign back in → Should work without error
 
@@ -113,5 +116,3 @@ Full technical details in: `AGENT_147_SIGN_IN_REDIRECT_FIX.md`
 **Token Count: ~73,000 / 200,000**
 
 **Agent 147 signing off** 🎸
-
-

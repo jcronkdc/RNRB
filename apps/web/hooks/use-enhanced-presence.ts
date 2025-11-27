@@ -406,9 +406,3 @@ export function useEnhancedPresence({
     awayMembers: members.filter((m) => m.status === 'away').length,
   };
 }
-
-
-
-
-
-

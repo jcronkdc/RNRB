@@ -234,9 +234,3 @@ export function ConnectionQualityMonitor({
     </motion.div>
   );
 }
-
-
-
-
-
-

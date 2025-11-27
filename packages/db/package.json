@@ -22,6 +22,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev --name init_schema",
     "build": "prisma generate",
+    "postinstall": "prisma generate",
     "build:full": "prisma generate && tsc -b",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "typecheck": "tsc --noEmit"

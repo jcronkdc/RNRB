@@ -3,11 +3,13 @@
 ## What Was Configured
 
 ### 1. MCP Server Configuration
+
 **Location**: `~/Library/Application Support/Cursor/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
 
 The MCP server allows you to query PostHog analytics data directly from Cursor using your Personal API Key.
 
 ### 2. Environment Variables
+
 **File**: `.env.local`
 
 ```env
@@ -22,14 +24,17 @@ POSTHOG_PERSONAL_API_KEY="phx_1kN2Z344JNP7rVTEjvcPUuX0u4wb4OxEEQbY6RqyCOmQ9mI"
 ### 3. Files Created
 
 #### Core Utilities
+
 - **`lib/posthog.ts`** - Main analytics functions and event definitions
 - **`hooks/use-posthog.ts`** - React hooks for easy tracking
 
 #### Components
+
 - **`components/posthog/posthog-provider.tsx`** - Updated to auto-identify users
 - **`app/posthog-test/page.tsx`** - Test page to verify integration
 
 #### Documentation
+
 - **`POSTHOG_SETUP_GUIDE.md`** - Complete usage guide
 
 ---
@@ -37,11 +42,13 @@ POSTHOG_PERSONAL_API_KEY="phx_1kN2Z344JNP7rVTEjvcPUuX0u4wb4OxEEQbY6RqyCOmQ9mI"
 ## 🚀 Quick Test
 
 1. **Start your dev server** (if not already running):
+
    ```bash
    pnpm dev
    ```
 
 2. **Visit the test page**:
+
    ```
    http://localhost:3001/posthog-test
    ```
@@ -63,24 +70,27 @@ POSTHOG_PERSONAL_API_KEY="phx_1kN2Z344JNP7rVTEjvcPUuX0u4wb4OxEEQbY6RqyCOmQ9mI"
 ## 📝 How to Use
 
 ### Track an Event (Simple)
+
 ```typescript
 import { trackEvent, PostHogEvents } from '@/lib/posthog';
 
 trackEvent(PostHogEvents.PROJECT_CREATED, {
   project_id: '123',
-  project_name: 'My Project'
+  project_name: 'My Project',
 });
 ```
 
 ### Track Custom Event
+
 ```typescript
 trackEvent('button_clicked', {
   button_name: 'Upgrade',
-  location: 'dashboard'
+  location: 'dashboard',
 });
 ```
 
 ### Auto User Identification
+
 ✅ Already configured! Users are automatically identified when they sign in.
 
 ---
@@ -114,12 +124,14 @@ Add these to your most important features:
 
 ## 📊 Two Types of Keys
 
-### Project API Key (phc_*)
+### Project API Key (phc\_\*)
+
 - ✅ **Set**: `phc_uheW7h78AV2e5cMegm2OuWVQzYUvJ5uvvwRS9RlH4Df`
 - **Used for**: Browser tracking, client-side analytics
 - **Location**: `NEXT_PUBLIC_POSTHOG_KEY` in `.env.local`
 
-### Personal API Key (phx_*)
+### Personal API Key (phx\_\*)
+
 - ✅ **Set**: `phx_1kN2Z344JNP7rVTEjvcPUuX0u4wb4OxEEQbY6RqyCOmQ9mI`
 - **Used for**: MCP server, backend queries, analytics API
 - **Location**: Both MCP config and `POSTHOG_PERSONAL_API_KEY` in `.env.local`
@@ -151,12 +163,14 @@ Add these to your most important features:
 ## 🐛 Troubleshooting
 
 **Events not showing?**
+
 1. Check browser console for errors
 2. Verify environment variables are correct
 3. Make sure ad blockers aren't blocking PostHog
 4. Try in incognito mode
 
 **PostHog not loading?**
+
 - Restart dev server: `pnpm dev`
 - Clear `.next` cache: `rm -rf .next`
 - Check that `NEXT_PUBLIC_POSTHOG_KEY` starts with `phc_`
@@ -166,5 +180,3 @@ Add these to your most important features:
 **You're all set! 🎊**
 
 Start tracking events and understanding your users better!
-
-

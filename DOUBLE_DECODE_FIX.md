@@ -22,6 +22,7 @@ Next.js `searchParams.get()` returns **already-decoded** values. The profile pag
 **File**: `apps/web/app/(app)/settings/profile/page.tsx` (lines 156-177)
 
 **Before**:
+
 ```typescript
 const decodedKey = decodeURIComponent(key);
 const decodedValue = value ? decodeURIComponent(value) : '';
@@ -29,6 +30,7 @@ params.set(decodedKey, decodedValue);
 ```
 
 **After**:
+
 ```typescript
 // Values are already decoded by Next.js
 // URLSearchParams will handle proper encoding when we call toString()
@@ -45,6 +47,7 @@ params.set(key, value);
 ## Testing
 
 ### Test Case 1: Email with + character
+
 1. Create invite link: `/invites/test-project?email=user%2Btest%40example.com`
 2. Sign up as new user
 3. Complete profile setup
@@ -52,6 +55,7 @@ params.set(key, value);
 5. **Verify**: Email parameter is `user+test@example.com` (not `user test@example.com`)
 
 ### Test Case 2: Special characters in URL
+
 1. Create invite link with special chars: `/invites/project?name=John%20Doe&tag=rock%26roll`
 2. Sign up as new user
 3. Complete profile setup
@@ -59,6 +63,7 @@ params.set(key, value);
 5. **Verify**: All parameters preserved correctly
 
 ### Test Case 3: No redirect parameter
+
 1. Sign up without redirect parameter
 2. Complete profile setup
 3. **Expected**: Redirects to `/dashboard`
@@ -67,6 +72,7 @@ params.set(key, value);
 ## Security
 
 The fix maintains all security checks:
+
 - ✅ Open redirect prevention (validates path starts with `/`)
 - ✅ Proper URL encoding via `URLSearchParams`
 - ✅ Error handling with fallback
@@ -91,4 +97,3 @@ The fix maintains all security checks:
 **Date**: 2025-11-27  
 **Priority**: High (Breaks invite flow)  
 **Impact**: Email verification in invite flow now works correctly
-

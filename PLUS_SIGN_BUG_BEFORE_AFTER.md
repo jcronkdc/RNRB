@@ -70,6 +70,7 @@ Email check: "user+test@example.com" === "user+test@example.com"
 ## Key Difference
 
 ### Before (Broken)
+
 ```typescript
 router.push(destination);
 // destination = "/invites/project?email=user+test@example.com"
@@ -77,6 +78,7 @@ router.push(destination);
 ```
 
 ### After (Fixed)
+
 ```typescript
 const url = new URL(destination, 'http://dummy.com');
 const params = new URLSearchParams();
@@ -92,6 +94,7 @@ router.push(encoded);
 ## Why This Matters
 
 **Gmail users often use plus signs for email aliases:**
+
 - `john+work@gmail.com`
 - `jane+personal@gmail.com`
 - `test+dev@company.com`
@@ -103,7 +106,7 @@ Without this fix, **NONE of these users could accept invites** after signing up.
 `router.push()` in Next.js does **NOT** automatically encode URL query parameters. It treats the string as-is. So when you pass a decoded URL with special characters:
 
 ```typescript
-router.push("/path?email=user+test@example.com")
+router.push('/path?email=user+test@example.com');
 ```
 
 The `+` is sent **literally** to the browser, which then interprets it as a space per RFC 3986.
@@ -123,4 +126,3 @@ params.set('email', 'user+test@example.com');
 **Status:** ✅ FIXED
 **Impact:** Critical - Enables Gmail alias users to accept invites
 **Date:** 2025-11-27
-

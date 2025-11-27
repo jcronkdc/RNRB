@@ -148,9 +148,3 @@ curl "http://localhost:3000/api/shows?page=1&limit=50"
 **Fixed by**: Agent Session
 **Date**: 2025-11-26
 **Priority**: High (Security & Stability)
-
-
-
-
-
-

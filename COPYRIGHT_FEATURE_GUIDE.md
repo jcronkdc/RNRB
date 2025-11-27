@@ -214,9 +214,3 @@ and links (which we now have).
 Users now have everything they need to properly protect their music and
 collect royalties. The feature makes a complex legal process approachable
 and manageable for musicians at any level.
-
-
-
-
-
-

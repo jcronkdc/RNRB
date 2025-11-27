@@ -284,9 +284,3 @@ Hides once user starts filling out information - no clutter!
 ## 🚀 The copyright feature is now FULLY FUNCTIONAL and WORLD-CLASS!
 
 Users can confidently protect their music, understand the process, and have direct access to everything they need. The feature transforms a complex legal process into an approachable, manageable workflow for musicians at any level.
-
-
-
-
-
-

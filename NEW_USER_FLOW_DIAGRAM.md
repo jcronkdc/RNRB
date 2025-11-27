@@ -200,10 +200,3 @@ PATCH  /api/profile
        └─ Updates session
 
 ```
-
-
-
-
-
-
-

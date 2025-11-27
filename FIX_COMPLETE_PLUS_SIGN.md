@@ -30,6 +30,7 @@ router.push(encodedDestination);
 ## Impact
 
 ✅ **Critical Fix:**
+
 - Enables Gmail alias users (user+tag@gmail.com) to accept invites
 - Fixes invite acceptance for emails with other special characters (`%`, `&`, `=`, etc.)
 - Maintains all security validations (open redirect protection)
@@ -45,11 +46,12 @@ router.push(encodedDestination);
 4. **PLUS_SIGN_EMAIL_FLOW_ANALYSIS.md** - Complete flow analysis
 5. **PLUS_SIGN_BUG_BEFORE_AFTER.md** - Visual before/after comparison
 6. **AGENT_148_PLUS_SIGN_FIX_SUMMARY.md** - Summary document
-7. **apps/web/__tests__/plus-sign-email-redirect.test.ts** - Test suite
+7. **apps/web/**tests**/plus-sign-email-redirect.test.ts** - Test suite
 
 ## Testing
 
 ### Manual Test
+
 1. Create invite: `/invites/test-project?email=user%2Btest%40example.com`
 2. Sign up as: `user+test@example.com`
 3. Complete profile setup
@@ -58,7 +60,9 @@ router.push(encodedDestination);
 6. Verify: Invite accepted successfully ✅
 
 ### Automated Tests
+
 Comprehensive test suite created covering:
+
 - Emails with `+` signs
 - Multiple special characters
 - Multiple query parameters
@@ -85,4 +89,3 @@ The plus sign bug is now **100% FIXED**. Users with Gmail aliases (e.g., `user+t
 **Status:** ✅ FIXED
 
 **Token Count:** ~79,500 / 200,000 (40% used, 60% remaining)
-

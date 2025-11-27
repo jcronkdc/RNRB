@@ -32,12 +32,12 @@ export default function PostHogTestPage() {
   };
 
   return (
-    <div className="container mx-auto p-8 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">PostHog Analytics Test Page</h1>
-      
+    <div className="container mx-auto max-w-4xl p-8">
+      <h1 className="mb-6 text-3xl font-bold">PostHog Analytics Test Page</h1>
+
       {/* Status Section */}
-      <div className="mb-8 p-6 bg-gray-100 dark:bg-gray-800 rounded-lg">
-        <h2 className="text-xl font-semibold mb-4">Status</h2>
+      <div className="mb-8 rounded-lg bg-gray-100 p-6 dark:bg-gray-800">
+        <h2 className="mb-4 text-xl font-semibold">Status</h2>
         <Button onClick={checkStatus} className="mb-4">
           Check PostHog Status
         </Button>
@@ -65,24 +65,15 @@ export default function PostHogTestPage() {
 
       {/* Test Events Section */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Test Events</h2>
+        <h2 className="mb-4 text-xl font-semibold">Test Events</h2>
         <div className="grid grid-cols-2 gap-4">
-          <Button
-            onClick={() => handleTestEvent(PostHogEvents.PROJECT_CREATED)}
-            variant="outline"
-          >
+          <Button onClick={() => handleTestEvent(PostHogEvents.PROJECT_CREATED)} variant="outline">
             Track: Project Created
           </Button>
-          <Button
-            onClick={() => handleTestEvent(PostHogEvents.SONG_CREATED)}
-            variant="outline"
-          >
+          <Button onClick={() => handleTestEvent(PostHogEvents.SONG_CREATED)} variant="outline">
             Track: Song Created
           </Button>
-          <Button
-            onClick={() => handleTestEvent(PostHogEvents.TRACK_PLAYED)}
-            variant="outline"
-          >
+          <Button onClick={() => handleTestEvent(PostHogEvents.TRACK_PLAYED)} variant="outline">
             Track: Track Played
           </Button>
           <Button
@@ -91,10 +82,7 @@ export default function PostHogTestPage() {
           >
             Track: AI Assistant Used
           </Button>
-          <Button
-            onClick={() => handleTestEvent('custom_test_event')}
-            variant="outline"
-          >
+          <Button onClick={() => handleTestEvent('custom_test_event')} variant="outline">
             Track: Custom Event
           </Button>
           <Button
@@ -115,8 +103,8 @@ export default function PostHogTestPage() {
 
       {/* Event Log */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Event Log</h2>
-        <div className="bg-black text-green-400 p-4 rounded-lg font-mono text-sm h-64 overflow-y-auto">
+        <h2 className="mb-4 text-xl font-semibold">Event Log</h2>
+        <div className="h-64 overflow-y-auto rounded-lg bg-black p-4 font-mono text-sm text-green-400">
           {events.length === 0 ? (
             <p className="text-gray-500">No events tracked yet. Click buttons above to test.</p>
           ) : (
@@ -135,13 +123,13 @@ export default function PostHogTestPage() {
       </div>
 
       {/* Documentation */}
-      <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-        <h2 className="text-xl font-semibold mb-4">How to Use PostHog</h2>
+      <div className="rounded-lg bg-blue-50 p-6 dark:bg-blue-900/20">
+        <h2 className="mb-4 text-xl font-semibold">How to Use PostHog</h2>
         <div className="space-y-4 text-sm">
           <div>
-            <h3 className="font-semibold mb-2">1. Track Events</h3>
-            <pre className="bg-gray-800 text-gray-100 p-3 rounded overflow-x-auto">
-{`import { trackEvent, PostHogEvents } from '@/lib/posthog';
+            <h3 className="mb-2 font-semibold">1. Track Events</h3>
+            <pre className="overflow-x-auto rounded bg-gray-800 p-3 text-gray-100">
+              {`import { trackEvent, PostHogEvents } from '@/lib/posthog';
 
 // Track a predefined event
 trackEvent(PostHogEvents.PROJECT_CREATED, {
@@ -157,15 +145,15 @@ trackEvent('custom_event_name', {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-2">2. User Identification (Automatic)</h3>
+            <h3 className="mb-2 font-semibold">2. User Identification (Automatic)</h3>
             <p className="mb-2">
-              Users are automatically identified when they sign in. The PostHogProvider
-              uses the session to identify users.
+              Users are automatically identified when they sign in. The PostHogProvider uses the
+              session to identify users.
             </p>
           </div>
 
           <div>
-            <h3 className="font-semibold mb-2">3. Check PostHog Dashboard</h3>
+            <h3 className="mb-2 font-semibold">3. Check PostHog Dashboard</h3>
             <p>
               View your events at:{' '}
               <a
@@ -180,7 +168,7 @@ trackEvent('custom_event_name', {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-2">4. Available Event Types</h3>
+            <h3 className="mb-2 font-semibold">4. Available Event Types</h3>
             <p>
               See all predefined events in <code>@/lib/posthog.ts</code> under the{' '}
               <code>PostHogEvents</code> constant.
@@ -191,5 +179,3 @@ trackEvent('custom_event_name', {
     </div>
   );
 }
-
-

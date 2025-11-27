@@ -313,9 +313,3 @@ The feature now:
 ---
 
 ## ✨ The copyright feature is now production-ready and best-in-class! ✨
-
-
-
-
-
-

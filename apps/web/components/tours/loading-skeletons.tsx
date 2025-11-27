@@ -74,9 +74,3 @@ export function ShowsListSkeleton({ count = 6 }: { count?: number }) {
     </div>
   );
 }
-
-
-
-
-
-

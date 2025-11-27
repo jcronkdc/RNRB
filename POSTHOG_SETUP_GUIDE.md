@@ -9,6 +9,7 @@ PostHog analytics is now fully configured in your Rock N' Roll Basement applicat
 ## 📋 Configuration Summary
 
 ### Environment Variables (.env.local)
+
 ```env
 # Client-side tracking (browser)
 NEXT_PUBLIC_POSTHOG_KEY="phc_uheW7h78AV2e5cMegm2OuWVQzYUvJ5uvvwRS9RlH4Df"
@@ -19,6 +20,7 @@ POSTHOG_PERSONAL_API_KEY="phx_1kN2Z344JNP7rVTEjvcPUuX0u4wb4OxEEQbY6RqyCOmQ9mI"
 ```
 
 ### Key Files Created/Updated
+
 - ✅ `lib/posthog.ts` - Main utilities and event definitions
 - ✅ `hooks/use-posthog.ts` - React hooks for PostHog
 - ✅ `components/posthog/posthog-provider.tsx` - Provider component (auto-identifies users)
@@ -32,11 +34,13 @@ POSTHOG_PERSONAL_API_KEY="phx_1kN2Z344JNP7rVTEjvcPUuX0u4wb4OxEEQbY6RqyCOmQ9mI"
 ### 1. Test the Integration
 
 Visit the test page to verify everything works:
+
 ```
 http://localhost:3001/posthog-test
 ```
 
 This page lets you:
+
 - Check if PostHog is loaded
 - See your distinct ID
 - Test event tracking
@@ -50,19 +54,20 @@ import { trackEvent, PostHogEvents } from '@/lib/posthog';
 // Use predefined events
 trackEvent(PostHogEvents.PROJECT_CREATED, {
   project_id: project.id,
-  project_name: project.name
+  project_name: project.name,
 });
 
 // Or create custom events
 trackEvent('custom_action', {
   property1: 'value1',
-  property2: 'value2'
+  property2: 'value2',
 });
 ```
 
 ### 3. User Identification (Automatic)
 
 Users are automatically identified when they sign in. The `PostHogProvider` uses NextAuth session data to identify users with their:
+
 - User ID
 - Email
 - Name
@@ -76,17 +81,20 @@ No additional code needed! 🎉
 Located in `lib/posthog.ts` under `PostHogEvents`:
 
 ### User Events
+
 - `user_signed_up`
 - `user_signed_in`
 - `user_signed_out`
 
 ### Project Events
+
 - `project_created`
 - `project_updated`
 - `project_deleted`
 - `project_shared`
 
 ### Song/Track Events
+
 - `song_created`
 - `song_updated`
 - `song_deleted`
@@ -94,24 +102,29 @@ Located in `lib/posthog.ts` under `PostHogEvents`:
 - `track_played`
 
 ### Collaboration Events
+
 - `collaboration_started`
 - `message_sent`
 - `comment_added`
 
 ### Tour & Gig Events
+
 - `tour_created`
 - `gig_added`
 - `setlist_generated`
 
 ### AI Feature Events
+
 - `ai_assistant_used`
 - `songwriting_ai_used`
 
 ### Studio Events
+
 - `recording_started`
 - `recording_completed`
 
 ### Billing Events
+
 - `subscription_started`
 - `subscription_upgraded`
 - `subscription_cancelled`
@@ -121,26 +134,28 @@ Located in `lib/posthog.ts` under `PostHogEvents`:
 ## 💡 Usage Examples
 
 ### Example 1: Track Project Creation
+
 ```typescript
 // In your project creation handler
 import { trackEvent, PostHogEvents } from '@/lib/posthog';
 
 async function createProject(data: ProjectData) {
   const project = await db.project.create({ data });
-  
+
   // Track the event
   trackEvent(PostHogEvents.PROJECT_CREATED, {
     project_id: project.id,
     project_name: project.name,
     project_type: project.type,
-    created_at: new Date().toISOString()
+    created_at: new Date().toISOString(),
   });
-  
+
   return project;
 }
 ```
 
 ### Example 2: Track Song Plays
+
 ```typescript
 // In your audio player component
 import { trackEvent, PostHogEvents } from '@/lib/posthog';
@@ -152,37 +167,39 @@ function AudioPlayer({ track }) {
       track_id: track.id,
       track_name: track.name,
       duration: track.duration,
-      project_id: track.projectId
+      project_id: track.projectId,
     });
-    
+
     // ... play logic
   };
 }
 ```
 
 ### Example 3: Track AI Assistant Usage
+
 ```typescript
 // In your AI assistant component
 import { trackEvent, PostHogEvents } from '@/lib/posthog';
 
 async function sendAIMessage(message: string) {
   const response = await aiService.chat(message);
-  
+
   trackEvent(PostHogEvents.AI_ASSISTANT_USED, {
     message_length: message.length,
     response_length: response.length,
-    feature: 'general_chat'
+    feature: 'general_chat',
   });
-  
+
   return response;
 }
 ```
 
 ### Example 4: Track Button Clicks
+
 ```typescript
 import { trackEvent } from '@/lib/posthog';
 
-<Button 
+<Button
   onClick={() => {
     trackEvent('upgrade_button_clicked', {
       location: 'dashboard',
@@ -200,6 +217,7 @@ import { trackEvent } from '@/lib/posthog';
 ## 🔧 Advanced Features
 
 ### Manual User Identification
+
 ```typescript
 import { identifyUser } from '@/lib/posthog';
 
@@ -207,11 +225,12 @@ import { identifyUser } from '@/lib/posthog';
 identifyUser('user-123', {
   email: 'user@example.com',
   name: 'John Doe',
-  plan: 'pro'
+  plan: 'pro',
 });
 ```
 
 ### Reset User on Logout
+
 ```typescript
 import { resetUser } from '@/lib/posthog';
 
@@ -220,6 +239,7 @@ resetUser();
 ```
 
 ### Check if PostHog is Ready
+
 ```typescript
 import { isPostHogLoaded } from '@/lib/posthog';
 
@@ -229,6 +249,7 @@ if (isPostHogLoaded()) {
 ```
 
 ### Session Recording
+
 ```typescript
 import { startSessionRecording, stopSessionRecording } from '@/lib/posthog';
 
@@ -244,9 +265,11 @@ stopSessionRecording();
 ## 📈 View Your Analytics
 
 ### PostHog Dashboard
+
 Visit: https://app.posthog.com
 
 You'll be able to see:
+
 - Real-time event stream
 - User analytics
 - Funnels and conversion rates
@@ -255,6 +278,7 @@ You'll be able to see:
 - A/B test results
 
 ### Using MCP for Analytics Queries
+
 With the MCP server configured, you can now query PostHog data directly from Cursor!
 
 ---
@@ -273,6 +297,7 @@ With the MCP server configured, you can now query PostHog data directly from Cur
 ## 🐛 Troubleshooting
 
 ### Events Not Showing Up?
+
 1. Check the browser console for PostHog initialization
 2. Verify environment variables are set correctly
 3. Make sure you're on `http://localhost:3001` (not 3000)
@@ -280,13 +305,16 @@ With the MCP server configured, you can now query PostHog data directly from Cur
 5. Check PostHog dashboard for any API errors
 
 ### PostHog Not Loading?
+
 1. Verify `NEXT_PUBLIC_POSTHOG_KEY` starts with `phc_`
 2. Check network tab for blocked requests
 3. Ensure ad blockers aren't blocking PostHog
 4. Try in incognito mode
 
 ### Need to Change Configuration?
+
 Edit `.env.local` and restart the dev server:
+
 ```bash
 pnpm dev
 ```
@@ -313,5 +341,3 @@ pnpm dev
 ---
 
 **Need Help?** Check the test page at `/posthog-test` or the PostHog docs!
-
-

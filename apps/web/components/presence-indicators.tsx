@@ -240,9 +240,3 @@ export function PresenceIndicators({
     </div>
   );
 }
-
-
-
-
-
-

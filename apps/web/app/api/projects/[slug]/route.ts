@@ -108,9 +108,3 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
     return NextResponse.json({ error: 'Failed to fetch project' }, { status: 500 });
   }
 }
-
-
-
-
-
-

@@ -274,9 +274,3 @@ export function PublishToCommunityModal({
     </AnimatePresence>
   );
 }
-
-
-
-
-
-

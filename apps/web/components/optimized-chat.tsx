@@ -369,9 +369,3 @@ export function OptimizedChat({
     </div>
   );
 }
-
-
-
-
-
-

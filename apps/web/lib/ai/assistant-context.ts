@@ -297,9 +297,3 @@ ${platformKnowledge}
 
 Now assist the user with their question, considering their context and current page.`;
 }
-
-
-
-
-
-

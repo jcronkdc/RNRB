@@ -48,9 +48,3 @@ Or check with Prisma:
 ```bash
 pnpm --filter @cronkwaters/db exec prisma db execute --stdin <<< "SELECT current_database(), inet_server_addr();"
 ```
-
-
-
-
-
-

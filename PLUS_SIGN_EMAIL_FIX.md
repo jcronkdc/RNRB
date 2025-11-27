@@ -48,6 +48,7 @@ try {
 To verify this fix works:
 
 1. Create an invite link with an email containing `+`:
+
    ```
    /invites/test-project?email=user+test@example.com
    ```
@@ -75,21 +76,25 @@ To verify this fix works:
 The encoding/decoding happens in this sequence:
 
 1. **Invites page** (line 76): Encodes email when building returnUrl
+
    ```typescript
-   `/invites/${projectSlug}?email=${encodeURIComponent(inviteEmail)}`
+   `/invites/${projectSlug}?email=${encodeURIComponent(inviteEmail)}`;
    ```
 
 2. **Auth page** (line 65): Passes encoded redirect to auth action
+
    ```typescript
-   redirectTo: redirectParam || undefined
+   redirectTo: redirectParam || undefined;
    ```
 
 3. **Auth action** (line 43): Double-encodes when passing to profile setup
+
    ```typescript
-   `/settings/profile?setup=true&redirect=${encodeURIComponent(redirectTo)}`
+   `/settings/profile?setup=true&redirect=${encodeURIComponent(redirectTo)}`;
    ```
 
 4. **Profile setup** (line 143): Decodes to get original URL
+
    ```typescript
    destination = decodeURIComponent(destination);
    ```
@@ -104,4 +109,3 @@ The encoding/decoding happens in this sequence:
 **Status:** ✅ FIXED
 **Date:** 2025-11-27
 **Agent:** 148
-

@@ -307,9 +307,3 @@ export function VoiceMessageRecorder({
     </div>
   );
 }
-
-
-
-
-
-

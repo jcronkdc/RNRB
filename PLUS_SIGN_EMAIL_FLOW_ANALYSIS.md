@@ -36,12 +36,12 @@ User clicks invite: user+test@example.com
    Code: searchParams.get('redirect')
    Result: "/invites/project?email=user+test@example.com" (auto-decoded)
    After save: Wait 2s, then redirect
-   
+
    --- OLD BUG (FIXED) ---
    ❌ OLD: router.push(destination)
    ❌ Result: /invites/project?email=user+test@example.com (literal +)
    ❌ Browser: Interprets + as space → user test@example.com
-   
+
    --- NEW FIX ---
    ✅ NEW: Parse URL, re-encode params with URLSearchParams
    ✅ Code:
@@ -101,17 +101,17 @@ Browser parsing: `%2B` → `+` → `user+test@example.com` ✅
 
 ## Special Characters Tested
 
-| Character | URL-Encoded | Description           | Fixed? |
-|-----------|-------------|----------------------|--------|
-| `+`       | `%2B`       | Plus sign            | ✅     |
-| `@`       | `%40`       | At sign              | ✅     |
-| `&`       | `%26`       | Ampersand            | ✅     |
-| `=`       | `%3D`       | Equals               | ✅     |
-| `?`       | `%3F`       | Question mark        | ✅     |
-| `#`       | `%23`       | Hash                 | ✅     |
-| `%`       | `%25`       | Percent              | ✅     |
-| `/`       | `%2F`       | Forward slash        | ✅     |
-| ` `       | `%20` or `+`| Space                | ✅     |
+| Character | URL-Encoded  | Description   | Fixed? |
+| --------- | ------------ | ------------- | ------ |
+| `+`       | `%2B`        | Plus sign     | ✅     |
+| `@`       | `%40`        | At sign       | ✅     |
+| `&`       | `%26`        | Ampersand     | ✅     |
+| `=`       | `%3D`        | Equals        | ✅     |
+| `?`       | `%3F`        | Question mark | ✅     |
+| `#`       | `%23`        | Hash          | ✅     |
+| `%`       | `%25`        | Percent       | ✅     |
+| `/`       | `%2F`        | Forward slash | ✅     |
+| ` `       | `%20` or `+` | Space         | ✅     |
 
 ## Why URLSearchParams?
 
@@ -149,6 +149,7 @@ if (destination.startsWith('/') && !destination.startsWith('//')) {
 ## Performance Impact
 
 Minimal performance impact:
+
 - URL parsing: ~0.1ms
 - URLSearchParams: ~0.1ms
 - String concatenation: ~0.01ms
@@ -158,6 +159,7 @@ Total: **~0.2ms** added to redirect flow (imperceptible to users)
 ## Browser Compatibility
 
 ✅ All modern browsers:
+
 - Chrome 51+
 - Firefox 29+
 - Safari 10.1+
@@ -179,4 +181,3 @@ The plus sign bug is **100% FIXED** with proper URL encoding using `URLSearchPar
 **Status:** ✅ COMPLETE AND VERIFIED
 **Date:** 2025-11-27
 **Agent:** 148
-
