@@ -11,6 +11,8 @@ import {
   FolderOpen,
   Loader2,
   Zap,
+  LayoutDashboard,
+  Bell,
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -19,7 +21,6 @@ import { useState } from 'react';
 
 import { useToast } from '@/hooks/useToast';
 import { trpc } from '@cronkwaters/trpc/client/react';
-
 
 export function UserMenu() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export function UserMenu() {
 
   const handleSignOut = async () => {
     setSigningOut(true);
-    
+
     try {
       await signOut({ callbackUrl: '/' });
       showToast('Successfully signed out', 'success');
@@ -127,40 +128,39 @@ export function UserMenu() {
     <div className="relative">
       <button
         onClick={() => setMenuOpen(!menuOpen)}
-        className="group flex max-w-[200px] items-center gap-2 rounded-xl px-3 py-2 transition-all hover:scale-105"
+        className="group flex max-w-[240px] items-center gap-2.5 rounded-xl px-3 py-2.5 transition-all hover:scale-[1.02]"
         style={{
-          border: '1px solid rgba(255, 99, 71, 0.2)',
+          border: '1px solid rgba(255, 99, 71, 0.25)',
           background: menuOpen
-            ? 'linear-gradient(135deg, rgba(255,99,71,0.15) 0%, rgba(255,69,0,0.1) 100%)'
-            : 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(10px)',
+            ? 'linear-gradient(135deg, rgba(255,99,71,0.2) 0%, rgba(255,69,0,0.15) 100%)'
+            : 'rgba(30, 30, 30, 0.9)',
+          backdropFilter: 'blur(12px)',
           boxShadow: menuOpen
-            ? '0 4px 16px rgba(255, 99, 71, 0.2)'
-            : '0 2px 8px rgba(0, 0, 0, 0.1)',
+            ? '0 4px 20px rgba(255, 99, 71, 0.3)'
+            : '0 2px 12px rgba(0, 0, 0, 0.2)',
         }}
       >
         {/* User Avatar */}
         <div
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-base font-bold text-white shadow-md"
           style={{
             background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%)',
-            boxShadow: '0 2px 8px rgba(255, 99, 71, 0.3)',
           }}
         >
           {userInitial}
         </div>
 
-        {/* User Info - Hidden on mobile to prevent cutoff */}
-        <div className="hidden min-w-0 text-left md:block">
-          <p className="truncate text-sm font-medium text-white">{userName}</p>
-          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+        {/* User Info */}
+        <div className="hidden min-w-0 flex-1 text-left sm:block">
+          <p className="truncate text-sm font-semibold leading-tight text-white">{userName}</p>
+          <p className="text-[11px] leading-tight" style={{ color: 'rgba(255, 255, 255, 0.6)' }}>
             Signed In
           </p>
         </div>
 
         {/* Dropdown Arrow */}
         <ChevronDown
-          className={`hidden h-4 w-4 text-gray-400 transition-transform md:block ${menuOpen ? 'rotate-180' : ''}`}
+          className={`hidden h-4 w-4 shrink-0 text-white/70 transition-transform sm:block ${menuOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -223,6 +223,38 @@ export function UserMenu() {
               {/* Quick Actions */}
               <div className="p-2">
                 <Link
+                  href="/dashboard"
+                  className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all hover:bg-white/5"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10 transition-all group-hover:bg-indigo-500/20">
+                    <LayoutDashboard className="h-4 w-4 text-indigo-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-white">Dashboard</p>
+                    <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                      Your central hub
+                    </p>
+                  </div>
+                </Link>
+
+                <Link
+                  href="/dashboard"
+                  className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all hover:bg-white/5"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/10 transition-all group-hover:bg-purple-500/20">
+                    <Bell className="h-4 w-4 text-purple-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-white">Notifications</p>
+                    <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                      Stay updated
+                    </p>
+                  </div>
+                </Link>
+
+                <Link
                   href="/songwriting"
                   className="group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all hover:bg-white/5"
                   onClick={() => setMenuOpen(false)}
@@ -283,15 +315,17 @@ export function UserMenu() {
                   </div>
                   {creditsData && (
                     <div className="flex items-center gap-1">
-                      <Zap className={`h-3 w-3 ${
-                        creditsData.unlimited 
-                          ? 'text-green-400' 
-                          : creditsData.remaining < 20 
-                            ? 'text-red-400' 
-                            : creditsData.remaining < 50 
-                              ? 'text-orange-400' 
-                              : 'text-green-400'
-                      }`} />
+                      <Zap
+                        className={`h-3 w-3 ${
+                          creditsData.unlimited
+                            ? 'text-green-400'
+                            : creditsData.remaining < 20
+                              ? 'text-red-400'
+                              : creditsData.remaining < 50
+                                ? 'text-orange-400'
+                                : 'text-green-400'
+                        }`}
+                      />
                       <span className="text-xs font-medium">
                         {creditsData.unlimited ? '∞' : creditsData.remaining}
                       </span>

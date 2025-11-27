@@ -1,7 +1,7 @@
 # MASTER_TRUTH
 
-**Agent:** 145 | **Prev:** 144 | **Date:** 2025-11-27  
-**Status:** ✅ **100% PRODUCTION READY & DEPLOYED**
+**Agent:** 146 | **Prev:** 145 | **Date:** 2025-11-27  
+**Status:** ✅ **100% PRODUCTION READY - NAVIGATION FIXES APPLIED**
 
 ---
 
@@ -21,6 +21,8 @@
 | **Stack**         | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0 |
 | **Onboarding**    | ✅ New user profile setup flow active           |
 | **Notifications** | ✅ Notification Bell functional in TopBar       |
+| **Landing Page**  | ✅ Clean - No notification clutter              |
+| **Navigation**    | ✅ Dashboard access from UserMenu               |
 
 ---
 
@@ -168,6 +170,94 @@ The Supabase database contains **orphaned tables from other projects**:
 
 ---
 
+## 🔄 LATEST CHANGES (Agent 146)
+
+### Landing Page Navigation Fixes
+
+**Issues Resolved:**
+
+1. **Notification Bell on Landing Page** - The notification bell was appearing on marketing pages for all users (even logged out), creating visual clutter.
+2. **Sign-In Menu Obscured** - User menu button had poor contrast and was partially cut off, especially on smaller screens.
+3. **No Dashboard Access** - Signed-in users had no clear way to navigate to the dashboard from the landing page.
+
+**Root Causes:**
+
+1. `NavBar.tsx` (marketing navigation) was importing and rendering `<NotificationBell />` on all pages
+2. UserMenu button styling had weak background contrast and poor responsive design
+3. UserMenu dropdown didn't include Dashboard or Notifications links
+
+**Fixes Applied:**
+
+1. **Removed Notification Bell from Marketing NavBar**
+   - Deleted `<NotificationBell />` from `NavBar.tsx` line 442
+   - Removed unused dynamic import
+   - Notification bell now ONLY appears in `TopBar.tsx` (app navigation)
+   - Clean landing page experience for marketing
+
+2. **Enhanced UserMenu Button Visibility**
+   - Improved background: `rgba(30, 30, 30, 0.9)` vs `rgba(255, 255, 255, 0.03)`
+   - Stronger border: `rgba(255, 99, 71, 0.25)` vs `0.2`
+   - Better responsive design: changed `md:block` to `sm:block`
+   - Increased avatar size: `h-9 w-9` vs `h-8 w-8`
+   - Better text styling: `font-semibold` with improved color hierarchy
+   - Enhanced shadows and hover effects
+   - Max-width increased: `240px` vs `200px`
+
+3. **Added Dashboard & Notifications Access**
+   - **Dashboard** link added as FIRST item in UserMenu dropdown
+   - **Notifications** link added as SECOND item
+   - Both styled with distinct colors (indigo for Dashboard, purple for Notifications)
+   - Clear icons and descriptions
+   - Routes to `/dashboard` where full functionality is available
+
+**Files Modified:**
+
+- `apps/web/components/NavBar.tsx` (lines 1-9, 440-442)
+- `apps/web/components/UserMenu.tsx` (lines 1-14, 127-165, 223-257)
+
+**User Experience Improvements:**
+
+- ✅ Clean marketing landing page (no notification clutter)
+- ✅ Clear, readable user menu with excellent contrast
+- ✅ Direct dashboard access prominently featured
+- ✅ Notifications easily accessible
+- ✅ Professional aesthetic with proper visual hierarchy
+- ✅ Responsive design works on all screen sizes
+- ✅ Logical navigation flow (mycelial network approach)
+
+**Verification:**
+
+- ✅ No linter errors
+- ✅ Build successful
+- ✅ TypeScript compilation passed
+- ✅ All navigation paths tested
+- ✅ Responsive design verified
+
+**Architecture:**
+
+```
+Landing Page (/)
+└── NavBar (Marketing) - Clean, no notifications
+    └── UserMenu
+        ├── Dashboard (NEW) → /dashboard
+        ├── Notifications (NEW) → /dashboard
+        ├── Songwriting Studio → /songwriting
+        ├── My Projects → /projects
+        ├── Settings → /settings
+        ├── Credits & Billing → /credits
+        └── Sign Out
+
+Dashboard (/dashboard)
+└── AppLayout
+    └── TopBar (App Navigation)
+        ├── NotificationBell (HERE - real-time)
+        └── Full app functionality
+```
+
+**See:** `LANDING_PAGE_FIXES_COMPLETE.md` for comprehensive implementation details
+
+---
+
 ## 🔄 LATEST CHANGES (Agent 145)
 
 ### Critical Bug Fix: Non-Functional Notification Bell
@@ -305,4 +395,4 @@ New users are automatically redirected to profile setup after signup. This ensur
 
 ---
 
-**Last Updated:** 2025-11-27 by Agent 145 (Notification Bell Fix)
+**Last Updated:** 2025-11-27 by Agent 146 (Landing Page Navigation Fixes)

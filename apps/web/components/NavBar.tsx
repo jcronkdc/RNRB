@@ -1,18 +1,11 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 import { UserMenu } from './UserMenu';
-
-// Dynamically import NotificationBell to avoid SSR issues
-const NotificationBell = dynamic(
-  () => import('./notification-bell').then((m) => m.NotificationBell),
-  { ssr: false }
-);
 
 // ============================================================================
 // Navigation Data (Single Source of Truth)
@@ -439,7 +432,6 @@ export function NavBar() {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-3">
-          <NotificationBell />
           <UserMenu />
 
           {/* Mobile Menu Toggle */}
