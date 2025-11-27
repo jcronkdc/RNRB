@@ -1362,7 +1362,7 @@ enum TransactionStatus {
   cancelled
 }
 
-// Force Prisma regeneration: 2025-11-24-03:30:00 UTC
+// Force Prisma regeneration: 2025-11-27-DATABASE-URL-FIX
 // SongRequest table migration applied to Supabase successfully
 // Force Prisma regeneration - Sun Nov 23 21:54:49 CST 2025
 
