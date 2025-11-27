@@ -1,10 +1,10 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
   Plus,
-  Bell,
   User,
   Command,
   CreditCard,
@@ -15,7 +15,6 @@ import {
   Music,
 } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -23,7 +22,7 @@ import { trpc } from '@cronkwaters/trpc/client/react';
 
 // Dynamically import NotificationBell to avoid SSR issues
 const NotificationBell = dynamic(
-  () => import('./notification-bell').then((m) => m.NotificationBell),
+  () => import('./notification-bell').then((m) => ({ default: m.NotificationBell })),
   { ssr: false }
 );
 
@@ -131,7 +130,7 @@ export function TopBar() {
             <span className="text-xs text-gray-400">credits</span>
           </motion.button>
 
-          {/* Notifications */}
+          {/* Notifications - Use actual NotificationBell component */}
           <NotificationBell />
 
           {/* Profile Dropdown */}

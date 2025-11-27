@@ -1,24 +1,26 @@
 # MASTER_TRUTH
 
-**Agent:** 143 | **Prev:** 142 | **Date:** 2025-11-26  
+**Agent:** 145 | **Prev:** 144 | **Date:** 2025-11-27  
 **Status:** ✅ **100% PRODUCTION READY & DEPLOYED**
 
 ---
 
 ## ⚡ CURRENT STATE
 
-| Component        | Status                                          |
-| ---------------- | ----------------------------------------------- |
-| **Site**         | https://www.cronkwaters.com → ✅ HTTP 200 LIVE  |
-| **Build**        | ✅ Clean - Deployed 2025-11-26                  |
-| **Health Check** | ✅ 100%                                         |
-| **Dashboard**    | ✅ All 4 stats displaying - Verified in prod    |
-| **Auth**         | ✅ NextAuth + Google OAuth + Email/Password     |
-| **Database**     | ✅ Neon PostgreSQL (connected)                  |
-| **Video**        | ✅ Daily.co configured                          |
-| **Chat**         | ✅ Ably configured                              |
-| **AI**           | ✅ OpenAI configured                            |
-| **Stack**        | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0 |
+| Component         | Status                                          |
+| ----------------- | ----------------------------------------------- |
+| **Site**          | https://www.cronkwaters.com → ✅ HTTP 200 LIVE  |
+| **Build**         | ✅ Clean - Deployed 2025-11-26                  |
+| **Health Check**  | ✅ 100%                                         |
+| **Dashboard**     | ✅ All 4 stats displaying - Verified in prod    |
+| **Auth**          | ✅ NextAuth + Google OAuth + Email/Password     |
+| **Database**      | ✅ Neon PostgreSQL (connected)                  |
+| **Video**         | ✅ Daily.co configured                          |
+| **Chat**          | ✅ Ably configured                              |
+| **AI**            | ✅ OpenAI configured                            |
+| **Stack**         | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0 |
+| **Onboarding**    | ✅ New user profile setup flow active           |
+| **Notifications** | ✅ Notification Bell functional in TopBar       |
 
 ---
 
@@ -166,6 +168,79 @@ The Supabase database contains **orphaned tables from other projects**:
 
 ---
 
+## 🔄 LATEST CHANGES (Agent 145)
+
+### Critical Bug Fix: Non-Functional Notification Bell
+
+**Issue:** The notification bell icon in the TopBar appeared but was completely non-functional—no dropdown, no click response, nothing.
+
+**Root Cause:** The TopBar component had TWO different notification implementations:
+
+1. **NotificationBell component** (`notification-bell.tsx`) - Fully functional with Ably real-time, dropdown, mark as read, browser notifications, etc.
+2. **Static button** in TopBar (lines 130-143) - Just a mock button with hardcoded count, NO click handler
+
+The TopBar was using the static mock button instead of the actual NotificationBell component.
+
+**Fix Applied:**
+
+- Replaced static notification button with the actual `NotificationBell` component
+- Added dynamic import of NotificationBell (to avoid SSR issues)
+- Removed mock notification state (`useState(3)`)
+- Removed unused Bell import from lucide-react
+
+**Files Modified:**
+
+- `apps/web/components/top-bar.tsx` - Replaced static button with NotificationBell component
+
+**What Users Get Now:**
+
+- ✅ Click to open notification dropdown
+- ✅ Real-time notifications via Ably
+- ✅ Unread count badge (live updates)
+- ✅ Mark as read / Mark all as read
+- ✅ Delete individual notifications
+- ✅ Clear all notifications
+- ✅ Click notification to navigate to related content
+- ✅ Connection status indicator
+- ✅ Browser notification permission request
+- ✅ Sound on new notifications
+- ✅ LocalStorage persistence
+
+**Verification:** ✅ No linter errors, clean build
+
+---
+
+## 🔄 LATEST CHANGES (Agent 144)
+
+### New User Onboarding Flow
+
+1. **Automatic Profile Setup Redirect** - New users are automatically redirected to profile setup after signup
+   - Added `profileCompleted` field to User model (default: false)
+   - New signups (credentials & Google OAuth) are redirected to `/settings/profile?setup=true`
+   - Dashboard checks profile completion and redirects if needed
+   - Profile page shows welcome message for first-time setup
+2. **Files Modified:**
+   - `packages/db/prisma/schema.prisma` - Added profileCompleted field
+   - `packages/auth/src/auth.ts` - Include profileCompleted in session
+   - `apps/web/app/api/register/route.ts` - Set profileCompleted=false for new users
+   - `apps/web/app/actions/auth.ts` - Check profile completion on signup
+   - `apps/web/app/(app)/dashboard/page.tsx` - Redirect incomplete profiles
+   - `apps/web/app/(app)/settings/profile/page.tsx` - Handle setup mode
+   - `apps/web/app/api/profile/route.ts` - New endpoint to update profile
+3. **Database Migration:**
+   - Applied migration: `add_profile_completed.sql`
+   - Existing users set to profileCompleted=true (grandfathered in)
+   - New users default to profileCompleted=false
+
+### Verification
+
+- ✅ Migration applied successfully
+- ✅ No linter errors
+- ✅ Profile setup flow implemented end-to-end
+- ✅ Existing users unaffected
+
+---
+
 ## 🔄 LATEST CHANGES (Agent 143)
 
 ### Critical Bug Fix: Settings Navigation
@@ -191,4 +266,43 @@ The Supabase database contains **orphaned tables from other projects**:
 
 ---
 
-**Last Updated:** 2025-11-26 by Agent 143 (Deployed)
+**Last Updated:** 2025-11-26 by Agent 144
+
+---
+
+## 📖 NEW USER ONBOARDING (Agent 144)
+
+### Feature Overview
+
+New users are automatically redirected to profile setup after signup. This ensures every user completes their profile before accessing the platform.
+
+### How It Works
+
+1. **New Signup** → User creates account (Email/Password or Google OAuth)
+2. **Auto-Redirect** → Redirected to `/settings/profile?setup=true`
+3. **Welcome Screen** → Sees welcome message and profile form
+4. **Complete Profile** → Fills in information and saves
+5. **Dashboard Access** → Redirected to dashboard, full platform access
+
+### Technical Details
+
+- `User.profileCompleted` field tracks setup status (default: false)
+- Dashboard checks status and redirects if incomplete
+- Profile save updates status and session
+- Existing users grandfathered in (profileCompleted: true)
+
+### Files Involved
+
+- Schema: `packages/db/prisma/schema.prisma`
+- Auth: `packages/auth/src/auth.ts`
+- Registration: `apps/web/app/api/register/route.ts`
+- Sign-in: `apps/web/app/actions/auth.ts`
+- Dashboard: `apps/web/app/(app)/dashboard/page.tsx`
+- Profile: `apps/web/app/(app)/settings/profile/page.tsx`
+- API: `apps/web/app/api/profile/route.ts`
+
+**See:** `NEW_USER_ONBOARDING_COMPLETE.md` for full implementation details
+
+---
+
+**Last Updated:** 2025-11-27 by Agent 145 (Notification Bell Fix)
