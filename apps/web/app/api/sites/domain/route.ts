@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
-import dns from 'dns/promises';
+import { removeDomainFromVercel } from '@/lib/vercel-domains';
 
 // POST /api/sites/domain - Add a custom domain
 export async function POST(request: NextRequest) {
@@ -156,6 +156,15 @@ export async function DELETE() {
 
     if (!site) {
       return NextResponse.json({ error: 'Site not found' }, { status: 404 });
+    }
+
+    // Remove domain from Vercel if it was configured
+    if (site.customDomain) {
+      const vercelResult = await removeDomainFromVercel(site.customDomain);
+      if (!vercelResult.success) {
+        console.warn('[DOMAIN] Failed to remove from Vercel:', vercelResult.error);
+        // Continue anyway - we still want to remove from our database
+      }
     }
 
     await prisma.musicianSite.update({

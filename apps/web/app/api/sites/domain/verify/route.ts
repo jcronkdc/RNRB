@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
 import dns from 'dns/promises';
+import { addDomainToVercel, verifyDomainOnVercel } from '@/lib/vercel-domains';
 
 // POST /api/sites/domain/verify - Verify domain ownership via DNS TXT record
 export async function POST() {
@@ -101,13 +102,32 @@ export async function POST() {
       }
     }
 
-    // TXT is verified, update database
-    // We'll mark as verified even if CNAME/A isn't set yet
-    // The site will only work once CNAME/A is properly configured
+    // TXT is verified - now add domain to Vercel for SSL and routing
+    let vercelResult = { success: false, verified: false, error: '' };
+
+    // Step 1: Add domain to Vercel project
+    const addResult = await addDomainToVercel(site.customDomain);
+
+    if (addResult.success) {
+      // Step 2: If DNS points to us, verify the domain on Vercel
+      if (dnsPointsToUs) {
+        vercelResult = await verifyDomainOnVercel(site.customDomain);
+      } else {
+        vercelResult = { success: true, verified: false, error: '' };
+      }
+    } else {
+      console.error('[DOMAIN-VERIFY] Failed to add domain to Vercel:', addResult.error);
+      // Still continue - domain can work without Vercel API in some cases
+      vercelResult = { success: false, verified: false, error: addResult.error || '' };
+    }
+
+    // Update database with verification status
     await prisma.musicianSite.update({
       where: { id: site.id },
       data: { domainVerified: true },
     });
+
+    const fullyConfigured = dnsPointsToUs && addResult.success;
 
     return NextResponse.json({
       success: true,
@@ -115,10 +135,12 @@ export async function POST() {
       txtVerified: true,
       dnsPointsToUs,
       dnsInfo,
-      message: dnsPointsToUs
-        ? 'Domain fully verified and configured!'
-        : 'Domain ownership verified! Now add a CNAME or A record to point to cronkwaters.com',
-      nextSteps: dnsPointsToUs
+      vercelConfigured: addResult.success,
+      vercelVerified: vercelResult.verified,
+      message: fullyConfigured
+        ? '🎉 Domain fully verified and configured! SSL certificate will be issued automatically.'
+        : 'Domain ownership verified! Complete the DNS configuration below.',
+      nextSteps: fullyConfigured
         ? null
         : {
             description: 'Add one of these DNS records to make your domain work:',
@@ -132,6 +154,9 @@ export async function POST() {
               name: '@',
               value: '76.76.21.21',
             },
+            note: addResult.success
+              ? 'Domain has been added to Vercel. SSL will be issued once DNS propagates.'
+              : 'Note: Automatic Vercel configuration is pending. Contact support if issues persist.',
           },
     });
   } catch (error) {
