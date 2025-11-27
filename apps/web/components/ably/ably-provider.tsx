@@ -17,16 +17,62 @@ interface ConnectionMetrics {
   lastConnected: number | null;
 }
 
-// Exponential backoff configuration
-const RETRY_DELAYS = [1000, 2000, 4000, 8000, 15000]; // ms
-const MAX_RETRIES = 5;
-const CONNECTION_TIMEOUT = 15000; // 15s
+// ============================================================================
+// CIRCUIT BREAKER - Prevents infinite token request loops
+// ============================================================================
+const CIRCUIT_BREAKER_THRESHOLD = 3; // Open circuit after 3 failures
+const CIRCUIT_BREAKER_RESET_MS = 60000; // Reset after 60 seconds
+const MAX_INIT_RETRIES = 3; // Max initialization retries
+const INIT_TIMEOUT_MS = 10000; // 10 second timeout per attempt
 
+// Global circuit breaker state (persists across component remounts)
+let circuitBreakerFailures = 0;
+let circuitBreakerOpenTime: number | null = null;
+let isAblyDisabled = false;
+
+function isCircuitOpen(): boolean {
+  if (isAblyDisabled) return true;
+
+  if (circuitBreakerOpenTime) {
+    // Check if enough time has passed to reset
+    if (Date.now() - circuitBreakerOpenTime > CIRCUIT_BREAKER_RESET_MS) {
+      circuitBreakerOpenTime = null;
+      circuitBreakerFailures = 0;
+      console.log('[Ably] Circuit breaker reset - will retry');
+      return false;
+    }
+    return true;
+  }
+  return false;
+}
+
+function recordFailure(): void {
+  circuitBreakerFailures++;
+  console.warn(`[Ably] Token failure ${circuitBreakerFailures}/${CIRCUIT_BREAKER_THRESHOLD}`);
+
+  if (circuitBreakerFailures >= CIRCUIT_BREAKER_THRESHOLD) {
+    circuitBreakerOpenTime = Date.now();
+    console.error('[Ably] Circuit breaker OPEN - Ably disabled for 60 seconds');
+  }
+}
+
+function recordSuccess(): void {
+  circuitBreakerFailures = 0;
+  circuitBreakerOpenTime = null;
+}
+
+function permanentlyDisable(): void {
+  isAblyDisabled = true;
+  console.error('[Ably] Permanently disabled due to repeated failures');
+}
+
+// ============================================================================
+// PROVIDER COMPONENT
+// ============================================================================
 export function AblyProvider({ children, lazy = true }: Props) {
   const [client, setClient] = useState<Ably.Realtime | null>(null);
   const [shouldInit, setShouldInit] = useState(!lazy);
   const [hasError, setHasError] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
   const [metrics, setMetrics] = useState<ConnectionMetrics>({
     latency: 0,
     quality: 'offline',
@@ -34,55 +80,96 @@ export function AblyProvider({ children, lazy = true }: Props) {
     lastConnected: null,
   });
 
-  // Use ref to track lastConnected without causing re-initialization
-  // This prevents the cycle: metrics update → initializeAbly re-runs → new client → repeat
-  const lastConnectedRef = useRef<number | null>(null);
-
   const { data: session, status } = useSession();
   const isAuthenticated = status === 'authenticated' && !!session?.user;
+  const mountedRef = useRef(true);
+  const initAttemptRef = useRef(0);
+  const clientRef = useRef<Ably.Realtime | null>(null);
 
-  // Measure connection quality
-  const measureLatency = useCallback(async (ablyClient: Ably.Realtime) => {
-    if (!mountedRef.current) return;
+  // Controlled token request with circuit breaker
+  const fetchToken = useCallback(async (userId: string): Promise<Ably.TokenRequest | null> => {
+    // Check circuit breaker first
+    if (isCircuitOpen()) {
+      console.log('[Ably] Circuit breaker open - skipping token request');
+      return null;
+    }
 
     try {
-      const start = Date.now();
-      await ablyClient.stats();
-      const latency = Date.now() - start;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
 
-      let quality: ConnectionMetrics['quality'] = 'excellent';
-      if (latency > 500) quality = 'poor';
-      else if (latency > 200) quality = 'good';
+      const response = await fetch('/api/ably/token', {
+        method: 'GET',
+        signal: controller.signal,
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
 
-      const now = Date.now();
-      lastConnectedRef.current = now; // Update ref
+      clearTimeout(timeoutId);
 
-      if (mountedRef.current) {
-        setMetrics((prev) => ({
-          ...prev,
-          latency,
-          quality,
-          lastConnected: now,
-        }));
+      // Service unavailable (503) means ABLY_API_KEY not configured - permanently disable
+      if (response.status === 503) {
+        console.info('[Ably] Service unavailable (503) - real-time features disabled');
+        permanentlyDisable();
+        return null;
       }
+
+      // Auth required (401) - don't count as failure, just skip
+      if (response.status === 401) {
+        console.log('[Ably] Not authenticated - skipping');
+        return null;
+      }
+
+      if (!response.ok) {
+        throw new Error(`Token request failed: ${response.status}`);
+      }
+
+      const tokenRequest = await response.json();
+      recordSuccess();
+      return tokenRequest;
     } catch (error) {
-      if (mountedRef.current) {
-        setMetrics((prev) => ({ ...prev, quality: 'offline' }));
+      if ((error as Error).name === 'AbortError') {
+        console.warn('[Ably] Token request timed out');
+      } else {
+        console.error('[Ably] Token request failed:', error);
       }
+      recordFailure();
+      return null;
     }
   }, []);
 
-  // Ref to track if component is mounted (prevent state updates on unmounted component)
-  const mountedRef = useRef(true);
+  // Initialize Ably with controlled token callback
+  const initializeAbly = useCallback(async (): Promise<void> => {
+    if (!isAuthenticated || !session?.user?.id) return;
 
-  // Initialize Ably with retry logic
-  const initializeAbly = useCallback(
-    async (attemptNum: number = 0): Promise<void> => {
-      if (!isAuthenticated || !session?.user?.id) return;
+    // Check circuit breaker
+    if (isCircuitOpen()) {
+      console.log('[Ably] Circuit breaker open - not initializing');
+      if (mountedRef.current) {
+        setHasError(true);
+        setMetrics((prev) => ({ ...prev, quality: 'offline' }));
+      }
+      return;
+    }
 
-      // Check if we've exceeded max retries
-      if (attemptNum >= MAX_RETRIES) {
-        console.warn(`Ably: Max retries (${MAX_RETRIES}) exceeded - disabling real-time features`);
+    // Check if we've exceeded max init attempts
+    if (initAttemptRef.current >= MAX_INIT_RETRIES) {
+      console.warn(`[Ably] Max init retries (${MAX_INIT_RETRIES}) exceeded`);
+      permanentlyDisable();
+      if (mountedRef.current) {
+        setHasError(true);
+      }
+      return;
+    }
+
+    initAttemptRef.current++;
+    const userId = session.user.id;
+
+    try {
+      // Pre-check token availability
+      const initialToken = await fetchToken(userId);
+      if (!initialToken) {
         if (mountedRef.current) {
           setHasError(true);
           setMetrics((prev) => ({ ...prev, quality: 'offline' }));
@@ -90,184 +177,108 @@ export function AblyProvider({ children, lazy = true }: Props) {
         return;
       }
 
-      // Apply exponential backoff for retries
-      if (attemptNum > 0) {
-        const delay = RETRY_DELAYS[Math.min(attemptNum - 1, RETRY_DELAYS.length - 1)];
-        console.log(`Ably: Retry attempt ${attemptNum}/${MAX_RETRIES} in ${delay}ms...`);
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-
-      return new Promise((resolve) => {
-        let isResolved = false;
-
-        const connectionTimeout = setTimeout(() => {
-          if (!isResolved && mountedRef.current) {
-            isResolved = true;
-            console.warn(`Ably: Connection timeout (attempt ${attemptNum + 1}/${MAX_RETRIES})`);
-            setRetryCount(attemptNum + 1);
-            setMetrics((prev) => ({ ...prev, reconnectAttempts: prev.reconnectAttempts + 1 }));
-
-            // Retry with exponential backoff
-            initializeAbly(attemptNum + 1).then(resolve);
+      // Create Ably client with authCallback (gives us control over retries)
+      const ablyClient = new Ably.Realtime({
+        authCallback: async (tokenParams, callback) => {
+          // Circuit breaker check on every token refresh
+          if (isCircuitOpen()) {
+            callback(new Error('Circuit breaker open'), null);
+            return;
           }
-        }, CONNECTION_TIMEOUT);
 
-        // Check if Ably service is available before creating client
-        fetch('/api/ably/token?check=true')
-          .catch(() => ({ ok: false, status: 503 }))
-          .then((tokenCheck) => {
-            if (isResolved || !mountedRef.current) return; // Already timed out or unmounted
-
-            // Check if response is OK (status 200-299)
-            // Any error response (400, 500, 503, etc.) should disable real-time features
-            if (!tokenCheck.ok) {
-              // Service is unavailable or errored - don't retry
-              console.log(
-                `Ably: Service unavailable (status ${tokenCheck.status}) - disabling real-time features`
-              );
-              if (mountedRef.current) {
-                setHasError(true);
-                setMetrics((prev) => ({ ...prev, quality: 'offline' }));
-              }
-              isResolved = true;
-              clearTimeout(connectionTimeout);
-              resolve();
-              return;
-            }
-
-            try {
-              const ablyClient = new Ably.Realtime({
-                authUrl: '/api/ably/token',
-                authMethod: 'GET',
-                clientId: session?.user?.id || 'anonymous',
-                echoMessages: false,
-                // FIX: closeOnUnload and recover() are mutually exclusive
-                // Use recover() for better connection persistence
-                closeOnUnload: false,
-                // Optimized transport params
-                transportParams: {
-                  remainPresentFor: 30, // Reduced from 60 for faster cleanup
-                },
-                // Add disconnection handling
-                disconnectedRetryTimeout: 3000,
-                suspendedRetryTimeout: 6000,
-                // Performance optimizations
-                autoConnect: true,
-                recover: (lastConnectionDetails, cb) => {
-                  // Try to recover connection if possible
-                  // Use ref to avoid closure over metrics state which would cause re-initialization
-                  if (
-                    lastConnectionDetails &&
-                    Date.now() - (lastConnectedRef.current || 0) < 120000
-                  ) {
-                    cb(true);
-                  } else {
-                    cb(false);
-                  }
-                },
-              });
-
-              // Connection successful
-              ablyClient.connection.once('connected', () => {
-                if (!isResolved && mountedRef.current) {
-                  isResolved = true;
-                  clearTimeout(connectionTimeout);
-                  console.log(
-                    `Ably: Connected successfully ${attemptNum > 0 ? `(after ${attemptNum} retries)` : ''}`
-                  );
-
-                  const now = Date.now();
-                  lastConnectedRef.current = now; // Update ref
-
-                  setClient(ablyClient);
-                  setHasError(false);
-                  setRetryCount(0);
-                  setMetrics((prev) => ({
-                    ...prev,
-                    quality: 'good',
-                    lastConnected: now,
-                  }));
-
-                  // Measure initial latency
-                  measureLatency(ablyClient);
-
-                  // Periodic quality checks (every 30s)
-                  const qualityCheck = setInterval(() => {
-                    if (ablyClient.connection.state === 'connected') {
-                      measureLatency(ablyClient);
-                    }
-                  }, 30000);
-
-                  // Cleanup quality checks on disconnect
-                  ablyClient.connection.once('closed', () => clearInterval(qualityCheck));
-
-                  resolve();
-                }
-              });
-
-              // Handle connection failures
-              ablyClient.connection.on('failed', () => {
-                if (!isResolved && mountedRef.current) {
-                  isResolved = true;
-                  clearTimeout(connectionTimeout);
-                  console.warn(
-                    `Ably: Connection failed (attempt ${attemptNum + 1}/${MAX_RETRIES})`
-                  );
-
-                  setMetrics((prev) => ({
-                    ...prev,
-                    quality: 'offline',
-                    reconnectAttempts: prev.reconnectAttempts + 1,
-                  }));
-                  ablyClient.close();
-
-                  // Retry
-                  initializeAbly(attemptNum + 1).then(resolve);
-                }
-              });
-
-              // Monitor disconnections
-              ablyClient.connection.on('disconnected', () => {
-                console.warn('Ably: Disconnected - will auto-reconnect');
-                if (mountedRef.current) {
-                  setMetrics((prev) => ({ ...prev, quality: 'poor' }));
-                }
-              });
-
-              // Monitor suspensions
-              ablyClient.connection.on('suspended', () => {
-                console.warn('Ably: Connection suspended - attempting to recover');
-                if (mountedRef.current) {
-                  setMetrics((prev) => ({ ...prev, quality: 'poor' }));
-                }
-              });
-
-              // Monitor reconnections
-              ablyClient.connection.on('connecting', () => {
-                console.log('Ably: Reconnecting...');
-              });
-            } catch (error) {
-              if (!isResolved && mountedRef.current) {
-                isResolved = true;
-                clearTimeout(connectionTimeout);
-                console.error(
-                  `Ably: Initialization error (attempt ${attemptNum + 1}/${MAX_RETRIES}):`,
-                  error
-                );
-
-                setMetrics((prev) => ({ ...prev, reconnectAttempts: prev.reconnectAttempts + 1 }));
-
-                // Retry
-                initializeAbly(attemptNum + 1).then(resolve);
-              }
-            }
-          });
+          const token = await fetchToken(userId);
+          if (token) {
+            callback(null, token);
+          } else {
+            callback(new Error('Failed to fetch token'), null);
+          }
+        },
+        clientId: userId,
+        echoMessages: false,
+        closeOnUnload: true, // Clean up on page unload
+        // CRITICAL: Disable aggressive auto-reconnect that causes resource exhaustion
+        disconnectedRetryTimeout: 15000, // Wait 15s before retry
+        suspendedRetryTimeout: 30000, // Wait 30s if suspended
+        // Only use WebSocket (faster, less overhead)
+        transports: ['web_socket'],
+        // Don't auto-connect - we'll handle it
+        autoConnect: false,
       });
-    },
-    [isAuthenticated, session?.user?.id, measureLatency]
-  );
-  // Note: metrics.lastConnected removed from dependencies to prevent infinite re-initialization
-  // We use lastConnectedRef instead to read the value without causing re-renders
+
+      // Store reference for cleanup
+      clientRef.current = ablyClient;
+
+      // Set up connection handlers BEFORE connecting
+      const connectionTimeout = setTimeout(() => {
+        if (ablyClient.connection.state !== 'connected') {
+          console.warn('[Ably] Connection timeout');
+          ablyClient.close();
+          recordFailure();
+          if (mountedRef.current) {
+            setHasError(true);
+            setMetrics((prev) => ({ ...prev, quality: 'offline' }));
+          }
+        }
+      }, INIT_TIMEOUT_MS);
+
+      ablyClient.connection.once('connected', () => {
+        clearTimeout(connectionTimeout);
+        if (!mountedRef.current) {
+          ablyClient.close();
+          return;
+        }
+
+        console.log('[Ably] ✅ Connected successfully');
+        initAttemptRef.current = 0; // Reset on success
+        recordSuccess();
+
+        const now = Date.now();
+        setClient(ablyClient);
+        setHasError(false);
+        setMetrics((prev) => ({
+          ...prev,
+          quality: 'good',
+          lastConnected: now,
+        }));
+      });
+
+      ablyClient.connection.on('failed', () => {
+        clearTimeout(connectionTimeout);
+        console.error('[Ably] Connection failed');
+        recordFailure();
+        ablyClient.close();
+
+        if (mountedRef.current) {
+          setHasError(true);
+          setMetrics((prev) => ({ ...prev, quality: 'offline' }));
+        }
+      });
+
+      ablyClient.connection.on('disconnected', () => {
+        console.warn('[Ably] Disconnected');
+        if (mountedRef.current) {
+          setMetrics((prev) => ({ ...prev, quality: 'poor' }));
+        }
+      });
+
+      ablyClient.connection.on('suspended', () => {
+        console.warn('[Ably] Connection suspended');
+        if (mountedRef.current) {
+          setMetrics((prev) => ({ ...prev, quality: 'poor' }));
+        }
+      });
+
+      // Now connect
+      ablyClient.connect();
+    } catch (error) {
+      console.error('[Ably] Initialization error:', error);
+      recordFailure();
+      if (mountedRef.current) {
+        setHasError(true);
+        setMetrics((prev) => ({ ...prev, quality: 'offline' }));
+      }
+    }
+  }, [isAuthenticated, session?.user?.id, fetchToken]);
 
   // Initialize Ably when ready
   useEffect(() => {
@@ -275,20 +286,21 @@ export function AblyProvider({ children, lazy = true }: Props) {
       return;
     }
 
+    // Check if already disabled
+    if (isAblyDisabled) {
+      setHasError(true);
+      return;
+    }
+
     mountedRef.current = true;
 
-    initializeAbly(0).catch((error) => {
-      console.error('Ably: Fatal initialization error:', error);
-      if (mountedRef.current) {
-        setHasError(true);
-        setMetrics((prev) => ({ ...prev, quality: 'offline' }));
-      }
-    });
+    initializeAbly();
 
     return () => {
       mountedRef.current = false;
-      if (client) {
-        client.close();
+      if (clientRef.current) {
+        clientRef.current.close();
+        clientRef.current = null;
         setClient(null);
       }
     };
@@ -298,19 +310,18 @@ export function AblyProvider({ children, lazy = true }: Props) {
   useEffect(() => {
     if (!lazy || shouldInit || !isAuthenticated) return;
 
-    // Initialize on first user interaction (optimized)
+    // Initialize on first user interaction
     const handleInteraction = () => {
       setShouldInit(true);
     };
 
-    // Listen for any user interaction
     const events = ['mousedown', 'keydown', 'touchstart', 'scroll'];
     events.forEach((event) =>
       window.addEventListener(event, handleInteraction, { once: true, passive: true })
     );
 
-    // Fallback: initialize after 2 seconds if no interaction
-    const timer = setTimeout(() => setShouldInit(true), 2000);
+    // Fallback: initialize after 3 seconds if no interaction
+    const timer = setTimeout(() => setShouldInit(true), 3000);
 
     return () => {
       events.forEach((event) => window.removeEventListener(event, handleInteraction));
@@ -318,14 +329,19 @@ export function AblyProvider({ children, lazy = true }: Props) {
     };
   }, [lazy, shouldInit, isAuthenticated]);
 
-  // Expose metrics to window for debugging (development only)
+  // Expose metrics for debugging (development only)
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      (window as any).__ablyMetrics = metrics;
+      (window as any).__ablyMetrics = {
+        ...metrics,
+        circuitBreakerFailures,
+        isCircuitOpen: isCircuitOpen(),
+        isAblyDisabled,
+      };
     }
   }, [metrics]);
 
-  // Always render children immediately - don't block app
+  // Always render children - don't block app for real-time features
   if (!client || hasError) {
     return <>{children}</>;
   }

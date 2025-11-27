@@ -17,6 +17,13 @@ import type { Message, RealtimeChannel } from 'ably';
 import { Realtime } from 'ably';
 import { useEffect, useState } from 'react';
 
+import {
+  canUseAbly,
+  recordAblyFailure,
+  recordAblySuccess,
+  disableAblyPermanently,
+} from '@/lib/ably-circuit-breaker';
+
 export type NotificationType =
   | 'mention'
   | 'invite'
@@ -58,11 +65,55 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
     let channel: RealtimeChannel | null = null;
 
     const initAbly = async () => {
+      // Circuit breaker check - prevent runaway connection loops
+      if (!canUseAbly()) {
+        console.log('[useNotifications] Circuit breaker open - skipping Ably init');
+        return;
+      }
+
       try {
-        // Create Ably client
+        // Pre-check token availability
+        const tokenCheck = await fetch('/api/ably/token', {
+          signal: AbortSignal.timeout(5000),
+        }).catch(() => ({ ok: false, status: 0 }));
+
+        if (!mounted) return;
+
+        // 503 = ABLY_API_KEY not configured
+        if (tokenCheck.status === 503) {
+          disableAblyPermanently('ABLY_API_KEY not configured');
+          return;
+        }
+
+        if (!tokenCheck.ok) {
+          recordAblyFailure('Token pre-check failed');
+          return;
+        }
+
+        // Create Ably client with authCallback for circuit breaker control
         const ablyClient = new Realtime({
-          authUrl: '/api/ably/token',
+          authCallback: async (tokenParams, callback) => {
+            if (!canUseAbly()) {
+              callback(new Error('Circuit breaker open'), null);
+              return;
+            }
+            try {
+              const response = await fetch('/api/ably/token', {
+                signal: AbortSignal.timeout(5000),
+              });
+              if (!response.ok) throw new Error(`Token failed: ${response.status}`);
+              const token = await response.json();
+              recordAblySuccess();
+              callback(null, token);
+            } catch (err) {
+              recordAblyFailure('Token callback failed');
+              callback(err as Error, null);
+            }
+          },
           clientId: userId,
+          closeOnUnload: true,
+          disconnectedRetryTimeout: 15000,
+          suspendedRetryTimeout: 30000,
         });
 
         if (!mounted) {
@@ -70,6 +121,7 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
           return;
         }
 
+        recordAblySuccess();
         setAbly(ablyClient);
 
         // Get user-specific notification channel
@@ -141,6 +193,7 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
         setIsConnected(true);
       } catch (err) {
         console.error('Ably notifications error:', err);
+        recordAblyFailure(err instanceof Error ? err.message : 'Unknown error');
         if (mounted) {
           setError(err instanceof Error ? err.message : 'Failed to connect');
         }
