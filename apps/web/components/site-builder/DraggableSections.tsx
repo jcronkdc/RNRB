@@ -16,6 +16,10 @@ import {
   Award,
   Share2,
   Layout,
+  Video,
+  Grid,
+  Headphones,
+  Send,
 } from 'lucide-react';
 
 interface SiteSection {
@@ -58,15 +62,33 @@ const sectionConfig: Record<
   },
   hero_video: {
     label: 'Hero Video',
-    icon: Image,
+    icon: Video,
     description: 'Video background hero',
     color: '#ec4899',
+  },
+  video_hero: {
+    label: 'Video Hero',
+    icon: Video,
+    description: 'YouTube/Vimeo background',
+    color: '#dc2626',
   },
   music_player: {
     label: 'Music Player',
     icon: Music,
     description: 'Showcase your tracks',
     color: '#10b981',
+  },
+  streaming: {
+    label: 'Streaming Links',
+    icon: Headphones,
+    description: 'Spotify, Apple Music & more',
+    color: '#1DB954',
+  },
+  photo_gallery: {
+    label: 'Photo Gallery',
+    icon: Grid,
+    description: 'Image grid with lightbox',
+    color: '#a855f7',
   },
   tour_dates: {
     label: 'Tour Dates',
@@ -97,6 +119,12 @@ const sectionConfig: Record<
     icon: Award,
     description: 'Awards and milestones',
     color: '#eab308',
+  },
+  booking: {
+    label: 'Booking Form',
+    icon: Send,
+    description: 'Venue booking requests',
+    color: '#f97316',
   },
   contact_form: {
     label: 'Contact Form',
