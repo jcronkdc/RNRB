@@ -650,6 +650,80 @@ export default function SolutionsForStudiosPage() {
         </div>
       </section>
 
+      {/* Website Builder Section */}
+      <section className="page-section" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="container">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
+            <motion.div {...fadeIn}>
+              <div
+                className="mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1"
+                style={{
+                  background: 'rgba(6, 182, 212, 0.1)',
+                  border: '1px solid rgba(6, 182, 212, 0.25)',
+                }}
+              >
+                <Globe className="h-4 w-4 text-sky-400" />
+                <span className="text-sm text-sky-400">Client Websites & EPKs</span>
+              </div>
+              <h3 className="mb-4 text-3xl font-bold">Deliver A Site With Every Project</h3>
+              <p className="mb-6 text-lg" style={{ color: 'var(--muted)' }}>
+                Use our Website Builder to hand artists a polished microsite with stems, press
+                photos, credits, and booking info. Quick Start pulls assets from the project, while
+                custom domains and analytics keep clients coming back to you.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  'Spin up a site in 60 seconds using project data',
+                  'Separate pages for roster, discography, and booking',
+                  'Guided custom domain setup + automatic SSL',
+                  'Secure download links for WAV, stems, and splits',
+                  'Built-in analytics + contact forms for your studio',
+                ].map((feature) => (
+                  <li key={feature} className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/features/website-builder"
+                className="mt-6 inline-flex items-center gap-2 text-sky-300 underline-offset-4 hover:underline"
+              >
+                Learn more about Website Builder
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
+            <div className="relative">
+              <div
+                className="rounded-2xl p-8"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+              >
+                <div className="rounded-lg bg-sky-500/10 p-4">
+                  <p className="mb-3 text-sm text-sky-200">Client Portal Snapshot</p>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span style={{ color: 'var(--muted)' }}>Site</span>
+                      <code>luminousstudios.cronkwaters.com</code>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span style={{ color: 'var(--muted)' }}>Custom Domain</span>
+                      <code>clients.luminousstudios.com</code>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span style={{ color: 'var(--muted)' }}>Downloads</span>
+                      <span>24-bit WAV · Instrumentals · Split Sheets</span>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-xs text-sky-200">
+                    Perfect for EPK handoffs, sync pitches, and showcasing your catalogue.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Additional Features Grid */}
       <section className="page-section" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="container">
@@ -685,7 +759,7 @@ export default function SolutionsForStudiosPage() {
                 color: 'rose',
               },
               {
-                icon: Globe,
+                icon: Users,
                 title: 'Real-Time Collaboration',
                 desc: 'Multi-cursor editing for lyrics and notes',
                 color: 'cyan',
@@ -695,6 +769,12 @@ export default function SolutionsForStudiosPage() {
                 title: 'Invoice Integration',
                 desc: 'Export time logs for client billing',
                 color: 'emerald',
+              },
+              {
+                icon: Globe,
+                title: 'Website Builder',
+                desc: 'Deliver branded sites with custom domains + analytics',
+                color: 'sky',
               },
             ].map((feature) => (
               <div

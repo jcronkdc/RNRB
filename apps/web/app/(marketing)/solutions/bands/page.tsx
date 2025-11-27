@@ -515,6 +515,84 @@ export default function SolutionsForBandsPage() {
               </motion.div>
             </div>
           </div>
+
+          {/* Feature 5: Website Builder */}
+          <div className="mb-20">
+            <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2">
+              <motion.div {...fadeIn}>
+                <div
+                  className="mb-4 inline-flex items-center gap-2 rounded-full px-3 py-1"
+                  style={{
+                    background: 'rgba(6, 182, 212, 0.1)',
+                    border: '1px solid rgba(6, 182, 212, 0.25)',
+                  }}
+                >
+                  <Globe className="h-4 w-4 text-sky-400" />
+                  <span className="text-sm text-sky-400">Digital Presence</span>
+                </div>
+                <h3 className="mb-4 text-3xl font-bold">Launch A Pro Site In Minutes</h3>
+                <p className="mb-6 text-lg" style={{ color: 'var(--muted)' }}>
+                  Turn your CronkWaters data into a beautiful band website. Quick Start pulls in
+                  your songs, tour dates, and press photos automatically—then add a custom domain
+                  with guided DNS instructions.
+                </p>
+                <ul className="space-y-3">
+                  {[
+                    '8 world-class templates built for bands',
+                    'Auto-syncs music, videos, and upcoming shows',
+                    'Guided custom domain + free SSL certificates',
+                    'Built-in contact form, mailing list, and analytics',
+                    'Update once—website refreshes instantly',
+                  ].map((feature) => (
+                    <li key={feature} className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/features/website-builder"
+                  className="mt-6 inline-flex items-center gap-2 text-sky-300 underline-offset-4 hover:underline"
+                >
+                  See Website Builder →
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              </motion.div>
+              <div className="relative">
+                <div
+                  className="rounded-2xl p-8"
+                  style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                >
+                  <div className="mb-6 rounded-lg p-4" style={{ background: 'var(--panel)' }}>
+                    <p className="mb-2 text-sm" style={{ color: 'var(--muted)' }}>
+                      Default URL
+                    </p>
+                    <code className="text-lg font-semibold">midnightcircuit.cronkwaters.com</code>
+                  </div>
+                  <div className="rounded-lg bg-sky-500/10 p-4">
+                    <p className="mb-3 text-sm text-sky-200">Custom Domain Checklist</p>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-400" />
+                        Add TXT verification record
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-400" />
+                        Point CNAME → cronkwaters
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-400" />
+                        Auto issue SSL certificate
+                      </div>
+                    </div>
+                    <p className="mt-4 text-xs text-sky-200">
+                      Go live with yourband.com in under 10 minutes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -563,6 +641,12 @@ export default function SolutionsForBandsPage() {
                 title: 'Revenue Tracking',
                 desc: 'Track merch, streams, and ticket sales in one dashboard',
                 color: 'emerald',
+              },
+              {
+                icon: Globe,
+                title: 'Website Builder',
+                desc: 'Launch a pro site with custom domain + auto-updated music & shows',
+                color: 'sky',
               },
             ].map((feature) => (
               <div

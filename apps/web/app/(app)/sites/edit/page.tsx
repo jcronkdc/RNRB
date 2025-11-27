@@ -17,7 +17,6 @@ import {
   Plus,
   ExternalLink,
   Check,
-  Link,
 } from 'lucide-react';
 import { DomainSettings } from '@/components/site-builder/DomainSettings';
 
@@ -223,7 +222,7 @@ function SiteEditorContent() {
   const tabs = [
     { id: 'sections', label: 'Sections', icon: Layers },
     { id: 'theme', label: 'Theme', icon: Palette },
-    { id: 'domain', label: 'Domain', icon: Link },
+    { id: 'domain', label: 'Domain', icon: Globe },
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
   ];
 

@@ -80,7 +80,7 @@
 - 8 world-class templates (NOIR, VINYL, NEON, ACOUSTIC, ARENA, EDITORIAL, OUTLAW, FUTURA)
 - Section-based editing (Hero, Music Player, Tour Dates, Bio, Contact, Mailing List)
 - Auto-sync with CronkWaters (songs, shows, profile)
-- Custom domain support
+- Custom domain management (guided DNS instructions, verification, auto HTTPS)
 - Built-in analytics
 - Contact form & mailing list collection
 

@@ -113,7 +113,12 @@ export async function POST() {
       if (dnsPointsToUs) {
         vercelResult = await verifyDomainOnVercel(site.customDomain);
       } else {
-        vercelResult = { success: true, verified: false, error: '' };
+        // Preserve the verification status reported by Vercel (e.g. when domain already exists)
+        vercelResult = {
+          success: true,
+          verified: addResult.verified ?? false,
+          error: '',
+        };
       }
     } else {
       console.error('[DOMAIN-VERIFY] Failed to add domain to Vercel:', addResult.error);
@@ -121,13 +126,14 @@ export async function POST() {
       vercelResult = { success: false, verified: false, error: addResult.error || '' };
     }
 
-    // Update database with verification status
-    await prisma.musicianSite.update({
-      where: { id: site.id },
-      data: { domainVerified: true },
-    });
-
     const fullyConfigured = dnsPointsToUs && addResult.success;
+
+    if (fullyConfigured) {
+      await prisma.musicianSite.update({
+        where: { id: site.id },
+        data: { domainVerified: true },
+      });
+    }
 
     return NextResponse.json({
       success: true,

@@ -610,6 +610,18 @@ export default function WebsiteBuilderFeaturePage() {
                 'Mailing list signup, contact forms, and social media links all built in. Grow your fanbase effortlessly.',
               features: ['Email capture', 'Social links', 'SEO optimization'],
             },
+            {
+              icon: Globe,
+              color: 'amber',
+              title: 'Custom Domains & Analytics',
+              description:
+                'Connect your own domain with guided DNS instructions, automatic SSL, and real-time visitor analytics.',
+              features: [
+                'Guided DNS + verification',
+                'Auto HTTPS certificates',
+                'Daily visitor & section insights',
+              ],
+            },
           ].map((feature, index) => (
             <motion.div
               key={feature.title}

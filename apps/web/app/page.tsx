@@ -199,7 +199,7 @@ export default function HomePage() {
           </div>
 
           {/* Primary Features - Large Cards */}
-          <div className="primary-features mb-12 grid gap-6 md:grid-cols-2">
+          <div className="primary-features mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* AI Songwriting */}
             <Link href="/features/songwriting" className="feature-card-large group">
               <div
@@ -292,6 +292,57 @@ export default function HomePage() {
                   </ul>
                   <span className="feature-link" style={{ color: '#3b82f6' }}>
                     Explore Collaboration →
+                  </span>
+                </div>
+              </div>
+            </Link>
+
+            {/* Website Builder */}
+            <Link href="/features/website-builder" className="feature-card-large group">
+              <div
+                className="feature-card-bg"
+                style={{ '--accent-color': '#06b6d4' } as React.CSSProperties}
+              ></div>
+              <div className="feature-card-content">
+                <div
+                  className="feature-icon-large"
+                  style={{ background: 'rgba(6, 182, 212, 0.15)' }}
+                >
+                  <svg
+                    className="h-8 w-8"
+                    style={{ color: '#06b6d4' }}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div
+                    className="feature-badge"
+                    style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#06b6d4' }}
+                  >
+                    Digital Presence
+                  </div>
+                  <h3 className="feature-title-large">Website Builder</h3>
+                  <p className="feature-desc-large">
+                    Launch a stunning site in 60 seconds. Auto-import your music, shows, and
+                    profile, plug in a custom domain, and watch analytics roll in.
+                  </p>
+                  <ul className="feature-list">
+                    <li>✓ Quick Start pulls in songs, bio, tour dates</li>
+                    <li>✓ 8 pro templates + full theme customization</li>
+                    <li>✓ Guided custom domain setup & auto SSL</li>
+                    <li>✓ Built-in analytics, contact + mailing list</li>
+                  </ul>
+                  <span className="feature-link" style={{ color: '#06b6d4' }}>
+                    Explore Website Builder →
                   </span>
                 </div>
               </div>
@@ -618,7 +669,7 @@ export default function HomePage() {
               </div>
               <h4 className="feature-title-small">Website Builder</h4>
               <p className="feature-desc-small">
-                One-click pro websites with 8 templates, auto-sync music & tours
+                One-click pro sites with custom domains, analytics, auto-sync music & tours
               </p>
             </Link>
 
