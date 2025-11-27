@@ -19,6 +19,7 @@ import {
   MessageSquare,
   LogOut,
   Loader2,
+  Globe,
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
@@ -43,6 +44,7 @@ const navItems: NavItem[] = [
   { label: 'Projects', href: '/projects', icon: FolderOpen },
   { label: 'Studio', href: '/studio', icon: Mic2 },
   { label: 'Tours', href: '/tours', icon: Radio },
+  { label: 'My Website', href: '/sites', icon: Globe, badge: 'NEW' },
   { label: 'Explore', href: '/explore', icon: Compass },
   { label: 'Messages', href: '/messages', icon: MessageSquare },
   { label: 'Library', href: '/library', icon: Library },

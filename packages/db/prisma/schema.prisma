@@ -133,6 +133,9 @@ model User {
   // AI Assistant
   assistantConversations AssistantConversation[]
   creditPurchases        CreditPurchase[]
+  
+  // Website Builder
+  musicianSite           MusicianSite?
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -179,6 +182,7 @@ model Org {
   tours            Tour[]
   invitations      Invitation[]
   setlistTemplates SetlistTemplate[]
+  musicianSites    MusicianSite[]
 
   @@index([slug])
   @@index([type])
@@ -2131,3 +2135,361 @@ model CreditPurchase {
   @@index([type])
   @@index([status])
 }
+
+// ====================================
+// WORLD-CLASS WEBSITE BUILDER
+// Added: 2025-11-27
+// ====================================
+
+model MusicianSite {
+  id          String   @id @default(cuid())
+  userId      String   @unique // One site per user initially
+  orgId       String?  // Optional org/band association
+  
+  // Domain configuration
+  subdomain   String   @unique // yourname.cronkwaters.com
+  customDomain String? @unique // www.yourband.com
+  domainVerified Boolean @default(false)
+  sslEnabled  Boolean  @default(true)
+  
+  // Template & Theme
+  templateId  String   @default("noir") // NOIR, VINYL, NEON, etc.
+  theme       Json?    // { primaryColor, accentColor, fontHeading, fontBody, darkMode }
+  
+  // Site Info
+  siteName    String?  // Display name
+  tagline     String?  // "Rock & Roll Since 2015"
+  
+  // SEO & Meta
+  siteTitle   String?  // "The Band Name | Official Website"
+  metaDescription String? @db.Text
+  ogImage     String?  // Social share image URL
+  favicon     String?
+  keywords    String[]
+  
+  // Social Links
+  socialLinks Json?    // { spotify, apple, youtube, instagram, tiktok, twitter, facebook, tiktok, bandcamp, soundcloud, website }
+  
+  // Contact Info
+  bookingEmail String?
+  publicEmail  String?
+  phone        String?
+  
+  // Analytics Integration
+  googleAnalyticsId String?
+  facebookPixelId   String?
+  
+  // Site Status
+  status      SiteStatus @default(draft)
+  publishedAt DateTime?
+  
+  // Traffic Stats (cached)
+  totalViews  Int       @default(0)
+  
+  // Quick Start tracking
+  quickStartUsed Boolean @default(false)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  sections    SiteSection[]
+  pages       SitePage[]
+  analytics   SiteAnalytics[]
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  org         Org?      @relation(fields: [orgId], references: [id])
+  
+  @@index([subdomain])
+  @@index([customDomain])
+  @@index([status])
+  @@index([userId])
+  @@index([templateId])
+}
+
+enum SiteStatus {
+  draft
+  published
+  paused
+  archived
+}
+
+model SitePage {
+  id          String    @id @default(cuid())
+  siteId      String
+  slug        String    // "home", "music", "tour", "about", "contact"
+  title       String
+  isHomepage  Boolean   @default(false)
+  showInNav   Boolean   @default(true)
+  order       Int       @default(0)
+  
+  // SEO per page
+  metaTitle   String?
+  metaDescription String? @db.Text
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  site        MusicianSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  sections    SiteSection[]
+  
+  @@unique([siteId, slug])
+  @@index([siteId, order])
+}
+
+model SiteSection {
+  id          String   @id @default(cuid())
+  siteId      String
+  pageId      String?  // Which page (null = global like header/footer)
+  
+  // Section type
+  type        SectionType
+  
+  // Content (varies by section type)
+  // Hero: { title, subtitle, backgroundImage, backgroundVideo, ctaText, ctaLink }
+  // Music: { autoSync: true, trackIds: [], spotifyEmbed, appleMusicEmbed }
+  // Tour: { autoSync: true, showIds: [], showMap: true }
+  // Bio: { content: "rich text", images: [] }
+  // Gallery: { images: [], layout: "masonry" | "grid" }
+  // Contact: { fields: [], submitTo: "email" | "webhook" }
+  // MailingList: { provider: "native" | "mailchimp", listId }
+  content     Json     @default("{}")
+  
+  // Styling overrides
+  styles      Json?    // { backgroundColor, textColor, padding, animation }
+  
+  // Position & visibility
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  
+  // Responsive options
+  hideOnMobile Boolean @default(false)
+  hideOnDesktop Boolean @default(false)
+  
+  // Animation
+  animation   String?  // "fade-in", "slide-up", "parallax"
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  site        MusicianSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  page        SitePage?    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@index([siteId, pageId, order])
+  @@index([type])
+}
+
+enum SectionType {
+  // Navigation
+  header
+  footer
+  
+  // Hero Sections
+  hero_video       // Full-screen video background
+  hero_image       // Full-screen image background
+  hero_slideshow   // Rotating images
+  hero_animated    // Particle/gradient animation
+  hero_split       // Split screen image + text
+  
+  // Music Sections
+  music_player     // Custom waveform player (auto-syncs songs)
+  music_spotify    // Spotify embed
+  music_apple      // Apple Music embed
+  music_bandcamp   // Bandcamp embed
+  discography      // Album/single browser grid
+  
+  // Tour/Shows
+  tour_dates       // Auto-synced from CronkWaters Shows
+  tour_map         // Interactive map with venues
+  tour_upcoming    // Next 3 shows highlight
+  
+  // Video
+  video_hero       // Featured video (YouTube/Vimeo)
+  video_gallery    // Multiple videos grid
+  
+  // About/Bio
+  bio_full         // Full rich text bio
+  bio_split        // Image + bio side by side
+  band_members     // Team/member profiles grid
+  timeline         // Career/band timeline
+  achievements     // Awards and accolades
+  
+  // Media
+  photo_gallery    // Masonry image gallery
+  photo_grid       // Uniform grid gallery
+  press_photos     // Downloadable hi-res images
+  
+  // Engagement
+  mailing_list     // Email signup (native or Mailchimp)
+  contact_form     // Booking/fan contact form
+  social_links     // Social media icon links
+  social_feed      // Instagram/Twitter embed
+  
+  // Press/EPK
+  epk_download     // Electronic Press Kit download
+  press_quotes     // Reviews/testimonials carousel
+  press_logos      // "As seen in" media logos
+  
+  // Commerce
+  merch_bandcamp   // Bandcamp store embed
+  merch_shopify    // Shopify embed
+  merch_grid       // Product cards (links out)
+  
+  // Utility
+  text_block       // Rich text block
+  image_block      // Single image with caption
+  video_embed      // Single video embed
+  html_embed       // Custom HTML/embed code
+  spacer           // Visual spacing
+  divider          // Horizontal divider
+  cta_banner       // Call-to-action banner
+  countdown        // Event countdown timer
+}
+
+model SiteAnalytics {
+  id          String   @id @default(cuid())
+  siteId      String
+  date        DateTime @db.Date
+  
+  // Traffic
+  pageViews   Int      @default(0)
+  uniqueVisitors Int   @default(0)
+  avgTimeOnSite Int?   // Seconds
+  bounceRate  Float?   // Percentage
+  
+  // Sources
+  sources     Json?    // { direct: 100, google: 50, instagram: 25, facebook: 10 }
+  
+  // Geography
+  countries   Json?    // { US: 500, UK: 100, CA: 50 }
+  cities      Json?    // { "New York": 100, "Los Angeles": 80 }
+  
+  // Devices
+  devices     Json?    // { desktop: 400, mobile: 200, tablet: 50 }
+  browsers    Json?    // { chrome: 300, safari: 200, firefox: 50 }
+  
+  // Top Pages
+  topPages    Json?    // { "/": 300, "/tour": 150, "/music": 100 }
+  
+  // Engagement Metrics
+  musicPlays  Int      @default(0)
+  videoPlays  Int      @default(0)
+  mailingListSignups Int @default(0)
+  contactFormSubmissions Int @default(0)
+  socialClicks Int     @default(0)
+  
+  // Referrers
+  topReferrers Json?   // { "instagram.com": 50, "google.com": 30 }
+  
+  createdAt   DateTime @default(now())
+  
+  site        MusicianSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  
+  @@unique([siteId, date])
+  @@index([siteId, date])
+}
+
+// Mailing list subscribers (native, not Mailchimp)
+model SiteSubscriber {
+  id          String   @id @default(cuid())
+  siteId      String
+  email       String
+  name        String?
+  
+  // Preferences
+  subscribedToNews Boolean @default(true)
+  subscribedToTours Boolean @default(true)
+  subscribedToReleases Boolean @default(true)
+  
+  // Status
+  confirmed   Boolean  @default(false)
+  confirmToken String? @unique
+  unsubscribed Boolean @default(false)
+  unsubscribedAt DateTime?
+  
+  // Source
+  source      String?  // "website", "import", etc.
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([siteId, email])
+  @@index([siteId, confirmed])
+  @@index([email])
+}
+
+// Contact form submissions
+model SiteContactSubmission {
+  id          String   @id @default(cuid())
+  siteId      String
+  
+  // Submitter info
+  name        String
+  email       String
+  phone       String?
+  
+  // Message
+  subject     String?
+  message     String   @db.Text
+  inquiryType String?  // "booking", "press", "fan", "other"
+  
+  // Status
+  status      ContactStatus @default(new)
+  respondedAt DateTime?
+  notes       String?  @db.Text
+  
+  // Metadata
+  ipAddress   String?
+  userAgent   String?
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([siteId, status])
+  @@index([siteId, createdAt])
+  @@index([email])
+}
+
+enum ContactStatus {
+  new
+  read
+  replied
+  archived
+  spam
+}
+
+// Site templates library
+model SiteTemplate {
+  id          String   @id @default(cuid())
+  slug        String   @unique // "noir", "vinyl", "neon"
+  name        String   // "NOIR", "VINYL", "NEON"
+  description String?
+  
+  // Preview
+  previewImage String? // Template preview image
+  previewUrl  String?  // Live preview URL
+  
+  // Category
+  category    String?  // "dark", "light", "colorful", "minimal"
+  genres      String[] // ["rock", "electronic", "hip-hop"]
+  
+  // Default theme values
+  defaultTheme Json    // { primaryColor, accentColor, fonts, etc. }
+  
+  // Default sections for quick start
+  defaultSections Json // Array of section configs
+  
+  // Availability
+  isPremium   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  
+  // Stats
+  usageCount  Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([category])
+  @@index([isActive])
+  @@index([isPremium])
+}
+
+// Force Prisma regeneration: 2025-11-27-WEBSITE-BUILDER-V1

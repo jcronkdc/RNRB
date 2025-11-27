@@ -49,52 +49,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        console.log('[NEXTAUTH AUTHORIZE] Starting...');
-        console.log('[NEXTAUTH AUTHORIZE] Credentials received:', {
-          hasEmail: !!credentials?.email,
-          emailType: typeof credentials?.email,
-          emailLength: (credentials?.email as string)?.length,
-          hasPassword: !!credentials?.password,
-          passwordLength: (credentials?.password as string)?.length,
-        });
-
         // Validate credentials presence
         if (!credentials?.email || !credentials?.password) {
-          console.log('[NEXTAUTH AUTHORIZE] Missing email or password');
           return null;
         }
 
         try {
           // Find user by email
-          console.log('[NEXTAUTH AUTHORIZE] Looking up user by email...');
           const user = await prisma.user.findUnique({
             where: { email: credentials.email as string },
           });
 
-          console.log('[NEXTAUTH AUTHORIZE] User lookup result:', {
-            found: !!user,
-            userId: user?.id,
-            hasPassword: !!user?.password,
-            passwordLength: user?.password?.length,
-          });
-
           // Check if user exists and has a password set
           if (!user || !user.password) {
-            console.log('[NEXTAUTH AUTHORIZE] User not found or no password');
             return null;
           }
 
           // Verify password
-          console.log('[NEXTAUTH AUTHORIZE] Comparing passwords...');
           const isValid = await bcrypt.compare(credentials.password as string, user.password);
-          console.log('[NEXTAUTH AUTHORIZE] Password comparison result:', isValid);
 
           if (!isValid) {
-            console.log('[NEXTAUTH AUTHORIZE] Invalid password');
             return null;
           }
 
-          console.log('[NEXTAUTH AUTHORIZE] Success! Returning user');
           // Return user object
           return {
             id: user.id,
@@ -103,7 +80,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             image: user.image,
           };
         } catch (error) {
-          console.error('[NEXTAUTH AUTHORIZE] Error:', error);
+          console.error('[AUTH] Authorization error:', error);
           return null;
         }
       },
