@@ -178,7 +178,7 @@ export default function SitesPage() {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-3 gap-6">
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
               <div className="rounded-lg p-4" style={{ background: 'var(--bg)' }}>
                 <div className="mb-2 flex items-center gap-2" style={{ color: 'var(--muted)' }}>
                   <Eye size={16} />
@@ -210,7 +210,7 @@ export default function SitesPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <button
               onClick={() => router.push('/sites/edit?tab=sections')}
               className="rounded-xl p-6 text-left transition-all hover:scale-[1.02]"

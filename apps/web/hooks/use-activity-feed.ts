@@ -2,7 +2,7 @@
  * Activity Feed Hook
  *
  * Tracks all real-time activity across the platform
- * Like the nervous system of the mycelial network
+ * Uses shared Ably client to prevent connection leaks
  *
  * Activity types:
  * - user_joined - User joined project
@@ -16,15 +16,9 @@
  */
 
 import type { Message, RealtimeChannel } from 'ably';
-import Ably from 'ably';
 import { useEffect, useRef, useState } from 'react';
 
-import {
-  canUseAbly,
-  recordAblyFailure,
-  recordAblySuccess,
-  disableAblyPermanently,
-} from '@/lib/ably-circuit-breaker';
+import { useAblyClient } from './use-ably-client';
 
 export type ActivityType =
   | 'user_joined'
@@ -53,98 +47,55 @@ export type ActivityEvent = {
 
 type UseActivityFeedOptions = {
   channelName: string; // e.g., 'activity:project:{slug}' or 'activity:global'
+  userId?: string; // Required for real-time connection
   limit?: number;
   enabled?: boolean; // Whether to connect to Ably (prevents connection when auth is loading)
 };
 
 export function useActivityFeed({
   channelName,
+  userId,
   limit = 50,
   enabled = true,
 }: UseActivityFeedOptions) {
   const [activities, setActivities] = useState<ActivityEvent[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const ablyRef = useRef<Ably.Realtime | null>(null);
 
+  // Use shared Ably client instead of creating separate connection
+  const {
+    client: ablyClient,
+    isConnected: ablyConnected,
+    error: ablyError,
+  } = useAblyClient(enabled ? userId : undefined);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const mountedRef = useRef(true);
+
+  // Sync error state from shared client
   useEffect(() => {
-    // Skip connection if not enabled (e.g., auth still loading)
-    if (!enabled) {
+    if (ablyError) {
+      setError(ablyError);
+    }
+  }, [ablyError]);
+
+  // Initialize activity feed using shared client
+  useEffect(() => {
+    // Wait for shared client to be connected
+    if (!enabled || !ablyClient || !ablyConnected) {
       return;
     }
 
-    let mounted = true;
-    let channel: RealtimeChannel | null = null;
+    mountedRef.current = true;
 
-    const initAbly = async () => {
-      // Circuit breaker check - prevent runaway connection loops
-      if (!canUseAbly()) {
-        console.log('[useActivityFeed] Circuit breaker open - skipping Ably init');
-        return;
-      }
-
+    const initActivityFeed = async () => {
       try {
-        // Pre-check token availability
-        const tokenCheck = await fetch('/api/ably/token', {
-          signal: AbortSignal.timeout(5000),
-        }).catch(() => ({ ok: false, status: 0 }));
-
-        if (!mounted) return;
-
-        // 503 = ABLY_API_KEY not configured
-        if (tokenCheck.status === 503) {
-          disableAblyPermanently('ABLY_API_KEY not configured');
-          return;
-        }
-
-        if (!tokenCheck.ok) {
-          recordAblyFailure('Token pre-check failed');
-          return;
-        }
-
-        // Create Ably client with authCallback for circuit breaker control
-        const ablyClient = new Ably.Realtime({
-          authCallback: async (tokenParams, callback) => {
-            if (!canUseAbly()) {
-              callback(new Error('Circuit breaker open'), null);
-              return;
-            }
-            try {
-              const response = await fetch('/api/ably/token', {
-                signal: AbortSignal.timeout(5000),
-              });
-              if (!response.ok) throw new Error(`Token failed: ${response.status}`);
-              const token = await response.json();
-              recordAblySuccess();
-              callback(null, token);
-            } catch (err) {
-              recordAblyFailure('Token callback failed');
-              callback(err as Error, null);
-            }
-          },
-          closeOnUnload: true,
-          disconnectedRetryTimeout: 15000,
-          suspendedRetryTimeout: 30000,
-        });
-
-        if (!mounted) {
-          try {
-            ablyClient.close();
-          } catch {
-            // Ignore close errors when component unmounted
-          }
-          return;
-        }
-
-        recordAblySuccess();
-        ablyRef.current = ablyClient;
-
-        // Get channel
-        channel = ablyClient.channels.get(channelName);
+        // Get channel from shared client
+        const channel = ablyClient.channels.get(channelName);
+        channelRef.current = channel;
 
         // Subscribe to all activity events
         channel.subscribe((message: Message) => {
-          if (!mounted) return;
+          if (!mountedRef.current) return;
 
           const activity: ActivityEvent = {
             id: message.id || `activity_${Date.now()}`,
@@ -164,7 +115,7 @@ export function useActivityFeed({
         try {
           const resultPage = await channel.history({ limit });
 
-          if (!mounted || !resultPage) return;
+          if (!mountedRef.current || !resultPage) return;
 
           const historicalActivities: ActivityEvent[] = resultPage.items.map(
             (message: Message) => ({
@@ -181,50 +132,42 @@ export function useActivityFeed({
           console.error('Error fetching activity history:', error_);
         }
 
-        if (mounted) {
+        if (mountedRef.current) {
           setIsConnected(true);
         }
       } catch (err) {
         console.error('Ably activity feed error:', err);
-        recordAblyFailure(err instanceof Error ? err.message : 'Unknown error');
-        if (mounted) {
+        if (mountedRef.current) {
           setError(err instanceof Error ? err.message : 'Failed to connect');
         }
       }
     };
 
-    initAbly();
+    initActivityFeed();
 
-    // Cleanup - wrap in try/catch to prevent unhandled promise rejections
+    // Cleanup - only unsubscribe, don't close shared client
     return () => {
-      mounted = false;
-      if (channel) {
+      mountedRef.current = false;
+      if (channelRef.current) {
         try {
-          channel.unsubscribe();
+          channelRef.current.unsubscribe();
         } catch {
           // Ignore unsubscribe errors during cleanup
         }
-      }
-      if (ablyRef.current) {
-        try {
-          ablyRef.current.close();
-        } catch {
-          // Ignore close errors during cleanup (prevents "Connection closed" unhandled rejection)
-        }
-        ablyRef.current = null;
+        channelRef.current = null;
       }
     };
-  }, [channelName, limit, enabled]);
+  }, [channelName, limit, enabled, ablyClient, ablyConnected]);
 
   // Function to publish activity (for components to use)
   const publishActivity = async (activity: Omit<ActivityEvent, 'id' | 'timestamp'>) => {
-    if (!ablyRef.current || !isConnected) {
+    if (!ablyClient || !isConnected) {
       console.error('Cannot publish: Ably not connected');
       return;
     }
 
     try {
-      const channel = ablyRef.current.channels.get(channelName);
+      const channel = ablyClient.channels.get(channelName);
       await channel.publish('activity', activity);
     } catch (err) {
       console.error('Error publishing activity:', err);

@@ -45,6 +45,19 @@ const StatCard = memo(
     icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
     href?: string;
   }) => {
+    const router = useRouter();
+
+    const handleClick = useCallback(
+      (e: React.MouseEvent) => {
+        if (href) {
+          console.log('[StatCard] Clicked:', href);
+          e.preventDefault();
+          router.push(href);
+        }
+      },
+      [href, router]
+    );
+
     const content = (
       <div
         className="flex items-center gap-4 rounded-2xl p-4 transition-all duration-200 hover:translate-y-[-2px]"
@@ -52,6 +65,8 @@ const StatCard = memo(
           background: 'var(--panel)',
           border: '1px solid var(--border)',
           boxShadow: 'var(--shadow)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <div
@@ -72,7 +87,11 @@ const StatCard = memo(
     );
 
     if (href) {
-      return <Link href={href}>{content}</Link>;
+      return (
+        <Link href={href} onClick={handleClick}>
+          {content}
+        </Link>
+      );
     }
     return content;
   }
@@ -93,63 +112,79 @@ const PrimaryActionCard = memo(
     icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
     href: string;
     badge?: string;
-  }) => (
-    <Link
-      href={href}
-      className="group relative block h-full cursor-pointer overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:translate-y-[-4px]"
-      style={{
-        background: 'var(--panel)',
-        border: '1px solid var(--border)',
-        boxShadow: 'var(--shadow)',
-      }}
-    >
-      {/* Accent glow on hover - pointer-events-none to not block clicks */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+  }) => {
+    const router = useRouter();
+
+    const handleClick = useCallback(
+      (e: React.MouseEvent<HTMLAnchorElement>) => {
+        console.log('[PrimaryActionCard] Clicked:', href);
+        e.preventDefault();
+        router.push(href);
+      },
+      [href, router]
+    );
+
+    return (
+      <Link
+        href={href}
+        onClick={handleClick}
+        className="group relative block h-full cursor-pointer overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:translate-y-[-4px]"
         style={{
-          background:
-            'radial-gradient(ellipse at top right, rgba(255, 99, 71, 0.15), transparent 70%)',
+          background: 'var(--panel)',
+          border: '1px solid var(--border)',
+          boxShadow: 'var(--shadow)',
+          position: 'relative',
+          zIndex: 1,
         }}
-      />
-
-      {badge && (
-        <span
-          className="pointer-events-none absolute right-4 top-4 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider"
-          style={{
-            background: 'var(--accent)',
-            color: 'white',
-          }}
-        >
-          {badge}
-        </span>
-      )}
-
-      <div className="relative">
+      >
+        {/* Accent glow on hover - pointer-events-none to not block clicks */}
         <div
-          className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110"
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{
-            background: 'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 99, 71, 0.1))',
-            border: '1px solid rgba(255, 99, 71, 0.2)',
+            background:
+              'radial-gradient(ellipse at top right, rgba(255, 99, 71, 0.15), transparent 70%)',
           }}
-        >
-          <Icon className="h-8 w-8" style={{ color: 'var(--accent)' }} />
+        />
+
+        {badge && (
+          <span
+            className="pointer-events-none absolute right-4 top-4 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider"
+            style={{
+              background: 'var(--accent)',
+              color: 'white',
+            }}
+          >
+            {badge}
+          </span>
+        )}
+
+        <div className="relative">
+          <div
+            className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-110"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 99, 71, 0.1))',
+              border: '1px solid rgba(255, 99, 71, 0.2)',
+            }}
+          >
+            <Icon className="h-8 w-8" style={{ color: 'var(--accent)' }} />
+          </div>
+          <h3 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
+            {title}
+          </h3>
+          <p className="mb-4 leading-relaxed" style={{ color: 'var(--muted)' }}>
+            {description}
+          </p>
+          <div
+            className="flex items-center gap-2 text-sm font-medium transition-all duration-200 group-hover:gap-3"
+            style={{ color: 'var(--accent)' }}
+          >
+            <span>Get Started</span>
+            <ChevronRight className="h-4 w-4" />
+          </div>
         </div>
-        <h3 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
-          {title}
-        </h3>
-        <p className="mb-4 leading-relaxed" style={{ color: 'var(--muted)' }}>
-          {description}
-        </p>
-        <div
-          className="flex items-center gap-2 text-sm font-medium transition-all duration-200 group-hover:gap-3"
-          style={{ color: 'var(--accent)' }}
-        >
-          <span>Get Started</span>
-          <ChevronRight className="h-4 w-4" />
-        </div>
-      </div>
-    </Link>
-  )
+      </Link>
+    );
+  }
 );
 PrimaryActionCard.displayName = 'PrimaryActionCard';
 
@@ -166,14 +201,32 @@ const FeatureTile = memo(
     href: string;
     description?: string;
   }) => {
+    const router = useRouter();
+
+    const handleClick = useCallback(
+      (e: React.MouseEvent<HTMLAnchorElement>) => {
+        // Log click for debugging
+        console.log('[FeatureTile] Clicked:', href);
+
+        // Ensure navigation happens - use router.push as primary method
+        // This ensures navigation works even if Link has issues
+        e.preventDefault();
+        router.push(href);
+      },
+      [href, router]
+    );
+
     return (
       <Link
         href={href}
+        onClick={handleClick}
         className="group flex h-full cursor-pointer flex-col items-center rounded-2xl p-5 text-center transition-all duration-200 hover:translate-y-[-2px] focus:outline-none focus:ring-2 focus:ring-offset-2"
         style={{
           background: 'var(--panel)',
           border: '1px solid var(--border)',
           boxShadow: 'var(--shadow)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <div

@@ -119,7 +119,7 @@ export default function HomePage() {
             </div>
 
             {/* Quick Stats */}
-            <div className="hero-stats grid grid-cols-3 gap-6 text-center">
+            <div className="hero-stats grid grid-cols-1 gap-6 text-center sm:grid-cols-3">
               <div className="stat-item">
                 <div className="stat-number">75+</div>
                 <div className="stat-label">Features</div>

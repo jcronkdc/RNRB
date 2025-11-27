@@ -3,7 +3,7 @@
  *
  * Features:
  * - Infinite scroll with cursor-based pagination
- * - Real-time updates via Ably
+ * - Real-time updates via Ably (using shared client)
  * - Optimistic updates
  * - Message deduplication
  * - Smart caching and revalidation
@@ -12,7 +12,9 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import useSWRInfinite from 'swr/infinite';
-import Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
+
+import { useAblyClient } from './use-ably-client';
 
 type MessageType = 'text' | 'voice' | 'video' | 'file' | 'system';
 
@@ -48,6 +50,7 @@ type MessagesResponse = {
 
 interface UseMessagesOptions {
   channelId: string;
+  userId?: string; // Required for real-time updates
   messageType?: MessageType;
   limit?: number;
   enableRealtime?: boolean;
@@ -62,14 +65,19 @@ const fetcher = async (url: string): Promise<MessagesResponse> => {
 
 export function useMessages({
   channelId,
+  userId,
   messageType,
   limit = 50,
   enableRealtime = true,
   onNewMessage,
 }: UseMessagesOptions) {
-  const ablyRef = useRef<Ably.Realtime | null>(null);
-  const channelRef = useRef<Ably.RealtimeChannel | null>(null);
+  // Use shared Ably client instead of creating separate connection
+  const { client: ablyClient, isConnected: ablyConnected } = useAblyClient(
+    enableRealtime ? userId : undefined
+  );
+  const channelRef = useRef<RealtimeChannel | null>(null);
   const messageIdsRef = useRef<Set<string>>(new Set());
+  const mountedRef = useRef(true);
 
   // Generate SWR key for infinite loading
   const getKey = (pageIndex: number, previousPageData: MessagesResponse | null) => {
@@ -156,88 +164,80 @@ export function useMessages({
     [mutate, onNewMessage]
   );
 
-  // Initialize Ably real-time subscription
+  // Initialize Ably real-time subscription using shared client
   useEffect(() => {
-    if (!enableRealtime || !channelId) return;
+    if (!enableRealtime || !channelId || !ablyClient || !ablyConnected) return;
 
-    const initRealtime = async () => {
-      const ablyKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
-      if (!ablyKey) return;
+    mountedRef.current = true;
 
-      try {
-        // Create Ably client
-        const client = new Ably.Realtime({
-          key: ablyKey,
-          recover: (lastConnectionDetails, cb) => {
-            // Connection recovery for offline support
-            cb(true);
-          },
-        });
+    try {
+      // Subscribe to channel using shared client
+      const channel = ablyClient.channels.get(channelId);
+      channelRef.current = channel;
 
-        ablyRef.current = client;
+      // Listen for text messages
+      channel.subscribe('message', (msg) => {
+        if (!mountedRef.current) return;
 
-        // Subscribe to channel
-        const channel = client.channels.get(channelId);
-        channelRef.current = channel;
+        const newMessage: Message = {
+          id: msg.id || `${Date.now()}-${Math.random()}`,
+          type: 'text',
+          senderId: msg.clientId || 'unknown',
+          senderName: msg.data.senderName || 'Unknown',
+          senderEmail: msg.data.senderEmail || '',
+          senderAvatar: msg.data.senderAvatar,
+          content: msg.data.content,
+          timestamp: new Date(msg.timestamp || Date.now()),
+          threadId: msg.data.threadId,
+          reactions: msg.data.reactions,
+          mentions: msg.data.mentions,
+        };
 
-        // Listen for text messages
-        channel.subscribe('message', (msg) => {
-          const newMessage: Message = {
-            id: msg.id || `${Date.now()}-${Math.random()}`,
-            type: 'text',
-            senderId: msg.clientId || 'unknown',
-            senderName: msg.data.senderName || 'Unknown',
-            senderEmail: msg.data.senderEmail || '',
-            senderAvatar: msg.data.senderAvatar,
-            content: msg.data.content,
-            timestamp: new Date(msg.timestamp || Date.now()),
-            threadId: msg.data.threadId,
-            reactions: msg.data.reactions,
-            mentions: msg.data.mentions,
-          };
+        addMessage(newMessage);
+      });
 
-          addMessage(newMessage);
-        });
+      // Listen for voice messages
+      channel.subscribe('voice-message', (msg) => {
+        if (!mountedRef.current) return;
 
-        // Listen for voice messages
-        channel.subscribe('voice-message', (msg) => {
-          const newMessage: Message = {
-            id: msg.data.messageId || `${Date.now()}-${Math.random()}`,
-            type: 'voice',
-            senderId: msg.data.senderId || 'unknown',
-            senderName: msg.data.senderName || 'Unknown',
-            senderEmail: msg.data.senderEmail || '',
-            senderAvatar: msg.data.senderAvatar,
-            audioUrl: msg.data.audioUrl,
-            audioDuration: msg.data.duration,
-            waveformData: msg.data.waveformData,
-            timestamp: new Date(msg.data.timestamp || Date.now()),
-          };
+        const newMessage: Message = {
+          id: msg.data.messageId || `${Date.now()}-${Math.random()}`,
+          type: 'voice',
+          senderId: msg.data.senderId || 'unknown',
+          senderName: msg.data.senderName || 'Unknown',
+          senderEmail: msg.data.senderEmail || '',
+          senderAvatar: msg.data.senderAvatar,
+          audioUrl: msg.data.audioUrl,
+          audioDuration: msg.data.duration,
+          waveformData: msg.data.waveformData,
+          timestamp: new Date(msg.data.timestamp || Date.now()),
+        };
 
-          addMessage(newMessage);
-        });
+        addMessage(newMessage);
+      });
 
-        // Listen for message updates (edits, reactions, etc.)
-        channel.subscribe('message-update', (msg) => {
-          mutate(); // Revalidate on updates
-        });
-      } catch (error) {
-        console.error('Failed to initialize Ably:', error);
-      }
-    };
+      // Listen for message updates (edits, reactions, etc.)
+      channel.subscribe('message-update', () => {
+        if (!mountedRef.current) return;
+        mutate(); // Revalidate on updates
+      });
+    } catch (error) {
+      console.error('Failed to subscribe to Ably channel:', error);
+    }
 
-    initRealtime();
-
-    // Cleanup
+    // Cleanup - only unsubscribe, don't close shared client
     return () => {
+      mountedRef.current = false;
       if (channelRef.current) {
-        channelRef.current.unsubscribe();
-      }
-      if (ablyRef.current) {
-        ablyRef.current.close();
+        try {
+          channelRef.current.unsubscribe();
+        } catch {
+          // Ignore unsubscribe errors during cleanup
+        }
+        channelRef.current = null;
       }
     };
-  }, [channelId, enableRealtime, addMessage, mutate]);
+  }, [channelId, enableRealtime, ablyClient, ablyConnected, addMessage, mutate]);
 
   return {
     messages,

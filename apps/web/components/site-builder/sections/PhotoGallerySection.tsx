@@ -386,7 +386,7 @@ export function PhotoGallerySectionEditor({
           <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--muted)' }}>
             Photos ({(content.photos || []).length})
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {(content.photos || []).map((photo, index) => (
               <div key={index} className="group relative aspect-square overflow-hidden rounded-lg">
                 <Image src={photo.url} alt={photo.alt || ''} fill className="object-cover" />

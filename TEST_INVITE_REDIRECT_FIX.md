@@ -197,16 +197,19 @@
 
 1. **Full encoded flow**
    - Auth URL:
+
    ```
    /auth?redirect=%2Finvites%2Fmy-band%3Femail%3Duser%252Btest%40example.com
    ```
 
    - Profile URL:
+
    ```
    /settings/profile?setup=true&redirect=%2Finvites%2Fmy-band%3Femail%3Duser%252Btest%40example.com
    ```
 
    - Final destination:
+
    ```
    /invites/my-band?email=user%2Btest@example.com
    ```

@@ -89,7 +89,7 @@ export default function SolutionsForStudiosPage() {
             </div>
 
             {/* Quick Stats */}
-            <div className="mt-12 grid grid-cols-3 gap-8">
+            <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
               <div className="text-center">
                 <div className="text-3xl font-bold" style={{ color: 'var(--accent)' }}>
                   100GB

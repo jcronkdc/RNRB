@@ -106,6 +106,7 @@ column_default: "false"     -- New users default to false
    - No NULL values exist due to NOT NULL constraint
 
 3. **Dashboard** (`apps/web/app/(app)/dashboard/page.tsx:352-353`)
+
    ```typescript
    const profileCompleted = session.user.profileCompleted;
    if (profileCompleted === false) {

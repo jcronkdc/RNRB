@@ -11,10 +11,10 @@ interface UsageHistoryProps {
   showChart?: boolean;
 }
 
-export function UsageHistory({ 
-  type = 'aiRequests', 
+export function UsageHistory({
+  type = 'aiRequests',
   days = 30,
-  showChart = true 
+  showChart = true,
 }: UsageHistoryProps) {
   const { data: usageData, isLoading } = trpc.usage.getSummary.useQuery(undefined, {
     refetchInterval: 60000, // Refetch every minute
@@ -36,15 +36,14 @@ export function UsageHistory({
   const icon = type === 'aiRequests' ? Zap : Clock;
   const IconComponent = icon;
 
-  const percentageUsed = data?.limit && data.limit > 0 
-    ? Math.min(100, (data.used / data.limit) * 100) 
-    : 0;
+  const percentageUsed =
+    data?.limit && data.limit > 0 ? Math.min(100, (data.used / data.limit) * 100) : 0;
 
   const isHealthy = percentageUsed < 70;
-  const statusColor = isHealthy 
-    ? 'text-green-400' 
-    : percentageUsed < 90 
-      ? 'text-orange-400' 
+  const statusColor = isHealthy
+    ? 'text-green-400'
+    : percentageUsed < 90
+      ? 'text-orange-400'
       : 'text-red-400';
 
   const TrendIcon = isHealthy ? TrendingDown : TrendingUp;
@@ -53,16 +52,18 @@ export function UsageHistory({
     <Card className="rnrb-card p-6">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-            type === 'aiRequests' ? 'bg-orange-500/10' : 'bg-purple-500/10'
-          }`}>
-            <IconComponent className={`h-5 w-5 ${
-              type === 'aiRequests' ? 'text-orange-400' : 'text-purple-400'
-            }`} />
+          <div
+            className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+              type === 'aiRequests' ? 'bg-orange-500/10' : 'bg-purple-500/10'
+            }`}
+          >
+            <IconComponent
+              className={`h-5 w-5 ${type === 'aiRequests' ? 'text-orange-400' : 'text-purple-400'}`}
+            />
           </div>
           <div>
             <h3 className="font-semibold">{typeLabel} Usage</h3>
-            <p className="text-muted-foreground text-xs">Last {days} days</p>
+            <p className="text-xs text-muted-foreground">Last {days} days</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -80,9 +81,7 @@ export function UsageHistory({
             <span className="text-muted-foreground">
               {data.used} / {data.limit === -1 ? '∞' : data.limit}
             </span>
-            <span className={statusColor}>
-              {data.remaining} remaining
-            </span>
+            <span className={statusColor}>{data.remaining} remaining</span>
           </div>
           <div className="h-3 w-full overflow-hidden rounded-full bg-gray-800">
             <motion.div
@@ -90,7 +89,7 @@ export function UsageHistory({
               animate={{ width: `${percentageUsed}%` }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
               className={`h-full rounded-full ${
-                isHealthy 
+                isHealthy
                   ? 'bg-gradient-to-r from-green-500 to-green-400'
                   : percentageUsed < 90
                     ? 'bg-gradient-to-r from-orange-500 to-orange-400'
@@ -103,30 +102,30 @@ export function UsageHistory({
 
       {/* Reset Info */}
       {usageData?.resetDate && (
-        <div className="border-border mt-4 flex items-center justify-between border-t pt-4 text-xs">
+        <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-xs">
           <span className="text-muted-foreground">Resets on</span>
           <span className="font-medium text-white">
             {new Date(usageData.resetDate).toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric',
-              year: 'numeric'
+              year: 'numeric',
             })}
           </span>
         </div>
       )}
 
       {/* Quick Stats */}
-      <div className="border-border mt-4 grid grid-cols-3 gap-4 border-t pt-4">
+      <div className="mt-4 grid grid-cols-1 gap-4 border-t border-border pt-4 sm:grid-cols-3">
         <div>
-          <p className="text-muted-foreground mb-1 text-xs">Used</p>
+          <p className="mb-1 text-xs text-muted-foreground">Used</p>
           <p className="text-lg font-bold">{data?.used || 0}</p>
         </div>
         <div>
-          <p className="text-muted-foreground mb-1 text-xs">Limit</p>
+          <p className="mb-1 text-xs text-muted-foreground">Limit</p>
           <p className="text-lg font-bold">{data?.limit === -1 ? '∞' : data?.limit || 0}</p>
         </div>
         <div>
-          <p className="text-muted-foreground mb-1 text-xs">Available</p>
+          <p className="mb-1 text-xs text-muted-foreground">Available</p>
           <p className={`text-lg font-bold ${statusColor}`}>
             {data?.limit === -1 ? '∞' : data?.remaining || 0}
           </p>
@@ -137,12 +136,11 @@ export function UsageHistory({
       {data && data.limit > 0 && (
         <div className="mt-4 rounded-lg bg-blue-500/5 p-3">
           <p className="text-xs text-blue-400">
-            {percentageUsed < 50 
-              ? '✓ You\'re on track with your usage'
+            {percentageUsed < 50
+              ? "✓ You're on track with your usage"
               : percentageUsed < 80
                 ? '⚠️ Monitor your usage to avoid running out'
-                : '🔴 Consider upgrading to avoid service interruption'
-            }
+                : '🔴 Consider upgrading to avoid service interruption'}
           </p>
         </div>
       )}
@@ -172,7 +170,8 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
     );
   }
 
-  const creditsColor = !creditsData || creditsData.remaining === undefined
+  const creditsColor =
+    !creditsData || creditsData.remaining === undefined
       ? 'text-gray-400' // Loading or no data = gray
       : creditsData.remaining < 20
         ? 'text-red-400' // Critical = red
@@ -199,10 +198,8 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
           <Zap className="h-6 w-6 text-orange-400" />
         </div>
         <div>
-          <p className="text-muted-foreground text-sm">AI Credits</p>
-          <p className={`text-2xl font-bold ${creditsColor}`}>
-            {creditsData?.remaining ?? '...'}
-          </p>
+          <p className="text-sm text-muted-foreground">AI Credits</p>
+          <p className={`text-2xl font-bold ${creditsColor}`}>{creditsData?.remaining ?? '...'}</p>
         </div>
       </div>
 
@@ -211,8 +208,8 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
           <div className="mb-4 h-2 w-full overflow-hidden rounded-full bg-gray-800">
             <motion.div
               initial={{ width: 0 }}
-              animate={{ 
-                width: `${creditsData.limit > 0 ? ((creditsData.used / creditsData.limit) * 100) : 0}%` 
+              animate={{
+                width: `${creditsData.limit > 0 ? (creditsData.used / creditsData.limit) * 100 : 0}%`,
               }}
               transition={{ duration: 0.5 }}
               className={`h-full rounded-full ${
@@ -235,12 +232,12 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
               <span className="font-medium">{creditsData.limit}</span>
             </div>
             {creditsData.resetDate && (
-              <div className="border-border flex justify-between border-t pt-2">
+              <div className="flex justify-between border-t border-border pt-2">
                 <span className="text-muted-foreground">Resets</span>
                 <span className="font-medium">
                   {new Date(creditsData.resetDate).toLocaleDateString('en-US', {
                     month: 'short',
-                    day: 'numeric'
+                    day: 'numeric',
                   })}
                 </span>
               </div>
@@ -251,4 +248,3 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
     </Card>
   );
 }
-

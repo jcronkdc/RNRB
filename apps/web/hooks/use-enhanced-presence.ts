@@ -9,11 +9,14 @@
  * - Their status (active, idle, away, DND)
  *
  * Goes beyond simple "online" indicators to show rich context
+ * Uses shared Ably client to prevent connection leaks
  */
 
-import Ably from 'ably';
 import type { RealtimeChannel } from 'ably';
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { debounce } from 'lodash';
+
+import { useAblyClient } from './use-ably-client';
 
 export type PresenceStatus = 'active' | 'idle' | 'away' | 'dnd' | 'offline';
 
@@ -71,10 +74,12 @@ export function useEnhancedPresence({
   const [error, setError] = useState<string | null>(null);
   const [myStatus, setMyStatus] = useState<PresenceStatus>('active');
 
-  const ablyRef = useRef<Ably.Realtime | null>(null);
+  // Use shared Ably client instead of creating separate connection
+  const { client: ablyClient, isConnected: ablyConnected } = useAblyClient(userData.userId);
   const channelRef = useRef<RealtimeChannel | null>(null);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const awayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const mountedRef = useRef(true);
 
   // Detect device type
   const getDeviceType = (): 'desktop' | 'mobile' | 'tablet' => {
@@ -106,37 +111,16 @@ export function useEnhancedPresence({
     return 'Other';
   };
 
-  // Initialize presence
+  // Initialize presence using shared client
   useEffect(() => {
-    let mounted = true;
+    // Wait for shared client to be connected
+    if (!ablyClient || !ablyConnected) return;
+
+    mountedRef.current = true;
 
     const initPresence = async () => {
       try {
-        // Get Ably token
-        const response = await fetch('/api/ably/token');
-
-        // If Ably is not configured, fail silently
-        if (response.status === 503) {
-          console.info('Ably not configured - enhanced presence disabled');
-          return;
-        }
-
-        if (!response.ok) throw new Error('Failed to get Ably token');
-
-        // Create Ably client
-        const ablyClient = new Ably.Realtime({
-          authUrl: '/api/ably/token',
-          clientId: userData.userId,
-        });
-
-        if (!mounted) {
-          ablyClient.close();
-          return;
-        }
-
-        ablyRef.current = ablyClient;
-
-        // Get presence channel
+        // Get presence channel from shared client
         const channel = ablyClient.channels.get(channelName);
         channelRef.current = channel;
 
@@ -154,17 +138,18 @@ export function useEnhancedPresence({
           lastActive: new Date().toISOString(),
         });
 
+        if (!mountedRef.current) return;
         setIsConnected(true);
 
         // Subscribe to presence updates
-        channel.presence.subscribe((update) => {
-          if (!mounted) return;
+        channel.presence.subscribe(() => {
+          if (!mountedRef.current) return;
 
           // Get all current members
           channel.presence
             .get()
             .then((presenceMembers) => {
-              if (!mounted) return;
+              if (!mountedRef.current) return;
 
               const formattedMembers: PresenceMember[] = (presenceMembers || [])
                 .filter((m) => m.clientId !== userData.userId) // Exclude self
@@ -196,7 +181,7 @@ export function useEnhancedPresence({
         channel.presence
           .get()
           .then((presenceMembers) => {
-            if (!mounted) return;
+            if (!mountedRef.current) return;
 
             const formattedMembers: PresenceMember[] = (presenceMembers || [])
               .filter((m) => m.clientId !== userData.userId)
@@ -224,7 +209,7 @@ export function useEnhancedPresence({
           });
       } catch (err) {
         console.error('Enhanced presence error:', err);
-        if (mounted) {
+        if (mountedRef.current) {
           setError(err instanceof Error ? err.message : 'Failed to connect');
         }
       }
@@ -233,7 +218,7 @@ export function useEnhancedPresence({
     initPresence();
 
     return () => {
-      mounted = false;
+      mountedRef.current = false;
 
       if (idleTimerRef.current) {
         clearTimeout(idleTimerRef.current);
@@ -242,17 +227,38 @@ export function useEnhancedPresence({
         clearTimeout(awayTimerRef.current);
       }
 
-      // Leave presence
-      channelRef.current?.presence.leave();
-
-      // Close connection
-      ablyRef.current?.close();
+      // Leave presence - wrap in try/catch for cleanup safety
+      if (channelRef.current) {
+        try {
+          channelRef.current.presence.leave();
+          channelRef.current.presence.unsubscribe();
+        } catch {
+          // Ignore cleanup errors
+        }
+        channelRef.current = null;
+      }
+      // Don't close shared client - it's managed by useAblyClient
     };
-  }, [channelName, userData.userId]);
+  }, [channelName, userData.userId, ablyClient, ablyConnected]);
 
   // Activity detection - idle after 2 minutes, away after 5 minutes
+  // Debounced to prevent flooding Ably with presence updates
   useEffect(() => {
     if (!isConnected || !channelRef.current) return;
+
+    // Debounce presence updates to max 1 update per 2 seconds
+    const debouncedPresenceUpdate = debounce(
+      (status: PresenceStatus) => {
+        if (!mountedRef.current || !channelRef.current) return;
+        channelRef.current.presence.update({
+          ...userData,
+          status,
+          lastActive: new Date().toISOString(),
+        });
+      },
+      2000,
+      { leading: true, trailing: false }
+    );
 
     const resetActivityTimers = () => {
       if (idleTimerRef.current) {
@@ -262,35 +268,25 @@ export function useEnhancedPresence({
         clearTimeout(awayTimerRef.current);
       }
 
-      // Update to active
+      // Update to active (debounced)
       if (myStatus !== 'active' && myStatus !== 'dnd') {
         setMyStatus('active');
-        channelRef.current?.presence.update({
-          ...userData,
-          status: 'active',
-          lastActive: new Date().toISOString(),
-        });
+        debouncedPresenceUpdate('active');
       }
 
       // Set idle after 2 minutes
       idleTimerRef.current = setTimeout(
         () => {
+          if (!mountedRef.current) return;
           setMyStatus('idle');
-          channelRef.current?.presence.update({
-            ...userData,
-            status: 'idle',
-            lastActive: new Date().toISOString(),
-          });
+          debouncedPresenceUpdate('idle');
 
           // Set away after 5 minutes total
           awayTimerRef.current = setTimeout(
             () => {
+              if (!mountedRef.current) return;
               setMyStatus('away');
-              channelRef.current?.presence.update({
-                ...userData,
-                status: 'away',
-                lastActive: new Date().toISOString(),
-              });
+              debouncedPresenceUpdate('away');
             },
             3 * 60 * 1000
           ); // 3 more minutes (5 total)
@@ -299,21 +295,29 @@ export function useEnhancedPresence({
       ); // 2 minutes
     };
 
+    // Debounce the activity listener itself
+    const debouncedActivityListener = debounce(resetActivityTimers, 500, {
+      leading: true,
+      trailing: false,
+    });
+
     // Listen for user activity
     if (typeof window !== 'undefined') {
-      window.addEventListener('mousemove', resetActivityTimers);
-      window.addEventListener('keydown', resetActivityTimers);
-      window.addEventListener('click', resetActivityTimers);
-      window.addEventListener('scroll', resetActivityTimers);
+      window.addEventListener('mousemove', debouncedActivityListener);
+      window.addEventListener('keydown', debouncedActivityListener);
+      window.addEventListener('click', debouncedActivityListener);
+      window.addEventListener('scroll', debouncedActivityListener);
       resetActivityTimers(); // Initial call
     }
 
     return () => {
+      debouncedPresenceUpdate.cancel();
+      debouncedActivityListener.cancel();
       if (typeof window !== 'undefined') {
-        window.removeEventListener('mousemove', resetActivityTimers);
-        window.removeEventListener('keydown', resetActivityTimers);
-        window.removeEventListener('click', resetActivityTimers);
-        window.removeEventListener('scroll', resetActivityTimers);
+        window.removeEventListener('mousemove', debouncedActivityListener);
+        window.removeEventListener('keydown', debouncedActivityListener);
+        window.removeEventListener('click', debouncedActivityListener);
+        window.removeEventListener('scroll', debouncedActivityListener);
       }
     };
   }, [isConnected, myStatus, userData]);

@@ -19,6 +19,9 @@ function AuthForm() {
   const isSignup = searchParams.get('signup') === 'true';
   const errorParam = searchParams.get('error');
   const redirectParam = searchParams.get('redirect');
+  const forgotPasswordHref = `/auth/reset${
+    redirectParam ? `?redirect=${encodeURIComponent(redirectParam)}` : ''
+  }`;
 
   const sanitizeRedirect = (value?: string | null) => {
     if (!value) {
@@ -346,6 +349,17 @@ function AuthForm() {
                   className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
                 />
               </div>
+
+              {!isSignup && (
+                <div className="flex justify-end">
+                  <Link
+                    href={forgotPasswordHref}
+                    className="text-sm font-medium text-orange-500 transition-colors hover:text-orange-400"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+              )}
 
               <button
                 type="submit"

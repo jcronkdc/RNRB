@@ -63,6 +63,9 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
 
     let mounted = true;
     let channel: RealtimeChannel | null = null;
+    let ablyInstance: Realtime | null = null;
+    let connectionHandler: (() => void) | null = null;
+    let connectionClient: Realtime | null = null;
 
     const initAbly = async () => {
       // Circuit breaker check - prevent runaway connection loops
@@ -121,7 +124,13 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
           return;
         }
 
-        recordAblySuccess();
+        connectionHandler = () => {
+          recordAblySuccess();
+        };
+        connectionClient = ablyClient;
+        ablyClient.connection.on('connected', connectionHandler);
+
+        ablyInstance = ablyClient;
         setAbly(ablyClient);
 
         // Get user-specific notification channel
@@ -206,7 +215,23 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
     return () => {
       mounted = false;
       channel?.unsubscribe();
-      ably?.close();
+
+      if (connectionHandler && connectionClient) {
+        try {
+          connectionClient.connection.off('connected', connectionHandler);
+        } catch {
+          // Ignore connection handler removal errors
+        }
+        connectionHandler = null;
+        connectionClient = null;
+      }
+
+      if (ablyInstance) {
+        ablyInstance.close();
+        ablyInstance = null;
+      } else if (ably) {
+        ably.close();
+      }
     };
   }, [userId, onNewNotification]);
 

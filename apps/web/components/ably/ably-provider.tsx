@@ -5,6 +5,15 @@ import { AblyProvider as ReactAblyProvider } from 'ably/react';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState, useCallback, useRef, type ReactNode } from 'react';
 
+// Use centralized circuit breaker instead of duplicate implementation
+import {
+  canUseAbly,
+  recordAblyFailure,
+  recordAblySuccess,
+  disableAblyPermanently,
+  isAblyPermanentlyDisabled,
+} from '@/lib/ably-circuit-breaker';
+
 interface Props {
   children: ReactNode;
   lazy?: boolean;
@@ -17,54 +26,8 @@ interface ConnectionMetrics {
   lastConnected: number | null;
 }
 
-// ============================================================================
-// CIRCUIT BREAKER - Prevents infinite token request loops
-// ============================================================================
-const CIRCUIT_BREAKER_THRESHOLD = 3; // Open circuit after 3 failures
-const CIRCUIT_BREAKER_RESET_MS = 60000; // Reset after 60 seconds
 const MAX_INIT_RETRIES = 3; // Max initialization retries
 const INIT_TIMEOUT_MS = 10000; // 10 second timeout per attempt
-
-// Global circuit breaker state (persists across component remounts)
-let circuitBreakerFailures = 0;
-let circuitBreakerOpenTime: number | null = null;
-let isAblyDisabled = false;
-
-function isCircuitOpen(): boolean {
-  if (isAblyDisabled) return true;
-
-  if (circuitBreakerOpenTime) {
-    // Check if enough time has passed to reset
-    if (Date.now() - circuitBreakerOpenTime > CIRCUIT_BREAKER_RESET_MS) {
-      circuitBreakerOpenTime = null;
-      circuitBreakerFailures = 0;
-      console.log('[Ably] Circuit breaker reset - will retry');
-      return false;
-    }
-    return true;
-  }
-  return false;
-}
-
-function recordFailure(): void {
-  circuitBreakerFailures++;
-  console.warn(`[Ably] Token failure ${circuitBreakerFailures}/${CIRCUIT_BREAKER_THRESHOLD}`);
-
-  if (circuitBreakerFailures >= CIRCUIT_BREAKER_THRESHOLD) {
-    circuitBreakerOpenTime = Date.now();
-    console.error('[Ably] Circuit breaker OPEN - Ably disabled for 60 seconds');
-  }
-}
-
-function recordSuccess(): void {
-  circuitBreakerFailures = 0;
-  circuitBreakerOpenTime = null;
-}
-
-function permanentlyDisable(): void {
-  isAblyDisabled = true;
-  console.error('[Ably] Permanently disabled due to repeated failures');
-}
 
 // ============================================================================
 // PROVIDER COMPONENT
@@ -89,7 +52,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
   // Controlled token request with circuit breaker
   const fetchToken = useCallback(async (userId: string): Promise<Ably.TokenRequest | null> => {
     // Check circuit breaker first
-    if (isCircuitOpen()) {
+    if (!canUseAbly()) {
       console.log('[Ably] Circuit breaker open - skipping token request');
       return null;
     }
@@ -111,7 +74,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
       // Service unavailable (503) means ABLY_API_KEY not configured - permanently disable
       if (response.status === 503) {
         console.info('[Ably] Service unavailable (503) - real-time features disabled');
-        permanentlyDisable();
+        disableAblyPermanently('ABLY_API_KEY not configured');
         return null;
       }
 
@@ -126,7 +89,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
       }
 
       const tokenRequest = await response.json();
-      recordSuccess();
+      recordAblySuccess();
       return tokenRequest;
     } catch (error) {
       if ((error as Error).name === 'AbortError') {
@@ -134,7 +97,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
       } else {
         console.error('[Ably] Token request failed:', error);
       }
-      recordFailure();
+      recordAblyFailure((error as Error).message || 'Token request failed');
       return null;
     }
   }, []);
@@ -144,7 +107,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
     if (!isAuthenticated || !session?.user?.id) return;
 
     // Check circuit breaker
-    if (isCircuitOpen()) {
+    if (!canUseAbly()) {
       console.log('[Ably] Circuit breaker open - not initializing');
       if (mountedRef.current) {
         setHasError(true);
@@ -156,7 +119,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
     // Check if we've exceeded max init attempts
     if (initAttemptRef.current >= MAX_INIT_RETRIES) {
       console.warn(`[Ably] Max init retries (${MAX_INIT_RETRIES}) exceeded`);
-      permanentlyDisable();
+      disableAblyPermanently('Max init retries exceeded');
       if (mountedRef.current) {
         setHasError(true);
       }
@@ -181,7 +144,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
       const ablyClient = new Ably.Realtime({
         authCallback: async (tokenParams, callback) => {
           // Circuit breaker check on every token refresh
-          if (isCircuitOpen()) {
+          if (!canUseAbly()) {
             callback(new Error('Circuit breaker open'), null);
             return;
           }
@@ -213,7 +176,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
         if (ablyClient.connection.state !== 'connected') {
           console.warn('[Ably] Connection timeout');
           ablyClient.close();
-          recordFailure();
+          recordAblyFailure();
           if (mountedRef.current) {
             setHasError(true);
             setMetrics((prev) => ({ ...prev, quality: 'offline' }));
@@ -230,7 +193,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
 
         console.log('[Ably] ✅ Connected successfully');
         initAttemptRef.current = 0; // Reset on success
-        recordSuccess();
+        recordAblySuccess();
 
         const now = Date.now();
         setClient(ablyClient);
@@ -245,7 +208,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
       ablyClient.connection.on('failed', () => {
         clearTimeout(connectionTimeout);
         console.error('[Ably] Connection failed');
-        recordFailure();
+        recordAblyFailure();
         ablyClient.close();
 
         if (mountedRef.current) {
@@ -272,7 +235,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
       ablyClient.connect();
     } catch (error) {
       console.error('[Ably] Initialization error:', error);
-      recordFailure();
+      recordAblyFailure();
       if (mountedRef.current) {
         setHasError(true);
         setMetrics((prev) => ({ ...prev, quality: 'offline' }));
@@ -287,7 +250,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
     }
 
     // Check if already disabled
-    if (isAblyDisabled) {
+    if (isAblyPermanentlyDisabled()) {
       setHasError(true);
       return;
     }
@@ -334,9 +297,8 @@ export function AblyProvider({ children, lazy = true }: Props) {
     if (process.env.NODE_ENV === 'development') {
       (window as any).__ablyMetrics = {
         ...metrics,
-        circuitBreakerFailures,
-        isCircuitOpen: isCircuitOpen(),
-        isAblyDisabled,
+        canUseAbly: canUseAbly(),
+        isAblyPermanentlyDisabled: isAblyPermanentlyDisabled(),
       };
     }
   }, [metrics]);
