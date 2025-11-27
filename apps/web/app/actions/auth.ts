@@ -11,6 +11,16 @@ export async function signInWithCredentials(formData: {
   isNewUser?: boolean;
   redirectTo?: string;
 }) {
+  console.log('[AUTH ACTION] signInWithCredentials called');
+  console.log('[AUTH ACTION] formData:', {
+    email: formData.email,
+    emailLength: formData.email?.length,
+    hasPassword: !!formData.password,
+    passwordLength: formData.password?.length,
+    isNewUser: formData.isNewUser,
+    redirectTo: formData.redirectTo,
+  });
+
   try {
     // Check if user needs profile setup
     // Note: redirectTo is already URL-decoded if it came from Next.js searchParams
@@ -44,11 +54,19 @@ export async function signInWithCredentials(formData: {
 
     // NextAuth v5: signIn with credentials must redirect
     // The redirect: false option doesn't work with credentials in v5
+    console.log('[AUTH ACTION] Calling signIn with:', {
+      email: formData.email,
+      hasPassword: !!formData.password,
+      redirectTo,
+    });
+
     await signIn('credentials', {
       email: formData.email,
       password: formData.password,
       redirectTo,
     });
+
+    console.log('[AUTH ACTION] signIn completed without throwing');
 
     // If we get here, sign-in was successful (redirect will happen automatically)
     return { success: true };
@@ -61,6 +79,12 @@ export async function signInWithCredentials(formData: {
     }
 
     if (error instanceof AuthError) {
+      console.error('[AUTH ACTION] AuthError caught:', {
+        type: error.type,
+        message: error.message,
+        cause: error.cause,
+        stack: error.stack?.substring(0, 500),
+      });
       switch (error.type) {
         case 'CredentialsSignin':
           return { success: false, error: 'Invalid email or password' };
