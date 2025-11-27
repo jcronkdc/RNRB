@@ -11,13 +11,6 @@ export async function signInWithCredentials(formData: {
   isNewUser?: boolean;
   redirectTo?: string;
 }) {
-  console.log('[AUTH DEBUG] signInWithCredentials called:', {
-    email: formData.email,
-    hasPassword: !!formData.password,
-    passwordLength: formData.password?.length,
-    isNewUser: formData.isNewUser,
-  });
-
   try {
     // Check if user needs profile setup
     // Note: redirectTo is already URL-decoded if it came from Next.js searchParams
@@ -68,7 +61,6 @@ export async function signInWithCredentials(formData: {
     }
 
     if (error instanceof AuthError) {
-      console.error('[AUTH DEBUG] AuthError:', error.type, error.message, error.cause);
       switch (error.type) {
         case 'CredentialsSignin':
           return { success: false, error: 'Invalid email or password' };

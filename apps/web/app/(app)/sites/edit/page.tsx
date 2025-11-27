@@ -17,7 +17,9 @@ import {
   Plus,
   ExternalLink,
   Check,
+  Link,
 } from 'lucide-react';
+import { DomainSettings } from '@/components/site-builder/DomainSettings';
 
 interface SiteSection {
   id: string;
@@ -221,6 +223,7 @@ function SiteEditorContent() {
   const tabs = [
     { id: 'sections', label: 'Sections', icon: Layers },
     { id: 'theme', label: 'Theme', icon: Palette },
+    { id: 'domain', label: 'Domain', icon: Link },
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
   ];
 
@@ -349,6 +352,8 @@ function SiteEditorContent() {
             onChange={(theme) => updateSite({ theme })}
           />
         )}
+
+        {activeTab === 'domain' && <DomainSettings />}
 
         {activeTab === 'settings' && <SettingsTab site={site} onChange={updateSite} />}
       </div>
