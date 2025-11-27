@@ -1,10 +1,12 @@
 import { prisma } from '@cronkwaters/db';
+import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
 // TEMPORARY DEBUG ENDPOINT - REMOVE AFTER TESTING
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const email = url.searchParams.get('email');
+  const password = url.searchParams.get('password');
 
   if (!email) {
     return NextResponse.json({ error: 'Email param required' }, { status: 400 });
@@ -30,6 +32,23 @@ export async function GET(request: Request) {
     // Count total users
     const userCount = await prisma.user.count();
 
+    // Test bcrypt comparison if password provided
+    let bcryptTest = null;
+    if (password && user?.password) {
+      try {
+        const isValid = await bcrypt.compare(password, user.password);
+        bcryptTest = {
+          passwordProvided: password,
+          isValid,
+          hashAlgorithm: user.password.substring(0, 4),
+        };
+      } catch (bcryptError) {
+        bcryptTest = {
+          error: bcryptError instanceof Error ? bcryptError.message : String(bcryptError),
+        };
+      }
+    }
+
     return NextResponse.json({
       database: dbInfo[0]?.current_database,
       userCount,
@@ -44,6 +63,7 @@ export async function GET(request: Request) {
             createdAt: user.createdAt,
           }
         : null,
+      bcryptTest,
     });
   } catch (error) {
     return NextResponse.json(
