@@ -47,7 +47,7 @@ function ProfileSettingsContent() {
 
   // Check if this is first-time setup
   const isSetup = searchParams.get('setup') === 'true';
-  
+
   // Get the redirect destination for after setup (e.g., invite link)
   const redirectAfterSetup = searchParams.get('redirect');
 
@@ -130,18 +130,30 @@ function ProfileSettingsContent() {
         if (redirectTimeoutRef.current) {
           clearTimeout(redirectTimeoutRef.current);
         }
-        
+
         redirectTimeoutRef.current = setTimeout(() => {
           // If we have a custom redirect destination (e.g., from invite link), go there
           // Otherwise, default to dashboard
           let destination = redirectAfterSetup || '/dashboard';
-          
+
           // Security: Validate redirect URL to prevent open redirect attacks
           // Only allow relative paths starting with /
           if (destination.startsWith('/') && !destination.startsWith('//')) {
-            // Note: destination is already decoded by searchParams.get()
-            // Just push it directly - Next.js router will handle encoding properly
-            router.push(destination);
+            // Fix: Use URL constructor to properly preserve query parameter encoding
+            //
+            // Problem: destination from searchParams.get() is already decoded once by Next.js.
+            // Query params like email=user%2Btest%40example.com are still percent-encoded.
+            // Manual re-encoding would double-encode (%2B → %252B), corrupting the URL.
+            //
+            // Solution: Use URL constructor which parses and preserves proper encoding
+            try {
+              const url = new URL(destination, 'http://placeholder.com');
+              const reEncodedPath = url.pathname + url.search + url.hash;
+              router.push(reEncodedPath);
+            } catch (error) {
+              console.warn('[PROFILE] Failed to parse redirect URL:', error);
+              router.push('/dashboard');
+            }
           } else {
             router.push('/dashboard');
           }
