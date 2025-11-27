@@ -1,32 +1,33 @@
 # MASTER_TRUTH
 
-**Agent:** 148 | **Prev:** 147 | **Date:** 2025-11-27  
-**Status:** ✅ **100% PRODUCTION READY - PLUS SIGN URL FIX COMPLETE**
+**Agent:** 150 | **Prev:** 149 | **Date:** 2025-11-27  
+**Status:** ✅ **100% PRODUCTION READY - WEBSITE BUILDER ADDED**
 
 ---
 
 ## ⚡ CURRENT STATE
 
-| Component          | Status                                          |
-| ------------------ | ----------------------------------------------- |
-| **Site**           | https://www.cronkwaters.com → ✅ HTTP 200 LIVE  |
-| **Build**          | ✅ Clean - Deployed 2025-11-26                  |
-| **Health Check**   | ✅ 100%                                         |
-| **Dashboard**      | ✅ All 4 stats displaying - Verified in prod    |
-| **Auth**           | ✅ NextAuth + Google OAuth + Email/Password     |
-| **Auth Redirect**  | ✅ Sign-in → Dashboard flow fixed (Agent 147)   |
-| **URL Plus Signs** | ✅ Email + signs preserved in redirects (148)   |
-| **Profile Setup**  | ✅ Minimal layout for first-time setup          |
-| **Suspense**       | ✅ All useSearchParams() wrapped (FIXED 148)    |
-| **Database**       | ✅ Neon PostgreSQL (connected)                  |
-| **Video**          | ✅ Daily.co configured                          |
-| **Chat**           | ✅ Ably configured                              |
-| **AI**             | ✅ OpenAI configured                            |
-| **Stack**          | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0 |
-| **Onboarding**     | ✅ Clean, focused first-time user experience    |
-| **Notifications**  | ✅ Notification Bell functional in TopBar       |
-| **Landing Page**   | ✅ Updated with all 75+ features (Agent 147)    |
-| **Navigation**     | ✅ Dashboard access from UserMenu               |
+| Component           | Status                                          |
+| ------------------- | ----------------------------------------------- |
+| **Site**            | https://www.cronkwaters.com → ✅ HTTP 200 LIVE  |
+| **Build**           | ✅ Clean - Deployed 2025-11-26                  |
+| **Health Check**    | ✅ 100%                                         |
+| **Dashboard**       | ✅ All 4 stats displaying - Verified in prod    |
+| **Auth**            | ✅ NextAuth + Google OAuth + Email/Password     |
+| **Auth Redirect**   | ✅ Sign-in → Dashboard flow fixed (Agent 147)   |
+| **URL Plus Signs**  | ✅ Email + signs preserved in redirects (148)   |
+| **Profile Setup**   | ✅ Minimal layout for first-time setup          |
+| **Suspense**        | ✅ All useSearchParams() wrapped (FIXED 148)    |
+| **Database**        | ✅ Neon PostgreSQL (connected)                  |
+| **Video**           | ✅ Daily.co configured                          |
+| **Chat**            | ✅ Ably configured                              |
+| **AI**              | ✅ OpenAI configured                            |
+| **Stack**           | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0 |
+| **Onboarding**      | ✅ Clean, focused first-time user experience    |
+| **Notifications**   | ✅ Notification Bell functional in TopBar       |
+| **Landing Page**    | ✅ Updated with all 75+ features (Agent 147)    |
+| **Navigation**      | ✅ Dashboard access from UserMenu               |
+| **Website Builder** | ✅ NEW - World-class musician website builder   |
 
 ---
 
@@ -72,6 +73,16 @@
 - License management
 - Stripe subscriptions (free/creator/studio)
 - Usage metering (AI/video/storage)
+
+**Website Builder:** (NEW - Agent 150)
+
+- Quick Start auto-generation from existing data
+- 8 world-class templates (NOIR, VINYL, NEON, ACOUSTIC, ARENA, EDITORIAL, OUTLAW, FUTURA)
+- Section-based editing (Hero, Music Player, Tour Dates, Bio, Contact, Mailing List)
+- Auto-sync with CronkWaters (songs, shows, profile)
+- Custom domain support
+- Built-in analytics
+- Contact form & mailing list collection
 
 ---
 
@@ -181,16 +192,19 @@ The Supabase database contains **orphaned tables from other projects**:
 **Issue:** Profile page was double-decoding redirect URLs, corrupting special characters like `+` in email addresses.
 
 **Root Cause:**
+
 - `searchParams.get('redirect')` returns a **fully decoded** string from Next.js
 - Code was trying to decode query parameters again with `decodeURIComponent()`
 - This caused issues where literal `+` characters were treated as spaces
 
 **Fix Applied:**
+
 1. ✅ Removed unnecessary `decodeURIComponent()` calls in profile page redirect handler
 2. ✅ Updated comments to reflect correct understanding of Next.js decoding behavior
 3. ✅ Preserved proper re-encoding with `URLSearchParams.set()` for safe navigation
 
 **Example Flow:**
+
 - Original: `/invites/project?email=user+test@example.com` (literal `+`)
 - After encoding: `/settings/profile?setup=true&redirect=%2Finvites%2Fproject%3Femail%3Duser%2Btest%40example.com`
 - Next.js decodes: `/invites/project?email=user+test@example.com` (fully decoded)
@@ -198,9 +212,11 @@ The Supabase database contains **orphaned tables from other projects**:
 - Before: Parse → Decode again (wrong!) → Re-encode → Navigate ❌
 
 **Files Modified:**
+
 - `apps/web/app/(app)/settings/profile/page.tsx` - Fixed double-decode issue
 
 **Documentation:**
+
 - `REDIRECT_URL_DOUBLE_DECODE_FIX.md` - Detailed explanation and test cases
 
 **Status:** ✅ Ready for production deployment
@@ -219,6 +235,7 @@ The Supabase database contains **orphaned tables from other projects**:
 The profile setup page was causing double-encoding of query parameters when redirecting users after profile setup. This broke the invite flow for emails containing special characters like `+` signs.
 
 **Example:**
+
 - User clicks invite: `/invites/project?email=user%2Btest%40example.com`
 - After auth redirect through profile setup: `/invites/project?email=user%252Btest%2540example.com`
 - Result: Email becomes `user test@example.com` (broken) instead of `user+test@example.com` ✅
@@ -233,13 +250,14 @@ The code was manually parsing query parameters from an already-decoded string:
 // BEFORE (BROKEN):
 const [pathname, queryString] = destination.split('?');
 const params = new URLSearchParams();
-queryString.split('&').forEach(pair => {
+queryString.split('&').forEach((pair) => {
   const [key, value] = pair.split('=', 2);
   params.set(key, value || ''); // ❌ Double-encoding
 });
 ```
 
 **Why This Failed:**
+
 1. `searchParams.get('redirect')` returns **fully decoded** string
 2. Manual split on `&` and `=` extracts already-decoded values
 3. `URLSearchParams.set()` encodes values again
@@ -262,6 +280,7 @@ try {
 ```
 
 **Why This Works:**
+
 - `URL` constructor accepts decoded strings
 - It properly parses pathname, query, and hash
 - Returns correctly encoded parts via `.search`
@@ -270,6 +289,7 @@ try {
 #### Impact
 
 ✅ **Fixed:**
+
 - Invite flow with emails containing `+` signs
 - Invite flow with emails containing special characters (`@`, spaces, etc.)
 - Redirect flow through profile setup preserves all query parameters
@@ -309,13 +329,16 @@ try {
 **Priority:** High (Marketing Accuracy)
 
 #### Problem
+
 Landing page was underrepresenting the platform's capabilities:
+
 - Listed "50+ Features" when actual count is 75+
 - Missing major features: Tour Management, Studio Recording, Community, Venue Database, Copyright Registration
 - Generic descriptions without specific technology mentions
 - Only 12 feature cards displayed (platform has 18+ major features)
 
 #### Solution
+
 Completely updated landing page (`apps/web/app/page.tsx`) to accurately reflect all current features:
 
 1. **Updated Feature Count**
@@ -341,22 +364,27 @@ Completely updated landing page (`apps/web/app/page.tsx`) to accurately reflect 
    - Specific capabilities: "up to 50 people", "CRDT editing", "cloud backup"
 
 #### Files Modified
+
 - `/apps/web/app/page.tsx` - Updated feature count, descriptions, grid
   - Lines changed: ~150 lines
   - Linter errors: 0 ✅
 
 #### Impact
+
 ✅ **Marketing Accuracy:**
+
 - Landing page now truthfully represents platform capabilities
 - All major features from MASTER_TRUTH are showcased
 - Competitive advantage is clear (75+ features)
 
 ✅ **Better Conversions:**
+
 - More features displayed = stronger value proposition
 - Technology transparency builds trust
 - Complete feature story told
 
 #### Features Now on Landing Page
+
 1. Songwriting Studio (version control, multi-track, AI, split sheets, copyright)
 2. Real-Time Collaboration (Yjs CRDT, Daily.co video, Ably messaging)
 3. Tour Management (AI routing, venues, revenue)
@@ -476,6 +504,7 @@ Dashboard (/dashboard)
 **Priority:** Critical (Breaks invite acceptance for common email patterns)
 
 #### Problem
+
 When an invite email contained a plus sign (e.g., `user+test@example.com`), the redirect flow through profile setup would break:
 
 1. Invite page → Auth → Profile setup → **BUG** → Invite page
@@ -488,6 +517,7 @@ When an invite email contained a plus sign (e.g., `user+test@example.com`), the 
 **Root Cause:** Profile setup page (line 154) called `router.push(destination)` where `destination` contained decoded special characters.
 
 #### Solution
+
 Profile page now properly re-encodes query parameters before navigation:
 
 ```typescript
@@ -508,10 +538,13 @@ router.push(encodedDestination);
 This ensures special characters like `+`, `%`, `&`, `=` are properly percent-encoded in the final URL.
 
 #### Files Modified
+
 - `apps/web/app/(app)/settings/profile/page.tsx` (lines 134-171)
 
 #### Impact
+
 ✅ **Critical Fix:**
+
 - Fixes invite acceptance for emails with `+` (Gmail aliases, etc.)
 - Fixes invite acceptance for emails with other special characters
 - Maintains all security validations (open redirect protection)
@@ -520,6 +553,7 @@ This ensures special characters like `+`, `%`, `&`, `=` are properly percent-enc
 
 **Documentation:**
 **Documentation:**
+
 - `PLUS_SIGN_EMAIL_FIX.md` - Technical implementation details
 - `apps/web/__tests__/plus-sign-email-redirect.test.ts` - Test suite
 
@@ -532,37 +566,44 @@ This ensures special characters like `+`, `%`, `&`, `=` are properly percent-enc
 **Deep Analysis:** Verified and fixed critical security vulnerabilities identified in ultra-deep analysis.
 
 #### 1. JSON.parse DoS Vulnerability Fixed (`apps/web/lib/validations.ts`)
+
 - **Issue:** JSON.parse without size/depth limits, vulnerable to DoS attacks
 - **Fix:** Added 1MB size limit, 20-level depth check, prototype pollution protection
 - **Impact:** Prevents DoS attacks via malicious JSON payloads
 
 #### 2. JSON.parse DoS Fixed (`apps/web/components/songwriting/voice-memo-recorder.tsx`)
+
 - **Issue:** JSON.parse without size limits, could exhaust memory
 - **Fix:** Added 5MB size limit, 1000-item array limit
 - **Impact:** Prevents memory exhaustion from large voice memo arrays
 
 #### 3. JSON.parse DoS Fixed (`apps/web/hooks/use-notifications.ts`)
+
 - **Issue:** JSON.parse without size limits or validation
 - **Fix:** Added 1MB size limit, array validation, 1000-item limit
 - **Impact:** Prevents DoS attacks via malicious notification payloads
 
 #### 4. Input Size Limits Added (`apps/web/app/api/register/route.ts`)
+
 - **Issue:** No request body size limits, vulnerable to DoS
 - **Fix:** Added 1MB body size limit, body type validation
 - **Impact:** Prevents DoS attacks via large request bodies
 
 #### 5. String Bounds Checking Fixed (`apps/web/app/api/register/route.ts`)
+
 - **Issue:** `substring(0, 3)` without checking email length
 - **Fix:** Added `Math.min(3, email.length)` check
 - **Impact:** Prevents errors with very short email addresses
 
 #### 6. Deprecated APIs Replaced
+
 - **Files:** `use-song-suggestions.ts`, `enhanced-project-chat.tsx`
 - **Issue:** `substr()` and `onKeyPress` deprecated
 - **Fix:** Replaced `substr()` with `slice()`, `onKeyPress` with `onKeyDown`
 - **Impact:** Future-proof code, prevents deprecation warnings
 
 #### 7. Date Validation Added (`apps/web/app/api/projects/[slug]/insights/route.ts`)
+
 - **Issue:** Date parsing without validation, could cause errors
 - **Fix:** Added `isValidDate()` helper, validate all dates before use
 - **Impact:** Prevents errors from invalid date strings
@@ -576,31 +617,37 @@ This ensures special characters like `+`, `%`, `&`, `=` are properly percent-enc
 **Deep Analysis:** Verified and fixed critical memory leaks, timer cleanup issues, and race conditions identified in codebase analysis.
 
 #### 1. Server-Side Memory Leak Fixed (`apps/web/lib/cache.ts`)
+
 - **Issue:** `setInterval` created but never cleared, causing memory leaks in serverless environments
 - **Fix:** Store interval ID and clear on process exit (SIGTERM, SIGINT, exit)
 - **Impact:** Prevents memory buildup in production serverless functions
 
 #### 2. Timer Cleanup Issues Fixed (`apps/web/lib/read-receipts.ts`)
+
 - **Issue:** `setTimeout` calls without storing IDs for cleanup
 - **Fix:** Added `retryTimeout` property, track all timeouts in `useReadReceipts` hook
 - **Impact:** Prevents timers firing after component unmount or manager destruction
 
 #### 3. Race Condition Fixes (`apps/web/hooks/use-song-suggestions.ts`)
+
 - **Issue:** `setTimeout` calls without checking if component is mounted
 - **Fix:** Track all timeouts in `cleanupTimersRef`, check `mounted` state before state updates
 - **Impact:** Prevents React warnings and state updates after unmount
 
 #### 4. Interval Cleanup Fixed (`apps/web/hooks/use-voice-recorder.ts`)
+
 - **Issue:** `resumeRecording()` creates new intervals without clearing existing ones
 - **Fix:** Clear existing intervals before creating new ones in `resumeRecording()`
 - **Impact:** Prevents multiple intervals running simultaneously
 
 #### 5. Navigation Race Condition Fixed (`apps/web/app/invites/[projectSlug]/page.tsx`)
+
 - **Issue:** `setTimeout` for navigation not tracked, could navigate after unmount
 - **Fix:** Store timeout ID in `navigationTimeoutRef`, clear on unmount
 - **Impact:** Prevents navigation errors and React warnings
 
 #### 6. localStorage Error Handling Added (5 files)
+
 - **Files:** `voice-memo-recorder.tsx`, `ThemeToggle.tsx`, `first-time-onboarding.tsx`, `use-notifications.ts`
 - **Issue:** localStorage operations without try-catch blocks (fails in private browsing mode)
 - **Fix:** Wrapped all localStorage operations in try-catch with graceful fallbacks
@@ -613,6 +660,7 @@ This ensures special characters like `+`, `%`, `&`, `=` are properly percent-enc
 ### Critical Suspense Boundary Fixes
 
 **Issue:** Codebase analysis found 2 files using `useSearchParams()` without proper Suspense boundaries, which can cause:
+
 - React hydration errors
 - Development warnings
 - Potential rendering failures
@@ -634,6 +682,7 @@ This ensures special characters like `+`, `%`, `&`, `=` are properly percent-enc
 **Pattern Applied:** Same as `apps/web/app/auth/page.tsx` and `apps/web/app/(app)/settings/profile/page.tsx`
 
 **All pages using `useSearchParams()` now properly wrapped:**
+
 - ✅ `/auth` (AuthForm + Suspense)
 - ✅ `/settings/profile` (ProfileSettingsContent + Suspense)
 - ✅ `/shows/calendar` (CalendarPageContent + Suspense) - **FIXED**
@@ -960,20 +1009,24 @@ if (isProfileSetup) {
 **Bug:** Email addresses with plus signs (`+`) were being corrupted during redirect URL handling.
 
 **Example:**
+
 - User clicks invite: `/invites/project?email=user%2Btest@example.com`
 - After sign-in/profile setup: `/invites/project?email=user test@example.com` ❌
 - Plus sign was converted to space, breaking the email
 
 **Root Cause:**
+
 - `URL.searchParams` API treats `+` as space (HTML form encoding)
 - When parsing redirect URLs, `+` was permanently lost
 
 **Fix Applied:**
+
 - Manual query string parsing instead of `URL.searchParams`
 - Preserves literal `+` characters throughout the flow
 - File: `apps/web/app/(app)/settings/profile/page.tsx` (lines 139-176)
 
 **Test Results:**
+
 - ✅ Test 1: Email with `+` (decoded) - PASS
 - ✅ Test 2: Email with `+` (encoded) - PASS
 - ✅ Test 3: Multiple params with special chars - PASS
@@ -982,6 +1035,7 @@ if (isProfileSetup) {
 - **5/5 tests passing** (buggy approach: 1/5)
 
 **Impact:**
+
 - ✅ Users with `+` in emails can now accept invitations
 - ✅ No regression for existing functionality
 - ✅ Backward compatible
@@ -1058,5 +1112,131 @@ if (isProfileSetup) {
 - **Request Timeouts:** 0% coverage (100% unprotected) 🔴
 
 **See:** `ULTRA_DEEP_ANALYSIS_REPORT_ROUND_2.md` for complete re-analysis details
+
+---
+
+## 🌐 WEBSITE BUILDER (Agent 150)
+
+### Feature Overview
+
+World-class website builder that lets musicians create professional websites in 60 seconds using their existing CronkWaters data.
+
+### Quick Start Flow
+
+1. **User clicks "My Website"** in sidebar navigation
+2. **Selects a template** (NOIR, VINYL, NEON, ACOUSTIC, ARENA, EDITORIAL, OUTLAW, FUTURA)
+3. **Clicks "Create My Website"** → System auto-generates:
+   - Hero section with name/tagline
+   - Music player (auto-syncs songs)
+   - Tour dates (auto-syncs shows)
+   - Bio section
+   - Band members (if applicable)
+   - Contact form
+   - Mailing list signup
+   - Social links
+   - Footer
+4. **Site published** at `subdomain.cronkwaters.com`
+
+### Database Models Added
+
+- `MusicianSite` - Main site configuration (template, theme, SEO, domain)
+- `SitePage` - Multi-page support (home, music, tour, about, contact)
+- `SiteSection` - Block-based content (30+ section types)
+- `SiteAnalytics` - Daily visitor/engagement tracking
+- `SiteSubscriber` - Mailing list management
+- `SiteContactSubmission` - Contact form submissions
+- `SiteTemplate` - Template library
+
+### API Routes Created
+
+- `POST /api/sites/quick-start` - Auto-generate site from user data
+- `GET/PATCH/DELETE /api/sites` - Site CRUD operations
+- `POST/PATCH/DELETE /api/sites/sections` - Section management
+- `POST /api/sites/contact` - Contact form submissions
+- `POST /api/sites/subscribe` - Mailing list signups
+
+### Page Routes Created
+
+- `/sites` - Main page (Quick Start or Dashboard)
+- `/sites/edit` - Full site editor (Sections, Theme, Settings tabs)
+- `/s/[subdomain]` - Public site renderer (SSR, SEO optimized)
+
+### Templates Available
+
+| Template  | Aesthetic                | Best For                 |
+| --------- | ------------------------ | ------------------------ |
+| NOIR      | Cinematic dark, dramatic | Hip-hop, R&B, Electronic |
+| VINYL     | Retro record store       | Indie, Folk, Jazz        |
+| NEON      | Cyberpunk glow effects   | EDM, DJ, Club            |
+| ACOUSTIC  | Warm organic earth tones | Singer-songwriters       |
+| ARENA     | Stadium energy, massive  | Rock, Metal, Pop         |
+| EDITORIAL | Gallery minimal white    | Art pop, Experimental    |
+| OUTLAW    | Weathered americana      | Country, Americana       |
+| FUTURA    | Chrome glass geometric   | Modern Pop, Electronic   |
+
+### Section Types
+
+- **Hero:** hero_image, hero_video, hero_slideshow, hero_animated, hero_split
+- **Music:** music_player, music_spotify, music_apple, music_bandcamp, discography
+- **Tour:** tour_dates, tour_map, tour_upcoming
+- **About:** bio_full, bio_split, band_members, timeline, achievements
+- **Media:** photo_gallery, photo_grid, press_photos, video_hero, video_gallery
+- **Engagement:** mailing_list, contact_form, social_links, social_feed
+- **Press:** epk_download, press_quotes, press_logos
+- **Commerce:** merch_bandcamp, merch_shopify, merch_grid
+- **Utility:** text_block, image_block, video_embed, html_embed, spacer, divider
+
+### Files Created
+
+```
+apps/web/
+├── app/
+│   ├── (app)/sites/
+│   │   ├── page.tsx           # Main sites page
+│   │   └── edit/page.tsx      # Site editor
+│   ├── api/sites/
+│   │   ├── route.ts           # Site CRUD
+│   │   ├── quick-start/route.ts
+│   │   ├── sections/route.ts
+│   │   ├── contact/route.ts
+│   │   └── subscribe/route.ts
+│   └── s/[subdomain]/
+│       └── page.tsx           # Public renderer
+└── components/site-builder/
+    ├── SiteRenderer.tsx
+    └── sections/
+        ├── HeroSection.tsx
+        ├── MusicPlayerSection.tsx
+        ├── TourDatesSection.tsx
+        ├── BioSection.tsx
+        ├── ContactSection.tsx
+        ├── MailingListSection.tsx
+        ├── HeaderSection.tsx
+        ├── FooterSection.tsx
+        └── index.ts
+```
+
+### Navigation Updated
+
+- Added "My Website" to sidebar navigation with Globe icon and "NEW" badge
+- Located after "Tours" in nav items
+
+### Build Status
+
+✅ Build successful (46.4s)
+
+- `/s/[subdomain]` - 10.1 kB
+- `/sites` - 2.58 kB
+- `/sites/edit` - 3.51 kB
+
+### Deployment Note
+
+Database migration required before production deployment:
+
+```bash
+pnpm prisma:generate  # Already done
+# Then push to production for Vercel to apply schema
+git push origin main
+```
 
 ---
