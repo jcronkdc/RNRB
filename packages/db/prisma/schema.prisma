@@ -58,6 +58,7 @@ model User {
   pro                     String?
   mlcMember               Boolean   @default(false)
   soundExchangeRegistered Boolean   @default(false)
+  profileCompleted        Boolean   @default(false) // Track if user has completed profile setup
   createdAt               DateTime  @default(now())
   updatedAt               DateTime  @updatedAt
 

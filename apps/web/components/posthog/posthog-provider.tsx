@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import posthog from 'posthog-js';
+import { usePostHogUser } from '@/hooks/use-posthog';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -13,7 +14,6 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
     if (!apiKey) {
       // PostHog is optional - silently skip initialization if not configured
-      // Suppress the warning by not attempting to use posthog at all
       console.debug('PostHog: API key not configured, analytics disabled');
       return;
     }
@@ -28,6 +28,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
           if (process.env.NODE_ENV === 'development') {
             ph.debug();
           }
+          console.log('✅ PostHog initialized successfully');
         },
         capture_pageview: true, // Auto-capture page views
         capture_pageleave: true, // Auto-capture page exits
@@ -38,10 +39,13 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Auto-identify users based on session
+  usePostHogUser();
+
   return <>{children}</>;
 }
 
-// Export a utility hook for user identification
+// Legacy hook - kept for backwards compatibility
 export function usePostHogIdentify(
   userId: string | null | undefined,
   userProperties?: Record<string, any>
@@ -52,4 +56,3 @@ export function usePostHogIdentify(
     }
   }, [userId, userProperties]);
 }
-

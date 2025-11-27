@@ -5,12 +5,16 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const { email, password, name } = await request.json();
-    
-    console.log('[REGISTER] Request received:', { email: email?.substring(0, 3) + '***', hasPassword: !!password, hasName: !!name });
+
+    console.log('[REGISTER] Request received:', {
+      email: email?.substring(0, 3) + '***',
+      hasPassword: !!password,
+      hasName: !!name,
+    });
     console.log('[REGISTER] Environment check:', {
       hasDatabaseUrl: !!process.env.DATABASE_URL,
       nodeEnv: process.env.NODE_ENV,
-      prismaImported: !!prisma
+      prismaImported: !!prisma,
     });
 
     // Validation
@@ -52,6 +56,7 @@ export async function POST(request: Request) {
         name: name || null,
         subscriptionTier: 'free', // Start with free tier
         subscriptionStatus: 'active',
+        profileCompleted: false, // New users need to complete profile setup
       },
       select: {
         id: true,
@@ -71,13 +76,29 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error('[REGISTER] ERROR:', error);
-    console.error('[REGISTER] Error type:', error instanceof Error ? error.constructor.name : typeof error);
-    console.error('[REGISTER] Error message:', error instanceof Error ? error.message : String(error));
-    console.error('[REGISTER] Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-    return NextResponse.json({ 
-      error: 'Failed to create account',
-      details: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.message : String(error) : undefined
-    }, { status: 500 });
+    console.error(
+      '[REGISTER] Error type:',
+      error instanceof Error ? error.constructor.name : typeof error
+    );
+    console.error(
+      '[REGISTER] Error message:',
+      error instanceof Error ? error.message : String(error)
+    );
+    console.error(
+      '[REGISTER] Error stack:',
+      error instanceof Error ? error.stack : 'No stack trace'
+    );
+    return NextResponse.json(
+      {
+        error: 'Failed to create account',
+        details:
+          process.env.NODE_ENV === 'development'
+            ? error instanceof Error
+              ? error.message
+              : String(error)
+            : undefined,
+      },
+      { status: 500 }
+    );
   }
 }
-

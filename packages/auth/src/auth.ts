@@ -15,21 +15,22 @@ import { env } from './env';
 export const { handlers, auth, signIn, signOut } = NextAuth({
   // Use Prisma adapter (compatible with JWT + Credentials in v5)
   adapter: PrismaAdapter(prisma) as Adapter,
-  
+
   // Trust host for Vercel deployments (REQUIRED for v5!)
   trustHost: true,
-  
+
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  
+
   // Cookie configuration for session persistence
   cookies: {
     sessionToken: {
-      name: process.env.NODE_ENV === 'production' 
-        ? '__Secure-next-auth.session-token'
-        : 'next-auth.session-token',
+      name:
+        process.env.NODE_ENV === 'production'
+          ? '__Secure-next-auth.session-token'
+          : 'next-auth.session-token',
       options: {
         httpOnly: true,
         sameSite: 'lax',
@@ -38,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     },
   },
-  
+
   providers: [
     // Password-based authentication
     Credentials({
@@ -65,10 +66,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
 
           // Verify password
-          const isValid = await bcrypt.compare(
-            credentials.password as string,
-            user.password
-          );
+          const isValid = await bcrypt.compare(credentials.password as string, user.password);
 
           if (!isValid) {
             return null;
@@ -87,7 +85,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
       },
     }),
-    
+
     // Email magic link provider (if configured)
     ...(env.EMAIL_FROM && env.EMAIL_SERVER_URL
       ? [
@@ -97,7 +95,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }),
         ]
       : []),
-    
+
     // Google OAuth provider (if configured)
     ...(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
       ? [
@@ -108,13 +106,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         ]
       : []),
   ],
-  
+
   callbacks: {
     async jwt({ token, user, trigger, session, account }) {
       // Session fixation protection: Regenerate token ID on sign in
       if (user) {
         // Set user ID (required for all auth providers)
         (token as JWT & { userId?: string }).userId = user.id;
+
+        // Check if user has completed profile (for new user redirect)
+        if (user.id) {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { profileCompleted: true },
+          });
+          (token as JWT & { profileCompleted?: boolean }).profileCompleted =
+            dbUser?.profileCompleted ?? false;
+        }
 
         // Generate new session token ID to prevent session fixation
         if (account) {
@@ -137,14 +145,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         activeOrganizationId?: string;
         rotatedAt?: number;
         jti?: string;
+        profileCompleted?: boolean;
       };
 
       // Rotate session token every 60 minutes
       const ROTATION_INTERVAL = 60 * 60 * 1000; // 1 hour
-      if (
-        tokenWithExtras.rotatedAt &&
-        Date.now() - tokenWithExtras.rotatedAt > ROTATION_INTERVAL
-      ) {
+      if (tokenWithExtras.rotatedAt && Date.now() - tokenWithExtras.rotatedAt > ROTATION_INTERVAL) {
         tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
         tokenWithExtras.rotatedAt = Date.now();
       }
@@ -152,6 +158,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (trigger === 'update') {
         if (session?.activeOrganizationId) {
           tokenWithExtras.activeOrganizationId = session.activeOrganizationId;
+        }
+        // Update profile completion status if changed
+        if (session?.profileCompleted !== undefined) {
+          tokenWithExtras.profileCompleted = session.profileCompleted;
         }
         // Regenerate token on manual update
         tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
@@ -175,15 +185,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       return tokenWithExtras;
     },
-    
+
     async session({ session, token }) {
       const tokenWithExtras = token as JWT & {
         userId?: string;
         organizationIds?: string[];
         activeOrganizationId?: string;
+        profileCompleted?: boolean;
       };
       const sessionWithExtras = session as Session & {
-        user?: { id?: string; organizationIds?: string[]; activeOrganizationId?: string };
+        user?: {
+          id?: string;
+          organizationIds?: string[];
+          activeOrganizationId?: string;
+          profileCompleted?: boolean;
+        };
       };
 
       if (sessionWithExtras.user) {
@@ -193,12 +209,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         sessionWithExtras.user.activeOrganizationId = tokenWithExtras.activeOrganizationId as
           | string
           | undefined;
+        sessionWithExtras.user.profileCompleted = tokenWithExtras.profileCompleted ?? false;
       }
 
       return sessionWithExtras;
     },
   },
-  
+
   pages: {
     signIn: '/auth',
     error: '/auth/error',

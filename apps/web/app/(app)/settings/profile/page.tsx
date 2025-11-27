@@ -14,7 +14,7 @@ import {
   Twitter,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { createBrowserClient } from '@/lib/supabase';
@@ -38,11 +38,15 @@ type ProfileData = {
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
+  const { data: session, status, update } = useSession();
   const user = session?.user;
   const loading = status === 'loading';
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Check if this is first-time setup
+  const isSetup = searchParams.get('setup') === 'true';
 
   const [profile, setProfile] = useState<ProfileData>({
     username: '',
@@ -87,7 +91,7 @@ export default function ProfileSettingsPage() {
       const response = await fetch('/api/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profile),
+        body: JSON.stringify({ ...profile, profileCompleted: true }),
       });
 
       if (!response.ok) {
@@ -95,10 +99,22 @@ export default function ProfileSettingsPage() {
         throw new Error(data.error || 'Failed to update profile');
       }
 
+      // Update session to mark profile as completed
+      await update({ profileCompleted: true });
+
       setMessage({
         type: 'success',
-        text: 'Profile updated successfully!',
+        text: isSetup
+          ? 'Profile setup complete! Welcome to Rock N Roll Basement!'
+          : 'Profile updated successfully!',
       });
+
+      // Redirect to dashboard after setup
+      if (isSetup) {
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 2000);
+      }
     } catch (error: unknown) {
       setMessage({
         type: 'error',
@@ -156,6 +172,19 @@ export default function ProfileSettingsPage() {
   return (
     <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container max-w-4xl">
+        {/* Welcome header for new users */}
+        {isSetup && (
+          <Card className="mb-6 border-purple-500/30 bg-gradient-to-r from-purple-500/10 to-blue-500/10 p-6">
+            <h1 className="mb-2 text-2xl font-bold text-foreground">
+              Welcome to Rock N Roll Basement!
+            </h1>
+            <p className="text-muted-foreground">
+              Let's set up your profile so other musicians can find and collaborate with you. You
+              can always update this information later in Settings.
+            </p>
+          </Card>
+        )}
+
         {message && (
           <div
             className={`mb-6 rounded-lg p-4 ${

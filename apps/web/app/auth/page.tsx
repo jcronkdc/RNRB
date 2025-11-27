@@ -61,8 +61,8 @@ function AuthForm() {
           text: 'Account created! Signing you in...',
         });
 
-        // Auto sign-in immediately (no setTimeout to avoid async boundary issues)
-        const result = await signInWithCredentials({ email, password });
+        // Auto sign-in immediately with isNewUser flag for profile setup redirect
+        const result = await signInWithCredentials({ email, password, isNewUser: true });
         if (result && !result.success) {
           throw new Error(result.error || 'Auto sign-in failed. Please sign in manually.');
         }

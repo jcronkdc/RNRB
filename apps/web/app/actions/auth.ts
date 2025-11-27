@@ -1,17 +1,38 @@
 'use server';
 
+import { prisma } from '@cronkwaters/db';
 import { signIn } from '@cronkwaters/auth';
 import { AuthError } from 'next-auth';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
-export async function signInWithCredentials(formData: { email: string; password: string }) {
+export async function signInWithCredentials(formData: {
+  email: string;
+  password: string;
+  isNewUser?: boolean;
+}) {
   try {
+    // Check if user needs profile setup
+    let redirectTo = '/dashboard';
+
+    // If this is a new user signup, check profile completion status
+    if (formData.isNewUser) {
+      const user = await prisma.user.findUnique({
+        where: { email: formData.email },
+        select: { profileCompleted: true },
+      });
+
+      // Redirect to profile setup if profile not completed
+      if (user && !user.profileCompleted) {
+        redirectTo = '/settings/profile?setup=true';
+      }
+    }
+
     // NextAuth v5: signIn with credentials must redirect
     // The redirect: false option doesn't work with credentials in v5
     await signIn('credentials', {
       email: formData.email,
       password: formData.password,
-      redirectTo: '/dashboard',
+      redirectTo,
     });
 
     // If we get here, sign-in was successful (redirect will happen automatically)
@@ -43,6 +64,7 @@ export async function signInWithCredentials(formData: { email: string; password:
 
 export async function signInWithGoogle() {
   try {
+    // Note: We'll handle new Google users via middleware check
     await signIn('google', { redirectTo: '/dashboard' });
 
     // If we get here, sign-in was successful (redirect will happen automatically)
