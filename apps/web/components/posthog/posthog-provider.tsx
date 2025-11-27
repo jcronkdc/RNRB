@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import posthog from 'posthog-js';
-import { usePostHogUser } from '@/hooks/use-posthog';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -38,9 +37,6 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       });
     }
   }, []);
-
-  // Auto-identify users based on session
-  usePostHogUser();
 
   return <>{children}</>;
 }
