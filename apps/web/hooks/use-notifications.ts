@@ -13,8 +13,8 @@
  * - collab_request - Collaboration request received
  */
 
+import type { Message, RealtimeChannel } from 'ably';
 import { Realtime } from 'ably';
-import type { RealtimeChannel, Message } from 'ably';
 import { useEffect, useState } from 'react';
 
 export type NotificationType =
@@ -105,16 +105,36 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
         });
 
         // Load notification history from localStorage
+        // Note: Validation failures should skip loading but NOT exit the function
+        // The Ably connection is already established above, so we must call setIsConnected(true)
         if (typeof window !== 'undefined') {
-          const stored = localStorage.getItem(`notifications_${userId}`);
-          if (stored) {
-            try {
-              const storedNotifications = JSON.parse(stored);
-              setNotifications(storedNotifications);
-              setUnreadCount(storedNotifications.filter((n: Notification) => !n.read).length);
-            } catch (err) {
-              console.error('Error loading stored notifications:', err);
+          try {
+            const stored = localStorage.getItem(`notifications_${userId}`);
+            if (stored) {
+              // Security: Limit JSON size to prevent DoS attacks (max 1MB)
+              const MAX_JSON_SIZE = 1024 * 1024; // 1MB
+              if (stored.length > MAX_JSON_SIZE) {
+                console.warn('Notifications JSON too large, skipping load');
+                // Don't return - continue to setIsConnected(true)
+              } else {
+                const storedNotifications = JSON.parse(stored);
+
+                // Security: Ensure it's an array and limit size (max 1000 notifications)
+                if (!Array.isArray(storedNotifications)) {
+                  console.warn('Invalid notifications format, skipping load');
+                  // Don't return - continue to setIsConnected(true)
+                } else {
+                  const MAX_NOTIFICATIONS = 1000;
+                  const limitedNotifications = storedNotifications.slice(0, MAX_NOTIFICATIONS);
+
+                  setNotifications(limitedNotifications);
+                  setUnreadCount(limitedNotifications.filter((n: Notification) => !n.read).length);
+                }
+              }
             }
+          } catch (err) {
+            console.warn('Failed to load notifications from localStorage:', err);
+            // Continue - Ably connection is already established, just skip loading cached notifications
           }
         }
 
@@ -140,7 +160,15 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
   // Save notifications to localStorage whenever they change
   useEffect(() => {
     if (typeof window !== 'undefined' && notifications.length > 0) {
-      localStorage.setItem(`notifications_${userId}`, JSON.stringify(notifications.slice(0, 100))); // Keep last 100
+      try {
+        localStorage.setItem(
+          `notifications_${userId}`,
+          JSON.stringify(notifications.slice(0, 100))
+        ); // Keep last 100
+      } catch (error) {
+        console.warn('Failed to save notifications to localStorage:', error);
+        // Continue - notifications are still in memory
+      }
     }
   }, [notifications, userId]);
 
@@ -174,7 +202,12 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
     setNotifications([]);
     setUnreadCount(0);
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(`notifications_${userId}`);
+      try {
+        localStorage.removeItem(`notifications_${userId}`);
+      } catch (error) {
+        console.warn('Failed to remove notifications from localStorage:', error);
+        // Continue - notifications are still cleared from memory
+      }
     }
   };
 

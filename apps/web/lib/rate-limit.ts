@@ -33,8 +33,12 @@ interface RateLimitEntry {
 const rateLimitStore = new Map<string, RateLimitEntry>();
 
 // Cleanup old entries periodically (every 5 minutes)
-if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
+// Server-side only - rate limiting should only run on the server
+let cleanupInterval: NodeJS.Timeout | null = null;
+
+if (typeof window === 'undefined') {
+  // Server-side only
+  cleanupInterval = setInterval(() => {
     const now = Date.now();
     const entries = Array.from(rateLimitStore.entries());
     for (let i = 0; i < entries.length; i++) {
@@ -44,6 +48,20 @@ if (typeof setInterval !== 'undefined') {
       }
     }
   }, 5 * 60 * 1000);
+  
+  // Cleanup on process exit (for serverless environments)
+  if (typeof process !== 'undefined') {
+    const cleanup = () => {
+      if (cleanupInterval) {
+        clearInterval(cleanupInterval);
+        cleanupInterval = null;
+      }
+    };
+    
+    process.on('SIGTERM', cleanup);
+    process.on('SIGINT', cleanup);
+    process.on('exit', cleanup);
+  }
 }
 
 /**

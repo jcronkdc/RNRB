@@ -20,6 +20,7 @@ function AuthForm() {
 
   const isSignup = searchParams.get('signup') === 'true';
   const errorParam = searchParams.get('error');
+  const redirectParam = searchParams.get('redirect');
 
   useEffect(() => {
     if (errorParam) {
@@ -62,14 +63,23 @@ function AuthForm() {
         });
 
         // Auto sign-in immediately with isNewUser flag for profile setup redirect
-        const result = await signInWithCredentials({ email, password, isNewUser: true });
+        const result = await signInWithCredentials({ 
+          email, 
+          password, 
+          isNewUser: true,
+          redirectTo: redirectParam || undefined,
+        });
         if (result && !result.success) {
           throw new Error(result.error || 'Auto sign-in failed. Please sign in manually.');
         }
         // If successful, redirect will happen automatically (via thrown redirect error)
       } else {
         // Sign in flow
-        const result = await signInWithCredentials({ email, password });
+        const result = await signInWithCredentials({ 
+          email, 
+          password,
+          redirectTo: redirectParam || undefined,
+        });
         if (result && !result.success) {
           throw new Error(result.error || 'Sign in failed');
         }
@@ -336,7 +346,10 @@ function AuthForm() {
               <p className="pt-4 text-center text-sm text-zinc-500">
                 {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <Link
-                  href={isSignup ? '/auth' : '/auth?signup=true'}
+                  href={isSignup 
+                    ? `/auth${redirectParam ? `?redirect=${encodeURIComponent(redirectParam)}` : ''}`
+                    : `/auth?signup=true${redirectParam ? `&redirect=${encodeURIComponent(redirectParam)}` : ''}`
+                  }
                   className="font-medium text-orange-500 transition-colors hover:text-orange-400"
                 >
                   {isSignup ? 'Sign in' : 'Create one'}

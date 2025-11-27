@@ -46,16 +46,33 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
 
   // Load memos from localStorage on mount
   useEffect(() => {
-    const savedMemos = localStorage.getItem(`voice-memos-${songId}`);
-    if (savedMemos) {
-      // Parse JSON and convert createdAt strings back to Date objects
-      // JSON.parse returns dates as ISO strings, not Date objects
-      const parsed = JSON.parse(savedMemos) as Array<Omit<VoiceMemo, 'createdAt'> & { createdAt: string }>;
-      const hydrated: VoiceMemo[] = parsed.map((memo) => ({
-        ...memo,
-        createdAt: new Date(memo.createdAt),
-      }));
-      setMemos(hydrated);
+    try {
+      const savedMemos = localStorage.getItem(`voice-memos-${songId}`);
+      if (savedMemos) {
+        // Security: Limit JSON size to prevent DoS attacks (max 5MB for voice memos)
+        const MAX_JSON_SIZE = 5 * 1024 * 1024; // 5MB
+        if (savedMemos.length > MAX_JSON_SIZE) {
+          console.warn('Voice memos JSON too large, skipping load');
+          return;
+        }
+        
+        // Parse JSON and convert createdAt strings back to Date objects
+        // JSON.parse returns dates as ISO strings, not Date objects
+        const parsed = JSON.parse(savedMemos) as Array<Omit<VoiceMemo, 'createdAt'> & { createdAt: string }>;
+        
+        // Security: Limit array size to prevent memory exhaustion (max 1000 memos)
+        const MAX_MEMOS = 1000;
+        const limitedParsed = parsed.slice(0, MAX_MEMOS);
+        
+        const hydrated: VoiceMemo[] = limitedParsed.map((memo) => ({
+          ...memo,
+          createdAt: new Date(memo.createdAt),
+        }));
+        setMemos(hydrated);
+      }
+    } catch (error) {
+      console.warn('Failed to load voice memos from localStorage:', error);
+      // Continue without loading cached memos
     }
   }, [songId]);
 
@@ -139,7 +156,12 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
       setMemos(updatedMemos);
       
       // Save to localStorage with data URL (persists across refreshes)
-      localStorage.setItem(`voice-memos-${songId}`, JSON.stringify(updatedMemos));
+      try {
+        localStorage.setItem(`voice-memos-${songId}`, JSON.stringify(updatedMemos));
+      } catch (error) {
+        console.warn('Failed to save voice memo to localStorage:', error);
+        // Continue - memo is still saved in state
+      }
       
       // Revoke the temporary blob URL to free memory
       URL.revokeObjectURL(audioUrl);
@@ -161,7 +183,12 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
   const deleteMemo = (id: string) => {
     const updatedMemos = memos.filter((m) => m.id !== id);
     setMemos(updatedMemos);
-    localStorage.setItem(`voice-memos-${songId}`, JSON.stringify(updatedMemos));
+    try {
+      localStorage.setItem(`voice-memos-${songId}`, JSON.stringify(updatedMemos));
+    } catch (error) {
+      console.warn('Failed to save deleted memo to localStorage:', error);
+      // Continue - memo is still deleted from memory
+    }
   };
 
   const downloadMemo = (memo: VoiceMemo) => {

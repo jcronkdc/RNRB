@@ -10,7 +10,12 @@ export function ThemeToggle() {
   useEffect(() => {
     setMounted(true);
     // Check localStorage or system preference
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    let savedTheme: 'light' | 'dark' | null = null;
+    try {
+      savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    } catch (error) {
+      console.warn('Failed to read theme from localStorage:', error);
+    }
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark'
       : 'light';
@@ -22,7 +27,12 @@ export function ThemeToggle() {
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    try {
+      localStorage.setItem('theme', newTheme);
+    } catch (error) {
+      console.warn('Failed to save theme to localStorage:', error);
+      // Continue - theme is still applied to DOM
+    }
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 

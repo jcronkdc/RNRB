@@ -224,10 +224,44 @@ export async function parseFormData<T extends z.ZodSchema>(
   formData.forEach((value, key) => {
     // Handle JSON fields
     if (typeof value === 'string' && (value.startsWith('[') || value.startsWith('{'))) {
+      // Security: Limit JSON size to prevent DoS attacks (max 1MB)
+      const MAX_JSON_SIZE = 1024 * 1024; // 1MB
+      if (value.length > MAX_JSON_SIZE) {
+        data[key] = value; // Keep as string if too large
+        return;
+      }
+      
       try {
-        data[key] = JSON.parse(value);
+        // Security: Parse with reviver to prevent prototype pollution
+        const parsed = JSON.parse(value, (k, v) => {
+          // Prevent prototype pollution by rejecting __proto__ keys
+          if (k === '__proto__' || k === 'constructor' || k === 'prototype') {
+            return undefined;
+          }
+          return v;
+        });
+        
+        // Security: Limit depth to prevent stack overflow (max depth 20)
+        const checkDepth = (obj: unknown, depth = 0): unknown => {
+          if (depth > 20) {
+            throw new Error('JSON depth exceeds maximum');
+          }
+          if (obj && typeof obj === 'object') {
+            if (Array.isArray(obj)) {
+              return obj.map(item => checkDepth(item, depth + 1));
+            }
+            const result: Record<string, unknown> = {};
+            for (const [k, v] of Object.entries(obj)) {
+              result[k] = checkDepth(v, depth + 1);
+            }
+            return result;
+          }
+          return obj;
+        };
+        
+        data[key] = checkDepth(parsed);
       } catch {
-        data[key] = value;
+        data[key] = value; // Keep as string if parsing fails
       }
     } else {
       data[key] = value;

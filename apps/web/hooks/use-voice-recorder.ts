@@ -234,6 +234,14 @@ export function useVoiceRecorder({
       mediaRecorderRef.current.resume();
       setState('recording');
 
+      // Clear any existing intervals before creating new ones
+      if (durationIntervalRef.current) {
+        clearInterval(durationIntervalRef.current);
+      }
+      if (waveformIntervalRef.current) {
+        clearInterval(waveformIntervalRef.current);
+      }
+
       // Resume duration tracking
       const pausedDuration = duration;
       startTimeRef.current = Date.now() - pausedDuration * 1000;
@@ -279,3 +287,9 @@ export function useVoiceRecorder({
     resumeRecording,
   };
 }
+
+
+
+
+
+

@@ -73,6 +73,7 @@ export function useSongSuggestions({
   const processedMessagesRef = useRef<Set<string>>(new Set()); // Deduplication
   const batchUpdateTimerRef = useRef<NodeJS.Timeout | null>(null);
   const pendingUpdatesRef = useRef<Array<() => void>>([]);
+  const mountedRef = useRef(true); // Track mount status for callbacks with timeouts
 
   // LRU Cache for suggestions (max 100 items)
   const MAX_SUGGESTIONS = 100;
@@ -112,6 +113,7 @@ export function useSongSuggestions({
     if (!enabled) return;
 
     let mounted = true;
+    mountedRef.current = true; // Sync ref for callbacks with timeouts
 
     const initAbly = async () => {
       try {
@@ -233,26 +235,48 @@ export function useSongSuggestions({
           if (!mounted) return;
           const { suggestionId } = message.data;
 
-          setTimeout(() => {
-            setChordSuggestions((prev) => {
-              const newMap = new Map(prev);
-              newMap.delete(suggestionId);
-              return newMap;
-            });
+          // Clear any existing timeout to prevent resource leak
+          const timeoutKey = `chord-accepted-${suggestionId}`;
+          const existingTimeout = cleanupTimersRef.current.get(timeoutKey);
+          if (existingTimeout) {
+            clearTimeout(existingTimeout);
+          }
+
+          const timeout = setTimeout(() => {
+            if (mounted) {
+              setChordSuggestions((prev) => {
+                const newMap = new Map(prev);
+                newMap.delete(suggestionId);
+                return newMap;
+              });
+            }
+            cleanupTimersRef.current.delete(timeoutKey);
           }, 2000);
+          cleanupTimersRef.current.set(timeoutKey, timeout);
         });
 
         channel.subscribe('chord-rejected', (message: Ably.Message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 
-          setTimeout(() => {
-            setChordSuggestions((prev) => {
-              const newMap = new Map(prev);
-              newMap.delete(suggestionId);
-              return newMap;
-            });
+          // Use consistent key and check for existing timer to prevent duplicates
+          // (rejectChordSuggestion may have already set a timer with this key)
+          const timeoutKey = `chord-rejected-${suggestionId}`;
+          if (cleanupTimersRef.current.has(timeoutKey)) {
+            return; // Timer already exists, skip creating duplicate
+          }
+
+          const timeout = setTimeout(() => {
+            if (mounted) {
+              setChordSuggestions((prev) => {
+                const newMap = new Map(prev);
+                newMap.delete(suggestionId);
+                return newMap;
+              });
+            }
+            cleanupTimersRef.current.delete(timeoutKey);
           }, 1000);
+          cleanupTimersRef.current.set(timeoutKey, timeout);
         });
 
         setIsConnected(true);
@@ -268,6 +292,7 @@ export function useSongSuggestions({
 
     return () => {
       mounted = false;
+      mountedRef.current = false; // Sync ref for callbacks with timeouts
       
       // Clear all timers
       if (batchUpdateTimerRef.current) {
@@ -297,7 +322,7 @@ export function useSongSuggestions({
       if (!channelRef.current) return;
 
       const suggestion: LyricSuggestion = {
-        id: `suggestion-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `suggestion-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
         blockId,
         lineIndex,
         wordIndex,
@@ -325,7 +350,7 @@ export function useSongSuggestions({
       if (!channelRef.current) return;
 
       const suggestion: ChordSuggestion = {
-        id: `chord-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `chord-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
         blockId,
         lineIndex,
         wordIndex,
@@ -415,13 +440,24 @@ export function useSongSuggestions({
 
       channelRef.current.publish('chord-rejected', { suggestionId });
 
-      setTimeout(() => {
-        setChordSuggestions((prev) => {
-          const newMap = new Map(prev);
-          newMap.delete(suggestionId);
-          return newMap;
-        });
+      // Use consistent key with message handler to prevent duplicate timers
+      const timeoutKey = `chord-rejected-${suggestionId}`;
+      if (cleanupTimersRef.current.has(timeoutKey)) {
+        return; // Timer already exists (message handler may have fired first)
+      }
+
+      const timeout = setTimeout(() => {
+        // Check mounted status to prevent state updates on unmounted component
+        if (mountedRef.current) {
+          setChordSuggestions((prev) => {
+            const newMap = new Map(prev);
+            newMap.delete(suggestionId);
+            return newMap;
+          });
+        }
+        cleanupTimersRef.current.delete(timeoutKey);
       }, 1000);
+      cleanupTimersRef.current.set(timeoutKey, timeout);
     },
     [isOwner]
   );

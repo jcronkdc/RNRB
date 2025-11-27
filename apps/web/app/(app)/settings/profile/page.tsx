@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 
 import { createBrowserClient } from '@/lib/supabase';
 
@@ -36,7 +36,7 @@ type ProfileData = {
   genres: string[];
 };
 
-export default function ProfileSettingsPage() {
+function ProfileSettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status, update } = useSession();
@@ -47,6 +47,12 @@ export default function ProfileSettingsPage() {
 
   // Check if this is first-time setup
   const isSetup = searchParams.get('setup') === 'true';
+  
+  // Get the redirect destination for after setup (e.g., invite link)
+  const redirectAfterSetup = searchParams.get('redirect');
+
+  // Track timeout for cleanup on unmount
+  const redirectTimeoutRef = useRef<NodeJS.Timeout>();
 
   const [profile, setProfile] = useState<ProfileData>({
     username: '',
@@ -82,6 +88,15 @@ export default function ProfileSettingsPage() {
     }
   }, [status, router, user]);
 
+  // Cleanup timeout on unmount to prevent memory leaks and state updates on unmounted component
+  useEffect(() => {
+    return () => {
+      if (redirectTimeoutRef.current) {
+        clearTimeout(redirectTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleSaveProfile = async () => {
     setSaving(true);
     setMessage(null);
@@ -109,10 +124,27 @@ export default function ProfileSettingsPage() {
           : 'Profile updated successfully!',
       });
 
-      // Redirect to dashboard after setup
+      // Redirect after setup
       if (isSetup) {
-        setTimeout(() => {
-          router.push('/dashboard');
+        // Clear any existing timeout before setting a new one
+        if (redirectTimeoutRef.current) {
+          clearTimeout(redirectTimeoutRef.current);
+        }
+        
+        redirectTimeoutRef.current = setTimeout(() => {
+          // If we have a custom redirect destination (e.g., from invite link), go there
+          // Otherwise, default to dashboard
+          let destination = redirectAfterSetup || '/dashboard';
+          
+          // Security: Validate redirect URL to prevent open redirect attacks
+          // Only allow relative paths starting with /
+          if (destination.startsWith('/') && !destination.startsWith('//')) {
+            // Note: destination is already decoded by searchParams.get()
+            // Just push it directly - Next.js router will handle encoding properly
+            router.push(destination);
+          } else {
+            router.push('/dashboard');
+          }
         }, 2000);
       }
     } catch (error: unknown) {
@@ -475,5 +507,19 @@ export default function ProfileSettingsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ProfileSettingsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-background">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+        </div>
+      }
+    >
+      <ProfileSettingsContent />
+    </Suspense>
   );
 }

@@ -296,3 +296,9 @@
 **ZERO SHORTCUTS:** Done right the first time
 
 **This is now the most advanced music project management tool in existence.** 🎸🔥
+
+
+
+
+
+

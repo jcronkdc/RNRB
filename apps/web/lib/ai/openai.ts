@@ -11,6 +11,8 @@
 
 import OpenAI from 'openai';
 
+import { AI_MODELS, AI_TEMPERATURES, AI_MAX_TOKENS } from './config';
+
 // Initialize OpenAI client (runtime only)
 export function getOpenAIClient() {
   if (typeof window !== 'undefined') return null; // Client-side not allowed
@@ -62,13 +64,13 @@ Keep responses concise (2-3 sentences max). Focus on actionable suggestions.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
+      model: AI_MODELS.FAST,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userMessage },
       ],
-      max_tokens: 150,
-      temperature: 0.7,
+      max_tokens: AI_MAX_TOKENS.SHORT,
+      temperature: AI_TEMPERATURES.CREATIVE,
     });
 
     return response.choices[0]?.message?.content || null;
@@ -90,7 +92,7 @@ export async function transcribeSession(audioUrl: string) {
     // Use Whisper API for transcription
     const response = await client.audio.transcriptions.create({
       file: (await fetch(audioUrl).then((r) => r.blob())) as any,
-      model: 'whisper-1',
+      model: AI_MODELS.TRANSCRIPTION,
       language: 'en',
     });
 
@@ -121,13 +123,13 @@ Be concise. Only extract clear decisions and actionable items.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
+      model: AI_MODELS.FAST,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: transcription },
       ],
-      max_tokens: 500,
-      temperature: 0.3,
+      max_tokens: AI_MAX_TOKENS.LONG,
+      temperature: AI_TEMPERATURES.PRECISE,
     });
 
     return response.choices[0]?.message?.content || null;
@@ -171,14 +173,16 @@ Output format:
 Include total miles and recommended rest days.`;
 
   try {
+    // Note: Tour routing requires complex geographic + business reasoning
+    // Using GPT-4o for this task as it excels at spatial reasoning
     const response = await client.chat.completions.create({
-      model: 'gpt-4o', // Using gpt-4o for complex routing logic (better than mini)
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: JSON.stringify(venues, null, 2) },
       ],
-      max_tokens: 800,
-      temperature: 0.3,
+      max_tokens: AI_MAX_TOKENS.VERY_LONG,
+      temperature: AI_TEMPERATURES.PRECISE,
     });
 
     return response.choices[0]?.message?.content || null;
@@ -216,13 +220,13 @@ Keep suggestions practical and educational.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
+      model: AI_MODELS.FAST,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: JSON.stringify(audioAnalysis, null, 2) },
       ],
-      max_tokens: 300,
-      temperature: 0.5,
+      max_tokens: AI_MAX_TOKENS.MEDIUM,
+      temperature: AI_TEMPERATURES.BALANCED,
     });
 
     return response.choices[0]?.message?.content || null;
@@ -262,14 +266,16 @@ IMPORTANT:
 Be fair and transparent.`;
 
   try {
+    // Note: Royalty splits require careful fairness reasoning
+    // Using GPT-4o for nuanced analysis of contribution data
     const response = await client.chat.completions.create({
-      model: 'gpt-4o', // Using gpt-4o for fairness analysis (needs reasoning)
+      model: 'gpt-4o',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: JSON.stringify(contributions, null, 2) },
       ],
-      max_tokens: 400,
-      temperature: 0.3,
+      max_tokens: AI_MAX_TOKENS.MEDIUM + 100, // 400 tokens
+      temperature: AI_TEMPERATURES.PRECISE,
     });
 
     return response.choices[0]?.message?.content || null;
@@ -312,13 +318,13 @@ Keep it authentic and aligned with artist's voice.`;
 
   try {
     const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini', // Optimized: 67× cheaper than gpt-4-turbo-preview
+      model: AI_MODELS.FAST,
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Generate ${type} content:\n${JSON.stringify(context, null, 2)}` },
       ],
-      max_tokens: 500,
-      temperature: 0.8,
+      max_tokens: AI_MAX_TOKENS.LONG,
+      temperature: AI_TEMPERATURES.VERY_CREATIVE,
     });
 
     return response.choices[0]?.message?.content || null;

@@ -56,9 +56,25 @@ class Cache {
 export const cache = new Cache();
 
 // Run cleanup every 10 minutes
+let cleanupInterval: NodeJS.Timeout | null = null;
+
 if (typeof window === 'undefined') {
   // Server-side only
-  setInterval(() => cache.cleanup(), 600000);
+  cleanupInterval = setInterval(() => cache.cleanup(), 600000);
+  
+  // Cleanup on process exit (for serverless environments)
+  if (typeof process !== 'undefined') {
+    const cleanup = () => {
+      if (cleanupInterval) {
+        clearInterval(cleanupInterval);
+        cleanupInterval = null;
+      }
+    };
+    
+    process.on('SIGTERM', cleanup);
+    process.on('SIGINT', cleanup);
+    process.on('exit', cleanup);
+  }
 }
 
 /**
@@ -74,3 +90,9 @@ export async function withCache<T>(key: string, fn: () => Promise<T>, ttl?: numb
   cache.set(key, data, ttl);
   return data;
 }
+
+
+
+
+
+

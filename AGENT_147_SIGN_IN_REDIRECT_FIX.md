@@ -1,7 +1,7 @@
 # Agent 147: Sign-In Redirect & Profile Setup UX Fix
 
 **Agent:** 147 | **Previous Agent:** 146 | **Date:** 2025-11-27  
-**Status:** ✅ **COMPLETE**
+**Status:** ✅ **COMPLETE** (Updated: Added Suspense fix for profile page)
 
 ---
 
@@ -24,6 +24,16 @@ This created a **cluttered, unfocused experience** during initial onboarding whe
 ### Issue 2: Sign-In Redirect (PREVIOUSLY FIXED BY AGENT 146)
 
 After successful sign-in, users weren't being redirected to the dashboard. This was already fixed by Agent 146.
+
+### Issue 3: Profile Page useSearchParams() Without Suspense (NEW - FIXED)
+
+The profile settings page (`/apps/web/app/(app)/settings/profile/page.tsx`) was using `useSearchParams()` directly without wrapping it in a Suspense boundary. According to Next.js best practices, each component using `useSearchParams()` must have explicit Suspense wrapping at its level.
+
+**Root Cause:** While the parent `AppLayout` provides a boundary, Next.js requires each component using `useSearchParams()` to have its own Suspense wrapper to prevent:
+
+- Development warnings
+- Hydration mismatches
+- Rendering failures if the component is used outside its current parent context
 
 ---
 
@@ -63,6 +73,45 @@ Modified `/apps/web/components/app-layout.tsx`:
      );
    }
    ```
+
+### Profile Page Suspense Wrapper
+
+Modified `/apps/web/app/(app)/settings/profile/page.tsx`:
+
+1. **Added `Suspense` to imports:**
+
+   ```typescript
+   import { useEffect, useState, Suspense } from 'react';
+   ```
+
+2. **Extracted content into separate component:**
+
+   ```typescript
+   function ProfileSettingsContent() {
+     const router = useRouter();
+     const searchParams = useSearchParams(); // Now safely inside Suspense
+     // ... rest of component logic
+   }
+   ```
+
+3. **Wrapped export with Suspense:**
+   ```typescript
+   export default function ProfileSettingsPage() {
+     return (
+       <Suspense
+         fallback={
+           <div className="flex min-h-screen items-center justify-center bg-background">
+             <div className="h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+           </div>
+         }
+       >
+         <ProfileSettingsContent />
+       </Suspense>
+     );
+   }
+   ```
+
+This follows the same pattern used in `/apps/web/app/auth/page.tsx` (the `AuthForm` component).
 
 ---
 
@@ -131,6 +180,18 @@ Modified `/apps/web/components/app-layout.tsx`:
 **Breaking Changes:** None  
 **Linter Errors:** 0
 
+### `/apps/web/app/(app)/settings/profile/page.tsx` (NEW)
+
+- Added `Suspense` to React imports
+- Extracted main logic into `ProfileSettingsContent` component
+- Wrapped component with `Suspense` boundary in default export
+- Added loading spinner fallback matching auth page pattern
+
+**Lines Changed:** ~15 lines  
+**Breaking Changes:** None  
+**Linter Errors:** 0  
+**Pattern:** Follows Next.js best practices for `useSearchParams()`
+
 ---
 
 ## Testing Checklist
@@ -175,6 +236,13 @@ Modified `/apps/web/components/app-layout.tsx`:
    - [ ] Try to access `/settings/profile?setup=true`
    - [ ] Verify redirect to `/auth`
 
+6. **Profile Page Suspense Boundary:**
+   - [ ] Navigate to `/settings/profile` (with or without `?setup=true`)
+   - [ ] Verify no React warnings in console about `useSearchParams()`
+   - [ ] Verify loading spinner appears briefly during initial load
+   - [ ] Verify page renders correctly after Suspense resolves
+   - [ ] Check browser DevTools console for any Suspense-related errors
+
 ---
 
 ## Technical Details
@@ -202,6 +270,22 @@ The current solution keeps the layout logic self-contained and easy to understan
 ### Performance Impact
 
 **Negligible.** The `useSearchParams()` call is very fast, and the Suspense boundary only shows during initial load (which already has a loading state).
+
+### Component Pattern Benefits
+
+The profile page now follows the **same pattern** as the auth page:
+
+1. **Content component** with `useSearchParams()` logic
+2. **Wrapper component** with Suspense boundary
+3. **Loading fallback** for better UX
+4. **Self-contained** - no reliance on parent boundaries
+
+This makes the component:
+
+- ✅ Safe to move or refactor
+- ✅ Compliant with Next.js best practices
+- ✅ Protected from hydration issues
+- ✅ Consistent with the rest of the codebase
 
 ---
 
@@ -254,7 +338,9 @@ The current solution keeps the layout logic self-contained and easy to understan
 ✅ **New users see clean, focused profile setup**  
 ✅ **Existing users see full app layout when editing profile**  
 ✅ **No layout "flash" or hydration errors**  
-✅ **Smooth transition after profile completion**
+✅ **Smooth transition after profile completion**  
+✅ **No React warnings about useSearchParams()**  
+✅ **Proper Suspense boundaries on all search param usage**
 
 ### What to Look For
 
@@ -265,6 +351,8 @@ The current solution keeps the layout logic self-contained and easy to understan
 - AI Assistant widget during setup
 - Layout shifts or flashing
 - Suspense fallback stuck loading
+- Console warnings: "useSearchParams() should be wrapped in a suspense boundary"
+- Hydration errors related to search params
 
 ✅ **Good Signs:**
 
@@ -280,27 +368,47 @@ The current solution keeps the layout logic self-contained and easy to understan
 If issues occur, revert these changes:
 
 ```bash
+# Revert AppLayout changes
 git checkout HEAD~1 -- apps/web/components/app-layout.tsx
+
+# Revert Profile page changes
+git checkout HEAD~1 -- apps/web/app/(app)/settings/profile/page.tsx
 ```
 
-The previous version works but shows cluttered UI during setup. Not ideal, but functional.
+**Note:** The previous AppLayout version works but shows cluttered UI during setup. The previous profile page works but may show React warnings about `useSearchParams()` in development.
 
 ---
 
 ## Summary
 
-This fix improves the **first-time user experience** by providing a clean, focused interface during profile setup. No more distracting sidebars, navigation, or widgets when users are trying to complete their initial onboarding.
+This fix improves both the **first-time user experience** and **code quality**:
+
+### UX Improvements
+
+- Clean, focused interface during profile setup
+- No distracting sidebars, navigation, or widgets during onboarding
+- Professional, polished onboarding flow
+
+### Code Quality Improvements
+
+- Proper Suspense boundaries for all `useSearchParams()` usage
+- Follows Next.js best practices
+- Prevents potential hydration issues
+- Self-contained components that are safe to refactor
 
 **Impact:**
 
-- Better UX for new users
-- Less cognitive load during setup
-- Professional, polished onboarding flow
-- No performance impact
-- No breaking changes
+- ✅ Better UX for new users
+- ✅ Less cognitive load during setup
+- ✅ Eliminates React warnings
+- ✅ Prevents hydration mismatches
+- ✅ No performance impact
+- ✅ No breaking changes
+- ✅ Consistent with codebase patterns
 
 **Status:** ✅ **Ready for Testing**
 
 ---
 
-**Token Count: ~42,000 / 200,000 (21% used)**
+**Token Count at Start: 46,500 / 200,000**  
+**Token Count at End: 61,500 / 200,000 (31% used)**

@@ -54,9 +54,17 @@ export function FirstTimeOnboarding() {
 
   useEffect(() => {
     // Check if user has seen onboarding
-    const hasSeenOnboarding = localStorage.getItem('rnrb_onboarding_complete');
-    if (!hasSeenOnboarding && !dismissed) {
-      setIsVisible(true);
+    try {
+      const hasSeenOnboarding = localStorage.getItem('rnrb_onboarding_complete');
+      if (!hasSeenOnboarding && !dismissed) {
+        setIsVisible(true);
+      }
+    } catch (error) {
+      console.warn('Failed to read onboarding status from localStorage:', error);
+      // Show onboarding if we can't determine status
+      if (!dismissed) {
+        setIsVisible(true);
+      }
     }
   }, [dismissed]);
 
@@ -69,13 +77,23 @@ export function FirstTimeOnboarding() {
   };
 
   const handleSkip = () => {
-    localStorage.setItem('rnrb_onboarding_complete', 'true');
+    try {
+      localStorage.setItem('rnrb_onboarding_complete', 'true');
+    } catch (error) {
+      console.warn('Failed to save onboarding status to localStorage:', error);
+      // Continue - onboarding is still dismissed
+    }
     setIsVisible(false);
     setDismissed(true);
   };
 
   const handleComplete = () => {
-    localStorage.setItem('rnrb_onboarding_complete', 'true');
+    try {
+      localStorage.setItem('rnrb_onboarding_complete', 'true');
+    } catch (error) {
+      console.warn('Failed to save onboarding status to localStorage:', error);
+      // Continue - onboarding is still dismissed
+    }
     setIsVisible(false);
     setDismissed(true);
   };

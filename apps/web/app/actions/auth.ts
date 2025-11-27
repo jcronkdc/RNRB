@@ -9,12 +9,15 @@ export async function signInWithCredentials(formData: {
   email: string;
   password: string;
   isNewUser?: boolean;
+  redirectTo?: string;
 }) {
   try {
     // Check if user needs profile setup
-    let redirectTo = '/dashboard';
+    // Note: redirectTo is already URL-decoded if it came from Next.js searchParams
+    let redirectTo = formData.redirectTo || '/dashboard';
 
     // If this is a new user signup, check profile completion status
+    // (profile setup takes precedence over custom redirect, but we preserve the original destination)
     if (formData.isNewUser) {
       const user = await prisma.user.findUnique({
         where: { email: formData.email },
@@ -22,9 +25,21 @@ export async function signInWithCredentials(formData: {
       });
 
       // Redirect to profile setup if profile not completed
+      // Pass the original redirectTo as a query param so we can redirect there after setup
       if (user && !user.profileCompleted) {
-        redirectTo = '/settings/profile?setup=true';
+        // Only pass redirectTo param if it's not the default dashboard
+        if (redirectTo !== '/dashboard') {
+          redirectTo = `/settings/profile?setup=true&redirect=${encodeURIComponent(redirectTo)}`;
+        } else {
+          redirectTo = '/settings/profile?setup=true';
+        }
       }
+    }
+
+    // Security: Validate redirect URL to prevent open redirect attacks
+    // Only allow relative paths starting with /
+    if (redirectTo && (!redirectTo.startsWith('/') || redirectTo.startsWith('//'))) {
+      redirectTo = '/dashboard';
     }
 
     // NextAuth v5: signIn with credentials must redirect

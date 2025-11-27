@@ -116,9 +116,23 @@ async function generateProjectInsights(project: any) {
     blockers.push('Over 50% of songs are still in draft status');
   }
 
-  const overdueMilestones = milestones.filter(
-    (m: any) => new Date(m.dueDate) < new Date() && m.status !== 'completed'
-  );
+  // Helper function to check if a value can be parsed as a valid date
+  // Note: This returns boolean, not a type guard, because it validates
+  // date-convertible values (string | number | Date), not just Date objects
+  const canParseAsDate = (value: unknown): boolean => {
+    if (value == null) return false;
+    if (typeof value !== 'string' && typeof value !== 'number' && !(value instanceof Date)) {
+      return false;
+    }
+    const parsed = new Date(value);
+    return !isNaN(parsed.getTime());
+  };
+  
+  const overdueMilestones = milestones.filter((m: any) => {
+    if (!canParseAsDate(m.dueDate)) return false;
+    const dueDate = new Date(m.dueDate);
+    return dueDate < new Date() && m.status !== 'completed';
+  });
   if (overdueMilestones.length > 0) {
     blockers.push(`${overdueMilestones.length} milestone(s) are overdue`);
   }
@@ -165,6 +179,7 @@ async function generateProjectInsights(project: any) {
   // Activity patterns
   const sessionsByDay: Record<string, number> = {};
   sessions.forEach((s: any) => {
+    if (!canParseAsDate(s.startTime)) return;
     const day = new Date(s.startTime).toLocaleDateString('en-US', { weekday: 'long' });
     sessionsByDay[day] = (sessionsByDay[day] || 0) + 1;
   });
@@ -172,7 +187,7 @@ async function generateProjectInsights(project: any) {
 
   // Average session length
   const sessionDurations = sessions
-    .filter((s: any) => s.endTime)
+    .filter((s: any) => s.endTime && canParseAsDate(s.startTime) && canParseAsDate(s.endTime))
     .map((s: any) => {
       const start = new Date(s.startTime).getTime();
       const end = new Date(s.endTime).getTime();
@@ -180,13 +195,16 @@ async function generateProjectInsights(project: any) {
     });
   const averageSession =
     sessionDurations.length > 0
-      ? sessionDurations.reduce((a, b) => a + b, 0) / sessionDurations.length
+      ? sessionDurations.reduce((a: number, b: number) => a + b, 0) / sessionDurations.length
       : null;
 
   // Velocity trend (simplified)
-  const recentActivity = songs.filter(
-    (s: any) => new Date(s.updatedAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-  ).length;
+  const recentActivity = songs.filter((s: any) => {
+    if (!canParseAsDate(s.updatedAt)) return false;
+    const updatedAt = new Date(s.updatedAt);
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    return updatedAt > weekAgo;
+  }).length;
   const velocityTrend = recentActivity > songs.length * 0.3 ? 'increasing' : 'stable';
 
   // Quality metrics
@@ -211,3 +229,9 @@ async function generateProjectInsights(project: any) {
     mixReady,
   };
 }
+
+
+
+
+
+

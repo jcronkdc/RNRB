@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 import { Music, Users, Check, X, Loader2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, useRef } from 'react';
 
 import { supabase } from '@/lib/supabase';
 
-export default function InviteAcceptPage() {
+function InviteAcceptContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -21,23 +21,68 @@ export default function InviteAcceptPage() {
   const [accepting, setAccepting] = useState(false);
   const [status, setStatus] = useState<'pending' | 'accepted' | 'error'>('pending');
   const [message, setMessage] = useState<string>('');
+  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Track mounted state for async operations outside useEffect
+  const isMountedRef = useRef<boolean>(true);
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-      setLoading(false);
-    });
+    // Use a local closure variable to track this specific effect instance.
+    // This is the recommended pattern because each useEffect invocation creates
+    // a new `cancelled` variable, so each promise only knows about its own
+    // cancellation state - avoiding the shared ref race condition in Strict Mode.
+    let cancelled = false;
+    isMountedRef.current = true;
+    
+    supabase?.auth.getUser()
+      .then(({ data: { user } }) => {
+        // Only update state if this specific effect instance hasn't been cancelled
+        if (!cancelled) {
+          setUser(user);
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        // Handle auth errors (network failure, invalid session, etc.)
+        console.warn('Failed to get user session:', error);
+        // Only update state if this specific effect instance hasn't been cancelled
+        if (!cancelled) {
+          setUser(null);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      // Cancel this specific effect instance's pending operations
+      cancelled = true;
+      isMountedRef.current = false;
+      
+      // Cleanup navigation timeout on unmount
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+        navigationTimeoutRef.current = null;
+      }
+    };
   }, []);
 
   const handleAccept = async () => {
     if (!user) {
       // Redirect to auth with return URL
-      router.push(`/auth?redirect=/invites/${projectSlug}?email=${inviteEmail}`);
+      // The email MUST be URL-encoded when building the query string to handle
+      // special characters like +, @, ?, &, etc. The outer encodeURIComponent
+      // then encodes the entire returnUrl for safe transport as a query param.
+      // When decoded at auth page and used for redirect, the inner encoding
+      // remains intact, ensuring the email parameter parses correctly.
+      const returnUrl = inviteEmail 
+        ? `/invites/${projectSlug}?email=${encodeURIComponent(inviteEmail)}`
+        : `/invites/${projectSlug}`;
+      router.push(`/auth?redirect=${encodeURIComponent(returnUrl)}`);
       return;
     }
 
     // Check if invite email matches user email
     if (inviteEmail && user.email !== inviteEmail) {
+      // Guard state updates even for synchronous code paths
+      if (!isMountedRef.current) return;
       setStatus('error');
       setMessage(
         `This invite was sent to ${inviteEmail}, but you're signed in as ${user.email}. Please sign in with the invited email.`
@@ -45,6 +90,8 @@ export default function InviteAcceptPage() {
       return;
     }
 
+    // Guard state update before async operations
+    if (!isMountedRef.current) return;
     setAccepting(true);
 
     try {
@@ -53,10 +100,17 @@ export default function InviteAcceptPage() {
       const projectExists = allProjects.find((p: any) => p.slug === projectSlug);
 
       if (projectExists) {
-        // Already a member
+        // Already a member - check mount before state updates
+        if (!isMountedRef.current) return;
         setStatus('accepted');
         setMessage("You're already a member of this project!");
-        setTimeout(() => router.push(`/projects/${projectSlug}`), 2000);
+        if (navigationTimeoutRef.current) {
+          clearTimeout(navigationTimeoutRef.current);
+        }
+        navigationTimeoutRef.current = setTimeout(() => {
+          navigationTimeoutRef.current = null;
+          router.push(`/projects/${projectSlug}`);
+        }, 2000);
         return;
       }
 
@@ -85,14 +139,28 @@ export default function InviteAcceptPage() {
 
       if (error) throw error;
 
+      // Check mount status after async operation before updating state
+      if (!isMountedRef.current) return;
+
       setStatus('accepted');
       setMessage('Successfully joined the project!');
-      setTimeout(() => router.push(`/projects/${projectSlug}`), 2000);
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
+      navigationTimeoutRef.current = setTimeout(() => {
+        navigationTimeoutRef.current = null;
+        router.push(`/projects/${projectSlug}`);
+      }, 2000);
     } catch (error: any) {
+      // Check mount status before updating state on error
+      if (!isMountedRef.current) return;
       setStatus('error');
       setMessage(error.message || 'Failed to accept invite');
     } finally {
-      setAccepting(false);
+      // Check mount status before updating state in finally block
+      if (isMountedRef.current) {
+        setAccepting(false);
+      }
     }
   };
 
@@ -244,5 +312,19 @@ export default function InviteAcceptPage() {
         </Card>
       </motion.div>
     </div>
+  );
+}
+
+export default function InviteAcceptPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="bg-background flex min-h-screen items-center justify-center">
+          <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
+        </div>
+      }
+    >
+      <InviteAcceptContent />
+    </Suspense>
   );
 }

@@ -4,10 +4,30 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name } = await request.json();
+    // Security: Limit request body size to prevent DoS attacks (max 1MB)
+    const MAX_BODY_SIZE = 1024 * 1024; // 1MB
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
+      return NextResponse.json(
+        { error: 'Request body too large' },
+        { status: 413 }
+      );
+    }
+    
+    const body = await request.json();
+    
+    // Security: Validate body is an object and not too large
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return NextResponse.json(
+        { error: 'Invalid request body' },
+        { status: 400 }
+      );
+    }
+    
+    const { email, password, name } = body;
 
     console.log('[REGISTER] Request received:', {
-      email: email?.substring(0, 3) + '***',
+      email: typeof email === 'string' ? email.substring(0, Math.min(3, email.length)) + '***' : undefined,
       hasPassword: !!password,
       hasName: !!name,
     });
@@ -18,9 +38,9 @@ export async function POST(request: Request) {
     });
 
     // Validation
-    if (!email || !password) {
-      console.log('[REGISTER] Validation failed: missing email or password');
-      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    if (!email || typeof email !== 'string' || !password || typeof password !== 'string') {
+      console.log('[REGISTER] Validation failed: missing email or password, or invalid types');
+      return NextResponse.json({ error: 'Email and password are required and must be strings' }, { status: 400 });
     }
 
     if (password.length < 8) {

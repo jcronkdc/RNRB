@@ -4,6 +4,7 @@
  */
 
 import { detectKey, type KeySuggestion } from './key-detector';
+import { AI_MODELS, AI_TEMPERATURES, AI_MAX_TOKENS } from '../ai/config';
 
 export interface AIKeyAnalysis {
   primaryKey: string;
@@ -127,15 +128,15 @@ async function callAIAnalysis(chords: string[]): Promise<AIKeyAnalysis | null> {
         'X-Title': "Rock N' Roll Basement - AI Key Detection",
       },
       body: JSON.stringify({
-        model: 'anthropic/claude-3.5-sonnet', // Best for reasoning
+        model: AI_MODELS.OPENROUTER_REASONING,
         messages: [
           {
             role: 'user',
             content: AI_ANALYSIS_PROMPT(chords),
           },
         ],
-        temperature: 0.3, // Low temperature for consistent analysis
-        max_tokens: 2000,
+        temperature: AI_TEMPERATURES.PRECISE,
+        max_tokens: AI_MAX_TOKENS.ANALYSIS,
       }),
     });
 

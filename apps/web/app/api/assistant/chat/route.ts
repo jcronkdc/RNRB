@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
 import { buildAssistantContext, formatContextForAI } from '@/lib/ai/assistant-context';
+import { AI_MODELS, AI_MAX_TOKENS } from '@/lib/ai/config';
 import { handleApiError, AppError } from '@/lib/errors';
 import { env, features } from '@/lib/env';
 import { requireAuth } from '@/lib/session';
@@ -92,10 +93,10 @@ export async function POST(request: NextRequest) {
       content: validated.message,
     });
 
-    // Call Claude API
+    // Call Claude API - using best reasoning model for assistant
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1024,
+      model: AI_MODELS.REASONING,
+      max_tokens: AI_MAX_TOKENS.CONVERSATION,
       system: systemPrompt,
       messages: messages,
     });
@@ -216,6 +217,6 @@ export async function GET() {
   return NextResponse.json({
     status: features.ai ? 'ok' : 'disabled',
     message: features.ai ? 'AI Assistant endpoint is running' : 'AI features not configured',
-    model: 'claude-3-5-sonnet-20241022',
+    model: AI_MODELS.REASONING,
   });
 }

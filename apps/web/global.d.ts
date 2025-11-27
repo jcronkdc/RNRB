@@ -7,3 +7,9 @@ interface Window {
     // Add other PostHog methods as needed
   };
 }
+
+
+
+
+
+

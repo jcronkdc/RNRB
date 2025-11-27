@@ -22,6 +22,7 @@ class ReadReceiptManager {
   private static instance: ReadReceiptManager;
   private pendingReceipts: Map<string, Set<string>> = new Map(); // channelId -> Set of messageIds
   private syncTimeout: NodeJS.Timeout | null = null;
+  private retryTimeout: NodeJS.Timeout | null = null;
   private readonly BATCH_DELAY = 2000; // 2 seconds
 
   private constructor() {}
@@ -107,7 +108,13 @@ class ReadReceiptManager {
       });
 
       // Retry after delay
-      setTimeout(() => this.syncPendingReceipts(), 5000);
+      if (this.retryTimeout) {
+        clearTimeout(this.retryTimeout);
+      }
+      this.retryTimeout = setTimeout(() => {
+        this.retryTimeout = null;
+        this.syncPendingReceipts();
+      }, 5000);
     }
   }
 
@@ -119,7 +126,25 @@ class ReadReceiptManager {
       clearTimeout(this.syncTimeout);
       this.syncTimeout = null;
     }
+    if (this.retryTimeout) {
+      clearTimeout(this.retryTimeout);
+      this.retryTimeout = null;
+    }
     await this.syncPendingReceipts();
+  }
+
+  /**
+   * Cleanup all timers (for testing or shutdown)
+   */
+  cleanup(): void {
+    if (this.syncTimeout) {
+      clearTimeout(this.syncTimeout);
+      this.syncTimeout = null;
+    }
+    if (this.retryTimeout) {
+      clearTimeout(this.retryTimeout);
+      this.retryTimeout = null;
+    }
   }
 
   /**
@@ -143,6 +168,7 @@ export function useReadReceipts({ channelId, userId, onMarkAsRead }: ReadReceipt
   const observerRef = useRef<IntersectionObserver | null>(null);
   const visibleMessagesRef = useRef<Set<string>>(new Set());
   const observedElementsRef = useRef<Map<Element, string>>(new Map()); // element -> messageId
+  const timeoutRefsRef = useRef<Map<string, NodeJS.Timeout>>(new Map()); // messageId -> timeout
 
   // Initialize Intersection Observer
   useEffect(() => {
@@ -157,17 +183,31 @@ export function useReadReceipts({ channelId, userId, onMarkAsRead }: ReadReceipt
             if (!visibleMessagesRef.current.has(messageId)) {
               visibleMessagesRef.current.add(messageId);
 
+              // Clear any existing timeout for this message
+              const existingTimeout = timeoutRefsRef.current.get(messageId);
+              if (existingTimeout) {
+                clearTimeout(existingTimeout);
+              }
+
               // Mark as read after 1 second of visibility
-              setTimeout(() => {
+              const timeout = setTimeout(() => {
+                timeoutRefsRef.current.delete(messageId);
                 if (visibleMessagesRef.current.has(messageId)) {
                   readReceiptManager.markAsRead(channelId, messageId);
                   onMarkAsRead?.([messageId]);
                 }
               }, 1000);
+              timeoutRefsRef.current.set(messageId, timeout);
             }
           } else {
             // Message is no longer visible
             visibleMessagesRef.current.delete(messageId);
+            // Clear timeout if message becomes invisible before 1 second
+            const timeout = timeoutRefsRef.current.get(messageId);
+            if (timeout) {
+              clearTimeout(timeout);
+              timeoutRefsRef.current.delete(messageId);
+            }
           }
         });
       },
@@ -181,6 +221,9 @@ export function useReadReceipts({ channelId, userId, onMarkAsRead }: ReadReceipt
     return () => {
       observerRef.current?.disconnect();
       observedElementsRef.current.clear();
+      // Clear all pending timeouts
+      timeoutRefsRef.current.forEach((timeout) => clearTimeout(timeout));
+      timeoutRefsRef.current.clear();
     };
   }, [channelId, onMarkAsRead]);
 
@@ -254,3 +297,9 @@ export async function batchMarkMessagesAsRead(
     throw error;
   }
 }
+
+
+
+
+
+

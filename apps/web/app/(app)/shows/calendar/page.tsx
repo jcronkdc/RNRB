@@ -37,7 +37,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, Suspense } from 'react';
 
 import { CalendarView } from '@/components/gig-calendar/calendar-view';
 import { ConflictDetector } from '@/components/gig-calendar/conflict-detector';
@@ -82,7 +82,7 @@ type Show = {
   notes?: string;
 };
 
-export default function CalendarPage() {
+function CalendarPageContent() {
   const { user, loading } = useRequireAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -425,6 +425,23 @@ export default function CalendarPage() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+export default function CalendarPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="bg-background flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin" />
+            <p className="text-muted-foreground text-lg">Loading calendar...</p>
+          </div>
+        </div>
+      }
+    >
+      <CalendarPageContent />
+    </Suspense>
   );
 }
 

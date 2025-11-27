@@ -314,3 +314,9 @@ The recording-to-project workflow is now fully functional. Users can:
 4. Add their recordings to projects seamlessly
 
 This completes the missing piece of the Studio → Project integration.
+
+
+
+
+
+

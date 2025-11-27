@@ -102,7 +102,7 @@ export default function HomePage() {
             {/* Quick Stats */}
             <div className="hero-stats grid grid-cols-3 gap-6 text-center">
               <div className="stat-item">
-                <div className="stat-number">50+</div>
+                <div className="stat-number">75+</div>
                 <div className="stat-label">Features</div>
               </div>
               <div className="stat-item">
@@ -185,14 +185,14 @@ export default function HomePage() {
                   <div className="feature-badge">AI-Powered</div>
                   <h3 className="feature-title-large">Songwriting Studio</h3>
                   <p className="feature-desc-large">
-                    Real-time key detection, word-level chord placement, AI lyrics assistant, 
-                    rhyme suggestions, and chord progression generation. Break through creative blocks instantly.
+                    Complete songwriting environment with version control, multi-track mixer, 
+                    real-time key detection, AI chord/lyric suggestions, split sheets, copyright registration guidance, and ISWC/ISRC tracking.
                   </p>
                   <ul className="feature-list">
-                    <li>✓ Chord progression AI</li>
-                    <li>✓ Lyrics rhyme finder</li>
-                    <li>✓ Melody generator</li>
-                    <li>✓ Music theory assistant</li>
+                    <li>✓ Version control (v1, v2, Radio Edit)</li>
+                    <li>✓ Multi-track stems mixer</li>
+                    <li>✓ AI chord & lyric suggestions</li>
+                    <li>✓ Split sheets & copyright tools</li>
                   </ul>
                   <span className="feature-link">Explore Songwriting →</span>
                 </div>
@@ -212,14 +212,14 @@ export default function HomePage() {
                   <div className="feature-badge" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' }}>Live Sessions</div>
                   <h3 className="feature-title-large">Real-Time Collaboration</h3>
                   <p className="feature-desc-large">
-                    HD video calls up to 50 people, screen sharing, multi-cursor editing, 
-                    instant messaging, and presence tracking. Work together like you're in the same room.
+                    HD video calls (up to 50 people), screen sharing, real-time CRDT editing (Yjs), 
+                    instant messaging with voice messages, presence tracking, multi-cursor editing, and pinned comments on lyrics/audio.
                   </p>
                   <ul className="feature-list">
-                    <li>✓ HD Video (Daily.co)</li>
-                    <li>✓ Real-time sync (Ably)</li>
-                    <li>✓ Screen sharing</li>
-                    <li>✓ Voice messages</li>
+                    <li>✓ HD Video (Daily.co) + Screen share</li>
+                    <li>✓ Real-time sync (Ably + Yjs CRDT)</li>
+                    <li>✓ Multi-cursor editing</li>
+                    <li>✓ Voice messages + reactions</li>
                   </ul>
                   <span className="feature-link" style={{ color: '#3b82f6' }}>Explore Collaboration →</span>
                 </div>
@@ -229,6 +229,39 @@ export default function HomePage() {
 
           {/* Secondary Features Grid - Expanded */}
           <div className="secondary-features grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {/* Tour Management */}
+            <div className="feature-card-small group">
+              <div className="feature-icon-small" style={{ background: 'rgba(251, 146, 60, 0.1)' }}>
+                <svg className="h-5 w-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+              </div>
+              <h4 className="feature-title-small">Tour Management</h4>
+              <p className="feature-desc-small">Book venues, manage shows, track revenue with AI route optimization</p>
+            </div>
+
+            {/* Gig Calendar */}
+            <div className="feature-card-small group">
+              <div className="feature-icon-small" style={{ background: 'rgba(168, 85, 247, 0.1)' }}>
+                <svg className="h-5 w-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h4 className="feature-title-small">Gig Calendar</h4>
+              <p className="feature-desc-small">Visual calendar with conflict detection and revenue tracking</p>
+            </div>
+
+            {/* Smart Setlists */}
+            <div className="feature-card-small group">
+              <div className="feature-icon-small" style={{ background: 'rgba(139, 92, 246, 0.1)' }}>
+                <svg className="h-5 w-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+              </div>
+              <h4 className="feature-title-small">Smart Setlists</h4>
+              <p className="feature-desc-small">AI-curated setlists analyzing tempo flow, key transitions & energy</p>
+            </div>
+
             {/* Screen Sharing */}
             <div className="feature-card-small group">
               <div className="feature-icon-small" style={{ background: 'rgba(59, 130, 246, 0.1)' }}>
@@ -238,6 +271,17 @@ export default function HomePage() {
               </div>
               <h4 className="feature-title-small">Screen Sharing</h4>
               <p className="feature-desc-small">Share your DAW in real-time during video sessions</p>
+            </div>
+
+            {/* Studio Recording */}
+            <div className="feature-card-small group">
+              <div className="feature-icon-small" style={{ background: 'rgba(244, 63, 94, 0.1)' }}>
+                <svg className="h-5 w-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </div>
+              <h4 className="feature-title-small">Studio Recording</h4>
+              <p className="feature-desc-small">Record sessions with automatic cloud backup and project integration</p>
             </div>
 
             {/* AI Assistant */}
@@ -258,19 +302,8 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h4 className="feature-title-small">Copyright Assistant</h4>
-              <p className="feature-desc-small">Protect your work with automatic registration guidance</p>
-            </div>
-
-            {/* Smart Setlists */}
-            <div className="feature-card-small group">
-              <div className="feature-icon-small" style={{ background: 'rgba(139, 92, 246, 0.1)' }}>
-                <svg className="h-5 w-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
-              </div>
-              <h4 className="feature-title-small">Smart Setlists</h4>
-              <p className="feature-desc-small">AI-curated setlists with tempo flow and audience energy</p>
+              <h4 className="feature-title-small">Copyright Registration</h4>
+              <p className="feature-desc-small">Step-by-step guidance for protecting your work with copyright.gov links</p>
             </div>
 
             {/* Split Sheets */}
@@ -281,7 +314,7 @@ export default function HomePage() {
                 </svg>
               </div>
               <h4 className="feature-title-small">Split Sheets</h4>
-              <p className="feature-desc-small">Generate and share legal split agreements instantly</p>
+              <p className="feature-desc-small">Generate and share legal split agreements with email delivery</p>
             </div>
 
             {/* Multi-Cursor Editing */}
@@ -292,7 +325,7 @@ export default function HomePage() {
                 </svg>
               </div>
               <h4 className="feature-title-small">Multi-Cursor Editing</h4>
-              <p className="feature-desc-small">See collaborators' cursors and edits in real-time</p>
+              <p className="feature-desc-small">See collaborators' cursors and edits in real-time with Yjs CRDT</p>
             </div>
 
             {/* Project Management */}
@@ -303,40 +336,18 @@ export default function HomePage() {
                 </svg>
               </div>
               <h4 className="feature-title-small">Project Management</h4>
-              <p className="feature-desc-small">Organize songs, tracks, and sessions with version control</p>
+              <p className="feature-desc-small">Organize songs, milestones, files with version control & permissions</p>
             </Link>
 
-            {/* AI Tour Routing */}
+            {/* Community Features */}
             <div className="feature-card-small group">
-              <div className="feature-icon-small" style={{ background: 'rgba(251, 146, 60, 0.1)' }}>
-                <svg className="h-5 w-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              <div className="feature-icon-small" style={{ background: 'rgba(99, 102, 241, 0.1)' }}>
+                <svg className="h-5 w-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h4 className="feature-title-small">AI Tour Routing</h4>
-              <p className="feature-desc-small">Optimal routes using Tokyo subway algorithms</p>
-            </div>
-
-            {/* Gig Calendar */}
-            <div className="feature-card-small group">
-              <div className="feature-icon-small" style={{ background: 'rgba(168, 85, 247, 0.1)' }}>
-                <svg className="h-5 w-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h4 className="feature-title-small">Gig Calendar</h4>
-              <p className="feature-desc-small">Book venues, manage shows, track everything</p>
-            </div>
-
-            {/* Revenue Tracking */}
-            <div className="feature-card-small group">
-              <div className="feature-icon-small" style={{ background: 'rgba(244, 63, 94, 0.1)' }}>
-                <svg className="h-5 w-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h4 className="feature-title-small">Revenue Tracking</h4>
-              <p className="feature-desc-small">Royalties, merch, tickets—all in one dashboard</p>
+              <h4 className="feature-title-small">Community & Discovery</h4>
+              <p className="feature-desc-small">Musician profiles, follow artists, discover talent, networking</p>
             </div>
 
             {/* Voice Memos */}
@@ -347,7 +358,7 @@ export default function HomePage() {
                 </svg>
               </div>
               <h4 className="feature-title-small">Voice Memos</h4>
-              <p className="feature-desc-small">Record ideas instantly, transcribe with AI</p>
+              <p className="feature-desc-small">Record ideas instantly, attach to songs, playback with controls</p>
             </div>
 
             {/* Media Library */}
@@ -358,7 +369,40 @@ export default function HomePage() {
                 </svg>
               </div>
               <h4 className="feature-title-small">Media Library</h4>
-              <p className="feature-desc-small">Cloud storage for all your music files</p>
+              <p className="feature-desc-small">Cloud storage for all your music files with drag-drop upload</p>
+            </div>
+
+            {/* Venue Database */}
+            <div className="feature-card-small group">
+              <div className="feature-icon-small" style={{ background: 'rgba(245, 158, 11, 0.1)' }}>
+                <svg className="h-5 w-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h4 className="feature-title-small">Venue Database</h4>
+              <p className="feature-desc-small">Track venue details, contacts, capacity, and booking history</p>
+            </div>
+
+            {/* Revenue Tracking */}
+            <div className="feature-card-small group">
+              <div className="feature-icon-small" style={{ background: 'rgba(34, 197, 94, 0.1)' }}>
+                <svg className="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h4 className="feature-title-small">Revenue Tracking</h4>
+              <p className="feature-desc-small">Track royalties, ticket sales, merch—all in one dashboard</p>
+            </div>
+
+            {/* Notifications & Activity */}
+            <div className="feature-card-small group">
+              <div className="feature-icon-small" style={{ background: 'rgba(168, 85, 247, 0.1)' }}>
+                <svg className="h-5 w-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+              </div>
+              <h4 className="feature-title-small">Real-Time Notifications</h4>
+              <p className="feature-desc-small">Activity feed with comments, mentions, invites & updates</p>
             </div>
           </div>
 

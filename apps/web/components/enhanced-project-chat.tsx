@@ -497,7 +497,7 @@ export function EnhancedChat({
             <textarea
               value={inputValue}
               onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
               className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
@@ -519,3 +519,9 @@ export function EnhancedChat({
     </div>
   );
 }
+
+
+
+
+
+
