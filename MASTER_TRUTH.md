@@ -1,33 +1,54 @@
 # MASTER_TRUTH
 
-**Agent:** 150 | **Prev:** 149 | **Date:** 2025-11-27  
-**Status:** ✅ **100% PRODUCTION READY - WEBSITE BUILDER ADDED**
+**Agent:** 151 | **Prev:** 150 | **Date:** 2025-11-27  
+**Status:** 🟠 **Credentials sign-in broken in production → fix committed (redeploy to restore login)**
 
 ---
 
 ## ⚡ CURRENT STATE
 
-| Component           | Status                                           |
-| ------------------- | ------------------------------------------------ |
-| **Site**            | https://www.cronkwaters.com → ✅ HTTP 200 LIVE   |
-| **Build**           | ✅ Clean - Deployed 2025-11-27 (Website Builder) |
-| **Health Check**    | ✅ 100%                                          |
-| **Dashboard**       | ✅ All 4 stats displaying - Verified in prod     |
-| **Auth**            | ✅ NextAuth + Google OAuth + Email/Password      |
-| **Auth Redirect**   | ✅ Sign-in → Dashboard flow fixed (Agent 147)    |
-| **URL Plus Signs**  | ✅ Email + signs preserved in redirects (148)    |
-| **Profile Setup**   | ✅ Minimal layout for first-time setup           |
-| **Suspense**        | ✅ All useSearchParams() wrapped (FIXED 148)     |
-| **Database**        | ✅ Neon PostgreSQL (connected)                   |
-| **Video**           | ✅ Daily.co configured                           |
-| **Chat**            | ✅ Ably configured                               |
-| **AI**              | ✅ OpenAI configured                             |
-| **Stack**           | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0  |
-| **Onboarding**      | ✅ Clean, focused first-time user experience     |
-| **Notifications**   | ✅ Notification Bell functional in TopBar        |
-| **Landing Page**    | ✅ Updated with all 75+ features (Agent 147)     |
-| **Navigation**      | ✅ Dashboard access from UserMenu                |
-| **Website Builder** | ✅ LIVE - World-class musician website builder   |
+| Component           | Status                                                                   |
+| ------------------- | ------------------------------------------------------------------------ |
+| **Site**            | https://www.cronkwaters.com → ✅ HTTP 200 LIVE                           |
+| **Build**           | ✅ Clean - Deployed 2025-11-27 (Website Builder)                         |
+| **Health Check**    | ✅ 100%                                                                  |
+| **Dashboard**       | ✅ All 4 stats displaying - Verified in prod                             |
+| **Auth**            | 🟠 Credentials sign-in/reg fix committed (Agent 151) – redeploy required |
+| **Auth Redirect**   | ✅ Sign-in → Dashboard flow fixed (Agent 147)                            |
+| **URL Plus Signs**  | ✅ Email + signs preserved in redirects (148)                            |
+| **Profile Setup**   | ✅ Minimal layout for first-time setup                                   |
+| **Suspense**        | ✅ All useSearchParams() wrapped (FIXED 148)                             |
+| **Database**        | ✅ Neon PostgreSQL (connected)                                           |
+| **Video**           | ✅ Daily.co configured                                                   |
+| **Chat**            | ✅ Ably configured                                                       |
+| **AI**              | ✅ OpenAI configured                                                     |
+| **Stack**           | Next.js 15, tRPC 11, Prisma 5.22.0, Turbo 2.3.0                          |
+| **Onboarding**      | ✅ Clean, focused first-time user experience                             |
+| **Notifications**   | ✅ Notification Bell functional in TopBar                                |
+| **Landing Page**    | ✅ Updated with all 75+ features (Agent 147)                             |
+| **Navigation**      | ✅ Dashboard access from UserMenu                                        |
+| **Website Builder** | ✅ LIVE - World-class musician website builder                           |
+
+---
+
+## 🔄 LATEST CHANGES (Agent 151 – Credentials Sign-In Fix)
+
+**Problem:** Password sign-in and the post-registration auto-login both failed in production. Users only saw “An unexpected error occurred,” which effectively blocked all new or returning users.
+
+**Root Cause:**
+
+1. The `signInWithCredentials` server action assumed NextAuth would throw an `AuthError`. In reality the thrown value was a plain object, so every failure path fell into the generic “unexpected error” clause.
+2. Because authentication lived inside a server action, the `/auth` page had no client-side fallback—the POST to `/auth` always bubbled up as a 500, even for valid credentials.
+
+**Fix (committed, not yet deployed):**
+
+- Removed the server-action dependency. The `/auth` form now calls `signIn('credentials', { redirect: false, redirectTo })` from `next-auth/react`, sanitizes redirect targets, and shows accurate inline errors.
+- Sign-up still goes through `/api/register`, but new accounts are forced through `/settings/profile?setup=true` (with the original destination preserved via `redirect=`) before they can hit invites/projects.
+- Error messaging differentiates invalid credentials from real server errors, so QA can see real failure reasons.
+
+**Testing:** `pnpm build` (Nov 27, 19:43 UTC) ✅
+
+**Deployment:** Not deployed yet—production login remains broken until this commit is shipped. After deployment, run the human test: create a throwaway account, confirm it redirects to profile setup, and log back in with `test@cronkwaters.com / TestRock2024!`.
 
 ---
 

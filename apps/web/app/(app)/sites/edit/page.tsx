@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Save,
@@ -17,8 +17,21 @@ import {
   Plus,
   ExternalLink,
   Check,
+  Link,
+  PanelLeftClose,
+  PanelLeft,
+  Monitor,
+  Tablet,
+  Smartphone,
+  RefreshCw,
+  Undo,
+  Redo,
+  CloudOff,
+  Cloud,
 } from 'lucide-react';
 import { DomainSettings } from '@/components/site-builder/DomainSettings';
+import { DraggableSections } from '@/components/site-builder/DraggableSections';
+import { LivePreview } from '@/components/site-builder/LivePreview';
 
 interface SiteSection {
   id: string;
@@ -58,9 +71,46 @@ function SiteEditorContent() {
   const [hasChanges, setHasChanges] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
 
+  // New state for enhanced editor
+  const [showPreview, setShowPreview] = useState(true);
+  const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [history, setHistory] = useState<Site[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
   useEffect(() => {
     fetchSite();
   }, []);
+
+  // Auto-save effect
+  useEffect(() => {
+    if (!hasChanges || !autoSaveEnabled || !site) return;
+
+    // Clear existing timer
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+    }
+
+    // Set new timer for auto-save (2 seconds after last change)
+    autoSaveTimerRef.current = setTimeout(() => {
+      handleSave();
+    }, 2000);
+
+    return () => {
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+    };
+  }, [hasChanges, site, autoSaveEnabled]);
+
+  // Refresh preview when site changes
+  useEffect(() => {
+    if (site && !hasChanges) {
+      setPreviewRefreshKey((k) => k + 1);
+    }
+  }, [site?.sections, site?.theme, hasChanges]);
 
   const fetchSite = async () => {
     try {
@@ -100,7 +150,9 @@ function SiteEditorContent() {
 
       if (response.ok) {
         setHasChanges(false);
+        setLastSaved(new Date());
         setSaveMessage('Saved!');
+        setPreviewRefreshKey((k) => k + 1);
         setTimeout(() => setSaveMessage(''), 2000);
       }
     } catch {
@@ -108,6 +160,37 @@ function SiteEditorContent() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // Reorder sections handler for drag & drop
+  const handleReorderSections = async (newSections: SiteSection[]) => {
+    if (!site) return;
+
+    setSite({ ...site, sections: newSections });
+    setHasChanges(true);
+
+    // Save the new order to the server
+    try {
+      for (const section of newSections) {
+        await fetch('/api/sites/sections', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: section.id,
+            order: section.order,
+          }),
+        });
+      }
+      setPreviewRefreshKey((k) => k + 1);
+    } catch (error) {
+      console.error('Failed to save section order:', error);
+    }
+  };
+
+  // Edit section handler
+  const handleEditSection = (section: SiteSection) => {
+    // TODO: Open section editor modal
+    console.log('Edit section:', section);
   };
 
   const handlePublish = async () => {
@@ -222,15 +305,25 @@ function SiteEditorContent() {
   const tabs = [
     { id: 'sections', label: 'Sections', icon: Layers },
     { id: 'theme', label: 'Theme', icon: Palette },
-    { id: 'domain', label: 'Domain', icon: Globe },
+    { id: 'domain', label: 'Domain', icon: Link },
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
   ];
 
+  // Format last saved time
+  const formatLastSaved = () => {
+    if (!lastSaved) return null;
+    const now = new Date();
+    const diff = Math.floor((now.getTime() - lastSaved.getTime()) / 1000);
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    return lastSaved.toLocaleTimeString();
+  };
+
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+    <div className="flex h-screen flex-col overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Top Bar */}
       <div
-        className="sticky top-0 z-50 flex items-center justify-between px-4 py-3"
+        className="flex flex-shrink-0 items-center justify-between px-4 py-3"
         style={{
           background: 'var(--panel)',
           borderBottom: '1px solid var(--border)',
@@ -255,6 +348,21 @@ function SiteEditorContent() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Auto-save indicator */}
+          <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--muted)' }}>
+            {autoSaveEnabled ? (
+              <>
+                <Cloud size={14} className="text-green-400" />
+                <span>{hasChanges ? 'Saving...' : formatLastSaved() || 'Auto-save on'}</span>
+              </>
+            ) : (
+              <>
+                <CloudOff size={14} />
+                <span>Auto-save off</span>
+              </>
+            )}
+          </div>
+
           {saveMessage && (
             <span className="flex items-center gap-1 text-sm text-green-400">
               <Check size={14} />
@@ -262,21 +370,20 @@ function SiteEditorContent() {
             </span>
           )}
 
-          <a
-            href={`/s/${site.subdomain}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* Toggle Preview Button */}
+          <button
+            onClick={() => setShowPreview(!showPreview)}
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors"
             style={{
-              background: 'var(--bg)',
-              color: 'var(--text)',
-              border: '1px solid var(--border)',
+              background: showPreview ? 'var(--accent)' : 'var(--bg)',
+              color: showPreview ? '#fff' : 'var(--muted)',
+              border: showPreview ? 'none' : '1px solid var(--border)',
             }}
+            title={showPreview ? 'Hide Preview' : 'Show Preview'}
           >
-            <Eye size={16} />
+            {showPreview ? <PanelLeftClose size={16} /> : <PanelLeft size={16} />}
             Preview
-            <ExternalLink size={12} />
-          </a>
+          </button>
 
           <button
             onClick={handleSave}
@@ -309,7 +416,7 @@ function SiteEditorContent() {
 
       {/* Tabs */}
       <div
-        className="flex gap-2 px-4 py-2"
+        className="flex flex-shrink-0 gap-2 px-4 py-2"
         style={{
           background: 'var(--panel)',
           borderBottom: '1px solid var(--border)',
@@ -332,29 +439,66 @@ function SiteEditorContent() {
         ))}
       </div>
 
-      {/* Content */}
-      <div className="mx-auto max-w-4xl p-6">
-        {activeTab === 'sections' && (
-          <SectionsTab
-            sections={site.sections}
-            onMoveUp={moveSectionUp}
-            onMoveDown={moveSectionDown}
-            onToggleVisibility={toggleSectionVisibility}
-            onDelete={deleteSection}
-          />
+      {/* Main Content - Split Pane */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Editor Panel */}
+        <div
+          className={`flex-shrink-0 overflow-y-auto transition-all duration-300 ${
+            showPreview ? 'w-1/2' : 'w-full'
+          }`}
+          style={{ borderRight: showPreview ? '1px solid var(--border)' : 'none' }}
+        >
+          <div className="mx-auto max-w-2xl p-6">
+            {activeTab === 'sections' && (
+              <div>
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
+                    Page Sections
+                  </h2>
+                  <button
+                    className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium"
+                    style={{
+                      background: 'var(--accent)',
+                      color: '#fff',
+                    }}
+                  >
+                    <Plus size={16} />
+                    Add Section
+                  </button>
+                </div>
+                <p className="mb-4 text-sm" style={{ color: 'var(--muted)' }}>
+                  Drag and drop to reorder sections
+                </p>
+                <DraggableSections
+                  sections={site.sections}
+                  onReorder={handleReorderSections}
+                  onToggleVisibility={toggleSectionVisibility}
+                  onDelete={deleteSection}
+                  onEdit={handleEditSection}
+                />
+              </div>
+            )}
+
+            {activeTab === 'theme' && (
+              <ThemeTab
+                theme={(site.theme || {}) as Record<string, unknown>}
+                templateId={site.templateId}
+                onChange={(theme) => updateSite({ theme })}
+              />
+            )}
+
+            {activeTab === 'domain' && <DomainSettings />}
+
+            {activeTab === 'settings' && <SettingsTab site={site} onChange={updateSite} />}
+          </div>
+        </div>
+
+        {/* Live Preview Panel */}
+        {showPreview && (
+          <div className="flex-1 overflow-hidden p-4">
+            <LivePreview subdomain={site.subdomain} refreshKey={previewRefreshKey} />
+          </div>
         )}
-
-        {activeTab === 'theme' && (
-          <ThemeTab
-            theme={(site.theme || {}) as Record<string, unknown>}
-            templateId={site.templateId}
-            onChange={(theme) => updateSite({ theme })}
-          />
-        )}
-
-        {activeTab === 'domain' && <DomainSettings />}
-
-        {activeTab === 'settings' && <SettingsTab site={site} onChange={updateSite} />}
       </div>
     </div>
   );
