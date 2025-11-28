@@ -51,31 +51,74 @@ function buildEmailHtml(name: string | null, resetUrl: string): string {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="supported-color-schemes" content="dark" />
     <title>Reset your password</title>
     <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f0f; color: #f5f5f5; padding: 0; margin: 0; }
-      .container { max-width: 480px; margin: 0 auto; padding: 40px 24px; }
-      .card { background: #1c1c1f; border: 1px solid #2f2f34; border-radius: 16px; padding: 32px; box-shadow: 0 20px 45px rgba(0,0,0,0.4); }
-      .button { display: inline-block; padding: 14px 24px; background: linear-gradient(135deg, #ff6200, #ff2d55); color: #ffffff; border-radius: 999px; text-decoration: none; font-weight: 600; letter-spacing: 0.02em; }
-      .footer { margin-top: 32px; font-size: 12px; color: #9c9ca5; line-height: 1.6; }
-      p { line-height: 1.6; color: #e0e0e6; }
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+      body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0b0b0c; color: #e9e9ec; padding: 0; margin: 0; line-height: 1.6; }
+      .email-wrapper { background: #0b0b0c; padding: 40px 20px; }
+      .email-container { max-width: 560px; margin: 0 auto; background: linear-gradient(180deg, #1e1e1e 0%, #161616 100%); border-radius: 16px; border: 1px solid #2f2f34; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+      .email-header { background: linear-gradient(135deg, rgba(255, 99, 71, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%); border-bottom: 1px solid #2f2f34; padding: 32px; text-align: center; }
+      .logo-text { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; background: linear-gradient(135deg, #ff6347 0%, #ffd700 50%, #ff6347 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0; }
+      .tagline { font-size: 13px; color: #9c9ca5; letter-spacing: 0.05em; text-transform: uppercase; margin: 8px 0 0; }
+      .email-content { padding: 40px 32px; }
+      .greeting { font-size: 15px; color: #b5b5c2; margin-bottom: 8px; }
+      .main-heading { font-size: 24px; font-weight: 700; color: #ffffff; margin: 0 0 20px; letter-spacing: -0.02em; }
+      .body-text { font-size: 15px; color: #b5b5c2; margin: 16px 0; line-height: 1.7; }
+      .warning-box { background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: 12px; padding: 16px 20px; margin: 20px 0; }
+      .warning-text { color: #fbbf24; font-size: 14px; margin: 0; }
+      .button-container { text-align: center; margin: 32px 0; }
+      .primary-button { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%); color: #ffffff !important; text-decoration: none; font-weight: 600; font-size: 15px; border-radius: 999px; letter-spacing: 0.02em; box-shadow: 0 4px 14px rgba(255, 99, 71, 0.4); }
+      .link-fallback { font-size: 12px; color: #6b6b75; word-break: break-all; margin-top: 16px; }
+      .link-fallback a { color: #ff6347; }
+      .info-card { background: #1a1a1a; border: 1px solid #2f2f34; border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+      .email-footer { background: #141414; border-top: 1px solid #2f2f34; padding: 24px 32px; text-align: center; }
+      .footer-brand { font-size: 13px; font-weight: 600; color: #9c9ca5; margin-bottom: 8px; }
+      .footer-text { font-size: 12px; color: #6b6b75; margin: 4px 0; }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="card">
-        <p>${name ? `Hey ${name},` : 'Hey there,'}</p>
-        <p>We received a request to reset your Rock N' Roll Basement password. Click the secure link below — it expires in 30 minutes.</p>
-        <p style="text-align:center; margin: 32px 0;">
-          <a href="${resetUrl}" class="button">Reset password</a>
-        </p>
-        <p>If the button doesn't work, copy and paste this URL into your browser:</p>
-        <p style="word-break: break-all; font-size: 13px; color: #b5b5c2;">${resetUrl}</p>
-        <p>If you didn't request this, you can safely ignore this email.</p>
-        <p class="footer">
-          Rock N' Roll Basement · Los Angeles, CA<br/>
-          Need help? Reply to this email or contact support@cronkwaters.com
-        </p>
+    <div class="email-wrapper">
+      <div class="email-container">
+        <div class="email-header">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <p class="tagline">Password Reset</p>
+        </div>
+        <div class="email-content">
+          <p class="greeting">${name ? `Hey ${name},` : 'Hey there,'}</p>
+          <h2 class="main-heading">Reset Your Password</h2>
+          
+          <p class="body-text">
+            We received a request to reset your password. Click the button below to create a new one.
+          </p>
+          
+          <div class="warning-box">
+            <p class="warning-text">⏰ This link expires in 30 minutes for security</p>
+          </div>
+          
+          <div class="button-container">
+            <a href="${resetUrl}" class="primary-button">Reset Password</a>
+          </div>
+          
+          <div class="info-card">
+            <p style="color: #9c9ca5; font-size: 13px; margin: 0 0 8px;">Or copy this link:</p>
+            <p style="color: #ff6347; font-size: 12px; margin: 0; word-break: break-all;">${resetUrl}</p>
+          </div>
+          
+          <p class="body-text" style="margin-top: 24px;">
+            If you didn't request this password reset, you can safely ignore this email. Your password will remain unchanged.
+          </p>
+        </div>
+        <div class="email-footer">
+          <p class="footer-brand">Rock N' Roll Basement</p>
+          <p class="footer-text">Los Angeles, CA • The All-In-One Platform for Modern Musicians</p>
+          <p class="footer-text" style="margin-top: 12px;">
+            <a href="${getBaseUrl()}" style="color: #ff6347; text-decoration: none;">Visit Website</a>
+            &nbsp;•&nbsp;
+            <a href="mailto:support@cronkwaters.com" style="color: #6b6b75; text-decoration: none;">Contact Support</a>
+          </p>
+        </div>
       </div>
     </div>
   </body>
