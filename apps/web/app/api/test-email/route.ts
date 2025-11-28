@@ -48,11 +48,19 @@ export async function GET(request: Request) {
         note: 'Check your inbox (and spam folder). Also check Resend dashboard: https://resend.com/emails',
       });
     } else {
+      // Provide helpful error messages for common Resend issues
+      let helpfulNote = 'Check that RESEND_API_KEY or EMAIL_SERVER_URL is configured';
+
+      if (result.error?.includes('testing emails') || result.error?.includes('verified email')) {
+        helpfulNote =
+          'Resend test mode: You can only send to verified email addresses. To send to any address, verify a domain at https://resend.com/domains and update EMAIL_FROM to use your domain (e.g., noreply@cronkwaters.com)';
+      }
+
       return NextResponse.json(
         {
           success: false,
           error: result.error,
-          note: 'Check that RESEND_API_KEY or EMAIL_SERVER_URL is configured',
+          note: helpfulNote,
         },
         { status: 500 }
       );

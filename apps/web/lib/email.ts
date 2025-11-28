@@ -79,6 +79,14 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
     };
   }
 
+  // Warn about Resend test mode limitations
+  if (RESEND_TEST_MODE) {
+    const recipients = Array.isArray(options.to) ? options.to : [options.to];
+    const testModeWarning =
+      '⚠️ Resend test mode: Can only send to verified email addresses. Verify a domain at resend.com/domains to send to any address.';
+    console.warn(testModeWarning);
+  }
+
   try {
     const result = await resend.emails.send({
       from: options.from || DEFAULT_FROM,
