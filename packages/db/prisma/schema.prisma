@@ -142,6 +142,10 @@ model User {
   createdViews      ProjectView[]      @relation("CreatedViews")
   createdReferences ProjectReference[] @relation("CreatedReferences")
   
+  // Notifications
+  notifications        Notification[] @relation("UserNotifications")
+  sentNotifications    Notification[] @relation("NotificationActor")
+
   // Library Files
   libraryFiles LibraryFile[]
   
@@ -2974,3 +2978,76 @@ model SiteEvent {
 }
 
 // Force Prisma regeneration: 2025-11-27-PHASE3-MERCH-ANALYTICS
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String   // Recipient
+  actorId     String?  // Who triggered the notification
+  
+  // Notification type
+  type        NotificationType
+  
+  // Content
+  title       String
+  message     String?  @db.Text
+  
+  // Reference to related entity
+  entityType  String?  // "post", "comment", "user", "song", etc.
+  entityId    String?  // ID of the related entity
+  
+  // Link to navigate to
+  actionUrl   String?
+  
+  // Data payload (for rich notifications)
+  data        Json?
+  
+  // Status
+  readAt      DateTime?
+  
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  user        User     @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  actor       User?    @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+  @@index([actorId])
+  @@index([type])
+}
+
+enum NotificationType {
+  // Social Feed
+  post_reaction    // Someone reacted to your post
+  post_comment     // Someone commented on your post
+  post_share       // Someone shared your post
+  post_mention     // Someone mentioned you in a post
+  comment_reply    // Someone replied to your comment
+  comment_reaction // Someone reacted to your comment
+  
+  // Following
+  new_follower     // Someone followed you
+  follow_post      // Someone you follow posted
+  
+  // Collaboration
+  collab_invite    // Invited to collaborate
+  collab_join      // Someone joined your project
+  collab_leave     // Someone left your project
+  collab_mention   // Mentioned in project/song
+  
+  // Music
+  song_comment     // Comment on your song
+  song_play        // Song milestone (10, 100, 1000 plays)
+  
+  // System
+  system_message   // System announcement
+  account_update   // Account changes
+  
+  // Website
+  site_contact     // Contact form submission
+  site_subscriber  // New mailing list subscriber
+}

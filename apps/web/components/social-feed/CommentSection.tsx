@@ -102,7 +102,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
     }
   };
 
-  if (!session) {
+  if (!session?.user) {
     return <div className="text-center text-white/60">Sign in to comment</div>;
   }
 
