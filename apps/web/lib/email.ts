@@ -40,6 +40,10 @@ const DEFAULT_FROM = process.env.EMAIL_FROM || 'CronkWaters <onboarding@resend.d
 const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
+// Resend test mode: can only send to verified emails when using onboarding@resend.dev
+const RESEND_TEST_MODE =
+  !process.env.EMAIL_FROM?.includes('@') || process.env.EMAIL_FROM?.includes('@resend.dev');
+
 export interface EmailOptions {
   to: string | string[];
   subject: string;
