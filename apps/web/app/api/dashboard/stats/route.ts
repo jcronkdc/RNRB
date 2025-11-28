@@ -1,11 +1,14 @@
 /**
  * Dashboard Stats API
  * Returns real-time statistics for the authenticated user
+ * Including weekly progress and activity streaks
  */
 
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
+
 import { prisma } from '@cronkwaters/db';
+
+import { auth } from '@/auth';
 
 // Subscription tier storage limits (in bytes)
 const STORAGE_LIMITS: Record<string, number> = {
@@ -14,18 +17,74 @@ const STORAGE_LIMITS: Record<string, number> = {
   studio: 100 * 1024 * 1024 * 1024, // 100 GB
 };
 
+/**
+ * Calculate activity streak (consecutive days with activity)
+ */
+async function calculateStreak(userId: string): Promise<number> {
+  // Get all unique dates with activity in the last 60 days
+  const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+
+  const [songs, messages] = await Promise.all([
+    // Songs created or updated
+    prisma.song.findMany({
+      where: {
+        OR: [{ userId }, { collaborators: { some: { userId } } }],
+        updatedAt: { gte: sixtyDaysAgo },
+      },
+      select: { updatedAt: true, createdAt: true },
+    }),
+    // Chat messages sent
+    prisma.chatMessage.findMany({
+      where: {
+        senderId: userId,
+        createdAt: { gte: sixtyDaysAgo },
+      },
+      select: { createdAt: true },
+    }),
+  ]);
+
+  // Collect all activity dates
+  const activityDates = new Set<string>();
+
+  songs.forEach((song) => {
+    activityDates.add(song.updatedAt.toISOString().split('T')[0]);
+    activityDates.add(song.createdAt.toISOString().split('T')[0]);
+  });
+
+  messages.forEach((msg) => {
+    activityDates.add(msg.createdAt.toISOString().split('T')[0]);
+  });
+
+  // Calculate streak from today backwards
+  let streak = 0;
+  const today = new Date();
+
+  for (let i = 0; i < 60; i++) {
+    const checkDate = new Date(today);
+    checkDate.setDate(today.getDate() - i);
+    const dateStr = checkDate.toISOString().split('T')[0];
+
+    if (activityDates.has(dateStr)) {
+      streak++;
+    } else if (i > 0) {
+      // Allow skipping today if no activity yet, but break on other gaps
+      break;
+    }
+  }
+
+  return streak;
+}
+
 export async function GET() {
   try {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const userId = session.user.id;
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
     // Run all queries in parallel for speed
     const [
@@ -34,6 +93,8 @@ export async function GET() {
       songCount,
       collaboratorCount,
       recentActivityCount,
+      thisWeekSongs,
+      streak,
     ] = await Promise.all([
       // Get user with storage and subscription info
       prisma.user.findUnique({
@@ -48,20 +109,14 @@ export async function GET() {
       // Count projects where user is owner or member
       prisma.project.count({
         where: {
-          OR: [
-            { org: { memberships: { some: { userId } } } },
-            { members: { some: { userId } } },
-          ],
+          OR: [{ org: { memberships: { some: { userId } } } }, { members: { some: { userId } } }],
         },
       }),
 
       // Count songs owned by user or where user is collaborator
       prisma.song.count({
         where: {
-          OR: [
-            { userId },
-            { collaborators: { some: { userId } } },
-          ],
+          OR: [{ userId }, { collaborators: { some: { userId } } }],
           archived: false,
         },
       }),
@@ -70,29 +125,32 @@ export async function GET() {
       prisma.songCollaborator.count({
         where: {
           song: { userId },
-          userId: { not: userId }, // Don't count self
+          userId: { not: userId },
         },
       }),
 
       // Count recent activity (songs updated in last 7 days)
       prisma.song.count({
         where: {
-          OR: [
-            { userId },
-            { collaborators: { some: { userId } } },
-          ],
-          updatedAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-          },
+          OR: [{ userId }, { collaborators: { some: { userId } } }],
+          updatedAt: { gte: oneWeekAgo },
         },
       }),
+
+      // Count songs created this week
+      prisma.song.count({
+        where: {
+          userId,
+          createdAt: { gte: oneWeekAgo },
+        },
+      }),
+
+      // Calculate activity streak
+      calculateStreak(userId),
     ]);
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     // Calculate storage
@@ -101,9 +159,20 @@ export async function GET() {
     const bonusGB = Number(user.storageBonusGB) || 0;
     const bonusBytes = bonusGB * 1024 * 1024 * 1024;
     const totalStorage = baseLimit + bonusBytes;
-    
+
     const usedGB = Number(user.storageUsedGB) || 0;
     const usedBytes = usedGB * 1024 * 1024 * 1024;
+
+    // Calculate this week hours from chat/collab activity (approximation)
+    const thisWeekMessages = await prisma.chatMessage.count({
+      where: {
+        senderId: userId,
+        createdAt: { gte: oneWeekAgo },
+      },
+    });
+
+    // Estimate hours: ~5 messages per hour of active collaboration
+    const thisWeekHours = Math.round(thisWeekMessages / 5);
 
     return NextResponse.json({
       projectCount,
@@ -113,13 +182,13 @@ export async function GET() {
       storageUsed: usedBytes,
       storageTotal: totalStorage,
       subscriptionTier: tier,
+      // Weekly stats
+      thisWeekSongs,
+      thisWeekHours,
+      streakDays: streak,
     });
   } catch (error) {
     console.error('Dashboard stats error:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch dashboard stats' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
   }
 }
-
