@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { trpc } from '@cronkwaters/trpc/client/react';
+import { MobileMenuButton } from './sidebar-nav';
 
 // Dynamically import NotificationBell to avoid SSR issues
 const NotificationBell = dynamic(
@@ -68,53 +69,58 @@ export function TopBar() {
 
   return (
     <header
-      className="fixed left-0 right-0 top-0 z-30 h-14 backdrop-blur-xl"
+      className="fixed left-0 right-0 top-0 z-30 h-14 backdrop-blur-xl lg:ml-[260px]"
       style={{
         background: 'rgba(30, 30, 30, 0.8)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        marginLeft: '260px',
       }}
     >
-      <div className="flex h-full items-center justify-between px-6">
-        {/* Left Section - Search */}
-        <div className="flex flex-1 items-center gap-4">
+      <div className="flex h-full items-center justify-between px-4 lg:px-6">
+        {/* Left Section - Mobile Menu + Search */}
+        <div className="flex flex-1 items-center gap-2 lg:gap-4">
+          {/* Mobile Menu Button */}
+          <MobileMenuButton />
+
+          {/* Search - Hidden on small screens, icon only on medium */}
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="group flex items-center gap-2 rounded-xl px-4 py-2 transition-all hover:bg-white/5"
+            className="group flex items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-white/5 lg:px-4"
             style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
           >
             <Search className="h-4 w-4 text-gray-400 group-hover:text-white" />
-            <span className="text-sm text-gray-400 group-hover:text-white">Search</span>
-            <div className="ml-8 flex items-center gap-1 opacity-50">
+            <span className="hidden text-sm text-gray-400 group-hover:text-white sm:inline">
+              Search
+            </span>
+            <div className="ml-2 hidden items-center gap-1 opacity-50 lg:ml-8 lg:flex">
               <Command className="h-3 w-3" />
               <span className="text-xs">K</span>
             </div>
           </button>
 
-          {/* Quick Create Button */}
+          {/* Quick Create Button - Condensed on mobile */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/create')}
-            className="flex items-center gap-2 rounded-xl px-4 py-2 font-medium text-white"
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
               boxShadow: '0 4px 12px rgba(255, 99, 71, 0.3)',
             }}
           >
             <Plus className="h-4 w-4" />
-            <span className="text-sm">New</span>
-            <Sparkles className="h-3 w-3" />
+            <span className="hidden text-sm sm:inline">New</span>
+            <Sparkles className="hidden h-3 w-3 lg:block" />
           </motion.button>
         </div>
 
         {/* Right Section - Credits, Notifications, Profile */}
-        <div className="flex items-center gap-3">
-          {/* Credits Display - Enhanced */}
+        <div className="flex items-center gap-2 lg:gap-3">
+          {/* Credits Display - Enhanced, hidden on very small screens */}
           <motion.button
             whileHover={{ scale: 1.02 }}
             onClick={() => router.push('/credits')}
-            className="group flex items-center gap-2 rounded-xl px-4 py-2 transition-all hover:bg-white/5"
+            className="group hidden items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-white/5 sm:flex lg:px-4"
             style={{
               border: '1px solid rgba(255, 255, 255, 0.1)',
               background: 'rgba(255, 99, 71, 0.1)',
@@ -127,7 +133,7 @@ export function TopBar() {
           >
             <Zap className={`h-4 w-4 ${creditsColor}`} />
             <span className={`text-sm font-medium ${creditsColor}`}>{creditsDisplay}</span>
-            <span className="text-xs text-gray-400">credits</span>
+            <span className="hidden text-xs text-gray-400 lg:inline">credits</span>
           </motion.button>
 
           {/* Notifications - Use actual NotificationBell component */}
@@ -137,7 +143,7 @@ export function TopBar() {
           <div className="relative">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 rounded-xl px-3 py-1.5 transition-all hover:bg-white/5"
+              className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition-all hover:bg-white/5 lg:px-3"
               style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
             >
               {user?.image ? (
@@ -158,11 +164,11 @@ export function TopBar() {
                   <User className="h-5 w-5 text-white" />
                 </div>
               )}
-              <span className="max-w-[120px] truncate text-sm font-medium text-white">
+              <span className="hidden max-w-[120px] truncate text-sm font-medium text-white sm:block">
                 {user?.name || user?.email?.split('@')[0] || 'Artist'}
               </span>
               <ChevronDown
-                className={`h-4 w-4 text-gray-400 transition-transform ${profileOpen ? 'rotate-180' : ''}`}
+                className={`hidden h-4 w-4 text-gray-400 transition-transform sm:block ${profileOpen ? 'rotate-180' : ''}`}
               />
             </button>
 
@@ -296,15 +302,6 @@ export function TopBar() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Responsive styles */}
-      <style jsx>{`
-        @media (max-width: 1024px) {
-          header {
-            margin-left: 0 !important;
-          }
-        }
-      `}</style>
     </header>
   );
 }

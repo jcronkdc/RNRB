@@ -52,6 +52,7 @@ const envSchema = z.object({
 
   // AI (required for AI features)
   ANTHROPIC_API_KEY: z.string().min(20, 'ANTHROPIC_API_KEY appears invalid').optional(),
+  REPLICATE_API_TOKEN: z.string().startsWith('r8_').optional(),
 
   // Realtime (Ably)
   ABLY_API_KEY: z.string().optional(),
@@ -101,6 +102,7 @@ function getValidatedEnv(): Env {
       STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
       STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
       ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+      REPLICATE_API_TOKEN: process.env.REPLICATE_API_TOKEN,
       ABLY_API_KEY: process.env.ABLY_API_KEY,
       NEXT_PUBLIC_ABLY_API_KEY: process.env.NEXT_PUBLIC_ABLY_API_KEY,
       DAILY_API_KEY: process.env.DAILY_API_KEY,
@@ -164,6 +166,7 @@ export const env = getValidatedEnv();
  */
 export const features = {
   ai: !!env.ANTHROPIC_API_KEY,
+  aiMusic: !!env.REPLICATE_API_TOKEN,
   payments: !!env.STRIPE_SECRET_KEY,
   realtime: !!env.ABLY_API_KEY,
   video: !!env.DAILY_API_KEY,
