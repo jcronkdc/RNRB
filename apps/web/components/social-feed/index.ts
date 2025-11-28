@@ -8,3 +8,4 @@ export { ReactionPicker } from './ReactionPicker';
 export { CommentSection } from './CommentSection';
 export { FeedRealtime } from './FeedRealtime';
 export { TrendingSidebar } from './TrendingSidebar';
+export { SearchModal } from './SearchModal';
