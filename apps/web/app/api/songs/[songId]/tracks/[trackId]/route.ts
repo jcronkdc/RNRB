@@ -1,8 +1,44 @@
+import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+import { prisma } from '@cronkwaters/db';
+
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+
+// Server-side Supabase client for storage operations
+function getSupabaseStorageClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    return null;
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey);
+}
+
+// Delete file from Supabase Storage
+async function deleteAudioFromStorage(audioPath: string): Promise<boolean> {
+  const supabase = getSupabaseStorageClient();
+  if (!supabase) {
+    console.warn('Supabase not configured, skipping file deletion');
+    return false;
+  }
+
+  try {
+    const { error } = await supabase.storage.from('audio-files').remove([audioPath]);
+    if (error) {
+      console.error('Failed to delete audio file:', error);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('Error deleting from storage:', error);
+    return false;
+  }
+}
 
 // Validation schema for track updates
 const updateTrackSchema = z.object({
@@ -12,7 +48,10 @@ const updateTrackSchema = z.object({
   solo: z.boolean().optional(),
   mute: z.boolean().optional(),
   order: z.number().int().min(0).optional(),
-  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .optional(),
 });
 
 /**
@@ -106,10 +145,7 @@ export async function PATCH(
 
     // Check if there's anything to update
     if (Object.keys(validatedData).length === 0) {
-      return NextResponse.json(
-        { error: 'No valid fields provided for update' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'No valid fields provided for update' }, { status: 400 });
     }
 
     // Check access
@@ -133,8 +169,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Song not found' }, { status: 404 });
     }
 
-    const canEdit =
-      song.userId === userId || (song.project && song.project.members.length > 0);
+    const canEdit = song.userId === userId || (song.project && song.project.members.length > 0);
 
     if (!canEdit) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -175,7 +210,7 @@ export async function PATCH(
     });
   } catch (error) {
     console.error('PATCH /api/songs/[songId]/tracks/[trackId] error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
@@ -235,8 +270,7 @@ export async function DELETE(
     }
 
     // Only song owner or project admin can delete
-    const canDelete =
-      song.userId === userId || (song.project && song.project.members.length > 0);
+    const canDelete = song.userId === userId || (song.project && song.project.members.length > 0);
 
     if (!canDelete) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -255,20 +289,47 @@ export async function DELETE(
       );
     }
 
-    // Delete track
+    // Delete audio file from storage if it exists
+    let storageDeleted = false;
+    if (track.audioPath) {
+      storageDeleted = await deleteAudioFromStorage(track.audioPath);
+
+      // Update user's storage usage if file was deleted
+      if (storageDeleted) {
+        // Get file size from track metadata if available, or estimate
+        try {
+          const trackData = await db.songTrack.findUnique({
+            where: { id: trackId },
+            select: { fileSize: true, uploadedById: true },
+          });
+
+          if (trackData?.uploadedById && trackData.fileSize) {
+            const fileSizeGB = Number(trackData.fileSize) / (1024 * 1024 * 1024);
+            await prisma.user.update({
+              where: { id: trackData.uploadedById },
+              data: {
+                storageUsedGB: {
+                  decrement: Math.max(0, fileSizeGB),
+                },
+              },
+            });
+          }
+        } catch (error) {
+          console.warn('Failed to update storage usage:', error);
+        }
+      }
+    }
+
+    // Delete track from database
     await db.songTrack.delete({
       where: { id: trackId },
     });
-
-    // TODO: Delete audio file from storage (Supabase Storage)
-    // if (track.audioPath) {
-    //   await deleteFromStorage(track.audioPath);
-    // }
 
     return NextResponse.json({
       success: true,
       message: 'Track deleted successfully',
       trackId,
+      storageDeleted,
     });
   } catch (error) {
     console.error('DELETE /api/songs/[songId]/tracks/[trackId] error:', error);
@@ -281,4 +342,3 @@ export async function DELETE(
     );
   }
 }
-
