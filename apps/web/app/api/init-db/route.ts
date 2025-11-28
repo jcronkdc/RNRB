@@ -57,15 +57,23 @@ export async function GET() {
       ON "PasswordResetToken"("expiresAt")
     `;
 
-    // Add foreign key constraint
-    await prisma.$executeRaw`
-      ALTER TABLE "PasswordResetToken" 
-      ADD CONSTRAINT IF NOT EXISTS "PasswordResetToken_userId_fkey" 
-      FOREIGN KEY ("userId") 
-      REFERENCES "User"("id") 
-      ON DELETE CASCADE 
-      ON UPDATE CASCADE
+    // Add foreign key constraint (check if it exists first)
+    const fkCheck = await prisma.$queryRaw<{ exists: boolean }[]>`
+      SELECT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'PasswordResetToken_userId_fkey'
+      )
     `;
+
+    if (!fkCheck[0]?.exists) {
+      await prisma.$executeRaw`
+        ALTER TABLE "PasswordResetToken" 
+        ADD CONSTRAINT "PasswordResetToken_userId_fkey" 
+        FOREIGN KEY ("userId") 
+        REFERENCES "User"("id") 
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE
+      `;
+    }
 
     return NextResponse.json({
       success: true,
