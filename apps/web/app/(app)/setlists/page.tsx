@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRequireAuth } from '@/hooks/use-require-auth';
+import { useSetlistAccess } from '@/hooks/use-subscription';
 import { UpgradeModal, useUpgradeModal } from '@/components/upgrade-modal';
 
 interface Setlist {
@@ -43,17 +44,20 @@ interface Setlist {
 export default function SetlistsPage() {
   const { user, loading } = useRequireAuth();
   const { isOpen, showUpgradeModal, hideUpgradeModal, modalProps } = useUpgradeModal();
+  const { hasAccess, isLoading: isLoadingSubscription } = useSetlistAccess();
   const [setlists, setSetlists] = useState<Setlist[]>([]);
   const [isLoadingSetlists, setIsLoadingSetlists] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
-    // TODO: Fetch user subscription status
-    setHasAccess(false);
+    // Fetch user's setlists if they have access
+    if (hasAccess) {
+      // TODO: Fetch actual setlists from API
+      setSetlists([]);
+    }
     setIsLoadingSetlists(false);
-  }, [user]);
+  }, [user, hasAccess]);
 
   // Mock data for preview
   const mockSetlists: Setlist[] = [
@@ -102,17 +106,23 @@ export default function SetlistsPage() {
 
   const getEnergyColor = (level: Setlist['energyLevel']) => {
     switch (level) {
-      case 'high': return 'from-red-500 to-orange-500';
-      case 'mixed': return 'from-purple-500 to-pink-500';
-      case 'mellow': return 'from-blue-500 to-cyan-500';
+      case 'high':
+        return 'from-red-500 to-orange-500';
+      case 'mixed':
+        return 'from-purple-500 to-pink-500';
+      case 'mellow':
+        return 'from-blue-500 to-cyan-500';
     }
   };
 
   const getEnergyIcon = (level: Setlist['energyLevel']) => {
     switch (level) {
-      case 'high': return Zap;
-      case 'mixed': return Activity;
-      case 'mellow': return Music2;
+      case 'high':
+        return Zap;
+      case 'mixed':
+        return Activity;
+      case 'mellow':
+        return Music2;
     }
   };
 
@@ -198,7 +208,7 @@ export default function SetlistsPage() {
                   whileTap={{ scale: 0.95 }}
                   className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:shadow-2xl hover:shadow-orange-500/40"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:animate-shimmer group-hover:opacity-100" />
+                  <div className="group-hover:animate-shimmer absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
                   <div className="relative flex items-center gap-2">
                     <Plus className="h-5 w-5" />
                     <span>Generate Setlist</span>
@@ -294,8 +304,12 @@ export default function SetlistsPage() {
                   whileHover={{ y: -4, scale: 1.02 }}
                   className="group relative overflow-hidden rounded-xl border border-gray-800 bg-gray-900/50 p-6 backdrop-blur-sm transition-all hover:border-gray-700"
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 transition-opacity group-hover:opacity-10`} />
-                  <div className={`mb-3 inline-flex rounded-lg bg-gradient-to-br ${benefit.color} p-3`}>
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 transition-opacity group-hover:opacity-10`}
+                  />
+                  <div
+                    className={`mb-3 inline-flex rounded-lg bg-gradient-to-br ${benefit.color} p-3`}
+                  >
                     <benefit.icon className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="mb-2 font-bold text-white">{benefit.title}</h3>
@@ -316,7 +330,7 @@ export default function SetlistsPage() {
                 whileTap={{ scale: 0.98 }}
                 className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-8 py-4 font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:shadow-2xl hover:shadow-orange-500/40"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:animate-shimmer group-hover:opacity-100" />
+                <div className="group-hover:animate-shimmer absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
                 <span className="relative flex items-center gap-2">
                   Upgrade to Creator
                   <span className="text-sm opacity-80">from $9.99/mo</span>
@@ -402,7 +416,9 @@ export default function SetlistsPage() {
                       {/* Header */}
                       <div className="mb-4 flex items-start justify-between">
                         <div className="flex items-center gap-3">
-                          <div className={`rounded-xl bg-gradient-to-br ${energyColor} p-3 shadow-lg`}>
+                          <div
+                            className={`rounded-xl bg-gradient-to-br ${energyColor} p-3 shadow-lg`}
+                          >
                             <EnergyIcon className="h-6 w-6 text-white" />
                           </div>
                           <div>
@@ -417,10 +433,10 @@ export default function SetlistsPage() {
                       {/* Details */}
                       <div className="mb-4 space-y-3">
                         {setlist.showDate && (
-                            <div className="flex items-center gap-2 text-sm text-gray-400">
-                              <Calendar className="h-4 w-4 text-orange-500" />
-                              <span>{formatDateWithDay(setlist.showDate)}</span>
-                            </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-400">
+                            <Calendar className="h-4 w-4 text-orange-500" />
+                            <span>{formatDateWithDay(setlist.showDate)}</span>
+                          </div>
                         )}
                         <div className="flex items-center gap-2 text-sm text-gray-400">
                           <Clock className="h-4 w-4 text-orange-500" />
@@ -435,7 +451,9 @@ export default function SetlistsPage() {
 
                       {/* Energy Badge */}
                       <div className="mb-4">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${energyColor} px-3 py-1 text-xs font-bold text-white`}>
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${energyColor} px-3 py-1 text-xs font-bold text-white`}
+                        >
                           <Activity className="h-3 w-3" />
                           {setlist.energyLevel.toUpperCase()} ENERGY
                         </span>
@@ -473,8 +491,12 @@ export default function SetlistsPage() {
       {/* Add custom shimmer animation */}
       <style jsx global>{`
         @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
         }
         .animate-shimmer {
           animation: shimmer 2s infinite;
