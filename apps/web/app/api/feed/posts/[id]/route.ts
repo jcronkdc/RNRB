@@ -6,10 +6,10 @@ import { prisma } from '@cronkwaters/db';
  * GET /api/feed/posts/[id]
  * Get a single post by ID
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
-    const postId = params.id;
+    const { id: postId } = await params;
 
     const post = await prisma.post.findUnique({
       where: { id: postId, isDeleted: false },
@@ -127,14 +127,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * PATCH /api/feed/posts/[id]
  * Update a post (must be the author)
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const postId = params.id;
+    const { id: postId } = await params;
     const userId = session.user.id;
     const body = await request.json();
 
@@ -207,14 +207,17 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  * DELETE /api/feed/posts/[id]
  * Soft delete a post (must be the author)
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const postId = params.id;
+    const { id: postId } = await params;
     const userId = session.user.id;
 
     // Check ownership

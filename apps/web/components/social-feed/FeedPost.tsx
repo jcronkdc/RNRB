@@ -36,8 +36,18 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
   const isOwnPost = session?.user?.id === localPost.userId;
   const isRepost = localPost.originalPostId !== null;
 
-  // Handle reaction
+  // Handle reaction with optimistic update
   const handleReaction = async (emoji: string) => {
+    const wasReacted = localPost.currentUserReaction === emoji;
+    const previousState = { ...localPost };
+
+    // Optimistic update
+    setLocalPost((prev: any) => ({
+      ...prev,
+      likeCount: wasReacted ? prev.likeCount - 1 : prev.likeCount + 1,
+      currentUserReaction: wasReacted ? null : emoji,
+    }));
+
     try {
       const response = await fetch('/api/feed/reactions', {
         method: 'POST',
@@ -48,26 +58,55 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-
-        // Update local state
-        setLocalPost((prev: any) => ({
-          ...prev,
-          likeCount: data.action === 'added' ? prev.likeCount + 1 : prev.likeCount - 1,
-          currentUserReaction: data.action === 'added' ? emoji : null,
-        }));
+      if (!response.ok) {
+        // Revert on error
+        setLocalPost(previousState);
       }
     } catch (error) {
       console.error('Error reacting:', error);
+      setLocalPost(previousState);
     }
   };
 
-  // Handle bookmark
-  const handleBookmark = async () => {
+  // Track audio play
+  const handleAudioPlay = async (duration?: number, completed?: boolean) => {
     try {
-      const method = localPost.currentUserBookmarked ? 'DELETE' : 'POST';
-      const url = localPost.currentUserBookmarked
+      await fetch('/api/feed/plays', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId: localPost.id,
+          duration,
+          completed,
+        }),
+      });
+
+      // Update play count optimistically
+      if (!duration) {
+        setLocalPost((prev: any) => ({
+          ...prev,
+          playCount: prev.playCount + 1,
+        }));
+      }
+    } catch (error) {
+      console.error('Error tracking play:', error);
+    }
+  };
+
+  // Handle bookmark with optimistic update
+  const handleBookmark = async () => {
+    const wasBookmarked = localPost.currentUserBookmarked;
+    const previousState = { ...localPost };
+
+    // Optimistic update
+    setLocalPost((prev: any) => ({
+      ...prev,
+      currentUserBookmarked: !prev.currentUserBookmarked,
+    }));
+
+    try {
+      const method = wasBookmarked ? 'DELETE' : 'POST';
+      const url = wasBookmarked
         ? `/api/feed/bookmarks?postId=${localPost.id}`
         : '/api/feed/bookmarks';
 
@@ -79,14 +118,12 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
         }),
       });
 
-      if (response.ok) {
-        setLocalPost((prev: any) => ({
-          ...prev,
-          currentUserBookmarked: !prev.currentUserBookmarked,
-        }));
+      if (!response.ok) {
+        setLocalPost(previousState);
       }
     } catch (error) {
       console.error('Error bookmarking:', error);
+      setLocalPost(previousState);
     }
   };
 
@@ -182,7 +219,10 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
               )}
             </div>
           </div>
-          <WaveformPlayer audioUrl={localPost.audioUrl} waveformData={localPost.waveformData} />
+          <WaveformPlayer
+            audioUrl={localPost.audioUrl}
+            audioName={localPost.content || 'Audio Post'}
+          />
           {(localPost.genre || localPost.mood || localPost.bpm) && (
             <div className="mt-3 flex flex-wrap gap-2">
               {localPost.genre && (

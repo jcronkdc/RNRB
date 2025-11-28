@@ -30,6 +30,10 @@ import {
   Cloud,
   FileText,
   BarChart3,
+  HelpCircle,
+  AlertCircle,
+  Wifi,
+  WifiOff,
 } from 'lucide-react';
 import { DomainSettings } from '@/components/site-builder/DomainSettings';
 import { DraggableSections } from '@/components/site-builder/DraggableSections';
@@ -40,6 +44,8 @@ import { SEOPreview } from '@/components/site-builder/SEOPreview';
 import { PageManager } from '@/components/site-builder/PageManager';
 import { ResponsiveTesting } from '@/components/site-builder/ResponsiveTesting';
 import { SectionEditor } from '@/components/site-builder/SectionEditor';
+import { KeyboardShortcutsHelp } from '@/components/site-builder/KeyboardShortcutsHelp';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 
 interface SiteSection {
   id: string;
@@ -88,10 +94,131 @@ function SiteEditorContent() {
   const [history, setHistory] = useState<Site[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [editingSection, setEditingSection] = useState<SiteSection | null>(null);
+  const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSite();
   }, []);
+
+  // Online/offline detection
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      setSaveError(null);
+    };
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  // Initialize history when site loads
+  useEffect(() => {
+    if (site && history.length === 0) {
+      setHistory([JSON.parse(JSON.stringify(site))]);
+      setHistoryIndex(0);
+    }
+  }, [site, history.length]);
+
+  // Save to history when site changes
+  const saveToHistory = useCallback(() => {
+    if (!site) return;
+
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(site)));
+
+    // Limit history to 50 entries
+    if (newHistory.length > 50) {
+      newHistory.shift();
+    } else {
+      setHistoryIndex((prev) => prev + 1);
+    }
+
+    setHistory(newHistory);
+  }, [site, history, historyIndex]);
+
+  // Undo handler
+  const handleUndo = useCallback(() => {
+    if (historyIndex > 0) {
+      setHistoryIndex((prev) => prev - 1);
+      setSite(JSON.parse(JSON.stringify(history[historyIndex - 1])));
+      setHasChanges(true);
+      setPreviewRefreshKey((k) => k + 1);
+    }
+  }, [history, historyIndex]);
+
+  // Redo handler
+  const handleRedo = useCallback(() => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex((prev) => prev + 1);
+      setSite(JSON.parse(JSON.stringify(history[historyIndex + 1])));
+      setHasChanges(true);
+      setPreviewRefreshKey((k) => k + 1);
+    }
+  }, [history, historyIndex]);
+
+  // Refresh preview handler
+  const handleRefreshPreview = useCallback(() => {
+    setPreviewRefreshKey((k) => k + 1);
+  }, []);
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      key: 's',
+      ctrl: true,
+      description: 'Save changes',
+      callback: () => {
+        if (hasChanges && !isSaving) {
+          handleSave();
+        }
+      },
+    },
+    {
+      key: 'z',
+      ctrl: true,
+      shift: false,
+      description: 'Undo',
+      callback: handleUndo,
+    },
+    {
+      key: 'z',
+      ctrl: true,
+      shift: true,
+      description: 'Redo',
+      callback: handleRedo,
+    },
+    {
+      key: 'p',
+      ctrl: true,
+      description: 'Toggle preview',
+      callback: () => setShowPreview((prev) => !prev),
+    },
+    {
+      key: 'r',
+      ctrl: true,
+      description: 'Refresh preview',
+      callback: handleRefreshPreview,
+    },
+    {
+      key: 'e',
+      ctrl: true,
+      description: 'Toggle editor',
+      callback: () => setShowPreview((prev) => !prev),
+    },
+    {
+      key: '?',
+      description: 'Show keyboard shortcuts',
+      callback: () => setShowShortcutsHelp(true),
+    },
+  ]);
 
   // Auto-save effect
   useEffect(() => {
@@ -140,6 +267,7 @@ function SiteEditorContent() {
   const handleSave = async () => {
     if (!site) return;
     setIsSaving(true);
+    setSaveError(null);
 
     try {
       const response = await fetch('/api/sites', {
@@ -162,10 +290,15 @@ function SiteEditorContent() {
         setLastSaved(new Date());
         setSaveMessage('Saved!');
         setPreviewRefreshKey((k) => k + 1);
+        saveToHistory();
         setTimeout(() => setSaveMessage(''), 2000);
+      } else {
+        throw new Error('Save failed');
       }
-    } catch {
+    } catch (error) {
+      setSaveError('Failed to save. Check your connection.');
       setSaveMessage('Error saving');
+      setTimeout(() => setSaveMessage(''), 3000);
     } finally {
       setIsSaving(false);
     }
@@ -420,7 +553,12 @@ function SiteEditorContent() {
         <div className="flex items-center gap-3">
           {/* Auto-save indicator */}
           <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--muted)' }}>
-            {autoSaveEnabled ? (
+            {!isOnline ? (
+              <>
+                <WifiOff size={14} className="text-red-400" />
+                <span className="text-red-400">Offline</span>
+              </>
+            ) : autoSaveEnabled ? (
               <>
                 <Cloud size={14} className="text-green-400" />
                 <span>{hasChanges ? 'Saving...' : formatLastSaved() || 'Auto-save on'}</span>
@@ -433,12 +571,54 @@ function SiteEditorContent() {
             )}
           </div>
 
-          {saveMessage && (
+          {saveError && (
+            <span className="flex items-center gap-1 text-xs text-red-400">
+              <AlertCircle size={14} />
+              {saveError}
+            </span>
+          )}
+
+          {saveMessage && !saveError && (
             <span className="flex items-center gap-1 text-sm text-green-400">
               <Check size={14} />
               {saveMessage}
             </span>
           )}
+
+          {/* Undo/Redo Buttons */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleUndo}
+              disabled={historyIndex <= 0}
+              className="rounded-lg p-2 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+              style={{ color: 'var(--muted)' }}
+              title="Undo (Cmd/Ctrl+Z)"
+            >
+              <Undo size={16} />
+            </button>
+            <button
+              onClick={handleRedo}
+              disabled={historyIndex >= history.length - 1}
+              className="rounded-lg p-2 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+              style={{ color: 'var(--muted)' }}
+              title="Redo (Cmd/Ctrl+Shift+Z)"
+            >
+              <Redo size={16} />
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div className="h-6 w-px" style={{ background: 'var(--border)' }} />
+
+          {/* Help Button */}
+          <button
+            onClick={() => setShowShortcutsHelp(true)}
+            className="rounded-lg p-2 transition-colors hover:bg-white/10"
+            style={{ color: 'var(--muted)' }}
+            title="Keyboard Shortcuts (?)"
+          >
+            <HelpCircle size={16} />
+          </button>
 
           {/* Toggle Preview Button */}
           <button
@@ -449,7 +629,7 @@ function SiteEditorContent() {
               color: showPreview ? '#fff' : 'var(--muted)',
               border: showPreview ? 'none' : '1px solid var(--border)',
             }}
-            title={showPreview ? 'Hide Preview' : 'Show Preview'}
+            title={showPreview ? 'Hide Preview (Cmd/Ctrl+P)' : 'Show Preview (Cmd/Ctrl+P)'}
           >
             {showPreview ? <PanelLeftClose size={16} /> : <PanelLeft size={16} />}
             Preview
@@ -457,13 +637,14 @@ function SiteEditorContent() {
 
           <button
             onClick={handleSave}
-            disabled={isSaving || !hasChanges}
+            disabled={isSaving || !hasChanges || !isOnline}
             className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50"
             style={{
               background: hasChanges ? 'var(--accent)' : 'var(--bg)',
               color: hasChanges ? '#fff' : 'var(--muted)',
               border: hasChanges ? 'none' : '1px solid var(--border)',
             }}
+            title="Save (Cmd/Ctrl+S)"
           >
             {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             Save
@@ -598,6 +779,12 @@ function SiteEditorContent() {
         isOpen={editingSection !== null}
         onClose={() => setEditingSection(null)}
         onSave={handleSaveSection}
+      />
+
+      {/* Keyboard Shortcuts Help */}
+      <KeyboardShortcutsHelp
+        isOpen={showShortcutsHelp}
+        onClose={() => setShowShortcutsHelp(false)}
       />
     </div>
   );

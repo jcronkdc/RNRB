@@ -1,18 +1,38 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { Image as ImageIcon, Music, Globe, Users, Lock, X, Loader2, Send } from 'lucide-react';
+import {
+  Image as ImageIcon,
+  Music,
+  Globe,
+  Users,
+  Lock,
+  X,
+  Loader2,
+  Send,
+  Link as LinkIcon,
+  Hash,
+  AtSign,
+} from 'lucide-react';
 import Image from 'next/image';
 
 interface PostComposerProps {
   onPostCreated: (post: any) => void;
 }
 
+interface LinkPreview {
+  title: string | null;
+  description: string | null;
+  image: string | null;
+  siteName: string | null;
+  url: string;
+}
+
 export function PostComposer({ onPostCreated }: PostComposerProps) {
   const { data: session } = useSession();
   const [content, setContent] = useState('');
-  const [contentType, setContentType] = useState<'text' | 'audio' | 'image'>('text');
+  const [contentType, setContentType] = useState<'text' | 'audio' | 'image' | 'link'>('text');
   const [visibility, setVisibility] = useState<'public' | 'friends' | 'private'>('public');
   const [uploading, setUploading] = useState(false);
   const [posting, setPosting] = useState(false);
@@ -23,13 +43,92 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
+  // Link preview state
+  const [linkUrl, setLinkUrl] = useState<string | null>(null);
+  const [linkPreview, setLinkPreview] = useState<LinkPreview | null>(null);
+  const [fetchingPreview, setFetchingPreview] = useState(false);
+
   // Audio metadata
   const [genre, setGenre] = useState('');
   const [mood, setMood] = useState('');
   const [bpm, setBpm] = useState('');
 
+  // Extracted tags
+  const [extractedTags, setExtractedTags] = useState<string[]>([]);
+  const [extractedMentions, setExtractedMentions] = useState<string[]>([]);
+
   const audioInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const linkFetchTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  // Extract hashtags and mentions from content
+  useEffect(() => {
+    const hashtagRegex = /#(\w+)/g;
+    const mentionRegex = /@(\w+)/g;
+
+    const hashtags: string[] = [];
+    const mentions: string[] = [];
+
+    let match;
+    while ((match = hashtagRegex.exec(content)) !== null) {
+      if (!hashtags.includes(match[1])) hashtags.push(match[1]);
+    }
+    while ((match = mentionRegex.exec(content)) !== null) {
+      if (!mentions.includes(match[1])) mentions.push(match[1]);
+    }
+
+    setExtractedTags(hashtags);
+    setExtractedMentions(mentions);
+  }, [content]);
+
+  // Auto-detect and fetch link previews
+  const fetchLinkPreview = useCallback(
+    async (url: string) => {
+      setFetchingPreview(true);
+      try {
+        const response = await fetch('/api/feed/link-preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setLinkUrl(url);
+          setLinkPreview(data.preview);
+          if (contentType === 'text') setContentType('link');
+        }
+      } catch (error) {
+        console.error('Error fetching link preview:', error);
+      } finally {
+        setFetchingPreview(false);
+      }
+    },
+    [contentType]
+  );
+
+  // Debounced URL detection in content
+  useEffect(() => {
+    if (linkFetchTimeout.current) {
+      clearTimeout(linkFetchTimeout.current);
+    }
+
+    // Don't auto-fetch if we already have media
+    if (audioUrl || imageFiles.length > 0 || linkPreview) return;
+
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const matches = content.match(urlRegex);
+
+    if (matches && matches.length > 0) {
+      linkFetchTimeout.current = setTimeout(() => {
+        fetchLinkPreview(matches[0]);
+      }, 1000);
+    }
+
+    return () => {
+      if (linkFetchTimeout.current) clearTimeout(linkFetchTimeout.current);
+    };
+  }, [content, audioUrl, imageFiles.length, linkPreview, fetchLinkPreview]);
 
   // Handle audio upload
   const handleAudioUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,13 +227,16 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content,
-          contentType,
+          contentType: linkUrl && !audioUrl && imageUrls.length === 0 ? 'link' : contentType,
           audioUrl,
           audioPath: audioUrl ? `audio-posts/${Date.now()}` : undefined,
           imageUrls,
+          linkUrl: linkUrl || undefined,
+          linkPreview: linkPreview || undefined,
           genre: genre || undefined,
           mood: mood || undefined,
           bpm: bpm ? parseInt(bpm) : undefined,
+          tags: extractedTags,
           visibility,
           allowComments: true,
           allowReactions: true,
@@ -153,6 +255,10 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
       setAudioUrl(null);
       setImageFiles([]);
       setImagePreviews([]);
+      setLinkUrl(null);
+      setLinkPreview(null);
+      setExtractedTags([]);
+      setExtractedMentions([]);
       setGenre('');
       setMood('');
       setBpm('');
@@ -165,7 +271,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
     }
   };
 
-  if (!session) return null;
+  if (!session?.user) return null;
 
   return (
     <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-6 backdrop-blur-xl">
@@ -237,6 +343,83 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
                 <X className="h-4 w-4 text-white" />
               </button>
             </div>
+          ))}
+        </div>
+      )}
+
+      {/* Link Preview */}
+      {(linkPreview || fetchingPreview) && (
+        <div className="mb-4 overflow-hidden rounded-lg border border-white/10 bg-white/5">
+          {fetchingPreview ? (
+            <div className="flex items-center justify-center p-6">
+              <Loader2 className="h-6 w-6 animate-spin text-purple-500" />
+              <span className="ml-2 text-sm text-white/60">Fetching preview...</span>
+            </div>
+          ) : (
+            linkPreview && (
+              <div className="relative">
+                {linkPreview.image && (
+                  <div className="relative aspect-video">
+                    <Image
+                      src={linkPreview.image}
+                      alt={linkPreview.title || 'Link preview'}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-semibold text-white">{linkPreview.title}</p>
+                      {linkPreview.description && (
+                        <p className="mt-1 line-clamp-2 text-sm text-white/60">
+                          {linkPreview.description}
+                        </p>
+                      )}
+                      <p className="mt-2 flex items-center gap-1 text-xs text-purple-400">
+                        <LinkIcon className="h-3 w-3" />
+                        {linkPreview.siteName}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setLinkUrl(null);
+                        setLinkPreview(null);
+                        setContentType('text');
+                      }}
+                      className="ml-2 text-white/40 hover:text-white"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+        </div>
+      )}
+
+      {/* Detected Hashtags & Mentions */}
+      {(extractedTags.length > 0 || extractedMentions.length > 0) && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {extractedTags.map((tag) => (
+            <span
+              key={tag}
+              className="flex items-center gap-1 rounded-full bg-purple-500/20 px-3 py-1 text-xs font-medium text-purple-300"
+            >
+              <Hash className="h-3 w-3" />
+              {tag}
+            </span>
+          ))}
+          {extractedMentions.map((mention) => (
+            <span
+              key={mention}
+              className="flex items-center gap-1 rounded-full bg-pink-500/20 px-3 py-1 text-xs font-medium text-pink-300"
+            >
+              <AtSign className="h-3 w-3" />
+              {mention}
+            </span>
           ))}
         </div>
       )}

@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useAblyClient } from '@/hooks/use-ably-client';
 import { useSession } from 'next-auth/react';
+import type { Types } from 'ably';
 
 interface FeedRealtimeProps {
   onNewPost: (post: any) => void;
@@ -20,43 +21,43 @@ export function FeedRealtime({
   onCommentAdded,
 }: FeedRealtimeProps) {
   const { data: session } = useSession();
-  const ably = useAblyClient();
+  const { client, isConnected } = useAblyClient(session?.user?.id);
 
   useEffect(() => {
-    if (!ably || !session?.user?.id) return;
+    if (!client || !isConnected || !session?.user?.id) return;
 
     // Subscribe to global feed channel
-    const feedChannel = ably.channels.get('feed:public');
+    const feedChannel = client.channels.get('feed:public');
 
     // New post published
-    feedChannel.subscribe('post:created', (message) => {
+    feedChannel.subscribe('post:created', (message: Types.Message) => {
       onNewPost(message.data);
     });
 
     // Post updated
-    feedChannel.subscribe('post:updated', (message) => {
+    feedChannel.subscribe('post:updated', (message: Types.Message) => {
       onPostUpdated(message.data);
     });
 
     // Post deleted
-    feedChannel.subscribe('post:deleted', (message) => {
+    feedChannel.subscribe('post:deleted', (message: Types.Message) => {
       onPostDeleted(message.data.postId);
     });
 
     // Reaction added
-    feedChannel.subscribe('reaction:added', (message) => {
+    feedChannel.subscribe('reaction:added', (message: Types.Message) => {
       onReactionAdded(message.data);
     });
 
     // Comment added
-    feedChannel.subscribe('comment:added', (message) => {
+    feedChannel.subscribe('comment:added', (message: Types.Message) => {
       onCommentAdded(message.data);
     });
 
     // Subscribe to user's following feed
-    const followingChannel = ably.channels.get(`feed:user:${session.user.id}:following`);
+    const followingChannel = client.channels.get(`feed:user:${session.user.id}:following`);
 
-    followingChannel.subscribe('post:created', (message) => {
+    followingChannel.subscribe('post:created', (message: Types.Message) => {
       // Only add if following the author
       onNewPost(message.data);
     });
@@ -67,7 +68,8 @@ export function FeedRealtime({
       followingChannel.unsubscribe();
     };
   }, [
-    ably,
+    client,
+    isConnected,
     session?.user?.id,
     onNewPost,
     onPostUpdated,
@@ -77,21 +79,4 @@ export function FeedRealtime({
   ]);
 
   return null; // This is a headless component
-}
-
-// Helper to publish feed events from API routes
-export async function publishFeedEvent(
-  eventType: 'post:created' | 'post:updated' | 'post:deleted' | 'reaction:added' | 'comment:added',
-  data: any,
-  channelSuffix?: string
-) {
-  const Ably = require('ably');
-
-  const ably = new Ably.Rest({
-    key: process.env.ABLY_API_KEY,
-  });
-
-  const channel = ably.channels.get(channelSuffix ? `feed:${channelSuffix}` : 'feed:public');
-
-  await channel.publish(eventType, data);
 }
