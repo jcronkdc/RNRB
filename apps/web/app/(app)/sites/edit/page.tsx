@@ -39,6 +39,7 @@ import { AnalyticsDashboard } from '@/components/site-builder/AnalyticsDashboard
 import { SEOPreview } from '@/components/site-builder/SEOPreview';
 import { PageManager } from '@/components/site-builder/PageManager';
 import { ResponsiveTesting } from '@/components/site-builder/ResponsiveTesting';
+import { SectionEditor } from '@/components/site-builder/SectionEditor';
 
 interface SiteSection {
   id: string;
@@ -86,6 +87,7 @@ function SiteEditorContent() {
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [history, setHistory] = useState<Site[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [editingSection, setEditingSection] = useState<SiteSection | null>(null);
 
   useEffect(() => {
     fetchSite();
@@ -196,8 +198,37 @@ function SiteEditorContent() {
 
   // Edit section handler
   const handleEditSection = (section: SiteSection) => {
-    // TODO: Open section editor modal
-    console.log('Edit section:', section);
+    setEditingSection(section);
+  };
+
+  // Save section handler
+  const handleSaveSection = async (updatedSection: SiteSection) => {
+    try {
+      const response = await fetch('/api/sites/sections', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: updatedSection.id,
+          content: updatedSection.content,
+          animation: updatedSection.animation,
+        }),
+      });
+
+      if (response.ok) {
+        // Update local state
+        setSite((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            sections: prev.sections.map((s) => (s.id === updatedSection.id ? updatedSection : s)),
+          };
+        });
+        setPreviewRefreshKey((k) => k + 1);
+        setHasChanges(true);
+      }
+    } catch (error) {
+      console.error('Failed to save section:', error);
+    }
   };
 
   const handlePublish = async () => {
@@ -560,6 +591,14 @@ function SiteEditorContent() {
           </div>
         )}
       </div>
+
+      {/* Section Editor Modal */}
+      <SectionEditor
+        section={editingSection}
+        isOpen={editingSection !== null}
+        onClose={() => setEditingSection(null)}
+        onSave={handleSaveSection}
+      />
     </div>
   );
 }

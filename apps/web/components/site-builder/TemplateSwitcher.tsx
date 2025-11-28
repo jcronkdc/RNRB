@@ -1,7 +1,7 @@
 'use client';
 
+import { Palette, Check, Sparkles, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { Palette, Check, Eye, Sparkles, Loader2 } from 'lucide-react';
 
 interface Template {
   id: string;

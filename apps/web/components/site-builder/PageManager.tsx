@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Plus,
   Eye,
@@ -12,8 +11,8 @@ import {
   FileText,
   Loader2,
   Check,
-  X,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface SitePage {
   id: string;
@@ -203,10 +202,15 @@ export function PageManager({
               // Edit Mode
               <div className="space-y-3">
                 <div>
-                  <label className="mb-1 block text-sm" style={{ color: 'var(--muted)' }}>
+                  <label
+                    htmlFor="edit-title"
+                    className="mb-1 block text-sm"
+                    style={{ color: 'var(--muted)' }}
+                  >
                     Page Title
                   </label>
                   <input
+                    id="edit-title"
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
@@ -219,10 +223,15 @@ export function PageManager({
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm" style={{ color: 'var(--muted)' }}>
+                  <label
+                    htmlFor="edit-slug"
+                    className="mb-1 block text-sm"
+                    style={{ color: 'var(--muted)' }}
+                  >
                     URL Slug
                   </label>
                   <input
+                    id="edit-slug"
                     type="text"
                     value={editSlug}
                     onChange={(e) => setEditSlug(e.target.value)}
@@ -371,10 +380,15 @@ export function PageManager({
 
           <div className="space-y-4">
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+              <label
+                htmlFor="new-page-title"
+                className="mb-2 block text-sm font-medium"
+                style={{ color: 'var(--text)' }}
+              >
                 Page Title *
               </label>
               <input
+                id="new-page-title"
                 type="text"
                 value={newPageTitle}
                 onChange={(e) => setNewPageTitle(e.target.value)}
@@ -385,12 +399,15 @@ export function PageManager({
                   color: 'var(--text)',
                   border: '1px solid var(--border)',
                 }}
-                autoFocus
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+              <label
+                htmlFor="new-page-slug"
+                className="mb-2 block text-sm font-medium"
+                style={{ color: 'var(--text)' }}
+              >
                 URL Slug (optional)
               </label>
               <div className="flex items-center gap-2">
@@ -398,6 +415,7 @@ export function PageManager({
                   /
                 </span>
                 <input
+                  id="new-page-slug"
                   type="text"
                   value={newPageSlug}
                   onChange={(e) => setNewPageSlug(e.target.value)}

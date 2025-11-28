@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
   Eye,
   Users,
@@ -14,11 +13,10 @@ import {
   Smartphone,
   Tablet,
   Loader2,
-  Calendar,
-  ExternalLink,
   BarChart3,
   PieChart,
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface AnalyticsData {
   period: string;
@@ -47,6 +45,7 @@ export function AnalyticsDashboard() {
 
   useEffect(() => {
     fetchAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [period]);
 
   const fetchAnalytics = async () => {

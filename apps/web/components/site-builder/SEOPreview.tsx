@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { Search, Monitor, Smartphone, ExternalLink, Star, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
 interface SEOPreviewProps {
   siteTitle: string;
@@ -22,7 +22,6 @@ export function SEOPreview({
 
   // Generate display URL
   const displayUrl = customDomain || `${subdomain}.cronkwaters.com`;
-  const fullUrl = `https://${displayUrl}`;
 
   // Truncate for display
   const truncateTitle = (text: string, max: number) => {

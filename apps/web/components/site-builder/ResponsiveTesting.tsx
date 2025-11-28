@@ -1,18 +1,7 @@
 'use client';
 
+import { Monitor, Smartphone, Tablet, RotateCw, Ruler, Zap, Grid3x3 } from 'lucide-react';
 import { useState } from 'react';
-import {
-  Monitor,
-  Smartphone,
-  Tablet,
-  Maximize2,
-  RotateCw,
-  Ruler,
-  Zap,
-  Eye,
-  Grid3x3,
-  ImageIcon,
-} from 'lucide-react';
 
 interface ResponsiveTestingProps {
   url: string;
@@ -108,26 +97,14 @@ const devicePresets: DevicePreset[] = [
 export function ResponsiveTesting({ url }: ResponsiveTestingProps) {
   const [selectedDevice, setSelectedDevice] = useState(devicePresets[0]);
   const [orientation, setOrientation] = useState<Orientation>('portrait');
-  const [customWidth, setCustomWidth] = useState(1280);
-  const [customHeight, setCustomHeight] = useState(800);
   const [showGrid, setShowGrid] = useState(false);
   const [showRulers, setShowRulers] = useState(false);
   const [touchMode, setTouchMode] = useState(false);
   const [zoom, setZoom] = useState(1);
 
-  const width =
-    selectedDevice.type === 'custom'
-      ? customWidth
-      : orientation === 'landscape'
-        ? selectedDevice.height
-        : selectedDevice.width;
+  const width = orientation === 'landscape' ? selectedDevice.height : selectedDevice.width;
 
-  const height =
-    selectedDevice.type === 'custom'
-      ? customHeight
-      : orientation === 'landscape'
-        ? selectedDevice.width
-        : selectedDevice.height;
+  const height = orientation === 'landscape' ? selectedDevice.width : selectedDevice.height;
 
   const canRotate = selectedDevice.type !== 'desktop' && selectedDevice.type !== 'custom';
 
