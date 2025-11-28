@@ -28,10 +28,17 @@ import {
   Redo,
   CloudOff,
   Cloud,
+  FileText,
+  BarChart3,
 } from 'lucide-react';
 import { DomainSettings } from '@/components/site-builder/DomainSettings';
 import { DraggableSections } from '@/components/site-builder/DraggableSections';
 import { LivePreview } from '@/components/site-builder/LivePreview';
+import { TemplateSwitcher } from '@/components/site-builder/TemplateSwitcher';
+import { AnalyticsDashboard } from '@/components/site-builder/AnalyticsDashboard';
+import { SEOPreview } from '@/components/site-builder/SEOPreview';
+import { PageManager } from '@/components/site-builder/PageManager';
+import { ResponsiveTesting } from '@/components/site-builder/ResponsiveTesting';
 
 interface SiteSection {
   id: string;
@@ -223,6 +230,35 @@ function SiteEditorContent() {
     setHasChanges(true);
   };
 
+  const handleTemplateChange = async (templateId: string, keepTheme: boolean) => {
+    if (!site) return;
+
+    try {
+      // Fetch template theme
+      const response = await fetch(`/api/sites/templates/${templateId}`);
+      const { theme: newTheme } = await response.json();
+
+      const updatedTheme = keepTheme
+        ? { ...newTheme, ...(site.theme || {}) } // Merge keeping custom settings
+        : newTheme; // Replace completely
+
+      await fetch('/api/sites', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          templateId,
+          theme: updatedTheme,
+        }),
+      });
+
+      setSite({ ...site, templateId, theme: updatedTheme as Record<string, unknown> | null });
+      setPreviewRefreshKey((k) => k + 1);
+    } catch (error) {
+      console.error('Failed to change template:', error);
+      throw error;
+    }
+  };
+
   const moveSectionUp = async (sectionId: string) => {
     if (!site) return;
     const sections = [...site.sections];
@@ -304,7 +340,10 @@ function SiteEditorContent() {
 
   const tabs = [
     { id: 'sections', label: 'Sections', icon: Layers },
+    { id: 'pages', label: 'Pages', icon: FileText },
     { id: 'theme', label: 'Theme', icon: Palette },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'seo', label: 'SEO', icon: Globe },
     { id: 'domain', label: 'Domain', icon: Link },
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
   ];
@@ -479,11 +518,32 @@ function SiteEditorContent() {
               </div>
             )}
 
+            {activeTab === 'pages' && <PagesTab site={site} onUpdate={() => fetchSite()} />}
+
             {activeTab === 'theme' && (
-              <ThemeTab
-                theme={(site.theme || {}) as Record<string, unknown>}
-                templateId={site.templateId}
-                onChange={(theme) => updateSite({ theme })}
+              <div className="space-y-6">
+                <TemplateSwitcher
+                  currentTemplateId={site.templateId}
+                  currentTheme={site.theme as Record<string, unknown> | undefined}
+                  onTemplateChange={handleTemplateChange}
+                />
+                <ThemeTab
+                  theme={(site.theme || {}) as Record<string, unknown>}
+                  templateId={site.templateId}
+                  onChange={(theme) => updateSite({ theme })}
+                />
+              </div>
+            )}
+
+            {activeTab === 'analytics' && <AnalyticsDashboard />}
+
+            {activeTab === 'seo' && (
+              <SEOPreview
+                siteTitle={site.siteTitle || site.siteName || ''}
+                metaDescription={site.metaDescription || ''}
+                subdomain={site.subdomain}
+                customDomain={site.customDomain}
+                siteName={site.siteName || undefined}
               />
             )}
 
@@ -968,6 +1028,138 @@ function SettingsTab({
         </div>
       </div>
     </div>
+  );
+}
+
+// Pages Tab Component
+function PagesTab({ site, onUpdate }: { site: Site; onUpdate: () => void }) {
+  const [pages, setPages] = useState<
+    Array<{
+      id: string;
+      slug: string;
+      title: string;
+      isHomepage: boolean;
+      isVisible: boolean;
+      order: number;
+      sectionCount?: number;
+    }>
+  >([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPages();
+  }, []);
+
+  const fetchPages = async () => {
+    try {
+      const response = await fetch('/api/sites/pages');
+      const data = await response.json();
+      setPages(data.pages || []);
+    } catch (error) {
+      console.error('Failed to fetch pages:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePageAdd = async (page: Omit<(typeof pages)[0], 'id' | 'sectionCount'>) => {
+    try {
+      const response = await fetch('/api/sites/pages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(page),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to create page');
+      }
+
+      await fetchPages();
+      onUpdate();
+    } catch (error) {
+      console.error('Failed to add page:', error);
+      throw error;
+    }
+  };
+
+  const handlePageUpdate = async (pageId: string, updates: Partial<(typeof pages)[0]>) => {
+    try {
+      const response = await fetch(`/api/sites/pages?id=${pageId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update page');
+      }
+
+      await fetchPages();
+      onUpdate();
+    } catch (error) {
+      console.error('Failed to update page:', error);
+      throw error;
+    }
+  };
+
+  const handlePageDelete = async (pageId: string) => {
+    try {
+      const response = await fetch(`/api/sites/pages?id=${pageId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete page');
+      }
+
+      await fetchPages();
+      onUpdate();
+    } catch (error) {
+      console.error('Failed to delete page:', error);
+      throw error;
+    }
+  };
+
+  const handlePageReorder = async (reorderedPages: typeof pages) => {
+    // Optimistically update UI
+    setPages(reorderedPages);
+
+    // Save each page's new order
+    try {
+      await Promise.all(
+        reorderedPages.map((page) =>
+          fetch(`/api/sites/pages?id=${page.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order: page.order }),
+          })
+        )
+      );
+      onUpdate();
+    } catch (error) {
+      console.error('Failed to reorder pages:', error);
+      // Revert on error
+      await fetchPages();
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+      </div>
+    );
+  }
+
+  return (
+    <PageManager
+      pages={pages}
+      onPageAdd={handlePageAdd}
+      onPageUpdate={handlePageUpdate}
+      onPageDelete={handlePageDelete}
+      onPageReorder={handlePageReorder}
+    />
   );
 }
 

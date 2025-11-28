@@ -8,6 +8,12 @@ import { TRPCReactProvider } from '@/components/providers/trpc-provider';
 import { SessionProvider } from '@/components/session-provider';
 import { ToastProvider } from '@/hooks/useToast';
 import { auth } from '@/auth';
+import {
+  generateMetadata as generateSEOMetadata,
+  generateOrganizationSchema,
+  generateWebApplicationSchema,
+  JsonLd,
+} from '@/lib/seo';
 import './globals.css';
 
 export const viewport: Viewport = {
@@ -22,86 +28,27 @@ export const viewport: Viewport = {
   ],
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://cronkwaters.com'),
-  title: "Rock N' Roll Basement",
-  icons: {
-    icon: [
-      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
-    ],
-    shortcut: '/icon-192.png',
-    apple: '/icon-192.png',
-  },
+export const metadata: Metadata = generateSEOMetadata({
+  title: "Rock N' Roll Basement - Music Collaboration Platform for Bands & Studios",
   description:
-    "Rock N' Roll Basement is a full-stack music workspace for bands, studios, and organizations to manage songs, tours, rights, and revenue in one place.",
+    'The all-in-one music collaboration platform trusted by musicians worldwide. AI-powered songwriting, real-time collaboration, tour management, copyright tools, and more. Start free today.',
   keywords: [
-    'rock',
-    'bands',
-    'songwriting',
-    'music production',
-    'touring',
-    'rights management',
-    'royalties',
-    'studios',
+    'music collaboration software',
+    'online band management',
+    'songwriter collaboration tools',
+    'AI music assistant',
+    'real-time music editing',
   ],
-  authors: [{ name: "Rock N' Roll Basement" }],
-  creator: "Rock N' Roll Basement",
-  publisher: "Rock N' Roll Basement",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: "Rock N' Roll Basement",
-  },
-  formatDetection: {
-    telephone: false,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://rnrb.ai',
-    title: "Rock N' Roll Basement",
-    description:
-      "Rock N' Roll Basement is a full-stack music workspace for bands, studios, and organizations to manage songs, tours, rights, and revenue in one place.",
-    siteName: "Rock N' Roll Basement",
-    images: [
-      {
-        url: '/logo-light.png',
-        width: 240,
-        height: 100,
-        alt: "Rock N' Roll Basement logo",
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: "Rock N' Roll Basement",
-    description:
-      "Rock N' Roll Basement is a full-stack music workspace for bands, studios, and organizations to manage songs, tours, rights, and revenue in one place.",
-    images: ['/logo-light.png'],
-  },
-  alternates: {
-    canonical: 'https://rnrb.ai',
-  },
-  manifest: '/manifest.json',
-};
+});
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
 
   return (
     <html lang="en">
+      <head>
+        <JsonLd data={[generateOrganizationSchema(), generateWebApplicationSchema()]} />
+      </head>
       <body>
         <ErrorBoundary>
           <SessionProvider session={session}>

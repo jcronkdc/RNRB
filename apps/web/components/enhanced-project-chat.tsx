@@ -191,6 +191,23 @@ export function EnhancedChat({
         });
       });
 
+      // Listen for reaction updates
+      chatChannel.subscribe('reaction-added', (msg) => {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === msg.data.messageId ? { ...m, reactions: msg.data.reactions } : m
+          )
+        );
+      });
+
+      chatChannel.subscribe('reaction-removed', (msg) => {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === msg.data.messageId ? { ...m, reactions: msg.data.reactions } : m
+          )
+        );
+      });
+
       // Get message history
       try {
         const response = await fetch(`/api/chat/messages?channelId=${channelName}&limit=100`);
@@ -331,9 +348,61 @@ export function EnhancedChat({
     return mentions;
   };
 
+  const [showReactionPicker, setShowReactionPicker] = useState<string | null>(null);
+
+  // Common emoji reactions
+  const QUICK_REACTIONS = ['👍', '❤️', '🔥', '😂', '🎵', '🤘', '👏', '💯'];
+
   const addReaction = async (messageId: string, emoji: string) => {
-    // TODO: Implement reaction logic
-    console.log('Add reaction:', messageId, emoji);
+    try {
+      const response = await fetch('/api/chat/reactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageId, emoji }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Update local state
+        setMessages((prev) =>
+          prev.map((msg) => (msg.id === messageId ? { ...msg, reactions: data.reactions } : msg))
+        );
+      }
+    } catch (error) {
+      console.error('Failed to add reaction:', error);
+    }
+    setShowReactionPicker(null);
+  };
+
+  const removeReaction = async (messageId: string, emoji: string) => {
+    try {
+      const response = await fetch(
+        `/api/chat/reactions?messageId=${messageId}&emoji=${encodeURIComponent(emoji)}`,
+        { method: 'DELETE' }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessages((prev) =>
+          prev.map((msg) => (msg.id === messageId ? { ...msg, reactions: data.reactions } : msg))
+        );
+      }
+    } catch (error) {
+      console.error('Failed to remove reaction:', error);
+    }
+  };
+
+  const toggleReaction = async (
+    messageId: string,
+    emoji: string,
+    currentReactions?: Record<string, string[]>
+  ) => {
+    const hasReacted = currentReactions?.[emoji]?.includes(currentUserId);
+    if (hasReacted) {
+      await removeReaction(messageId, emoji);
+    } else {
+      await addReaction(messageId, emoji);
+    }
   };
 
   return (
@@ -362,7 +431,7 @@ export function EnhancedChat({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}
+                className={`group flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 {/* Avatar */}
                 <div className="flex-shrink-0">
@@ -420,6 +489,59 @@ export function EnhancedChat({
                       className="min-w-[300px]"
                     />
                   )}
+
+                  {/* Reactions Display */}
+                  {message.reactions && Object.keys(message.reactions).length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {Object.entries(message.reactions).map(([emoji, userIds]) => (
+                        <button
+                          key={emoji}
+                          onClick={() => toggleReaction(message.id, emoji, message.reactions)}
+                          className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs transition-colors ${
+                            userIds.includes(currentUserId)
+                              ? 'bg-brand-primary/20 text-brand-primary'
+                              : 'border border-border bg-surface hover:bg-surface-hover'
+                          }`}
+                        >
+                          <span>{emoji}</span>
+                          <span className="font-medium">{userIds.length}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Reaction Picker Button */}
+                  <div className="relative mt-1">
+                    <button
+                      onClick={() =>
+                        setShowReactionPicker(showReactionPicker === message.id ? null : message.id)
+                      }
+                      className="flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-surface group-hover:opacity-100"
+                    >
+                      <Smile className="h-4 w-4" />
+                    </button>
+
+                    {/* Quick Reaction Picker */}
+                    {showReactionPicker === message.id && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className={`absolute z-10 flex gap-1 rounded-lg border border-border bg-background p-2 shadow-lg ${
+                          isOwnMessage ? 'right-0' : 'left-0'
+                        }`}
+                      >
+                        {QUICK_REACTIONS.map((emoji) => (
+                          <button
+                            key={emoji}
+                            onClick={() => addReaction(message.id, emoji)}
+                            className="rounded p-1 text-lg transition-transform hover:scale-125 hover:bg-surface"
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             );
@@ -519,9 +641,3 @@ export function EnhancedChat({
     </div>
   );
 }
-
-
-
-
-
-

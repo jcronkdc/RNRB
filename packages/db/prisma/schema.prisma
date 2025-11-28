@@ -151,6 +151,16 @@ model User {
   
   // Website Builder
   musicianSite           MusicianSite?
+  
+  // Social Feed
+  authoredPosts          Post[]               @relation("AuthoredPosts")
+  sharedPosts            Post[]               @relation("SharedPosts")
+  postReactions          PostReaction[]       @relation("PostReactions")
+  postShares             PostShare[]          @relation("UserPostShares")
+  postComments           PostComment[]        @relation("PostComments")
+  postCommentReactions   PostCommentReaction[] @relation("PostCommentReactions")
+  postPlays              PostPlay[]           @relation("PostPlays")
+  postBookmarks          PostBookmark[]       @relation("PostBookmarks")
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -1484,6 +1494,197 @@ model UserFollow {
   @@unique([followerId, followingId])
   @@index([followerId])
   @@index([followingId])
+}
+
+// ====================================
+// SOCIAL FEED - Facebook/X.com/SoundCloud hybrid
+// ====================================
+
+model Post {
+  id              String    @id @default(cuid())
+  userId          String
+  content         String?   @db.Text
+  contentType     String    @default("text") // text, audio, image, video, link
+  
+  // Audio posts (SoundCloud-style)
+  audioUrl        String?
+  audioPath       String?
+  waveformData    Json?
+  duration        Int? // in seconds
+  bpm             Int?
+  key             String? // Musical key (C, Am, etc.)
+  
+  // Media attachments
+  imageUrls       String[]
+  videoUrl        String?
+  linkUrl         String?
+  linkPreview     Json? // Open Graph preview data
+  
+  // Metadata
+  genre           String?
+  mood            String?
+  tags            String[]
+  
+  // Privacy & permissions
+  visibility      String    @default("public") // public, friends, private
+  allowComments   Boolean   @default(true)
+  allowReactions  Boolean   @default(true)
+  allowShares     Boolean   @default(true)
+  
+  // Engagement metrics (cached for performance)
+  likeCount       Int       @default(0)
+  commentCount    Int       @default(0)
+  shareCount      Int       @default(0)
+  playCount       Int       @default(0)
+  
+  // Repost tracking
+  originalPostId  String? // For reposts/shares
+  sharedFromUserId String? // Original author for reposts
+  
+  // Soft delete
+  isDeleted       Boolean   @default(false)
+  deletedAt       DateTime?
+  
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  editedAt        DateTime?
+  
+  // Relations
+  author          User         @relation("AuthoredPosts", fields: [userId], references: [id], onDelete: Cascade)
+  originalPost    Post?        @relation("PostShares", fields: [originalPostId], references: [id], onDelete: SetNull)
+  sharedFrom      User?        @relation("SharedPosts", fields: [sharedFromUserId], references: [id], onDelete: SetNull)
+  
+  reposts         Post[]       @relation("PostShares")
+  reactions       PostReaction[]
+  shares          PostShare[]
+  comments        PostComment[]
+  plays           PostPlay[]
+  bookmarks       PostBookmark[]
+  
+  @@index([userId])
+  @@index([originalPostId])
+  @@index([sharedFromUserId])
+  @@index([visibility])
+  @@index([contentType])
+  @@index([createdAt(sort: Desc)])
+  @@index([genre])
+  @@index([mood])
+  @@index([isDeleted])
+}
+
+model PostReaction {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  emoji     String // ❤️ 🔥 👏 😮 😂 🎵 🎸 💯 etc.
+  createdAt DateTime @default(now())
+  
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation("PostReactions", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, userId, emoji])
+  @@index([postId])
+  @@index([userId])
+  @@index([emoji])
+  @@index([createdAt(sort: Desc)])
+}
+
+model PostShare {
+  id         String   @id @default(cuid())
+  postId     String
+  userId     String
+  comment    String?  @db.Text // Optional comment when sharing
+  visibility String   @default("public")
+  createdAt  DateTime @default(now())
+  
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation("UserPostShares", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+}
+
+model PostComment {
+  id            String    @id @default(cuid())
+  postId        String
+  userId        String
+  content       String    @db.Text
+  parentId      String? // For threaded replies
+  
+  // Audio comment (voice note)
+  audioUrl      String?
+  audioDuration Int?
+  
+  // Engagement metrics
+  likeCount     Int       @default(0)
+  replyCount    Int       @default(0)
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  editedAt      DateTime?
+  
+  post      Post                   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User                   @relation("PostComments", fields: [userId], references: [id], onDelete: Cascade)
+  parent    PostComment?           @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   PostComment[]          @relation("CommentReplies")
+  reactions PostCommentReaction[]
+  
+  @@index([postId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([createdAt(sort: Desc)])
+}
+
+model PostCommentReaction {
+  id        String   @id @default(cuid())
+  commentId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+  
+  comment PostComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User        @relation("PostCommentReactions", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([commentId, userId, emoji])
+  @@index([commentId])
+  @@index([userId])
+}
+
+model PostPlay {
+  id          String    @id @default(cuid())
+  postId      String
+  userId      String? // Optional - can be anonymous
+  ipAddress   String?
+  duration    Int? // How long they listened (seconds)
+  completedAt DateTime? // Did they finish the track?
+  createdAt   DateTime  @default(now())
+  
+  post Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User? @relation("PostPlays", fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([postId])
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+}
+
+model PostBookmark {
+  id             String   @id @default(cuid())
+  postId         String
+  userId         String
+  collectionName String? // Optional: organize bookmarks
+  createdAt      DateTime @default(now())
+  
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation("PostBookmarks", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@index([collectionName])
 }
 
 // ====================================
