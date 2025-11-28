@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 export async function POST(request: Request) {
   try {
@@ -134,14 +135,32 @@ export async function POST(request: Request) {
       include: {
         org: true,
         project: true,
+        sender: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
       },
     });
 
-    // TODO: Send email with invitation link
-    // For now, return the invitation URL
-    const inviteUrl = `${process.env.NEXTAUTH_URL}/invite/${token}`;
+    // Send invitation email
+    const inviteUrl = `${process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/invite/${token}`;
 
-    console.log('Invitation created:', { inviteUrl, invitation });
+    const emailOptions = emailTemplates.invitation({
+      email,
+      inviterName: invitation.sender?.name || undefined,
+      inviteUrl,
+      orgName: invitation.org?.name,
+      projectName: invitation.project?.name,
+    });
+
+    const emailResult = await sendEmail(emailOptions);
+
+    if (!emailResult.success) {
+      console.warn('Failed to send invitation email:', emailResult.error);
+      // Still return success since invitation was created
+    }
 
     return NextResponse.json({
       success: true,
@@ -152,6 +171,7 @@ export async function POST(request: Request) {
         expiresAt: invitation.expiresAt,
         inviteUrl,
       },
+      emailSent: emailResult.success,
     });
   } catch (error) {
     console.error('Error sending invitation:', error);

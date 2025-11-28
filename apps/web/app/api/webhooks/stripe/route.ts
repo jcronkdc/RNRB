@@ -4,7 +4,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 
 import { verifyWebhookSignature } from '@/lib/stripe-subscriptions';
-
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 // Disable body parsing - we need the raw body for signature verification
 export const runtime = 'nodejs';
@@ -166,7 +166,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 
     const user = await prisma.user.findUnique({
       where: { stripeCustomerId: customerId },
-      select: { id: true, email: true },
+      select: { id: true, email: true, name: true, subscriptionTier: true },
     });
 
     if (!user) {
@@ -176,8 +176,24 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 
     console.log('✅ Payment succeeded for user:', user.email);
 
-    // TODO: Send payment success email notification
-    // TODO: Update payment history log (if you want to track this)
+    // Send payment success email
+    const amount = invoice.amount_paid ? (invoice.amount_paid / 100).toFixed(2) : '0.00';
+    const nextBillingDate = invoice.lines.data[0]?.period?.end
+      ? new Date(invoice.lines.data[0].period.end * 1000).toLocaleDateString()
+      : undefined;
+
+    const emailOptions = emailTemplates.paymentSuccess({
+      email: user.email,
+      userName: user.name || 'User',
+      amount,
+      subscriptionTier: user.subscriptionTier || 'free',
+      nextBillingDate,
+    });
+
+    const emailResult = await sendEmail(emailOptions);
+    if (!emailResult.success) {
+      console.warn('Failed to send payment success email:', emailResult.error);
+    }
   } catch (error) {
     console.error('Error handling payment succeeded:', error);
     throw error;
@@ -193,7 +209,13 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
     const user = await prisma.user.findUnique({
       where: { stripeCustomerId: customerId },
-      select: { id: true, email: true, subscriptionStatus: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        subscriptionStatus: true,
+        subscriptionTier: true,
+      },
     });
 
     if (!user) {
@@ -211,8 +233,24 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
     console.log('⚠️ Payment failed for user:', user.email);
 
-    // TODO: Send payment failed email notification
-    // TODO: Implement retry logic or grace period
+    // Send payment failed email
+    const amount = invoice.amount_due ? (invoice.amount_due / 100).toFixed(2) : '0.00';
+    const retryDate = invoice.next_payment_attempt
+      ? new Date(invoice.next_payment_attempt * 1000).toLocaleDateString()
+      : undefined;
+
+    const emailOptions = emailTemplates.paymentFailed({
+      email: user.email,
+      userName: user.name || 'User',
+      amount,
+      subscriptionTier: user.subscriptionTier || 'free',
+      retryDate,
+    });
+
+    const emailResult = await sendEmail(emailOptions);
+    if (!emailResult.success) {
+      console.warn('Failed to send payment failed email:', emailResult.error);
+    }
   } catch (error) {
     console.error('Error handling payment failed:', error);
     throw error;
@@ -228,7 +266,7 @@ async function handleTrialEnding(subscription: Stripe.Subscription) {
 
     const user = await prisma.user.findUnique({
       where: { stripeCustomerId: customerId },
-      select: { id: true, email: true },
+      select: { id: true, email: true, name: true, subscriptionTier: true },
     });
 
     if (!user) {
@@ -238,7 +276,22 @@ async function handleTrialEnding(subscription: Stripe.Subscription) {
 
     console.log('⏰ Trial ending soon for user:', user.email);
 
-    // TODO: Send trial ending notification email
+    // Send trial ending email
+    const trialEndDate = subscription.trial_end
+      ? new Date(subscription.trial_end * 1000).toLocaleDateString()
+      : new Date().toLocaleDateString();
+
+    const emailOptions = emailTemplates.trialEnding({
+      email: user.email,
+      userName: user.name || 'User',
+      trialEndDate,
+      subscriptionTier: user.subscriptionTier || 'free',
+    });
+
+    const emailResult = await sendEmail(emailOptions);
+    if (!emailResult.success) {
+      console.warn('Failed to send trial ending email:', emailResult.error);
+    }
   } catch (error) {
     console.error('Error handling trial ending:', error);
     throw error;
@@ -320,15 +373,3 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     throw error;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

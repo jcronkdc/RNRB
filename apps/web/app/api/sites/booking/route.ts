@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -60,10 +61,35 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // TODO: Send email notification to the musician
-    // This would integrate with your email service (e.g., Resend, SendGrid)
+    // Send email notification to the musician
+    const siteUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000'}/sites/${subdomain}`;
 
-    return NextResponse.json({ success: true });
+    const emailOptions = emailTemplates.bookingRequest({
+      musicianEmail: site.user.email,
+      musicianName: site.user.name || 'Musician',
+      venueName,
+      contactName,
+      contactEmail: email,
+      contactPhone: phone,
+      eventDate,
+      eventType,
+      location,
+      budget,
+      message,
+      siteUrl,
+    });
+
+    const emailResult = await sendEmail(emailOptions);
+
+    if (!emailResult.success) {
+      console.warn('Failed to send booking notification email:', emailResult.error);
+      // Still return success since booking was saved
+    }
+
+    return NextResponse.json({
+      success: true,
+      emailSent: emailResult.success,
+    });
   } catch (error) {
     console.error('Booking submission error:', error);
     return NextResponse.json({ error: 'Failed to submit booking request' }, { status: 500 });

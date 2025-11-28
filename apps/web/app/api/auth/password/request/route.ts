@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-import { sendTransactionalEmail } from '@/lib/email';
+import { sendEmail } from '@/lib/email';
 import { env } from '@/lib/env';
 import { handleApiError } from '@/lib/errors';
 
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
       select: { id: true, name: true },
     });
 
-    let emailResult: Awaited<ReturnType<typeof sendTransactionalEmail>> | null = null;
+    let emailResult: Awaited<ReturnType<typeof sendEmail>> | null = null;
 
     if (user) {
       await prisma.passwordResetToken.deleteMany({
@@ -133,9 +133,9 @@ export async function POST(request: Request) {
         resetUrl.searchParams.set('redirect', safeRedirect);
       }
 
-      emailResult = await sendTransactionalEmail({
+      emailResult = await sendEmail({
         to: normalizedEmail,
-        subject: 'Reset your Rock N’ Roll Basement password',
+        subject: "Reset your Rock N' Roll Basement password",
         html: buildEmailHtml(user.name ?? null, resetUrl.toString()),
         text: buildEmailText(resetUrl.toString()),
       });
@@ -144,8 +144,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: 'If that email is registered, reset instructions are on the way.',
-      emailSent: emailResult?.sent ?? false,
-      ...(emailResult && !emailResult.sent ? { warning: emailResult.reason } : {}),
+      emailSent: emailResult?.success ?? false,
+      ...(emailResult && !emailResult.success ? { warning: emailResult.error } : {}),
     });
   } catch (error) {
     return handleApiError(error, {

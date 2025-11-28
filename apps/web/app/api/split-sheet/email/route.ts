@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 /**
  * Split Sheet Email API
@@ -24,62 +25,56 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No recipients provided' }, { status: 400 });
     }
 
-    // Extract base64 data (remove data:application/pdf;base64, prefix)
-    const base64Data = pdfData.split(',')[1] || pdfData;
+    // Extract base64 data (remove data:application/pdf;base64, prefix if present)
+    const base64Data = pdfData.includes(',') ? pdfData.split(',')[1] : pdfData;
 
-    // In a production app, you would:
-    // 1. Use a service like SendGrid, AWS SES, or Resend
-    // 2. Store the PDF in S3/Cloudflare R2
-    // 3. Send personalized emails to each recipient
+    // Send emails to all recipients
+    const emailResults = await Promise.allSettled(
+      recipients.map(
+        async (recipient: { email: string; contributorName: string; percentage: number }) => {
+          const emailOptions = emailTemplates.splitSheet({
+            recipientEmail: recipient.email,
+            recipientName: recipient.contributorName,
+            songTitle,
+            percentage: recipient.percentage,
+            pdfData: base64Data,
+          });
 
-    // For now, we'll simulate the email sending
-    console.log('Split sheet email request:', {
-      songTitle,
-      songId,
-      recipientCount: recipients.length,
-      recipients: recipients.map((r: any) => ({
-        name: r.contributorName,
-        email: r.email,
-        percentage: r.percentage,
-      })),
+          return sendEmail(emailOptions);
+        }
+      )
+    );
+
+    // Count successes and failures
+    const successful = emailResults.filter(
+      (r) => r.status === 'fulfilled' && r.value.success
+    ).length;
+    const failed = emailResults.length - successful;
+
+    // Log results
+    emailResults.forEach((result, index) => {
+      const recipient = recipients[index];
+      if (result.status === 'fulfilled' && result.value.success) {
+        console.log(`✅ Split sheet sent to ${recipient.email}`);
+      } else {
+        const error = result.status === 'rejected' ? result.reason : result.value.error;
+        console.error(`❌ Failed to send split sheet to ${recipient.email}:`, error);
+      }
     });
 
-    // TODO: Implement actual email sending
-    // Example with Resend (once configured):
-    /*
-    const { Resend } = require('resend');
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    
-    for (const recipient of recipients) {
-      await resend.emails.send({
-        from: 'CronkWaters <noreply@cronkwaters.com>',
-        to: recipient.email,
-        subject: `Split Sheet for "${songTitle}"`,
-        html: `
-          <h2>Split Sheet for "${songTitle}"</h2>
-          <p>Hi ${recipient.contributorName},</p>
-          <p>Please find attached the ownership split sheet for "${songTitle}".</p>
-          <p>Your share: <strong>${recipient.percentage}%</strong></p>
-          <p>Please review and sign the attached document.</p>
-          <br>
-          <p>Best regards,<br>CronkWaters Team</p>
-        `,
-        attachments: [
-          {
-            filename: `${songTitle}_Split_Sheet.pdf`,
-            content: base64Data,
-          },
-        ],
-      });
-    }
-    */
-
-    // For now, return success (development mode)
     return NextResponse.json({
       success: true,
-      message: `Split sheet would be sent to ${recipients.length} recipient(s)`,
-      recipients: recipients.map((r: any) => r.email),
-      note: 'Email integration not yet configured. Configure RESEND_API_KEY to enable.',
+      message: `Split sheets sent to ${successful} recipient(s)${failed > 0 ? `, ${failed} failed` : ''}`,
+      sent: successful,
+      failed,
+      recipients: recipients.map((r: any) => ({
+        email: r.email,
+        status:
+          emailResults[recipients.indexOf(r)].status === 'fulfilled' &&
+          emailResults[recipients.indexOf(r)].value.success
+            ? 'sent'
+            : 'failed',
+      })),
     });
   } catch (error) {
     console.error('Split sheet email error:', error);
