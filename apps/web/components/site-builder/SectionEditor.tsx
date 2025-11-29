@@ -1,19 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import {
-  X,
-  Save,
-  Image as ImageIcon,
-  Link,
-  Type,
-  AlignLeft,
-  Play,
-  Plus,
-  Trash2,
-  GripVertical,
-} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { X, Save, Plus, Trash2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+import { ImageUpload } from './ImageUpload';
 
 interface SiteSection {
   id: string;
@@ -270,35 +261,14 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
 
       case 'image':
         return (
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <input
-                type="url"
-                value={(value as string) || ''}
-                onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                placeholder={field.placeholder}
-                className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
-              />
-              <button className="rounded-lg bg-gray-800 px-4 py-2.5 text-gray-300 hover:bg-gray-700">
-                <ImageIcon className="h-5 w-5" />
-              </button>
-            </div>
-            {value && (
-              <div className="relative h-24 w-full overflow-hidden rounded-lg border border-gray-700">
-                <img
-                  src={value as string}
-                  alt="Preview"
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              </div>
-            )}
-          </div>
+          <ImageUpload
+            value={(value as string) || null}
+            onChange={(url) => handleFieldChange(field.key, url)}
+            label={field.placeholder || 'Upload Image'}
+          />
         );
 
-      case 'select':
+      case 'select': {
         const options =
           field.key === 'imagePosition'
             ? [
@@ -326,6 +296,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             ))}
           </select>
         );
+      }
 
       case 'toggle':
         return (
@@ -344,20 +315,22 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
           </button>
         );
 
-      case 'range':
+      case 'range': {
+        const rangeValue = typeof value === 'number' ? value : 50;
         return (
           <div className="flex items-center gap-4">
             <input
               type="range"
               min="0"
               max="100"
-              value={(value as number) || 50}
+              value={rangeValue}
               onChange={(e) => handleFieldChange(field.key, parseInt(e.target.value))}
               className="flex-1"
             />
-            <span className="w-12 text-right text-gray-400">{value || 50}%</span>
+            <span className="w-12 text-right text-gray-400">{rangeValue}%</span>
           </div>
         );
+      }
 
       case 'events':
         return (
@@ -449,10 +422,14 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
 
                 {/* Animation Setting */}
                 <div className="border-t border-gray-800 pt-6">
-                  <label className="mb-2 block text-sm font-medium text-gray-300">
+                  <label
+                    htmlFor="section-animation"
+                    className="mb-2 block text-sm font-medium text-gray-300"
+                  >
                     Entrance Animation
                   </label>
                   <select
+                    id="section-animation"
                     value={animation}
                     onChange={(e) => setAnimation(e.target.value)}
                     className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"

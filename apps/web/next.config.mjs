@@ -1,4 +1,58 @@
 /** @type {import('next').NextConfig} */
+
+// Security headers to protect against common attacks
+const securityHeaders = [
+  // Prevent clickjacking attacks
+  {
+    key: 'X-Frame-Options',
+    value: 'DENY',
+  },
+  // Prevent MIME type sniffing
+  {
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
+  },
+  // Enable XSS filter in browsers
+  {
+    key: 'X-XSS-Protection',
+    value: '1; mode=block',
+  },
+  // Control referrer information
+  {
+    key: 'Referrer-Policy',
+    value: 'strict-origin-when-cross-origin',
+  },
+  // Permissions policy - restrict features
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(self), geolocation=(), interest-cohort=()',
+  },
+  // Strict Transport Security (HTTPS only)
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=31536000; includeSubDomains',
+  },
+  // Content Security Policy
+  {
+    key: 'Content-Security-Policy',
+    value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.vercel-insights.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: blob: https: http:",
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https://*.supabase.co https://*.neon.tech wss://*.ably.io https://api.openai.com https://*.stripe.com https://*.vercel-insights.com",
+      "media-src 'self' blob: https:",
+      "frame-src 'self' https://js.stripe.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "upgrade-insecure-requests",
+    ].join('; '),
+  },
+];
+
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
@@ -132,6 +186,28 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
+  },
+  // Apply security headers to all routes
+  async headers() {
+    return [
+      {
+        // Apply to all routes
+        source: '/:path*',
+        headers: securityHeaders,
+      },
+      {
+        // Extra security for API routes
+        source: '/api/:path*',
+        headers: [
+          ...securityHeaders,
+          // Prevent caching of API responses with sensitive data
+          {
+            key: 'Cache-Control',
+            value: 'no-store, max-age=0',
+          },
+        ],
+      },
+    ];
   },
 };
 

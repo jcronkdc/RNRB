@@ -34,6 +34,14 @@ export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[]) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
+
+  return {
+    shortcuts,
+    shortcutsHelp: shortcuts.map((s) => ({
+      ...s,
+      formatted: formatShortcut(s),
+    })),
+  };
 }
 
 // Get platform-specific modifier key name

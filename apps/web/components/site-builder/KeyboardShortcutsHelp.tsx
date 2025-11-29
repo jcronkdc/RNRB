@@ -1,6 +1,7 @@
 'use client';
 
 import { X, Command, Keyboard } from 'lucide-react';
+
 import { getModifierKey } from '@/hooks/use-keyboard-shortcuts';
 
 interface KeyboardShortcutsHelpProps {
@@ -53,14 +54,27 @@ export function KeyboardShortcutsHelp({ isOpen, onClose }: KeyboardShortcutsHelp
   );
 
   return (
+    // Backdrop overlay - click to close
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
       onClick={onClose}
+      onKeyDown={(e) => e.key === 'Escape' && onClose()}
+      role="presentation"
     >
+      {/* Modal dialog - contains the actual content */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="shortcuts-title"
         className="w-full max-w-2xl rounded-xl"
         style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            onClose();
+          }
+          e.stopPropagation();
+        }}
       >
         {/* Header */}
         <div
@@ -75,7 +89,11 @@ export function KeyboardShortcutsHelp({ isOpen, onClose }: KeyboardShortcutsHelp
               <Keyboard size={20} style={{ color: 'var(--accent)' }} />
             </div>
             <div>
-              <h2 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
+              <h2
+                id="shortcuts-title"
+                className="text-xl font-bold"
+                style={{ color: 'var(--text)' }}
+              >
                 Keyboard Shortcuts
               </h2>
               <p className="text-sm" style={{ color: 'var(--muted)' }}>

@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 
-export { prisma } from './prisma';
+export { prisma, safeDelete } from './prisma';
 export { Prisma };
 
 // Re-export Prisma types for convenience

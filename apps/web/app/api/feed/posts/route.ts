@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
+import {
+  validateCursor,
+  validateLimit,
+  validateUrl,
+  sanitizeContent,
+  validateVisibility,
+  validateContentType,
+  rateLimitUser,
+  logSecurityEvent,
+  getClientIp,
+} from '@/lib/security';
 
 /**
  * GET /api/feed/posts
@@ -17,10 +28,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limiting
+    if (!rateLimitUser(session.user.id, 'feed-posts-read', 200)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type') || 'following';
-    const cursor = searchParams.get('cursor');
-    const limit = parseInt(searchParams.get('limit') || '20');
+    const typeParam = searchParams.get('type') || 'following';
+    // SECURITY: Validate feed type to prevent injection
+    const validTypes = ['following', 'public', 'discover', 'audio'];
+    const type = validTypes.includes(typeParam) ? typeParam : 'following';
+    // SECURITY: Validate cursor and limit
+    const cursor = validateCursor(searchParams.get('cursor'));
+    const limit = validateLimit(searchParams.get('limit'), 50, 20);
 
     const userId = session.user.id;
 
@@ -173,31 +193,55 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limiting - 30 posts per hour
+    if (!rateLimitUser(session.user.id, 'feed-posts-create', 30)) {
+      logSecurityEvent('rate_limit', {
+        userId: session.user.id,
+        action: 'post-create',
+        ip: getClientIp(request),
+      });
+      return NextResponse.json(
+        { error: 'Too many posts. Please wait before posting again.' },
+        { status: 429 }
+      );
+    }
+
     const userId = session.user.id;
     const body = await request.json();
 
-    const {
-      content,
-      contentType = 'text',
-      audioUrl,
-      audioPath,
-      waveformData,
-      duration,
-      bpm,
-      key,
-      imageUrls = [],
-      videoUrl,
-      linkUrl,
-      linkPreview,
-      genre,
-      mood,
-      tags = [],
-      visibility = 'public',
-      allowComments = true,
-      allowReactions = true,
-      allowShares = true,
-      originalPostId, // For shares/reposts
-    } = body;
+    // SECURITY: Sanitize and validate all inputs
+    const content = sanitizeContent(body.content, 10000);
+    const contentType = validateContentType(body.contentType);
+    const audioUrl = validateUrl(body.audioUrl);
+    const audioPath = body.audioPath ? sanitizeContent(body.audioPath, 500) : null;
+    const waveformData = body.waveformData; // JSON data, validated by Prisma
+    const duration =
+      typeof body.duration === 'number' && body.duration > 0
+        ? Math.min(body.duration, 36000)
+        : null;
+    const bpm = typeof body.bpm === 'number' && body.bpm > 0 ? Math.min(body.bpm, 999) : null;
+    const key = body.key ? sanitizeContent(body.key, 10) : null;
+    // Validate image URLs array
+    const imageUrls = Array.isArray(body.imageUrls)
+      ? body.imageUrls.filter((url: string) => validateUrl(url)).slice(0, 10)
+      : [];
+    const videoUrl = validateUrl(body.videoUrl);
+    const linkUrl = validateUrl(body.linkUrl);
+    const linkPreview = body.linkPreview; // JSON data
+    const genre = body.genre ? sanitizeContent(body.genre, 50) : null;
+    const mood = body.mood ? sanitizeContent(body.mood, 50) : null;
+    // Validate tags array
+    const tags = Array.isArray(body.tags)
+      ? body.tags
+          .map((t: string) => sanitizeContent(t, 50))
+          .filter(Boolean)
+          .slice(0, 20)
+      : [];
+    const visibility = validateVisibility(body.visibility);
+    const allowComments = body.allowComments !== false;
+    const allowReactions = body.allowReactions !== false;
+    const allowShares = body.allowShares !== false;
+    const originalPostId = body.originalPostId; // Will be validated below
 
     // Validate required fields based on content type
     if (contentType === 'audio' && !audioUrl) {

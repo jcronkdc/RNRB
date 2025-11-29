@@ -1,7 +1,5 @@
 'use client';
 
-import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Save,
   Eye,
@@ -15,15 +13,10 @@ import {
   ChevronDown,
   Trash2,
   Plus,
-  ExternalLink,
   Check,
   Link,
   PanelLeftClose,
   PanelLeft,
-  Monitor,
-  Tablet,
-  Smartphone,
-  RefreshCw,
   Undo,
   Redo,
   CloudOff,
@@ -32,19 +25,31 @@ import {
   BarChart3,
   HelpCircle,
   AlertCircle,
-  Wifi,
   WifiOff,
+  Wand2,
+  Sparkles,
+  Bot,
+  PenTool,
 } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
+
+import { AddSectionModal } from '@/components/site-builder/AddSectionModal';
+import { AIContentGenerator } from '@/components/site-builder/AIContentGenerator';
+import { AISectionWizard } from '@/components/site-builder/AISectionWizard';
+import { AnalyticsDashboard } from '@/components/site-builder/AnalyticsDashboard';
 import { DomainSettings } from '@/components/site-builder/DomainSettings';
 import { DraggableSections } from '@/components/site-builder/DraggableSections';
-import { LivePreview } from '@/components/site-builder/LivePreview';
-import { TemplateSwitcher } from '@/components/site-builder/TemplateSwitcher';
-import { AnalyticsDashboard } from '@/components/site-builder/AnalyticsDashboard';
-import { SEOPreview } from '@/components/site-builder/SEOPreview';
-import { PageManager } from '@/components/site-builder/PageManager';
-import { ResponsiveTesting } from '@/components/site-builder/ResponsiveTesting';
-import { SectionEditor } from '@/components/site-builder/SectionEditor';
 import { KeyboardShortcutsHelp } from '@/components/site-builder/KeyboardShortcutsHelp';
+import { LivePreview } from '@/components/site-builder/LivePreview';
+import { OnboardingTour, useOnboardingTour } from '@/components/site-builder/OnboardingTour';
+import { PageManager } from '@/components/site-builder/PageManager';
+import { SectionEditor } from '@/components/site-builder/SectionEditor';
+import { SEOPreview } from '@/components/site-builder/SEOPreview';
+import { SubscriptionGate, useSubscription } from '@/components/site-builder/SubscriptionGate';
+import { TemplateSwitcher } from '@/components/site-builder/TemplateSwitcher';
+import { UserGuides } from '@/components/site-builder/UserGuides';
+import { WebsiteAIAssistant } from '@/components/site-builder/WebsiteAIAssistant';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 
 interface SiteSection {
@@ -69,6 +74,7 @@ interface Site {
   metaDescription: string | null;
   bookingEmail: string | null;
   publicEmail: string | null;
+  customDomain: string | null;
   sections: SiteSection[];
 }
 
@@ -95,8 +101,25 @@ function SiteEditorContent() {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [editingSection, setEditingSection] = useState<SiteSection | null>(null);
   const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
+  const [showUserGuides, setShowUserGuides] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [saveError, setSaveError] = useState<string | null>(null);
+
+  // Onboarding tour
+  const { showTour, setShowTour, completeTour } = useOnboardingTour();
+
+  // AI Features state
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [showAIContentGenerator, setShowAIContentGenerator] = useState(false);
+  const [showAISectionWizard, setShowAISectionWizard] = useState(false);
+  const [showAddSectionModal, setShowAddSectionModal] = useState(false);
+  const [showSubscriptionGate, setShowSubscriptionGate] = useState(false);
+  const [gatedFeature, setGatedFeature] = useState<{ name: string; plan: 'pro' | 'studio' } | null>(
+    null
+  );
+
+  // Subscription hook
+  const { plan: currentPlan, canAccess, isPro } = useSubscription();
 
   useEffect(() => {
     fetchSite();
@@ -295,7 +318,7 @@ function SiteEditorContent() {
       } else {
         throw new Error('Save failed');
       }
-    } catch (error) {
+    } catch {
       setSaveError('Failed to save. Check your connection.');
       setSaveMessage('Error saving');
       setTimeout(() => setSaveMessage(''), 3000);
@@ -423,43 +446,7 @@ function SiteEditorContent() {
     }
   };
 
-  const moveSectionUp = async (sectionId: string) => {
-    if (!site) return;
-    const sections = [...site.sections];
-    const index = sections.findIndex((s) => s.id === sectionId);
-    if (index > 0) {
-      [sections[index - 1], sections[index]] = [sections[index], sections[index - 1]];
-      sections[index - 1].order = index - 1;
-      sections[index].order = index;
-      setSite({ ...site, sections });
-
-      // Save to server
-      await fetch('/api/sites/sections', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: sectionId, order: index - 1 }),
-      });
-    }
-  };
-
-  const moveSectionDown = async (sectionId: string) => {
-    if (!site) return;
-    const sections = [...site.sections];
-    const index = sections.findIndex((s) => s.id === sectionId);
-    if (index < sections.length - 1) {
-      [sections[index], sections[index + 1]] = [sections[index + 1], sections[index]];
-      sections[index].order = index;
-      sections[index + 1].order = index + 1;
-      setSite({ ...site, sections });
-
-      // Save to server
-      await fetch('/api/sites/sections', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: sectionId, order: index + 1 }),
-      });
-    }
-  };
+  // Note: moveSectionUp and moveSectionDown are handled via DraggableSections drag-and-drop
 
   const toggleSectionVisibility = async (sectionId: string) => {
     if (!site) return;
@@ -487,6 +474,77 @@ function SiteEditorContent() {
     });
   };
 
+  // Add new section handler
+  const handleAddSection = async (sectionType: string) => {
+    if (!site) return;
+
+    try {
+      const response = await fetch('/api/sites/sections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: sectionType,
+          order: site.sections.length,
+        }),
+      });
+
+      if (response.ok) {
+        await fetchSite();
+        setPreviewRefreshKey((k) => k + 1);
+      }
+    } catch (error) {
+      console.error('Failed to add section:', error);
+    }
+  };
+
+  // Handle AI-generated sections
+  const handleAIGeneratedSections = async (
+    sections: Array<{ type: string; content: Record<string, unknown>; order: number }>
+  ) => {
+    if (!site) return;
+
+    try {
+      for (const section of sections) {
+        await fetch('/api/sites/sections', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: section.type,
+            content: section.content,
+            order: site.sections.length + section.order,
+          }),
+        });
+      }
+
+      await fetchSite();
+      setPreviewRefreshKey((k) => k + 1);
+    } catch (error) {
+      console.error('Failed to create AI sections:', error);
+    }
+  };
+
+  // Handle AI content insertion
+  const handleAIContentInsert = (content: string, field?: string) => {
+    // Insert content into the appropriate field
+    if (editingSection && field) {
+      const updatedContent = { ...editingSection.content, [field]: content };
+      setEditingSection({ ...editingSection, content: updatedContent });
+    } else {
+      // Copy to clipboard as fallback
+      navigator.clipboard.writeText(content);
+    }
+  };
+
+  // Check feature access
+  const checkFeatureAccess = (feature: string, requiredPlan: 'pro' | 'studio') => {
+    if (canAccess(feature, requiredPlan)) {
+      return true;
+    }
+    setGatedFeature({ name: feature, plan: requiredPlan });
+    setShowSubscriptionGate(true);
+    return false;
+  };
+
   if (isLoading) {
     return (
       <div
@@ -504,6 +562,7 @@ function SiteEditorContent() {
 
   const tabs = [
     { id: 'sections', label: 'Sections', icon: Layers },
+    { id: 'ai', label: 'AI Tools', icon: Sparkles, highlight: true },
     { id: 'pages', label: 'Pages', icon: FileText },
     { id: 'theme', label: 'Theme', icon: Palette },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
@@ -551,8 +610,13 @@ function SiteEditorContent() {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Auto-save indicator */}
-          <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--muted)' }}>
+          {/* Auto-save indicator & toggle */}
+          <button
+            onClick={() => setAutoSaveEnabled(!autoSaveEnabled)}
+            className="flex items-center gap-2 rounded-lg px-2 py-1 text-xs transition-colors hover:bg-white/10"
+            style={{ color: 'var(--muted)' }}
+            title={autoSaveEnabled ? 'Click to disable auto-save' : 'Click to enable auto-save'}
+          >
             {!isOnline ? (
               <>
                 <WifiOff size={14} className="text-red-400" />
@@ -569,7 +633,7 @@ function SiteEditorContent() {
                 <span>Auto-save off</span>
               </>
             )}
-          </div>
+          </button>
 
           {saveError && (
             <span className="flex items-center gap-1 text-xs text-red-400">
@@ -662,6 +726,17 @@ function SiteEditorContent() {
             {isPublishing ? <Loader2 size={16} className="animate-spin" /> : <Globe size={16} />}
             {site.status === 'published' ? 'Published' : 'Publish'}
           </button>
+
+          {/* Help Button */}
+          <button
+            onClick={() => setShowUserGuides(true)}
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/10"
+            style={{ color: 'var(--muted)', border: '1px solid var(--border)' }}
+            data-tour="publish-button"
+          >
+            <FileText size={16} />
+            Help
+          </button>
         </div>
       </div>
 
@@ -677,6 +752,7 @@ function SiteEditorContent() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
+            data-tour={`${tab.id}-tab`}
             className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === tab.id ? 'bg-white/10' : 'hover:bg-white/5'
             }`}
@@ -706,16 +782,36 @@ function SiteEditorContent() {
                   <h2 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
                     Page Sections
                   </h2>
-                  <button
-                    className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium"
-                    style={{
-                      background: 'var(--accent)',
-                      color: '#fff',
-                    }}
-                  >
-                    <Plus size={16} />
-                    Add Section
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        if (checkFeatureAccess('AI Website Wizard', 'studio')) {
+                          setShowAISectionWizard(true);
+                        }
+                      }}
+                      className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all hover:scale-105"
+                      style={{
+                        background: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)',
+                        color: '#fff',
+                      }}
+                      data-tour="ai-wizard-button"
+                    >
+                      <Wand2 size={16} />
+                      AI Wizard
+                    </button>
+                    <button
+                      onClick={() => setShowAddSectionModal(true)}
+                      className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium"
+                      style={{
+                        background: 'var(--accent)',
+                        color: '#fff',
+                      }}
+                      data-tour="add-section-button"
+                    >
+                      <Plus size={16} />
+                      Add Section
+                    </button>
+                  </div>
                 </div>
                 <p className="mb-4 text-sm" style={{ color: 'var(--muted)' }}>
                   Drag and drop to reorder sections
@@ -727,6 +823,191 @@ function SiteEditorContent() {
                   onDelete={deleteSection}
                   onEdit={handleEditSection}
                 />
+              </div>
+            )}
+
+            {activeTab === 'ai' && (
+              <div className="space-y-6">
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
+                    AI-Powered Tools
+                  </h2>
+                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                    Let AI help you create a stunning website faster
+                  </p>
+                </div>
+
+                {/* AI Tools Grid */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {/* AI Website Wizard */}
+                  <button
+                    onClick={() => {
+                      if (checkFeatureAccess('AI Website Wizard', 'studio')) {
+                        setShowAISectionWizard(true);
+                      }
+                    }}
+                    className="flex flex-col items-start gap-4 rounded-xl p-6 text-left transition-all hover:scale-[1.02]"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(249,115,22,0.1) 0%, rgba(236,72,153,0.1) 100%)',
+                      border: '1px solid var(--border)',
+                    }}
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-pink-500">
+                      <Wand2 size={24} className="text-white" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+                          AI Website Wizard
+                        </h3>
+                        <span className="rounded bg-purple-500/20 px-2 py-0.5 text-xs text-purple-400">
+                          STUDIO
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
+                        Answer a few questions and let AI create your entire website structure
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* AI Content Generator */}
+                  <button
+                    onClick={() => {
+                      if (checkFeatureAccess('AI Content Generator', 'pro')) {
+                        setShowAIContentGenerator(true);
+                      }
+                    }}
+                    className="flex flex-col items-start gap-4 rounded-xl p-6 text-left transition-all hover:scale-[1.02]"
+                    style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                  >
+                    <div
+                      className="flex h-12 w-12 items-center justify-center rounded-xl"
+                      style={{ background: 'var(--accent)' }}
+                    >
+                      <PenTool size={24} className="text-white" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+                          AI Content Generator
+                        </h3>
+                        <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs text-orange-400">
+                          PRO
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
+                        Generate bios, press releases, social posts, and more
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* AI Assistant */}
+                  <button
+                    onClick={() => {
+                      if (checkFeatureAccess('AI Website Assistant', 'pro')) {
+                        setShowAIAssistant(true);
+                      }
+                    }}
+                    className="flex flex-col items-start gap-4 rounded-xl p-6 text-left transition-all hover:scale-[1.02]"
+                    style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                  >
+                    <div
+                      className="flex h-12 w-12 items-center justify-center rounded-xl"
+                      style={{ background: 'var(--accent)' }}
+                    >
+                      <Bot size={24} className="text-white" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+                          AI Assistant
+                        </h3>
+                        <span className="rounded bg-orange-500/20 px-2 py-0.5 text-xs text-orange-400">
+                          PRO
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
+                        Chat with AI to get help building your website
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Quick Actions */}
+                  <div
+                    className="flex flex-col gap-3 rounded-xl p-6"
+                    style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                  >
+                    <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+                      Quick AI Actions
+                    </h3>
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => {
+                          if (checkFeatureAccess('AI Content Generator', 'pro')) {
+                            setShowAIContentGenerator(true);
+                          }
+                        }}
+                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        <Sparkles size={14} className="text-orange-500" />
+                        Generate Artist Bio
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (checkFeatureAccess('AI Content Generator', 'pro')) {
+                            setShowAIContentGenerator(true);
+                          }
+                        }}
+                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        <Sparkles size={14} className="text-orange-500" />
+                        Write Press Release
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (checkFeatureAccess('AI Content Generator', 'pro')) {
+                            setShowAIContentGenerator(true);
+                          }
+                        }}
+                        className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        <Sparkles size={14} className="text-orange-500" />
+                        Optimize SEO
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Upgrade CTA for Free Users */}
+                {!isPro && (
+                  <div
+                    className="rounded-xl p-6 text-center"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(249,115,22,0.1) 0%, rgba(236,72,153,0.1) 100%)',
+                      border: '1px solid var(--border)',
+                    }}
+                  >
+                    <h3 className="mb-2 font-semibold" style={{ color: 'var(--text)' }}>
+                      Unlock AI Features
+                    </h3>
+                    <p className="mb-4 text-sm" style={{ color: 'var(--muted)' }}>
+                      Upgrade to Pro or Studio to access all AI-powered tools
+                    </p>
+                    <a
+                      href="/website-builder/pricing"
+                      className="inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white transition-all hover:scale-105"
+                      style={{ background: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)' }}
+                    >
+                      <Sparkles size={16} />
+                      View Plans
+                    </a>
+                  </div>
+                )}
               </div>
             )}
 
@@ -786,12 +1067,91 @@ function SiteEditorContent() {
         isOpen={showShortcutsHelp}
         onClose={() => setShowShortcutsHelp(false)}
       />
+
+      {/* User Guides */}
+      <UserGuides isOpen={showUserGuides} onClose={() => setShowUserGuides(false)} />
+
+      {/* Onboarding Tour */}
+      <OnboardingTour
+        isOpen={showTour}
+        onClose={() => setShowTour(false)}
+        onComplete={completeTour}
+      />
+
+      {/* AI Assistant (Floating) */}
+      {showAIAssistant && (
+        <WebsiteAIAssistant
+          siteId={site.id}
+          siteName={site.siteName || undefined}
+          currentSection={activeTab}
+          onApplyTheme={(theme) => {
+            setSite((prev) => {
+              if (!prev) return prev;
+              return { ...prev, theme: { ...prev.theme, ...theme } };
+            });
+            setHasChanges(true);
+            setPreviewRefreshKey((k) => k + 1);
+          }}
+          onAddSection={(sectionType) => {
+            handleAddSection(sectionType);
+            setActiveTab('sections');
+          }}
+          onNavigate={(tab) => setActiveTab(tab)}
+        />
+      )}
+
+      {/* AI Content Generator Modal */}
+      <AIContentGenerator
+        isOpen={showAIContentGenerator}
+        onClose={() => setShowAIContentGenerator(false)}
+        onInsert={handleAIContentInsert}
+        siteName={site.siteName || undefined}
+        genre={site.theme?.genre as string | undefined}
+        context={
+          editingSection
+            ? {
+                currentSection: editingSection.type,
+                existingContent: JSON.stringify(editingSection.content),
+              }
+            : undefined
+        }
+      />
+
+      {/* AI Section Wizard Modal */}
+      <AISectionWizard
+        isOpen={showAISectionWizard}
+        onClose={() => setShowAISectionWizard(false)}
+        onCreateSections={handleAIGeneratedSections}
+        siteName={site.siteName || undefined}
+        existingSections={site.sections.map((s) => s.type)}
+      />
+
+      {/* Add Section Modal */}
+      <AddSectionModal
+        isOpen={showAddSectionModal}
+        onClose={() => setShowAddSectionModal(false)}
+        onAdd={handleAddSection}
+      />
+
+      {/* Subscription Gate Modal */}
+      {gatedFeature && (
+        <SubscriptionGate
+          isOpen={showSubscriptionGate}
+          onClose={() => {
+            setShowSubscriptionGate(false);
+            setGatedFeature(null);
+          }}
+          feature={gatedFeature.name}
+          requiredPlan={gatedFeature.plan}
+          currentPlan={currentPlan}
+        />
+      )}
     </div>
   );
 }
 
-// Sections Tab Component
-function SectionsTab({
+// Sections Tab Component (legacy - now using DraggableSections)
+function _SectionsTab({
   sections,
   onMoveUp,
   onMoveDown,
@@ -937,9 +1297,9 @@ function ThemeTab({
             border: '1px solid var(--border)',
           }}
         >
-          <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--muted)' }}>
+          <span className="mb-2 block text-sm font-medium" style={{ color: 'var(--muted)' }}>
             Template
-          </label>
+          </span>
           <p className="text-lg font-bold uppercase" style={{ color: 'var(--text)' }}>
             {templateId}
           </p>
@@ -959,12 +1319,17 @@ function ThemeTab({
           <div className="grid grid-cols-2 gap-4">
             {colorFields.map(({ key, label }) => (
               <div key={key}>
-                <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+                <label
+                  htmlFor={`color-${key}`}
+                  className="mb-2 block text-sm"
+                  style={{ color: 'var(--muted)' }}
+                >
                   {label}
                 </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
+                    id={`color-${key}`}
                     value={(theme[key] as string) || '#000000'}
                     onChange={(e) => onChange({ ...theme, [key]: e.target.value })}
                     className="h-10 w-10 cursor-pointer rounded"
@@ -1000,10 +1365,15 @@ function ThemeTab({
           </h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+              <label
+                htmlFor="font-heading"
+                className="mb-2 block text-sm"
+                style={{ color: 'var(--muted)' }}
+              >
                 Heading Font
               </label>
               <input
+                id="font-heading"
                 type="text"
                 value={(theme.fontHeading as string) || ''}
                 onChange={(e) => onChange({ ...theme, fontHeading: e.target.value })}
@@ -1017,10 +1387,15 @@ function ThemeTab({
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+              <label
+                htmlFor="font-body"
+                className="mb-2 block text-sm"
+                style={{ color: 'var(--muted)' }}
+              >
                 Body Font
               </label>
               <input
+                id="font-body"
                 type="text"
                 value={(theme.fontBody as string) || ''}
                 onChange={(e) => onChange({ ...theme, fontBody: e.target.value })}
@@ -1079,10 +1454,15 @@ function SettingsTab({
         </h3>
         <div className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+            <label
+              htmlFor="settings-site-name"
+              className="mb-2 block text-sm"
+              style={{ color: 'var(--muted)' }}
+            >
               Site Name
             </label>
             <input
+              id="settings-site-name"
               type="text"
               value={site.siteName || ''}
               onChange={(e) => onChange({ siteName: e.target.value })}
@@ -1096,10 +1476,15 @@ function SettingsTab({
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+            <label
+              htmlFor="settings-tagline"
+              className="mb-2 block text-sm"
+              style={{ color: 'var(--muted)' }}
+            >
               Tagline
             </label>
             <input
+              id="settings-tagline"
               type="text"
               value={site.tagline || ''}
               onChange={(e) => onChange({ tagline: e.target.value })}
@@ -1128,10 +1513,15 @@ function SettingsTab({
         </h3>
         <div className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+            <label
+              htmlFor="settings-page-title"
+              className="mb-2 block text-sm"
+              style={{ color: 'var(--muted)' }}
+            >
               Page Title (for Google)
             </label>
             <input
+              id="settings-page-title"
               type="text"
               value={site.siteTitle || ''}
               onChange={(e) => onChange({ siteTitle: e.target.value })}
@@ -1145,10 +1535,15 @@ function SettingsTab({
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+            <label
+              htmlFor="settings-meta-desc"
+              className="mb-2 block text-sm"
+              style={{ color: 'var(--muted)' }}
+            >
               Meta Description
             </label>
             <textarea
+              id="settings-meta-desc"
               value={site.metaDescription || ''}
               onChange={(e) => onChange({ metaDescription: e.target.value })}
               rows={3}
@@ -1218,10 +1613,15 @@ function SettingsTab({
         </h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+            <label
+              htmlFor="settings-booking-email"
+              className="mb-2 block text-sm"
+              style={{ color: 'var(--muted)' }}
+            >
               Booking Email
             </label>
             <input
+              id="settings-booking-email"
               type="email"
               value={site.bookingEmail || ''}
               onChange={(e) => onChange({ bookingEmail: e.target.value })}
@@ -1235,10 +1635,15 @@ function SettingsTab({
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm" style={{ color: 'var(--muted)' }}>
+            <label
+              htmlFor="settings-public-email"
+              className="mb-2 block text-sm"
+              style={{ color: 'var(--muted)' }}
+            >
               Public Email
             </label>
             <input
+              id="settings-public-email"
               type="email"
               value={site.publicEmail || ''}
               onChange={(e) => onChange({ publicEmail: e.target.value })}
@@ -1258,7 +1663,7 @@ function SettingsTab({
 }
 
 // Pages Tab Component
-function PagesTab({ site, onUpdate }: { site: Site; onUpdate: () => void }) {
+function PagesTab({ site: _site, onUpdate }: { site: Site; onUpdate: () => void }) {
   const [pages, setPages] = useState<
     Array<{
       id: string;

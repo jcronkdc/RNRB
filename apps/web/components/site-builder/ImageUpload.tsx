@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef, ChangeEvent } from 'react';
-import { Upload, X, Loader2, Image, Check, AlertCircle } from 'lucide-react';
+import { Upload, Loader2, Check, AlertCircle } from 'lucide-react';
+import { useState, useRef, type ChangeEvent } from 'react';
 
 interface ImageUploadProps {
   value?: string | null;

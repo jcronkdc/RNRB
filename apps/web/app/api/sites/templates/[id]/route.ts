@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET /api/sites/templates/:id - Get theme defaults for a template
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const templateId = params.id;
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id: templateId } = await params;
 
   const themes: Record<string, Record<string, unknown>> = {
     noir: {

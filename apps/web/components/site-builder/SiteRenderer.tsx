@@ -9,7 +9,118 @@ import {
   MailingListSection,
   HeaderSection,
   FooterSection,
+  VideoHeroSection,
+  StreamingSection,
+  PhotoGallerySection,
+  BookingSection,
+  MerchStoreSection,
 } from './sections';
+
+// Type definitions for section props
+interface VideoHeroSectionProps {
+  content: {
+    headline?: string;
+    subheadline?: string;
+    videoUrl?: string;
+    youtubeId?: string;
+    vimeoId?: string;
+    posterImage?: string;
+    ctaText?: string;
+    ctaLink?: string;
+    overlayOpacity?: number;
+    textAlignment?: 'left' | 'center' | 'right';
+    autoplay?: boolean;
+    loop?: boolean;
+    showControls?: boolean;
+  };
+  styles?: {
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+    overlayColor?: string;
+  };
+}
+
+interface StreamingSectionProps {
+  content: {
+    title?: string;
+    subtitle?: string;
+    links?: { platform: string; url: string; embedId?: string }[];
+    featuredEmbed?: {
+      platform: 'spotify' | 'apple' | 'soundcloud' | 'bandcamp';
+      embedUrl: string;
+      embedType: 'track' | 'album' | 'playlist' | 'artist';
+    };
+    layout?: 'featured' | 'grid' | 'list';
+  };
+  styles?: {
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+  };
+}
+
+interface PhotoGallerySectionProps {
+  content: {
+    title?: string;
+    subtitle?: string;
+    photos?: { url: string; alt?: string; caption?: string }[];
+    layout?: 'grid' | 'masonry' | 'carousel';
+    columns?: 2 | 3 | 4;
+  };
+  styles?: {
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+  };
+}
+
+interface BookingSectionProps {
+  content: {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    email?: string;
+    showPricing?: boolean;
+    pricingNote?: string;
+    availableFor?: string[];
+    requirements?: string;
+  };
+  styles?: {
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+  };
+  subdomain?: string;
+}
+
+interface MerchStoreSectionProps {
+  content: {
+    title?: string;
+    subtitle?: string;
+    products?: {
+      id: string;
+      name: string;
+      description?: string;
+      price: number;
+      comparePrice?: number;
+      images: string[];
+      category?: string;
+      variants?: { name: string; options: string[] }[];
+      inStock: boolean;
+    }[];
+    layout?: 'grid' | 'featured' | 'carousel';
+    columns?: 2 | 3 | 4;
+    showCategories?: boolean;
+    stripeEnabled?: boolean;
+  };
+  styles?: {
+    backgroundColor?: string;
+    textColor?: string;
+    accentColor?: string;
+  };
+  subdomain?: string;
+}
 
 interface SiteSection {
   id: string;
@@ -56,12 +167,84 @@ export function SiteRenderer({ site, isPreview = false }: SiteRendererProps) {
 
     switch (section.type) {
       case 'hero_image':
-      case 'hero_video':
       case 'hero_slideshow':
       case 'hero_animated':
       case 'hero_split':
         return (
           <HeroSection key={section.id} content={content} theme={theme} animation={animation} />
+        );
+
+      case 'hero_video':
+      case 'video_hero':
+        return (
+          <VideoHeroSection
+            key={section.id}
+            content={content as VideoHeroSectionProps['content']}
+            styles={{
+              backgroundColor: theme.primaryColor as string,
+              textColor: theme.textColor as string,
+              accentColor: theme.accentColor as string,
+              overlayColor: theme.secondaryColor as string,
+            }}
+          />
+        );
+
+      case 'streaming':
+      case 'streaming_links':
+        return (
+          <StreamingSection
+            key={section.id}
+            content={content as StreamingSectionProps['content']}
+            styles={{
+              backgroundColor: theme.primaryColor as string,
+              textColor: theme.textColor as string,
+              accentColor: theme.accentColor as string,
+            }}
+          />
+        );
+
+      case 'photo_gallery':
+      case 'gallery':
+        return (
+          <PhotoGallerySection
+            key={section.id}
+            content={content as PhotoGallerySectionProps['content']}
+            styles={{
+              backgroundColor: theme.primaryColor as string,
+              textColor: theme.textColor as string,
+              accentColor: theme.accentColor as string,
+            }}
+          />
+        );
+
+      case 'booking':
+      case 'booking_form':
+        return (
+          <BookingSection
+            key={section.id}
+            content={content as BookingSectionProps['content']}
+            styles={{
+              backgroundColor: theme.primaryColor as string,
+              textColor: theme.textColor as string,
+              accentColor: theme.accentColor as string,
+            }}
+            subdomain={site.subdomain}
+          />
+        );
+
+      case 'merch':
+      case 'merch_store':
+        return (
+          <MerchStoreSection
+            key={section.id}
+            content={content as MerchStoreSectionProps['content']}
+            styles={{
+              backgroundColor: theme.primaryColor as string,
+              textColor: theme.textColor as string,
+              accentColor: theme.accentColor as string,
+            }}
+            subdomain={site.subdomain}
+          />
         );
 
       case 'music_player':

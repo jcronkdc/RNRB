@@ -19,6 +19,24 @@ import {
   Send,
   ShoppingCart,
   Search,
+  FileText,
+  Mic,
+  ListMusic,
+  Disc,
+  Star,
+  Radio,
+  Ticket,
+  Film,
+  Clock,
+  Heart,
+  Quote,
+  UserPlus,
+  Link,
+  Trophy,
+  Download,
+  VideoIcon,
+  Phone,
+  Info,
 } from 'lucide-react';
 
 interface AddSectionModalProps {
@@ -32,8 +50,9 @@ interface SectionType {
   name: string;
   description: string;
   icon: typeof Image;
-  category: 'hero' | 'content' | 'media' | 'engagement' | 'commerce';
+  category: 'hero' | 'content' | 'media' | 'engagement' | 'commerce' | 'pro' | 'pages';
   color: string;
+  isPro?: boolean;
 }
 
 const sectionTypes: SectionType[] = [
@@ -62,6 +81,14 @@ const sectionTypes: SectionType[] = [
     category: 'hero',
     color: '#dc2626',
   },
+  {
+    id: 'countdown',
+    name: 'Countdown Timer',
+    description: 'Release countdown with pre-save links',
+    icon: Clock,
+    category: 'hero',
+    color: '#f97316',
+  },
 
   // Media Sections
   {
@@ -87,6 +114,39 @@ const sectionTypes: SectionType[] = [
     icon: Grid3x3,
     category: 'media',
     color: '#a855f7',
+  },
+  {
+    id: 'music_videos',
+    name: 'Music Videos',
+    description: 'Video gallery with modal player',
+    icon: Film,
+    category: 'media',
+    color: '#ef4444',
+  },
+  {
+    id: 'discography',
+    name: 'Discography',
+    description: 'Full album catalog with track lists',
+    icon: Disc,
+    category: 'media',
+    color: '#8b5cf6',
+  },
+  {
+    id: 'lyrics',
+    name: 'Lyrics',
+    description: 'Searchable lyrics with streaming links',
+    icon: FileText,
+    category: 'media',
+    color: '#06b6d4',
+  },
+  {
+    id: 'live_stream',
+    name: 'Live Stream',
+    description: 'Twitch/YouTube live integration',
+    icon: Radio,
+    category: 'media',
+    color: '#9333ea',
+    isPro: true,
   },
 
   // Content Sections
@@ -130,6 +190,38 @@ const sectionTypes: SectionType[] = [
     category: 'content',
     color: '#eab308',
   },
+  {
+    id: 'setlist',
+    name: 'Setlist',
+    description: 'Shareable setlists with covers & encores',
+    icon: ListMusic,
+    category: 'content',
+    color: '#10b981',
+  },
+  {
+    id: 'press_quotes',
+    name: 'Press Quotes',
+    description: 'Media reviews and testimonials',
+    icon: Quote,
+    category: 'content',
+    color: '#f43f5e',
+  },
+  {
+    id: 'credits',
+    name: 'Credits',
+    description: 'Collaborators and production credits',
+    icon: UserPlus,
+    category: 'content',
+    color: '#0ea5e9',
+  },
+  {
+    id: 'awards',
+    name: 'Awards & Certifications',
+    description: 'Gold/platinum records, awards display',
+    icon: Trophy,
+    category: 'content',
+    color: '#eab308',
+  },
 
   // Engagement Sections
   {
@@ -164,8 +256,42 @@ const sectionTypes: SectionType[] = [
     category: 'engagement',
     color: '#14b8a6',
   },
+  {
+    id: 'fan_club',
+    name: 'Fan Club',
+    description: 'VIP memberships and exclusive content',
+    icon: Star,
+    category: 'engagement',
+    color: '#f59e0b',
+    isPro: true,
+  },
+  {
+    id: 'pre_save',
+    name: 'Pre-Save Links',
+    description: 'Smart links for all platforms',
+    icon: Link,
+    category: 'engagement',
+    color: '#22c55e',
+  },
+  {
+    id: 'support',
+    name: 'Support / Tip Jar',
+    description: 'Patreon, Ko-fi, and tip integration',
+    icon: Heart,
+    category: 'engagement',
+    color: '#ec4899',
+  },
+  {
+    id: 'meet_greet',
+    name: 'Meet & Greet',
+    description: 'Virtual meet & greet booking',
+    icon: VideoIcon,
+    category: 'engagement',
+    color: '#8b5cf6',
+    isPro: true,
+  },
 
-  // Commerce
+  // Commerce Sections
   {
     id: 'merch_store',
     name: 'Merch Store',
@@ -173,6 +299,61 @@ const sectionTypes: SectionType[] = [
     icon: ShoppingCart,
     category: 'commerce',
     color: '#8b5cf6',
+  },
+  {
+    id: 'tickets',
+    name: 'Ticket Integration',
+    description: 'Eventbrite, DICE, and more',
+    icon: Ticket,
+    category: 'commerce',
+    color: '#f97316',
+  },
+  {
+    id: 'downloads',
+    name: 'Downloads Store',
+    description: 'Sell stems, samples, and presets',
+    icon: Download,
+    category: 'commerce',
+    color: '#06b6d4',
+    isPro: true,
+  },
+
+  // Pro/Professional Sections
+  {
+    id: 'epk',
+    name: 'Electronic Press Kit',
+    description: 'Complete EPK with PDF export',
+    icon: FileText,
+    category: 'pro',
+    color: '#3b82f6',
+    isPro: true,
+  },
+  {
+    id: 'tech_rider',
+    name: 'Tech Rider',
+    description: 'Stage plot, input list, hospitality',
+    icon: Mic,
+    category: 'pro',
+    color: '#10b981',
+    isPro: true,
+  },
+
+  // Full Pages
+  {
+    id: 'about_page',
+    name: 'About Page',
+    description: 'Full about page with timeline & story',
+    icon: Info,
+    category: 'pages',
+    color: '#8b5cf6',
+  },
+  {
+    id: 'contact_page',
+    name: 'Contact Page',
+    description: 'Contact page with team & FAQ',
+    icon: Phone,
+    category: 'pages',
+    color: '#ef4444',
   },
 ];
 
@@ -183,6 +364,8 @@ const categories = [
   { id: 'content', label: 'Content' },
   { id: 'engagement', label: 'Engagement' },
   { id: 'commerce', label: 'Commerce' },
+  { id: 'pro', label: 'Professional' },
+  { id: 'pages', label: 'Pages' },
 ];
 
 export function AddSectionModal({ isOpen, onClose, onAdd }: AddSectionModalProps) {
@@ -322,9 +505,16 @@ export function AddSectionModal({ isOpen, onClose, onAdd }: AddSectionModalProps
                     </div>
 
                     {/* Content */}
-                    <h3 className="mb-1 font-semibold" style={{ color: 'var(--text)' }}>
-                      {section.name}
-                    </h3>
+                    <div className="mb-1 flex items-center gap-2">
+                      <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+                        {section.name}
+                      </h3>
+                      {section.isPro && (
+                        <span className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-xs font-bold text-white">
+                          PRO
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm" style={{ color: 'var(--muted)' }}>
                       {section.description}
                     </p>

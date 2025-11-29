@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useAblyClient } from '@/hooks/use-ably-client';
 import { useSession } from 'next-auth/react';
-import type { Types } from 'ably';
 
 interface FeedRealtimeProps {
   onNewPost: (post: any) => void;
@@ -30,34 +29,34 @@ export function FeedRealtime({
     const feedChannel = client.channels.get('feed:public');
 
     // New post published
-    feedChannel.subscribe('post:created', (message: Types.Message) => {
+    feedChannel.subscribe('post:created', (message) => {
       onNewPost(message.data);
     });
 
     // Post updated
-    feedChannel.subscribe('post:updated', (message: Types.Message) => {
+    feedChannel.subscribe('post:updated', (message) => {
       onPostUpdated(message.data);
     });
 
     // Post deleted
-    feedChannel.subscribe('post:deleted', (message: Types.Message) => {
+    feedChannel.subscribe('post:deleted', (message) => {
       onPostDeleted(message.data.postId);
     });
 
     // Reaction added
-    feedChannel.subscribe('reaction:added', (message: Types.Message) => {
+    feedChannel.subscribe('reaction:added', (message) => {
       onReactionAdded(message.data);
     });
 
     // Comment added
-    feedChannel.subscribe('comment:added', (message: Types.Message) => {
+    feedChannel.subscribe('comment:added', (message) => {
       onCommentAdded(message.data);
     });
 
     // Subscribe to user's following feed
     const followingChannel = client.channels.get(`feed:user:${session.user.id}:following`);
 
-    followingChannel.subscribe('post:created', (message: Types.Message) => {
+    followingChannel.subscribe('post:created', (message) => {
       // Only add if following the author
       onNewPost(message.data);
     });

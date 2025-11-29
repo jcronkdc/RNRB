@@ -38,6 +38,7 @@ const protectedPaths = [
   '/request',
   '/u',
   '/discover',
+  '/feed', // Social feed requires auth
   '/auth-test',
   '/posthog-test',
 ];

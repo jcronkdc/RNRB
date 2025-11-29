@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
       order: sectionOrder++,
       content: {
         title: primaryOrg?.name || user?.name || 'Welcome',
-        subtitle: primaryOrg?.tagline || musicianProfile?.experience || 'Official Website',
+        subtitle: primaryOrg?.description || musicianProfile?.experience || 'Official Website',
         backgroundImage: primaryOrg?.images
           ? (primaryOrg.images as Record<string, string>).hero
           : null,
@@ -294,7 +294,7 @@ export async function POST(request: NextRequest) {
         orgId: primaryOrg?.id,
         subdomain,
         templateId,
-        theme: themeDefaults,
+        theme: themeDefaults as object,
         siteName: primaryOrg?.name || user?.name || 'My Music',
         tagline: primaryOrg?.description || '',
         siteTitle: `${primaryOrg?.name || user?.name || 'Artist'} | Official Website`,
@@ -318,9 +318,9 @@ export async function POST(request: NextRequest) {
         // Create all sections
         sections: {
           create: sections.map((s) => ({
-            type: s.type as any,
+            type: s.type,
             order: s.order,
-            content: s.content,
+            content: s.content as object,
             animation: s.animation,
             isVisible: true,
           })),

@@ -1665,4 +1665,50 @@ body {
   }
 }
 
+/* === PROFILE SETUP PAGE ANIMATIONS === */
+@layer components {
+  /* Delayed pulse animation for background orbs */
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  /* Fade in slide from top animation */
+  @keyframes slide-in-from-top {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-in {
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+  }
+
+  .slide-in-from-top-5 {
+    animation-name: slide-in-from-top;
+  }
+
+  .fade-in {
+    animation-name: fade-in-keyframes;
+  }
+
+  @keyframes fade-in-keyframes {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .duration-500 {
+    animation-duration: 500ms;
+  }
+}
+
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */

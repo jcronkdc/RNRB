@@ -143,7 +143,7 @@ export async function GET(request: NextRequest) {
         results.users = users.map((u) => ({
           ...u,
           isFollowing: followingSet.has(u.id),
-          isOwnProfile: u.id === session.user.id,
+          isOwnProfile: u.id === session?.user?.id,
         }));
       } else {
         results.users = users;

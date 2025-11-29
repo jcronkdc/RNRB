@@ -269,13 +269,11 @@ export function MusicPlayerSection({ content, theme, animation }: MusicPlayerSec
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 onClick={() => playTrack(index)}
-                className={`flex w-full items-center gap-4 rounded-lg p-4 transition-all ${
-                  currentTrack === index ? 'ring-2' : 'hover:bg-white/5'
-                }`}
+                className="flex w-full items-center gap-4 rounded-lg p-4 transition-all hover:bg-white/5"
                 style={{
                   backgroundColor: currentTrack === index ? accentColor + '20' : 'transparent',
-                  borderColor: currentTrack === index ? accentColor : 'transparent',
-                  ringColor: accentColor,
+                  border:
+                    currentTrack === index ? `2px solid ${accentColor}` : '2px solid transparent',
                 }}
               >
                 <div

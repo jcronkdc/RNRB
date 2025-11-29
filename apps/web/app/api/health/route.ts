@@ -1,16 +1,38 @@
 import { prisma } from '@cronkwaters/db';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // SECURITY: In production, require a secret key to access detailed health info
+  const isProduction = process.env.NODE_ENV === 'production';
+  const authHeader = request.headers.get('x-health-key');
+  const healthKey = process.env.HEALTH_CHECK_KEY;
+
+  // In production, only show detailed info if authenticated
+  const isAuthenticated = healthKey && authHeader === healthKey;
+
+  // Quick health check for load balancers (always available)
+  if (!isAuthenticated && isProduction) {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      return NextResponse.json({ status: 'healthy', timestamp: new Date().toISOString() });
+    } catch {
+      return NextResponse.json(
+        { status: 'unhealthy', timestamp: new Date().toISOString() },
+        { status: 503 }
+      );
+    }
+  }
+
   const diagnostics = {
     status: 'checking',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV,
     checks: {
+      // SECURITY: Only show detailed env info to authenticated requests
       env: {
         DATABASE_URL: !!process.env.DATABASE_URL,
         NEXTAUTH_SECRET: !!process.env.NEXTAUTH_SECRET,
-        NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'not set',
+        NEXTAUTH_URL: isAuthenticated ? process.env.NEXTAUTH_URL || 'not set' : '[hidden]',
         GOOGLE_CLIENT_ID: !!process.env.GOOGLE_CLIENT_ID,
         GOOGLE_CLIENT_SECRET: !!process.env.GOOGLE_CLIENT_SECRET,
         DAILY_API_KEY: !!process.env.DAILY_API_KEY,

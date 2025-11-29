@@ -170,13 +170,11 @@ export function MerchStoreSection({ content, styles, subdomain }: MerchStoreSect
           <div className="mb-8 flex flex-wrap justify-center gap-2">
             <button
               onClick={() => setActiveCategory(null)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                !activeCategory ? 'ring-2 ring-offset-2' : ''
-              }`}
+              className="rounded-full px-4 py-2 text-sm font-medium transition-colors"
               style={{
                 background: !activeCategory ? accentColor : 'rgba(255,255,255,0.1)',
                 color: !activeCategory ? '#fff' : textColor,
-                ringColor: accentColor,
+                border: !activeCategory ? `2px solid ${accentColor}` : '2px solid transparent',
               }}
             >
               All
@@ -185,13 +183,12 @@ export function MerchStoreSection({ content, styles, subdomain }: MerchStoreSect
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat as string)}
-                className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition-colors ${
-                  activeCategory === cat ? 'ring-2 ring-offset-2' : ''
-                }`}
+                className="rounded-full px-4 py-2 text-sm font-medium capitalize transition-colors"
                 style={{
                   background: activeCategory === cat ? accentColor : 'rgba(255,255,255,0.1)',
                   color: activeCategory === cat ? '#fff' : textColor,
-                  ringColor: accentColor,
+                  border:
+                    activeCategory === cat ? `2px solid ${accentColor}` : '2px solid transparent',
                 }}
               >
                 {cat}
