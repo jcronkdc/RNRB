@@ -166,6 +166,10 @@ export function AblyProvider({ children, lazy = true }: Props) {
         transports: ['web_socket'],
         // Don't auto-connect - we'll handle it
         autoConnect: false,
+        // Use JSON for better error messages
+        useBinaryProtocol: false,
+        // Add timeout for connections
+        realtimeRequestTimeout: 10000,
       });
 
       // Store reference for cleanup
