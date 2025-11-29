@@ -103,7 +103,7 @@ export default function ProjectCollaboratePage() {
           inviteEmail,
           projectName: project.name,
           projectSlug: slug,
-          inviterName: user.user_metadata?.name,
+          inviterName: user.name,
           inviterEmail: user.email,
         }),
       });
@@ -261,7 +261,7 @@ export default function ProjectCollaboratePage() {
                 userId: user.id,
                 userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
                 userEmail: user.email || '',
-                avatar: user.user_metadata?.avatar_url,
+                avatar: user.image,
               }}
               location={`project:${slug}:${activeView}`}
               showDetails={false}

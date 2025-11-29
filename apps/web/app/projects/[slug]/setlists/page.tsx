@@ -317,7 +317,7 @@ export default function SetlistsPage() {
                     userId: user.id,
                     userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
                     userEmail: user.email || '',
-                    avatar: user.user_metadata?.avatar_url,
+                    avatar: user.image,
                   }}
                   location={`Setlist: ${selectedSetlist.name}`}
                   showDetails={true}

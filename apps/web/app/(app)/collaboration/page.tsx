@@ -293,9 +293,9 @@ export default function CollaborationDashboard() {
                   channelName="presence:global"
                   currentUser={{
                     userId: user.id,
-                    userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                    userName: user.name || user.email?.split('@')[0] || 'User',
                     userEmail: user.email || '',
-                    avatar: user.user_metadata?.avatar_url,
+                    avatar: user.image,
                   }}
                   location="collaboration:dashboard"
                   showDetails={true}

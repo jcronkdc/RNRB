@@ -481,7 +481,7 @@ function DashboardContent() {
 
   const userName = useMemo(() => {
     if (loading || !user) return 'Artist';
-    return user.user_metadata?.name || user.email?.split('@')[0] || 'Artist';
+    return user.name || user.email?.split('@')[0] || 'Artist';
   }, [user, loading]);
 
   useEffect(() => {

@@ -464,9 +464,9 @@ export default function SongwritingPage() {
                   channelName="songwriting:studio"
                   currentUser={{
                     userId: user.id,
-                    userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                    userName: user.name || user.email?.split('@')[0] || 'User',
                     userEmail: user.email || '',
-                    avatar: user.user_metadata?.avatar_url,
+                    avatar: user.image,
                   }}
                   location={`songwriting:${activeView}`}
                   showDetails={false}
@@ -531,9 +531,9 @@ export default function SongwritingPage() {
                 onSongChange={(blocks) => setSongBlocks(blocks)}
                 currentUser={{
                   userId: user.id,
-                  userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                  userName: user.name || user.email?.split('@')[0] || 'User',
                   userEmail: user.email || '',
-                  avatar: user.user_metadata?.avatar_url,
+                  avatar: user.image,
                 }}
               />
             </div>
