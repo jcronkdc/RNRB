@@ -357,25 +357,28 @@ export function NavBar() {
     pathname?.startsWith('/onboarding') ||
     pathname?.startsWith('/community');
 
-  // Don't render NavBar on app routes - they have their own navigation
-  if (isAppRoute) {
-    return null;
-  }
-
   // Track scroll position for styling
+  // NOTE: All hooks must be called before any conditional returns (React rules of hooks)
   useEffect(() => {
+    if (isAppRoute) return; // Skip scroll handling for app routes
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
     handleScroll(); // Check initial state
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isAppRoute]);
 
   // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
+
+  // Don't render NavBar on app routes - they have their own navigation
+  // This check MUST come AFTER all hooks are called
+  if (isAppRoute) {
+    return null;
+  }
 
   const isActive = (href: string) => {
     if (href.startsWith('/#')) return false; // Hash links never show active
