@@ -3,6 +3,8 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
+type RouteContext = { params: Promise<{ slug: string }> };
+
 /**
  * GET /api/projects/[slug]
  * Get a single project by slug
@@ -106,5 +108,82 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
   } catch (error) {
     console.error(`GET /api/projects/[slug] error:`, error);
     return NextResponse.json({ error: 'Failed to fetch project' }, { status: 500 });
+  }
+}
+
+/**
+ * PATCH /api/projects/[slug]
+ * Update a project (name, description, cover image, etc.)
+ */
+export async function PATCH(req: NextRequest, { params }: RouteContext) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
+    const userId = session.user.id;
+    const { slug } = await params;
+
+    // Find project and verify access
+    const project = await db.project.findUnique({
+      where: { slug },
+      include: {
+        members: {
+          where: { userId },
+          select: { role: true },
+        },
+      },
+    });
+
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    // Check if user has edit access (owner or admin)
+    const membership = project.members[0];
+    if (!membership || !['owner', 'admin'].includes(membership.role)) {
+      return NextResponse.json(
+        { error: 'You do not have permission to edit this project' },
+        { status: 403 }
+      );
+    }
+
+    const body = await req.json();
+    const {
+      name,
+      description,
+      tagline,
+      cover_image, // For album art
+      coverImage, // Alternative casing
+      visibility,
+      status,
+    } = body;
+
+    // Use whichever cover image field was provided
+    const coverImageValue = cover_image ?? coverImage;
+
+    const updatedProject = await db.project.update({
+      where: { slug },
+      data: {
+        ...(name !== undefined && { name }),
+        ...(description !== undefined && { description }),
+        ...(tagline !== undefined && { tagline }),
+        ...(coverImageValue !== undefined && { coverImage: coverImageValue }),
+        ...(visibility !== undefined && { visibility }),
+        ...(status !== undefined && { status }),
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      project: {
+        ...updatedProject,
+        cover_image: updatedProject.coverImage,
+      },
+    });
+  } catch (error) {
+    console.error(`PATCH /api/projects/[slug] error:`, error);
+    return NextResponse.json({ error: 'Failed to update project' }, { status: 500 });
   }
 }

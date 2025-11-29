@@ -73,18 +73,22 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     }
 
     const body = await req.json();
-    const { 
-      title, 
-      key, 
-      tempo, 
-      timeSignature, 
-      lyrics, 
-      chords, 
-      status, 
+    const {
+      title,
+      key,
+      tempo,
+      timeSignature,
+      lyrics,
+      chords,
+      status,
       visibility,
       copyrightInfo,
       audioUrl,
       audioPath,
+      // AI Album Art fields
+      artworkUrl,
+      artworkPrompt,
+      artworkStyle,
     } = body;
 
     const song = await db.song.update({
@@ -103,6 +107,10 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
         ...(copyrightInfo !== undefined && { copyrightInfo }),
         ...(audioUrl !== undefined && { audioUrl }),
         ...(audioPath !== undefined && { audioPath }),
+        // AI Album Art fields
+        ...(artworkUrl !== undefined && { artworkUrl }),
+        ...(artworkPrompt !== undefined && { artworkPrompt }),
+        ...(artworkStyle !== undefined && { artworkStyle }),
         lastSavedAt: new Date(),
       },
     });
