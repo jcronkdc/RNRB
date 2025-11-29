@@ -1665,6 +1665,23 @@ body {
   }
 }
 
+/* === DASHBOARD PAGE ANIMATIONS === */
+@layer components {
+  /* Shimmer animation for loading skeletons */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+}
+
 /* === PROFILE SETUP PAGE ANIMATIONS === */
 @layer components {
   /* Delayed pulse animation for background orbs */
