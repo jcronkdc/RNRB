@@ -333,7 +333,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
               <h3 className="text-lg font-semibold text-white">Creator</h3>
             </div>
             <p className="mb-2 text-3xl font-bold text-white">
-              $9.99<span className="text-sm font-normal text-gray-400">/month</span>
+              $14.99<span className="text-sm font-normal text-gray-400">/month</span>
             </p>
             <p className="mb-6 text-sm text-gray-400">For serious musicians</p>
 
@@ -554,8 +554,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             <div>
               <h3 className="mb-2 text-lg font-semibold text-white">Unlock More with Creator</h3>
               <p className="mb-4 text-sm text-gray-300">
-                Get unlimited projects, 50GB storage, AI features, and priority support for just
-                $9.99/month.
+                Get 10 projects, 10GB storage, AI features, and email support for just $14.99/month.
               </p>
               <Button
                 onClick={() => handleUpgrade('creator')}

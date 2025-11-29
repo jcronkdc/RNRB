@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   X,
   Plus,
@@ -38,6 +37,7 @@ import {
   Phone,
   Info,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface AddSectionModalProps {
   isOpen: boolean;

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, X, Music, User, Hash, Loader2, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface SearchModalProps {
   isOpen: boolean;

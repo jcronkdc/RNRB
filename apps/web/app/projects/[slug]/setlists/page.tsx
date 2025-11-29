@@ -2,7 +2,6 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { formatDateLong, formatDateWithDay } from '@/lib/format-date';
 import {
   Music,
   Plus,
@@ -13,7 +12,6 @@ import {
   Sparkles,
   Edit,
   Link as LinkIcon,
-  ExternalLink,
   X,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -21,6 +19,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { formatDateLong, formatDateWithDay } from '@/lib/format-date';
 import { supabase } from '@/lib/supabase';
 
 // Dynamically import setlist builder
@@ -130,7 +129,7 @@ export default function SetlistsPage() {
 
   if (loading) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-lg">Loading setlists...</div>
       </div>
     );
@@ -192,7 +191,7 @@ export default function SetlistsPage() {
 
   const handleLinkToShow = async (showId: string) => {
     if (!selectedSetlist) return;
-    
+
     setLinkingShow(true);
     try {
       const response = await fetch(`/api/shows/${showId}/setlist`, {
@@ -261,7 +260,7 @@ export default function SetlistsPage() {
   // If viewing/editing a setlist
   if (selectedSetlist) {
     return (
-      <div className="bg-background min-h-screen px-4 py-12">
+      <div className="min-h-screen bg-background px-4 py-12">
         <div className="rnrb-container max-w-7xl">
           {/* Header */}
           <div className="mb-8 flex items-center justify-between">
@@ -271,7 +270,7 @@ export default function SetlistsPage() {
               </Button>
               <h1 className="font-display mb-2 text-4xl font-bold">{selectedSetlist.name}</h1>
               <p className="text-muted-foreground">Collaborative setlist builder</p>
-              
+
               {/* Linked Show Display */}
               {selectedSetlist.show ? (
                 <div className="mt-4 inline-flex items-center gap-2 rounded-xl border border-brand-primary/30 bg-brand-primary/10 px-4 py-2">
@@ -279,13 +278,12 @@ export default function SetlistsPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/shows`}
-                      className="text-sm font-medium hover:text-brand-primary transition"
+                      className="text-sm font-medium transition hover:text-brand-primary"
                     >
                       {selectedSetlist.show.name}
                     </Link>
-                    <span className="text-muted-foreground text-xs">
-                      •{' '}
-                      {formatDateLong(selectedSetlist.show.date)}
+                    <span className="text-xs text-muted-foreground">
+                      • {formatDateLong(selectedSetlist.show.date)}
                       {selectedSetlist.show.venue && ` • ${selectedSetlist.show.venue.name}`}
                     </span>
                   </div>
@@ -397,8 +395,8 @@ export default function SetlistsPage() {
                   </div>
                 ) : shows.length === 0 ? (
                   <div className="py-12 text-center">
-                    <Calendar className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
-                    <p className="text-muted-foreground mb-4">No upcoming shows scheduled</p>
+                    <Calendar className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
+                    <p className="mb-4 text-muted-foreground">No upcoming shows scheduled</p>
                     <Link href="/shows/new">
                       <Button className="rnrb-button-primary">
                         <Plus className="mr-2 h-4 w-4" />
@@ -413,18 +411,16 @@ export default function SetlistsPage() {
                         key={show.id}
                         onClick={() => handleLinkToShow(show.id)}
                         disabled={linkingShow}
-                        className="rnrb-card hover:border-brand-primary/50 w-full p-4 text-left transition disabled:opacity-50"
+                        className="rnrb-card w-full p-4 text-left transition hover:border-brand-primary/50 disabled:opacity-50"
                       >
                         <div className="mb-2 flex items-start justify-between">
                           <h3 className="font-semibold">{show.name}</h3>
-                          <LinkIcon className="text-muted-foreground h-4 w-4 shrink-0" />
+                          <LinkIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
                         </div>
                         <div className="space-y-1 text-sm text-muted-foreground">
                           <div className="flex items-center gap-2">
                             <Calendar className="h-3.5 w-3.5" />
-                            <span>
-                              {formatDateWithDay(show.date)}
-                            </span>
+                            <span>{formatDateWithDay(show.date)}</span>
                           </div>
                           {show.venue && (
                             <div className="flex items-center gap-2">
@@ -450,15 +446,15 @@ export default function SetlistsPage() {
   }
 
   return (
-    <div className="bg-background min-h-screen px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container max-w-7xl">
         {/* Breadcrumb */}
-        <div className="text-muted-foreground mb-6 flex items-center gap-2 text-sm">
-          <Link href="/projects" className="hover:text-brand-primary transition">
+        <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
+          <Link href="/projects" className="transition hover:text-brand-primary">
             Projects
           </Link>
           <span>/</span>
-          <Link href={`/projects/${slug}`} className="hover:text-brand-primary transition">
+          <Link href={`/projects/${slug}`} className="transition hover:text-brand-primary">
             {project.name}
           </Link>
           <span>/</span>
@@ -469,7 +465,7 @@ export default function SetlistsPage() {
         <div className="mb-8 flex items-start justify-between">
           <div>
             <h1 className="font-display mb-2 text-4xl font-bold">Setlists</h1>
-            <p className="text-muted-foreground text-xl">
+            <p className="text-xl text-muted-foreground">
               Organize your songs for live performances
             </p>
           </div>
@@ -511,9 +507,9 @@ export default function SetlistsPage() {
         {/* Empty State or Setlist Grid */}
         {setlists.length === 0 ? (
           <Card className="rnrb-card p-16 text-center">
-            <Music className="text-muted-foreground/50 mx-auto mb-6 h-20 w-20" />
+            <Music className="mx-auto mb-6 h-20 w-20 text-muted-foreground/50" />
             <h2 className="font-display mb-4 text-3xl font-bold">Ready for Your First Show?</h2>
-            <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-lg">
+            <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
               Whether you're playing an intimate coffee shop or a packed venue, a great setlist
               builds energy and tells your story. Create your first setlist to organize songs, plan
               transitions, and share with your band.
@@ -521,7 +517,7 @@ export default function SetlistsPage() {
 
             {projectSongs.length === 0 ? (
               <div className="rnrb-card mx-auto mb-6 max-w-md border-yellow-500/20 bg-yellow-500/5 p-6">
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   You need songs first! Add some songs to {project.name}, then come back to build
                   your setlist.
                 </p>
@@ -544,29 +540,29 @@ export default function SetlistsPage() {
 
             <div className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-4 text-left md:grid-cols-3">
               <div className="rnrb-card bg-surface-muted p-4">
-                <Music className="text-brand-primary mb-3 h-8 w-8" />
+                <Music className="mb-3 h-8 w-8 text-brand-primary" />
                 <h3 className="mb-2 text-sm font-semibold">Smart Organization</h3>
-                <p className="text-muted-foreground text-xs">
+                <p className="text-xs text-muted-foreground">
                   Drag-drop reordering, key change indicators, set duration calculator
                 </p>
               </div>
               <div className="rnrb-card bg-surface-muted p-4">
-                <Users className="text-brand-primary mb-3 h-8 w-8" />
+                <Users className="mb-3 h-8 w-8 text-brand-primary" />
                 <h3 className="mb-2 text-sm font-semibold">Collaborative</h3>
-                <p className="text-muted-foreground text-xs">
+                <p className="text-xs text-muted-foreground">
                   Your whole band sees the setlist. Make changes together in real-time.
                 </p>
               </div>
               <div className="rnrb-card bg-surface-muted p-4">
-                <Share2 className="text-brand-primary mb-3 h-8 w-8" />
+                <Share2 className="mb-3 h-8 w-8 text-brand-primary" />
                 <h3 className="mb-2 text-sm font-semibold">Export & Share</h3>
-                <p className="text-muted-foreground text-xs">
+                <p className="text-xs text-muted-foreground">
                   Print for your bandmates or export for sound engineers
                 </p>
               </div>
             </div>
 
-            <p className="text-muted-foreground mt-8 text-sm italic">
+            <p className="mt-8 text-sm italic text-muted-foreground">
               "Every great show starts with a great setlist."
             </p>
           </Card>
@@ -578,21 +574,21 @@ export default function SetlistsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <Card className="rnrb-card hover:border-brand-primary/30 cursor-pointer p-6 transition">
+                <Card className="rnrb-card cursor-pointer p-6 transition hover:border-brand-primary/30">
                   <h3 className="mb-3 text-xl font-semibold">{setlist.name}</h3>
                   {setlist.venue && (
-                    <p className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
+                    <p className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <MapPin className="h-4 w-4" />
                       {setlist.venue}
                     </p>
                   )}
                   {setlist.date && (
-                    <p className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
+                    <p className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4" />
                       {formatDateLong(setlist.date)}
                     </p>
                   )}
-                  <p className="text-muted-foreground flex items-center gap-2 text-sm">
+                  <p className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Music className="h-4 w-4" />
                     {setlist.songs.length} songs
                   </p>
@@ -615,6 +611,7 @@ export default function SetlistsPage() {
         {showGenerator && user && (
           <SetlistGeneratorModal
             projectId={project.id || `temp_${slug}`}
+            availableSongs={projectSongs}
             onClose={() => setShowGenerator(false)}
             onGenerated={handleGenerateSetlist}
           />
@@ -631,11 +628,11 @@ export default function SetlistsPage() {
 
         {/* Helpful Note */}
         <Card className="rnrb-card mt-8 border-purple-500/20 bg-purple-500/5 p-6">
-          <p className="text-brand-primary mb-1 flex items-center gap-2 text-sm font-medium">
+          <p className="mb-1 flex items-center gap-2 text-sm font-medium text-brand-primary">
             <Sparkles className="h-4 w-4 text-purple-400" />
             Pro Tip: Building Your Set
           </p>
-          <p className="text-muted-foreground text-xs">
+          <p className="text-xs text-muted-foreground">
             Start strong, dip in the middle for intimacy, build to your biggest song. Watch key
             changes (too many can tire your voice). Share your setlist in project chat for band
             feedback!

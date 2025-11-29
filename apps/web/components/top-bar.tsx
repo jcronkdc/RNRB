@@ -1,6 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import { trpc } from '@cronkwaters/trpc/client/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search,
@@ -14,11 +14,11 @@ import {
   Zap,
   Music,
 } from 'lucide-react';
-import { signOut, useSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 import { useState } from 'react';
 
-import { trpc } from '@cronkwaters/trpc/client/react';
 import { MobileMenuButton } from './sidebar-nav';
 
 // Dynamically import NotificationBell to avoid SSR issues

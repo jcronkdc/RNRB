@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 import { sendEmail, emailTemplates } from '@/lib/email';
 
@@ -67,14 +68,14 @@ export async function POST(request: Request) {
       message: `Split sheets sent to ${successful} recipient(s)${failed > 0 ? `, ${failed} failed` : ''}`,
       sent: successful,
       failed,
-      recipients: recipients.map((r: any) => ({
-        email: r.email,
-        status:
-          emailResults[recipients.indexOf(r)].status === 'fulfilled' &&
-          emailResults[recipients.indexOf(r)].value.success
-            ? 'sent'
-            : 'failed',
-      })),
+      recipients: recipients.map((r: any, index: number) => {
+        const result = emailResults[index];
+        const wasSuccessful = result.status === 'fulfilled' && result.value.success;
+        return {
+          email: r.email,
+          status: wasSuccessful ? 'sent' : 'failed',
+        };
+      }),
     });
   } catch (error) {
     console.error('Split sheet email error:', error);

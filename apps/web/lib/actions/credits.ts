@@ -1,11 +1,11 @@
 'use server';
 
 import { prisma } from '@cronkwaters/db';
-import { CreditType } from '@prisma/client';
+import { type CreditType } from '@prisma/client';
 
+import { getOrCreateStripeCustomer } from '@/lib/actions/subscriptions';
 import { getCurrentUser } from '@/lib/session';
 import { createOneTimeCheckoutSession } from '@/lib/stripe-subscriptions';
-import { getOrCreateStripeCustomer } from '@/lib/actions/subscriptions';
 
 type CreditKind = 'ai' | 'video' | 'storage';
 
@@ -93,7 +93,7 @@ export async function createCreditCheckout(productKey: CreditProductKey) {
       type: product.type as CreditType,
       unitAmount: product.amount,
       storageAmount: product.type === 'storage' ? product.amount : null,
-      priceCents: (session.amount_total ?? 0),
+      priceCents: session.amount_total ?? 0,
     },
     create: {
       userId: user.id,
@@ -112,4 +112,3 @@ export async function createCreditCheckout(productKey: CreditProductKey) {
 
   return session.url;
 }
-

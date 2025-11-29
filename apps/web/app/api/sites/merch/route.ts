@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { auth } from '@/auth';
 
 // GET - List products for a site
 export async function GET(request: NextRequest) {

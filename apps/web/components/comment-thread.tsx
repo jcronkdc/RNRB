@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { MessageSquare, Reply, Loader2, Send, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -85,7 +85,11 @@ export function CommentThread({ trackId, currentUserId }: CommentThreadProps) {
         {/* Avatar */}
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-800">
           {comment.user.image ? (
-            <img src={comment.user.image} alt={comment.user.name || 'User'} className="h-full w-full rounded-full" />
+            <img
+              src={comment.user.image}
+              alt={comment.user.name || 'User'}
+              className="h-full w-full rounded-full"
+            />
           ) : (
             <User className="h-5 w-5 text-gray-500" />
           )}
@@ -130,7 +134,9 @@ export function CommentThread({ trackId, currentUserId }: CommentThreadProps) {
 
           {/* Nested Replies */}
           {comment.replies &&
-            comment.replies.map((reply) => <CommentItem key={reply.id} comment={reply} depth={depth + 1} />)}
+            comment.replies.map((reply) => (
+              <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
+            ))}
         </div>
       </div>
     </motion.div>
@@ -201,5 +207,3 @@ export function CommentThread({ trackId, currentUserId }: CommentThreadProps) {
     </div>
   );
 }
-
-

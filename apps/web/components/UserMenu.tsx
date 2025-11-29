@@ -1,5 +1,6 @@
 'use client';
 
+import { trpc } from '@cronkwaters/trpc/client/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogOut,
@@ -14,13 +15,12 @@ import {
   LayoutDashboard,
   Bell,
 } from 'lucide-react';
-import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 import { useToast } from '@/hooks/useToast';
-import { trpc } from '@cronkwaters/trpc/client/react';
 
 export function UserMenu() {
   const router = useRouter();

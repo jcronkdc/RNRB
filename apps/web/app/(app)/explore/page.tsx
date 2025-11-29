@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { Compass, TrendingUp, Clock, Heart, Search, Loader2, Sparkles, Music2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-import { TrackCard } from '@/components/track-card';
 import { AudioPlayer } from '@/components/audio-player';
+import { TrackCard } from '@/components/track-card';
 
 interface CommunityTrack {
   id: string;
@@ -336,21 +336,32 @@ export default function ExplorePage() {
             className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/90 p-4 backdrop-blur-xl"
           >
             <div className="mx-auto max-w-4xl">
+              <div className="flex items-center gap-4">
+                {selectedTrack.coverUrl && (
+                  <img
+                    src={selectedTrack.coverUrl}
+                    alt={selectedTrack.song.title}
+                    className="h-16 w-16 rounded-lg object-cover"
+                  />
+                )}
+                <div className="flex-1">
+                  <p className="font-medium text-white">{selectedTrack.song.title}</p>
+                  <p className="text-sm text-white/60">
+                    {selectedTrack.user.name || 'Unknown Artist'}
+                  </p>
+                </div>
+              </div>
               <AudioPlayer
-                trackId={selectedTrack.id}
-                audioUrl={selectedTrack.audioUrl}
-                title={selectedTrack.song.title}
-                artist={selectedTrack.user.name || 'Unknown Artist'}
-                coverUrl={selectedTrack.coverUrl}
-                waveformData={selectedTrack.waveformData as number[] | undefined}
-                duration={selectedTrack.duration}
-                onPlayComplete={() => {
+                src={selectedTrack.audioUrl}
+                name={selectedTrack.song.title}
+                onEnded={() => {
                   // Auto-play next track
                   const currentIndex = tracks.findIndex((t) => t.id === selectedTrack.id);
                   if (currentIndex < tracks.length - 1) {
                     setSelectedTrack(tracks[currentIndex + 1]);
                   }
                 }}
+                autoPlay
               />
             </div>
           </motion.div>
@@ -360,5 +371,4 @@ export default function ExplorePage() {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _unused = { Music2, Sparkles }; // Ensure imports are used

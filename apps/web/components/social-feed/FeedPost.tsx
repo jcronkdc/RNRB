@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { format } from 'date-fns';
 import {
   Heart,
@@ -9,17 +7,18 @@ import {
   Share2,
   Bookmark,
   MoreHorizontal,
-  Play,
-  Pause,
-  Volume2,
   Music,
   Repeat2,
 } from 'lucide-react';
-import { ReactionPicker } from './ReactionPicker';
-import { CommentSection } from './CommentSection';
-import { WaveformPlayer } from '@/components/waveform-player';
-import { PostContent } from './PostContent';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+
+import { CommentSection } from './CommentSection';
+import { PostContent } from './PostContent';
+import { ReactionPicker } from './ReactionPicker';
+
+import { WaveformPlayer } from '@/components/waveform-player';
 
 interface FeedPostProps {
   post: any;

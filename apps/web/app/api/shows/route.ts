@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
+import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { getCurrentUser } from '@/lib/session';
 
 /**
@@ -14,17 +15,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `shows-read:${user.id}`);
+
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get('orgId');
     const projectId = searchParams.get('projectId');
     const tourId = searchParams.get('tourId');
     const status = searchParams.get('status');
     const upcoming = searchParams.get('upcoming'); // 'true' or 'false'
-    
+
     // Parse and validate pagination parameters
     const pageParam = parseInt(searchParams.get('page') || '1');
     const limitParam = parseInt(searchParams.get('limit') || '50');
-    
+
     // Validate parsed values are valid positive integers
     if (isNaN(pageParam) || pageParam < 1) {
       return NextResponse.json(
@@ -32,14 +36,14 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     if (isNaN(limitParam) || limitParam < 1) {
       return NextResponse.json(
         { error: 'Invalid limit parameter: must be a positive integer' },
         { status: 400 }
       );
     }
-    
+
     const page = pageParam;
     const limit = Math.min(limitParam, 100); // Cap at 100
     const skip = (page - 1) * limit;
@@ -137,34 +141,36 @@ export async function GET(request: NextRequest) {
             slug: true,
           },
         },
-        ...(includeSetlist ? {
-          setlist: {
-            select: {
-              id: true,
-              name: true,
-              _count: {
-                select: {
-                  items: true,
-                },
-              },
-              items: {
+        ...(includeSetlist
+          ? {
+              setlist: {
                 select: {
                   id: true,
-                  position: true,
-                  isEncore: true,
-                  song: {
+                  name: true,
+                  _count: {
                     select: {
-                      id: true,
-                      title: true,
+                      items: true,
                     },
                   },
+                  items: {
+                    select: {
+                      id: true,
+                      position: true,
+                      isEncore: true,
+                      song: {
+                        select: {
+                          id: true,
+                          title: true,
+                        },
+                      },
+                    },
+                    orderBy: { position: 'asc' },
+                    take: 5, // Just show first 5 songs
+                  },
                 },
-                orderBy: { position: 'asc' },
-                take: 5, // Just show first 5 songs
               },
-            },
-          },
-        } : {}),
+            }
+          : {}),
       },
       orderBy: [{ date: upcoming === 'false' ? 'desc' : 'asc' }],
       skip,
@@ -195,6 +201,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limit: 10 shows per minute for writes
+    await checkRateLimit(strictLimiter, `shows-write:${user.id}`);
+
     const body = await request.json();
     const {
       orgId,
@@ -222,6 +231,11 @@ export async function POST(request: NextRequest) {
         { error: 'Organization ID, name, and date are required' },
         { status: 400 }
       );
+    }
+
+    // Ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Verify user is member of org

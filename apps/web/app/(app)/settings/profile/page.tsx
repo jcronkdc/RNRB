@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@cronkwaters/ui';
 import {
   Phone,
   Globe,
@@ -18,11 +17,10 @@ import {
   CheckCircle2,
   ArrowRight,
   Camera,
-  Sparkles,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState, useRef, Suspense } from 'react';
 
 import { createBrowserClient } from '@/lib/supabase';
@@ -166,7 +164,7 @@ function ProfileSettingsContent() {
         redirectTimeoutRef.current = setTimeout(() => {
           // If we have a custom redirect destination (e.g., from invite link), go there
           // Otherwise, default to dashboard
-          let destination = redirectAfterSetup || '/dashboard';
+          const destination = redirectAfterSetup || '/dashboard';
 
           // Security: Validate redirect URL to prevent open redirect attacks
           // Only allow relative paths starting with /

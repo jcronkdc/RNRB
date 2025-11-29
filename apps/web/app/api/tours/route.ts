@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
+import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { getCurrentUser } from '@/lib/session';
 import { requireFeatureAccess, SubscriptionError } from '@/lib/subscription';
 
@@ -12,9 +13,12 @@ import { requireFeatureAccess, SubscriptionError } from '@/lib/subscription';
 export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `tours-read:${user.id}`);
 
     // Check subscription access - FEATURE GATE
     try {
@@ -38,11 +42,11 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get('orgId');
     const status = searchParams.get('status');
-    
+
     // Parse and validate pagination parameters
     const pageParam = parseInt(searchParams.get('page') || '1');
     const limitParam = parseInt(searchParams.get('limit') || '50');
-    
+
     // Validate parsed values are valid positive integers
     if (isNaN(pageParam) || pageParam < 1) {
       return NextResponse.json(
@@ -50,14 +54,14 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     if (isNaN(limitParam) || limitParam < 1) {
       return NextResponse.json(
         { error: 'Invalid limit parameter: must be a positive integer' },
         { status: 400 }
       );
     }
-    
+
     const page = pageParam;
     const limit = Math.min(limitParam, 100); // Max 100
     const skip = (page - 1) * limit;
@@ -119,26 +123,28 @@ export async function GET(request: NextRequest) {
             slug: true,
           },
         },
-        ...(includeShows ? {
-          shows: {
-            select: {
-              id: true,
-              name: true,
-              date: true,
-              status: true,
-              venue: {
+        ...(includeShows
+          ? {
+              shows: {
                 select: {
                   id: true,
                   name: true,
-                  city: true,
-                  state: true,
+                  date: true,
+                  status: true,
+                  venue: {
+                    select: {
+                      id: true,
+                      name: true,
+                      city: true,
+                      state: true,
+                    },
+                  },
                 },
+                orderBy: { date: 'asc' },
+                take: 10, // Limit shows per tour
               },
-            },
-            orderBy: { date: 'asc' },
-            take: 10, // Limit shows per tour
-          },
-        } : {}),
+            }
+          : {}),
         _count: {
           select: {
             shows: true,
@@ -171,9 +177,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: 10 tours per minute for writes
+    await checkRateLimit(strictLimiter, `tours-write:${user.id}`);
 
     // Check subscription access - FEATURE GATE
     try {
@@ -215,7 +224,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify user is member of org
+    // Verify user is member of org (user.id already checked above)
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {

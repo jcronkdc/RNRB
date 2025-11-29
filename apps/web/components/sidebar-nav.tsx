@@ -22,9 +22,9 @@ import {
   Globe,
   X,
 } from 'lucide-react';
-import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { useState, useEffect, createContext, useContext } from 'react';
 
 import { useToast } from '@/hooks/useToast';
@@ -302,34 +302,44 @@ export function SidebarNav() {
 
         {/* Floating Music Icons (subtle animation) */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {floatingIcons.map((Icon, index) => (
-            <motion.div
-              key={index}
-              className="absolute opacity-5"
-              initial={{
-                x: Math.random() * 200,
-                y: Math.random() * 600,
-                scale: 0,
-              }}
-              animate={{
-                y: [null, -20, 20, -20],
-                scale: 1,
-              }}
-              transition={{
-                y: {
-                  repeat: Infinity,
-                  duration: 6 + index * 2,
-                  ease: 'easeInOut',
-                },
-                scale: {
-                  duration: 0.5,
-                  delay: index * 0.2,
-                },
-              }}
-            >
-              <Icon className="h-16 w-16 text-white" />
-            </motion.div>
-          ))}
+          {floatingIcons.map((Icon, index) => {
+            // Use deterministic positions based on index to avoid hydration mismatch
+            const positions = [
+              { x: 50, y: 100 },
+              { x: 150, y: 300 },
+              { x: 80, y: 500 },
+              { x: 180, y: 200 },
+            ];
+            const pos = positions[index % positions.length];
+            return (
+              <motion.div
+                key={index}
+                className="absolute opacity-5"
+                initial={{
+                  x: pos.x,
+                  y: pos.y,
+                  scale: 0,
+                }}
+                animate={{
+                  y: [null, -20, 20, -20],
+                  scale: 1,
+                }}
+                transition={{
+                  y: {
+                    repeat: Infinity,
+                    duration: 6 + index * 2,
+                    ease: 'easeInOut',
+                  },
+                  scale: {
+                    duration: 0.5,
+                    delay: index * 0.2,
+                  },
+                }}
+              >
+                <Icon className="h-16 w-16 text-white" />
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Keyboard Shortcuts Hint - Hide on mobile */}

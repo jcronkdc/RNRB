@@ -5,12 +5,11 @@
  * Used by client components to determine what to show/hide
  */
 
+import { prisma } from '@cronkwaters/db';
 import { NextResponse } from 'next/server';
 
-import { prisma } from '@cronkwaters/db';
-
 import { auth } from '@/auth';
-import { SUBSCRIPTION_TIERS, SubscriptionTier } from '@/lib/subscription-access';
+import { SUBSCRIPTION_TIERS, type SubscriptionTier } from '@/lib/subscription-access';
 
 export const runtime = 'nodejs';
 

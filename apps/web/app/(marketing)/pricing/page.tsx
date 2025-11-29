@@ -1,7 +1,8 @@
-import type { Metadata } from 'next';
-import { generateMetadata as generateSEOMetadata, generateProductSchema, JsonLd } from '@/lib/seo';
-import Link from 'next/link';
 import { Check, X, Zap, Crown, Music } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+
+import { generateMetadata as generateSEOMetadata, generateProductSchema, JsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: "Pricing - Rock N' Roll Basement Music Platform Plans",

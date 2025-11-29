@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/lib/session';
 /**
  * GET /api/tours/[id]/routing
  * Optimize tour routing for minimum travel distance and cost
- * 
+ *
  * WORLD-CLASS: Smart routing optimization like professional tour managers use
  * Features:
  * - Traveling Salesman Problem (TSP) optimization
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -70,9 +70,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     // Only optimize shows with valid venue coordinates
     const showsWithCoordinates = tour.shows.filter(
-      (show) =>
-        show.venue?.latitude != null &&
-        show.venue?.longitude != null
+      (show) => show.venue?.latitude != null && show.venue?.longitude != null
     );
 
     if (showsWithCoordinates.length < 2) {
@@ -95,7 +93,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Calculate savings
     const savings = {
       distance: currentRouting.totalDistance - optimizedRouting.totalDistance,
-      distancePercent: ((currentRouting.totalDistance - optimizedRouting.totalDistance) / currentRouting.totalDistance) * 100,
+      distancePercent:
+        ((currentRouting.totalDistance - optimizedRouting.totalDistance) /
+          currentRouting.totalDistance) *
+        100,
       estimatedCost: (currentRouting.totalDistance - optimizedRouting.totalDistance) * 0.58, // IRS mileage rate
       drivingHours: (currentRouting.totalDistance - optimizedRouting.totalDistance) / 60, // Assume 60 mph average
     };
@@ -173,8 +174,7 @@ function calculateRoutingMetrics(shows: any[]) {
       drivingTime,
       restStops,
       daysBetween: Math.ceil(
-        (new Date(to.date).getTime() - new Date(from.date).getTime()) /
-          (1000 * 60 * 60 * 24)
+        (new Date(to.date).getTime() - new Date(from.date).getTime()) / (1000 * 60 * 60 * 24)
       ),
     };
 
@@ -186,9 +186,7 @@ function calculateRoutingMetrics(shows: any[]) {
   // Calculate inefficiencies
   const backtrackLegs = identifyBacktracking(legs);
   const longDriveLegs = legs.filter((leg) => leg.drivingTime > 8);
-  const tightScheduleLegs = legs.filter(
-    (leg) => leg.daysBetween === 1 && leg.drivingTime > 4
-  );
+  const tightScheduleLegs = legs.filter((leg) => leg.daysBetween === 1 && leg.drivingTime > 4);
 
   return {
     totalDistance: Math.round(totalDistance),
@@ -271,12 +269,7 @@ function optimizeTourRouting(shows: any[]) {
  * Calculate distance between two coordinates using Haversine formula
  * Returns distance in miles
  */
-function calculateDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 3959; // Earth's radius in miles
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -335,19 +328,12 @@ function identifyBacktracking(legs: any[]) {
 /**
  * Calculate bearing between two coordinates
  */
-function calculateBearing(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
+function calculateBearing(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const y = Math.sin(dLon) * Math.cos((lat2 * Math.PI) / 180);
   const x =
     Math.cos((lat1 * Math.PI) / 180) * Math.sin((lat2 * Math.PI) / 180) -
-    Math.sin((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.cos(dLon);
+    Math.sin((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.cos(dLon);
 
   let bearing = (Math.atan2(y, x) * 180) / Math.PI;
   bearing = (bearing + 360) % 360;
@@ -358,11 +344,7 @@ function calculateBearing(
 /**
  * Generate routing recommendations
  */
-function generateRoutingRecommendations(
-  current: any,
-  optimized: any,
-  allShows: any[]
-) {
+function generateRoutingRecommendations(current: any, optimized: any, allShows: any[]) {
   const recommendations: any[] = [];
 
   // Distance savings recommendation
@@ -470,4 +452,3 @@ function generateRestDayRecommendations(legs: any[]) {
 
   return recommendations.slice(0, 5); // Limit to top 5
 }
-

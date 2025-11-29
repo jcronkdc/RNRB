@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Search, Users, Mail, Phone, Music, Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+
 import { UserProfileCard, type UserProfileCardProps } from '@/components/user-profile-card';
 import { useDebounce } from '@/hooks/use-debounce';
 
@@ -58,7 +59,7 @@ export default function DiscoverPage() {
       }
 
       const data: SearchResponse = await response.json();
-      
+
       // Update state with search results
       setSearchResults(data.users);
       setTotalResults(data.total);
@@ -108,12 +109,12 @@ export default function DiscoverPage() {
   };
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Premium Hero */}
-      <div className="border-border/50 relative overflow-hidden border-b">
-        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
-          <div className="bg-brand-primary/10 absolute right-1/3 top-0 h-96 w-96 rounded-full blur-3xl" />
+          <div className="absolute right-1/3 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-6xl px-4 py-16">
@@ -123,15 +124,15 @@ export default function DiscoverPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="bg-brand-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
-                <Users className="text-brand-primary h-6 w-6" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
+                <Users className="h-6 w-6 text-brand-primary" />
               </div>
               <div>
-                <p className="text-muted-foreground text-sm">Build Your Network</p>
+                <p className="text-sm text-muted-foreground">Build Your Network</p>
                 <h1 className="font-display text-3xl font-bold md:text-4xl">Discover Musicians</h1>
               </div>
             </div>
-            <p className="text-muted-foreground max-w-2xl text-lg">
+            <p className="max-w-2xl text-lg text-muted-foreground">
               Find collaborators, connect with artists worldwide, build your creative network
             </p>
           </motion.div>
@@ -149,7 +150,7 @@ export default function DiscoverPage() {
               className={`rounded-xl px-6 py-2.5 font-medium transition ${
                 searchType === 'username'
                   ? 'bg-brand-primary text-brand-primary-foreground shadow-lg'
-                  : 'border-border bg-surface-muted text-foreground hover:bg-surface border'
+                  : 'border border-border bg-surface-muted text-foreground hover:bg-surface'
               }`}
             >
               <Users className="mr-2 inline-block h-4 w-4" />
@@ -160,7 +161,7 @@ export default function DiscoverPage() {
               className={`rounded-xl px-6 py-2.5 font-medium transition ${
                 searchType === 'email'
                   ? 'bg-brand-primary text-brand-primary-foreground shadow-lg'
-                  : 'border-border bg-surface-muted text-foreground hover:bg-surface border'
+                  : 'border border-border bg-surface-muted text-foreground hover:bg-surface'
               }`}
             >
               <Mail className="mr-2 inline-block h-4 w-4" />
@@ -171,7 +172,7 @@ export default function DiscoverPage() {
               className={`rounded-xl px-6 py-2.5 font-medium transition ${
                 searchType === 'phone'
                   ? 'bg-brand-primary text-brand-primary-foreground shadow-lg'
-                  : 'border-border bg-surface-muted text-foreground hover:bg-surface border'
+                  : 'border border-border bg-surface-muted text-foreground hover:bg-surface'
               }`}
             >
               <Phone className="mr-2 inline-block h-4 w-4" />
@@ -180,22 +181,22 @@ export default function DiscoverPage() {
           </div>
 
           <div className="relative">
-            <Search className="text-muted-foreground absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 transform" />
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 transform text-muted-foreground" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={`Search by ${searchType}... (min 2 characters)`}
-              className="border-border bg-surface text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border py-3.5 pl-12 pr-12 outline-none transition focus:ring-2"
+              className="w-full rounded-xl border border-border bg-surface py-3.5 pl-12 pr-12 text-foreground placeholder-muted-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
             />
             {isLoading && (
-              <Loader2 className="text-brand-primary absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin" />
+              <Loader2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-brand-primary" />
             )}
           </div>
 
-          <div className="rnrb-card border-brand-primary/20 bg-brand-primary/5 mt-4 p-4">
-            <p className="text-muted-foreground flex items-center gap-2 text-sm">
-              <Sparkles className="text-brand-primary h-4 w-4" />
+          <div className="rnrb-card mt-4 border-brand-primary/20 bg-brand-primary/5 p-4">
+            <p className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Sparkles className="h-4 w-4 text-brand-primary" />
               Search respects privacy. Only public profiles appear in results.
             </p>
           </div>
@@ -203,9 +204,9 @@ export default function DiscoverPage() {
 
         {/* Search Results */}
         {error && (
-          <Card className="rnrb-card mb-8 border-destructive/50 bg-destructive/5 p-6">
+          <Card className="rnrb-card border-destructive/50 bg-destructive/5 mb-8 p-6">
             <div className="flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-destructive" />
+              <AlertCircle className="text-destructive h-5 w-5" />
               <p className="text-destructive text-sm font-medium">{error}</p>
             </div>
           </Card>
@@ -213,19 +214,18 @@ export default function DiscoverPage() {
 
         {hasSearched && !isLoading && searchResults.length === 0 && !error && (
           <Card className="rnrb-card p-12 text-center">
-            <Users className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
+            <Users className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
             <h3 className="font-display mb-2 text-xl font-semibold">No users found</h3>
-            <p className="text-muted-foreground">
-              Try adjusting your search terms or search type
-            </p>
+            <p className="text-muted-foreground">Try adjusting your search terms or search type</p>
           </Card>
         )}
 
         {searchResults.length > 0 && (
           <>
             <div className="mb-6 flex items-center justify-between">
-              <p className="text-muted-foreground text-sm">
-                Found <span className="font-semibold text-foreground">{totalResults}</span> {totalResults === 1 ? 'user' : 'users'}
+              <p className="text-sm text-muted-foreground">
+                Found <span className="font-semibold text-foreground">{totalResults}</span>{' '}
+                {totalResults === 1 ? 'user' : 'users'}
               </p>
             </div>
 
@@ -267,7 +267,7 @@ export default function DiscoverPage() {
                         className={`h-10 w-10 rounded-xl font-medium transition ${
                           currentPage === pageNum
                             ? 'bg-brand-primary text-brand-primary-foreground shadow-lg'
-                            : 'border-border bg-surface hover:bg-surface-muted border'
+                            : 'border border-border bg-surface hover:bg-surface-muted'
                         }`}
                       >
                         {pageNum}
@@ -292,47 +292,47 @@ export default function DiscoverPage() {
         {!hasSearched && (
           <Card className="rnrb-card p-8">
             <h2 className="font-display mb-4 text-2xl font-bold">Advanced Features</h2>
-            <p className="text-muted-foreground mb-8">
+            <p className="mb-8 text-muted-foreground">
               Start searching above or explore these upcoming features:
             </p>
 
             <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="rnrb-card bg-surface-muted p-6">
-                <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                  <Search className="text-brand-primary h-6 w-6" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
+                  <Search className="h-6 w-6 text-brand-primary" />
                 </div>
                 <h3 className="mb-2 font-semibold">Advanced Filters</h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   Filter by genre, instrument, location, and availability
                 </p>
               </div>
 
               <div className="rnrb-card bg-surface-muted p-6">
-                <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                  <Phone className="text-brand-primary h-6 w-6" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
+                  <Phone className="h-6 w-6 text-brand-primary" />
                 </div>
                 <h3 className="mb-2 font-semibold">Phone Search</h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   Connect using phone numbers (with artist permission)
                 </p>
               </div>
 
               <div className="rnrb-card bg-surface-muted p-6">
-                <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                  <Music className="text-brand-primary h-6 w-6" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
+                  <Music className="h-6 w-6 text-brand-primary" />
                 </div>
                 <h3 className="mb-2 font-semibold">Browse by Genre</h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   Discover artists working in your musical style
                 </p>
               </div>
 
               <div className="rnrb-card bg-surface-muted p-6">
-                <div className="bg-brand-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-xl">
-                  <Users className="text-brand-primary h-6 w-6" />
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
+                  <Users className="h-6 w-6 text-brand-primary" />
                 </div>
                 <h3 className="mb-2 font-semibold">Recommended Artists</h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   AI-powered recommendations based on your interests
                 </p>
               </div>
@@ -344,7 +344,7 @@ export default function DiscoverPage() {
                   Set Up Your Profile First
                 </Button>
               </Link>
-              <p className="text-muted-foreground mt-3 text-xs">
+              <p className="mt-3 text-xs text-muted-foreground">
                 Make your profile public so other artists can find and connect with you
               </p>
             </div>

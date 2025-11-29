@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useAblyClient } from '@/hooks/use-ably-client';
 import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+
+import { useAblyClient } from '@/hooks/use-ably-client';
 
 interface FeedRealtimeProps {
   onNewPost: (post: any) => void;

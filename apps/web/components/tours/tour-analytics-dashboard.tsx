@@ -2,7 +2,7 @@
 
 /**
  * WORLD-CLASS TOUR ANALYTICS DASHBOARD
- * 
+ *
  * Features:
  * - Real-time performance metrics
  * - Revenue/attendance charts
@@ -22,10 +22,7 @@ import {
   Calendar,
   Download,
   AlertCircle,
-  Award,
   BarChart3,
-  PieChart,
-  LineChart,
   Navigation,
   Loader2,
 } from 'lucide-react';
@@ -81,7 +78,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
   const handleExport = async (format: 'csv' | 'json' | 'pdf-data') => {
     try {
       const response = await fetch(`/api/tours/${tourSlug}/export?format=${format}`);
-      
+
       if (!response.ok) {
         throw new Error('Export failed');
       }
@@ -118,7 +115,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
       </div>
     );
   }
@@ -126,9 +123,11 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
   if (!analytics) {
     return (
       <Card className="p-8 text-center">
-        <AlertCircle className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+        <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
         <p className="text-muted-foreground">No analytics data available yet.</p>
-        <p className="text-muted-foreground text-sm">Add shows with revenue and attendance data to see insights.</p>
+        <p className="text-sm text-muted-foreground">
+          Add shows with revenue and attendance data to see insights.
+        </p>
       </Card>
     );
   }
@@ -228,7 +227,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
 
           {/* Performance Metrics */}
           <Card className="p-6">
-            <h3 className="mb-4 text-lg font-semibold flex items-center gap-2">
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <BarChart3 className="h-5 w-5 text-blue-500" />
               Performance Metrics
             </h3>
@@ -254,19 +253,19 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
           {/* Data-Driven Recommendations */}
           {analytics.recommendations && analytics.recommendations.length > 0 && (
             <Card className="border-blue-500/20 bg-blue-500/5 p-6">
-              <h3 className="mb-4 text-lg font-semibold flex items-center gap-2">
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
                 <AlertCircle className="h-5 w-5 text-blue-500" />
                 Recommendations
               </h3>
               <div className="space-y-2">
                 {analytics.recommendations.map((rec: string, index: number) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="bg-blue-500/20 mt-0.5 h-1.5 w-1.5 rounded-full" />
+                    <div className="mt-0.5 h-1.5 w-1.5 rounded-full bg-blue-500/20" />
                     <p className="text-sm">{rec}</p>
                   </div>
                 ))}
               </div>
-              <p className="text-muted-foreground mt-4 text-xs italic">
+              <p className="mt-4 text-xs italic text-muted-foreground">
                 Based on your tour data. Not financial or legal advice.
               </p>
             </Card>
@@ -274,7 +273,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
 
           {/* Top Markets */}
           <Card className="p-6">
-            <h3 className="mb-4 text-lg font-semibold flex items-center gap-2">
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
               <MapPin className="h-5 w-5" />
               Top Markets
             </h3>
@@ -288,7 +287,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
                     <p className="font-medium">
                       {index + 1}. {market.city}, {market.state}
                     </p>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-sm text-muted-foreground">
                       {market.shows} shows • {market.totalAttendance.toLocaleString()} fans
                     </p>
                   </div>
@@ -296,7 +295,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
                     <p className="font-semibold text-green-500">
                       ${market.totalRevenue.toLocaleString()}
                     </p>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-sm text-muted-foreground">
                       ${market.averageRevenue.toLocaleString()}/show
                     </p>
                   </div>
@@ -308,29 +307,28 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
           {/* Growth Markets */}
           {analytics.geographic.growthMarkets && analytics.geographic.growthMarkets.length > 0 && (
             <Card className="border-green-500/20 bg-green-500/5 p-6">
-              <h3 className="mb-4 text-lg font-semibold flex items-center gap-2">
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
                 <TrendingUp className="h-5 w-5 text-green-500" />
                 Growth Markets
               </h3>
               <div className="space-y-3">
-                {analytics.geographic.growthMarkets.slice(0, 3).map((market: any, index: number) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{market.city}</p>
-                      <p className="text-muted-foreground text-sm">
-                        {market.shows} shows
-                      </p>
+                {analytics.geographic.growthMarkets
+                  .slice(0, 3)
+                  .map((market: any, index: number) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{market.city}</p>
+                        <p className="text-sm text-muted-foreground">{market.shows} shows</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold text-green-500">+{market.growth.toFixed(1)}%</p>
+                        <p className="text-sm text-muted-foreground">
+                          ${market.firstRevenue.toLocaleString()} → $
+                          {market.lastRevenue.toLocaleString()}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-green-500">
-                        +{market.growth.toFixed(1)}%
-                      </p>
-                      <p className="text-muted-foreground text-sm">
-                        ${market.firstRevenue.toLocaleString()} → ${market.lastRevenue.toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </Card>
           )}
@@ -347,29 +345,31 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
           {/* Financial Summary */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Card className="border-green-500/20 bg-green-500/5 p-6">
-              <h4 className="text-muted-foreground mb-2 text-sm">Total Revenue</h4>
+              <h4 className="mb-2 text-sm text-muted-foreground">Total Revenue</h4>
               <p className="text-2xl font-bold text-green-500">
                 ${financials.revenue.total.toLocaleString()}
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                ${financials.revenue.completed.toLocaleString()} completed • ${financials.revenue.projected.toLocaleString()} projected
+              <p className="mt-1 text-xs text-muted-foreground">
+                ${financials.revenue.completed.toLocaleString()} completed • $
+                {financials.revenue.projected.toLocaleString()} projected
               </p>
             </Card>
             <Card className="border-red-500/20 bg-red-500/5 p-6">
-              <h4 className="text-muted-foreground mb-2 text-sm">Total Expenses</h4>
+              <h4 className="mb-2 text-sm text-muted-foreground">Total Expenses</h4>
               <p className="text-2xl font-bold text-red-500">
                 ${financials.expenses.total.total.toLocaleString()}
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                ${financials.expenses.completed.total.toLocaleString()} actual • ${financials.expenses.upcoming.total.toLocaleString()} estimated
+              <p className="mt-1 text-xs text-muted-foreground">
+                ${financials.expenses.completed.total.toLocaleString()} actual • $
+                {financials.expenses.upcoming.total.toLocaleString()} estimated
               </p>
             </Card>
             <Card className="border-blue-500/20 bg-blue-500/5 p-6">
-              <h4 className="text-muted-foreground mb-2 text-sm">Net Profit</h4>
+              <h4 className="mb-2 text-sm text-muted-foreground">Net Profit</h4>
               <p className="text-2xl font-bold text-blue-500">
                 ${financials.profitLoss.total.toLocaleString()}
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {financials.profitLoss.margin.toFixed(1)}% margin
               </p>
             </Card>
@@ -401,25 +401,37 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
           {/* Expense Estimates (Planning Tool) */}
           <Card className="border-yellow-500/20 bg-yellow-500/5 p-6">
             <div className="mb-4 flex items-start gap-2">
-              <AlertCircle className="text-yellow-500 mt-0.5 h-5 w-5 shrink-0" />
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-500" />
               <div>
                 <h3 className="text-lg font-semibold">Expense Estimates (Planning Only)</h3>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   Industry-standard percentages - NOT your actual expenses
                 </p>
               </div>
             </div>
             <div className="space-y-3">
-              <ExpenseRow label="Venue Rental (est. 15%)" amount={financials.expenses.total.venueRental} />
-              <ExpenseRow label="Production (est. 20%)" amount={financials.expenses.total.production} />
+              <ExpenseRow
+                label="Venue Rental (est. 15%)"
+                amount={financials.expenses.total.venueRental}
+              />
+              <ExpenseRow
+                label="Production (est. 20%)"
+                amount={financials.expenses.total.production}
+              />
               <ExpenseRow label="Crew (est. 15%)" amount={financials.expenses.total.crew} />
               <ExpenseRow label="Travel (est. 10%)" amount={financials.expenses.total.travel} />
-              <ExpenseRow label="Accommodation (est. 10%)" amount={financials.expenses.total.accommodation} />
-              <ExpenseRow label="Marketing (est. 5%)" amount={financials.expenses.total.marketing} />
+              <ExpenseRow
+                label="Accommodation (est. 10%)"
+                amount={financials.expenses.total.accommodation}
+              />
+              <ExpenseRow
+                label="Marketing (est. 5%)"
+                amount={financials.expenses.total.marketing}
+              />
               <ExpenseRow label="Miscellaneous (est. 5%)" amount={financials.expenses.total.misc} />
             </div>
-            <div className="border-yellow-500/20 mt-4 rounded-lg border bg-yellow-500/10 p-3">
-              <p className="text-yellow-700 dark:text-yellow-300 text-xs font-medium">
+            <div className="mt-4 rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-3">
+              <p className="text-xs font-medium text-yellow-700 dark:text-yellow-300">
                 ⚠️ {financials.disclaimer}
               </p>
             </div>
@@ -429,27 +441,29 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
           <Card className="p-6">
             <h3 className="mb-4 text-lg font-semibold">Most Profitable Shows</h3>
             <div className="space-y-3">
-              {financials.topPerformers.mostProfitable.slice(0, 5).map((show: any, index: number) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between rounded-lg border border-green-500/20 bg-green-500/5 p-3"
-                >
-                  <div>
-                    <p className="font-medium">{show.name}</p>
-                    <p className="text-muted-foreground text-sm">
-                      {show.venue} • {new Date(show.date).toLocaleDateString()}
-                    </p>
+              {financials.topPerformers.mostProfitable
+                .slice(0, 5)
+                .map((show: any, index: number) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between rounded-lg border border-green-500/20 bg-green-500/5 p-3"
+                  >
+                    <div>
+                      <p className="font-medium">{show.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {show.venue} • {new Date(show.date).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-green-500">
+                        ${show.profit.toLocaleString()}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {show.profitMargin.toFixed(1)}% margin
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-green-500">
-                      ${show.profit.toLocaleString()}
-                    </p>
-                    <p className="text-muted-foreground text-sm">
-                      {show.profitMargin.toFixed(1)}% margin
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
             </div>
           </Card>
 
@@ -460,7 +474,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
               <div className="space-y-2">
                 {financials.recommendations.map((rec: string, index: number) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="bg-yellow-500/20 mt-0.5 h-1.5 w-1.5 rounded-full" />
+                    <div className="mt-0.5 h-1.5 w-1.5 rounded-full bg-yellow-500/20" />
                     <p className="text-sm">{rec}</p>
                   </div>
                 ))}
@@ -480,30 +494,32 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
           {/* Routing Summary */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Card className="p-6">
-              <h4 className="text-muted-foreground mb-2 text-sm">Total Distance</h4>
+              <h4 className="mb-2 text-sm text-muted-foreground">Total Distance</h4>
               <p className="text-2xl font-bold">
                 {routing.current.totalDistance.toLocaleString()} mi
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {routing.current.totalDrivingTime.toFixed(1)} hours driving
               </p>
             </Card>
             <Card className="p-6">
-              <h4 className="text-muted-foreground mb-2 text-sm">Estimated Cost</h4>
+              <h4 className="mb-2 text-sm text-muted-foreground">Estimated Cost</h4>
               <p className="text-2xl font-bold">
                 ${routing.current.estimatedCost.toLocaleString()}
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                Based on IRS mileage rate
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">Based on IRS mileage rate</p>
             </Card>
             <Card className="p-6">
-              <h4 className="text-muted-foreground mb-2 text-sm">Issues Detected</h4>
+              <h4 className="mb-2 text-sm text-muted-foreground">Issues Detected</h4>
               <p className="text-2xl font-bold text-yellow-500">
-                {routing.current.issues.backtracking + routing.current.issues.longDrives + routing.current.issues.tightSchedules}
+                {routing.current.issues.backtracking +
+                  routing.current.issues.longDrives +
+                  routing.current.issues.tightSchedules}
               </p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                {routing.current.issues.backtracking} backtrack • {routing.current.issues.longDrives} long • {routing.current.issues.tightSchedules} tight
+              <p className="mt-1 text-xs text-muted-foreground">
+                {routing.current.issues.backtracking} backtrack •{' '}
+                {routing.current.issues.longDrives} long • {routing.current.issues.tightSchedules}{' '}
+                tight
               </p>
             </Card>
           </div>
@@ -516,22 +532,22 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
               </h3>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div>
-                  <p className="text-muted-foreground text-sm">Distance Saved</p>
+                  <p className="text-sm text-muted-foreground">Distance Saved</p>
                   <p className="text-2xl font-bold text-green-500">
                     {Math.round(routing.savings.distance).toLocaleString()} mi
                   </p>
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-xs text-muted-foreground">
                     {routing.savings.distancePercent.toFixed(1)}% reduction
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-sm">Cost Saved</p>
+                  <p className="text-sm text-muted-foreground">Cost Saved</p>
                   <p className="text-2xl font-bold text-green-500">
                     ${Math.round(routing.savings.estimatedCost).toLocaleString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground text-sm">Time Saved</p>
+                  <p className="text-sm text-muted-foreground">Time Saved</p>
                   <p className="text-2xl font-bold text-green-500">
                     {routing.savings.drivingHours.toFixed(1)} hrs
                   </p>
@@ -570,18 +586,12 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
                         {rec.priority}
                       </span>
                     </div>
-                    <p className="text-muted-foreground text-sm">{rec.description}</p>
+                    <p className="text-sm text-muted-foreground">{rec.description}</p>
                     {rec.savings && (
                       <div className="mt-3 flex gap-4 text-sm">
-                        <span className="text-green-500">
-                          Save {rec.savings.miles} mi
-                        </span>
-                        <span className="text-green-500">
-                          Save ${rec.savings.cost}
-                        </span>
-                        <span className="text-green-500">
-                          Save {rec.savings.hours} hrs
-                        </span>
+                        <span className="text-green-500">Save {rec.savings.miles} mi</span>
+                        <span className="text-green-500">Save ${rec.savings.cost}</span>
+                        <span className="text-green-500">Save {rec.savings.hours} hrs</span>
                       </div>
                     )}
                   </div>
@@ -619,23 +629,31 @@ function MetricCard({
   return (
     <Card className="p-6">
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-muted-foreground text-sm">{label}</p>
+        <p className="text-sm text-muted-foreground">{label}</p>
         <div className={`rounded-lg p-2 ${colorClasses[color as keyof typeof colorClasses]}`}>
           <Icon className="h-4 w-4" />
         </div>
       </div>
       <p className="mb-1 text-2xl font-bold">{value}</p>
-      <p className="text-muted-foreground text-xs">{subtext}</p>
+      <p className="text-xs text-muted-foreground">{subtext}</p>
     </Card>
   );
 }
 
-function MetricDisplay({ label, value, description }: { label: string; value: string; description: string }) {
+function MetricDisplay({
+  label,
+  value,
+  description,
+}: {
+  label: string;
+  value: string;
+  description: string;
+}) {
   return (
     <div className="rounded-lg border border-border p-4">
-      <p className="text-muted-foreground mb-1 text-sm">{label}</p>
+      <p className="mb-1 text-sm text-muted-foreground">{label}</p>
       <p className="mb-1 text-2xl font-bold">{value}</p>
-      <p className="text-muted-foreground text-xs">{description}</p>
+      <p className="text-xs text-muted-foreground">{description}</p>
     </div>
   );
 }
@@ -667,7 +685,7 @@ function HealthIndicator({
     <div className="flex items-center justify-between">
       <div className="flex-1">
         <p className="font-medium">{label}</p>
-        {benchmark && <p className="text-muted-foreground text-xs">{benchmark}</p>}
+        {benchmark && <p className="text-xs text-muted-foreground">{benchmark}</p>}
       </div>
       <div className="flex items-center gap-3">
         <p className="font-semibold">{value}</p>
@@ -691,4 +709,3 @@ function ExpenseRow({ label, amount }: { label: string; amount: number }) {
     </div>
   );
 }
-

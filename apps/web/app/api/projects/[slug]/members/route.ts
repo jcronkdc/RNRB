@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
+import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { getCurrentUser } from '@/lib/session';
 
 /**
@@ -14,6 +15,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: 100 requests per minute
+    await checkRateLimit(standardLimiter, `project-members:${user.id}`);
 
     // Find project by slug first
     const project = await db.project.findFirst({

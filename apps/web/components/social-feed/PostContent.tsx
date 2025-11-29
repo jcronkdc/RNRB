@@ -82,12 +82,15 @@ function parseContent(content: string): ParsedPart[] {
 export function PostContent({ content, className = '' }: PostContentProps) {
   const parts = parseContent(content);
 
+  // Base styling classes for consistent text formatting
+  const baseClasses = 'whitespace-pre-wrap text-base leading-relaxed';
+
   if (parts.length === 0) {
-    return <p className={className}>{content}</p>;
+    return <p className={`${baseClasses} ${className}`.trim()}>{content}</p>;
   }
 
   return (
-    <p className={`whitespace-pre-wrap text-base leading-relaxed ${className}`}>
+    <p className={`${baseClasses} ${className}`.trim()}>
       {parts.map((part, index) => {
         if (part.type === 'text') {
           return <Fragment key={index}>{part.value}</Fragment>;

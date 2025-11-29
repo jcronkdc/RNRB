@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 
 // GET /api/sites - Get user's site
 export async function GET() {
@@ -9,6 +11,9 @@ export async function GET() {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `sites-read:${session.user.id}`);
 
     const site = await prisma.musicianSite.findUnique({
       where: { userId: session.user.id },
@@ -47,6 +52,9 @@ export async function PATCH(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: 30 updates per minute for writes
+    await checkRateLimit(strictLimiter, `sites-write:${session.user.id}`);
 
     const body = await request.json();
     const {
@@ -128,6 +136,9 @@ export async function DELETE() {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: 5 deletes per minute (destructive action)
+    await checkRateLimit(strictLimiter, `sites-delete:${session.user.id}`);
 
     const site = await prisma.musicianSite.findUnique({
       where: { userId: session.user.id },

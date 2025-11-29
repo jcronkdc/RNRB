@@ -10,9 +10,12 @@ import { getCurrentUser } from '@/lib/session';
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // user.id is guaranteed to be string at this point
+    const userId = user.id;
 
     const body = await request.json();
     const { projectId, songs } = body;
@@ -26,7 +29,7 @@ export async function POST(request: NextRequest) {
       where: { id: projectId },
       include: {
         members: {
-          where: { userId: user.id },
+          where: { userId },
         },
       },
     });
@@ -61,7 +64,7 @@ export async function POST(request: NextRequest) {
     // Create songs in batch
     const createdSongs = await db.song.createMany({
       data: newSongs.map((song: any) => ({
-        userId: user.id,
+        userId,
         projectId,
         title: song.title,
         description: song.artist ? `By ${song.artist}` : null,

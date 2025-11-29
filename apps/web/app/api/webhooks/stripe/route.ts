@@ -1,10 +1,10 @@
 import { prisma } from '@cronkwaters/db';
-import { CreditType } from '@prisma/client';
+import { type CreditType } from '@prisma/client';
 import { type NextRequest, NextResponse } from 'next/server';
 import type Stripe from 'stripe';
 
-import { verifyWebhookSignature } from '@/lib/stripe-subscriptions';
 import { sendEmail, emailTemplates } from '@/lib/email';
+import { verifyWebhookSignature } from '@/lib/stripe-subscriptions';
 
 // Disable body parsing - we need the raw body for signature verification
 export const runtime = 'nodejs';
@@ -55,6 +55,10 @@ export async function POST(req: NextRequest) {
 
       case 'checkout.session.completed':
         await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
+        break;
+
+      case 'payment_intent.succeeded':
+        await handleMerchPaymentSucceeded(event.data.object as Stripe.PaymentIntent);
         break;
 
       default:
@@ -299,7 +303,7 @@ async function handleTrialEnding(subscription: Stripe.Subscription) {
 }
 
 /**
- * Handle credit purchases (one-time checkout sessions)
+ * Handle credit purchases and merch orders (one-time checkout sessions)
  */
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   try {
@@ -308,6 +312,14 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     }
 
     const metadata = session.metadata || {};
+
+    // Check if this is a merch order
+    if (metadata.orderId) {
+      await handleMerchCheckoutCompleted(session);
+      return;
+    }
+
+    // Handle credit purchases
     const userId = metadata.userId;
     const creditType = metadata.creditType as 'ai' | 'video' | 'storage' | undefined;
     const creditAmount = Number(metadata.creditAmount || 0);
@@ -371,5 +383,205 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
   } catch (error) {
     console.error('Error handling checkout.session.completed:', error);
     throw error;
+  }
+}
+
+/**
+ * Handle merch checkout completion
+ * This handler extracts customer details from the checkout session.
+ * It's safe to call multiple times and preserves existing data.
+ */
+async function handleMerchCheckoutCompleted(session: Stripe.Checkout.Session) {
+  try {
+    const metadata = session.metadata || {};
+    const orderId = metadata.orderId;
+    const orderNumber = metadata.orderNumber;
+
+    if (!orderId) {
+      console.warn('Merch checkout session missing orderId', session.id);
+      return;
+    }
+
+    // Get current order to check existing data
+    const existingOrder = await prisma.merchOrder.findUnique({
+      where: { id: orderId },
+      select: {
+        customerEmail: true,
+        customerName: true,
+        shippingAddress: true,
+        paymentStatus: true,
+        stripePaymentIntentId: true,
+      },
+    });
+
+    if (!existingOrder) {
+      console.warn('Merch order not found:', orderId);
+      return;
+    }
+
+    // Get customer details from Stripe session
+    const customerEmail = session.customer_details?.email;
+    const customerName = session.customer_details?.name;
+
+    // Note: In Stripe API 2025-02-24.acacia, shipping_details was moved to collected_information.shipping_details
+    // The top-level shipping_details field was fully removed in 2025-03-31.basil
+    // Use type assertion since the SDK types may not reflect this change yet
+    const collectedInfo = (
+      session as unknown as {
+        collected_information?: { shipping_details?: { address?: Stripe.Address } };
+      }
+    ).collected_information;
+    const shippingAddress = collectedInfo?.shipping_details?.address;
+
+    // Build update data - only update fields that have values or need to be set
+    // Preserve existing customer details if new values are missing (race condition protection)
+    // Use Record type to allow dynamic updates while maintaining type safety with Prisma
+    const updateData: Record<string, unknown> = {};
+
+    // Always update payment status if not already paid
+    if (existingOrder.paymentStatus !== 'paid') {
+      updateData.status = 'confirmed';
+      updateData.paymentStatus = 'paid';
+      updateData.paidAt = new Date();
+    }
+
+    // CRITICAL: Always update customer details from checkout session when available
+    // This ensures customer details are captured regardless of webhook order.
+    // If payment_intent.succeeded fired first and set paymentStatus to 'paid',
+    // we still need to capture customer details from checkout.session.completed.
+
+    // Update customer email - always use checkout session value if available
+    // This overwrites any existing value to ensure we have the most up-to-date info from Stripe
+    if (customerEmail) {
+      updateData.customerEmail = customerEmail;
+    }
+    // Note: We don't set to null if missing - preserve existing value as fallback
+
+    // Update customer name - always use checkout session value if available
+    if (customerName) {
+      updateData.customerName = customerName;
+    }
+    // Note: We don't set to null if missing - preserve existing value as fallback
+
+    // Update shipping address - always use checkout session value if available
+    if (shippingAddress) {
+      updateData.shippingAddress = {
+        line1: shippingAddress.line1,
+        line2: shippingAddress.line2 || null,
+        city: shippingAddress.city,
+        state: shippingAddress.state || null,
+        postalCode: shippingAddress.postal_code,
+        country: shippingAddress.country,
+      };
+    }
+    // Note: We don't set to null if missing - preserve existing value as fallback
+
+    // Always update if we have any changes OR if we have customer details to capture
+    // This ensures customer details are saved even if payment status was already set by payment_intent.succeeded
+    const hasCustomerDetails = customerEmail || customerName || shippingAddress;
+    const hasUpdates = Object.keys(updateData).length > 0;
+
+    if (hasUpdates) {
+      await prisma.merchOrder.update({
+        where: { id: orderId },
+        data: updateData,
+      });
+
+      if (hasCustomerDetails) {
+        console.log(
+          `✅ Merch order ${orderNumber} updated with customer details${existingOrder.paymentStatus === 'paid' ? ' (payment already confirmed)' : ' and payment confirmed'}`
+        );
+      } else {
+        console.log(`✅ Merch order ${orderNumber} payment status updated`);
+      }
+    } else if (hasCustomerDetails) {
+      // This shouldn't happen, but log if we have customer details but didn't update
+      console.warn(
+        `⚠️ Merch order ${orderNumber} has customer details in session but updateData is empty`
+      );
+    } else {
+      console.log(
+        `ℹ️ Merch order ${orderNumber} already has all customer details and payment confirmed`
+      );
+    }
+  } catch (error) {
+    console.error('Error handling merch checkout completed:', error);
+    throw error;
+  }
+}
+
+/**
+ * Handle successful payment intent for merch orders
+ * This handler ONLY updates payment-related fields (status, paymentStatus, stripePaymentIntentId).
+ * Customer details (email, name, shipping address) are handled by handleMerchCheckoutCompleted
+ * since they're only available in the checkout session, not the payment intent.
+ *
+ * This event may fire before or after checkout.session.completed - both handlers are idempotent.
+ */
+async function handleMerchPaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
+  try {
+    const metadata = paymentIntent.metadata || {};
+    const orderId = metadata.orderId;
+
+    // Check if this is a merch order (has orderId in metadata)
+    if (!orderId) {
+      // Not a merch order (could be a credit purchase or subscription), skip
+      return;
+    }
+
+    // Find order by ID from payment intent metadata
+    const order = await prisma.merchOrder.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        orderNumber: true,
+        paymentStatus: true,
+        stripePaymentIntentId: true,
+      },
+    });
+
+    if (!order) {
+      console.warn(
+        'Merch order not found for payment_intent:',
+        paymentIntent.id,
+        'orderId:',
+        orderId
+      );
+      return;
+    }
+
+    // Build update data - only payment-related fields
+    // Use Record type to allow dynamic updates while maintaining type safety with Prisma
+    const updateData: Record<string, unknown> = {};
+
+    // Update payment status if not already paid
+    // Note: Customer details are NOT updated here - they come from checkout.session.completed
+    if (order.paymentStatus !== 'paid') {
+      updateData.status = 'confirmed';
+      updateData.paymentStatus = 'paid';
+      updateData.paidAt = new Date();
+      updateData.stripePaymentIntentId = paymentIntent.id;
+
+      await prisma.merchOrder.update({
+        where: { id: order.id },
+        data: updateData,
+      });
+
+      console.log(`✅ Merch order ${order.orderNumber} payment confirmed via payment_intent`);
+    } else if (!order.stripePaymentIntentId) {
+      // Order already paid but missing payment intent ID - update it
+      // This handles the case where checkout.session.completed fired first
+      await prisma.merchOrder.update({
+        where: { id: order.id },
+        data: { stripePaymentIntentId: paymentIntent.id },
+      });
+
+      console.log(`✅ Merch order ${order.orderNumber} payment intent ID updated`);
+    } else {
+      console.log(`ℹ️ Merch order ${order.orderNumber} already has payment intent ID`);
+    }
+  } catch (error) {
+    console.error('Error handling merch payment succeeded:', error);
+    // Don't throw - this is a backup handler and shouldn't fail the webhook
   }
 }

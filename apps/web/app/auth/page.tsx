@@ -2,10 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
-import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { Suspense, useState, useEffect } from 'react';
 
 function AuthForm() {

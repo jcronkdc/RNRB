@@ -30,7 +30,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Show not found' }, { status: 404 });
     }
 
-    // Verify access
+    // Verify access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {
@@ -100,7 +104,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: 'Show not found' }, { status: 404 });
     }
 
-    // Verify access
+    // Verify access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {
@@ -211,7 +219,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Show not found' }, { status: 404 });
     }
 
-    // Verify access
+    // Verify access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {

@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { auth } from '@/auth';
 
 /**
  * GET /api/library
@@ -16,11 +17,11 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
     const search = searchParams.get('search');
-    
+
     // Parse and validate pagination parameters
     const limitParam = parseInt(searchParams.get('limit') || '50');
     const offsetParam = parseInt(searchParams.get('offset') || '0');
-    
+
     // Validate parsed values are valid positive integers (or zero for offset)
     if (isNaN(limitParam) || limitParam < 1) {
       return NextResponse.json(
@@ -28,14 +29,14 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     if (isNaN(offsetParam) || offsetParam < 0) {
       return NextResponse.json(
         { error: 'Invalid offset parameter: must be a non-negative integer' },
         { status: 400 }
       );
     }
-    
+
     const limit = limitParam;
     const offset = offsetParam;
     const sortBy = searchParams.get('sortBy') || 'createdAt';
@@ -99,10 +100,7 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching library files:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch library files' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch library files' }, { status: 500 });
   }
 }
 
@@ -118,25 +116,12 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const {
-      name,
-      originalName,
-      url,
-      path,
-      size,
-      mimeType,
-      type,
-      duration,
-      waveformData,
-      tags,
-    } = body;
+    const { name, originalName, url, path, size, mimeType, type, duration, waveformData, tags } =
+      body;
 
     // Validate required fields
     if (!name || !url || !path || !size || !mimeType || !type) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Create library file entry
@@ -165,10 +150,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(serializedFile, { status: 201 });
   } catch (error) {
     console.error('Error creating library file:', error);
-    return NextResponse.json(
-      { error: 'Failed to create library file' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to create library file' }, { status: 500 });
   }
 }
 
@@ -185,12 +167,9 @@ export async function DELETE(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const idsParam = searchParams.get('ids');
-    
+
     if (!idsParam) {
-      return NextResponse.json(
-        { error: 'No file IDs provided' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'No file IDs provided' }, { status: 400 });
     }
 
     const ids = idsParam.split(',');
@@ -209,10 +188,6 @@ export async function DELETE(req: NextRequest) {
     });
   } catch (error) {
     console.error('Error deleting library files:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete library files' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete library files' }, { status: 500 });
   }
 }
-

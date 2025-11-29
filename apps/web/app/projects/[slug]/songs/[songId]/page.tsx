@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import {
   Edit,
   FileText,
-  Image as ImageIcon,
   Loader2,
   MessageSquare,
   Mic2,
@@ -22,8 +21,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useAudioUpload } from '@/hooks/use-audio-upload';
-import { supabase } from '@/lib/supabase';
 import { formatDateLong } from '@/lib/format-date';
+import { supabase } from '@/lib/supabase';
 
 // Dynamically import chat for song-level collaboration
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {

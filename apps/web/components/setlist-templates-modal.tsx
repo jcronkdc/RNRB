@@ -2,25 +2,14 @@
 
 /**
  * SETLIST TEMPLATES MODAL
- * 
+ *
  * Browse and apply pre-built or custom setlist templates
  * Features: Festival, Club, Acoustic, Wedding templates + user-created
  */
 
 import { Button, Card } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import {
-  Sparkles,
-  X,
-  Clock,
-  Zap,
-  Music,
-  Heart,
-  Briefcase,
-  Plus,
-  Loader2,
-  Check,
-} from 'lucide-react';
+import { Sparkles, X, Clock, Zap, Music, Heart, Briefcase, Plus, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 type Template = {
@@ -118,7 +107,7 @@ export function SetlistTemplatesModal({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-4xl max-h-[90vh] overflow-hidden"
+        className="max-h-[90vh] w-full max-w-4xl overflow-hidden"
       >
         <Card className="rnrb-card p-6 sm:p-8">
           {/* Header */}
@@ -127,16 +116,11 @@ export function SetlistTemplatesModal({
               <h2 className="font-display mb-1 text-2xl font-bold sm:text-3xl">
                 Setlist Templates
               </h2>
-              <p className="text-muted-foreground text-sm sm:text-base">
+              <p className="text-sm text-muted-foreground sm:text-base">
                 Choose a pre-built template to generate your setlist
               </p>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 shrink-0 p-0"
-            >
+            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 shrink-0 p-0">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -151,13 +135,13 @@ export function SetlistTemplatesModal({
           {/* Loading */}
           {loading ? (
             <div className="py-12 text-center">
-              <Loader2 className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin" />
+              <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
               <p className="text-muted-foreground">Loading templates...</p>
             </div>
           ) : templates.length === 0 ? (
             <div className="py-12 text-center">
-              <Sparkles className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
-              <p className="text-muted-foreground mb-4">No templates available yet</p>
+              <Sparkles className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
+              <p className="mb-4 text-muted-foreground">No templates available yet</p>
               <Button className="rnrb-button-primary">
                 <Plus className="mr-2 h-4 w-4" />
                 Create Custom Template
@@ -168,7 +152,7 @@ export function SetlistTemplatesModal({
               {/* Built-in Templates */}
               {templates.filter((t) => t.isBuiltIn).length > 0 && (
                 <div>
-                  <h3 className="text-muted-foreground mb-3 text-xs font-medium uppercase tracking-wide">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Built-in Templates
                   </h3>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -188,19 +172,19 @@ export function SetlistTemplatesModal({
                             <div className="mb-3 flex items-start justify-between">
                               <div className="flex items-center gap-3">
                                 <div className="rounded-lg bg-brand-primary/10 p-2">
-                                  <Icon className="text-brand-primary h-5 w-5" />
+                                  <Icon className="h-5 w-5 text-brand-primary" />
                                 </div>
-                                <div className="flex-1 min-w-0">
+                                <div className="min-w-0 flex-1">
                                   <h4 className="truncate font-semibold">{template.name}</h4>
                                 </div>
                               </div>
                               {isApplying && (
-                                <Loader2 className="text-brand-primary h-5 w-5 shrink-0 animate-spin" />
+                                <Loader2 className="h-5 w-5 shrink-0 animate-spin text-brand-primary" />
                               )}
                             </div>
 
                             {template.description && (
-                              <p className="text-muted-foreground mb-3 text-xs sm:text-sm">
+                              <p className="mb-3 text-xs text-muted-foreground sm:text-sm">
                                 {template.description}
                               </p>
                             )}
@@ -224,7 +208,7 @@ export function SetlistTemplatesModal({
                             </div>
 
                             {isApplying && (
-                              <p className="text-brand-primary mt-3 text-xs font-medium">
+                              <p className="mt-3 text-xs font-medium text-brand-primary">
                                 Generating setlist...
                               </p>
                             )}
@@ -238,7 +222,7 @@ export function SetlistTemplatesModal({
               {/* User Templates */}
               {templates.filter((t) => !t.isBuiltIn).length > 0 && (
                 <div className="mt-6">
-                  <h3 className="text-muted-foreground mb-3 text-xs font-medium uppercase tracking-wide">
+                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     My Custom Templates
                   </h3>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -259,17 +243,17 @@ export function SetlistTemplatesModal({
                                 <div className="rounded-lg bg-purple-500/10 p-2">
                                   <Sparkles className="h-5 w-5 text-purple-500" />
                                 </div>
-                                <div className="flex-1 min-w-0">
+                                <div className="min-w-0 flex-1">
                                   <h4 className="truncate font-semibold">{template.name}</h4>
                                 </div>
                               </div>
                               {isApplying && (
-                                <Loader2 className="text-brand-primary h-5 w-5 shrink-0 animate-spin" />
+                                <Loader2 className="h-5 w-5 shrink-0 animate-spin text-brand-primary" />
                               )}
                             </div>
 
                             {template.description && (
-                              <p className="text-muted-foreground mb-3 text-xs sm:text-sm">
+                              <p className="mb-3 text-xs text-muted-foreground sm:text-sm">
                                 {template.description}
                               </p>
                             )}
@@ -289,7 +273,7 @@ export function SetlistTemplatesModal({
                             </div>
 
                             {isApplying && (
-                              <p className="text-brand-primary mt-3 text-xs font-medium">
+                              <p className="mt-3 text-xs font-medium text-brand-primary">
                                 Generating setlist...
                               </p>
                             )}
@@ -305,8 +289,9 @@ export function SetlistTemplatesModal({
           {/* Footer */}
           {!loading && templates.length > 0 && (
             <div className="mt-6 border-t border-border pt-4">
-              <p className="text-muted-foreground text-center text-xs sm:text-sm">
-                Templates analyze your songs and build optimized setlists based on duration, energy, and style
+              <p className="text-center text-xs text-muted-foreground sm:text-sm">
+                Templates analyze your songs and build optimized setlists based on duration, energy,
+                and style
               </p>
             </div>
           )}
@@ -315,4 +300,3 @@ export function SetlistTemplatesModal({
     </div>
   );
 }
-

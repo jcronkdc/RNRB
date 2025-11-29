@@ -41,8 +41,8 @@ import { useEffect, useState, useMemo, Suspense } from 'react';
 
 import { CalendarView } from '@/components/gig-calendar/calendar-view';
 import { ConflictDetector } from '@/components/gig-calendar/conflict-detector';
-import { useRequireAuth } from '@/hooks/use-require-auth';
 import { ToastNotification, useToast } from '@/components/toast-notification';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 import { formatDateWithDay, formatTime } from '@/lib/format-date';
 
 type Show = {
@@ -64,7 +64,7 @@ type Show = {
   tour?: {
     id: string;
     name: string;
-    slug: string;
+    slug?: string; // Made optional to match CalendarView component's Show type
   };
   project?: {
     id: string;

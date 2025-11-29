@@ -2,13 +2,12 @@
 
 /**
  * VENUES MANAGEMENT PAGE
- * 
+ *
  * List all venues with CRUD operations
  * Venue database for quick selection when creating shows
  */
 
 import { Button, Card } from '@cronkwaters/ui';
-import { formatNumber } from '@/lib/format-date';
 import { motion } from 'framer-motion';
 import {
   MapPin,
@@ -27,8 +26,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { useRequireAuth } from '@/hooks/use-require-auth';
 import { ToastNotification, useToast } from '@/components/toast-notification';
+import { useRequireAuth } from '@/hooks/use-require-auth';
+import { formatNumber } from '@/lib/format-date';
 
 type Venue = {
   id: string;
@@ -114,17 +114,17 @@ export default function VenuesPage() {
 
   if (loading || loadingVenues) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <Loader2 className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin" />
-          <p className="text-muted-foreground text-lg">Loading venues...</p>
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
+          <p className="text-lg text-muted-foreground">Loading venues...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-background min-h-screen px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container mx-auto max-w-7xl">
         {/* Toast Notifications */}
         <ToastNotification toasts={toasts} onRemove={removeToast} />
@@ -132,10 +132,8 @@ export default function VenuesPage() {
         {/* Header */}
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl lg:text-5xl">
-              Venues
-            </h1>
-            <p className="text-muted-foreground text-base sm:text-lg lg:text-xl">
+            <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl lg:text-5xl">Venues</h1>
+            <p className="text-base text-muted-foreground sm:text-lg lg:text-xl">
               Your touring venue database
             </p>
           </div>
@@ -159,7 +157,7 @@ export default function VenuesPage() {
         {/* Search */}
         <div className="mb-6">
           <div className="relative">
-            <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 sm:left-4 sm:h-5 sm:w-5" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground sm:left-4 sm:h-5 sm:w-5" />
             <input
               type="text"
               placeholder="Search venues by name, city, state..."
@@ -184,13 +182,13 @@ export default function VenuesPage() {
         {/* Empty State */}
         {venues.length === 0 ? (
           <Card className="rnrb-card p-12 text-center sm:p-16">
-            <MapPin className="text-muted-foreground/50 mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
+            <MapPin className="mx-auto mb-6 h-20 w-20 text-muted-foreground/50 sm:h-24 sm:w-24" />
             <h2 className="font-display mb-4 text-2xl font-bold sm:text-3xl">
               No Venues in Database
             </h2>
-            <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-base sm:text-lg">
-              Build your touring venue database. Save venue details for quick access when
-              scheduling shows.
+            <p className="mx-auto mb-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
+              Build your touring venue database. Save venue details for quick access when scheduling
+              shows.
             </p>
             <Button
               onClick={() => setShowAddForm(true)}
@@ -224,10 +222,10 @@ function VenueCard({
       <Card className="rnrb-card group p-4 transition hover:border-brand-primary/30 sm:p-6">
         {/* Header */}
         <div className="mb-4 flex items-start justify-between">
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <h3 className="mb-1 truncate text-lg font-semibold sm:text-xl">{venue.name}</h3>
             {(venue.city || venue.state) && (
-              <p className="text-muted-foreground truncate text-sm">
+              <p className="truncate text-sm text-muted-foreground">
                 {venue.city}
                 {venue.city && venue.state && ', '}
                 {venue.state}
@@ -256,21 +254,21 @@ function VenueCard({
         {/* Details */}
         <div className="space-y-2">
           {venue.address && (
-            <div className="text-muted-foreground flex items-start gap-2 text-sm">
+            <div className="flex items-start gap-2 text-sm text-muted-foreground">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
               <span className="break-words">{venue.address}</span>
             </div>
           )}
 
           {venue.capacity && (
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Users className="h-4 w-4 shrink-0" />
               <span>Capacity: {formatNumber(venue.capacity)}</span>
             </div>
           )}
 
           {venue.phone && (
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Phone className="h-4 w-4 shrink-0" />
               <a href={`tel:${venue.phone}`} className="hover:text-brand-primary">
                 {venue.phone}
@@ -279,22 +277,22 @@ function VenueCard({
           )}
 
           {venue.email && (
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Mail className="h-4 w-4 shrink-0" />
-              <a href={`mailto:${venue.email}`} className="hover:text-brand-primary truncate">
+              <a href={`mailto:${venue.email}`} className="truncate hover:text-brand-primary">
                 {venue.email}
               </a>
             </div>
           )}
 
           {venue.website && (
-            <div className="text-muted-foreground flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <ExternalLink className="h-4 w-4 shrink-0" />
               <a
                 href={venue.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-brand-primary truncate"
+                className="truncate hover:text-brand-primary"
               >
                 Website
               </a>
@@ -305,7 +303,7 @@ function VenueCard({
         {/* Show Count */}
         {venue._count && venue._count.shows > 0 && (
           <div className="mt-4 border-t border-border pt-3">
-            <p className="text-muted-foreground text-xs">
+            <p className="text-xs text-muted-foreground">
               {venue._count.shows} {venue._count.shows === 1 ? 'show' : 'shows'} at this venue
             </p>
           </div>
@@ -315,13 +313,7 @@ function VenueCard({
   );
 }
 
-function AddVenueForm({
-  onClose,
-  onSuccess,
-}: {
-  onClose: () => void;
-  onSuccess: () => void;
-}) {
+function AddVenueForm({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
   const { success, error } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -536,4 +528,3 @@ function AddVenueForm({
     </div>
   );
 }
-

@@ -1,10 +1,9 @@
 'use client';
 
-import { Button, Card, Input } from '@cronkwaters/ui';
+import { Button, Card } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sparkles,
-  Image as ImageIcon,
   Palette,
   Wand2,
   Download,

@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { auth } from '@/auth';
 
 /**
  * POST /api/users/follow
@@ -194,7 +195,7 @@ export async function GET(request: NextRequest) {
         result = result.map((u) => ({
           ...u,
           isFollowingBack: followingSet.has(u.id),
-          isOwnProfile: u.id === session.user.id,
+          isOwnProfile: u.id === session.user?.id,
         }));
       }
 

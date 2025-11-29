@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { formatDateTime, formatNumber } from '@/lib/format-date';
 import {
   useLiveStreaming,
   useDaily,
@@ -24,6 +23,8 @@ import {
   WifiOff,
 } from 'lucide-react';
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+
+import { formatDateTime, formatNumber } from '@/lib/format-date';
 
 interface LivePerformanceProps {
   performanceName: string;
@@ -61,7 +62,7 @@ export function LivePerformance({
   const [chatMessages, setChatMessages] = useState<
     Array<{ id: string; user: string; message: string; timestamp: Date }>
   >([]);
-  
+
   // Use refs to prevent state updates after unmount
   const isMountedRef = useRef(true);
   const viewerIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -141,43 +142,51 @@ export function LivePerformance({
   }, []);
 
   // Memoize formatted values
-  const formattedDuration = useMemo(() => formatDuration(streamDuration), [streamDuration, formatDuration]);
+  const formattedDuration = useMemo(
+    () => formatDuration(streamDuration),
+    [streamDuration, formatDuration]
+  );
   const formattedViewerCount = useMemo(() => formatNumber(viewerCount), [viewerCount]);
-  const formattedPeakViewers = useMemo(() => 
-    formatNumber(Math.max(viewerCount, Math.floor(viewerCount * 1.3))), 
+  const formattedPeakViewers = useMemo(
+    () => formatNumber(Math.max(viewerCount, Math.floor(viewerCount * 1.3))),
     [viewerCount]
   );
-  const formattedReactions = useMemo(() => 
-    formatNumber(Math.floor(viewerCount * 8.2)), 
+  const formattedReactions = useMemo(
+    () => formatNumber(Math.floor(viewerCount * 8.2)),
     [viewerCount]
   );
-  const formattedHearts = useMemo(() => 
-    formatNumber(Math.floor(viewerCount * 2.5)), 
-    [viewerCount]
-  );
+  const formattedHearts = useMemo(() => formatNumber(Math.floor(viewerCount * 2.5)), [viewerCount]);
 
   // Get platform-specific RTMP URL - Memoized
-  const getPlatformUrl = useCallback((platform: string) => {
-    switch (platform) {
-      case 'youtube':
-        return 'rtmp://a.rtmp.youtube.com/live2';
-      case 'twitch':
-        return 'rtmp://live.twitch.tv/app';
-      case 'facebook':
-        return 'rtmps://live-api-s.facebook.com:443/rtmp';
-      default:
-        return streamConfig.rtmpUrl;
-    }
-  }, [streamConfig.rtmpUrl]);
+  const getPlatformUrl = useCallback(
+    (platform: string) => {
+      switch (platform) {
+        case 'youtube':
+          return 'rtmp://a.rtmp.youtube.com/live2';
+        case 'twitch':
+          return 'rtmp://live.twitch.tv/app';
+        case 'facebook':
+          return 'rtmps://live-api-s.facebook.com:443/rtmp';
+        default:
+          return streamConfig.rtmpUrl;
+      }
+    },
+    [streamConfig.rtmpUrl]
+  );
 
   // Memoize video bitrate calculation
   const videoBitrate = useMemo(() => {
     switch (streamConfig.quality) {
-      case 'ultra': return 3000;
-      case 'high': return 2000;
-      case 'medium': return 1000;
-      case 'low': return 500;
-      default: return 2000;
+      case 'ultra':
+        return 3000;
+      case 'high':
+        return 2000;
+      case 'medium':
+        return 1000;
+      case 'low':
+        return 500;
+      default:
+        return 2000;
     }
   }, [streamConfig.quality]);
 
@@ -209,7 +218,14 @@ export function LivePerformance({
     } catch (err) {
       console.error('Failed to start streaming:', err);
     }
-  }, [startLiveStreaming, streamConfig.streamKey, streamConfig.platform, streamConfig.rtmpUrl, getPlatformUrl, videoBitrate]);
+  }, [
+    startLiveStreaming,
+    streamConfig.streamKey,
+    streamConfig.platform,
+    streamConfig.rtmpUrl,
+    getPlatformUrl,
+    videoBitrate,
+  ]);
 
   // Stop live stream - Memoized
   const handleStopStream = useCallback(async () => {
@@ -225,43 +241,46 @@ export function LivePerformance({
 
   // Memoize config update handlers
   const updatePlatform = useCallback((value: string) => {
-    setStreamConfig(prev => ({ ...prev, platform: value as any }));
+    setStreamConfig((prev) => ({ ...prev, platform: value as any }));
   }, []);
 
   const updateStreamKey = useCallback((value: string) => {
-    setStreamConfig(prev => ({ ...prev, streamKey: value }));
+    setStreamConfig((prev) => ({ ...prev, streamKey: value }));
   }, []);
 
   const updateRtmpUrl = useCallback((value: string) => {
-    setStreamConfig(prev => ({ ...prev, rtmpUrl: value }));
+    setStreamConfig((prev) => ({ ...prev, rtmpUrl: value }));
   }, []);
 
   const updateQuality = useCallback((value: string) => {
-    setStreamConfig(prev => ({ ...prev, quality: value as any }));
+    setStreamConfig((prev) => ({ ...prev, quality: value as any }));
   }, []);
 
   const updateShowChat = useCallback((checked: boolean) => {
-    setStreamConfig(prev => ({ ...prev, showChat: checked }));
+    setStreamConfig((prev) => ({ ...prev, showChat: checked }));
   }, []);
 
   const updateRecordStream = useCallback((checked: boolean) => {
-    setStreamConfig(prev => ({ ...prev, recordStream: checked }));
+    setStreamConfig((prev) => ({ ...prev, recordStream: checked }));
   }, []);
 
   const toggleSettings = useCallback(() => {
-    setShowSettings(prev => !prev);
+    setShowSettings((prev) => !prev);
   }, []);
 
   // Memoized chat message handler
   const handleChatMessage = useCallback((message: string) => {
     if (!message.trim()) return;
-    
-    setChatMessages(prev => [...prev, {
-      id: Date.now().toString(),
-      user: 'Artist',
-      message: message.trim(),
-      timestamp: new Date(),
-    }]);
+
+    setChatMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        user: 'Artist',
+        message: message.trim(),
+        timestamp: new Date(),
+      },
+    ]);
   }, []);
 
   return (
@@ -271,7 +290,7 @@ export function LivePerformance({
         <div className="flex items-start justify-between">
           <div>
             <h2 className="mb-2 text-2xl font-bold">{performanceName}</h2>
-            {description && <p className="text-muted-foreground mb-4">{description}</p>}
+            {description && <p className="mb-4 text-muted-foreground">{description}</p>}
             {scheduledTime && !isLiveStreaming && (
               <p className="text-sm">Scheduled for: {formatDateTime(scheduledTime)}</p>
             )}
@@ -359,11 +378,7 @@ export function LivePerformance({
                     <option value="custom">Custom RTMP</option>
                   </select>
 
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={toggleSettings}
-                  >
+                  <Button variant="ghost" size="icon" onClick={toggleSettings}>
                     <Settings className="h-4 w-4" />
                   </Button>
                 </div>
@@ -489,17 +504,17 @@ export function LivePerformance({
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Peak Viewers</span>
+                <span className="text-sm text-muted-foreground">Peak Viewers</span>
                 <span className="font-semibold">{formattedPeakViewers}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Chat Messages</span>
+                <span className="text-sm text-muted-foreground">Chat Messages</span>
                 <span className="font-semibold">{chatMessages.length}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Reactions</span>
+                <span className="text-sm text-muted-foreground">Reactions</span>
                 <span className="font-semibold">{formattedReactions}</span>
               </div>
             </div>

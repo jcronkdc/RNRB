@@ -17,10 +17,10 @@ import {
   Palette,
   Sparkles,
 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
 
 import { supabase } from '@/lib/supabase';
 

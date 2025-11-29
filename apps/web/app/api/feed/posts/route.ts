@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { auth } from '@/auth';
 import {
   validateCursor,
   validateLimit,
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
     const userId = session.user.id;
 
     // Base query conditions
-    let whereClause: any = {
+    const whereClause: any = {
       isDeleted: false,
     };
 

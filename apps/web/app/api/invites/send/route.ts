@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { sendEmail, emailTemplates } from '@/lib/email';
 import { handleApiError } from '@/lib/errors';
 import { requireAuth } from '@/lib/session';
-import { sendEmail, emailTemplates } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {

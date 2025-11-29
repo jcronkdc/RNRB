@@ -8,20 +8,20 @@
  * - Matches your target duration (±5 min)
  * - Prevents 3+ consecutive songs in same key (vocal health)
  * - Varies tempo to avoid monotony
- * 
+ *
  * What you'll need:
  * - Songs with key, tempo, and duration metadata
  * - Willingness to tweak the results (it's a tool, not magic)
  */
 
-import { Button , Card } from '@cronkwaters/ui';
+import { Button, Card } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Sparkles, 
-  X, 
-  Loader2, 
-  AlertCircle, 
-  Wand2, 
+import {
+  Sparkles,
+  X,
+  Loader2,
+  AlertCircle,
+  Wand2,
   Zap,
   TrendingUp,
   Heart,
@@ -51,7 +51,7 @@ export function SetlistGeneratorModal({
   const [energyProfile, setEnergyProfile] = useState<EnergyProfile>('balanced');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Advanced options
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [requiredSongs, setRequiredSongs] = useState<string[]>([]);
@@ -106,14 +106,14 @@ export function SetlistGeneratorModal({
   };
 
   const toggleSongRequired = (songId: string) => {
-    setRequiredSongs(prev =>
-      prev.includes(songId) ? prev.filter(id => id !== songId) : [...prev, songId]
+    setRequiredSongs((prev) =>
+      prev.includes(songId) ? prev.filter((id) => id !== songId) : [...prev, songId]
     );
   };
 
   const toggleSongExcluded = (songId: string) => {
-    setExcludedSongs(prev =>
-      prev.includes(songId) ? prev.filter(id => id !== songId) : [...prev, songId]
+    setExcludedSongs((prev) =>
+      prev.includes(songId) ? prev.filter((id) => id !== songId) : [...prev, songId]
     );
   };
 
@@ -160,12 +160,12 @@ export function SetlistGeneratorModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/70 p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="w-full max-w-4xl my-8"
+        className="my-8 w-full max-w-4xl"
       >
         <Card className="rnrb-card p-6">
           {/* Header */}
@@ -176,7 +176,7 @@ export function SetlistGeneratorModal({
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold">Setlist Generator</h2>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   Algorithmic optimization for faster setlist creation
                 </p>
               </div>
@@ -316,12 +316,12 @@ export function SetlistGeneratorModal({
                       }`}
                     >
                       <div className="text-2xl font-bold">{duration}</div>
-                      <div className="text-muted-foreground text-xs">minutes</div>
+                      <div className="text-xs text-muted-foreground">minutes</div>
                     </button>
                   ))}
                 </div>
                 <div className="mt-3">
-                  <label className="text-muted-foreground text-xs">Custom duration (minutes)</label>
+                  <label className="text-xs text-muted-foreground">Custom duration (minutes)</label>
                   <input
                     type="number"
                     value={targetDuration}
@@ -329,7 +329,7 @@ export function SetlistGeneratorModal({
                     disabled={loading}
                     min={15}
                     max={240}
-                    className="border-border bg-surface focus:border-brand-primary focus:ring-brand-primary/20 mt-1 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
+                    className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                   />
                 </div>
               </div>
@@ -357,7 +357,7 @@ export function SetlistGeneratorModal({
                           </div>
                           <div className="font-semibold">{profile.name}</div>
                         </div>
-                        <div className="text-muted-foreground text-xs">{profile.description}</div>
+                        <div className="text-xs text-muted-foreground">{profile.description}</div>
                       </button>
                     );
                   })}
@@ -365,11 +365,11 @@ export function SetlistGeneratorModal({
               </div>
 
               {/* Advanced Options */}
-              <div className="border-border rounded-lg border">
+              <div className="rounded-lg border border-border">
                 <button
                   onClick={() => setShowAdvanced(!showAdvanced)}
                   disabled={loading}
-                  className="hover:bg-surface-muted flex w-full items-center justify-between p-4 transition"
+                  className="flex w-full items-center justify-between p-4 transition hover:bg-surface-muted"
                 >
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-purple-400" />
@@ -388,7 +388,7 @@ export function SetlistGeneratorModal({
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="border-border overflow-hidden border-t"
+                      className="overflow-hidden border-t border-border"
                     >
                       <div className="space-y-4 p-4">
                         {/* Toggles */}
@@ -401,7 +401,9 @@ export function SetlistGeneratorModal({
                               disabled={loading}
                               className="h-4 w-4 rounded"
                             />
-                            <span className="text-sm">Avoid large key jumps (vocalist-friendly)</span>
+                            <span className="text-sm">
+                              Avoid large key jumps (vocalist-friendly)
+                            </span>
                           </label>
                         </div>
 
@@ -411,7 +413,10 @@ export function SetlistGeneratorModal({
                             <div className="text-sm font-medium">Song Constraints</div>
                             <div className="max-h-40 space-y-1 overflow-y-auto rounded-lg bg-gray-900/50 p-2">
                               {availableSongs.slice(0, 20).map((song: any) => (
-                                <div key={song.id} className="flex items-center justify-between py-1">
+                                <div
+                                  key={song.id}
+                                  className="flex items-center justify-between py-1"
+                                >
                                   <span className="text-sm">{song.title}</span>
                                   <div className="flex gap-1">
                                     <button
@@ -454,7 +459,7 @@ export function SetlistGeneratorModal({
                   <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
                   <div className="text-sm">
                     <p className="mb-1 font-medium text-blue-300">What This Tool Does</p>
-                    <ul className="text-muted-foreground space-y-1">
+                    <ul className="space-y-1 text-muted-foreground">
                       <li>• Matches your target duration (±5 minutes)</li>
                       <li>• Prevents 3+ songs in same key (vocal health)</li>
                       <li>• Varies tempo to avoid monotony</li>
@@ -470,7 +475,7 @@ export function SetlistGeneratorModal({
                   <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-400" />
                   <div className="text-sm">
                     <p className="mb-1 font-medium text-yellow-300">Realistic Expectations</p>
-                    <ul className="text-muted-foreground space-y-1">
+                    <ul className="space-y-1 text-muted-foreground">
                       <li>• Requires songs with key, tempo, duration metadata</li>
                       <li>• You'll likely need to tweak the results</li>
                       <li>• It's a time-saving tool, not magic</li>
@@ -484,12 +489,7 @@ export function SetlistGeneratorModal({
 
           {/* Actions */}
           <div className="mt-6 flex gap-3">
-            <Button 
-              variant="ghost" 
-              onClick={onClose} 
-              className="flex-1" 
-              disabled={loading}
-            >
+            <Button variant="ghost" onClick={onClose} className="flex-1" disabled={loading}>
               {result ? 'Cancel' : 'Close'}
             </Button>
             {result ? (

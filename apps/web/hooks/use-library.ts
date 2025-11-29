@@ -289,10 +289,18 @@ export function useLibraryUpload() {
       const uploadPromise = new Promise<LibraryFile>((resolve, reject) => {
         xhr.addEventListener('load', () => {
           if (xhr.status >= 200 && xhr.status < 300) {
-            resolve(JSON.parse(xhr.responseText));
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch (e) {
+              reject(new Error('Invalid response from server'));
+            }
           } else {
-            const error = JSON.parse(xhr.responseText);
-            reject(new Error(error.error || 'Upload failed'));
+            try {
+              const error = JSON.parse(xhr.responseText);
+              reject(new Error(error.error || 'Upload failed'));
+            } catch {
+              reject(new Error(`Upload failed with status ${xhr.status}`));
+            }
           }
         });
 

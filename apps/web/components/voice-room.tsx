@@ -18,7 +18,7 @@
 import { Button } from '@cronkwaters/ui';
 import { DailyProvider } from '@daily-co/daily-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, PhoneOff, Users, Volume2, VolumeX, Settings } from 'lucide-react';
+import { Mic, MicOff, PhoneOff, Volume2, Settings } from 'lucide-react';
 import { useState } from 'react';
 
 import { useVoiceRoom } from '@/hooks/use-voice-room';

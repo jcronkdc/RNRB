@@ -1,13 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
 import {
   Image as ImageIcon,
   Music,
-  Globe,
-  Users,
-  Lock,
   X,
   Loader2,
   Send,
@@ -16,6 +11,8 @@ import {
   AtSign,
 } from 'lucide-react';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 interface PostComposerProps {
   onPostCreated: (post: any) => void;

@@ -9,15 +9,17 @@ describe('Redirect URL Handling', () => {
   describe('searchParams.get() behavior', () => {
     it('should return already-decoded values from Next.js', () => {
       // Next.js searchParams.get() automatically decodes URL-encoded values
-      // Example: ?redirect=%2Finvites%2Fproject%3Femail%3Duser%252Btest%2540example.com
-      // Returns: /invites/project?email=user%2Btest@example.com
+      // When a URL like /invites/project?email=user%2Btest%40example.com is encoded:
+      // encodeURIComponent encodes % as %25, so %2B becomes %252B and %40 becomes %2540
 
-      const encodedUrl = encodeURIComponent('/invites/project?email=user%2Btest@example.com');
+      const originalUrl = '/invites/project?email=user%2Btest%40example.com';
+      const encodedUrl = encodeURIComponent(originalUrl);
+      // The @ is already decoded in the original, so it gets encoded to %40
       expect(encodedUrl).toBe('%2Finvites%2Fproject%3Femail%3Duser%252Btest%2540example.com');
 
-      // Simulate what searchParams.get() does
+      // Simulate what searchParams.get() does - single decode
       const decoded = decodeURIComponent(encodedUrl);
-      expect(decoded).toBe('/invites/project?email=user%2Btest@example.com');
+      expect(decoded).toBe(originalUrl);
     });
   });
 
@@ -65,7 +67,7 @@ describe('Redirect URL Handling', () => {
 
       // Step 3: Profile page should use URL constructor to re-encode before router.push()
       // This ensures special characters like + are properly encoded in the final URL
-      const urlForReEncoding = new URL(decodedAtProfile, 'http://placeholder.com');
+      const urlForReEncoding = new URL(decodedAtProfile!, 'http://placeholder.com');
       const reEncodedPath =
         urlForReEncoding.pathname + urlForReEncoding.search + urlForReEncoding.hash;
 

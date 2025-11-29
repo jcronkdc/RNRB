@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/lib/session';
 /**
  * GET /api/tours/[id]/export
  * Export tour data in multiple formats
- * 
+ *
  * WORLD-CLASS: Professional export capabilities
  * Formats: CSV, JSON, PDF-ready data
  * Includes: Shows, venues, financials, setlists, analytics
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -278,13 +278,8 @@ function preparePDFData(tour: any) {
       totalRevenue: Number(totalRevenue.toFixed(2)),
       totalAttendance,
       averageRevenue:
-        pastShows.length > 0
-          ? Number((totalRevenue / pastShows.length).toFixed(2))
-          : 0,
-      averageAttendance:
-        pastShows.length > 0
-          ? Math.round(totalAttendance / pastShows.length)
-          : 0,
+        pastShows.length > 0 ? Number((totalRevenue / pastShows.length).toFixed(2)) : 0,
+      averageAttendance: pastShows.length > 0 ? Math.round(totalAttendance / pastShows.length) : 0,
     },
     shows: tour.shows.map((show: any) => ({
       date: show.date,
@@ -312,4 +307,3 @@ function preparePDFData(tour: any) {
     exportedAt: new Date().toISOString(),
   };
 }
-

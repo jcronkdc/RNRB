@@ -9,13 +9,10 @@ import { requireFeatureAccess, SubscriptionError } from '@/lib/subscription';
  * Get setlist by ID with all songs and details
  * REQUIRES: Creator or Studio subscription
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -124,4 +121,3 @@ export async function GET(
     return NextResponse.json({ error: 'Failed to fetch setlist' }, { status: 500 });
   }
 }
-

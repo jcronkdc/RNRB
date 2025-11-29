@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { Send, Calendar, MapPin, DollarSign, Music, Check, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface BookingSectionProps {
   content: {

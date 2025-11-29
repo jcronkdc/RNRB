@@ -2,32 +2,47 @@ import { prisma } from '@cronkwaters/db';
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
+import { authLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { getClientIp, logSecurityEvent } from '@/lib/security';
+
 export async function POST(request: Request) {
   try {
+    // 🔒 RATE LIMITING: Prevent brute-force account creation (5 attempts per minute per IP)
+    const clientIp = getClientIp(request);
+    try {
+      await checkRateLimit(authLimiter, `register:${clientIp}`);
+    } catch {
+      logSecurityEvent('rate_limit', {
+        action: 'register',
+        ip: clientIp,
+      });
+      return NextResponse.json(
+        { error: 'Too many registration attempts. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     // Security: Limit request body size to prevent DoS attacks (max 1MB)
     const MAX_BODY_SIZE = 1024 * 1024; // 1MB
     const contentLength = request.headers.get('content-length');
     if (contentLength && parseInt(contentLength, 10) > MAX_BODY_SIZE) {
-      return NextResponse.json(
-        { error: 'Request body too large' },
-        { status: 413 }
-      );
+      return NextResponse.json({ error: 'Request body too large' }, { status: 413 });
     }
-    
+
     const body = await request.json();
-    
+
     // Security: Validate body is an object and not too large
     if (!body || typeof body !== 'object' || Array.isArray(body)) {
-      return NextResponse.json(
-        { error: 'Invalid request body' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
-    
+
     const { email, password, name } = body;
 
     console.log('[REGISTER] Request received:', {
-      email: typeof email === 'string' ? email.substring(0, Math.min(3, email.length)) + '***' : undefined,
+      email:
+        typeof email === 'string'
+          ? email.substring(0, Math.min(3, email.length)) + '***'
+          : undefined,
       hasPassword: !!password,
       hasName: !!name,
     });
@@ -40,7 +55,10 @@ export async function POST(request: Request) {
     // Validation
     if (!email || typeof email !== 'string' || !password || typeof password !== 'string') {
       console.log('[REGISTER] Validation failed: missing email or password, or invalid types');
-      return NextResponse.json({ error: 'Email and password are required and must be strings' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Email and password are required and must be strings' },
+        { status: 400 }
+      );
     }
 
     if (password.length < 8) {

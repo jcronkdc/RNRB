@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+
 import { identifyUser, resetUser, trackEvent } from '@/lib/posthog';
 
 /**
@@ -12,7 +13,7 @@ export function usePostHogUser() {
   useEffect(() => {
     if (status === 'loading') return;
 
-    if (session?.user) {
+    if (session?.user?.id) {
       // User is signed in - identify them
       identifyUser(session.user.id, {
         email: session.user.email || undefined,

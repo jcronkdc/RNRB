@@ -1,7 +1,8 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Search, Music, X, Loader2, Play, FileAudio } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
-import { useLibrary, LibraryFile } from '@/hooks/use-library';
+import { motion } from 'framer-motion';
+import { Check, Search, Music, X, Loader2, FileAudio } from 'lucide-react';
+import { useState } from 'react';
+
+import { useLibrary, type LibraryFile } from '@/hooks/use-library';
 
 interface LibraryImportModalProps {
   isOpen: boolean;
@@ -69,9 +70,7 @@ export function LibraryImportModal({
         <div className="flex items-center justify-between border-b border-zinc-800 p-6">
           <div>
             <h2 className="text-2xl font-bold text-white">Import from Library</h2>
-            <p className="mt-1 text-sm text-zinc-400">
-              Select a file from your library to import
-            </p>
+            <p className="mt-1 text-sm text-zinc-400">Select a file from your library to import</p>
           </div>
           <button
             onClick={onClose}
@@ -115,10 +114,7 @@ export function LibraryImportModal({
               <p className="text-zinc-400">
                 {searchQuery ? 'No files found' : 'Your library is empty'}
               </p>
-              <a
-                href="/library"
-                className="mt-4 text-sm text-orange-500 hover:text-orange-400"
-              >
+              <a href="/library" className="mt-4 text-sm text-orange-500 hover:text-orange-400">
                 Upload files to your library →
               </a>
             </div>
@@ -140,7 +136,7 @@ export function LibraryImportModal({
                     {getTypeIcon(file.type)}
                   </div>
 
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <h3 className="truncate font-semibold text-white">{file.name}</h3>
                     <div className="flex items-center gap-2 text-xs text-zinc-400">
                       <span className="capitalize">{file.type}</span>
@@ -187,4 +183,3 @@ export function LibraryImportModal({
     </div>
   );
 }
-

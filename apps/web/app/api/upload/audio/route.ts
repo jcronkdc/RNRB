@@ -8,14 +8,15 @@
  * - Updates user storage usage tracking
  */
 
+import { prisma } from '@cronkwaters/db';
 import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { prisma } from '@cronkwaters/db';
-
 import { auth } from '@/auth';
 import { handleApiError } from '@/lib/errors';
-import { getUsageSummary, TIER_LIMITS, TierName } from '@/lib/usage-tracking';
+import { uploadLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { logSecurityEvent } from '@/lib/security';
+import { getUsageSummary, type TierName } from '@/lib/usage-tracking';
 
 export const runtime = 'nodejs';
 
@@ -72,6 +73,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
     const userId = session.user.id;
+
+    // 🔒 RATE LIMITING: Prevent upload spam (5 uploads per minute per user)
+    try {
+      await checkRateLimit(uploadLimiter, `audio-upload:${userId}`);
+    } catch {
+      logSecurityEvent('rate_limit', {
+        action: 'audio-upload',
+        userId,
+      });
+      return NextResponse.json(
+        { error: 'Too many uploads. Please wait before uploading more files.' },
+        { status: 429 }
+      );
+    }
 
     // Parse form data
     const formData = await request.formData();

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/sites/sections - Add a new section
 export async function POST(request: NextRequest) {

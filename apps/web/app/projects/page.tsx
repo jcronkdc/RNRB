@@ -15,11 +15,11 @@ import {
   Loader2,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useState, useMemo, useCallback, memo } from 'react';
+import { useEffect, useState, useMemo, memo } from 'react';
 
-import { useRequireAuth } from '@/hooks/use-require-auth';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { usePerformanceMonitor } from '@/hooks/use-performance-monitor';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useToast } from '@/hooks/useToast';
 
 type Project = {
@@ -37,13 +37,7 @@ type Project = {
 };
 
 // Memoized stats card component
-const StatsCard = memo(({ 
-  label, 
-  value 
-}: { 
-  label: string; 
-  value: number;
-}) => (
+const StatsCard = memo(({ label, value }: { label: string; value: number }) => (
   <div className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-3 transition-all hover:border-orange-500/50 hover:shadow-lg sm:p-4 lg:p-5">
     <p className="mb-1 text-xs text-gray-400 sm:mb-2 sm:text-sm">{label}</p>
     <p className="text-xl font-bold text-white sm:text-2xl lg:text-3xl">{value}</p>
@@ -52,13 +46,7 @@ const StatsCard = memo(({
 StatsCard.displayName = 'StatsCard';
 
 // Memoized project card component
-const ProjectCard = memo(({ 
-  project, 
-  index 
-}: { 
-  project: Project; 
-  index: number;
-}) => (
+const ProjectCard = memo(({ project, index }: { project: Project; index: number }) => (
   <motion.div
     key={project.id}
     initial={{ opacity: 0, y: 20 }}
@@ -74,7 +62,7 @@ const ProjectCard = memo(({
               src={project.cover_image}
               alt={project.name}
               className="h-full w-full object-cover"
-              loading={index < 6 ? "eager" : "lazy"}
+              loading={index < 6 ? 'eager' : 'lazy'}
             />
           ) : (
             <Music className="h-12 w-12 text-orange-500/50 sm:h-16 sm:w-16" />
@@ -148,17 +136,20 @@ function ProjectsPageContent() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
   const { showToast } = useToast();
-  
+
   // Performance monitoring
   usePerformanceMonitor('projects_list');
 
   // Memoized stats calculations
-  const stats = useMemo(() => ({
-    activeProjects: projects.length,
-    totalSongs: projects.reduce((sum, p) => sum + (p.song_count || 0), 0),
-    collaborators: projects.reduce((sum, p) => sum + (p.collaborator_count || 1), 0),
-    sessions: projects.reduce((sum, p) => sum + (p.session_count || 0), 0),
-  }), [projects]);
+  const stats = useMemo(
+    () => ({
+      activeProjects: projects.length,
+      totalSongs: projects.reduce((sum, p) => sum + (p.song_count || 0), 0),
+      collaborators: projects.reduce((sum, p) => sum + (p.collaborator_count || 1), 0),
+      sessions: projects.reduce((sum, p) => sum + (p.session_count || 0), 0),
+    }),
+    [projects]
+  );
 
   // Load projects with proper cleanup
   useEffect(() => {
@@ -166,16 +157,16 @@ function ProjectsPageContent() {
 
     const loadProjects = async () => {
       if (!user) return;
-      
+
       setLoadingProjects(true);
       try {
         const response = await fetch('/api/projects');
         if (!response.ok) {
           throw new Error('Failed to load projects');
         }
-        
+
         const data = await response.json();
-        
+
         // Safety: Only update if still mounted
         if (mounted) {
           setProjects(data);
@@ -239,7 +230,9 @@ function ProjectsPageContent() {
                     <Folder className="h-5 w-5 text-orange-500 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs text-gray-400 sm:text-sm">Your Creative Workspace</p>
+                    <p className="truncate text-xs text-gray-400 sm:text-sm">
+                      Your Creative Workspace
+                    </p>
                     <h1 className="truncate text-xl font-bold text-white sm:text-2xl md:text-3xl lg:text-4xl">
                       Projects
                     </h1>
@@ -324,7 +317,9 @@ function ProjectsPageContent() {
                     <p className="mb-1 text-sm font-semibold text-white sm:mb-2 sm:text-base">
                       Track Progress
                     </p>
-                    <p className="text-xs text-gray-400 sm:text-sm">Monitor sessions and creative work</p>
+                    <p className="text-xs text-gray-400 sm:text-sm">
+                      Monitor sessions and creative work
+                    </p>
                   </div>
                 </div>
 

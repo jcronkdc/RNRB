@@ -1,6 +1,9 @@
 import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/security';
+
 // Simple in-memory cache with TTL
 interface CacheEntry {
   data: any;
@@ -17,13 +20,13 @@ function getCacheKey(query: string, type: string, page: number, limit: number): 
 function getFromCache(key: string): any | null {
   const entry = cache.get(key);
   if (!entry) return null;
-  
+
   const now = Date.now();
   if (now - entry.timestamp > CACHE_TTL) {
     cache.delete(key);
     return null;
   }
-  
+
   return entry.data;
 }
 
@@ -32,7 +35,7 @@ function setCache(key: string, data: any): void {
     data,
     timestamp: Date.now(),
   });
-  
+
   // Clean up old cache entries (keep max 100 entries)
   if (cache.size > 100) {
     const oldestKey = cache.keys().next().value;
@@ -42,14 +45,18 @@ function setCache(key: string, data: any): void {
 
 export async function GET(request: NextRequest) {
   try {
+    // Rate limit: 100 searches per minute (by IP for public search)
+    const clientIp = getClientIp(request);
+    await checkRateLimit(standardLimiter, `discover-search:${clientIp}`);
+
     const searchParams = request.nextUrl.searchParams;
     const query = searchParams.get('q');
     const searchType = searchParams.get('type') || 'username';
-    
+
     // Parse and validate pagination parameters
     const pageParam = parseInt(searchParams.get('page') || '1');
     const limitParam = parseInt(searchParams.get('limit') || '20');
-    
+
     // Validate parsed values are valid positive integers
     if (isNaN(pageParam) || pageParam < 1) {
       return NextResponse.json(
@@ -57,14 +64,14 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     if (isNaN(limitParam) || limitParam < 1) {
       return NextResponse.json(
         { error: 'Invalid limit parameter: must be a positive integer' },
         { status: 400 }
       );
     }
-    
+
     const page = pageParam;
     const limit = Math.min(limitParam, 50); // Max 50 results per page
 
@@ -75,7 +82,7 @@ export async function GET(request: NextRequest) {
     // Check cache first
     const cacheKey = getCacheKey(query, searchType, page, limit);
     const cachedResult = getFromCache(cacheKey);
-    
+
     if (cachedResult) {
       return NextResponse.json({
         ...cachedResult,
@@ -105,12 +112,12 @@ export async function GET(request: NextRequest) {
       case 'phone':
         // Phone search would require additional phone field in User model
         // For now, return empty results
-        return NextResponse.json({ 
-          users: [], 
-          total: 0, 
-          page, 
+        return NextResponse.json({
+          users: [],
+          total: 0,
+          page,
           limit,
-          message: 'Phone search coming soon'
+          message: 'Phone search coming soon',
         });
       default:
         whereCondition = {
@@ -149,9 +156,7 @@ export async function GET(request: NextRequest) {
       },
       take: limit,
       skip,
-      orderBy: [
-        { createdAt: 'desc' },
-      ],
+      orderBy: [{ createdAt: 'desc' }],
     });
 
     // Transform data for response
@@ -184,7 +189,10 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error searching users:', error);
     return NextResponse.json(
-      { error: 'Failed to search users', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to search users',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -18,6 +19,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
     }
 
     const userId = session.user.id;
+
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `project-read:${userId}`);
+
     const { slug } = await params;
 
     // Get project by slug
@@ -123,6 +128,10 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     }
 
     const userId = session.user.id;
+
+    // Rate limit: 30 updates per minute
+    await checkRateLimit(strictLimiter, `project-update:${userId}`);
+
     const { slug } = await params;
 
     // Find project and verify access

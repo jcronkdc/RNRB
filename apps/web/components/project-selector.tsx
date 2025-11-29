@@ -1,7 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronDown, Folder, Plus, ExternalLink } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState, useRef, useEffect } from 'react';
+
 import { useProjects, useProjectSongActions } from '@/hooks/use-projects';
 
 interface ProjectSelectorProps {
@@ -16,7 +17,12 @@ interface ProjectSelectorProps {
  * Allows users to save songs to projects from anywhere in the app
  * Now with optional navigation to project pages
  */
-export function ProjectSelector({ songId, onProjectAdded, className = '', allowNavigation = true }: ProjectSelectorProps) {
+export function ProjectSelector({
+  songId,
+  onProjectAdded,
+  className = '',
+  allowNavigation = true,
+}: ProjectSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProjects, setSelectedProjects] = useState<Set<string>>(new Set());
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -96,11 +102,13 @@ export function ProjectSelector({ songId, onProjectAdded, className = '', allowN
         className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-all ${
           songId
             ? 'border-zinc-800 bg-zinc-900/50 text-white hover:border-orange-500 hover:bg-zinc-900'
-            : 'border-zinc-800/50 bg-zinc-900/30 text-zinc-600 cursor-not-allowed'
+            : 'cursor-not-allowed border-zinc-800/50 bg-zinc-900/30 text-zinc-600'
         }`}
       >
         <Folder className="h-4 w-4" />
-        <span>{selectedProjects.size > 0 ? `In ${selectedProjects.size} project(s)` : 'Add to Project'}</span>
+        <span>
+          {selectedProjects.size > 0 ? `In ${selectedProjects.size} project(s)` : 'Add to Project'}
+        </span>
         <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
@@ -131,7 +139,7 @@ export function ProjectSelector({ songId, onProjectAdded, className = '', allowN
                       className={`flex w-full items-center gap-3 rounded-lg p-2 text-left transition-colors ${
                         isSelected
                           ? 'bg-orange-500/10 text-orange-400'
-                          : 'hover:bg-zinc-800 text-white'
+                          : 'text-white hover:bg-zinc-800'
                       } disabled:cursor-not-allowed disabled:opacity-50`}
                     >
                       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-800">
@@ -146,18 +154,16 @@ export function ProjectSelector({ songId, onProjectAdded, className = '', allowN
                         )}
                       </div>
 
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="truncate font-medium">{project.name}</p>
                         <p className="truncate text-xs text-zinc-500">
                           {project.song_count} song{project.song_count !== 1 ? 's' : ''}
                         </p>
                       </div>
 
-                      {isSelected && (
-                        <Check className="h-4 w-4 shrink-0 text-orange-500" />
-                      )}
+                      {isSelected && <Check className="h-4 w-4 shrink-0 text-orange-500" />}
                     </button>
-                    
+
                     {/* View Project Link - appears on hover */}
                     {allowNavigation && (
                       <button
@@ -197,4 +203,3 @@ export function ProjectSelector({ songId, onProjectAdded, className = '', allowN
     </div>
   );
 }
-

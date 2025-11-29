@@ -60,7 +60,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Show not found' }, { status: 404 });
     }
 
-    // Verify user has access
+    // Verify user has access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {
@@ -106,7 +110,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Show not found' }, { status: 404 });
     }
 
-    // Verify user has access
+    // Verify user has access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {
@@ -171,7 +179,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
  * DELETE /api/shows/[id]
  * Delete a show (cascades to setlist)
  */
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params;
     const user = await getCurrentUser();
@@ -190,7 +201,11 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       return NextResponse.json({ error: 'Show not found' }, { status: 404 });
     }
 
-    // Verify user has access
+    // Verify user has access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { Button, cn } from '@cronkwaters/ui';
 import { X, Minus, Send, Sparkles, MessageSquare } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 
 import { useAssistant } from '@/hooks/use-assistant';
-import { Button, cn } from '@cronkwaters/ui';
 
 export function AssistantChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,7 +67,7 @@ export function AssistantChat() {
         className={cn(
           'fixed bottom-6 right-6 z-50',
           'flex items-center gap-2',
-          'px-4 py-3 rounded-full',
+          'rounded-full px-4 py-3',
           'bg-primary text-primary-foreground',
           'shadow-lg hover:shadow-xl',
           'transition-all duration-200',
@@ -76,7 +76,7 @@ export function AssistantChat() {
         )}
         aria-label="Open AI Assistant"
       >
-        <Sparkles className="w-5 h-5 group-hover:animate-spin" />
+        <Sparkles className="h-5 w-5 group-hover:animate-spin" />
         <span className="font-medium">AI Assistant</span>
       </button>
     );
@@ -88,20 +88,20 @@ export function AssistantChat() {
       className={cn(
         'fixed bottom-6 right-6 z-50',
         'w-[400px] max-w-[calc(100vw-2rem)]',
-        'bg-background border border-border rounded-lg shadow-2xl',
+        'rounded-lg border border-border bg-background shadow-2xl',
         'flex flex-col',
         isMinimized ? 'h-14' : 'h-[600px] max-h-[calc(100vh-2rem)]'
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
+      <div className="flex items-center justify-between border-b border-border p-4">
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <Sparkles className="text-primary h-5 w-5" />
+            <div className="absolute -right-1 -top-1 h-2 w-2 animate-pulse rounded-full bg-green-500" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm">AI Assistant</h3>
+            <h3 className="text-sm font-semibold">AI Assistant</h3>
             <p className="text-xs text-muted-foreground">Always here to help</p>
           </div>
         </div>
@@ -118,17 +118,17 @@ export function AssistantChat() {
       {!isMinimized && (
         <>
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div className="flex-1 space-y-4 overflow-y-auto p-4">
             {messages.length === 0 && (
-              <div className="h-full flex flex-col items-center justify-center text-center px-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <Sparkles className="w-8 h-8 text-primary" />
+              <div className="flex h-full flex-col items-center justify-center px-4 text-center">
+                <div className="bg-primary/10 mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+                  <Sparkles className="text-primary h-8 w-8" />
                 </div>
-                <h4 className="font-semibold mb-2">Welcome to AI Assistant!</h4>
-                <p className="text-sm text-muted-foreground mb-4">
+                <h4 className="mb-2 font-semibold">Welcome to AI Assistant!</h4>
+                <p className="mb-4 text-sm text-muted-foreground">
                   I'm here to help you navigate CronkWaters and answer any questions.
                 </p>
-                <div className="text-xs text-left space-y-2 bg-muted/50 rounded-lg p-3">
+                <div className="space-y-2 rounded-lg bg-muted/50 p-3 text-left text-xs">
                   <p className="font-medium">💬 Ask me about:</p>
                   <ul className="space-y-1 text-muted-foreground">
                     <li>• Navigating features</li>
@@ -144,10 +144,7 @@ export function AssistantChat() {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={cn(
-                  'flex',
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
-                )}
+                className={cn('flex', message.role === 'user' ? 'justify-end' : 'justify-start')}
               >
                 <div
                   className={cn(
@@ -158,9 +155,9 @@ export function AssistantChat() {
                   )}
                 >
                   {message.role === 'assistant' && (
-                    <div className="flex items-center gap-1 mb-1">
-                      <Sparkles className="w-3 h-3 text-primary" />
-                      <span className="text-xs font-medium text-primary">AI Assistant</span>
+                    <div className="mb-1 flex items-center gap-1">
+                      <Sparkles className="text-primary h-3 w-3" />
+                      <span className="text-primary text-xs font-medium">AI Assistant</span>
                     </div>
                   )}
                   <div className="whitespace-pre-wrap">{message.content}</div>
@@ -170,12 +167,21 @@ export function AssistantChat() {
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="max-w-[85%] rounded-lg px-3 py-2 text-sm bg-muted">
+                <div className="max-w-[85%] rounded-lg bg-muted px-3 py-2 text-sm">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <div
+                        className="bg-primary/60 h-2 w-2 animate-bounce rounded-full"
+                        style={{ animationDelay: '0ms' }}
+                      />
+                      <div
+                        className="bg-primary/60 h-2 w-2 animate-bounce rounded-full"
+                        style={{ animationDelay: '150ms' }}
+                      />
+                      <div
+                        className="bg-primary/60 h-2 w-2 animate-bounce rounded-full"
+                        style={{ animationDelay: '300ms' }}
+                      />
                     </div>
                     <span className="text-xs text-muted-foreground">Thinking...</span>
                   </div>
@@ -185,8 +191,8 @@ export function AssistantChat() {
 
             {error && (
               <div className="flex justify-center">
-                <div className="max-w-[85%] rounded-lg px-3 py-2 text-sm bg-destructive/10 text-destructive border border-destructive/20">
-                  <p className="font-medium mb-1">⚠️ Error</p>
+                <div className="bg-destructive/10 text-destructive border-destructive/20 max-w-[85%] rounded-lg border px-3 py-2 text-sm">
+                  <p className="mb-1 font-medium">⚠️ Error</p>
                   <p className="text-xs">{error}</p>
                   {error.includes('Upgrade') && (
                     <Button
@@ -208,14 +214,14 @@ export function AssistantChat() {
           {/* Input */}
           <div className="border-t border-border p-3">
             {messages.length > 0 && (
-              <div className="flex justify-end mb-2">
+              <div className="mb-2 flex justify-end">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={reset}
-                  className="text-xs text-muted-foreground h-auto py-1"
+                  className="h-auto py-1 text-xs text-muted-foreground"
                 >
-                  <MessageSquare className="w-3 h-3 mr-1" />
+                  <MessageSquare className="mr-1 h-3 w-3" />
                   New conversation
                 </Button>
               </div>
@@ -230,8 +236,8 @@ export function AssistantChat() {
                 className={cn(
                   'flex-1 resize-none rounded-md px-3 py-2',
                   'bg-muted text-sm',
-                  'border border-input',
-                  'focus:outline-none focus:ring-2 focus:ring-primary',
+                  'border-input border',
+                  'focus:ring-primary focus:outline-none focus:ring-2',
                   'placeholder:text-muted-foreground',
                   'max-h-32'
                 )}
@@ -247,7 +253,7 @@ export function AssistantChat() {
                 <Send className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground mt-2 text-center">
+            <p className="mt-2 text-center text-xs text-muted-foreground">
               Press Enter to send • Shift+Enter for new line
             </p>
           </div>
@@ -256,4 +262,3 @@ export function AssistantChat() {
     </div>
   );
 }
-

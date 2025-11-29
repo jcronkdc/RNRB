@@ -4,6 +4,8 @@ import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { sendEmail, emailTemplates } from '@/lib/email';
+import { strictLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { logSecurityEvent } from '@/lib/security';
 
 export async function POST(request: Request) {
   try {
@@ -11,6 +13,20 @@ export async function POST(request: Request) {
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // 🔒 RATE LIMITING: Prevent invitation email spam (10 per minute per user)
+    try {
+      await checkRateLimit(strictLimiter, `invite:${session.user.id}`);
+    } catch {
+      logSecurityEvent('rate_limit', {
+        action: 'invitation-send',
+        userId: session.user.id,
+      });
+      return NextResponse.json(
+        { error: 'Too many invitations sent. Please wait before sending more.' },
+        { status: 429 }
+      );
     }
 
     const body = await request.json();

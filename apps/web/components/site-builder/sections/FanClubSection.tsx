@@ -17,7 +17,6 @@ import {
   Play,
   Heart,
 } from 'lucide-react';
-import { useState } from 'react';
 
 interface ExclusiveContent {
   id: string;

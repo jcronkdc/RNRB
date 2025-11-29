@@ -1,5 +1,6 @@
 import { prisma } from '@cronkwaters/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
 
 export async function GET(request: NextRequest) {
@@ -8,11 +9,11 @@ export async function GET(request: NextRequest) {
   const genre = searchParams.get('genre');
   const mood = searchParams.get('mood');
   const search = searchParams.get('search');
-  
+
   // Parse and validate pagination parameters
   const limitParam = parseInt(searchParams.get('limit') || '20');
   const offsetParam = parseInt(searchParams.get('offset') || '0');
-  
+
   // Validate parsed values are valid positive integers (or zero for offset)
   if (isNaN(limitParam) || limitParam < 1) {
     return NextResponse.json(
@@ -20,14 +21,14 @@ export async function GET(request: NextRequest) {
       { status: 400 }
     );
   }
-  
+
   if (isNaN(offsetParam) || offsetParam < 0) {
     return NextResponse.json(
       { error: 'Invalid offset parameter: must be a non-negative integer' },
       { status: 400 }
     );
   }
-  
+
   const limit = limitParam;
   const offset = offsetParam;
 
@@ -244,4 +245,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to publish track' }, { status: 500 });
   }
 }
-

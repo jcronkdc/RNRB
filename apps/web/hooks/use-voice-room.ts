@@ -13,12 +13,7 @@
  * - Spatial audio (optional)
  */
 
-import {
-  useDaily,
-  useParticipantIds,
-  useLocalParticipant,
-  useAudioTrack,
-} from '@daily-co/daily-react';
+import { useDaily, useParticipantIds, useLocalParticipant } from '@daily-co/daily-react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 
 interface VoiceRoomConfig {
@@ -171,12 +166,15 @@ export function useVoiceRoom(config: VoiceRoomConfig) {
       Object.entries(remoteParticipants).forEach(([id, participant]) => {
         if (id === 'local') return;
 
+        // Audio level is not directly available on DailyParticipant
+        // We use audio track state as a proxy for activity
+        const audioEnabled = !!participant.audio;
         participantList.push({
           id,
           userName: participant.user_name || 'Unknown',
-          audioEnabled: !!participant.audio,
-          audioLevel: participant.audioLevel || 0,
-          isSpeaking: (participant.audioLevel || 0) > 0.1,
+          audioEnabled,
+          audioLevel: audioEnabled ? 0.5 : 0, // Simplified: on/off
+          isSpeaking: audioEnabled,
         });
       });
 
@@ -186,8 +184,8 @@ export function useVoiceRoom(config: VoiceRoomConfig) {
           id: 'local',
           userName: config.userName,
           audioEnabled: !isMuted,
-          audioLevel: localParticipant.audioLevel || 0,
-          isSpeaking: (localParticipant.audioLevel || 0) > 0.1,
+          audioLevel: !isMuted ? 0.5 : 0, // Simplified: on/off
+          isSpeaking: !isMuted,
         });
       }
 

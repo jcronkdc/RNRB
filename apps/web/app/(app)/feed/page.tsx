@@ -1,6 +1,7 @@
-import { Suspense } from 'react';
-import { SocialFeed } from '@/components/social-feed/SocialFeed';
 import { Loader2, Radio, Sparkles, TrendingUp, Users } from 'lucide-react';
+import { Suspense } from 'react';
+
+import { SocialFeed } from '@/components/social-feed/SocialFeed';
 
 export const metadata = {
   title: "Feed | Rock N' Roll Basement",

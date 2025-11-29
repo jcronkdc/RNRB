@@ -1,20 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { auth } from '@/auth';
 
 /**
  * POST /api/library/[id]/publish
  * Publish a library file to the community
- * 
+ *
  * This creates a CommunityTrack from a LibraryFile by:
  * 1. Creating a temporary Song record (required by CommunityTrack schema)
  * 2. Creating a CommunityTrack linked to that Song
  * 3. Making the content publicly accessible
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -117,7 +115,10 @@ export async function POST(
         audioUrl: libraryFile.url,
         audioPath: libraryFile.path,
         duration: libraryFile.duration || 0,
-        genre: libraryFile.type === 'demo' ? 'Demo' : libraryFile.type.charAt(0).toUpperCase() + libraryFile.type.slice(1),
+        genre:
+          libraryFile.type === 'demo'
+            ? 'Demo'
+            : libraryFile.type.charAt(0).toUpperCase() + libraryFile.type.slice(1),
         allowDownload: true,
         allowRemix: true,
         isExplicit: false,
@@ -131,10 +132,6 @@ export async function POST(
     });
   } catch (error) {
     console.error('Error publishing library file:', error);
-    return NextResponse.json(
-      { error: 'Failed to publish file' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to publish file' }, { status: 500 });
   }
 }
-

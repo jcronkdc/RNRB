@@ -230,7 +230,7 @@ export default function CollaborationDashboard() {
             >
               {/* Glow effect on hover */}
               <div
-                className={`absolute -right-10 -top-10 h-32 w-32 rounded-full bg-${stat.bgGlow}-500/20 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100`}
+                className={`bg- absolute -right-10 -top-10 h-32 w-32 rounded-full${stat.bgGlow}-500/20 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100`}
               />
 
               <div className="relative">
@@ -399,7 +399,7 @@ export default function CollaborationDashboard() {
                 ].map((tag) => (
                   <span
                     key={tag.label}
-                    className={`rounded-full bg-${tag.color}-500/20 px-3 py-1 text-xs font-medium text-${tag.color}-400`}
+                    className={`bg- rounded-full${tag.color}-500/20 text- px-3 py-1 text-xs font-medium${tag.color}-400`}
                   >
                     {tag.label}
                   </span>

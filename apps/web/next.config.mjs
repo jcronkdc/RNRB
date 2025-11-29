@@ -37,11 +37,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.vercel-insights.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.vercel-insights.com https://*.posthog.com https://us-assets.i.posthog.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https: http:",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://*.supabase.co https://*.neon.tech wss://*.ably.io wss://*.ably.net https://*.ably.net wss://*.ably-realtime.com https://*.ably-realtime.com https://api.openai.com https://*.stripe.com https://*.vercel-insights.com https://api.replicate.com https://*.replicate.delivery",
+      "connect-src 'self' https://*.supabase.co https://*.neon.tech wss://*.ably.io wss://*.ably.net https://*.ably.net wss://*.ably-realtime.com https://*.ably-realtime.com https://api.openai.com https://*.stripe.com https://*.vercel-insights.com https://api.replicate.com https://*.replicate.delivery https://*.posthog.com https://us.i.posthog.com https://us-assets.i.posthog.com",
       "media-src 'self' blob: https:",
       "frame-src 'self' https://js.stripe.com",
       "object-src 'none'",
@@ -53,9 +53,17 @@ const securityHeaders = [
   },
 ];
 
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  // Fix for monorepo: explicitly set the workspace root for file tracing
+  outputFileTracingRoot: join(__dirname, '../../'),
   eslint: {
     ignoreDuringBuilds: true
   },

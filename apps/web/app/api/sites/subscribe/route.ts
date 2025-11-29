@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
 import { randomBytes } from 'crypto';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/sites/subscribe - Subscribe to mailing list
 export async function POST(request: NextRequest) {

@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 import { handleApiError, AppError } from '@/lib/errors';
+import { checkRateLimit, uploadLimiter } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
 import { createBrowserClient } from '@/lib/supabase';
-import { checkRateLimit, uploadLimiter } from '@/lib/rate-limit';
 import { getUsageSummary } from '@/lib/usage-tracking';
-import { prisma } from '@cronkwaters/db';
-import { z } from 'zod';
 
 // Valid audio MIME types
 const VALID_AUDIO_TYPES = [
@@ -23,13 +23,7 @@ const VALID_AUDIO_TYPES = [
 const VALID_EXTENSIONS = /\.(mp3|wav|aiff|flac|ogg|m4a)$/i;
 
 // Library file type enum - must match Prisma LibraryFileType
-const libraryFileTypeSchema = z.enum([
-  'stem',
-  'demo',
-  'sample',
-  'loop',
-  'other',
-]);
+const libraryFileTypeSchema = z.enum(['stem', 'demo', 'sample', 'loop', 'other']);
 
 // Tags validation schema
 const tagsSchema = z.array(z.string().max(50)).max(20).default([]);
@@ -60,7 +54,9 @@ export async function POST(req: NextRequest) {
     const isValidExtension = VALID_EXTENSIONS.test(file.name);
 
     if (!isValidMime && !isValidExtension) {
-      throw AppError.badRequest('Invalid file type. Please upload audio files only (mp3, wav, aiff, flac, ogg, m4a)');
+      throw AppError.badRequest(
+        'Invalid file type. Please upload audio files only (mp3, wav, aiff, flac, ogg, m4a)'
+      );
     }
 
     // Validate and parse type
@@ -104,12 +100,7 @@ export async function POST(req: NextRequest) {
     // Check storage quota
     const fileSizeGB = file.size / (1024 * 1024 * 1024);
     if (usage.storage.remaining < fileSizeGB) {
-      throw AppError.quotaExceeded(
-        'Storage',
-        usage.storage.used,
-        usage.storage.limit,
-        usage.tier
-      );
+      throw AppError.quotaExceeded('Storage', usage.storage.used, usage.storage.limit, usage.tier);
     }
 
     // Create Supabase client
@@ -120,9 +111,7 @@ export async function POST(req: NextRequest) {
 
     // Create unique filename (sanitize to prevent path traversal)
     const timestamp = Date.now();
-    const sanitizedFileName = file.name
-      .replace(/[^a-zA-Z0-9.-]/g, '_')
-      .replace(/\.{2,}/g, '.'); // Prevent directory traversal
+    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.{2,}/g, '.'); // Prevent directory traversal
     const filePath = `library/${user.id}/${timestamp}-${sanitizedFileName}`;
 
     // Upload to Supabase Storage

@@ -2,7 +2,7 @@
 
 /**
  * WORLD-CLASS GIG CALENDAR VIEW
- * 
+ *
  * Features:
  * - Month/Week/Day/Agenda views
  * - Drag-and-drop rescheduling
@@ -35,11 +35,13 @@ import {
   Sun,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
+
 import { formatDateWithDay, formatTime } from '@/lib/format-date';
 
 type Show = {
   id: string;
   name: string;
+  slug: string;
   date: string;
   doorsTime?: string;
   soundcheckTime?: string;
@@ -53,6 +55,7 @@ type Show = {
   tour?: {
     id: string;
     name: string;
+    slug?: string;
   };
   setlist?: {
     id: string;
@@ -164,8 +167,18 @@ export function CalendarView({
   // Get header title based on view
   const getHeaderTitle = () => {
     const monthNames = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
 
     if (viewMode === 'month') {
@@ -300,11 +313,7 @@ export function CalendarView({
       )}
 
       {viewMode === 'agenda' && (
-        <AgendaView
-          shows={shows}
-          onShowClick={onShowClick}
-          conflicts={conflicts}
-        />
+        <AgendaView shows={shows} onShowClick={onShowClick} conflicts={conflicts} />
       )}
 
       {/* Stats Footer */}
@@ -363,35 +372,35 @@ function MonthView({
           const isCurrentMonth = day.date.getMonth() === currentDate.getMonth();
 
           return (
-              <div
-                key={index}
-                role="button"
-                tabIndex={0}
-                className={`min-h-[120px] border-b border-r border-border p-2 transition hover:bg-muted/20 ${
-                  !isCurrentMonth ? 'bg-muted/10 opacity-50' : ''
-                } ${isToday ? 'bg-brand-primary/5' : ''}`}
-                onDragOver={onDragOver}
-                onDrop={() => onDrop(day.date)}
-                onClick={() => onDateClick(day.date)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    onDateClick(day.date);
-                  }
-                }}
-              >
+            <div
+              key={index}
+              role="button"
+              tabIndex={0}
+              className={`min-h-[120px] border-b border-r border-border p-2 transition hover:bg-muted/20 ${
+                !isCurrentMonth ? 'bg-muted/10 opacity-50' : ''
+              } ${isToday ? 'bg-brand-primary/5' : ''}`}
+              onDragOver={onDragOver}
+              onDrop={() => onDrop(day.date)}
+              onClick={() => onDateClick(day.date)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  onDateClick(day.date);
+                }
+              }}
+            >
               {/* Date number */}
               <div className="mb-2 flex items-center justify-between">
                 <span
                   className={`text-sm font-semibold ${
                     isToday
-                      ? 'bg-brand-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full'
+                      ? 'text-primary-foreground flex h-6 w-6 items-center justify-center rounded-full bg-brand-primary'
                       : ''
                   }`}
                 >
                   {day.date.getDate()}
                 </span>
                 {hasConflict && (
-                  <AlertTriangle className="h-4 w-4 text-red-500" title="Multiple shows" />
+                  <AlertTriangle className="h-4 w-4 text-red-500" aria-label="Multiple shows" />
                 )}
                 {onCreateShow && isCurrentMonth && dayShows.length === 0 && (
                   <Button
@@ -428,14 +437,14 @@ function MonthView({
                   >
                     <div className="truncate">{show.name}</div>
                     {show.venue && (
-                      <div className="text-muted-foreground truncate text-[10px]">
+                      <div className="truncate text-[10px] text-muted-foreground">
                         {show.venue.city}
                       </div>
                     )}
                   </motion.div>
                 ))}
                 {dayShows.length > 3 && (
-                  <div className="text-muted-foreground text-[10px]">
+                  <div className="text-[10px] text-muted-foreground">
                     +{dayShows.length - 3} more
                   </div>
                 )}
@@ -476,7 +485,7 @@ function WeekView({
   return (
     <div className="flex-1 overflow-auto">
       {/* Day headers */}
-      <div className="grid grid-cols-8 border-b border-border sticky top-0 bg-background z-10">
+      <div className="sticky top-0 z-10 grid grid-cols-8 border-b border-border bg-background">
         <div className="p-2"></div>
         {calendarData.slice(0, 7).map((day: any, index: number) => {
           const dateKey = day.date.toISOString().split('T')[0];
@@ -494,13 +503,13 @@ function WeekView({
               <div
                 className={`mt-1 text-lg font-semibold ${
                   isToday
-                    ? 'bg-brand-primary text-primary-foreground inline-flex h-8 w-8 items-center justify-center rounded-full'
+                    ? 'text-primary-foreground inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary'
                     : ''
                 }`}
               >
                 {day.date.getDate()}
               </div>
-              <div className="text-muted-foreground mt-1 text-xs">
+              <div className="mt-1 text-xs text-muted-foreground">
                 {dayShows.length} {dayShows.length === 1 ? 'show' : 'shows'}
               </div>
             </div>
@@ -513,9 +522,7 @@ function WeekView({
         {hours.map((hour) => (
           <div key={hour} className="grid grid-cols-8 border-b border-border">
             {/* Hour label */}
-            <div className="p-2 text-right text-xs text-muted-foreground">
-              {formatHour(hour)}
-            </div>
+            <div className="p-2 text-right text-xs text-muted-foreground">{formatHour(hour)}</div>
 
             {/* Day columns */}
             {calendarData.slice(0, 7).map((day: any, index: number) => {
@@ -548,7 +555,7 @@ function WeekView({
                     >
                       <div className="font-semibold">{show.name}</div>
                       {show.venue && (
-                        <div className="text-muted-foreground text-[10px]">{show.venue.name}</div>
+                        <div className="text-[10px] text-muted-foreground">{show.venue.name}</div>
                       )}
                     </motion.div>
                   ))}
@@ -579,8 +586,10 @@ function DayView({ date, shows, onShowClick, onCreateShow }: any) {
         {/* Date header */}
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h3 className="font-display text-2xl font-bold">{formatDateWithDay(date.toISOString())}</h3>
-            <p className="text-muted-foreground text-sm">
+            <h3 className="font-display text-2xl font-bold">
+              {formatDateWithDay(date.toISOString())}
+            </h3>
+            <p className="text-sm text-muted-foreground">
               {shows.length} {shows.length === 1 ? 'show' : 'shows'} scheduled
             </p>
           </div>
@@ -599,7 +608,7 @@ function DayView({ date, shows, onShowClick, onCreateShow }: any) {
         <div className="space-y-4">
           {sortedShows.length === 0 ? (
             <div className="py-12 text-center">
-              <Calendar className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
+              <Calendar className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
               <p className="text-muted-foreground">No shows scheduled for this day</p>
             </div>
           ) : (
@@ -649,10 +658,13 @@ function AgendaView({ shows, onShowClick, conflicts }: any) {
       <div className="space-y-6">
         {sortedMonths.map((monthKey) => {
           const [year, month] = monthKey.split('-');
-          const monthName = new Date(parseInt(year), parseInt(month) - 1).toLocaleString('default', {
-            month: 'long',
-            year: 'numeric',
-          });
+          const monthName = new Date(parseInt(year), parseInt(month) - 1).toLocaleString(
+            'default',
+            {
+              month: 'long',
+              year: 'numeric',
+            }
+          );
           const monthShows = showsByMonth.get(monthKey)!;
 
           return (
@@ -669,9 +681,9 @@ function AgendaView({ shows, onShowClick, conflicts }: any) {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                     >
-                      <ShowDetailCard 
-                        show={show} 
-                        onClick={() => onShowClick(show)} 
+                      <ShowDetailCard
+                        show={show}
+                        onClick={() => onShowClick(show)}
                         hasConflict={hasConflict}
                       />
                     </motion.div>
@@ -684,11 +696,9 @@ function AgendaView({ shows, onShowClick, conflicts }: any) {
 
         {sortedMonths.length === 0 && (
           <Card className="rnrb-card p-12 text-center">
-            <Calendar className="text-muted-foreground/50 mx-auto mb-4 h-20 w-20" />
+            <Calendar className="mx-auto mb-4 h-20 w-20 text-muted-foreground/50" />
             <h3 className="font-display mb-2 text-xl font-bold">No Upcoming Shows</h3>
-            <p className="text-muted-foreground">
-              Your calendar is clear. Time to book some gigs!
-            </p>
+            <p className="text-muted-foreground">Your calendar is clear. Time to book some gigs!</p>
           </Card>
         )}
       </div>
@@ -704,7 +714,7 @@ function ShowDetailCard({ show, onClick, hasConflict = false }: any) {
       onClick={onClick}
     >
       <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Header */}
           <div className="mb-2 flex items-center gap-2">
             <h4 className="truncate text-lg font-semibold">{show.name}</h4>
@@ -716,19 +726,22 @@ function ShowDetailCard({ show, onClick, hasConflict = false }: any) {
               {show.status}
             </span>
             {hasConflict && (
-              <AlertTriangle className="h-4 w-4 shrink-0 text-red-500" title="Conflicting shows" />
+              <AlertTriangle
+                className="h-4 w-4 shrink-0 text-red-500"
+                aria-label="Conflicting shows"
+              />
             )}
           </div>
 
           {/* Details */}
           <div className="space-y-1 text-sm">
-            <div className="text-muted-foreground flex items-center gap-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4 shrink-0" />
               <span>{formatDateWithDay(show.date)}</span>
             </div>
 
             {show.venue && (
-              <div className="text-muted-foreground flex items-center gap-2">
+              <div className="flex items-center gap-2 text-muted-foreground">
                 <MapPin className="h-4 w-4 shrink-0" />
                 <span className="truncate">
                   {show.venue.name}
@@ -739,7 +752,7 @@ function ShowDetailCard({ show, onClick, hasConflict = false }: any) {
             )}
 
             {(show.doorsTime || show.soundcheckTime) && (
-              <div className="text-muted-foreground flex items-center gap-2">
+              <div className="flex items-center gap-2 text-muted-foreground">
                 <Clock className="h-4 w-4 shrink-0" />
                 <span>
                   {show.soundcheckTime && `Soundcheck ${formatTime(show.soundcheckTime)}`}
@@ -750,14 +763,14 @@ function ShowDetailCard({ show, onClick, hasConflict = false }: any) {
             )}
 
             {show.setlist && (
-              <div className="text-muted-foreground flex items-center gap-2">
+              <div className="flex items-center gap-2 text-muted-foreground">
                 <Music className="h-4 w-4 shrink-0" />
                 <span>{show.setlist.name || 'Setlist attached'}</span>
               </div>
             )}
 
             {show.tour && (
-              <div className="text-brand-primary flex items-center gap-2 text-xs">
+              <div className="flex items-center gap-2 text-xs text-brand-primary">
                 <Car className="h-3 w-3 shrink-0" />
                 <span>{show.tour.name}</span>
               </div>
@@ -769,7 +782,7 @@ function ShowDetailCard({ show, onClick, hasConflict = false }: any) {
         {(show.attendance || show.grossRevenue) && (
           <div className="text-right">
             {show.attendance && (
-              <div className="text-muted-foreground flex items-center gap-1 text-xs">
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <span className="font-semibold">{show.attendance}</span>
                 <span>attendees</span>
               </div>
@@ -818,25 +831,25 @@ function ShowStats({ shows }: { shows: Show[] }) {
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
       <Card className="rnrb-card p-3 text-center">
-        <div className="text-brand-primary text-2xl font-bold">{stats.upcoming}</div>
-        <div className="text-muted-foreground text-xs">Upcoming</div>
+        <div className="text-2xl font-bold text-brand-primary">{stats.upcoming}</div>
+        <div className="text-xs text-muted-foreground">Upcoming</div>
       </Card>
       <Card className="rnrb-card p-3 text-center">
-        <div className="text-green-500 text-2xl font-bold">{stats.confirmed}</div>
-        <div className="text-muted-foreground text-xs">Confirmed</div>
+        <div className="text-2xl font-bold text-green-500">{stats.confirmed}</div>
+        <div className="text-xs text-muted-foreground">Confirmed</div>
       </Card>
       <Card className="rnrb-card p-3 text-center">
-        <div className="text-blue-500 text-2xl font-bold">{stats.past}</div>
-        <div className="text-muted-foreground text-xs">Completed</div>
+        <div className="text-2xl font-bold text-blue-500">{stats.past}</div>
+        <div className="text-xs text-muted-foreground">Completed</div>
       </Card>
       <Card className="rnrb-card p-3 text-center">
-        <div className="text-purple-500 text-2xl font-bold">
+        <div className="text-2xl font-bold text-purple-500">
           {stats.totalAttendance.toLocaleString()}
         </div>
-        <div className="text-muted-foreground text-xs">Total Fans</div>
+        <div className="text-xs text-muted-foreground">Total Fans</div>
       </Card>
       <Card className="rnrb-card p-3 text-center">
-        <div className="text-yellow-500 text-2xl font-bold">
+        <div className="text-2xl font-bold text-yellow-500">
           {new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',
@@ -844,7 +857,7 @@ function ShowStats({ shows }: { shows: Show[] }) {
             maximumFractionDigits: 0,
           }).format(stats.totalRevenue)}
         </div>
-        <div className="text-muted-foreground text-xs">Revenue</div>
+        <div className="text-xs text-muted-foreground">Revenue</div>
       </Card>
     </div>
   );
@@ -936,4 +949,3 @@ function getStatusColorBorder(status: string) {
   };
   return colors[status as keyof typeof colors] || colors.scheduled;
 }
-

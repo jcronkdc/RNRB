@@ -17,9 +17,10 @@ import {
   AlertCircle,
   CheckCircle2,
 } from 'lucide-react';
-import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useState, useCallback, useEffect } from 'react';
+
 import { ProjectSelector } from '@/components/project-selector';
 
 // Style chips for genre/mood/tempo

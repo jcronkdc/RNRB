@@ -1,8 +1,8 @@
 /**
  * SETLIST TEMPLATES LIBRARY
- * 
+ *
  * Common setlist configurations for typical performance scenarios.
- * 
+ *
  * NOTE: These are starting points based on common practices,
  * not validated by 100 professional musicians. Adjust to your needs.
  */
@@ -100,7 +100,6 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
       energyProfile: 'balanced',
       prioritizePopular: false, // Mix hits with deep cuts
       avoidKeyJumps: true,
-      allowRepetition: true, // Enable encores
     },
     usageHints: [
       'Strong opener (top 3 energy song)',
@@ -125,7 +124,7 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
     },
     usageHints: [
       'Play your absolute best songs',
-      'Don\'t overstay your welcome',
+      "Don't overstay your welcome",
       'Build rapport quickly',
       'End strong (leave impression)',
     ],
@@ -290,7 +289,6 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
       energyProfile: 'balanced',
       prioritizePopular: true,
       avoidKeyJumps: true,
-      allowRepetition: true,
     },
     usageHints: [
       'Rehearse extensively beforehand',
@@ -383,16 +381,14 @@ export const SETLIST_TEMPLATES: SetlistTemplate[] = [
  * Get template by ID
  */
 export function getTemplate(id: string): SetlistTemplate | undefined {
-  return SETLIST_TEMPLATES.find(t => t.id === id);
+  return SETLIST_TEMPLATES.find((t) => t.id === id);
 }
 
 /**
  * Get templates by category
  */
-export function getTemplatesByCategory(
-  category: SetlistTemplate['category']
-): SetlistTemplate[] {
-  return SETLIST_TEMPLATES.filter(t => t.category === category);
+export function getTemplatesByCategory(category: SetlistTemplate['category']): SetlistTemplate[] {
+  return SETLIST_TEMPLATES.filter((t) => t.category === category);
 }
 
 /**
@@ -401,9 +397,7 @@ export function getTemplatesByCategory(
 export function searchTemplates(query: string): SetlistTemplate[] {
   const lowerQuery = query.toLowerCase();
   return SETLIST_TEMPLATES.filter(
-    t =>
-      t.name.toLowerCase().includes(lowerQuery) ||
-      t.description.toLowerCase().includes(lowerQuery)
+    (t) =>
+      t.name.toLowerCase().includes(lowerQuery) || t.description.toLowerCase().includes(lowerQuery)
   );
 }
-

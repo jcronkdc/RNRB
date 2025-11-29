@@ -1,7 +1,7 @@
 'use client';
 
-import { Card, Button } from '@cronkwaters/ui';
 import { trpc } from '@cronkwaters/trpc/client/react';
+import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import {
   CreditCard,
@@ -14,7 +14,6 @@ import {
   Clock,
   Zap,
   AlertCircle,
-  ImageIcon,
   Palette,
 } from 'lucide-react';
 import Link from 'next/link';

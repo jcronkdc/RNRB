@@ -7,11 +7,12 @@
  * - Filters by message type
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-
 import { prisma as db } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
+import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { logSecurityEvent } from '@/lib/security';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,6 +23,17 @@ export async function GET(request: NextRequest) {
     }
     const user = { id: session.user.id };
 
+    // 🔒 RATE LIMITING: Prevent data scraping (100 requests per minute per user)
+    try {
+      await checkRateLimit(standardLimiter, `chat-messages:${user.id}`);
+    } catch {
+      logSecurityEvent('rate_limit', {
+        action: 'chat-messages-fetch',
+        userId: user.id,
+      });
+      return NextResponse.json({ error: 'Too many requests. Please slow down.' }, { status: 429 });
+    }
+
     const { searchParams } = new URL(request.url);
     const channelId = searchParams.get('channelId');
     const cursor = searchParams.get('cursor'); // Cursor for pagination (message ID)
@@ -30,17 +42,17 @@ export async function GET(request: NextRequest) {
     if (!channelId) {
       return NextResponse.json({ error: 'channelId required' }, { status: 400 });
     }
-    
+
     // Parse and validate pagination parameters
     const limitParam = parseInt(searchParams.get('limit') || '50');
-    
+
     if (isNaN(limitParam) || limitParam < 1) {
       return NextResponse.json(
         { error: 'Invalid limit parameter: must be a positive integer' },
         { status: 400 }
       );
     }
-    
+
     const limit = Math.min(limitParam, 100); // Max 100 messages
 
     // Build optimized query with cursor-based pagination
@@ -131,22 +143,21 @@ export async function GET(request: NextRequest) {
     // Return next cursor for pagination
     const nextCursor = hasMore ? messages[limit].id : null;
 
-    return NextResponse.json({
-      messages: formattedMessages,
-      hasMore,
-      nextCursor,
-      // Cache headers for better performance
-    }, {
-      headers: {
-        'Cache-Control': 'private, max-age=30', // Cache for 30 seconds
+    return NextResponse.json(
+      {
+        messages: formattedMessages,
+        hasMore,
+        nextCursor,
+        // Cache headers for better performance
+      },
+      {
+        headers: {
+          'Cache-Control': 'private, max-age=30', // Cache for 30 seconds
+        },
       }
-    });
+    );
   } catch (error) {
     console.error('Get messages error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
-

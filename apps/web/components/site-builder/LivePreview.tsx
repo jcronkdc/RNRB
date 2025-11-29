@@ -1,7 +1,7 @@
 'use client';
 
+import { Monitor, Tablet, Smartphone, RefreshCw, ExternalLink } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
-import { Monitor, Tablet, Smartphone, RefreshCw, ExternalLink, Maximize2 } from 'lucide-react';
 
 interface LivePreviewProps {
   subdomain: string;

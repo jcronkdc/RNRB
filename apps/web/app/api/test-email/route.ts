@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { sendEmail, emailTemplates } from '@/lib/email';
 
 /**

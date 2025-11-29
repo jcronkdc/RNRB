@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { slug, title, isVisible = true, order } = body;
+    const { slug, title, showInNav = true, order } = body;
 
     if (!slug || !title) {
       return NextResponse.json({ error: 'Slug and title are required' }, { status: 400 });
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
         slug,
         title,
         isHomepage: false,
-        isVisible,
+        showInNav,
         order: order ?? (lastPage ? lastPage.order + 1 : 0),
       },
     });
@@ -115,7 +115,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { slug, title, isVisible, order } = body;
+    const { slug, title, showInNav, order } = body;
 
     // Verify ownership
     const page = await prisma.sitePage.findUnique({
@@ -153,7 +153,7 @@ export async function PATCH(request: NextRequest) {
     const updateData: Record<string, unknown> = {};
     if (slug !== undefined) updateData.slug = slug;
     if (title !== undefined) updateData.title = title;
-    if (isVisible !== undefined) updateData.isVisible = isVisible;
+    if (showInNav !== undefined) updateData.showInNav = showInNav;
     if (order !== undefined) updateData.order = order;
 
     const updatedPage = await prisma.sitePage.update({

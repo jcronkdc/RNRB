@@ -1,11 +1,10 @@
 'use client';
 
+import { Button } from '@cronkwaters/ui';
 import { useTransition } from 'react';
 
-import { Button } from '@cronkwaters/ui';
-
-import { createCreditCheckout, type CreditProductKey } from '@/lib/actions/credits';
 import { useToast } from '@/hooks/useToast';
+import { createCreditCheckout, type CreditProductKey } from '@/lib/actions/credits';
 
 const LABELS: Record<CreditProductKey, string> = {
   ai_100: 'Buy +100 AI Requests ($5)',
@@ -45,4 +44,3 @@ export function BuyCreditsButton({ product, className }: BuyCreditsButtonProps) 
     </Button>
   );
 }
-

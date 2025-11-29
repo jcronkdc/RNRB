@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/sites/contact - Submit contact form
 export async function POST(request: NextRequest) {

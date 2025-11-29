@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -21,6 +20,7 @@ import {
   MapPin,
   Clock,
 } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
 
 // Types for different data sources
 export interface SyncableSong {

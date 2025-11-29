@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useRef } from 'react';
 import {
   GripVertical,
   Eye,
@@ -21,6 +20,7 @@ import {
   Headphones,
   Send,
 } from 'lucide-react';
+import { useState, useRef } from 'react';
 
 interface SiteSection {
   id: string;

@@ -1,7 +1,7 @@
 'use client';
 
+import { Music, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
-import { Music, ExternalLink, Play } from 'lucide-react';
 
 interface StreamingLink {
   platform: string;

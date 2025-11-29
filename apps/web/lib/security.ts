@@ -73,7 +73,7 @@ export function sanitizeSearchQuery(
   if (!query) return '';
 
   // Remove potentially dangerous characters
-  let sanitized = query
+  const sanitized = query
     .trim()
     .slice(0, maxLength)
     // Remove SQL injection patterns

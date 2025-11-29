@@ -12,14 +12,15 @@
  */
 
 import { Button } from '@cronkwaters/ui';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState, useCallback, memo } from 'react';
-import { useVirtualizer } from '@tanstack/react-virtual';
 
-import { formatTime } from '@/lib/format-date';
 import { VoiceMessagePlayer } from './voice-message-player';
+
 import type { Message } from '@/hooks/use-messages';
+import { formatTime } from '@/lib/format-date';
 
 interface VirtualizedMessageListProps {
   messages: Message[];

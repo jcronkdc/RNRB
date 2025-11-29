@@ -1,4 +1,5 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 type GlobalWithPrisma = typeof globalThis & {
   __cronkwatersPrisma?: PrismaClient;
@@ -6,8 +7,9 @@ type GlobalWithPrisma = typeof globalThis & {
 
 const globalForPrisma = globalThis as GlobalWithPrisma;
 
-// List of dangerous operations to block in production
-const DANGEROUS_SQL_PATTERNS = [
+// Note: These patterns could be used in the future to validate raw SQL queries
+// Currently the middleware intercepts deleteMany operations instead
+const _DANGEROUS_SQL_PATTERNS = [
   /DROP\s+TABLE/i,
   /DROP\s+DATABASE/i,
   /DROP\s+SCHEMA/i,
@@ -69,7 +71,7 @@ if (process.env.NODE_ENV !== 'production') {
 // Add query extension to block dangerous raw SQL
 const prisma = basePrisma.$extends({
   query: {
-    $allOperations({ model, operation, args, query }) {
+    $allOperations({ args, query }) {
       return query(args);
     },
   },
@@ -88,10 +90,19 @@ if (process.env.NODE_ENV === 'development') {
   })();
 }
 
+// Type for Prisma model delegate with common methods
+type PrismaModelDelegate = {
+  updateMany: (args: {
+    where: Record<string, unknown>;
+    data: Record<string, unknown>;
+  }) => Promise<{ count: number }>;
+  deleteMany: (args: { where: Record<string, unknown> }) => Promise<{ count: number }>;
+};
+
 // Export utility for safe operations
 export const safeDelete = async (
   model: keyof typeof Prisma.ModelName,
-  where: Record<string, any>,
+  where: Record<string, unknown>,
   options: { hardDelete?: boolean; reason?: string } = {}
 ) => {
   const { hardDelete = false, reason = 'No reason provided' } = options;
@@ -101,9 +112,13 @@ export const safeDelete = async (
   // Check if model supports soft delete
   const softDeleteModels = ['Post', 'Song', 'Project', 'Asset'];
 
+  // Get the model delegate dynamically
+  const modelName = model.toLowerCase() as keyof typeof basePrisma;
+  const modelDelegate = basePrisma[modelName] as unknown as PrismaModelDelegate;
+
   if (softDeleteModels.includes(model) && !hardDelete) {
     // Use soft delete
-    return (basePrisma as any)[model.toLowerCase()].updateMany({
+    return modelDelegate.updateMany({
       where,
       data: {
         isDeleted: true,
@@ -117,7 +132,7 @@ export const safeDelete = async (
     throw new Error('Hard delete not allowed in production. Set hardDelete: true explicitly.');
   }
 
-  return (basePrisma as any)[model.toLowerCase()].deleteMany({ where });
+  return modelDelegate.deleteMany({ where });
 };
 
 export { prisma, basePrisma };

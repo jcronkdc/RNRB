@@ -177,7 +177,7 @@ export function useCollaborativeCursors({
 
       // Immediate send for clicks
       if (isClick) {
-        publish(position);
+        publish({ name: 'cursor-move', data: position });
         lastSentPositionRef.current = { x, y };
       } else {
         // Batch position updates (send every 50ms max)
@@ -188,14 +188,17 @@ export function useCollaborativeCursors({
             if (pendingPositionRef.current && publish) {
               const { x: px, y: py } = pendingPositionRef.current;
               publish({
-                x: px,
-                y: py,
-                userId,
-                userName,
-                userColor: color,
-                timestamp: Date.now(),
-                isClick: false,
-                isIdle: false,
+                name: 'cursor-move',
+                data: {
+                  x: px,
+                  y: py,
+                  userId,
+                  userName,
+                  userColor: color,
+                  timestamp: Date.now(),
+                  isClick: false,
+                  isIdle: false,
+                },
               });
               lastSentPositionRef.current = { x: px, y: py };
               pendingPositionRef.current = null;
@@ -215,9 +218,12 @@ export function useCollaborativeCursors({
         if (!publish) return;
 
         publish({
-          ...position,
-          isIdle: true,
-          timestamp: Date.now(),
+          name: 'cursor-move',
+          data: {
+            ...position,
+            isIdle: true,
+            timestamp: Date.now(),
+          },
         });
       }, 5000);
 

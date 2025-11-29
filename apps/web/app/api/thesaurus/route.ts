@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
+import { fetchWithTimeout, TIMEOUTS } from '@/lib/fetch-utils';
+import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { logSecurityEvent } from '@/lib/security';
 
 /**
  * Thesaurus API - Uses Datamuse API for synonyms and related words
@@ -19,6 +23,17 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // 🔒 RATE LIMITING: Prevent external API abuse (100 per minute per user)
+    try {
+      await checkRateLimit(standardLimiter, `thesaurus:${session.user.id}`);
+    } catch {
+      logSecurityEvent('rate_limit', {
+        action: 'thesaurus-lookup',
+        userId: session.user.id,
+      });
+      return NextResponse.json({ error: 'Too many requests. Please slow down.' }, { status: 429 });
+    }
+
     const { searchParams } = new URL(request.url);
     const word = searchParams.get('word');
     const type = searchParams.get('type') || 'synonyms'; // synonyms, triggers, adjectives, nouns
@@ -30,75 +45,73 @@ export async function GET(request: Request) {
     // Build Datamuse API endpoints based on type
     const apiCalls: Promise<Response>[] = [];
 
+    // Build API calls with timeout protection (5s)
+    const fetchOptions = {
+      headers: { 'User-Agent': 'CronkWaters-Songwriting-Tool' },
+    };
+
     switch (type) {
       case 'synonyms':
         // ml = means like (synonyms)
         apiCalls.push(
-          fetch(
+          fetchWithTimeout(
             `https://api.datamuse.com/words?ml=${encodeURIComponent(word)}&max=30&md=d`,
-            {
-              headers: { 'User-Agent': 'CronkWaters-Songwriting-Tool' },
-            }
+            fetchOptions,
+            TIMEOUTS.FAST_API
           )
         );
         break;
       case 'triggers':
         // rel_trg = "trigger words" (words that often follow)
         apiCalls.push(
-          fetch(
+          fetchWithTimeout(
             `https://api.datamuse.com/words?rel_trg=${encodeURIComponent(word)}&max=20`,
-            {
-              headers: { 'User-Agent': 'CronkWaters-Songwriting-Tool' },
-            }
+            fetchOptions,
+            TIMEOUTS.FAST_API
           )
         );
         break;
       case 'adjectives':
         // rel_jjb = adjectives that modify this word
         apiCalls.push(
-          fetch(
+          fetchWithTimeout(
             `https://api.datamuse.com/words?rel_jjb=${encodeURIComponent(word)}&max=20`,
-            {
-              headers: { 'User-Agent': 'CronkWaters-Songwriting-Tool' },
-            }
+            fetchOptions,
+            TIMEOUTS.FAST_API
           )
         );
         break;
       case 'nouns':
         // rel_jja = nouns modified by this adjective
         apiCalls.push(
-          fetch(
+          fetchWithTimeout(
             `https://api.datamuse.com/words?rel_jja=${encodeURIComponent(word)}&max=20`,
-            {
-              headers: { 'User-Agent': 'CronkWaters-Songwriting-Tool' },
-            }
+            fetchOptions,
+            TIMEOUTS.FAST_API
           )
         );
         break;
       case 'all':
         // Fetch all types in parallel
         apiCalls.push(
-          fetch(
+          fetchWithTimeout(
             `https://api.datamuse.com/words?ml=${encodeURIComponent(word)}&max=15&md=d`,
-            {
-              headers: { 'User-Agent': 'CronkWaters-Songwriting-Tool' },
-            }
+            fetchOptions,
+            TIMEOUTS.FAST_API
           ),
-          fetch(
+          fetchWithTimeout(
             `https://api.datamuse.com/words?rel_trg=${encodeURIComponent(word)}&max=10`,
-            {
-              headers: { 'User-Agent': 'CronkWaters-Songwriting-Tool' },
-            }
+            fetchOptions,
+            TIMEOUTS.FAST_API
           )
         );
         break;
       default:
         apiCalls.push(
-          fetch(
+          fetchWithTimeout(
             `https://api.datamuse.com/words?ml=${encodeURIComponent(word)}&max=30&md=d`,
-            {
-              headers: { 'User-Agent': 'CronkWaters-Songwriting-Tool' },
-            }
+            fetchOptions,
+            TIMEOUTS.FAST_API
           )
         );
     }
@@ -174,4 +187,3 @@ export async function GET(request: Request) {
     );
   }
 }
-

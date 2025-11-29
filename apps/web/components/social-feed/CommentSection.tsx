@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { Send, Loader2, Heart } from 'lucide-react';
 import { format } from 'date-fns';
+import { Send, Loader2, Heart } from 'lucide-react';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 
 interface CommentSectionProps {
   postId: string;

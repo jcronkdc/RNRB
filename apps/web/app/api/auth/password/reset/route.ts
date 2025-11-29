@@ -1,10 +1,12 @@
 import { prisma } from '@cronkwaters/db';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 import { handleApiError } from '@/lib/errors';
+import { authLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/security';
 
 export const runtime = 'nodejs';
 
@@ -16,8 +18,12 @@ const resetSchema = z.object({
     .max(128, 'Password must be fewer than 128 characters'),
 });
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // SECURITY: Strict rate limiting for password reset to prevent brute-force
+    const clientIp = getClientIp(request);
+    await checkRateLimit(authLimiter, `password-reset:${clientIp}`);
+
     const body = await request.json();
     const { token, password } = resetSchema.parse(body);
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');

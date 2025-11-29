@@ -1,9 +1,9 @@
 'use server';
 
-import { prisma } from '@cronkwaters/db';
 import { signIn } from '@cronkwaters/auth';
-import { AuthError } from 'next-auth';
+import { prisma } from '@cronkwaters/db';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
+import { AuthError } from 'next-auth';
 
 export async function signInWithCredentials(formData: {
   email: string;

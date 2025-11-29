@@ -198,7 +198,10 @@ export async function createSafeAblyClient(clientId: string): Promise<Ably.Realt
     const client = new Ably.Realtime({
       authCallback: async (tokenParams, callback) => {
         if (!canUseAbly()) {
-          callback(new Error('Circuit breaker open'), null);
+          callback(
+            { code: 40000, statusCode: 400, message: 'Circuit breaker open' } as Ably.ErrorInfo,
+            null
+          );
           return;
         }
 
@@ -206,7 +209,10 @@ export async function createSafeAblyClient(clientId: string): Promise<Ably.Realt
         if (newToken) {
           callback(null, newToken);
         } else {
-          callback(new Error('Failed to fetch token'), null);
+          callback(
+            { code: 40000, statusCode: 400, message: 'Failed to fetch token' } as Ably.ErrorInfo,
+            null
+          );
         }
       },
       clientId,

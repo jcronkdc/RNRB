@@ -1,16 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { auth } from '@/auth';
 import { deleteAudioFile } from '@/lib/storage';
 
 /**
  * GET /api/library/[id]
  * Get a single library file by ID
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -39,10 +37,7 @@ export async function GET(
     return NextResponse.json(serializedFile);
   } catch (error) {
     console.error('Error fetching library file:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch library file' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch library file' }, { status: 500 });
   }
 }
 
@@ -50,10 +45,7 @@ export async function GET(
  * PATCH /api/library/[id]
  * Update a library file's metadata
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -95,10 +87,7 @@ export async function PATCH(
     return NextResponse.json(serializedFile);
   } catch (error) {
     console.error('Error updating library file:', error);
-    return NextResponse.json(
-      { error: 'Failed to update library file' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update library file' }, { status: 500 });
   }
 }
 
@@ -106,10 +95,7 @@ export async function PATCH(
  * DELETE /api/library/[id]
  * Delete a library file (from database and storage)
  */
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -149,10 +135,6 @@ export async function DELETE(
     });
   } catch (error) {
     console.error('Error deleting library file:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete library file' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete library file' }, { status: 500 });
   }
 }
-

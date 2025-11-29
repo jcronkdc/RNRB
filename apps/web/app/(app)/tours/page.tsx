@@ -2,7 +2,7 @@
 
 /**
  * WORLD-CLASS TOURS PAGE
- * 
+ *
  * Features:
  * - Optimized data loading with pagination
  * - Real-time performance metrics
@@ -22,24 +22,22 @@ import {
   Plus,
   TrendingUp,
   DollarSign,
-  Users,
   ChevronDown,
   Loader2,
   Edit,
   Trash2,
   ExternalLink,
   Search,
-  Filter,
   BarChart3,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 
 import { LivePerformance } from '@/components/daily/live-performance';
+import { ToastNotification, useToast } from '@/components/toast-notification';
+import { ToursListSkeleton } from '@/components/tours/loading-skeletons';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useTours } from '@/hooks/use-tours';
-import { ToursListSkeleton } from '@/components/tours/loading-skeletons';
-import { ToastNotification, useToast } from '@/components/toast-notification';
 
 type Tour = {
   id: string;
@@ -132,10 +130,9 @@ export default function ToursPage() {
         !searchQuery ||
         tour.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tour.description?.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesStatus =
-        statusFilter === 'all' || tour.status === statusFilter;
-      
+
+      const matchesStatus = statusFilter === 'all' || tour.status === statusFilter;
+
       return matchesSearch && matchesStatus;
     });
   }, [tours, searchQuery, statusFilter]);
@@ -145,22 +142,18 @@ export default function ToursPage() {
     const now = new Date();
     return {
       total: tours.length,
-      active: tours.filter(
-        (t) => t.status === 'ongoing' || t.status === 'announced'
-      ).length,
-      upcoming: tours.filter(
-        (t) => new Date(t.startDate) > now && t.status !== 'completed'
-      ).length,
+      active: tours.filter((t) => t.status === 'ongoing' || t.status === 'announced').length,
+      upcoming: tours.filter((t) => new Date(t.startDate) > now && t.status !== 'completed').length,
       totalShows: tours.reduce((sum, t) => sum + (t._count?.shows || 0), 0),
     };
   }, [tours]);
 
   if (authLoading) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <Loader2 className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin" />
-          <p className="text-muted-foreground text-lg">Loading...</p>
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
+          <p className="text-lg text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -171,15 +164,15 @@ export default function ToursPage() {
   }
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Toast Notifications */}
       <ToastNotification toasts={toasts} onRemove={removeToast} />
 
       {/* Hero Section */}
-      <div className="border-border/50 relative overflow-hidden border-b">
-        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
-          <div className="bg-brand-primary/10 absolute left-1/4 top-0 h-96 w-96 rounded-full blur-3xl" />
+          <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-7xl px-4 py-16">
@@ -189,16 +182,17 @@ export default function ToursPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="bg-brand-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
-                <Radio className="text-brand-primary h-6 w-6" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
+                <Radio className="h-6 w-6 text-brand-primary" />
               </div>
               <div>
-                <p className="text-muted-foreground text-sm">Professional Tour Management</p>
+                <p className="text-sm text-muted-foreground">Professional Tour Management</p>
                 <h1 className="font-display text-3xl font-bold md:text-4xl">Tours & Shows</h1>
               </div>
             </div>
-            <p className="text-muted-foreground max-w-2xl text-lg">
-              World-class tour management with analytics, routing optimization, and financial tracking
+            <p className="max-w-2xl text-lg text-muted-foreground">
+              World-class tour management with analytics, routing optimization, and financial
+              tracking
             </p>
           </motion.div>
         </div>
@@ -209,10 +203,7 @@ export default function ToursPage() {
           <DailyProvider callObject={callObject}>
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowLiveStream(false)}
-                >
+                <Button variant="secondary" onClick={() => setShowLiveStream(false)}>
                   Back to Tours
                 </Button>
               </div>
@@ -220,7 +211,7 @@ export default function ToursPage() {
               <LivePerformance
                 performanceName="Virtual Concert"
                 description="Live streaming performance"
-                scheduledTime={new Date().toISOString()}
+                scheduledTime={new Date()}
                 ticketUrl="#"
               />
             </div>
@@ -231,28 +222,28 @@ export default function ToursPage() {
             <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
               <Card className="p-6">
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="text-muted-foreground text-sm">Total Tours</p>
-                  <BarChart3 className="text-brand-primary h-5 w-5" />
+                  <p className="text-sm text-muted-foreground">Total Tours</p>
+                  <BarChart3 className="h-5 w-5 text-brand-primary" />
                 </div>
                 <p className="text-3xl font-bold">{stats.total}</p>
               </Card>
               <Card className="p-6">
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="text-muted-foreground text-sm">Active Tours</p>
+                  <p className="text-sm text-muted-foreground">Active Tours</p>
                   <TrendingUp className="h-5 w-5 text-green-500" />
                 </div>
                 <p className="text-3xl font-bold">{stats.active}</p>
               </Card>
               <Card className="p-6">
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="text-muted-foreground text-sm">Upcoming</p>
+                  <p className="text-sm text-muted-foreground">Upcoming</p>
                   <Calendar className="h-5 w-5 text-blue-500" />
                 </div>
                 <p className="text-3xl font-bold">{stats.upcoming}</p>
               </Card>
               <Card className="p-6">
                 <div className="mb-2 flex items-center justify-between">
-                  <p className="text-muted-foreground text-sm">Total Shows</p>
+                  <p className="text-sm text-muted-foreground">Total Shows</p>
                   <MapPin className="h-5 w-5 text-purple-500" />
                 </div>
                 <p className="text-3xl font-bold">{stats.totalShows}</p>
@@ -264,19 +255,19 @@ export default function ToursPage() {
               {/* Search & Filter */}
               <div className="flex flex-1 gap-2">
                 <div className="relative flex-1">
-                  <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="text"
                     placeholder="Search tours..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring h-10 w-full rounded-md border px-3 py-2 pl-9 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="border-input h-10 w-full rounded-md border bg-background px-3 py-2 pl-9 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   />
                 </div>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="border-input bg-background ring-offset-background focus-visible:ring-ring h-10 rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                  className="border-input h-10 rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <option value="all">All Status</option>
                   <option value="planning">Planning</option>
@@ -308,13 +299,13 @@ export default function ToursPage() {
             {/* Empty State */}
             {!toursLoading && tours.length === 0 && (
               <Card className="rnrb-card border-blue-500/20 bg-blue-500/5 p-12 text-center">
-                <Calendar className="text-muted-foreground/50 mx-auto mb-6 h-24 w-24" />
+                <Calendar className="mx-auto mb-6 h-24 w-24 text-muted-foreground/50" />
                 <h2 className="font-display mb-4 text-3xl font-bold">
                   World-Class Tour Management
                 </h2>
-                <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-lg">
-                  Professional analytics, routing optimization, financial tracking, and real-time collaboration.
-                  Create your first tour to get started.
+                <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
+                  Professional analytics, routing optimization, financial tracking, and real-time
+                  collaboration. Create your first tour to get started.
                 </p>
                 <Link href="/tours/new">
                   <Button className="rnrb-button-primary inline-flex items-center gap-3 px-8 py-4 text-lg font-semibold">
@@ -363,11 +354,9 @@ export default function ToursPage() {
             {/* No Results */}
             {!toursLoading && tours.length > 0 && filteredTours.length === 0 && (
               <Card className="p-12 text-center">
-                <Search className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
+                <Search className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
                 <h3 className="mb-2 text-lg font-semibold">No tours found</h3>
-                <p className="text-muted-foreground mb-6">
-                  Try adjusting your search or filters
-                </p>
+                <p className="mb-6 text-muted-foreground">Try adjusting your search or filters</p>
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -389,8 +378,9 @@ export default function ToursPage() {
                       <BarChart3 className="h-6 w-6 text-green-500" />
                       <h3 className="text-lg font-semibold">Analytics Dashboard</h3>
                     </div>
-                    <p className="text-muted-foreground text-sm">
-                      Real-time revenue tracking, attendance metrics, geographic insights, and AI-powered recommendations.
+                    <p className="text-sm text-muted-foreground">
+                      Real-time revenue tracking, attendance metrics, geographic insights, and
+                      AI-powered recommendations.
                     </p>
                   </div>
                   <div>
@@ -398,8 +388,9 @@ export default function ToursPage() {
                       <MapPin className="h-6 w-6 text-green-500" />
                       <h3 className="text-lg font-semibold">Smart Routing</h3>
                     </div>
-                    <p className="text-muted-foreground text-sm">
-                      Optimize tour routing to minimize travel distance, save costs, and identify scheduling conflicts.
+                    <p className="text-sm text-muted-foreground">
+                      Optimize tour routing to minimize travel distance, save costs, and identify
+                      scheduling conflicts.
                     </p>
                   </div>
                   <div>
@@ -407,8 +398,9 @@ export default function ToursPage() {
                       <DollarSign className="h-6 w-6 text-green-500" />
                       <h3 className="text-lg font-semibold">Financial Tracking</h3>
                     </div>
-                    <p className="text-muted-foreground text-sm">
-                      Comprehensive profit/loss tracking, expense breakdowns, and professional export capabilities.
+                    <p className="text-sm text-muted-foreground">
+                      Comprehensive profit/loss tracking, expense breakdowns, and professional
+                      export capabilities.
                     </p>
                   </div>
                 </div>
@@ -457,7 +449,7 @@ const TourCard = memo(function TourCard({
           <div className="min-w-0 flex-1">
             <Link
               href={`/tours/${tour.slug}`}
-              className="hover:text-brand-primary mb-2 block truncate text-xl font-bold transition"
+              className="mb-2 block truncate text-xl font-bold transition hover:text-brand-primary"
             >
               {tour.name}
             </Link>
@@ -492,12 +484,12 @@ const TourCard = memo(function TourCard({
 
         {/* Description */}
         {tour.description && (
-          <p className="text-muted-foreground mb-4 line-clamp-2 text-sm">{tour.description}</p>
+          <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">{tour.description}</p>
         )}
 
         {/* Dates */}
         <div className="mb-4 space-y-2">
-          <div className="text-muted-foreground flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4 shrink-0" />
             <span>
               {formatDate(tour.startDate)}
@@ -508,7 +500,7 @@ const TourCard = memo(function TourCard({
 
         {/* Stats */}
         <div className="flex items-center justify-between border-t border-border pt-4">
-          <div className="text-muted-foreground text-sm">
+          <div className="text-sm text-muted-foreground">
             <span className="font-medium">{tour._count?.shows || 0}</span> shows
           </div>
           <Link href={`/tours/${tour.slug}`}>
@@ -522,4 +514,3 @@ const TourCard = memo(function TourCard({
     </motion.div>
   );
 });
-

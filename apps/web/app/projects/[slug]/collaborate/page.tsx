@@ -2,7 +2,6 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { formatDateLong } from '@/lib/format-date';
 import {
   Users,
   UserPlus,
@@ -25,6 +24,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { formatDateLong } from '@/lib/format-date';
 import { supabase } from '@/lib/supabase';
 
 // Dynamically import collaboration components
@@ -372,12 +372,14 @@ export default function ProjectCollaboratePage() {
                           <p className="flex items-center gap-1.5 text-xs text-gray-400 sm:gap-2 sm:text-sm">
                             {collab.role === 'owner' && (
                               <>
-                                <Crown className="h-2.5 w-2.5 text-orange-500 sm:h-3 sm:w-3" /> Owner
+                                <Crown className="h-2.5 w-2.5 text-orange-500 sm:h-3 sm:w-3" />{' '}
+                                Owner
                               </>
                             )}
                             {collab.role === 'admin' && (
                               <>
-                                <Shield className="h-2.5 w-2.5 text-orange-500 sm:h-3 sm:w-3" /> Admin
+                                <Shield className="h-2.5 w-2.5 text-orange-500 sm:h-3 sm:w-3" />{' '}
+                                Admin
                               </>
                             )}
                             {collab.role === 'member' && (
@@ -406,10 +408,12 @@ export default function ProjectCollaboratePage() {
                         className="flex flex-col gap-2 rounded-lg border border-gray-800 bg-gray-900/50 p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
                       >
                         <div>
-                            <p className="text-sm font-medium text-white sm:text-base">{invite.email}</p>
-                            <p className="text-xs text-gray-400 sm:text-sm">
-                              Invited {formatDateLong(invite.invited_at)}
-                            </p>
+                          <p className="text-sm font-medium text-white sm:text-base">
+                            {invite.email}
+                          </p>
+                          <p className="text-xs text-gray-400 sm:text-sm">
+                            Invited {formatDateLong(invite.invited_at)}
+                          </p>
                         </div>
                         <span className="self-start rounded-full border border-yellow-500/30 bg-yellow-500/20 px-2 py-1 text-xs text-yellow-400 sm:px-3 sm:text-sm">
                           Pending
@@ -437,7 +441,7 @@ export default function ProjectCollaboratePage() {
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="musician@example.com"
-                    className="w-full rounded-lg border border-gray-800 bg-gray-900 px-3 py-2 text-sm text-white placeholder:text-gray-400 outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 sm:px-4 sm:text-base"
+                    className="w-full rounded-lg border border-gray-800 bg-gray-900 px-3 py-2 text-sm text-white outline-none transition placeholder:text-gray-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 sm:px-4 sm:text-base"
                     onKeyPress={(e) => e.key === 'Enter' && handleInvite()}
                   />
                   <Button
@@ -455,7 +459,9 @@ export default function ProjectCollaboratePage() {
                     <div className="flex h-4 w-4 items-center justify-center rounded-full bg-orange-500/20 sm:h-5 sm:w-5">
                       <Check className="h-2.5 w-2.5 text-orange-500 sm:h-3 sm:w-3" />
                     </div>
-                    <p className="text-xs font-semibold text-white sm:text-sm">Invite-Only Access</p>
+                    <p className="text-xs font-semibold text-white sm:text-sm">
+                      Invite-Only Access
+                    </p>
                   </div>
                   <p className="text-xs text-gray-400">
                     Only invited members can see this project. All collaboration is private by
@@ -519,12 +525,12 @@ export default function ProjectCollaboratePage() {
             className="space-y-4 sm:space-y-6"
           >
             {/* Coming Soon Banner with R&R Labs - Mobile Responsive */}
-            <Card className="to-brand-primary/10 rounded-xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-transparent p-4 sm:p-6 lg:p-8">
+            <Card className="rounded-xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-transparent to-brand-primary/10 p-4 sm:p-6 lg:p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg sm:h-16 sm:w-16">
                   <FlaskConical className="h-6 w-6 text-white sm:h-8 sm:w-8" />
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="mb-2 flex flex-wrap items-center gap-2 sm:mb-3">
                     <h2 className="text-xl font-bold text-white sm:text-2xl lg:text-3xl">
                       AI Music Together
@@ -558,8 +564,8 @@ export default function ProjectCollaboratePage() {
                 <div className="mb-4 space-y-3 text-sm text-gray-400 sm:mb-6 sm:space-y-4 sm:text-base">
                   <p className="leading-relaxed">
                     We're building our own AI music generation model specifically designed for{' '}
-                    <strong className="text-white">collaborative music creation</strong>, not
-                    solo AI replacement like Suno or Udio.
+                    <strong className="text-white">collaborative music creation</strong>, not solo
+                    AI replacement like Suno or Udio.
                   </p>
 
                   <p className="leading-relaxed">
@@ -611,9 +617,9 @@ export default function ProjectCollaboratePage() {
                   </div>
 
                   <p className="leading-relaxed">
-                    <strong className="text-white">We need volunteers</strong> to help us
-                    understand how musicians actually want to collaborate with AI. Your input will
-                    directly shape the tools we build.
+                    <strong className="text-white">We need volunteers</strong> to help us understand
+                    how musicians actually want to collaborate with AI. Your input will directly
+                    shape the tools we build.
                   </p>
                 </div>
 
@@ -644,9 +650,9 @@ export default function ProjectCollaboratePage() {
                   <p className="flex items-start gap-2 text-xs text-gray-400 sm:text-sm">
                     <Sparkles className="mt-0.5 h-3 w-3 shrink-0 text-purple-400 sm:h-4 sm:w-4" />
                     <span>
-                      <strong className="text-white">Why volunteer?</strong> Be part of
-                      building the first truly collaborative AI music platform. Early access to
-                      features, direct input on tools, and recognition in our research credits.
+                      <strong className="text-white">Why volunteer?</strong> Be part of building the
+                      first truly collaborative AI music platform. Early access to features, direct
+                      input on tools, and recognition in our research credits.
                     </span>
                   </p>
                 </div>
@@ -667,7 +673,10 @@ export default function ProjectCollaboratePage() {
 
               <div className="mx-auto max-w-2xl space-y-3 sm:space-y-4">
                 {[1, 2, 3, 4].map((num) => (
-                  <div key={num} className="flex items-start gap-3 rounded-xl bg-gray-900/50 p-3 sm:gap-4 sm:p-4">
+                  <div
+                    key={num}
+                    className="flex items-start gap-3 rounded-xl bg-gray-900/50 p-3 sm:gap-4 sm:p-4"
+                  >
                     <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-xs font-bold text-orange-500 sm:h-8 sm:w-8 sm:text-base">
                       {num}
                     </div>
@@ -679,10 +688,14 @@ export default function ProjectCollaboratePage() {
                         {num === 4 && 'Export Final Mix'}
                       </p>
                       <p className="text-xs text-gray-400 sm:text-sm">
-                        {num === 1 && 'Enter creative direction: "Upbeat indie rock about summer nights"'}
-                        {num === 2 && 'Lyrics + 5 stems (vocals, drums, bass, guitar, synth) - all team members see instantly'}
-                        {num === 3 && "Don't like the guitar? Regenerate it. Want real vocals? Upload yours. Infinite refinement."}
-                        {num === 4 && 'Download your AI + human hybrid track with full copyright ownership'}
+                        {num === 1 &&
+                          'Enter creative direction: "Upbeat indie rock about summer nights"'}
+                        {num === 2 &&
+                          'Lyrics + 5 stems (vocals, drums, bass, guitar, synth) - all team members see instantly'}
+                        {num === 3 &&
+                          "Don't like the guitar? Regenerate it. Want real vocals? Upload yours. Infinite refinement."}
+                        {num === 4 &&
+                          'Download your AI + human hybrid track with full copyright ownership'}
                       </p>
                     </div>
                   </div>

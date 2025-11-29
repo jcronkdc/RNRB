@@ -2,7 +2,7 @@
 
 /**
  * MOBILE DAY-OF-SHOW VIEW
- * 
+ *
  * Optimized mobile interface for performers on show day
  * - Timeline view
  * - Quick access to setlist
@@ -60,7 +60,7 @@ interface DayOfShowViewProps {
     };
     attendance?: number;
     grossRevenue?: number;
-    ticketPrice?: unknown;
+    ticketPrice?: { min?: number; max?: number } | null;
     guarantee?: number;
     ticketUrl?: string;
     [key: string]: unknown;
@@ -145,11 +145,11 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
     <div className="mx-auto max-w-2xl space-y-4 p-4">
       {/* Header */}
       <Card className="rnrb-card p-6">
-        <div className="text-brand-primary mb-2 text-sm font-medium uppercase tracking-wide">
+        <div className="mb-2 text-sm font-medium uppercase tracking-wide text-brand-primary">
           Today's Show
         </div>
         <h1 className="font-display mb-2 text-3xl font-bold">{show.name}</h1>
-        <div className="text-muted-foreground flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4" />
           <span>{formatDateWithDay(show.date)}</span>
         </div>
@@ -164,11 +164,7 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
 
         <div className="space-y-4">
           {timeline.map((event, index) => (
-            <TimelineEvent
-              key={event.id}
-              event={event}
-              isLast={index === timeline.length - 1}
-            />
+            <TimelineEvent key={event.id} event={event} isLast={index === timeline.length - 1} />
           ))}
         </div>
       </Card>
@@ -184,19 +180,12 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
           <div className="space-y-3">
             <div>
               <div className="text-lg font-semibold">{show.venue.name}</div>
-              {venueAddress && (
-                <div className="text-muted-foreground text-sm">{venueAddress}</div>
-              )}
+              {venueAddress && <div className="text-sm text-muted-foreground">{venueAddress}</div>}
             </div>
 
             <div className="flex flex-wrap gap-2">
               {mapsUrl && (
-                <a
-                  href={mapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1"
-                >
+                <a href={mapsUrl} target="_blank" rel="noopener noreferrer" className="flex-1">
                   <Button className="w-full" variant="outline">
                     <Navigation className="mr-2 h-4 w-4" />
                     Directions
@@ -215,8 +204,8 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
             </div>
 
             {show.venue.capacity && (
-              <div className="border-border border-t pt-3">
-                <div className="text-muted-foreground flex items-center gap-2 text-sm">
+              <div className="border-t border-border pt-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Users className="h-4 w-4" />
                   <span>Capacity: {show.venue.capacity.toLocaleString()}</span>
                 </div>
@@ -244,13 +233,11 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
               {completedTasks.has(task.id) ? (
                 <CheckCircle className="h-5 w-5 shrink-0 text-green-500" />
               ) : (
-                <Circle className="text-muted-foreground h-5 w-5 shrink-0" />
+                <Circle className="h-5 w-5 shrink-0 text-muted-foreground" />
               )}
               <span
                 className={`${
-                  completedTasks.has(task.id)
-                    ? 'text-muted-foreground line-through'
-                    : ''
+                  completedTasks.has(task.id) ? 'text-muted-foreground line-through' : ''
                 }`}
               >
                 {task.label}
@@ -289,9 +276,7 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
             Notes
           </h2>
 
-          <div className="bg-muted/30 whitespace-pre-wrap rounded-lg p-4 text-sm">
-            {show.notes}
-          </div>
+          <div className="whitespace-pre-wrap rounded-lg bg-muted/30 p-4 text-sm">{show.notes}</div>
         </Card>
       )}
 
@@ -306,7 +291,7 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
           <div className="space-y-2">
             {show.guarantee && (
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Guarantee</span>
+                <span className="text-sm text-muted-foreground">Guarantee</span>
                 <span className="font-semibold">
                   {new Intl.NumberFormat('en-US', {
                     style: 'currency',
@@ -315,13 +300,13 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
                 </span>
               </div>
             )}
-            {show.ticketPrice && typeof show.ticketPrice === 'object' && (
+            {show.ticketPrice && (
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">Ticket Price</span>
+                <span className="text-sm text-muted-foreground">Ticket Price</span>
                 <span className="font-semibold">
                   {show.ticketPrice.min && show.ticketPrice.max
                     ? `$${show.ticketPrice.min} - $${show.ticketPrice.max}`
-                    : `$${show.ticketPrice.min || show.ticketPrice.max || 0}`}
+                    : `$${show.ticketPrice.min ?? show.ticketPrice.max ?? 0}`}
                 </span>
               </div>
             )}
@@ -360,13 +345,19 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
   );
 }
 
-function TimelineEvent({ event, isLast }: { event: {
-  id: string;
-  time: Date;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-}; isLast: boolean }) {
+function TimelineEvent({
+  event,
+  isLast,
+}: {
+  event: {
+    id: string;
+    time: Date;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+    color: string;
+  };
+  isLast: boolean;
+}) {
   const Icon = event.icon;
   const now = new Date();
   const isPast = event.time < now;
@@ -380,7 +371,7 @@ function TimelineEvent({ event, isLast }: { event: {
             isPast
               ? 'bg-green-500/20 text-green-500'
               : isSoon
-                ? 'bg-brand-primary/20 text-brand-primary animate-pulse'
+                ? 'animate-pulse bg-brand-primary/20 text-brand-primary'
                 : 'bg-muted text-muted-foreground'
           }`}
         >
@@ -396,13 +387,10 @@ function TimelineEvent({ event, isLast }: { event: {
       <div className="flex-1 pb-4">
         <div className="flex items-baseline gap-2">
           <span className="font-semibold">{event.label}</span>
-          {isSoon && (
-            <span className="text-brand-primary text-xs font-medium uppercase">Soon</span>
-          )}
+          {isSoon && <span className="text-xs font-medium uppercase text-brand-primary">Soon</span>}
         </div>
-        <div className="text-muted-foreground text-sm">{formatTime(event.time.toISOString())}</div>
+        <div className="text-sm text-muted-foreground">{formatTime(event.time.toISOString())}</div>
       </div>
     </div>
   );
 }
-

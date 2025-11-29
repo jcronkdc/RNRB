@@ -9,8 +9,8 @@
  * - Memory-efficient tracking
  */
 
-import { useEffect, useRef, useCallback } from 'react';
 import { debounce } from 'lodash';
+import { useEffect, useRef, useCallback } from 'react';
 
 interface ReadReceiptOptions {
   channelId: string;
@@ -297,9 +297,3 @@ export async function batchMarkMessagesAsRead(
     throw error;
   }
 }
-
-
-
-
-
-

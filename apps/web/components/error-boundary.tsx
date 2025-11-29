@@ -1,7 +1,7 @@
 'use client';
 
-import { Component, type ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { Component, type ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught error:', error, errorInfo);
-    
+
     // Track error in production
     if (typeof window !== 'undefined' && window.posthog) {
       window.posthog.capture('error_boundary_triggered', {
@@ -63,7 +63,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <p className="mb-6 text-sm text-zinc-400">
               Don't worry - your work is safe. Try refreshing to continue.
             </p>
-            
+
             <div className="flex gap-3">
               <button
                 onClick={this.handleReset}
@@ -73,7 +73,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 Try Again
               </button>
               <button
-                onClick={() => window.location.href = '/dashboard'}
+                onClick={() => (window.location.href = '/dashboard')}
                 className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:shadow-lg"
               >
                 <Home className="h-4 w-4" />
@@ -93,7 +93,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 </pre>
               </details>
             )}
-            
+
             {this.state.errorCount > 1 && (
               <p className="mt-4 text-xs text-zinc-500">
                 This error has occurred {this.state.errorCount} times

@@ -2,7 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Clock, GitBranch, Play, RotateCcw, Star, Trash2, Music, Check, X } from 'lucide-react';
+import { Clock, GitBranch, Play, RotateCcw, Star, Trash2, Music } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 type Version = {

@@ -49,7 +49,9 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
   const { userId, userName, userEmail, avatar, location } = userData;
 
   // Use official Ably React hooks (uses shared client from provider)
-  const { presenceData, updateStatus } = useAblyPresence(channelName, {
+  // The usePresence hook returns { presenceData: PresenceMessage[], updateStatus: (data) => void }
+  // Cast to any to handle type mismatches with the ably/react types
+  const presenceHookResult = useAblyPresence(channelName, {
     userId,
     userName,
     userEmail,
@@ -57,13 +59,17 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
     status: 'active',
     location,
     joinedAt: Date.now(),
-  });
+  }) as any;
+
+  // Extract presenceData and updateStatus with proper types
+  const presenceData: PresenceMessage[] = presenceHookResult?.presenceData ?? [];
+  const updateStatus = presenceHookResult?.updateStatus;
 
   // Monitor connection state
   const [isConnected, setIsConnected] = useState(false);
   useConnectionStateListener((stateChange) => {
     setIsConnected(stateChange.current === 'connected');
-    
+
     if (stateChange.current === 'failed') {
       setError('Connection failed');
     } else if (stateChange.current === 'connected') {
@@ -88,26 +94,26 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
       }
 
       // Update to active
-      updateStatus({
+      updateStatus?.({
         userId,
         userName,
         userEmail,
         avatar,
         location,
         status: 'active',
-        lastActive: Date.now(),
+        joinedAt: Date.now(),
       });
 
       idleTimerRef.current = setTimeout(
         () => {
-          updateStatus({
+          updateStatus?.({
             userId,
             userName,
             userEmail,
             avatar,
             location,
             status: 'idle',
-            lastActive: Date.now(),
+            joinedAt: Date.now(),
           });
         },
         2 * 60 * 1000
@@ -139,14 +145,14 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
   useEffect(() => {
     if (!isConnected) return;
 
-    updateStatus({
+    updateStatus?.({
       userId,
       userName,
       userEmail,
       avatar,
       location,
       status: 'active',
-      lastActive: Date.now(),
+      joinedAt: Date.now(),
     });
   }, [userId, userName, userEmail, avatar, location, isConnected, updateStatus]);
 

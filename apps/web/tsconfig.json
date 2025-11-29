@@ -5,6 +5,7 @@
     "paths": {
       "@/*": ["./*"]
     },
+    "types": ["vitest/globals"],
     "plugins": [
       {
         "name": "next"

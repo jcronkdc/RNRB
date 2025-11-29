@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import DailyIframe, { type DailyCall } from '@daily-co/daily-js';
+import DailyIframe, { type DailyCall, type DailyParticipant } from '@daily-co/daily-js';
 import {
   useDaily,
   useLocalParticipant,
@@ -11,7 +11,7 @@ import {
 } from '@daily-co/daily-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Video, VideoOff, Mic, MicOff, Monitor, MonitorOff, Users } from 'lucide-react';
-import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef, memo } from 'react';
 
 interface CollaborativeRoomProps {
   roomUrl: string;
@@ -20,15 +20,15 @@ interface CollaborativeRoomProps {
 }
 
 // Optimized video tile component with memo
-const VideoTile = React.memo(({ participant }: { participant: any }) => {
+const VideoTile = memo(({ participant }: { participant: DailyParticipant }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   useEffect(() => {
-    if (videoRef.current && participant.videoTrack) {
-      const stream = new MediaStream([participant.videoTrack]);
+    if (videoRef.current && participant.tracks?.video?.persistentTrack) {
+      const stream = new MediaStream([participant.tracks.video.persistentTrack]);
       videoRef.current.srcObject = stream;
     }
-  }, [participant.videoTrack]);
+  }, [participant.tracks?.video?.persistentTrack]);
 
   return (
     <motion.div
@@ -37,7 +37,7 @@ const VideoTile = React.memo(({ participant }: { participant: any }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="border-border bg-surface/50 relative aspect-video overflow-hidden rounded-2xl border"
+      className="relative aspect-video overflow-hidden rounded-2xl border border-border bg-surface/50"
     >
       {participant.video ? (
         <video
@@ -55,9 +55,7 @@ const VideoTile = React.memo(({ participant }: { participant: any }) => {
         </div>
       )}
       <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-sm">
-        <span className="text-sm font-medium text-white">
-          {participant.user_name || 'Guest'}
-        </span>
+        <span className="text-sm font-medium text-white">{participant.user_name || 'Guest'}</span>
         {!participant.audio && <MicOff className="h-3 w-3 text-white/80" />}
         {participant.local && <span className="text-xs text-white/60">(You)</span>}
       </div>
@@ -67,23 +65,15 @@ const VideoTile = React.memo(({ participant }: { participant: any }) => {
 
 VideoTile.displayName = 'VideoTile';
 
-const React = { memo: (typeof window !== 'undefined' ? require('react').memo : (c: any) => c) };
-
-interface CollaborativeRoomProps {
-  roomUrl: string;
-  roomName: string;
-  userName: string;
-}
-
 function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
   const callObject = useDaily();
   const localParticipant = useLocalParticipant();
   const { isSharingScreen, startScreenShare, stopScreenShare } = useScreenShare();
   const participantIds = useParticipantIds();
-  
+
   // Use Daily's built-in participant tracking (more efficient)
   const participants = useMemo(() => {
-    if (!callObject) return {};
+    if (!callObject) return {} as Record<string, DailyParticipant>;
     return callObject.participants();
   }, [callObject, participantIds]); // Re-compute only when IDs change
 
@@ -106,8 +96,6 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
         await callObject.join({
           url: roomUrl,
           userName,
-          videoSource: true,
-          audioSource: true,
         });
 
         setIsJoining(false);
@@ -137,24 +125,28 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
   }, [callObject, roomUrl, userName]);
 
   // Optimized toggle functions with immediate UI feedback
-  const toggleVideo = useCallback(() => {
+  const toggleVideo = useCallback(async () => {
     if (!callObject) return;
     const newState = !isVideoEnabled;
     setIsVideoEnabled(newState); // Optimistic update
-    callObject.setLocalVideo(newState).catch((err) => {
+    try {
+      await callObject.setLocalVideo(newState);
+    } catch (err) {
       console.error('Video toggle error:', err);
       setIsVideoEnabled(!newState); // Revert on error
-    });
+    }
   }, [callObject, isVideoEnabled]);
 
-  const toggleAudio = useCallback(() => {
+  const toggleAudio = useCallback(async () => {
     if (!callObject) return;
     const newState = !isAudioEnabled;
     setIsAudioEnabled(newState); // Optimistic update
-    callObject.setLocalAudio(newState).catch((err) => {
+    try {
+      await callObject.setLocalAudio(newState);
+    } catch (err) {
       console.error('Audio toggle error:', err);
       setIsAudioEnabled(!newState); // Revert on error
-    });
+    }
   }, [callObject, isAudioEnabled]);
 
   // Toggle screen share
@@ -193,7 +185,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
   if (isJoining) {
     return (
-      <div className="border-border bg-surface flex min-h-[400px] items-center justify-center rounded-2xl border p-8">
+      <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-border bg-surface p-8">
         <div className="text-center">
           <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
           <p className="text-muted-foreground">Joining {roomName}...</p>
@@ -205,12 +197,12 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
   return (
     <div className="relative flex flex-col gap-4">
       {/* Room Header */}
-      <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4">
+      <div className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4">
         <div className="flex items-center gap-3">
           <Users className="text-primary h-5 w-5" />
           <div>
-            <h3 className="text-foreground font-semibold">{roomName}</h3>
-            <p className="text-muted-foreground text-sm">
+            <h3 className="font-semibold text-foreground">{roomName}</h3>
+            <p className="text-sm text-muted-foreground">
               {Object.keys(participants).length}{' '}
               {Object.keys(participants).length === 1 ? 'participant' : 'participants'}
             </p>
@@ -231,7 +223,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
       </div>
 
       {/* Controls Bar */}
-      <div className="border-border bg-surface flex items-center justify-center gap-3 rounded-2xl border p-4">
+      <div className="flex items-center justify-center gap-3 rounded-2xl border border-border bg-surface p-4">
         <Button
           onClick={toggleVideo}
           variant={isVideoEnabled ? 'solid' : 'outline'}
@@ -274,22 +266,9 @@ export default function CollaborativeRoom({ roomUrl, roomName, userName }: Colla
     if (initRef.current) return;
     initRef.current = true;
 
-    // Create call object with optimized settings
-    const daily = DailyIframe.createCallObject({
-      // Optimize video quality for collaboration
-      videoSource: {
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-        frameRate: { ideal: 24 }, // 24fps is enough for video calls
-      },
-      audioSource: true,
-      // Bandwidth optimization
-      dailyConfig: {
-        experimentalChromeVideoMuteLightOff: true,
-        useDevicePreferenceCookies: true,
-      },
-    });
-    
+    // Create call object with basic settings
+    const daily = DailyIframe.createCallObject();
+
     setCallObject(daily);
 
     return () => {
@@ -299,7 +278,7 @@ export default function CollaborativeRoom({ roomUrl, roomName, userName }: Colla
 
   if (!callObject) {
     return (
-      <div className="border-border bg-surface flex min-h-[400px] items-center justify-center rounded-2xl border p-8">
+      <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-border bg-surface p-8">
         <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
       </div>
     );

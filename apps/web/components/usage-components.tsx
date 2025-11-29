@@ -1,9 +1,9 @@
 'use client';
 
 import { trpc } from '@cronkwaters/trpc/client/react';
+import { Card } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import { Zap, Clock, TrendingUp, TrendingDown } from 'lucide-react';
-import { Card } from '@cronkwaters/ui';
 
 interface UsageHistoryProps {
   type?: 'aiRequests' | 'videoMinutes';

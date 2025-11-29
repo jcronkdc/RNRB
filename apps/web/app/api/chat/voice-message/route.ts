@@ -11,22 +11,22 @@
  * - Returns message object
  */
 
-import { createClient } from '@supabase/supabase-js';
-import { NextRequest, NextResponse } from 'next/server';
-
 import { prisma as db } from '@cronkwaters/db';
+import { createClient } from '@supabase/supabase-js';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
+import { uploadLimiter, standardLimiter, checkRateLimit } from '@/lib/rate-limit';
 
 // Server-side Supabase client for storage operations only (NOT for auth)
 function getSupabaseStorageClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
+
   if (!supabaseUrl || !supabaseServiceKey) {
     throw new Error('Missing Supabase storage configuration');
   }
-  
+
   return createClient(supabaseUrl, supabaseServiceKey);
 }
 
@@ -39,13 +39,27 @@ export async function POST(request: NextRequest) {
     }
     const user = { id: session.user.id, email: session.user.email };
 
+    // Rate limit: 30 voice messages per minute (uploads)
+    await checkRateLimit(uploadLimiter, `voice-message-upload:${user.id}`);
+
     // Parse form data
     const formData = await request.formData();
     const audioFile = formData.get('audio') as File;
     const channelId = formData.get('channelId') as string;
     const channelType = formData.get('channelType') as string;
     const duration = parseInt(formData.get('duration') as string);
-    const waveformData = JSON.parse(formData.get('waveformData') as string);
+
+    // Safely parse waveform data
+    let waveformData: number[] | null = null;
+    const waveformRaw = formData.get('waveformData') as string | null;
+    if (waveformRaw) {
+      try {
+        waveformData = JSON.parse(waveformRaw);
+      } catch (e) {
+        console.warn('Failed to parse waveform data:', e);
+        // Continue without waveform data
+      }
+    }
 
     if (!audioFile || !channelId || !channelType) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -71,13 +85,15 @@ export async function POST(request: NextRequest) {
     const fileName = `voice-messages/${channelId}/${user.id}-${timestamp}.webm`;
 
     // Compress audio if it's too large (> 5MB)
-    let fileToUpload: File | Blob = audioFile;
+    const fileToUpload: File | Blob = audioFile;
     const maxSize = 5 * 1024 * 1024; // 5MB
 
     if (audioFile.size > maxSize) {
       // For large files, we could implement server-side compression
       // For now, we'll add metadata to track compression needs
-      console.warn(`Large voice message (${(audioFile.size / 1024 / 1024).toFixed(2)}MB) - consider compression`);
+      console.warn(
+        `Large voice message (${(audioFile.size / 1024 / 1024).toFixed(2)}MB) - consider compression`
+      );
     }
 
     // Upload to Supabase Storage with optimization
@@ -113,7 +129,9 @@ export async function POST(request: NextRequest) {
         audioUrl: publicUrl,
         audioPath: fileName,
         audioDuration: duration,
-        waveformData,
+        waveformData: waveformData as unknown as Parameters<
+          typeof db.chatMessage.create
+        >[0]['data']['waveformData'],
       },
     });
 
@@ -152,10 +170,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Voice message API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -168,23 +183,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `voice-message-read:${session.user.id}`);
+
     const { searchParams } = new URL(request.url);
     const channelId = searchParams.get('channelId');
-    
+
     if (!channelId) {
       return NextResponse.json({ error: 'channelId required' }, { status: 400 });
     }
-    
+
     // Parse and validate pagination parameters
     const limitParam = parseInt(searchParams.get('limit') || '50');
-    
+
     if (isNaN(limitParam) || limitParam < 1) {
       return NextResponse.json(
         { error: 'Invalid limit parameter: must be a positive integer' },
         { status: 400 }
       );
     }
-    
+
     const limit = Math.min(limitParam, 100); // Max 100 messages per request
 
     // Get messages from database
@@ -205,10 +223,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Get voice messages error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
-

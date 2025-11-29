@@ -2,7 +2,6 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { formatDateLong } from '@/lib/format-date';
 import {
   Calendar,
   Clock,
@@ -18,6 +17,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { formatDateLong } from '@/lib/format-date';
 import { supabase } from '@/lib/supabase';
 
 type Session = {
@@ -67,7 +67,7 @@ export default function ProjectSessionsPage() {
 
   if (loading) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-lg">Loading sessions...</div>
       </div>
     );
@@ -86,15 +86,15 @@ export default function ProjectSessionsPage() {
   );
 
   return (
-    <div className="bg-background min-h-screen px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container max-w-7xl">
         {/* Breadcrumb */}
-        <div className="text-muted-foreground mb-6 flex items-center gap-2 text-sm">
-          <Link href="/projects" className="hover:text-brand-primary transition">
+        <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
+          <Link href="/projects" className="transition hover:text-brand-primary">
             Projects
           </Link>
           <span>/</span>
-          <Link href={`/projects/${slug}`} className="hover:text-brand-primary transition">
+          <Link href={`/projects/${slug}`} className="transition hover:text-brand-primary">
             {project.name}
           </Link>
           <span>/</span>
@@ -105,7 +105,7 @@ export default function ProjectSessionsPage() {
         <div className="mb-8 flex items-start justify-between">
           <div>
             <h1 className="font-display mb-2 text-4xl font-bold">Recording Sessions</h1>
-            <p className="text-muted-foreground text-xl">
+            <p className="text-xl text-muted-foreground">
               Track your creative work and collaborate with your team
             </p>
           </div>
@@ -122,50 +122,50 @@ export default function ProjectSessionsPage() {
         <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
           <Card className="rnrb-card p-6">
             <div className="mb-2 flex items-center gap-3">
-              <div className="bg-brand-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
-                <Clock className="text-brand-primary h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
+                <Clock className="h-5 w-5 text-brand-primary" />
               </div>
               <div>
                 <p className="text-2xl font-bold">
                   {totalHours}h {remainingMinutes}m
                 </p>
-                <p className="text-muted-foreground text-xs">Total Time</p>
+                <p className="text-xs text-muted-foreground">Total Time</p>
               </div>
             </div>
           </Card>
 
           <Card className="rnrb-card p-6">
             <div className="mb-2 flex items-center gap-3">
-              <div className="bg-brand-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
-                <Calendar className="text-brand-primary h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
+                <Calendar className="h-5 w-5 text-brand-primary" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{sessions.length}</p>
-                <p className="text-muted-foreground text-xs">Total Sessions</p>
+                <p className="text-xs text-muted-foreground">Total Sessions</p>
               </div>
             </div>
           </Card>
 
           <Card className="rnrb-card p-6">
             <div className="mb-2 flex items-center gap-3">
-              <div className="bg-brand-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
-                <Mic2 className="text-brand-primary h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
+                <Mic2 className="h-5 w-5 text-brand-primary" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{sessionsByType.recording || 0}</p>
-                <p className="text-muted-foreground text-xs">Recording Sessions</p>
+                <p className="text-xs text-muted-foreground">Recording Sessions</p>
               </div>
             </div>
           </Card>
 
           <Card className="rnrb-card p-6">
             <div className="mb-2 flex items-center gap-3">
-              <div className="bg-brand-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
-                <Users className="text-brand-primary h-5 w-5" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
+                <Users className="h-5 w-5 text-brand-primary" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{sessionsByType.rehearsal || 0}</p>
-                <p className="text-muted-foreground text-xs">Rehearsals</p>
+                <p className="text-xs text-muted-foreground">Rehearsals</p>
               </div>
             </div>
           </Card>
@@ -174,9 +174,9 @@ export default function ProjectSessionsPage() {
         {/* Sessions List */}
         {sessions.length === 0 ? (
           <Card className="rnrb-card p-16 text-center">
-            <Calendar className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
+            <Calendar className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
             <h3 className="mb-2 text-2xl font-semibold">No sessions logged yet</h3>
-            <p className="text-muted-foreground mx-auto mb-6 max-w-md">
+            <p className="mx-auto mb-6 max-w-md text-muted-foreground">
               Start tracking your creative work. Log recording sessions, writing time, rehearsals,
               and more. Your team can see your progress.
             </p>
@@ -197,7 +197,7 @@ export default function ProjectSessionsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <Card className="rnrb-card hover:border-brand-primary/30 p-6 transition">
+                <Card className="rnrb-card p-6 transition hover:border-brand-primary/30">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="mb-2 flex items-center gap-3">
@@ -232,11 +232,11 @@ export default function ProjectSessionsPage() {
                           {session.type === 'other' && <Music className="h-5 w-5 text-gray-500" />}
                         </div>
                         <div>
-                          <h3 className="text-foreground font-semibold capitalize">
+                          <h3 className="font-semibold capitalize text-foreground">
                             {session.type} Session
                           </h3>
                           {session.song_title && (
-                            <p className="text-muted-foreground text-sm">
+                            <p className="text-sm text-muted-foreground">
                               Song: {session.song_title}
                             </p>
                           )}
@@ -244,18 +244,18 @@ export default function ProjectSessionsPage() {
                       </div>
 
                       {session.notes && (
-                        <p className="ml-13 text-muted-foreground mb-3 text-sm">{session.notes}</p>
+                        <p className="ml-13 mb-3 text-sm text-muted-foreground">{session.notes}</p>
                       )}
 
-                      <div className="ml-13 text-muted-foreground flex items-center gap-4 text-xs">
+                      <div className="ml-13 flex items-center gap-4 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {session.duration_minutes} minutes
                         </span>
-                          <span className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {formatDateLong(session.date)}
-                          </span>
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {formatDateLong(session.date)}
+                        </span>
                         <span className="flex items-center gap-1">
                           <Users className="h-3 w-3" />
                           {session.participants.length} participant
@@ -272,8 +272,8 @@ export default function ProjectSessionsPage() {
 
         {/* Helpful Note */}
         <Card className="rnrb-card mt-8 border-purple-500/20 bg-purple-500/5 p-6">
-          <p className="text-brand-primary mb-1 text-sm font-medium">💡 Why Track Sessions?</p>
-          <p className="text-muted-foreground text-xs">
+          <p className="mb-1 text-sm font-medium text-brand-primary">💡 Why Track Sessions?</p>
+          <p className="text-xs text-muted-foreground">
             Logging your creative work helps you and your team see progress, coordinate schedules,
             and prepare for royalty split conversations. Plus, you'll never forget when that magic
             take happened!

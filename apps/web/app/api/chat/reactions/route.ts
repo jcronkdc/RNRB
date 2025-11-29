@@ -7,11 +7,11 @@
  * Reactions are stored as JSON: { "👍": ["userId1", "userId2"], "❤️": ["userId3"] }
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
+import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -54,6 +54,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     const userId = session.user.id;
+
+    // Rate limit: 100 reactions per minute
+    await checkRateLimit(standardLimiter, `chat-reactions:${userId}`);
 
     const body: ReactionBody = await request.json();
     const { messageId, emoji } = body;
@@ -143,6 +146,9 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     const userId = session.user.id;
+
+    // Rate limit: 100 reaction removals per minute
+    await checkRateLimit(standardLimiter, `chat-reactions-delete:${userId}`);
 
     const { searchParams } = new URL(request.url);
     const messageId = searchParams.get('messageId');

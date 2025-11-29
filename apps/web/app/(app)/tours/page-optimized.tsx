@@ -15,9 +15,7 @@ import { Card, Button } from '@cronkwaters/ui';
 import Daily from '@daily-co/daily-js';
 import { DailyProvider } from '@daily-co/daily-react';
 import { motion } from 'framer-motion';
-import { formatDateLong } from '@/lib/format-date';
 import {
-  MapPin,
   Calendar,
   Radio,
   Plus,
@@ -31,10 +29,11 @@ import Link from 'next/link';
 import { useState, useEffect, memo, useCallback } from 'react';
 
 import { LivePerformance } from '@/components/daily/live-performance';
+import { ToastNotification, useToast } from '@/components/toast-notification';
+import { ToursListSkeleton } from '@/components/tours/loading-skeletons';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useTours } from '@/hooks/use-tours';
-import { ToursListSkeleton } from '@/components/tours/loading-skeletons';
-import { ToastNotification, useToast } from '@/components/toast-notification';
+import { formatDateLong } from '@/lib/format-date';
 
 type Tour = {
   id: string;
@@ -185,7 +184,7 @@ export default function ToursPageOptimized() {
               <LivePerformance
                 performanceName="Virtual Concert"
                 description="Live streaming performance"
-                scheduledTime={new Date().toISOString()}
+                scheduledTime={new Date()}
                 ticketUrl="#"
               />
             </div>

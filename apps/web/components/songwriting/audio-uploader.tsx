@@ -104,20 +104,41 @@ export function AudioUploader({
 
       xhr.addEventListener('load', () => {
         if (xhr.status === 200) {
-          const response = JSON.parse(xhr.responseText);
-          setAudioUrl(response.url);
-          if (onUploadComplete) {
-            onUploadComplete(response.url, response.path);
+          try {
+            const response = JSON.parse(xhr.responseText);
+            setAudioUrl(response.url);
+            if (onUploadComplete) {
+              onUploadComplete(response.url, response.path);
+            }
+            setIsUploading(false);
+            setUploadProgress(100);
+          } catch (e) {
+            console.error('Failed to parse upload response:', e);
+            setError('Upload completed but response was invalid. Please try again.');
+            setIsUploading(false);
           }
-          setIsUploading(false);
-          setUploadProgress(100);
         } else {
-          throw new Error('Upload failed');
+          console.error('Upload failed with status:', xhr.status);
+          // Try to extract error message from response
+          let errorMessage = `Upload failed (status ${xhr.status})`;
+          try {
+            const errorResponse = JSON.parse(xhr.responseText);
+            if (errorResponse.error) {
+              errorMessage = errorResponse.error;
+            }
+          } catch {
+            // Use default error message if response isn't JSON
+          }
+          setError(errorMessage);
+          setIsUploading(false);
         }
       });
 
       xhr.addEventListener('error', () => {
-        throw new Error('Network error during upload');
+        // Handle network errors properly - event listeners run async so can't throw
+        console.error('Network error during upload');
+        setError('Network error during upload. Please check your connection and try again.');
+        setIsUploading(false);
       });
 
       xhr.open('POST', '/api/upload/audio');

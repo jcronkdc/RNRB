@@ -9,7 +9,6 @@
 
 import { Button, Card } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { formatDateWithDay, formatNumber } from '@/lib/format-date';
 import {
   Calendar,
   MapPin,
@@ -20,7 +19,6 @@ import {
   DollarSign,
   Edit,
   Trash2,
-  ExternalLink,
   Filter,
   Search,
   Loader2,
@@ -29,8 +27,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { useRequireAuth } from '@/hooks/use-require-auth';
 import { ToastNotification, useToast } from '@/components/toast-notification';
+import { useRequireAuth } from '@/hooks/use-require-auth';
+import { formatDateWithDay, formatNumber } from '@/lib/format-date';
 
 type Show = {
   id: string;

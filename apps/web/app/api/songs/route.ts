@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 import { handleApiError } from '@/lib/errors';
+import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
 
 /**
@@ -11,6 +12,9 @@ import { requireAuth } from '@/lib/session';
 export async function GET() {
   try {
     const user = await requireAuth();
+
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `songs-read:${user.id}`);
 
     const songs = await db.song.findMany({
       where: {
@@ -50,6 +54,9 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const user = await requireAuth();
+
+    // Rate limit: 10 songs per minute for writes
+    await checkRateLimit(strictLimiter, `songs-write:${user.id}`);
 
     const body = await req.json();
     const {

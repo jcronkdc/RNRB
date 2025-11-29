@@ -4,13 +4,13 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Suspense } from 'react';
 
+import { AssistantChat } from './ai-assistant/assistant-chat';
 import { Breadcrumbs } from './breadcrumbs';
 import { CommandPalette } from './command-palette';
 import { KeyboardShortcutsHelp } from './keyboard-shortcuts-help';
 import { SidebarNav, MobileMenuProvider } from './sidebar-nav';
 import { TopBar } from './top-bar';
 import { TransportBar } from './transport-bar';
-import { AssistantChat } from './ai-assistant/assistant-chat';
 
 // NOTE: AblyProvider removed - it's already provided in app/layout.tsx
 // Having nested AblyProviders caused duplicate connections and ERR_INSUFFICIENT_RESOURCES

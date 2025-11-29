@@ -1,7 +1,8 @@
-import { NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
 import dns from 'dns/promises';
+import { NextResponse } from 'next/server';
+
 import { addDomainToVercel, verifyDomainOnVercel } from '@/lib/vercel-domains';
 
 // POST /api/sites/domain/verify - Verify domain ownership via DNS TXT record
@@ -103,7 +104,11 @@ export async function POST() {
     }
 
     // TXT is verified - now add domain to Vercel for SSL and routing
-    let vercelResult = { success: false, verified: false, error: '' };
+    let vercelResult: { success: boolean; verified: boolean; error: string } = {
+      success: false,
+      verified: false,
+      error: '',
+    };
 
     // Step 1: Add domain to Vercel project
     const addResult = await addDomainToVercel(site.customDomain);
@@ -111,7 +116,12 @@ export async function POST() {
     if (addResult.success) {
       // Step 2: If DNS points to us, verify the domain on Vercel
       if (dnsPointsToUs) {
-        vercelResult = await verifyDomainOnVercel(site.customDomain);
+        const verifyResult = await verifyDomainOnVercel(site.customDomain);
+        vercelResult = {
+          success: verifyResult.success,
+          verified: verifyResult.verified ?? false,
+          error: verifyResult.error ?? '',
+        };
       } else {
         // Preserve the verification status reported by Vercel (e.g. when domain already exists)
         vercelResult = {

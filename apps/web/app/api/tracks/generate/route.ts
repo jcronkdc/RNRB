@@ -8,14 +8,14 @@
  * - Creates song/track records in database
  */
 
+import { prisma } from '@cronkwaters/db';
 import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 import Replicate from 'replicate';
 import { z } from 'zod';
 
-import { prisma } from '@cronkwaters/db';
-
 import { auth } from '@/auth';
+import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { trackUsage, getUsageSummary } from '@/lib/usage-tracking';
 
 export const runtime = 'nodejs';
@@ -77,6 +77,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
     const userId = session.user.id;
+
+    // Rate limit by user ID (20 requests per minute)
+    await checkRateLimit(aiLimiter, userId);
 
     // Parse and validate request body
     const body = await req.json();
@@ -161,7 +164,7 @@ export async function POST(req: NextRequest) {
     );
 
     // MusicGen returns a URL to the generated audio
-    const audioUrl = output as string;
+    const audioUrl = output as unknown as string;
 
     if (!audioUrl || typeof audioUrl !== 'string') {
       throw new Error('AI generation failed - no audio URL returned');
@@ -206,27 +209,16 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create song record
+    // Create song record (genre and mood stored in description for now since Song model doesn't have these fields)
     const song = await prisma.song.create({
       data: {
         title: generateTrackTitle(validatedData),
         userId,
-        genre: validatedData.genres[0] || null,
-        mood: validatedData.moods[0] || null,
         tempo: validatedData.tempo,
         visibility: 'private',
         description: validatedData.prompt || prompt,
-        metadata: {
-          generated: true,
-          generationParams: validatedData,
-          creditsUsed: creditsNeeded,
-          generatedAt: new Date().toISOString(),
-          model: 'musicgen-stereo-melody-large',
-          audioPath: filename,
-          audioUrl: urlData.publicUrl,
-          duration: validatedData.duration,
-          fileSize: audioBuffer.length,
-        },
+        audioUrl: urlData.publicUrl,
+        audioPath: filename,
       },
     });
 
@@ -239,8 +231,8 @@ export async function POST(req: NextRequest) {
         title: song.title,
         audioUrl: urlData.publicUrl,
         duration: validatedData.duration,
-        genre: song.genre,
-        mood: song.mood,
+        genre: validatedData.genres[0] || null,
+        mood: validatedData.moods[0] || null,
       },
       generation: {
         creditsUsed: creditsNeeded,

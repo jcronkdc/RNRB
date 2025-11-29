@@ -6,7 +6,7 @@
  * Provides global keyboard shortcuts state and management
  */
 
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 
 interface KeyboardShortcut {
   keys: string[];

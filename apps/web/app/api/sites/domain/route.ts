@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
+
 import { removeDomainFromVercel } from '@/lib/vercel-domains';
 
 // POST /api/sites/domain - Add a custom domain

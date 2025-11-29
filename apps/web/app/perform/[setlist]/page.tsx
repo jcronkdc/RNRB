@@ -2,7 +2,7 @@
 
 /**
  * MOBILE PERFORMER MODE
- * 
+ *
  * Full-screen mobile view optimized for performers on stage
  * - Large fonts, high contrast
  * - Swipe navigation between songs
@@ -11,7 +11,7 @@
  * - Works offline (PWA-ready)
  */
 
-import { Button, Card } from '@cronkwaters/ui';
+import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
@@ -73,11 +73,11 @@ export default function PerformerModePage() {
     setError('');
     try {
       const response = await fetch(`/api/setlists/${setlistId}`);
-      
+
       if (!response.ok) {
         throw new Error('Failed to load setlist');
       }
-      
+
       const data = await response.json();
       setSetlist(data.setlist);
     } catch (err) {
@@ -171,7 +171,7 @@ export default function PerformerModePage() {
 
   if (loading) {
     return (
-      <div className="bg-black flex min-h-screen items-center justify-center text-white">
+      <div className="flex min-h-screen items-center justify-center bg-black text-white">
         <div className="text-center">
           <Music className="mx-auto mb-4 h-16 w-16 animate-pulse" />
           <p className="text-2xl font-semibold">Loading setlist...</p>
@@ -182,7 +182,7 @@ export default function PerformerModePage() {
 
   if (error || !setlist || !currentSong) {
     return (
-      <div className="bg-black flex min-h-screen items-center justify-center text-white">
+      <div className="flex min-h-screen items-center justify-center bg-black text-white">
         <div className="text-center">
           <X className="mx-auto mb-4 h-16 w-16 text-red-500" />
           <p className="mb-4 text-2xl font-semibold">{error || 'Setlist not found'}</p>
@@ -197,13 +197,13 @@ export default function PerformerModePage() {
 
   return (
     <div
-      className="bg-black flex min-h-screen flex-col text-white"
+      className="flex min-h-screen flex-col bg-black text-white"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {/* Header */}
-      <div className="border-white/10 bg-black/95 fixed left-0 right-0 top-0 z-50 border-b backdrop-blur-sm">
+      <div className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Button
             variant="ghost"
@@ -216,7 +216,7 @@ export default function PerformerModePage() {
 
           <div className="flex-1 text-center">
             <h1 className="truncate text-sm font-semibold sm:text-lg">{setlist.name}</h1>
-            <p className="text-white/60 text-xs sm:text-sm">
+            <p className="text-xs text-white/60 sm:text-sm">
               Song {currentIndex + 1} of {setlist.songs.length}
             </p>
           </div>
@@ -234,7 +234,7 @@ export default function PerformerModePage() {
         {/* Progress Bar */}
         <div className="h-1 w-full bg-white/10">
           <motion.div
-            className="bg-brand-primary h-full"
+            className="h-full bg-brand-primary"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.3 }}
@@ -243,7 +243,7 @@ export default function PerformerModePage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col pt-16 pb-20">
+      <div className="flex flex-1 flex-col pb-20 pt-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -332,7 +332,7 @@ export default function PerformerModePage() {
                 ) : (
                   // Chords
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 lg:p-10">
-                    <pre className="text-brand-primary whitespace-pre-wrap font-mono text-lg font-semibold leading-relaxed sm:text-xl lg:text-2xl">
+                    <pre className="whitespace-pre-wrap font-mono text-lg font-semibold leading-relaxed text-brand-primary sm:text-xl lg:text-2xl">
                       {currentSong.song.chords || 'No chords available'}
                     </pre>
                   </div>
@@ -362,7 +362,7 @@ export default function PerformerModePage() {
       </div>
 
       {/* Navigation Footer */}
-      <div className="border-white/10 bg-black/95 fixed bottom-0 left-0 right-0 z-50 border-t backdrop-blur-sm">
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <Button
             onClick={goPrevious}
@@ -380,7 +380,7 @@ export default function PerformerModePage() {
                 onClick={() => setCurrentIndex(idx)}
                 className={`h-2 w-2 rounded-full transition ${
                   idx === currentIndex
-                    ? 'bg-brand-primary w-6'
+                    ? 'w-6 bg-brand-primary'
                     : completedSongs.has(setlist.songs[idx].song.id)
                       ? 'bg-green-500'
                       : 'bg-white/30'
@@ -403,4 +403,3 @@ export default function PerformerModePage() {
     </div>
   );
 }
-

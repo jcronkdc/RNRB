@@ -1,15 +1,16 @@
-import { type NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { buildAssistantContext, formatContextForAI } from '@/lib/ai/assistant-context';
 import { AI_MODELS, AI_MAX_TOKENS } from '@/lib/ai/config';
-import { handleApiError, AppError } from '@/lib/errors';
 import { env, features } from '@/lib/env';
+import { handleApiError, AppError } from '@/lib/errors';
+import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
-import { assistantChatSchema, parseBody } from '@/lib/validations';
 import { requireFeatureAccess } from '@/lib/subscription-access';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
-import { prisma } from '@cronkwaters/db';
+import { assistantChatSchema, parseBody } from '@/lib/validations';
 
 // Initialize Claude client (only if API key is available)
 const getAnthropicClient = () => {
@@ -31,6 +32,9 @@ export async function POST(request: NextRequest) {
     // Require authentication
     const user = await requireAuth();
 
+    // Rate limit by user ID (20 requests per minute)
+    await checkRateLimit(aiLimiter, user.id);
+
     // Check subscription access
     try {
       await requireFeatureAccess('aiAssistant');
@@ -49,7 +53,14 @@ export async function POST(request: NextRequest) {
     try {
       await requireUsageQuota('assistantConversations', 1);
     } catch (error: unknown) {
-      const err = error as { code?: string; message?: string; tier?: string; used?: number; limit?: number; resetDate?: string };
+      const err = error as {
+        code?: string;
+        message?: string;
+        tier?: string;
+        used?: number;
+        limit?: number;
+        resetDate?: string;
+      };
       if (err.code === 'QUOTA_EXCEEDED') {
         throw AppError.quotaExceeded(
           'AI conversations',

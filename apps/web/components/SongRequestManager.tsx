@@ -2,14 +2,13 @@
 
 /**
  * SONG REQUEST MANAGER COMPONENT
- * 
+ *
  * Admin interface for reviewing and approving/rejecting song requests
  * Displays in the setlist page sidebar or modal
  */
 
 import { Button, Card } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'framer-motion';
-import { formatDateLong } from '@/lib/format-date';
+import { motion } from 'framer-motion';
 import {
   Music,
   User,
@@ -24,6 +23,8 @@ import {
   XCircle,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+
+import { formatDateLong } from '@/lib/format-date';
 
 type SongRequest = {
   id: string;
@@ -80,7 +81,7 @@ export function SongRequestManager({ setlistId, projectId }: SongRequestManagerP
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status: 'approved',
-          responseMessage: 'Thanks for your request! We\'ll do our best to include it.',
+          responseMessage: "Thanks for your request! We'll do our best to include it.",
         }),
       });
 
@@ -105,7 +106,7 @@ export function SongRequestManager({ setlistId, projectId }: SongRequestManagerP
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status: 'rejected',
-          responseMessage: 'Thanks for your request, but we won\'t be able to include it this time.',
+          responseMessage: "Thanks for your request, but we won't be able to include it this time.",
         }),
       });
 
@@ -166,8 +167,7 @@ export function SongRequestManager({ setlistId, projectId }: SongRequestManagerP
           <div className="mt-4 rounded-xl border border-border bg-surface/50 p-3">
             <p className="mb-2 text-xs font-medium text-muted-foreground">Request Link:</p>
             <code className="text-xs text-brand-primary">
-              {typeof window !== 'undefined' &&
-                `${window.location.origin}/request/${setlistId}`}
+              {typeof window !== 'undefined' && `${window.location.origin}/request/${setlistId}`}
             </code>
           </div>
         </Card>
@@ -238,14 +238,10 @@ function RequestCard({
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-      <Card
-        className={`rnrb-card p-4 ${
-          reviewed ? 'opacity-75' : ''
-        }`}
-      >
+      <Card className={`rnrb-card p-4 ${reviewed ? 'opacity-75' : ''}`}>
         {/* Header */}
         <div className="mb-3 flex items-start justify-between">
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <h4 className="mb-1 truncate text-base font-semibold">{request.songTitle}</h4>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <User className="h-3 w-3" />
@@ -327,11 +323,9 @@ function RequestCard({
         {/* Timestamp */}
         <p className="mt-2 text-xs text-muted-foreground">
           Requested {formatDateLong(request.createdAt)}
-          {request.respondedAt &&
-            ` • Reviewed ${formatDateLong(request.respondedAt)}`}
+          {request.respondedAt && ` • Reviewed ${formatDateLong(request.respondedAt)}`}
         </p>
       </Card>
     </motion.div>
   );
 }
-

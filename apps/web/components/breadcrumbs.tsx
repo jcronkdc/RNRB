@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+
 import { generateBreadcrumbSchema, JsonLd } from '@/lib/seo';
 
 interface BreadcrumbItem {
@@ -7,13 +8,14 @@ interface BreadcrumbItem {
   url: string;
 }
 
-interface BreadcrumbsProps {
-  items: BreadcrumbItem[];
+export interface BreadcrumbsProps {
+  items?: BreadcrumbItem[];
 }
 
-export function Breadcrumbs({ items }: BreadcrumbsProps) {
-  // Ensure home is always first
-  const allItems = [{ name: 'Home', url: 'https://cronkwaters.com' }, ...items];
+export function Breadcrumbs({ items = [] }: BreadcrumbsProps) {
+  // Ensure home is always first (guard against undefined/null items)
+  const safeItems = Array.isArray(items) ? items : [];
+  const allItems = [{ name: 'Home', url: 'https://cronkwaters.com' }, ...safeItems];
 
   return (
     <>

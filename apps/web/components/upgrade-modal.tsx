@@ -1,19 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  X,
-  Check,
-  Sparkles,
-  Zap,
-  Crown,
-  ArrowRight,
-  Lock,
-  type LucideIcon,
-} from 'lucide-react';
+import { X, Check, Sparkles, Zap, Crown, ArrowRight, Lock } from 'lucide-react';
 import Link from 'next/link';
-import { FEATURE_DESCRIPTIONS } from '@/lib/subscription';
+import { useState } from 'react';
+
+import { FEATURE_DESCRIPTIONS } from '@/lib/subscription-constants';
 
 interface UpgradeModalProps {
   isOpen: boolean;
@@ -178,7 +170,9 @@ export function UpgradeModal({
                 {/* Features List */}
                 <div className="mb-6 rounded-xl border border-gray-800 bg-gray-800/50 p-6">
                   <div className="mb-4 flex items-center gap-2">
-                    <TierIcon className={`h-5 w-5 bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`} />
+                    <TierIcon
+                      className={`h-5 w-5 bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
+                    />
                     <h3 className="font-semibold text-white">{tier.name} Plan Includes:</h3>
                   </div>
                   <ul className="space-y-3">
@@ -249,4 +243,3 @@ export function useUpgradeModal() {
     modalProps,
   };
 }
-

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, Ticket, ExternalLink } from 'lucide-react';
+import { MapPin, Ticket, ExternalLink } from 'lucide-react';
 
 interface Show {
   id: string;

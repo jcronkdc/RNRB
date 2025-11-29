@@ -1,7 +1,20 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { Shield, Users, FileCheck, AlertCircle, Check, Plus, X, PieChart, Music, HelpCircle, ExternalLink, Info } from 'lucide-react';
+import {
+  Shield,
+  Users,
+  FileCheck,
+  AlertCircle,
+  Check,
+  Plus,
+  X,
+  PieChart,
+  Music,
+  HelpCircle,
+  ExternalLink,
+  Info,
+} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 
@@ -10,21 +23,11 @@ import { CollaborationAgreementGenerator } from './collaboration-agreement';
 import { CopyrightGuide } from './copyright-guide';
 import { SplitSheetGenerator } from './split-sheet-generator';
 
-const WaveformPlayer = dynamic(
-  () => import('./waveform-player').then((m) => m.WaveformPlayer),
-  { ssr: false }
-);
+const WaveformPlayer = dynamic(() => import('./waveform-player').then((m) => m.WaveformPlayer), {
+  ssr: false,
+});
 
-export type PRO = 
-  | 'ASCAP' 
-  | 'BMI' 
-  | 'SESAC' 
-  | 'GMR' 
-  | 'SOCAN' 
-  | 'PRS' 
-  | 'APRA' 
-  | 'GEMA'
-  | null;
+export type PRO = 'ASCAP' | 'BMI' | 'SESAC' | 'GMR' | 'SOCAN' | 'PRS' | 'APRA' | 'GEMA' | null;
 
 export type SongSplit = {
   contributorName: string;
@@ -38,23 +41,23 @@ export type CopyrightInfo = {
   // Core Copyright
   copyrightYear?: number;
   copyrightHolder?: string;
-  
+
   // PRO (Performance Rights Organization)
   performingRightsOrg?: PRO;
   proPublisherNumber?: string;
   proWriterNumber?: string;
-  
+
   // Industry IDs
   iswc?: string; // International Standard Musical Work Code (T-123.456.789-0)
   isrc?: string; // International Standard Recording Code
-  
+
   // Publishing
   publisherName?: string;
   publisherShare?: number; // 0-100%
-  
+
   // Splits
   splits: SongSplit[];
-  
+
   // Registration
   isRegistered: boolean;
   registrationDate?: string;
@@ -72,7 +75,7 @@ type CopyrightManagerProps = {
   onAudioRemove?: () => void;
 };
 
-const PRO_OPTIONS: Array<{ value: PRO; label: string; country: string }> = [
+const PRO_OPTIONS: Array<{ value: NonNullable<PRO>; label: string; country: string }> = [
   { value: 'ASCAP', label: 'ASCAP', country: 'USA' },
   { value: 'BMI', label: 'BMI', country: 'USA' },
   { value: 'SESAC', label: 'SESAC', country: 'USA' },
@@ -90,12 +93,12 @@ const ROLE_OPTIONS = [
   { value: 'arranger', label: 'Arranger' },
 ] as const;
 
-export function CopyrightManager({ 
-  songId, 
-  songTitle = 'Untitled Song', 
+export function CopyrightManager({
+  songId,
+  songTitle = 'Untitled Song',
   audioUrl,
   audioPath,
-  initialData, 
+  initialData,
   onUpdate,
   onAudioUpdate,
   onAudioRemove,
@@ -106,7 +109,7 @@ export function CopyrightManager({
       isRegistered: false,
     }
   );
-  
+
   const [isAddingSplit, setIsAddingSplit] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [newSplit, setNewSplit] = useState<SongSplit>({
@@ -116,7 +119,10 @@ export function CopyrightManager({
   });
 
   // Calculate total split percentage
-  const totalSplitPercentage = copyrightInfo.splits.reduce((sum, split) => sum + split.percentage, 0);
+  const totalSplitPercentage = copyrightInfo.splits.reduce(
+    (sum, split) => sum + split.percentage,
+    0
+  );
   const remainingPercentage = 100 - totalSplitPercentage;
 
   // Auto-save when copyright info changes
@@ -131,7 +137,7 @@ export function CopyrightManager({
       alert('Please enter a contributor name and valid percentage');
       return;
     }
-    
+
     if (totalSplitPercentage + newSplit.percentage > 100) {
       alert(`Cannot add split. Only ${remainingPercentage}% remaining.`);
       return;
@@ -141,7 +147,7 @@ export function CopyrightManager({
       ...copyrightInfo,
       splits: [...copyrightInfo.splits, newSplit],
     });
-    
+
     setNewSplit({
       contributorName: '',
       role: 'writer',
@@ -215,26 +221,34 @@ export function CopyrightManager({
               <ol className="mt-3 space-y-2 text-sm text-gray-300">
                 <li className="flex items-start gap-2">
                   <span className="text-yellow-400">1.</span>
-                  <span><strong className="text-white">Start simple:</strong> Fill in Copyright Year and Holder below</span>
+                  <span>
+                    <strong className="text-white">Start simple:</strong> Fill in Copyright Year and
+                    Holder below
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-yellow-400">2.</span>
-                  <span><strong className="text-white">Add collaborators:</strong> Set up ownership splits (must total 100%)</span>
+                  <span>
+                    <strong className="text-white">Add collaborators:</strong> Set up ownership
+                    splits (must total 100%)
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-yellow-400">3.</span>
-                  <span><strong className="text-white">Join a PRO:</strong> Click "Show Guide" above for step-by-step instructions</span>
+                  <span>
+                    <strong className="text-white">Join a PRO:</strong> Click "Show Guide" above for
+                    step-by-step instructions
+                  </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-yellow-400">4.</span>
-                  <span><strong className="text-white">Get codes:</strong> ISWC, ISRC, and IPI numbers come later when you register</span>
+                  <span>
+                    <strong className="text-white">Get codes:</strong> ISWC, ISRC, and IPI numbers
+                    come later when you register
+                  </span>
                 </li>
               </ol>
-              <Button
-                onClick={() => setShowGuide(true)}
-                className="mt-4"
-                variant="outline"
-              >
+              <Button onClick={() => setShowGuide(true)} className="mt-4" variant="outline">
                 <HelpCircle className="mr-2 h-4 w-4" />
                 Show Complete Guide
               </Button>
@@ -249,19 +263,19 @@ export function CopyrightManager({
           <FileCheck className="h-5 w-5 text-blue-400" />
           Copyright Information
         </h3>
-        
+
         <div className="grid gap-4 md:grid-cols-2">
           {/* Copyright Year */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300">
-              Copyright Year
-            </label>
+            <label className="mb-2 block text-sm font-medium text-gray-300">Copyright Year</label>
             <input
               type="number"
               min="1900"
               max="2099"
               value={copyrightInfo.copyrightYear || new Date().getFullYear()}
-              onChange={(e) => setCopyrightInfo({ ...copyrightInfo, copyrightYear: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setCopyrightInfo({ ...copyrightInfo, copyrightYear: parseInt(e.target.value) })
+              }
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-white"
               placeholder="2025"
             />
@@ -269,13 +283,13 @@ export function CopyrightManager({
 
           {/* Copyright Holder */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300">
-              Copyright Holder
-            </label>
+            <label className="mb-2 block text-sm font-medium text-gray-300">Copyright Holder</label>
             <input
               type="text"
               value={copyrightInfo.copyrightHolder || ''}
-              onChange={(e) => setCopyrightInfo({ ...copyrightInfo, copyrightHolder: e.target.value })}
+              onChange={(e) =>
+                setCopyrightInfo({ ...copyrightInfo, copyrightHolder: e.target.value })
+              }
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-white"
               placeholder="Your Name or Company"
             />
@@ -284,8 +298,10 @@ export function CopyrightManager({
           {/* ISWC */}
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300">
-              ISWC 
-              <span className="ml-1 text-xs text-gray-500">(International Standard Musical Work Code)</span>
+              ISWC
+              <span className="ml-1 text-xs text-gray-500">
+                (International Standard Musical Work Code)
+              </span>
               <button
                 onClick={() => setShowGuide(true)}
                 className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
@@ -303,10 +319,10 @@ export function CopyrightManager({
               maxLength={15}
             />
             <p className="mt-1 text-xs text-gray-500">
-              Get from your PRO when registering this song • 
-              <a 
-                href="https://www.ascap.com/help/ace-title-registration" 
-                target="_blank" 
+              Get from your PRO when registering this song •
+              <a
+                href="https://www.ascap.com/help/ace-title-registration"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="ml-1 text-blue-400 hover:text-blue-300"
               >
@@ -318,8 +334,10 @@ export function CopyrightManager({
           {/* ISRC */}
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300">
-              ISRC 
-              <span className="ml-1 text-xs text-gray-500">(International Standard Recording Code)</span>
+              ISRC
+              <span className="ml-1 text-xs text-gray-500">
+                (International Standard Recording Code)
+              </span>
               <button
                 onClick={() => setShowGuide(true)}
                 className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
@@ -337,10 +355,10 @@ export function CopyrightManager({
               maxLength={12}
             />
             <p className="mt-1 text-xs text-gray-500">
-              Get from your distributor (CD Baby, DistroKid) • 
-              <a 
-                href="https://usisrc.org/" 
-                target="_blank" 
+              Get from your distributor (CD Baby, DistroKid) •
+              <a
+                href="https://usisrc.org/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="ml-1 text-blue-400 hover:text-blue-300"
               >
@@ -357,7 +375,7 @@ export function CopyrightManager({
           <Shield className="h-5 w-5 text-green-400" />
           Performance Rights Organization (PRO)
         </h3>
-        
+
         <div className="grid gap-4 md:grid-cols-3">
           {/* PRO Selection */}
           <div>
@@ -372,8 +390,13 @@ export function CopyrightManager({
               </button>
             </label>
             <select
-              value={copyrightInfo.performingRightsOrg || ''}
-              onChange={(e) => setCopyrightInfo({ ...copyrightInfo, performingRightsOrg: (e.target.value || null) as PRO })}
+              value={copyrightInfo.performingRightsOrg ?? ''}
+              onChange={(e) =>
+                setCopyrightInfo({
+                  ...copyrightInfo,
+                  performingRightsOrg: e.target.value ? (e.target.value as NonNullable<PRO>) : null,
+                })
+              }
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-white"
             >
               <option value="">Select PRO</option>
@@ -384,19 +407,19 @@ export function CopyrightManager({
               ))}
             </select>
             <p className="mt-1 text-xs text-gray-500">
-              Don't have a PRO? 
-              <a 
-                href="https://www.ascap.com/join" 
-                target="_blank" 
+              Don't have a PRO?
+              <a
+                href="https://www.ascap.com/join"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="ml-1 text-blue-400 hover:text-blue-300"
               >
                 Join ASCAP (Free) <ExternalLink className="inline h-3 w-3" />
               </a>
               {' or '}
-              <a 
-                href="https://www.bmi.com/join" 
-                target="_blank" 
+              <a
+                href="https://www.bmi.com/join"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-400 hover:text-blue-300"
               >
@@ -420,7 +443,9 @@ export function CopyrightManager({
             <input
               type="text"
               value={copyrightInfo.proWriterNumber || ''}
-              onChange={(e) => setCopyrightInfo({ ...copyrightInfo, proWriterNumber: e.target.value })}
+              onChange={(e) =>
+                setCopyrightInfo({ ...copyrightInfo, proWriterNumber: e.target.value })
+              }
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 font-mono text-white"
               placeholder="000000000"
               maxLength={11}
@@ -445,7 +470,9 @@ export function CopyrightManager({
             <input
               type="text"
               value={copyrightInfo.proPublisherNumber || ''}
-              onChange={(e) => setCopyrightInfo({ ...copyrightInfo, proPublisherNumber: e.target.value })}
+              onChange={(e) =>
+                setCopyrightInfo({ ...copyrightInfo, proPublisherNumber: e.target.value })
+              }
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 font-mono text-white"
               placeholder="000000000"
               maxLength={11}
@@ -464,13 +491,15 @@ export function CopyrightManager({
             <Users className="h-5 w-5 text-orange-400" />
             Ownership Splits
           </h3>
-          <div className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2 ${
-            totalSplitPercentage === 100 
-              ? 'border-green-500/30 bg-green-500/10 text-green-400' 
-              : totalSplitPercentage > 100 
-              ? 'border-red-500/30 bg-red-500/10 text-red-400' 
-              : 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400'
-          }`}>
+          <div
+            className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2 ${
+              totalSplitPercentage === 100
+                ? 'border-green-500/30 bg-green-500/10 text-green-400'
+                : totalSplitPercentage > 100
+                  ? 'border-red-500/30 bg-red-500/10 text-red-400'
+                  : 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400'
+            }`}
+          >
             <PieChart className="h-4 w-4" />
             <span className="font-mono text-lg font-bold">{totalSplitPercentage}%</span>
             {totalSplitPercentage === 100 && <Check className="h-4 w-4" />}
@@ -479,18 +508,21 @@ export function CopyrightManager({
         </div>
 
         {totalSplitPercentage !== 100 && (
-          <div className={`mb-4 rounded-lg border-2 p-4 ${
-            totalSplitPercentage > 100 
-              ? 'border-red-500/30 bg-red-500/10' 
-              : 'border-yellow-500/30 bg-yellow-500/10'
-          }`}>
-            <p className={`text-sm font-medium ${
-              totalSplitPercentage > 100 ? 'text-red-400' : 'text-yellow-400'
-            }`}>
-              {totalSplitPercentage > 100 
+          <div
+            className={`mb-4 rounded-lg border-2 p-4 ${
+              totalSplitPercentage > 100
+                ? 'border-red-500/30 bg-red-500/10'
+                : 'border-yellow-500/30 bg-yellow-500/10'
+            }`}
+          >
+            <p
+              className={`text-sm font-medium ${
+                totalSplitPercentage > 100 ? 'text-red-400' : 'text-yellow-400'
+              }`}
+            >
+              {totalSplitPercentage > 100
                 ? `⚠️ Total exceeds 100% by ${totalSplitPercentage - 100}%. Please adjust splits.`
-                : `ℹ️ ${remainingPercentage}% remaining to allocate`
-              }
+                : `ℹ️ ${remainingPercentage}% remaining to allocate`}
             </p>
           </div>
         )}
@@ -499,7 +531,10 @@ export function CopyrightManager({
         {copyrightInfo.splits.length > 0 && (
           <div className="mb-4 space-y-3">
             {copyrightInfo.splits.map((split, index) => (
-              <div key={index} className="flex items-center gap-3 rounded-lg border border-gray-700 bg-gray-800/50 p-4">
+              <div
+                key={index}
+                className="flex items-center gap-3 rounded-lg border border-gray-700 bg-gray-800/50 p-4"
+              >
                 <div className="grid flex-1 gap-3 md:grid-cols-4">
                   <div>
                     <p className="text-xs text-gray-500">Name</p>
@@ -511,7 +546,9 @@ export function CopyrightManager({
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Share</p>
-                    <p className="font-mono text-lg font-bold text-orange-400">{split.percentage}%</p>
+                    <p className="font-mono text-lg font-bold text-orange-400">
+                      {split.percentage}%
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-gray-500">Email</p>
@@ -532,11 +569,7 @@ export function CopyrightManager({
 
         {/* Add Split Form */}
         {!isAddingSplit ? (
-          <Button
-            onClick={() => setIsAddingSplit(true)}
-            className="w-full"
-            variant="outline"
-          >
+          <Button onClick={() => setIsAddingSplit(true)} className="w-full" variant="outline">
             <Plus className="mr-2 h-4 w-4" />
             Add Contributor
           </Button>
@@ -567,7 +600,9 @@ export function CopyrightManager({
                 min="0"
                 max={remainingPercentage}
                 value={newSplit.percentage}
-                onChange={(e) => setNewSplit({ ...newSplit, percentage: parseFloat(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setNewSplit({ ...newSplit, percentage: parseFloat(e.target.value) || 0 })
+                }
                 placeholder="Percentage"
                 className="rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 font-mono text-white"
               />
@@ -584,11 +619,7 @@ export function CopyrightManager({
                 <Check className="mr-2 h-4 w-4" />
                 Add Split
               </Button>
-              <Button 
-                onClick={() => setIsAddingSplit(false)} 
-                variant="outline"
-                className="flex-1"
-              >
+              <Button onClick={() => setIsAddingSplit(false)} variant="outline" className="flex-1">
                 Cancel
               </Button>
             </div>
@@ -602,21 +633,21 @@ export function CopyrightManager({
           <FileCheck className="h-5 w-5 text-purple-400" />
           Publishing Information
         </h3>
-        
+
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300">
-              Publisher Name
-            </label>
+            <label className="mb-2 block text-sm font-medium text-gray-300">Publisher Name</label>
             <input
               type="text"
               value={copyrightInfo.publisherName || ''}
-              onChange={(e) => setCopyrightInfo({ ...copyrightInfo, publisherName: e.target.value })}
+              onChange={(e) =>
+                setCopyrightInfo({ ...copyrightInfo, publisherName: e.target.value })
+              }
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-white"
               placeholder="Publisher or Self-Published"
             />
           </div>
-          
+
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-300">
               Publisher Share (%)
@@ -626,7 +657,12 @@ export function CopyrightManager({
               min="0"
               max="100"
               value={copyrightInfo.publisherShare || 0}
-              onChange={(e) => setCopyrightInfo({ ...copyrightInfo, publisherShare: parseFloat(e.target.value) || 0 })}
+              onChange={(e) =>
+                setCopyrightInfo({
+                  ...copyrightInfo,
+                  publisherShare: parseFloat(e.target.value) || 0,
+                })
+              }
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 font-mono text-white"
               placeholder="0-100"
             />
@@ -647,21 +683,24 @@ export function CopyrightManager({
             <Info className="h-3 w-3" />
           </button>
         </h3>
-        
+
         <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
           <p className="text-sm text-gray-300">
-            <strong className="text-white">💡 What does "registered" mean?</strong><br />
-            Check this box when you've registered this song with your PRO (ASCAP, BMI, etc.). 
-            This is different from U.S. Copyright registration.
+            <strong className="text-white">💡 What does "registered" mean?</strong>
+            <br />
+            Check this box when you've registered this song with your PRO (ASCAP, BMI, etc.). This
+            is different from U.S. Copyright registration.
           </p>
         </div>
-        
+
         <div className="space-y-4">
           <label className="flex items-center gap-3">
             <input
               type="checkbox"
               checked={copyrightInfo.isRegistered}
-              onChange={(e) => setCopyrightInfo({ ...copyrightInfo, isRegistered: e.target.checked })}
+              onChange={(e) =>
+                setCopyrightInfo({ ...copyrightInfo, isRegistered: e.target.checked })
+              }
               className="h-5 w-5 rounded border-gray-700 bg-gray-800"
             />
             <span className="text-white">Song is registered with PRO</span>
@@ -676,11 +715,13 @@ export function CopyrightManager({
                 <input
                   type="date"
                   value={copyrightInfo.registrationDate || ''}
-                  onChange={(e) => setCopyrightInfo({ ...copyrightInfo, registrationDate: e.target.value })}
+                  onChange={(e) =>
+                    setCopyrightInfo({ ...copyrightInfo, registrationDate: e.target.value })
+                  }
                   className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 text-white"
                 />
               </div>
-              
+
               <div>
                 <label className="mb-2 block text-sm font-medium text-gray-300">
                   Registration Number
@@ -688,7 +729,9 @@ export function CopyrightManager({
                 <input
                   type="text"
                   value={copyrightInfo.registrationNumber || ''}
-                  onChange={(e) => setCopyrightInfo({ ...copyrightInfo, registrationNumber: e.target.value })}
+                  onChange={(e) =>
+                    setCopyrightInfo({ ...copyrightInfo, registrationNumber: e.target.value })
+                  }
                   className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2 font-mono text-white"
                   placeholder="PRO-assigned number"
                 />
@@ -707,18 +750,11 @@ export function CopyrightManager({
           <FileCheck className="h-5 w-5 text-blue-400" />
           Generate Split Sheet
         </h3>
-        <SplitSheetGenerator
-          songTitle={songTitle}
-          songId={songId}
-          copyrightInfo={copyrightInfo}
-        />
+        <SplitSheetGenerator songTitle={songTitle} songId={songId} copyrightInfo={copyrightInfo} />
       </Card>
 
       {/* Collaboration Agreement */}
-      <CollaborationAgreementGenerator
-        songTitle={songTitle}
-        copyrightInfo={copyrightInfo}
-      />
+      <CollaborationAgreementGenerator songTitle={songTitle} copyrightInfo={copyrightInfo} />
 
       {/* Audio Upload */}
       <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
@@ -729,7 +765,7 @@ export function CopyrightManager({
         <p className="mb-4 text-sm text-gray-400">
           Upload an instrumental, demo, or reference track for this song
         </p>
-        
+
         {!audioUrl ? (
           <AudioUploader
             songId={songId}
@@ -746,7 +782,7 @@ export function CopyrightManager({
           <div className="space-y-4">
             {/* Waveform Player with Sync */}
             <WaveformPlayer audioUrl={audioUrl} />
-            
+
             {/* Remove Audio Button */}
             <button
               onClick={() => {
@@ -762,4 +798,3 @@ export function CopyrightManager({
     </div>
   );
 }
-

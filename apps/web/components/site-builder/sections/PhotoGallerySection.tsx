@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, X, Maximize2, Grid, LayoutGrid } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Maximize2, Grid } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
 interface Photo {
   url: string;

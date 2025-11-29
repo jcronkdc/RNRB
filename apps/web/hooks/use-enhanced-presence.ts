@@ -13,8 +13,8 @@
  */
 
 import type { RealtimeChannel } from 'ably';
-import { useEffect, useState, useCallback, useRef } from 'react';
 import { debounce } from 'lodash';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 import { useAblyClient } from './use-ably-client';
 

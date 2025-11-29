@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 
+import { auth } from '@/auth';
 import { AblyProvider } from '@/components/ably/ably-provider';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { NavBar } from '@/components/NavBar';
@@ -8,7 +9,6 @@ import { KeyboardShortcutsProvider } from '@/components/providers/keyboard-short
 import { TRPCReactProvider } from '@/components/providers/trpc-provider';
 import { SessionProvider } from '@/components/session-provider';
 import { ToastProvider } from '@/hooks/useToast';
-import { auth } from '@/auth';
 import {
   generateMetadata as generateSEOMetadata,
   generateOrganizationSchema,

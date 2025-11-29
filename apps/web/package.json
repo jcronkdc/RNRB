@@ -13,7 +13,10 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
     "check": "pnpm typecheck && pnpm lint && pnpm format:check",
-    "fix": "pnpm lint:fix && pnpm format"
+    "fix": "pnpm lint:fix && pnpm format",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@cronkwaters/auth": "workspace:*",
@@ -71,8 +74,16 @@
   },
   "devDependencies": {
     "@cronkwaters/config": "workspace:*",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/nodemailer": "^6.4.21",
+    "@vitest/coverage-v8": "^4.0.8",
+    "@vitest/ui": "^4.0.8",
     "dotenv": "^17.2.3",
-    "eslint": "^9.39.1"
+    "eslint": "^9.39.1",
+    "jsdom": "^26.0.0",
+    "msw": "^2.7.3",
+    "vitest": "^4.0.8"
   }
 }

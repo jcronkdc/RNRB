@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // GET /api/sites/sync-data - Fetch user's data for syncing to website
 export async function GET(request: NextRequest) {
@@ -62,10 +62,10 @@ export async function GET(request: NextRequest) {
           data: {
             id: song.id,
             title: song.title,
-            artist: song.artist,
+            artist: song.writer || 'Unknown Artist',
             audioUrl: song.audioUrl,
-            coverUrl: song.coverArtUrl,
-            duration: song.duration,
+            coverUrl: song.artworkUrl,
+            duration: song.tempo ? song.tempo * 3 : 180, // Estimate from tempo, default 3 min
             createdAt: song.createdAt,
             projectName: song.project?.name,
           },
@@ -195,10 +195,10 @@ export async function GET(request: NextRequest) {
           type: 'release' as const,
           data: {
             id: track.id,
-            title: track.song?.title || track.title || 'Untitled',
+            title: track.song?.title || 'Untitled',
             type: 'single' as const,
             releaseDate: track.publishedAt || new Date(),
-            coverUrl: track.song?.coverArtUrl,
+            coverUrl: track.song?.artworkUrl,
             trackCount: 1,
           },
         }));
@@ -264,10 +264,10 @@ export async function POST(request: NextRequest) {
         refreshedItems = songs.map((song) => ({
           id: song.id,
           title: song.title,
-          artist: song.artist,
+          artist: song.writer || 'Unknown Artist',
           audioUrl: song.audioUrl,
-          coverUrl: song.coverArtUrl,
-          duration: song.duration,
+          coverUrl: song.artworkUrl,
+          duration: song.tempo ? song.tempo * 3 : 180,
         }));
         break;
       }

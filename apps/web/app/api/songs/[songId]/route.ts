@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 import { handleApiError, AppError } from '@/lib/errors';
+import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
 
 type RouteContext = {
@@ -18,6 +19,9 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
   try {
     const { songId } = await params;
     const user = await requireAuth();
+
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `song-read:${user.id}`);
 
     const song = await db.song.findUnique({
       where: {
@@ -57,6 +61,9 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
   try {
     const { songId } = await params;
     const user = await requireAuth();
+
+    // Rate limit: 60 updates per minute (allows fast auto-save)
+    await checkRateLimit(standardLimiter, `song-update:${user.id}`);
 
     // Verify ownership
     const existing = await db.song.findUnique({
@@ -129,6 +136,9 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
   try {
     const { songId } = await params;
     const user = await requireAuth();
+
+    // Rate limit: 10 deletes per minute
+    await checkRateLimit(strictLimiter, `song-delete:${user.id}`);
 
     // Verify ownership
     const existing = await db.song.findUnique({

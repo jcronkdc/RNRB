@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
+import { fetchWithTimeout, TIMEOUTS } from '@/lib/fetch-utils';
+import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { logSecurityEvent } from '@/lib/security';
 
 /**
  * Rhyme Dictionary API - Uses Datamuse API for free rhyme suggestions
@@ -13,6 +17,17 @@ export async function GET(request: Request) {
     const session = await auth();
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // 🔒 RATE LIMITING: Prevent external API abuse (100 per minute per user)
+    try {
+      await checkRateLimit(standardLimiter, `rhyme:${session.user.id}`);
+    } catch {
+      logSecurityEvent('rate_limit', {
+        action: 'rhyme-lookup',
+        userId: session.user.id,
+      });
+      return NextResponse.json({ error: 'Too many requests. Please slow down.' }, { status: 429 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -42,12 +57,16 @@ export async function GET(request: Request) {
         apiUrl = `https://api.datamuse.com/words?rel_rhy=${encodeURIComponent(word)}&max=30`;
     }
 
-    // Fetch rhymes from Datamuse API
-    const response = await fetch(apiUrl, {
-      headers: {
-        'User-Agent': 'CronkWaters-Songwriting-Tool',
+    // Fetch rhymes from Datamuse API (with 5s timeout)
+    const response = await fetchWithTimeout(
+      apiUrl,
+      {
+        headers: {
+          'User-Agent': 'CronkWaters-Songwriting-Tool',
+        },
       },
-    });
+      TIMEOUTS.FAST_API
+    );
 
     if (!response.ok) {
       throw new Error('Datamuse API request failed');
@@ -95,4 +114,3 @@ export async function GET(request: Request) {
     );
   }
 }
-

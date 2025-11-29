@@ -9,9 +9,8 @@
  * DELETE /api/rooms/voice/[roomId] - End room
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-
 import { prisma as db } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 
@@ -25,13 +24,15 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const user = { id: session.user.id, email: session.user.email, name: session.user.name, image: session.user.image };
+    const user = {
+      id: session.user.id,
+      email: session.user.email,
+      name: session.user.name,
+      image: session.user.image,
+    };
 
     if (!DAILY_API_KEY) {
-      return NextResponse.json(
-        { error: 'Daily.co not configured' },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: 'Daily.co not configured' }, { status: 503 });
     }
 
     const body = await request.json();
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    let dailyRoomUrl: string;
+    let dailyRoomUrl: string = '';
 
     if (existingRoom && existingRoom.dailyRoomId) {
       // Room exists, get Daily.co room details
@@ -68,7 +69,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (!existingRoom) {
+    // If room has no Daily ID or is null, we need to create a new one
+    if (!existingRoom || !dailyRoomUrl) {
       // Create new Daily.co room
       const dailyResponse = await fetch(`${DAILY_API_URL}/rooms`, {
         method: 'POST',
@@ -95,10 +97,7 @@ export async function POST(request: NextRequest) {
       if (!dailyResponse.ok) {
         const error = await dailyResponse.json();
         console.error('Daily.co error:', error);
-        return NextResponse.json(
-          { error: 'Failed to create Daily.co room' },
-          { status: 500 }
-        );
+        return NextResponse.json({ error: 'Failed to create Daily.co room' }, { status: 500 });
       }
 
       const dailyRoom = await dailyResponse.json();
@@ -142,10 +141,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Voice room API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -203,10 +199,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Get voice room error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
-

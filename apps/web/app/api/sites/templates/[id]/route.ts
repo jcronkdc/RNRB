@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // GET /api/sites/templates/:id - Get theme defaults for a template
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {

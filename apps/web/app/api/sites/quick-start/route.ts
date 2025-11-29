@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // POST /api/sites/quick-start - Auto-generate a website from user's existing data
 export async function POST(request: NextRequest) {
@@ -318,7 +318,7 @@ export async function POST(request: NextRequest) {
         // Create all sections
         sections: {
           create: sections.map((s) => ({
-            type: s.type,
+            type: s.type as any, // Cast to SectionType enum
             order: s.order,
             content: s.content as object,
             animation: s.animation,

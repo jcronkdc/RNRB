@@ -2,19 +2,19 @@
 
 /**
  * CREATE NEW SHOW PAGE
- * 
+ *
  * Form to create a new show with venue, date, times, and setlist linking
  */
 
 import { Button, Card } from '@cronkwaters/ui';
-import { formatDateLong } from '@/lib/format-date';
-import { Calendar, MapPin, Clock, Music, DollarSign, FileText, ArrowLeft, Loader2 } from 'lucide-react';
+import { Calendar, MapPin, Clock, DollarSign, FileText, ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-import { useRequireAuth } from '@/hooks/use-require-auth';
 import { ToastNotification, useToast } from '@/components/toast-notification';
+import { useRequireAuth } from '@/hooks/use-require-auth';
+import { formatDateLong } from '@/lib/format-date';
 
 type Venue = {
   id: string;
@@ -144,14 +144,14 @@ export default function NewShowPage() {
 
   if (loading) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
-        <Loader2 className="text-brand-primary h-12 w-12 animate-spin" />
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
       </div>
     );
   }
 
   return (
-    <div className="bg-background min-h-screen px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="rnrb-container mx-auto max-w-3xl">
         {/* Toast Notifications */}
         <ToastNotification toasts={toasts} onRemove={removeToast} />
@@ -165,7 +165,7 @@ export default function NewShowPage() {
             </Button>
           </Link>
           <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl">Schedule a Show</h1>
-          <p className="text-muted-foreground text-base sm:text-lg">
+          <p className="text-base text-muted-foreground sm:text-lg">
             Add a new gig to your touring calendar
           </p>
         </div>
@@ -195,7 +195,7 @@ export default function NewShowPage() {
                   Date <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Calendar className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                  <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="date"
                     required
@@ -230,7 +230,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Venue</label>
               <div className="relative">
-                <MapPin className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <select
                   value={formData.venueId}
                   onChange={(e) => setFormData({ ...formData, venueId: e.target.value })}
@@ -247,7 +247,7 @@ export default function NewShowPage() {
                   ))}
                 </select>
               </div>
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Don't see your venue?{' '}
                 <Link href="/venues" className="text-brand-primary hover:underline">
                   Add a new venue
@@ -267,12 +267,11 @@ export default function NewShowPage() {
                 <option value="">Not part of a tour</option>
                 {tours.map((tour) => (
                   <option key={tour.id} value={tour.id}>
-                    {tour.name} ({formatDateLong(tour.startDate)} -{' '}
-                    {formatDateLong(tour.endDate)})
+                    {tour.name} ({formatDateLong(tour.startDate)} - {formatDateLong(tour.endDate)})
                   </option>
                 ))}
               </select>
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Link this show to a multi-show tour for better organization
               </p>
             </div>
@@ -282,7 +281,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Doors Time</label>
                 <div className="relative">
-                  <Clock className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="time"
                     value={formData.doors_time}
@@ -295,7 +294,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Soundcheck</label>
                 <div className="relative">
-                  <Clock className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="time"
                     value={formData.soundcheck_time}
@@ -308,7 +307,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Show Time</label>
                 <div className="relative">
-                  <Clock className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="time"
                     value={formData.show_time}
@@ -350,7 +349,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Guarantee</label>
               <div className="relative">
-                <DollarSign className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+                <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="number"
                   step="0.01"
@@ -366,7 +365,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Notes</label>
               <div className="relative">
-                <FileText className="text-muted-foreground absolute left-3 top-3 h-4 w-4" />
+                <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -405,4 +404,3 @@ export default function NewShowPage() {
     </div>
   );
 }
-

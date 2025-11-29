@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Mail,
   Phone,
@@ -17,6 +16,7 @@ import {
   Facebook,
   Youtube,
 } from 'lucide-react';
+import { useState } from 'react';
 
 interface ContactPageSectionProps {
   content: {

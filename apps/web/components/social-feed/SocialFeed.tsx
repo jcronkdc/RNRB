@@ -1,12 +1,5 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useSession } from 'next-auth/react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { FeedPost } from './FeedPost';
-import { PostComposer } from './PostComposer';
-import { TrendingSidebar } from './TrendingSidebar';
-import { SearchModal } from './SearchModal';
 import {
   Loader2,
   Music,
@@ -19,6 +12,14 @@ import {
   X,
   Hash,
 } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+
+import { FeedPost } from './FeedPost';
+import { PostComposer } from './PostComposer';
+import { SearchModal } from './SearchModal';
+import { TrendingSidebar } from './TrendingSidebar';
 
 interface FeedProps {
   initialType?: 'following' | 'public' | 'discover' | 'audio' | 'algorithm';

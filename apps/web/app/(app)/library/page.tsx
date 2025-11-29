@@ -12,10 +12,8 @@ import {
   Mic2,
   Radio,
   Loader2,
-  Share2,
   Folder,
   Download,
-  Edit2,
   CheckSquare,
   Square,
   X,
@@ -23,11 +21,11 @@ import {
   AlertCircle,
   Globe,
 } from 'lucide-react';
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 
-import { useRequireAuth } from '@/hooks/use-require-auth';
-import { useLibrary, useLibraryUpload, LibraryFileType } from '@/hooks/use-library';
 import { AudioPlayer } from '@/components/audio-player';
+import { useLibrary, useLibraryUpload, type LibraryFileType } from '@/hooks/use-library';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 
 export default function LibraryPage() {
   const { user, loading: authLoading } = useRequireAuth();
@@ -59,12 +57,7 @@ export default function LibraryPage() {
   });
 
   // Upload hook with progress tracking
-  const {
-    upload,
-    uploading,
-    progress,
-    error: uploadError,
-  } = useLibraryUpload();
+  const { upload, uploading, progress, error: uploadError } = useLibraryUpload();
 
   // Format file size
   const formatFileSize = (bytesStr: string): string => {
@@ -402,9 +395,7 @@ export default function LibraryPage() {
             >
               <div className="mb-2 flex items-center gap-2 sm:gap-3">
                 <Upload className="h-4 w-4 animate-pulse text-orange-500 sm:h-5 sm:w-5" />
-                <span className="text-sm text-white sm:text-base">
-                  Uploading... {progress}%
-                </span>
+                <span className="text-sm text-white sm:text-base">Uploading... {progress}%</span>
               </div>
               <div className="h-2 w-full rounded-full bg-gray-800">
                 <motion.div
@@ -527,7 +518,10 @@ export default function LibraryPage() {
                         {file.duration && (
                           <>
                             <span>•</span>
-                            <span>{Math.floor(file.duration / 60)}:{(file.duration % 60).toString().padStart(2, '0')}</span>
+                            <span>
+                              {Math.floor(file.duration / 60)}:
+                              {(file.duration % 60).toString().padStart(2, '0')}
+                            </span>
                           </>
                         )}
                       </div>
@@ -549,9 +543,7 @@ export default function LibraryPage() {
                     {!isSelectionMode && (
                       <div className="mt-3 flex items-center gap-1.5 sm:mt-4 sm:gap-2 md:mt-0">
                         <button
-                          onClick={() =>
-                            setPlayingId(playingId === file.id ? null : file.id)
-                          }
+                          onClick={() => setPlayingId(playingId === file.id ? null : file.id)}
                           className="rounded-lg bg-orange-500/10 p-1.5 text-orange-500 transition-all hover:bg-orange-500 hover:text-white sm:p-2"
                           title="Play/Pause"
                         >
@@ -564,7 +556,7 @@ export default function LibraryPage() {
                         <button
                           onClick={() => handlePublish(file.id)}
                           disabled={publishingFile === file.id}
-                          className="rounded-lg bg-gray-800 p-1.5 text-gray-400 transition-all hover:bg-green-500/20 hover:text-green-500 sm:p-2 disabled:opacity-50"
+                          className="rounded-lg bg-gray-800 p-1.5 text-gray-400 transition-all hover:bg-green-500/20 hover:text-green-500 disabled:opacity-50 sm:p-2"
                           title="Publish to Community"
                         >
                           <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />

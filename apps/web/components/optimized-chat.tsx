@@ -17,15 +17,14 @@
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, MoreVertical, Loader2, WifiOff } from 'lucide-react';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
-import { formatTime } from '@/lib/format-date';
+import { VirtualizedMessageList } from './virtualized-message-list';
+import { VoiceMessageRecorder } from './voice-message-recorder';
+
+import { useMessages } from '@/hooks/use-messages';
 import { ablyManager, useAblyConnection } from '@/lib/ably-manager';
 import { useReadReceipts } from '@/lib/read-receipts';
-import { VoiceMessagePlayer } from './voice-message-player';
-import { VoiceMessageRecorder } from './voice-message-recorder';
-import { VirtualizedMessageList } from './virtualized-message-list';
-import { useMessages } from '@/hooks/use-messages';
 
 interface OptimizedChatProps {
   projectSlug: string;

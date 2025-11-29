@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { Button } from '@cronkwaters/ui';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+
 import { trackEvent, PostHogEvents, isPostHogLoaded, getDistinctId } from '@/lib/posthog';
 
 export default function PostHogTestPage() {

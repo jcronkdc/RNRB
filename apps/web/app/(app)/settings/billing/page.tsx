@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
 import { CreditCard, Sparkles } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 import { BillingDashboard } from './BillingDashboard';
 

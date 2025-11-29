@@ -20,50 +20,61 @@ import Link from 'next/link';
 
 export default function WebsiteBuilderFeaturePage() {
   const templateCardClass =
-    'rnrb-card group relative w-full overflow-hidden rounded-2xl border border-white/5 p-0 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_25px_60px_rgba(0,0,0,0.45)]';
+    'card group relative w-full overflow-hidden p-0 transition-all duration-300 hover:-translate-y-2';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {/* Hero */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 via-transparent to-cyan-500/5" />
+      <div className="relative overflow-hidden" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="absolute inset-0" style={{ background: 'var(--panel)' }} />
         <div className="absolute inset-0">
-          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-sky-500/10 blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div
+            className="absolute right-1/4 top-0 h-96 w-96 rounded-full blur-3xl"
+            style={{ background: 'rgba(255, 99, 71, 0.05)' }}
+          />
+          <div
+            className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full blur-3xl"
+            style={{ background: 'rgba(255, 99, 71, 0.03)' }}
+          />
         </div>
 
-        <div className="rnrb-container relative z-10 mx-auto max-w-6xl px-4 py-20">
+        <div className="container relative z-10 mx-auto max-w-6xl px-4 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-sky-500/20 bg-sky-500/10 px-4 py-2">
-              <Globe className="h-4 w-4 text-sky-400" />
-              <span className="text-sm font-medium text-sky-400">Website Builder</span>
+            <div
+              className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2"
+              style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}
+            >
+              <Globe className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+              <span className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                Website Builder
+              </span>
             </div>
 
-            <h1 className="font-display mb-6 text-5xl font-bold md:text-6xl">
+            <h1 className="mb-6 text-5xl font-bold md:text-6xl" style={{ color: 'var(--text)' }}>
               Your Music. Your Website. One Click.
             </h1>
-            <p className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-muted-foreground">
+            <p
+              className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed"
+              style={{ color: 'var(--muted)' }}
+            >
               Build a stunning musician website in seconds. Choose from 8 professional templates,
               auto-sync your music and tour dates, and publish to your own subdomain instantly.
             </p>
 
             <div className="flex items-center justify-center gap-4">
               <Link href="/auth?signup=true">
-                <Button className="rnrb-button-primary flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold">
-                  <Sparkles className="h-5 w-5" />
+                <button className="button flex items-center gap-2 text-lg font-semibold">
                   Build My Website
                   <ArrowRight className="h-5 w-5" />
-                </Button>
+                </button>
               </Link>
               <Link href="#templates">
-                <Button className="rnrb-button-secondary rounded-xl px-8 py-4 text-lg font-semibold">
-                  View Templates
-                </Button>
+                <button className="button secondary text-lg font-semibold">View Templates</button>
               </Link>
             </div>
           </motion.div>
@@ -71,12 +82,15 @@ export default function WebsiteBuilderFeaturePage() {
       </div>
 
       {/* Templates Showcase */}
-      <div id="templates" className="border-b border-border/50 bg-surface/30">
-        <div className="rnrb-container mx-auto max-w-7xl px-4 py-20">
-          <h2 className="font-display mb-4 text-center text-4xl font-bold">
+      <div id="templates" className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container mx-auto max-w-7xl px-4 py-20">
+          <h2 className="mb-4 text-center text-4xl font-bold" style={{ color: 'var(--text)' }}>
             8 Pro Templates Built for Musicians
           </h2>
-          <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-muted-foreground">
+          <p
+            className="mx-auto mb-12 max-w-2xl text-center text-lg"
+            style={{ color: 'var(--muted)' }}
+          >
             Each template is designed by professionals to showcase your music, tour dates, and story
             in the best possible light.
           </p>
@@ -119,10 +133,17 @@ export default function WebsiteBuilderFeaturePage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">NOIR</h3>
-                      <p className="text-xs text-muted-foreground">Cinematic dark theme</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                        NOIR
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                        Cinematic dark theme
+                      </p>
                     </div>
-                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                    >
                       Dark
                     </span>
                   </div>
@@ -185,10 +206,17 @@ export default function WebsiteBuilderFeaturePage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">VINYL</h3>
-                      <p className="text-xs text-muted-foreground">Retro record store vibe</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                        VINYL
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                        Retro record store vibe
+                      </p>
                     </div>
-                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                    >
                       Dark
                     </span>
                   </div>
@@ -251,10 +279,17 @@ export default function WebsiteBuilderFeaturePage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">NEON</h3>
-                      <p className="text-xs text-muted-foreground">Cyberpunk glow</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                        NEON
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                        Cyberpunk glow
+                      </p>
                     </div>
-                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                    >
                       Dark
                     </span>
                   </div>
@@ -308,10 +343,17 @@ export default function WebsiteBuilderFeaturePage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">ACOUSTIC</h3>
-                      <p className="text-xs text-muted-foreground">Warm, organic feel</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                        ACOUSTIC
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                        Warm, organic feel
+                      </p>
                     </div>
-                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                    >
                       Light
                     </span>
                   </div>
@@ -364,10 +406,17 @@ export default function WebsiteBuilderFeaturePage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">ARENA</h3>
-                      <p className="text-xs text-muted-foreground">Stadium energy</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                        ARENA
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                        Stadium energy
+                      </p>
                     </div>
-                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                    >
                       Dark
                     </span>
                   </div>
@@ -406,10 +455,17 @@ export default function WebsiteBuilderFeaturePage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">EDITORIAL</h3>
-                      <p className="text-xs text-muted-foreground">Gallery minimal</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                        EDITORIAL
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                        Gallery minimal
+                      </p>
                     </div>
-                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                    >
                       Light
                     </span>
                   </div>
@@ -470,10 +526,17 @@ export default function WebsiteBuilderFeaturePage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">OUTLAW</h3>
-                      <p className="text-xs text-muted-foreground">Weathered americana</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                        OUTLAW
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                        Weathered americana
+                      </p>
                     </div>
-                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                    >
                       Dark
                     </span>
                   </div>
@@ -543,10 +606,17 @@ export default function WebsiteBuilderFeaturePage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-bold">FUTURA</h3>
-                      <p className="text-xs text-muted-foreground">Chrome & glass</p>
+                      <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                        FUTURA
+                      </h3>
+                      <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                        Chrome & glass
+                      </p>
                     </div>
-                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs"
+                      style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                    >
                       Dark
                     </span>
                   </div>
@@ -558,8 +628,12 @@ export default function WebsiteBuilderFeaturePage() {
       </div>
 
       {/* Features */}
-      <div id="features" className="rnrb-container mx-auto max-w-7xl px-4 py-20">
-        <h2 className="font-display mb-12 text-center text-4xl font-bold">
+      <div
+        id="features"
+        className="page-section container mx-auto max-w-7xl px-4 py-20"
+        style={{ borderTop: '1px solid var(--border)' }}
+      >
+        <h2 className="mb-12 text-center text-4xl font-bold" style={{ color: 'var(--text)' }}>
           Everything You Need to Shine Online
         </h2>
 
@@ -567,7 +641,6 @@ export default function WebsiteBuilderFeaturePage() {
           {[
             {
               icon: Zap,
-              color: 'sky',
               title: 'One-Click Creation',
               description:
                 'Start with Quick Start and have a fully functional website in under 30 seconds. We automatically import your profile, music, and tour dates.',
@@ -575,7 +648,6 @@ export default function WebsiteBuilderFeaturePage() {
             },
             {
               icon: Music,
-              color: 'pink',
               title: 'Auto-Sync Music',
               description:
                 "Your songs from Rock N' Roll Basement automatically appear on your website. Update once, sync everywhere.",
@@ -583,7 +655,6 @@ export default function WebsiteBuilderFeaturePage() {
             },
             {
               icon: Calendar,
-              color: 'orange',
               title: 'Tour Dates Integration',
               description:
                 'Shows from your tour management sync automatically. Fans always see your latest gigs without you lifting a finger.',
@@ -591,7 +662,6 @@ export default function WebsiteBuilderFeaturePage() {
             },
             {
               icon: Palette,
-              color: 'purple',
               title: 'Full Customization',
               description:
                 'Customize every aspect—colors, fonts, layouts. Make it uniquely yours while keeping it professional.',
@@ -599,7 +669,6 @@ export default function WebsiteBuilderFeaturePage() {
             },
             {
               icon: Layout,
-              color: 'green',
               title: 'Drag & Drop Sections',
               description:
                 'Add, remove, and reorder sections with ease. Hero images, bio, band members, contact forms, and more.',
@@ -607,7 +676,6 @@ export default function WebsiteBuilderFeaturePage() {
             },
             {
               icon: Mail,
-              color: 'cyan',
               title: 'Built-In Marketing',
               description:
                 'Mailing list signup, contact forms, and social media links all built in. Grow your fanbase effortlessly.',
@@ -615,7 +683,6 @@ export default function WebsiteBuilderFeaturePage() {
             },
             {
               icon: Globe,
-              color: 'amber',
               title: 'Custom Domains & Analytics',
               description:
                 'Connect your own domain with guided DNS instructions, automatic SSL, and real-time visitor analytics.',
@@ -632,49 +699,56 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 * (index + 1) }}
             >
-              <Card className="rnrb-card h-full rounded-2xl border border-white/5 p-6 transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="card h-full transition-transform duration-300 hover:-translate-y-1">
                 <div
-                  className={`mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-${feature.color}-500/10`}
+                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg"
+                  style={{ background: 'var(--panel-hover)' }}
                 >
-                  <feature.icon className={`h-6 w-6 text-${feature.color}-400`} />
+                  <feature.icon className="h-6 w-6" style={{ color: 'var(--accent)' }} />
                 </div>
-                <h3 className="mb-3 text-xl font-semibold">{feature.title}</h3>
-                <p className="mb-4 text-muted-foreground">{feature.description}</p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <h3 className="mb-3 text-xl font-semibold" style={{ color: 'var(--text)' }}>
+                  {feature.title}
+                </h3>
+                <p className="mb-4" style={{ color: 'var(--muted)' }}>
+                  {feature.description}
+                </p>
+                <ul className="space-y-2 text-sm" style={{ color: 'var(--muted)' }}>
                   {feature.features.map((item) => (
                     <li key={item} className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 flex-shrink-0 text-brand-primary" />
+                      <CheckCircle
+                        className="h-4 w-4 flex-shrink-0"
+                        style={{ color: 'var(--accent)' }}
+                      />
                       {item}
                     </li>
                   ))}
                 </ul>
-              </Card>
+              </div>
             </motion.div>
           ))}
         </div>
 
         {/* How It Works */}
-        <h2 className="font-display mb-12 text-center text-4xl font-bold">How It Works</h2>
+        <h2 className="mb-12 text-center text-4xl font-bold" style={{ color: 'var(--text)' }}>
+          How It Works
+        </h2>
 
         <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
           {[
             {
               step: '1',
-              gradient: 'from-sky-500 to-cyan-500',
               title: 'Choose a Template',
               description:
                 'Pick from 8 stunning templates designed for musicians. Dark or light, minimal or bold.',
             },
             {
               step: '2',
-              gradient: 'from-purple-500 to-pink-500',
               title: 'Customize Everything',
               description:
                 'Add your colors, fonts, and content. Drag sections around. Make it uniquely yours.',
             },
             {
               step: '3',
-              gradient: 'from-orange-500 to-red-500',
               title: 'Publish & Share',
               description:
                 'Hit publish and get your own yourname.cronkwaters.com URL. Share it everywhere.',
@@ -688,29 +762,32 @@ export default function WebsiteBuilderFeaturePage() {
               className="text-center"
             >
               <div
-                className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${item.gradient}`}
+                className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                style={{ background: 'var(--accent)' }}
               >
                 <span className="text-2xl font-bold text-white">{item.step}</span>
               </div>
-              <h3 className="mb-3 text-xl font-semibold">{item.title}</h3>
-              <p className="text-muted-foreground">{item.description}</p>
+              <h3 className="mb-3 text-xl font-semibold" style={{ color: 'var(--text)' }}>
+                {item.title}
+              </h3>
+              <p style={{ color: 'var(--muted)' }}>{item.description}</p>
             </motion.div>
           ))}
         </div>
       </div>
 
       {/* Social Proof */}
-      <div className="border-t border-border/50 bg-surface/30">
-        <div className="rnrb-container max-w-4xl px-4 py-20 text-center">
+      <div className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container max-w-4xl px-4 py-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-display mb-4 text-3xl font-bold">
+            <h2 className="mb-4 text-3xl font-bold" style={{ color: 'var(--text)' }}>
               "I had a pro website in 5 minutes. My old site took me weeks."
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg" style={{ color: 'var(--muted)' }}>
               Our website builder is designed specifically for musicians. Every template, every
               feature, every detail is crafted to help you connect with fans and book more gigs.
             </p>
@@ -719,16 +796,18 @@ export default function WebsiteBuilderFeaturePage() {
       </div>
 
       {/* Preview Feature */}
-      <div className="border-t border-border/50">
-        <div className="rnrb-container max-w-6xl px-4 py-20">
+      <div className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container max-w-6xl px-4 py-20">
           <div className="grid items-center gap-12 md:grid-cols-2">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="font-display mb-6 text-4xl font-bold">Real-Time Preview</h2>
-              <p className="mb-6 text-lg text-muted-foreground">
+              <h2 className="mb-6 text-4xl font-bold" style={{ color: 'var(--text)' }}>
+                Real-Time Preview
+              </h2>
+              <p className="mb-6 text-lg" style={{ color: 'var(--muted)' }}>
                 See your changes instantly. Every color tweak, every section rearrangement, every
                 text edit shows up immediately in the live preview.
               </p>
@@ -740,8 +819,8 @@ export default function WebsiteBuilderFeaturePage() {
                   'SEO-optimized pages',
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 text-sky-400" />
-                    <span>{item}</span>
+                    <CheckCircle className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                    <span style={{ color: 'var(--text)' }}>{item}</span>
                   </li>
                 ))}
               </ul>
@@ -751,47 +830,65 @@ export default function WebsiteBuilderFeaturePage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <Card className="rnrb-card overflow-hidden p-4">
-                <div className="flex items-center gap-2 border-b border-border/50 pb-3">
+              <div className="card overflow-hidden p-4">
+                <div
+                  className="flex items-center gap-2 pb-3"
+                  style={{ borderBottom: '1px solid var(--border)' }}
+                >
                   <div className="flex gap-1.5">
-                    <div className="h-3 w-3 rounded-full bg-red-500/50"></div>
-                    <div className="h-3 w-3 rounded-full bg-yellow-500/50"></div>
-                    <div className="h-3 w-3 rounded-full bg-green-500/50"></div>
+                    <div
+                      className="h-3 w-3 rounded-full"
+                      style={{ background: 'var(--error)' }}
+                    ></div>
+                    <div
+                      className="h-3 w-3 rounded-full"
+                      style={{ background: 'var(--warning)' }}
+                    ></div>
+                    <div
+                      className="h-3 w-3 rounded-full"
+                      style={{ background: 'var(--success)' }}
+                    ></div>
                   </div>
-                  <div className="flex-1 text-center text-xs text-muted-foreground">
+                  <div className="flex-1 text-center text-xs" style={{ color: 'var(--muted)' }}>
                     yourband.cronkwaters.com
                   </div>
                 </div>
-                <div className="mt-3 flex aspect-video items-center justify-center rounded-lg bg-surface/50">
+                <div
+                  className="mt-3 flex aspect-video items-center justify-center rounded-lg"
+                  style={{ background: 'var(--panel)' }}
+                >
                   <div className="text-center">
-                    <Eye className="mx-auto mb-2 h-12 w-12 text-muted-foreground/30" />
-                    <p className="text-sm text-muted-foreground">Live Preview</p>
+                    <Eye className="mx-auto mb-2 h-12 w-12" style={{ color: 'var(--muted)' }} />
+                    <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                      Live Preview
+                    </p>
                   </div>
                 </div>
-              </Card>
+              </div>
             </motion.div>
           </div>
         </div>
       </div>
 
       {/* CTA */}
-      <div className="border-t border-border/50">
-        <div className="rnrb-container max-w-3xl px-4 py-20 text-center">
+      <div className="page-section" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="container max-w-3xl px-4 py-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="font-display mb-4 text-4xl font-bold">Build Your Website Today</h2>
-            <p className="mb-8 text-xl text-muted-foreground">
+            <h2 className="mb-4 text-4xl font-bold" style={{ color: 'var(--text)' }}>
+              Build Your Website Today
+            </h2>
+            <p className="mb-8 text-xl" style={{ color: 'var(--muted)' }}>
               Free plan includes a full-featured website. No credit card required.
             </p>
             <Link href="/auth?signup=true">
-              <Button className="rnrb-button-primary inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold">
-                <Sparkles className="h-5 w-5" />
+              <button className="button inline-flex items-center gap-2 text-lg font-semibold">
                 Create My Website
                 <ChevronRight className="h-5 w-5" />
-              </Button>
+              </button>
             </Link>
           </motion.div>
         </div>

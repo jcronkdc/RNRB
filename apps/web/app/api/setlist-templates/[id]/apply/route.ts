@@ -7,16 +7,14 @@ import { getCurrentUser } from '@/lib/session';
  * POST /api/setlist-templates/[id]/apply
  * Apply a template to generate a setlist
  */
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const userId = user.id;
 
     const body = await request.json();
     const { projectId } = body;
@@ -39,7 +37,7 @@ export async function POST(
       const membership = await db.membership.findUnique({
         where: {
           userId_orgId: {
-            userId: user.id,
+            userId,
             orgId: template.orgId,
           },
         },
@@ -75,7 +73,7 @@ export async function POST(
     const projectMember = await db.projectMember.findUnique({
       where: {
         userId_projectId: {
-          userId: user.id,
+          userId,
           projectId: project.id,
         },
       },
@@ -148,4 +146,3 @@ export async function POST(
     return NextResponse.json({ error: 'Failed to apply template' }, { status: 500 });
   }
 }
-

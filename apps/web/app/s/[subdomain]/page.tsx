@@ -1,7 +1,8 @@
-import { notFound } from 'next/navigation';
 import { prisma } from '@cronkwaters/db';
-import { SiteRenderer } from '@/components/site-builder/SiteRenderer';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+
+import { SiteRenderer } from '@/components/site-builder/SiteRenderer';
 
 interface Props {
   params: Promise<{ subdomain: string }>;

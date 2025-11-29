@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
   Globe,
   Check,
@@ -13,6 +12,7 @@ import {
   RefreshCw,
   Trash2,
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface DomainStatus {
   customDomain: string | null;

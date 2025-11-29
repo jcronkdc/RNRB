@@ -4,7 +4,7 @@
  * Client-side hook to check user's subscription tier and feature access
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 type SubscriptionTier = 'free' | 'creator' | 'studio';

@@ -7,10 +7,7 @@ import { getCurrentUser } from '@/lib/session';
  * GET /api/setlist-templates/[id]
  * Get a specific template
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const user = await getCurrentUser();
@@ -27,7 +24,7 @@ export async function GET(
     }
 
     // Check access (built-in templates are public, custom templates require org membership)
-    if (!template.isBuiltIn) {
+    if (!template.isBuiltIn && user.id) {
       const membership = await db.membership.findUnique({
         where: {
           userId_orgId: {
@@ -53,10 +50,7 @@ export async function GET(
  * PATCH /api/setlist-templates/[id]
  * Update a custom template
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const user = await getCurrentUser();
@@ -77,7 +71,11 @@ export async function PATCH(
       return NextResponse.json({ error: 'Cannot edit built-in template' }, { status: 403 });
     }
 
-    // Check access
+    // Check access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {
@@ -141,7 +139,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Cannot delete built-in template' }, { status: 403 });
     }
 
-    // Check access
+    // Check access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {
@@ -165,4 +167,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete template' }, { status: 500 });
   }
 }
-

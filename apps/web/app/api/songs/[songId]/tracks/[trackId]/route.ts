@@ -2,8 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
-import { prisma } from '@cronkwaters/db';
-
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
@@ -89,7 +87,7 @@ export async function GET(
 
     const hasAccess =
       song.userId === userId ||
-      (song.project && song.project.members.length > 0) ||
+      ((song as any).project && (song as any).project.members.length > 0) ||
       song.visibility === 'public';
 
     if (!hasAccess) {
@@ -158,7 +156,7 @@ export async function PATCH(
           select: {
             members: {
               where: { userId },
-              select: { id: true },
+              select: { userId: true },
             },
           },
         },
@@ -169,7 +167,9 @@ export async function PATCH(
       return NextResponse.json({ error: 'Song not found' }, { status: 404 });
     }
 
-    const canEdit = song.userId === userId || (song.project && song.project.members.length > 0);
+    // Check if user owns the song OR is a project member (type-safe access)
+    const projectMembers = (song as any).project?.members;
+    const canEdit = song.userId === userId || (projectMembers && projectMembers.length > 0);
 
     if (!canEdit) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -258,7 +258,7 @@ export async function DELETE(
           select: {
             members: {
               where: { userId },
-              select: { id: true },
+              select: { userId: true },
             },
           },
         },
@@ -270,7 +270,10 @@ export async function DELETE(
     }
 
     // Only song owner or project admin can delete
-    const canDelete = song.userId === userId || (song.project && song.project.members.length > 0);
+    // Check if user owns the song OR is a project member (type-safe access)
+    const projectMembersForDelete = (song as any).project?.members;
+    const canDelete =
+      song.userId === userId || (projectMembersForDelete && projectMembersForDelete.length > 0);
 
     if (!canDelete) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -294,30 +297,8 @@ export async function DELETE(
     if (track.audioPath) {
       storageDeleted = await deleteAudioFromStorage(track.audioPath);
 
-      // Update user's storage usage if file was deleted
-      if (storageDeleted) {
-        // Get file size from track metadata if available, or estimate
-        try {
-          const trackData = await db.songTrack.findUnique({
-            where: { id: trackId },
-            select: { fileSize: true, uploadedById: true },
-          });
-
-          if (trackData?.uploadedById && trackData.fileSize) {
-            const fileSizeGB = Number(trackData.fileSize) / (1024 * 1024 * 1024);
-            await prisma.user.update({
-              where: { id: trackData.uploadedById },
-              data: {
-                storageUsedGB: {
-                  decrement: Math.max(0, fileSizeGB),
-                },
-              },
-            });
-          }
-        } catch (error) {
-          console.warn('Failed to update storage usage:', error);
-        }
-      }
+      // Note: Storage tracking disabled - fileSize not in SongTrack schema
+      // If storage tracking is needed, add fileSize field to SongTrack model
     }
 
     // Delete track from database

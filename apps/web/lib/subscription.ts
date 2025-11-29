@@ -1,11 +1,11 @@
 /**
  * Subscription Access Control Utility
- * 
+ *
  * Centralized logic for checking subscription tiers and feature access.
  * Follows the Tokyo Ant principle: verify before allowing passage.
  */
 
-import { db } from '@/lib/db';
+import { prisma as db } from '@cronkwaters/db';
 
 export type SubscriptionTier = 'free' | 'creator' | 'studio';
 export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'trialing' | 'incomplete';
@@ -101,8 +101,8 @@ export async function getUserSubscription(userId: string): Promise<SubscriptionI
   const status = user.subscriptionStatus as SubscriptionStatus | null;
 
   // Check if subscription is actually active
-  const isActive = 
-    tier !== 'free' && 
+  const isActive =
+    tier !== 'free' &&
     (status === 'active' || status === 'trialing') &&
     (!user.subscriptionEndsAt || new Date(user.subscriptionEndsAt) > new Date());
 
@@ -126,12 +126,12 @@ export async function hasFeatureAccess(
 ): Promise<boolean> {
   const subscription = await getUserSubscription(userId);
   const featureValue = subscription.features[feature];
-  
+
   // For boolean features, return as-is
   if (typeof featureValue === 'boolean') {
     return featureValue;
   }
-  
+
   // For numeric features, return true if > 0 or -1 (unlimited)
   return featureValue === -1 || featureValue > 0;
 }
@@ -145,9 +145,10 @@ export async function requireFeatureAccess(
   customMessage?: string
 ): Promise<void> {
   const hasAccess = await hasFeatureAccess(userId, feature);
-  
+
   if (!hasAccess) {
-    const message = customMessage || `This feature requires a paid subscription. Please upgrade your account.`;
+    const message =
+      customMessage || `This feature requires a paid subscription. Please upgrade your account.`;
     throw new SubscriptionError(message, feature);
   }
 }
@@ -158,10 +159,10 @@ export async function requireFeatureAccess(
 export function getRequiredTier(feature: keyof FeatureAccess): SubscriptionTier | null {
   // Check each tier from lowest to highest
   const tiers: SubscriptionTier[] = ['free', 'creator', 'studio'];
-  
+
   for (const tier of tiers) {
     const featureValue = TIER_FEATURES[tier][feature];
-    
+
     if (typeof featureValue === 'boolean' && featureValue === true) {
       return tier;
     }
@@ -169,7 +170,7 @@ export function getRequiredTier(feature: keyof FeatureAccess): SubscriptionTier 
       return tier;
     }
   }
-  
+
   return null;
 }
 
@@ -178,7 +179,7 @@ export function getRequiredTier(feature: keyof FeatureAccess): SubscriptionTier 
  */
 export async function getFeatureLimits(userId: string) {
   const subscription = await getUserSubscription(userId);
-  
+
   // Get current usage
   const user = await db.user.findUnique({
     where: { id: userId },
@@ -207,7 +208,8 @@ export async function getFeatureLimits(userId: string) {
 
   // Count total projects across all orgs
   const projectCount = user.memberships.reduce(
-    (total, membership) => total + membership.org.projects.length,
+    (total: number, membership: { org: { projects: { id: string }[] } }) =>
+      total + membership.org.projects.length,
     0
   );
 
@@ -255,39 +257,6 @@ export class SubscriptionError extends Error {
   }
 }
 
-/**
- * Feature descriptions for upgrade prompts
- */
-export const FEATURE_DESCRIPTIONS: Record<string, { title: string; description: string; icon: string }> = {
-  setlistManagement: {
-    title: 'Smart Setlist Management',
-    description: 'AI-powered setlist generation, templates, and performance mode for live shows. Organize your songs by energy level, key, and duration.',
-    icon: 'ListMusic',
-  },
-  toursAndGigs: {
-    title: 'Tour & Gig Management',
-    description: 'Track your shows, venues, and tour schedules. Manage load-ins, soundchecks, and setlists for each performance.',
-    icon: 'Radio',
-  },
-  advancedAnalytics: {
-    title: 'Advanced Analytics',
-    description: 'Deep insights into your music career: streaming stats, revenue tracking, audience demographics, and growth trends.',
-    icon: 'BarChart3',
-  },
-  liveCollaboration: {
-    title: 'Live Collaboration',
-    description: 'Real-time video sessions with your band. Co-write songs, jam remotely, and record together from anywhere.',
-    icon: 'Users2',
-  },
-  customBranding: {
-    title: 'Custom Branding',
-    description: 'White-label your projects with custom logos, colors, and domain names. Perfect for labels and studios.',
-    icon: 'Palette',
-  },
-  apiAccess: {
-    title: 'API Access',
-    description: 'Build custom integrations and automate workflows with our REST API. Perfect for power users and developers.',
-    icon: 'Code',
-  },
-};
-
+// FEATURE_DESCRIPTIONS moved to subscription-constants.ts for client-safe imports
+// Re-export for backwards compatibility with server-side code
+export { FEATURE_DESCRIPTIONS } from './subscription-constants';

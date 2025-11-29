@@ -336,9 +336,9 @@ export default function MessagesPage() {
                     className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-left backdrop-blur-sm"
                   >
                     <div
-                      className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-${feature.color}-500/20`}
+                      className={`bg- flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl${feature.color}-500/20`}
                     >
-                      <feature.icon className={`h-5 w-5 text-${feature.color}-400`} />
+                      <feature.icon className={`text- h-5 w-5${feature.color}-400`} />
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-white">{feature.label}</p>

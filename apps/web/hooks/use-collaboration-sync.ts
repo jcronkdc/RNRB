@@ -54,13 +54,22 @@ type UseCollaborationSyncOptions = {
 export function useCollaborationSync({
   projectId,
   userId,
-  userName,
-  userEmail,
-  userAvatar,
+  // Note: userName, userEmail, userAvatar are used in broadcastEvent
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  userName: _userName,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  userEmail: _userEmail,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  userAvatar: _userAvatar,
 }: UseCollaborationSyncOptions) {
-  // Get activity feed publisher
-  const { publishActivity } = useActivityFeed({
+  // Get activity feed publishers - hooks must be called at the top level
+  const { publishActivity: publishProjectActivity } = useActivityFeed({
     channelName: projectId ? `activity:project:${projectId}` : 'activity:global',
+  });
+
+  // Global activity feed for cross-project events
+  const { publishActivity: publishGlobalActivity } = useActivityFeed({
+    channelName: 'activity:global',
   });
 
   // Get notification sender
@@ -84,7 +93,7 @@ export function useCollaborationSync({
     };
 
     // 1. Publish to Activity Feed (visible to all)
-    await publishActivity({
+    await publishProjectActivity({
       type: activityTypeMap[event.type],
       userId: event.userId,
       userName: event.userName,
@@ -192,13 +201,9 @@ export function useCollaborationSync({
     }
 
     // 3. Update Global Activity Feed (if not project-specific)
+    // Also publish to global feed for non-project events
     if (!projectId) {
-      // Also publish to global feed
-      const { publishActivity: publishGlobal } = useActivityFeed({
-        channelName: 'activity:global',
-      });
-
-      await publishGlobal({
+      await publishGlobalActivity({
         type: activityTypeMap[event.type],
         userId: event.userId,
         userName: event.userName,

@@ -1,11 +1,11 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { db } from '@/lib/db';
 import { generateOptimalSetlist, type OptimizerOptions } from '@/lib/ai/setlist-optimizer';
+import { db } from '@/lib/db';
 import { handleApiError, AppError } from '@/lib/errors';
 import { requireAuth } from '@/lib/session';
-import { generateSetlistSchema, parseBody } from '@/lib/validations';
 import { requireFeatureAccess, SubscriptionError } from '@/lib/subscription';
+import { generateSetlistSchema, parseBody } from '@/lib/validations';
 
 /**
  * POST /api/setlists/generate
@@ -64,7 +64,6 @@ export async function POST(request: NextRequest) {
       closingSong: validated.closingSong || undefined,
       avoidKeyJumps: validated.avoidKeyJumps,
       genreBalance: validated.genreBalance,
-      allowedDeviation: 5,
     };
 
     // Generate optimized setlist

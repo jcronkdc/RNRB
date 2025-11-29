@@ -71,6 +71,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No organization found' }, { status: 404 });
     }
 
+    // Ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     // Create template
     const template = await db.setlistTemplate.create({
       data: {
@@ -92,4 +97,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create template' }, { status: 500 });
   }
 }
-

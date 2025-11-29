@@ -17,16 +17,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  MessageCircle,
-  Check,
-  X,
-  MoreVertical,
-  Reply,
-  Trash2,
-  Edit2,
-  Smile,
-} from 'lucide-react';
+import { MessageCircle, Check, X, MoreVertical, Reply, Trash2, Edit2, Smile } from 'lucide-react';
 import { useState } from 'react';
 
 import type { PinnedComment } from '@/hooks/use-pinned-comments';
@@ -90,11 +81,7 @@ export function PinnedCommentThread({
     if (!newCommentText.trim()) return;
 
     try {
-      const location = lineNumber
-        ? { lineNumber }
-        : timestamp
-          ? { timestamp }
-          : {};
+      const location = lineNumber ? { lineNumber } : timestamp ? { timestamp } : {};
 
       await createComment(newCommentText, location, replyingTo || undefined);
 
@@ -165,27 +152,23 @@ export function PinnedCommentThread({
 
   if (loading) {
     return (
-      <div className={`border-border bg-surface rounded-lg border p-4 ${className}`}>
-        <p className="text-muted-foreground text-sm">Loading comments...</p>
+      <div className={`rounded-lg border border-border bg-surface p-4 ${className}`}>
+        <p className="text-sm text-muted-foreground">Loading comments...</p>
       </div>
     );
   }
 
   return (
-    <div className={`border-border bg-surface rounded-lg border ${className}`}>
+    <div className={`rounded-lg border border-border bg-surface ${className}`}>
       {/* Header */}
-      <div className="border-border flex items-center justify-between border-b p-4">
+      <div className="flex items-center justify-between border-b border-border p-4">
         <div className="flex items-center gap-2">
           <MessageCircle className="h-5 w-5 text-brand-primary" />
-          <h3 className="text-foreground font-semibold">
+          <h3 className="font-semibold text-foreground">
             Comments {relevantComments.length > 0 && `(${relevantComments.length})`}
           </h3>
         </div>
-        <Button
-          onClick={() => setIsAddingComment(!isAddingComment)}
-          variant="default"
-          size="sm"
-        >
+        <Button onClick={() => setIsAddingComment(!isAddingComment)} variant="default" size="sm">
           Add Comment
         </Button>
       </div>
@@ -204,7 +187,7 @@ export function PinnedCommentThread({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className={`border-border rounded-lg border p-4 ${
+                className={`rounded-lg border border-border p-4 ${
                   comment.isResolved ? 'bg-surface-muted opacity-60' : 'bg-surface'
                 }`}
               >
@@ -212,7 +195,7 @@ export function PinnedCommentThread({
                 <div className="mb-2 flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     {/* Avatar */}
-                    <div className="bg-brand-primary/20 text-foreground flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
                       {comment.userAvatar ? (
                         <img
                           src={comment.userAvatar}
@@ -226,8 +209,8 @@ export function PinnedCommentThread({
 
                     {/* Name and time */}
                     <div>
-                      <p className="text-foreground text-sm font-medium">{comment.userName}</p>
-                      <p className="text-muted-foreground text-xs">
+                      <p className="text-sm font-medium text-foreground">{comment.userName}</p>
+                      <p className="text-xs text-muted-foreground">
                         {new Date(comment.createdAt).toLocaleString()}
                       </p>
                     </div>
@@ -255,7 +238,7 @@ export function PinnedCommentThread({
                     <textarea
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
-                      className="border-border bg-surface text-foreground w-full rounded border p-2 text-sm"
+                      className="w-full rounded border border-border bg-surface p-2 text-sm text-foreground"
                       rows={3}
                       autoFocus
                     />
@@ -280,7 +263,7 @@ export function PinnedCommentThread({
                     </div>
                   </div>
                 ) : (
-                  <p className="text-foreground mb-3 whitespace-pre-wrap text-sm">
+                  <p className="mb-3 whitespace-pre-wrap text-sm text-foreground">
                     {comment.content}
                   </p>
                 )}
@@ -336,11 +319,7 @@ export function PinnedCommentThread({
 
                   {isOwner && (
                     <>
-                      <Button
-                        onClick={() => startEdit(comment)}
-                        size="sm"
-                        variant="secondary"
-                      >
+                      <Button onClick={() => startEdit(comment)} size="sm" variant="secondary">
                         <Edit2 className="h-3 w-3" />
                       </Button>
                       <Button
@@ -364,7 +343,7 @@ export function PinnedCommentThread({
                     {thread.map((reply) => (
                       <div key={reply.id} className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <div className="bg-brand-primary/20 text-foreground flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-primary/20 text-xs font-semibold text-foreground">
                             {reply.userAvatar ? (
                               <img
                                 src={reply.userAvatar}
@@ -375,14 +354,14 @@ export function PinnedCommentThread({
                               reply.userName[0].toUpperCase()
                             )}
                           </div>
-                          <span className="text-foreground text-sm font-medium">
+                          <span className="text-sm font-medium text-foreground">
                             {reply.userName}
                           </span>
-                          <span className="text-muted-foreground text-xs">
+                          <span className="text-xs text-muted-foreground">
                             {new Date(reply.createdAt).toLocaleTimeString()}
                           </span>
                         </div>
-                        <p className="text-foreground text-sm">{reply.content}</p>
+                        <p className="text-sm text-foreground">{reply.content}</p>
                       </div>
                     ))}
                   </div>
@@ -395,9 +374,9 @@ export function PinnedCommentThread({
         {/* No comments state */}
         {relevantComments.length === 0 && !isAddingComment && (
           <div className="py-8 text-center">
-            <MessageCircle className="text-muted-foreground mx-auto mb-3 h-12 w-12 opacity-50" />
-            <p className="text-muted-foreground text-sm">No comments yet</p>
-            <p className="text-muted-foreground mt-1 text-xs">
+            <MessageCircle className="mx-auto mb-3 h-12 w-12 text-muted-foreground opacity-50" />
+            <p className="text-sm text-muted-foreground">No comments yet</p>
+            <p className="mt-1 text-xs text-muted-foreground">
               Add a comment to start the conversation
             </p>
           </div>
@@ -409,13 +388,11 @@ export function PinnedCommentThread({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-border space-y-3 rounded-lg border p-4"
+            className="space-y-3 rounded-lg border border-border p-4"
           >
             {replyingTo && (
               <div className="flex items-center justify-between">
-                <p className="text-muted-foreground text-sm">
-                  Replying to comment...
-                </p>
+                <p className="text-sm text-muted-foreground">Replying to comment...</p>
                 <Button onClick={() => setReplyingTo(null)} size="sm" variant="secondary">
                   <X className="h-3 w-3" />
                 </Button>
@@ -426,7 +403,7 @@ export function PinnedCommentThread({
               value={newCommentText}
               onChange={(e) => setNewCommentText(e.target.value)}
               placeholder="Add a comment... Use @ to mention someone"
-              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-lg border p-3 outline-none focus:ring-2"
+              className="w-full resize-none rounded-lg border border-border bg-surface p-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               rows={3}
               autoFocus
             />
@@ -458,4 +435,3 @@ export function PinnedCommentThread({
     </div>
   );
 }
-

@@ -1,6 +1,5 @@
 'use client';
 
-import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import {
   Pen,
@@ -17,13 +16,12 @@ import {
   CheckCircle,
   ArrowRight,
   ChevronRight,
-  Zap,
   Copy,
   Mail,
   Globe,
 } from 'lucide-react';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -799,9 +797,9 @@ export default function SolutionsForSongwritersPage() {
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
               >
                 <div
-                  className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-${feature.color}-500/10`}
+                  className={`bg- mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg${feature.color}-500/10`}
                 >
-                  <feature.icon className={`h-5 w-5 text-${feature.color}-400`} />
+                  <feature.icon className={`text- h-5 w-5${feature.color}-400`} />
                 </div>
                 <h3 className="mb-2 font-semibold">{feature.title}</h3>
                 <p className="text-sm" style={{ color: 'var(--muted)' }}>

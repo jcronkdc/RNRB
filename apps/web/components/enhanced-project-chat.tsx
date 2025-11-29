@@ -20,22 +20,13 @@
 import { Button } from '@cronkwaters/ui';
 import Ably from 'ably';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Send,
-  Smile,
-  Paperclip,
-  MoreVertical,
-  Reply,
-  Edit2,
-  Trash2,
-  Check,
-  CheckCheck,
-} from 'lucide-react';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { Send, Smile, Paperclip, MoreVertical, Reply } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 
-import { formatTime } from '@/lib/format-date';
 import { VoiceMessagePlayer } from './voice-message-player';
 import { VoiceMessageRecorder } from './voice-message-recorder';
+
+import { formatTime } from '@/lib/format-date';
 
 type MessageType = 'text' | 'voice' | 'video' | 'file' | 'system';
 

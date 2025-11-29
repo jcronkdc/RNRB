@@ -1,5 +1,5 @@
 import { prisma } from '@cronkwaters/db';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   // SECURITY: In production, require a secret key to access detailed health info

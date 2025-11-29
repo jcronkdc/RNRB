@@ -77,19 +77,19 @@ export function useSongSuggestions({
 
   // LRU Cache for suggestions (max 100 items)
   const MAX_SUGGESTIONS = 100;
-  
+
   // Batch state updates for performance
   const scheduleBatchUpdate = useCallback((updateFn: () => void) => {
     pendingUpdatesRef.current.push(updateFn);
-    
+
     if (!batchUpdateTimerRef.current) {
       batchUpdateTimerRef.current = setTimeout(() => {
         // Apply all pending updates in one batch
         const updates = pendingUpdatesRef.current;
         pendingUpdatesRef.current = [];
         batchUpdateTimerRef.current = null;
-        
-        updates.forEach(fn => fn());
+
+        updates.forEach((fn) => fn());
       }, 300); // 300ms debounce
     }
   }, []);
@@ -104,7 +104,7 @@ export function useSongSuggestions({
       });
       cleanupTimersRef.current.delete(suggestionId);
     }, delay);
-    
+
     cleanupTimersRef.current.set(suggestionId, timer);
   }, []);
 
@@ -142,35 +142,35 @@ export function useSongSuggestions({
         // Subscribe to suggestion events with deduplication
         channel.subscribe('suggestion-created', (message: Ably.Message) => {
           if (!mounted) return;
-          
+
           // Deduplicate messages
           const messageId = message.id || `${message.timestamp}-${message.data.id}`;
           if (processedMessagesRef.current.has(messageId)) return;
           processedMessagesRef.current.add(messageId);
-          
+
           // Cleanup old message IDs (keep last 1000)
           if (processedMessagesRef.current.size > 1000) {
             const toDelete = Array.from(processedMessagesRef.current).slice(0, 100);
-            toDelete.forEach(id => processedMessagesRef.current.delete(id));
+            toDelete.forEach((id) => processedMessagesRef.current.delete(id));
           }
-          
+
           const suggestion: LyricSuggestion = message.data;
 
           scheduleBatchUpdate(() => {
             setSuggestions((prev) => {
               const newMap = new Map(prev);
-              
+
               // Enforce LRU cache limit
               if (newMap.size >= MAX_SUGGESTIONS) {
                 const oldestKey = newMap.keys().next().value;
-                newMap.delete(oldestKey);
+                if (oldestKey) newMap.delete(oldestKey);
               }
-              
+
               newMap.set(suggestion.id, suggestion);
               return newMap;
             });
           });
-          
+
           // Auto-cleanup after 30s
           scheduleCleanup(suggestion.id, 30000);
         });
@@ -217,13 +217,13 @@ export function useSongSuggestions({
         channel.subscribe('chord-suggested', (message: Ably.Message) => {
           if (!mounted) return;
           const suggestion: ChordSuggestion = message.data;
-          
+
           scheduleBatchUpdate(() => {
             setChordSuggestions((prev) => {
               const newMap = new Map(prev);
               if (newMap.size >= MAX_SUGGESTIONS) {
                 const oldestKey = newMap.keys().next().value;
-                newMap.delete(oldestKey);
+                if (oldestKey) newMap.delete(oldestKey);
               }
               newMap.set(suggestion.id, suggestion);
               return newMap;
@@ -293,15 +293,15 @@ export function useSongSuggestions({
     return () => {
       mounted = false;
       mountedRef.current = false; // Sync ref for callbacks with timeouts
-      
+
       // Clear all timers
       if (batchUpdateTimerRef.current) {
         clearTimeout(batchUpdateTimerRef.current);
       }
-      cleanupTimersRef.current.forEach(timer => clearTimeout(timer));
+      cleanupTimersRef.current.forEach((timer) => clearTimeout(timer));
       cleanupTimersRef.current.clear();
       processedMessagesRef.current.clear();
-      
+
       channelRef.current?.unsubscribe();
       ablyRef.current?.close();
       setSuggestions(new Map());
@@ -479,7 +479,10 @@ export function useSongSuggestions({
 
   // Memoize arrays to prevent unnecessary re-renders
   const suggestionsArray = useMemo(() => Array.from(suggestions.values()), [suggestions]);
-  const chordSuggestionsArray = useMemo(() => Array.from(chordSuggestions.values()), [chordSuggestions]);
+  const chordSuggestionsArray = useMemo(
+    () => Array.from(chordSuggestions.values()),
+    [chordSuggestions]
+  );
 
   return {
     // State

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 // Cache for domain lookups (reduces database calls)
 const domainCache = new Map<string, { subdomain: string; expires: number }>();

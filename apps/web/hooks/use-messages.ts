@@ -10,9 +10,9 @@
  * - Automatic retry with exponential backoff
  */
 
+import type { RealtimeChannel } from 'ably';
 import { useEffect, useRef, useCallback } from 'react';
 import useSWRInfinite from 'swr/infinite';
-import type { RealtimeChannel } from 'ably';
 
 import { useAblyClient } from './use-ably-client';
 

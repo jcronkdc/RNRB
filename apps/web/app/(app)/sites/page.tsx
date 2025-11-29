@@ -1,8 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   Globe,
   Sparkles,
@@ -17,6 +15,8 @@ import {
   Calendar,
   Zap,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 interface Site {
   id: string;

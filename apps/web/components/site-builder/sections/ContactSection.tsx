@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Loader2, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
 
 interface ContactSectionProps {
   content: {

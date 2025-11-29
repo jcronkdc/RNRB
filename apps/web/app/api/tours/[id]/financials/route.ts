@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/lib/session';
 /**
  * GET /api/tours/[id]/financials
  * Comprehensive financial tracking and reporting
- * 
+ *
  * WORLD-CLASS: Professional tour accounting
  * Features:
  * - Revenue tracking by show
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -89,8 +89,7 @@ function calculateTourFinancials(tour: any) {
     (sum: number, show: any) => sum + (Number(show.grossRevenue) || 0),
     0
   );
-  const averageRevenuePerShow =
-    pastShows.length > 0 ? completedRevenue / pastShows.length : 0;
+  const averageRevenuePerShow = pastShows.length > 0 ? completedRevenue / pastShows.length : 0;
   const projectedRevenue = upcomingShows.length * averageRevenuePerShow;
   const totalProjectedRevenue = completedRevenue + projectedRevenue;
 
@@ -99,8 +98,7 @@ function calculateTourFinancials(tour: any) {
     (sum: number, show: any) => sum + (show.attendance || 0),
     0
   );
-  const averageAttendance =
-    pastShows.length > 0 ? completedAttendance / pastShows.length : 0;
+  const averageAttendance = pastShows.length > 0 ? completedAttendance / pastShows.length : 0;
   const projectedAttendance = Math.round(upcomingShows.length * averageAttendance);
 
   // Estimated expenses (industry averages)
@@ -112,12 +110,10 @@ function calculateTourFinancials(tour: any) {
   const totalProjectedProfit = grossProfit + projectedProfit;
 
   // Profit margin
-  const profitMargin =
-    completedRevenue > 0 ? (grossProfit / completedRevenue) * 100 : 0;
+  const profitMargin = completedRevenue > 0 ? (grossProfit / completedRevenue) * 100 : 0;
 
   // Revenue per attendee
-  const revenuePerAttendee =
-    completedAttendance > 0 ? completedRevenue / completedAttendance : 0;
+  const revenuePerAttendee = completedAttendance > 0 ? completedRevenue / completedAttendance : 0;
 
   // Show-by-show breakdown
   const showBreakdown = pastShows.map((show: any) => {
@@ -136,18 +132,13 @@ function calculateTourFinancials(tour: any) {
       profit,
       profitMargin: revenue > 0 ? (profit / revenue) * 100 : 0,
       attendance: show.attendance,
-      revenuePerAttendee:
-        show.attendance > 0 ? revenue / show.attendance : 0,
+      revenuePerAttendee: show.attendance > 0 ? revenue / show.attendance : 0,
     };
   });
 
   // Sort shows by profit
-  const topProfitableShows = [...showBreakdown]
-    .sort((a, b) => b.profit - a.profit)
-    .slice(0, 5);
-  const leastProfitableShows = [...showBreakdown]
-    .sort((a, b) => a.profit - b.profit)
-    .slice(0, 5);
+  const topProfitableShows = [...showBreakdown].sort((a, b) => b.profit - a.profit).slice(0, 5);
+  const leastProfitableShows = [...showBreakdown].sort((a, b) => a.profit - b.profit).slice(0, 5);
 
   // Cash flow timeline
   const cashFlow = generateCashFlowTimeline(tour.shows, now);
@@ -159,19 +150,28 @@ function calculateTourFinancials(tour: any) {
   const healthIndicators = {
     profitMargin: {
       value: profitMargin,
-      status: profitMargin >= 30 ? 'excellent' : profitMargin >= 20 ? 'good' : profitMargin >= 10 ? 'fair' : 'poor',
+      status:
+        profitMargin >= 30
+          ? 'excellent'
+          : profitMargin >= 20
+            ? 'good'
+            : profitMargin >= 10
+              ? 'fair'
+              : 'poor',
       benchmark: '30%+ is excellent for touring',
     },
     revenueGrowth: {
       value: calculateRevenueGrowth(pastShows),
-      status: calculateRevenueGrowth(pastShows) > 10 ? 'growing' : calculateRevenueGrowth(pastShows) < -10 ? 'declining' : 'stable',
+      status:
+        calculateRevenueGrowth(pastShows) > 10
+          ? 'growing'
+          : calculateRevenueGrowth(pastShows) < -10
+            ? 'declining'
+            : 'stable',
     },
     cashPosition: {
       value: completedRevenue - estimatedExpenses.completed.total,
-      status:
-        completedRevenue - estimatedExpenses.completed.total > 0
-          ? 'positive'
-          : 'negative',
+      status: completedRevenue - estimatedExpenses.completed.total > 0 ? 'positive' : 'negative',
     },
   };
 
@@ -210,7 +210,8 @@ function calculateTourFinancials(tour: any) {
     cashFlow,
     healthIndicators,
     recommendations: generateFinancialRecommendations(healthIndicators, showBreakdown),
-    disclaimer: 'PLANNING ESTIMATES ONLY - These are industry-standard percentages, not actual expenses. Track real costs for accurate accounting.',
+    disclaimer:
+      'PLANNING ESTIMATES ONLY - These are industry-standard percentages, not actual expenses. Track real costs for accurate accounting.',
   };
 }
 
@@ -325,18 +326,14 @@ function generateCashFlowTimeline(shows: any[], now: Date) {
 function calculateRevenueGrowth(shows: any[]): number {
   if (shows.length < 2) return 0;
 
-  const sorted = [...shows].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
+  const sorted = [...shows].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   const firstHalf = sorted.slice(0, Math.floor(sorted.length / 2));
   const secondHalf = sorted.slice(Math.floor(sorted.length / 2));
 
   const firstHalfAvg =
-    firstHalf.reduce((sum, show) => sum + (Number(show.grossRevenue) || 0), 0) /
-    firstHalf.length;
+    firstHalf.reduce((sum, show) => sum + (Number(show.grossRevenue) || 0), 0) / firstHalf.length;
   const secondHalfAvg =
-    secondHalf.reduce((sum, show) => sum + (Number(show.grossRevenue) || 0), 0) /
-    secondHalf.length;
+    secondHalf.reduce((sum, show) => sum + (Number(show.grossRevenue) || 0), 0) / secondHalf.length;
 
   return ((secondHalfAvg - firstHalfAvg) / Math.max(firstHalfAvg, 1)) * 100;
 }
@@ -344,10 +341,7 @@ function calculateRevenueGrowth(shows: any[]): number {
 /**
  * Generate financial recommendations
  */
-function generateFinancialRecommendations(
-  healthIndicators: any,
-  showBreakdown: any[]
-): string[] {
+function generateFinancialRecommendations(healthIndicators: any, showBreakdown: any[]): string[] {
   const recommendations: string[] = [];
 
   // Profit margin recommendations
@@ -393,4 +387,3 @@ function generateFinancialRecommendations(
 
   return recommendations;
 }
-

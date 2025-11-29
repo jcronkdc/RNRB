@@ -13,7 +13,6 @@
 
 import { Button, Card } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { formatDateWithDay, formatNumber } from '@/lib/format-date';
 import {
   Calendar,
   MapPin,
@@ -32,11 +31,15 @@ import {
 import Link from 'next/link';
 import { memo, useCallback, useMemo, useState } from 'react';
 
-import { useRequireAuth } from '@/hooks/use-require-auth';
-import { useShows } from '@/hooks/use-shows';
 import { ToastNotification, useToast } from '@/components/toast-notification';
 import { ShowsListSkeleton } from '@/components/tours/loading-skeletons';
+import { useRequireAuth } from '@/hooks/use-require-auth';
+import { useShows } from '@/hooks/use-shows';
+import { formatDateWithDay, formatNumber } from '@/lib/format-date';
 
+type ShowStatus = 'scheduled' | 'confirmed' | 'cancelled' | 'completed';
+
+// Use same Show type as useShows hook to avoid type conflicts
 type Show = {
   id: string;
   name: string;
@@ -51,7 +54,7 @@ type Show = {
     id: string;
     name: string;
   };
-  status: 'scheduled' | 'confirmed' | 'cancelled' | 'completed';
+  status: string; // API returns string, cast to ShowStatus where needed
   setlist?: {
     id: string;
     name: string;
@@ -324,7 +327,7 @@ const ShowCard = memo(function ShowCard({
   onDelete: (id: string, name: string) => void;
   isPast?: boolean;
 }) {
-  const statusColors = {
+  const statusColors: Record<string, string> = {
     scheduled: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
     confirmed: 'bg-green-500/10 text-green-500 border-green-500/20',
     cancelled: 'bg-red-500/10 text-red-500 border-red-500/20',

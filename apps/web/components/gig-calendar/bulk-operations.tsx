@@ -2,7 +2,7 @@
 
 /**
  * BULK OPERATIONS COMPONENT
- * 
+ *
  * Multi-select and bulk actions for shows:
  * - Bulk delete
  * - Bulk status update
@@ -12,14 +12,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Trash2,
-  CheckCircle,
-  XCircle,
-  Download,
-  X,
-  AlertTriangle,
-} from 'lucide-react';
+import { Trash2, CheckCircle, XCircle, Download, X, AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
 
 interface BulkOperationsProps {
@@ -88,10 +81,10 @@ export function BulkOperations({
           exit={{ y: 100, opacity: 0 }}
           className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
         >
-          <div className="bg-background rnrb-card flex items-center gap-4 rounded-2xl border-2 border-brand-primary p-4 shadow-2xl">
+          <div className="rnrb-card flex items-center gap-4 rounded-2xl border-2 border-brand-primary bg-background p-4 shadow-2xl">
             {/* Count */}
             <div className="flex items-center gap-2">
-              <div className="bg-brand-primary/20 text-brand-primary flex h-10 w-10 items-center justify-center rounded-full font-bold">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 font-bold text-brand-primary">
                 {selectedCount}
               </div>
               <span className="text-sm font-medium">
@@ -100,7 +93,7 @@ export function BulkOperations({
             </div>
 
             {/* Divider */}
-            <div className="border-border h-8 w-px" />
+            <div className="h-8 w-px border-border" />
 
             {/* Actions */}
             <div className="flex items-center gap-2">
@@ -152,15 +145,10 @@ export function BulkOperations({
               </Button>
 
               {/* Divider */}
-              <div className="border-border h-8 w-px" />
+              <div className="h-8 w-px border-border" />
 
               {/* Clear */}
-              <Button
-                onClick={onClearSelection}
-                disabled={isProcessing}
-                size="sm"
-                variant="ghost"
-              >
+              <Button onClick={onClearSelection} disabled={isProcessing} size="sm" variant="ghost">
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -182,7 +170,7 @@ export function BulkOperations({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-background max-w-md rounded-2xl p-6 shadow-2xl"
+              className="max-w-md rounded-2xl bg-background p-6 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-4 flex items-center gap-3">
@@ -191,27 +179,27 @@ export function BulkOperations({
                 </div>
                 <div>
                   <h3 className="font-semibold">Confirm Action</h3>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-sm text-muted-foreground">
                     This action affects {selectedCount} {selectedCount === 1 ? 'show' : 'shows'}
                   </p>
                 </div>
               </div>
 
-              <div className="bg-muted/30 mb-6 max-h-48 overflow-y-auto rounded-lg p-3">
+              <div className="mb-6 max-h-48 overflow-y-auto rounded-lg bg-muted/30 p-3">
                 {selectedShowsData.slice(0, 5).map((show) => (
                   <div key={show.id} className="text-sm">
                     • {show.name}
                   </div>
                 ))}
                 {selectedShowsData.length > 5 && (
-                  <div className="text-muted-foreground text-xs">
+                  <div className="text-xs text-muted-foreground">
                     + {selectedShowsData.length - 5} more
                   </div>
                 )}
               </div>
 
               {showConfirm.type === 'delete' && (
-                <p className="text-muted-foreground mb-6 text-sm">
+                <p className="mb-6 text-sm text-muted-foreground">
                   Are you sure you want to delete these shows? This action cannot be undone.
                 </p>
               )}
@@ -240,4 +228,3 @@ export function BulkOperations({
     </>
   );
 }
-

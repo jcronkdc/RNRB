@@ -4,9 +4,8 @@
  * Including weekly progress and activity streaks
  */
 
-import { NextResponse } from 'next/server';
-
 import { prisma } from '@cronkwaters/db';
+import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 

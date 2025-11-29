@@ -110,8 +110,8 @@ pnpm prisma migrate deploy
 - Name: `Creator`
 - Description: `Professional music creation tools`
 - Pricing:
-  - Price: `$9.99` USD
-  - Billing period: `Monthly` (or `Yearly` at `$99/year`)
+  - Price: `$14.99` USD
+  - Billing period: `Monthly` (or `Yearly` at `$149/year`)
   - Payment type: `Recurring`
 - Click "Save product"
 - **Copy the Price ID** (starts with `price_...`) and add to Vercel as `STRIPE_PRICE_ID_CREATOR`
@@ -332,12 +332,3 @@ Before launching subscriptions:
 **END OF SETUP GUIDE** | Agent 58 | 2025-11-22
 
 **Status:** 🎉 Infrastructure complete - ready for 15-minute Stripe setup!
-
-
-
-
-
-
-
-
-

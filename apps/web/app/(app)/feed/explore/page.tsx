@@ -1,8 +1,8 @@
-import { Suspense } from 'react';
-import { Loader2, Hash, TrendingUp, Music, Users, Sparkles, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { prisma } from '@cronkwaters/db';
+import { Loader2, Hash, TrendingUp, Music, Users, Sparkles, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 export const metadata = {
   title: "Explore | Rock N' Roll Basement",

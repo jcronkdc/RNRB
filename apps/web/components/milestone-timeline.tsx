@@ -11,7 +11,6 @@ import {
   Plus,
   Users,
   Trash2,
-  Edit,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -87,7 +86,7 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
       });
 
       if (!response.ok) throw new Error('Failed to create milestone');
-      
+
       await loadMilestones();
     } catch (err: any) {
       alert(`Error: ${err.message}`);
@@ -103,7 +102,7 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
       });
 
       if (!response.ok) throw new Error('Failed to update milestone');
-      
+
       await loadMilestones();
     } catch (err: any) {
       alert(`Error: ${err.message}`);
@@ -119,7 +118,7 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
       });
 
       if (!response.ok) throw new Error('Failed to delete milestone');
-      
+
       await loadMilestones();
     } catch (err: any) {
       alert(`Error: ${err.message}`);
@@ -131,7 +130,7 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
       case 'completed':
         return <CheckCircle2 className="h-5 w-5 text-green-500" />;
       case 'in_progress':
-        return <Clock className="h-5 w-5 text-blue-500 animate-pulse" />;
+        return <Clock className="h-5 w-5 animate-pulse text-blue-500" />;
       case 'blocked':
         return <AlertTriangle className="h-5 w-5 text-red-500" />;
       default:
@@ -206,9 +205,7 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
   };
 
   const completionRate =
-    milestones.length > 0
-      ? Math.round((grouped.completed.length / milestones.length) * 100)
-      : 0;
+    milestones.length > 0 ? Math.round((grouped.completed.length / milestones.length) * 100) : 0;
 
   return (
     <div className="space-y-4">
@@ -218,12 +215,15 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
           <Calendar className="h-5 w-5 text-brand-primary" />
           <div>
             <h2 className="text-xl font-semibold">Project Roadmap</h2>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               {completionRate}% complete • {grouped.in_progress.length} in progress
             </p>
           </div>
         </div>
-        <Button onClick={handleCreateMilestone} className="rnrb-button-primary flex items-center gap-2">
+        <Button
+          onClick={handleCreateMilestone}
+          className="rnrb-button-primary flex items-center gap-2"
+        >
           <Plus className="h-4 w-4" />
           Add Milestone
         </Button>
@@ -236,12 +236,12 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
             <span className="text-muted-foreground">Overall Progress</span>
             <span className="font-semibold">{completionRate}%</span>
           </div>
-          <div className="bg-surface-muted h-2 overflow-hidden rounded-full">
+          <div className="h-2 overflow-hidden rounded-full bg-surface-muted">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${completionRate}%` }}
               transition={{ duration: 1, ease: 'easeOut' }}
-              className="bg-brand-primary h-full rounded-full"
+              className="h-full rounded-full bg-brand-primary"
             />
           </div>
         </Card>
@@ -251,8 +251,8 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
       {milestones.length === 0 ? (
         <Card className="p-8 text-center">
           <Calendar className="mx-auto mb-3 h-12 w-12 text-muted-foreground/50" />
-          <p className="text-muted-foreground mb-2">No milestones yet</p>
-          <p className="text-muted-foreground mb-6 text-sm">
+          <p className="mb-2 text-muted-foreground">No milestones yet</p>
+          <p className="mb-6 text-sm text-muted-foreground">
             Create milestones to track your project's progress and deadlines
           </p>
           <Button onClick={handleCreateMilestone} className="rnrb-button-primary">
@@ -281,14 +281,18 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
                     <div className="flex-1">
                       <div className="mb-1 flex items-center gap-2">
                         <h3 className="font-semibold">{milestone.title}</h3>
-                        <div className={`h-2 w-2 rounded-full ${getPriorityColor(milestone.priority)}`} />
+                        <div
+                          className={`h-2 w-2 rounded-full ${getPriorityColor(milestone.priority)}`}
+                        />
                       </div>
 
                       {milestone.description && (
-                        <p className="text-muted-foreground mb-2 text-sm">{milestone.description}</p>
+                        <p className="mb-2 text-sm text-muted-foreground">
+                          {milestone.description}
+                        </p>
                       )}
 
-                      <div className="text-muted-foreground flex items-center gap-3 text-xs">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           Due {new Date(milestone.dueDate).toLocaleDateString()}
@@ -311,13 +315,15 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
                       {/* Progress Bar */}
                       {milestone.status === 'in_progress' && (
                         <div className="mt-2">
-                          <div className="bg-surface-muted h-1.5 overflow-hidden rounded-full">
+                          <div className="h-1.5 overflow-hidden rounded-full bg-surface-muted">
                             <div
-                              className="h-full bg-blue-500 rounded-full transition-all"
+                              className="h-full rounded-full bg-blue-500 transition-all"
                               style={{ width: `${milestone.progress}%` }}
                             />
                           </div>
-                          <span className="text-muted-foreground mt-1 text-xs">{milestone.progress}% complete</span>
+                          <span className="mt-1 text-xs text-muted-foreground">
+                            {milestone.progress}% complete
+                          </span>
                         </div>
                       )}
 
@@ -342,7 +348,7 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
                             status: e.target.value as Milestone['status'],
                           });
                         }}
-                        className="border-border bg-surface rounded border px-2 py-1 text-sm"
+                        className="rounded border border-border bg-surface px-2 py-1 text-sm"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <option value="not_started">Not Started</option>
@@ -373,4 +379,3 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
     </div>
   );
 }
-

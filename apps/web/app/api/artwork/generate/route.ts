@@ -1,6 +1,8 @@
 import { auth } from '@cronkwaters/auth';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { fetchWithTimeout, TIMEOUTS } from '@/lib/fetch-utils';
+import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { getCurrentUserId } from '@/lib/session';
 import { requireFeatureAccess } from '@/lib/subscription-access';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
@@ -136,6 +138,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limit by user ID (20 requests per minute)
+    await checkRateLimit(aiLimiter, session.user.id);
+
     // ✅ SECURITY: Check subscription access
     try {
       await requireFeatureAccess('aiAlbumArt');
@@ -234,26 +239,30 @@ export async function POST(request: NextRequest) {
 
     for (let i = 0; i < imageCount; i++) {
       try {
-        // Create prediction
-        const createResponse = await fetch('https://api.replicate.com/v1/predictions', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${replicateToken}`,
-            'Content-Type': 'application/json',
-            Prefer: 'wait', // Wait for completion
-          },
-          body: JSON.stringify({
-            version: getModelVersion(model.id),
-            input: {
-              prompt: fullPrompt,
-              aspect_ratio: '1:1', // Square for album art
-              output_format: 'webp',
-              output_quality: 90,
-              // Add slight variation for multiple images
-              ...(imageCount > 1 && { seed: Math.floor(Math.random() * 1000000) + i * 1000 }),
+        // Create prediction (with 60s timeout for image generation)
+        const createResponse = await fetchWithTimeout(
+          'https://api.replicate.com/v1/predictions',
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${replicateToken}`,
+              'Content-Type': 'application/json',
+              Prefer: 'wait', // Wait for completion
             },
-          }),
-        });
+            body: JSON.stringify({
+              version: getModelVersion(model.id),
+              input: {
+                prompt: fullPrompt,
+                aspect_ratio: '1:1', // Square for album art
+                output_format: 'webp',
+                output_quality: 90,
+                // Add slight variation for multiple images
+                ...(imageCount > 1 && { seed: Math.floor(Math.random() * 1000000) + i * 1000 }),
+              },
+            }),
+          },
+          TIMEOUTS.IMAGE_GENERATION
+        );
 
         if (!createResponse.ok) {
           const errorText = await createResponse.text();
@@ -363,11 +372,15 @@ async function pollForCompletion(
   for (let i = 0; i < maxAttempts; i++) {
     await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second between polls
 
-    const response = await fetch(`https://api.replicate.com/v1/predictions/${predictionId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetchWithTimeout(
+      `https://api.replicate.com/v1/predictions/${predictionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+      TIMEOUTS.STANDARD
+    );
 
     if (!response.ok) {
       console.error('[ARTWORK] Poll error:', await response.text());

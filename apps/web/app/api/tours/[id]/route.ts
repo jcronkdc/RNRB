@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
+import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { getCurrentUser } from '@/lib/session';
 
 /**
@@ -14,6 +15,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `tour-read:${user.id}`);
 
     const { searchParams } = new URL(request.url);
     const includeShowDetails = searchParams.get('includeShowDetails') === 'true';
@@ -55,36 +59,38 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             doorsTime: true,
             attendance: true,
             grossRevenue: true,
-            ...(includeShowDetails ? {
-              venue: {
-                select: {
-                  id: true,
-                  name: true,
-                  city: true,
-                  state: true,
-                  country: true,
-                  capacity: true,
-                },
-              },
-              project: {
-                select: {
-                  id: true,
-                  name: true,
-                  slug: true,
-                },
-              },
-              setlist: {
-                select: {
-                  id: true,
-                  name: true,
-                  _count: {
+            ...(includeShowDetails
+              ? {
+                  venue: {
                     select: {
-                      items: true,
+                      id: true,
+                      name: true,
+                      city: true,
+                      state: true,
+                      country: true,
+                      capacity: true,
                     },
                   },
-                },
-              },
-            } : {}),
+                  project: {
+                    select: {
+                      id: true,
+                      name: true,
+                      slug: true,
+                    },
+                  },
+                  setlist: {
+                    select: {
+                      id: true,
+                      name: true,
+                      _count: {
+                        select: {
+                          items: true,
+                        },
+                      },
+                    },
+                  },
+                }
+              : {}),
           },
           orderBy: { date: 'asc' },
         },
@@ -100,7 +106,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Tour not found' }, { status: 404 });
     }
 
-    // Verify access
+    // Verify access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {
@@ -133,6 +143,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limit: 30 updates per minute
+    await checkRateLimit(strictLimiter, `tour-update:${user.id}`);
+
     const body = await request.json();
 
     const existingTour = await db.tour.findFirst({
@@ -145,7 +158,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: 'Tour not found' }, { status: 404 });
     }
 
-    // Verify access
+    // Verify access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {
@@ -200,13 +217,19 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
  * DELETE /api/tours/[id]
  * Delete a tour
  */
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params;
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Rate limit: 10 deletes per minute
+    await checkRateLimit(strictLimiter, `tour-delete:${user.id}`);
 
     const existingTour = await db.tour.findFirst({
       where: {
@@ -221,7 +244,11 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       return NextResponse.json({ error: 'Tour not found' }, { status: 404 });
     }
 
-    // Verify access
+    // Verify access - ensure user.id exists
+    if (!user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const membership = await db.membership.findUnique({
       where: {
         userId_orgId: {

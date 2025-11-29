@@ -24,8 +24,8 @@ type Show = {
 };
 
 import { DayOfShowView } from '@/components/gig-calendar/day-of-show-view';
-import { useRequireAuth } from '@/hooks/use-require-auth';
 import { ToastNotification, useToast } from '@/components/toast-notification';
+import { useRequireAuth } from '@/hooks/use-require-auth';
 
 export default function DayOfShowPage() {
   const { user, loading } = useRequireAuth();

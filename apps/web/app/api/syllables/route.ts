@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
+
 import { auth } from '@/auth';
+import { fetchWithTimeout, TIMEOUTS } from '@/lib/fetch-utils';
+import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { logSecurityEvent } from '@/lib/security';
 
 /**
  * Syllable Counter API - Uses multiple methods for accuracy
@@ -29,6 +33,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // 🔒 RATE LIMITING: Prevent external API abuse (100 per minute per user)
+    try {
+      await checkRateLimit(standardLimiter, `syllables:${session.user.id}`);
+    } catch {
+      logSecurityEvent('rate_limit', {
+        action: 'syllable-count',
+        userId: session.user.id,
+      });
+      return NextResponse.json({ error: 'Too many requests. Please slow down.' }, { status: 429 });
+    }
+
     const { text } = await request.json();
 
     if (!text || typeof text !== 'string') {
@@ -50,14 +65,15 @@ export async function POST(request: Request) {
           if (!cleanWord) continue;
 
           try {
-            // Try Datamuse API first for accurate syllable count
-            const response = await fetch(
+            // Try Datamuse API first for accurate syllable count (with 5s timeout)
+            const response = await fetchWithTimeout(
               `https://api.datamuse.com/words?sp=${encodeURIComponent(cleanWord)}&md=s&max=1`,
               {
                 headers: {
                   'User-Agent': 'CronkWaters-Songwriting-Tool',
                 },
-              }
+              },
+              TIMEOUTS.FAST_API
             );
 
             if (response.ok) {
@@ -92,9 +108,7 @@ export async function POST(request: Request) {
     // Detect meter inconsistencies
     const syllableCounts = results.map((r) => r.syllables).filter((s) => s > 0);
     const avgSyllables = syllableCounts.reduce((a, b) => a + b, 0) / syllableCounts.length;
-    const hasInconsistency = syllableCounts.some(
-      (count) => Math.abs(count - avgSyllables) > 2
-    );
+    const hasInconsistency = syllableCounts.some((count) => Math.abs(count - avgSyllables) > 2);
 
     return NextResponse.json({
       lines: results,
@@ -116,4 +130,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

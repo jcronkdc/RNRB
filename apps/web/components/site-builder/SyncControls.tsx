@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import {
   Link2,
   Link2Off,
@@ -10,7 +9,6 @@ import {
   AlertTriangle,
   Clock,
   Database,
-  Loader2,
   ChevronDown,
   ChevronUp,
   Music,
@@ -18,7 +16,9 @@ import {
   Users,
   Trophy,
 } from 'lucide-react';
-import { DataSyncPicker, SyncableItem } from './DataSyncPicker';
+import { useState, useCallback } from 'react';
+
+import { DataSyncPicker, type SyncableItem } from './DataSyncPicker';
 
 type SyncDataType = 'songs' | 'shows' | 'members' | 'awards';
 
@@ -409,21 +409,26 @@ export function SyncControls({
                 <button
                   type="button"
                   onClick={() => {
-                    onSyncConfigChange({
-                      ...syncConfig,
-                      autoRefresh: !syncConfig.autoRefresh,
-                    });
+                    if (syncConfig) {
+                      onSyncConfigChange({
+                        enabled: syncConfig.enabled,
+                        dataType: syncConfig.dataType,
+                        selectedIds: syncConfig.selectedIds,
+                        lastSyncedAt: syncConfig.lastSyncedAt,
+                        autoRefresh: !syncConfig.autoRefresh,
+                      });
+                    }
                   }}
                   className={`relative h-6 w-11 rounded-full transition-colors ${
-                    syncConfig.autoRefresh ? '' : ''
+                    syncConfig?.autoRefresh ? '' : ''
                   }`}
                   style={{
-                    background: syncConfig.autoRefresh ? 'var(--accent)' : 'var(--border)',
+                    background: syncConfig?.autoRefresh ? 'var(--accent)' : 'var(--border)',
                   }}
                 >
                   <span
                     className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
-                      syncConfig.autoRefresh ? 'translate-x-5' : 'translate-x-0'
+                      syncConfig?.autoRefresh ? 'translate-x-5' : 'translate-x-0'
                     }`}
                   />
                 </button>

@@ -17,8 +17,14 @@
  * - Tier-based limits
  */
 
-import { db } from '@/lib/db';
-import { getCurrentUser } from '@/lib/session';
+import { auth } from '@cronkwaters/auth';
+import { prisma as db } from '@cronkwaters/db';
+
+// Helper to get current user from auth session
+async function getCurrentUser() {
+  const session = await auth();
+  return session?.user || null;
+}
 
 // Usage limits per tier (monthly) - MUST MATCH subscription-access.ts
 export const TIER_LIMITS = {

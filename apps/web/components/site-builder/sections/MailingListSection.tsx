@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Loader2, CheckCircle, Sparkles } from 'lucide-react';
+import { useState } from 'react';
 
 interface MailingListSectionProps {
   content: {

@@ -2,7 +2,7 @@
 
 /**
  * WORLD-CLASS TOUR DETAIL PAGE
- * 
+ *
  * Features:
  * - Comprehensive analytics dashboard
  * - Show management
@@ -14,17 +14,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import {
-  ArrowLeft,
-  Edit,
-  Share2,
-  Calendar,
-  MapPin,
-  Users,
-  Plus,
-  MoreVertical,
-  Download,
-} from 'lucide-react';
+import { ArrowLeft, Edit, Share2, Calendar, MapPin, Users, Plus, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -38,7 +28,9 @@ export default function TourDetailPage() {
   const { user, loading: authLoading } = useRequireAuth();
   const [tour, setTour] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState<'analytics' | 'shows' | 'setlists'>('analytics');
+  const [activeSection, setActiveSection] = useState<'analytics' | 'shows' | 'setlists'>(
+    'analytics'
+  );
 
   const tourSlug = params.slug as string;
 
@@ -67,7 +59,7 @@ export default function TourDetailPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-800 border-t-brand-primary" />
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-800 border-t-brand-primary text-brand-primary" />
           <p className="text-muted-foreground">Loading tour...</p>
         </div>
       </div>
@@ -78,7 +70,7 @@ export default function TourDetailPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Card className="p-8 text-center">
-          <p className="text-muted-foreground mb-4">Tour not found</p>
+          <p className="mb-4 text-muted-foreground">Tour not found</p>
           <Link href="/tours">
             <Button>Back to Tours</Button>
           </Link>
@@ -88,9 +80,9 @@ export default function TourDetailPage() {
   }
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-border/50 border-b">
+      <div className="border-b border-border/50">
         <div className="mx-auto max-w-7xl px-4 py-6">
           <div className="mb-4">
             <Link href="/tours">
@@ -103,13 +95,8 @@ export default function TourDetailPage() {
 
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <h1 className="font-display mb-2 text-3xl font-bold md:text-4xl">
-                  {tour.name}
-                </h1>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                <h1 className="font-display mb-2 text-3xl font-bold md:text-4xl">{tour.name}</h1>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
@@ -137,7 +124,7 @@ export default function TourDetailPage() {
                   </span>
                 </div>
                 {tour.description && (
-                  <p className="text-muted-foreground mt-3 max-w-2xl">{tour.description}</p>
+                  <p className="mt-3 max-w-2xl text-muted-foreground">{tour.description}</p>
                 )}
               </motion.div>
             </div>
@@ -166,7 +153,7 @@ export default function TourDetailPage() {
               onClick={() => setActiveSection('analytics')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'analytics'
-                  ? 'border-brand-primary text-brand-primary border-b-2'
+                  ? 'border-b-2 border-brand-primary text-brand-primary'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -176,7 +163,7 @@ export default function TourDetailPage() {
               onClick={() => setActiveSection('shows')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'shows'
-                  ? 'border-brand-primary text-brand-primary border-b-2'
+                  ? 'border-b-2 border-brand-primary text-brand-primary'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -186,7 +173,7 @@ export default function TourDetailPage() {
               onClick={() => setActiveSection('setlists')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'setlists'
-                  ? 'border-brand-primary text-brand-primary border-b-2'
+                  ? 'border-b-2 border-brand-primary text-brand-primary'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -217,12 +204,12 @@ export default function TourDetailPage() {
             {tour.shows && tour.shows.length > 0 ? (
               <div className="space-y-3">
                 {tour.shows.map((show: any) => (
-                  <Card key={show.id} className="p-4 hover:border-brand-primary/30 transition">
+                  <Card key={show.id} className="p-4 transition hover:border-brand-primary/30">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <Link
                           href={`/shows/${show.slug}`}
-                          className="hover:text-brand-primary block font-semibold transition"
+                          className="block font-semibold transition hover:text-brand-primary"
                         >
                           {show.name}
                         </Link>
@@ -262,9 +249,9 @@ export default function TourDetailPage() {
               </div>
             ) : (
               <Card className="p-12 text-center">
-                <Calendar className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
+                <Calendar className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
                 <h3 className="mb-2 text-lg font-semibold">No Shows Yet</h3>
-                <p className="text-muted-foreground mb-6">
+                <p className="mb-6 text-muted-foreground">
                   Start adding shows to your tour to track performance and manage logistics.
                 </p>
                 <Link href={`/tours/${tourSlug}/shows/new`}>
@@ -290,4 +277,3 @@ export default function TourDetailPage() {
     </div>
   );
 }
-

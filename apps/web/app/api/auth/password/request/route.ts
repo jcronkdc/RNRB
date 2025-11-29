@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { sendEmail } from '@/lib/email';
 import { env } from '@/lib/env';
 import { handleApiError } from '@/lib/errors';
+import { strictLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { getClientIp, logSecurityEvent } from '@/lib/security';
 
 export const runtime = 'nodejs';
 
@@ -138,6 +140,21 @@ function buildEmailText(resetUrl: string): string {
 
 export async function POST(request: Request) {
   try {
+    // 🔒 RATE LIMITING: Prevent email spam and enumeration attacks (10 per minute per IP)
+    const clientIp = getClientIp(request);
+    try {
+      await checkRateLimit(strictLimiter, `password-reset:${clientIp}`);
+    } catch {
+      logSecurityEvent('rate_limit', {
+        action: 'password-reset-request',
+        ip: clientIp,
+      });
+      return NextResponse.json(
+        { error: 'Too many password reset requests. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { email, redirect } = requestSchema.parse(body);
     const normalizedEmail = email.trim().toLowerCase();

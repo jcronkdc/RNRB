@@ -13,7 +13,6 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import Ably from 'ably';
-import { formatDateLong } from '@/lib/format-date';
 import {
   Users,
   UserPlus,
@@ -29,6 +28,8 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+
+import { formatDateLong } from '@/lib/format-date';
 
 type TeamMember = {
   userId: string;
@@ -328,7 +329,7 @@ export function TeamMemberManager({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
       </div>
     );
   }
@@ -339,10 +340,10 @@ export function TeamMemberManager({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display flex items-center gap-3 text-2xl font-bold">
-            <Users className="text-brand-primary h-7 w-7" />
+            <Users className="h-7 w-7 text-brand-primary" />
             Team Members
           </h2>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-muted-foreground">
             {members.length} {members.length === 1 ? 'member' : 'members'}
             {isConnected && <span className="ml-2 text-green-400">• Live sync enabled</span>}
           </p>
@@ -374,7 +375,7 @@ export function TeamMemberManager({
           </span>
           <button
             onClick={() => setMessage(null)}
-            className="text-muted-foreground hover:text-foreground ml-auto"
+            className="ml-auto text-muted-foreground hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -392,7 +393,7 @@ export function TeamMemberManager({
             <Card key={member.userId} className="rnrb-card p-4">
               <div className="flex items-center gap-4">
                 {/* Avatar */}
-                <div className="bg-brand-primary/20 flex h-12 w-12 items-center justify-center rounded-full">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/20">
                   {member.avatar ? (
                     <img
                       src={member.avatar}
@@ -400,7 +401,7 @@ export function TeamMemberManager({
                       className="h-full w-full rounded-full"
                     />
                   ) : (
-                    <span className="text-brand-primary text-xl font-bold">
+                    <span className="text-xl font-bold text-brand-primary">
                       {member.userName.charAt(0).toUpperCase()}
                     </span>
                   )}
@@ -409,15 +410,15 @@ export function TeamMemberManager({
                 {/* Info */}
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-foreground font-semibold">{member.userName}</h4>
+                    <h4 className="font-semibold text-foreground">{member.userName}</h4>
                     {isCurrentUser && (
-                      <span className="bg-brand-primary/20 text-brand-primary rounded-full px-2 py-0.5 text-xs font-medium">
+                      <span className="rounded-full bg-brand-primary/20 px-2 py-0.5 text-xs font-medium text-brand-primary">
                         You
                       </span>
                     )}
                   </div>
-                  <p className="text-muted-foreground text-sm">{member.userEmail}</p>
-                  <p className="text-muted-foreground mt-1 text-xs">
+                  <p className="text-sm text-muted-foreground">{member.userEmail}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
                     Joined {formatDateLong(member.joinedAt)}
                   </p>
                 </div>
@@ -472,7 +473,7 @@ export function TeamMemberManager({
               <h3 className="font-display text-2xl font-bold">Invite Team Member</h3>
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="hover:bg-surface-muted flex h-8 w-8 items-center justify-center rounded-lg"
+                className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-surface-muted"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -486,7 +487,7 @@ export function TeamMemberManager({
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@example.com"
-                  className="border-border bg-surface focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-3 outline-none focus:ring-4"
+                  className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
                 />
               </div>
 
@@ -495,7 +496,7 @@ export function TeamMemberManager({
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as any)}
-                  className="border-border bg-surface focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-3 outline-none focus:ring-4"
+                  className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
                 >
                   <option value="viewer">Viewer (Read-only)</option>
                   <option value="member">Member (Can edit)</option>
@@ -536,34 +537,34 @@ export function TeamMemberManager({
 
       {/* Role Legend */}
       <Card className="bg-surface-muted p-6">
-        <h4 className="text-muted-foreground mb-4 text-sm font-semibold">ROLE PERMISSIONS</h4>
+        <h4 className="mb-4 text-sm font-semibold text-muted-foreground">ROLE PERMISSIONS</h4>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="flex items-start gap-3">
             <Crown className="mt-0.5 h-5 w-5 text-yellow-400" />
             <div>
               <p className="text-sm font-medium">Owner</p>
-              <p className="text-muted-foreground text-xs">Full control, including deletion</p>
+              <p className="text-xs text-muted-foreground">Full control, including deletion</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <Shield className="mt-0.5 h-5 w-5 text-purple-400" />
             <div>
               <p className="text-sm font-medium">Admin</p>
-              <p className="text-muted-foreground text-xs">Can manage team and settings</p>
+              <p className="text-xs text-muted-foreground">Can manage team and settings</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <Edit className="mt-0.5 h-5 w-5 text-blue-400" />
             <div>
               <p className="text-sm font-medium">Member</p>
-              <p className="text-muted-foreground text-xs">Can edit songs and collaborate</p>
+              <p className="text-xs text-muted-foreground">Can edit songs and collaborate</p>
             </div>
           </div>
           <div className="flex items-start gap-3">
             <Eye className="mt-0.5 h-5 w-5 text-gray-400" />
             <div>
               <p className="text-sm font-medium">Viewer</p>
-              <p className="text-muted-foreground text-xs">Read-only access, no edits</p>
+              <p className="text-xs text-muted-foreground">Read-only access, no edits</p>
             </div>
           </div>
         </div>

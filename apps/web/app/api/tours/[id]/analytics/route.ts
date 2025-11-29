@@ -6,7 +6,7 @@ import { getCurrentUser } from '@/lib/session';
 /**
  * GET /api/tours/[id]/analytics
  * Get comprehensive analytics for a tour
- * 
+ *
  * World-class features:
  * - Revenue trends and projections
  * - Attendance patterns
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const user = await getCurrentUser();
-    if (!user) {
+    if (!user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -114,8 +114,7 @@ function calculateTourAnalytics(tour: any) {
     (sum: number, show: any) => sum + (Number(show.grossRevenue) || 0),
     0
   );
-  const averageRevenuePerShow =
-    pastShows.length > 0 ? totalRevenue / pastShows.length : 0;
+  const averageRevenuePerShow = pastShows.length > 0 ? totalRevenue / pastShows.length : 0;
 
   // Projected revenue for remaining shows
   const projectedRevenue = upcomingShows.length * averageRevenuePerShow;
@@ -126,8 +125,7 @@ function calculateTourAnalytics(tour: any) {
     (sum: number, show: any) => sum + (show.attendance || 0),
     0
   );
-  const averageAttendance =
-    pastShows.length > 0 ? totalAttendance / pastShows.length : 0;
+  const averageAttendance = pastShows.length > 0 ? totalAttendance / pastShows.length : 0;
 
   // Capacity utilization (sell-through rate)
   const showsWithCapacity = pastShows.filter(
@@ -136,8 +134,7 @@ function calculateTourAnalytics(tour: any) {
   const averageUtilization =
     showsWithCapacity.length > 0
       ? showsWithCapacity.reduce(
-          (sum: number, show: any) =>
-            sum + (show.attendance / show.venue.capacity) * 100,
+          (sum: number, show: any) => sum + (show.attendance / show.venue.capacity) * 100,
           0
         ) / showsWithCapacity.length
       : 0;
@@ -212,9 +209,13 @@ function calculateTourAnalytics(tour: any) {
     completedShows: pastShows.length,
     upcomingShows: upcomingShows.length,
     percentComplete: shows.length > 0 ? (pastShows.length / shows.length) * 100 : 0,
-    daysRemaining: upcomingShows.length > 0 
-      ? Math.ceil((new Date(upcomingShows[upcomingShows.length - 1].date).getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-      : 0,
+    daysRemaining:
+      upcomingShows.length > 0
+        ? Math.ceil(
+            (new Date(upcomingShows[upcomingShows.length - 1].date).getTime() - now.getTime()) /
+              (1000 * 60 * 60 * 24)
+          )
+        : 0,
   };
 
   // Setlist Insights
@@ -253,9 +254,7 @@ function calculateTourAnalytics(tour: any) {
       growthMarkets,
       cityMetrics,
       totalCities: Object.keys(performanceByCity).length,
-      totalStates: new Set(
-        pastShows.map((show: any) => show.venue?.state).filter(Boolean)
-      ).size,
+      totalStates: new Set(pastShows.map((show: any) => show.venue?.state).filter(Boolean)).size,
     },
     timeline: {
       shows: showTimeline,
@@ -365,8 +364,7 @@ function calculateSetlistStats(shows: any[]) {
     .sort((a, b) => b.count - a.count)
     .slice(0, 10);
 
-  const averageSongsPerShow =
-    shows.length > 0 ? totalSongsPlayed / shows.length : 0;
+  const averageSongsPerShow = shows.length > 0 ? totalSongsPlayed / shows.length : 0;
 
   return {
     totalSongsPlayed,
@@ -382,18 +380,14 @@ function calculateSetlistStats(shows: any[]) {
 function calculateRevenueGrowth(shows: any[]) {
   if (shows.length < 2) return 0;
 
-  const sorted = [...shows].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
+  const sorted = [...shows].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   const firstHalf = sorted.slice(0, Math.floor(sorted.length / 2));
   const secondHalf = sorted.slice(Math.floor(sorted.length / 2));
 
   const firstHalfAvg =
-    firstHalf.reduce((sum, show) => sum + (Number(show.grossRevenue) || 0), 0) /
-    firstHalf.length;
+    firstHalf.reduce((sum, show) => sum + (Number(show.grossRevenue) || 0), 0) / firstHalf.length;
   const secondHalfAvg =
-    secondHalf.reduce((sum, show) => sum + (Number(show.grossRevenue) || 0), 0) /
-    secondHalf.length;
+    secondHalf.reduce((sum, show) => sum + (Number(show.grossRevenue) || 0), 0) / secondHalf.length;
 
   return ((secondHalfAvg - firstHalfAvg) / Math.max(firstHalfAvg, 1)) * 100;
 }
@@ -406,8 +400,7 @@ function calculateConsistency(shows: any[]) {
 
   const revenues = shows.map((show) => Number(show.grossRevenue) || 0);
   const avg = revenues.reduce((sum, rev) => sum + rev, 0) / revenues.length;
-  const variance =
-    revenues.reduce((sum, rev) => sum + Math.pow(rev - avg, 2), 0) / revenues.length;
+  const variance = revenues.reduce((sum, rev) => sum + Math.pow(rev - avg, 2), 0) / revenues.length;
   const stdDev = Math.sqrt(variance);
 
   // Convert to consistency score (0-100, higher is more consistent)
@@ -424,13 +417,10 @@ function getTopShow(shows: any[], metric: string) {
   if (shows.length === 0) return null;
 
   const topShow = shows.reduce((best, show) => {
-    const value = metric === 'grossRevenue' 
-      ? Number(show.grossRevenue) || 0 
-      : show.attendance || 0;
-    const bestValue = metric === 'grossRevenue'
-      ? Number(best?.grossRevenue) || 0
-      : best?.attendance || 0;
-    
+    const value = metric === 'grossRevenue' ? Number(show.grossRevenue) || 0 : show.attendance || 0;
+    const bestValue =
+      metric === 'grossRevenue' ? Number(best?.grossRevenue) || 0 : best?.attendance || 0;
+
     return value > bestValue ? show : best;
   }, shows[0]);
 
@@ -493,17 +483,14 @@ function generateInsights(data: any) {
 
   // Consistency insights
   if (performanceMetrics.consistency < 60) {
-    insights.push(
-      `Show performance varies significantly. Review top performers for patterns.`
-    );
+    insights.push(`Show performance varies significantly. Review top performers for patterns.`);
   }
 
   // Opportunity insights
   if (pastShows.length >= 5) {
-    const avgRevenue = pastShows.reduce(
-      (sum: number, show: any) => sum + (Number(show.grossRevenue) || 0),
-      0
-    ) / pastShows.length;
+    const avgRevenue =
+      pastShows.reduce((sum: number, show: any) => sum + (Number(show.grossRevenue) || 0), 0) /
+      pastShows.length;
     const lowPerformers = pastShows.filter(
       (show: any) => Number(show.grossRevenue) < avgRevenue * 0.7
     );
@@ -516,9 +503,7 @@ function generateInsights(data: any) {
 
   // Add note about data quality
   if (insights.length === 0) {
-    insights.push(
-      `Keep adding show data (revenue, attendance) to see more insights.`
-    );
+    insights.push(`Keep adding show data (revenue, attendance) to see more insights.`);
   }
 
   return insights;
@@ -534,9 +519,7 @@ function calculateRoutingEfficiency(shows: any[]) {
 
   // Count back-and-forth movements between states
   let backtrackCount = 0;
-  const stateSequence = shows
-    .map((show: any) => show.venue?.state)
-    .filter(Boolean);
+  const stateSequence = shows.map((show: any) => show.venue?.state).filter(Boolean);
 
   for (let i = 2; i < stateSequence.length; i++) {
     if (stateSequence[i] === stateSequence[i - 2] && stateSequence[i] !== stateSequence[i - 1]) {
@@ -547,4 +530,3 @@ function calculateRoutingEfficiency(shows: any[]) {
   const efficiency = Math.max(0, 100 - backtrackCount * 20);
   return efficiency;
 }
-

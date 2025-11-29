@@ -2,8 +2,8 @@
 
 import { Card } from '@cronkwaters/ui';
 import { Users, Music, MapPin, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface MusicianProfile {
   instruments: string[];
@@ -40,7 +40,7 @@ export function UserProfileCard({ id, name, image, email, profile, stats }: User
           {/* Header */}
           <div className="mb-4 flex items-start gap-4">
             {/* Avatar */}
-            <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl ring-2 ring-border group-hover:ring-brand-primary transition-all">
+            <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl ring-2 ring-border transition-all group-hover:ring-brand-primary">
               {image ? (
                 <Image src={image} alt={name || 'User'} fill className="object-cover" />
               ) : (
@@ -51,14 +51,19 @@ export function UserProfileCard({ id, name, image, email, profile, stats }: User
             </div>
 
             {/* User Info */}
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <h3 className="font-display text-lg font-semibold truncate">{name || 'Anonymous User'}</h3>
+                <h3 className="font-display truncate text-lg font-semibold">
+                  {name || 'Anonymous User'}
+                </h3>
                 {profile?.availableForCollaboration && (
-                  <CheckCircle className="h-4 w-4 text-brand-primary flex-shrink-0" title="Available for collaboration" />
+                  <CheckCircle
+                    className="h-4 w-4 flex-shrink-0 text-brand-primary"
+                    aria-label="Available for collaboration"
+                  />
                 )}
               </div>
-              <p className="text-muted-foreground text-sm truncate">{email}</p>
+              <p className="truncate text-sm text-muted-foreground">{email}</p>
             </div>
           </div>
 
@@ -68,7 +73,7 @@ export function UserProfileCard({ id, name, image, email, profile, stats }: User
               {/* Genres */}
               {profile.genres && profile.genres.length > 0 && (
                 <div className="flex items-center gap-2">
-                  <Music className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                  <Music className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
                   <div className="flex flex-wrap gap-1">
                     {profile.genres.slice(0, 3).map((genre) => (
                       <span
@@ -79,7 +84,9 @@ export function UserProfileCard({ id, name, image, email, profile, stats }: User
                       </span>
                     ))}
                     {profile.genres.length > 3 && (
-                      <span className="text-muted-foreground text-xs">+{profile.genres.length - 3} more</span>
+                      <span className="text-xs text-muted-foreground">
+                        +{profile.genres.length - 3} more
+                      </span>
                     )}
                   </div>
                 </div>
@@ -91,7 +98,10 @@ export function UserProfileCard({ id, name, image, email, profile, stats }: User
                   <span className="text-muted-foreground">Plays: </span>
                   <span className="font-medium">{profile.instruments.slice(0, 3).join(', ')}</span>
                   {profile.instruments.length > 3 && (
-                    <span className="text-muted-foreground"> +{profile.instruments.length - 3} more</span>
+                    <span className="text-muted-foreground">
+                      {' '}
+                      +{profile.instruments.length - 3} more
+                    </span>
                   )}
                 </div>
               )}
@@ -110,15 +120,15 @@ export function UserProfileCard({ id, name, image, email, profile, stats }: User
           <div className="flex items-center gap-4 border-t border-border/50 pt-4">
             <div className="text-center">
               <div className="font-display text-lg font-bold">{stats.followers}</div>
-              <div className="text-muted-foreground text-xs">Followers</div>
+              <div className="text-xs text-muted-foreground">Followers</div>
             </div>
             <div className="text-center">
               <div className="font-display text-lg font-bold">{stats.following}</div>
-              <div className="text-muted-foreground text-xs">Following</div>
+              <div className="text-xs text-muted-foreground">Following</div>
             </div>
             <div className="text-center">
               <div className="font-display text-lg font-bold">{stats.tracks}</div>
-              <div className="text-muted-foreground text-xs">Tracks</div>
+              <div className="text-xs text-muted-foreground">Tracks</div>
             </div>
           </div>
 
@@ -144,4 +154,3 @@ export function UserProfileCard({ id, name, image, email, profile, stats }: User
     </Link>
   );
 }
-

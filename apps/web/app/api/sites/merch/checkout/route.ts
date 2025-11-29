@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 // Lazy-initialize Stripe to avoid build-time errors
@@ -8,7 +8,7 @@ function getStripe() {
     throw new Error('STRIPE_SECRET_KEY is not configured');
   }
   return new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2024-06-20',
+    apiVersion: '2025-02-24.acacia',
   });
 }
 
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
               quantity: item.quantity,
               total: Number(product.price) * item.quantity,
             };
-          }),
+          }) as any, // Cast to bypass Prisma type inference issues with nested creates
         },
       },
     });
@@ -136,6 +136,14 @@ export async function POST(request: NextRequest) {
         siteId: site.id,
         orderNumber,
       },
+      // Copy metadata to payment intent so payment_intent.succeeded can look up the order
+      payment_intent_data: {
+        metadata: {
+          orderId: order.id,
+          siteId: site.id,
+          orderNumber,
+        },
+      },
       shipping_address_collection: {
         allowed_countries: [
           'US',
@@ -157,13 +165,9 @@ export async function POST(request: NextRequest) {
       billing_address_collection: 'required',
     });
 
-    // Update order with Stripe session ID
-    await prisma.merchOrder.update({
-      where: { id: order.id },
-      data: {
-        stripePaymentIntentId: checkoutSession.payment_intent as string,
-      },
-    });
+    // Note: payment_intent is null immediately after session creation in Stripe API 2025-02-24.acacia
+    // The payment_intent will be stored by the checkout.session.completed webhook handler
+    // when the customer completes payment
 
     return NextResponse.json({
       checkoutUrl: checkoutSession.url,

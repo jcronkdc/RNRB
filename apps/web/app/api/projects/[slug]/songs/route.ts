@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
+import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 
 /**
  * GET /api/projects/[slug]/songs
@@ -15,6 +16,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
     if (!userId) {
       return NextResponse.json({ error: 'User ID required' }, { status: 400 });
     }
+
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `project-songs-read:${userId}`);
 
     // Find project by slug (or ID for backward compatibility)
     const project = await db.project.findFirst({
@@ -81,6 +85,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ slu
     if (!userId) {
       return NextResponse.json({ error: 'User ID required' }, { status: 400 });
     }
+
+    // Rate limit: 10 songs per minute
+    await checkRateLimit(strictLimiter, `project-songs-write:${userId}`);
 
     if (!title || !title.trim()) {
       return NextResponse.json({ error: 'Song title is required' }, { status: 400 });
@@ -151,9 +158,3 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ slu
     );
   }
 }
-
-
-
-
-
-

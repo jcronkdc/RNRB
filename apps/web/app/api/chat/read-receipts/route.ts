@@ -1,14 +1,13 @@
 /**
  * Read Receipts API
- * 
+ *
  * POST /api/chat/read-receipts
  * - Batch update read status for multiple messages
  * - Optimized with single database transaction
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-
 import { prisma as db } from '@cronkwaters/db';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 
@@ -25,10 +24,7 @@ export async function POST(request: NextRequest) {
     const { channelId, messageIds } = body;
 
     if (!channelId || !Array.isArray(messageIds) || messageIds.length === 0) {
-      return NextResponse.json(
-        { error: 'channelId and messageIds are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'channelId and messageIds are required' }, { status: 400 });
     }
 
     // Batch update messages as read in a single transaction
@@ -79,13 +75,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Read receipts API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
-
-
-
-

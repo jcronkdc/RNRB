@@ -49,7 +49,6 @@ export default async function OGImage() {
           style={{
             fontSize: '80px',
             fontWeight: 'bold',
-            color: '#ffffff',
             margin: 0,
             textAlign: 'center',
             lineHeight: 1.2,

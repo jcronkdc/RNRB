@@ -43,7 +43,7 @@ export async function buildAssistantContext(userId: string, currentPage?: string
 
       projectMemberships: {
         take: 5,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { joinedAt: 'desc' },
         select: {
           role: true,
           project: {
@@ -71,26 +71,26 @@ export async function buildAssistantContext(userId: string, currentPage?: string
         orderBy: { createdAt: 'desc' },
         select: {
           id: true,
-          title: true,
-          type: true,
-          fileSize: true,
+          name: true,
+          assetType: true,
+          bytes: true,
           createdAt: true,
         },
       },
 
-      // Tours
+      // Sessions
       studioSessions: {
         take: 3,
-        orderBy: { scheduledAt: 'desc' },
+        orderBy: { startTime: 'desc' },
         where: {
-          scheduledAt: {
+          startTime: {
             gte: new Date(),
           },
         },
         select: {
           id: true,
           title: true,
-          scheduledAt: true,
+          startTime: true,
           status: true,
         },
       },

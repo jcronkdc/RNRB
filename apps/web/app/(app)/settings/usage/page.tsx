@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import {
   Button,
   Card,
@@ -11,8 +9,10 @@ import {
   CardTitle,
   Progress,
 } from '@cronkwaters/ui';
+import { motion } from 'framer-motion';
 import { AlertCircle, TrendingUp, Calendar, Zap, BarChart3, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 import { BuyCreditsButton } from '@/components/billing/BuyCreditsButton';
 

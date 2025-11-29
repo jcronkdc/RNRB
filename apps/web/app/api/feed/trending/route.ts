@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
+import { NextResponse } from 'next/server';
 
 /**
  * GET /api/feed/trending

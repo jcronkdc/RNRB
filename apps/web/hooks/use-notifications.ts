@@ -14,6 +14,7 @@
  */
 
 import type { Message, RealtimeChannel } from 'ably';
+import type * as Ably from 'ably';
 import { Realtime } from 'ably';
 import { useEffect, useState } from 'react';
 
@@ -97,7 +98,10 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
         const ablyClient = new Realtime({
           authCallback: async (tokenParams, callback) => {
             if (!canUseAbly()) {
-              callback(new Error('Circuit breaker open'), null);
+              callback(
+                { code: 40000, statusCode: 400, message: 'Circuit breaker open' } as Ably.ErrorInfo,
+                null
+              );
               return;
             }
             try {
@@ -110,7 +114,11 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
               callback(null, token);
             } catch (err) {
               recordAblyFailure('Token callback failed');
-              callback(err as Error, null);
+              const errMessage = err instanceof Error ? err.message : 'Token callback failed';
+              callback(
+                { code: 40000, statusCode: 400, message: errMessage } as Ably.ErrorInfo,
+                null
+              );
             }
           },
           clientId: userId,

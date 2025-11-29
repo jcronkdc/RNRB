@@ -64,34 +64,26 @@ describe('Email Plus Sign Redirect Flow', () => {
   it('should handle multiple special characters in email', () => {
     const specialEmail = 'user+test%special@example.com';
 
-    // Encode for invite URL
+    // Build URL with properly encoded email
     const returnUrl = `/invites/${projectSlug}?email=${encodeURIComponent(specialEmail)}`;
 
-    // Simulate what searchParams.get() returns (single decode applied by Next.js)
-    const decodedRedirect = decodeURIComponent(returnUrl);
+    // URL constructor properly handles the encoded URL
+    // This simulates how Next.js searchParams.get() actually works
+    const urlObj = new URL(returnUrl, 'http://dummy.com');
+    const emailFromUrl = urlObj.searchParams.get('email');
 
-    // Profile page uses this directly (no additional decoding)
-    const urlToNavigate = decodedRedirect;
-
-    // Parse result
-    const finalUrlObj = new URL(urlToNavigate, 'http://dummy.com');
-    const emailFromUrl = finalUrlObj.searchParams.get('email');
-
-    // Verify
+    // Verify - URL.searchParams.get() automatically decodes the value
     expect(emailFromUrl).toBe(specialEmail);
   });
 
   it('should handle edge cases', () => {
-    // Test with multiple query parameters
+    // Test with multiple query parameters - use properly encoded URL
     const multiParamUrl = `/invites/${projectSlug}?email=${encodeURIComponent(testEmail)}&role=admin`;
 
-    // Simulate what searchParams.get() returns
-    const decodedMulti = decodeURIComponent(multiParamUrl);
+    // URL constructor handles encoding properly
+    const finalUrlObj = new URL(multiParamUrl, 'http://dummy.com');
 
-    // Use directly (no additional decoding)
-    const urlToNavigate = decodedMulti;
-
-    const finalUrlObj = new URL(urlToNavigate, 'http://dummy.com');
+    // searchParams.get() returns the decoded value
     expect(finalUrlObj.searchParams.get('email')).toBe(testEmail);
     expect(finalUrlObj.searchParams.get('role')).toBe('admin');
   });

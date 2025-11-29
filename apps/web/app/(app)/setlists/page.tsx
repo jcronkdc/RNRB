@@ -1,15 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { formatDateWithDay } from '@/lib/format-date';
 import {
   ListMusic,
   Plus,
   Play,
   Edit,
-  Trash2,
-  Download,
   Share2,
   Calendar,
   Clock,
@@ -18,16 +14,17 @@ import {
   Zap,
   Music2,
   TrendingUp,
-  Users,
   Star,
   ChevronRight,
-  Shuffle,
   Activity,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+
+import { UpgradeModal, useUpgradeModal } from '@/components/upgrade-modal';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSetlistAccess } from '@/hooks/use-subscription';
-import { UpgradeModal, useUpgradeModal } from '@/components/upgrade-modal';
+import { formatDateWithDay } from '@/lib/format-date';
 
 interface Setlist {
   id: string;

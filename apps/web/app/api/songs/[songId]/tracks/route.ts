@@ -3,41 +3,62 @@ import { z } from 'zod';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { standardLimiter, strictLimiter, uploadLimiter, checkRateLimit } from '@/lib/rate-limit';
 
 // Validation schema for creating tracks
+// TrackType values must match Prisma enum values
 const createTrackSchema = z.object({
   trackName: z.string().min(1).max(100),
-  trackType: z.enum(['VOCAL', 'INSTRUMENTAL', 'BACKING', 'FULL_MIX', 'OTHER']),
+  trackType: z.enum([
+    'vocal_lead',
+    'vocal_harmony',
+    'vocal_backing',
+    'guitar_electric',
+    'guitar_acoustic',
+    'guitar_bass',
+    'drums',
+    'percussion',
+    'piano',
+    'synth',
+    'strings',
+    'brass',
+    'woodwind',
+    'fx',
+    'master',
+    'other',
+  ]),
   audioUrl: z.string().url(),
   audioPath: z.string().min(1),
   duration: z.number().positive().optional(),
   waveformData: z.any().optional(),
-  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+  color: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .optional(),
   versionId: z.string().optional(),
 });
 
 // Validation schema for bulk updates
 const bulkUpdateSchema = z.object({
-  updates: z.array(
-    z.object({
-      trackId: z.string(),
-      volume: z.number().min(0).max(2).optional(),
-      pan: z.number().min(-1).max(1).optional(),
-      solo: z.boolean().optional(),
-      mute: z.boolean().optional(),
-      order: z.number().int().min(0).optional(),
-    })
-  ).min(1),
+  updates: z
+    .array(
+      z.object({
+        trackId: z.string(),
+        volume: z.number().min(0).max(2).optional(),
+        pan: z.number().min(-1).max(1).optional(),
+        solo: z.boolean().optional(),
+        mute: z.boolean().optional(),
+        order: z.number().int().min(0).optional(),
+      })
+    )
+    .min(1),
 });
 
 /**
  * GET /api/songs/[songId]/tracks
  * Get all tracks (stems) for a song with optimized queries
  */
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ songId: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ songId: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -46,6 +67,9 @@ export async function GET(
 
     const { songId } = await params;
     const userId = session.user.id;
+
+    // Rate limit: 100 requests per minute for reads
+    await checkRateLimit(standardLimiter, `tracks-read:${userId}`);
 
     // Optimized query - only fetch what we need
     const song = await db.song.findUnique({
@@ -60,7 +84,7 @@ export async function GET(
             id: true,
             members: {
               where: { userId },
-              select: { id: true },
+              select: { userId: true },
             },
           },
         },
@@ -73,7 +97,7 @@ export async function GET(
 
     const hasAccess =
       song.userId === userId ||
-      (song.project && song.project.members.length > 0) ||
+      ((song as any).project && (song as any).project.members.length > 0) ||
       song.visibility === 'public';
 
     if (!hasAccess) {
@@ -138,10 +162,7 @@ export async function GET(
  * POST /api/songs/[songId]/tracks
  * Upload a new track (stem) with comprehensive validation
  */
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ songId: string }> }
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ songId: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -150,6 +171,10 @@ export async function POST(
 
     const { songId } = await params;
     const userId = session.user.id;
+
+    // Rate limit: 30 uploads per minute
+    await checkRateLimit(uploadLimiter, `tracks-upload:${userId}`);
+
     const body = await req.json();
 
     // Validate input with Zod
@@ -175,7 +200,7 @@ export async function POST(
     }
 
     const canEdit =
-      song.userId === userId || (song.project && song.project.members.length > 0);
+      song.userId === userId || ((song as any).project && (song as any).project.members.length > 0);
 
     if (!canEdit) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -184,10 +209,7 @@ export async function POST(
     // Check track limit (example: max 20 tracks per song)
     const MAX_TRACKS = 20;
     if (song.tracks.length >= MAX_TRACKS) {
-      return NextResponse.json(
-        { error: `Maximum ${MAX_TRACKS} tracks per song` },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: `Maximum ${MAX_TRACKS} tracks per song` }, { status: 400 });
     }
 
     // Get next order number
@@ -248,7 +270,7 @@ export async function POST(
     );
   } catch (error) {
     console.error('POST /api/songs/[songId]/tracks error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
@@ -273,10 +295,7 @@ export async function POST(
  * PATCH /api/songs/[songId]/tracks
  * Bulk update track mix parameters or order with validation
  */
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ songId: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ songId: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
@@ -285,6 +304,10 @@ export async function PATCH(
 
     const { songId } = await params;
     const userId = session.user.id;
+
+    // Rate limit: 60 updates per minute (mixing adjustments)
+    await checkRateLimit(standardLimiter, `tracks-update:${userId}`);
+
     const body = await req.json();
 
     // Validate with Zod
@@ -307,7 +330,7 @@ export async function PATCH(
     }
 
     const canEdit =
-      song.userId === userId || (song.project && song.project.members.length > 0);
+      song.userId === userId || ((song as any).project && (song as any).project.members.length > 0);
 
     if (!canEdit) {
       return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -356,7 +379,7 @@ export async function PATCH(
     });
   } catch (error) {
     console.error('PATCH /api/songs/[songId]/tracks error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
@@ -376,4 +399,3 @@ export async function PATCH(
     );
   }
 }
-
