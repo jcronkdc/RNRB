@@ -185,10 +185,14 @@ export function VersionSnapshotManager({
           >
             <div className="space-y-3">
               <div>
-                <label className="mb-1 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="snapshot-name"
+                  className="mb-1 block text-sm font-medium text-foreground"
+                >
                   Snapshot Name *
                 </label>
                 <input
+                  id="snapshot-name"
                   type="text"
                   value={newLabel}
                   onChange={(e) => setNewLabel(e.target.value)}
@@ -197,10 +201,14 @@ export function VersionSnapshotManager({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium text-foreground">
+                <label
+                  htmlFor="snapshot-description"
+                  className="mb-1 block text-sm font-medium text-foreground"
+                >
                   Description (optional)
                 </label>
                 <textarea
+                  id="snapshot-description"
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                   placeholder="Describe what changed in this version..."

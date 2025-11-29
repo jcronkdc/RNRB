@@ -183,10 +183,14 @@ function PasswordResetContent() {
             {mode === 'request' ? (
               <form onSubmit={handleRequestReset} className="space-y-4">
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                  <label
+                    htmlFor="reset-email"
+                    className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500"
+                  >
                     Email address
                   </label>
                   <input
+                    id="reset-email"
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
@@ -215,10 +219,14 @@ function PasswordResetContent() {
             ) : (
               <form onSubmit={handleResetPassword} className="space-y-4">
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                  <label
+                    htmlFor="new-password"
+                    className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500"
+                  >
                     New password
                   </label>
                   <input
+                    id="new-password"
                     type="password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
@@ -231,10 +239,14 @@ function PasswordResetContent() {
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                  <label
+                    htmlFor="confirm-password"
+                    className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500"
+                  >
                     Confirm password
                   </label>
                   <input
+                    id="confirm-password"
                     type="password"
                     value={confirmPassword}
                     onChange={(event) => setConfirmPassword(event.target.value)}

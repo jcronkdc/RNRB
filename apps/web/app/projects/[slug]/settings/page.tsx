@@ -132,9 +132,9 @@ export default function ProjectSettingsPage() {
 
   if (loading || !project) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="text-brand-primary h-12 w-12 animate-spin" />
+          <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
           <div className="text-foreground">Loading settings...</div>
         </div>
       </div>
@@ -142,11 +142,11 @@ export default function ProjectSettingsPage() {
   }
 
   return (
-    <div className="bg-background min-h-screen px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="container mx-auto max-w-4xl">
         <Link
           href={`/projects/${slug}`}
-          className="text-brand-primary hover:text-brand-primary/80 mb-6 inline-flex items-center gap-2 transition"
+          className="mb-6 inline-flex items-center gap-2 text-brand-primary transition hover:text-brand-primary/80"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Project
@@ -155,7 +155,7 @@ export default function ProjectSettingsPage() {
         {/* Header with Collaboration Status */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="font-display text-foreground mb-2 text-4xl font-bold">
+            <h1 className="font-display mb-2 text-4xl font-bold text-foreground">
               Project Settings
             </h1>
             <p className="text-muted-foreground">Manage your project details collaboratively</p>
@@ -164,10 +164,10 @@ export default function ProjectSettingsPage() {
           {/* Active Editors */}
           <Card className="rnrb-card p-4">
             <div className="flex items-center gap-3">
-              <Users className="text-brand-primary h-5 w-5" />
+              <Users className="h-5 w-5 text-brand-primary" />
               <div>
                 <div className="text-sm font-medium">Active Editors</div>
-                <div className="text-muted-foreground text-xs">
+                <div className="text-xs text-muted-foreground">
                   {activeEditors.length + 1} online
                 </div>
               </div>
@@ -176,11 +176,11 @@ export default function ProjectSettingsPage() {
               />
             </div>
             {activeEditors.length > 0 && (
-              <div className="border-border mt-3 border-t pt-3">
+              <div className="mt-3 border-t border-border pt-3">
                 {activeEditors.map((editor) => (
                   <div
                     key={editor.id}
-                    className="text-muted-foreground flex items-center gap-2 text-xs"
+                    className="flex items-center gap-2 text-xs text-muted-foreground"
                   >
                     <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
                     {editor.name}
@@ -209,11 +209,14 @@ export default function ProjectSettingsPage() {
         )}
 
         <Card className="rnrb-card mb-6 p-6">
-          <h2 className="text-foreground mb-4 text-xl font-semibold">Basic Information</h2>
+          <h2 className="mb-4 text-xl font-semibold text-foreground">Basic Information</h2>
           <div className="space-y-4">
             {/* Project Name */}
             <div>
-              <label className="text-muted-foreground mb-2 block text-sm font-medium">
+              <label
+                htmlFor="project-name"
+                className="mb-2 block text-sm font-medium text-muted-foreground"
+              >
                 Project Name
                 {isFieldLocked('name') && (
                   <span className="ml-2 flex items-center gap-1 text-xs text-yellow-400">
@@ -229,19 +232,23 @@ export default function ProjectSettingsPage() {
                 )}
               </label>
               <input
+                id="project-name"
                 type="text"
                 value={settings.name}
                 onChange={(e) => updateField('name', e.target.value)}
                 onFocus={() => lockField('name')}
                 onBlur={() => unlockField('name')}
                 disabled={isFieldLocked('name')}
-                className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-3 outline-none transition focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
             {/* Tagline */}
             <div>
-              <label className="text-muted-foreground mb-2 block text-sm font-medium">
+              <label
+                htmlFor="project-tagline"
+                className="mb-2 block text-sm font-medium text-muted-foreground"
+              >
                 Tagline
                 {isFieldLocked('tagline') && (
                   <span className="ml-2 flex items-center gap-1 text-xs text-yellow-400">
@@ -254,6 +261,7 @@ export default function ProjectSettingsPage() {
                 )}
               </label>
               <input
+                id="project-tagline"
                 type="text"
                 value={settings.tagline || ''}
                 onChange={(e) => updateField('tagline', e.target.value)}
@@ -261,13 +269,16 @@ export default function ProjectSettingsPage() {
                 onBlur={() => unlockField('tagline')}
                 disabled={isFieldLocked('tagline')}
                 placeholder="A short description of your project"
-                className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-3 outline-none transition focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
             {/* Description */}
             <div>
-              <label className="text-muted-foreground mb-2 block text-sm font-medium">
+              <label
+                htmlFor="project-description"
+                className="mb-2 block text-sm font-medium text-muted-foreground"
+              >
                 Description
                 {isFieldLocked('description') && (
                   <span className="ml-2 flex items-center gap-1 text-xs text-yellow-400">
@@ -280,6 +291,7 @@ export default function ProjectSettingsPage() {
                 )}
               </label>
               <textarea
+                id="project-description"
                 value={settings.description || ''}
                 onChange={(e) => updateField('description', e.target.value)}
                 onFocus={() => lockField('description')}
@@ -287,13 +299,16 @@ export default function ProjectSettingsPage() {
                 disabled={isFieldLocked('description')}
                 rows={4}
                 placeholder="Tell the story of this project..."
-                className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 w-full resize-none rounded-xl border-2 px-4 py-3 outline-none transition focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full resize-none rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
             {/* Visibility */}
             <div>
-              <label className="text-muted-foreground mb-2 block text-sm font-medium">
+              <label
+                htmlFor="project-visibility"
+                className="mb-2 block text-sm font-medium text-muted-foreground"
+              >
                 Visibility
                 {isFieldLocked('visibility') && (
                   <span className="ml-2 flex items-center gap-1 text-xs text-yellow-400">
@@ -303,6 +318,7 @@ export default function ProjectSettingsPage() {
                 )}
               </label>
               <select
+                id="project-visibility"
                 value={settings.visibility}
                 onChange={(e) =>
                   updateField('visibility', e.target.value as 'private' | 'org' | 'public')
@@ -310,7 +326,7 @@ export default function ProjectSettingsPage() {
                 onFocus={() => lockField('visibility')}
                 onBlur={() => unlockField('visibility')}
                 disabled={isFieldLocked('visibility')}
-                className="border-border bg-surface text-foreground focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-3 outline-none transition focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="private">Private (Only invited members)</option>
                 <option value="org">Organization (All org members)</option>
@@ -325,8 +341,8 @@ export default function ProjectSettingsPage() {
           <h2 className="mb-4 text-xl font-semibold text-red-400">Danger Zone</h2>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-foreground font-medium">Delete this project</p>
-              <p className="text-muted-foreground text-sm">Once deleted, it cannot be recovered</p>
+              <p className="font-medium text-foreground">Delete this project</p>
+              <p className="text-sm text-muted-foreground">Once deleted, it cannot be recovered</p>
             </div>
             <Button
               onClick={handleDelete}
@@ -340,9 +356,9 @@ export default function ProjectSettingsPage() {
         </Card>
 
         {/* Info card */}
-        <Card className="border-brand-primary/20 bg-brand-primary/5 mt-6 p-4">
-          <p className="text-muted-foreground flex items-center gap-2 text-sm">
-            <Check className="text-brand-primary h-4 w-4" />
+        <Card className="mt-6 border-brand-primary/20 bg-brand-primary/5 p-4">
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Check className="h-4 w-4 text-brand-primary" />
             Changes are automatically saved as you type. Field locks prevent conflicts with other
             editors.
           </p>

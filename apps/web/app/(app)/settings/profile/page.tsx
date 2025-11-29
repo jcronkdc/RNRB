@@ -439,6 +439,7 @@ function ProfileSettingsContent() {
             <div className="space-y-5">
               <div>
                 <label
+                  htmlFor="profile-username"
                   className="mb-2 flex items-center gap-2 text-sm font-medium"
                   style={{ color: 'var(--text-secondary)' }}
                 >
@@ -448,6 +449,7 @@ function ProfileSettingsContent() {
                   </span>
                 </label>
                 <input
+                  id="profile-username"
                   type="text"
                   value={profile.username}
                   onChange={(e) => setProfile({ ...profile, username: e.target.value })}
@@ -466,12 +468,14 @@ function ProfileSettingsContent() {
 
               <div>
                 <label
+                  htmlFor="profile-display-name"
                   className="mb-2 block text-sm font-medium"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   Display Name
                 </label>
                 <input
+                  id="profile-display-name"
                   type="text"
                   value={profile.display_name}
                   onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
@@ -487,12 +491,14 @@ function ProfileSettingsContent() {
 
               <div>
                 <label
+                  htmlFor="profile-bio"
                   className="mb-2 block text-sm font-medium"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   Bio
                 </label>
                 <textarea
+                  id="profile-bio"
                   value={profile.bio}
                   onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                   placeholder="Tell the world about your music... What instruments do you play? What's your style?"
@@ -654,6 +660,7 @@ function ProfileSettingsContent() {
             <div className="space-y-5">
               <div>
                 <label
+                  htmlFor="profile-phone"
                   className="mb-2 flex items-center gap-2 text-sm font-medium"
                   style={{ color: 'var(--text-secondary)' }}
                 >
@@ -661,6 +668,7 @@ function ProfileSettingsContent() {
                   Phone Number
                 </label>
                 <input
+                  id="profile-phone"
                   type="tel"
                   value={profile.phone}
                   onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
@@ -676,6 +684,7 @@ function ProfileSettingsContent() {
 
               <div>
                 <label
+                  htmlFor="profile-website"
                   className="mb-2 flex items-center gap-2 text-sm font-medium"
                   style={{ color: 'var(--text-secondary)' }}
                 >
@@ -683,6 +692,7 @@ function ProfileSettingsContent() {
                   Website
                 </label>
                 <input
+                  id="profile-website"
                   type="url"
                   value={profile.website}
                   onChange={(e) => setProfile({ ...profile, website: e.target.value })}
@@ -699,6 +709,7 @@ function ProfileSettingsContent() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <label
+                    htmlFor="profile-instagram"
                     className="mb-2 flex items-center gap-2 text-sm font-medium"
                     style={{ color: 'var(--text-secondary)' }}
                   >
@@ -706,6 +717,7 @@ function ProfileSettingsContent() {
                     Instagram
                   </label>
                   <input
+                    id="profile-instagram"
                     type="text"
                     value={profile.instagram}
                     onChange={(e) => setProfile({ ...profile, instagram: e.target.value })}
@@ -721,6 +733,7 @@ function ProfileSettingsContent() {
 
                 <div>
                   <label
+                    htmlFor="profile-youtube"
                     className="mb-2 flex items-center gap-2 text-sm font-medium"
                     style={{ color: 'var(--text-secondary)' }}
                   >
@@ -728,6 +741,7 @@ function ProfileSettingsContent() {
                     YouTube
                   </label>
                   <input
+                    id="profile-youtube"
                     type="text"
                     value={profile.youtube}
                     onChange={(e) => setProfile({ ...profile, youtube: e.target.value })}
@@ -744,12 +758,14 @@ function ProfileSettingsContent() {
 
               <div>
                 <label
+                  htmlFor="profile-twitter"
                   className="mb-2 flex items-center gap-2 text-sm font-medium"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   <Twitter className="h-4 w-4" style={{ color: '#1DA1F2' }} />X (Twitter)
                 </label>
                 <input
+                  id="profile-twitter"
                   type="text"
                   value={profile.twitter}
                   onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}

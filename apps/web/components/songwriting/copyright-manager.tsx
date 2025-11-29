@@ -297,7 +297,10 @@ export function CopyrightManager({
 
           {/* ISWC */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="copyright-iswc"
+              className="mb-2 block text-sm font-medium text-gray-300"
+            >
               ISWC
               <span className="ml-1 text-xs text-gray-500">
                 (International Standard Musical Work Code)
@@ -306,11 +309,13 @@ export function CopyrightManager({
                 onClick={() => setShowGuide(true)}
                 className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
                 title="Click for help"
+                type="button"
               >
                 <Info className="h-3 w-3" />
               </button>
             </label>
             <input
+              id="copyright-iswc"
               type="text"
               value={copyrightInfo.iswc || ''}
               onChange={(e) => setCopyrightInfo({ ...copyrightInfo, iswc: e.target.value })}
@@ -333,7 +338,10 @@ export function CopyrightManager({
 
           {/* ISRC */}
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="copyright-isrc"
+              className="mb-2 block text-sm font-medium text-gray-300"
+            >
               ISRC
               <span className="ml-1 text-xs text-gray-500">
                 (International Standard Recording Code)
@@ -342,11 +350,13 @@ export function CopyrightManager({
                 onClick={() => setShowGuide(true)}
                 className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300"
                 title="Click for help"
+                type="button"
               >
                 <Info className="h-3 w-3" />
               </button>
             </label>
             <input
+              id="copyright-isrc"
               type="text"
               value={copyrightInfo.isrc || ''}
               onChange={(e) => setCopyrightInfo({ ...copyrightInfo, isrc: e.target.value })}

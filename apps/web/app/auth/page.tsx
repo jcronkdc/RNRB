@@ -305,10 +305,14 @@ function AuthForm() {
             <form onSubmit={handlePasswordAuth} className="space-y-4">
               {isSignup && (
                 <div>
-                  <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                  <label
+                    htmlFor="auth-name"
+                    className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                  >
                     Name
                   </label>
                   <input
+                    id="auth-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -320,10 +324,14 @@ function AuthForm() {
               )}
 
               <div>
-                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                <label
+                  htmlFor="auth-email"
+                  className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                >
                   Email
                 </label>
                 <input
+                  id="auth-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -335,10 +343,14 @@ function AuthForm() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500">
+                <label
+                  htmlFor="auth-password"
+                  className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                >
                   Password
                 </label>
                 <input
+                  id="auth-password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
