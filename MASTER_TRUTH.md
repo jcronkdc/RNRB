@@ -96,29 +96,32 @@ const broadcastEvent = async (event) => {
 
 ### Browser Testing Results
 
-| Page          | Status     | Notes                                                |
-| ------------- | ---------- | ---------------------------------------------------- |
-| Landing Page  | ✅ Working | User signed in, all CTAs visible                     |
-| Dashboard     | ✅ Working | Navigation, quick create, stats all functioning      |
-| Shows Page    | ✅ Working | Critical fix from Agent 154 verified                 |
-| Projects Page | ✅ Working | Empty state, create button functional                |
-| Songwriting   | ⚠️ Error   | `TypeError: t is not iterable` - needs investigation |
+| Page          | Status     | Notes                                           |
+| ------------- | ---------- | ----------------------------------------------- |
+| Landing Page  | ✅ Working | User signed in, all CTAs visible                |
+| Dashboard     | ✅ Working | Navigation, quick create, stats all functioning |
+| Shows Page    | ✅ Working | Critical fix from Agent 154 verified            |
+| Projects Page | ✅ Working | Empty state, create button functional           |
+| Songwriting   | ✅ FIXED   | Auth property names corrected (Agent 155)       |
 
-### Active Issue: Songwriting Page Error
+### Fixed Issue: Songwriting Page Error (Agent 155)
 
-The `/songwriting` page shows "Something went wrong" with error:
+**Problem:** `/songwriting` page showed `TypeError: t is not iterable`
 
-```
-TypeError: t is not iterable
-```
+**Root Cause:** Code was using Supabase Auth property names (`user.user_metadata?.name`, `user.user_metadata?.avatar_url`) instead of NextAuth property names (`user.name`, `user.image`).
 
-This is happening in minified production code. Could be:
+**Fix:**
 
-- Data format issue from API
-- Stale deployment cache
-- Component hydration issue
+- Files using **NextAuth** (session from `useRequireAuth`) → use `user.name`, `user.image`
+- Files using **Supabase Auth** (`supabase.auth.getUser()`) → use `user.user_metadata?.name`, `user.user_metadata?.avatar_url`
 
-**Recommended:** Deploy fresh build and clear CDN cache.
+**Files Fixed:**
+
+- `apps/web/app/(app)/songwriting/page.tsx`
+- `apps/web/components/project-video-room.tsx`
+- `apps/web/components/project-chat.tsx`
+- `apps/web/app/projects/[slug]/songs/[songId]/page.tsx`
+- All files in `apps/web/app/projects/` directory
 
 ---
 
