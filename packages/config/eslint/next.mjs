@@ -34,6 +34,8 @@ export default [
       ...reactHooksRecommendedRules,
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
+      // Allow apostrophes and quotes in JSX text (common in English)
+      'react/no-unescaped-entities': 'off',
       // Allow default exports for Next.js pages, layouts, and route handlers
       'import/no-default-export': 'off'
     }
