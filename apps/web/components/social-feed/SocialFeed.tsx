@@ -2,10 +2,23 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { FeedPost } from './FeedPost';
 import { PostComposer } from './PostComposer';
 import { TrendingSidebar } from './TrendingSidebar';
-import { Loader2, Music, Globe, Users, TrendingUp, Sparkles, RefreshCw } from 'lucide-react';
+import { SearchModal } from './SearchModal';
+import {
+  Loader2,
+  Music,
+  Globe,
+  Users,
+  TrendingUp,
+  Sparkles,
+  RefreshCw,
+  Search,
+  X,
+  Hash,
+} from 'lucide-react';
 
 interface FeedProps {
   initialType?: 'following' | 'public' | 'discover' | 'audio' | 'algorithm';
@@ -13,12 +26,20 @@ interface FeedProps {
 
 export function SocialFeed({ initialType = 'following' }: FeedProps) {
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Get filters from URL
+  const tagFilter = searchParams.get('tag');
+  const genreFilter = searchParams.get('genre');
+
   const [feedType, setFeedType] = useState(initialType);
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasNewPosts, setHasNewPosts] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   // Infinite scroll refs
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -40,6 +61,8 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
           ...(feedType !== 'algorithm' && { type: feedType }),
           limit: '20',
           ...(cursor && { cursor }),
+          ...(tagFilter && { tag: tagFilter }),
+          ...(genreFilter && { genre: genreFilter }),
         });
 
         const response = await fetch(`${endpoint}?${params}`);
@@ -62,13 +85,18 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
         setLoadingMore(false);
       }
     },
-    [feedType]
+    [feedType, tagFilter, genreFilter]
   );
 
-  // Initial load and when feed type changes
+  // Initial load and when feed type or filters change
   useEffect(() => {
     loadPosts();
-  }, [feedType, loadPosts]);
+  }, [feedType, tagFilter, genreFilter, loadPosts]);
+
+  // Clear filter function
+  const clearFilter = () => {
+    router.push('/feed');
+  };
 
   // Infinite scroll with Intersection Observer
   useEffect(() => {

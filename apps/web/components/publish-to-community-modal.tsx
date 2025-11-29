@@ -56,8 +56,8 @@ export function PublishToCommunityModal({
     e.preventDefault();
     setError('');
 
-    if (!genre) {
-      setError('Please select a genre');
+    if (!genre.trim()) {
+      setError('Please enter a genre');
       return;
     }
 
@@ -138,36 +138,41 @@ export function PublishToCommunityModal({
               <label className="mb-2 block text-sm font-medium text-foreground">
                 Genre <span className="text-red-500">*</span>
               </label>
-              <select
+              <input
+                type="text"
+                list="genre-suggestions"
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
+                placeholder="Select or type a genre"
                 className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                 required
-              >
-                <option value="">Select a genre</option>
+              />
+              <datalist id="genre-suggestions">
                 {genres.map((g) => (
-                  <option key={g} value={g}>
-                    {g}
-                  </option>
+                  <option key={g} value={g} />
                 ))}
-              </select>
+              </datalist>
+              <p className="mt-1 text-xs text-foreground-muted">
+                Choose from suggestions or type your own
+              </p>
             </div>
 
             {/* Mood */}
             <div>
               <label className="mb-2 block text-sm font-medium text-foreground">Mood</label>
-              <select
+              <input
+                type="text"
+                list="mood-suggestions"
                 value={mood}
                 onChange={(e) => setMood(e.target.value)}
+                placeholder="Select or type a mood (optional)"
                 className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
-              >
-                <option value="">Select a mood (optional)</option>
+              />
+              <datalist id="mood-suggestions">
                 {moods.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
+                  <option key={m} value={m} />
                 ))}
-              </select>
+              </datalist>
             </div>
 
             {/* BPM */}

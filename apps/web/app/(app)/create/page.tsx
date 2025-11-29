@@ -82,16 +82,18 @@ type GenerationStatus = 'idle' | 'validating' | 'generating' | 'success' | 'erro
 export default function CreatePage() {
   const router = useRouter();
   const { data: session } = useSession();
-  
+
   const [prompt, setPrompt] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
   const [selectedInstruments, setSelectedInstruments] = useState<string[]>([]);
+  const [customGenre, setCustomGenre] = useState('');
+  const [customMood, setCustomMood] = useState('');
   const [duration, setDuration] = useState(30); // seconds
   const [tempo, setTempo] = useState(120); // BPM
   const [seed, setSeed] = useState('');
   const [keySignature, setKeySignature] = useState('Auto');
-  
+
   const [status, setStatus] = useState<GenerationStatus>('idle');
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -115,22 +117,22 @@ export default function CreatePage() {
       setError('Please provide a description or select at least one genre/mood');
       return false;
     }
-    
+
     if (prompt.length > 500) {
       setError('Description must be less than 500 characters');
       return false;
     }
-    
+
     if (duration < 15 || duration > 180) {
       setError('Duration must be between 15 and 180 seconds');
       return false;
     }
-    
+
     if (tempo < 60 || tempo > 200) {
       setError('Tempo must be between 60 and 200 BPM');
       return false;
     }
-    
+
     setError(null);
     return true;
   }, [prompt, selectedGenres, selectedMoods, duration, tempo]);
@@ -221,7 +223,7 @@ export default function CreatePage() {
     }
   };
 
-  const canGenerate = 
+  const canGenerate =
     (prompt.trim() || selectedGenres.length > 0 || selectedMoods.length > 0) &&
     status !== 'generating' &&
     status !== 'success';
@@ -266,7 +268,7 @@ export default function CreatePage() {
             <div>
               <label className="mb-3 block text-sm font-medium">
                 Describe your track
-                <span className="text-muted-foreground ml-2 text-xs">
+                <span className="ml-2 text-xs text-muted-foreground">
                   ({prompt.length}/500 characters)
                 </span>
               </label>
@@ -275,7 +277,7 @@ export default function CreatePage() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="E.g., A driving rock anthem with powerful electric guitars and thunderous drums..."
-                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-none transition focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
                   rows={4}
                   maxLength={500}
                   disabled={isDisabled}
@@ -284,7 +286,7 @@ export default function CreatePage() {
                   onClick={() =>
                     setPrompt(examplePrompts[Math.floor(Math.random() * examplePrompts.length)])
                   }
-                  className="text-muted-foreground hover:bg-surface/50 hover:text-foreground absolute bottom-3 right-3 rounded-lg p-2 transition disabled:cursor-not-allowed disabled:opacity-50"
+                  className="absolute bottom-3 right-3 rounded-lg p-2 text-muted-foreground transition hover:bg-surface/50 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                   title="Get random prompt"
                   disabled={isDisabled}
                 >
@@ -306,13 +308,13 @@ export default function CreatePage() {
 
               {/* Example prompts */}
               <div className="mt-3 flex items-center gap-2">
-                <span className="text-muted-foreground text-xs">Try:</span>
+                <span className="text-xs text-muted-foreground">Try:</span>
                 <div className="flex flex-wrap gap-2">
                   {examplePrompts.slice(0, 3).map((example, i) => (
                     <button
                       key={i}
                       onClick={() => setPrompt(example)}
-                      className="border-border bg-surface hover:border-brand-primary/50 hover:bg-surface/80 rounded-lg border px-3 py-1.5 text-xs transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                      className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs transition-all hover:border-brand-primary/50 hover:bg-surface/80 disabled:cursor-not-allowed disabled:opacity-50"
                       disabled={isDisabled}
                     >
                       {example.substring(0, 30)}...
@@ -329,8 +331,8 @@ export default function CreatePage() {
                 <label className="mb-3 block text-sm font-medium">
                   Genre
                   {selectedGenres.length > 0 && (
-                    <span className="text-muted-foreground ml-2 text-xs">
-                      ({selectedGenres.length} selected)
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      ({selectedGenres.length} selected, max 3)
                     </span>
                   )}
                 </label>
@@ -342,13 +344,63 @@ export default function CreatePage() {
                       className={`rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedGenres.includes(genre)
                           ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border-border bg-surface hover:border-brand-primary/50 border'
+                          : 'border border-border bg-surface hover:border-brand-primary/50'
                       }`}
                       disabled={isDisabled}
                     >
                       {genre}
                     </button>
                   ))}
+                  {/* Custom genres that were added */}
+                  {selectedGenres
+                    .filter((g) => !styleOptions.genre.includes(g))
+                    .map((customG) => (
+                      <button
+                        key={customG}
+                        onClick={() => toggleChip(customG, selectedGenres, setSelectedGenres, 3)}
+                        className="rounded-xl bg-brand-primary px-4 py-2 font-medium text-brand-primary-foreground transition disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={isDisabled}
+                      >
+                        {customG} ×
+                      </button>
+                    ))}
+                </div>
+                {/* Custom genre input */}
+                <div className="mt-3 flex gap-2">
+                  <input
+                    type="text"
+                    value={customGenre}
+                    onChange={(e) => setCustomGenre(e.target.value)}
+                    placeholder="Add custom genre..."
+                    className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isDisabled || selectedGenres.length >= 3}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && customGenre.trim() && selectedGenres.length < 3) {
+                        e.preventDefault();
+                        if (!selectedGenres.includes(customGenre.trim())) {
+                          setSelectedGenres([...selectedGenres, customGenre.trim()]);
+                        }
+                        setCustomGenre('');
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (
+                        customGenre.trim() &&
+                        selectedGenres.length < 3 &&
+                        !selectedGenres.includes(customGenre.trim())
+                      ) {
+                        setSelectedGenres([...selectedGenres, customGenre.trim()]);
+                        setCustomGenre('');
+                      }
+                    }}
+                    className="rounded-lg border border-border bg-surface px-3 py-2 text-sm transition hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isDisabled || !customGenre.trim() || selectedGenres.length >= 3}
+                  >
+                    Add
+                  </button>
                 </div>
               </div>
 
@@ -357,8 +409,8 @@ export default function CreatePage() {
                 <label className="mb-3 block text-sm font-medium">
                   Mood
                   {selectedMoods.length > 0 && (
-                    <span className="text-muted-foreground ml-2 text-xs">
-                      ({selectedMoods.length} selected)
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      ({selectedMoods.length} selected, max 3)
                     </span>
                   )}
                 </label>
@@ -370,13 +422,63 @@ export default function CreatePage() {
                       className={`rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedMoods.includes(mood)
                           ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border-border bg-surface hover:border-brand-primary/50 border'
+                          : 'border border-border bg-surface hover:border-brand-primary/50'
                       }`}
                       disabled={isDisabled}
                     >
                       {mood}
                     </button>
                   ))}
+                  {/* Custom moods that were added */}
+                  {selectedMoods
+                    .filter((m) => !styleOptions.mood.includes(m))
+                    .map((customM) => (
+                      <button
+                        key={customM}
+                        onClick={() => toggleChip(customM, selectedMoods, setSelectedMoods, 3)}
+                        className="rounded-xl bg-brand-primary px-4 py-2 font-medium text-brand-primary-foreground transition disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={isDisabled}
+                      >
+                        {customM} ×
+                      </button>
+                    ))}
+                </div>
+                {/* Custom mood input */}
+                <div className="mt-3 flex gap-2">
+                  <input
+                    type="text"
+                    value={customMood}
+                    onChange={(e) => setCustomMood(e.target.value)}
+                    placeholder="Add custom mood..."
+                    className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isDisabled || selectedMoods.length >= 3}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && customMood.trim() && selectedMoods.length < 3) {
+                        e.preventDefault();
+                        if (!selectedMoods.includes(customMood.trim())) {
+                          setSelectedMoods([...selectedMoods, customMood.trim()]);
+                        }
+                        setCustomMood('');
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (
+                        customMood.trim() &&
+                        selectedMoods.length < 3 &&
+                        !selectedMoods.includes(customMood.trim())
+                      ) {
+                        setSelectedMoods([...selectedMoods, customMood.trim()]);
+                        setCustomMood('');
+                      }
+                    }}
+                    className="rounded-lg border border-border bg-surface px-3 py-2 text-sm transition hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isDisabled || !customMood.trim() || selectedMoods.length >= 3}
+                  >
+                    Add
+                  </button>
                 </div>
               </div>
 
@@ -385,7 +487,7 @@ export default function CreatePage() {
                 <label className="mb-3 block text-sm font-medium">
                   Instruments
                   {selectedInstruments.length > 0 && (
-                    <span className="text-muted-foreground ml-2 text-xs">
+                    <span className="ml-2 text-xs text-muted-foreground">
                       ({selectedInstruments.length} selected)
                     </span>
                   )}
@@ -400,7 +502,7 @@ export default function CreatePage() {
                       className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedInstruments.includes(instrument)
                           ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border-border bg-surface hover:border-brand-primary/50 border'
+                          : 'border border-border bg-surface hover:border-brand-primary/50'
                       }`}
                       disabled={isDisabled}
                     >
@@ -463,7 +565,7 @@ export default function CreatePage() {
             <div>
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isDisabled}
               >
                 <Sliders className="h-4 w-4" />
@@ -482,7 +584,7 @@ export default function CreatePage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="border-border bg-surface/50 mt-4 rounded-xl border p-6">
+                    <div className="mt-4 rounded-xl border border-border bg-surface/50 p-6">
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                           <label className="mb-2 block flex items-center gap-2 text-sm font-medium">
@@ -494,10 +596,10 @@ export default function CreatePage() {
                             value={seed}
                             onChange={(e) => setSeed(e.target.value)}
                             placeholder="Enter seed for consistent results"
-                            className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={isDisabled}
                           />
-                          <p className="text-muted-foreground mt-1 text-xs">
+                          <p className="mt-1 text-xs text-muted-foreground">
                             Same seed = same output
                           </p>
                         </div>
@@ -506,7 +608,7 @@ export default function CreatePage() {
                           <select
                             value={keySignature}
                             onChange={(e) => setKeySignature(e.target.value)}
-                            className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={isDisabled}
                           >
                             <option>Auto</option>
@@ -528,9 +630,9 @@ export default function CreatePage() {
             </div>
 
             {/* Generate Button */}
-            <div className="border-border flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <div className="text-muted-foreground flex items-center gap-2 text-sm">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Info className="h-4 w-4" />
                   <span>Generation uses {estimatedCredits} credits</span>
                 </div>
@@ -585,12 +687,10 @@ export default function CreatePage() {
               className="mt-8"
             >
               <Card className="rnrb-card p-12 text-center">
-                <Music2 className="rnrb-pulse text-brand-primary mx-auto mb-4 h-16 w-16" />
+                <Music2 className="rnrb-pulse mx-auto mb-4 h-16 w-16 text-brand-primary" />
                 <h3 className="mb-2 text-xl font-semibold">Creating your track...</h3>
-                <p className="text-muted-foreground mb-4">
-                  This usually takes 20-30 seconds
-                </p>
-                <div className="text-muted-foreground mx-auto max-w-md space-y-2 text-sm">
+                <p className="mb-4 text-muted-foreground">This usually takes 20-30 seconds</p>
+                <div className="mx-auto max-w-md space-y-2 text-sm text-muted-foreground">
                   {progress >= 0 && progress < 30 && (
                     <p className="flex items-center justify-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -630,14 +730,14 @@ export default function CreatePage() {
               <Card className="rnrb-card border-green-500/20 bg-green-500/5 p-12 text-center">
                 <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500" />
                 <h3 className="mb-2 text-xl font-semibold text-green-400">Track Generated!</h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="mb-4 text-muted-foreground">
                   Your AI-generated track is ready. Add it to a project or view it now.
                 </p>
 
                 {/* Action buttons */}
                 <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                   {generatedSongId && (
-                    <ProjectSelector 
+                    <ProjectSelector
                       songId={generatedSongId}
                       onProjectAdded={(slug) => {
                         console.log('Added to project:', slug);
@@ -645,7 +745,7 @@ export default function CreatePage() {
                       className="w-full sm:w-auto"
                     />
                   )}
-                  
+
                   <button
                     onClick={() => generatedTrackId && router.push(`/tracks/${generatedTrackId}`)}
                     className="rnrb-button-primary w-full rounded-xl px-6 py-3 sm:w-auto"
@@ -683,7 +783,7 @@ export default function CreatePage() {
               <Card className="rnrb-card border-red-500/20 bg-red-500/5 p-12 text-center">
                 <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
                 <h3 className="mb-2 text-xl font-semibold text-red-400">Generation Failed</h3>
-                <p className="text-muted-foreground mb-4">{error}</p>
+                <p className="mb-4 text-muted-foreground">{error}</p>
                 <button
                   onClick={() => {
                     setStatus('idle');

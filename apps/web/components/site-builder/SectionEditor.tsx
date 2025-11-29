@@ -5,6 +5,15 @@ import { X, Save, Plus, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 import { ImageUpload } from './ImageUpload';
+import { SyncControls } from './SyncControls';
+
+interface SyncConfig {
+  enabled: boolean;
+  dataType: 'songs' | 'shows' | 'members' | 'awards';
+  selectedIds: string[];
+  lastSyncedAt?: string;
+  autoRefresh?: boolean;
+}
 
 interface SiteSection {
   id: string;
@@ -13,6 +22,7 @@ interface SiteSection {
   order: number;
   isVisible: boolean;
   animation?: string | null;
+  syncConfig?: SyncConfig | null;
 }
 
 interface SectionEditorProps {
@@ -178,20 +188,58 @@ const animationOptions = [
   { value: 'bounce', label: 'Bounce' },
 ];
 
+// Section types that support data syncing
+const syncableSectionTypes = [
+  'music_player',
+  'music_spotify',
+  'music_apple',
+  'discography',
+  'streaming',
+  'tour_dates',
+  'tour_map',
+  'tour_upcoming',
+  'band_members',
+  'achievements',
+  'awards',
+];
+
 export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEditorProps) {
   const [content, setContent] = useState<Record<string, unknown>>({});
   const [animation, setAnimation] = useState<string>('');
+  const [syncConfig, setSyncConfig] = useState<SyncConfig | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  const isSyncable = section ? syncableSectionTypes.includes(section.type) : false;
 
   useEffect(() => {
     if (section) {
       setContent(section.content || {});
       setAnimation(section.animation || '');
+      setSyncConfig((section.syncConfig as SyncConfig) || null);
     }
   }, [section]);
 
   const handleFieldChange = (key: string, value: unknown) => {
     setContent((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSyncConfigChange = (config: SyncConfig | null) => {
+    setSyncConfig(config);
+  };
+
+  const handleSyncRefresh = (items: unknown[]) => {
+    // Update content based on section type
+    if (!section) return;
+
+    if (['music_player', 'discography', 'streaming'].includes(section.type)) {
+      setContent((prev) => ({ ...prev, tracks: items }));
+    } else if (['tour_dates', 'tour_map', 'tour_upcoming'].includes(section.type)) {
+      setContent((prev) => ({ ...prev, shows: items }));
+    } else if (section.type === 'band_members') {
+      setContent((prev) => ({ ...prev, members: items }));
+    } else if (['achievements', 'awards'].includes(section.type)) {
+      setContent((prev) => ({ ...prev, items: items }));
+    }
   };
 
   const handleSave = async () => {
@@ -203,6 +251,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
         ...section,
         content,
         animation: animation || null,
+        syncConfig: syncConfig,
       };
       await onSave(updatedSection);
       onClose();
@@ -410,6 +459,16 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-6">
               <div className="space-y-6">
+                {/* Sync Controls - Only show for syncable sections */}
+                {isSyncable && (
+                  <SyncControls
+                    sectionType={section.type}
+                    syncConfig={syncConfig}
+                    onSyncConfigChange={handleSyncConfigChange}
+                    onRefresh={handleSyncRefresh}
+                  />
+                )}
+
                 {/* Section Fields */}
                 {fields.map((field) => (
                   <div key={field.key}>

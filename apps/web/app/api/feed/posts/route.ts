@@ -41,6 +41,10 @@ export async function GET(request: NextRequest) {
     // SECURITY: Validate cursor and limit
     const cursor = validateCursor(searchParams.get('cursor'));
     const limit = validateLimit(searchParams.get('limit'), 50, 20);
+    // Hashtag filter
+    const tagFilter = searchParams.get('tag')?.toLowerCase().trim();
+    // Genre filter
+    const genreFilter = searchParams.get('genre')?.toLowerCase().trim();
 
     const userId = session.user.id;
 
@@ -77,6 +81,18 @@ export async function GET(request: NextRequest) {
     } else if (type === 'audio') {
       // Audio-only posts (SoundCloud mode)
       whereClause.contentType = 'audio';
+      whereClause.visibility = 'public';
+    }
+
+    // Apply hashtag filter if provided
+    if (tagFilter) {
+      whereClause.tags = { has: tagFilter };
+      whereClause.visibility = 'public'; // Only show public posts for tag search
+    }
+
+    // Apply genre filter if provided
+    if (genreFilter) {
+      whereClause.genre = { equals: genreFilter, mode: 'insensitive' };
       whereClause.visibility = 'public';
     }
 

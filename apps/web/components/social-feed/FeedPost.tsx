@@ -18,6 +18,7 @@ import {
 import { ReactionPicker } from './ReactionPicker';
 import { CommentSection } from './CommentSection';
 import { WaveformPlayer } from '@/components/waveform-player';
+import { PostContent } from './PostContent';
 import Image from 'next/image';
 
 interface FeedPostProps {
@@ -195,10 +196,25 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
         )}
       </div>
 
-      {/* Post Content */}
+      {/* Post Content - with clickable hashtags, mentions, and URLs */}
       {localPost.content && (
         <div className="mb-4 text-white">
-          <p className="whitespace-pre-wrap text-base leading-relaxed">{localPost.content}</p>
+          <PostContent content={localPost.content} />
+        </div>
+      )}
+
+      {/* Hashtag Tags Display */}
+      {localPost.tags && localPost.tags.length > 0 && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {localPost.tags.map((tag: string) => (
+            <a
+              key={tag}
+              href={`/feed?tag=${encodeURIComponent(tag)}`}
+              className="rounded-full bg-purple-500/20 px-3 py-1 text-xs font-medium text-purple-300 transition-all hover:bg-purple-500/30"
+            >
+              #{tag}
+            </a>
+          ))}
         </div>
       )}
 
