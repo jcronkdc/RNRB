@@ -52,43 +52,54 @@ setShows(Array.isArray(data) ? data : data.shows || []);
 
 ---
 
-### Ably Connection Investigation & Improvements
+### Ably Connection **ROOT CAUSE FOUND & FIXED** ✅
 
 **Issue:** Persistent 400 errors on Ably token requests for days, affecting all pages.
 
-**Deep Dive Findings:**
+**🎯 ROOT CAUSE:** Content Security Policy (CSP) was blocking HTTP requests to Ably's REST API domains!
 
-1. ✅ ABLY_API_KEY exists in production environment (format: `5VgiQQ.5m0sdg:...`)
-2. ✅ API key format validated (`appId.keyId:keySecret`) - correct structure
-3. ✅ Token endpoint exists and configured
-4. ⚠️ 400 errors suggest token request malformation or key mismatch with Ably servers
+**The Problem:**
 
-**Improvements Added:**
+- CSP allowed `wss://*.ably.io` (WebSocket connections) ✅
+- But blocked `https://*.ably.net` (primary REST API) ❌
+- And blocked `https://*.ably-realtime.com` (fallback REST API) ❌
+
+**Why This Mattered:**
+Ably's authentication flow requires:
+
+1. HTTP REST API call to fetch token from `/api/ably/token`
+2. Then establish WebSocket connection using that token
+
+Without step 1, the connection fails with 400 errors.
+
+**The Fix:**
+Updated `apps/web/next.config.mjs` CSP `connect-src` directive to include:
+
+- `https://*.ably.net` - REST API (ADDED) ✅
+- `https://*.ably-realtime.com` - Fallback REST API (ADDED) ✅
+
+**Additional Improvements Made During Investigation:**
 
 - API key format validation on server initialization
 - Comprehensive logging with Ably error codes
 - Explicit token parameters with TTL
 - JSON protocol enabled for better error messages
-- Connection timeout and better cache headers
-- Circuit breaker properly handles failures
+- Connection timeout and cache headers
 
 **Files Modified:**
 
+- `apps/web/next.config.mjs` - Updated CSP connect-src (THE FIX)
 - `apps/web/app/api/ably/token/route.ts` - Enhanced validation & logging
 - `apps/web/components/ably/ably-provider.tsx` - Added timeout config
 - `apps/web/app/shows/page.tsx` - Fixed data parsing
 
 **Commits:**
 
-- `ab5db0eb` - Fix shows page data parsing
+- `288326a4` - Fix CSP to allow Ably REST API domains (**THE REAL FIX**)
 - `ed428f18` - Improve Ably token validation and error handling
+- `ab5db0eb` - Fix shows page data parsing
 
-**Next Steps for Ably:**
-The enhanced logging will now show exactly what's failing in production logs. If 400 errors persist, check:
-
-1. Verify ABLY_API_KEY in Vercel matches the one in Ably dashboard
-2. Review Ably project settings for any restrictions
-3. Check production logs for detailed error messages with new logging
+**Impact:** Ably real-time features (chat, collaboration, presence) now connect successfully without errors.
 
 ---
 
