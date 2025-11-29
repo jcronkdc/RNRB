@@ -1,7 +1,7 @@
 # MASTER_TRUTH
 
-**Agent:** 153 | **Prev:** 152 | **Date:** 2025-11-29  
-**Status:** ✅ **PRODUCTION LIVE** • Profile setup upgraded to world-class onboarding experience
+**Agent:** 154 | **Prev:** 153 | **Date:** 2025-11-29  
+**Status:** ✅ **PRODUCTION LIVE** • Shows page fixed + Ably diagnostic improvements
 
 ---
 
@@ -32,7 +32,67 @@
 
 ---
 
-## 🔄 LATEST CHANGES (Agent 153 – Profile Setup Aesthetic Upgrade + Dashboard Fix)
+## 🔄 LATEST CHANGES (Agent 154 – Shows Page Critical Fix + Ably Diagnostics)
+
+### Critical Fix: Shows Page Data Parsing Bug
+
+**Problem:** `/shows` page was completely broken with `TypeError: p.filter is not a function` causing app crash.
+
+**Root Cause:** API returns `{ shows: [], total, page, limit }` but page component tried to use response as direct array.
+
+**Fix:**
+
+```typescript
+const data = await response.json();
+// Fixed: Extract shows array with fallback
+setShows(Array.isArray(data) ? data : data.shows || []);
+```
+
+**Impact:** Shows page now loads correctly, users can manage gigs/tours/performances.
+
+---
+
+### Ably Connection Investigation & Improvements
+
+**Issue:** Persistent 400 errors on Ably token requests for days, affecting all pages.
+
+**Deep Dive Findings:**
+
+1. ✅ ABLY_API_KEY exists in production environment (format: `5VgiQQ.5m0sdg:...`)
+2. ✅ API key format validated (`appId.keyId:keySecret`) - correct structure
+3. ✅ Token endpoint exists and configured
+4. ⚠️ 400 errors suggest token request malformation or key mismatch with Ably servers
+
+**Improvements Added:**
+
+- API key format validation on server initialization
+- Comprehensive logging with Ably error codes
+- Explicit token parameters with TTL
+- JSON protocol enabled for better error messages
+- Connection timeout and better cache headers
+- Circuit breaker properly handles failures
+
+**Files Modified:**
+
+- `apps/web/app/api/ably/token/route.ts` - Enhanced validation & logging
+- `apps/web/components/ably/ably-provider.tsx` - Added timeout config
+- `apps/web/app/shows/page.tsx` - Fixed data parsing
+
+**Commits:**
+
+- `ab5db0eb` - Fix shows page data parsing
+- `ed428f18` - Improve Ably token validation and error handling
+
+**Next Steps for Ably:**
+The enhanced logging will now show exactly what's failing in production logs. If 400 errors persist, check:
+
+1. Verify ABLY_API_KEY in Vercel matches the one in Ably dashboard
+2. Review Ably project settings for any restrictions
+3. Check production logs for detailed error messages with new logging
+
+---
+
+## 🔄 PREVIOUS CHANGES (Agent 153 – Profile Setup Aesthetic Upgrade + Dashboard Fix)
 
 ### Part 1: Profile Setup Aesthetic Upgrade
 
