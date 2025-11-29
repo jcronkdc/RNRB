@@ -138,25 +138,26 @@ export function TrendingSidebar() {
       <div className="rounded-2xl border border-white/10 bg-black/40 p-5 backdrop-blur-xl">
         <div className="space-y-2 text-sm">
           <Link
-            href="/discover"
-            className="flex items-center gap-2 text-white/60 transition-colors hover:text-white"
+            href="/feed/explore"
+            className="flex items-center gap-2 font-medium text-purple-400 transition-colors hover:text-purple-300"
           >
-            Discover Artists
-            <ExternalLink className="h-3 w-3" />
-          </Link>
-          <Link
-            href="/genres"
-            className="flex items-center gap-2 text-white/60 transition-colors hover:text-white"
-          >
-            Browse by Genre
+            <TrendingUp className="h-4 w-4" />
+            Explore All Trending
             <ExternalLink className="h-3 w-3" />
           </Link>
           <Link
             href="/feed?type=audio"
             className="flex items-center gap-2 text-white/60 transition-colors hover:text-white"
           >
+            <Music className="h-4 w-4" />
             Audio-only Feed
-            <ExternalLink className="h-3 w-3" />
+          </Link>
+          <Link
+            href="/feed?type=discover"
+            className="flex items-center gap-2 text-white/60 transition-colors hover:text-white"
+          >
+            <Users className="h-4 w-4" />
+            Popular Posts
           </Link>
         </div>
         <div className="mt-4 border-t border-white/10 pt-4">

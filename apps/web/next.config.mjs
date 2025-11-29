@@ -41,7 +41,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https: http:",
       "font-src 'self' https://fonts.gstatic.com",
-      "connect-src 'self' https://*.supabase.co https://*.neon.tech wss://*.ably.io https://*.ably.net https://*.ably-realtime.com https://api.openai.com https://*.stripe.com https://*.vercel-insights.com",
+      "connect-src 'self' https://*.supabase.co https://*.neon.tech wss://*.ably.io wss://*.ably.net https://*.ably.net wss://*.ably-realtime.com https://*.ably-realtime.com https://api.openai.com https://*.stripe.com https://*.vercel-insights.com https://api.replicate.com https://*.replicate.delivery",
       "media-src 'self' blob: https:",
       "frame-src 'self' https://js.stripe.com",
       "object-src 'none'",

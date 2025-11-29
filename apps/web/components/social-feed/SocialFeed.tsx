@@ -98,6 +98,19 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
     router.push('/feed');
   };
 
+  // Keyboard shortcut for search (⌘K or Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearch(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Infinite scroll with Intersection Observer
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
@@ -168,6 +181,40 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
     <div className="mx-auto flex max-w-6xl gap-6 px-4 py-6">
       {/* Main Feed */}
       <div className="max-w-2xl flex-1">
+        {/* Search Bar */}
+        <div className="mb-4">
+          <button
+            onClick={() => setShowSearch(true)}
+            className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white/50 backdrop-blur-xl transition-all hover:border-purple-500/30 hover:bg-black/60"
+          >
+            <Search className="h-5 w-5" />
+            <span>Search posts, music, artists, #hashtags...</span>
+            <kbd className="ml-auto hidden rounded bg-white/10 px-2 py-1 text-xs text-white/40 sm:inline">
+              ⌘K
+            </kbd>
+          </button>
+        </div>
+
+        {/* Active Filter Display */}
+        {(tagFilter || genreFilter) && (
+          <div className="mb-4 flex items-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3 backdrop-blur-xl">
+            <Hash className="h-5 w-5 text-purple-400" />
+            <span className="font-medium text-white">
+              {tagFilter ? `#${tagFilter}` : genreFilter}
+            </span>
+            <span className="text-white/60">
+              {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+            </span>
+            <button
+              onClick={clearFilter}
+              className="ml-auto flex items-center gap-1 rounded-lg bg-white/10 px-3 py-1 text-sm font-medium text-white/70 transition-all hover:bg-white/20 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+              Clear
+            </button>
+          </div>
+        )}
+
         {/* Feed Type Selector */}
         <div className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-black/40 p-2 backdrop-blur-xl">
           <FeedTypeButton
@@ -257,6 +304,9 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
       <div className="hidden w-80 lg:block">
         <TrendingSidebar />
       </div>
+
+      {/* Search Modal */}
+      <SearchModal isOpen={showSearch} onClose={() => setShowSearch(false)} />
     </div>
   );
 }
