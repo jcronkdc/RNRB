@@ -90,12 +90,14 @@ model User {
   aiRequestsUsed          Int       @default(0)
   videoMinutesUsed        Int       @default(0)
   assistantConversationsUsed Int    @default(0) // For AI Assistant add-on
+  imageCreditsUsed        Int       @default(0) // AI album art generation
   usagePeriodStart        DateTime? @default(now())
   storageUsedGB           Decimal   @default(0) @db.Decimal(10, 2)
 
   // Usage Bonus Buckets (top-ups)
   aiRequestsBonus         Int       @default(0)
   videoMinutesBonus       Int       @default(0)
+  imageCreditsBonus       Int       @default(0) // Purchased image credit packs
   storageBonusGB          Decimal   @default(0) @db.Decimal(10, 2)
 
   accounts               Account[]
@@ -294,6 +296,11 @@ model Song {
   copyrightInfo Json? // Copyright, PRO, splits, publishing details
   audioUrl      String? // URL to uploaded audio file
   audioPath     String? // Storage path for audio
+
+  // AI-Generated Artwork
+  artworkUrl    String? // URL to generated/uploaded artwork
+  artworkPrompt String? // Prompt used for AI generation (for regeneration)
+  artworkStyle  String? // Style preset used (e.g., "vinyl-classic", "neon-glow")
 
   user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   project        Project?           @relation(fields: [projectId], references: [id], onDelete: Cascade)

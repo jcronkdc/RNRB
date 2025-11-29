@@ -2,17 +2,17 @@
  * Usage Tracking & Rate Limiting for Rock N' Roll Basement
  *
  * CRITICAL: Protects profit margins by enforcing tier-based usage limits
- * 
+ *
  * SINGLE SOURCE OF TRUTH - Must match subscription-access.ts
  *
  * Pricing & Margins:
  * - Free ($0): $0 cost → 100% margin
- * - Creator ($9.99): ~$0.28 cost → 97% margin  
+ * - Creator ($9.99): ~$0.28 cost → 97% margin
  * - Studio ($29.99): ~$3.33 cost → 89% margin
  *
  * Features:
  * - Monthly AI request tracking
- * - Video call minute tracking  
+ * - Video call minute tracking
  * - Automatic period reset
  * - Tier-based limits
  */
@@ -23,40 +23,43 @@ import { getCurrentUser } from '@/lib/session';
 // Usage limits per tier (monthly) - MUST MATCH subscription-access.ts
 export const TIER_LIMITS = {
   free: {
-    aiRequests: 0,           // No AI for free tier
-    videoMinutes: 0,         // No video for free tier
+    aiRequests: 0, // No AI for free tier
+    videoMinutes: 0, // No video for free tier
     videoParticipantMinutes: 0, // No video
     assistantConversations: 0, // No assistant for free tier
-    collaborators: 1,        // 1 collaborator max
-    projects: 3,             // 3 projects max
-    storageGB: 1,            // 1 GB storage
+    imageCredits: 0, // No album art AI for free tier
+    collaborators: 1, // 1 collaborator max
+    projects: 3, // 3 projects max
+    storageGB: 1, // 1 GB storage
     maxVideoParticipants: 0, // No video
   },
   creator: {
-    aiRequests: 100,         // 100 AI assists/month (~$0.15 cost)
-    videoMinutes: 0,         // No video for Creator tier
+    aiRequests: 100, // 100 AI assists/month (~$0.15 cost)
+    videoMinutes: 0, // No video for Creator tier
     videoParticipantMinutes: 0, // No video
     assistantConversations: 30, // 30 assistant conversations (~$0.90 cost)
-    collaborators: 5,        // 5 collaborators per project
-    projects: 10,            // 10 projects max
-    storageGB: 10,           // 10 GB storage
+    imageCredits: 10, // 10 album art generations/month (~$0.03 cost)
+    collaborators: 5, // 5 collaborators per project
+    projects: 10, // 10 projects max
+    storageGB: 10, // 10 GB storage
     maxVideoParticipants: 0, // No video
   },
   studio: {
-    aiRequests: 500,         // 500 AI assists/month (~$0.75 cost)
-    videoMinutes: 1200,      // 20 hours/month = 1200 min
+    aiRequests: 500, // 500 AI assists/month (~$0.75 cost)
+    videoMinutes: 1200, // 20 hours/month = 1200 min
     videoParticipantMinutes: 3600, // ACTUAL LIMIT: 3600 participant-minutes (~$14.40 cost)
-                             // Allows: 20hr with 3 people, or 10hr with 6 people
+    // Allows: 20hr with 3 people, or 10hr with 6 people
     assistantConversations: 100, // 100 assistant conversations (~$3.00 cost)
-    collaborators: -1,       // Unlimited collaborators
-    projects: -1,            // Unlimited projects
-    storageGB: 100,          // 100 GB storage
+    imageCredits: 50, // 50 album art generations/month (~$0.15 cost)
+    collaborators: -1, // Unlimited collaborators
+    projects: -1, // Unlimited projects
+    storageGB: 100, // 100 GB storage
     maxVideoParticipants: 10, // Cap per call to prevent runaway costs
   },
 } as const;
 
 export type TierName = keyof typeof TIER_LIMITS;
-export type UsageType = 'aiRequests' | 'videoMinutes' | 'assistantConversations';
+export type UsageType = 'aiRequests' | 'videoMinutes' | 'assistantConversations' | 'imageCredits';
 
 interface UsageStatus {
   allowed: boolean;
@@ -81,8 +84,10 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
         aiRequestsUsed: true,
         videoMinutesUsed: true,
         assistantConversationsUsed: true,
+        imageCreditsUsed: true,
         aiRequestsBonus: true,
         videoMinutesBonus: true,
+        imageCreditsBonus: true,
         storageBonusGB: true,
         usagePeriodStart: true,
       },
@@ -112,8 +117,10 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
           aiRequestsUsed: 0,
           videoMinutesUsed: 0,
           assistantConversationsUsed: 0,
+          imageCreditsUsed: 0,
           aiRequestsBonus: 0,
           videoMinutesBonus: 0,
+          imageCreditsBonus: 0,
           usagePeriodStart: now,
         },
       });
@@ -129,17 +136,23 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
     }
 
     // Get current usage
-    const used = 
-      type === 'aiRequests' ? user.aiRequestsUsed || 0 :
-      type === 'videoMinutes' ? user.videoMinutesUsed || 0 :
-      user.assistantConversationsUsed || 0;
+    const used =
+      type === 'aiRequests'
+        ? user.aiRequestsUsed || 0
+        : type === 'videoMinutes'
+          ? user.videoMinutesUsed || 0
+          : type === 'imageCredits'
+            ? user.imageCreditsUsed || 0
+            : user.assistantConversationsUsed || 0;
 
     const bonus =
       type === 'aiRequests'
         ? user.aiRequestsBonus || 0
         : type === 'videoMinutes'
           ? user.videoMinutesBonus || 0
-          : 0;
+          : type === 'imageCredits'
+            ? user.imageCreditsBonus || 0
+            : 0;
 
     const limit = TIER_LIMITS[tier][type] + bonus;
     const remaining = limit - used;
@@ -204,7 +217,9 @@ export async function trackUsage(
         ? { aiRequestsUsed: { increment: amount } }
         : type === 'videoMinutes'
           ? { videoMinutesUsed: { increment: amount } }
-          : { assistantConversationsUsed: { increment: amount } };
+          : type === 'imageCredits'
+            ? { imageCreditsUsed: { increment: amount } }
+            : { assistantConversationsUsed: { increment: amount } };
 
     await db.user.update({
       where: { id: userId },
@@ -220,10 +235,11 @@ export async function trackUsage(
  * Get usage summary for dashboard display
  */
 export async function getUsageSummary(userId: string) {
-  const [aiUsage, videoUsage, assistantUsage] = await Promise.all([
+  const [aiUsage, videoUsage, assistantUsage, imageUsage] = await Promise.all([
     getUserUsage(userId, 'aiRequests'),
     getUserUsage(userId, 'videoMinutes'),
     getUserUsage(userId, 'assistantConversations'),
+    getUserUsage(userId, 'imageCredits'),
   ]);
 
   const user = await db.user.findUnique({
@@ -235,6 +251,7 @@ export async function getUsageSummary(userId: string) {
       storageBonusGB: true,
       aiRequestsBonus: true,
       videoMinutesBonus: true,
+      imageCreditsBonus: true,
     },
   });
 
@@ -242,6 +259,7 @@ export async function getUsageSummary(userId: string) {
   const storageBonus = Number(user?.storageBonusGB) || 0;
   const aiBonus = user?.aiRequestsBonus || 0;
   const videoBonus = user?.videoMinutesBonus || 0;
+  const imageBonus = user?.imageCreditsBonus || 0;
   const storageLimit = TIER_LIMITS[tier].storageGB + storageBonus;
 
   return {
@@ -266,12 +284,18 @@ export async function getUsageSummary(userId: string) {
       remaining: assistantUsage.remaining,
       percentage: assistantUsage.limit > 0 ? (assistantUsage.used / assistantUsage.limit) * 100 : 0,
     },
+    image: {
+      used: imageUsage.used,
+      limit: imageUsage.limit,
+      remaining: imageUsage.remaining,
+      percentage: imageUsage.limit > 0 ? (imageUsage.used / imageUsage.limit) * 100 : 0,
+      bonus: imageBonus,
+    },
     storage: {
       used: Number(user?.storageUsedGB) || 0,
       limit: storageLimit,
       remaining: storageLimit - (Number(user?.storageUsedGB) || 0),
-      percentage:
-        storageLimit > 0 ? ((Number(user?.storageUsedGB) || 0) / storageLimit) * 100 : 0,
+      percentage: storageLimit > 0 ? ((Number(user?.storageUsedGB) || 0) / storageLimit) * 100 : 0,
       bonus: storageBonus,
     },
     resetDate: aiUsage.resetDate,

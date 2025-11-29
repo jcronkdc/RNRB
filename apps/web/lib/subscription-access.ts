@@ -23,6 +23,7 @@ export const SUBSCRIPTION_TIERS = {
       aiContentGeneration: false,
       aiTourRouter: false,
       aiAssistant: false,
+      aiAlbumArt: false, // AI artwork generation
       videoCalls: false,
       collaborationLimit: 1, // Max 1 collaborator per project
       projectLimit: 3,
@@ -30,6 +31,7 @@ export const SUBSCRIPTION_TIERS = {
       aiRequestsLimit: 0,
       videoMinutesLimit: 0,
       videoParticipantMinutesLimit: 0,
+      imageCreditsLimit: 0, // No album art for free tier
       maxVideoParticipants: 0,
     },
   },
@@ -42,6 +44,7 @@ export const SUBSCRIPTION_TIERS = {
       aiContentGeneration: true,
       aiTourRouter: true,
       aiAssistant: false, // Requires add-on or Studio tier
+      aiAlbumArt: true, // AI artwork generation enabled
       videoCalls: false, // Video only in Studio tier
       collaborationLimit: 5,
       projectLimit: 10,
@@ -49,6 +52,7 @@ export const SUBSCRIPTION_TIERS = {
       aiRequestsLimit: 100, // 100 AI assists/month
       videoMinutesLimit: 0,
       videoParticipantMinutesLimit: 0,
+      imageCreditsLimit: 10, // 10 album art generations/month (~$0.03 cost)
       maxVideoParticipants: 0,
     },
   },
@@ -61,6 +65,7 @@ export const SUBSCRIPTION_TIERS = {
       aiContentGeneration: true,
       aiTourRouter: true,
       aiAssistant: true, // Included in Studio
+      aiAlbumArt: true, // AI artwork generation enabled
       videoCalls: true,
       collaborationLimit: -1, // Unlimited
       projectLimit: -1, // Unlimited
@@ -68,6 +73,7 @@ export const SUBSCRIPTION_TIERS = {
       aiRequestsLimit: 500, // 500 AI assists/month
       videoMinutesLimit: 1200, // Legacy: simple hour tracking
       videoParticipantMinutesLimit: 3600, // REAL LIMIT: 3600 participant-minutes (~$14.40 cost cap)
+      imageCreditsLimit: 50, // 50 album art generations/month (~$0.15 cost)
       maxVideoParticipants: 10, // Max per call to prevent runaway costs
     },
   },

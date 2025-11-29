@@ -245,6 +245,50 @@ Updated `apps/web/next.config.mjs` CSP `connect-src` directive to include:
 
 ---
 
+## 🎨 NEW FEATURE: AI Album Art Generator (Agent 155)
+
+**Status:** ✅ IMPLEMENTED - Ready for deployment
+
+### What Was Added:
+
+1. **Database Schema Updates:**
+   - `imageCreditsUsed` + `imageCreditsBonus` fields on User model
+   - `artworkUrl`, `artworkPrompt`, `artworkStyle` fields on Song model
+
+2. **Usage Tracking:**
+   - Image credits added to TIER_LIMITS (Free: 0, Creator: 10/mo, Studio: 50/mo)
+   - Full integration with existing usage tracking system
+
+3. **API Route:** `/api/artwork/generate`
+   - Replicate API integration with 3 model tiers:
+     - Draft (flux-schnell): 1 credit, ~$0.003/image
+     - Standard (ideogram-v3-turbo): 3 credits, ~$0.03/image
+     - Premium (flux-1.1-pro): 5 credits, ~$0.06/image
+   - 12 style presets (vinyl-classic, neon-glow, psychedelic, etc.)
+
+4. **UI Component:** `<ArtworkGenerator />`
+   - Located in `components/songwriting/artwork-generator.tsx`
+   - Style selection, quality tiers, batch generation (1-4 images)
+   - Gallery view with select/download
+
+5. **Credits Page Updated:**
+   - Image Credits display added to usage dashboard
+   - Progress bar and near-limit warning
+
+### Environment Variable Needed:
+
+```bash
+REPLICATE_API_TOKEN=r8_xxxxx
+```
+
+### Cost Impact (per user):
+
+- Creator: +$0.03/month (10 images at draft quality)
+- Studio: +$0.15/month (50 images at draft quality)
+- **Margins remain >85%**
+
+---
+
 ## 🔥 ACTIVE ISSUES & NEXT STEPS
 
 1. **🚨 Deploy credentials fix:** `pnpm build && git push origin main` then verify production login + onboarding (see human test above). Until then, production sign-in is broken.

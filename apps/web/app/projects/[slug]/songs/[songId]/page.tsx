@@ -5,10 +5,12 @@ import { motion } from 'framer-motion';
 import {
   Edit,
   FileText,
+  Image as ImageIcon,
   Loader2,
   MessageSquare,
   Mic2,
   Music,
+  Palette,
   Save,
   Sparkles,
   Upload,
@@ -47,12 +49,15 @@ const VersionHistory = dynamic(
   () => import('@/components/version-history').then((m) => m.VersionHistory),
   { ssr: false }
 );
-const StemsMixer = dynamic(
-  () => import('@/components/stems-mixer').then((m) => m.StemsMixer),
-  { ssr: false }
-);
+const StemsMixer = dynamic(() => import('@/components/stems-mixer').then((m) => m.StemsMixer), {
+  ssr: false,
+});
 const CopyrightManager = dynamic(
   () => import('@/components/copyright-manager').then((m) => m.CopyrightManager),
+  { ssr: false }
+);
+const ArtworkGenerator = dynamic(
+  () => import('@/components/songwriting/artwork-generator').then((m) => m.ArtworkGenerator),
   { ssr: false }
 );
 
@@ -78,9 +83,17 @@ export default function SongDetailPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'details' | 'lyrics' | 'audio' | 'versions' | 'stems' | 'copyright' | 'chat' | 'share'>(
-    'details'
-  );
+  const [activeTab, setActiveTab] = useState<
+    | 'details'
+    | 'lyrics'
+    | 'audio'
+    | 'artwork'
+    | 'versions'
+    | 'stems'
+    | 'copyright'
+    | 'chat'
+    | 'share'
+  >('details');
   const [audioFiles, setAudioFiles] = useState<AudioFileInfo[]>([]);
   const [showPublishModal, setShowPublishModal] = useState(false);
   const { upload, uploading, progress, error: uploadError } = useAudioUpload();
@@ -254,12 +267,22 @@ export default function SongDetailPage() {
         )}
 
         {/* Tabs */}
-        <div className="mb-6 flex gap-2 border-b border-border overflow-x-auto">
-          {['details', 'lyrics', 'audio', 'versions', 'stems', 'copyright', 'share', 'chat'].map((tab) => (
+        <div className="mb-6 flex gap-2 overflow-x-auto border-b border-border">
+          {[
+            'details',
+            'lyrics',
+            'audio',
+            'artwork',
+            'versions',
+            'stems',
+            'copyright',
+            'share',
+            'chat',
+          ].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
-              className={`px-6 py-3 font-medium capitalize transition whitespace-nowrap ${
+              className={`whitespace-nowrap px-6 py-3 font-medium capitalize transition ${
                 activeTab === tab
                   ? 'border-b-2 border-brand-primary text-brand-primary'
                   : 'text-muted-foreground hover:text-foreground'
@@ -268,6 +291,7 @@ export default function SongDetailPage() {
               {tab === 'chat' && <MessageSquare className="mr-2 inline-block h-4 w-4" />}
               {tab === 'lyrics' && <FileText className="mr-2 inline-block h-4 w-4" />}
               {tab === 'audio' && <Mic2 className="mr-2 inline-block h-4 w-4" />}
+              {tab === 'artwork' && <Palette className="mr-2 inline-block h-4 w-4" />}
               {tab === 'share' && <Sparkles className="mr-2 inline-block h-4 w-4" />}
               {tab}
             </button>
@@ -480,9 +504,69 @@ export default function SongDetailPage() {
             </motion.div>
           )}
 
+          {activeTab === 'artwork' && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <Card className="rnrb-card p-8">
+                <div className="mb-6 flex items-start justify-between">
+                  <div>
+                    <h3 className="mb-2 flex items-center gap-2 text-2xl font-semibold">
+                      <Palette className="h-6 w-6 text-pink-400" />
+                      Album Artwork
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Generate unique AI artwork for "{song.title}" or upload your own cover art.
+                    </p>
+                  </div>
+                  {song.artworkUrl && (
+                    <div className="relative h-20 w-20 overflow-hidden rounded-xl border border-border">
+                      <img
+                        src={song.artworkUrl}
+                        alt="Current artwork"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <ArtworkGenerator
+                  songId={songId}
+                  songTitle={song.title}
+                  artistName={user?.user_metadata?.name || user?.email?.split('@')[0]}
+                  genre={song.genre || project?.genre}
+                  mood={song.mood}
+                  currentArtwork={song.artworkUrl}
+                  onArtworkSelect={async (url, prompt, style) => {
+                    // Save artwork to song
+                    try {
+                      const response = await fetch(`/api/songs/${songId}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          artworkUrl: url,
+                          artworkPrompt: prompt,
+                          artworkStyle: style,
+                        }),
+                      });
+                      if (response.ok) {
+                        setSong((prev: any) => ({
+                          ...prev,
+                          artworkUrl: url,
+                          artworkPrompt: prompt,
+                          artworkStyle: style,
+                        }));
+                      }
+                    } catch (err) {
+                      console.error('Failed to save artwork:', err);
+                    }
+                  }}
+                />
+              </Card>
+            </motion.div>
+          )}
+
           {activeTab === 'versions' && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <VersionHistory 
+              <VersionHistory
                 songId={songId}
                 onRestore={async (versionId) => {
                   // Reload song data after restore
@@ -494,7 +578,7 @@ export default function SongDetailPage() {
 
           {activeTab === 'stems' && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <StemsMixer 
+              <StemsMixer
                 songId={songId}
                 onTrackUpload={() => {
                   // Could open a modal or navigate to upload
@@ -510,12 +594,13 @@ export default function SongDetailPage() {
                 {/* Save Notice */}
                 <Card className="border-blue-500/30 bg-blue-500/5 p-4">
                   <p className="text-sm text-gray-300">
-                    <strong className="text-white">💡 Auto-Save:</strong> Your copyright information is automatically 
-                    saved as you type. Make sure to register your song with your PRO to get official codes!
+                    <strong className="text-white">💡 Auto-Save:</strong> Your copyright information
+                    is automatically saved as you type. Make sure to register your song with your
+                    PRO to get official codes!
                   </p>
                 </Card>
 
-                <CopyrightManager 
+                <CopyrightManager
                   songId={songId}
                   songTitle={song?.title}
                   currentCopyright={song?.copyrightInfo}
