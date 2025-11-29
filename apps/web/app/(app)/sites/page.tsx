@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -12,6 +13,9 @@ import {
   ExternalLink,
   Palette,
   BarChart3,
+  Music2,
+  Calendar,
+  Zap,
 } from 'lucide-react';
 
 interface Site {
@@ -90,11 +94,18 @@ export default function SitesPage() {
 
   if (isLoading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+      <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
+        {/* Animated background while loading */}
+        <div className="absolute inset-0">
+          <div className="absolute left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-purple-500/10 blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-cyan-500/10 blur-3xl" />
+        </div>
+        <div className="relative text-center">
+          <div className="relative mx-auto mb-6 h-16 w-16">
+            <div className="absolute inset-0 animate-spin rounded-full border-4 border-purple-500/30 border-t-purple-500" />
+          </div>
+          <p className="text-gray-400">Loading your website...</p>
+        </div>
       </div>
     );
   }
@@ -102,146 +113,176 @@ export default function SitesPage() {
   // Show dashboard if site exists
   if (hasWebsite && site) {
     return (
-      <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
-        <div className="mx-auto max-w-6xl">
+      <div className="relative min-h-screen overflow-hidden bg-black">
+        {/* Animated Background Gradient Orbs */}
+        <div className="pointer-events-none fixed inset-0 overflow-hidden">
+          <motion.div
+            className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-purple-600/15 to-transparent blur-3xl"
+            animate={{
+              x: [0, 50, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+          <motion.div
+            className="absolute -right-32 top-1/3 h-[500px] w-[500px] rounded-full bg-gradient-to-bl from-cyan-600/10 to-transparent blur-3xl"
+            animate={{
+              x: [0, -30, 0],
+              y: [0, 50, 0],
+              scale: [1, 1.15, 1],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-6xl px-6 py-8">
           {/* Header */}
-          <div className="mb-8 flex items-center justify-between">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 flex items-center justify-between"
+          >
             <div>
-              <h1 className="text-3xl font-bold" style={{ color: 'var(--text)' }}>
-                My Website
-              </h1>
-              <p style={{ color: 'var(--muted)' }}>Manage your musician website</p>
+              {/* Accent bar */}
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: 60 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="mb-4 h-1 rounded-full bg-gradient-to-r from-purple-500 to-cyan-500"
+              />
+              <div className="flex items-center gap-4">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-cyan-500/20 backdrop-blur-sm">
+                  <Globe className="h-7 w-7 text-purple-400" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-white">My Website</h1>
+                  <p className="text-gray-400">Manage your musician website</p>
+                </div>
+              </div>
             </div>
             <div className="flex gap-3">
-              <a
+              <motion.a
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 href={`/s/${site.subdomain}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-lg px-4 py-2 transition-colors"
-                style={{
-                  background: 'var(--panel)',
-                  color: 'var(--text)',
-                  border: '1px solid var(--border)',
-                }}
+                className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/10"
               >
                 <Eye size={18} />
                 Preview
                 <ExternalLink size={14} />
-              </a>
-              <button
+              </motion.a>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => router.push('/sites/edit')}
-                className="flex items-center gap-2 rounded-lg px-4 py-2 font-semibold transition-colors"
-                style={{
-                  background: 'var(--accent)',
-                  color: '#fff',
-                }}
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-500/25"
               >
                 <Settings size={18} />
                 Edit Site
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Site Card */}
-          <div
-            className="mb-6 rounded-xl p-6"
-            style={{
-              background: 'var(--panel)',
-              border: '1px solid var(--border)',
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-6 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl"
           >
             <div className="flex items-start justify-between">
               <div>
-                <h2 className="mb-2 text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                <h2 className="mb-2 text-2xl font-bold text-white">
                   {site.siteName || 'My Website'}
                 </h2>
                 <a
                   href={`/s/${site.subdomain}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-sm hover:underline"
-                  style={{ color: 'var(--accent)' }}
+                  className="flex items-center gap-1 text-sm text-purple-400 hover:underline"
                 >
                   <Globe size={14} />
                   {site.subdomain}.cronkwaters.com
                   <ExternalLink size={12} />
                 </a>
               </div>
-              <div
-                className={`rounded-full px-3 py-1 text-sm font-medium ${
+              <span
+                className={`rounded-full px-4 py-1.5 text-sm font-medium ${
                   site.status === 'published'
                     ? 'bg-green-500/20 text-green-400'
                     : 'bg-yellow-500/20 text-yellow-400'
                 }`}
               >
                 {site.status === 'published' ? 'Published' : 'Draft'}
-              </div>
+              </span>
             </div>
 
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-3">
-              <div className="rounded-lg p-4" style={{ background: 'var(--bg)' }}>
-                <div className="mb-2 flex items-center gap-2" style={{ color: 'var(--muted)' }}>
-                  <Eye size={16} />
-                  <span className="text-sm">Total Views</span>
-                </div>
-                <p className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
-                  {site.totalViews.toLocaleString()}
-                </p>
-              </div>
-              <div className="rounded-lg p-4" style={{ background: 'var(--bg)' }}>
-                <div className="mb-2 flex items-center gap-2" style={{ color: 'var(--muted)' }}>
-                  <Palette size={16} />
-                  <span className="text-sm">Template</span>
-                </div>
-                <p className="text-2xl font-bold uppercase" style={{ color: 'var(--text)' }}>
-                  {site.templateId}
-                </p>
-              </div>
-              <div className="rounded-lg p-4" style={{ background: 'var(--bg)' }}>
-                <div className="mb-2 flex items-center gap-2" style={{ color: 'var(--muted)' }}>
-                  <BarChart3 size={16} />
-                  <span className="text-sm">Created</span>
-                </div>
-                <p className="text-lg font-medium" style={{ color: 'var(--text)' }}>
-                  {new Date(site.createdAt).toLocaleDateString()}
-                </p>
-              </div>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {[
+                { icon: Eye, label: 'Total Views', value: site.totalViews.toLocaleString() },
+                { icon: Palette, label: 'Template', value: site.templateId.toUpperCase() },
+                {
+                  icon: BarChart3,
+                  label: 'Created',
+                  value: new Date(site.createdAt).toLocaleDateString(),
+                },
+              ].map((stat) => (
+                <motion.div
+                  key={stat.label}
+                  whileHover={{ scale: 1.02 }}
+                  className="rounded-xl border border-white/10 bg-white/5 p-4"
+                >
+                  <div className="mb-2 flex items-center gap-2 text-gray-400">
+                    <stat.icon size={16} />
+                    <span className="text-sm">{stat.label}</span>
+                  </div>
+                  <p className="text-xl font-bold text-white">{stat.value}</p>
+                </motion.div>
+              ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <button
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+          >
+            <motion.button
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => router.push('/sites/edit?tab=sections')}
-              className="rounded-xl p-6 text-left transition-all hover:scale-[1.02]"
-              style={{
-                background: 'var(--panel)',
-                border: '1px solid var(--border)',
-              }}
+              className="group rounded-2xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur-sm transition-all hover:border-purple-500/30 hover:bg-white/10"
             >
-              <h3 className="mb-1 font-semibold" style={{ color: 'var(--text)' }}>
+              <h3 className="mb-2 font-semibold text-white group-hover:text-purple-400">
                 Edit Sections
               </h3>
-              <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                Add, remove, or reorder content blocks
-              </p>
-            </button>
-            <button
+              <p className="text-sm text-gray-400">Add, remove, or reorder content blocks</p>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => router.push('/sites/edit?tab=theme')}
-              className="rounded-xl p-6 text-left transition-all hover:scale-[1.02]"
-              style={{
-                background: 'var(--panel)',
-                border: '1px solid var(--border)',
-              }}
+              className="group rounded-2xl border border-white/10 bg-white/5 p-6 text-left backdrop-blur-sm transition-all hover:border-purple-500/30 hover:bg-white/10"
             >
-              <h3 className="mb-1 font-semibold" style={{ color: 'var(--text)' }}>
+              <h3 className="mb-2 font-semibold text-white group-hover:text-purple-400">
                 Customize Theme
               </h3>
-              <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                Change colors, fonts, and styling
-              </p>
-            </button>
-          </div>
+              <p className="text-sm text-gray-400">Change colors, fonts, and styling</p>
+            </motion.button>
+          </motion.div>
         </div>
       </div>
     );
@@ -249,90 +290,138 @@ export default function SitesPage() {
 
   // Show Quick Start if no site
   return (
-    <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
-      <div className="mx-auto max-w-4xl">
+    <div className="relative min-h-screen overflow-hidden bg-black">
+      {/* Animated Background Gradient Orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <motion.div
+          className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-purple-600/20 to-transparent blur-3xl"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        <motion.div
+          className="absolute -right-32 top-1/3 h-[500px] w-[500px] rounded-full bg-gradient-to-bl from-cyan-600/15 to-transparent blur-3xl"
+          animate={{
+            x: [0, -30, 0],
+            y: [0, 50, 0],
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        <motion.div
+          className="absolute bottom-0 left-1/3 h-[400px] w-[400px] rounded-full bg-gradient-to-t from-pink-600/10 to-transparent blur-3xl"
+          animate={{
+            x: [0, 40, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-4xl px-6 py-12">
         {/* Header */}
-        <div className="mb-12 text-center">
-          <div
-            className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full"
-            style={{ background: 'var(--accent)', opacity: 0.2 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12 text-center"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', duration: 0.6 }}
+            className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-purple-500/20 to-pink-500/20"
           >
-            <Globe size={32} style={{ color: 'var(--accent)' }} />
-          </div>
-          <h1 className="mb-4 text-4xl font-bold" style={{ color: 'var(--text)' }}>
+            <Globe size={40} className="text-purple-400" />
+          </motion.div>
+          <h1 className="mb-4 bg-gradient-to-r from-white via-purple-100 to-cyan-100 bg-clip-text text-4xl font-bold text-transparent md:text-5xl">
             Build Your Website
           </h1>
-          <p className="mx-auto max-w-2xl text-xl" style={{ color: 'var(--muted)' }}>
-            Create a stunning website in seconds. We&apos;ll automatically import your songs, tour
-            dates, and profile info.
+          <p className="mx-auto max-w-2xl text-lg text-gray-400">
+            Create a stunning website in seconds. We'll automatically import your songs, tour dates,
+            and profile info.
           </p>
-        </div>
+        </motion.div>
 
         {/* Quick Start Card */}
-        <div
-          className="mb-8 rounded-xl p-8"
-          style={{
-            background: 'var(--panel)',
-            border: '1px solid var(--border)',
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl"
         >
           <div className="mb-6 flex items-center gap-3">
-            <Sparkles style={{ color: 'var(--accent)' }} />
-            <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
-              Quick Start
-            </h2>
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+              <Sparkles className="h-6 w-6 text-purple-400" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Quick Start</h2>
+              <p className="text-sm text-gray-400">Choose a template to get started</p>
+            </div>
           </div>
 
-          <p className="mb-6" style={{ color: 'var(--muted)' }}>
-            Choose a template and we&apos;ll create your website using your existing CronkWaters
-            data. You can customize everything after.
+          <p className="mb-6 text-gray-400">
+            Choose a template and we'll create your website using your existing CronkWaters data.
+            You can customize everything after.
           </p>
 
           {/* Template Selection */}
           <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-4">
             {templates.map((template) => (
-              <button
+              <motion.button
                 key={template.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedTemplate(template.id)}
-                className={`rounded-lg p-4 text-left transition-all ${
-                  selectedTemplate === template.id ? 'ring-2' : ''
+                className={`rounded-xl border p-4 text-left transition-all ${
+                  selectedTemplate === template.id
+                    ? 'border-purple-500/50 bg-purple-500/10 ring-2 ring-purple-500/30'
+                    : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'
                 }`}
-                style={
-                  {
-                    background:
-                      selectedTemplate === template.id ? 'var(--accent)' + '20' : 'var(--bg)',
-                    borderColor: selectedTemplate === template.id ? 'var(--accent)' : 'transparent',
-                    '--tw-ring-color': 'var(--accent)',
-                  } as React.CSSProperties
-                }
               >
                 <h3
-                  className="mb-1 text-sm font-bold"
-                  style={{
-                    color: selectedTemplate === template.id ? 'var(--accent)' : 'var(--text)',
-                  }}
+                  className={`mb-1 text-sm font-bold ${
+                    selectedTemplate === template.id ? 'text-purple-400' : 'text-white'
+                  }`}
                 >
                   {template.name}
                 </h3>
-                <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                  {template.description}
-                </p>
-              </button>
+                <p className="text-xs text-gray-500">{template.description}</p>
+              </motion.button>
             ))}
           </div>
 
           {error && (
-            <div className="mb-4 rounded-lg bg-red-500/20 p-3 text-sm text-red-400">{error}</div>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 rounded-xl bg-red-500/20 p-3 text-sm text-red-400"
+            >
+              {error}
+            </motion.div>
           )}
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={handleQuickStart}
             disabled={isCreating}
-            className="flex w-full items-center justify-center gap-2 rounded-lg py-4 font-semibold transition-all hover:scale-[1.02] disabled:opacity-50"
-            style={{
-              background: 'var(--accent)',
-              color: '#fff',
-            }}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 py-4 text-lg font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-purple-500/40 disabled:opacity-50"
           >
             {isCreating ? (
               <>
@@ -346,39 +435,42 @@ export default function SitesPage() {
                 <ArrowRight size={20} />
               </>
             )}
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
         {/* Features List */}
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="p-6 text-center">
-            <div className="mb-3 text-4xl">🎵</div>
-            <h3 className="mb-2 font-semibold" style={{ color: 'var(--text)' }}>
-              Auto-Sync Music
-            </h3>
-            <p className="text-sm" style={{ color: 'var(--muted)' }}>
-              Your songs automatically appear on your website
-            </p>
-          </div>
-          <div className="p-6 text-center">
-            <div className="mb-3 text-4xl">📅</div>
-            <h3 className="mb-2 font-semibold" style={{ color: 'var(--text)' }}>
-              Tour Dates
-            </h3>
-            <p className="text-sm" style={{ color: 'var(--muted)' }}>
-              Shows sync from your tour management
-            </p>
-          </div>
-          <div className="p-6 text-center">
-            <div className="mb-3 text-4xl">✨</div>
-            <h3 className="mb-2 font-semibold" style={{ color: 'var(--text)' }}>
-              Pro Design
-            </h3>
-            <p className="text-sm" style={{ color: 'var(--muted)' }}>
-              World-class templates designed for musicians
-            </p>
-          </div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="grid gap-6 md:grid-cols-3"
+        >
+          {[
+            {
+              icon: Music2,
+              title: 'Auto-Sync Music',
+              desc: 'Your songs automatically appear on your website',
+            },
+            { icon: Calendar, title: 'Tour Dates', desc: 'Shows sync from your tour management' },
+            {
+              icon: Zap,
+              title: 'Pro Design',
+              desc: 'World-class templates designed for musicians',
+            },
+          ].map((feature) => (
+            <motion.div
+              key={feature.title}
+              whileHover={{ scale: 1.02, y: -2 }}
+              className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur-sm"
+            >
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+                <feature.icon className="h-7 w-7 text-purple-400" />
+              </div>
+              <h3 className="mb-2 font-semibold text-white">{feature.title}</h3>
+              <p className="text-sm text-gray-400">{feature.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </div>
   );
