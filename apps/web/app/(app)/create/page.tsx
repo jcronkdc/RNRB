@@ -175,7 +175,7 @@ export default function CreatePage() {
           instruments: selectedInstruments,
           duration,
           tempo,
-          seed: seed || undefined,
+          seed: seed ? parseInt(seed, 10) : undefined,
           keySignature: keySignature !== 'Auto' ? keySignature : undefined,
         }),
       });
