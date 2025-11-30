@@ -246,12 +246,7 @@ export default function SitesPage() {
                     border: '1px solid rgba(255, 99, 71, 0.3)',
                   }}
                 >
-                  <Image
-                    src="/logo-dark.png"
-                    alt="RR"
-                    width={32}
-                    height={32}
-                  />
+                  <Image src="/logo-dark.png" alt="RR" width={32} height={32} />
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-white">My Website</h1>
