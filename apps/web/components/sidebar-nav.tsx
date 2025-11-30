@@ -72,7 +72,7 @@ const navItems: NavItem[] = [
   { label: 'Collaboration', href: '/collaboration', icon: Users, badge: 'LIVE' },
   { label: 'Songwriting', href: '/songwriting', icon: Music4, badge: 'AI' },
   { label: 'R&R Labs', href: '/labs', icon: FlaskConical, badge: 'NEW' },
-  // { label: 'Create Track', href: '/create', icon: Sparkles }, // Hidden - AI music gen not ready
+  { label: 'AI Sketches', href: '/create', icon: Sparkles, badge: 'BETA' },
   { label: 'Projects', href: '/projects', icon: FolderOpen },
   { label: 'Studio', href: '/studio', icon: Mic2 },
   { label: 'Tours', href: '/tours', icon: Radio },

@@ -18,7 +18,6 @@ import {
   Music2,
   Plus,
   Sparkles,
-  Users,
   Zap,
   Globe,
   Activity,
@@ -452,7 +451,7 @@ function DashboardContent() {
   }, [user, loading]);
 
   useEffect(() => {
-    const criticalRoutes = ['/songwriting', '/projects'];
+    const criticalRoutes = ['/songwriting', '/create', '/projects'];
     criticalRoutes.forEach((route) => {
       router.prefetch(route);
     });
@@ -581,11 +580,11 @@ function DashboardContent() {
               delay={0.25}
             />
             <PrimaryActionCard
-              title="Collaboration"
-              description="Real-time video sessions with your band. Screen sharing, live chat, and jam together"
-              icon={Users}
-              href="/collaboration"
-              badge="LIVE"
+              title="AI Sketches"
+              description="Generate 5-30 second clips for inspiration. Great for loops, ideas, and getting unstuck"
+              icon={Sparkles}
+              href="/create"
+              badge="BETA"
               delay={0.3}
             />
             <PrimaryActionCard

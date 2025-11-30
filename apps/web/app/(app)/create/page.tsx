@@ -281,9 +281,9 @@ export default function CreatePage() {
                 </div>
                 <div>
                   <p className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
-                    AI Music Generation
+                    AI Music Sketches • BETA
                   </p>
-                  <h1 className="text-2xl font-bold text-white">Create New Track</h1>
+                  <h1 className="text-2xl font-bold text-white">Generate Quick Ideas</h1>
                 </div>
               </div>
               <button
@@ -296,7 +296,7 @@ export default function CreatePage() {
               </button>
             </div>
             <p style={{ color: 'var(--muted)' }}>
-              Generate original music with AI - describe your idea and get a unique audio track
+              Generate 5-30 second clips for inspiration, loops, and getting unstuck
             </p>
           </motion.div>
         </div>
@@ -324,58 +324,73 @@ export default function CreatePage() {
                     How It Works
                   </h2>
 
-                  {/* What You Get */}
+                  {/* What This Is */}
                   <div
-                    className="mb-6 rounded-xl p-4"
+                    className="mb-4 rounded-xl p-4"
                     style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
                   >
-                    <h3 className="mb-3 font-medium text-white">What You'll Get:</h3>
+                    <h3 className="mb-3 font-medium text-white">Best For:</h3>
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                       <div className="flex items-start gap-3">
                         <div className="rounded-lg bg-orange-500/20 p-2">
-                          <Volume2 className="h-4 w-4 text-orange-400" />
+                          <Sparkles className="h-4 w-4 text-orange-400" />
                         </div>
                         <div>
-                          <p className="font-medium text-white">Original Audio</p>
+                          <p className="font-medium text-white">Inspiration</p>
                           <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                            5-30 second MP3 track
+                            Get unstuck with a quick idea
                           </p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <div className="rounded-lg bg-blue-500/20 p-2">
-                          <Download className="h-4 w-4 text-blue-400" />
+                          <RefreshCw className="h-4 w-4 text-blue-400" />
                         </div>
                         <div>
-                          <p className="font-medium text-white">Downloadable</p>
+                          <p className="font-medium text-white">Loops & Sketches</p>
                           <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                            Save to your library
+                            5-30 second clips to build on
                           </p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <div className="rounded-lg bg-green-500/20 p-2">
-                          <FolderPlus className="h-4 w-4 text-green-400" />
+                          <Music2 className="h-4 w-4 text-green-400" />
                         </div>
                         <div>
-                          <p className="font-medium text-white">Add to Projects</p>
+                          <p className="font-medium text-white">Temp Tracks</p>
                           <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                            Use in your songs
+                            Placeholder while writing
                           </p>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
                         <div className="rounded-lg bg-purple-500/20 p-2">
-                          <Music2 className="h-4 w-4 text-purple-400" />
+                          <Zap className="h-4 w-4 text-purple-400" />
                         </div>
                         <div>
-                          <p className="font-medium text-white">100% Original</p>
+                          <p className="font-medium text-white">Experimenting</p>
                           <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                            AI-generated, royalty-free
+                            Try different genre combos
                           </p>
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Honest Limitations */}
+                  <div
+                    className="mb-6 rounded-xl p-3"
+                    style={{
+                      background: 'rgba(251, 191, 36, 0.1)',
+                      border: '1px solid rgba(251, 191, 36, 0.2)',
+                    }}
+                  >
+                    <p className="text-sm" style={{ color: 'rgb(251, 191, 36)' }}>
+                      <strong>Heads up:</strong> This generates short AI clips (max 30 sec) — great
+                      for sparking ideas, not for finished songs. Think of it as a creative starting
+                      point.
+                    </p>
                   </div>
 
                   {/* Steps */}
@@ -439,7 +454,7 @@ export default function CreatePage() {
                             <span className="text-white">10/month</span>
                           </span>
                           <span>
-                            <span className="text-gray-400">Creator ($9.99):</span>{' '}
+                            <span className="text-gray-400">Creator ($17.99):</span>{' '}
                             <span className="text-white">100/month</span>
                           </span>
                           <span>
