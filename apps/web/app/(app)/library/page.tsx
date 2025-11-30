@@ -57,7 +57,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { AudioPlayer } from '@/components/audio-player';
+import { FileEditModal } from '@/components/file-edit-modal';
 import { FileViewer } from '@/components/file-viewer';
 import {
   useLibrary,
@@ -206,6 +209,9 @@ export default function LibraryPage() {
   const [draggedType, setDraggedType] = useState<LibraryFileType>('other');
   const dropZoneRef = useRef<HTMLDivElement>(null);
 
+  // Router for navigation
+  const router = useRouter();
+
   // Hooks
   const {
     files,
@@ -218,6 +224,7 @@ export default function LibraryPage() {
     toggleFavorite,
     incrementPlayCount,
     moveToCollection,
+    updateFile,
     total,
   } = useLibrary({
     type: filterType,
@@ -366,6 +373,42 @@ export default function LibraryPage() {
     [deleteFile, playingId]
   );
 
+  // Handle edit file save
+  const handleEditSave = useCallback(
+    async (updates: Partial<LibraryFile>) => {
+      if (!editingFile) return;
+      await updateFile(editingFile.id, updates);
+    },
+    [editingFile, updateFile]
+  );
+
+  // Handle edit file delete
+  const handleEditDelete = useCallback(async () => {
+    if (!editingFile) return;
+    await deleteFile(editingFile.id);
+    setEditingFile(null);
+  }, [editingFile, deleteFile]);
+
+  // Handle open in songwriting tool
+  const handleOpenInSongwriting = useCallback(() => {
+    if (!editingFile) return;
+
+    // Store the file data in sessionStorage to pass to songwriting tool
+    const songwritingData = {
+      importedFile: {
+        id: editingFile.id,
+        name: editingFile.name,
+        type: editingFile.type,
+        lyrics: editingFile.lyrics || '',
+        url: editingFile.url,
+      },
+    };
+    sessionStorage.setItem('songwritingImport', JSON.stringify(songwritingData));
+
+    // Navigate to songwriting tool
+    router.push('/songwriting');
+  }, [editingFile, router]);
+
   // Handle bulk delete
   const handleBulkDelete = useCallback(async () => {
     if (selectedFiles.size === 0) return;
@@ -478,6 +521,22 @@ export default function LibraryPage() {
           name={viewingFile.name}
           mimeType={viewingFile.mimeType}
           onClose={() => setViewingFile(null)}
+        />
+      )}
+
+      {/* File Edit Modal */}
+      {editingFile && (
+        <FileEditModal
+          file={editingFile}
+          collections={collections}
+          onSave={handleEditSave}
+          onDelete={handleEditDelete}
+          onOpenInSongwriting={
+            ['lyrics', 'chords', 'sheet_music'].includes(editingFile.type)
+              ? handleOpenInSongwriting
+              : undefined
+          }
+          onClose={() => setEditingFile(null)}
         />
       )}
 
@@ -1298,10 +1357,20 @@ export default function LibraryPage() {
                                   })
                                 }
                                 className="rounded-lg bg-gray-800 p-2 text-gray-400 transition-all hover:bg-blue-500/20 hover:text-blue-500"
+                                title="View"
                               >
                                 <Eye className="h-4 w-4" />
                               </button>
                             )}
+
+                            {/* Edit button */}
+                            <button
+                              onClick={() => setEditingFile(file)}
+                              className="rounded-lg bg-gray-800 p-2 text-gray-400 transition-all hover:bg-emerald-500/20 hover:text-emerald-500"
+                              title="Edit"
+                            >
+                              <Edit3 className="h-4 w-4" />
+                            </button>
 
                             {/* Favorite */}
                             <button

@@ -29,10 +29,10 @@ async function getCurrentUser() {
 // Usage limits per tier (monthly) - MUST MATCH subscription-access.ts
 export const TIER_LIMITS = {
   free: {
-    aiRequests: 0, // No AI for free tier
+    aiRequests: 10, // 10 AI requests for free tier (teaser)
     videoMinutes: 0, // No video for free tier
     videoParticipantMinutes: 0, // No video
-    assistantConversations: 0, // No assistant for free tier
+    assistantConversations: 10, // 10 GODLIKE AI conversations (teaser to get hooked)
     imageCredits: 0, // No album art AI for free tier
     collaborators: 1, // 1 collaborator max
     projects: 3, // 3 projects max
@@ -43,7 +43,7 @@ export const TIER_LIMITS = {
     aiRequests: 100, // 100 AI assists/month (~$0.15 cost)
     videoMinutes: 0, // No video for Creator tier
     videoParticipantMinutes: 0, // No video
-    assistantConversations: 30, // 30 assistant conversations (~$0.90 cost)
+    assistantConversations: 100, // 100 GODLIKE AI conversations (~$4 cost, $15 revenue = $11 profit)
     imageCredits: 10, // 10 album art generations/month (~$0.03 cost)
     collaborators: 5, // 5 collaborators per project
     projects: 10, // 10 projects max
@@ -55,7 +55,7 @@ export const TIER_LIMITS = {
     videoMinutes: 1200, // 20 hours/month = 1200 min
     videoParticipantMinutes: 3600, // ACTUAL LIMIT: 3600 participant-minutes (~$14.40 cost)
     // Allows: 20hr with 3 people, or 10hr with 6 people
-    assistantConversations: 100, // 100 assistant conversations (~$3.00 cost)
+    assistantConversations: -1, // UNLIMITED GODLIKE AI (peace of mind, estimated ~$6-12 cost)
     imageCredits: 50, // 50 album art generations/month (~$0.15 cost)
     collaborators: -1, // Unlimited collaborators
     projects: -1, // Unlimited projects

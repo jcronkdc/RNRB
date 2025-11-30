@@ -45,7 +45,7 @@ const TIER_FEATURES: Record<SubscriptionTier, FeatureAccess> = {
     customBranding: false,
     apiAccess: false,
     prioritySupport: false,
-    aiCreditsPerMonth: 10,
+    aiCreditsPerMonth: 10, // 10 GODLIKE AI conversations (teaser)
     maxProjectCount: 1,
     storageGB: 1,
     videoMinutesPerMonth: 0,
@@ -59,7 +59,7 @@ const TIER_FEATURES: Record<SubscriptionTier, FeatureAccess> = {
     customBranding: false,
     apiAccess: false,
     prioritySupport: false,
-    aiCreditsPerMonth: 500,
+    aiCreditsPerMonth: 100, // 100 GODLIKE AI conversations ($15/mo)
     maxProjectCount: -1, // unlimited
     storageGB: 50,
     videoMinutesPerMonth: 120,
@@ -73,7 +73,7 @@ const TIER_FEATURES: Record<SubscriptionTier, FeatureAccess> = {
     customBranding: true,
     apiAccess: true,
     prioritySupport: true,
-    aiCreditsPerMonth: -1, // unlimited
+    aiCreditsPerMonth: -1, // UNLIMITED GODLIKE AI ($35/mo)
     maxProjectCount: -1, // unlimited
     storageGB: 500,
     videoMinutesPerMonth: -1, // unlimited

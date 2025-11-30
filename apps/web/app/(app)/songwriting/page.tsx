@@ -1,7 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Loader2, AlertCircle, Music4, Sparkles, GitBranch, Save } from 'lucide-react';
+import {
+  Check,
+  Loader2,
+  AlertCircle,
+  Music4,
+  Sparkles,
+  GitBranch,
+  Save,
+  Download,
+} from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -69,6 +78,36 @@ const SaveVersionModal = dynamic(
   { ssr: false }
 );
 
+const SongExport = dynamic(
+  () => import('@/components/songwriting/song-export').then((m) => m.SongExport),
+  { ssr: false }
+);
+
+const KeyTransposer = dynamic(
+  () => import('@/components/songwriting/key-transposer').then((m) => m.KeyTransposer),
+  { ssr: false }
+);
+
+const ChordDiagramStrip = dynamic(
+  () => import('@/components/songwriting/chord-diagrams').then((m) => m.ChordDiagramStrip),
+  { ssr: false }
+);
+
+const BpmTapper = dynamic(
+  () => import('@/components/songwriting/bpm-tapper').then((m) => m.BpmTapper),
+  { ssr: false }
+);
+
+const NashvilleNumbers = dynamic(
+  () => import('@/components/songwriting/nashville-numbers').then((m) => m.NashvilleNumbers),
+  { ssr: false }
+);
+
+const ReferenceTracks = dynamic(
+  () => import('@/components/songwriting/reference-tracks').then((m) => m.ReferenceTracks),
+  { ssr: false }
+);
+
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
@@ -110,6 +149,16 @@ export default function SongwritingPage() {
   const [showLibraryImport, setShowLibraryImport] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showSaveVersion, setShowSaveVersion] = useState(false);
+  const [showExport, setShowExport] = useState(false);
+  const [referenceTracks, setReferenceTracks] = useState<
+    Array<{
+      id: string;
+      title: string;
+      artist: string;
+      url?: string;
+      notes?: string;
+    }>
+  >([]);
 
   // Undo/Redo state management
   const [history, setHistory] = useState<Array<{ blocks: SongBlock[]; lyrics: string }>>([]);
@@ -132,6 +181,43 @@ export default function SongwritingPage() {
   // Refs for undo/redo to avoid stale closures
   const historyRef = useRef(history);
   const historyIndexRef = useRef(historyIndex);
+
+  // Check for imported file from library on mount
+  useEffect(() => {
+    try {
+      const importedData = sessionStorage.getItem('songwritingImport');
+      if (importedData) {
+        const data = JSON.parse(importedData);
+        if (data.importedFile) {
+          const { name, lyrics: importedLyrics, type } = data.importedFile;
+
+          // Set song title from file name
+          if (name) {
+            const cleanName = name.replace(/\.[^/.]+$/, ''); // Remove extension
+            setSongTitle(cleanName);
+          }
+
+          // Import lyrics content
+          if (importedLyrics) {
+            setLyrics(importedLyrics);
+            success(`Imported "${name}" from library!`, 3000);
+          } else {
+            success(`Opened "${name}" - add lyrics in the Lyrics tab`, 3000);
+          }
+
+          // Switch to lyrics view if it's a lyrics/chords file
+          if (['lyrics', 'chords'].includes(type)) {
+            setActiveView('lyrics');
+          }
+        }
+
+        // Clear the import data
+        sessionStorage.removeItem('songwritingImport');
+      }
+    } catch (err) {
+      console.error('Failed to load imported file:', err);
+    }
+  }, [success]);
 
   // Keep refs in sync with state
   useEffect(() => {
@@ -319,11 +405,46 @@ export default function SongwritingPage() {
   }, [user]);
 
   // Handle library import
-  const handleLibraryImport = (file: LibraryFile) => {
-    // For now, add a link to the file in the lyrics
+  const handleLibraryImport = async (file: LibraryFile) => {
+    // If the file has lyrics content, import it directly
+    if (file.lyrics) {
+      setLyrics((prev) => {
+        // If there's existing content, add a separator
+        if (prev.trim()) {
+          return prev + `\n\n--- Imported from: ${file.name} ---\n\n` + file.lyrics;
+        }
+        return file.lyrics || '';
+      });
+      success(`Imported lyrics from ${file.name}`, 2000);
+      setActiveView('lyrics');
+      return;
+    }
+
+    // For text-based files, try to fetch the content
+    if (['lyrics', 'chords'].includes(file.type) || file.mimeType.startsWith('text/')) {
+      try {
+        const response = await fetch(file.url);
+        const text = await response.text();
+        if (text) {
+          setLyrics((prev) => {
+            if (prev.trim()) {
+              return prev + `\n\n--- Imported from: ${file.name} ---\n\n` + text;
+            }
+            return text;
+          });
+          success(`Imported content from ${file.name}`, 2000);
+          setActiveView('lyrics');
+          return;
+        }
+      } catch (err) {
+        console.error('Failed to fetch file content:', err);
+      }
+    }
+
+    // Fallback: add a reference to the file
     const importText = `\n\n[Imported: ${file.name}]\nFile URL: ${file.url}\n`;
     setLyrics((prev) => prev + importText);
-    success(`Imported ${file.name}`, 2000);
+    success(`Added reference to ${file.name}`, 2000);
   };
 
   // Handle version restore - refetch the song data from the server
@@ -371,6 +492,22 @@ export default function SongwritingPage() {
   const handleVersionSaved = () => {
     success('Version saved!', 2000);
   };
+
+  // Reference tracks handlers
+  const addReferenceTrack = (track: Omit<(typeof referenceTracks)[0], 'id'>) => {
+    setReferenceTracks((prev) => [...prev, { ...track, id: crypto.randomUUID() }]);
+  };
+
+  const removeReferenceTrack = (id: string) => {
+    setReferenceTracks((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  const updateReferenceTrack = (id: string, updates: Partial<(typeof referenceTracks)[0]>) => {
+    setReferenceTracks((prev) => prev.map((t) => (t.id === id ? { ...t, ...updates } : t)));
+  };
+
+  // Get unique chords from chord progression
+  const uniqueChords = [...new Set(_chordProgression.map((c) => c.chord))];
 
   const tabs = [
     { id: 'structure', label: 'Structure' },
@@ -562,6 +699,20 @@ export default function SongwritingPage() {
                           <GitBranch className="h-3.5 w-3.5" style={{ color: 'var(--accent)' }} />
                           History
                         </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setShowExport(true)}
+                          className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition"
+                          style={{
+                            background: 'var(--accent)',
+                            color: 'white',
+                          }}
+                          title="Export Song"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          Export
+                        </motion.button>
                       </div>
                     )}
                   </>
@@ -717,6 +868,7 @@ export default function SongwritingPage() {
 
           {activeView === 'chords' && (
             <div className="space-y-6">
+              {/* Main Chord Builder */}
               <div className="card overflow-hidden rounded-2xl p-6">
                 <ChordBuilder
                   onChange={(progression) => {
@@ -729,47 +881,116 @@ export default function SongwritingPage() {
                   }}
                 />
               </div>
-              <div className="card overflow-hidden rounded-2xl">
-                <Metronome
-                  initialBpm={songData.tempo || 120}
-                  initialTimeSignature={songData.timeSignature || '4/4'}
-                  onBpmChange={(bpm) => {
-                    if (songData.id) {
-                      updateSong({ tempo: bpm });
-                    }
-                  }}
-                  onTimeSignatureChange={(sig) => {
-                    if (songData.id) {
-                      updateSong({ timeSignature: sig });
-                    }
-                  }}
-                />
+
+              {/* Two-column layout for tools */}
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* Left column */}
+                <div className="space-y-6">
+                  {/* Key Transposer */}
+                  {uniqueChords.length > 0 && (
+                    <div className="card overflow-hidden rounded-2xl p-6">
+                      <KeyTransposer
+                        chords={uniqueChords}
+                        currentKey={songData.key || 'C'}
+                        onTranspose={(transposedChords, newKey, semitones) => {
+                          if (songData.id && semitones !== 0) {
+                            updateSong({ key: newKey });
+                            success(`Transposed to ${newKey}`, 2000);
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Nashville Numbers */}
+                  {uniqueChords.length > 0 && songData.key && (
+                    <div className="card overflow-hidden rounded-2xl p-6">
+                      <NashvilleNumbers chords={uniqueChords} songKey={songData.key} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Right column */}
+                <div className="space-y-6">
+                  {/* Metronome + BPM Tapper */}
+                  <div className="card overflow-hidden rounded-2xl">
+                    <Metronome
+                      initialBpm={songData.tempo || 120}
+                      initialTimeSignature={songData.timeSignature || '4/4'}
+                      onBpmChange={(bpm) => {
+                        if (songData.id) {
+                          updateSong({ tempo: bpm });
+                        }
+                      }}
+                      onTimeSignatureChange={(sig) => {
+                        if (songData.id) {
+                          updateSong({ timeSignature: sig });
+                        }
+                      }}
+                    />
+                  </div>
+
+                  {/* BPM Tapper */}
+                  <div className="card overflow-hidden rounded-2xl p-6">
+                    <BpmTapper
+                      currentBpm={songData.tempo}
+                      onBpmDetected={(bpm) => {
+                        if (songData.id) {
+                          updateSong({ tempo: bpm });
+                          success(`Tempo set to ${bpm} BPM`, 2000);
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
+
+              {/* Chord Diagrams - Full Width */}
+              {uniqueChords.length > 0 && (
+                <div className="card overflow-hidden rounded-2xl p-6">
+                  <ChordDiagramStrip chords={uniqueChords} />
+                </div>
+              )}
             </div>
           )}
 
           {activeView === 'lyrics' && (
             <div className="space-y-6">
-              <div className="card overflow-hidden rounded-2xl p-6">
-                <div
-                  className="mb-6 flex items-center gap-3 pb-4"
-                  style={{ borderBottom: '1px solid var(--border)' }}
-                >
+              <div className="grid gap-6 lg:grid-cols-2">
+                {/* Voice Memos */}
+                <div className="card overflow-hidden rounded-2xl p-6">
                   <div
-                    className="flex h-10 w-10 items-center justify-center rounded-xl"
-                    style={{
-                      background:
-                        'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 69, 0, 0.1))',
-                    }}
+                    className="mb-6 flex items-center gap-3 pb-4"
+                    style={{ borderBottom: '1px solid var(--border)' }}
                   >
-                    <Music4 className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-xl"
+                      style={{
+                        background:
+                          'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 69, 0, 0.1))',
+                      }}
+                    >
+                      <Music4 className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                    </div>
+                    <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+                      Voice Memos
+                    </h3>
                   </div>
-                  <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
-                    Voice Memos
-                  </h3>
+                  <VoiceMemoRecorder songId={songData.id} />
                 </div>
-                <VoiceMemoRecorder songId={songData.id} />
+
+                {/* Reference Tracks */}
+                <div className="card overflow-hidden rounded-2xl p-6">
+                  <ReferenceTracks
+                    tracks={referenceTracks}
+                    onAddTrack={addReferenceTrack}
+                    onRemoveTrack={removeReferenceTrack}
+                    onUpdateTrack={updateReferenceTrack}
+                  />
+                </div>
               </div>
+
+              {/* Lyrics Assistant - Full Width */}
               <div className="card overflow-hidden rounded-2xl p-6">
                 <LyricsAssistant
                   currentLyrics={lyrics}
@@ -838,7 +1059,7 @@ export default function SongwritingPage() {
           isOpen={showLibraryImport}
           onClose={() => setShowLibraryImport(false)}
           onImport={handleLibraryImport}
-          acceptTypes={['demo', 'sample', 'loop', 'stem']}
+          acceptTypes={['demo', 'sample', 'loop', 'stem', 'lyrics', 'chords', 'sheet_music']}
         />
       )}
 
@@ -893,6 +1114,19 @@ export default function SongwritingPage() {
         isOpen={showSaveVersion}
         onClose={() => setShowSaveVersion(false)}
         onVersionSaved={handleVersionSaved}
+      />
+
+      {/* Song Export Modal */}
+      <SongExport
+        isOpen={showExport}
+        onClose={() => setShowExport(false)}
+        songTitle={songTitle}
+        key={songData.key}
+        tempo={songData.tempo}
+        timeSignature={songData.timeSignature}
+        lyrics={lyrics}
+        blocks={songBlocks}
+        chords={uniqueChords}
       />
 
       {/* Toast Notifications */}

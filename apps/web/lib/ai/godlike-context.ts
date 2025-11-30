@@ -287,7 +287,7 @@ export async function buildGodlikeContext(
       select: {
         id: true,
         name: true,
-        fileType: true,
+        type: true,
         duration: true,
         tags: true,
         createdAt: true,
@@ -433,7 +433,7 @@ export async function buildGodlikeContext(
   const libraryContext: LibraryContext[] = libraryFiles.map((f) => ({
     id: f.id,
     name: f.name,
-    type: f.fileType,
+    type: f.type,
     duration: f.duration,
     tags: f.tags || [],
     createdAt: f.createdAt.toISOString(),
@@ -660,7 +660,7 @@ function getQuotasForTier(tier: string) {
         storage: 100,
         aiRequests: 500,
         videoMinutes: 1200,
-        assistantConversations: 100,
+        assistantConversations: -1, // UNLIMITED for Studio ($35/mo)
       };
     case 'creator':
       return {
@@ -668,9 +668,15 @@ function getQuotasForTier(tier: string) {
         storage: 10,
         aiRequests: 100,
         videoMinutes: 0,
-        assistantConversations: 30,
+        assistantConversations: 100, // 100/month for Creator ($15/mo)
       };
     default:
-      return { projects: 3, storage: 1, aiRequests: 0, videoMinutes: 0, assistantConversations: 0 };
+      return {
+        projects: 3,
+        storage: 1,
+        aiRequests: 10,
+        videoMinutes: 0,
+        assistantConversations: 10,
+      }; // 10/month Free (teaser)
   }
 }
