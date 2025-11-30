@@ -86,16 +86,16 @@ export async function POST(request: NextRequest) {
     try {
       await requireFeatureAccess('aiAssistant');
     } catch {
+      // Return JSON response for error handling (not SSE)
       return new Response(
-        encoder.encode(
-          `data: ${JSON.stringify({ error: 'Upgrade to Studio tier to use AI Assistant', code: 'SUBSCRIPTION_REQUIRED' })}\n\n`
-        ),
+        JSON.stringify({
+          error: 'Upgrade to Studio tier to use AI Assistant',
+          code: 'SUBSCRIPTION_REQUIRED',
+        }),
         {
           status: 403,
           headers: {
-            'Content-Type': 'text/event-stream',
-            'Cache-Control': 'no-cache',
-            Connection: 'keep-alive',
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -105,16 +105,16 @@ export async function POST(request: NextRequest) {
     try {
       await requireUsageQuota('assistantConversations', 1);
     } catch {
+      // Return JSON response for error handling (not SSE)
       return new Response(
-        encoder.encode(
-          `data: ${JSON.stringify({ error: 'Monthly conversation limit reached', code: 'QUOTA_EXCEEDED' })}\n\n`
-        ),
+        JSON.stringify({
+          error: 'Monthly conversation limit reached',
+          code: 'QUOTA_EXCEEDED',
+        }),
         {
           status: 429,
           headers: {
-            'Content-Type': 'text/event-stream',
-            'Cache-Control': 'no-cache',
-            Connection: 'keep-alive',
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -125,18 +125,25 @@ export async function POST(request: NextRequest) {
     const { message, conversationId, conversationHistory = [] } = body;
 
     if (!message || typeof message !== 'string') {
-      return new Response(
-        encoder.encode(`data: ${JSON.stringify({ error: 'Message is required' })}\n\n`),
-        { status: 400 }
-      );
+      return new Response(JSON.stringify({ error: 'Message is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     // Detect AI provider
     const provider = detectAIProvider();
     if (!provider) {
       return new Response(
-        encoder.encode(`data: ${JSON.stringify({ error: 'AI service unavailable' })}\n\n`),
-        { status: 503 }
+        JSON.stringify({
+          error:
+            'AI service is not configured. Please add OPENAI_API_KEY or ANTHROPIC_API_KEY to environment variables.',
+          code: 'AI_NOT_CONFIGURED',
+        }),
+        {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' },
+        }
       );
     }
 
@@ -492,15 +499,15 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Stream setup error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      encoder.encode(`data: ${JSON.stringify({ error: 'Failed to initialize stream' })}\n\n`),
+      JSON.stringify({
+        error: `Failed to start AI Assistant: ${errorMessage}`,
+        code: 'STREAM_INIT_ERROR',
+      }),
       {
         status: 500,
-        headers: {
-          'Content-Type': 'text/event-stream',
-          'Cache-Control': 'no-cache',
-          Connection: 'keep-alive',
-        },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
   }

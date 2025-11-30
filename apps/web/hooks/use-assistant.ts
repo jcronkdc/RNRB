@@ -89,14 +89,29 @@ export function useAssistant(options: UseAssistantOptions = {}): UseAssistantRet
           });
 
           if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
+            // Try to parse as JSON first (error responses should be JSON now)
+            let errorData: { error?: string; code?: string } = {};
+            try {
+              const text = await response.text();
+              // Try parsing as JSON
+              errorData = JSON.parse(text);
+            } catch {
+              // If not JSON, use generic error based on status
+            }
+
+            if (response.status === 401) {
+              throw new Error('Please sign in to use the AI Assistant');
+            }
             if (response.status === 403) {
               throw new Error(errorData.error || 'Upgrade to Studio tier to use AI Assistant');
             }
             if (response.status === 429) {
               throw new Error(errorData.error || 'Monthly conversation limit reached');
             }
-            throw new Error(errorData.error || 'Failed to get response');
+            if (response.status === 503) {
+              throw new Error(errorData.error || 'AI service is temporarily unavailable');
+            }
+            throw new Error(errorData.error || `Error ${response.status}: Failed to get response`);
           }
 
           if (!response.body) {
@@ -201,16 +216,22 @@ export function useAssistant(options: UseAssistantOptions = {}): UseAssistantRet
             signal: abortControllerRef.current.signal,
           });
 
-          const data = await response.json();
+          const data = await response.json().catch(() => ({}));
 
           if (!response.ok) {
+            if (response.status === 401) {
+              throw new Error('Please sign in to use the AI Assistant');
+            }
             if (response.status === 403) {
               throw new Error(data.error || 'Upgrade to Studio tier to use AI Assistant');
             }
             if (response.status === 429) {
               throw new Error(data.error || 'Monthly conversation limit reached');
             }
-            throw new Error(data.error || 'Failed to get response');
+            if (response.status === 503) {
+              throw new Error(data.error || 'AI service is temporarily unavailable');
+            }
+            throw new Error(data.error || `Error ${response.status}: Failed to get response`);
           }
 
           const assistantMessage: Message = {
