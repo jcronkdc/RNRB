@@ -3,6 +3,8 @@
 import { motion } from 'framer-motion';
 import { Check, Loader2, AlertCircle, Music4, Sparkles } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 
 import { OnboardingTour } from '@/components/feature-tooltip';
@@ -363,6 +365,30 @@ export default function SongwritingPage() {
       />
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* RR Logo - Required on all feature pages */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 flex justify-center"
+        >
+          <Link href="/" className="group relative inline-block">
+            <Image
+              src="/logo-light.png"
+              alt="Rock N' Roll Basement"
+              width={160}
+              height={65}
+              priority
+              className="transition-all duration-300 group-hover:scale-105"
+              style={{
+                filter:
+                  'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(168, 85, 247, 0.2))',
+              }}
+            />
+            {/* Subtle glow on hover */}
+            <div className="absolute inset-0 -z-10 rounded-full bg-purple-500/20 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
+          </Link>
+        </motion.div>
         {/* Premium Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">

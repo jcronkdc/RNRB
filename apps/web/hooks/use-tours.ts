@@ -34,6 +34,14 @@ interface ToursResponse {
   hasMore: boolean;
 }
 
+interface SubscriptionError {
+  error: string;
+  message: string;
+  feature: string;
+  requiredTier: string;
+  upgradeUrl: string;
+}
+
 interface UseToursOptions {
   orgId?: string;
   status?: string;
@@ -41,12 +49,19 @@ interface UseToursOptions {
   autoFetch?: boolean;
 }
 
+interface ToursError {
+  message: string;
+  isSubscriptionError?: boolean;
+  requiredTier?: string;
+  upgradeUrl?: string;
+}
+
 export function useTours(options: UseToursOptions = {}) {
   const { orgId, status, includeShows = false, autoFetch = true } = options;
 
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ToursError | null>(null);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [hasMore, setHasMore] = useState(false);
