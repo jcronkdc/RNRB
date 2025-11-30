@@ -15,6 +15,15 @@ import {
   suggestCollaborators,
   ADVANCED_AI_FUNCTIONS,
 } from '@/lib/ai/assistant-tools';
+import {
+  storeMemory,
+  updateMemory,
+  deleteMemory,
+  summarizeConversation,
+  MEMORY_AI_FUNCTIONS,
+  type MemoryType,
+  type MemoryPriority,
+} from '@/lib/ai/assistant-memory';
 import { buildGodlikeContext, formatGodlikeContext } from '@/lib/ai/godlike-context';
 import { handleApiError, AppError } from '@/lib/errors';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
@@ -144,8 +153,8 @@ export async function POST(request: NextRequest) {
         content: validated.message,
       });
 
-      // Convert AI_FUNCTIONS + ADVANCED_AI_FUNCTIONS to OpenAI format
-      const allFunctions = [...AI_FUNCTIONS, ...ADVANCED_AI_FUNCTIONS];
+      // Convert ALL AI functions to OpenAI format
+      const allFunctions = [...AI_FUNCTIONS, ...ADVANCED_AI_FUNCTIONS, ...MEMORY_AI_FUNCTIONS];
       const tools: OpenAI.ChatCompletionTool[] = allFunctions.map((fn) => ({
         type: 'function' as const,
         function: {
@@ -211,6 +220,25 @@ export async function POST(request: NextRequest) {
               break;
             case 'suggestCollaborators':
               result = await suggestCollaborators(user.id);
+              break;
+            // Memory functions
+            case 'storeMemory':
+              result = await storeMemory(user.id, {
+                type: functionArgs.type as MemoryType,
+                content: functionArgs.content,
+                priority: functionArgs.priority as MemoryPriority,
+                tags: functionArgs.tags,
+                source: 'conversation',
+              });
+              break;
+            case 'updateMemory':
+              result = await updateMemory(functionArgs.memoryId, user.id, {
+                content: functionArgs.content,
+                supersede: functionArgs.supersede,
+              });
+              break;
+            case 'deleteMemory':
+              result = { success: await deleteMemory(functionArgs.memoryId, user.id) };
               break;
             default:
               // Fall back to original action executor
@@ -374,6 +402,19 @@ When the user asks you to do something, explain what you would do and guide them
 
     // Track successful usage
     await trackUsage(user.id, 'assistantConversations', 1);
+
+    // Auto-summarize conversation if it's getting long (background, don't wait)
+    const messageCount = conversation.messageCount || 2;
+    if (messageCount >= 6 && messageCount % 4 === 2) {
+      // Summarize every 4 messages after the first 6
+      summarizeConversation(conversation.id, user.id, {
+        summary: `Conversation about ${detectTopic(validated.message, context.currentPage)}`,
+        keyTopics: [detectTopic(validated.message, context.currentPage)],
+        actionsTaken: actionsExecuted.map((a) => a.action),
+        userSentiment: 'neutral',
+        learnings: [],
+      }).catch((err) => console.error('Failed to summarize conversation:', err));
+    }
 
     return NextResponse.json({
       response: responseText,

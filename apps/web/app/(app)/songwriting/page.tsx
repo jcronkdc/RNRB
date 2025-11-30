@@ -108,6 +108,11 @@ const ReferenceTracks = dynamic(
   { ssr: false }
 );
 
+const PasteLyricsModal = dynamic(
+  () => import('@/components/songwriting/paste-lyrics-modal').then((m) => m.PasteLyricsModal),
+  { ssr: false }
+);
+
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
@@ -150,6 +155,7 @@ export default function SongwritingPage() {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showSaveVersion, setShowSaveVersion] = useState(false);
   const [showExport, setShowExport] = useState(false);
+  const [showPasteLyrics, setShowPasteLyrics] = useState(false);
   const [referenceTracks, setReferenceTracks] = useState<
     Array<{
       id: string;
@@ -404,19 +410,35 @@ export default function SongwritingPage() {
     }
   }, [user]);
 
-  // Handle library import
+  // Handle library import with smart lyrics parsing
   const handleLibraryImport = async (file: LibraryFile) => {
+    // Dynamic import of lyrics parser to keep bundle small
+    const { parseLyricsToBlocks, getSectionSummary, smartParseLyrics } =
+      await import('@/lib/lyrics-parser');
+
+    // Helper to process lyrics content
+    const processLyrics = (lyricsText: string, source: string) => {
+      const sections = smartParseLyrics(lyricsText);
+      const blocks = parseLyricsToBlocks(lyricsText);
+
+      if (blocks.length > 0) {
+        // Smart import: convert to song blocks
+        setSongBlocks(blocks);
+        setLyrics(lyricsText);
+        const summary = getSectionSummary(sections);
+        success(`Imported from ${source}: ${summary}`, 3000);
+        setActiveView('structure'); // Switch to structure view to see the blocks
+      } else {
+        // Fallback: just set the lyrics
+        setLyrics(lyricsText);
+        success(`Imported lyrics from ${source}`, 2000);
+        setActiveView('lyrics');
+      }
+    };
+
     // If the file has lyrics content, import it directly
     if (file.lyrics) {
-      setLyrics((prev) => {
-        // If there's existing content, add a separator
-        if (prev.trim()) {
-          return prev + `\n\n--- Imported from: ${file.name} ---\n\n` + file.lyrics;
-        }
-        return file.lyrics || '';
-      });
-      success(`Imported lyrics from ${file.name}`, 2000);
-      setActiveView('lyrics');
+      processLyrics(file.lyrics, file.name);
       return;
     }
 
@@ -426,14 +448,7 @@ export default function SongwritingPage() {
         const response = await fetch(file.url);
         const text = await response.text();
         if (text) {
-          setLyrics((prev) => {
-            if (prev.trim()) {
-              return prev + `\n\n--- Imported from: ${file.name} ---\n\n` + text;
-            }
-            return text;
-          });
-          success(`Imported content from ${file.name}`, 2000);
-          setActiveView('lyrics');
+          processLyrics(text, file.name);
           return;
         }
       } catch (err) {
@@ -732,6 +747,14 @@ export default function SongwritingPage() {
                       className="button secondary rounded-xl px-4 py-2.5 text-sm font-medium"
                     >
                       Templates
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setShowPasteLyrics(true)}
+                      className="button secondary rounded-xl px-4 py-2.5 text-sm font-medium"
+                    >
+                      Paste Lyrics
                     </motion.button>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
@@ -1121,6 +1144,17 @@ export default function SongwritingPage() {
         lyrics={lyrics}
         blocks={songBlocks}
         chords={uniqueChords}
+      />
+
+      {/* Paste Lyrics Modal */}
+      <PasteLyricsModal
+        isOpen={showPasteLyrics}
+        onClose={() => setShowPasteLyrics(false)}
+        onImport={(blocks, rawLyrics) => {
+          setSongBlocks(blocks);
+          setLyrics(rawLyrics);
+          success(`Imported ${blocks.length} section${blocks.length !== 1 ? 's' : ''}!`, 2000);
+        }}
       />
 
       {/* Toast Notifications */}

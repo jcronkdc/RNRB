@@ -7,11 +7,14 @@ import {
   Compass,
   FileMusic,
   Folder,
+  FolderOpen,
+  FolderPlus,
   HardDrive,
   Library,
   ListMusic,
   Loader2,
   Mic2,
+  Music,
   Music2,
   Plus,
   Sparkles,
@@ -35,6 +38,20 @@ type RecentProject = {
   name: string;
   slug: string;
   song_count: number;
+};
+
+// Song type for recent songs
+type RecentSong = {
+  id: string;
+  title: string;
+  status: 'draft' | 'in_progress' | 'needs_review' | 'complete';
+  projectId?: string;
+  updatedAt: string;
+  project?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
 };
 
 // Animated background component
@@ -350,6 +367,115 @@ const RecentProjectCard = memo(
 );
 RecentProjectCard.displayName = 'RecentProjectCard';
 
+// Recent song card with "Add to Project" action
+const RecentSongCard = memo(
+  ({
+    song,
+    delay = 0,
+    onProjectAdded,
+  }: {
+    song: RecentSong;
+    delay?: number;
+    onProjectAdded?: () => void;
+  }) => {
+    const router = useRouter();
+    const [isAdding, setIsAdding] = useState(false);
+    const [showProjectMenu, setShowProjectMenu] = useState(false);
+
+    const handleOpenSong = () => {
+      if (song.project) {
+        router.push(`/projects/${song.project.slug}/songs/${song.id}`);
+      } else {
+        router.push(`/songwriting?song=${song.id}`);
+      }
+    };
+
+    const statusColors = {
+      draft: 'text-gray-400',
+      in_progress: 'text-blue-400',
+      needs_review: 'text-yellow-400',
+      complete: 'text-green-400',
+    };
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, delay }}
+      >
+        <motion.div
+          whileHover={{ x: 8, scale: 1.01 }}
+          className="card group flex cursor-pointer items-center gap-4 p-4 transition-all duration-200"
+        >
+          <div
+            onClick={handleOpenSong}
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl shadow-lg transition-transform group-hover:scale-110"
+            style={{ background: 'var(--accent)' }}
+          >
+            <Music className="h-6 w-6 text-white" />
+          </div>
+          <div className="flex-1 overflow-hidden" onClick={handleOpenSong}>
+            <h4
+              className="truncate font-medium text-white transition-colors"
+              style={{ color: 'var(--text)' }}
+            >
+              {song.title}
+            </h4>
+            <p className="flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
+              <span className={statusColors[song.status]}>{song.status.replace('_', ' ')}</span>
+              {song.project && (
+                <>
+                  <span>•</span>
+                  <span className="truncate">{song.project.name}</span>
+                </>
+              )}
+            </p>
+          </div>
+          {/* Add to Project button for standalone songs */}
+          {!song.project && (
+            <Link
+              href={`/songs`}
+              className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
+              style={{
+                background: 'rgba(255, 99, 71, 0.1)',
+                color: 'var(--accent)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <FolderPlus className="h-3 w-3" />
+              Add to Project
+            </Link>
+          )}
+          <ChevronRight
+            onClick={handleOpenSong}
+            className="h-5 w-5 shrink-0 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+            style={{ color: 'var(--accent)' }}
+          />
+        </motion.div>
+      </motion.div>
+    );
+  }
+);
+RecentSongCard.displayName = 'RecentSongCard';
+
+// Loading skeleton for songs
+const SongsSkeleton = memo(() => (
+  <div className="space-y-3">
+    {[...Array(4)].map((_, i) => (
+      <div key={i} className="card relative overflow-hidden p-4">
+        <div className="flex animate-pulse items-center gap-4">
+          <div className="h-12 w-12 rounded-xl" style={{ background: 'var(--panel)' }} />
+          <div className="flex-1">
+            <div className="mb-2 h-4 w-32 rounded" style={{ background: 'var(--panel)' }} />
+            <div className="h-3 w-20 rounded" style={{ background: 'var(--panel)' }} />
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+));
+SongsSkeleton.displayName = 'SongsSkeleton';
+
 // Loading skeleton with shimmer
 const StatsSkeleton = memo(() => (
   <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -438,7 +564,9 @@ function DashboardContent() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
+  const [recentSongs, setRecentSongs] = useState<RecentSong[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
+  const [loadingSongs, setLoadingSongs] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -474,11 +602,27 @@ function DashboardContent() {
     }
   }, []);
 
+  const loadSongs = useCallback(async () => {
+    setLoadingSongs(true);
+    try {
+      const response = await fetch('/api/songs/all?limit=5&sortBy=updatedAt&sortOrder=desc');
+      if (response.ok) {
+        const data = await response.json();
+        setRecentSongs(data.songs || []);
+      }
+    } catch (err) {
+      console.error('Error loading songs:', err);
+    } finally {
+      setLoadingSongs(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (user && !loading && status === 'authenticated') {
       loadProjects();
+      loadSongs();
     }
-  }, [user, loading, status, loadProjects]);
+  }, [user, loading, status, loadProjects, loadSongs]);
 
   const userName = useMemo(() => {
     if (loading || !user) return 'Artist';
@@ -744,7 +888,7 @@ function DashboardContent() {
           </div>
         </section>
 
-        {/* ==================== RECENT + ACTIVITY ==================== */}
+        {/* ==================== RECENT PROJECTS + SONGS ==================== */}
         <section className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Recent Projects */}
           <motion.div
@@ -802,38 +946,64 @@ function DashboardContent() {
             </div>
           </motion.div>
 
-          {/* Activity Feed */}
+          {/* Recent Songs - NEW SECTION */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1 }}
           >
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-1 w-6 rounded-full" style={{ background: 'var(--accent)' }} />
-              <h2
-                className="text-sm font-semibold uppercase tracking-widest"
-                style={{ color: 'var(--muted)' }}
-              >
-                Recent Activity
-              </h2>
-            </div>
-            <div className="card p-6">
-              <div className="flex flex-col items-center justify-center py-8 text-center">
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1], opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-                  style={{ background: 'rgba(255, 99, 71, 0.1)' }}
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-1 w-6 rounded-full" style={{ background: 'var(--accent)' }} />
+                <h2
+                  className="text-sm font-semibold uppercase tracking-widest"
+                  style={{ color: 'var(--muted)' }}
                 >
-                  <Activity className="h-8 w-8" style={{ color: 'var(--accent)' }} />
-                </motion.div>
-                <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  Activity feed syncing...
-                </p>
-                <p className="mt-1 text-xs" style={{ color: 'var(--muted)', opacity: 0.6 }}>
-                  Real-time updates coming soon
-                </p>
+                  Recent Songs
+                </h2>
               </div>
+              <Link
+                href="/songs"
+                className="flex items-center gap-1 text-sm font-medium transition-colors"
+                style={{ color: 'var(--accent)' }}
+              >
+                View All
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {loadingSongs ? (
+                <SongsSkeleton />
+              ) : recentSongs.length > 0 ? (
+                recentSongs.map((song, i) => (
+                  <RecentSongCard
+                    key={song.id}
+                    song={song}
+                    delay={1 + i * 0.1}
+                    onProjectAdded={loadSongs}
+                  />
+                ))
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="card flex flex-col items-center justify-center py-12 text-center"
+                >
+                  <div
+                    className="mb-4 flex h-16 w-16 items-center justify-center rounded-full"
+                    style={{ background: 'rgba(255, 99, 71, 0.1)' }}
+                  >
+                    <Music className="h-8 w-8" style={{ color: 'var(--accent)' }} />
+                  </div>
+                  <p className="mb-4" style={{ color: 'var(--muted)' }}>
+                    No songs yet
+                  </p>
+                  <Link href="/songwriting" className="button flex items-center gap-2">
+                    <Plus className="h-4 w-4" />
+                    Write Your First Song
+                  </Link>
+                </motion.div>
+              )}
             </div>
           </motion.div>
         </section>

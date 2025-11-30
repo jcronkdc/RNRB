@@ -16,5 +16,6 @@ export { BpmTapper } from './bpm-tapper';
 export { NashvilleNumbers, NashvilleInline } from './nashville-numbers';
 export { SectionNotes, NoteIndicator, useNotes } from './section-notes';
 export { ReferenceTracks, useReferenceTracks } from './reference-tracks';
+export { PasteLyricsModal } from './paste-lyrics-modal';
 export type { ChordPlacement } from './granular-chord-editor';
 export type { SongVersion } from './version-history-panel';

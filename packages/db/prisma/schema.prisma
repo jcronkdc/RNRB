@@ -154,6 +154,8 @@ model User {
   
   // AI Assistant
   assistantConversations AssistantConversation[]
+  aiMemories             AIMemory[]
+  conversationSummaries  ConversationSummary[]
   creditPurchases        CreditPurchase[]
   
   // Website Builder
@@ -2246,6 +2248,78 @@ model AssistantConversation {
   @@index([topic])
   @@index([rating])
   @@index([resolved])
+
+  // Relation to conversation summaries
+  summary ConversationSummary?
+}
+
+// ====================================
+// AI PERSISTENT MEMORY SYSTEM
+// Stores learned facts, preferences, and insights about users
+// ====================================
+
+enum MemoryType {
+  fact        // Explicit fact: "User's album is due in January"
+  preference  // Preference: "User prefers writing in G major"
+  goal        // Goal: "User wants to release an EP by summer"
+  correction  // Correction: "User said they don't like country"
+  context     // Important context: "User is in a band called The Waves"
+  relationship // Relationship: "Sarah is user's main co-writer"
+  insight     // AI insight: "User is most productive on Tuesdays"
+}
+
+enum MemoryPriority {
+  critical  // Always include in context
+  high      // Include when relevant
+  medium    // Include when space allows
+  low       // Archive, rarely surface
+}
+
+model AIMemory {
+  id              String          @id @default(cuid())
+  userId          String
+  type            MemoryType      @default(fact)
+  priority        MemoryPriority  @default(medium)
+  content         String          @db.Text  // The actual memory content
+  context         String?         @db.Text  // Where/how this was learned
+  source          String?         // conversation, analysis, user_stated
+  confidence      Float           @default(1.0)  // How confident (0-1)
+  lastAccessed    DateTime?       // When AI last used this
+  accessCount     Int             @default(0)  // How often accessed
+  expiresAt       DateTime?       // Optional expiration
+  supersededBy    String?         // If updated/replaced
+  tags            String[]        // For filtering
+  relatedEntityId   String?       // Related song/project/tour ID
+  relatedEntityType String?       // song, project, tour, collaborator
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, type])
+  @@index([userId, priority])
+  @@index([tags])
+}
+
+// Compressed summaries of conversations for long-term memory
+model ConversationSummary {
+  id              String   @id @default(cuid())
+  userId          String
+  conversationId  String   @unique
+  summary         String   @db.Text  // Brief summary
+  keyTopics       String[]          // Main topics discussed
+  actionsTaken    String[]          // Actions AI performed
+  userSentiment   String?           // positive, neutral, frustrated
+  unresolved      String?  @db.Text // Unresolved questions/tasks
+  learnings       String[]          // Things learned about user
+  createdAt       DateTime @default(now())
+
+  user         User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, createdAt])
 }
 
 // Conflict resolution suggestions (AI-powered)

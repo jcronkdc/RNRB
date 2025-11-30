@@ -1,28 +1,70 @@
 /**
- * AI ASSISTANT MEMORY SYSTEM
+ * AI ASSISTANT PERSISTENT MEMORY SYSTEM
  *
- * Gives the AI persistent memory across conversations:
- * - Remembers past conversations and their topics
- * - Learns user preferences (favorite keys, genres, collaborators)
- * - Tracks what the user was working on last time
- * - Surfaces relevant context from past interactions
+ * Truly persistent memory that:
+ * - Stores explicit facts learned from conversations
+ * - Remembers user corrections and preferences
+ * - Compresses old conversations into summaries
+ * - Persists across all sessions
+ * - Can be updated/corrected by the AI
+ *
+ * Memory Types:
+ * - fact: "User's album is due in January"
+ * - preference: "User prefers writing in G major"
+ * - goal: "User wants to release an EP by summer"
+ * - correction: "User said they don't like country"
+ * - context: "User is in a band called The Waves"
+ * - relationship: "Sarah is user's main co-writer"
+ * - insight: "User is most productive on Tuesdays"
  */
 
 import { prisma } from '@cronkwaters/db';
 
-export interface AIMemory {
-  // Recent conversation summaries
-  recentConversations: {
-    id: string;
-    topic: string;
-    summary: string;
-    timestamp: string;
-    page: string;
-    keyPoints: string[];
-  }[];
+// ============================================
+// TYPES
+// ============================================
 
-  // Learned preferences
-  preferences: {
+export type MemoryType =
+  | 'fact'
+  | 'preference'
+  | 'goal'
+  | 'correction'
+  | 'context'
+  | 'relationship'
+  | 'insight';
+
+export type MemoryPriority = 'critical' | 'high' | 'medium' | 'low';
+
+export interface Memory {
+  id: string;
+  type: MemoryType;
+  priority: MemoryPriority;
+  content: string;
+  context: string | null;
+  source: string | null;
+  confidence: number;
+  tags: string[];
+  createdAt: string;
+  accessCount: number;
+}
+
+export interface ConversationSummaryData {
+  id: string;
+  summary: string;
+  keyTopics: string[];
+  actionsTaken: string[];
+  userSentiment: string | null;
+  unresolved: string | null;
+  learnings: string[];
+  createdAt: string;
+}
+
+export interface AIMemory {
+  // Persistent memories from database
+  memories: Memory[];
+
+  // Computed preferences from song analysis
+  computedPreferences: {
     favoriteKeys: string[];
     averageTempo: number;
     preferredGenres: string[];
@@ -31,6 +73,9 @@ export interface AIMemory {
     peakProductivityDays: string[];
     peakProductivityHours: string[];
   };
+
+  // Recent conversation summaries
+  recentSummaries: ConversationSummaryData[];
 
   // What they were working on last
   lastSession: {
@@ -43,35 +88,293 @@ export interface AIMemory {
     unfinishedTask: string | null;
   } | null;
 
-  // Things the AI should remember to mention
-  reminders: {
-    type: 'followup' | 'suggestion' | 'deadline' | 'achievement';
-    message: string;
-    context: string | null;
-    createdAt: string;
-  }[];
+  // Stats
+  totalMemories: number;
+  oldestMemory: string | null;
+}
+
+// ============================================
+// MEMORY OPERATIONS
+// ============================================
+
+/**
+ * Store a new memory
+ */
+export async function storeMemory(
+  userId: string,
+  memory: {
+    type: MemoryType;
+    content: string;
+    priority?: MemoryPriority;
+    context?: string;
+    source?: string;
+    confidence?: number;
+    tags?: string[];
+    relatedEntityId?: string;
+    relatedEntityType?: string;
+    expiresAt?: Date;
+  }
+): Promise<Memory> {
+  // Check if similar memory exists to avoid duplicates
+  const existing = await prisma.aIMemory.findFirst({
+    where: {
+      userId,
+      type: memory.type,
+      content: { contains: memory.content.substring(0, 50), mode: 'insensitive' },
+    },
+  });
+
+  if (existing) {
+    // Update existing memory's access count and confidence
+    const updated = await prisma.aIMemory.update({
+      where: { id: existing.id },
+      data: {
+        confidence: Math.min(1, (existing.confidence || 0.5) + 0.1),
+        accessCount: { increment: 1 },
+        lastAccessed: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+    return formatMemory(updated);
+  }
+
+  // Create new memory
+  const created = await prisma.aIMemory.create({
+    data: {
+      userId,
+      type: memory.type,
+      priority: memory.priority || 'medium',
+      content: memory.content,
+      context: memory.context,
+      source: memory.source || 'conversation',
+      confidence: memory.confidence || 0.8,
+      tags: memory.tags || [],
+      relatedEntityId: memory.relatedEntityId,
+      relatedEntityType: memory.relatedEntityType,
+      expiresAt: memory.expiresAt,
+    },
+  });
+
+  return formatMemory(created);
 }
 
 /**
- * Load AI memory for a user
+ * Update an existing memory
+ */
+export async function updateMemory(
+  memoryId: string,
+  userId: string,
+  updates: {
+    content?: string;
+    priority?: MemoryPriority;
+    confidence?: number;
+    supersede?: boolean; // Mark old memory as superseded
+  }
+): Promise<Memory | null> {
+  // Verify ownership
+  const existing = await prisma.aIMemory.findFirst({
+    where: { id: memoryId, userId },
+  });
+
+  if (!existing) return null;
+
+  if (updates.supersede && updates.content) {
+    // Create new memory and mark old as superseded
+    const newMemory = await prisma.aIMemory.create({
+      data: {
+        userId,
+        type: existing.type,
+        priority: updates.priority || (existing.priority as MemoryPriority),
+        content: updates.content,
+        context: `Updated from: "${existing.content}"`,
+        source: 'user_correction',
+        confidence: 1.0, // User corrections are high confidence
+        tags: existing.tags,
+        relatedEntityId: existing.relatedEntityId,
+        relatedEntityType: existing.relatedEntityType,
+      },
+    });
+
+    // Mark old as superseded
+    await prisma.aIMemory.update({
+      where: { id: memoryId },
+      data: { supersededBy: newMemory.id },
+    });
+
+    return formatMemory(newMemory);
+  }
+
+  // Simple update
+  const updated = await prisma.aIMemory.update({
+    where: { id: memoryId },
+    data: {
+      content: updates.content,
+      priority: updates.priority,
+      confidence: updates.confidence,
+      updatedAt: new Date(),
+    },
+  });
+
+  return formatMemory(updated);
+}
+
+/**
+ * Delete a memory
+ */
+export async function deleteMemory(memoryId: string, userId: string): Promise<boolean> {
+  const result = await prisma.aIMemory.deleteMany({
+    where: { id: memoryId, userId },
+  });
+  return result.count > 0;
+}
+
+/**
+ * Store conversation summary for long-term memory
+ */
+export async function summarizeConversation(
+  conversationId: string,
+  userId: string,
+  data: {
+    summary: string;
+    keyTopics: string[];
+    actionsTaken: string[];
+    userSentiment?: string;
+    unresolved?: string;
+    learnings: string[];
+  }
+): Promise<void> {
+  // Check if summary already exists
+  const existing = await prisma.conversationSummary.findUnique({
+    where: { conversationId },
+  });
+
+  if (existing) {
+    await prisma.conversationSummary.update({
+      where: { conversationId },
+      data: {
+        summary: data.summary,
+        keyTopics: data.keyTopics,
+        actionsTaken: data.actionsTaken,
+        userSentiment: data.userSentiment,
+        unresolved: data.unresolved,
+        learnings: data.learnings,
+      },
+    });
+  } else {
+    await prisma.conversationSummary.create({
+      data: {
+        userId,
+        conversationId,
+        summary: data.summary,
+        keyTopics: data.keyTopics,
+        actionsTaken: data.actionsTaken,
+        userSentiment: data.userSentiment,
+        unresolved: data.unresolved,
+        learnings: data.learnings,
+      },
+    });
+  }
+
+  // Extract and store learnings as memories
+  for (const learning of data.learnings) {
+    await storeMemory(userId, {
+      type: 'insight',
+      content: learning,
+      source: 'conversation_analysis',
+      context: `Learned from conversation about: ${data.keyTopics.join(', ')}`,
+      confidence: 0.7,
+    });
+  }
+}
+
+// ============================================
+// MEMORY LOADING
+// ============================================
+
+/**
+ * Load all AI memory for a user
  */
 export async function loadAIMemory(userId: string): Promise<AIMemory> {
-  // Get recent conversations
-  const conversations = await prisma.assistantConversation.findMany({
-    where: { userId },
-    select: {
-      id: true,
-      topic: true,
-      page: true,
-      createdAt: true,
-      updatedAt: true,
-      messages: true,
+  // Load persistent memories
+  const memoriesRaw = await prisma.aIMemory.findMany({
+    where: {
+      userId,
+      supersededBy: null, // Only active memories
+      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
     },
-    orderBy: { updatedAt: 'desc' },
+    orderBy: [{ priority: 'asc' }, { accessCount: 'desc' }, { createdAt: 'desc' }],
+    take: 100,
+  });
+
+  // Update access timestamps for loaded memories
+  const memoryIds = memoriesRaw.map((m) => m.id);
+  await prisma.aIMemory.updateMany({
+    where: { id: { in: memoryIds } },
+    data: { lastAccessed: new Date(), accessCount: { increment: 1 } },
+  });
+
+  // Load recent conversation summaries
+  const summaries = await prisma.conversationSummary.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
     take: 10,
   });
 
-  // Get user's songs for preference analysis
+  // Load computed preferences from songs
+  const computedPreferences = await computePreferencesFromSongs(userId);
+
+  // Get last session info
+  const lastConversation = await prisma.assistantConversation.findFirst({
+    where: { userId },
+    orderBy: { updatedAt: 'desc' },
+    select: {
+      page: true,
+      context: true,
+      updatedAt: true,
+      summary: true,
+    },
+  });
+
+  let lastSession = null;
+  if (lastConversation) {
+    const ctx = lastConversation.context as any;
+    lastSession = {
+      page: lastConversation.page || 'dashboard',
+      songId: ctx?.songId || null,
+      songTitle: ctx?.songTitle || null,
+      projectId: ctx?.projectId || null,
+      projectName: ctx?.projectName || null,
+      timestamp: lastConversation.updatedAt.toISOString(),
+      unfinishedTask: lastConversation.summary?.unresolved || null,
+    };
+  }
+
+  const memories = memoriesRaw.map(formatMemory);
+
+  return {
+    memories,
+    computedPreferences,
+    recentSummaries: summaries.map((s) => ({
+      id: s.id,
+      summary: s.summary,
+      keyTopics: s.keyTopics,
+      actionsTaken: s.actionsTaken,
+      userSentiment: s.userSentiment,
+      unresolved: s.unresolved,
+      learnings: s.learnings,
+      createdAt: s.createdAt.toISOString(),
+    })),
+    lastSession,
+    totalMemories: memoriesRaw.length,
+    oldestMemory:
+      memoriesRaw.length > 0 ? memoriesRaw[memoriesRaw.length - 1].createdAt.toISOString() : null,
+  };
+}
+
+/**
+ * Compute preferences by analyzing user's songs
+ */
+async function computePreferencesFromSongs(userId: string) {
   const songs = await prisma.song.findMany({
     where: { userId, archived: false },
     select: {
@@ -79,11 +382,9 @@ export async function loadAIMemory(userId: string): Promise<AIMemory> {
       tempo: true,
       genre: true,
       createdAt: true,
-      updatedAt: true,
     },
   });
 
-  // Get collaborator frequency
   const collaborators = await prisma.songCollaborator.findMany({
     where: { song: { userId } },
     select: {
@@ -92,7 +393,7 @@ export async function loadAIMemory(userId: string): Promise<AIMemory> {
     },
   });
 
-  // Analyze preferences from songs
+  // Analyze keys
   const keyCount: Record<string, number> = {};
   const genreCount: Record<string, number> = {};
   let tempoSum = 0;
@@ -155,222 +456,245 @@ export async function loadAIMemory(userId: string): Promise<AIMemory> {
     .slice(0, 5)
     .map(([name]) => name);
 
-  // Process conversations for summaries
-  const recentConversations = conversations.map((c) => {
-    const msgs = c.messages as Array<{ role: string; content: string }>;
-    const userMessages = msgs?.filter((m) => m.role === 'user').map((m) => m.content) || [];
-    const keyPoints = extractKeyPoints(userMessages);
-
-    return {
-      id: c.id,
-      topic: c.topic || 'general',
-      summary: generateConversationSummary(userMessages),
-      timestamp: c.updatedAt.toISOString(),
-      page: c.page || 'unknown',
-      keyPoints,
-    };
-  });
-
-  // Find last session
-  const lastConvo = conversations[0];
-  let lastSession = null;
-
-  if (lastConvo) {
-    const context = lastConvo.messages as any;
-    lastSession = {
-      page: lastConvo.page || 'dashboard',
-      songId: context?.songId || null,
-      songTitle: context?.songTitle || null,
-      projectId: context?.projectId || null,
-      projectName: context?.projectName || null,
-      timestamp: lastConvo.updatedAt.toISOString(),
-      unfinishedTask: extractUnfinishedTask(context),
-    };
-  }
-
-  // Generate reminders based on context
-  const reminders = await generateReminders(userId, conversations);
-
   return {
-    recentConversations,
-    preferences: {
-      favoriteKeys,
-      averageTempo: tempoCount > 0 ? Math.round(tempoSum / tempoCount) : 120,
-      preferredGenres,
-      writingStyle: detectWritingStyle(songs),
-      frequentCollaborators,
-      peakProductivityDays,
-      peakProductivityHours,
-    },
-    lastSession,
-    reminders,
+    favoriteKeys,
+    averageTempo: tempoCount > 0 ? Math.round(tempoSum / tempoCount) : 120,
+    preferredGenres,
+    writingStyle: preferredGenres[0] || null,
+    frequentCollaborators,
+    peakProductivityDays,
+    peakProductivityHours,
   };
 }
 
-/**
- * Extract key points from user messages
- */
-function extractKeyPoints(messages: string[]): string[] {
-  const keyPoints: string[] = [];
-  const keywords = [
-    'help me',
-    'working on',
-    'stuck on',
-    'finish',
-    'create',
-    'need to',
-    'want to',
-    'how do i',
-  ];
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
 
-  messages.forEach((msg) => {
-    const lower = msg.toLowerCase();
-    keywords.forEach((kw) => {
-      if (lower.includes(kw)) {
-        // Extract the relevant part
-        const idx = lower.indexOf(kw);
-        const snippet = msg.substring(idx, Math.min(idx + 50, msg.length));
-        if (snippet.length > 10) keyPoints.push(snippet);
-      }
-    });
-  });
-
-  return [...new Set(keyPoints)].slice(0, 5);
+function formatMemory(raw: any): Memory {
+  return {
+    id: raw.id,
+    type: raw.type as MemoryType,
+    priority: raw.priority as MemoryPriority,
+    content: raw.content,
+    context: raw.context,
+    source: raw.source,
+    confidence: raw.confidence,
+    tags: raw.tags || [],
+    createdAt: raw.createdAt.toISOString(),
+    accessCount: raw.accessCount,
+  };
 }
 
-/**
- * Generate a brief summary of a conversation
- */
-function generateConversationSummary(messages: string[]): string {
-  if (messages.length === 0) return 'Empty conversation';
-  const firstMsg = messages[0] || '';
-  return firstMsg.length > 100 ? firstMsg.substring(0, 100) + '...' : firstMsg;
-}
-
-/**
- * Extract any unfinished task from conversation context
- */
-function extractUnfinishedTask(context: any): string | null {
-  if (!context) return null;
-  // Look for patterns like "I'll help you with X" without completion
-  // This is a simplified version - could be enhanced with AI
-  return null;
-}
-
-/**
- * Detect user's writing style from their songs
- */
-function detectWritingStyle(songs: Array<{ genre: string | null }>): string | null {
-  const genres = songs.filter((s) => s.genre).map((s) => s.genre!);
-  if (genres.length === 0) return null;
-
-  const genreCount: Record<string, number> = {};
-  genres.forEach((g) => {
-    genreCount[g] = (genreCount[g] || 0) + 1;
-  });
-
-  const topGenre = Object.entries(genreCount).sort(([, a], [, b]) => b - a)[0];
-  return topGenre ? topGenre[0] : null;
-}
-
-/**
- * Generate reminders based on user's activity
- */
-async function generateReminders(
-  userId: string,
-  conversations: any[]
-): Promise<AIMemory['reminders']> {
-  const reminders: AIMemory['reminders'] = [];
-
-  // Check if there was an unfinished conversation
-  if (conversations.length > 0) {
-    const lastConvo = conversations[0];
-    const msgs = lastConvo.messages as Array<{ role: string; content: string }>;
-    const lastUserMsg = msgs?.filter((m) => m.role === 'user').pop();
-
-    if (lastUserMsg?.content.toLowerCase().includes('help me')) {
-      reminders.push({
-        type: 'followup',
-        message: `Last time we talked about: "${lastUserMsg.content.substring(0, 50)}..."`,
-        context: lastConvo.topic,
-        createdAt: lastConvo.updatedAt.toISOString(),
-      });
-    }
-  }
-
-  return reminders;
-}
+// ============================================
+// FORMAT FOR AI PROMPT
+// ============================================
 
 /**
  * Format memory for AI prompt
  */
 export function formatMemoryForAI(memory: AIMemory): string {
-  let section = `## 🧠 AI MEMORY (What I Remember About You)\n\n`;
+  let section = `## 🧠 PERSISTENT MEMORY (${memory.totalMemories} memories stored)\n\n`;
+
+  // Critical memories first
+  const critical = memory.memories.filter((m) => m.priority === 'critical');
+  if (critical.length > 0) {
+    section += `### ⭐ CRITICAL (Always Remember)\n`;
+    critical.forEach((m) => {
+      section += `- **[${m.type}]** ${m.content}\n`;
+    });
+    section += '\n';
+  }
+
+  // High priority memories
+  const high = memory.memories.filter((m) => m.priority === 'high');
+  if (high.length > 0) {
+    section += `### 🔴 HIGH PRIORITY\n`;
+    high.forEach((m) => {
+      section += `- **[${m.type}]** ${m.content}\n`;
+    });
+    section += '\n';
+  }
+
+  // Group other memories by type
+  const byType: Record<string, Memory[]> = {};
+  memory.memories
+    .filter((m) => m.priority !== 'critical' && m.priority !== 'high')
+    .forEach((m) => {
+      if (!byType[m.type]) byType[m.type] = [];
+      byType[m.type].push(m);
+    });
+
+  // Facts
+  if (byType.fact?.length) {
+    section += `### 📌 Known Facts\n`;
+    byType.fact.slice(0, 10).forEach((m) => {
+      section += `- ${m.content}\n`;
+    });
+    section += '\n';
+  }
 
   // Preferences
-  section += `### Your Musical Preferences\n`;
-  if (memory.preferences.favoriteKeys.length > 0) {
-    section += `- **Favorite Keys:** ${memory.preferences.favoriteKeys.join(', ')}\n`;
-  }
-  section += `- **Average Tempo:** ${memory.preferences.averageTempo} BPM\n`;
-  if (memory.preferences.preferredGenres.length > 0) {
-    section += `- **Preferred Genres:** ${memory.preferences.preferredGenres.join(', ')}\n`;
-  }
-  if (memory.preferences.writingStyle) {
-    section += `- **Writing Style:** ${memory.preferences.writingStyle}\n`;
-  }
-  if (memory.preferences.frequentCollaborators.length > 0) {
-    section += `- **Frequent Collaborators:** ${memory.preferences.frequentCollaborators.join(', ')}\n`;
+  if (byType.preference?.length) {
+    section += `### 💡 Learned Preferences\n`;
+    byType.preference.slice(0, 10).forEach((m) => {
+      section += `- ${m.content}\n`;
+    });
+    section += '\n';
   }
 
-  // Productivity patterns
-  if (memory.preferences.peakProductivityDays.length > 0) {
-    section += `\n### Your Productivity Patterns\n`;
-    section += `- **Most Creative Days:** ${memory.preferences.peakProductivityDays.join(', ')}\n`;
-    section += `- **Peak Hours:** ${memory.preferences.peakProductivityHours.join(', ')}\n`;
+  // Goals
+  if (byType.goal?.length) {
+    section += `### 🎯 User Goals\n`;
+    byType.goal.slice(0, 5).forEach((m) => {
+      section += `- ${m.content}\n`;
+    });
+    section += '\n';
+  }
+
+  // Corrections (important!)
+  if (byType.correction?.length) {
+    section += `### ⚠️ User Corrections (Respect These!)\n`;
+    byType.correction.forEach((m) => {
+      section += `- ${m.content}\n`;
+    });
+    section += '\n';
+  }
+
+  // Context
+  if (byType.context?.length) {
+    section += `### 📋 Context\n`;
+    byType.context.slice(0, 5).forEach((m) => {
+      section += `- ${m.content}\n`;
+    });
+    section += '\n';
+  }
+
+  // Relationships
+  if (byType.relationship?.length) {
+    section += `### 👥 Relationships\n`;
+    byType.relationship.slice(0, 5).forEach((m) => {
+      section += `- ${m.content}\n`;
+    });
+    section += '\n';
+  }
+
+  // Computed preferences
+  const prefs = memory.computedPreferences;
+  section += `### 🎵 Analyzed From Songs\n`;
+  if (prefs.favoriteKeys.length > 0) {
+    section += `- Favorite Keys: ${prefs.favoriteKeys.join(', ')}\n`;
+  }
+  section += `- Average Tempo: ${prefs.averageTempo} BPM\n`;
+  if (prefs.preferredGenres.length > 0) {
+    section += `- Preferred Genres: ${prefs.preferredGenres.join(', ')}\n`;
+  }
+  if (prefs.frequentCollaborators.length > 0) {
+    section += `- Frequent Collaborators: ${prefs.frequentCollaborators.join(', ')}\n`;
+  }
+  if (prefs.peakProductivityDays.length > 0) {
+    section += `- Most Creative Days: ${prefs.peakProductivityDays.join(', ')}\n`;
+  }
+  if (prefs.peakProductivityHours.length > 0) {
+    section += `- Peak Hours: ${prefs.peakProductivityHours.join(', ')}\n`;
+  }
+  section += '\n';
+
+  // Recent conversation summaries
+  if (memory.recentSummaries.length > 0) {
+    section += `### 💬 Recent Conversations\n`;
+    memory.recentSummaries.slice(0, 5).forEach((s) => {
+      section += `- **${s.keyTopics.slice(0, 2).join(', ') || 'General'}** (${new Date(s.createdAt).toLocaleDateString()}): ${s.summary.substring(0, 80)}...\n`;
+      if (s.unresolved) {
+        section += `  ⏳ Unresolved: ${s.unresolved}\n`;
+      }
+    });
+    section += '\n';
   }
 
   // Last session
   if (memory.lastSession) {
-    section += `\n### Last Session\n`;
-    section += `- **When:** ${new Date(memory.lastSession.timestamp).toLocaleDateString()}\n`;
-    section += `- **Where:** ${memory.lastSession.page}\n`;
+    section += `### 🕐 Last Session\n`;
+    section += `- When: ${new Date(memory.lastSession.timestamp).toLocaleDateString()}\n`;
+    section += `- Where: ${memory.lastSession.page}\n`;
     if (memory.lastSession.songTitle) {
-      section += `- **Working On:** "${memory.lastSession.songTitle}"\n`;
+      section += `- Working On: "${memory.lastSession.songTitle}"\n`;
     }
     if (memory.lastSession.unfinishedTask) {
-      section += `- **Unfinished:** ${memory.lastSession.unfinishedTask}\n`;
+      section += `- Unfinished: ${memory.lastSession.unfinishedTask}\n`;
     }
   }
 
-  // Recent conversations
-  if (memory.recentConversations.length > 0) {
-    section += `\n### Recent Conversations\n`;
-    memory.recentConversations.slice(0, 5).forEach((c) => {
-      section += `- **${c.topic}** (${new Date(c.timestamp).toLocaleDateString()}): ${c.summary}\n`;
-    });
-  }
-
-  // Reminders
-  if (memory.reminders.length > 0) {
-    section += `\n### Things to Follow Up On\n`;
-    memory.reminders.forEach((r) => {
-      section += `- ${r.type.toUpperCase()}: ${r.message}\n`;
-    });
-  }
+  section += `\n### 📝 MEMORY INSTRUCTIONS
+- When user shares important info, use storeMemory() to remember it
+- When user corrects you, store with type='correction' and priority='high'
+- Reference these memories naturally in conversation
+- Ask about unresolved items from past conversations
+`;
 
   return section;
 }
 
-/**
- * Save a memory/preference learned from conversation
- */
-export async function saveLearnedPreference(
-  userId: string,
-  key: string,
-  value: string
-): Promise<void> {
-  // This could store learned preferences in a dedicated table
-  // For now, we rely on analyzing their actual data
-  console.log(`[AI Memory] Learned: ${key} = ${value} for user ${userId}`);
-}
+// ============================================
+// AI FUNCTION FOR STORING MEMORIES
+// ============================================
+
+export const MEMORY_AI_FUNCTIONS = [
+  {
+    name: 'storeMemory',
+    description:
+      'Store an important fact, preference, goal, or context about the user for future reference. Use this when the user shares something you should remember.',
+    parameters: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'string',
+          enum: ['fact', 'preference', 'goal', 'correction', 'context', 'relationship', 'insight'],
+          description: 'Type of memory',
+        },
+        content: {
+          type: 'string',
+          description: 'The information to remember',
+        },
+        priority: {
+          type: 'string',
+          enum: ['critical', 'high', 'medium', 'low'],
+          description: 'How important is this? critical=always include, high=when relevant',
+        },
+        tags: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Tags for categorization',
+        },
+      },
+      required: ['type', 'content'],
+    },
+  },
+  {
+    name: 'updateMemory',
+    description: 'Update or correct an existing memory when user provides new information',
+    parameters: {
+      type: 'object',
+      properties: {
+        memoryId: { type: 'string', description: 'ID of memory to update' },
+        content: { type: 'string', description: 'New content' },
+        supersede: {
+          type: 'boolean',
+          description: 'If true, creates new memory and marks old as outdated',
+        },
+      },
+      required: ['memoryId'],
+    },
+  },
+  {
+    name: 'deleteMemory',
+    description: 'Delete a memory that is no longer relevant or was incorrect',
+    parameters: {
+      type: 'object',
+      properties: {
+        memoryId: { type: 'string', description: 'ID of memory to delete' },
+      },
+      required: ['memoryId'],
+    },
+  },
+];
