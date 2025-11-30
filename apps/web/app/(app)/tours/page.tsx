@@ -29,6 +29,8 @@ import {
   ExternalLink,
   Search,
   BarChart3,
+  Lock,
+  ArrowUpRight,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
@@ -159,8 +161,90 @@ export default function ToursPage() {
     );
   }
 
-  if (toursError) {
-    error(toursError);
+  // Handle subscription errors with upgrade prompt
+  if (toursError?.isSubscriptionError) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="rnrb-container flex max-w-3xl flex-col items-center justify-center px-4 py-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-brand-primary/10">
+              <Lock className="h-10 w-10 text-brand-primary" />
+            </div>
+            <h1 className="font-display mb-4 text-3xl font-bold">Tour Management</h1>
+            <p className="mb-2 text-xl text-muted-foreground">{toursError.message}</p>
+            <p className="mb-8 text-muted-foreground">
+              Upgrade to{' '}
+              <span className="font-semibold text-brand-primary">{toursError.requiredTier}</span> to
+              access professional tour management with analytics, routing optimization, and
+              financial tracking.
+            </p>
+
+            <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+              <Link href={toursError.upgradeUrl || '/settings/billing?upgrade=creator'}>
+                <Button className="rnrb-button-primary flex items-center gap-2 px-8 py-3 text-lg">
+                  Upgrade Now
+                  <ArrowUpRight className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/dashboard">
+                <Button variant="outline" className="px-8 py-3">
+                  Back to Dashboard
+                </Button>
+              </Link>
+            </div>
+
+            {/* Feature Preview */}
+            <Card className="rnrb-card mt-12 p-8 text-left">
+              <h3 className="mb-6 text-lg font-semibold">What you'll get with Tour Management:</h3>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="flex items-start gap-3">
+                  <BarChart3 className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
+                  <div>
+                    <p className="font-medium">Analytics Dashboard</p>
+                    <p className="text-sm text-muted-foreground">
+                      Revenue tracking & attendance metrics
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue-500" />
+                  <div>
+                    <p className="font-medium">Smart Routing</p>
+                    <p className="text-sm text-muted-foreground">Optimize travel & reduce costs</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <DollarSign className="mt-0.5 h-5 w-5 shrink-0 text-purple-500" />
+                  <div>
+                    <p className="font-medium">Financial Tracking</p>
+                    <p className="text-sm text-muted-foreground">
+                      Profit/loss & expense breakdowns
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Radio className="mt-0.5 h-5 w-5 shrink-0 text-brand-primary" />
+                  <div>
+                    <p className="font-medium">Virtual Shows</p>
+                    <p className="text-sm text-muted-foreground">Live streaming performances</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show toast for non-subscription errors
+  if (toursError && !toursError.isSubscriptionError) {
+    error(toursError.message);
   }
 
   return (

@@ -34,14 +34,6 @@ interface ToursResponse {
   hasMore: boolean;
 }
 
-interface SubscriptionError {
-  error: string;
-  message: string;
-  feature: string;
-  requiredTier: string;
-  upgradeUrl: string;
-}
-
 interface UseToursOptions {
   orgId?: string;
   status?: string;
@@ -83,7 +75,21 @@ export function useTours(options: UseToursOptions = {}) {
         const response = await fetch(`/api/tours?${params}`);
 
         if (!response.ok) {
-          throw new Error('Failed to fetch tours');
+          // Parse the error response
+          const errorData = await response.json().catch(() => ({}));
+
+          // Handle subscription errors (403)
+          if (response.status === 403 && errorData.requiredTier) {
+            setError({
+              message: errorData.message || 'Subscription required',
+              isSubscriptionError: true,
+              requiredTier: errorData.requiredTier,
+              upgradeUrl: errorData.upgradeUrl || '/settings/billing?upgrade=creator',
+            });
+            return;
+          }
+
+          throw new Error(errorData.error || 'Failed to fetch tours');
         }
 
         const data: ToursResponse = await response.json();
@@ -93,7 +99,7 @@ export function useTours(options: UseToursOptions = {}) {
         setPage(data.page);
         setHasMore(data.hasMore);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError({ message: err instanceof Error ? err.message : 'An error occurred' });
         console.error('Error fetching tours:', err);
       } finally {
         setLoading(false);
