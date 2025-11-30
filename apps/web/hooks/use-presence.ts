@@ -1,10 +1,12 @@
 /**
- * Real-time Presence Hook (OPTIMIZED v2)
+ * Real-time Presence Hook (SAFE v4)
  *
  * Tracks who's actively working where across the platform
  * Uses Ably presence API for instant updates
  *
- * NOW USES: Official Ably React hooks (uses shared client from provider)
+ * CRITICAL: Does NOT use ably/react hooks to avoid crashes
+ * when AblyProvider doesn't have a client. Instead, manages
+ * its own Ably connection with circuit breaker protection.
  *
  * Shows presence in:
  * - Projects (who's viewing)
@@ -13,9 +15,16 @@
  * - Video rooms (who's connected)
  */
 
-import type { PresenceMessage } from 'ably';
-import { usePresence as useAblyPresence, useConnectionStateListener } from 'ably/react';
-import { useEffect, useState, useRef } from 'react';
+import type { RealtimeChannel, PresenceMessage } from 'ably';
+import { Realtime } from 'ably';
+import { useEffect, useState, useRef, useCallback } from 'react';
+
+import {
+  canUseAbly,
+  recordAblyFailure,
+  recordAblySuccess,
+  disableAblyPermanently,
+} from '@/lib/ably-circuit-breaker';
 
 type PresenceMember = {
   clientId: string;
@@ -25,7 +34,7 @@ type PresenceMember = {
     userEmail: string;
     avatar?: string;
     status: 'active' | 'idle' | 'away';
-    location: string; // e.g., 'project:my-album', 'song:track-1'
+    location: string;
   };
 };
 
@@ -40,87 +49,247 @@ type UsePresenceOptions = {
   };
 };
 
-export function usePresence({ channelName, userData }: UsePresenceOptions) {
+type PresenceResult = {
+  members: PresenceMember[];
+  isConnected: boolean;
+  error: string | null;
+  totalMembers: number;
+  activeMembers: number;
+  idleMembers: number;
+};
+
+/**
+ * Safe presence hook that manages its own Ably connection
+ * Does NOT use ably/react hooks - prevents crashes when provider is unavailable
+ */
+export function usePresence({ channelName, userData }: UsePresenceOptions): PresenceResult {
   const [members, setMembers] = useState<PresenceMember[]>([]);
+  const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const ablyRef = useRef<Realtime | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+  const mountedRef = useRef(true);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Extract individual fields to stabilize dependencies
   const { userId, userName, userEmail, avatar, location } = userData;
 
-  // Use official Ably React hooks (uses shared client from provider)
-  // The usePresence hook returns { presenceData: PresenceMessage[], updateStatus: (data) => void }
-  // Cast to any to handle type mismatches with the ably/react types
-  const presenceHookResult = useAblyPresence(channelName, {
-    userId,
-    userName,
-    userEmail,
-    avatar,
-    status: 'active',
-    location,
-    joinedAt: Date.now(),
-  }) as any;
+  // Update presence data
+  const updatePresence = useCallback(
+    (status: 'active' | 'idle' | 'away' = 'active') => {
+      if (!channelRef.current || !isConnected) return;
 
-  // Extract presenceData and updateStatus with proper types
-  const presenceData: PresenceMessage[] = presenceHookResult?.presenceData ?? [];
-  const updateStatus = presenceHookResult?.updateStatus;
+      try {
+        channelRef.current.presence.update({
+          userId,
+          userName,
+          userEmail,
+          avatar,
+          status,
+          location,
+          joinedAt: Date.now(),
+        });
+      } catch (err) {
+        console.warn('[usePresence] Failed to update presence:', err);
+      }
+    },
+    [userId, userName, userEmail, avatar, location, isConnected]
+  );
 
-  // Monitor connection state
-  const [isConnected, setIsConnected] = useState(false);
-  useConnectionStateListener((stateChange) => {
-    setIsConnected(stateChange.current === 'connected');
+  // Initialize Ably connection
+  useEffect(() => {
+    if (!userId || !channelName) return;
 
-    if (stateChange.current === 'failed') {
-      setError('Connection failed');
-    } else if (stateChange.current === 'connected') {
-      setError(null);
+    mountedRef.current = true;
+
+    // Check circuit breaker
+    if (!canUseAbly()) {
+      console.log('[usePresence] Circuit breaker open - skipping init');
+      return;
     }
-  });
 
-  // Transform Ably presence data to our format
-  useEffect(() => {
-    const transformed = presenceData.map((msg: PresenceMessage) => ({
-      clientId: msg.clientId,
-      data: msg.data,
-    }));
-    setMembers(transformed);
-  }, [presenceData]);
+    const initPresence = async () => {
+      try {
+        // Pre-check token availability
+        const tokenCheck = await fetch('/api/ably/token', {
+          signal: AbortSignal.timeout(5000),
+        }).catch(() => ({ ok: false, status: 0 }));
 
-  // Update status to idle after 2 minutes of inactivity
+        if (!mountedRef.current) return;
+
+        // 503 = ABLY_API_KEY not configured
+        if (tokenCheck.status === 503) {
+          disableAblyPermanently('ABLY_API_KEY not configured');
+          return;
+        }
+
+        if (!tokenCheck.ok) {
+          recordAblyFailure('Token pre-check failed');
+          return;
+        }
+
+        // Create Ably client
+        const ablyClient = new Realtime({
+          authCallback: async (tokenParams, callback) => {
+            if (!canUseAbly()) {
+              callback(
+                { code: 40000, statusCode: 400, message: 'Circuit breaker open' } as any,
+                null
+              );
+              return;
+            }
+            try {
+              const response = await fetch('/api/ably/token', {
+                signal: AbortSignal.timeout(5000),
+              });
+              if (!response.ok) throw new Error(`Token failed: ${response.status}`);
+              const token = await response.json();
+              recordAblySuccess();
+              callback(null, token);
+            } catch (err) {
+              recordAblyFailure('Token callback failed');
+              callback({ code: 40000, statusCode: 400, message: 'Token failed' } as any, null);
+            }
+          },
+          clientId: userId,
+          closeOnUnload: true,
+          disconnectedRetryTimeout: 15000,
+          suspendedRetryTimeout: 30000,
+        });
+
+        if (!mountedRef.current) {
+          ablyClient.close();
+          return;
+        }
+
+        ablyRef.current = ablyClient;
+
+        // Get channel and subscribe to presence
+        const channel = ablyClient.channels.get(channelName);
+        channelRef.current = channel;
+
+        // Handle presence events
+        channel.presence.subscribe('enter', (msg: PresenceMessage) => {
+          if (!mountedRef.current) return;
+          setMembers((prev) => {
+            const exists = prev.some((m) => m.clientId === msg.clientId);
+            if (exists) return prev;
+            return [...prev, { clientId: msg.clientId, data: msg.data }];
+          });
+        });
+
+        channel.presence.subscribe('leave', (msg: PresenceMessage) => {
+          if (!mountedRef.current) return;
+          setMembers((prev) => prev.filter((m) => m.clientId !== msg.clientId));
+        });
+
+        channel.presence.subscribe('update', (msg: PresenceMessage) => {
+          if (!mountedRef.current) return;
+          setMembers((prev) =>
+            prev.map((m) =>
+              m.clientId === msg.clientId ? { clientId: msg.clientId, data: msg.data } : m
+            )
+          );
+        });
+
+        // Wait for connection
+        ablyClient.connection.once('connected', async () => {
+          if (!mountedRef.current) return;
+
+          recordAblySuccess();
+          setIsConnected(true);
+          setError(null);
+
+          // Enter presence
+          try {
+            await channel.presence.enter({
+              userId,
+              userName,
+              userEmail,
+              avatar,
+              status: 'active',
+              location,
+              joinedAt: Date.now(),
+            });
+
+            // Get initial presence members
+            const presenceSet = await channel.presence.get();
+            if (mountedRef.current) {
+              setMembers(
+                presenceSet.map((msg) => ({
+                  clientId: msg.clientId,
+                  data: msg.data,
+                }))
+              );
+            }
+          } catch (err) {
+            console.error('[usePresence] Failed to enter presence:', err);
+          }
+        });
+
+        ablyClient.connection.on('disconnected', () => {
+          if (mountedRef.current) setIsConnected(false);
+        });
+
+        ablyClient.connection.on('failed', () => {
+          if (mountedRef.current) {
+            setIsConnected(false);
+            setError('Connection failed');
+          }
+          recordAblyFailure();
+        });
+      } catch (err) {
+        console.error('[usePresence] Init error:', err);
+        recordAblyFailure(err instanceof Error ? err.message : 'Unknown error');
+        if (mountedRef.current) {
+          setError(err instanceof Error ? err.message : 'Connection failed');
+        }
+      }
+    };
+
+    initPresence();
+
+    // Cleanup
+    return () => {
+      mountedRef.current = false;
+
+      if (channelRef.current) {
+        try {
+          channelRef.current.presence.leave();
+          channelRef.current.presence.unsubscribe();
+        } catch {
+          // Ignore cleanup errors
+        }
+        channelRef.current = null;
+      }
+
+      if (ablyRef.current) {
+        ablyRef.current.close();
+        ablyRef.current = null;
+      }
+    };
+  }, [userId, userName, userEmail, avatar, location, channelName]);
+
+  // Idle detection
   useEffect(() => {
+    if (!isConnected) return;
+
     const resetIdleTimer = () => {
       if (idleTimerRef.current) {
         clearTimeout(idleTimerRef.current);
       }
 
-      // Update to active
-      updateStatus?.({
-        userId,
-        userName,
-        userEmail,
-        avatar,
-        location,
-        status: 'active',
-        joinedAt: Date.now(),
-      });
+      updatePresence('active');
 
       idleTimerRef.current = setTimeout(
         () => {
-          updateStatus?.({
-            userId,
-            userName,
-            userEmail,
-            avatar,
-            location,
-            status: 'idle',
-            joinedAt: Date.now(),
-          });
+          updatePresence('idle');
         },
         2 * 60 * 1000
       ); // 2 minutes
     };
 
-    // Listen for user activity
     if (typeof window !== 'undefined') {
       window.addEventListener('mousemove', resetIdleTimer);
       window.addEventListener('keydown', resetIdleTimer);
@@ -132,36 +301,20 @@ export function usePresence({ channelName, userData }: UsePresenceOptions) {
       if (idleTimerRef.current) {
         clearTimeout(idleTimerRef.current);
       }
-
       if (typeof window !== 'undefined') {
         window.removeEventListener('mousemove', resetIdleTimer);
         window.removeEventListener('keydown', resetIdleTimer);
         window.removeEventListener('click', resetIdleTimer);
       }
     };
-  }, [userId, userName, userEmail, avatar, location, updateStatus]);
-
-  // Update presence data when location changes
-  useEffect(() => {
-    if (!isConnected) return;
-
-    updateStatus?.({
-      userId,
-      userName,
-      userEmail,
-      avatar,
-      location,
-      status: 'active',
-      joinedAt: Date.now(),
-    });
-  }, [userId, userName, userEmail, avatar, location, isConnected, updateStatus]);
+  }, [isConnected, updatePresence]);
 
   return {
     members,
     isConnected,
     error,
     totalMembers: members.length,
-    activeMembers: members.filter((m) => m.data.status === 'active').length,
-    idleMembers: members.filter((m) => m.data.status === 'idle').length,
+    activeMembers: members.filter((m) => m.data?.status === 'active').length,
+    idleMembers: members.filter((m) => m.data?.status === 'idle').length,
   };
 }

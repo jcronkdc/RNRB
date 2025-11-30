@@ -3,7 +3,15 @@
 import * as Ably from 'ably';
 import { AblyProvider as ReactAblyProvider } from 'ably/react';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState, useCallback, useRef, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  type ReactNode,
+} from 'react';
 
 // Use centralized circuit breaker instead of duplicate implementation
 import {
@@ -24,6 +32,30 @@ interface ConnectionMetrics {
   quality: 'excellent' | 'good' | 'poor' | 'offline';
   reconnectAttempts: number;
   lastConnected: number | null;
+}
+
+// ============================================================================
+// ABLY AVAILABILITY CONTEXT
+// Components can check this before using ably/react hooks
+// ============================================================================
+interface AblyAvailabilityContextType {
+  isAvailable: boolean;
+  isConnected: boolean;
+  hasError: boolean;
+}
+
+const AblyAvailabilityContext = createContext<AblyAvailabilityContextType>({
+  isAvailable: false,
+  isConnected: false,
+  hasError: false,
+});
+
+/**
+ * Hook to check if Ably is available for use
+ * Components should check this before using ably/react hooks
+ */
+export function useAblyAvailable(): AblyAvailabilityContextType {
+  return useContext(AblyAvailabilityContext);
 }
 
 const MAX_INIT_RETRIES = 3; // Max initialization retries
@@ -313,10 +345,26 @@ export function AblyProvider({ children, lazy = true }: Props) {
     }
   }, [metrics]);
 
-  // Always render children - don't block app for real-time features
+  // Provide availability context for all children
+  const availabilityValue: AblyAvailabilityContextType = {
+    isAvailable: !!client && !hasError,
+    isConnected: !!client && metrics.quality !== 'offline',
+    hasError,
+  };
+
+  // Always render children wrapped in availability context
+  // If client is ready, also wrap in ReactAblyProvider
   if (!client || hasError) {
-    return <>{children}</>;
+    return (
+      <AblyAvailabilityContext.Provider value={availabilityValue}>
+        {children}
+      </AblyAvailabilityContext.Provider>
+    );
   }
 
-  return <ReactAblyProvider client={client}>{children}</ReactAblyProvider>;
+  return (
+    <AblyAvailabilityContext.Provider value={availabilityValue}>
+      <ReactAblyProvider client={client}>{children}</ReactAblyProvider>
+    </AblyAvailabilityContext.Provider>
+  );
 }

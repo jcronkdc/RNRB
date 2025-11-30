@@ -1,13 +1,13 @@
 'use client';
 
 /**
- * Presence Indicator Component - FULLY WIRED
+ * Presence Indicator Component - SAFE VERSION
  * Shows real-time presence tracking with Ably integration
  *
- * Note: Wrapped in error boundary to gracefully handle missing ChannelProvider
+ * The usePresence hook now manages its own Ably connection,
+ * so we don't need ChannelProvider from ably/react.
  */
 
-import { ChannelProvider } from 'ably/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Circle } from 'lucide-react';
 import { Component, type ReactNode } from 'react';
@@ -188,13 +188,12 @@ function PresenceIndicatorInner({
   );
 }
 
-// Main exported component - wraps with ChannelProvider and error boundary
+// Main exported component - wraps with error boundary only
+// ChannelProvider is no longer needed since usePresence manages its own connection
 export function PresenceIndicator(props: PresenceIndicatorProps) {
   return (
     <PresenceErrorBoundary>
-      <ChannelProvider channelName={props.channelName}>
-        <PresenceIndicatorInner {...props} />
-      </ChannelProvider>
+      <PresenceIndicatorInner {...props} />
     </PresenceErrorBoundary>
   );
 }
