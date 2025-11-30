@@ -34,8 +34,8 @@ const StreamlinedSongBuilder = dynamic(
   { ssr: false }
 );
 
-const SongTemplatePicker = dynamic(
-  () => import('@/components/songwriting/song-template-picker').then((m) => m.SongTemplatePicker),
+const QuickLibraryImport = dynamic(
+  () => import('@/components/songwriting/quick-library-import').then((m) => m.QuickLibraryImport),
   { ssr: false }
 );
 
@@ -162,7 +162,6 @@ export default function SongwritingPage() {
   const [lyrics, setLyrics] = useState('');
   const [songTitle, setSongTitle] = useState('Untitled Song');
   const [isFirstSave, setIsFirstSave] = useState(true);
-  const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showLibraryImport, setShowLibraryImport] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
@@ -726,14 +725,6 @@ export default function SongwritingPage() {
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => setShowTemplatePicker(true)}
-                      className="button secondary rounded-xl px-4 py-2.5 text-sm font-medium"
-                    >
-                      Templates
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
                       onClick={() => setShowPasteLyrics(true)}
                       className="button secondary rounded-xl px-4 py-2.5 text-sm font-medium"
                     >
@@ -810,11 +801,20 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'structure' && !loading && user && (
-            <div className="card overflow-hidden rounded-2xl p-6">
-              <StreamlinedSongBuilder
-                onSongChange={(blocks) => setSongBlocks(blocks)}
-                initialBlocks={songBlocks}
+            <div className="space-y-4">
+              {/* Quick Import Panel */}
+              <QuickLibraryImport
+                onImport={handleLibraryImport}
+                onOpenFullLibrary={() => setShowLibraryImport(true)}
               />
+
+              {/* Song Builder */}
+              <div className="card overflow-hidden rounded-2xl p-6">
+                <StreamlinedSongBuilder
+                  onSongChange={(blocks) => setSongBlocks(blocks)}
+                  initialBlocks={songBlocks}
+                />
+              </div>
             </div>
           )}
 
@@ -1036,17 +1036,6 @@ export default function SongwritingPage() {
           )}
         </motion.div>
       </div>
-
-      {/* Song Template Picker Modal */}
-      {showTemplatePicker && (
-        <SongTemplatePicker
-          onSelectTemplate={(blocks) => {
-            setSongBlocks(blocks);
-            saveToHistory();
-          }}
-          onClose={() => setShowTemplatePicker(false)}
-        />
-      )}
 
       {/* Library Import Modal */}
       {showLibraryImport && (
