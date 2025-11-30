@@ -40,6 +40,10 @@ const WaveformPlayer = dynamic(
   () => import('@/components/waveform-player').then((m) => m.WaveformPlayer),
   { ssr: false }
 );
+const WaveformComments = dynamic(
+  () => import('@/components/waveform-comments').then((m) => m.WaveformComments),
+  { ssr: false }
+);
 const PublishToCommunityModal = dynamic(
   () => import('@/components/publish-to-community-modal').then((m) => m.PublishToCommunityModal),
   { ssr: false }
@@ -492,8 +496,18 @@ export default function SongDetailPage() {
                             </span>
                           </div>
 
-                          {/* Waveform Player */}
-                          <WaveformPlayer audioUrl={file.url} audioName={file.name} />
+                          {/* Waveform Player with Time-Stamped Comments */}
+                          <WaveformComments
+                            audioUrl={file.url}
+                            audioName={file.name}
+                            entityId={songId}
+                            entityType="audio_track"
+                            currentUserId={user?.id || ''}
+                            currentUserName={
+                              user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'
+                            }
+                            currentUserAvatar={user?.user_metadata?.avatar_url}
+                          />
                         </motion.div>
                       ))}
                     </div>

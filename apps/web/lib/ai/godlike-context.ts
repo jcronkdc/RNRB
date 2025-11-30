@@ -25,6 +25,173 @@ export interface GodlikeContext {
   platformKnowledge: string;
   currentPage: string;
   timestamp: string;
+  // NEW: Hyper-focused context on what they're currently working on
+  currentWork: CurrentWorkContext | null;
+}
+
+// Deep context about what the user is CURRENTLY working on
+interface CurrentWorkContext {
+  type: 'song' | 'project' | 'tour' | 'show' | 'setlist' | 'library' | null;
+  id: string | null;
+  name: string | null;
+  // Full details for songs
+  song?: {
+    id: string;
+    title: string;
+    fullLyrics: string | null;
+    fullChords: any | null;
+    key: string | null;
+    tempo: number | null;
+    status: string;
+    genre: string | null;
+    mood: string | null;
+    notes: string | null;
+    // VERSION HISTORY - every saved version
+    versions: {
+      id: string;
+      versionNumber: number;
+      name: string | null;
+      createdAt: string;
+      createdBy: string | null;
+      changeNotes: string | null;
+      lyricsSnapshot: string | null;
+      chordsSnapshot: any | null;
+    }[];
+    // ALL tracks/stems
+    tracks: {
+      id: string;
+      name: string;
+      type: string;
+      instrument: string | null;
+      duration: number | null;
+      isMuted: boolean;
+    }[];
+    // Comments and feedback
+    comments: {
+      author: string;
+      content: string;
+      timestamp: string;
+      resolved: boolean;
+    }[];
+    // Collaborator activity
+    collaborators: {
+      name: string;
+      role: string;
+      lastActive: string | null;
+      contributions: number;
+    }[];
+    // Related files in library
+    relatedFiles: {
+      id: string;
+      name: string;
+      type: string;
+    }[];
+  };
+  // Full details for projects
+  project?: {
+    id: string;
+    name: string;
+    description: string | null;
+    type: string;
+    status: string;
+    genre: string | null;
+    targetRelease: string | null;
+    // All songs in project with details
+    songs: {
+      id: string;
+      title: string;
+      status: string;
+      trackNumber: number | null;
+      duration: number | null;
+    }[];
+    // Milestones with progress
+    milestones: {
+      id: string;
+      title: string;
+      description: string | null;
+      dueDate: string | null;
+      completed: boolean;
+      completedAt: string | null;
+    }[];
+    // Team members
+    members: {
+      name: string;
+      role: string;
+      joinedAt: string;
+    }[];
+    // Recent activity
+    activity: {
+      action: string;
+      by: string;
+      timestamp: string;
+      details: string | null;
+    }[];
+  };
+  // Full details for tours
+  tour?: {
+    id: string;
+    name: string;
+    status: string;
+    startDate: string;
+    endDate: string | null;
+    budget: number | null;
+    // All shows
+    shows: {
+      id: string;
+      name: string;
+      date: string;
+      venue: string | null;
+      city: string | null;
+      state: string | null;
+      status: string;
+      ticketsSold: number | null;
+      capacity: number | null;
+      hasSetlist: boolean;
+      setlistId: string | null;
+    }[];
+    // Past setlists for reference
+    pastSetlists: {
+      showName: string;
+      date: string;
+      songs: string[];
+    }[];
+  };
+  // Full details for shows
+  show?: {
+    id: string;
+    name: string;
+    date: string;
+    venue: {
+      name: string;
+      address: string | null;
+      city: string | null;
+      state: string | null;
+      capacity: number | null;
+      notes: string | null;
+    } | null;
+    status: string;
+    soundcheck: string | null;
+    loadIn: string | null;
+    doors: string | null;
+    setTime: string | null;
+    // Current setlist
+    setlist: {
+      id: string;
+      songs: {
+        position: number;
+        songTitle: string;
+        songKey: string | null;
+        songTempo: number | null;
+        isEncore: boolean;
+        notes: string | null;
+      }[];
+    } | null;
+    // Song requests from fans
+    songRequests: {
+      songTitle: string;
+      requestCount: number;
+    }[];
+  };
 }
 
 interface UserContext {
@@ -119,6 +286,458 @@ interface SetlistTemplateContext {
 
 // Cache platform knowledge
 let cachedPlatformKnowledge: string | null = null;
+
+/**
+ * Parse the current URL to detect what the user is working on
+ */
+function parseCurrentWork(url: string): { type: CurrentWorkContext['type']; id: string | null } {
+  if (!url) return { type: null, id: null };
+
+  // Song pages: /songs/[id], /songwriting/[id], /dashboard/songs/[id]
+  const songMatch = url.match(/\/(songs|songwriting)\/([a-zA-Z0-9_-]+)/);
+  if (songMatch) return { type: 'song', id: songMatch[2] };
+
+  // Project pages: /projects/[id], /dashboard/projects/[slug]
+  const projectMatch = url.match(/\/projects?\/([a-zA-Z0-9_-]+)/);
+  if (projectMatch) return { type: 'project', id: projectMatch[1] };
+
+  // Tour pages: /tours/[id]
+  const tourMatch = url.match(/\/tours?\/([a-zA-Z0-9_-]+)/);
+  if (tourMatch) return { type: 'tour', id: tourMatch[1] };
+
+  // Show pages: /shows/[id], /gigs/[id]
+  const showMatch = url.match(/\/(shows?|gigs?)\/([a-zA-Z0-9_-]+)/);
+  if (showMatch) return { type: 'show', id: showMatch[2] };
+
+  // Setlist pages: /setlists/[id]
+  const setlistMatch = url.match(/\/setlists?\/([a-zA-Z0-9_-]+)/);
+  if (setlistMatch) return { type: 'setlist', id: setlistMatch[1] };
+
+  // Library pages: /library/[id]
+  const libraryMatch = url.match(/\/library\/([a-zA-Z0-9_-]+)/);
+  if (libraryMatch) return { type: 'library', id: libraryMatch[1] };
+
+  return { type: null, id: null };
+}
+
+/**
+ * Load deep context for whatever the user is currently working on
+ */
+async function loadCurrentWorkContext(
+  userId: string,
+  url: string
+): Promise<CurrentWorkContext | null> {
+  const { type, id } = parseCurrentWork(url);
+  if (!type || !id) return null;
+
+  try {
+    if (type === 'song') {
+      const song = await prisma.song.findFirst({
+        where: { id, userId }, // Security: must be user's song
+        select: {
+          id: true,
+          title: true,
+          lyrics: true,
+          chords: true,
+          key: true,
+          tempo: true,
+          status: true,
+          genre: true,
+          mood: true,
+          notes: true,
+          // Version history
+          versions: {
+            select: {
+              id: true,
+              versionNumber: true,
+              name: true,
+              createdAt: true,
+              changeNotes: true,
+              lyricsSnapshot: true,
+              chordsSnapshot: true,
+              createdBy: { select: { name: true } },
+            },
+            orderBy: { versionNumber: 'desc' },
+            take: 20,
+          },
+          // All tracks/stems
+          tracks: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              instrument: true,
+              duration: true,
+              isMuted: true,
+            },
+          },
+          // Comments
+          comments: {
+            select: {
+              content: true,
+              resolved: true,
+              createdAt: true,
+              user: { select: { name: true } },
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 50,
+          },
+          // Collaborators
+          collaborators: {
+            select: {
+              role: true,
+              user: { select: { name: true } },
+              email: true,
+              createdAt: true,
+            },
+          },
+        },
+      });
+
+      if (!song) return null;
+
+      // Find related library files
+      const relatedFiles = await prisma.libraryFile.findMany({
+        where: {
+          userId,
+          OR: [{ name: { contains: song.title, mode: 'insensitive' } }, { songId: song.id }],
+        },
+        select: { id: true, name: true, type: true },
+        take: 10,
+      });
+
+      return {
+        type: 'song',
+        id: song.id,
+        name: song.title,
+        song: {
+          id: song.id,
+          title: song.title,
+          fullLyrics: song.lyrics,
+          fullChords: song.chords,
+          key: song.key,
+          tempo: song.tempo,
+          status: song.status,
+          genre: song.genre,
+          mood: song.mood,
+          notes: song.notes,
+          versions: song.versions.map((v) => ({
+            id: v.id,
+            versionNumber: v.versionNumber,
+            name: v.name,
+            createdAt: v.createdAt.toISOString(),
+            createdBy: v.createdBy?.name || null,
+            changeNotes: v.changeNotes,
+            lyricsSnapshot: v.lyricsSnapshot,
+            chordsSnapshot: v.chordsSnapshot,
+          })),
+          tracks: song.tracks.map((t) => ({
+            id: t.id,
+            name: t.name,
+            type: t.type,
+            instrument: t.instrument,
+            duration: t.duration,
+            isMuted: t.isMuted,
+          })),
+          comments: song.comments.map((c) => ({
+            author: c.user?.name || 'Unknown',
+            content: c.content,
+            timestamp: c.createdAt.toISOString(),
+            resolved: c.resolved,
+          })),
+          collaborators: song.collaborators.map((c) => ({
+            name: c.user?.name || c.email || 'Unknown',
+            role: c.role,
+            lastActive: null,
+            contributions: 0,
+          })),
+          relatedFiles,
+        },
+      };
+    }
+
+    if (type === 'project') {
+      const project = await prisma.project.findFirst({
+        where: {
+          OR: [{ id }, { slug: id }],
+          members: { some: { userId } }, // Security: must be member
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          type: true,
+          status: true,
+          genre: true,
+          targetReleaseDate: true,
+          songs: {
+            where: { archived: false },
+            select: {
+              id: true,
+              title: true,
+              status: true,
+              trackNumber: true,
+              duration: true,
+            },
+            orderBy: { trackNumber: 'asc' },
+          },
+          milestones: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              dueDate: true,
+              completed: true,
+              completedAt: true,
+            },
+            orderBy: { dueDate: 'asc' },
+          },
+          members: {
+            select: {
+              role: true,
+              createdAt: true,
+              user: { select: { name: true } },
+            },
+          },
+          views: {
+            select: {
+              action: true,
+              createdAt: true,
+              user: { select: { name: true } },
+              details: true,
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 20,
+          },
+        },
+      });
+
+      if (!project) return null;
+
+      return {
+        type: 'project',
+        id: project.id,
+        name: project.name,
+        project: {
+          id: project.id,
+          name: project.name,
+          description: project.description,
+          type: project.type,
+          status: project.status,
+          genre: project.genre,
+          targetRelease: project.targetReleaseDate?.toISOString() || null,
+          songs: project.songs.map((s) => ({
+            id: s.id,
+            title: s.title,
+            status: s.status,
+            trackNumber: s.trackNumber,
+            duration: s.duration,
+          })),
+          milestones: project.milestones.map((m) => ({
+            id: m.id,
+            title: m.title,
+            description: m.description,
+            dueDate: m.dueDate?.toISOString() || null,
+            completed: m.completed,
+            completedAt: m.completedAt?.toISOString() || null,
+          })),
+          members: project.members.map((m) => ({
+            name: m.user?.name || 'Unknown',
+            role: m.role,
+            joinedAt: m.createdAt.toISOString(),
+          })),
+          activity:
+            project.views?.map((v) => ({
+              action: v.action || 'viewed',
+              by: v.user?.name || 'Unknown',
+              timestamp: v.createdAt.toISOString(),
+              details: typeof v.details === 'string' ? v.details : null,
+            })) || [],
+        },
+      };
+    }
+
+    if (type === 'tour') {
+      const tour = await prisma.tour.findFirst({
+        where: {
+          OR: [{ id }, { slug: id }],
+          org: { members: { some: { userId } } }, // Security: must be org member
+        },
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          startDate: true,
+          endDate: true,
+          budget: true,
+          shows: {
+            select: {
+              id: true,
+              name: true,
+              date: true,
+              status: true,
+              ticketsSold: true,
+              venue: {
+                select: { name: true, city: true, state: true, capacity: true },
+              },
+              setlist: {
+                select: {
+                  id: true,
+                  items: {
+                    select: {
+                      song: { select: { title: true } },
+                    },
+                    orderBy: { position: 'asc' },
+                  },
+                },
+              },
+            },
+            orderBy: { date: 'asc' },
+          },
+        },
+      });
+
+      if (!tour) return null;
+
+      return {
+        type: 'tour',
+        id: tour.id,
+        name: tour.name,
+        tour: {
+          id: tour.id,
+          name: tour.name,
+          status: tour.status,
+          startDate: tour.startDate.toISOString(),
+          endDate: tour.endDate?.toISOString() || null,
+          budget: tour.budget ? Number(tour.budget) : null,
+          shows: tour.shows.map((s) => ({
+            id: s.id,
+            name: s.name,
+            date: s.date.toISOString(),
+            venue: s.venue?.name || null,
+            city: s.venue?.city || null,
+            state: s.venue?.state || null,
+            status: s.status,
+            ticketsSold: s.ticketsSold,
+            capacity: s.venue?.capacity || null,
+            hasSetlist: !!s.setlist,
+            setlistId: s.setlist?.id || null,
+          })),
+          pastSetlists: tour.shows
+            .filter((s) => s.setlist && new Date(s.date) < new Date())
+            .map((s) => ({
+              showName: s.name,
+              date: s.date.toISOString(),
+              songs: s.setlist?.items.map((i) => i.song?.title || 'Unknown') || [],
+            })),
+        },
+      };
+    }
+
+    if (type === 'show') {
+      const show = await prisma.show.findFirst({
+        where: {
+          OR: [{ id }, { slug: id }],
+          org: { members: { some: { userId } } }, // Security
+        },
+        select: {
+          id: true,
+          name: true,
+          date: true,
+          status: true,
+          soundcheck: true,
+          loadIn: true,
+          doors: true,
+          setTime: true,
+          venue: {
+            select: {
+              name: true,
+              address: true,
+              city: true,
+              state: true,
+              capacity: true,
+              notes: true,
+            },
+          },
+          setlist: {
+            select: {
+              id: true,
+              items: {
+                select: {
+                  position: true,
+                  isEncore: true,
+                  notes: true,
+                  song: {
+                    select: { title: true, key: true, tempo: true },
+                  },
+                },
+                orderBy: { position: 'asc' },
+              },
+              songRequests: {
+                select: {
+                  song: { select: { title: true } },
+                  votes: true,
+                },
+                orderBy: { votes: 'desc' },
+                take: 10,
+              },
+            },
+          },
+        },
+      });
+
+      if (!show) return null;
+
+      return {
+        type: 'show',
+        id: show.id,
+        name: show.name,
+        show: {
+          id: show.id,
+          name: show.name,
+          date: show.date.toISOString(),
+          venue: show.venue
+            ? {
+                name: show.venue.name,
+                address: show.venue.address,
+                city: show.venue.city,
+                state: show.venue.state,
+                capacity: show.venue.capacity,
+                notes: show.venue.notes,
+              }
+            : null,
+          status: show.status,
+          soundcheck: show.soundcheck,
+          loadIn: show.loadIn,
+          doors: show.doors,
+          setTime: show.setTime,
+          setlist: show.setlist
+            ? {
+                id: show.setlist.id,
+                songs: show.setlist.items.map((i) => ({
+                  position: i.position,
+                  songTitle: i.song?.title || 'Unknown',
+                  songKey: i.song?.key || null,
+                  songTempo: i.song?.tempo || null,
+                  isEncore: i.isEncore,
+                  notes: i.notes,
+                })),
+              }
+            : null,
+          songRequests:
+            show.setlist?.songRequests?.map((r) => ({
+              songTitle: r.song?.title || 'Unknown',
+              requestCount: r.votes || 0,
+            })) || [],
+        },
+      };
+    }
+  } catch (error) {
+    console.error('Error loading current work context:', error);
+  }
+
+  return null;
+}
 
 function loadPlatformKnowledge(): string {
   if (cachedPlatformKnowledge) return cachedPlatformKnowledge;
@@ -491,6 +1110,9 @@ export async function buildGodlikeContext(
     else if (currentPage.includes('/collaboration')) pageContext = 'collaboration';
   }
 
+  // NEW: Load deep context for what they're currently working on
+  const currentWork = await loadCurrentWorkContext(userId, currentPage || '');
+
   return {
     user: userContext,
     songs: songsContext,
@@ -508,7 +1130,221 @@ export async function buildGodlikeContext(
     platformKnowledge: loadPlatformKnowledge(),
     currentPage: pageContext,
     timestamp: new Date().toISOString(),
+    currentWork, // Deep context about what they're actively working on
   };
+}
+
+/**
+ * Format the current work context section for the AI prompt
+ */
+function formatCurrentWorkSection(work: CurrentWorkContext | null): string {
+  if (!work || !work.type) {
+    return `## 🎯 CURRENTLY WORKING ON
+(User is browsing - no specific item selected)`;
+  }
+
+  let section = `## 🎯 CURRENTLY WORKING ON: ${work.name?.toUpperCase()}\n`;
+  section += `**Type:** ${work.type}\n\n`;
+
+  if (work.type === 'song' && work.song) {
+    const s = work.song;
+    section += `### Song Details\n`;
+    section += `- **Title:** ${s.title}\n`;
+    section += `- **Status:** ${s.status}\n`;
+    section += `- **Key:** ${s.key || 'Not set'}\n`;
+    section += `- **Tempo:** ${s.tempo ? `${s.tempo} BPM` : 'Not set'}\n`;
+    section += `- **Genre:** ${s.genre || 'Not set'}\n`;
+    section += `- **Mood:** ${s.mood || 'Not set'}\n`;
+
+    if (s.notes) {
+      section += `\n### Song Notes\n${s.notes}\n`;
+    }
+
+    if (s.fullLyrics) {
+      section += `\n### FULL LYRICS\n\`\`\`\n${s.fullLyrics}\n\`\`\`\n`;
+    }
+
+    if (s.fullChords) {
+      try {
+        const chords = typeof s.fullChords === 'string' ? JSON.parse(s.fullChords) : s.fullChords;
+        section += `\n### CHORD CHART\n${JSON.stringify(chords, null, 2)}\n`;
+      } catch {
+        section += `\n### CHORD DATA\n${s.fullChords}\n`;
+      }
+    }
+
+    if (s.versions.length > 0) {
+      section += `\n### VERSION HISTORY (${s.versions.length} versions)\n`;
+      s.versions.slice(0, 10).forEach((v) => {
+        section += `- **v${v.versionNumber}** ${v.name || ''} (${new Date(v.createdAt).toLocaleDateString()})`;
+        if (v.createdBy) section += ` by ${v.createdBy}`;
+        if (v.changeNotes) section += ` - "${v.changeNotes}"`;
+        section += `\n`;
+      });
+      section += `\n*You can reference older versions if the user wants to compare or revert.*\n`;
+    }
+
+    if (s.tracks.length > 0) {
+      section += `\n### TRACKS & STEMS (${s.tracks.length} tracks)\n`;
+      s.tracks.forEach((t) => {
+        section += `- ${t.name} [${t.type}]${t.instrument ? ` - ${t.instrument}` : ''}${t.isMuted ? ' (muted)' : ''}\n`;
+      });
+    }
+
+    if (s.comments.length > 0) {
+      section += `\n### COMMENTS & FEEDBACK (${s.comments.length})\n`;
+      s.comments.slice(0, 5).forEach((c) => {
+        section += `- ${c.author}: "${c.content.substring(0, 100)}${c.content.length > 100 ? '...' : ''}"${c.resolved ? ' ✅' : ''}\n`;
+      });
+    }
+
+    if (s.collaborators.length > 0) {
+      section += `\n### COLLABORATORS\n`;
+      s.collaborators.forEach((c) => {
+        section += `- ${c.name} (${c.role})\n`;
+      });
+    }
+
+    if (s.relatedFiles.length > 0) {
+      section += `\n### RELATED FILES IN LIBRARY\n`;
+      s.relatedFiles.forEach((f) => {
+        section += `- ${f.name} [${f.type}]\n`;
+      });
+    }
+  }
+
+  if (work.type === 'project' && work.project) {
+    const p = work.project;
+    section += `### Project Details\n`;
+    section += `- **Name:** ${p.name}\n`;
+    section += `- **Type:** ${p.type}\n`;
+    section += `- **Status:** ${p.status}\n`;
+    section += `- **Genre:** ${p.genre || 'Not set'}\n`;
+    section += `- **Target Release:** ${p.targetRelease ? new Date(p.targetRelease).toLocaleDateString() : 'Not set'}\n`;
+
+    if (p.description) {
+      section += `\n### Description\n${p.description}\n`;
+    }
+
+    if (p.songs.length > 0) {
+      section += `\n### SONGS IN PROJECT (${p.songs.length})\n`;
+      p.songs.forEach((s, i) => {
+        section += `${s.trackNumber || i + 1}. ${s.title} [${s.status}]${s.duration ? ` (${Math.floor(s.duration / 60)}:${(s.duration % 60).toString().padStart(2, '0')})` : ''}\n`;
+      });
+    }
+
+    if (p.milestones.length > 0) {
+      section += `\n### MILESTONES\n`;
+      p.milestones.forEach((m) => {
+        section += `- ${m.completed ? '✅' : '⏳'} ${m.title}`;
+        if (m.dueDate) section += ` (due ${new Date(m.dueDate).toLocaleDateString()})`;
+        section += `\n`;
+      });
+    }
+
+    if (p.members.length > 0) {
+      section += `\n### TEAM\n`;
+      p.members.forEach((m) => {
+        section += `- ${m.name} (${m.role})\n`;
+      });
+    }
+
+    if (p.activity.length > 0) {
+      section += `\n### RECENT ACTIVITY\n`;
+      p.activity.slice(0, 5).forEach((a) => {
+        section += `- ${a.by}: ${a.action} (${new Date(a.timestamp).toLocaleDateString()})\n`;
+      });
+    }
+  }
+
+  if (work.type === 'tour' && work.tour) {
+    const t = work.tour;
+    section += `### Tour Details\n`;
+    section += `- **Name:** ${t.name}\n`;
+    section += `- **Status:** ${t.status}\n`;
+    section += `- **Dates:** ${new Date(t.startDate).toLocaleDateString()}`;
+    if (t.endDate) section += ` - ${new Date(t.endDate).toLocaleDateString()}`;
+    section += `\n`;
+    if (t.budget) section += `- **Budget:** $${t.budget.toLocaleString()}\n`;
+
+    if (t.shows.length > 0) {
+      section += `\n### SHOWS (${t.shows.length})\n`;
+      t.shows.forEach((s) => {
+        section += `- ${new Date(s.date).toLocaleDateString()}: ${s.name}`;
+        if (s.venue) section += ` @ ${s.venue}`;
+        if (s.city) section += `, ${s.city}`;
+        section += ` [${s.status}]`;
+        if (s.ticketsSold && s.capacity) section += ` (${s.ticketsSold}/${s.capacity} sold)`;
+        section += s.hasSetlist ? ' ✅ setlist' : ' ⚠️ needs setlist';
+        section += `\n`;
+      });
+    }
+
+    if (t.pastSetlists.length > 0) {
+      section += `\n### PAST SETLISTS (for reference)\n`;
+      t.pastSetlists.forEach((ps) => {
+        section += `**${ps.showName}** (${new Date(ps.date).toLocaleDateString()}):\n`;
+        section += `  ${ps.songs.join(' → ')}\n`;
+      });
+    }
+  }
+
+  if (work.type === 'show' && work.show) {
+    const s = work.show;
+    section += `### Show Details\n`;
+    section += `- **Name:** ${s.name}\n`;
+    section += `- **Date:** ${new Date(s.date).toLocaleDateString()}\n`;
+    section += `- **Status:** ${s.status}\n`;
+
+    if (s.venue) {
+      section += `\n### VENUE\n`;
+      section += `- **Name:** ${s.venue.name}\n`;
+      if (s.venue.address) section += `- **Address:** ${s.venue.address}\n`;
+      if (s.venue.city) section += `- **City:** ${s.venue.city}, ${s.venue.state || ''}\n`;
+      if (s.venue.capacity) section += `- **Capacity:** ${s.venue.capacity}\n`;
+      if (s.venue.notes) section += `- **Notes:** ${s.venue.notes}\n`;
+    }
+
+    section += `\n### SCHEDULE\n`;
+    if (s.loadIn) section += `- Load In: ${s.loadIn}\n`;
+    if (s.soundcheck) section += `- Soundcheck: ${s.soundcheck}\n`;
+    if (s.doors) section += `- Doors: ${s.doors}\n`;
+    if (s.setTime) section += `- Set Time: ${s.setTime}\n`;
+
+    if (s.setlist) {
+      section += `\n### CURRENT SETLIST (${s.setlist.songs.length} songs)\n`;
+      let mainSet = s.setlist.songs.filter((song) => !song.isEncore);
+      let encore = s.setlist.songs.filter((song) => song.isEncore);
+
+      mainSet.forEach((song) => {
+        section += `${song.position}. ${song.songTitle}`;
+        if (song.songKey) section += ` [${song.songKey}]`;
+        if (song.songTempo) section += ` ${song.songTempo}bpm`;
+        if (song.notes) section += ` - "${song.notes}"`;
+        section += `\n`;
+      });
+
+      if (encore.length > 0) {
+        section += `\n**ENCORE:**\n`;
+        encore.forEach((song) => {
+          section += `${song.position}. ${song.songTitle}`;
+          if (song.songKey) section += ` [${song.songKey}]`;
+          section += `\n`;
+        });
+      }
+    } else {
+      section += `\n### ⚠️ NO SETLIST YET\nOffer to help build one!\n`;
+    }
+
+    if (s.songRequests.length > 0) {
+      section += `\n### FAN SONG REQUESTS\n`;
+      s.songRequests.forEach((r) => {
+        section += `- ${r.songTitle} (${r.requestCount} requests)\n`;
+      });
+    }
+  }
+
+  return section;
 }
 
 /**
@@ -580,6 +1416,8 @@ export function formatGodlikeContext(ctx: GodlikeContext): string {
 - Storage: ${ctx.user.usage.storage.used}GB/${ctx.user.usage.storage.limit}GB
 - Video: ${ctx.user.usage.video.used}/${ctx.user.usage.video.limit} minutes
 - Assistant: ${ctx.user.usage.assistant.used}/${ctx.user.usage.assistant.limit} conversations
+
+${formatCurrentWorkSection(ctx.currentWork)}
 
 ## 🎵 SONGS (${ctx.songs.length} total)
 ${songsList}
