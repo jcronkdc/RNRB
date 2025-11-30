@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import {
-  Globe,
   Sparkles,
   ArrowRight,
   Loader2,
@@ -14,7 +13,9 @@ import {
   Music2,
   Calendar,
   Zap,
+  Globe,
 } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
@@ -183,10 +184,29 @@ export default function SitesPage() {
         <WarmGradientOrbs />
         <MusicNotes />
         <div className="relative text-center">
-          <div className="relative mx-auto mb-6 h-16 w-16">
-            <div className="absolute inset-0 animate-spin rounded-full border-4 border-orange-500/30 border-t-orange-500" />
-          </div>
-          <p className="text-gray-400">Loading your website...</p>
+          {/* RR Logo with pulse animation */}
+          <motion.div
+            className="mx-auto mb-6"
+            animate={{
+              scale: [1, 1.05, 1],
+              opacity: [0.8, 1, 0.8],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          >
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={80}
+              height={80}
+              className="mx-auto"
+              priority
+            />
+          </motion.div>
+          <p className="text-lg font-medium text-white">Loading your website...</p>
         </div>
       </div>
     );
@@ -226,11 +246,16 @@ export default function SitesPage() {
                     border: '1px solid rgba(255, 99, 71, 0.3)',
                   }}
                 >
-                  <Globe className="h-7 w-7 text-orange-400" />
+                  <Image
+                    src="/logo-dark.png"
+                    alt="RR"
+                    width={32}
+                    height={32}
+                  />
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold text-white">My Website</h1>
-                  <p className="text-gray-400">Manage your musician website</p>
+                  <p className="text-white/70">Manage your musician website</p>
                 </div>
               </div>
             </div>
@@ -315,7 +340,7 @@ export default function SitesPage() {
                   whileHover={{ scale: 1.02 }}
                   className="rounded-xl border border-white/10 bg-white/5 p-4"
                 >
-                  <div className="mb-2 flex items-center gap-2 text-gray-400">
+                  <div className="mb-2 flex items-center gap-2 text-white/70">
                     <stat.icon size={16} className="text-orange-400" />
                     <span className="text-sm">{stat.label}</span>
                   </div>
@@ -341,7 +366,7 @@ export default function SitesPage() {
               <h3 className="mb-2 font-semibold text-white group-hover:text-orange-400">
                 Edit Sections
               </h3>
-              <p className="text-sm text-gray-400">Add, remove, or reorder content blocks</p>
+              <p className="text-sm text-white/70">Add, remove, or reorder content blocks</p>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02, y: -2 }}
@@ -352,7 +377,7 @@ export default function SitesPage() {
               <h3 className="mb-2 font-semibold text-white group-hover:text-orange-400">
                 Customize Theme
               </h3>
-              <p className="text-sm text-gray-400">Change colors, fonts, and styling</p>
+              <p className="text-sm text-white/70">Change colors, fonts, and styling</p>
             </motion.button>
           </motion.div>
         </div>
@@ -373,19 +398,25 @@ export default function SitesPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-12 text-center"
         >
-          {/* Globe icon with warm gradient background */}
+          {/* White RR Logo with glow effect */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', duration: 0.6 }}
-            className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl"
+            className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
+              background: 'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 215, 0, 0.1))',
               border: '1px solid rgba(255, 99, 71, 0.3)',
-              boxShadow: '0 0 40px rgba(255, 99, 71, 0.2)',
+              boxShadow: '0 0 60px rgba(255, 99, 71, 0.3)',
             }}
           >
-            <Globe size={40} className="text-orange-400" />
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={56}
+              height={56}
+              priority
+            />
           </motion.div>
 
           {/* Title with warm gradient text */}
@@ -402,7 +433,7 @@ export default function SitesPage() {
           >
             Build Your Website
           </h1>
-          <p className="mx-auto max-w-2xl text-lg text-gray-400">
+          <p className="mx-auto max-w-2xl text-lg text-white/80">
             Create a stunning website in seconds. We'll automatically import your songs, tour dates,
             and profile info.
           </p>
@@ -431,11 +462,11 @@ export default function SitesPage() {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-white">Quick Start</h2>
-              <p className="text-sm text-gray-400">Choose a template to get started</p>
+              <p className="text-sm text-white/70">Choose a template to get started</p>
             </div>
           </div>
 
-          <p className="mb-6 text-gray-400">
+          <p className="mb-6 text-white/80">
             Choose a template and we'll create your website using your existing CronkWaters data.
             You can customize everything after.
           </p>
@@ -461,7 +492,7 @@ export default function SitesPage() {
                 >
                   {template.name}
                 </h3>
-                <p className="text-xs text-gray-500">{template.description}</p>
+                <p className="text-xs text-white/60">{template.description}</p>
               </motion.button>
             ))}
           </div>
@@ -537,7 +568,7 @@ export default function SitesPage() {
                 <feature.icon className="h-7 w-7 text-orange-400" />
               </div>
               <h3 className="mb-2 font-semibold text-white">{feature.title}</h3>
-              <p className="text-sm text-gray-400">{feature.desc}</p>
+              <p className="text-sm text-white/70">{feature.desc}</p>
             </motion.div>
           ))}
         </motion.div>

@@ -1,12 +1,12 @@
 /**
  * RATE LIMITING
- * 
+ *
  * In-memory rate limiting for API routes.
  * For production, consider using Redis or Upstash.
- * 
+ *
  * Usage:
  *   import { rateLimit, RateLimitConfig } from '@/lib/rate-limit';
- *   
+ *
  *   // In API route:
  *   const limiter = rateLimit({ interval: 60000, limit: 10 });
  *   const { success } = await limiter.check(userId);
@@ -38,17 +38,20 @@ let cleanupInterval: NodeJS.Timeout | null = null;
 
 if (typeof window === 'undefined') {
   // Server-side only
-  cleanupInterval = setInterval(() => {
-    const now = Date.now();
-    const entries = Array.from(rateLimitStore.entries());
-    for (let i = 0; i < entries.length; i++) {
-      const [key, entry] = entries[i];
-      if (entry.resetTime < now) {
-        rateLimitStore.delete(key);
+  cleanupInterval = setInterval(
+    () => {
+      const now = Date.now();
+      const entries = Array.from(rateLimitStore.entries());
+      for (let i = 0; i < entries.length; i++) {
+        const [key, entry] = entries[i];
+        if (entry.resetTime < now) {
+          rateLimitStore.delete(key);
+        }
       }
-    }
-  }, 5 * 60 * 1000);
-  
+    },
+    5 * 60 * 1000
+  );
+
   // Cleanup on process exit (for serverless environments)
   if (typeof process !== 'undefined') {
     const cleanup = () => {
@@ -57,7 +60,7 @@ if (typeof window === 'undefined') {
         cleanupInterval = null;
       }
     };
-    
+
     process.on('SIGTERM', cleanup);
     process.on('SIGINT', cleanup);
     process.on('exit', cleanup);
@@ -173,6 +176,20 @@ export const authLimiter = rateLimit({
   prefix: 'auth',
 });
 
+/**
+ * Ably token rate limiter (120 requests per minute)
+ * Higher limit because:
+ * - Tokens are valid for 1 hour, so we're not worried about token abuse
+ * - Multiple components may initialize on page load
+ * - Page navigation can trigger multiple components to request tokens
+ * - The shared client should reduce requests, but we allow headroom for edge cases
+ */
+export const ablyTokenLimiter = rateLimit({
+  interval: 60 * 1000, // 1 minute
+  limit: 120,
+  prefix: 'ably-token',
+});
+
 // ============================================
 // HELPER FUNCTION
 // ============================================
@@ -191,4 +208,3 @@ export async function checkRateLimit(
     throw AppError.rateLimited(retryAfter);
   }
 }
-

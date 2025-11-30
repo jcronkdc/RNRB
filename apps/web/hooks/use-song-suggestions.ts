@@ -10,16 +10,17 @@
  * - Debounced batch updates (300ms)
  * - Memoized selectors for block filtering
  * - Automatic cleanup of old suggestions (30s)
- * - Connection reuse across multiple hooks
+ * - USES SHARED ABLY CLIENT to prevent token rate limiting
  * - Message deduplication
  *
  * Mycelial Pathway:
  * User suggests edit → Ably broadcasts → All see suggestion → Owner accepts → Master updates → All sync
  */
 
-import Ably from 'ably';
 import type { RealtimeChannel } from 'ably';
 import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+
+import { useAblyClient } from './use-ably-client';
 
 export type LyricSuggestion = {
   id: string;
@@ -64,10 +65,11 @@ export function useSongSuggestions({
 }: UseSongSuggestionsOptions) {
   const [suggestions, setSuggestions] = useState<Map<string, LyricSuggestion>>(new Map());
   const [chordSuggestions, setChordSuggestions] = useState<Map<string, ChordSuggestion>>(new Map());
-  const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const ablyRef = useRef<Ably.Realtime | null>(null);
+  // Use the shared Ably client instead of creating our own
+  const { client: ablyClient, isConnected, status } = useAblyClient(enabled ? userId : undefined);
+
   const channelRef = useRef<RealtimeChannel | null>(null);
   const cleanupTimersRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
   const processedMessagesRef = useRef<Set<string>>(new Set()); // Deduplication
@@ -108,39 +110,29 @@ export function useSongSuggestions({
     cleanupTimersRef.current.set(suggestionId, timer);
   }, []);
 
-  // Initialize Ably connection
+  // Set error state from shared client
   useEffect(() => {
-    if (!enabled) return;
+    if (status === 'error' || status === 'unavailable') {
+      setError(status === 'unavailable' ? 'Real-time features not available' : 'Connection failed');
+    } else {
+      setError(null);
+    }
+  }, [status]);
+
+  // Initialize channel when Ably client is ready
+  useEffect(() => {
+    if (!enabled || !ablyClient || !isConnected) return;
 
     let mounted = true;
     mountedRef.current = true; // Sync ref for callbacks with timeouts
 
-    const initAbly = async () => {
+    const initChannel = () => {
       try {
-        const response = await fetch('/api/ably/token');
-        if (response.status === 503) {
-          console.info('Ably not configured - suggestions disabled');
-          return;
-        }
-
-        if (!response.ok) throw new Error('Failed to get Ably token');
-
-        const ablyClient = new Ably.Realtime({
-          authUrl: '/api/ably/token',
-          clientId: userId,
-        });
-
-        if (!mounted) {
-          ablyClient.close();
-          return;
-        }
-
-        ablyRef.current = ablyClient;
         const channel = ablyClient.channels.get(channelName);
         channelRef.current = channel;
 
         // Subscribe to suggestion events with deduplication
-        channel.subscribe('suggestion-created', (message: Ably.Message) => {
+        channel.subscribe('suggestion-created', (message) => {
           if (!mounted) return;
 
           // Deduplicate messages
@@ -175,7 +167,7 @@ export function useSongSuggestions({
           scheduleCleanup(suggestion.id, 30000);
         });
 
-        channel.subscribe('suggestion-accepted', (message: Ably.Message) => {
+        channel.subscribe('suggestion-accepted', (message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 
@@ -194,7 +186,7 @@ export function useSongSuggestions({
           scheduleCleanup(suggestionId, 2000);
         });
 
-        channel.subscribe('suggestion-rejected', (message: Ably.Message) => {
+        channel.subscribe('suggestion-rejected', (message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 
@@ -214,7 +206,7 @@ export function useSongSuggestions({
         });
 
         // Chord suggestions with batching
-        channel.subscribe('chord-suggested', (message: Ably.Message) => {
+        channel.subscribe('chord-suggested', (message) => {
           if (!mounted) return;
           const suggestion: ChordSuggestion = message.data;
 
@@ -231,7 +223,7 @@ export function useSongSuggestions({
           });
         });
 
-        channel.subscribe('chord-accepted', (message: Ably.Message) => {
+        channel.subscribe('chord-accepted', (message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 
@@ -255,7 +247,7 @@ export function useSongSuggestions({
           cleanupTimersRef.current.set(timeoutKey, timeout);
         });
 
-        channel.subscribe('chord-rejected', (message: Ably.Message) => {
+        channel.subscribe('chord-rejected', (message) => {
           if (!mounted) return;
           const { suggestionId } = message.data;
 
@@ -278,8 +270,6 @@ export function useSongSuggestions({
           }, 1000);
           cleanupTimersRef.current.set(timeoutKey, timeout);
         });
-
-        setIsConnected(true);
       } catch (err) {
         console.error('Suggestions sync error:', err);
         if (mounted) {
@@ -288,7 +278,7 @@ export function useSongSuggestions({
       }
     };
 
-    initAbly();
+    initChannel();
 
     return () => {
       mounted = false;
@@ -302,13 +292,13 @@ export function useSongSuggestions({
       cleanupTimersRef.current.clear();
       processedMessagesRef.current.clear();
 
+      // Unsubscribe from channel (don't close the shared client)
       channelRef.current?.unsubscribe();
-      ablyRef.current?.close();
+      channelRef.current = null;
       setSuggestions(new Map());
       setChordSuggestions(new Map());
-      setIsConnected(false);
     };
-  }, [channelName, userId, enabled, scheduleBatchUpdate, scheduleCleanup]);
+  }, [channelName, ablyClient, isConnected, enabled, scheduleBatchUpdate, scheduleCleanup]);
 
   // Create lyric suggestion
   const suggestLyricChange = useCallback(

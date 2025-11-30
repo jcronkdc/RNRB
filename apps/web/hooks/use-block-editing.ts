@@ -1,7 +1,9 @@
 'use client';
 
-import Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
 import { useEffect, useRef, useState, useCallback } from 'react';
+
+import { useAblyClient } from './use-ably-client';
 
 export type BlockEditor = {
   blockId: string;
@@ -37,30 +39,21 @@ export function useBlockEditing({
 }: UseBlockEditingOptions) {
   const [activeEditors, setActiveEditors] = useState<Record<string, BlockEditor>>({});
   const [userColor] = useState(() => USER_COLORS[Math.floor(Math.random() * USER_COLORS.length)]);
-  const ablyRef = useRef<Ably.Realtime | null>(null);
-  const channelRef = useRef<Ably.RealtimeChannel | null>(null);
+
+  // Use the shared Ably client instead of creating our own
+  const { client: ablyClient, isConnected } = useAblyClient(enabled ? userId : undefined);
+
+  const channelRef = useRef<RealtimeChannel | null>(null);
   const clearTimersRef = useRef<Record<string, NodeJS.Timeout>>({});
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !ablyClient || !isConnected) return;
 
     let mounted = true;
 
-    const initAbly = async () => {
+    const initChannel = () => {
       try {
-        // Create Ably client
-        const ablyClient = new Ably.Realtime({
-          authUrl: '/api/ably/token',
-        });
-
-        if (!mounted) {
-          ablyClient.close();
-          return;
-        }
-
-        ablyRef.current = ablyClient;
-
-        // Get channel
+        // Get channel from shared client
         const channel = ablyClient.channels.get(channelName);
         channelRef.current = channel;
 
@@ -120,7 +113,7 @@ export function useBlockEditing({
       }
     };
 
-    initAbly();
+    initChannel();
 
     // Cleanup
     return () => {
@@ -129,14 +122,13 @@ export function useBlockEditing({
       // Clear all timers
       Object.values(clearTimersRef.current).forEach(clearTimeout);
 
+      // Unsubscribe from channel (don't close the shared client)
       if (channelRef.current) {
         channelRef.current.unsubscribe();
-      }
-      if (ablyRef.current) {
-        ablyRef.current.close();
+        channelRef.current = null;
       }
     };
-  }, [channelName, userId, enabled]);
+  }, [channelName, userId, ablyClient, isConnected, enabled]);
 
   // Notify that user is editing a block
   const notifyEditing = useCallback(
@@ -173,4 +165,3 @@ export function useBlockEditing({
     notifyStopEditing,
   };
 }
-

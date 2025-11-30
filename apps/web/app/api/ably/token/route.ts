@@ -2,7 +2,7 @@ import Ably from 'ably';
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { strictLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { ablyTokenLimiter, checkRateLimit } from '@/lib/rate-limit';
 
 // Validate and initialize Ably Rest client
 function initializeAblyRest(): Ably.Rest | null {
@@ -56,9 +56,9 @@ export async function GET() {
 
   const user = session.user;
 
-  // Rate limit: 30 token requests per minute (prevent token abuse)
+  // Rate limit: 60 token requests per minute (allow for multiple components initializing)
   try {
-    await checkRateLimit(strictLimiter, `ably-token:${user.id}`);
+    await checkRateLimit(ablyTokenLimiter, `${user.id}`);
   } catch {
     return NextResponse.json({ error: 'Too many token requests' }, { status: 429 });
   }
