@@ -16,6 +16,12 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle2,
+  HelpCircle,
+  Coins,
+  Volume2,
+  Download,
+  FolderPlus,
+  X,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -92,7 +98,7 @@ export default function CreatePage() {
   const [selectedInstruments, setSelectedInstruments] = useState<string[]>([]);
   const [customGenre, setCustomGenre] = useState('');
   const [customMood, setCustomMood] = useState('');
-  const [duration, setDuration] = useState(30); // seconds
+  const [duration, setDuration] = useState(15); // seconds (MusicGen supports 5-30s)
   const [tempo, setTempo] = useState(120); // BPM
   const [seed, setSeed] = useState('');
   const [keySignature, setKeySignature] = useState('Auto');
@@ -105,6 +111,7 @@ export default function CreatePage() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [estimatedCredits, setEstimatedCredits] = useState(10);
   const [showProjectSelector, setShowProjectSelector] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(true); // Show tutorial by default for new users
 
   // Calculate estimated credits based on parameters
   useEffect(() => {
@@ -126,8 +133,8 @@ export default function CreatePage() {
       return false;
     }
 
-    if (duration < 15 || duration > 180) {
-      setError('Duration must be between 15 and 180 seconds');
+    if (duration < 5 || duration > 30) {
+      setError('Duration must be between 5 and 30 seconds');
       return false;
     }
 
@@ -264,26 +271,200 @@ export default function CreatePage() {
           >
             {/* Accent bar */}
             <div className="mb-4 h-1 w-12 rounded-full" style={{ background: 'var(--accent)' }} />
-            <div className="mb-3 flex items-center gap-3">
-              <div
-                className="flex h-10 w-10 items-center justify-center rounded-lg"
-                style={{ background: 'var(--panel)' }}
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div
+                  className="flex h-10 w-10 items-center justify-center rounded-lg"
+                  style={{ background: 'var(--panel)' }}
+                >
+                  <Sparkles className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                </div>
+                <div>
+                  <p className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                    AI Music Generation
+                  </p>
+                  <h1 className="text-2xl font-bold text-white">Create New Track</h1>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowTutorial(!showTutorial)}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition hover:bg-white/5"
+                style={{ color: 'var(--muted)' }}
               >
-                <Sparkles className="h-5 w-5" style={{ color: 'var(--accent)' }} />
-              </div>
-              <div>
-                <p className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
-                  AI Music Generation
-                </p>
-                <h1 className="text-2xl font-bold text-white">Create New Track</h1>
-              </div>
+                <HelpCircle className="h-4 w-4" />
+                {showTutorial ? 'Hide Guide' : 'Show Guide'}
+              </button>
             </div>
             <p style={{ color: 'var(--muted)' }}>
-              Describe your music idea or use the style options below
+              Generate original music with AI - describe your idea and get a unique audio track
             </p>
           </motion.div>
         </div>
       </div>
+
+      {/* Tutorial/Onboarding Section */}
+      <AnimatePresence>
+        {showTutorial && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden border-b"
+            style={{
+              borderColor: 'var(--border)',
+              background: 'linear-gradient(to bottom, rgba(249, 115, 22, 0.05), transparent)',
+            }}
+          >
+            <div className="mx-auto max-w-6xl px-4 py-6">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
+                    <Info className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                    How It Works
+                  </h2>
+
+                  {/* What You Get */}
+                  <div
+                    className="mb-6 rounded-xl p-4"
+                    style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                  >
+                    <h3 className="mb-3 font-medium text-white">What You'll Get:</h3>
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      <div className="flex items-start gap-3">
+                        <div className="rounded-lg bg-orange-500/20 p-2">
+                          <Volume2 className="h-4 w-4 text-orange-400" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-white">Original Audio</p>
+                          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                            5-30 second MP3 track
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="rounded-lg bg-blue-500/20 p-2">
+                          <Download className="h-4 w-4 text-blue-400" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-white">Downloadable</p>
+                          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                            Save to your library
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="rounded-lg bg-green-500/20 p-2">
+                          <FolderPlus className="h-4 w-4 text-green-400" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-white">Add to Projects</p>
+                          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                            Use in your songs
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="rounded-lg bg-purple-500/20 p-2">
+                          <Music2 className="h-4 w-4 text-purple-400" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-white">100% Original</p>
+                          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                            AI-generated, royalty-free
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Steps */}
+                  <div className="mb-6">
+                    <h3 className="mb-3 font-medium text-white">Steps:</h3>
+                    <div className="grid gap-2 sm:grid-cols-4">
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
+                          1
+                        </span>
+                        <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                          Describe or select style
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
+                          2
+                        </span>
+                        <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                          Choose duration & tempo
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
+                          3
+                        </span>
+                        <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                          Click "Generate Track"
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
+                          4
+                        </span>
+                        <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                          Listen & add to project
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Credit Info */}
+                  <div
+                    className="rounded-xl p-4"
+                    style={{
+                      background: 'rgba(249, 115, 22, 0.1)',
+                      border: '1px solid rgba(249, 115, 22, 0.2)',
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <Coins className="mt-0.5 h-5 w-5 text-orange-400" />
+                      <div>
+                        <h3 className="font-medium text-white">Credit System</h3>
+                        <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
+                          Each track costs <strong className="text-orange-400">10 credits</strong>.
+                          Credits reset monthly based on your plan:
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-4 text-sm">
+                          <span>
+                            <span className="text-gray-400">Free:</span>{' '}
+                            <span className="text-white">10/month</span>
+                          </span>
+                          <span>
+                            <span className="text-gray-400">Creator ($9.99):</span>{' '}
+                            <span className="text-white">100/month</span>
+                          </span>
+                          <span>
+                            <span className="text-gray-400">Studio ($29.99):</span>{' '}
+                            <span className="text-white">500/month</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setShowTutorial(false)}
+                  className="rounded-lg p-2 transition hover:bg-white/10"
+                  style={{ color: 'var(--muted)' }}
+                  title="Close guide"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Main Content Card */}
@@ -544,23 +725,28 @@ export default function CreatePage() {
             {/* Duration & Parameters */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <label className="mb-3 block flex items-center gap-2 text-sm font-medium">
-                  <Clock className="h-4 w-4" />
-                  Duration: {duration}s
+                <label className="mb-3 block text-sm font-medium">
+                  <span className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    Duration: {duration} seconds
+                  </span>
+                  <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                    AI generates 5-30 second clips
+                  </span>
                 </label>
                 <div className="flex items-center gap-4">
                   <input
                     type="range"
-                    min="15"
-                    max="180"
-                    step="15"
+                    min="5"
+                    max="30"
+                    step="5"
                     value={duration}
                     onChange={(e) => setDuration(parseInt(e.target.value))}
                     className="flex-1 accent-orange-500 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isDisabled}
                   />
                   <span className="w-16 text-right text-sm font-medium text-gray-400">
-                    {Math.floor(duration / 60)}:{(duration % 60).toString().padStart(2, '0')}
+                    {duration}s
                   </span>
                 </div>
               </div>
