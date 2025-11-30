@@ -10,8 +10,8 @@ import { getCurrentUser } from '@/lib/session';
  *
  * Pricing (for good margins):
  * - Free: $0/mo → Cost: $0 → 100% margin
- * - Creator: $9.99/mo → Cost: ~$0.28/user → 97% margin
- * - Studio: $29.99/mo → Cost: ~$3.33/user → 89% margin
+ * - Creator: $17.99/mo → Cost: ~$0.28/user → 98% margin
+ * - Studio: $34.99/mo → Cost: ~$3.33/user → 90% margin
  */
 export const SUBSCRIPTION_TIERS = {
   free: {
@@ -37,7 +37,7 @@ export const SUBSCRIPTION_TIERS = {
   },
   creator: {
     name: 'Creator',
-    price: 14.99,
+    price: 17.99,
     features: {
       aiChatAssist: true,
       aiTranscription: true,
@@ -58,7 +58,7 @@ export const SUBSCRIPTION_TIERS = {
   },
   studio: {
     name: 'Studio',
-    price: 29.99,
+    price: 34.99,
     features: {
       aiChatAssist: true,
       aiTranscription: true,

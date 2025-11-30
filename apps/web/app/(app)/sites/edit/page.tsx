@@ -389,6 +389,7 @@ function SiteEditorContent() {
 
   const handlePublish = async () => {
     if (!site) return;
+    const isPublishing = site.status !== 'published';
     setIsPublishing(true);
 
     try {
@@ -396,13 +397,17 @@ function SiteEditorContent() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          status: site.status === 'published' ? 'draft' : 'published',
+          status: isPublishing ? 'published' : 'draft',
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
         setSite(data.site);
+        // Redirect to deployment success monitor on publish
+        if (isPublishing) {
+          router.push('/sites/success?new=true');
+        }
       }
     } catch {
       // Handle error

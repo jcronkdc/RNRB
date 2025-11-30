@@ -42,61 +42,24 @@ CREATE INDEX IF NOT EXISTS "Invitation_projectId_idx" ON "Invitation"("projectId
 CREATE INDEX IF NOT EXISTS "Invitation_status_idx" ON "Invitation"("status");
 CREATE INDEX IF NOT EXISTS "ProjectMember_projectId_idx" ON "ProjectMember"("projectId");
 
--- Enable RLS (Row Level Security) for security
-ALTER TABLE "Invitation" ENABLE ROW LEVEL SECURITY;
-ALTER TABLE "ProjectMember" ENABLE ROW LEVEL SECURITY;
-
--- RLS Policies for Invitation
--- Users can see invitations sent to their email
-CREATE POLICY "Users can view their own invitations"
-    ON "Invitation" FOR SELECT
-    USING (email = current_setting('request.jwt.claims', true)::json->>'email');
-
--- Users can see invitations they sent
-CREATE POLICY "Senders can view invitations they sent"
-    ON "Invitation" FOR SELECT
-    USING ("senderId" = current_setting('request.jwt.claims', true)::json->>'sub');
-
--- Org admins can create invitations for their orgs
-CREATE POLICY "Org admins can create invitations"
-    ON "Invitation" FOR INSERT
-    WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM "Membership"
-            WHERE "userId" = current_setting('request.jwt.claims', true)::json->>'sub'
-            AND "orgId" = "Invitation"."orgId"
-            AND "role" IN ('owner', 'admin')
-        )
-    );
-
--- RLS Policies for ProjectMember
--- Project members can view other members of the same project
-CREATE POLICY "Project members can view team members"
-    ON "ProjectMember" FOR SELECT
-    USING (
-        EXISTS (
-            SELECT 1 FROM "ProjectMember" pm
-            WHERE pm."projectId" = "ProjectMember"."projectId"
-            AND pm."userId" = current_setting('request.jwt.claims', true)::json->>'sub'
-        )
-    );
-
--- Project owners/admins can add members
-CREATE POLICY "Project admins can add members"
-    ON "ProjectMember" FOR INSERT
-    WITH CHECK (
-        EXISTS (
-            SELECT 1 FROM "ProjectMember"
-            WHERE "projectId" = "ProjectMember"."projectId"
-            AND "userId" = current_setting('request.jwt.claims', true)::json->>'sub'
-            AND "role" IN ('owner', 'admin')
-        )
-    );
-
--- Users can leave projects they're members of
-CREATE POLICY "Members can leave projects"
-    ON "ProjectMember" FOR DELETE
-    USING ("userId" = current_setting('request.jwt.claims', true)::json->>'sub');
+-- ============================================================================
+-- AUTHORIZATION NOTE (2025-11-30)
+-- ============================================================================
+-- RLS (Row Level Security) policies were REMOVED because they are INEFFECTIVE
+-- with the NextAuth + Prisma architecture used in this application.
+--
+-- The RLS policies expected JWT claims via current_setting('request.jwt.claims'),
+-- but Prisma does NOT set PostgreSQL session variables. Therefore, the policies
+-- were never enforced.
+--
+-- AUTHORIZATION is handled at the APPLICATION layer:
+-- - NextAuth validates JWT sessions before any API route execution
+-- - Each API route checks session.user.id for ownership/access control
+-- - Prisma queries filter by userId for data isolation
+-- - Role checks (owner/admin/member) performed in TypeScript code
+--
+-- See: packages/db/prisma/migrations/20251130_fix_rls_security/migration.sql
+-- ============================================================================
 
 
 

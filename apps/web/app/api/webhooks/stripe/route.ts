@@ -339,7 +339,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       return;
     }
 
-    // Apply credits
+    // Apply credits based on type
     if (creditType === 'ai') {
       await prisma.user.update({
         where: { id: userId },
@@ -349,6 +349,11 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       await prisma.user.update({
         where: { id: userId },
         data: { videoMinutesBonus: { increment: creditAmount } },
+      });
+    } else if (creditType === 'image') {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { imageCreditsBonus: { increment: creditAmount } },
       });
     } else if (creditType === 'storage') {
       await prisma.user.update({

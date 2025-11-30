@@ -19,7 +19,7 @@ interface UpgradeModalProps {
 const TIER_INFO = {
   creator: {
     name: 'Creator',
-    price: '$9.99',
+    price: '$17.99',
     period: '/month',
     icon: Zap,
     color: 'from-orange-500 to-red-500',
@@ -35,7 +35,7 @@ const TIER_INFO = {
   },
   studio: {
     name: 'Studio',
-    price: '$29.99',
+    price: '$34.99',
     period: '/month',
     icon: Crown,
     color: 'from-purple-500 to-pink-500',
@@ -137,7 +137,7 @@ export function UpgradeModal({
                         Creator
                       </span>
                     </div>
-                    <div className="text-2xl font-bold text-white">$9.99</div>
+                    <div className="text-2xl font-bold text-white">$17.99</div>
                     <div className="text-sm text-gray-400">/month</div>
                   </button>
 
@@ -162,7 +162,7 @@ export function UpgradeModal({
                         Best Value
                       </span>
                     </div>
-                    <div className="text-2xl font-bold text-white">$29.99</div>
+                    <div className="text-2xl font-bold text-white">$34.99</div>
                     <div className="text-sm text-gray-400">/month</div>
                   </button>
                 </div>

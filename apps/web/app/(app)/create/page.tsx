@@ -195,8 +195,19 @@ export default function CreatePage() {
 
       setProgress(100);
       setStatus('success');
-      setGeneratedTrackId(data.trackId);
-      setGeneratedSongId(data.songId); // Assume API returns songId
+
+      // Handle both demo mode and production mode responses
+      if (data.mode === 'demo') {
+        setGeneratedTrackId(data.song?.id || data.trackId);
+        setGeneratedSongId(data.songId || data.song?.id);
+        // Store demo mode flag for UI
+        (window as any).__rnrbDemoMode = true;
+      } else {
+        setGeneratedTrackId(data.song?.id || data.trackId);
+        setGeneratedSongId(data.songId || data.song?.id);
+        (window as any).__rnrbDemoMode = false;
+      }
+
       setShowProjectSelector(true); // Show project selector after success
 
       // Don't auto-redirect - let user add to project first
@@ -962,6 +973,36 @@ export default function CreatePage() {
                   Your AI-generated track is ready. Add it to a project or view it now.
                 </p>
 
+                {/* Demo Mode Notice */}
+                {(window as any).__rnrbDemoMode && (
+                  <div className="mb-6 rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-left">
+                    <div className="flex items-start gap-3">
+                      <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-400" />
+                      <div>
+                        <p className="text-sm font-medium text-yellow-400">Demo Mode Active</p>
+                        <p className="mt-1 text-xs text-yellow-400/80">
+                          A placeholder track has been created. For real AI-generated music,
+                          configure REPLICATE_API_TOKEN in your environment. Demo tracks show how
+                          the workflow works without using AI credits.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Audio Preview */}
+                <div className="mb-6 rounded-xl bg-white/5 p-4">
+                  <div className="flex items-center justify-center gap-4">
+                    <Volume2 className="h-5 w-5 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      Your track:{' '}
+                      <span className="font-medium text-white">
+                        {selectedMoods[0] || 'AI'} {selectedGenres[0] || ''} Track
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
                 {/* Action buttons */}
                 <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                   {generatedSongId && (
@@ -975,10 +1016,10 @@ export default function CreatePage() {
                   )}
 
                   <button
-                    onClick={() => generatedTrackId && router.push(`/tracks/${generatedTrackId}`)}
+                    onClick={() => generatedSongId && router.push(`/library`)}
                     className="rnrb-button-primary w-full rounded-xl px-6 py-3 sm:w-auto"
                   >
-                    View Track
+                    View in Library
                   </button>
 
                   <button
@@ -991,6 +1032,7 @@ export default function CreatePage() {
                       setSelectedGenres([]);
                       setSelectedMoods([]);
                       setSelectedInstruments([]);
+                      (window as any).__rnrbDemoMode = false;
                     }}
                     className="rnrb-button-secondary w-full rounded-xl px-6 py-3 sm:w-auto"
                   >

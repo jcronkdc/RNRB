@@ -82,14 +82,14 @@ const PLAN_INFO = {
   },
   creator: {
     name: 'Creator',
-    price: '$14.99',
+    price: '$17.99',
     period: '/month',
     icon: Zap,
     color: 'from-orange-500 to-red-500',
   },
   studio: {
     name: 'Studio',
-    price: '$29.99',
+    price: '$34.99',
     period: '/month',
     icon: Crown,
     color: 'from-purple-500 to-pink-500',

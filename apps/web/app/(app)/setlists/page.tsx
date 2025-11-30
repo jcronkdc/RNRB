@@ -275,7 +275,7 @@ export default function SetlistsPage() {
               </motion.div>
               <div>
                 <h2 className="mb-2 text-3xl font-black text-white">
-                  Upgrade to Creator for $9.99/month
+                  Upgrade to Creator for $17.99/month
                 </h2>
                 <p className="text-lg text-orange-200">
                   Join thousands of musicians using AI-powered setlist generation
@@ -341,7 +341,7 @@ export default function SetlistsPage() {
                 <div className="group-hover:animate-shimmer absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
                 <span className="relative flex items-center gap-2">
                   Upgrade to Creator
-                  <span className="text-sm opacity-80">from $9.99/mo</span>
+                  <span className="text-sm opacity-80">from $17.99/mo</span>
                 </span>
               </motion.button>
               <Link href="/pricing">

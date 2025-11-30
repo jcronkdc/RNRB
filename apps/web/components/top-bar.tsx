@@ -3,22 +3,22 @@
 import { trpc } from '@cronkwaters/trpc/client/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search,
   Plus,
   User,
+  Users,
   Command,
   CreditCard,
   LogOut,
   ChevronDown,
   Sparkles,
   Zap,
-  Music,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
+import { GlobalUserSearch } from './global-user-search';
 import { MobileMenuButton } from './sidebar-nav';
 
 // Dynamically import NotificationBell to avoid SSR issues
@@ -67,6 +67,18 @@ export function TopBar() {
 
   const user = session?.user;
 
+  // Keyboard shortcut to open people search (Cmd/Ctrl + Shift + F for "Find")
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'f') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <header
       className="fixed left-0 right-0 top-0 z-30 h-14 backdrop-blur-xl lg:ml-[260px]"
@@ -81,19 +93,19 @@ export function TopBar() {
           {/* Mobile Menu Button */}
           <MobileMenuButton />
 
-          {/* Search - Hidden on small screens, icon only on medium */}
+          {/* Search - Facebook-style people search */}
           <button
             onClick={() => setSearchOpen(!searchOpen)}
             className="group flex items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-white/5 lg:px-4"
             style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
           >
-            <Search className="h-4 w-4 text-gray-400 group-hover:text-white" />
+            <Users className="h-4 w-4 text-gray-400 group-hover:text-orange-400" />
             <span className="hidden text-sm text-gray-400 group-hover:text-white sm:inline">
-              Search
+              Find People
             </span>
-            <div className="ml-2 hidden items-center gap-1 opacity-50 lg:ml-8 lg:flex">
+            <div className="ml-2 hidden items-center gap-1 opacity-50 lg:ml-4 lg:flex">
               <Command className="h-3 w-3" />
-              <span className="text-xs">K</span>
+              <span className="text-xs">⇧F</span>
             </div>
           </button>
 
@@ -243,65 +255,8 @@ export function TopBar() {
         </div>
       </div>
 
-      {/* Global Search Modal */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-start justify-center pt-32"
-            style={{ background: 'rgba(0, 0, 0, 0.8)' }}
-            onClick={() => setSearchOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: -20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: -20 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-2xl overflow-hidden rounded-2xl"
-              style={{
-                background: 'rgba(30, 30, 30, 0.95)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 24px 48px rgba(0, 0, 0, 0.5)',
-                backdropFilter: 'blur(20px)',
-              }}
-            >
-              <div className="p-6">
-                <div className="mb-6 flex items-center gap-3">
-                  <Search className="h-6 w-6 text-gray-400" />
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="Search projects, tracks, collaborators..."
-                    className="flex-1 bg-transparent text-lg text-white placeholder-gray-400 outline-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <p className="mb-3 text-xs font-medium uppercase text-gray-500">Quick Actions</p>
-                  {[
-                    { icon: Sparkles, label: 'Create New Track', shortcut: '⌘N' },
-                    { icon: Music, label: 'Browse Library', shortcut: '⌘L' },
-                    { icon: User, label: 'View Profile', shortcut: '⌘P' },
-                  ].map((action, index) => (
-                    <button
-                      key={index}
-                      className="flex w-full items-center justify-between rounded-lg px-4 py-3 transition-all hover:bg-white/5"
-                    >
-                      <div className="flex items-center gap-3">
-                        <action.icon className="h-5 w-5 text-gray-400" />
-                        <span className="text-sm text-gray-300">{action.label}</span>
-                      </div>
-                      <span className="text-xs text-gray-500">{action.shortcut}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Global User Search Modal */}
+      <GlobalUserSearch isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

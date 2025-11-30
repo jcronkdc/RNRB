@@ -7,8 +7,8 @@
  *
  * Pricing & Margins:
  * - Free ($0): $0 cost → 100% margin
- * - Creator ($9.99): ~$0.28 cost → 97% margin
- * - Studio ($29.99): ~$3.33 cost → 89% margin
+ * - Creator ($17.99): ~$0.28 cost → 98% margin
+ * - Studio ($34.99): ~$3.33 cost → 90% margin
  *
  * Features:
  * - Monthly AI request tracking

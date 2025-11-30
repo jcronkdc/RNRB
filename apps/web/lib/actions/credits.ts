@@ -7,7 +7,7 @@ import { getOrCreateStripeCustomer } from '@/lib/actions/subscriptions';
 import { getCurrentUser } from '@/lib/session';
 import { createOneTimeCheckoutSession } from '@/lib/stripe-subscriptions';
 
-type CreditKind = 'ai' | 'video' | 'storage';
+type CreditKind = 'ai' | 'video' | 'storage' | 'image';
 
 const CREDIT_PRODUCTS = {
   ai_100: {
@@ -23,6 +23,20 @@ const CREDIT_PRODUCTS = {
     amount: 600, // minutes
     priceEnv: 'STRIPE_PRICE_ID_VIDEO_600',
     description: 'Adds 600 video minutes (10 hours) for this billing cycle.',
+  },
+  image_25: {
+    label: '+25 Image Credits',
+    type: 'image' as CreditKind,
+    amount: 25,
+    priceEnv: 'STRIPE_PRICE_ID_IMAGE_25',
+    description: 'Generate 25 additional album artworks this cycle.',
+  },
+  image_100: {
+    label: '+100 Image Credits',
+    type: 'image' as CreditKind,
+    amount: 100,
+    priceEnv: 'STRIPE_PRICE_ID_IMAGE_100',
+    description: 'Best value! 100 album art generations for creative freedom.',
   },
   storage_25: {
     label: '+25 GB Storage',

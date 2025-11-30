@@ -7,6 +7,7 @@ import {
   FolderOpen,
   Library,
   Users,
+  UserSearch,
   Compass,
   CreditCard,
   Settings,
@@ -69,6 +70,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Home', href: '/dashboard', icon: Home },
+  { label: 'Find Musicians', href: '/discover', icon: UserSearch, badge: 'NEW' },
   { label: 'Collaboration', href: '/collaboration', icon: Users, badge: 'LIVE' },
   { label: 'Songwriting', href: '/songwriting', icon: Music4, badge: 'AI' },
   { label: 'R&R Labs', href: '/labs', icon: FlaskConical, badge: 'NEW' },

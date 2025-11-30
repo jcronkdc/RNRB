@@ -2,774 +2,405 @@
 
 import { motion } from 'framer-motion';
 import {
-  ArrowRight,
-  Calendar,
-  ChevronRight,
-  Compass,
-  FlaskConical,
-  Folder,
-  FolderPlus,
-  HardDrive,
-  Library,
-  ListMusic,
-  Loader2,
-  Mic2,
-  Music,
-  Music2,
   Plus,
-  Sparkles,
-  Zap,
+  Loader2,
+  Bell,
+  TrendingUp,
+  Users,
+  Music,
   Globe,
-  Activity,
+  Sparkles,
+  Hash,
+  ChevronRight,
+  Flame,
+  Zap,
+  UserSearch,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 
+import { PeopleSidebar } from '@/components/dashboard/people-sidebar';
+import { QuickTools } from '@/components/dashboard/quick-tools';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { getStoragePercentage, useDashboardData } from '@/hooks/use-dashboard-data';
+import { FeedPost } from '@/components/social-feed/FeedPost';
+import { PostComposer } from '@/components/social-feed/PostComposer';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
-// Project type for recent projects
-type RecentProject = {
-  id: string;
-  name: string;
-  slug: string;
-  song_count: number;
-};
-
-// Song type for recent songs
-type RecentSong = {
-  id: string;
-  title: string;
-  status: 'draft' | 'in_progress' | 'needs_review' | 'complete';
-  projectId?: string;
-  updatedAt: string;
-  project?: {
-    id: string;
-    name: string;
-    slug: string;
-  };
-};
-
-// Subtle ambient background - calmer than landing page, focused workspace
-const AmbientBackground = memo(() => <div className="app-ambient" />);
-AmbientBackground.displayName = 'AmbientBackground';
-
-// Clean stat card - calmer than landing page
-const StatCard = memo(
-  ({
-    label,
-    value,
-    icon: Icon,
-    href,
-    delay = 0,
-  }: {
-    label: string;
-    value: string | number;
-    icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-    href?: string;
-    delay?: number;
-  }) => {
-    const content = (
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay }}
-        className="app-stat-card group cursor-pointer"
-      >
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-            style={{ background: 'var(--accent)' }}
-          >
-            <Icon className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <p className="app-stat-label">{label}</p>
-            <p className="app-stat-value">{value}</p>
-          </div>
-        </div>
-      </motion.div>
-    );
-
-    if (href) {
-      return <Link href={href}>{content}</Link>;
-    }
-    return content;
-  }
-);
-StatCard.displayName = 'StatCard';
-
-// Clean primary action card - calmer workspace aesthetic
-const PrimaryActionCard = memo(
-  ({
-    title,
-    description,
-    icon: Icon,
-    href,
-    badge,
-    delay = 0,
-  }: {
-    title: string;
-    description: string;
-    icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-    href: string;
-    badge?: string;
-    delay?: number;
-  }) => {
-    return (
-      <Link href={href} className="app-quick-action group relative h-full">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay }}
-        >
-          {badge && (
-            <span
-              className="absolute right-4 top-4 flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-white"
-              style={{ background: 'var(--accent)' }}
-            >
-              <Sparkles className="h-3 w-3" />
-              {badge}
-            </span>
-          )}
-
-          <div className="app-icon">
-            <Icon />
-          </div>
-          <h3>{title}</h3>
-          <p>{description}</p>
-          <div
-            className="mt-3 flex items-center gap-1 text-sm font-medium"
-            style={{ color: 'var(--accent)' }}
-          >
-            <span>Get Started</span>
-            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </div>
-        </motion.div>
-      </Link>
-    );
-  }
-);
-PrimaryActionCard.displayName = 'PrimaryActionCard';
-
-// Clean feature tile - calm workspace navigation
-const FeatureTile = memo(
-  ({
-    title,
-    icon: Icon,
-    href,
-    description,
-    delay = 0,
-  }: {
-    title: string;
-    icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-    href: string;
-    description?: string;
-    delay?: number;
-  }) => {
-    return (
-      <Link href={href} className="app-feature-tile">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay }}
-        >
-          <div className="icon">
-            <Icon />
-          </div>
-          <h4>{title}</h4>
-          {description && <span>{description}</span>}
-        </motion.div>
-      </Link>
-    );
-  }
-);
-FeatureTile.displayName = 'FeatureTile';
-
-// Clean recent project card
-const RecentProjectCard = memo(
-  ({ project, delay = 0 }: { project: RecentProject; delay?: number }) => (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay }}
-    >
-      <Link href={`/projects/${project.slug}`} className="app-list-item group">
-        <div className="app-list-icon">
-          <Folder />
-        </div>
-        <div className="app-list-content">
-          <div className="app-list-title">{project.name}</div>
-          <div className="app-list-meta">
-            {project.song_count} {project.song_count === 1 ? 'song' : 'songs'}
-          </div>
-        </div>
-        <ChevronRight
-          className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-          style={{ color: 'var(--muted)' }}
-        />
-      </Link>
-    </motion.div>
-  )
-);
-RecentProjectCard.displayName = 'RecentProjectCard';
-
-// Clean recent song card
-const RecentSongCard = memo(({ song, delay = 0 }: { song: RecentSong; delay?: number }) => {
-  const statusColors: Record<string, string> = {
-    draft: '#9ca3af',
-    in_progress: '#60a5fa',
-    needs_review: '#fbbf24',
-    complete: '#4ade80',
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay }}
-    >
-      <Link
-        href={
-          song.project
-            ? `/projects/${song.project.slug}/songs/${song.id}`
-            : `/songwriting?song=${song.id}`
-        }
-        className="app-list-item group"
-      >
-        <div className="app-list-icon">
-          <Music />
-        </div>
-        <div className="app-list-content">
-          <div className="app-list-title">{song.title}</div>
-          <div className="app-list-meta flex items-center gap-2">
-            <span style={{ color: statusColors[song.status] }}>
-              {song.status.replace('_', ' ')}
-            </span>
-            {song.project && (
-              <>
-                <span>•</span>
-                <span className="truncate">{song.project.name}</span>
-              </>
-            )}
-          </div>
-        </div>
-        {!song.project && (
-          <Link
-            href="/songs"
-            className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium"
-            style={{ background: 'rgba(255, 99, 71, 0.1)', color: 'var(--accent)' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <FolderPlus className="h-3 w-3" />
-            Add
-          </Link>
-        )}
-        <ChevronRight
-          className="h-4 w-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-          style={{ color: 'var(--muted)' }}
-        />
-      </Link>
-    </motion.div>
-  );
-});
-RecentSongCard.displayName = 'RecentSongCard';
-
-// Loading skeleton for songs
-const SongsSkeleton = memo(() => (
-  <div className="space-y-3">
-    {[...Array(4)].map((_, i) => (
-      <div key={i} className="card relative overflow-hidden p-4">
-        <div className="flex animate-pulse items-center gap-4">
-          <div className="h-12 w-12 rounded-xl" style={{ background: 'var(--panel)' }} />
-          <div className="flex-1">
-            <div className="mb-2 h-4 w-32 rounded" style={{ background: 'var(--panel)' }} />
-            <div className="h-3 w-20 rounded" style={{ background: 'var(--panel)' }} />
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-));
-SongsSkeleton.displayName = 'SongsSkeleton';
-
-// Loading skeleton with shimmer
-const StatsSkeleton = memo(() => (
-  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-    {[...Array(4)].map((_, i) => (
-      <div key={i} className="card relative overflow-hidden p-5">
-        <div className="animate-pulse">
-          <div className="flex items-center gap-4">
-            <div className="h-14 w-14 rounded-xl" style={{ background: 'var(--panel)' }} />
-            <div>
-              <div className="mb-2 h-4 w-16 rounded" style={{ background: 'var(--panel)' }} />
-              <div className="h-8 w-12 rounded" style={{ background: 'var(--panel)' }} />
-            </div>
-          </div>
-        </div>
-        <div
-          className="absolute inset-0 translate-x-[-100%] animate-[shimmer_2s_infinite]"
-          style={{
-            background: 'linear-gradient(90deg, transparent, rgba(255,99,71,0.1), transparent)',
-          }}
-        />
-      </div>
-    ))}
-  </div>
-));
-StatsSkeleton.displayName = 'StatsSkeleton';
-
-const ActionsSkeleton = memo(() => (
-  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-    {[...Array(3)].map((_, i) => (
-      <div key={i} className="card relative h-64 overflow-hidden">
-        <div className="animate-pulse p-6">
-          <div className="mb-5 h-16 w-16 rounded-2xl" style={{ background: 'var(--panel)' }} />
-          <div className="mb-3 h-6 w-40 rounded" style={{ background: 'var(--panel)' }} />
-          <div className="mb-2 h-4 w-full rounded" style={{ background: 'var(--panel)' }} />
-          <div className="h-4 w-3/4 rounded" style={{ background: 'var(--panel)' }} />
-        </div>
-        <div
-          className="absolute inset-0 translate-x-[-100%] animate-[shimmer_2s_infinite]"
-          style={{
-            background: 'linear-gradient(90deg, transparent, rgba(255,99,71,0.1), transparent)',
-          }}
-        />
-      </div>
-    ))}
-  </div>
-));
-ActionsSkeleton.displayName = 'ActionsSkeleton';
-
-const ProjectsSkeleton = memo(() => (
-  <div className="space-y-3">
-    {[...Array(4)].map((_, i) => (
-      <div key={i} className="card relative overflow-hidden p-4">
-        <div className="flex animate-pulse items-center gap-4">
-          <div className="h-12 w-12 rounded-xl" style={{ background: 'var(--panel)' }} />
-          <div className="flex-1">
-            <div className="mb-2 h-4 w-32 rounded" style={{ background: 'var(--panel)' }} />
-            <div className="h-3 w-20 rounded" style={{ background: 'var(--panel)' }} />
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-));
-ProjectsSkeleton.displayName = 'ProjectsSkeleton';
-
-// Full page skeleton - clean, minimal
-const DashboardSkeleton = () => (
-  <div className="app-workspace relative">
-    <AmbientBackground />
-    <div className="relative z-10 mx-auto max-w-7xl px-6 py-6">
-      <div className="mb-8 animate-pulse">
-        <div className="mb-3 h-10 w-64 rounded-lg" style={{ background: 'var(--panel)' }} />
-        <div className="h-5 w-40 rounded-lg" style={{ background: 'var(--panel)' }} />
-      </div>
-      <div className="mb-8">
-        <StatsSkeleton />
-      </div>
-      <div className="mb-5 h-4 w-28 rounded" style={{ background: 'var(--panel)' }} />
-      <ActionsSkeleton />
-    </div>
-  </div>
-);
+// Feed type tabs
+const feedTabs = [
+  { id: 'following', label: 'Following', icon: Users },
+  { id: 'public', label: 'Discover', icon: Globe },
+  { id: 'algorithm', label: 'For You', icon: Sparkles },
+  { id: 'audio', label: 'Music', icon: Music },
+];
 
 function DashboardContent() {
-  const { user, loading } = useRequireAuth();
-  const router = useRouter();
   const { data: session, status } = useSession();
-  const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
-  const [recentSongs, setRecentSongs] = useState<RecentSong[]>([]);
-  const [loadingProjects, setLoadingProjects] = useState(false);
-  const [loadingSongs, setLoadingSongs] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const user = session?.user;
+  const userName = user?.name?.split(' ')[0] || 'Artist';
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const [feedType, setFeedType] = useState<'following' | 'public' | 'algorithm' | 'audio'>(
+    'following'
+  );
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [trendingTags, setTrendingTags] = useState<{ tag: string; count: number }[]>([]);
 
-  useEffect(() => {
-    if (session?.user && !loading) {
-      const profileCompleted = (session.user as { profileCompleted?: boolean }).profileCompleted;
-      if (profileCompleted === false) {
-        router.push('/settings/profile?setup=true');
+  // Require authentication
+  useRequireAuth();
+
+  // Load posts
+  const loadPosts = useCallback(
+    async (nextCursor?: string) => {
+      try {
+        if (!nextCursor) setLoading(true);
+
+        const endpoint = feedType === 'algorithm' ? '/api/feed/algorithm' : '/api/feed/posts';
+        const params = new URLSearchParams({
+          ...(feedType !== 'algorithm' && { type: feedType }),
+          limit: '10',
+          ...(nextCursor && { cursor: nextCursor }),
+        });
+
+        const response = await fetch(`${endpoint}?${params}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (nextCursor) {
+            setPosts((prev) => [...prev, ...data.posts]);
+          } else {
+            setPosts(data.posts || []);
+          }
+          setCursor(data.nextCursor || null);
+          setHasMore(!!data.nextCursor);
+        }
+      } catch (error) {
+        console.error('Error loading posts:', error);
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [session, loading, router]);
+    },
+    [feedType]
+  );
 
-  const { data: dashboardStats, loading: statsLoading } = useDashboardData({
-    refreshInterval: 60000,
-    enabled: isMounted && !!user && !loading && status === 'authenticated',
-  });
-
-  const loadProjects = useCallback(async () => {
-    setLoadingProjects(true);
+  // Load trending tags
+  const loadTrending = useCallback(async () => {
     try {
-      const response = await fetch('/api/projects');
+      const response = await fetch('/api/feed/trending?limit=5');
       if (response.ok) {
         const data = await response.json();
-        setRecentProjects(data.slice(0, 4));
+        setTrendingTags(data.hashtags || []);
       }
-    } catch (err) {
-      console.error('Error loading projects:', err);
-    } finally {
-      setLoadingProjects(false);
-    }
-  }, []);
-
-  const loadSongs = useCallback(async () => {
-    setLoadingSongs(true);
-    try {
-      const response = await fetch('/api/songs/all?limit=5&sortBy=updatedAt&sortOrder=desc');
-      if (response.ok) {
-        const data = await response.json();
-        setRecentSongs(data.songs || []);
-      }
-    } catch (err) {
-      console.error('Error loading songs:', err);
-    } finally {
-      setLoadingSongs(false);
+    } catch (error) {
+      console.error('Error loading trending:', error);
     }
   }, []);
 
   useEffect(() => {
-    if (user && !loading && status === 'authenticated') {
-      loadProjects();
-      loadSongs();
-    }
-  }, [user, loading, status, loadProjects, loadSongs]);
+    loadPosts();
+    loadTrending();
+  }, [feedType, loadPosts, loadTrending]);
 
-  const userName = useMemo(() => {
-    if (loading || !user) return 'Artist';
-    return user.name || user.email?.split('@')[0] || 'Artist';
-  }, [user, loading]);
+  const handlePostCreated = (newPost: any) => {
+    setPosts((prev) => [newPost, ...prev]);
+  };
 
-  useEffect(() => {
-    const criticalRoutes = ['/songwriting', '/create', '/projects'];
-    criticalRoutes.forEach((route) => {
-      router.prefetch(route);
-    });
-  }, [router]);
+  const handlePostDeleted = (postId: string) => {
+    setPosts((prev) => prev.filter((p) => p.id !== postId));
+  };
 
-  useEffect(() => {
-    if (user && isMounted && typeof window !== 'undefined' && window.posthog) {
-      window.posthog.capture('dashboard_viewed', {
-        user_id: user.id,
-        timestamp: Date.now(),
-      });
-    }
-  }, [user, isMounted]);
+  const handlePostUpdated = (updatedPost: any) => {
+    setPosts((prev) => prev.map((p) => (p.id === updatedPost.id ? updatedPost : p)));
+  };
 
-  if (!isMounted || loading || status === 'loading' || !user) {
-    return <DashboardSkeleton />;
+  if (status === 'loading') {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+      </div>
+    );
   }
 
-  const storagePercent = dashboardStats
-    ? getStoragePercentage(dashboardStats.storageUsed, dashboardStats.storageTotal)
-    : 0;
-
   return (
-    <div className="app-workspace relative">
-      {/* Subtle ambient background - calmer workspace */}
-      <AmbientBackground />
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
+      {/* Ambient background effects */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-orange-500/5 blur-[100px]" />
+        <div className="absolute -right-40 top-1/3 h-[400px] w-[400px] rounded-full bg-purple-500/5 blur-[100px]" />
+      </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-6">
-        {/* Clean logo header - per memory [[memory:11700420]] */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mb-6 flex flex-col items-center"
-        >
-          <Link href="/" className="group inline-block">
-            <Image
-              src="/logo-dark.png"
-              alt="Rock N' Roll Basement"
-              width={140}
-              height={57}
-              priority
-              className="transition-transform duration-200 group-hover:scale-105"
-            />
-          </Link>
-        </motion.div>
-        {/* Loading indicator - subtle */}
-        {(loading || statsLoading) && user && (
-          <div
-            className="fixed right-6 top-20 z-50 flex items-center gap-2 rounded-lg px-3 py-1.5"
-            style={{ border: '1px solid var(--border)', background: 'var(--panel)' }}
-          >
-            <Loader2 className="h-3 w-3 animate-spin" style={{ color: 'var(--muted)' }} />
-            <span className="text-xs" style={{ color: 'var(--muted)' }}>
-              Syncing
-            </span>
-          </div>
-        )}
-
-        {/* ==================== WELCOME HEADER - Clean & Calm ==================== */}
+      <div className="relative mx-auto max-w-7xl px-4 py-6">
+        {/* Header */}
         <motion.header
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="app-welcome mb-8"
+          className="mb-6 flex items-center justify-between"
         >
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h1 className="mb-1 text-2xl font-bold md:text-3xl" style={{ color: 'var(--text)' }}>
-                Welcome back, {userName}
-              </h1>
-              <p style={{ color: 'var(--muted)', margin: 0 }}>Ready to create something amazing?</p>
+          <div className="flex items-center gap-4">
+            <Link href="/">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={120}
+                height={48}
+                className="transition-transform hover:scale-105"
+              />
+            </Link>
+            <div className="hidden md:block">
+              <h1 className="text-xl font-bold text-white">Hey {userName}! 👋</h1>
+              <p className="text-sm text-gray-400">What's on your mind today?</p>
             </div>
-            <Link href="/songwriting">
-              <button className="button flex items-center gap-2 px-5 py-2.5">
-                <Plus className="h-4 w-4" />
-                New Song
-              </button>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="flex items-center gap-2">
+            <Link
+              href="/discover"
+              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-white/10"
+            >
+              <UserSearch className="h-4 w-4" />
+              <span className="hidden sm:inline">Find Musicians</span>
+            </Link>
+            <Link
+              href="/songwriting"
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 px-4 py-2 text-sm font-medium text-white transition-all hover:from-orange-600 hover:to-red-700"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">New Song</span>
             </Link>
           </div>
         </motion.header>
 
-        {/* ==================== QUICK STATS - Clean Grid ==================== */}
-        <section className="mb-8">
-          {statsLoading && !dashboardStats ? (
-            <StatsSkeleton />
-          ) : dashboardStats ? (
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              <StatCard
-                icon={Folder}
-                label="Projects"
-                value={dashboardStats.projectCount}
-                href="/projects"
-                delay={0.05}
-              />
-              <StatCard icon={Music2} label="Songs" value={dashboardStats.songCount} delay={0.1} />
-              <StatCard
-                icon={HardDrive}
-                label="Storage"
-                value={`${storagePercent}%`}
-                href="/settings/usage"
-                delay={0.15}
-              />
-              <StatCard
-                icon={Activity}
-                label="This Week"
-                value={dashboardStats.recentActivity}
-                delay={0.2}
-              />
-            </div>
-          ) : null}
-        </section>
+        {/* Main Grid Layout - Social First! */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* Left Sidebar - Quick Tools (Desktop) */}
+          <aside className="hidden lg:col-span-3 lg:block">
+            <div className="sticky top-20 space-y-4">
+              <QuickTools />
 
-        {/* ==================== PRIMARY ACTIONS - Clean Cards ==================== */}
-        <section className="mb-8">
-          <div className="app-section-header">
-            <h2>Start Creating</h2>
-          </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <PrimaryActionCard
-              title="Songwriting Studio"
-              description="Write lyrics, build chord progressions, and collaborate with AI-powered tools"
-              icon={Music2}
-              href="/songwriting"
-              badge="AI"
-              delay={0.25}
-            />
-            <PrimaryActionCard
-              title="AI Sketches"
-              description="Generate 5-30 second clips for inspiration. Great for loops, ideas, and getting unstuck"
-              icon={Sparkles}
-              href="/create"
-              badge="BETA"
-              delay={0.3}
-            />
-            <PrimaryActionCard
-              title="New Project"
-              description="Start an album, EP, or single. Collaborate with your band and track milestones"
-              icon={Folder}
-              href="/projects/new"
-              delay={0.35}
-            />
-          </div>
-        </section>
-
-        {/* ==================== FEATURE PROMOS - Clean Promo Cards ==================== */}
-        <div className="mb-8 grid grid-cols-1 gap-3 lg:grid-cols-2">
-          {/* R&R Labs Promo */}
-          <Link href="/labs" className="app-promo-card purple">
-            <div className="app-promo-icon purple">
-              <FlaskConical />
+              {/* Trending Tags */}
+              {trendingTags.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl"
+                >
+                  <div className="mb-3 flex items-center gap-2">
+                    <Flame className="h-5 w-5 text-orange-500" />
+                    <h3 className="font-semibold text-white">Trending Now</h3>
+                  </div>
+                  <div className="space-y-2">
+                    {trendingTags.map((tag, i) => (
+                      <Link
+                        key={tag.tag}
+                        href={`/feed?tag=${encodeURIComponent(tag.tag)}`}
+                        className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-white/5"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Hash className="h-4 w-4 text-purple-400" />
+                          <span className="text-sm font-medium text-white">{tag.tag}</span>
+                        </div>
+                        <span className="text-xs text-gray-500">{tag.count} posts</span>
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </div>
-            <div className="app-promo-content flex-1">
-              <div className="flex items-center gap-2">
-                <h3>R&R Labs</h3>
-                <span className="app-promo-badge purple">NEW</span>
+          </aside>
+
+          {/* Main Feed - Center Stage! */}
+          <main className="lg:col-span-6">
+            {/* Feed Type Tabs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-4 flex items-center gap-1 rounded-2xl border border-white/10 bg-black/40 p-1.5 backdrop-blur-xl"
+            >
+              {feedTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setFeedType(tab.id as any)}
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
+                    feedType === tab.id
+                      ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg'
+                      : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <tab.icon className="h-4 w-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                </button>
+              ))}
+            </motion.div>
+
+            {/* Post Composer */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="mb-6"
+            >
+              <PostComposer onPostCreated={handlePostCreated} />
+            </motion.div>
+
+            {/* Feed */}
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+                  <p className="text-sm text-gray-400">Loading your feed...</p>
+                </div>
               </div>
-              <p>Help build the future of AI music</p>
-            </div>
-            <ArrowRight className="h-5 w-5" style={{ color: 'var(--muted)' }} />
-          </Link>
+            ) : posts.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="rounded-2xl border border-white/10 bg-black/40 p-12 text-center backdrop-blur-xl"
+              >
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-orange-500/20 to-red-600/20">
+                  <Music className="h-8 w-8 text-orange-500" />
+                </div>
+                <h3 className="mb-2 text-lg font-semibold text-white">
+                  {feedType === 'following' ? 'Your feed is empty' : 'No posts yet'}
+                </h3>
+                <p className="mb-4 text-sm text-gray-400">
+                  {feedType === 'following'
+                    ? 'Follow some musicians to see their posts here!'
+                    : 'Be the first to share something amazing!'}
+                </p>
+                {feedType === 'following' && (
+                  <Link
+                    href="/discover"
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 px-6 py-3 font-medium text-white transition-all hover:from-orange-600 hover:to-red-700"
+                  >
+                    <Users className="h-4 w-4" />
+                    Find Musicians to Follow
+                  </Link>
+                )}
+              </motion.div>
+            ) : (
+              <div className="space-y-6">
+                {posts.map((post, index) => (
+                  <motion.div
+                    key={post.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <FeedPost
+                      post={post}
+                      onDeleted={handlePostDeleted}
+                      onUpdated={handlePostUpdated}
+                    />
+                  </motion.div>
+                ))}
 
-          {/* Musician's Toolbox Promo */}
-          <Link href="/tools" className="app-promo-card emerald">
-            <div className="app-promo-icon emerald">
-              <Zap />
-            </div>
-            <div className="app-promo-content flex-1">
-              <div className="flex items-center gap-2">
-                <h3>Musician's Toolbox</h3>
-                <span className="app-promo-badge emerald">12 TOOLS</span>
+                {/* Load More */}
+                {hasMore && (
+                  <div className="flex justify-center py-4">
+                    <button
+                      onClick={() => cursor && loadPosts(cursor)}
+                      className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-medium text-white transition-all hover:bg-white/10"
+                    >
+                      Load More
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+
+                {!hasMore && posts.length > 0 && (
+                  <p className="py-4 text-center text-sm text-gray-500">
+                    You've reached the end! 🎸
+                  </p>
+                )}
               </div>
-              <p>Tuner, click track, performer mode & more</p>
+            )}
+          </main>
+
+          {/* Right Sidebar - People Suggestions */}
+          <aside className="hidden lg:col-span-3 lg:block">
+            <div className="sticky top-20 space-y-4">
+              <Suspense
+                fallback={
+                  <div className="flex h-40 items-center justify-center rounded-2xl border border-white/10 bg-black/40">
+                    <Loader2 className="h-6 w-6 animate-spin text-orange-500" />
+                  </div>
+                }
+              >
+                <PeopleSidebar />
+              </Suspense>
+
+              {/* Your Activity Summary */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl"
+              >
+                <div className="mb-3 flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-yellow-500" />
+                  <h3 className="font-semibold text-white">Your Activity</h3>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="rounded-xl bg-white/5 p-3">
+                    <p className="text-lg font-bold text-white">0</p>
+                    <p className="text-xs text-gray-400">Posts</p>
+                  </div>
+                  <div className="rounded-xl bg-white/5 p-3">
+                    <p className="text-lg font-bold text-white">0</p>
+                    <p className="text-xs text-gray-400">Followers</p>
+                  </div>
+                  <div className="rounded-xl bg-white/5 p-3">
+                    <p className="text-lg font-bold text-white">0</p>
+                    <p className="text-xs text-gray-400">Following</p>
+                  </div>
+                </div>
+                <Link
+                  href="/settings/profile"
+                  className="mt-3 flex items-center justify-center gap-1 rounded-xl border border-white/10 py-2 text-sm font-medium text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
+                >
+                  Complete Your Profile
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              </motion.div>
             </div>
-            <ArrowRight className="h-5 w-5" style={{ color: 'var(--muted)' }} />
-          </Link>
+          </aside>
         </div>
 
-        {/* ==================== RECENT PROJECTS + SONGS - Clean Lists ==================== */}
-        <section className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Recent Projects */}
-          <div>
-            <div className="mb-3 flex items-center justify-between">
-              <div className="app-section-header" style={{ marginBottom: 0 }}>
-                <h2 style={{ fontSize: '0.875rem' }}>Recent Projects</h2>
-              </div>
-              <Link
-                href="/projects"
-                className="flex items-center gap-1 text-sm font-medium"
-                style={{ color: 'var(--accent)' }}
-              >
-                View All
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="space-y-2">
-              {loadingProjects ? (
-                <ProjectsSkeleton />
-              ) : recentProjects.length > 0 ? (
-                recentProjects.map((project, i) => (
-                  <RecentProjectCard key={project.id} project={project} delay={0.4 + i * 0.05} />
-                ))
-              ) : (
-                <div className="app-empty-state">
-                  <div
-                    className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl"
-                    style={{ background: 'rgba(255, 99, 71, 0.1)' }}
-                  >
-                    <Folder className="h-6 w-6" style={{ color: 'var(--accent)' }} />
-                  </div>
-                  <p>No projects yet</p>
-                  <Link href="/projects/new" className="button flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    Create Project
-                  </Link>
-                </div>
-              )}
-            </div>
+        {/* Mobile Quick Tools (Bottom) */}
+        <div className="fixed bottom-0 left-0 right-0 border-t border-white/10 bg-black/90 p-2 backdrop-blur-xl lg:hidden">
+          <div className="mx-auto flex max-w-md justify-around">
+            <Link
+              href="/songwriting"
+              className="flex flex-col items-center gap-1 p-2 text-gray-400"
+            >
+              <Music className="h-5 w-5" />
+              <span className="text-xs">Write</span>
+            </Link>
+            <Link href="/create" className="flex flex-col items-center gap-1 p-2 text-gray-400">
+              <Sparkles className="h-5 w-5" />
+              <span className="text-xs">AI</span>
+            </Link>
+            <Link
+              href="/discover"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-red-600"
+            >
+              <UserSearch className="h-6 w-6 text-white" />
+            </Link>
+            <Link href="/studio" className="flex flex-col items-center gap-1 p-2 text-gray-400">
+              <Music className="h-5 w-5" />
+              <span className="text-xs">Studio</span>
+            </Link>
+            <Link href="/feed" className="flex flex-col items-center gap-1 p-2 text-gray-400">
+              <TrendingUp className="h-5 w-5" />
+              <span className="text-xs">Feed</span>
+            </Link>
           </div>
-
-          {/* Recent Songs */}
-          <div>
-            <div className="mb-3 flex items-center justify-between">
-              <div className="app-section-header" style={{ marginBottom: 0 }}>
-                <h2 style={{ fontSize: '0.875rem' }}>Recent Songs</h2>
-              </div>
-              <Link
-                href="/songs"
-                className="flex items-center gap-1 text-sm font-medium"
-                style={{ color: 'var(--accent)' }}
-              >
-                View All
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="space-y-2">
-              {loadingSongs ? (
-                <SongsSkeleton />
-              ) : recentSongs.length > 0 ? (
-                recentSongs.map((song, i) => (
-                  <RecentSongCard key={song.id} song={song} delay={0.45 + i * 0.05} />
-                ))
-              ) : (
-                <div className="app-empty-state">
-                  <div
-                    className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl"
-                    style={{ background: 'rgba(255, 99, 71, 0.1)' }}
-                  >
-                    <Music className="h-6 w-6" style={{ color: 'var(--accent)' }} />
-                  </div>
-                  <p>No songs yet</p>
-                  <Link href="/songwriting" className="button flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    Write a Song
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================== FEATURE TILES - Clean Grid ==================== */}
-        <section>
-          <div className="app-section-header">
-            <h2>Explore Features</h2>
-          </div>
-          <div className="app-feature-grid">
-            <FeatureTile
-              title="My Songs"
-              icon={Music}
-              href="/songs"
-              description="All your songs"
-              delay={0.5}
-            />
-            <FeatureTile
-              title="Shows"
-              icon={Calendar}
-              href="/shows"
-              description="Gig calendar"
-              delay={0.52}
-            />
-            <FeatureTile
-              title="Setlists"
-              icon={ListMusic}
-              href="/setlists"
-              description="Smart builder"
-              delay={0.54}
-            />
-            <FeatureTile
-              title="Studio"
-              icon={Mic2}
-              href="/studio"
-              description="Record & mix"
-              delay={0.56}
-            />
-            <FeatureTile
-              title="Library"
-              icon={Library}
-              href="/library"
-              description="Your assets"
-              delay={0.58}
-            />
-            <FeatureTile
-              title="Explore"
-              icon={Compass}
-              href="/explore"
-              description="Community"
-              delay={0.6}
-            />
-            <FeatureTile
-              title="Tours"
-              icon={Globe}
-              href="/tours"
-              description="Management"
-              delay={0.62}
-            />
-          </div>
-        </section>
+        </div>
       </div>
     </div>
   );
@@ -778,7 +409,15 @@ function DashboardContent() {
 export default function DashboardPage() {
   return (
     <ErrorBoundary>
-      <DashboardContent />
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+          </div>
+        }
+      >
+        <DashboardContent />
+      </Suspense>
     </ErrorBoundary>
   );
 }

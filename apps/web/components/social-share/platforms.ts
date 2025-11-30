@@ -1,8 +1,9 @@
 // All social media platforms relevant to musicians
+// Icons are single letters or abbreviations (NO EMOJIS - per design system)
 export interface Platform {
   id: string;
   name: string;
-  icon: string;
+  icon: string; // Single letter or short abbreviation
   color: string;
   category: 'social' | 'music' | 'video' | 'messaging';
   charLimit?: number;
@@ -17,7 +18,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'instagram',
     name: 'Instagram',
-    icon: '📸',
+    icon: 'IG',
     color: '#E4405F',
     category: 'social',
     charLimit: 2200,
@@ -40,7 +41,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'twitter',
     name: 'X / Twitter',
-    icon: '𝕏',
+    icon: 'X',
     color: '#000000',
     category: 'social',
     charLimit: 280,
@@ -94,7 +95,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'bluesky',
     name: 'Bluesky',
-    icon: '☁️',
+    icon: 'BS',
     color: '#0085FF',
     category: 'social',
     charLimit: 300,
@@ -105,7 +106,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'mastodon',
     name: 'Mastodon',
-    icon: '🐘',
+    icon: 'M',
     color: '#6364FF',
     category: 'social',
     charLimit: 500,
@@ -118,7 +119,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'soundcloud',
     name: 'SoundCloud',
-    icon: '☁',
+    icon: 'SC',
     color: '#FF5500',
     category: 'music',
     charLimit: 4000,
@@ -129,7 +130,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'spotify',
     name: 'Spotify',
-    icon: '♫',
+    icon: 'SP',
     color: '#1DB954',
     category: 'music',
     features: ['artist profile', 'playlists', 'canvas'],
@@ -150,7 +151,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'apple-music',
     name: 'Apple Music',
-    icon: '🎵',
+    icon: 'AM',
     color: '#FA2D48',
     category: 'music',
     features: ['artist profile', 'playlists'],
@@ -160,7 +161,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'audiomack',
     name: 'Audiomack',
-    icon: 'AM',
+    icon: 'AU',
     color: '#FFA200',
     category: 'music',
     features: ['tracks', 'albums', 'playlists'],
@@ -170,7 +171,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'deezer',
     name: 'Deezer',
-    icon: 'D',
+    icon: 'DZ',
     color: '#00C7F2',
     category: 'music',
     features: ['tracks', 'playlists'],
@@ -180,7 +181,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'tidal',
     name: 'TIDAL',
-    icon: 'T',
+    icon: 'TD',
     color: '#000000',
     category: 'music',
     features: ['hi-fi streaming', 'artist tools'],
@@ -192,7 +193,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'youtube',
     name: 'YouTube',
-    icon: '▶',
+    icon: 'YT',
     color: '#FF0000',
     category: 'video',
     charLimit: 5000,
@@ -204,7 +205,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'tiktok',
     name: 'TikTok',
-    icon: '♪',
+    icon: 'TT',
     color: '#000000',
     category: 'video',
     charLimit: 2200,
@@ -216,7 +217,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'youtube-music',
     name: 'YouTube Music',
-    icon: '🎶',
+    icon: 'YM',
     color: '#FF0000',
     category: 'music',
     features: ['tracks', 'albums', 'playlists'],
@@ -236,7 +237,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'twitch',
     name: 'Twitch',
-    icon: '📺',
+    icon: 'TW',
     color: '#9146FF',
     category: 'video',
     features: ['live streams', 'clips', 'VODs'],
@@ -248,7 +249,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'discord',
     name: 'Discord',
-    icon: 'D',
+    icon: 'DC',
     color: '#5865F2',
     category: 'messaging',
     charLimit: 2000,
@@ -259,7 +260,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'whatsapp',
     name: 'WhatsApp',
-    icon: '💬',
+    icon: 'WA',
     color: '#25D366',
     category: 'messaging',
     charLimit: 65536,
@@ -270,7 +271,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'telegram',
     name: 'Telegram',
-    icon: '✈',
+    icon: 'TG',
     color: '#26A5E4',
     category: 'messaging',
     charLimit: 4096,
@@ -281,7 +282,7 @@ export const PLATFORMS: Platform[] = [
   {
     id: 'snapchat',
     name: 'Snapchat',
-    icon: '👻',
+    icon: 'SN',
     color: '#FFFC00',
     category: 'messaging',
     features: ['stories', 'spotlight', 'sounds'],

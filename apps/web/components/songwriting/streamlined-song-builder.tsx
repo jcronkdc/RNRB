@@ -1,6 +1,5 @@
 'use client';
 
-import { Card, Button } from '@cronkwaters/ui';
 import {
   DndContext,
   closestCenter,
@@ -25,12 +24,10 @@ import {
   ChevronDown,
   ChevronUp,
   Music,
-  Sparkles,
   Copy,
   Check,
   Undo,
   Redo,
-  RefreshCw,
   FileText,
 } from 'lucide-react';
 import { useState, useCallback, memo, useRef, useEffect } from 'react';
@@ -58,48 +55,6 @@ const BLOCK_TYPES = [
   { type: 'pre-chorus' as const, label: 'Pre-Chorus', color: '#10B981', description: 'Build up' },
   { type: 'intro' as const, label: 'Intro', color: '#EC4899', description: 'Opening' },
   { type: 'outro' as const, label: 'Outro', color: '#6366F1', description: 'Ending' },
-];
-
-// Quick templates for common song structures
-const SONG_TEMPLATES = [
-  {
-    name: 'Pop',
-    sections: 8,
-    structure: [
-      'intro',
-      'verse',
-      'chorus',
-      'verse',
-      'chorus',
-      'bridge',
-      'chorus',
-      'outro',
-    ] as const,
-  },
-  {
-    name: 'Rock',
-    sections: 8,
-    structure: [
-      'intro',
-      'verse',
-      'chorus',
-      'verse',
-      'chorus',
-      'bridge',
-      'chorus',
-      'chorus',
-    ] as const,
-  },
-  {
-    name: 'Ballad',
-    sections: 7,
-    structure: ['verse', 'verse', 'chorus', 'verse', 'chorus', 'bridge', 'chorus'] as const,
-  },
-  {
-    name: 'Simple',
-    sections: 4,
-    structure: ['verse', 'chorus', 'verse', 'chorus'] as const,
-  },
 ];
 
 // Get block color
@@ -367,6 +322,8 @@ type StreamlinedSongBuilderProps = {
   initialBlocks?: SongBlock[];
 };
 
+type EditorMode = 'blocks' | 'freeform';
+
 export function StreamlinedSongBuilder({
   onSongChange,
   initialBlocks = [],
@@ -376,6 +333,8 @@ export function StreamlinedSongBuilder({
   const [history, setHistory] = useState<SongBlock[][]>([initialBlocks]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [editorMode, setEditorMode] = useState<EditorMode>('freeform');
+  const [freeformText, setFreeformText] = useState('');
 
   // Sync blocks when initialBlocks changes (e.g., when template is selected)
   const initialBlocksRef = useRef(initialBlocks);
@@ -388,8 +347,99 @@ export function StreamlinedSongBuilder({
       setHistory([initialBlocks]);
       setHistoryIndex(0);
       initialBlocksRef.current = initialBlocks;
+      // Also update freeform text when blocks change externally
+      if (initialBlocks.length > 0) {
+        setFreeformText(blocksToText(initialBlocks));
+      }
     }
   }, [initialBlocks]);
+
+  // Convert blocks to plain text (preserves section labels)
+  const blocksToText = useCallback((blocksArray: SongBlock[]): string => {
+    if (blocksArray.length === 0) return '';
+    return blocksArray
+      .map((b) => {
+        const label = `[${b.type.toUpperCase().replace('-', ' ')}]`;
+        return `${label}\n${b.content}`;
+      })
+      .join('\n\n');
+  }, []);
+
+  // Convert plain text to blocks (smart parsing - preserves block IDs when possible)
+  const textToBlocks = useCallback(
+    (text: string, existingBlocks: SongBlock[] = []): SongBlock[] => {
+      if (!text.trim()) return [];
+
+      const lines = text.split('\n');
+      const newBlocks: SongBlock[] = [];
+      let currentBlock: { type: SongBlock['type']; content: string[] } | null = null;
+
+      const sectionRegex = /^\[([A-Z\s\-]+)\]$/i;
+
+      for (const line of lines) {
+        const match = line.match(sectionRegex);
+        if (match) {
+          // Save previous block
+          if (currentBlock) {
+            const content = currentBlock.content.join('\n').trim();
+            // Try to find matching existing block to preserve ID
+            const existingIndex = newBlocks.length;
+            const existingBlock = existingBlocks[existingIndex];
+            newBlocks.push({
+              id: existingBlock?.id || crypto.randomUUID(),
+              type: currentBlock.type,
+              content,
+              chordPlacements: existingBlock?.chordPlacements || [],
+            });
+          }
+          // Start new block
+          const typeRaw = match[1].toLowerCase().replace(/\s+/g, '-');
+          const validTypes: SongBlock['type'][] = [
+            'verse',
+            'chorus',
+            'bridge',
+            'pre-chorus',
+            'intro',
+            'outro',
+          ];
+          const type = validTypes.includes(typeRaw as SongBlock['type'])
+            ? (typeRaw as SongBlock['type'])
+            : 'verse';
+          currentBlock = { type, content: [] };
+        } else if (currentBlock) {
+          currentBlock.content.push(line);
+        } else if (line.trim()) {
+          // Text before any section header - create a verse
+          currentBlock = { type: 'verse', content: [line] };
+        }
+      }
+
+      // Don't forget last block
+      if (currentBlock) {
+        const content = currentBlock.content.join('\n').trim();
+        const existingIndex = newBlocks.length;
+        const existingBlock = existingBlocks[existingIndex];
+        newBlocks.push({
+          id: existingBlock?.id || crypto.randomUUID(),
+          type: currentBlock.type,
+          content,
+          chordPlacements: existingBlock?.chordPlacements || [],
+        });
+      }
+
+      return newBlocks;
+    },
+    []
+  );
+
+  // Keep freeform text in sync when blocks change (from block editing)
+  const syncFreeformFromBlocks = useCallback(
+    (blocksArray: SongBlock[]) => {
+      const newText = blocksToText(blocksArray);
+      setFreeformText(newText);
+    },
+    [blocksToText]
+  );
 
   // Sensors for drag-and-drop
   const sensors = useSensors(
@@ -411,14 +461,58 @@ export function StreamlinedSongBuilder({
     [historyIndex]
   );
 
-  // Update blocks with history
+  // Handle mode switch - instant sync
+  const switchMode = useCallback(
+    (newMode: EditorMode) => {
+      if (newMode === editorMode) return;
+
+      if (newMode === 'freeform') {
+        // Switching to freeform: ensure text is synced from blocks
+        syncFreeformFromBlocks(blocks);
+      } else {
+        // Switching to blocks: parse text to blocks (preserving IDs where possible)
+        const parsedBlocks = textToBlocks(freeformText, blocks);
+        if (parsedBlocks.length > 0) {
+          setBlocks(parsedBlocks);
+          saveToHistory(parsedBlocks);
+          onSongChange?.(parsedBlocks);
+        }
+      }
+      setEditorMode(newMode);
+    },
+    [
+      editorMode,
+      blocks,
+      freeformText,
+      syncFreeformFromBlocks,
+      textToBlocks,
+      saveToHistory,
+      onSongChange,
+    ]
+  );
+
+  // Handle freeform text change - parse to blocks in real-time
+  const handleFreeformChange = useCallback(
+    (text: string) => {
+      setFreeformText(text);
+      // Parse to blocks in real-time for syncing with parent (preserve existing block IDs)
+      const parsedBlocks = textToBlocks(text, blocks);
+      setBlocks(parsedBlocks);
+      onSongChange?.(parsedBlocks);
+    },
+    [textToBlocks, blocks, onSongChange]
+  );
+
+  // Update blocks with history AND sync freeform text
   const updateBlocks = useCallback(
     (newBlocks: SongBlock[]) => {
       setBlocks(newBlocks);
       saveToHistory(newBlocks);
       onSongChange?.(newBlocks);
+      // Keep freeform in sync
+      syncFreeformFromBlocks(newBlocks);
     },
-    [saveToHistory, onSongChange]
+    [saveToHistory, onSongChange, syncFreeformFromBlocks]
   );
 
   // Undo
@@ -427,9 +521,10 @@ export function StreamlinedSongBuilder({
       setHistoryIndex(historyIndex - 1);
       const restored = history[historyIndex - 1];
       setBlocks(restored);
+      setFreeformText(blocksToText(restored));
       onSongChange?.(restored);
     }
-  }, [historyIndex, history, onSongChange]);
+  }, [historyIndex, history, onSongChange, blocksToText]);
 
   // Redo
   const redo = useCallback(() => {
@@ -437,9 +532,10 @@ export function StreamlinedSongBuilder({
       setHistoryIndex(historyIndex + 1);
       const restored = history[historyIndex + 1];
       setBlocks(restored);
+      setFreeformText(blocksToText(restored));
       onSongChange?.(restored);
     }
-  }, [historyIndex, history, onSongChange]);
+  }, [historyIndex, history, onSongChange, blocksToText]);
 
   // Add block at position
   const addBlockAt = useCallback(
@@ -467,15 +563,19 @@ export function StreamlinedSongBuilder({
     });
   }, []);
 
-  // Sync blocks to parent whenever they change (for Preview tab)
+  // Sync blocks to parent AND freeform text whenever blocks change
   const blocksRef = useRef(blocks);
   useEffect(() => {
-    // Only call onSongChange if blocks actually changed (not just on mount)
-    if (blocksRef.current !== blocks && onSongChange) {
-      onSongChange(blocks);
+    // Only sync if blocks actually changed (not just on mount)
+    if (blocksRef.current !== blocks) {
+      onSongChange?.(blocks);
+      // Keep freeform text in sync when in blocks mode
+      if (editorMode === 'blocks' && blocks.length > 0) {
+        setFreeformText(blocksToText(blocks));
+      }
     }
     blocksRef.current = blocks;
-  }, [blocks, onSongChange]);
+  }, [blocks, onSongChange, editorMode, blocksToText]);
 
   // Update block chords
   const updateBlockChords = useCallback((id: string, chordPlacements: ChordPlacement[]) => {
@@ -518,20 +618,6 @@ export function StreamlinedSongBuilder({
       updateBlocks(newBlocks);
     },
     [blocks, updateBlocks]
-  );
-
-  // Apply template
-  const applyTemplate = useCallback(
-    (structure: readonly SongBlock['type'][]) => {
-      const newBlocks: SongBlock[] = structure.map((type) => ({
-        id: crypto.randomUUID(),
-        type,
-        content: '',
-        chordPlacements: [],
-      }));
-      updateBlocks(newBlocks);
-    },
-    [updateBlocks]
   );
 
   // Calculate section number for each block
@@ -598,7 +684,36 @@ export function StreamlinedSongBuilder({
         className="flex items-center justify-between rounded-lg px-3 py-2"
         style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {/* Mode Toggle */}
+          <div
+            className="flex items-center gap-0.5 rounded-lg p-0.5"
+            style={{ background: 'var(--background)' }}
+          >
+            <button
+              onClick={() => switchMode('freeform')}
+              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition"
+              style={{
+                background: editorMode === 'freeform' ? 'var(--accent)' : 'transparent',
+                color: editorMode === 'freeform' ? 'white' : 'var(--muted)',
+              }}
+            >
+              <FileText className="h-3.5 w-3.5" />
+              Freeform
+            </button>
+            <button
+              onClick={() => switchMode('blocks')}
+              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition"
+              style={{
+                background: editorMode === 'blocks' ? 'var(--accent)' : 'transparent',
+                color: editorMode === 'blocks' ? 'white' : 'var(--muted)',
+              }}
+            >
+              <GripVertical className="h-3.5 w-3.5" />
+              Blocks
+            </button>
+          </div>
+
           <span className="text-xs font-medium" style={{ color: 'var(--text)' }}>
             {blocks.length} section{blocks.length !== 1 ? 's' : ''}
           </span>
@@ -609,24 +724,28 @@ export function StreamlinedSongBuilder({
           )}
         </div>
         <div className="flex items-center gap-1">
-          <button
-            onClick={undo}
-            disabled={historyIndex <= 0}
-            className="rounded p-1.5 transition disabled:opacity-30"
-            style={{ background: 'var(--background)' }}
-            title="Undo (⌘Z)"
-          >
-            <Undo className="h-3.5 w-3.5" style={{ color: 'var(--muted)' }} />
-          </button>
-          <button
-            onClick={redo}
-            disabled={historyIndex >= history.length - 1}
-            className="rounded p-1.5 transition disabled:opacity-30"
-            style={{ background: 'var(--background)' }}
-            title="Redo (⌘⇧Z)"
-          >
-            <Redo className="h-3.5 w-3.5" style={{ color: 'var(--muted)' }} />
-          </button>
+          {editorMode === 'blocks' && (
+            <>
+              <button
+                onClick={undo}
+                disabled={historyIndex <= 0}
+                className="rounded p-1.5 transition disabled:opacity-30"
+                style={{ background: 'var(--background)' }}
+                title="Undo (⌘Z)"
+              >
+                <Undo className="h-3.5 w-3.5" style={{ color: 'var(--muted)' }} />
+              </button>
+              <button
+                onClick={redo}
+                disabled={historyIndex >= history.length - 1}
+                className="rounded p-1.5 transition disabled:opacity-30"
+                style={{ background: 'var(--background)' }}
+                title="Redo (⌘⇧Z)"
+              >
+                <Redo className="h-3.5 w-3.5" style={{ color: 'var(--muted)' }} />
+              </button>
+            </>
+          )}
           <button
             onClick={exportToClipboard}
             className="flex items-center gap-1 rounded px-2 py-1.5 text-xs font-medium transition"
@@ -643,8 +762,127 @@ export function StreamlinedSongBuilder({
         className="min-h-[350px] rounded-lg p-3"
         style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
       >
-        {blocks.length === 0 ? (
-          // Empty state with templates - COMPACT
+        {editorMode === 'freeform' ? (
+          // FREEFORM MODE - Simple text editor with clear guidance
+          <div className="h-full space-y-3">
+            {/* How It Works Guide - Always visible */}
+            <div
+              className="rounded-lg p-4"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08))',
+                border: '1px solid rgba(59, 130, 246, 0.2)',
+              }}
+            >
+              <div className="mb-3 flex items-center gap-2">
+                <div
+                  className="flex h-6 w-6 items-center justify-center rounded-md"
+                  style={{ background: 'rgba(59, 130, 246, 0.2)' }}
+                >
+                  <FileText className="h-3.5 w-3.5" style={{ color: '#3B82F6' }} />
+                </div>
+                <h4 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>
+                  How Freeform Mode Works
+                </h4>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {/* Left: Instructions */}
+                <div className="space-y-2">
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--muted)' }}>
+                    <strong style={{ color: 'var(--text)' }}>Just type naturally!</strong> Use
+                    section markers in brackets to organize your song. Each marker starts a new
+                    section.
+                  </p>
+
+                  {/* Quick Insert Buttons */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    <span className="text-[10px] font-medium" style={{ color: 'var(--muted)' }}>
+                      Quick insert:
+                    </span>
+                    {BLOCK_TYPES.map((block) => (
+                      <button
+                        key={block.type}
+                        onClick={() => {
+                          const marker = `[${block.type.toUpperCase().replace('-', ' ')}]\n`;
+                          const newText = freeformText
+                            ? freeformText + (freeformText.endsWith('\n') ? '\n' : '\n\n') + marker
+                            : marker;
+                          handleFreeformChange(newText);
+                        }}
+                        className="rounded px-1.5 py-0.5 text-[10px] font-medium transition hover:scale-105"
+                        style={{ background: `${block.color}20`, color: block.color }}
+                      >
+                        [{block.label.toUpperCase()}]
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right: Example */}
+                <div
+                  className="rounded-md p-2.5 text-[11px] leading-relaxed"
+                  style={{
+                    background: 'var(--background)',
+                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                    color: 'var(--muted)',
+                  }}
+                >
+                  <div style={{ color: '#3B82F6' }}>[VERSE]</div>
+                  <div>Walking down this road alone</div>
+                  <div>Searching for a place called home</div>
+                  <div className="mt-1.5" style={{ color: '#F59E0B' }}>
+                    [CHORUS]
+                  </div>
+                  <div>But I keep moving on...</div>
+                </div>
+              </div>
+
+              {/* Tip about switching modes */}
+              <p className="mt-3 text-[10px]" style={{ color: 'var(--muted)' }}>
+                💡 <strong>Tip:</strong> Switch to{' '}
+                <span style={{ color: 'var(--accent)' }}>Blocks mode</span> anytime to drag and
+                reorder sections, add chords to specific words, or duplicate sections. Your work
+                syncs automatically!
+              </p>
+            </div>
+
+            {/* Editor Area */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-medium" style={{ color: 'var(--text)' }}>
+                    Your Lyrics
+                  </span>
+                  {blocks.length > 0 && (
+                    <span
+                      className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                      style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10B981' }}
+                    >
+                      {blocks.length} section{blocks.length !== 1 ? 's' : ''} detected
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs" style={{ color: 'var(--muted)' }}>
+                  {freeformText.length} characters
+                </span>
+              </div>
+              <textarea
+                value={freeformText}
+                onChange={(e) => handleFreeformChange(e.target.value)}
+                placeholder={`Start typing your song here...\n\nExample:\n[VERSE]\nYour first verse lyrics go here\nAdd as many lines as you want\n\n[CHORUS]\nYour catchy chorus goes here\n\n[VERSE]\nYour second verse...\n\n[BRIDGE]\nSomething different to break it up\n\n[CHORUS]\nRepeat that chorus!`}
+                className="min-h-[350px] w-full resize-y rounded-lg border-0 p-4 text-sm leading-relaxed outline-none transition focus:ring-2"
+                style={{
+                  background: 'var(--background)',
+                  color: 'var(--text)',
+                  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                }}
+                autoFocus
+              />
+            </div>
+          </div>
+        ) : blocks.length === 0 ? (
+          // Empty state with templates for BLOCK MODE - COMPACT
           <div className="flex flex-col items-center justify-center py-6">
             <div
               className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl"
@@ -656,42 +894,15 @@ export function StreamlinedSongBuilder({
               <Music className="h-6 w-6" style={{ color: 'var(--accent)' }} />
             </div>
             <h3 className="mb-1 text-base font-semibold" style={{ color: 'var(--text)' }}>
-              Start Your Song
+              Build Your Song Structure
             </h3>
             <p className="mb-4 text-center text-xs" style={{ color: 'var(--muted)' }}>
-              Pick a template or add sections
+              Add sections and drag to reorder
             </p>
 
-            {/* Quick Templates - Clean */}
-            <div className="mb-4 flex flex-wrap justify-center gap-2">
-              {SONG_TEMPLATES.map((template) => (
-                <motion.button
-                  key={template.name}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => applyTemplate(template.structure)}
-                  className="rounded-lg px-4 py-2 text-sm font-medium transition"
-                  style={{
-                    background: 'var(--background)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)',
-                  }}
-                >
-                  {template.name}
-                  <span className="ml-1.5 opacity-50">{template.sections}</span>
-                </motion.button>
-              ))}
-            </div>
-
-            {/* Or add manually - Compact */}
-            <div className="flex items-center gap-2 text-[10px]" style={{ color: 'var(--muted)' }}>
-              <div className="h-px w-8" style={{ background: 'var(--border)' }} />
-              or start fresh
-              <div className="h-px w-8" style={{ background: 'var(--border)' }} />
-            </div>
-
+            {/* Add sections - Compact */}
             <div className="mt-2 flex flex-wrap justify-center gap-1.5">
-              {BLOCK_TYPES.slice(0, 3).map((block) => (
+              {BLOCK_TYPES.map((block) => (
                 <motion.button
                   key={block.type}
                   whileHover={{ scale: 1.03 }}
@@ -707,6 +918,7 @@ export function StreamlinedSongBuilder({
             </div>
           </div>
         ) : (
+          // BLOCK MODE - Drag and drop
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}

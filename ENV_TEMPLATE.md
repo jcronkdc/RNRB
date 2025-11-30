@@ -122,11 +122,24 @@ STRIPE_PRICE_ID_STUDIO="price_studio_monthly"
 
 # Credit Add-Ons (one-time purchases)
 
-STRIPE_PRICE_ID_AI_100="price_ai_100_requests"
-STRIPE_PRICE_ID_VIDEO_600="price_video_600_minutes"
-STRIPE_PRICE_ID_STORAGE_25="price_storage_25gb"
-STRIPE_PRICE_ID_STORAGE_100="price_storage_100gb"
-STRIPE_PRICE_ID_STORAGE_250="price_storage_250gb"
+# AI Credits: $6 for 100 requests
+
+STRIPE_PRICE_ID_AI_100="price_1SZGEw2H6bMdop9gZadK70BA"
+
+# Video Credits: $10 for 10 hours
+
+STRIPE_PRICE_ID_VIDEO_600="price_1SZGEw2H6bMdop9gOgb1lZ0G"
+
+# Image Credits: $4 for 25, $12 for 100
+
+STRIPE_PRICE_ID_IMAGE_25="price_1SZGEx2H6bMdop9gcHo3QgEg"
+STRIPE_PRICE_ID_IMAGE_100="price_1SZGEy2H6bMdop9glMbDKKCv"
+
+# Storage Credits: $6/25GB, $15/100GB, $30/250GB (permanent)
+
+STRIPE_PRICE_ID_STORAGE_25="price_1SZGEy2H6bMdop9gdH8RExgr"
+STRIPE_PRICE_ID_STORAGE_100="price_1SZGEz2H6bMdop9gPECUD89F"
+STRIPE_PRICE_ID_STORAGE_250="price_1SZGF02H6bMdop9g3pujT79e"
 
 # ============================================
 

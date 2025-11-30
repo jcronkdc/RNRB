@@ -490,25 +490,103 @@ export default function ExperimentPage() {
           </Card>
         </motion.div>
 
-        {/* Coming Soon Notice */}
+        {/* Experiment Status & How It Works */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-8 text-center"
+          className="mt-8 space-y-4"
         >
-          <Card className="inline-flex items-center gap-3 rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-6 py-3">
-            <FlaskConical className="h-5 w-5 text-yellow-400" />
-            <span className="text-yellow-300">
-              This is a preview. Actual AI generation coming in Phase 3!
-            </span>
+          {/* Feature Status */}
+          <Card className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <h3 className="mb-4 flex items-center gap-2 font-bold text-white">
+              <FlaskConical className="h-5 w-5 text-purple-400" />
+              Experiment Status
+            </h3>
+
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="rounded-lg border border-green-500/30 bg-green-500/10 p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-400" />
+                  <span className="font-medium text-green-400">Working</span>
+                </div>
+                <p className="text-sm text-gray-400">
+                  Interactive UI demo with stem mixer simulation
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-orange-500/30 bg-orange-500/10 p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin text-orange-400" />
+                  <span className="font-medium text-orange-400">In Progress</span>
+                </div>
+                <p className="text-sm text-gray-400">
+                  Web Audio API integration for real-time playback
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-purple-500/30 bg-purple-500/10 p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <Lock className="h-4 w-4 text-purple-400" />
+                  <span className="font-medium text-purple-400">Phase 3</span>
+                </div>
+                <p className="text-sm text-gray-400">Real AI stem generation model integration</p>
+              </div>
+            </div>
           </Card>
-          <p className="mt-4 text-sm text-gray-500">
-            <Link href="/labs/volunteer" className="text-purple-400 hover:underline">
-              Sign up as a volunteer
-            </Link>{' '}
-            to be the first to test real AI-generated stems.
-          </p>
+
+          {/* How This Demo Works */}
+          <Card className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-500/20">
+                <Sparkles className="h-5 w-5 text-blue-400" />
+              </div>
+              <div>
+                <h4 className="mb-2 font-bold text-white">How This Demo Works</h4>
+                <ul className="space-y-2 text-sm text-gray-400">
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400">1.</span>
+                    Enter a creative prompt describing the music you want
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400">2.</span>
+                    Click "Generate Stems" to simulate AI stem creation
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400">3.</span>
+                    Each stem can be independently regenerated or replaced with your own recording
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-400">4.</span>
+                    This demonstrates the{' '}
+                    <strong className="text-white">collaborative workflow</strong> where AI assists
+                    musicians without replacing them
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </Card>
+
+          {/* CTA */}
+          <div className="text-center">
+            <p className="mb-4 text-sm text-gray-500">
+              Want real AI-generated stems? Help us build the model!
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link href="/labs/volunteer">
+                <button className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-orange-500 px-6 py-3 font-semibold text-white transition-all hover:from-purple-600 hover:to-orange-600">
+                  <Users className="h-4 w-4" />
+                  Become a Volunteer
+                </button>
+              </Link>
+              <Link href="/labs/contribute">
+                <button className="flex items-center gap-2 rounded-xl bg-white/10 px-6 py-3 font-medium text-white transition-all hover:bg-white/20">
+                  <Upload className="h-4 w-4" />
+                  Contribute Audio
+                </button>
+              </Link>
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>

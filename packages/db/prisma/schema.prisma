@@ -2527,6 +2527,7 @@ enum LibraryFileType {
 enum CreditType {
   ai
   video
+  image
   storage
 }
 

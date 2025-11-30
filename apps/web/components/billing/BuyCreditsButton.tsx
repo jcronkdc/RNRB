@@ -7,11 +7,13 @@ import { useToast } from '@/hooks/useToast';
 import { createCreditCheckout, type CreditProductKey } from '@/lib/actions/credits';
 
 const LABELS: Record<CreditProductKey, string> = {
-  ai_100: 'Buy +100 AI Requests ($5)',
-  video_600: 'Buy +10 Hours Video ($8)',
-  storage_25: 'Add +25 GB Storage ($5)',
-  storage_100: 'Add +100 GB Storage ($12)',
-  storage_250: 'Add +250 GB Storage ($25)',
+  ai_100: 'Buy +100 AI Requests ($6)',
+  video_600: 'Buy +10 Hours Video ($10)',
+  image_25: 'Buy +25 Image Credits ($4)',
+  image_100: 'Buy +100 Image Credits ($12)',
+  storage_25: 'Add +25 GB Storage ($6)',
+  storage_100: 'Add +100 GB Storage ($15)',
+  storage_250: 'Add +250 GB Storage ($30)',
 };
 
 interface BuyCreditsButtonProps {

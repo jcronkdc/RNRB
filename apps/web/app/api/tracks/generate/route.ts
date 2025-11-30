@@ -127,15 +127,51 @@ export async function POST(req: NextRequest) {
     // Check if Replicate is configured
     const replicate = getReplicateClient();
     if (!replicate) {
-      // Return mock response if no API key (development mode)
+      // Demo mode: Generate a unique demo track for the user
+      // This allows testing the full flow without requiring API keys
+      const prompt = buildGenerationPrompt(validatedData);
+      const trackTitle = generateTrackTitle(validatedData);
+
+      // Create a song record with a demo audio placeholder
+      // In production, you would configure REPLICATE_API_TOKEN for real AI generation
+      const demoSong = await prisma.song.create({
+        data: {
+          title: `${trackTitle} (Demo)`,
+          userId,
+          tempo: validatedData.tempo,
+          visibility: 'private',
+          description: `Demo track - ${prompt}\n\nNote: This is a demo. Configure REPLICATE_API_TOKEN for real AI music generation.`,
+          // Use a royalty-free demo audio sample
+          audioUrl: '/demo-audio/ai-demo-track.mp3',
+          audioPath: 'demo/ai-demo-track.mp3',
+        },
+      });
+
+      console.log(`[AI Music Demo] Created demo track: ${demoSong.id}`);
+
       return NextResponse.json({
         success: true,
-        mode: 'preview',
-        message: 'AI Music Generation is in beta. Configure REPLICATE_API_TOKEN to enable.',
-        preview: {
-          prompt: buildGenerationPrompt(validatedData),
-          creditsNeeded,
-          estimatedTime: '20-30 seconds',
+        mode: 'demo',
+        message:
+          'Demo mode: AI track placeholder created. Configure REPLICATE_API_TOKEN for real generation.',
+        song: {
+          id: demoSong.id,
+          title: demoSong.title,
+          audioUrl: '/demo-audio/ai-demo-track.mp3',
+          duration: validatedData.duration,
+          genre: validatedData.genres[0] || null,
+          mood: validatedData.moods[0] || null,
+        },
+        songId: demoSong.id, // For project selector
+        trackId: demoSong.id, // Legacy compatibility
+        generation: {
+          creditsUsed: 0, // Demo doesn't use credits
+          model: 'demo-mode',
+          prompt: prompt,
+        },
+        demo: {
+          note: 'Real AI generation requires REPLICATE_API_TOKEN environment variable',
+          documentation: 'https://replicate.com/meta/musicgen',
         },
       });
     }

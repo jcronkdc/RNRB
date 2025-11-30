@@ -29,13 +29,13 @@ const pricingSchemas = [
     name: "Rock N' Roll Basement - Creator Plan",
     description:
       'Music collaboration platform for serious musicians with AI assists, tour management, and copyright tools.',
-    price: '14.99',
+    price: '17.99',
   }),
   generateProductSchema({
     name: "Rock N' Roll Basement - Studio Plan",
     description:
       'Professional music platform with unlimited projects, HD video collaboration, and 100GB storage.',
-    price: '29.99',
+    price: '34.99',
   }),
 ];
 
@@ -155,8 +155,8 @@ export default function PricingPage() {
                 <p className="mb-6" style={{ color: 'var(--muted)' }} itemProp="description">
                   For serious musicians & songwriters
                 </p>
-                <div className="mb-2 text-4xl font-bold" itemProp="price" content="14.99">
-                  $14.99
+                <div className="mb-2 text-4xl font-bold" itemProp="price" content="17.99">
+                  $17.99
                   <span className="text-base font-normal" style={{ color: 'var(--muted)' }}>
                     /month
                   </span>
@@ -253,8 +253,8 @@ export default function PricingPage() {
                 <p className="mb-6" style={{ color: 'var(--muted)' }} itemProp="description">
                   For bands, studios & professionals
                 </p>
-                <div className="mb-2 text-4xl font-bold" itemProp="price" content="29.99">
-                  $29.99
+                <div className="mb-2 text-4xl font-bold" itemProp="price" content="34.99">
+                  $34.99
                   <span className="text-base font-normal" style={{ color: 'var(--muted)' }}>
                     /month
                   </span>

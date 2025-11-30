@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { LandingAuthControls } from '@/components/landing-auth-controls';
 import { generateFAQSchema, JsonLd } from '@/lib/seo';
 
 const faqs = [
@@ -31,6 +32,9 @@ export default function HomePage() {
     <>
       <JsonLd data={generateFAQSchema(faqs)} />
       <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+        {/* Auth Controls - Shows Dashboard/Sign Out when logged in */}
+        <LandingAuthControls />
+
         {/* Hero Section - Enhanced */}
         <section
           className="hero-section relative min-h-screen overflow-hidden pt-20"
@@ -1094,7 +1098,7 @@ export default function HomePage() {
                   <h3>Creator</h3>
                   <p className="pricing-subtitle">For serious musicians</p>
                   <div className="pricing-amount">
-                    <span className="price">$9.99</span>
+                    <span className="price">$17.99</span>
                     <span className="period">/month</span>
                   </div>
                 </div>

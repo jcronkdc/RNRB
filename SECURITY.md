@@ -4,23 +4,39 @@
 
 ### 🔴 Critical Issues Found & Fixed
 
-| Issue                                  | Severity    | Status   | Details                                       |
-| -------------------------------------- | ----------- | -------- | --------------------------------------------- |
-| SQL Injection in `/api/feed/algorithm` | 🔴 CRITICAL | ✅ FIXED | Cursor was interpolated directly into raw SQL |
-| Missing Input Validation               | 🟠 HIGH     | ✅ FIXED | Added validation for all user inputs          |
-| No Rate Limiting                       | 🟠 HIGH     | ✅ FIXED | Added rate limiting to API routes             |
-| No Security Headers                    | 🟠 HIGH     | ✅ FIXED | Added CSP, X-Frame-Options, HSTS, etc.        |
-| Debug Endpoints Exposed                | 🟡 MEDIUM   | ✅ FIXED | Blocked in production                         |
-| Health Endpoint Info Leak              | 🟡 MEDIUM   | ✅ FIXED | Protected with auth key                       |
-| Feed Route Unprotected                 | 🟡 MEDIUM   | ✅ FIXED | Added to protected paths                      |
+| Issue                                  | Severity  | Status   | Details                                                     |
+| -------------------------------------- | --------- | -------- | ----------------------------------------------------------- |
+| SQL Injection in `/api/feed/algorithm` | 🟢 N/A    | ✅ SAFE  | Prisma $queryRaw with tagged templates is parameterized     |
+| Missing Input Validation               | 🟠 HIGH   | ✅ FIXED | Added validation for all user inputs via `/lib/security.ts` |
+| No Rate Limiting                       | 🟠 HIGH   | ✅ FIXED | Added rate limiting to API routes                           |
+| No Security Headers                    | 🟠 HIGH   | ✅ FIXED | Added CSP, X-Frame-Options, HSTS, etc.                      |
+| Debug Endpoints Exposed                | 🟡 MEDIUM | ✅ FIXED | Blocked in production                                       |
+| Health Endpoint Info Leak              | 🟡 MEDIUM | ✅ FIXED | Protected with `x-health-key` header in production          |
+| Feed Route Unprotected                 | 🟡 MEDIUM | ✅ FIXED | Added to protected paths with session validation            |
+| Ineffective RLS Policies               | 🟡 MEDIUM | ✅ FIXED | Removed - authorization at application layer                |
+
+> **SQL Injection Clarification:** Prisma's `$queryRaw` with tagged template literals (backticks) is **SAFE**.
+> The `${variable}` syntax is NOT string interpolation - Prisma automatically parameterizes all values.
+> Additional validation (CUID/UUID format checking) provides defense-in-depth.
 
 ### 🟢 Database Security (Completed)
 
-| Issue                | Status   | Details                                                |
-| -------------------- | -------- | ------------------------------------------------------ |
-| RLS Enabled          | ✅ FIXED | All critical tables now have Row Level Security        |
-| Function Search Path | ✅ FIXED | All functions now have explicit `search_path = public` |
-| Extensions in Public | ⚠️ LOW   | Extensions remain in public schema (low risk)          |
+| Issue                    | Status   | Details                                                            |
+| ------------------------ | -------- | ------------------------------------------------------------------ |
+| RLS Disabled (By Design) | ✅ N/A   | RLS policies removed - authorization handled at application layer  |
+| Function Search Path     | ✅ FIXED | All functions now have explicit `search_path = public`             |
+| Extensions in Public     | ⚠️ LOW   | Extensions remain in public schema (low risk)                      |
+| Prisma Middleware        | ✅ FIXED | Blocks destructive operations in production, audit logging enabled |
+| Soft Delete              | ✅ FIXED | Critical models (Post, Song, Project, Asset) use soft delete       |
+
+> **Note on RLS:** Row Level Security policies were initially created but are **ineffective** with Prisma + NextAuth.
+> PostgreSQL RLS expects session variables (`current_setting('request.jwt.claims')`) that Prisma does not set.
+> All authorization is handled in TypeScript at the application layer, which provides:
+>
+> - Type-safe access control logic
+> - Consistent error handling and logging
+> - Rate limiting integration
+> - No false sense of security from database policies that don't actually work
 
 ---
 
@@ -98,16 +114,44 @@ if (!session?.user?.id) {
 }
 ```
 
-### 5. Authorization
+### 5. Authorization (Application Layer)
 
-Users can only modify their own resources:
+**Architecture Decision:** All authorization is handled at the application layer, NOT via database RLS.
+
+**Why Application-Layer Authorization:**
+
+- Prisma + NextAuth don't set PostgreSQL session variables needed for RLS
+- TypeScript provides type-safe access control with compile-time checking
+- Consistent error handling, logging, and rate limiting integration
+- No false sense of security from policies that don't work
+
+**Authorization Patterns:**
 
 ```typescript
+// Pattern 1: Resource ownership check
 const post = await prisma.post.findUnique({ where: { id } });
 if (post.userId !== session.user.id) {
   return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 }
+
+// Pattern 2: Membership/role check
+const member = await prisma.projectMember.findUnique({
+  where: { userId_projectId: { userId: session.user.id, projectId } },
+});
+if (!member || !['owner', 'admin'].includes(member.role)) {
+  return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+}
+
+// Pattern 3: Organization context from JWT
+if (!session.user.organizationIds?.includes(orgId)) {
+  return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+}
 ```
+
+**Authorization Helpers:**
+
+- `requireAuth()` - Returns user or throws 401
+- Session includes: `user.id`, `user.organizationIds`, `user.activeOrganizationId`
 
 ---
 
@@ -115,9 +159,10 @@ if (post.userId !== session.user.id) {
 
 ### 1. SQL Injection ✅ Protected
 
-- All raw queries use Prisma's parameterized queries
-- Input IDs are validated against CUID/UUID patterns
-- No string concatenation in SQL
+- All raw queries use Prisma's parameterized queries (`$queryRaw` with tagged templates)
+- **Important:** Prisma's `${variable}` in `$queryRaw` IS safe - it's auto-parameterized
+- Input IDs are validated against CUID/UUID patterns via `validateId()`
+- No string concatenation in SQL - always use tagged template literals
 
 ### 2. XSS (Cross-Site Scripting) ✅ Protected
 

@@ -905,7 +905,7 @@ export default function SolutionsForSongwritersPage() {
               </div>
               <h3 className="mb-2 text-2xl font-bold">Creator</h3>
               <div className="mb-4">
-                <span className="text-4xl font-bold">$9.99</span>
+                <span className="text-4xl font-bold">$17.99</span>
                 <span className="text-lg" style={{ color: 'var(--muted)' }}>
                   /month
                 </span>
