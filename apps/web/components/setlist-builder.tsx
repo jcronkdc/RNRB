@@ -7,6 +7,8 @@
  * Drag-drop reordering syncs across all clients
  * Duration calculator, key change indicators
  *
+ * NOW USES: Shared Ably client from AblyProvider (NO separate connections!)
+ *
  * Mycelial Pathway:
  * User drags song → Ably broadcasts update → All clients reorder instantly
  */
@@ -27,7 +29,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Realtime } from 'ably';
+import type { RealtimeChannel } from 'ably';
 import {
   Music,
   GripVertical,
@@ -41,9 +43,10 @@ import {
   Printer,
   FileText,
 } from 'lucide-react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 
 import { CursorOverlay } from '@/components/cursor-overlay';
+import { useAblyClient } from '@/hooks/use-ably-client';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { exportSetlistToPDF, printSetlist } from '@/lib/setlist-pdf-export';
 
@@ -64,6 +67,7 @@ type SetlistSong = Song & {
 
 type UseSetlistSyncOptions = {
   channelName: string;
+  userId: string;
   onSongAdded: (song: SetlistSong) => void;
   onSongRemoved: (songId: string) => void;
   onSongReordered: (songs: SetlistSong[]) => void;
@@ -71,100 +75,92 @@ type UseSetlistSyncOptions = {
 };
 
 /**
- * Hook: Real-time setlist sync via Ably
+ * Hook: Real-time setlist sync via shared Ably client
  */
 function useSetlistSync({
   channelName,
+  userId,
   onSongAdded,
   onSongRemoved,
   onSongReordered,
   enabled,
 }: UseSetlistSyncOptions) {
-  const [isConnected, setIsConnected] = useState(false);
   const [activeUsers, setActiveUsers] = useState<string[]>([]);
-  const [channel, setChannel] = useState<any>(null);
+
+  // Use shared Ably client from AblyProvider (NO separate connections!)
+  const { client: ablyClient, isConnected } = useAblyClient(enabled ? userId : undefined);
+  const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !ablyClient || !isConnected) return;
 
     let mounted = true;
-    let ablyClient: Realtime | null = null;
 
-    const initAbly = async () => {
-      try {
-        const response = await fetch('/api/ably/token');
-        if (!response.ok) {
-          console.info('Ably not configured - setlist sync disabled');
-          return;
-        }
+    try {
+      const channel = ablyClient.channels.get(channelName);
+      channelRef.current = channel;
 
-        ablyClient = new Realtime({ authUrl: '/api/ably/token' });
-        if (!mounted) {
-          ablyClient.close();
-          return;
-        }
+      // Subscribe to setlist events
+      channel.subscribe('song-added', (message) => {
+        if (mounted) onSongAdded(message.data);
+      });
 
-        const channel = ablyClient.channels.get(channelName);
-        setChannel(channel); // Expose channel to component
+      channel.subscribe('song-removed', (message) => {
+        if (mounted) onSongRemoved(message.data.songId);
+      });
 
-        // Subscribe to setlist events
-        channel.subscribe('song-added', (message) => {
-          if (mounted) onSongAdded(message.data);
-        });
+      channel.subscribe('songs-reordered', (message) => {
+        if (mounted) onSongReordered(message.data.songs);
+      });
 
-        channel.subscribe('song-removed', (message) => {
-          if (mounted) onSongRemoved(message.data.songId);
-        });
+      // Presence tracking
+      channel.presence.enter();
+      channel.presence.subscribe('enter', () => {
+        channel.presence
+          .get()
+          .then((members) => {
+            if (mounted) {
+              setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
+            }
+          })
+          .catch((err) => {
+            console.error('Presence error:', err);
+          });
+      });
 
-        channel.subscribe('songs-reordered', (message) => {
-          if (mounted) onSongReordered(message.data.songs);
-        });
+      channel.presence.subscribe('leave', () => {
+        channel.presence
+          .get()
+          .then((members) => {
+            if (mounted) {
+              setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
+            }
+          })
+          .catch((err) => {
+            console.error('Presence error:', err);
+          });
+      });
+    } catch (error) {
+      console.error('Setlist sync error:', error);
+    }
 
-        // Presence tracking
-        channel.presence.enter();
-        channel.presence.subscribe('enter', () => {
-          channel.presence
-            .get()
-            .then((members) => {
-              if (mounted) {
-                setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
-              }
-            })
-            .catch((err) => {
-              console.error('Presence error:', err);
-            });
-        });
-
-        channel.presence.subscribe('leave', () => {
-          channel.presence
-            .get()
-            .then((members) => {
-              if (mounted) {
-                setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
-              }
-            })
-            .catch((err) => {
-              console.error('Presence error:', err);
-            });
-        });
-
-        setIsConnected(true);
-      } catch (error) {
-        console.error('Setlist sync error:', error);
-      }
-    };
-
-    initAbly();
-
+    // Cleanup - only unsubscribe, don't close shared client
     return () => {
       mounted = false;
-      ablyClient?.close();
-      setIsConnected(false);
-      setChannel(null);
+      if (channelRef.current) {
+        try {
+          channelRef.current.presence.leave();
+          channelRef.current.presence.unsubscribe();
+          channelRef.current.unsubscribe();
+        } catch {
+          // Ignore cleanup errors
+        }
+        channelRef.current = null;
+      }
     };
-  }, [channelName, enabled]);
+  }, [channelName, enabled, ablyClient, isConnected, onSongAdded, onSongRemoved, onSongReordered]);
 
-  return { isConnected, activeUsers, channel };
+  return { isConnected, activeUsers, channel: channelRef.current };
 }
 
 /**
@@ -293,9 +289,10 @@ export function CollaborativeSetlistBuilder({
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
-  // Real-time setlist sync
+  // Real-time setlist sync using shared Ably client
   const { isConnected, activeUsers, channel } = useSetlistSync({
     channelName: `setlist:${projectSlug}-${setlistId}`,
+    userId: currentUser.userId,
     onSongAdded: (song) => {
       setSongs((prev) => [...prev, song].sort((a, b) => a.position - b.position));
     },

@@ -1,9 +1,11 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
 import { Trash2, Download, Palette, Square, Circle, Minus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+
+import { useAblyClient } from '@/hooks/use-ably-client';
 
 interface CollaborativeWhiteboardProps {
   channelName: string;
@@ -42,55 +44,65 @@ export function CollaborativeWhiteboard({
   const [currentColor, setCurrentColor] = useState('#ff6b35');
   const [currentTool, setCurrentTool] = useState<'pen' | 'rect' | 'circle' | 'text'>('pen');
   const [strokeWidth, setStrokeWidth] = useState(2);
-  const [channel, setChannel] = useState<Ably.RealtimeChannel | null>(null);
   const [tempLine, setTempLine] = useState<number[]>([]);
 
-  // Initialize Ably
+  // Use shared Ably client from AblyProvider (NO separate connections!)
+  const { client: ablyClient, isConnected } = useAblyClient(currentUser.userId);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+
+  // Initialize channel when shared client is ready
   useEffect(() => {
-    const initAbly = async () => {
-      const ablyKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
-      if (!ablyKey) {
-        console.warn('ABLY_API_KEY not configured');
-        return;
+    if (!ablyClient || !isConnected) return;
+
+    let mounted = true;
+
+    const initChannel = async () => {
+      try {
+        const whiteboardChannel = ablyClient.channels.get(channelName);
+        channelRef.current = whiteboardChannel;
+
+        // Subscribe to drawing events
+        whiteboardChannel.subscribe('draw', (message) => {
+          if (!mounted) return;
+          const element: DrawingElement = message.data;
+          setElements((prev) => [...prev, element]);
+        });
+
+        whiteboardChannel.subscribe('clear', () => {
+          if (!mounted) return;
+          setElements([]);
+        });
+
+        // Get drawing history
+        const result = await whiteboardChannel.history({ limit: 100 });
+        if (mounted && result) {
+          const historicalElements: DrawingElement[] = result.items
+            .reverse()
+            .filter((msg: any) => msg.name === 'draw')
+            .map((msg: any) => msg.data);
+
+          setElements(historicalElements);
+        }
+      } catch (error) {
+        console.error('Whiteboard initialization error:', error);
       }
-
-      const ably = new Ably.Realtime({
-        key: ablyKey,
-        clientId: currentUser.userId,
-      });
-
-      const whiteboardChannel = ably.channels.get(channelName);
-      setChannel(whiteboardChannel);
-
-      // Subscribe to drawing events
-      whiteboardChannel.subscribe('draw', (message) => {
-        const element: DrawingElement = message.data;
-        setElements((prev) => [...prev, element]);
-      });
-
-      whiteboardChannel.subscribe('clear', () => {
-        setElements([]);
-      });
-
-      // Get drawing history
-      const result = await whiteboardChannel.history({ limit: 100 });
-      if (result) {
-        const historicalElements: DrawingElement[] = result.items
-          .reverse()
-          .filter((msg: any) => msg.name === 'draw')
-          .map((msg: any) => msg.data);
-
-        setElements(historicalElements);
-      }
-
-      return () => {
-        whiteboardChannel.unsubscribe();
-        ably.close();
-      };
     };
 
-    initAbly();
-  }, [channelName, currentUser.userId]);
+    initChannel();
+
+    // Cleanup - only unsubscribe, don't close shared client
+    return () => {
+      mounted = false;
+      if (channelRef.current) {
+        try {
+          channelRef.current.unsubscribe();
+        } catch {
+          // Ignore cleanup errors
+        }
+        channelRef.current = null;
+      }
+    };
+  }, [channelName, ablyClient, isConnected]);
 
   // Redraw canvas
   useEffect(() => {
@@ -175,7 +187,7 @@ export function CollaborativeWhiteboard({
   };
 
   const handleMouseUp = () => {
-    if (!isDrawing || !channel || tempLine.length < 2) {
+    if (!isDrawing || !channelRef.current || tempLine.length < 2) {
       setIsDrawing(false);
       setTempLine([]);
       return;
@@ -192,7 +204,7 @@ export function CollaborativeWhiteboard({
     };
 
     // Publish to Ably
-    channel.publish('draw', element);
+    channelRef.current.publish('draw', element);
 
     // Add locally
     setElements((prev) => [...prev, element]);
@@ -201,8 +213,8 @@ export function CollaborativeWhiteboard({
   };
 
   const handleClear = () => {
-    if (!channel) return;
-    channel.publish('clear', {});
+    if (!channelRef.current) return;
+    channelRef.current.publish('clear', {});
     setElements([]);
   };
 

@@ -261,27 +261,38 @@ export default function SongwritingPage() {
     if (!user || !songData.id) return null;
 
     return (
-      <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs backdrop-blur-sm">
+      <div
+        className="flex items-center gap-2 rounded-xl px-4 py-2 text-xs"
+        style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+      >
         {isSaving && (
           <>
-            <Loader2 className="h-3.5 w-3.5 animate-spin text-purple-400" />
-            <span className="font-medium text-gray-400">Saving...</span>
+            <Loader2 className="h-3.5 w-3.5 animate-spin" style={{ color: 'var(--accent)' }} />
+            <span className="font-medium" style={{ color: 'var(--muted)' }}>
+              Saving...
+            </span>
           </>
         )}
         {isSaved && !isSaving && (
           <>
-            <Check className="h-3.5 w-3.5 text-green-400" />
-            <span className="font-medium text-gray-400">Saved</span>
+            <Check className="h-3.5 w-3.5" style={{ color: 'var(--success)' }} />
+            <span className="font-medium" style={{ color: 'var(--muted)' }}>
+              Saved
+            </span>
           </>
         )}
         {hasError && !isSaving && (
           <>
-            <AlertCircle className="h-3.5 w-3.5 text-red-400" />
-            <span className="font-medium text-gray-400">Error</span>
+            <AlertCircle className="h-3.5 w-3.5" style={{ color: 'var(--error)' }} />
+            <span className="font-medium" style={{ color: 'var(--muted)' }}>
+              Error
+            </span>
           </>
         )}
         {!isSaving && !isSaved && !hasError && (
-          <span className="font-medium text-gray-500">Auto-Save On</span>
+          <span className="font-medium" style={{ color: 'var(--muted)' }}>
+            Auto-Save On
+          </span>
         )}
       </div>
     );
@@ -311,61 +322,37 @@ export default function SongwritingPage() {
   ] as const;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
-      {/* Animated Background Gradient Orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <motion.div
-          className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full bg-gradient-to-br from-purple-600/20 to-transparent blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, 30, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute -right-32 top-1/3 h-[500px] w-[500px] rounded-full bg-gradient-to-bl from-pink-600/15 to-transparent blur-3xl"
-          animate={{
-            x: [0, -30, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute bottom-0 left-1/3 h-[400px] w-[400px] rounded-full bg-gradient-to-t from-cyan-600/10 to-transparent blur-3xl"
-          animate={{
-            x: [0, 40, 0],
-            y: [0, -30, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* Floating Music Notes - Matching Landing Page */}
+      <div className="music-notes-container pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="music-note"
+            style={{
+              left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.7}s`,
+              fontSize: `${18 + (i % 4) * 8}px`,
+            }}
+          >
+            {['♪', '♫', '♬', '♩'][i % 4]}
+          </div>
+        ))}
       </div>
 
-      {/* Subtle grid overlay */}
-      <div
-        className="pointer-events-none fixed inset-0 opacity-[0.015]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }}
-      />
+      {/* Animated Background Gradient Orbs - Matching Landing Page Colors */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="gradient-orb-accent"></div>
+      </div>
+
+      {/* Hero Grid Pattern - Matching Landing Page */}
+      <div className="hero-grid-pattern"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* RR Logo - Required on all feature pages */}
+        {/* RR Logo - Required on all feature pages (white logo for dark bg) */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -382,37 +369,50 @@ export default function SongwritingPage() {
               className="transition-all duration-300 group-hover:scale-105"
               style={{
                 filter:
-                  'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(168, 85, 247, 0.2))',
+                  'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
               }}
             />
-            {/* Subtle glow on hover */}
-            <div className="absolute inset-0 -z-10 rounded-full bg-purple-500/20 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
+            {/* Subtle glow on hover - matching landing page accent */}
+            <div
+              className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+              style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+            />
           </Link>
         </motion.div>
         {/* Premium Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 flex-1">
-              {/* Accent bar */}
+              {/* Accent bar - matching landing page tomato/gold gradient */}
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: 60 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="mb-4 h-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
+                className="mb-4 h-1 rounded-full"
+                style={{ background: 'linear-gradient(90deg, var(--accent), #ffd700)' }}
               />
 
               {/* Title with icon */}
               <div className="mb-4 flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm">
-                  <Music4 className="h-7 w-7 text-purple-400" />
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-2xl"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
+                  }}
+                >
+                  <Music4 className="h-7 w-7" style={{ color: 'var(--accent)' }} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-purple-400">Songwriting Studio</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                    Songwriting Studio
+                  </p>
                   <input
                     type="text"
                     value={songTitle}
                     onChange={(e) => setSongTitle(e.target.value)}
-                    className="w-full border-none bg-transparent text-3xl font-bold text-white outline-none placeholder:text-gray-600 focus:ring-0 lg:text-4xl"
+                    className="w-full border-none bg-transparent text-3xl font-bold outline-none focus:ring-0 lg:text-4xl"
+                    style={{ color: 'var(--text)' }}
                     placeholder="Untitled Song"
                     disabled={!user}
                   />
@@ -430,11 +430,13 @@ export default function SongwritingPage() {
                         whileTap={{ scale: 0.98 }}
                         onClick={undo}
                         disabled={historyIndex <= 0}
-                        className={`rounded-lg px-4 py-2 text-xs font-medium transition ${
-                          historyIndex > 0
-                            ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
-                            : 'cursor-not-allowed text-gray-600'
-                        }`}
+                        className="rounded-lg px-4 py-2 text-xs font-medium transition"
+                        style={{
+                          background: historyIndex > 0 ? 'var(--panel)' : 'transparent',
+                          border: historyIndex > 0 ? '1px solid var(--border)' : 'none',
+                          color: historyIndex > 0 ? 'var(--text)' : 'var(--muted)',
+                          cursor: historyIndex > 0 ? 'pointer' : 'not-allowed',
+                        }}
                         title="Undo (⌘Z)"
                       >
                         Undo
@@ -444,11 +446,15 @@ export default function SongwritingPage() {
                         whileTap={{ scale: 0.98 }}
                         onClick={redo}
                         disabled={historyIndex >= history.length - 1}
-                        className={`rounded-lg px-4 py-2 text-xs font-medium transition ${
-                          historyIndex < history.length - 1
-                            ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
-                            : 'cursor-not-allowed text-gray-600'
-                        }`}
+                        className="rounded-lg px-4 py-2 text-xs font-medium transition"
+                        style={{
+                          background:
+                            historyIndex < history.length - 1 ? 'var(--panel)' : 'transparent',
+                          border:
+                            historyIndex < history.length - 1 ? '1px solid var(--border)' : 'none',
+                          color: historyIndex < history.length - 1 ? 'var(--text)' : 'var(--muted)',
+                          cursor: historyIndex < history.length - 1 ? 'pointer' : 'not-allowed',
+                        }}
                         title="Redo (⌘⇧Z)"
                       >
                         Redo
@@ -472,7 +478,7 @@ export default function SongwritingPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowTemplatePicker(true)}
-                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/10"
+                      className="button secondary rounded-xl px-4 py-2.5 text-sm font-medium"
                     >
                       Templates
                     </motion.button>
@@ -480,7 +486,7 @@ export default function SongwritingPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setShowLibraryImport(true)}
-                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-white/10"
+                      className="button secondary rounded-xl px-4 py-2.5 text-sm font-medium"
                     >
                       Import
                     </motion.button>
@@ -503,26 +509,32 @@ export default function SongwritingPage() {
           </div>
         </motion.div>
 
-        {/* Premium Tab Navigation */}
+        {/* Premium Tab Navigation - Matching Landing Page Design System */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="mb-8"
         >
-          <div className="flex gap-2 rounded-2xl border border-white/10 bg-white/5 p-2 backdrop-blur-xl">
+          <div
+            className="flex gap-2 rounded-2xl p-2"
+            style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+          >
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveView(tab.id)}
-                className={`relative rounded-xl px-6 py-3 text-sm font-medium transition-all ${
-                  activeView === tab.id ? 'text-white' : 'text-gray-400 hover:text-white'
-                }`}
+                className="relative rounded-xl px-6 py-3 text-sm font-medium transition-all"
+                style={{ color: activeView === tab.id ? 'var(--text)' : 'var(--muted)' }}
               >
                 {activeView === tab.id && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600/50 to-pink-600/50"
+                    className="absolute inset-0 rounded-xl"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(255, 99, 71, 0.3), rgba(255, 215, 0, 0.2))',
+                    }}
                     transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                   />
                 )}
@@ -540,18 +552,26 @@ export default function SongwritingPage() {
           className="min-h-[600px]"
         >
           {activeView === 'structure' && loading && (
-            <div className="flex min-h-[600px] items-center justify-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+            <div className="card flex min-h-[600px] items-center justify-center rounded-2xl">
               <div className="text-center">
                 <div className="relative mx-auto mb-6 h-16 w-16">
-                  <div className="absolute inset-0 animate-spin rounded-full border-4 border-purple-500/30 border-t-purple-500" />
+                  <div
+                    className="absolute inset-0 animate-spin rounded-full border-4"
+                    style={{
+                      borderColor: 'rgba(255, 99, 71, 0.3)',
+                      borderTopColor: 'var(--accent)',
+                    }}
+                  />
                 </div>
-                <p className="text-sm font-medium text-gray-400">Loading Studio...</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--muted)' }}>
+                  Loading Studio...
+                </p>
               </div>
             </div>
           )}
 
           {activeView === 'structure' && !loading && user && (
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+            <div className="card overflow-hidden rounded-2xl">
               <CollaborativeVisualBuilder
                 projectSlug="songwriting-studio"
                 onSongChange={(blocks) => setSongBlocks(blocks)}
@@ -566,20 +586,28 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'structure' && !loading && !user && (
-            <div className="flex min-h-[600px] items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-12 backdrop-blur-xl">
+            <div className="card flex min-h-[600px] items-center justify-center rounded-2xl p-12">
               <div className="max-w-md text-center">
-                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
-                  <Sparkles className="h-10 w-10 text-purple-400" />
+                <div
+                  className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
+                  }}
+                >
+                  <Sparkles className="h-10 w-10" style={{ color: 'var(--accent)' }} />
                 </div>
-                <h3 className="mb-4 text-2xl font-bold text-white">Sign In Required</h3>
-                <p className="mb-8 text-gray-400">
+                <h3 className="mb-4 text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                  Sign In Required
+                </h3>
+                <p className="mb-8" style={{ color: 'var(--muted)' }}>
                   Authentication required to access collaborative songwriting features.
                 </p>
                 <motion.a
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   href="/auth"
-                  className="inline-block rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3 font-semibold text-white shadow-lg shadow-purple-500/25"
+                  className="button inline-block rounded-xl px-8 py-3 font-semibold"
                 >
                   Sign In
                 </motion.a>
@@ -589,7 +617,7 @@ export default function SongwritingPage() {
 
           {activeView === 'chords' && (
             <div className="space-y-6">
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+              <div className="card overflow-hidden rounded-2xl p-6">
                 <ChordBuilder
                   onChange={(progression) => {
                     setChordProgression(progression);
@@ -601,7 +629,7 @@ export default function SongwritingPage() {
                   }}
                 />
               </div>
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+              <div className="card overflow-hidden rounded-2xl">
                 <Metronome
                   initialBpm={songData.tempo || 120}
                   initialTimeSignature={songData.timeSignature || '4/4'}
@@ -622,16 +650,27 @@ export default function SongwritingPage() {
 
           {activeView === 'lyrics' && (
             <div className="space-y-6">
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-                <div className="mb-6 flex items-center gap-3 border-b border-white/10 pb-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20">
-                    <Music4 className="h-5 w-5 text-orange-400" />
+              <div className="card overflow-hidden rounded-2xl p-6">
+                <div
+                  className="mb-6 flex items-center gap-3 pb-4"
+                  style={{ borderBottom: '1px solid var(--border)' }}
+                >
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-xl"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 69, 0, 0.1))',
+                    }}
+                  >
+                    <Music4 className="h-5 w-5" style={{ color: 'var(--accent)' }} />
                   </div>
-                  <h3 className="font-semibold text-white">Voice Memos</h3>
+                  <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+                    Voice Memos
+                  </h3>
                 </div>
                 <VoiceMemoRecorder songId={songData.id} />
               </div>
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+              <div className="card overflow-hidden rounded-2xl p-6">
                 <LyricsAssistant
                   currentLyrics={lyrics}
                   onInsert={(text) => setLyrics(lyrics ? lyrics + '\n' + text : text)}
@@ -641,7 +680,7 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'copyright' && (
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <div className="card overflow-hidden rounded-2xl p-6">
               <CopyrightManager
                 songId={songData.id}
                 songTitle={songTitle}

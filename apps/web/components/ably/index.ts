@@ -1,5 +1,5 @@
 // Optimized exports with tree-shaking support
-export { AblyProvider } from './ably-provider';
+export { AblyProvider, useAblyClientContext, useAblyAvailable } from './ably-provider';
 export { ChatRoom } from './chat-room';
 export { ConnectionStatus } from './connection-status';
 export { NotificationFeed } from './notification-feed';

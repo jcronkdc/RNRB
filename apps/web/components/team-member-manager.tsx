@@ -7,12 +7,15 @@
  * Permission-based UI (only owners/admins can change roles)
  * Invite members, change roles, remove members
  *
+ * NOW USES: Shared Ably client from AblyProvider (NO separate connections!)
+ *
  * Mycelial Pathway:
  * Owner changes role → Ably broadcasts → All clients update → Server persists
  */
 
 import { Card, Button } from '@cronkwaters/ui';
-import Ably from 'ably';
+import type Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
 import {
   Users,
   UserPlus,
@@ -27,8 +30,9 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
+import { useAblyClient } from '@/hooks/use-ably-client';
 import { formatDateLong } from '@/lib/format-date';
 
 type TeamMember = {
@@ -50,6 +54,7 @@ type RoleChange = {
 
 type UseTeamSyncOptions = {
   channelName: string;
+  userId: string;
   onMemberAdded: (member: TeamMember) => void;
   onMemberRemoved: (userId: string) => void;
   onRoleChanged: (change: RoleChange) => void;
@@ -57,66 +62,66 @@ type UseTeamSyncOptions = {
 };
 
 /**
- * Hook: Real-time team sync via Ably
+ * Hook: Real-time team sync via shared Ably client
  */
 function useTeamSync({
   channelName,
+  userId,
   onMemberAdded,
   onMemberRemoved,
   onRoleChanged,
   enabled,
 }: UseTeamSyncOptions) {
-  const [isConnected, setIsConnected] = useState(false);
+  // Use shared Ably client from AblyProvider (NO separate connections!)
+  const { client: ablyClient, isConnected } = useAblyClient(enabled ? userId : undefined);
+  const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !ablyClient || !isConnected) return;
 
     let mounted = true;
-    let ablyClient: Ably.Realtime | null = null;
 
-    const initAbly = async () => {
-      try {
-        const response = await fetch('/api/ably/token');
-        if (!response.ok) {
-          console.info('Ably not configured - team sync disabled');
-          return;
-        }
+    try {
+      const channel = ablyClient.channels.get(channelName);
+      channelRef.current = channel;
 
-        ablyClient = new Ably.Realtime({ authUrl: '/api/ably/token' });
-        if (!mounted) {
-          ablyClient.close();
-          return;
-        }
+      // Subscribe to team events
+      channel.subscribe('member-added', (message: Ably.Message) => {
+        if (mounted) onMemberAdded(message.data);
+      });
 
-        const channel = ablyClient.channels.get(channelName);
+      channel.subscribe('member-removed', (message: Ably.Message) => {
+        if (mounted) onMemberRemoved(message.data.userId);
+      });
 
-        // Subscribe to team events
-        channel.subscribe('member-added', (message: Ably.Message) => {
-          if (mounted) onMemberAdded(message.data);
-        });
+      channel.subscribe('role-changed', (message: Ably.Message) => {
+        if (mounted) onRoleChanged(message.data);
+      });
+    } catch (error) {
+      console.error('Team sync error:', error);
+    }
 
-        channel.subscribe('member-removed', (message: Ably.Message) => {
-          if (mounted) onMemberRemoved(message.data.userId);
-        });
-
-        channel.subscribe('role-changed', (message: Ably.Message) => {
-          if (mounted) onRoleChanged(message.data);
-        });
-
-        setIsConnected(true);
-      } catch (error) {
-        console.error('Team sync error:', error);
-      }
-    };
-
-    initAbly();
-
+    // Cleanup - only unsubscribe, don't close shared client
     return () => {
       mounted = false;
-      ablyClient?.close();
-      setIsConnected(false);
+      if (channelRef.current) {
+        try {
+          channelRef.current.unsubscribe();
+        } catch {
+          // Ignore cleanup errors
+        }
+        channelRef.current = null;
+      }
     };
-  }, [channelName, enabled]);
+  }, [
+    channelName,
+    enabled,
+    ablyClient,
+    isConnected,
+    onMemberAdded,
+    onMemberRemoved,
+    onRoleChanged,
+  ]);
 
   return { isConnected };
 }
@@ -150,15 +155,16 @@ export function TeamMemberManager({
   const canManageMembers = currentUserRole === 'owner' || currentUserRole === 'admin';
   const isOwner = currentUserRole === 'owner';
 
-  // Real-time team sync
+  // Real-time team sync using shared Ably client
   const { isConnected } = useTeamSync({
     channelName: `team:${projectSlug}`,
+    userId: currentUser.userId,
     onMemberAdded: (member) => {
       setMembers((prev) => [...prev, member]);
       setMessage({ type: 'success', text: `${member.userName} joined the team` });
     },
-    onMemberRemoved: (userId) => {
-      setMembers((prev) => prev.filter((m) => m.userId !== userId));
+    onMemberRemoved: (removedUserId) => {
+      setMembers((prev) => prev.filter((m) => m.userId !== removedUserId));
       setMessage({ type: 'success', text: 'Member removed from team' });
     },
     onRoleChanged: (change) => {

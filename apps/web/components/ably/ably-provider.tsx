@@ -370,8 +370,8 @@ export function AblyProvider({ children, lazy = true }: Props) {
     }
   }, [metrics]);
 
-  // Compute status for context
-  const status: AblyStatus = hasError
+  // Compute connection status for context
+  const connectionStatus: AblyStatus = hasError
     ? isAblyPermanentlyDisabled()
       ? 'unavailable'
       : 'error'
@@ -385,7 +385,7 @@ export function AblyProvider({ children, lazy = true }: Props) {
   // This is the SINGLE SOURCE OF TRUTH for Ably in the entire app
   const contextValue: AblyClientContextType = {
     client,
-    status,
+    status: connectionStatus,
     error: hasError ? 'Ably connection failed' : null,
     isAvailable: !!client && !hasError,
     isConnected: !!client && metrics.quality !== 'offline',

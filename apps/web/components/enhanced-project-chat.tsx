@@ -14,11 +14,11 @@
  * - Message editing
  * - Read receipts
  *
- * Integrates with Ably for real-time sync
+ * NOW USES: Shared Ably client from AblyProvider (NO separate connections!)
  */
 
 import { Button } from '@cronkwaters/ui';
-import Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Smile, Paperclip, MoreVertical, Reply } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
@@ -26,6 +26,7 @@ import { useEffect, useState, useRef } from 'react';
 import { VoiceMessagePlayer } from './voice-message-player';
 import { VoiceMessageRecorder } from './voice-message-recorder';
 
+import { useAblyClient } from '@/hooks/use-ably-client';
 import { formatTime } from '@/lib/format-date';
 
 type MessageType = 'text' | 'voice' | 'video' | 'file' | 'system';
@@ -76,8 +77,6 @@ export function EnhancedChat({
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [sending, setSending] = useState(false);
-  const [ably, setAbly] = useState<Ably.Realtime | null>(null);
-  const [channel, setChannel] = useState<Ably.RealtimeChannel | null>(null);
   const [typingUsers, setTypingUsers] = useState<Map<string, TypingUser>>(new Map());
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   const [editingMessage, setEditingMessage] = useState<Message | null>(null);
@@ -85,146 +84,163 @@ export function EnhancedChat({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
   const channelName = `chat:project:${projectSlug}`;
 
-  // Initialize Ably
+  // Use shared Ably client from AblyProvider (NO separate connections!)
+  const { client: ablyClient, isConnected } = useAblyClient(currentUserId);
+
+  // Helper function to clear typing for a user
+  const clearTypingForUser = (userId: string) => {
+    setTypingUsers((prev) => {
+      const newMap = new Map(prev);
+      newMap.delete(userId);
+      return newMap;
+    });
+  };
+
+  // Initialize chat channel when shared client is ready
   useEffect(() => {
+    if (!ablyClient || !isConnected) return;
+
+    let mounted = true;
+
     const initChat = async () => {
-      const ablyKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
-      if (!ablyKey) {
-        console.warn('ABLY_API_KEY not configured');
-        return;
-      }
+      try {
+        // Subscribe to project chat channel using shared client
+        const chatChannel = ablyClient.channels.get(channelName);
+        channelRef.current = chatChannel;
 
-      const ablyClient = new Ably.Realtime({
-        key: ablyKey,
-        clientId: currentUserId,
-      });
+        // Listen for text messages
+        chatChannel.subscribe('message', (msg) => {
+          if (!mounted) return;
+          const newMessage: Message = {
+            id: msg.id || `${Date.now()}-${Math.random()}`,
+            type: 'text',
+            senderId: msg.clientId || 'unknown',
+            senderName: msg.data.senderName || 'Unknown',
+            senderEmail: msg.data.senderEmail || '',
+            senderAvatar: msg.data.senderAvatar,
+            content: msg.data.content,
+            timestamp: new Date(msg.timestamp || Date.now()),
+            threadId: msg.data.threadId,
+            reactions: msg.data.reactions,
+            mentions: msg.data.mentions,
+          };
 
-      setAbly(ablyClient);
-
-      // Subscribe to project chat channel
-      const chatChannel = ablyClient.channels.get(channelName);
-      setChannel(chatChannel);
-
-      // Listen for text messages
-      chatChannel.subscribe('message', (msg) => {
-        const newMessage: Message = {
-          id: msg.id || `${Date.now()}-${Math.random()}`,
-          type: 'text',
-          senderId: msg.clientId || 'unknown',
-          senderName: msg.data.senderName || 'Unknown',
-          senderEmail: msg.data.senderEmail || '',
-          senderAvatar: msg.data.senderAvatar,
-          content: msg.data.content,
-          timestamp: new Date(msg.timestamp || Date.now()),
-          threadId: msg.data.threadId,
-          reactions: msg.data.reactions,
-          mentions: msg.data.mentions,
-        };
-
-        setMessages((prev) => [...prev, newMessage]);
-        clearTypingForUser(msg.clientId || '');
-      });
-
-      // Listen for voice messages
-      chatChannel.subscribe('voice-message', (msg) => {
-        const newMessage: Message = {
-          id: msg.data.messageId || `${Date.now()}-${Math.random()}`,
-          type: 'voice',
-          senderId: msg.data.senderId || 'unknown',
-          senderName: msg.data.senderName || 'Unknown',
-          senderEmail: msg.data.senderEmail || '',
-          senderAvatar: msg.data.senderAvatar,
-          audioUrl: msg.data.audioUrl,
-          audioDuration: msg.data.duration,
-          waveformData: msg.data.waveformData,
-          timestamp: new Date(msg.data.timestamp || Date.now()),
-        };
-
-        setMessages((prev) => [...prev, newMessage]);
-        clearTypingForUser(msg.data.senderId || '');
-      });
-
-      // Listen for typing indicators
-      chatChannel.subscribe('typing', (msg) => {
-        if (msg.clientId === currentUserId) return;
-
-        const typingUser: TypingUser = {
-          userId: msg.clientId || 'unknown',
-          userName: msg.data.userName || 'Unknown',
-          timestamp: Date.now(),
-        };
-
-        setTypingUsers((prev) => {
-          const newMap = new Map(prev);
-          newMap.set(typingUser.userId, typingUser);
-          return newMap;
+          setMessages((prev) => [...prev, newMessage]);
+          clearTypingForUser(msg.clientId || '');
         });
 
-        setTimeout(() => {
+        // Listen for voice messages
+        chatChannel.subscribe('voice-message', (msg) => {
+          if (!mounted) return;
+          const newMessage: Message = {
+            id: msg.data.messageId || `${Date.now()}-${Math.random()}`,
+            type: 'voice',
+            senderId: msg.data.senderId || 'unknown',
+            senderName: msg.data.senderName || 'Unknown',
+            senderEmail: msg.data.senderEmail || '',
+            senderAvatar: msg.data.senderAvatar,
+            audioUrl: msg.data.audioUrl,
+            audioDuration: msg.data.duration,
+            waveformData: msg.data.waveformData,
+            timestamp: new Date(msg.data.timestamp || Date.now()),
+          };
+
+          setMessages((prev) => [...prev, newMessage]);
+          clearTypingForUser(msg.data.senderId || '');
+        });
+
+        // Listen for typing indicators
+        chatChannel.subscribe('typing', (msg) => {
+          if (!mounted || msg.clientId === currentUserId) return;
+
+          const typingUser: TypingUser = {
+            userId: msg.clientId || 'unknown',
+            userName: msg.data.userName || 'Unknown',
+            timestamp: Date.now(),
+          };
+
           setTypingUsers((prev) => {
             const newMap = new Map(prev);
-            const current = newMap.get(typingUser.userId);
-            if (current && current.timestamp === typingUser.timestamp) {
-              newMap.delete(typingUser.userId);
-            }
+            newMap.set(typingUser.userId, typingUser);
             return newMap;
           });
-        }, 3000);
-      });
 
-      chatChannel.subscribe('typing-stop', (msg) => {
-        setTypingUsers((prev) => {
-          const newMap = new Map(prev);
-          newMap.delete(msg.clientId || '');
-          return newMap;
+          setTimeout(() => {
+            setTypingUsers((prev) => {
+              const newMap = new Map(prev);
+              const current = newMap.get(typingUser.userId);
+              if (current && current.timestamp === typingUser.timestamp) {
+                newMap.delete(typingUser.userId);
+              }
+              return newMap;
+            });
+          }, 3000);
         });
-      });
 
-      // Listen for reaction updates
-      chatChannel.subscribe('reaction-added', (msg) => {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === msg.data.messageId ? { ...m, reactions: msg.data.reactions } : m
-          )
-        );
-      });
+        chatChannel.subscribe('typing-stop', (msg) => {
+          if (!mounted) return;
+          setTypingUsers((prev) => {
+            const newMap = new Map(prev);
+            newMap.delete(msg.clientId || '');
+            return newMap;
+          });
+        });
 
-      chatChannel.subscribe('reaction-removed', (msg) => {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === msg.data.messageId ? { ...m, reactions: msg.data.reactions } : m
-          )
-        );
-      });
+        // Listen for reaction updates
+        chatChannel.subscribe('reaction-added', (msg) => {
+          if (!mounted) return;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === msg.data.messageId ? { ...m, reactions: msg.data.reactions } : m
+            )
+          );
+        });
 
-      // Get message history
-      try {
-        const response = await fetch(`/api/chat/messages?channelId=${channelName}&limit=100`);
-        if (response.ok) {
-          const data = await response.json();
-          setMessages(data.messages || []);
+        chatChannel.subscribe('reaction-removed', (msg) => {
+          if (!mounted) return;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === msg.data.messageId ? { ...m, reactions: msg.data.reactions } : m
+            )
+          );
+        });
+
+        // Get message history
+        try {
+          const response = await fetch(`/api/chat/messages?channelId=${channelName}&limit=100`);
+          if (mounted && response.ok) {
+            const data = await response.json();
+            setMessages(data.messages || []);
+          }
+        } catch (error) {
+          console.error('Failed to load message history:', error);
         }
       } catch (error) {
-        console.error('Failed to load message history:', error);
+        console.error('Chat initialization error:', error);
       }
     };
 
     initChat();
 
+    // Cleanup - only unsubscribe, don't close shared client
     return () => {
+      mounted = false;
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
-      if (channel) {
-        channel.unsubscribe();
-      }
-      if (ably) {
-        ably.close();
+      if (channelRef.current) {
+        try {
+          channelRef.current.unsubscribe();
+        } catch {
+          // Ignore cleanup errors
+        }
+        channelRef.current = null;
       }
     };
-  }, [projectSlug, currentUserId]);
+  }, [channelName, currentUserId, ablyClient, isConnected]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -240,18 +256,18 @@ export function EnhancedChat({
   };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || !channel) return;
+    if (!inputValue.trim() || !channelRef.current) return;
 
     const messageContent = inputValue.trim();
     const mentions = extractMentions(messageContent);
 
     setSending(true);
     try {
-      await channel.publish('typing-stop', {
+      await channelRef.current.publish('typing-stop', {
         userName: currentUserName,
       });
 
-      await channel.publish('message', {
+      await channelRef.current.publish('message', {
         content: messageContent,
         senderName: currentUserName,
         senderEmail: currentUserEmail,
@@ -303,17 +319,17 @@ export function EnhancedChat({
     const value = e.target.value;
     setInputValue(value);
 
-    if (value.trim() && channel) {
+    if (value.trim() && channelRef.current) {
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
 
-      channel.publish('typing', {
+      channelRef.current.publish('typing', {
         userName: currentUserName,
       });
 
       typingTimeoutRef.current = setTimeout(() => {
-        channel.publish('typing-stop', {
+        channelRef.current?.publish('typing-stop', {
           userName: currentUserName,
         });
       }, 2000);

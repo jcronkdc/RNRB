@@ -5,13 +5,17 @@
  * Field-level locking to prevent conflicts
  * Ably presence + change broadcasting
  *
+ * NOW USES: Shared Ably client from AblyProvider (NO separate connections!)
+ *
  * Mycelial Pathway:
  * User edits field → Optimistic update → Ably broadcasts → Server saves → Other clients update
  */
 
-import Ably from 'ably';
+import type Ably from 'ably';
 import type { RealtimeChannel } from 'ably';
 import { useEffect, useState, useCallback, useRef } from 'react';
+
+import { useAblyClient } from './use-ably-client';
 
 export type ProjectSettings = {
   name: string;
@@ -54,131 +58,117 @@ export function useCollaborativeSettings({
   enabled,
 }: UseCollaborativeSettingsOptions) {
   const [settings, setSettings] = useState<ProjectSettings>(initialSettings);
-  const [isConnected, setIsConnected] = useState(false);
   const [activeEditors, setActiveEditors] = useState<Map<string, string>>(new Map()); // userId -> userName
   const [fieldLocks, setFieldLocks] = useState<Map<keyof ProjectSettings, FieldLock>>(new Map());
   const [pendingChanges, setPendingChanges] = useState<Map<keyof ProjectSettings, SettingsChange>>(
     new Map()
   );
 
-  const ablyRef = useRef<Ably.Realtime | null>(null);
+  // Use shared Ably client from AblyProvider (NO separate connections!)
+  const { client: ablyClient, isConnected } = useAblyClient(enabled ? userId : undefined);
   const channelRef = useRef<RealtimeChannel | null>(null);
   const saveTimerRef = useRef<Map<keyof ProjectSettings, NodeJS.Timeout>>(new Map());
 
-  // Initialize Ably connection
+  // Initialize channel when shared client is ready
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !ablyClient || !isConnected) return;
 
     let mounted = true;
 
-    const initAbly = async () => {
-      try {
-        const response = await fetch('/api/ably/token');
-        if (!response.ok) {
-          console.info('Ably not configured - collaborative settings disabled');
-          return;
-        }
+    try {
+      const channel = ablyClient.channels.get(channelName);
+      channelRef.current = channel;
 
-        const ablyClient = new Ably.Realtime({
-          authUrl: '/api/ably/token',
-          clientId: userId,
+      // Subscribe to settings changes
+      channel.subscribe('setting-changed', (message: Ably.Message) => {
+        if (!mounted) return;
+        const change: SettingsChange = message.data;
+
+        // Don't apply our own changes (already optimistically updated)
+        if (change.userId === userId) return;
+
+        setSettings((prev) => ({
+          ...prev,
+          [change.field]: change.value,
+        }));
+
+        // Remove pending change if it exists
+        setPendingChanges((prev) => {
+          const newMap = new Map(prev);
+          newMap.delete(change.field);
+          return newMap;
+        });
+      });
+
+      // Subscribe to field locks
+      channel.subscribe('field-locked', (message: Ably.Message) => {
+        if (!mounted) return;
+        const lock: FieldLock = message.data;
+        setFieldLocks((prev) => new Map(prev).set(lock.field, lock));
+      });
+
+      channel.subscribe('field-unlocked', (message: Ably.Message) => {
+        if (!mounted) return;
+        const { field } = message.data;
+        setFieldLocks((prev) => {
+          const newMap = new Map(prev);
+          newMap.delete(field);
+          return newMap;
+        });
+      });
+
+      // Presence tracking
+      channel.presence.enter({ userName });
+
+      channel.presence.subscribe('enter', (member: Ably.PresenceMessage) => {
+        if (!mounted) return;
+        setActiveEditors((prev) =>
+          new Map(prev).set(member.clientId, member.data?.userName || 'Unknown')
+        );
+      });
+
+      channel.presence.subscribe('leave', (member: Ably.PresenceMessage) => {
+        if (!mounted) return;
+        setActiveEditors((prev) => {
+          const newMap = new Map(prev);
+          newMap.delete(member.clientId);
+          return newMap;
         });
 
-        if (!mounted) {
-          ablyClient.close();
-          return;
-        }
-
-        ablyRef.current = ablyClient;
-        const channel = ablyClient.channels.get(channelName);
-        channelRef.current = channel;
-
-        // Subscribe to settings changes
-        channel.subscribe('setting-changed', (message: Ably.Message) => {
-          if (!mounted) return;
-          const change: SettingsChange = message.data;
-
-          // Don't apply our own changes (already optimistically updated)
-          if (change.userId === userId) return;
-
-          setSettings((prev) => ({
-            ...prev,
-            [change.field]: change.value,
-          }));
-
-          // Remove pending change if it exists
-          setPendingChanges((prev) => {
-            const newMap = new Map(prev);
-            newMap.delete(change.field);
-            return newMap;
-          });
-        });
-
-        // Subscribe to field locks
-        channel.subscribe('field-locked', (message: Ably.Message) => {
-          if (!mounted) return;
-          const lock: FieldLock = message.data;
-          setFieldLocks((prev) => new Map(prev).set(lock.field, lock));
-        });
-
-        channel.subscribe('field-unlocked', (message: Ably.Message) => {
-          if (!mounted) return;
-          const { field } = message.data;
-          setFieldLocks((prev) => {
-            const newMap = new Map(prev);
-            newMap.delete(field);
-            return newMap;
-          });
-        });
-
-        // Presence tracking
-        channel.presence.enter({ userName });
-
-        channel.presence.subscribe('enter', (member: Ably.PresenceMessage) => {
-          setActiveEditors((prev) =>
-            new Map(prev).set(member.clientId, member.data?.userName || 'Unknown')
-          );
-        });
-
-        channel.presence.subscribe('leave', (member: Ably.PresenceMessage) => {
-          setActiveEditors((prev) => {
-            const newMap = new Map(prev);
-            newMap.delete(member.clientId);
-            return newMap;
-          });
-
-          // Release any field locks held by this user
-          setFieldLocks((prev) => {
-            const newMap = new Map(prev);
-            for (const [field, lock] of newMap.entries()) {
-              if (lock.userId === member.clientId) {
-                newMap.delete(field);
-              }
+        // Release any field locks held by this user
+        setFieldLocks((prev) => {
+          const newMap = new Map(prev);
+          for (const [field, lock] of newMap.entries()) {
+            if (lock.userId === member.clientId) {
+              newMap.delete(field);
             }
-            return newMap;
-          });
+          }
+          return newMap;
         });
+      });
+    } catch (error) {
+      console.error('Collaborative settings error:', error);
+    }
 
-        setIsConnected(true);
-      } catch (error) {
-        console.error('Collaborative settings error:', error);
-      }
-    };
-
-    initAbly();
-
+    // Cleanup - only unsubscribe, don't close shared client
     return () => {
       mounted = false;
 
       // Clear all save timers
       saveTimerRef.current.forEach((timer) => clearTimeout(timer));
 
-      channelRef.current?.unsubscribe();
-      ablyRef.current?.close();
-
-      setIsConnected(false);
+      if (channelRef.current) {
+        try {
+          channelRef.current.presence.leave();
+          channelRef.current.presence.unsubscribe();
+          channelRef.current.unsubscribe();
+        } catch {
+          // Ignore cleanup errors
+        }
+        channelRef.current = null;
+      }
     };
-  }, [channelName, userId, userName, enabled]);
+  }, [channelName, userId, userName, enabled, ablyClient, isConnected]);
 
   // Lock field when user starts editing
   const lockField = useCallback(

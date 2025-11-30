@@ -1,11 +1,13 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import Ably from 'ably';
+import type { RealtimeChannel } from 'ably';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Smile, Paperclip, MoreVertical } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState, useRef } from 'react';
 
+import { useAblyClient } from '@/hooks/use-ably-client';
 import { formatTime } from '@/lib/format-date';
 
 type Message = {
@@ -33,143 +35,142 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [sending, setSending] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [ably, setAbly] = useState<Ably.Realtime | null>(null);
-  const [channel, setChannel] = useState<Ably.RealtimeChannel | null>(null);
   const [typingUsers, setTypingUsers] = useState<Map<string, TypingUser>>(new Map());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
 
-  // Initialize Ably and current user
-  useEffect(() => {
-    const initChat = async () => {
-      // Get current user from Supabase
-      const { createBrowserClient } = await import('@/lib/supabase');
-      const supabase = createBrowserClient();
-      const {
-        data: { user },
-      } = await supabase!.auth.getUser();
-
-      if (!user) return;
-
-      setCurrentUser({
-        id: user.id,
-        name: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
-        email: user.email || '',
-        avatar: user.user_metadata?.avatar_url,
-      });
-
-      // Initialize Ably
-      const ablyKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
-      if (!ablyKey) {
-        console.warn('ABLY_API_KEY not configured');
-        return;
+  // Get current user from session
+  const { data: session } = useSession();
+  const currentUser = session?.user
+    ? {
+        id: session.user.id,
+        name: session.user.name || session.user.email?.split('@')[0] || 'User',
+        email: session.user.email || '',
+        avatar: session.user.image,
       }
+    : null;
 
-      const ablyClient = new Ably.Realtime({
-        key: ablyKey,
-        clientId: user.id,
-      });
+  // Use shared Ably client from AblyProvider (NO separate connections!)
+  const { client: ablyClient, isConnected } = useAblyClient(currentUser?.id);
 
-      setAbly(ablyClient);
+  // Initialize chat channel when shared client is ready
+  useEffect(() => {
+    if (!currentUser?.id || !ablyClient || !isConnected) return;
 
-      // Subscribe to project chat channel
-      const chatChannel = ablyClient.channels.get(`chat:project:${projectSlug}`);
-      setChannel(chatChannel);
+    let mounted = true;
 
-      // Listen for new messages
-      chatChannel.subscribe('message', (message) => {
-        const newMessage: Message = {
-          id: message.id || `${Date.now()}-${Math.random()}`,
-          userId: message.clientId || 'unknown',
-          userName: message.data.userName || 'Unknown',
-          userEmail: message.data.userEmail || '',
-          content: message.data.content,
-          timestamp: new Date(message.timestamp || Date.now()),
-          avatar: message.data.avatar,
-        };
+    const initChat = async () => {
+      try {
+        // Subscribe to project chat channel
+        const chatChannel = ablyClient.channels.get(`chat:project:${projectSlug}`);
+        channelRef.current = chatChannel;
 
-        setMessages((prev) => [...prev, newMessage]);
+        // Listen for new messages
+        chatChannel.subscribe('message', (message) => {
+          if (!mounted) return;
 
-        // Clear typing indicator for this user when they send a message
-        setTypingUsers((prev) => {
-          const newMap = new Map(prev);
-          newMap.delete(message.clientId || '');
-          return newMap;
-        });
-      });
+          const newMessage: Message = {
+            id: message.id || `${Date.now()}-${Math.random()}`,
+            userId: message.clientId || 'unknown',
+            userName: message.data.userName || 'Unknown',
+            userEmail: message.data.userEmail || '',
+            content: message.data.content,
+            timestamp: new Date(message.timestamp || Date.now()),
+            avatar: message.data.avatar,
+          };
 
-      // Listen for typing indicators
-      chatChannel.subscribe('typing', (message) => {
-        const typingUser: TypingUser = {
-          userId: message.clientId || 'unknown',
-          userName: message.data.userName || 'Unknown',
-          timestamp: Date.now(),
-        };
+          setMessages((prev) => [...prev, newMessage]);
 
-        // Don't show own typing indicator
-        if (typingUser.userId === user.id) return;
-
-        setTypingUsers((prev) => {
-          const newMap = new Map(prev);
-          newMap.set(typingUser.userId, typingUser);
-          return newMap;
-        });
-
-        // Auto-remove typing indicator after 3 seconds
-        setTimeout(() => {
+          // Clear typing indicator for this user when they send a message
           setTypingUsers((prev) => {
             const newMap = new Map(prev);
-            // Only remove if timestamp hasn't been updated (no new typing events)
-            const current = newMap.get(typingUser.userId);
-            if (current && current.timestamp === typingUser.timestamp) {
-              newMap.delete(typingUser.userId);
-            }
+            newMap.delete(message.clientId || '');
             return newMap;
           });
-        }, 3000);
-      });
-
-      // Listen for typing stopped
-      chatChannel.subscribe('typing-stop', (message) => {
-        setTypingUsers((prev) => {
-          const newMap = new Map(prev);
-          newMap.delete(message.clientId || '');
-          return newMap;
         });
-      });
 
-      // Get message history (last 50 messages)
-      const history = await chatChannel.history({ limit: 50 });
-      if (history && history.items.length > 0) {
-        const historicalMessages: Message[] = history.items.reverse().map((msg: any) => ({
-          id: msg.id || `${Date.now()}-${Math.random()}`,
-          userId: msg.clientId || 'unknown',
-          userName: msg.data.userName || 'Unknown',
-          userEmail: msg.data.userEmail || '',
-          content: msg.data.content,
-          timestamp: new Date(msg.timestamp || Date.now()),
-          avatar: msg.data.avatar,
-        }));
+        // Listen for typing indicators
+        chatChannel.subscribe('typing', (message) => {
+          if (!mounted) return;
 
-        setMessages(historicalMessages);
+          const typingUser: TypingUser = {
+            userId: message.clientId || 'unknown',
+            userName: message.data.userName || 'Unknown',
+            timestamp: Date.now(),
+          };
+
+          // Don't show own typing indicator
+          if (typingUser.userId === currentUser.id) return;
+
+          setTypingUsers((prev) => {
+            const newMap = new Map(prev);
+            newMap.set(typingUser.userId, typingUser);
+            return newMap;
+          });
+
+          // Auto-remove typing indicator after 3 seconds
+          setTimeout(() => {
+            setTypingUsers((prev) => {
+              const newMap = new Map(prev);
+              // Only remove if timestamp hasn't been updated (no new typing events)
+              const current = newMap.get(typingUser.userId);
+              if (current && current.timestamp === typingUser.timestamp) {
+                newMap.delete(typingUser.userId);
+              }
+              return newMap;
+            });
+          }, 3000);
+        });
+
+        // Listen for typing stopped
+        chatChannel.subscribe('typing-stop', (message) => {
+          if (!mounted) return;
+          setTypingUsers((prev) => {
+            const newMap = new Map(prev);
+            newMap.delete(message.clientId || '');
+            return newMap;
+          });
+        });
+
+        // Get message history (last 50 messages)
+        const history = await chatChannel.history({ limit: 50 });
+        if (mounted && history && history.items.length > 0) {
+          const historicalMessages: Message[] = history.items.reverse().map((msg: any) => ({
+            id: msg.id || `${Date.now()}-${Math.random()}`,
+            userId: msg.clientId || 'unknown',
+            userName: msg.data.userName || 'Unknown',
+            userEmail: msg.data.userEmail || '',
+            content: msg.data.content,
+            timestamp: new Date(msg.timestamp || Date.now()),
+            avatar: msg.data.avatar,
+          }));
+
+          setMessages(historicalMessages);
+        }
+      } catch (error) {
+        console.error('Chat initialization error:', error);
       }
     };
 
     initChat();
 
+    // Cleanup - only unsubscribe, don't close shared client
     return () => {
+      mounted = false;
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
-      if (channel) {
-        channel.unsubscribe();
-      }
-      if (ably) {
-        ably.close();
+      if (channelRef.current) {
+        try {
+          channelRef.current.unsubscribe();
+        } catch {
+          // Ignore cleanup errors
+        }
+        channelRef.current = null;
       }
     };
-  }, [projectSlug]);
+  }, [projectSlug, currentUser?.id, ablyClient, isConnected]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -177,16 +178,16 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
   }, [messages]);
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || !channel || !currentUser) return;
+    if (!inputValue.trim() || !channelRef.current || !currentUser) return;
 
     setSending(true);
     try {
       // Send typing-stop event
-      await channel.publish('typing-stop', {
+      await channelRef.current.publish('typing-stop', {
         userName: currentUser.name,
       });
 
-      await channel.publish('message', {
+      await channelRef.current.publish('message', {
         content: inputValue.trim(),
         userName: currentUser.name,
         userEmail: currentUser.email,
@@ -206,20 +207,20 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
     setInputValue(value);
 
     // Broadcast typing indicator
-    if (value.trim() && channel && currentUser) {
+    if (value.trim() && channelRef.current && currentUser) {
       // Clear previous timeout
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
 
       // Send typing event
-      channel.publish('typing', {
+      channelRef.current.publish('typing', {
         userName: currentUser.name,
       });
 
       // Auto-stop typing after 2 seconds of no input
       typingTimeoutRef.current = setTimeout(() => {
-        channel.publish('typing-stop', {
+        channelRef.current?.publish('typing-stop', {
           userName: currentUser.name,
         });
       }, 2000);

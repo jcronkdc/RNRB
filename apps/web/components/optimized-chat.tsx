@@ -6,7 +6,7 @@
  * Performance features:
  * - Virtual scrolling with @tanstack/react-virtual
  * - Cursor-based pagination via SWR Infinite
- * - Optimized Ably connection pooling
+ * - Uses shared Ably client from AblyProvider (NO separate connections!)
  * - Batch read receipts
  * - Lazy loading of media
  * - Message deduplication
@@ -22,8 +22,8 @@ import { useEffect, useState, useRef } from 'react';
 import { VirtualizedMessageList } from './virtualized-message-list';
 import { VoiceMessageRecorder } from './voice-message-recorder';
 
+import { useAblyClient } from '@/hooks/use-ably-client';
 import { useMessages } from '@/hooks/use-messages';
-import { ablyManager, useAblyConnection } from '@/lib/ably-manager';
 import { useReadReceipts } from '@/lib/read-receipts';
 
 interface OptimizedChatProps {
@@ -57,8 +57,10 @@ export function OptimizedChat({
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const channelId = `chat:project:${projectSlug}`;
 
-  // Connection status
-  const { isConnected, isDisconnected } = useAblyConnection();
+  // Use shared Ably client from AblyProvider (NO separate connections!)
+  const { client: ablyClient, isConnected, status } = useAblyClient(currentUserId);
+  const isDisconnected =
+    status === 'error' || status === 'disconnected' || status === 'unavailable';
 
   // Optimized message loading with SWR Infinite
   const {
@@ -70,6 +72,7 @@ export function OptimizedChat({
     addMessage: addOptimisticMessage,
   } = useMessages({
     channelId,
+    userId: currentUserId,
     enableRealtime: true,
     onNewMessage: (message) => {
       // Clear typing indicator when message is received
@@ -92,75 +95,63 @@ export function OptimizedChat({
     },
   });
 
-  // Initialize Ably connection
+  // Subscribe to typing indicators using shared Ably client
   useEffect(() => {
-    const init = async () => {
-      const apiKey = process.env.NEXT_PUBLIC_ABLY_API_KEY;
-      if (!apiKey) {
-        console.warn('ABLY_API_KEY not configured');
-        return;
-      }
+    if (!ablyClient || !isConnected) return;
 
-      await ablyManager.initialize(apiKey, currentUserId);
+    let mounted = true;
+    const channel = ablyClient.channels.get(channelId);
 
-      // Subscribe to typing indicators
-      const unsubscribe = ablyManager.subscribe({
-        channelId,
-        events: [
-          {
-            event: 'typing',
-            callback: (msg) => {
-              if (msg.clientId === currentUserId) return;
+    // Subscribe to typing events
+    channel.subscribe('typing', (msg) => {
+      if (!mounted || msg.clientId === currentUserId) return;
 
-              const typingUser: TypingUser = {
-                userId: msg.clientId || 'unknown',
-                userName: msg.data.userName || 'Unknown',
-                timestamp: Date.now(),
-              };
+      const typingUser: TypingUser = {
+        userId: msg.clientId || 'unknown',
+        userName: msg.data.userName || 'Unknown',
+        timestamp: Date.now(),
+      };
 
-              setTypingUsers((prev) => {
-                const newMap = new Map(prev);
-                newMap.set(typingUser.userId, typingUser);
-                return newMap;
-              });
-
-              setTimeout(() => {
-                setTypingUsers((prev) => {
-                  const newMap = new Map(prev);
-                  const current = newMap.get(typingUser.userId);
-                  if (current && current.timestamp === typingUser.timestamp) {
-                    newMap.delete(typingUser.userId);
-                  }
-                  return newMap;
-                });
-              }, 3000);
-            },
-          },
-          {
-            event: 'typing-stop',
-            callback: (msg) => {
-              setTypingUsers((prev) => {
-                const newMap = new Map(prev);
-                newMap.delete(msg.clientId || '');
-                return newMap;
-              });
-            },
-          },
-        ],
+      setTypingUsers((prev) => {
+        const newMap = new Map(prev);
+        newMap.set(typingUser.userId, typingUser);
+        return newMap;
       });
 
-      return unsubscribe;
-    };
+      setTimeout(() => {
+        setTypingUsers((prev) => {
+          const newMap = new Map(prev);
+          const current = newMap.get(typingUser.userId);
+          if (current && current.timestamp === typingUser.timestamp) {
+            newMap.delete(typingUser.userId);
+          }
+          return newMap;
+        });
+      }, 3000);
+    });
 
-    const unsubscribe = init();
+    channel.subscribe('typing-stop', (msg) => {
+      if (!mounted) return;
+      setTypingUsers((prev) => {
+        const newMap = new Map(prev);
+        newMap.delete(msg.clientId || '');
+        return newMap;
+      });
+    });
 
     return () => {
-      unsubscribe.then((fn) => fn?.());
+      mounted = false;
+      try {
+        channel.unsubscribe('typing');
+        channel.unsubscribe('typing-stop');
+      } catch {
+        // Ignore cleanup errors
+      }
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
     };
-  }, [projectSlug, currentUserId, channelId]);
+  }, [ablyClient, isConnected, channelId, currentUserId]);
 
   // Sync read receipts on unmount
   useEffect(() => {
@@ -170,19 +161,21 @@ export function OptimizedChat({
   }, [syncReceipts]);
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() || !ablyClient || !isConnected) return;
 
     const messageContent = inputValue.trim();
     setSending(true);
 
     try {
+      const channel = ablyClient.channels.get(channelId);
+
       // Stop typing indicator
-      ablyManager.publish(channelId, 'typing-stop', {
+      await channel.publish('typing-stop', {
         userName: currentUserName,
       });
 
-      // Publish message (batched automatically)
-      ablyManager.publish(channelId, 'message', {
+      // Publish message
+      await channel.publish('message', {
         content: messageContent,
         senderName: currentUserName,
         senderEmail: currentUserEmail,
@@ -230,18 +223,19 @@ export function OptimizedChat({
     const value = e.target.value;
     setInputValue(value);
 
-    if (value.trim()) {
+    if (value.trim() && ablyClient && isConnected) {
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
 
-      // Batch typing indicators
-      ablyManager.publish(channelId, 'typing', {
+      // Publish typing indicator
+      const channel = ablyClient.channels.get(channelId);
+      channel.publish('typing', {
         userName: currentUserName,
       });
 
       typingTimeoutRef.current = setTimeout(() => {
-        ablyManager.publish(channelId, 'typing-stop', {
+        channel.publish('typing-stop', {
           userName: currentUserName,
         });
       }, 2000);

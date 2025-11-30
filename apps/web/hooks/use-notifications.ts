@@ -4,6 +4,8 @@
  * Alert system for the mycelial network
  * Like Tokyo subway notifications for incoming trains
  *
+ * NOW USES: Shared Ably client from AblyProvider (NO separate connections!)
+ *
  * Notification types:
  * - mention - Someone mentioned you in chat
  * - invite - You were invited to a project
@@ -14,16 +16,9 @@
  */
 
 import type { Message, RealtimeChannel } from 'ably';
-import type * as Ably from 'ably';
-import { Realtime } from 'ably';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
-import {
-  canUseAbly,
-  recordAblyFailure,
-  recordAblySuccess,
-  disableAblyPermanently,
-} from '@/lib/ably-circuit-breaker';
+import { useAblyClient } from './use-ably-client';
 
 export type NotificationType =
   | 'mention'
@@ -55,193 +50,109 @@ type UseNotificationsOptions = {
 export function useNotifications({ userId, onNewNotification }: UseNotificationsOptions) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [ably, setAbly] = useState<Realtime | null>(null);
 
+  // Use shared Ably client from AblyProvider (NO separate connections!)
+  const { client: ablyClient, isConnected, error: ablyError } = useAblyClient(userId);
+  const channelRef = useRef<RealtimeChannel | null>(null);
+
+  // Sync error state from shared client
   useEffect(() => {
-    if (!userId) return;
+    if (ablyError) {
+      setError(ablyError);
+    } else {
+      setError(null);
+    }
+  }, [ablyError]);
+
+  // Initialize notification channel when shared client is ready
+  useEffect(() => {
+    if (!userId || !ablyClient || !isConnected) return;
 
     let mounted = true;
-    let channel: RealtimeChannel | null = null;
-    let ablyInstance: Realtime | null = null;
-    let connectionHandler: (() => void) | null = null;
-    let connectionClient: Realtime | null = null;
 
-    const initAbly = async () => {
-      // Circuit breaker check - prevent runaway connection loops
-      if (!canUseAbly()) {
-        console.log('[useNotifications] Circuit breaker open - skipping Ably init');
-        return;
-      }
+    try {
+      // Get user-specific notification channel from shared client
+      const channel = ablyClient.channels.get(`notifications:user:${userId}`);
+      channelRef.current = channel;
 
-      try {
-        // Pre-check token availability
-        const tokenCheck = await fetch('/api/ably/token', {
-          signal: AbortSignal.timeout(5000),
-        }).catch(() => ({ ok: false, status: 0 }));
-
+      // Subscribe to notifications
+      channel.subscribe('notification', (message: Message) => {
         if (!mounted) return;
 
-        // 503 = ABLY_API_KEY not configured
-        if (tokenCheck.status === 503) {
-          disableAblyPermanently('ABLY_API_KEY not configured');
-          return;
-        }
-
-        if (!tokenCheck.ok) {
-          recordAblyFailure('Token pre-check failed');
-          return;
-        }
-
-        // Create Ably client with authCallback for circuit breaker control
-        const ablyClient = new Realtime({
-          authCallback: async (tokenParams, callback) => {
-            if (!canUseAbly()) {
-              callback(
-                { code: 40000, statusCode: 400, message: 'Circuit breaker open' } as Ably.ErrorInfo,
-                null
-              );
-              return;
-            }
-            try {
-              const response = await fetch('/api/ably/token', {
-                signal: AbortSignal.timeout(5000),
-              });
-              if (!response.ok) throw new Error(`Token failed: ${response.status}`);
-              const token = await response.json();
-              recordAblySuccess();
-              callback(null, token);
-            } catch (err) {
-              recordAblyFailure('Token callback failed');
-              const errMessage = err instanceof Error ? err.message : 'Token callback failed';
-              callback(
-                { code: 40000, statusCode: 400, message: errMessage } as Ably.ErrorInfo,
-                null
-              );
-            }
-          },
-          clientId: userId,
-          closeOnUnload: true,
-          disconnectedRetryTimeout: 15000,
-          suspendedRetryTimeout: 30000,
-        });
-
-        if (!mounted) {
-          ablyClient.close();
-          return;
-        }
-
-        connectionHandler = () => {
-          recordAblySuccess();
+        const notification: Notification = {
+          id: message.id || `notif_${Date.now()}`,
+          ...message.data,
+          read: false,
+          timestamp: message.timestamp || Date.now(),
         };
-        connectionClient = ablyClient;
-        ablyClient.connection.on('connected', connectionHandler);
 
-        ablyInstance = ablyClient;
-        setAbly(ablyClient);
+        setNotifications((prev) => [notification, ...prev]);
+        setUnreadCount((prev) => prev + 1);
 
-        // Get user-specific notification channel
-        channel = ablyClient.channels.get(`notifications:user:${userId}`);
+        // Trigger callback if provided
+        onNewNotification?.(notification);
 
-        // Subscribe to notifications
-        channel.subscribe('notification', (message: Message) => {
-          if (!mounted) return;
-
-          const notification: Notification = {
-            id: message.id || `notif_${Date.now()}`,
-            ...message.data,
-            read: false,
-            timestamp: message.timestamp || Date.now(),
-          };
-
-          setNotifications((prev) => [notification, ...prev]);
-          setUnreadCount((prev) => prev + 1);
-
-          // Trigger callback if provided
-          onNewNotification?.(notification);
-
-          // Browser notification if permission granted
-          if (typeof window !== 'undefined' && 'Notification' in window) {
-            if (Notification.permission === 'granted') {
-              new Notification(notification.title, {
-                body: notification.message,
-                icon: notification.fromUserAvatar || '/logo-dark.png',
-                tag: notification.id,
-              });
-            }
+        // Browser notification if permission granted
+        if (typeof window !== 'undefined' && 'Notification' in window) {
+          if (window.Notification.permission === 'granted') {
+            new window.Notification(notification.title, {
+              body: notification.message,
+              icon: notification.fromUserAvatar || '/logo-dark.png',
+              tag: notification.id,
+            });
           }
-        });
+        }
+      });
 
-        // Load notification history from localStorage
-        // Note: Validation failures should skip loading but NOT exit the function
-        // The Ably connection is already established above, so we must call setIsConnected(true)
-        if (typeof window !== 'undefined') {
-          try {
-            const stored = localStorage.getItem(`notifications_${userId}`);
-            if (stored) {
-              // Security: Limit JSON size to prevent DoS attacks (max 1MB)
-              const MAX_JSON_SIZE = 1024 * 1024; // 1MB
-              if (stored.length > MAX_JSON_SIZE) {
-                console.warn('Notifications JSON too large, skipping load');
-                // Don't return - continue to setIsConnected(true)
+      // Load notification history from localStorage
+      if (typeof window !== 'undefined') {
+        try {
+          const stored = localStorage.getItem(`notifications_${userId}`);
+          if (stored) {
+            // Security: Limit JSON size to prevent DoS attacks (max 1MB)
+            const MAX_JSON_SIZE = 1024 * 1024; // 1MB
+            if (stored.length > MAX_JSON_SIZE) {
+              console.warn('Notifications JSON too large, skipping load');
+            } else {
+              const storedNotifications = JSON.parse(stored);
+
+              // Security: Ensure it's an array and limit size (max 1000 notifications)
+              if (!Array.isArray(storedNotifications)) {
+                console.warn('Invalid notifications format, skipping load');
               } else {
-                const storedNotifications = JSON.parse(stored);
+                const MAX_NOTIFICATIONS = 1000;
+                const limitedNotifications = storedNotifications.slice(0, MAX_NOTIFICATIONS);
 
-                // Security: Ensure it's an array and limit size (max 1000 notifications)
-                if (!Array.isArray(storedNotifications)) {
-                  console.warn('Invalid notifications format, skipping load');
-                  // Don't return - continue to setIsConnected(true)
-                } else {
-                  const MAX_NOTIFICATIONS = 1000;
-                  const limitedNotifications = storedNotifications.slice(0, MAX_NOTIFICATIONS);
-
-                  setNotifications(limitedNotifications);
-                  setUnreadCount(limitedNotifications.filter((n: Notification) => !n.read).length);
-                }
+                setNotifications(limitedNotifications);
+                setUnreadCount(limitedNotifications.filter((n: Notification) => !n.read).length);
               }
             }
-          } catch (err) {
-            console.warn('Failed to load notifications from localStorage:', err);
-            // Continue - Ably connection is already established, just skip loading cached notifications
           }
-        }
-
-        setIsConnected(true);
-      } catch (err) {
-        console.error('Ably notifications error:', err);
-        recordAblyFailure(err instanceof Error ? err.message : 'Unknown error');
-        if (mounted) {
-          setError(err instanceof Error ? err.message : 'Failed to connect');
+        } catch (err) {
+          console.warn('Failed to load notifications from localStorage:', err);
         }
       }
-    };
+    } catch (err) {
+      console.error('Notifications channel error:', err);
+      if (mounted) {
+        setError(err instanceof Error ? err.message : 'Failed to connect');
+      }
+    }
 
-    initAbly();
-
-    // Cleanup
+    // Cleanup - only unsubscribe, don't close shared client
     return () => {
       mounted = false;
-      channel?.unsubscribe();
-
-      if (connectionHandler && connectionClient) {
+      if (channelRef.current) {
         try {
-          connectionClient.connection.off('connected', connectionHandler);
+          channelRef.current.unsubscribe();
         } catch {
-          // Ignore connection handler removal errors
+          // Ignore cleanup errors
         }
-        connectionHandler = null;
-        connectionClient = null;
-      }
-
-      if (ablyInstance) {
-        ablyInstance.close();
-        ablyInstance = null;
-      } else if (ably) {
-        ably.close();
+        channelRef.current = null;
       }
     };
-  }, [userId, onNewNotification]);
+  }, [userId, ablyClient, isConnected, onNewNotification]);
 
   // Save notifications to localStorage whenever they change
   useEffect(() => {
@@ -302,13 +213,13 @@ export function useNotifications({ userId, onNewNotification }: UseNotifications
     toUserId: string,
     notification: Omit<Notification, 'id' | 'timestamp' | 'read'>
   ) => {
-    if (!ably || !isConnected) {
+    if (!ablyClient || !isConnected) {
       console.error('Cannot send notification: Ably not connected');
       return;
     }
 
     try {
-      const channel = ably.channels.get(`notifications:user:${toUserId}`);
+      const channel = ablyClient.channels.get(`notifications:user:${toUserId}`);
       await channel.publish('notification', notification);
     } catch (err) {
       console.error('Error sending notification:', err);
