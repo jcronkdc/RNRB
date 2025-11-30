@@ -42,6 +42,15 @@ export async function GET(req: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'createdAt';
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
+    // Additional filter params
+    const collectionId = searchParams.get('collectionId');
+    const isFavorite = searchParams.get('isFavorite');
+    const bpmMin = searchParams.get('bpmMin');
+    const bpmMax = searchParams.get('bpmMax');
+    const musicalKey = searchParams.get('musicalKey');
+    const mood = searchParams.get('mood');
+    const tagsFilter = searchParams.get('tags');
+
     // Build where clause
     const where: any = {
       userId: session.user.id,
@@ -51,11 +60,42 @@ export async function GET(req: NextRequest) {
       where.type = type;
     }
 
+    if (collectionId) {
+      where.collectionId = collectionId;
+    }
+
+    if (isFavorite === 'true') {
+      where.isFavorite = true;
+    }
+
+    if (bpmMin || bpmMax) {
+      where.bpm = {};
+      if (bpmMin) where.bpm.gte = parseInt(bpmMin);
+      if (bpmMax) where.bpm.lte = parseInt(bpmMax);
+    }
+
+    if (musicalKey) {
+      where.musicalKey = musicalKey;
+    }
+
+    if (mood) {
+      where.mood = mood;
+    }
+
+    if (tagsFilter) {
+      const tags = tagsFilter.split(',').filter(Boolean);
+      if (tags.length > 0) {
+        where.tags = { hasSome: tags };
+      }
+    }
+
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
         { originalName: { contains: search, mode: 'insensitive' } },
         { tags: { has: search } },
+        { lyrics: { contains: search, mode: 'insensitive' } },
+        { notes: { contains: search, mode: 'insensitive' } },
       ];
     }
 
@@ -81,7 +121,27 @@ export async function GET(req: NextRequest) {
           type: true,
           duration: true,
           waveformData: true,
+          bpm: true,
+          musicalKey: true,
+          mood: true,
           tags: true,
+          color: true,
+          isFavorite: true,
+          playCount: true,
+          lastPlayed: true,
+          notes: true,
+          lyrics: true,
+          chordData: true,
+          version: true,
+          parentId: true,
+          collectionId: true,
+          collection: {
+            select: {
+              id: true,
+              name: true,
+              color: true,
+            },
+          },
           createdAt: true,
           updatedAt: true,
         },

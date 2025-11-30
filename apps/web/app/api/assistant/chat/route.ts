@@ -399,16 +399,30 @@ export async function GET() {
   return NextResponse.json({
     status: provider ? 'ok' : 'disabled',
     message: provider
-      ? `GODLIKE AI Assistant running with ${provider.toUpperCase()}`
+      ? `🚀 GODLIKE AI Assistant LIVE with ${provider.toUpperCase()}`
       : 'No AI provider configured',
     provider,
     model,
-    capabilities: [
-      'Full data access (songs, projects, tours, library)',
-      'Create projects, songs, tours, shows',
-      'Build optimized setlists',
-      'Creative assistance (chords, rhymes, lyrics)',
-      'Musical style analysis',
-    ],
+    version: '2.0-MOONSHOT',
+    dataAccess: {
+      songs: 'ALL - titles, lyrics, chords, keys, tempos, collaborators',
+      projects: 'ALL - with songs, milestones, team members',
+      tours: 'ALL - with shows, venues, setlists',
+      library: 'ALL - audio files, stems, demos',
+      messages: 'Recent 20 conversations',
+    },
+    actions: {
+      createProject: 'Create albums, EPs, singles',
+      createSong: 'Start new songs with metadata',
+      updateSong: 'Edit lyrics, chords, key, tempo',
+      addSongToProject: 'Organize songs into projects',
+      createTour: 'Plan tours with dates',
+      createShow: 'Add shows with venues',
+      buildSetlist: 'AI-optimized setlists by energy/key',
+      analyzeStyle: 'Analyze musical patterns',
+      getChordSuggestions: 'Rock, pop, folk, blues progressions',
+      getRhymes: 'Songwriting word suggestions',
+    },
+    security: 'All actions scoped to authenticated user only',
   });
 }

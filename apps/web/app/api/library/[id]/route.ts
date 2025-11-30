@@ -54,7 +54,20 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     const { id } = await params;
     const body = await req.json();
-    const { name, tags, metadata } = body;
+    const {
+      name,
+      tags,
+      metadata,
+      bpm,
+      musicalKey,
+      mood,
+      color,
+      isFavorite,
+      notes,
+      lyrics,
+      chordData,
+      collectionId,
+    } = body;
 
     // Verify file ownership
     const existingFile = await prisma.libraryFile.findFirst({
@@ -68,13 +81,38 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       return NextResponse.json({ error: 'File not found' }, { status: 404 });
     }
 
+    // If collectionId is provided, verify it belongs to user
+    if (collectionId !== undefined && collectionId !== null) {
+      const collection = await prisma.libraryCollection.findFirst({
+        where: {
+          id: collectionId,
+          userId: session.user.id,
+        },
+      });
+      if (!collection) {
+        return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
+      }
+    }
+
     // Update file
     const updatedFile = await prisma.libraryFile.update({
       where: { id },
       data: {
-        ...(name && { name }),
-        ...(tags && { tags }),
-        ...(metadata && { metadata }),
+        ...(name !== undefined && { name }),
+        ...(tags !== undefined && { tags }),
+        ...(metadata !== undefined && { metadata }),
+        ...(bpm !== undefined && { bpm }),
+        ...(musicalKey !== undefined && { musicalKey }),
+        ...(mood !== undefined && { mood }),
+        ...(color !== undefined && { color }),
+        ...(isFavorite !== undefined && { isFavorite }),
+        ...(notes !== undefined && { notes }),
+        ...(lyrics !== undefined && { lyrics }),
+        ...(chordData !== undefined && { chordData }),
+        ...(collectionId !== undefined && { collectionId }),
+      },
+      include: {
+        collection: true,
       },
     });
 
