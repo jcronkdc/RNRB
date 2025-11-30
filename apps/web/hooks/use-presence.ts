@@ -15,7 +15,8 @@
  */
 
 import type { RealtimeChannel, PresenceMessage } from 'ably';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { debounce } from 'lodash';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 
 import { useAblyClient } from './use-ably-client';
 
@@ -200,7 +201,41 @@ export function usePresence({ channelName, userData }: UsePresenceOptions): Pres
     };
   }, [ablyClient, ablyConnected, channelName, userId, userName, userEmail, avatar, location]);
 
-  // Idle detection
+  // Track last status to avoid duplicate updates
+  const lastStatusRef = useRef<'active' | 'idle' | 'away'>('active');
+
+  // Debounced presence update to prevent rate limiting (max 1 update per 3 seconds)
+  const debouncedUpdatePresence = useMemo(
+    () =>
+      debounce(
+        (status: 'active' | 'idle' | 'away') => {
+          if (!channelRef.current || !mountedRef.current) return;
+
+          // Only send update if status changed
+          if (lastStatusRef.current === status) return;
+          lastStatusRef.current = status;
+
+          try {
+            channelRef.current.presence.update({
+              userId,
+              userName,
+              userEmail,
+              avatar,
+              status,
+              location,
+              joinedAt: Date.now(),
+            });
+          } catch (err) {
+            console.warn('[usePresence] Failed to update presence:', err);
+          }
+        },
+        3000, // 3 second debounce (well under 50/sec limit)
+        { leading: true, trailing: false }
+      ),
+    [userId, userName, userEmail, avatar, location]
+  );
+
+  // Idle detection with debounced activity listener
   useEffect(() => {
     if (!isConnected) return;
 
@@ -209,34 +244,45 @@ export function usePresence({ channelName, userData }: UsePresenceOptions): Pres
         clearTimeout(idleTimerRef.current);
       }
 
-      updatePresence('active');
+      // Use debounced update (won't flood Ably)
+      debouncedUpdatePresence('active');
 
       idleTimerRef.current = setTimeout(
         () => {
-          updatePresence('idle');
+          debouncedUpdatePresence('idle');
         },
         2 * 60 * 1000
       ); // 2 minutes
     };
 
+    // Debounce the activity listener itself (max 1 call per 500ms)
+    const debouncedActivityListener = debounce(resetIdleTimer, 500, {
+      leading: true,
+      trailing: false,
+    });
+
     if (typeof window !== 'undefined') {
-      window.addEventListener('mousemove', resetIdleTimer);
-      window.addEventListener('keydown', resetIdleTimer);
-      window.addEventListener('click', resetIdleTimer);
-      resetIdleTimer();
+      window.addEventListener('mousemove', debouncedActivityListener);
+      window.addEventListener('keydown', debouncedActivityListener);
+      window.addEventListener('click', debouncedActivityListener);
+      window.addEventListener('scroll', debouncedActivityListener);
+      resetIdleTimer(); // Initial call
     }
 
     return () => {
+      debouncedActivityListener.cancel();
+      debouncedUpdatePresence.cancel();
       if (idleTimerRef.current) {
         clearTimeout(idleTimerRef.current);
       }
       if (typeof window !== 'undefined') {
-        window.removeEventListener('mousemove', resetIdleTimer);
-        window.removeEventListener('keydown', resetIdleTimer);
-        window.removeEventListener('click', resetIdleTimer);
+        window.removeEventListener('mousemove', debouncedActivityListener);
+        window.removeEventListener('keydown', debouncedActivityListener);
+        window.removeEventListener('click', debouncedActivityListener);
+        window.removeEventListener('scroll', debouncedActivityListener);
       }
     };
-  }, [isConnected, updatePresence]);
+  }, [isConnected, debouncedUpdatePresence]);
 
   return {
     members,

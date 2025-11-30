@@ -2,6 +2,41 @@ import { prisma } from '@cronkwaters/db';
 import fs from 'fs';
 import path from 'path';
 
+// Cache the platform knowledge to avoid reading from disk on every request
+let cachedPlatformKnowledge: string | null = null;
+
+/**
+ * Load platform knowledge with multiple fallback paths
+ * Handles different working directories in dev vs production
+ */
+function loadPlatformKnowledge(): string {
+  if (cachedPlatformKnowledge) {
+    return cachedPlatformKnowledge;
+  }
+
+  // Try multiple possible paths (handles monorepo structure)
+  const possiblePaths = [
+    path.join(process.cwd(), 'lib/ai/platform-knowledge.md'), // Production (apps/web is cwd)
+    path.join(process.cwd(), 'apps/web/lib/ai/platform-knowledge.md'), // Dev (workspace root is cwd)
+    path.resolve(__dirname, 'platform-knowledge.md'), // Relative to this file
+  ];
+
+  for (const p of possiblePaths) {
+    try {
+      if (fs.existsSync(p)) {
+        cachedPlatformKnowledge = fs.readFileSync(p, 'utf-8');
+        console.log(`[AI Assistant] Loaded platform knowledge from: ${p}`);
+        return cachedPlatformKnowledge;
+      }
+    } catch {
+      // Try next path
+    }
+  }
+
+  console.error('[AI Assistant] Could not load platform knowledge from any path:', possiblePaths);
+  return 'Platform knowledge unavailable. The assistant can still help with general questions.';
+}
+
 /**
  * Build comprehensive context for AI Assistant
  * Includes user data, platform knowledge, and current state
@@ -101,16 +136,8 @@ export async function buildAssistantContext(userId: string, currentPage?: string
     throw new Error('User not found');
   }
 
-  // Load platform knowledge base
-  const platformKnowledgePath = path.join(process.cwd(), 'lib/ai/platform-knowledge.md');
-  let platformKnowledge = '';
-
-  try {
-    platformKnowledge = fs.readFileSync(platformKnowledgePath, 'utf-8');
-  } catch (error) {
-    console.error('Failed to load platform knowledge:', error);
-    platformKnowledge = 'Platform knowledge unavailable';
-  }
+  // Load platform knowledge (cached)
+  const platformKnowledge = loadPlatformKnowledge();
 
   // Calculate usage quotas based on tier
   const quotas = getQuotasForTier(user.subscriptionTier);

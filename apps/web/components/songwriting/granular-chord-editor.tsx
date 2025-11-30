@@ -2,7 +2,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, X, Plus, Info } from 'lucide-react';
+import { Music, X, Plus } from 'lucide-react';
 import { useState, useRef, useMemo, useCallback, useEffect, memo } from 'react';
 
 export type ChordPlacement = {
@@ -162,86 +162,119 @@ export const GranularChordEditor = memo(function GranularChordEditor({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex items-start gap-2 rounded border border-zinc-800 bg-zinc-900/50 p-3 text-sm"
+            className="flex items-center gap-3 rounded-lg border border-brand-primary/30 bg-brand-primary/10 px-4 py-3"
           >
-            <Info className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400" />
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-primary/20">
+              <Music className="h-4 w-4 text-brand-primary" />
+            </div>
             <div>
-              <p className="font-mono text-xs uppercase tracking-wider text-zinc-300">Tip</p>
-              <p className="mt-1 text-xs text-zinc-400">
-                Click any word below to add a chord above it.
+              <p className="text-sm font-medium text-white">Click any word to add a chord</p>
+              <p className="text-xs text-zinc-400">
+                Chords will appear above your lyrics in chord chart style
               </p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Lyrics with clickable words */}
-      <div className="min-h-[60px] space-y-3">
+      {/* Lyrics with clickable words - Chord Chart Style */}
+      <div className="min-h-[80px] space-y-1 rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-4">
         {lines.length > 0 && lines.some((line) => line.trim()) ? (
           lines.map((line, lineIndex) => {
             const words = line.split(/(\s+)/);
+            const lineHasChords = words.some((word, wordIndex) => {
+              if (!word.trim()) return false;
+              const actualWordIndex = words.slice(0, wordIndex).filter((w) => w.trim()).length;
+              return !!getChordForWord(lineIndex, actualWordIndex);
+            });
+
             return (
-              <div key={lineIndex} className="flex flex-wrap items-start gap-1">
-                {words.map((word, wordIndex) => {
-                  if (!word.trim()) return <span key={wordIndex}>{word}</span>;
+              <div key={lineIndex} className="mb-4 last:mb-0">
+                {/* Chord Row - Always visible if line has any chords */}
+                <div
+                  className={`flex flex-wrap items-end gap-1 ${lineHasChords ? 'mb-1 min-h-[28px]' : 'h-0'}`}
+                >
+                  {words.map((word, wordIndex) => {
+                    if (!word.trim())
+                      return (
+                        <span key={wordIndex} className="invisible">
+                          {word}
+                        </span>
+                      );
 
-                  const actualWordIndex = words.slice(0, wordIndex).filter((w) => w.trim()).length;
-                  const chord = getChordForWord(lineIndex, actualWordIndex);
-                  const hasChord = !!chord;
+                    const actualWordIndex = words
+                      .slice(0, wordIndex)
+                      .filter((w) => w.trim()).length;
+                    const chord = getChordForWord(lineIndex, actualWordIndex);
 
-                  return (
-                    <div key={wordIndex} className="relative inline-flex flex-col items-center">
-                      {/* Chord display with animation */}
-                      <AnimatePresence>
-                        {hasChord && (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.8, y: 5 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.8, y: 5 }}
-                            className="group/chord absolute -top-7 left-1/2 -translate-x-1/2"
-                          >
-                            <div className="relative">
-                              <div className="flex min-w-[32px] items-center justify-center whitespace-nowrap rounded border-2 border-green-500/50 bg-green-500/20 px-2 py-0.5 text-xs font-bold text-green-600 shadow-sm dark:text-green-400">
-                                {chord}
-                              </div>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  removeChord(lineIndex, actualWordIndex);
-                                }}
-                                className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity transition-transform hover:scale-110 hover:bg-red-600 group-hover/chord:opacity-100"
-                                title="Remove chord (or click word)"
-                                aria-label="Remove chord"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                    return (
+                      <div key={wordIndex} className="inline-flex min-w-0">
+                        <AnimatePresence mode="wait">
+                          {chord ? (
+                            <motion.button
+                              initial={{ opacity: 0, y: 4 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -4 }}
+                              onClick={() => removeChord(lineIndex, actualWordIndex)}
+                              className="group relative flex items-center gap-1 rounded-md border-2 border-brand-primary/60 bg-brand-primary/20 px-2.5 py-1 text-sm font-bold text-brand-primary shadow-lg shadow-brand-primary/10 transition-all hover:border-brand-primary hover:bg-brand-primary/30 hover:shadow-brand-primary/20"
+                              title={`${chord} - Click to remove`}
+                            >
+                              <Music className="h-3.5 w-3.5" />
+                              {chord}
+                              <X className="ml-0.5 h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                            </motion.button>
+                          ) : (
+                            <span className="invisible px-2.5 py-1 text-sm">{word}</span>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
 
-                      {/* Clickable word with hover effect */}
+                {/* Lyrics Row */}
+                <div className="flex flex-wrap items-start gap-1">
+                  {words.map((word, wordIndex) => {
+                    if (!word.trim())
+                      return (
+                        <span key={wordIndex} className="text-zinc-300">
+                          {word}
+                        </span>
+                      );
+
+                    const actualWordIndex = words
+                      .slice(0, wordIndex)
+                      .filter((w) => w.trim()).length;
+                    const chord = getChordForWord(lineIndex, actualWordIndex);
+                    const hasChord = !!chord;
+
+                    return (
                       <button
+                        key={wordIndex}
                         onClick={() => handleWordClick(lineIndex, actualWordIndex)}
-                        className={`rounded px-1 py-0.5 transition-all ${
+                        className={`rounded-md px-2 py-1 text-base transition-all ${
                           hasChord
-                            ? 'bg-zinc-800 font-medium text-white hover:scale-105 hover:bg-zinc-700'
-                            : 'text-white hover:scale-105 hover:bg-zinc-800'
+                            ? 'border border-brand-primary/30 bg-brand-primary/10 font-semibold text-white shadow-sm'
+                            : 'text-zinc-200 hover:bg-zinc-800 hover:text-white'
                         }`}
                         title={hasChord ? `${chord} - Click to remove` : 'Click to add chord'}
                         aria-label={hasChord ? `Remove ${chord} chord` : 'Add chord'}
                       >
                         {word}
                       </button>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             );
           })
         ) : (
-          <div className="py-8 text-center text-sm text-muted-foreground">
-            Type your lyrics below to get started...
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <Music className="mb-3 h-8 w-8 text-zinc-600" />
+            <p className="text-sm text-zinc-400">Type your lyrics below to get started...</p>
+            <p className="mt-1 text-xs text-zinc-500">
+              Then click any word to add a chord above it
+            </p>
           </div>
         )}
       </div>
@@ -251,15 +284,21 @@ export const GranularChordEditor = memo(function GranularChordEditor({
         value={content}
         onChange={(e) => onContentChange(e.target.value)}
         placeholder={`Write your ${blockType} lyrics...\n\nTip: Type your lyrics, then click any word above to add a chord!`}
-        className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+        className="w-full resize-none rounded-lg border-2 border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-white outline-none transition-all placeholder:text-zinc-500 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
         rows={4}
         aria-label={`${blockType} lyrics editor`}
       />
 
       {/* Chord count indicator */}
       {chordPlacements.length > 0 && (
-        <div className="text-right text-xs text-muted-foreground">
-          {chordPlacements.length} {chordPlacements.length === 1 ? 'chord' : 'chords'} placed
+        <div className="flex items-center justify-end gap-2 text-xs">
+          <div className="flex h-5 w-5 items-center justify-center rounded bg-brand-primary/20">
+            <Music className="h-3 w-3 text-brand-primary" />
+          </div>
+          <span className="font-medium text-brand-primary">
+            {chordPlacements.length} {chordPlacements.length === 1 ? 'chord' : 'chords'}
+          </span>
+          <span className="text-zinc-500">placed</span>
         </div>
       )}
 
@@ -270,7 +309,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md"
             onClick={() => setShowChordPicker(false)}
           >
             <motion.div
@@ -278,60 +317,69 @@ export const GranularChordEditor = memo(function GranularChordEditor({
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="w-full max-w-md rounded border border-zinc-800 bg-zinc-900 p-6 shadow-2xl"
+              className="w-full max-w-lg rounded-xl border-2 border-zinc-700/80 bg-zinc-900/95 p-6 shadow-2xl ring-1 ring-white/5"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="flex items-center gap-2 text-lg font-semibold">
-                  <Music className="h-5 w-5 text-brand-primary" />
-                  Choose Chord
-                </h3>
+              <div className="mb-5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/20">
+                    <Music className="h-5 w-5 text-brand-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Choose a Chord</h3>
+                    <p className="text-xs text-zinc-400">
+                      Select from common chords or enter your own
+                    </p>
+                  </div>
+                </div>
                 <button
                   onClick={() => setShowChordPicker(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 transition hover:bg-zinc-800 hover:text-white"
                   aria-label="Close chord picker"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              {/* Common Chords Grid - optimized animation with group stagger */}
-              <motion.div
-                className="mb-4 grid grid-cols-5 gap-2"
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: {
-                      staggerChildren: 0.01, // Fast 10ms stagger (was 20ms per item)
-                      delayChildren: 0.05,
+              {/* Common Chords Grid */}
+              <div className="mb-5 max-h-[280px] overflow-y-auto rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-3">
+                <motion.div
+                  className="grid grid-cols-6 gap-2"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.008,
+                        delayChildren: 0.02,
+                      },
                     },
-                  },
-                }}
-              >
-                {COMMON_CHORDS.map((chord) => (
-                  <motion.button
-                    key={chord}
-                    variants={{
-                      hidden: { opacity: 0, scale: 0.9 },
-                      visible: { opacity: 1, scale: 1 },
-                    }}
-                    onClick={() => addChord(chord)}
-                    className="min-w-[48px] rounded-lg border-2 border-green-500/30 bg-gradient-to-br from-green-500/10 to-green-500/5 px-2 py-2 text-sm font-bold text-green-600 transition-all hover:scale-105 hover:border-green-500/60 hover:shadow-lg dark:text-green-400"
-                    aria-label={`Add ${chord} chord`}
-                  >
-                    {chord}
-                  </motion.button>
-                ))}
-              </motion.div>
+                  }}
+                >
+                  {COMMON_CHORDS.map((chord) => (
+                    <motion.button
+                      key={chord}
+                      variants={{
+                        hidden: { opacity: 0, scale: 0.9 },
+                        visible: { opacity: 1, scale: 1 },
+                      }}
+                      onClick={() => addChord(chord)}
+                      className="rounded-lg border border-brand-primary/40 bg-brand-primary/10 px-2 py-2.5 text-sm font-bold text-brand-primary transition-all hover:scale-105 hover:border-brand-primary hover:bg-brand-primary/20 hover:shadow-lg hover:shadow-brand-primary/20"
+                      aria-label={`Add ${chord} chord`}
+                    >
+                      {chord}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              </div>
 
               {/* Custom Chord Input */}
-              <div className="border-t border-border pt-4">
-                <p className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
-                  <Info className="h-3.5 w-3.5" />
-                  Or enter a custom chord:
+              <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/30 p-4">
+                <p className="mb-3 flex items-center gap-2 text-sm font-medium text-zinc-200">
+                  <Plus className="h-4 w-4 text-brand-primary" />
+                  Custom Chord
                 </p>
                 <div className="flex gap-2">
                   <input
@@ -341,27 +389,33 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                     onChange={(e) => setCustomChord(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addCustomChord()}
                     placeholder="e.g., Cmaj7, Dsus4, Fadd9"
-                    className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                    className="flex-1 rounded-lg border-2 border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                     aria-label="Custom chord input"
                   />
                   <Button
                     onClick={addCustomChord}
                     disabled={!customChord.trim()}
                     size="sm"
-                    className="px-4"
+                    className="bg-brand-primary px-5 hover:bg-brand-primary/80"
                     aria-label="Add custom chord"
                   >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="mr-1 h-4 w-4" />
+                    Add
                   </Button>
                 </div>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  Press{' '}
-                  <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">
-                    Enter
-                  </kbd>{' '}
-                  or{' '}
-                  <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">Esc</kbd>{' '}
-                  for shortcuts
+                <p className="mt-3 flex items-center gap-3 text-xs text-zinc-500">
+                  <span className="flex items-center gap-1">
+                    <kbd className="rounded border border-zinc-600 bg-zinc-700 px-1.5 py-0.5 text-[10px] font-medium text-zinc-300">
+                      Enter
+                    </kbd>
+                    to add
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <kbd className="rounded border border-zinc-600 bg-zinc-700 px-1.5 py-0.5 text-[10px] font-medium text-zinc-300">
+                      Esc
+                    </kbd>
+                    to close
+                  </span>
                 </p>
               </div>
             </motion.div>

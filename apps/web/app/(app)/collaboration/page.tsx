@@ -29,6 +29,8 @@ import {
   Radio,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { useRequireAuth } from '@/hooks/use-require-auth';

@@ -176,18 +176,19 @@ export function SidebarNav() {
           className="flex h-16 items-center justify-between px-4"
           style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}
         >
-          <Link href="/dashboard" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <motion.img
-              src="/logo-dark.png"
+              src="/logo-light.png"
               alt="Rock N' Roll Basement"
               animate={{
                 scale: isHovered ? 1.05 : 1,
-                filter: isHovered ? 'brightness(1.3) contrast(1.1)' : 'brightness(1.1)',
+                filter: isHovered ? 'brightness(1.2) contrast(1.05)' : 'brightness(1)',
               }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               className="h-10 w-auto"
               style={{
-                filter: 'drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3))',
+                filter:
+                  'drop-shadow(0 0 12px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 24px rgba(255, 99, 71, 0.3))',
                 maxWidth: isCollapsed && !isMobile ? '40px' : '200px',
                 transition: 'max-width 0.3s ease',
               }}

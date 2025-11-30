@@ -19,6 +19,7 @@ import {
   Globe,
   Activity,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -509,11 +510,62 @@ function DashboardContent() {
     : 0;
 
   return (
-    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
-      {/* Animated Background */}
-      <AnimatedBackground />
+    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* Floating Music Notes */}
+      <div className="music-notes-container pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="music-note"
+            style={{
+              left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.7}s`,
+              fontSize: `${18 + (i % 4) * 8}px`,
+            }}
+          >
+            {['♪', '♫', '♬', '♩'][i % 4]}
+          </div>
+        ))}
+      </div>
+
+      {/* Animated Background Gradient Orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="gradient-orb-accent"></div>
+      </div>
+
+      {/* Hero Grid Pattern */}
+      <div className="hero-grid-pattern"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-10">
+        {/* White RR Logo - Centered at top */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 flex justify-center"
+        >
+          <Link href="/" className="group relative inline-block">
+            <Image
+              src="/logo-light.png"
+              alt="Rock N' Roll Basement"
+              width={160}
+              height={65}
+              priority
+              className="transition-all duration-300 group-hover:scale-105"
+              style={{
+                filter:
+                  'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
+              }}
+            />
+            <div
+              className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+              style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+            />
+          </Link>
+        </motion.div>
         {/* Loading indicator */}
         {(loading || statsLoading) && user && (
           <motion.div
