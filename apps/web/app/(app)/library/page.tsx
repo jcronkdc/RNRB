@@ -53,6 +53,11 @@ import {
   Calendar,
   Hash,
   ArrowRight,
+  Share2,
+  Archive,
+  Users,
+  FileArchive,
+  Send,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -63,6 +68,7 @@ import { useRouter } from 'next/navigation';
 import { AudioPlayer } from '@/components/audio-player';
 import { FileEditModal } from '@/components/file-edit-modal';
 import { FileViewer } from '@/components/file-viewer';
+import { LibraryShareModal } from '@/components/library-share-modal';
 import {
   useLibrary,
   useLibraryUpload,
@@ -204,6 +210,15 @@ export default function LibraryPage() {
   const [editingFile, setEditingFile] = useState<LibraryFile | null>(null);
   const [showNewCollection, setShowNewCollection] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState('');
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [sharingFiles, setSharingFiles] = useState<{ ids: string[]; names: string[] }>({
+    ids: [],
+    names: [],
+  });
+
+  // View tab state
+  const [activeTab, setActiveTab] = useState<'my-files' | 'shared-with-me'>('my-files');
+  const [exporting, setExporting] = useState(false);
 
   // Drag & drop state
   const [isDragging, setIsDragging] = useState(false);
@@ -423,6 +438,60 @@ export default function LibraryPage() {
     }
   }, [selectedFiles, deleteFiles]);
 
+  // Handle share files
+  const handleShareFiles = useCallback((fileIds: string[], fileNames: string[]) => {
+    setSharingFiles({ ids: fileIds, names: fileNames });
+    setShowShareModal(true);
+  }, []);
+
+  // Handle share selected files
+  const handleShareSelected = useCallback(() => {
+    const selectedFilesList = files.filter((f) => selectedFiles.has(f.id));
+    handleShareFiles(
+      selectedFilesList.map((f) => f.id),
+      selectedFilesList.map((f) => f.name)
+    );
+  }, [files, selectedFiles, handleShareFiles]);
+
+  // Handle export as ZIP
+  const handleExportZip = useCallback(
+    async (fileIds?: string[], collectionId?: string) => {
+      setExporting(true);
+      try {
+        const response = await fetch('/api/library/export', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileIds: fileIds || Array.from(selectedFiles),
+            collectionId,
+            includeMetadata: true,
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Export failed');
+        }
+
+        // Download the ZIP file
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `library-export-${new Date().toISOString().slice(0, 10)}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        alert(err instanceof Error ? err.message : 'Export failed');
+      } finally {
+        setExporting(false);
+      }
+    },
+    [selectedFiles]
+  );
+
   // Handle play
   const handlePlay = useCallback(
     async (file: LibraryFile) => {
@@ -541,6 +610,19 @@ export default function LibraryPage() {
         />
       )}
 
+      {/* Share Modal */}
+      {showShareModal && (
+        <LibraryShareModal
+          fileIds={sharingFiles.ids}
+          fileNames={sharingFiles.names}
+          onClose={() => setShowShareModal(false)}
+          onShareComplete={() => {
+            setSelectedFiles(new Set());
+            setIsSelectionMode(false);
+          }}
+        />
+      )}
+
       {/* Global Drag Overlay */}
       <AnimatePresence>
         {isDragging && (
@@ -654,6 +736,20 @@ export default function LibraryPage() {
                   >
                     <TrendingUp className="h-4 w-4" />
                     <span>Most Played</span>
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      setActiveTab(activeTab === 'shared-with-me' ? 'my-files' : 'shared-with-me')
+                    }
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                      activeTab === 'shared-with-me'
+                        ? 'bg-blue-500/20 text-blue-400'
+                        : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    }`}
+                  >
+                    <Users className="h-4 w-4" />
+                    <span>Shared with me</span>
                   </button>
 
                   <button
@@ -1095,16 +1191,36 @@ export default function LibraryPage() {
                 <motion.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-3 rounded-xl border border-orange-500/30 bg-orange-500/10 p-3"
+                  className="flex flex-wrap items-center gap-3 rounded-xl border border-orange-500/30 bg-orange-500/10 p-3"
                 >
                   <CheckSquare className="h-4 w-4 text-orange-500" />
                   <span className="text-sm text-white">{selectedFiles.size} selected</span>
-                  <div className="ml-auto flex gap-2">
+                  <div className="ml-auto flex flex-wrap gap-2">
                     <button
                       onClick={() => setSelectedFiles(new Set(files.map((f) => f.id)))}
                       className="rounded-lg bg-gray-800 px-3 py-1.5 text-xs text-white hover:bg-gray-700"
                     >
                       Select All
+                    </button>
+                    <button
+                      onClick={handleShareSelected}
+                      disabled={selectedFiles.size === 0}
+                      className="flex items-center gap-1.5 rounded-lg bg-blue-500/20 px-3 py-1.5 text-xs text-blue-400 hover:bg-blue-500/30 disabled:opacity-50"
+                    >
+                      <Share2 className="h-3 w-3" />
+                      Share
+                    </button>
+                    <button
+                      onClick={() => handleExportZip()}
+                      disabled={selectedFiles.size === 0 || exporting}
+                      className="flex items-center gap-1.5 rounded-lg bg-emerald-500/20 px-3 py-1.5 text-xs text-emerald-400 hover:bg-emerald-500/30 disabled:opacity-50"
+                    >
+                      {exporting ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <FileArchive className="h-3 w-3" />
+                      )}
+                      Export ZIP
                     </button>
                     <button
                       onClick={handleBulkDelete}
@@ -1400,6 +1516,15 @@ export default function LibraryPage() {
                               <Heart
                                 className={`h-4 w-4 ${file.isFavorite ? 'fill-current' : ''}`}
                               />
+                            </button>
+
+                            {/* Share */}
+                            <button
+                              onClick={() => handleShareFiles([file.id], [file.name])}
+                              className="rounded-lg bg-gray-800 p-2 text-gray-400 transition-all hover:bg-blue-500/20 hover:text-blue-500"
+                              title="Share"
+                            >
+                              <Share2 className="h-4 w-4" />
                             </button>
 
                             {/* Download */}

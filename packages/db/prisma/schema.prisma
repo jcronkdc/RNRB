@@ -152,6 +152,8 @@ model User {
   // Library Files & Collections
   libraryFiles       LibraryFile[]
   libraryCollections LibraryCollection[]
+  sharedFiles        LibraryFileShare[] @relation("SharedByUser")
+  receivedShares     LibraryFileShare[] @relation("SharedWithUser")
   
   // AI Assistant
   assistantConversations AssistantConversation[]
@@ -161,6 +163,9 @@ model User {
   
   // Website Builder
   musicianSite           MusicianSite?
+  
+  // R&R Labs Research
+  labsVolunteer          LabsVolunteer?
   
   // Social Feed
   authoredPosts          Post[]               @relation("AuthoredPosts")
@@ -2415,6 +2420,9 @@ model LibraryFile {
   
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   
+  // Sharing
+  shares LibraryFileShare[]
+  
   @@index([userId])
   @@index([type])
   @@index([createdAt])
@@ -2423,6 +2431,37 @@ model LibraryFile {
   @@index([isFavorite])
   @@index([bpm])
   @@index([musicalKey])
+}
+
+// File sharing between users
+model LibraryFileShare {
+  id          String   @id @default(cuid())
+  fileId      String
+  sharedById  String   // User who shared the file
+  sharedWithId String  // User receiving the share
+  
+  // Permissions
+  canDownload Boolean @default(true)
+  canReshare  Boolean @default(false)
+  
+  // Optional message/note
+  message     String?
+  
+  // Tracking
+  viewedAt    DateTime?
+  downloadedAt DateTime?
+  
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime? // Optional expiration
+  
+  file        LibraryFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  sharedBy    User @relation("SharedByUser", fields: [sharedById], references: [id], onDelete: Cascade)
+  sharedWith  User @relation("SharedWithUser", fields: [sharedWithId], references: [id], onDelete: Cascade)
+  
+  @@unique([fileId, sharedWithId]) // Can only share a file once with same user
+  @@index([fileId])
+  @@index([sharedById])
+  @@index([sharedWithId])
 }
 
 // Collections for organizing library files
@@ -3193,4 +3232,112 @@ enum NotificationType {
   // Website
   site_contact     // Contact form submission
   site_subscriber  // New mailing list subscriber
+  
+  // Labs
+  labs_update      // R&R Labs research update
 }
+
+// ============================================
+// R&R LABS - Research Division
+// ============================================
+
+model LabsVolunteer {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  userId        String?  @unique // Link to user account if logged in
+  
+  // Volunteer Profile
+  musicianType  String?  // "singer", "guitarist", "drummer", "producer", "songwriter", "other"
+  experience    String?  // "beginner", "intermediate", "advanced", "professional"
+  instruments   String[] // Array of instruments they play
+  genres        String[] // Genres they're interested in
+  
+  // Research Interests
+  interests     String[] // ["stem_generation", "collaboration", "copyright", "feedback"]
+  
+  // Status
+  status        String   @default("pending") // "pending", "active", "contributing", "beta_tester"
+  source        String?  // Where they signed up from
+  
+  // Contributions
+  audioUploads  Int      @default(0) // Number of audio files uploaded
+  midiUploads   Int      @default(0) // Number of MIDI files uploaded
+  feedbackCount Int      @default(0) // Number of feedback submissions
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastActiveAt  DateTime?
+  
+  // Optional user link
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Related data
+  contributions LabsContribution[]
+  feedback      LabsFeedback[]
+  
+  @@index([status])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model LabsContribution {
+  id            String   @id @default(cuid())
+  volunteerId   String
+  
+  // Contribution Type
+  type          String   // "audio", "midi", "survey", "feedback"
+  
+  // File Info (for audio/midi)
+  fileName      String?
+  fileUrl       String?
+  fileSize      Int?
+  duration      Int?     // seconds
+  
+  // Metadata
+  genre         String?
+  bpm           Int?
+  key           String?
+  description   String?  @db.Text
+  
+  // For research
+  canUseForTraining Boolean @default(true)
+  license       String?  // License type for contributed content
+  
+  // Status
+  status        String   @default("pending") // "pending", "approved", "rejected", "used"
+  reviewNotes   String?  @db.Text
+  
+  createdAt     DateTime @default(now())
+  
+  volunteer     LabsVolunteer @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  
+  @@index([volunteerId])
+  @@index([type])
+  @@index([status])
+}
+
+model LabsFeedback {
+  id            String   @id @default(cuid())
+  volunteerId   String
+  
+  // What they're providing feedback on
+  targetType    String   // "generated_audio", "ui", "feature_request", "bug"
+  targetId      String?  // ID of the thing they're reviewing
+  
+  // Feedback Content
+  rating        Int?     // 1-5 star rating
+  feedback      String   @db.Text
+  
+  // For A/B testing
+  variant       String?  // Which variant they tested
+  
+  createdAt     DateTime @default(now())
+  
+  volunteer     LabsVolunteer @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  
+  @@index([volunteerId])
+  @@index([targetType])
+}
+
+// Force regeneration: 2025-11-30-RNRB-LABS

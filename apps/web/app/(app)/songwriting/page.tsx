@@ -113,6 +113,11 @@ const PasteLyricsModal = dynamic(
   { ssr: false }
 );
 
+const CleanPreview = dynamic(
+  () => import('@/components/songwriting/clean-preview').then((m) => m.CleanPreview),
+  { ssr: false }
+);
+
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
@@ -141,9 +146,9 @@ function safeParse<T>(jsonString: string | null | undefined, fallback: T): T {
 }
 
 export default function SongwritingPage() {
-  const [activeView, setActiveView] = useState<'structure' | 'chords' | 'lyrics' | 'copyright'>(
-    'structure'
-  );
+  const [activeView, setActiveView] = useState<
+    'structure' | 'preview' | 'chords' | 'lyrics' | 'copyright'
+  >('structure');
   const [songBlocks, setSongBlocks] = useState<SongBlock[]>([]);
   const [_chordProgression, setChordProgression] = useState<ChordBlock[]>([]);
   const [lyrics, setLyrics] = useState('');
@@ -526,6 +531,7 @@ export default function SongwritingPage() {
 
   const tabs = [
     { id: 'structure', label: 'Structure' },
+    { id: 'preview', label: '✨ Preview' },
     { id: 'chords', label: 'Chords' },
     { id: 'lyrics', label: 'Lyrics' },
     { id: 'copyright', label: 'Copyright' },
@@ -880,6 +886,18 @@ export default function SongwritingPage() {
                   Sign In
                 </motion.a>
               </div>
+            </div>
+          )}
+
+          {activeView === 'preview' && (
+            <div className="card overflow-hidden rounded-2xl p-6">
+              <CleanPreview
+                songTitle={songTitle}
+                blocks={songBlocks}
+                songKey={songData.key}
+                tempo={songData.tempo}
+                timeSignature={songData.timeSignature}
+              />
             </div>
           )}
 

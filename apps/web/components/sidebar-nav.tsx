@@ -21,6 +21,7 @@ import {
   Loader2,
   Globe,
   X,
+  FlaskConical,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -68,6 +69,7 @@ const navItems: NavItem[] = [
   { label: 'Home', href: '/dashboard', icon: Home },
   { label: 'Collaboration', href: '/collaboration', icon: Users, badge: 'LIVE' },
   { label: 'Songwriting', href: '/songwriting', icon: Music4, badge: 'AI' },
+  { label: 'R&R Labs', href: '/labs', icon: FlaskConical, badge: 'NEW' },
   { label: 'Create Track', href: '/create', icon: Sparkles },
   { label: 'Projects', href: '/projects', icon: FolderOpen },
   { label: 'Studio', href: '/studio', icon: Mic2 },

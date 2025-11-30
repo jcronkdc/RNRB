@@ -83,7 +83,7 @@ import { KeyAnalyzer } from './key-analyzer';
 
 import { CursorOverlay } from '@/components/cursor-overlay';
 import { useBlockEditing } from '@/hooks/use-block-editing';
-// import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
+import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { useSongSuggestions } from '@/hooks/use-song-suggestions';
 import { formatTime } from '@/lib/format-date';
 
@@ -286,16 +286,14 @@ function CollaborativeVisualBuilderInner({
     })
   );
 
-  // Collaborative cursors - disabled for now to prevent Ably context issues
-  // TODO: Re-enable when Ably context is properly available
-  const remoteCursors: never[] = []; // Empty array for CursorOverlay
-  const cursorsConnected = false;
-  // const { remoteCursors, isConnected: cursorsConnected } = useCollaborativeCursors({
-  //   channelName: `songwriting:${projectSlug}-cursors`,
-  //   userId: currentUser.userId,
-  //   userName: currentUser.userName,
-  //   enabled: true,
-  // });
+  // Collaborative cursors - RE-ENABLED with shared Ably client
+  // Uses the official ably/react hooks which consume the shared AblyProvider client
+  const { remoteCursors, isConnected: cursorsConnected } = useCollaborativeCursors({
+    channelName: `songwriting:${projectSlug}-cursors`,
+    userId: currentUser.userId,
+    userName: currentUser.userName,
+    enabled: true, // Now safe - AblyProvider handles connection
+  });
 
   // Block editing tracking
   const {
