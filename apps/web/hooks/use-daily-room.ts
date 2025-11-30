@@ -26,7 +26,7 @@ interface CreateRoomOptions {
 export function useDailyRoom() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Use ref to track pending requests and prevent race conditions
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -38,7 +38,7 @@ export function useDailyRoom() {
 
     // Create new abort controller for this request
     abortControllerRef.current = new AbortController();
-    
+
     setIsLoading(true);
     setError(null);
 
@@ -64,7 +64,7 @@ export function useDailyRoom() {
       if (err instanceof Error && err.name === 'AbortError') {
         throw err;
       }
-      
+
       const message = err instanceof Error ? err.message : 'Failed to create room';
       setError(message);
       throw err;

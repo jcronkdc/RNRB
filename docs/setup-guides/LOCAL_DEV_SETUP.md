@@ -40,6 +40,7 @@ NEXT_TELEMETRY_DISABLED=1
 ## Step 2: Copy Other Values from Vercel
 
 Go to Vercel Dashboard → Settings → Environment Variables and copy the values for:
+
 - DATABASE_URL
 - NEXT_PUBLIC_SUPABASE_URL
 - NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -60,5 +61,3 @@ pnpm dev
 ```
 
 Now local development will have AI features enabled!
-
-

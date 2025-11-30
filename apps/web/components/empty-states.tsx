@@ -148,14 +148,14 @@ export function EmptyState({
           repeatType: 'reverse',
           repeatDelay: 3,
         }}
-        className="bg-surface mb-6 flex h-20 w-20 items-center justify-center rounded-full"
+        className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-surface"
       >
-        <Icon className="text-foreground-muted h-10 w-10" />
+        <Icon className="h-10 w-10 text-foreground-muted" />
       </motion.div>
 
       {/* Text content */}
       <h3 className="mb-2 text-xl font-semibold">{finalTitle}</h3>
-      <p className="text-foreground-muted mb-6 max-w-sm">{finalDescription}</p>
+      <p className="mb-6 max-w-sm text-foreground-muted">{finalDescription}</p>
 
       {/* Action button */}
       {finalActionHref ? (
@@ -196,7 +196,7 @@ export function EmptyState({
 
       {type === 'tracks' && (
         <div className="mt-8 max-w-md space-y-4 text-left">
-          <h4 className="text-foreground-muted text-sm font-medium">
+          <h4 className="text-sm font-medium text-foreground-muted">
             Example prompts to get started:
           </h4>
           <div className="space-y-2">
@@ -225,18 +225,18 @@ function QuickAction({
   return (
     <Link
       href={href}
-      className="border-border hover:border-border-strong hover:bg-surface group rounded-lg border p-6 text-center transition-all duration-200"
+      className="group rounded-lg border border-border p-6 text-center transition-all duration-200 hover:border-border-strong hover:bg-surface"
     >
-      <Icon className="text-foreground-muted group-hover:text-foreground mx-auto mb-3 h-8 w-8" />
+      <Icon className="mx-auto mb-3 h-8 w-8 text-foreground-muted group-hover:text-foreground" />
       <h5 className="mb-1 font-medium">{title}</h5>
-      <p className="text-foreground-muted text-sm">{description}</p>
+      <p className="text-sm text-foreground-muted">{description}</p>
     </Link>
   );
 }
 
 function PromptExample({ text }: { text: string }) {
   return (
-    <div className="border-border bg-surface hover:border-border-strong cursor-pointer rounded-md border p-3 text-sm transition-all duration-200">
+    <div className="cursor-pointer rounded-md border border-border bg-surface p-3 text-sm transition-all duration-200 hover:border-border-strong">
       {text}
     </div>
   );
@@ -246,7 +246,7 @@ function PromptExample({ text }: { text: string }) {
 export function LoadingState({ message = 'Loading...' }: { message?: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-12">
-      <div className="border-surface border-t-brand-primary mb-4 h-12 w-12 animate-spin rounded-full border-2" />
+      <div className="mb-4 h-12 w-12 animate-spin rounded-full border-2 border-surface border-t-brand-primary" />
       <p className="text-foreground-muted">{message}</p>
     </div>
   );
@@ -255,15 +255,15 @@ export function LoadingState({ message = 'Loading...' }: { message?: string }) {
 // Skeleton Loading for Track Cards
 export function TrackCardSkeleton() {
   return (
-    <div className="border-border bg-surface animate-pulse rounded-lg border">
+    <div className="animate-pulse rounded-lg border border-border bg-surface">
       {/* Album art skeleton */}
-      <div className="bg-surface-hover aspect-square rounded-t-lg" />
+      <div className="aspect-square rounded-t-lg bg-surface-hover" />
 
       {/* Info skeleton */}
       <div className="space-y-3 p-4">
         <div className="space-y-2">
-          <div className="bg-surface-hover h-4 w-3/4 rounded" />
-          <div className="bg-surface-hover h-3 w-1/2 rounded" />
+          <div className="h-4 w-3/4 rounded bg-surface-hover" />
+          <div className="h-3 w-1/2 rounded bg-surface-hover" />
         </div>
 
         {/* Waveform skeleton */}
@@ -271,17 +271,17 @@ export function TrackCardSkeleton() {
           {Array.from({ length: 20 }).map((_, i) => (
             <div
               key={i}
-              className="bg-surface-hover flex-1 rounded-t"
+              className="flex-1 rounded-t bg-surface-hover"
               style={{ height: `${Math.random() * 100}%` }}
             />
           ))}
         </div>
 
         <div className="flex justify-between">
-          <div className="bg-surface-hover h-3 w-20 rounded" />
+          <div className="h-3 w-20 rounded bg-surface-hover" />
           <div className="flex gap-2">
-            <div className="bg-surface-hover h-8 w-8 rounded" />
-            <div className="bg-surface-hover h-8 w-8 rounded" />
+            <div className="h-8 w-8 rounded bg-surface-hover" />
+            <div className="h-8 w-8 rounded bg-surface-hover" />
           </div>
         </div>
       </div>

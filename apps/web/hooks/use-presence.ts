@@ -1,12 +1,11 @@
 /**
- * Real-time Presence Hook (SAFE v4)
+ * Real-time Presence Hook (SAFE v5 - Uses Shared Client)
  *
  * Tracks who's actively working where across the platform
  * Uses Ably presence API for instant updates
  *
- * CRITICAL: Does NOT use ably/react hooks to avoid crashes
- * when AblyProvider doesn't have a client. Instead, manages
- * its own Ably connection with circuit breaker protection.
+ * IMPORTANT: Uses the shared Ably client from useAblyClient
+ * to prevent multiple connections and token rate limiting.
  *
  * Shows presence in:
  * - Projects (who's viewing)
@@ -16,15 +15,9 @@
  */
 
 import type { RealtimeChannel, PresenceMessage } from 'ably';
-import { Realtime } from 'ably';
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-import {
-  canUseAbly,
-  recordAblyFailure,
-  recordAblySuccess,
-  disableAblyPermanently,
-} from '@/lib/ably-circuit-breaker';
+import { useAblyClient } from './use-ably-client';
 
 type PresenceMember = {
   clientId: string;
@@ -59,15 +52,21 @@ type PresenceResult = {
 };
 
 /**
- * Safe presence hook that manages its own Ably connection
- * Does NOT use ably/react hooks - prevents crashes when provider is unavailable
+ * Presence hook that uses the SHARED Ably client
+ * Prevents multiple connections and token rate limiting
  */
 export function usePresence({ channelName, userData }: UsePresenceOptions): PresenceResult {
   const [members, setMembers] = useState<PresenceMember[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const ablyRef = useRef<Realtime | null>(null);
+  // Use the SHARED Ably client - this is the key change!
+  const {
+    client: ablyClient,
+    isConnected: ablyConnected,
+    error: ablyError,
+  } = useAblyClient(userData.userId);
+
   const channelRef = useRef<RealtimeChannel | null>(null);
   const mountedRef = useRef(true);
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -97,75 +96,26 @@ export function usePresence({ channelName, userData }: UsePresenceOptions): Pres
     [userId, userName, userEmail, avatar, location, isConnected]
   );
 
-  // Initialize Ably connection
+  // Sync error state from shared client
   useEffect(() => {
-    if (!userId || !channelName) return;
+    if (ablyError) {
+      setError(ablyError);
+    } else {
+      setError(null);
+    }
+  }, [ablyError]);
 
-    mountedRef.current = true;
-
-    // Check circuit breaker
-    if (!canUseAbly()) {
-      console.log('[usePresence] Circuit breaker open - skipping init');
+  // Initialize presence channel when shared client is ready
+  useEffect(() => {
+    if (!ablyClient || !ablyConnected || !channelName) {
       return;
     }
 
+    mountedRef.current = true;
+
     const initPresence = async () => {
       try {
-        // Pre-check token availability
-        const tokenCheck = await fetch('/api/ably/token', {
-          signal: AbortSignal.timeout(5000),
-        }).catch(() => ({ ok: false, status: 0 }));
-
-        if (!mountedRef.current) return;
-
-        // 503 = ABLY_API_KEY not configured
-        if (tokenCheck.status === 503) {
-          disableAblyPermanently('ABLY_API_KEY not configured');
-          return;
-        }
-
-        if (!tokenCheck.ok) {
-          recordAblyFailure('Token pre-check failed');
-          return;
-        }
-
-        // Create Ably client
-        const ablyClient = new Realtime({
-          authCallback: async (tokenParams, callback) => {
-            if (!canUseAbly()) {
-              callback(
-                { code: 40000, statusCode: 400, message: 'Circuit breaker open' } as any,
-                null
-              );
-              return;
-            }
-            try {
-              const response = await fetch('/api/ably/token', {
-                signal: AbortSignal.timeout(5000),
-              });
-              if (!response.ok) throw new Error(`Token failed: ${response.status}`);
-              const token = await response.json();
-              recordAblySuccess();
-              callback(null, token);
-            } catch (err) {
-              recordAblyFailure('Token callback failed');
-              callback({ code: 40000, statusCode: 400, message: 'Token failed' } as any, null);
-            }
-          },
-          clientId: userId,
-          closeOnUnload: true,
-          disconnectedRetryTimeout: 15000,
-          suspendedRetryTimeout: 30000,
-        });
-
-        if (!mountedRef.current) {
-          ablyClient.close();
-          return;
-        }
-
-        ablyRef.current = ablyClient;
-
-        // Get channel and subscribe to presence
+        // Get channel from shared client (no new connection!)
         const channel = ablyClient.channels.get(channelName);
         channelRef.current = channel;
 
@@ -193,55 +143,37 @@ export function usePresence({ channelName, userData }: UsePresenceOptions): Pres
           );
         });
 
-        // Wait for connection
-        ablyClient.connection.once('connected', async () => {
-          if (!mountedRef.current) return;
+        // Enter presence
+        try {
+          await channel.presence.enter({
+            userId,
+            userName,
+            userEmail,
+            avatar,
+            status: 'active',
+            location,
+            joinedAt: Date.now(),
+          });
 
-          recordAblySuccess();
-          setIsConnected(true);
-          setError(null);
-
-          // Enter presence
-          try {
-            await channel.presence.enter({
-              userId,
-              userName,
-              userEmail,
-              avatar,
-              status: 'active',
-              location,
-              joinedAt: Date.now(),
-            });
-
-            // Get initial presence members
-            const presenceSet = await channel.presence.get();
-            if (mountedRef.current) {
-              setMembers(
-                presenceSet.map((msg) => ({
-                  clientId: msg.clientId,
-                  data: msg.data,
-                }))
-              );
-            }
-          } catch (err) {
-            console.error('[usePresence] Failed to enter presence:', err);
-          }
-        });
-
-        ablyClient.connection.on('disconnected', () => {
-          if (mountedRef.current) setIsConnected(false);
-        });
-
-        ablyClient.connection.on('failed', () => {
+          // Get initial presence members
+          const presenceSet = await channel.presence.get();
           if (mountedRef.current) {
-            setIsConnected(false);
-            setError('Connection failed');
+            setMembers(
+              presenceSet.map((msg) => ({
+                clientId: msg.clientId,
+                data: msg.data,
+              }))
+            );
+            setIsConnected(true);
           }
-          recordAblyFailure();
-        });
+        } catch (err) {
+          console.error('[usePresence] Failed to enter presence:', err);
+          if (mountedRef.current) {
+            setError('Failed to join presence');
+          }
+        }
       } catch (err) {
         console.error('[usePresence] Init error:', err);
-        recordAblyFailure(err instanceof Error ? err.message : 'Unknown error');
         if (mountedRef.current) {
           setError(err instanceof Error ? err.message : 'Connection failed');
         }
@@ -264,12 +196,9 @@ export function usePresence({ channelName, userData }: UsePresenceOptions): Pres
         channelRef.current = null;
       }
 
-      if (ablyRef.current) {
-        ablyRef.current.close();
-        ablyRef.current = null;
-      }
+      setIsConnected(false);
     };
-  }, [userId, userName, userEmail, avatar, location, channelName]);
+  }, [ablyClient, ablyConnected, channelName, userId, userName, userEmail, avatar, location]);
 
   // Idle detection
   useEffect(() => {

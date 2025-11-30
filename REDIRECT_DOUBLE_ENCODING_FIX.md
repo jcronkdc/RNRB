@@ -16,6 +16,7 @@ The authentication flow had a double-encoding issue with redirect URLs:
 4. This gets passed through the flow and doubly-encoded
 
 **Example:**
+
 - Original: `/invites/my-project?param=value`
 - After double-encoding: `%2Finvites%2Fmy-project%3Fparam%3Dvalue`
 - Result: Redirect fails or goes to wrong URL
@@ -67,6 +68,7 @@ Test case to verify the fix:
 ## Security Considerations
 
 ✅ **Security validation remains intact** in `auth.ts` line 41:
+
 - Checks if redirect starts with `/` (relative path only)
 - Rejects URLs starting with `//` (protocol-relative URLs)
 - Falls back to `/dashboard` if invalid

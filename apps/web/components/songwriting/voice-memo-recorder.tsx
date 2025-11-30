@@ -38,7 +38,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [memos, setMemos] = useState<VoiceMemo[]>([]);
-  
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -55,15 +55,17 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
           console.warn('Voice memos JSON too large, skipping load');
           return;
         }
-        
+
         // Parse JSON and convert createdAt strings back to Date objects
         // JSON.parse returns dates as ISO strings, not Date objects
-        const parsed = JSON.parse(savedMemos) as Array<Omit<VoiceMemo, 'createdAt'> & { createdAt: string }>;
-        
+        const parsed = JSON.parse(savedMemos) as Array<
+          Omit<VoiceMemo, 'createdAt'> & { createdAt: string }
+        >;
+
         // Security: Limit array size to prevent memory exhaustion (max 1000 memos)
         const MAX_MEMOS = 1000;
         const limitedParsed = parsed.slice(0, MAX_MEMOS);
-        
+
         const hydrated: VoiceMemo[] = limitedParsed.map((memo) => ({
           ...memo,
           createdAt: new Date(memo.createdAt),
@@ -94,7 +96,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
         const url = URL.createObjectURL(audioBlob);
         setAudioUrl(url);
         setAudioBlob(audioBlob);
-        
+
         // Stop all tracks
         stream.getTracks().forEach((track) => track.stop());
       };
@@ -102,7 +104,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
       mediaRecorder.start();
       setIsRecording(true);
       setDuration(0);
-      
+
       // Start timer
       timerRef.current = setInterval(() => {
         setDuration((prev) => prev + 1);
@@ -117,7 +119,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
-      
+
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
@@ -154,7 +156,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
 
       const updatedMemos = [...memos, newMemo];
       setMemos(updatedMemos);
-      
+
       // Save to localStorage with data URL (persists across refreshes)
       try {
         localStorage.setItem(`voice-memos-${songId}`, JSON.stringify(updatedMemos));
@@ -162,15 +164,15 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
         console.warn('Failed to save voice memo to localStorage:', error);
         // Continue - memo is still saved in state
       }
-      
+
       // Revoke the temporary blob URL to free memory
       URL.revokeObjectURL(audioUrl);
-      
+
       // Reset recording state
       setAudioUrl(null);
       setAudioBlob(null);
       setDuration(0);
-      
+
       if (onMemoCreated) {
         onMemoCreated(newMemo);
       }
@@ -264,7 +266,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
                   </>
                 )}
               </button>
-              
+
               <button
                 onClick={saveMemo}
                 className="flex items-center gap-2 rounded-xl border-2 border-blue-500/40 bg-blue-500/10 px-6 py-3 font-semibold text-blue-400 transition hover:bg-blue-500/20"
@@ -272,7 +274,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
                 <Upload className="h-5 w-5" />
                 Save Memo
               </button>
-              
+
               <button
                 onClick={() => {
                   setAudioUrl(null);
@@ -305,7 +307,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
           <h4 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
             Saved Voice Memos ({memos.length})
           </h4>
-          
+
           {memos.map((memo) => (
             <div
               key={memo.id}
@@ -322,7 +324,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
@@ -334,7 +336,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
                 >
                   <Play className="h-4 w-4" />
                 </button>
-                
+
                 <button
                   onClick={() => downloadMemo(memo)}
                   className="rounded-lg border border-blue-500/30 bg-blue-500/10 p-2 text-blue-400 transition hover:bg-blue-500/20"
@@ -342,7 +344,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
                 >
                   <Download className="h-4 w-4" />
                 </button>
-                
+
                 <button
                   onClick={() => {
                     if (confirm('Delete this voice memo?')) {
@@ -362,5 +364,3 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
     </div>
   );
 }
-
-

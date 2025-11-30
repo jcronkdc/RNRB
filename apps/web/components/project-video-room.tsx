@@ -1,12 +1,7 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import {
-  Video,
-  Sparkles,
-  ExternalLink,
-  MousePointer2,
-} from 'lucide-react';
+import { Video, Sparkles, ExternalLink, MousePointer2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
@@ -123,50 +118,50 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
             <Video className="h-10 w-10 text-white" />
           </div>
 
-          <h3 className="text-foreground mb-4 text-2xl font-bold">
+          <h3 className="mb-4 text-2xl font-bold text-foreground">
             Video Collaboration - Studio Tier
           </h3>
 
-          <p className="text-muted-foreground mb-6 text-lg">
+          <p className="mb-6 text-lg text-muted-foreground">
             Real-time video calls with your band are available on the Studio plan ($29.99/month)
           </p>
 
-          <div className="border-border bg-surface-muted mb-6 rounded-xl border p-6">
-            <h4 className="text-foreground mb-3 font-semibold">Studio Tier Includes:</h4>
-            <ul className="text-muted-foreground space-y-2 text-left text-sm">
+          <div className="mb-6 rounded-xl border border-border bg-surface-muted p-6">
+            <h4 className="mb-3 font-semibold text-foreground">Studio Tier Includes:</h4>
+            <ul className="space-y-2 text-left text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <Sparkles className="text-brand-primary mt-0.5 h-4 w-4 flex-shrink-0" />
+                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
                 <span>
                   <strong>Unlimited Video Calls:</strong> Collaborate face-to-face with your team
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="text-brand-primary mt-0.5 h-4 w-4 flex-shrink-0" />
+                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
                 <span>
                   <strong>Screen Sharing + Cursor Control:</strong> Show your DAW, and collaborators
                   see your cursor in real-time
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="text-brand-primary mt-0.5 h-4 w-4 flex-shrink-0" />
+                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
                 <span>
                   <strong>Recording:</strong> Save your sessions for later review
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="text-brand-primary mt-0.5 h-4 w-4 flex-shrink-0" />
+                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
                 <span>
                   <strong>Unlimited Projects:</strong> No limits on your creativity
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="text-brand-primary mt-0.5 h-4 w-4 flex-shrink-0" />
+                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
                 <span>
                   <strong>Unlimited Collaborators:</strong> Bring your whole team
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="text-brand-primary mt-0.5 h-4 w-4 flex-shrink-0" />
+                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
                 <span>
                   <strong>100 GB Storage:</strong> Store all your audio files
                 </span>
@@ -192,7 +187,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
             </Button>
           </div>
 
-          <p className="text-muted-foreground mt-6 text-xs">
+          <p className="mt-6 text-xs text-muted-foreground">
             🎸 <strong>Creator Tier ($9.99/mo)</strong> includes AI features and 10 projects.
             <br />
             Studio is for serious bands who need video collaboration.
@@ -211,9 +206,9 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
             <Video className="h-10 w-10 text-red-500" />
           </div>
 
-          <h3 className="text-foreground mb-4 text-2xl font-bold">Video Room Error</h3>
+          <h3 className="mb-4 text-2xl font-bold text-foreground">Video Room Error</h3>
 
-          <p className="text-muted-foreground mb-6 text-lg">{error}</p>
+          <p className="mb-6 text-lg text-muted-foreground">{error}</p>
 
           <Button
             onClick={() => window.location.reload()}
@@ -231,7 +226,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="border-brand-primary mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-t-transparent" />
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-brand-primary border-t-transparent" />
           <p className="text-muted-foreground">Creating video room...</p>
         </div>
       </div>
@@ -241,7 +236,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
   return (
     <div className="relative space-y-6">
       <div className="text-center">
-        <h3 className="text-foreground mb-2 flex items-center justify-center gap-2 text-xl font-semibold">
+        <h3 className="mb-2 flex items-center justify-center gap-2 text-xl font-semibold text-foreground">
           Video Collaboration Room
           {showCursors && cursorsConnected && (
             <span className="flex items-center gap-1 rounded-full bg-green-500/20 px-2 py-1 text-xs text-green-400">
@@ -250,7 +245,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
             </span>
           )}
         </h3>
-        <p className="text-muted-foreground text-sm">{projectName}</p>
+        <p className="text-sm text-muted-foreground">{projectName}</p>
       </div>
 
       {/* Daily.co Video Room */}
@@ -261,7 +256,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
       />
 
       {/* Cursor Control Toggle */}
-      <div className="border-border bg-surface-muted flex items-center justify-center gap-3 rounded-xl border p-4">
+      <div className="flex items-center justify-center gap-3 rounded-xl border border-border bg-surface-muted p-4">
         <Button
           onClick={() => setShowCursors(!showCursors)}
           variant={showCursors ? 'solid' : 'outline'}
@@ -270,7 +265,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
           <MousePointer2 className="h-4 w-4" />
           {showCursors ? 'Cursor Control: ON' : 'Cursor Control: OFF'}
         </Button>
-        <p className="text-muted-foreground max-w-md text-xs">
+        <p className="max-w-md text-xs text-muted-foreground">
           {showCursors
             ? 'Team members can see your cursor in real-time during screen sharing'
             : 'Enable to show your cursor position to collaborators'}
@@ -280,7 +275,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
       {/* Cursor Overlay (only when enabled) */}
       {showCursors && <CursorOverlay cursors={remoteCursors} />}
 
-      <div className="text-muted-foreground text-center text-sm">
+      <div className="text-center text-sm text-muted-foreground">
         <p className="flex items-center justify-center gap-2">
           🎥 Video powered by <strong>Daily.co</strong>
           {showCursors && (

@@ -3,14 +3,7 @@
 import { Card, Button } from '@cronkwaters/ui';
 import { useRecording, useDaily, useParticipantCounts } from '@daily-co/daily-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Disc,
-  Square,
-  Pause,
-  Play,
-  Settings,
-  AlertCircle,
-} from 'lucide-react';
+import { Disc, Square, Pause, Play, Settings, AlertCircle } from 'lucide-react';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 
 interface RecordingControlsProps {
@@ -64,7 +57,10 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
   }, []);
 
   // Memoize formatted duration to prevent re-renders
-  const formattedDuration = useMemo(() => formatDuration(recordingDuration), [recordingDuration, formatDuration]);
+  const formattedDuration = useMemo(
+    () => formatDuration(recordingDuration),
+    [recordingDuration, formatDuration]
+  );
 
   // Memoize participant text
   const participantText = useMemo(() => {
@@ -86,7 +82,12 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
     } catch (err) {
       console.error('Failed to start recording:', err);
     }
-  }, [startRecording, recordingConfig.videoBitrate, recordingConfig.audioBitrate, recordingConfig.backgroundColor]);
+  }, [
+    startRecording,
+    recordingConfig.videoBitrate,
+    recordingConfig.audioBitrate,
+    recordingConfig.backgroundColor,
+  ]);
 
   // Stop recording - Memoized
   const handleStopRecording = useCallback(async () => {
@@ -120,20 +121,20 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
 
   // Memoize config update handlers
   const updateLayout = useCallback((value: string) => {
-    setRecordingConfig(prev => ({ ...prev, layout: value as any }));
+    setRecordingConfig((prev) => ({ ...prev, layout: value as any }));
   }, []);
 
   const updateVideoBitrate = useCallback((value: string) => {
-    setRecordingConfig(prev => ({ ...prev, videoBitrate: parseInt(value) }));
+    setRecordingConfig((prev) => ({ ...prev, videoBitrate: parseInt(value) }));
   }, []);
 
   const updateShowLabels = useCallback((checked: boolean) => {
-    setRecordingConfig(prev => ({ ...prev, showParticipantLabels: checked }));
+    setRecordingConfig((prev) => ({ ...prev, showParticipantLabels: checked }));
   }, []);
 
   // Memoize toggle settings
   const toggleSettings = useCallback(() => {
-    setShowSettings(prev => !prev);
+    setShowSettings((prev) => !prev);
   }, []);
 
   return (
@@ -283,7 +284,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
 
         {/* Info */}
         {!isRecording && participantCounts.present === 0 && (
-          <p className="text-muted-foreground text-center text-sm">
+          <p className="text-center text-sm text-muted-foreground">
             Join the session to start recording
           </p>
         )}

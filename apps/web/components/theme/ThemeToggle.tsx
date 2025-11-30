@@ -43,7 +43,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="border-border/50 bg-surface hover:bg-surface-muted rounded-lg border p-2 transition-colors"
+      className="rounded-lg border border-border/50 bg-surface p-2 transition-colors hover:bg-surface-muted"
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
       {theme === 'dark' ? (

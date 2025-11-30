@@ -11,12 +11,14 @@
 Your dashboard organization is **SOLID** with clear separation of concerns. However, there are **strategic overlaps** that serve different user needs. This is GOOD, not bad. Here's the honest truth:
 
 ### ✅ What's Working Well
+
 - **Clear Entry Points:** Dashboard serves as mission control with links to specialized tools
 - **Logical Grouping:** Each major feature has its own dedicated page
 - **User Journey:** Natural flow from dashboard → specialized tool → work
 - **No Unnecessary Duplication:** Overlaps are intentional and serve different contexts
 
 ### ⚠️ Areas of Concern
+
 1. **Music Creation Split:** You have both `/songwriting` and `/create` - they serve different purposes but users might be confused
 2. **Project vs Library Distinction:** Could be clearer what goes where
 3. **Studio vs Collaboration:** Overlapping collaborative features
@@ -27,9 +29,11 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ## Feature Map Analysis
 
 ### 1. DASHBOARD (`/dashboard`)
+
 **Purpose:** Central hub and starting point
 
 **What It Does:**
+
 - Quick actions (shortcuts to other pages)
 - Stats overview (projects, songs, collaborators, storage)
 - Activity feed (what's happening across the platform)
@@ -37,6 +41,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 - Getting started guides
 
 **Overlaps:**
+
 - ❌ None - This is pure navigation/overview
 
 **Verdict:** ✅ **PERFECT** - Does exactly what a dashboard should do
@@ -44,9 +49,11 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ---
 
 ### 2. SONGWRITING TOOL (`/songwriting`)
+
 **Purpose:** Manual songwriting with AI assistance
 
 **What It Does:**
+
 - 4 tabs: Structure, Chords, Lyrics, Copyright
 - Real-time collaboration (presence indicators)
 - Auto-save functionality
@@ -58,6 +65,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 - Undo/redo history
 
 **Overlaps:**
+
 - ⚠️ **Copyright Manager:** Also appears in project song detail pages
   - **Why This Is OK:** Different contexts - standalone writing vs. project management
 - ⚠️ **Voice Memos:** Similar to track recording
@@ -68,9 +76,11 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ---
 
 ### 3. CREATE/TRACK GENERATOR (`/create`)
+
 **Purpose:** AI-powered full track generation
 
 **What It Does:**
+
 - Generate complete audio tracks with AI
 - Style selection (genre, mood, instruments)
 - Advanced parameters (tempo, duration, key, seed)
@@ -79,6 +89,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 - One-click generation
 
 **Overlaps:**
+
 - ✅ **NO CONFLICT with Songwriting:** Different use cases entirely
   - Songwriting = Manual crafting with AI help
   - Create = Full AI generation of finished audio
@@ -88,9 +99,11 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ---
 
 ### 4. PROJECTS (`/projects`)
+
 **Purpose:** Organize songs into albums/EPs/collections
 
 **What It Does:**
+
 - Project listing (albums, EPs, singles)
 - Project stats (songs, collaborators, sessions)
 - Project creation
@@ -104,6 +117,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
   - Settings
 
 **Overlaps:**
+
 - ⚠️ **Songs:** Can create songs from projects or standalone
   - **Issue:** Two paths to song creation
   - **Fix Needed:** Clarify when to use which
@@ -115,9 +129,11 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ---
 
 ### 5. LIBRARY (`/library`)
+
 **Purpose:** Asset management (stems, demos, samples, loops)
 
 **What It Does:**
+
 - File uploads by type (stem, demo, sample, loop, other)
 - Search and filter
 - Grid/list views
@@ -129,6 +145,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 - Upload progress tracking
 
 **Overlaps:**
+
 - ❌ **NONE:** This is purely asset storage, not song creation
 
 **Verdict:** ✅ **CLEAR PURPOSE** - Think of it as Dropbox for audio files
@@ -136,9 +153,11 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ---
 
 ### 6. STUDIO (`/studio`)
+
 **Purpose:** Live video recording/streaming sessions
 
 **What It Does:**
+
 - Daily.co video conferencing (up to 32 people)
 - HD video calls
 - Screen sharing (show your DAW)
@@ -147,6 +166,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 - Real-time communication
 
 **Overlaps:**
+
 - ⚠️ **Collaboration Features:** Similar to project collaboration
   - **Why This Is OK:** Studio = synchronous video, Projects = asynchronous file work
 - ⚠️ **Recording:** Different from songwriting voice memos
@@ -157,9 +177,11 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ---
 
 ### 7. EXPLORE (`/explore`)
+
 **Purpose:** Community discovery and inspiration
 
 **What It Does:**
+
 - Browse community-shared tracks
 - Trending/recent/top filters
 - Search by style/mood
@@ -170,6 +192,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 - Download shared tracks
 
 **Overlaps:**
+
 - ❌ **NONE:** This is consumption, not creation
 
 **Verdict:** ✅ **CLEAR SOCIAL FEATURE**
@@ -181,6 +204,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ### ✅ GOOD OVERLAPS (Intentional & Useful)
 
 #### 1. Collaboration Appears in Multiple Places
+
 - **Dashboard:** Shows collaborative activity
 - **Songwriting:** Real-time presence for co-writing
 - **Projects:** Async collaboration (file sharing, comments)
@@ -189,6 +213,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 **Why This Works:** Different types of collaboration for different workflows
 
 #### 2. Audio Files in Multiple Contexts
+
 - **Library:** Raw asset storage
 - **Songwriting:** Voice memo recorder (ideas)
 - **Create:** Generated AI tracks
@@ -197,6 +222,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 **Why This Works:** Different stages of the creation pipeline
 
 #### 3. Stats Appear Multiple Times
+
 - **Dashboard:** Global overview
 - **Projects:** Per-project metrics
 - **Explore:** Track engagement metrics
@@ -206,6 +232,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ### ⚠️ CONFUSING OVERLAPS (Need Clarification)
 
 #### 1. Song Creation Has 3 Entry Points
+
 1. **Dashboard → Songwriting:** Manual writing
 2. **Dashboard → Create:** AI generation
 3. **Projects → New Song:** Project-scoped song
@@ -213,21 +240,25 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 **Problem:** Users don't know which to use when
 
 **Suggestion:** Add guidance:
+
 - "Writing lyrics?" → Songwriting
 - "Need a quick beat?" → Create
 - "Working on an album?" → Projects → New Song
 
 #### 2. Library vs Projects: Where Do Files Go?
+
 - **Library:** Individual files for reuse
 - **Projects:** Organized into albums/collections
 
 **Problem:** Users might upload stems to wrong place
 
 **Suggestion:** Add tooltips explaining:
+
 - Library = ingredients (reusable across projects)
 - Projects = recipes (organized final products)
 
 #### 3. Multiple Recording Options
+
 - **Songwriting → Voice Memos:** Quick ideas
 - **Studio → Cloud Recording:** Full sessions
 - **Upload to Library:** Pre-recorded files
@@ -235,6 +266,7 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 **Problem:** Users might not understand the differences
 
 **Suggestion:** Add clear labels:
+
 - Voice Memo = "Quick idea (30s max)"
 - Studio = "Full recording session"
 - Library Upload = "Import existing files"
@@ -243,17 +275,18 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 
 ## Feature Interaction Matrix
 
-| From/To | Dashboard | Songwriting | Create | Projects | Library | Studio | Explore |
-|---------|-----------|-------------|--------|----------|---------|--------|---------|
-| **Dashboard** | - | ✅ Quick Action | ✅ Quick Action | ✅ Quick Action | ✅ Quick Action | ❌ | ✅ Quick Action |
-| **Songwriting** | ✅ | - | ❌ | ⚠️ Save to Project | ⚠️ Import from Library | ❌ | ❌ |
-| **Create** | ✅ | ❌ | - | ⚠️ Add to Project | ✅ Save to Library | ❌ | ⚠️ Publish |
-| **Projects** | ✅ | ✅ Open song | ✅ Generate track | - | ✅ Import assets | ⚠️ Record session | ⚠️ Publish |
-| **Library** | ✅ | ⚠️ Import to song | ⚠️ Use in generation | ⚠️ Add to project | - | ⚠️ Share in session | ⚠️ Publish |
-| **Studio** | ✅ | ❌ | ❌ | ⚠️ Attach to project | ✅ Save recording | - | ❌ |
-| **Explore** | ✅ | ⚠️ Remix | ⚠️ Use as reference | ❌ | ⚠️ Download | ❌ | - |
+| From/To         | Dashboard | Songwriting       | Create               | Projects             | Library                | Studio              | Explore         |
+| --------------- | --------- | ----------------- | -------------------- | -------------------- | ---------------------- | ------------------- | --------------- |
+| **Dashboard**   | -         | ✅ Quick Action   | ✅ Quick Action      | ✅ Quick Action      | ✅ Quick Action        | ❌                  | ✅ Quick Action |
+| **Songwriting** | ✅        | -                 | ❌                   | ⚠️ Save to Project   | ⚠️ Import from Library | ❌                  | ❌              |
+| **Create**      | ✅        | ❌                | -                    | ⚠️ Add to Project    | ✅ Save to Library     | ❌                  | ⚠️ Publish      |
+| **Projects**    | ✅        | ✅ Open song      | ✅ Generate track    | -                    | ✅ Import assets       | ⚠️ Record session   | ⚠️ Publish      |
+| **Library**     | ✅        | ⚠️ Import to song | ⚠️ Use in generation | ⚠️ Add to project    | -                      | ⚠️ Share in session | ⚠️ Publish      |
+| **Studio**      | ✅        | ❌                | ❌                   | ⚠️ Attach to project | ✅ Save recording      | -                   | ❌              |
+| **Explore**     | ✅        | ⚠️ Remix          | ⚠️ Use as reference  | ❌                   | ⚠️ Download            | ❌                  | -               |
 
 **Legend:**
+
 - ✅ = Clear, working connection
 - ⚠️ = Connection exists but could be clearer
 - ❌ = No connection (intentional)
@@ -263,31 +296,38 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ## User Journey Analysis
 
 ### Journey 1: "I want to write a song from scratch"
+
 **Current Path:** Dashboard → Songwriting → Work in tabs → Auto-save
 **Clarity:** ✅ **CLEAR**
 
 ### Journey 2: "I need a beat right now"
+
 **Current Path:** Dashboard → Create → Generate → Save
 **Clarity:** ✅ **CLEAR**
 
 ### Journey 3: "I'm making an album"
+
 **Current Path:** Dashboard → Projects → New Project → Add Songs → ???
 **Clarity:** ⚠️ **UNCLEAR** - How do songs get into projects?
 
 **Problem:** After creating a project, users don't know:
+
 - Should they click "New Song" in the project?
 - Should they go to Songwriting and save to project?
 - Should they generate in Create and add to project?
 
 ### Journey 4: "I have stems to organize"
+
 **Current Path:** Dashboard → Library → Upload by type → Store
 **Clarity:** ✅ **CLEAR**
 
 ### Journey 5: "I want to record with my band"
+
 **Current Path:** Dashboard → Studio → Start Session → Record
 **Clarity:** ✅ **CLEAR** (with honest limitations documented)
 
 ### Journey 6: "I want to find inspiration"
+
 **Current Path:** Dashboard → Explore → Filter → Play → Like/Download
 **Clarity:** ✅ **CLEAR**
 
@@ -296,11 +336,14 @@ Your dashboard organization is **SOLID** with clear separation of concerns. Howe
 ## Recommendations
 
 ### 1. ✅ Keep Current Structure
+
 Your dashboard organization is SOLID. Don't rebuild it.
 
 ### 2. ⚠️ Add Contextual Guidance
+
 **Where:** Dashboard quick actions
 **What:** Add subtitles clarifying use cases:
+
 - Songwriting Studio: "Write lyrics & craft songs manually"
 - Create Track: "Generate full AI music instantly"
 - New Project: "Organize songs into albums/EPs"
@@ -309,16 +352,21 @@ Your dashboard organization is SOLID. Don't rebuild it.
 - Explore: "Discover community tracks"
 
 ### 3. ⚠️ Clarify Project-Song Relationship
+
 **Where:** Projects page
 **What:** Add explanation:
+
 > "Projects organize your songs into albums, EPs, or collections. You can:
+>
 > - Add existing songs from your library
 > - Create new songs directly in this project
 > - Generate AI tracks and add them here"
 
 ### 4. ⚠️ Add "What Goes Where" Guide
+
 **Where:** New tooltip/modal on first visit
 **What:**
+
 ```
 📁 PROJECTS = Albums & EPs (organized releases)
 📚 LIBRARY = Individual files (stems, samples, demos)
@@ -329,13 +377,16 @@ Your dashboard organization is SOLID. Don't rebuild it.
 ```
 
 ### 5. ✅ Add Cross-Links Where Logical
+
 **Examples:**
+
 - In Songwriting → "Import from Library" button
 - In Create → "Add to Project" button after generation
 - In Projects → "Import from Library" option
 - In Library → "Use in Songwriting" quick action
 
 ### 6. ⚠️ Consolidate Copyright Management
+
 **Current:** Copyright manager appears in Songwriting AND project song pages
 **Recommendation:** Keep both but add sync indicator showing they're the same data
 
@@ -346,21 +397,25 @@ Your dashboard organization is SOLID. Don't rebuild it.
 Imagine you're an ant navigating the platform to complete tasks:
 
 ### Task: "Create a song and add it to an album"
+
 **Optimal Path:** Dashboard → Songwriting → Write → Project dropdown → Select project → Save
 **Current Path:** Dashboard → Songwriting → Write → Save → Go to Projects → Find project → Add song → ???
 **Efficiency:** ⚠️ **NEEDS IMPROVEMENT** - Missing direct "Save to Project" option
 
 ### Task: "Upload stems and use them in a song"
+
 **Optimal Path:** Dashboard → Library → Upload → Songwriting → Import button → Select files
 **Current Path:** Dashboard → Library → Upload → Copy URL → Songwriting → Paste somehow?
 **Efficiency:** ⚠️ **NEEDS IMPROVEMENT** - No clear import mechanism
 
 ### Task: "Generate AI track and publish to community"
+
 **Optimal Path:** Dashboard → Create → Generate → Publish button
 **Current Path:** Dashboard → Create → Generate → ??? → Explore
 **Efficiency:** ⚠️ **NEEDS IMPROVEMENT** - No direct publish flow
 
 ### Task: "Record video session and save to project"
+
 **Optimal Path:** Dashboard → Studio → Record → Save to Project
 **Current Path:** Dashboard → Studio → Record → Download → Upload somewhere?
 **Efficiency:** ⚠️ **NEEDS IMPROVEMENT** - No project integration
@@ -370,6 +425,7 @@ Imagine you're an ant navigating the platform to complete tasks:
 ## Mycelial Network Analysis (Connection Health)
 
 ### Strong Connections (✅ Good Flow)
+
 ```
 Dashboard ←→ All Pages (navigation)
 Songwriting ←→ Auto-save (persistence)
@@ -379,6 +435,7 @@ Explore ←→ Community API (engagement)
 ```
 
 ### Weak Connections (⚠️ Need Strengthening)
+
 ```
 Songwriting ←?→ Library (no import mechanism)
 Create ←?→ Projects (no "add to project" button)
@@ -388,6 +445,7 @@ Songwriting ←?→ Projects (unclear save relationship)
 ```
 
 ### Missing Connections (❌ Should Exist)
+
 ```
 Songwriting ❌ Create (could suggest AI assistance)
 Library ❌ Create (should be able to remix/extend library files)
@@ -402,6 +460,7 @@ Projects ❌ Explore (should be able to publish whole project)
 ### Overall Grade: B+ (Good, with room for optimization)
 
 **Strengths:**
+
 - ✅ Clear page purposes
 - ✅ No redundant features
 - ✅ Logical information architecture
@@ -410,6 +469,7 @@ Projects ❌ Explore (should be able to publish whole project)
 - ✅ Modern React patterns
 
 **Weaknesses:**
+
 - ⚠️ Missing cross-feature integrations
 - ⚠️ Unclear file/project relationships
 - ⚠️ Multiple entry points without guidance
@@ -421,18 +481,21 @@ Projects ❌ Explore (should be able to publish whole project)
 ## Action Items (Priority Order)
 
 ### 🔴 HIGH PRIORITY (Do First)
+
 1. Add "Save to Project" dropdown in Songwriting
 2. Add "Import from Library" button in Songwriting
 3. Add "Add to Project" button in Create success screen
 4. Add contextual help tooltips on Dashboard quick actions
 
 ### 🟡 MEDIUM PRIORITY (Do Soon)
+
 5. Add "Publish to Community" flow (Library → Explore)
 6. Add "Attach to Project" option in Studio recordings
 7. Create "What Goes Where" onboarding modal
 8. Add "Use in Generation" option for Library files
 
 ### 🟢 LOW PRIORITY (Nice to Have)
+
 9. Add "AI Assist" suggestion in Songwriting when user is stuck
 10. Add "Remix This" option in Explore → Create
 11. Add "Collaborate Live" button in Projects → Studio
@@ -445,6 +508,7 @@ Projects ❌ Explore (should be able to publish whole project)
 **Your dashboard is well-organized**. The "overlaps" you're concerned about are actually **intentional feature distinctions** serving different use cases. The real issue isn't duplication—it's **missing bridges between features**.
 
 Think of it like a highway system:
+
 - ✅ You have great roads (individual features)
 - ⚠️ You need more on-ramps and off-ramps (integrations)
 - ❌ You're NOT building parallel highways (no true duplication)
@@ -455,4 +519,3 @@ Think of it like a highway system:
 
 **Agent 133 | 2025-11-26**  
 **Tokens Used: ~85K / 200K**
-

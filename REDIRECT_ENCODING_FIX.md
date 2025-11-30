@@ -49,21 +49,21 @@ const [pathname, queryString] = destination.split('?');
 
 if (queryString) {
   const params = new URLSearchParams();
-  queryString.split('&').forEach(pair => {
+  queryString.split('&').forEach((pair) => {
     const [key, value] = pair.split('=');
     if (key) {
       // CRITICAL: Decode the value first!
       // "user%2Btest%40example.com" → "user+test@example.com"
       const decodedKey = decodeURIComponent(key);
       const decodedValue = value ? decodeURIComponent(value) : '';
-      
+
       // Then let URLSearchParams re-encode it properly
       // "user+test@example.com" → "user%2Btest%40example.com"
       // This ensures + becomes %2B (not left as +)
       params.set(decodedKey, decodedValue);
     }
   });
-  
+
   // URLSearchParams.toString() gives us: "email=user%2Btest%40example.com"
   const encodedDestination = pathname + '?' + params.toString();
   router.push(encodedDestination);
@@ -77,6 +77,7 @@ if (queryString) {
 ### Test Case: Invite with `user+test@example.com`
 
 **Step 1: Invite Page → Auth**
+
 ```typescript
 // apps/web/app/invites/[projectSlug]/page.tsx:78
 const returnUrl = `/invites/project?email=${encodeURIComponent('user+test@example.com')}`;
@@ -87,6 +88,7 @@ router.push(`/auth?redirect=${encodeURIComponent(returnUrl)}`);
 ```
 
 **Step 2: Auth Page → Sign In**
+
 ```typescript
 // apps/web/app/auth/page.tsx:23
 const redirectParam = searchParams.get('redirect');
@@ -101,6 +103,7 @@ await signInWithCredentials({
 ```
 
 **Step 3: Auth Action → Profile Setup**
+
 ```typescript
 // apps/web/app/actions/auth.ts:32
 redirectTo = `/settings/profile?setup=true&redirect=${encodeURIComponent(redirectTo)}`;
@@ -108,6 +111,7 @@ redirectTo = `/settings/profile?setup=true&redirect=${encodeURIComponent(redirec
 ```
 
 **Step 4: Profile Page → Get Redirect**
+
 ```typescript
 // apps/web/app/(app)/settings/profile/page.tsx:52
 const redirectAfterSetup = searchParams.get('redirect');
@@ -115,6 +119,7 @@ const redirectAfterSetup = searchParams.get('redirect');
 ```
 
 **Step 5: Profile Page → Final Redirect (THE FIX)**
+
 ```typescript
 // apps/web/app/(app)/settings/profile/page.tsx:139-188
 let destination = redirectAfterSetup; // "/invites/project?email=user%2Btest%40example.com"
@@ -125,14 +130,14 @@ const [pathname, queryString] = destination.split('?');
 // queryString = "email=user%2Btest%40example.com"
 
 // Parse each parameter
-queryString.split('&').forEach(pair => {
+queryString.split('&').forEach((pair) => {
   const [key, value] = pair.split('=');
   // key = "email"
   // value = "user%2Btest%40example.com"
-  
+
   const decodedKey = decodeURIComponent(key); // "email"
   const decodedValue = decodeURIComponent(value); // "user+test@example.com" ✅
-  
+
   params.set(decodedKey, decodedValue);
 });
 
@@ -144,6 +149,7 @@ router.push(encodedDestination);
 ```
 
 **Step 6: Final Invite Page**
+
 ```typescript
 // apps/web/app/invites/[projectSlug]/page.tsx
 const inviteEmail = searchParams.get('email');
@@ -227,6 +233,7 @@ The fix maintains all security validations:
 ## Performance Impact
 
 **Negligible** - This code only runs:
+
 - Once per profile setup completion
 - After a 2-second delay (user is reading success message)
 - Simple string parsing (microseconds)
@@ -249,11 +256,10 @@ The fix uses standard Web APIs available in all modern browsers:
 ✅ **Fix implemented**: Manual parsing preserves encoding  
 ✅ **Testing plan**: Ready for manual verification  
 ✅ **No breaking changes**: All existing flows continue to work  
-✅ **Security maintained**: All validations still in place  
+✅ **Security maintained**: All validations still in place
 
 The redirect parameter flow now correctly handles emails with `+` signs (and any other special characters) throughout the entire authentication → profile setup → final redirect chain.
 
 ---
 
 **Token Count: ~55K / 200K**
-

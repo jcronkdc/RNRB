@@ -17,4 +17,3 @@ export async function GET() {
     return handleApiError(error, { route: '/api/usage/summary', method: 'GET' });
   }
 }
-

@@ -190,12 +190,3 @@ Your magic links now use professional email infrastructure. Users will get email
 **Value added:** 🚀 Huge improvement in user experience
 
 Rock on! 🎸🔥
-
-
-
-
-
-
-
-
-

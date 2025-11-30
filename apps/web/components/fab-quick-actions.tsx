@@ -61,14 +61,14 @@ export function FABQuickActions() {
                 <Link href={action.href}>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="border-border bg-surface hover:bg-surface-muted group flex w-full items-center gap-3 rounded-xl border px-4 py-3 shadow-lg transition-all hover:shadow-xl"
+                    className="group flex w-full items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 shadow-lg transition-all hover:bg-surface-muted hover:shadow-xl"
                   >
                     <div
                       className={`h-10 w-10 rounded-lg ${action.bg} flex items-center justify-center`}
                     >
                       <action.icon className={`h-5 w-5 ${action.color}`} />
                     </div>
-                    <span className="text-foreground group-hover:text-brand-primary font-medium transition-colors">
+                    <span className="font-medium text-foreground transition-colors group-hover:text-brand-primary">
                       {action.label}
                     </span>
                   </button>
@@ -84,7 +84,7 @@ export function FABQuickActions() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="bg-brand-primary hover:bg-brand-primary/90 group flex h-16 w-16 items-center justify-center rounded-full shadow-2xl transition-colors"
+        className="group flex h-16 w-16 items-center justify-center rounded-full bg-brand-primary shadow-2xl transition-colors hover:bg-brand-primary/90"
         title="Quick actions"
       >
         <AnimatePresence mode="wait">
@@ -96,7 +96,7 @@ export function FABQuickActions() {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <X className="text-brand-primary-foreground h-7 w-7" />
+              <X className="h-7 w-7 text-brand-primary-foreground" />
             </motion.div>
           ) : (
             <motion.div
@@ -106,7 +106,7 @@ export function FABQuickActions() {
               exit={{ rotate: 90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Plus className="text-brand-primary-foreground h-7 w-7" />
+              <Plus className="h-7 w-7 text-brand-primary-foreground" />
             </motion.div>
           )}
         </AnimatePresence>

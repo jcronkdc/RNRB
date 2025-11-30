@@ -25,7 +25,7 @@ export default function RecordingGuidePage() {
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="mb-4 text-5xl font-bold">Professional Recording Studio</h1>
-          <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
+          <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
             Everything you need to know about our advanced recording, streaming, and collaboration
             features
           </p>
@@ -280,7 +280,7 @@ export default function RecordingGuidePage() {
             <div className="space-y-6">
               <div>
                 <h3 className="mb-3 text-lg font-semibold">1. Starting a Session</h3>
-                <ol className="text-muted-foreground list-inside list-decimal space-y-2">
+                <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
                   <li>Click "Start Recording" or "Go Live" from the Studio page</li>
                   <li>A secure room is automatically created with unique credentials</li>
                   <li>Grant camera and microphone permissions when prompted</li>
@@ -290,7 +290,7 @@ export default function RecordingGuidePage() {
 
               <div>
                 <h3 className="mb-3 text-lg font-semibold">2. During the Session</h3>
-                <ol className="text-muted-foreground list-inside list-decimal space-y-2">
+                <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
                   <li>Use the control bar to manage video, audio, and screen sharing</li>
                   <li>Start/stop recording or streaming as needed</li>
                   <li>Monitor participant status and connection quality</li>
@@ -300,7 +300,7 @@ export default function RecordingGuidePage() {
 
               <div>
                 <h3 className="mb-3 text-lg font-semibold">3. After Recording</h3>
-                <ol className="text-muted-foreground list-inside list-decimal space-y-2">
+                <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
                   <li>Recordings are automatically processed and stored</li>
                   <li>Access recordings from your dashboard within minutes</li>
                   <li>Download files or share via secure links</li>
@@ -387,19 +387,19 @@ export default function RecordingGuidePage() {
                   <tr className="border-b">
                     <td className="py-3">Cloud Recording</td>
                     <td className="py-3 text-right font-mono">$0.0135/min</td>
-                    <td className="text-muted-foreground py-3 text-right text-sm">~$0.81/hour</td>
+                    <td className="py-3 text-right text-sm text-muted-foreground">~$0.81/hour</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-3">Storage (after 30 days)</td>
                     <td className="py-3 text-right font-mono">$0.003/min</td>
-                    <td className="text-muted-foreground py-3 text-right text-sm">
+                    <td className="py-3 text-right text-sm text-muted-foreground">
                       ~$0.18/hour stored
                     </td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-3">Individual Tracks</td>
                     <td className="py-3 text-right font-mono">+20%</td>
-                    <td className="text-muted-foreground py-3 text-right text-sm">
+                    <td className="py-3 text-right text-sm text-muted-foreground">
                       Added to base recording
                     </td>
                   </tr>
@@ -421,12 +421,12 @@ export default function RecordingGuidePage() {
                   <tr className="border-b">
                     <td className="py-3">RTMP Streaming</td>
                     <td className="py-3 text-right font-mono">$0.015/min</td>
-                    <td className="text-muted-foreground py-3 text-right text-sm">~$0.90/hour</td>
+                    <td className="py-3 text-right text-sm text-muted-foreground">~$0.90/hour</td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-3">HLS Streaming</td>
                     <td className="py-3 text-right font-mono">$0.03/min</td>
-                    <td className="text-muted-foreground py-3 text-right text-sm">~$1.80/hour</td>
+                    <td className="py-3 text-right text-sm text-muted-foreground">~$1.80/hour</td>
                   </tr>
                 </tbody>
               </table>
@@ -446,14 +446,14 @@ export default function RecordingGuidePage() {
                   <tr className="border-b">
                     <td className="py-3">Participant Minutes</td>
                     <td className="py-3 text-right font-mono">$0.004/min</td>
-                    <td className="text-muted-foreground py-3 text-right text-sm">
+                    <td className="py-3 text-right text-sm text-muted-foreground">
                       Per participant
                     </td>
                   </tr>
                   <tr className="border-b">
                     <td className="py-3">Free Tier</td>
                     <td className="py-3 text-right font-mono">10,000 min/mo</td>
-                    <td className="text-muted-foreground py-3 text-right text-sm">~166 hours</td>
+                    <td className="py-3 text-right text-sm text-muted-foreground">~166 hours</td>
                   </tr>
                 </tbody>
               </table>
@@ -477,7 +477,7 @@ export default function RecordingGuidePage() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="space-y-3">
               <h3 className="font-semibold">Recording Best Practices</h3>
-              <ul className="text-muted-foreground space-y-2 text-sm">
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>• Use a stable internet connection (5+ Mbps upload)</li>
                 <li>• Close unnecessary applications to free up resources</li>
                 <li>• Use headphones to prevent audio feedback</li>
@@ -486,7 +486,7 @@ export default function RecordingGuidePage() {
             </div>
             <div className="space-y-3">
               <h3 className="font-semibold">Streaming Tips</h3>
-              <ul className="text-muted-foreground space-y-2 text-sm">
+              <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>• Schedule streams in advance for better reach</li>
                 <li>• Monitor chat for audience engagement</li>
                 <li>• Use lower quality settings for unstable connections</li>

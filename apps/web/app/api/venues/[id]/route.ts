@@ -127,7 +127,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
  * DELETE /api/venues/[id]
  * Delete a venue
  */
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const { id } = await params;
     const user = await getCurrentUser();

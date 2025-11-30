@@ -58,20 +58,20 @@ export function usePerformanceMonitor(componentName: string) {
 
     return () => {
       const renderTime = performance.now() - renderStartRef.current;
-      
+
       renderTimesRef.current.push(renderTime);
-      
+
       // Keep only last 100 renders
       if (renderTimesRef.current.length > 100) {
         renderTimesRef.current.shift();
       }
 
-      const avgRenderTime = 
+      const avgRenderTime =
         renderTimesRef.current.reduce((a, b) => a + b, 0) / renderTimesRef.current.length;
-      
-      const slowRenders = renderTimesRef.current.filter(t => t > 16).length;
 
-      setMetrics(prev => ({
+      const slowRenders = renderTimesRef.current.filter((t) => t > 16).length;
+
+      setMetrics((prev) => ({
         ...prev,
         renderCount: prev.renderCount + 1,
         avgRenderTime,
@@ -98,16 +98,16 @@ export function usePerformanceMonitor(componentName: string) {
 
       if (delta > 0) {
         fpsFramesRef.current.push(1000 / delta);
-        
+
         // Keep only last 60 frames
         if (fpsFramesRef.current.length > 60) {
           fpsFramesRef.current.shift();
         }
 
-        const avgFps = 
+        const avgFps =
           fpsFramesRef.current.reduce((a, b) => a + b, 0) / fpsFramesRef.current.length;
 
-        setMetrics(prev => ({
+        setMetrics((prev) => ({
           ...prev,
           fps: Math.round(avgFps),
         }));
@@ -129,8 +129,8 @@ export function usePerformanceMonitor(componentName: string) {
       if ('memory' in performance && (performance as any).memory) {
         const memoryInfo = (performance as any).memory;
         const usedMB = memoryInfo.usedJSHeapSize / 1024 / 1024;
-        
-        setMetrics(prev => ({
+
+        setMetrics((prev) => ({
           ...prev,
           memoryUsage: Math.round(usedMB),
         }));
@@ -152,58 +152,61 @@ export function usePerformanceMonitor(componentName: string) {
   }, [componentName]);
 
   // Track custom events
-  const trackEvent = useCallback((eventName: string, metadata?: Record<string, any>) => {
-    const startTime = performance.now();
+  const trackEvent = useCallback(
+    (eventName: string, metadata?: Record<string, any>) => {
+      const startTime = performance.now();
 
-    return () => {
-      const duration = performance.now() - startTime;
-      
-      const event: PerformanceEvent = {
-        name: eventName,
-        duration,
-        timestamp: Date.now(),
-        metadata,
-      };
+      return () => {
+        const duration = performance.now() - startTime;
 
-      eventsRef.current.push(event);
-
-      // Keep only last 100 events
-      if (eventsRef.current.length > 100) {
-        eventsRef.current.shift();
-      }
-
-      setMetrics(prev => ({
-        ...prev,
-        eventCount: prev.eventCount + 1,
-      }));
-
-      // Log slow events in development
-      if (process.env.NODE_ENV === 'development' && duration > 100) {
-        console.warn(
-          `[Performance] Slow event in ${componentName}: ${eventName} took ${duration.toFixed(2)}ms`,
-          metadata
-        );
-      }
-
-      // Send to analytics in production
-      if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
-        // Could integrate with analytics service here
-        (window as any).__performanceMetrics = (window as any).__performanceMetrics || [];
-        (window as any).__performanceMetrics.push({
-          component: componentName,
-          event: eventName,
+        const event: PerformanceEvent = {
+          name: eventName,
           duration,
           timestamp: Date.now(),
-          ...metadata,
-        });
-      }
-    };
-  }, [componentName]);
+          metadata,
+        };
+
+        eventsRef.current.push(event);
+
+        // Keep only last 100 events
+        if (eventsRef.current.length > 100) {
+          eventsRef.current.shift();
+        }
+
+        setMetrics((prev) => ({
+          ...prev,
+          eventCount: prev.eventCount + 1,
+        }));
+
+        // Log slow events in development
+        if (process.env.NODE_ENV === 'development' && duration > 100) {
+          console.warn(
+            `[Performance] Slow event in ${componentName}: ${eventName} took ${duration.toFixed(2)}ms`,
+            metadata
+          );
+        }
+
+        // Send to analytics in production
+        if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
+          // Could integrate with analytics service here
+          (window as any).__performanceMetrics = (window as any).__performanceMetrics || [];
+          (window as any).__performanceMetrics.push({
+            component: componentName,
+            event: eventName,
+            duration,
+            timestamp: Date.now(),
+            ...metadata,
+          });
+        }
+      };
+    },
+    [componentName]
+  );
 
   // Get performance report
   const getReport = useCallback(() => {
     const recentEvents = eventsRef.current.slice(-20);
-    const slowEvents = recentEvents.filter(e => e.duration > 100);
+    const slowEvents = recentEvents.filter((e) => e.duration > 100);
 
     return {
       metrics,

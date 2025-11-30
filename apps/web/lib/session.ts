@@ -1,15 +1,15 @@
 /**
  * SESSION UTILITIES
- * 
+ *
  * Standardized authentication helpers using NextAuth ONLY.
  * Do NOT use Supabase auth for authentication - use Supabase only for storage.
- * 
+ *
  * Usage:
  *   import { getCurrentUser, requireAuth } from '@/lib/session';
- *   
+ *
  *   // In API routes:
  *   const user = await requireAuth(); // Throws AppError if not authenticated
- *   
+ *
  *   // In pages:
  *   const user = await getCurrentUser(); // Returns null if not authenticated
  */
@@ -45,11 +45,11 @@ export const getCurrentUserId = cache(async (): Promise<string | null> => {
  */
 export async function requireAuth() {
   const session = await auth();
-  
+
   if (!session?.user?.id) {
     throw AppError.unauthorized();
   }
-  
+
   return {
     id: session.user.id,
     email: session.user.email || '',
@@ -64,11 +64,11 @@ export async function requireAuth() {
  */
 export async function requireUserSession() {
   const session = await auth();
-  
+
   if (!session?.user?.id) {
     redirect('/auth');
   }
-  
+
   return session;
 }
 
@@ -78,7 +78,7 @@ export async function requireUserSession() {
  */
 export async function requireOrgSession() {
   const session = await auth();
-  
+
   if (!session?.user?.id) {
     redirect('/auth');
   }

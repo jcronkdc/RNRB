@@ -5,15 +5,15 @@ export async function GET() {
   try {
     // Test 1: Check if Prisma is imported
     console.log('[TEST] Prisma imported:', !!prisma);
-    
+
     // Test 2: Check database connection
     const userCount = await prisma.user.count();
     console.log('[TEST] User count:', userCount);
-    
+
     // Test 3: Check if password field exists in Prisma client
     const prismaFields = Object.keys((prisma.user as any).fields || {});
     console.log('[TEST] User model fields:', prismaFields);
-    
+
     // Test 4: Try to create a test user
     const testEmail = `test-${Date.now()}@test.com`;
     const testUser = await prisma.user.create({
@@ -30,12 +30,12 @@ export async function GET() {
         password: true,
       },
     });
-    
+
     console.log('[TEST] User created:', testUser.id);
-    
+
     // Clean up
     await prisma.user.delete({ where: { id: testUser.id } });
-    
+
     return NextResponse.json({
       success: true,
       tests: {
@@ -58,4 +58,3 @@ export async function GET() {
     );
   }
 }
-

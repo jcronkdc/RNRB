@@ -187,9 +187,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete song' }, { status: 500 });
   }
 }
-
-
-
-
-
-

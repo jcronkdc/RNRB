@@ -31,7 +31,10 @@ import {
   BarChart3,
   Lock,
   ArrowUpRight,
+  Sparkles,
+  Crown,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 
@@ -164,78 +167,235 @@ export default function ToursPage() {
   // Handle subscription errors with upgrade prompt
   if (toursError?.isSubscriptionError) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="rnrb-container flex max-w-3xl flex-col items-center justify-center px-4 py-24">
+      <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+        {/* Animated Background */}
+        <div className="pointer-events-none absolute inset-0">
+          {/* Floating music notes */}
+          <div className="absolute inset-0 overflow-hidden">
+            {['♪', '♫', '♬', '♩', '♪', '♫'].map((note, i) => (
+              <motion.div
+                key={i}
+                className="absolute text-2xl opacity-10"
+                style={{
+                  left: `${10 + i * 15}%`,
+                  color: 'var(--accent)',
+                }}
+                animate={{
+                  y: [0, -100, 0],
+                  opacity: [0.05, 0.15, 0.05],
+                }}
+                transition={{
+                  duration: 8 + i * 2,
+                  repeat: Infinity,
+                  delay: i * 0.5,
+                }}
+              >
+                {note}
+              </motion.div>
+            ))}
+          </div>
+          {/* Gradient orbs */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(circle, rgba(255, 99, 71, 0.12), transparent)' }}
+            animate={{ x: [0, 50, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(circle, rgba(255, 215, 0, 0.08), transparent)' }}
+            animate={{ x: [0, -30, 0], y: [0, -50, 0] }}
+            transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute left-1/2 top-1/3 h-[400px] w-[400px] -translate-x-1/2 rounded-full blur-3xl"
+            style={{ background: 'radial-gradient(circle, rgba(255, 69, 0, 0.06), transparent)' }}
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 30, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        </div>
+
+        {/* White RR Logo Header */}
+        <div className="relative z-20 flex justify-center pt-8">
+          <Link href="/" className="transition-transform hover:scale-105">
+            <Image
+              src="/logo-light.png"
+              alt="Rock N' Roll Basement"
+              width={64}
+              height={64}
+              className="drop-shadow-[0_0_20px_rgba(255,99,71,0.4)]"
+            />
+          </Link>
+        </div>
+
+        <div className="relative z-10 flex min-h-[calc(100vh-100px)] flex-col items-center justify-center px-4 py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="max-w-2xl text-center"
           >
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-brand-primary/10">
-              <Lock className="h-10 w-10 text-brand-primary" />
-            </div>
-            <h1 className="font-display mb-4 text-3xl font-bold">Tour Management</h1>
-            <p className="mb-2 text-xl text-muted-foreground">{toursError.message}</p>
-            <p className="mb-8 text-muted-foreground">
+            {/* Premium Icon */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+              className="relative mx-auto mb-8"
+            >
+              <div
+                className="flex h-24 w-24 items-center justify-center rounded-2xl"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.15))',
+                  boxShadow: '0 0 60px rgba(255, 99, 71, 0.2)',
+                }}
+              >
+                <Crown className="h-12 w-12" style={{ color: 'var(--accent)' }} />
+              </div>
+              <motion.div
+                className="absolute -right-2 -top-2"
+                animate={{ rotate: [0, 15, -15, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <Sparkles className="h-6 w-6 text-yellow-400" />
+              </motion.div>
+            </motion.div>
+
+            {/* Title */}
+            <h1
+              className="mb-4 text-4xl font-bold tracking-tight md:text-5xl"
+              style={{ color: 'var(--text)' }}
+            >
+              Unlock{' '}
+              <span
+                style={{
+                  background: 'linear-gradient(135deg, var(--accent), #ffd700)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                Tour Management
+              </span>
+            </h1>
+
+            <p className="mb-3 text-lg" style={{ color: 'var(--text-secondary)' }}>
+              {toursError.message}
+            </p>
+
+            <p className="mb-10 text-base" style={{ color: 'var(--muted)' }}>
               Upgrade to{' '}
-              <span className="font-semibold text-brand-primary">{toursError.requiredTier}</span> to
-              access professional tour management with analytics, routing optimization, and
+              <span className="font-bold" style={{ color: 'var(--accent)' }}>
+                {toursError.requiredTier}
+              </span>{' '}
+              to access professional tour management with analytics, routing optimization, and
               financial tracking.
             </p>
 
-            <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            {/* CTA Buttons */}
+            <div className="mb-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link href={toursError.upgradeUrl || '/settings/billing?upgrade=creator'}>
-                <Button className="rnrb-button-primary flex items-center gap-2 px-8 py-3 text-lg">
-                  Upgrade Now
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(255, 99, 71, 0.4)' }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-bold text-white shadow-lg"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--accent), #ff7f50)',
+                    boxShadow: '0 4px 30px rgba(255, 99, 71, 0.3)',
+                  }}
+                >
+                  <Crown className="h-5 w-5" />
+                  Upgrade to Creator
                   <ArrowUpRight className="h-5 w-5" />
-                </Button>
+                </motion.button>
               </Link>
               <Link href="/dashboard">
-                <Button variant="outline" className="px-8 py-3">
+                <motion.button
+                  whileHover={{ scale: 1.02, borderColor: 'var(--accent)' }}
+                  whileTap={{ scale: 0.98 }}
+                  className="rounded-xl border px-8 py-4 text-lg font-medium transition-colors"
+                  style={{
+                    borderColor: 'var(--border)',
+                    color: 'var(--text)',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                  }}
+                >
                   Back to Dashboard
-                </Button>
+                </motion.button>
               </Link>
             </div>
 
-            {/* Feature Preview */}
-            <Card className="rnrb-card mt-12 p-8 text-left">
-              <h3 className="mb-6 text-lg font-semibold">What you'll get with Tour Management:</h3>
+            {/* Feature Preview Cards */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="rounded-2xl border p-8"
+              style={{
+                borderColor: 'var(--border)',
+                background: 'rgba(42, 42, 42, 0.5)',
+                backdropFilter: 'blur(20px)',
+              }}
+            >
+              <h3 className="mb-6 text-left text-lg font-bold" style={{ color: 'var(--text)' }}>
+                What you&apos;ll unlock:
+              </h3>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="flex items-start gap-3">
-                  <BarChart3 className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
-                  <div>
-                    <p className="font-medium">Analytics Dashboard</p>
-                    <p className="text-sm text-muted-foreground">
-                      Revenue tracking & attendance metrics
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue-500" />
-                  <div>
-                    <p className="font-medium">Smart Routing</p>
-                    <p className="text-sm text-muted-foreground">Optimize travel & reduce costs</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <DollarSign className="mt-0.5 h-5 w-5 shrink-0 text-purple-500" />
-                  <div>
-                    <p className="font-medium">Financial Tracking</p>
-                    <p className="text-sm text-muted-foreground">
-                      Profit/loss & expense breakdowns
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Radio className="mt-0.5 h-5 w-5 shrink-0 text-brand-primary" />
-                  <div>
-                    <p className="font-medium">Virtual Shows</p>
-                    <p className="text-sm text-muted-foreground">Live streaming performances</p>
-                  </div>
-                </div>
+                {[
+                  {
+                    icon: BarChart3,
+                    title: 'Analytics Dashboard',
+                    desc: 'Revenue tracking & attendance metrics',
+                    color: '#22c55e',
+                    gradient: 'rgba(34, 197, 94, 0.15)',
+                  },
+                  {
+                    icon: MapPin,
+                    title: 'Smart Routing',
+                    desc: 'Optimize travel & reduce costs',
+                    color: '#3b82f6',
+                    gradient: 'rgba(59, 130, 246, 0.15)',
+                  },
+                  {
+                    icon: DollarSign,
+                    title: 'Financial Tracking',
+                    desc: 'Profit/loss & expense breakdowns',
+                    color: '#a855f7',
+                    gradient: 'rgba(168, 85, 247, 0.15)',
+                  },
+                  {
+                    icon: Radio,
+                    title: 'Virtual Shows',
+                    desc: 'Live streaming performances',
+                    color: 'var(--accent)',
+                    gradient: 'rgba(255, 99, 71, 0.15)',
+                  },
+                ].map((feature, i) => (
+                  <motion.div
+                    key={feature.title}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 + i * 0.1 }}
+                    className="flex items-start gap-3 rounded-xl p-4 text-left transition-all hover:scale-[1.02]"
+                    style={{ background: feature.gradient }}
+                  >
+                    <div
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
+                      style={{ background: `${feature.color}20` }}
+                    >
+                      <feature.icon className="h-5 w-5" style={{ color: feature.color }} />
+                    </div>
+                    <div>
+                      <p className="font-semibold" style={{ color: 'var(--text)' }}>
+                        {feature.title}
+                      </p>
+                      <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                        {feature.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-            </Card>
+            </motion.div>
           </motion.div>
         </div>
       </div>
@@ -248,41 +408,76 @@ export default function ToursPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Toast Notifications */}
       <ToastNotification toasts={toasts} onRemove={removeToast} />
 
-      {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
-        <div className="absolute inset-0">
-          <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
-        </div>
+      {/* Animated Background */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <motion.div
+          className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(255, 99, 71, 0.08), transparent)' }}
+          animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full blur-3xl"
+          style={{ background: 'radial-gradient(circle, rgba(255, 215, 0, 0.06), transparent)' }}
+          animate={{ x: [0, -30, 0], y: [0, -50, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
 
-        <div className="rnrb-container relative z-10 max-w-7xl px-4 py-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
-                <Radio className="h-6 w-6 text-brand-primary" />
+      {/* Hero Section */}
+      <div className="relative overflow-hidden border-b" style={{ borderColor: 'var(--border)' }}>
+        <div className="relative z-10 px-4 py-8">
+          {/* White RR Logo */}
+          <div className="mb-8 flex justify-center">
+            <Link href="/" className="transition-transform hover:scale-105">
+              <Image
+                src="/logo-light.png"
+                alt="Rock N' Roll Basement"
+                width={56}
+                height={56}
+                className="drop-shadow-[0_0_15px_rgba(255,99,71,0.3)]"
+              />
+            </Link>
+          </div>
+
+          <div className="mx-auto max-w-7xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center"
+            >
+              <div className="mb-4 flex items-center justify-center gap-3">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-xl"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.15))',
+                  }}
+                >
+                  <Radio className="h-7 w-7" style={{ color: 'var(--accent)' }} />
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Professional Tour Management</p>
-                <h1 className="font-display text-3xl font-bold md:text-4xl">Tours & Shows</h1>
-              </div>
-            </div>
-            <p className="max-w-2xl text-lg text-muted-foreground">
-              World-class tour management with analytics, routing optimization, and financial
-              tracking
-            </p>
-          </motion.div>
+              <h1
+                className="mb-3 text-4xl font-bold tracking-tight md:text-5xl"
+                style={{ color: 'var(--text)' }}
+              >
+                Tours & Shows
+              </h1>
+              <p className="mx-auto max-w-xl text-lg" style={{ color: 'var(--muted)' }}>
+                World-class tour management with analytics, routing optimization, and financial
+                tracking
+              </p>
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      <div className="rnrb-container max-w-7xl px-4 py-12">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12">
         {showLiveStream && callObject ? (
           <DailyProvider callObject={callObject}>
             <div className="space-y-6">
@@ -304,34 +499,63 @@ export default function ToursPage() {
           <>
             {/* Tour Statistics */}
             <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
-              <Card className="p-6">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-sm text-muted-foreground">Total Tours</p>
-                  <BarChart3 className="h-5 w-5 text-brand-primary" />
-                </div>
-                <p className="text-3xl font-bold">{stats.total}</p>
-              </Card>
-              <Card className="p-6">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-sm text-muted-foreground">Active Tours</p>
-                  <TrendingUp className="h-5 w-5 text-green-500" />
-                </div>
-                <p className="text-3xl font-bold">{stats.active}</p>
-              </Card>
-              <Card className="p-6">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-sm text-muted-foreground">Upcoming</p>
-                  <Calendar className="h-5 w-5 text-blue-500" />
-                </div>
-                <p className="text-3xl font-bold">{stats.upcoming}</p>
-              </Card>
-              <Card className="p-6">
-                <div className="mb-2 flex items-center justify-between">
-                  <p className="text-sm text-muted-foreground">Total Shows</p>
-                  <MapPin className="h-5 w-5 text-purple-500" />
-                </div>
-                <p className="text-3xl font-bold">{stats.totalShows}</p>
-              </Card>
+              {[
+                {
+                  label: 'Total Tours',
+                  value: stats.total,
+                  icon: BarChart3,
+                  color: 'var(--accent)',
+                  gradient: 'rgba(255, 99, 71, 0.1)',
+                },
+                {
+                  label: 'Active Tours',
+                  value: stats.active,
+                  icon: TrendingUp,
+                  color: '#22c55e',
+                  gradient: 'rgba(34, 197, 94, 0.1)',
+                },
+                {
+                  label: 'Upcoming',
+                  value: stats.upcoming,
+                  icon: Calendar,
+                  color: '#3b82f6',
+                  gradient: 'rgba(59, 130, 246, 0.1)',
+                },
+                {
+                  label: 'Total Shows',
+                  value: stats.totalShows,
+                  icon: MapPin,
+                  color: '#a855f7',
+                  gradient: 'rgba(168, 85, 247, 0.1)',
+                },
+              ].map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.4 }}
+                  className="rounded-xl border p-6 backdrop-blur-sm transition-all hover:scale-[1.02]"
+                  style={{
+                    borderColor: 'var(--border)',
+                    background: `linear-gradient(135deg, ${stat.gradient}, transparent)`,
+                  }}
+                >
+                  <div className="mb-3 flex items-center justify-between">
+                    <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                      {stat.label}
+                    </p>
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: stat.gradient }}
+                    >
+                      <stat.icon className="h-5 w-5" style={{ color: stat.color }} />
+                    </div>
+                  </div>
+                  <p className="text-4xl font-bold" style={{ color: 'var(--text)' }}>
+                    {stat.value}
+                  </p>
+                </motion.div>
+              ))}
             </div>
 
             {/* Filters & Actions */}

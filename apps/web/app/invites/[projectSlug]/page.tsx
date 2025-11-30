@@ -32,8 +32,9 @@ function InviteAcceptContent() {
     // cancellation state - avoiding the shared ref race condition in Strict Mode.
     let cancelled = false;
     isMountedRef.current = true;
-    
-    supabase?.auth.getUser()
+
+    supabase?.auth
+      .getUser()
       .then(({ data: { user } }) => {
         // Only update state if this specific effect instance hasn't been cancelled
         if (!cancelled) {
@@ -55,7 +56,7 @@ function InviteAcceptContent() {
       // Cancel this specific effect instance's pending operations
       cancelled = true;
       isMountedRef.current = false;
-      
+
       // Cleanup navigation timeout on unmount
       if (navigationTimeoutRef.current) {
         clearTimeout(navigationTimeoutRef.current);
@@ -72,7 +73,7 @@ function InviteAcceptContent() {
       // then encodes the entire returnUrl for safe transport as a query param.
       // When decoded at auth page and used for redirect, the inner encoding
       // remains intact, ensuring the email parameter parses correctly.
-      const returnUrl = inviteEmail 
+      const returnUrl = inviteEmail
         ? `/invites/${projectSlug}?email=${encodeURIComponent(inviteEmail)}`
         : `/invites/${projectSlug}`;
       router.push(`/auth?redirect=${encodeURIComponent(returnUrl)}`);
@@ -170,14 +171,14 @@ function InviteAcceptContent() {
 
   if (loading) {
     return (
-      <div className="bg-background flex min-h-screen items-center justify-center">
-        <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
       </div>
     );
   }
 
   return (
-    <div className="bg-background flex min-h-screen items-center justify-center p-6">
+    <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -199,12 +200,12 @@ function InviteAcceptContent() {
           </div>
 
           {/* Project Info */}
-          <div className="border-border bg-surface-muted mb-6 rounded-xl border p-6">
+          <div className="mb-6 rounded-xl border border-border bg-surface-muted p-6">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
-              <Users className="text-brand-primary h-5 w-5" />
+              <Users className="h-5 w-5 text-brand-primary" />
               {projectSlug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
             </h2>
-            <p className="text-muted-foreground mb-4 text-sm">
+            <p className="mb-4 text-sm text-muted-foreground">
               Join this project to collaborate with your team using:
             </p>
             <ul className="space-y-2 text-sm">
@@ -226,9 +227,9 @@ function InviteAcceptContent() {
               </li>
             </ul>
             {inviteEmail && (
-              <div className="border-border bg-surface mt-4 rounded-lg border p-3">
-                <p className="text-muted-foreground text-xs">
-                  Invited: <span className="text-foreground font-medium">{inviteEmail}</span>
+              <div className="mt-4 rounded-lg border border-border bg-surface p-3">
+                <p className="text-xs text-muted-foreground">
+                  Invited: <span className="font-medium text-foreground">{inviteEmail}</span>
                 </p>
               </div>
             )}
@@ -305,7 +306,7 @@ function InviteAcceptContent() {
 
           {/* Footer */}
           <div className="mt-6 text-center">
-            <p className="text-muted-foreground text-xs">
+            <p className="text-xs text-muted-foreground">
               Rock N' Roll Basement • Collaborative Music Creation
             </p>
           </div>
@@ -319,8 +320,8 @@ export default function InviteAcceptPage() {
   return (
     <Suspense
       fallback={
-        <div className="bg-background flex min-h-screen items-center justify-center">
-          <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
+        <div className="flex min-h-screen items-center justify-center bg-background">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
         </div>
       }
     >

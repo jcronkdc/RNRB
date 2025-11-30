@@ -87,11 +87,11 @@ function SortableSongBlock({
     >
       <div className="flex items-start gap-4">
         <div {...listeners} className="flex-shrink-0 cursor-grab pt-1 active:cursor-grabbing">
-          <GripVertical className="text-muted-foreground h-5 w-5" />
+          <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
         <div className="flex-1">
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-brand-primary text-xs font-semibold uppercase tracking-wide">
+            <span className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
               {block.type}
             </span>
             <button
@@ -103,9 +103,9 @@ function SortableSongBlock({
           </div>
 
           {block.chord && (
-            <div className="border-brand-primary/30 bg-brand-primary/20 mb-2 inline-flex items-center gap-2 rounded-lg border px-3 py-1">
+            <div className="mb-2 inline-flex items-center gap-2 rounded-lg border border-brand-primary/30 bg-brand-primary/20 px-3 py-1">
               <Music className="h-3 w-3" />
-              <span className="font-display text-brand-primary font-bold">{block.chord}</span>
+              <span className="font-display font-bold text-brand-primary">{block.chord}</span>
             </div>
           )}
 
@@ -113,7 +113,7 @@ function SortableSongBlock({
             value={block.content}
             onChange={(e) => onEdit(e.target.value)}
             placeholder={`Write your ${block.type} here...`}
-            className="border-border/50 bg-surface/50 text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-lg border px-3 py-2 font-mono text-sm outline-none transition focus:ring-2"
+            className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-3 py-2 font-mono text-sm text-foreground placeholder-muted-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
             rows={4}
           />
         </div>
@@ -208,7 +208,7 @@ export function VisualSongBuilder({
             <Sparkles className="h-5 w-5 text-purple-400" />
             Building Blocks
           </h3>
-          <p className="text-muted-foreground mb-6 text-xs">
+          <p className="mb-6 text-xs text-muted-foreground">
             Drag blocks to the canvas to build your song structure
           </p>
 
@@ -218,13 +218,13 @@ export function VisualSongBuilder({
                 <div
                   key={`palette-${item.id}`}
                   id={`palette-${item.id}`}
-                  className="rnrb-card border-brand-primary/30 from-brand-primary/10 hover:border-brand-primary/50 cursor-grab border-2 border-dashed bg-gradient-to-r to-transparent p-4 transition-all hover:shadow-lg active:cursor-grabbing"
+                  className="rnrb-card cursor-grab border-2 border-dashed border-brand-primary/30 bg-gradient-to-r from-brand-primary/10 to-transparent p-4 transition-all hover:border-brand-primary/50 hover:shadow-lg active:cursor-grabbing"
                 >
                   <div className="flex items-center gap-3">
                     <div className="text-2xl">{item.icon}</div>
                     <div>
-                      <p className="text-foreground font-semibold">{item.label}</p>
-                      <p className="text-muted-foreground text-xs">Drag to canvas →</p>
+                      <p className="font-semibold text-foreground">{item.label}</p>
+                      <p className="text-xs text-muted-foreground">Drag to canvas →</p>
                     </div>
                   </div>
                 </div>
@@ -232,7 +232,7 @@ export function VisualSongBuilder({
             </div>
 
             {/* Chord Quick Add */}
-            <div className="border-border mt-6 border-t pt-6">
+            <div className="mt-6 border-t border-border pt-6">
               <h4 className="mb-3 text-sm font-semibold">Quick Add Chords</h4>
               <div className="grid grid-cols-2 gap-2">
                 {COMMON_CHORDS.slice(0, 8).map((chord) => (
@@ -250,7 +250,7 @@ export function VisualSongBuilder({
                       setSongBlocks(updated);
                       onSongChange(updated);
                     }}
-                    className="border-brand-primary/30 bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20 rounded-lg border px-3 py-2 text-sm font-bold transition"
+                    className="rounded-lg border border-brand-primary/30 bg-brand-primary/10 px-3 py-2 text-sm font-bold text-brand-primary transition hover:bg-brand-primary/20"
                   >
                     {chord}
                   </button>
@@ -260,7 +260,7 @@ export function VisualSongBuilder({
 
             <DragOverlay>
               {activeId ? (
-                <div className="rnrb-card border-brand-primary bg-brand-primary/20 border-2 p-4 opacity-50">
+                <div className="rnrb-card border-2 border-brand-primary bg-brand-primary/20 p-4 opacity-50">
                   <p className="font-semibold">Dragging...</p>
                 </div>
               ) : null}
@@ -268,7 +268,7 @@ export function VisualSongBuilder({
           </DndContext>
 
           <div className="rnrb-card mt-6 border-purple-500/20 bg-purple-500/5 p-4">
-            <p className="text-muted-foreground flex items-center gap-1 text-xs">
+            <p className="flex items-center gap-1 text-xs text-muted-foreground">
               <Sparkles className="h-3 w-3 text-purple-400" />
               Ask AI in chat for chord suggestions and song structure help
             </p>
@@ -288,15 +288,15 @@ export function VisualSongBuilder({
           </div>
 
           {songBlocks.length === 0 ? (
-            <div className="border-border from-surface-muted/30 flex flex-col items-center justify-center rounded-2xl border-2 border-dashed bg-gradient-to-b to-transparent py-24 text-center">
-              <div className="bg-brand-primary/10 mb-6 flex h-24 w-24 items-center justify-center rounded-2xl">
-                <Music className="text-brand-primary h-12 w-12" />
+            <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-gradient-to-b from-surface-muted/30 to-transparent py-24 text-center">
+              <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-brand-primary/10">
+                <Music className="h-12 w-12 text-brand-primary" />
               </div>
               <h3 className="font-display mb-3 text-2xl font-bold">Start Building Your Song</h3>
-              <p className="text-muted-foreground mb-2 max-w-md text-lg">
+              <p className="mb-2 max-w-md text-lg text-muted-foreground">
                 Drag blocks from the left palette to create your song structure.
               </p>
-              <p className="text-brand-primary text-sm italic">
+              <p className="text-sm italic text-brand-primary">
                 "Every great song starts with a simple structure"
               </p>
             </div>
@@ -324,14 +324,14 @@ export function VisualSongBuilder({
           )}
 
           {songBlocks.length > 0 && (
-            <div className="rnrb-card to-brand-primary/5 mt-8 border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 p-6">
-              <h4 className="text-brand-primary mb-3 font-semibold">Song Structure:</h4>
-              <p className="font-display text-foreground text-lg">
+            <div className="rnrb-card mt-8 border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 to-brand-primary/5 p-6">
+              <h4 className="mb-3 font-semibold text-brand-primary">Song Structure:</h4>
+              <p className="font-display text-lg text-foreground">
                 {songBlocks
                   .map((b) => b.type.charAt(0).toUpperCase() + b.type.slice(1))
                   .join(' → ')}
               </p>
-              <p className="text-muted-foreground mt-2 text-xs">
+              <p className="mt-2 text-xs text-muted-foreground">
                 {songBlocks.length} sections • Drag to reorder
               </p>
             </div>

@@ -1,12 +1,12 @@
 /**
  * SUPABASE CLIENT
- * 
+ *
  * IMPORTANT: Use Supabase ONLY for file storage, NOT for authentication!
- * 
+ *
  * Authentication is handled by NextAuth:
  *   - Use `import { auth } from '@/auth'` for server-side auth
  *   - Use `import { getCurrentUser, requireAuth } from '@/lib/session'` for utilities
- * 
+ *
  * This client is for:
  *   - File uploads to Supabase Storage
  *   - Realtime subscriptions (if needed)
@@ -87,12 +87,10 @@ export async function uploadFile(
     throw new Error('Supabase client not initialized');
   }
 
-  const { data, error } = await supabase.storage
-    .from(bucket)
-    .upload(path, file, {
-      contentType: options?.contentType,
-      upsert: options?.upsert ?? false,
-    });
+  const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
+    contentType: options?.contentType,
+    upsert: options?.upsert ?? false,
+  });
 
   if (error) {
     throw error;

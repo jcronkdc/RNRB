@@ -20,6 +20,7 @@
 ## 🚨 ACTIVE ISSUES
 
 ### 1. Ably Connection Timeout (Non-Blocking)
+
 - **Symptom:** Console shows repeated "Auth.requestToken(): Token request callback timed out after 10 seconds"
 - **Impact:** Real-time collaboration features disabled (chat, live cursors, presence)
 - **Root Cause:** `/api/ably/token` endpoint timing out (10s)
@@ -28,6 +29,7 @@
 - **Fix Required:** Set `ABLY_API_KEY` in Vercel environment variables
 
 ### 2. Browser Tool Text Rendering
+
 - **Symptom:** Missing 's' characters in browser snapshot tool
 - **Reality:** USER CONFIRMED this is a browser tool issue, NOT a real bug
 - **Action:** Ignore this completely - it's not affecting actual users
@@ -37,9 +39,11 @@
 ## 🔄 FIXES APPLIED IN THIS SESSION
 
 ### ✅ 1. Song Creation Dependency Array
+
 **File:** `apps/web/app/(app)/songwriting/page.tsx` (line 189-197)
 
 **Before:**
+
 ```typescript
 useEffect(() => {
   if (user && !songData.id) {
@@ -49,6 +53,7 @@ useEffect(() => {
 ```
 
 **After:**
+
 ```typescript
 useEffect(() => {
   if (user?.id && !songData.id) {
@@ -62,6 +67,7 @@ useEffect(() => {
 **Impact:** Prevents multiple song creation attempts and reduces error spam
 
 ### ✅ 2. MASTER_TRUTH.md Streamlined
+
 - Removed redundant historical information
 - Focused on current state only
 - Added clear recovery procedures
@@ -72,6 +78,7 @@ useEffect(() => {
 ## 🧪 TEST RESULTS
 
 ### Completed Tests
+
 - ✅ Site loads (HTTP 200)
 - ✅ Build passes (no errors)
 - ✅ Authentication works
@@ -80,6 +87,7 @@ useEffect(() => {
 - ✅ Console logs show expected behavior (auth checks, Ably timeouts)
 
 ### Tests Not Completed
+
 - ⏸️ Adding building blocks (Verse, Chorus, Bridge)
 - ⏸️ Template picker modal
 - ⏸️ Recording voice memos
@@ -92,14 +100,18 @@ useEffect(() => {
 ## 🎯 NEXT STEPS (Priority Order)
 
 ### 1. HIGH: Fix Ably Connection
+
 **Action:** Add `ABLY_API_KEY` to Vercel environment
+
 ```bash
 # Get key from: https://ably.com/dashboard
 # Add to Vercel: Project Settings → Environment Variables → Production
 ```
 
 ### 2. MEDIUM: Complete Human Testing
+
 **Reference:** `HUMAN_TEST_CHECKLIST.md`
+
 - Test each tab (Structure, Chords, Lyrics, Copyright)
 - Test building blocks (add Verse, Chorus, Bridge)
 - Test undo/redo functionality
@@ -107,6 +119,7 @@ useEffect(() => {
 - Test voice recording
 
 ### 3. LOW: Performance Optimization
+
 - Ably connection retry logic could be improved
 - Consider exponential backoff for failed connections
 
@@ -125,6 +138,7 @@ useEffect(() => {
 ## 🔧 ENVIRONMENT CHECK
 
 ### Production (Vercel)
+
 - ✅ DATABASE_URL - Set
 - ✅ NEXTAUTH_SECRET - Set
 - ✅ NEXTAUTH_URL - Set
@@ -132,6 +146,7 @@ useEffect(() => {
 - ❌ NEXT_PUBLIC_POSTHOG_KEY - Missing (analytics disabled, non-critical)
 
 ### Required Actions
+
 1. Add ABLY_API_KEY to Vercel (get from https://ably.com/dashboard)
 2. Redeploy or wait for automatic deployment
 
@@ -159,4 +174,3 @@ useEffect(() => {
 **READY FOR:** Next agent to continue testing and fix Ably connection
 
 **Last Updated:** 2025-11-25 @ Agent 130
-

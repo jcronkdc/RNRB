@@ -213,25 +213,19 @@ export function UpgradeModal({
  * Hook for managing upgrade modal state
  */
 export function useUpgradeModal() {
-  if (typeof window === 'undefined') {
-    // SSR fallback
-    return {
-      isOpen: false,
-      showUpgradeModal: () => {},
-      hideUpgradeModal: () => {},
-      modalProps: {},
-    };
-  }
-
   const [isOpen, setIsOpen] = useState(false);
   const [modalProps, setModalProps] = useState<Partial<UpgradeModalProps>>({});
 
+  const isClient = typeof window !== 'undefined';
+
   const showUpgradeModal = (props?: Partial<UpgradeModalProps>) => {
+    if (!isClient) return;
     setModalProps(props || {});
     setIsOpen(true);
   };
 
   const hideUpgradeModal = () => {
+    if (!isClient) return;
     setIsOpen(false);
     setTimeout(() => setModalProps({}), 300); // Clear props after animation
   };

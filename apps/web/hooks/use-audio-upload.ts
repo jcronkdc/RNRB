@@ -1,10 +1,6 @@
 import { useState } from 'react';
 
-import {
-  uploadAudioFile,
-  deleteAudioFile,
-  type UploadProgress,
-} from '@/lib/storage';
+import { uploadAudioFile, deleteAudioFile, type UploadProgress } from '@/lib/storage';
 
 export function useAudioUpload() {
   const [uploading, setUploading] = useState(false);

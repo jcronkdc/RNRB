@@ -400,7 +400,8 @@ export default function SitesPage() {
             transition={{ type: 'spring', duration: 0.6 }}
             className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 215, 0, 0.1))',
+              background:
+                'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 215, 0, 0.1))',
               border: '1px solid rgba(255, 99, 71, 0.3)',
               boxShadow: '0 0 60px rgba(255, 99, 71, 0.3)',
             }}

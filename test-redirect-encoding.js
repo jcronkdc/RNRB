@@ -2,10 +2,10 @@
 
 /**
  * Test Script: Redirect Parameter Encoding (Browser Simulation)
- * 
+ *
  * This script tests the redirect parameter encoding logic to ensure
  * special characters like + in email addresses are preserved correctly.
- * 
+ *
  * This version simulates BROWSER behavior where + is treated as space
  * in query strings per RFC 3986.
  */
@@ -18,23 +18,23 @@ const testCases = [
   {
     name: 'Email with + sign',
     email: 'user+test@example.com',
-    expected: 'user+test@example.com'
+    expected: 'user+test@example.com',
   },
   {
     name: 'Email with multiple + signs',
     email: 'user+tag+test@example.com',
-    expected: 'user+tag+test@example.com'
+    expected: 'user+tag+test@example.com',
   },
   {
     name: 'Email with special chars',
     email: 'user.name+tag@sub.example.com',
-    expected: 'user.name+tag@sub.example.com'
+    expected: 'user.name+tag@sub.example.com',
   },
   {
     name: 'Email with numbers',
     email: 'user+123@example.com',
-    expected: 'user+123@example.com'
-  }
+    expected: 'user+123@example.com',
+  },
 ];
 
 // Simulate browser behavior: + is treated as space in query strings
@@ -49,34 +49,34 @@ function browserDecodeQueryParam(encoded) {
 function simulateNewMethod(email) {
   console.log(`\n📧 Testing: ${email}`);
   console.log('-'.repeat(60));
-  
+
   // Step 1: Invite page - Build redirect URL
   const projectSlug = 'test-project';
   const returnUrl = `/invites/${projectSlug}?email=${encodeURIComponent(email)}`;
   console.log(`1️⃣  Invite builds URL: ${returnUrl}`);
-  
+
   // Step 2: Invite page - Build auth redirect
   const authUrl = `/auth?redirect=${encodeURIComponent(returnUrl)}`;
   console.log(`2️⃣  Redirects to auth: ${authUrl}`);
-  
+
   // Step 3: Auth page - Simulate searchParams.get() (auto-decodes once)
   const redirectParam = decodeURIComponent(authUrl.split('redirect=')[1]);
   console.log(`3️⃣  Auth gets redirect: ${redirectParam}`);
-  
+
   // Step 4: Auth action - Build profile setup URL
   const profileUrl = `/settings/profile?setup=true&redirect=${encodeURIComponent(redirectParam)}`;
   console.log(`4️⃣  Routes to profile: ${profileUrl}`);
-  
+
   // Step 5: Profile page - Simulate searchParams.get() (auto-decodes once)
   const redirectAfterSetup = decodeURIComponent(profileUrl.split('redirect=')[1]);
   console.log(`5️⃣  Profile gets redirect: ${redirectAfterSetup}`);
-  
+
   // Step 6: Profile page - NEW METHOD - Manual parsing
   const [pathname, queryString] = redirectAfterSetup.split('?');
-  
+
   if (queryString) {
     const params = new URLSearchParams();
-    queryString.split('&').forEach(pair => {
+    queryString.split('&').forEach((pair) => {
       const [key, value] = pair.split('=');
       if (key) {
         const decodedKey = decodeURIComponent(key);
@@ -84,21 +84,21 @@ function simulateNewMethod(email) {
         params.set(decodedKey, decodedValue);
       }
     });
-    
+
     const finalUrl = pathname + '?' + params.toString();
     console.log(`6️⃣  Profile pushes: ${finalUrl}`);
-    
+
     // Step 7: Browser interprets the URL (+ treated as space in query strings)
     const finalEmailEncoded = finalUrl.split('email=')[1];
     console.log(`7️⃣  Browser sees param: ${finalEmailEncoded}`);
-    
+
     // Simulate browser's searchParams.get() which treats + as space
     const finalEmail = browserDecodeQueryParam(finalEmailEncoded);
     console.log(`8️⃣  Final email value: ${finalEmail}`);
-    
+
     return finalEmail;
   }
-  
+
   return null;
 }
 
@@ -106,39 +106,39 @@ function simulateNewMethod(email) {
 function simulateOldMethod(email) {
   console.log(`\n📧 Testing (OLD): ${email}`);
   console.log('-'.repeat(60));
-  
+
   const projectSlug = 'test-project';
   const returnUrl = `/invites/${projectSlug}?email=${encodeURIComponent(email)}`;
   const authUrl = `/auth?redirect=${encodeURIComponent(returnUrl)}`;
   const redirectParam = decodeURIComponent(authUrl.split('redirect=')[1]);
   const profileUrl = `/settings/profile?setup=true&redirect=${encodeURIComponent(redirectParam)}`;
   const redirectAfterSetup = decodeURIComponent(profileUrl.split('redirect=')[1]);
-  
+
   console.log(`5️⃣  Profile gets redirect: ${redirectAfterSetup}`);
-  
+
   // OLD METHOD: Using URL constructor (auto-decodes, loses encoding)
   try {
     const url = new URL(redirectAfterSetup, 'http://dummy.com');
     // At this point, url.searchParams has DECODED the + from %2B to +
     console.log(`   URL decoded searchParams:`, Array.from(url.searchParams.entries()));
-    
+
     const params = new URLSearchParams();
     url.searchParams.forEach((value, key) => {
       // 'value' here already has + instead of %2B
       params.set(key, value);
     });
-    
+
     const finalUrl = url.pathname + (params.toString() ? `?${params.toString()}` : '');
     console.log(`6️⃣  Profile pushes (OLD): ${finalUrl}`);
-    
+
     // Browser interprets the URL
     const finalEmailEncoded = finalUrl.split('email=')[1];
     console.log(`7️⃣  Browser sees param: ${finalEmailEncoded}`);
-    
+
     // Simulate browser's searchParams.get() which treats + as space
     const finalEmail = browserDecodeQueryParam(finalEmailEncoded);
     console.log(`8️⃣  Final email value (BROKEN): ${finalEmail}`);
-    
+
     return finalEmail;
   } catch (error) {
     console.error('❌ Error:', error.message);
@@ -153,10 +153,10 @@ console.log('═'.repeat(60));
 let passedNew = 0;
 let failedNew = 0;
 
-testCases.forEach(testCase => {
+testCases.forEach((testCase) => {
   const result = simulateNewMethod(testCase.email);
   const passed = result === testCase.expected;
-  
+
   if (passed) {
     console.log(`\n✅ PASS: ${testCase.name}`);
     passedNew++;
@@ -174,10 +174,10 @@ console.log('═'.repeat(60));
 let passedOld = 0;
 let failedOld = 0;
 
-testCases.forEach(testCase => {
+testCases.forEach((testCase) => {
   const result = simulateOldMethod(testCase.email);
   const passed = result === testCase.expected;
-  
+
   if (passed) {
     console.log(`\n✅ PASS: ${testCase.name}`);
     passedOld++;

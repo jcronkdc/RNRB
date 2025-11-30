@@ -28,7 +28,7 @@ console.log('\n❌ OLD APPROACH (using URLSearchParams):');
 console.log('-'.repeat(80));
 
 const oldParams = new URLSearchParams();
-queryString.split('&').forEach(pair => {
+queryString.split('&').forEach((pair) => {
   const [key, value = ''] = pair.split('=');
   if (key) {
     const decodedKey = decodeURIComponent(key);
@@ -49,19 +49,19 @@ console.log('\n✅ NEW APPROACH (manual encoding):');
 console.log('-'.repeat(80));
 
 const encodedPairs = [];
-queryString.split('&').forEach(pair => {
+queryString.split('&').forEach((pair) => {
   const [key, value = ''] = pair.split('=');
   if (key) {
     // Decode first
     const decodedKey = decodeURIComponent(key);
     const decodedValue = decodeURIComponent(value);
     console.log(`   - Decoded: ${decodedKey}=${decodedValue}`);
-    
+
     // Re-encode properly
     const encodedKey = encodeURIComponent(decodedKey);
     const encodedValue = encodeURIComponent(decodedValue);
     console.log(`   - Re-encoded: ${encodedKey}=${encodedValue}`);
-    
+
     encodedPairs.push(`${encodedKey}=${encodedValue}`);
   }
 });
@@ -95,4 +95,3 @@ console.log(`   New approach:    ${newEmailParam} ${newEmailParam === testEmail 
 console.log('\n' + '='.repeat(80));
 console.log('TEST COMPLETE');
 console.log('='.repeat(80));
-

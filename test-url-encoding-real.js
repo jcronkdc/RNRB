@@ -1,6 +1,6 @@
 /**
  * Test to demonstrate the ACTUAL URL encoding issue with + signs
- * 
+ *
  * The problem occurs when the URL string itself is parsed by the browser,
  * not when using the URL API.
  */
@@ -28,7 +28,7 @@ const [pathAndQuery1, hash1 = ''] = receivedRedirect.split('#');
 const [pathname1, queryString1 = ''] = pathAndQuery1.split('?');
 
 const oldParams = new URLSearchParams();
-queryString1.split('&').forEach(pair => {
+queryString1.split('&').forEach((pair) => {
   const [key, value = ''] = pair.split('=');
   if (key) {
     const decodedValue = decodeURIComponent(value);
@@ -54,7 +54,7 @@ const [pathAndQuery2, hash2 = ''] = receivedRedirect.split('#');
 const [pathname2, queryString2 = ''] = pathAndQuery2.split('?');
 
 const encodedPairs = [];
-queryString2.split('&').forEach(pair => {
+queryString2.split('&').forEach((pair) => {
   const [key, value = ''] = pair.split('=');
   if (key) {
     const decodedValue = decodeURIComponent(value);
@@ -98,10 +98,13 @@ console.log(`   Problem: The + became a space! ${emailBack.includes(' ') ? '❌'
 console.log('\n📊 FINAL COMPARISON:');
 console.log('-'.repeat(80));
 console.log(`   Original email:     ${testEmail}`);
-console.log(`   Old approach:       ${oldEmailFromBrowser} ${oldEmailFromBrowser === testEmail ? '✅' : '❌'}`);
-console.log(`   New approach:       ${newEmailFromBrowser} ${newEmailFromBrowser === testEmail ? '✅' : '❌'}`);
+console.log(
+  `   Old approach:       ${oldEmailFromBrowser} ${oldEmailFromBrowser === testEmail ? '✅' : '❌'}`
+);
+console.log(
+  `   New approach:       ${newEmailFromBrowser} ${newEmailFromBrowser === testEmail ? '✅' : '❌'}`
+);
 
 console.log('\n' + '='.repeat(80));
 console.log('TEST COMPLETE');
 console.log('='.repeat(80));
-

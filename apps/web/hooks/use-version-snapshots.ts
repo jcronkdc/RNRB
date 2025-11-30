@@ -20,7 +20,7 @@ export type SongSnapshot = {
   versionNum: number;
   label: string | null;
   description: string | null;
-  
+
   // Snapshot of song state
   title: string;
   lyrics: string | null;
@@ -29,7 +29,7 @@ export type SongSnapshot = {
   tempo: number | null;
   timeSignature: string | null;
   audioUrl: string | null;
-  
+
   // Metadata
   createdById: string;
   createdByName?: string;
@@ -166,9 +166,7 @@ export function useVersionSnapshots({ songId, currentUserId }: UseVersionSnapsho
         const data = await response.json();
         const updatedSnapshot: SongSnapshot = data.snapshot;
 
-        setSnapshots((prev) =>
-          prev.map((s) => (s.id === snapshotId ? updatedSnapshot : s))
-        );
+        setSnapshots((prev) => prev.map((s) => (s.id === snapshotId ? updatedSnapshot : s)));
 
         return updatedSnapshot;
       } catch (err) {
@@ -215,16 +213,15 @@ export function useVersionSnapshots({ songId, currentUserId }: UseVersionSnapsho
     error,
     latestSnapshot,
     publishedSnapshot,
-    
+
     // Actions
     createSnapshot,
     restoreSnapshot,
     deleteSnapshot,
     updateSnapshot,
     compareSnapshots,
-    
+
     // Refresh
     refetch: fetchSnapshots,
   };
 }
-

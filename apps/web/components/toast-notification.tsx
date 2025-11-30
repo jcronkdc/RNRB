@@ -73,10 +73,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
     >
       <Icon className={`h-5 w-5 shrink-0 ${color.icon}`} />
       <p className={`flex-1 text-sm font-medium ${color.text}`}>{toast.message}</p>
-      <button
-        onClick={onRemove}
-        className="text-gray-400 transition-colors hover:text-white"
-      >
+      <button onClick={onRemove} className="text-gray-400 transition-colors hover:text-white">
         <X className="h-4 w-4" />
       </button>
     </motion.div>
@@ -104,7 +101,7 @@ export function useToast() {
 
   const addToast = (type: ToastType, message: string, duration?: number) => {
     // Generate ID using current counter value
-    setCounter(prev => prev + 1);
+    setCounter((prev) => prev + 1);
     const id = `toast-${counter + 1}`;
     const newToast: Toast = { id, type, message, duration };
     setToasts((prevToasts) => [...prevToasts, newToast]);
@@ -129,4 +126,3 @@ export function useToast() {
     info,
   };
 }
-

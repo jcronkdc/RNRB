@@ -1,6 +1,6 @@
 /**
  * ADVANCED CALENDAR UTILITIES
- * 
+ *
  * - Conflict detection
  * - Travel time calculation
  * - Distance calculation
@@ -9,22 +9,14 @@
  */
 
 // Haversine distance calculation (in miles)
-export function calculateDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
+export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 3959; // Earth's radius in miles
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
 
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
@@ -62,16 +54,18 @@ export interface ShowConflict {
   distance?: number; // Miles
 }
 
-export function detectConflicts(shows: Array<{
-  id: string;
-  date: string;
-  venue?: {
-    latitude?: number;
-    longitude?: number;
-    name: string;
-  };
-  [key: string]: unknown;
-}>): ShowConflict[] {
+export function detectConflicts(
+  shows: Array<{
+    id: string;
+    date: string;
+    venue?: {
+      latitude?: number;
+      longitude?: number;
+      name: string;
+    };
+    [key: string]: unknown;
+  }>
+): ShowConflict[] {
   const conflicts: ShowConflict[] = [];
   const sortedShows = [...shows].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -83,8 +77,7 @@ export function detectConflicts(shows: Array<{
 
     const currentDate = new Date(current.date);
     const nextDate = new Date(next.date);
-    const hoursBetween =
-      (nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60);
+    const hoursBetween = (nextDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60);
 
     // Same day conflict
     if (isSameDay(currentDate, nextDate)) {
@@ -164,17 +157,19 @@ export interface TourStats {
   citiesVisited: Set<string>;
 }
 
-export function calculateTourStats(shows: Array<{
-  date: string;
-  venue?: {
-    latitude?: number;
-    longitude?: number;
-    name: string;
-    city?: string;
-    state?: string;
-  };
-  [key: string]: unknown;
-}>): TourStats {
+export function calculateTourStats(
+  shows: Array<{
+    date: string;
+    venue?: {
+      latitude?: number;
+      longitude?: number;
+      name: string;
+      city?: string;
+      state?: string;
+    };
+    [key: string]: unknown;
+  }>
+): TourStats {
   const sortedShows = [...shows].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
@@ -235,13 +230,15 @@ export function calculateTourStats(shows: Array<{
 }
 
 // Optimize tour routing (traveling salesman problem approximation)
-export function optimizeTourRoute<T extends {
-  date: string;
-  venue?: {
-    latitude?: number;
-    longitude?: number;
-  };
-}>(shows: T[]): T[] {
+export function optimizeTourRoute<
+  T extends {
+    date: string;
+    venue?: {
+      latitude?: number;
+      longitude?: number;
+    };
+  },
+>(shows: T[]): T[] {
   // Simple greedy nearest-neighbor algorithm
   if (shows.length <= 1) return shows;
 
@@ -297,14 +294,16 @@ export function optimizeTourRoute<T extends {
 }
 
 // Generate Google Maps directions URL
-export function generateDirectionsUrl(shows: Array<{
-  date: string;
-  venue?: {
-    latitude?: number;
-    longitude?: number;
-  };
-  [key: string]: unknown;
-}>): string {
+export function generateDirectionsUrl(
+  shows: Array<{
+    date: string;
+    venue?: {
+      latitude?: number;
+      longitude?: number;
+    };
+    [key: string]: unknown;
+  }>
+): string {
   const sortedShows = [...shows]
     .filter((show) => show.venue?.latitude && show.venue?.longitude)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -313,8 +312,13 @@ export function generateDirectionsUrl(shows: Array<{
 
   const firstVenue = sortedShows[0]?.venue;
   const lastVenue = sortedShows[sortedShows.length - 1]?.venue;
-  
-  if (!firstVenue?.latitude || !firstVenue?.longitude || !lastVenue?.latitude || !lastVenue?.longitude) {
+
+  if (
+    !firstVenue?.latitude ||
+    !firstVenue?.longitude ||
+    !lastVenue?.latitude ||
+    !lastVenue?.longitude
+  ) {
     return '';
   }
 
@@ -371,9 +375,8 @@ export function calculatePerDiem(
   const lastDate = new Date(sortedShows[sortedShows.length - 1].date);
 
   // Add travel days (day before first show, day after last show)
-  const totalDays = Math.ceil(
-    (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24)
-  ) + 2;
+  const totalDays =
+    Math.ceil((lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24)) + 2;
 
   const totalPerDiem = totalDays * dailyRate * bandMembers;
 
@@ -389,4 +392,3 @@ export function calculatePerDiem(
     },
   };
 }
-

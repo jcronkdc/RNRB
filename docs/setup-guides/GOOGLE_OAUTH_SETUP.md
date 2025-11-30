@@ -9,6 +9,7 @@
 ## 🎯 Quick Setup Steps
 
 ### 1. Go to Google Cloud Console
+
 https://console.cloud.google.com/apis/credentials
 
 ### 2. Create or Edit OAuth 2.0 Client ID
@@ -23,6 +24,7 @@ https://web-git-main-cronkwaters.vercel.app/api/auth/callback/google
 ```
 
 **For Preview Deployments (Optional but recommended):**
+
 ```
 https://*.vercel.app/api/auth/callback/google
 ```
@@ -36,6 +38,7 @@ https://web-cronkwaters.vercel.app
 ```
 
 **For Preview Deployments (Optional):**
+
 ```
 https://*.vercel.app
 ```
@@ -47,6 +50,7 @@ https://*.vercel.app
 ### 3. Copy Your Credentials
 
 You'll get:
+
 - **Client ID:** `251126367330-xxxxx.apps.googleusercontent.com`
 - **Client Secret:** `GOCSPX-xxxxx`
 
@@ -55,6 +59,7 @@ You'll get:
 **Go to:** https://vercel.com/cronkwaters/web/settings/environment-variables
 
 **Or via Vercel project ID:**
+
 ```
 https://vercel.com/team_WeBoOSXWzKGtRgHXfRURkxyZ/prj_IVRXSJT78FdVy8E5Sj51440HAuu3/settings/environment-variables
 ```
@@ -117,7 +122,8 @@ curl https://www.cronkwaters.com/api/auth/debug/providers | jq '.'
 
 **Problem:** The redirect URI in Google Console doesn't match the one your app is sending.
 
-**Solution:** 
+**Solution:**
+
 1. Copy the EXACT URL from the error message
 2. Add it to "Authorized Redirect URIs" in Google Console
 3. Wait 5 minutes for Google's cache to update
@@ -128,6 +134,7 @@ curl https://www.cronkwaters.com/api/auth/debug/providers | jq '.'
 **Problem:** Client ID or Client Secret is wrong in Vercel.
 
 **Solution:**
+
 1. Double-check GOOGLE_CLIENT_ID in Vercel matches Google Console
 2. Double-check GOOGLE_CLIENT_SECRET in Vercel matches Google Console
 3. Redeploy after updating
@@ -137,6 +144,7 @@ curl https://www.cronkwaters.com/api/auth/debug/providers | jq '.'
 **Problem:** OAuth consent screen not configured properly.
 
 **Solution:**
+
 1. Go to: https://console.cloud.google.com/apis/credentials/consent
 2. Fill in all required fields (App name, Support email, etc.)
 3. Add test users if in "Testing" mode
@@ -149,17 +157,20 @@ curl https://www.cronkwaters.com/api/auth/debug/providers | jq '.'
 ### Application Type: **Web Application**
 
 ### Application Information:
+
 - **App name:** CronkWaters (or your preferred name)
 - **User support email:** Your email
 - **App logo:** Upload your logo (optional)
 
 ### Authorized Domains:
+
 ```
 cronkwaters.com
 vercel.app
 ```
 
 ### Scopes:
+
 ```
 .../auth/userinfo.email
 .../auth/userinfo.profile
@@ -167,6 +178,7 @@ openid
 ```
 
 ### Publishing Status:
+
 - **Testing:** Only allows specific test users
 - **Production:** Requires Google verification (7-14 days)
 
@@ -189,9 +201,8 @@ openid
 ✅ **Vercel Project ID Updated:** `prj_IVRXSJT78FdVy8E5Sj51440HAuu3`  
 ✅ **Production URL:** https://www.cronkwaters.com  
 ⏳ **Waiting for:** You to complete Google OAuth setup steps above  
-⏳ **Next:** Test authentication flow on production  
+⏳ **Next:** Test authentication flow on production
 
 ---
 
 **Need help?** Check the `🚨_SECURITY_BREACH_IMMEDIATE_ACTION_REQUIRED.md` file for full security rotation instructions.
-

@@ -1,6 +1,6 @@
 /**
  * Test to demonstrate the EXACT scenario the user is describing
- * 
+ *
  * Testing whether URLSearchParams.set() encodes literal + characters
  */
 
@@ -53,7 +53,10 @@ console.log('URLSearchParams.toString():', result3);
 console.log('What did it interpret + as?');
 const parsed3 = params3.get('email');
 console.log('  Parsed value:', parsed3);
-console.log('  Did + become space?', parsed3.includes(' ') ? 'YES (+ treated as space) ❌' : 'NO ✅');
+console.log(
+  '  Did + become space?',
+  parsed3.includes(' ') ? 'YES (+ treated as space) ❌' : 'NO ✅'
+);
 
 // Test 4: Manual encoding vs URLSearchParams
 console.log('\n📝 Test 4: Manual encodeURIComponent vs URLSearchParams');
@@ -101,6 +104,5 @@ console.log('\n' + '='.repeat(80));
 console.log('CONCLUSION');
 console.log('='.repeat(80));
 console.log('URLSearchParams.set() DOES encode + to %2B');
-console.log('The issue might be with how we\'re using it in the code.');
+console.log("The issue might be with how we're using it in the code.");
 console.log('='.repeat(80));
-

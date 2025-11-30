@@ -13,6 +13,7 @@ The redirect URL handling was performing unnecessary `decodeURIComponent()` call
 ### Real-World Impact
 
 **Example: Invite link with email**
+
 ```
 Original email: user+test@example.com
 Encoded in URL: user%2Btest%40example.com
@@ -30,33 +31,38 @@ Next.js `searchParams.get()` **automatically decodes** URL-encoded values. The c
 ### The Flow (Before Fix)
 
 1. **Invite page** → Creates URL with encoded email:
+
    ```typescript
    const returnUrl = `/invites/project?email=${encodeURIComponent('user+test@example.com')}`;
    // Result: /invites/project?email=user%2Btest%40example.com
-   
+
    router.push(`/auth?redirect=${encodeURIComponent(returnUrl)}`);
    // Result: /auth?redirect=%2Finvites%2Fproject%3Femail%3Duser%252Btest%2540example.com
    ```
 
 2. **Auth page** → Receives decoded value:
+
    ```typescript
    const redirectParam = searchParams.get('redirect');
    // Next.js returns: /invites/project?email=user%2Btest@example.com (ALREADY DECODED)
    ```
 
 3. **Auth action** → Encodes for profile setup:
+
    ```typescript
    redirectTo = `/settings/profile?setup=true&redirect=${encodeURIComponent(redirectParam)}`;
    // Result: /settings/profile?setup=true&redirect=%2Finvites%2Fproject%3Femail%3Duser%252Btest%2540example.com
    ```
 
 4. **Profile page** → Receives decoded value:
+
    ```typescript
    const redirectAfterSetup = searchParams.get('redirect');
    // Next.js returns: /invites/project?email=user%2Btest@example.com (ALREADY DECODED)
    ```
 
 5. **Profile page (BUG)** → Double-decodes:
+
    ```typescript
    ❌ const decodedKey = decodeURIComponent(key);      // WRONG!
    ❌ const decodedValue = decodeURIComponent(value);  // WRONG!
@@ -65,7 +71,7 @@ Next.js `searchParams.get()` **automatically decodes** URL-encoded values. The c
 
 6. **URL parsing** → Interprets `+` as space:
    ```typescript
-   new URL('http://localhost/invites/project?email=user+test@example.com')
+   new URL('http://localhost/invites/project?email=user+test@example.com');
    // searchParams.get('email') returns: "user test@example.com" ❌ CORRUPTED!
    ```
 
@@ -76,14 +82,16 @@ Next.js `searchParams.get()` **automatically decodes** URL-encoded values. The c
 1. **`apps/web/app/(app)/settings/profile/page.tsx`** (lines 139-147)
 
 **Before:**
+
 ```typescript
 // Complex logic with unnecessary decoding
-const decodedKey = decodeURIComponent(key);    // ❌ DOUBLE DECODE
+const decodedKey = decodeURIComponent(key); // ❌ DOUBLE DECODE
 const decodedValue = decodeURIComponent(value); // ❌ DOUBLE DECODE
 // ... complex reconstruction logic
 ```
 
 **After:**
+
 ```typescript
 // Simple and correct - use decoded value as-is
 if (destination.startsWith('/') && !destination.startsWith('//')) {
@@ -98,9 +106,9 @@ if (destination.startsWith('/') && !destination.startsWith('//')) {
 ## Key Insight
 
 > **Next.js `searchParams.get()` ALWAYS returns decoded values.**
-> 
+>
 > You should **NEVER** call `decodeURIComponent()` on these values.
-> 
+>
 > When passing them to `router.push()`, use them as-is—the router handles encoding internally.
 
 ## Encoding/Decoding Rules
@@ -141,6 +149,7 @@ const url = `/invites/project?email=${email}`; // ❌ WRONG if email has special
 Comprehensive test suite added: `apps/web/app/(app)/settings/profile/__tests__/redirect-handling.test.ts`
 
 **Test cases:**
+
 - Single vs double decoding behavior
 - Email addresses with `+` character
 - Multiple query parameters
@@ -152,6 +161,7 @@ Comprehensive test suite added: `apps/web/app/(app)/settings/profile/__tests__/r
 To verify the fix works:
 
 1. **Create invite link with special email:**
+
    ```
    http://localhost:3000/invites/test-project?email=user%2Btest%40example.com
    ```

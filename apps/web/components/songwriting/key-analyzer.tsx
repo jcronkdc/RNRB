@@ -82,10 +82,10 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`border-border/40 bg-surface/30 rounded-xl border-2 border-dashed p-6 text-center ${className}`}
+        className={`rounded-xl border-2 border-dashed border-border/40 bg-surface/30 p-6 text-center ${className}`}
       >
-        <Music className="text-muted-foreground/40 mx-auto mb-3 h-12 w-12" />
-        <p className="text-muted-foreground text-sm">
+        <Music className="mx-auto mb-3 h-12 w-12 text-muted-foreground/40" />
+        <p className="text-sm text-muted-foreground">
           Add chords to detect your song's key automatically
         </p>
       </motion.div>
@@ -100,13 +100,13 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className={`border-border/40 bg-surface/30 rounded-xl border-2 p-6 ${className}`}
+        className={`rounded-xl border-2 border-border/40 bg-surface/30 p-6 ${className}`}
       >
         <div className="mb-2 flex items-center gap-2">
           <Info className="h-5 w-5 text-yellow-500" />
           <p className="font-semibold text-yellow-600 dark:text-yellow-400">Unable to detect key</p>
         </div>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-sm text-muted-foreground">
           Try adding more chords or using common progressions (I-IV-V, ii-V-I)
         </p>
       </motion.div>
@@ -173,12 +173,12 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
             <motion.div
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-              className="from-brand-primary to-brand-secondary flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br shadow-lg"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary shadow-lg"
             >
               <Music className="h-6 w-6 text-white" />
             </motion.div>
             <div>
-              <p className="text-muted-foreground mb-1 text-xs font-semibold uppercase tracking-wide">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Detected Key
               </p>
               <motion.h3
@@ -220,7 +220,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
         {/* Reasons with animations */}
         {topSuggestion.reasons.length > 0 && (
           <div className="space-y-1">
-            <p className="text-muted-foreground mb-2 flex items-center gap-1 text-xs font-semibold uppercase tracking-wide">
+            <p className="mb-2 flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <Sparkles className="h-3 w-3" />
               Why this key?
             </p>
@@ -247,7 +247,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-border/50 mt-4 border-t pt-4"
+            className="mt-4 border-t border-border/50 pt-4"
           >
             <button
               onClick={() => setShowAIInsights(!showAIInsights)}
@@ -277,7 +277,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
                       <p className="mb-1 text-xs font-semibold text-purple-600 dark:text-purple-400">
                         Musical Character
                       </p>
-                      <p className="text-foreground/90 text-sm">{aiAnalysis.musicalCharacter}</p>
+                      <p className="text-sm text-foreground/90">{aiAnalysis.musicalCharacter}</p>
                     </div>
                   )}
 
@@ -287,7 +287,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
                       <p className="mb-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
                         Progression Type
                       </p>
-                      <p className="text-foreground/90 text-sm">{aiAnalysis.progressionType}</p>
+                      <p className="text-sm text-foreground/90">{aiAnalysis.progressionType}</p>
                     </div>
                   )}
 
@@ -334,7 +334,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
                       <p className="mb-1 text-xs font-semibold text-orange-600 dark:text-orange-400">
                         Secondary Dominants Detected
                       </p>
-                      <p className="text-foreground/90 text-sm">
+                      <p className="text-sm text-foreground/90">
                         {aiAnalysis.secondaryDominants.join(', ')}
                       </p>
                     </div>
@@ -347,7 +347,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
                         Key Changes Detected
                       </p>
                       {aiAnalysis.modulations.map((mod, i) => (
-                        <p key={i} className="text-foreground/90 text-sm">
+                        <p key={i} className="text-sm text-foreground/90">
                           {mod.fromKey} → {mod.toKey} (chord {mod.atChord})
                         </p>
                       ))}
@@ -364,11 +364,11 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-border/50 mt-4 border-t pt-4"
+            className="mt-4 border-t border-border/50 pt-4"
           >
             <div className="mb-3 flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-purple-400" />
-              <h5 className="text-muted-foreground text-xs font-semibold uppercase tracking-wide">
+              <h5 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Try These Alternatives
               </h5>
             </div>
@@ -383,10 +383,10 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
                   className="group"
                 >
                   <div className="mb-2 flex items-center gap-2">
-                    <span className="text-brand-primary text-sm font-bold">
+                    <span className="text-sm font-bold text-brand-primary">
                       {chordAlt.originalChord}
                     </span>
-                    <span className="text-muted-foreground text-xs">→</span>
+                    <span className="text-xs text-muted-foreground">→</span>
                   </div>
 
                   <div className="flex flex-wrap gap-2 pl-6">
@@ -437,7 +437,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
               ))}
             </div>
 
-            <p className="text-muted-foreground mt-3 text-center text-[10px] opacity-60">
+            <p className="mt-3 text-center text-[10px] text-muted-foreground opacity-60">
               💡 Hover over alternatives to see why they work
             </p>
           </motion.div>
@@ -453,7 +453,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
             exit={{ opacity: 0, height: 0 }}
             className="space-y-2"
           >
-            <p className="text-muted-foreground px-1 text-xs font-semibold uppercase tracking-wide">
+            <p className="px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Other Possibilities
             </p>
             {otherSuggestions.map((suggestion, i) => (
@@ -462,14 +462,14 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="border-border/60 bg-surface/50 hover:border-brand-primary/30 hover:bg-surface/80 cursor-help rounded-lg border p-4 transition-all"
+                className="cursor-help rounded-lg border border-border/60 bg-surface/50 p-4 transition-all hover:border-brand-primary/30 hover:bg-surface/80"
                 title={suggestion.reasons.join(', ')}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-foreground font-semibold">{suggestion.key}</p>
+                    <p className="font-semibold text-foreground">{suggestion.key}</p>
                     {suggestion.reasons.length > 0 && (
-                      <p className="text-muted-foreground mt-1 text-xs">{suggestion.reasons[0]}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{suggestion.reasons[0]}</p>
                     )}
                   </div>
                   <div className="text-right">
@@ -488,13 +488,13 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
 
       {/* Chord Count Info with animation */}
       <motion.div layout className="pt-2 text-center">
-        <p className="text-muted-foreground text-xs">
+        <p className="text-xs text-muted-foreground">
           Analyzing{' '}
           <motion.span
             key={chords.length}
             initial={{ scale: 1.5, color: 'var(--brand-primary)' }}
             animate={{ scale: 1, color: 'inherit' }}
-            className="text-brand-primary font-semibold"
+            className="font-semibold text-brand-primary"
           >
             {chords.length}
           </motion.span>{' '}

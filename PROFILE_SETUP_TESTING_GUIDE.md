@@ -331,7 +331,7 @@ Take screenshots of:
 
 **Test Status:** ⏳ Awaiting deployment to production
 
-**Tester:** ********\_********  
-**Date:** ********\_********  
+**Tester:** **\*\*\*\***\_**\*\*\*\***  
+**Date:** **\*\*\*\***\_**\*\*\*\***  
 **Result:** ☐ Pass ☐ Fail  
-**Notes:** ********\_********
+**Notes:** **\*\*\*\***\_**\*\*\*\***

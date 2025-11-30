@@ -32,17 +32,17 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
 
     try {
       const response = await fetch(`/api/rhyme?word=${encodeURIComponent(word)}&type=${rhymeType}`);
-      
+
       if (!response.ok) throw new Error('Rhyme API failed');
-      
+
       const data = await response.json();
-      
+
       if (data.rhymes && data.rhymes.length > 0) {
         // Group by syllable count if available
         if (data.grouped && Object.keys(data.grouped).length > 0) {
           const grouped = data.grouped as Record<string, string[]>;
           const formattedSuggestions: string[] = [];
-          
+
           Object.keys(grouped)
             .sort((a, b) => parseInt(a) - parseInt(b))
             .forEach((syllableCount) => {
@@ -53,13 +53,17 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
                 );
               }
             });
-          
-          setSuggestions(formattedSuggestions.length > 0 ? formattedSuggestions : data.rhymes.slice(0, 30));
+
+          setSuggestions(
+            formattedSuggestions.length > 0 ? formattedSuggestions : data.rhymes.slice(0, 30)
+          );
         } else {
           setSuggestions(data.rhymes.slice(0, 30));
         }
       } else {
-        setSuggestions([`No ${rhymeType} rhymes found for "${word}". Try a different word or rhyme type.`]);
+        setSuggestions([
+          `No ${rhymeType} rhymes found for "${word}". Try a different word or rhyme type.`,
+        ]);
       }
     } catch (error) {
       console.error('Rhyme fetch error:', error);
@@ -75,25 +79,25 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
 
     try {
       const response = await fetch(`/api/thesaurus?word=${encodeURIComponent(word)}&type=all`);
-      
+
       if (!response.ok) throw new Error('Thesaurus API failed');
-      
+
       const data = await response.json();
       const results: string[] = [];
-      
+
       if (data.synonyms && data.synonyms.length > 0) {
         const synonymWords = data.synonyms
           .slice(0, 15)
-          .map((s: { word: string; definition?: string }) => 
+          .map((s: { word: string; definition?: string }) =>
             s.definition ? `${s.word} (${s.definition})` : s.word
           );
         results.push(`Synonyms: ${synonymWords.join(', ')}`);
       }
-      
+
       if (data.triggers && data.triggers.length > 0) {
         results.push(`Words that follow: ${data.triggers.slice(0, 10).join(', ')}`);
       }
-      
+
       if (results.length > 0) {
         setSuggestions(results);
       } else {
@@ -118,25 +122,25 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text }),
       });
-      
+
       if (!response.ok) throw new Error('Syllable counter failed');
-      
+
       const data = await response.json();
-      
+
       if (data.lines && data.lines.length > 0) {
         setSyllableResults(data.lines);
-        
+
         const summary = [
           `Total lines: ${data.totalLines}`,
           `Average syllables per line: ${data.averageSyllables}`,
         ];
-        
+
         if (data.meterWarning) {
           summary.push(`⚠️ ${data.meterWarning}`);
         } else {
           summary.push('✓ Meter is consistent');
         }
-        
+
         setSuggestions(summary);
       } else {
         setSuggestions(['No text to analyze. Enter some lyrics first.']);
@@ -196,7 +200,9 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className={`rounded-lg p-2 ${mode === 'rhyme' ? 'bg-white/20' : 'bg-blue-500/10'}`}>
+            <div
+              className={`rounded-lg p-2 ${mode === 'rhyme' ? 'bg-white/20' : 'bg-blue-500/10'}`}
+            >
               <Book className="h-5 w-5" />
             </div>
             <div className="flex-1">
@@ -205,7 +211,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
             </div>
           </div>
         </button>
-        
+
         <button
           onClick={() => setMode('thesaurus')}
           className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
@@ -215,7 +221,9 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className={`rounded-lg p-2 ${mode === 'thesaurus' ? 'bg-white/20' : 'bg-indigo-500/10'}`}>
+            <div
+              className={`rounded-lg p-2 ${mode === 'thesaurus' ? 'bg-white/20' : 'bg-indigo-500/10'}`}
+            >
               <TrendingUp className="h-5 w-5" />
             </div>
             <div className="flex-1">
@@ -224,7 +232,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
             </div>
           </div>
         </button>
-        
+
         <button
           onClick={() => setMode('syllables')}
           className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
@@ -234,7 +242,9 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           }`}
         >
           <div className="flex items-center gap-3">
-            <div className={`rounded-lg p-2 ${mode === 'syllables' ? 'bg-white/20' : 'bg-green-500/10'}`}>
+            <div
+              className={`rounded-lg p-2 ${mode === 'syllables' ? 'bg-white/20' : 'bg-green-500/10'}`}
+            >
               <Hash className="h-5 w-5" />
             </div>
             <div className="flex-1">
@@ -243,7 +253,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
             </div>
           </div>
         </button>
-        
+
         <button
           onClick={() => setMode('ai')}
           className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
@@ -263,7 +273,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           </div>
         </button>
       </div>
-      
+
       {/* Rhyme type selector */}
       {mode === 'rhyme' && (
         <div className="flex gap-2">
@@ -307,14 +317,18 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Paste your lyrics here to count syllables per line..."
-              className="border-border bg-surface text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 min-h-[120px] w-full rounded-xl border-2 px-4 py-4 text-base outline-none transition focus:ring-4"
+              className="min-h-[120px] w-full rounded-xl border-2 border-border bg-surface px-4 py-4 text-base text-foreground placeholder-muted-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
             />
             <Button
               onClick={handleSearch}
               disabled={loading || (!query.trim() && !currentLyrics.trim())}
               className="w-full rounded-lg bg-green-600 px-6 py-3 hover:bg-green-700"
             >
-              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Hash className="mr-2 h-4 w-4" />}
+              {loading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Hash className="mr-2 h-4 w-4" />
+              )}
               {loading ? 'Counting...' : 'Count Syllables'}
             </Button>
           </div>
@@ -332,13 +346,17 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
                     ? 'Enter a word to find synonyms...'
                     : 'Ask AI for lyric help (e.g., "help with chorus about heartbreak")'
               }
-              className="border-border bg-surface text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-4 pr-32 text-base outline-none transition focus:ring-4"
+              className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 pr-32 text-base text-foreground placeholder-muted-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
             />
             <Button
               onClick={handleSearch}
               disabled={loading || !query.trim()}
               className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-6 py-2.5 ${
-                mode === 'ai' ? 'bg-purple-600 hover:bg-purple-700' : mode === 'rhyme' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-indigo-600 hover:bg-indigo-700'
+                mode === 'ai'
+                  ? 'bg-purple-600 hover:bg-purple-700'
+                  : mode === 'rhyme'
+                    ? 'bg-blue-600 hover:bg-blue-700'
+                    : 'bg-indigo-600 hover:bg-indigo-700'
               }`}
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Search'}
@@ -350,17 +368,17 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
       {/* Syllable breakdown display */}
       {mode === 'syllables' && syllableResults.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold uppercase tracking-wide">
+          <h4 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             <Hash className="h-4 w-4" />
             Syllable Breakdown
           </h4>
           {syllableResults.map((result, index) => (
             <Card
               key={index}
-              className="rnrb-card border-border from-surface-muted to-surface border-2 bg-gradient-to-br p-4"
+              className="rnrb-card border-2 border-border bg-gradient-to-br from-surface-muted to-surface p-4"
             >
               <div className="mb-2 flex items-center justify-between gap-4">
-                <p className="text-foreground flex-1 text-sm font-medium">{result.line}</p>
+                <p className="flex-1 text-sm font-medium text-foreground">{result.line}</p>
                 <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400">
                   {result.syllables} syllables
                 </span>
@@ -379,12 +397,18 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           ))}
         </div>
       )}
-      
+
       {/* Regular suggestions display */}
       {suggestions.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-muted-foreground text-sm font-semibold uppercase tracking-wide">
-            {mode === 'ai' ? 'AI Suggestions' : mode === 'rhyme' ? 'Rhymes' : mode === 'syllables' ? 'Analysis' : 'Synonyms'}
+          <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            {mode === 'ai'
+              ? 'AI Suggestions'
+              : mode === 'rhyme'
+                ? 'Rhymes'
+                : mode === 'syllables'
+                  ? 'Analysis'
+                  : 'Synonyms'}
           </h4>
           {suggestions.map((suggestion, index) => (
             <Card
@@ -393,9 +417,9 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
               onClick={mode === 'syllables' ? undefined : () => onInsert(suggestion)}
             >
               <div className="flex items-start justify-between gap-4">
-                <p className="text-foreground flex-1 text-sm leading-relaxed">{suggestion}</p>
+                <p className="flex-1 text-sm leading-relaxed text-foreground">{suggestion}</p>
                 {mode !== 'syllables' && (
-                  <div className="text-brand-primary text-xs font-medium opacity-0 transition group-hover:opacity-100">
+                  <div className="text-xs font-medium text-brand-primary opacity-0 transition group-hover:opacity-100">
                     Click to insert →
                   </div>
                 )}

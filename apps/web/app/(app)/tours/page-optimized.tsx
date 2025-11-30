@@ -129,7 +129,7 @@ export default function ToursPageOptimized() {
   }
 
   if (toursError) {
-    error(toursError);
+    error(toursError.message);
   }
 
   return (

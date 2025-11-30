@@ -61,7 +61,7 @@ let cleanupInterval: NodeJS.Timeout | null = null;
 if (typeof window === 'undefined') {
   // Server-side only
   cleanupInterval = setInterval(() => cache.cleanup(), 600000);
-  
+
   // Cleanup on process exit (for serverless environments)
   if (typeof process !== 'undefined') {
     const cleanup = () => {
@@ -70,7 +70,7 @@ if (typeof window === 'undefined') {
         cleanupInterval = null;
       }
     };
-    
+
     process.on('SIGTERM', cleanup);
     process.on('SIGINT', cleanup);
     process.on('exit', cleanup);
@@ -90,9 +90,3 @@ export async function withCache<T>(key: string, fn: () => Promise<T>, ttl?: numb
   cache.set(key, data, ttl);
   return data;
 }
-
-
-
-
-
-

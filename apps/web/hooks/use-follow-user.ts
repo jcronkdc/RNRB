@@ -32,7 +32,7 @@ export function useFollowUser({
   const [followingUserId, setFollowingUserId] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
   const followingMember = members.find((m) => m.userId === followingUserId);
-  
+
   const userScrolledRef = useRef(false);
   const userInteractionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -141,4 +141,3 @@ export function useFollowUser({
     toggleFollow,
   };
 }
-

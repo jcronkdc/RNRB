@@ -16,7 +16,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Debug: Log available models
-    console.log('🔍 Available db models:', Object.keys(db).filter(k => !k.startsWith('_') && !k.startsWith('$')));
+    console.log(
+      '🔍 Available db models:',
+      Object.keys(db).filter((k) => !k.startsWith('_') && !k.startsWith('$'))
+    );
     console.log('🔍 Checking songRequest accessor:', typeof db.songRequest);
 
     const requests = await db.songRequest.findMany({
@@ -32,11 +35,14 @@ export async function GET(request: NextRequest) {
     console.error('Song requests GET error:', error);
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ 
-      error: 'Failed to fetch song requests',
-      details: errorMessage,
-      availableModels: Object.keys(db).filter(k => !k.startsWith('_') && !k.startsWith('$'))
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch song requests',
+        details: errorMessage,
+        availableModels: Object.keys(db).filter((k) => !k.startsWith('_') && !k.startsWith('$')),
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -47,14 +53,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const {
-      setlistId,
-      songTitle,
-      requestedBy,
-      email,
-      message,
-      dedication,
-    } = body;
+    const { setlistId, songTitle, requestedBy, email, message, dedication } = body;
 
     if (!setlistId || !songTitle || !requestedBy) {
       return NextResponse.json(
@@ -88,10 +87,12 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Song requests POST error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ 
-      error: 'Failed to create song request',
-      details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to create song request',
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
+      },
+      { status: 500 }
+    );
   }
 }
-

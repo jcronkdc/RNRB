@@ -240,7 +240,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
             );
           })
         ) : (
-          <div className="text-muted-foreground py-8 text-center text-sm">
+          <div className="py-8 text-center text-sm text-muted-foreground">
             Type your lyrics below to get started...
           </div>
         )}
@@ -251,14 +251,14 @@ export const GranularChordEditor = memo(function GranularChordEditor({
         value={content}
         onChange={(e) => onContentChange(e.target.value)}
         placeholder={`Write your ${blockType} lyrics...\n\nTip: Type your lyrics, then click any word above to add a chord!`}
-        className="border-border/50 bg-surface/50 text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-lg border px-4 py-3 text-sm outline-none transition-all focus:ring-2"
+        className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-4 py-3 text-sm text-foreground outline-none transition-all focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
         rows={4}
         aria-label={`${blockType} lyrics editor`}
       />
 
       {/* Chord count indicator */}
       {chordPlacements.length > 0 && (
-        <div className="text-muted-foreground text-right text-xs">
+        <div className="text-right text-xs text-muted-foreground">
           {chordPlacements.length} {chordPlacements.length === 1 ? 'chord' : 'chords'} placed
         </div>
       )}
@@ -283,12 +283,12 @@ export const GranularChordEditor = memo(function GranularChordEditor({
             >
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="flex items-center gap-2 text-lg font-semibold">
-                  <Music className="text-brand-primary h-5 w-5" />
+                  <Music className="h-5 w-5 text-brand-primary" />
                   Choose Chord
                 </h3>
                 <button
                   onClick={() => setShowChordPicker(false)}
-                  className="text-muted-foreground hover:bg-surface-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
                   aria-label="Close chord picker"
                 >
                   <X className="h-5 w-5" />
@@ -296,7 +296,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
               </div>
 
               {/* Common Chords Grid - optimized animation with group stagger */}
-              <motion.div 
+              <motion.div
                 className="mb-4 grid grid-cols-5 gap-2"
                 initial="hidden"
                 animate="visible"
@@ -328,8 +328,8 @@ export const GranularChordEditor = memo(function GranularChordEditor({
               </motion.div>
 
               {/* Custom Chord Input */}
-              <div className="border-border border-t pt-4">
-                <p className="text-muted-foreground mb-2 flex items-center gap-2 text-sm">
+              <div className="border-t border-border pt-4">
+                <p className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
                   <Info className="h-3.5 w-3.5" />
                   Or enter a custom chord:
                 </p>
@@ -341,7 +341,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                     onChange={(e) => setCustomChord(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addCustomChord()}
                     placeholder="e.g., Cmaj7, Dsus4, Fadd9"
-                    className="border-border bg-background focus:border-brand-primary focus:ring-brand-primary/20 flex-1 rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
+                    className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                     aria-label="Custom chord input"
                   />
                   <Button
@@ -354,13 +354,13 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
-                <p className="text-muted-foreground mt-2 text-xs">
+                <p className="mt-2 text-xs text-muted-foreground">
                   Press{' '}
-                  <kbd className="bg-muted rounded px-1.5 py-0.5 text-[10px] font-medium">
+                  <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">
                     Enter
                   </kbd>{' '}
                   or{' '}
-                  <kbd className="bg-muted rounded px-1.5 py-0.5 text-[10px] font-medium">Esc</kbd>{' '}
+                  <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">Esc</kbd>{' '}
                   for shortcuts
                 </p>
               </div>

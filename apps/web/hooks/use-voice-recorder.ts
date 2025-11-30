@@ -287,9 +287,3 @@ export function useVoiceRecorder({
     resumeRecording,
   };
 }
-
-
-
-
-
-

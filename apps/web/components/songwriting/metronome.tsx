@@ -27,34 +27,46 @@ export function Metronome({
   const [isMuted, setIsMuted] = useState(false);
   const [tapTimes, setTapTimes] = useState<number[]>([]);
   const [showTapDetected, setShowTapDetected] = useState(false);
-  
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const nextNoteTimeRef = useRef<number>(0);
   const scheduleAheadTime = 0.1; // Schedule 100ms ahead
   const tapTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // Use refs to avoid stale closures in scheduler
   const bpmRef = useRef(bpm);
   const timeSignatureRef = useRef(timeSignature);
   const isMutedRef = useRef(isMuted);
   const volumeRef = useRef(volume);
   const currentBeatRef = useRef(currentBeat);
-  
+
   // Keep refs in sync with state
-  useEffect(() => { bpmRef.current = bpm; }, [bpm]);
-  useEffect(() => { timeSignatureRef.current = timeSignature; }, [timeSignature]);
-  useEffect(() => { isMutedRef.current = isMuted; }, [isMuted]);
-  useEffect(() => { volumeRef.current = volume; }, [volume]);
-  useEffect(() => { currentBeatRef.current = currentBeat; }, [currentBeat]);
+  useEffect(() => {
+    bpmRef.current = bpm;
+  }, [bpm]);
+  useEffect(() => {
+    timeSignatureRef.current = timeSignature;
+  }, [timeSignature]);
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+  }, [isMuted]);
+  useEffect(() => {
+    volumeRef.current = volume;
+  }, [volume]);
+  useEffect(() => {
+    currentBeatRef.current = currentBeat;
+  }, [currentBeat]);
 
   // Initialize Web Audio API
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       audioContextRef.current = new AudioContextClass();
     }
-    
+
     return () => {
       if (audioContextRef.current) {
         audioContextRef.current.close();
@@ -93,7 +105,7 @@ export function Metronome({
       const isAccent = currentBeatRef.current % beatsPerMeasure === 0;
       playClick(nextNoteTimeRef.current, isAccent);
       nextNoteTimeRef.current += interval;
-      setCurrentBeat(prev => (prev + 1) % beatsPerMeasure);
+      setCurrentBeat((prev) => (prev + 1) % beatsPerMeasure);
     }
   };
 
@@ -169,7 +181,7 @@ export function Metronome({
       }
       const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
       const calculatedBpm = Math.round(60000 / avgInterval);
-      
+
       if (calculatedBpm >= 40 && calculatedBpm <= 300) {
         handleBpmChange(calculatedBpm);
         setShowTapDetected(true);
@@ -370,7 +382,9 @@ export function Metronome({
         >
           TAP HERE
           {tapTimes.length > 0 && (
-            <span className="ml-2 text-xs">({tapTimes.length} tap{tapTimes.length === 1 ? '' : 's'})</span>
+            <span className="ml-2 text-xs">
+              ({tapTimes.length} tap{tapTimes.length === 1 ? '' : 's'})
+            </span>
           )}
         </button>
       </div>
@@ -403,7 +417,3 @@ export function Metronome({
     </Card>
   );
 }
-
-
-
-

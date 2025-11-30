@@ -20,12 +20,12 @@ interface UseRequireAuthReturn {
 /**
  * Custom hook to check authentication status on a page.
  * Uses NextAuth session for authentication.
- * 
+ *
  * ⚠️ IMPORTANT: This hook NO LONGER handles redirects or route protection.
- * 
+ *
  * Auth protection is now handled by middleware.ts at the server level.
  * This hook is ONLY for getting the current user and loading state in client components.
- * 
+ *
  * All protected routes are defined in middleware.ts. If you need a page to be:
  * - Protected: Add it to the middleware matcher
  * - Public: Remove it from the middleware matcher or add to publicRoutes array
@@ -42,17 +42,17 @@ export function useRequireAuth(options: UseRequireAuthOptions = {}): UseRequireA
     if (options.redirectTo || options.redirectIfNoUser !== undefined) {
       console.warn(
         '⚠️ useRequireAuth: The options you passed (redirectTo, redirectIfNoUser) are DEPRECATED and have no effect.\n' +
-        'Auth protection is now handled by middleware.ts.\n' +
-        'Please remove these options from your useRequireAuth() call.\n' +
-        'To change route protection, edit apps/web/middleware.ts instead.'
+          'Auth protection is now handled by middleware.ts.\n' +
+          'Please remove these options from your useRequireAuth() call.\n' +
+          'To change route protection, edit apps/web/middleware.ts instead.'
       );
     }
   }, []); // Only run once on mount
 
   useEffect(() => {
     if (status !== 'loading') {
-      console.log('🔐 useRequireAuth: Session check', { 
-        status, 
+      console.log('🔐 useRequireAuth: Session check', {
+        status,
         hasUser: !!session?.user,
         userId: session?.user?.id,
         email: session?.user?.email,
@@ -60,9 +60,9 @@ export function useRequireAuth(options: UseRequireAuthOptions = {}): UseRequireA
     }
   }, [session, status]);
 
-  return { 
-    user: session?.user || null, 
+  return {
+    user: session?.user || null,
     loading: status === 'loading',
-    error 
+    error,
   };
 }

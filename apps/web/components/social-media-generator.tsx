@@ -99,7 +99,7 @@ export function SocialMediaGenerator({
             </>
           )}
         </Button>
-        <p className="text-muted-foreground mt-3 text-xs">
+        <p className="mt-3 text-xs text-muted-foreground">
           AI will generate 5 caption options for Instagram, Facebook, and Twitter
         </p>
       </div>
@@ -132,7 +132,7 @@ export function SocialMediaGenerator({
                 <div className="flex gap-2">
                   <button
                     onClick={() => copyToClipboard(post, index)}
-                    className="bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90 flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition"
+                    className="flex items-center gap-1 rounded-lg bg-brand-primary px-3 py-1.5 text-xs font-medium text-brand-primary-foreground transition hover:bg-brand-primary/90"
                   >
                     {copiedIndex === index ? (
                       <>
@@ -146,17 +146,17 @@ export function SocialMediaGenerator({
                   </button>
                 </div>
               </div>
-              <p className="text-foreground whitespace-pre-wrap text-sm leading-relaxed">{post}</p>
-              <div className="border-border mt-4 flex gap-3 border-t pt-4">
-                <Instagram className="text-muted-foreground h-5 w-5" />
-                <Facebook className="text-muted-foreground h-5 w-5" />
-                <Twitter className="text-muted-foreground h-5 w-5" />
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">{post}</p>
+              <div className="mt-4 flex gap-3 border-t border-border pt-4">
+                <Instagram className="h-5 w-5 text-muted-foreground" />
+                <Facebook className="h-5 w-5 text-muted-foreground" />
+                <Twitter className="h-5 w-5 text-muted-foreground" />
               </div>
             </Card>
           ))}
 
           <div className="rnrb-card border-yellow-500/20 bg-yellow-500/5 p-4">
-            <p className="text-muted-foreground text-xs">
+            <p className="text-xs text-muted-foreground">
               <strong className="text-yellow-500">⚠️ Important:</strong> These are AI-generated
               drafts. Edit to match your voice and ensure accuracy before posting. Share with your
               team for feedback using the chat feature.

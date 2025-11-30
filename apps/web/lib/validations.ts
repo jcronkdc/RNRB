@@ -1,6 +1,6 @@
 /**
  * INPUT VALIDATION SCHEMAS
- * 
+ *
  * Zod schemas for validating API inputs.
  * All API routes should use these for request validation.
  */
@@ -89,13 +89,7 @@ export const generateSetlistSchema = z.object({
 // ============================================
 
 // Must match Prisma LibraryFileType enum
-export const libraryFileTypeSchema = z.enum([
-  'stem',
-  'demo',
-  'sample',
-  'loop',
-  'other',
-]);
+export const libraryFileTypeSchema = z.enum(['stem', 'demo', 'sample', 'loop', 'other']);
 
 export const uploadLibraryFileSchema = z.object({
   type: libraryFileTypeSchema.default('other'),
@@ -147,7 +141,9 @@ export const createTourSchema = z.object({
   projectId: cuidSchema.optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
-  status: z.enum(['planning', 'confirmed', 'in-progress', 'completed', 'cancelled']).default('planning'),
+  status: z
+    .enum(['planning', 'confirmed', 'in-progress', 'completed', 'cancelled'])
+    .default('planning'),
   description: safeString(2000).optional(),
 });
 
@@ -230,7 +226,7 @@ export async function parseFormData<T extends z.ZodSchema>(
         data[key] = value; // Keep as string if too large
         return;
       }
-      
+
       try {
         // Security: Parse with reviver to prevent prototype pollution
         const parsed = JSON.parse(value, (k, v) => {
@@ -240,7 +236,7 @@ export async function parseFormData<T extends z.ZodSchema>(
           }
           return v;
         });
-        
+
         // Security: Limit depth to prevent stack overflow (max depth 20)
         const checkDepth = (obj: unknown, depth = 0): unknown => {
           if (depth > 20) {
@@ -248,7 +244,7 @@ export async function parseFormData<T extends z.ZodSchema>(
           }
           if (obj && typeof obj === 'object') {
             if (Array.isArray(obj)) {
-              return obj.map(item => checkDepth(item, depth + 1));
+              return obj.map((item) => checkDepth(item, depth + 1));
             }
             const result: Record<string, unknown> = {};
             for (const [k, v] of Object.entries(obj)) {
@@ -258,7 +254,7 @@ export async function parseFormData<T extends z.ZodSchema>(
           }
           return obj;
         };
-        
+
         data[key] = checkDepth(parsed);
       } catch {
         data[key] = value; // Keep as string if parsing fails
@@ -291,4 +287,3 @@ export function parseSearchParams<T extends z.ZodSchema>(
 
   return schema.parse(data);
 }
-

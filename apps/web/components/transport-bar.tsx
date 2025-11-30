@@ -78,7 +78,7 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
       animate={{ y: 0 }}
       exit={{ y: 100 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="border-border bg-surface fixed bottom-0 left-0 right-0 z-40 flex h-[72px] items-center gap-4 border-t px-4"
+      className="fixed bottom-0 left-0 right-0 z-40 flex h-[72px] items-center gap-4 border-t border-border bg-surface px-4"
     >
       {/* Track Info */}
       <div className="flex w-64 min-w-0 flex-shrink-0 items-center gap-3">
@@ -91,13 +91,13 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
             className="rounded-md"
           />
         ) : (
-          <div className="bg-surface-hover flex h-12 w-12 items-center justify-center rounded-md">
-            <Volume2 className="text-foreground-muted h-5 w-5" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-md bg-surface-hover">
+            <Volume2 className="h-5 w-5 text-foreground-muted" />
           </div>
         )}
         <div className="min-w-0">
           <h4 className="truncate text-sm font-medium">{currentTrack.title}</h4>
-          <p className="text-foreground-muted truncate text-xs">
+          <p className="truncate text-xs text-foreground-muted">
             {currentTrack.artist || 'Unknown Artist'}
           </p>
         </div>
@@ -122,7 +122,7 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
           </button>
 
           <button
-            className="btn-icon bg-brand-primary text-background hover:bg-brand-primary/90 h-10 w-10"
+            className="btn-icon h-10 w-10 bg-brand-primary text-background hover:bg-brand-primary/90"
             onClick={() => setIsPlaying(!isPlaying)}
           >
             {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="ml-0.5 h-5 w-5" />}
@@ -142,7 +142,7 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
 
         {/* Waveform & Time */}
         <div className="flex items-center gap-2">
-          <span className="text-foreground-muted w-10 text-right text-xs">
+          <span className="w-10 text-right text-xs text-foreground-muted">
             {formatTime(currentTime)}
           </span>
 
@@ -169,12 +169,12 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
 
             {/* Progress indicator */}
             <div
-              className="bg-foreground absolute bottom-0 top-0 w-0.5"
+              className="absolute bottom-0 top-0 w-0.5 bg-foreground"
               style={{ left: `${progress}%` }}
             />
           </div>
 
-          <span className="text-foreground-muted w-10 text-xs">
+          <span className="w-10 text-xs text-foreground-muted">
             {formatTime(currentTrack.duration)}
           </span>
         </div>
@@ -192,9 +192,9 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
             )}
           </button>
 
-          <div className="bg-surface-hover group relative h-1 w-20 rounded-full">
+          <div className="group relative h-1 w-20 rounded-full bg-surface-hover">
             <div
-              className="bg-foreground absolute inset-y-0 left-0 rounded-full"
+              className="absolute inset-y-0 left-0 rounded-full bg-foreground"
               style={{ width: `${isMuted ? 0 : volume * 100}%` }}
             />
             <input

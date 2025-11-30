@@ -221,7 +221,7 @@ export function CollaborativeWhiteboard({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="border-border bg-surface-muted flex items-center gap-4 rounded-xl border p-4">
+      <div className="flex items-center gap-4 rounded-xl border border-border bg-surface-muted p-4">
         {/* Tools */}
         <div className="flex items-center gap-2">
           <Button
@@ -250,7 +250,7 @@ export function CollaborativeWhiteboard({
           </Button>
         </div>
 
-        <div className="bg-border h-8 w-px" />
+        <div className="h-8 w-px bg-border" />
 
         {/* Colors */}
         <div className="flex items-center gap-2">
@@ -259,18 +259,18 @@ export function CollaborativeWhiteboard({
               key={color}
               onClick={() => setCurrentColor(color)}
               className={`h-8 w-8 rounded-full border-2 ${
-                currentColor === color ? 'border-brand-primary scale-110' : 'border-border'
+                currentColor === color ? 'scale-110 border-brand-primary' : 'border-border'
               } transition-transform`}
               style={{ backgroundColor: color }}
             />
           ))}
         </div>
 
-        <div className="bg-border h-8 w-px" />
+        <div className="h-8 w-px bg-border" />
 
         {/* Stroke Width */}
         <div className="flex items-center gap-2">
-          <Minus className="text-muted-foreground h-4 w-4" />
+          <Minus className="h-4 w-4 text-muted-foreground" />
           <input
             type="range"
             min="1"
@@ -295,7 +295,7 @@ export function CollaborativeWhiteboard({
       </div>
 
       {/* Canvas */}
-      <div className="border-border overflow-hidden rounded-xl border-2">
+      <div className="overflow-hidden rounded-xl border-2 border-border">
         <canvas
           ref={canvasRef}
           width={width}
@@ -308,7 +308,7 @@ export function CollaborativeWhiteboard({
         />
       </div>
 
-      <p className="text-muted-foreground text-center text-xs">
+      <p className="text-center text-xs text-muted-foreground">
         All team members can see your drawings in real-time • Changes sync via Ably
       </p>
     </div>

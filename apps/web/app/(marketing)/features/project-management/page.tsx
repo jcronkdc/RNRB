@@ -16,10 +16,10 @@ import Link from 'next/link';
 
 export default function ProjectManagementFeaturePage() {
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
-      <div className="border-border/50 relative overflow-hidden border-b">
-        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
           <div className="absolute left-1/3 top-0 h-96 w-96 rounded-full bg-green-500/10 blur-3xl" />
         </div>
@@ -39,7 +39,7 @@ export default function ProjectManagementFeaturePage() {
             <h1 className="font-display mb-6 text-5xl font-bold md:text-6xl">
               Organize Your Music Like a Pro
             </h1>
-            <p className="text-muted-foreground mx-auto mb-8 max-w-3xl text-xl leading-relaxed">
+            <p className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-muted-foreground">
               Manage songs, albums, EPs, and collaborations all in one place. Version control,
               metadata management, and team permissions built specifically for musicians.
             </p>
@@ -131,11 +131,11 @@ export default function ProjectManagementFeaturePage() {
                   <feature.icon className={`text- h-6 w-6${feature.color}`} />
                 </div>
                 <h3 className="mb-3 text-xl font-semibold">{feature.title}</h3>
-                <p className="text-muted-foreground mb-4">{feature.description}</p>
-                <ul className="text-muted-foreground space-y-2 text-sm">
+                <p className="mb-4 text-muted-foreground">{feature.description}</p>
+                <ul className="space-y-2 text-sm text-muted-foreground">
                   {feature.features.map((item) => (
                     <li key={item} className="flex items-center gap-2">
-                      <CheckCircle className="text-brand-primary h-4 w-4 flex-shrink-0" />
+                      <CheckCircle className="h-4 w-4 flex-shrink-0 text-brand-primary" />
                       {item}
                     </li>
                   ))}
@@ -146,7 +146,7 @@ export default function ProjectManagementFeaturePage() {
         </div>
 
         {/* Workflow */}
-        <div className="border-border/50 border-t pt-20">
+        <div className="border-t border-border/50 pt-20">
           <h2 className="font-display mb-12 text-center text-4xl font-bold">
             Your Workflow, Streamlined
           </h2>
@@ -185,13 +185,13 @@ export default function ProjectManagementFeaturePage() {
                 transition={{ duration: 0.5, delay: 0.15 * (index + 1) }}
                 className="text-center"
               >
-                <div className="border-brand-primary/30 bg-brand-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2">
-                  <span className="font-display text-brand-primary text-3xl font-bold">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-primary/30 bg-brand-primary/10">
+                  <span className="font-display text-3xl font-bold text-brand-primary">
                     {step.step}
                   </span>
                 </div>
                 <h3 className="mb-2 text-lg font-semibold">{step.title}</h3>
-                <p className="text-muted-foreground text-sm">{step.description}</p>
+                <p className="text-sm text-muted-foreground">{step.description}</p>
               </motion.div>
             ))}
           </div>
@@ -199,7 +199,7 @@ export default function ProjectManagementFeaturePage() {
       </div>
 
       {/* Use Cases */}
-      <div className="border-border/50 bg-surface/30 border-t">
+      <div className="border-t border-border/50 bg-surface/30">
         <div className="rnrb-container max-w-6xl px-4 py-20">
           <h2 className="font-display mb-12 text-center text-4xl font-bold">Built For</h2>
 
@@ -248,7 +248,7 @@ export default function ProjectManagementFeaturePage() {
       </div>
 
       {/* CTA */}
-      <div className="border-border/50 border-t">
+      <div className="border-t border-border/50">
         <div className="rnrb-container max-w-3xl px-4 py-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -256,7 +256,7 @@ export default function ProjectManagementFeaturePage() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-display mb-4 text-4xl font-bold">Get Organized Today</h2>
-            <p className="text-muted-foreground mb-8 text-xl">
+            <p className="mb-8 text-xl text-muted-foreground">
               Free plan includes 3 projects and 5GB storage. Upgrade for unlimited projects and more
               space.
             </p>

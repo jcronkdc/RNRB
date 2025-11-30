@@ -3,12 +3,12 @@ import { type NextRequest } from 'next/server';
 
 /**
  * AUTH CALLBACK ROUTE
- * 
+ *
  * This route handles OAuth callbacks.
- * 
+ *
  * NOTE: NextAuth v5 handles its own callbacks at /api/auth/callback/*
  * This route exists for legacy compatibility and general auth redirects.
- * 
+ *
  * If you're coming from a magic link or OAuth flow, NextAuth handles it automatically.
  * This route redirects any direct access to the dashboard.
  */

@@ -9,24 +9,28 @@
 ## 📊 SCHEMA SUMMARY
 
 ### Core Models (User & Auth)
+
 - `User` - Main user table (Stripe subscriptions, usage tracking)
 - `Account` - OAuth provider accounts (Google, etc.)
 - `Session` - NextAuth session storage
 - `VerificationToken` - Email verification tokens
 
 ### Organization & Projects
+
 - `Org` - Organizations (bands, studios, solo artists)
 - `Membership` - User-org relationships with roles
 - `Project` - Albums, EPs, singles within orgs
 - `ProjectMember` - Collaborators on projects
 
 ### Music Content
+
 - `Song` - Songs with metadata, lyrics, chords
 - `SongCollaborator` - Song collaborators (registered users or emails)
 - `Asset` - Audio files, lyrics, charts, videos
 - `SongSplit` - Royalty split agreements
 
 ### Live Performance
+
 - `Venue` - Performance venues
 - `Tour` - Tour schedules
 - `Show` - Individual shows
@@ -36,6 +40,7 @@
 - `SongRequest` - Fan song requests
 
 ### Community Features
+
 - `CommunityTrack` - Songs published to community
 - `TrackLike` - Community track likes
 - `TrackPlay` - Play tracking & analytics
@@ -43,6 +48,7 @@
 - `UserFollow` - User following relationships
 
 ### Business & Legal
+
 - `Subscription` - Paid subscriptions (Stripe)
 - `Transaction` - Financial transactions
 - `License` - Legal agreements
@@ -51,6 +57,7 @@
 - `Donation` - Donation tracking
 
 ### Collaboration & Communication
+
 - `CollaborationRequest` - Open collaboration requests
 - `CollaborationResponse` - Responses to requests
 - `Message` - Direct messaging
@@ -60,10 +67,12 @@
 - `OrgInvite` - Organization invite codes
 
 ### Studio & Sessions
+
 - `StudioSession` - Recording/rehearsal sessions
 - `SessionAttendee` - Session participants
 
 ### Content & Media
+
 - `Event` - Events (festivals, concerts, workshops)
 - `PodcastEpisode` - Podcast content
 - `PressRelease` - Press releases
@@ -72,6 +81,7 @@
 - `FanEngagement` - Fan engagement tracking
 
 ### User Profiles
+
 - `MusicianProfile` - Musician profiles (instruments, skills)
 - `Skill` - Individual skills with verification
 - `ForumPost` - Forum discussions
@@ -83,12 +93,14 @@
 ## 🔑 KEY RELATIONSHIPS
 
 ### Auth Flow
+
 ```
 User (1) ──→ (N) Account (OAuth providers)
 User (1) ──→ (N) Session (NextAuth sessions)
 ```
 
 ### Organization Structure
+
 ```
 User (N) ←─→ (N) Org (via Membership with OrgRole)
 Org (1) ──→ (N) Project
@@ -97,6 +109,7 @@ Song (1) ──→ (N) SongCollaborator
 ```
 
 ### Performance Chain
+
 ```
 Org (1) ──→ (N) Tour
 Tour (1) ──→ (N) Show
@@ -105,6 +118,7 @@ Setlist (1) ──→ (N) SetlistItem ──→ Song
 ```
 
 ### Community Features
+
 ```
 Song (1) ──→ (1) CommunityTrack (if published)
 CommunityTrack (1) ──→ (N) TrackLike
@@ -118,6 +132,7 @@ User (N) ←─→ (N) User (via UserFollow)
 ## 🔐 SUBSCRIPTION & USAGE TRACKING
 
 ### User Model Fields (Revenue Protection)
+
 ```prisma
 stripeCustomerId       String?   @unique
 stripeSubscriptionId   String?   @unique
@@ -134,23 +149,27 @@ usagePeriodStart       DateTime?
 ## 📝 ENUMS
 
 ### Organization & Project
+
 - `OrgType`: foundation, studio, band, solo
 - `OrgRole`: owner, admin, member
 - `ProjectVisibility`: private, org, public
 - `ProjectStatus`: active, archived, draft
 
 ### Content & Assets
+
 - `SongStatus`: draft, in_progress, needs_review, complete
 - `Visibility`: private, org, public
 - `AssetType`: audio, lyric, image, pdf, chart, video, other
 
 ### Business & Legal
+
 - `LicenseTemplate`: COLLAB_NDA, WORK_FOR_HIRE, etc.
 - `LicenseStatus`: draft, pending_signature, executed, etc.
 - `TransactionType`: streaming_royalty, sync_license, etc.
 - `TransactionStatus`: pending, processing, completed, failed
 
 ### Events & Performance
+
 - `EventType`: festival, concert, showcase, workshop
 - `VenueType`: club, theater, arena, stadium, festival
 - `ShowStatus`: scheduled, soldout, cancelled, completed
@@ -158,11 +177,13 @@ usagePeriodStart       DateTime?
 - `SongRequestStatus`: pending, approved, rejected
 
 ### Subscriptions
+
 - `SubscriptionTier`: sustaining, patron, benefactor
 - `SubscriptionStatus`: active, cancelled, past_due, trialing
 - `DonationStatus`: pending, completed, failed, refunded
 
 ### Community
+
 - `ForumCategory`: general, collaboration, feedback, showcase, technical
 - `SkillLevel`: beginner, intermediate, advanced, professional
 - `CollaborationStatus`: open, in_progress, completed, cancelled
@@ -172,6 +193,7 @@ usagePeriodStart       DateTime?
 ## 🚨 CRITICAL INDEXES
 
 ### Performance Optimization
+
 ```prisma
 // User lookups
 @@index([email])
@@ -200,12 +222,14 @@ usagePeriodStart       DateTime?
 **Last Migration:** 2025-11-24 (Community Features - Agent 89)
 
 ### Recent Changes
+
 1. Added `CommunityTrack`, `TrackLike`, `TrackPlay`, `TrackComment`, `UserFollow`
 2. Added `password` field to User model (2025-11-24)
 3. Added `SongRequest` table for fan song requests
 4. Added subscription & usage tracking fields to User
 
 ### Pending Changes
+
 - None (schema is stable)
 
 ---
@@ -213,16 +237,19 @@ usagePeriodStart       DateTime?
 ## 📖 USAGE
 
 ### Generate Prisma Client
+
 ```bash
 pnpm prisma:generate
 ```
 
 ### Open Prisma Studio
+
 ```bash
 pnpm prisma:studio
 ```
 
 ### View Schema
+
 ```bash
 cat packages/db/prisma/schema.prisma
 ```
@@ -231,4 +258,3 @@ cat packages/db/prisma/schema.prisma
 
 **For full schema:** See `packages/db/prisma/schema.prisma` (1302 lines)  
 **For migrations:** See `packages/db/prisma/migrations/`
-

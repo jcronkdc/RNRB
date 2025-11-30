@@ -49,14 +49,12 @@ export default async function InvitePage({ params }: InvitePageProps) {
               <XCircle className="text-danger h-8 w-8" />
             </div>
           </div>
-          <h1 className="text-foreground text-2xl font-semibold">Invitation Not Found</h1>
-          <p className="text-muted-foreground mt-2 text-sm">
+          <h1 className="text-2xl font-semibold text-foreground">Invitation Not Found</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             This invitation link is invalid or has been removed.
           </p>
           <Link href="/dashboard">
-            <Button className="mt-6">
-              Go to Dashboard
-            </Button>
+            <Button className="mt-6">Go to Dashboard</Button>
           </Link>
         </div>
       </main>
@@ -74,18 +72,16 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <main className="flex min-h-screen items-center justify-center px-4 py-16">
         <div className="w-full max-w-md text-center">
           <div className="mb-4 flex justify-center">
-            <div className="bg-warning/20 flex h-16 w-16 items-center justify-center rounded-full">
-              <Clock className="text-warning h-8 w-8" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-warning/20">
+              <Clock className="h-8 w-8 text-warning" />
             </div>
           </div>
-          <h1 className="text-foreground text-2xl font-semibold">Invitation Expired</h1>
-          <p className="text-muted-foreground mt-2 text-sm">
+          <h1 className="text-2xl font-semibold text-foreground">Invitation Expired</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             This invitation has expired. Please request a new invitation from the organization.
           </p>
           <Link href="/dashboard">
-            <Button className="mt-6">
-              Go to Dashboard
-            </Button>
+            <Button className="mt-6">Go to Dashboard</Button>
           </Link>
         </div>
       </main>
@@ -98,18 +94,16 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <main className="flex min-h-screen items-center justify-center px-4 py-16">
         <div className="w-full max-w-md text-center">
           <div className="mb-4 flex justify-center">
-            <div className="bg-success/20 flex h-16 w-16 items-center justify-center rounded-full">
-              <CheckCircle2 className="text-success h-8 w-8" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/20">
+              <CheckCircle2 className="h-8 w-8 text-success" />
             </div>
           </div>
-          <h1 className="text-foreground text-2xl font-semibold">Already Accepted</h1>
-          <p className="text-muted-foreground mt-2 text-sm">
+          <h1 className="text-2xl font-semibold text-foreground">Already Accepted</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             You've already accepted this invitation.
           </p>
           <Link href="/dashboard">
-            <Button className="mt-6">
-              Go to Dashboard
-            </Button>
+            <Button className="mt-6">Go to Dashboard</Button>
           </Link>
         </div>
       </main>
@@ -122,16 +116,16 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <main className="flex min-h-screen items-center justify-center px-4 py-16">
         <div className="w-full max-w-md text-center">
           <div className="mb-4 flex justify-center">
-            <div className="bg-warning/20 flex h-16 w-16 items-center justify-center rounded-full">
-              <XCircle className="text-warning h-8 w-8" />
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-warning/20">
+              <XCircle className="h-8 w-8 text-warning" />
             </div>
           </div>
-          <h1 className="text-foreground text-2xl font-semibold">Email Mismatch</h1>
-          <p className="text-muted-foreground mt-2 text-sm">
+          <h1 className="text-2xl font-semibold text-foreground">Email Mismatch</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             This invitation was sent to <strong>{invitation.email}</strong>, but you're signed in as{' '}
             <strong>{session.user.email}</strong>.
           </p>
-          <p className="text-muted-foreground mt-4 text-sm">
+          <p className="mt-4 text-sm text-muted-foreground">
             Please sign in with the correct email address to accept this invitation.
           </p>
         </div>
@@ -142,7 +136,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
   // Accept invitation
   async function acceptInvitation() {
     'use server';
-    
+
     if (!invitation) {
       throw new Error('Invitation not found');
     }
@@ -196,30 +190,30 @@ export default async function InvitePage({ params }: InvitePageProps) {
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
-        <div className="border-border bg-surface shadow-soft rounded-3xl border p-8">
+        <div className="rounded-3xl border border-border bg-surface p-8 shadow-soft">
           <div className="mb-6 flex justify-center">
             <div className="bg-primary/20 flex h-16 w-16 items-center justify-center rounded-full">
               <Mail className="text-primary h-8 w-8" />
             </div>
           </div>
 
-          <h1 className="text-foreground text-center text-2xl font-semibold">
+          <h1 className="text-center text-2xl font-semibold text-foreground">
             You've Been Invited!
           </h1>
 
           <div className="mt-6 space-y-4">
-            <div className="border-border bg-muted/50 rounded-2xl border p-4">
-              <p className="text-muted-foreground text-sm">
+            <div className="rounded-2xl border border-border bg-muted/50 p-4">
+              <p className="text-sm text-muted-foreground">
                 <strong className="text-foreground">
                   {invitation.sender.name || invitation.sender.email}
                 </strong>{' '}
                 has invited you to join:
               </p>
-              <p className="text-foreground mt-2 text-lg font-semibold">
+              <p className="mt-2 text-lg font-semibold text-foreground">
                 {invitation.org?.name || invitation.project?.name}
               </p>
               {invitation.project && (
-                <p className="text-muted-foreground text-sm">in {invitation.project.org.name}</p>
+                <p className="text-sm text-muted-foreground">in {invitation.project.org.name}</p>
               )}
               <p className="text-primary mt-2 text-sm">as {invitation.role}</p>
             </div>
@@ -231,7 +225,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
               </Button>
             </form>
 
-            <p className="text-muted-foreground text-center text-xs">
+            <p className="text-center text-xs text-muted-foreground">
               By accepting, you agree to collaborate with other members and follow the
               organization's guidelines.
             </p>

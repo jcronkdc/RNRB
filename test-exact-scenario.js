@@ -26,7 +26,7 @@ console.log('   Query string:', queryString);
 
 // OLD CODE: Using URLSearchParams
 const newParams = new URLSearchParams();
-queryString.split('&').forEach(pair => {
+queryString.split('&').forEach((pair) => {
   const [key, value = ''] = pair.split('=');
   if (key) {
     const decodedKey = decodeURIComponent(key);
@@ -50,7 +50,7 @@ console.log('\n✅ NEW WAY (manual encoding):');
 console.log('-'.repeat(80));
 
 const encodedPairs = [];
-queryString.split('&').forEach(pair => {
+queryString.split('&').forEach((pair) => {
   const [key, value = ''] = pair.split('=');
   if (key) {
     const decodedKey = decodeURIComponent(key);
@@ -80,7 +80,7 @@ console.log('   Corrupted input:', corruptedQueryString);
 
 // OLD WAY with corrupted input
 const corruptedParams = new URLSearchParams();
-corruptedQueryString.split('&').forEach(pair => {
+corruptedQueryString.split('&').forEach((pair) => {
   const [key, value = ''] = pair.split('=');
   if (key) {
     const decodedValue = decodeURIComponent(value); // + stays as +
@@ -96,7 +96,7 @@ console.log('   Browser reads:', corruptedOldUrl.searchParams.get('email'));
 
 // NEW WAY with corrupted input
 const corruptedEncodedPairs = [];
-corruptedQueryString.split('&').forEach(pair => {
+corruptedQueryString.split('&').forEach((pair) => {
   const [key, value = ''] = pair.split('=');
   if (key) {
     const decodedValue = decodeURIComponent(value); // + stays as +
@@ -117,4 +117,3 @@ console.log('Both approaches work when queryString is properly encoded.');
 console.log('But the NEW approach is safer and more explicit.');
 console.log('It ensures proper encoding even if input is malformed.');
 console.log('='.repeat(80));
-

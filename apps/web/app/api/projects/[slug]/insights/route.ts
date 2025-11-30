@@ -127,7 +127,7 @@ async function generateProjectInsights(project: any) {
     const parsed = new Date(value);
     return !isNaN(parsed.getTime());
   };
-  
+
   const overdueMilestones = milestones.filter((m: any) => {
     if (!canParseAsDate(m.dueDate)) return false;
     const dueDate = new Date(m.dueDate);
@@ -229,9 +229,3 @@ async function generateProjectInsights(project: any) {
     mixReady,
   };
 }
-
-
-
-
-
-

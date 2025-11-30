@@ -41,8 +41,7 @@ const buttonVariants = cva(
 );
 
 interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   leadingIcon?: LucideIcon;
   trailingIcon?: LucideIcon;
@@ -113,8 +112,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = 'Button';
 
-interface IconButtonProps
-  extends Omit<ButtonProps, 'children' | 'size' | 'leadingIcon' | 'trailingIcon'> {
+interface IconButtonProps extends Omit<
+  ButtonProps,
+  'children' | 'size' | 'leadingIcon' | 'trailingIcon'
+> {
   icon: LucideIcon;
   srLabel: string;
   asChild?: boolean;

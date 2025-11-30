@@ -53,7 +53,7 @@ export function StudioSession({ roomUrl, token, onRecordingComplete }: StudioSes
   const [streamingUrl, setStreamingUrl] = useState('');
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
-  
+
   // Use ref to track if we've already attempted to join
   const hasJoinedRef = useRef(false);
 
@@ -63,11 +63,11 @@ export function StudioSession({ roomUrl, token, onRecordingComplete }: StudioSes
 
     const handleRecordingEvent = (event: any) => {
       console.log('Recording event received:', event);
-      
+
       // Daily.co may provide recording ID in different formats
       // Check multiple possible locations for the recording ID
       const recordingId = event?.recordingId || event?.id || event?.recording?.id;
-      
+
       if (recordingId) {
         console.log('Recording stopped, ID:', recordingId);
         onRecordingComplete(recordingId);
@@ -278,18 +278,18 @@ export function StudioSession({ roomUrl, token, onRecordingComplete }: StudioSes
           <Button
             variant={isSharingScreen ? 'default' : 'secondary'}
             size="icon"
-            onClick={() => isSharingScreen ? stopScreenShare() : startScreenShare()}
+            onClick={() => (isSharingScreen ? stopScreenShare() : startScreenShare())}
             title={isSharingScreen ? 'Stop screen share' : 'Share screen'}
           >
             {isSharingScreen ? <MonitorX className="h-4 w-4" /> : <MonitorUp className="h-4 w-4" />}
           </Button>
 
-          <div className="bg-border mx-2 h-8 w-px" />
+          <div className="mx-2 h-8 w-px bg-border" />
 
           {/* Recording */}
           <Button
             variant={isRecording ? 'destructive' : 'default'}
-            onClick={() => isRecording ? stopRecording() : handleStartRecording()}
+            onClick={() => (isRecording ? stopRecording() : handleStartRecording())}
             className="gap-2"
           >
             {isRecording ? (
@@ -329,7 +329,7 @@ export function StudioSession({ roomUrl, token, onRecordingComplete }: StudioSes
             </Button>
           )}
 
-          <div className="bg-border mx-2 h-8 w-px" />
+          <div className="mx-2 h-8 w-px bg-border" />
 
           {/* Leave Call */}
           <Button variant="destructive" onClick={leaveCall} className="gap-2">

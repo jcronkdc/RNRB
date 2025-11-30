@@ -19,12 +19,14 @@ An AI assistant with "God-level" knowledge of CronkWaters.com is **financially v
 ### Current State
 
 **Existing AI Features:**
+
 - AI Songwriting Assistance (gpt-4o-mini via OpenRouter)
 - Current limits: Free=0, Creator=100, Studio=500 requests/month
 - Current cost: ~$0.0015 per request
 - Already protected with rate limiting ✅
 
 **Current Profit Margins:**
+
 - Creator: $9.12/mo (91% margin)
 - Studio: $25.49/mo (85% margin)
 
@@ -77,7 +79,7 @@ Cost per conversation: $0.015-$0.0225
 Heavy user estimate: 100 conversations/month
 Monthly cost per user: $1.50-$2.25
 
-Medium user estimate: 30 conversations/month  
+Medium user estimate: 30 conversations/month
 Monthly cost per user: $0.45-$0.68
 
 Light user estimate: 10 conversations/month
@@ -85,6 +87,7 @@ Monthly cost per user: $0.15-$0.23
 ```
 
 **With Enhanced Context (Recommended):**
+
 - Load user data into context (projects, songs, usage stats)
 - Approximately 2-3K tokens per request
 - Cost increases by ~$0.001 per request
@@ -143,7 +146,7 @@ Monthly cost per user: $0.30-$0.45
 
 ```
 - Simple Q&A: gpt-4o-mini ($0.0015/request)
-- Complex navigation: Claude Sonnet ($0.003/request)  
+- Complex navigation: Claude Sonnet ($0.003/request)
 - Creative tasks: gpt-4o ($0.015/request)
 
 Estimated mix: 70% mini, 20% Sonnet, 10% 4o
@@ -180,12 +183,14 @@ Light user (10 conversations): $0.30/mo
 ```
 
 **Pros:**
+
 - Simple pricing (add $10 to any tier)
 - 70% margin even with heavy usage
 - Easy to understand value proposition
 - Can be trialed for free
 
 **Cons:**
+
 - Fixed cost regardless of usage
 - May need rate limiting (200 conversations/month cap)
 
@@ -234,12 +239,14 @@ Light user (10 conversations): $0.30/mo
 ```
 
 **Pros:**
+
 - Multiple entry points
 - Upsell opportunities
 - Premium tier captures power users
 - Excellent margins at all levels
 
 **Cons:**
+
 - More complex to explain
 - Requires usage tracking
 
@@ -280,12 +287,14 @@ Light user (10 conversations): $0.30/mo
 ```
 
 **Pros:**
+
 - Increases Studio tier value proposition
 - Competitive moat (unique feature)
 - Higher average revenue per user (ARPU)
 - Better retention
 
 **Cons:**
+
 - All Studio users get it (cost increases)
 - Harder to isolate ROI
 
@@ -301,7 +310,7 @@ Month 6: 60 paid users × 15% = 9 AI subscribers
   → $63/mo profit
 
 Year 1: 200 paid users × 15% = 30 AI subscribers
-  → $299.70/mo additional revenue  
+  → $299.70/mo additional revenue
   → $210/mo profit
   → $2,520 annual profit
 
@@ -354,7 +363,7 @@ Assuming 30% of users are Studio tier
 Month 6: 60 paid × 30% = 18 Studio users
   → $90/mo additional revenue (from increase)
   → ~$62/mo additional profit
-  
+
 Year 1: 200 paid × 30% = 60 Studio users
   → $300/mo additional revenue
   → ~$207/mo additional profit
@@ -389,7 +398,7 @@ import { useAssistant } from '@/hooks/use-assistant';
 export function AssistantChat() {
   const [isOpen, setIsOpen] = useState(false);
   const { messages, sendMessage, isLoading } = useAssistant();
-  
+
   return (
     <div className="fixed bottom-4 right-4 z-50">
       {/* Floating chat widget */}
@@ -405,19 +414,19 @@ export function AssistantChat() {
 export async function POST(request: NextRequest) {
   // Check subscription access (AI Assistant add-on or Studio Pro)
   await requireFeatureAccess('aiAssistant');
-  
+
   // Check usage quota (30/100/unlimited based on tier)
   await requireUsageQuota('assistantConversations', 1);
-  
+
   // Get user context
   const context = await buildUserContext(user.id);
-  
+
   // Call AI with full platform knowledge
   const response = await getAssistantResponse(message, context);
-  
+
   // Track usage
   await trackUsage(user.id, 'assistantConversations', 1);
-  
+
   return NextResponse.json({ response });
 }
 ```
@@ -431,12 +440,12 @@ async function buildUserContext(userId: string) {
     where: { id: userId },
     include: {
       memberships: { include: { org: true } },
-      projectMemberships: { 
-        include: { 
-          project: { 
-            include: { songs: true } 
-          } 
-        } 
+      projectMemberships: {
+        include: {
+          project: {
+            include: { songs: true },
+          },
+        },
       },
       uploadedAssets: { take: 5, orderBy: { createdAt: 'desc' } },
       // ... other relevant data
@@ -445,7 +454,7 @@ async function buildUserContext(userId: string) {
 
   // Also load platform documentation
   const platformDocs = await loadPlatformDocs();
-  
+
   return {
     user: sanitizeUserData(user),
     platformKnowledge: platformDocs,
@@ -469,6 +478,7 @@ Create comprehensive docs for AI:
 # CronkWaters Platform Guide for AI Assistant
 
 ## Navigation
+
 - Dashboard: /dashboard - Overview of all projects
 - Songwriting: /songwriting - Create and edit songs with AI
 - Library: /library - Manage audio files and assets
@@ -477,13 +487,16 @@ Create comprehensive docs for AI:
 - Explorer: /explorer - Discover community tracks
 
 ## Features
+
 ### Songwriting Tool
+
 - Structure Tab: Define verse/chorus/bridge arrangement
 - Chords Tab: Add chord progressions with AI suggestions
 - Lyrics Tab: Write lyrics with rhyme assistance
 - Copyright Tab: Register splits with collaborators
 
 ### Collaboration
+
 - Real-time co-editing with multi-cursor support
 - Video calls via Daily.co (Studio tier only)
 - Presence indicators show who's online
@@ -531,9 +544,11 @@ function routeToHandler(intent: Intent, context: Context) {
 // Trigger assistant suggestions based on user behavior
 const triggers = {
   firstProject: 'I see you created your first project! Would you like a tour?',
-  beforeTour: (tour) => `Your tour "${tour.name}" starts in ${daysUntil} days. Want help finalizing your setlist?`,
-  highStorageUse: 'You\'re at 85% storage. I can help you optimize your uploads.',
-  unusedFeatures: 'I noticed you haven\'t tried the Copyright Manager yet. It\'s perfect for tracking splits!',
+  beforeTour: (tour) =>
+    `Your tour "${tour.name}" starts in ${daysUntil} days. Want help finalizing your setlist?`,
+  highStorageUse: "You're at 85% storage. I can help you optimize your uploads.",
+  unusedFeatures:
+    "I noticed you haven't tried the Copyright Manager yet. It's perfect for tracking splits!",
 };
 ```
 
@@ -550,9 +565,9 @@ model AssistantConversation {
   rating    Int?     // 1-5 user satisfaction
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   user User @relation(fields: [userId], references: [id])
-  
+
   @@index([userId, createdAt])
 }
 ```
@@ -570,14 +585,14 @@ const cache = new Map();
 async function getCachedResponse(question: string) {
   const normalized = normalizeQuestion(question);
   const cached = cache.get(normalized);
-  
+
   if (cached && !isTooOld(cached.timestamp)) {
     return cached.response;
   }
-  
+
   const response = await getAIResponse(question);
   cache.set(normalized, { response, timestamp: Date.now() });
-  
+
   return response;
 }
 
@@ -586,7 +601,7 @@ const commonQuestions = [
   'How do I create a project?',
   'What is the difference between Creator and Studio?',
   'How do copyright splits work?',
-  'Can I collaborate with someone who doesn\'t have an account?',
+  "Can I collaborate with someone who doesn't have an account?",
   // ... 50-100 common questions
 ];
 ```
@@ -604,7 +619,7 @@ model AssistantAnalytics {
   page      String   // Where user was when they asked
   tier      String   // free, creator, studio
   timestamp DateTime @default(now())
-  
+
   @@index([intent, timestamp])
   @@index([page])
 }
@@ -654,6 +669,7 @@ Clicking opens:
 ### Example Interactions
 
 **Navigation Example:**
+
 ```
 User: "How do I create a new song?"
 
@@ -663,18 +679,19 @@ AI: "Great question! You have a couple of options:
    • Click the Songwriting tool in your sidebar
    • You'll see tabs for Structure, Chords, Lyrics, and Copyright
    • Start with the Structure tab to define your song format
-   
+
 2. **From a Project:**
    • Go to Projects and open an existing project
    • Click the '+ Add Song' button
    • This automatically links the song to your project
-   
+
 Would you like me to walk you through the songwriting interface? I can explain each tab!"
 
 [Button: Take Me to Songwriting Tool →]
 ```
 
 **Feature Explanation:**
+
 ```
 User: "What's the difference between Studio and Creator tier?"
 
@@ -704,6 +721,7 @@ Want to see a comparison chart?"
 ```
 
 **Contextual Awareness:**
+
 ```
 User: "My upload failed"
 
@@ -725,6 +743,7 @@ Would you like help compressing the file?"
 ```
 
 **Creative Assistance:**
+
 ```
 User: "I'm stuck on a bridge for this song"
 
@@ -823,12 +842,14 @@ Want me to generate more specific lyrics or chord progressions?"
 ### Phase 1: Soft Launch (Weeks 1-4)
 
 **Beta Program:**
+
 - Invite 20-30 power users
 - Free access in exchange for feedback
 - Weekly feedback sessions
 - Iterate on responses and UX
 
 **Goals:**
+
 - Validate cost per user (<$3)
 - Identify common questions
 - Refine UI/UX
@@ -839,12 +860,14 @@ Want me to generate more specific lyrics or chord progressions?"
 ### Phase 2: Limited Release (Months 2-3)
 
 **Offer to Studio Tier:**
+
 - Bundle into Studio at no extra cost
 - Position as exclusive feature
 - Gather usage data at scale
 - Refine based on analytics
 
 **Goals:**
+
 - 50% Studio adoption
 - <5% error rate
 - Build case studies
@@ -855,17 +878,20 @@ Want me to generate more specific lyrics or chord progressions?"
 ### Phase 3: General Availability (Month 4+)
 
 **Full Launch:**
+
 - Offer as $9.99 add-on to all tiers
 - Launch with tutorials and demos
 - Email campaign to all users
 - Social media announcement
 
 **Promotions:**
+
 - First month free trial
 - Annual discount (2 months free)
 - Bundle pricing (save $5 when added to subscription)
 
 **Marketing Messaging:**
+
 - "Your 24/7 Music Business Expert"
 - "Never Get Stuck Again"
 - "Like Having a Producer in Your Pocket"
@@ -877,16 +903,19 @@ Want me to generate more specific lyrics or chord progressions?"
 ### Technical Risks
 
 **1. Cost Overruns**
+
 - **Risk:** Users abuse unlimited conversations
 - **Mitigation:** Rate limits (200/mo for "unlimited"), monitoring, abuse detection
 - **Backup Plan:** Switch to per-message pricing
 
 **2. Poor Response Quality**
+
 - **Risk:** AI gives wrong/unhelpful answers
 - **Mitigation:** Extensive testing, feedback loops, human oversight for first 1000 conversations
 - **Backup Plan:** Fall back to documentation links + human support
 
 **3. Context Failures**
+
 - **Risk:** AI doesn't understand user context
 - **Mitigation:** Structured context loading, clear user data access, fallback to general help
 - **Backup Plan:** "I don't have enough context - can you provide more details?"
@@ -896,16 +925,19 @@ Want me to generate more specific lyrics or chord progressions?"
 ### Business Risks
 
 **4. Low Adoption**
+
 - **Risk:** <10% attachment rate
 - **Mitigation:** Aggressive trial program, in-app promotions, success stories
 - **Backup Plan:** Bundle into Studio tier instead
 
 **5. High Churn**
+
 - **Risk:** Users subscribe then cancel after 1-2 months
 - **Mitigation:** Continuous improvement, proactive value demonstration, usage reminders
 - **Backup Plan:** Lower price point or bundle
 
 **6. Support Cannibalization**
+
 - **Risk:** AI replaces human support but users still need humans
 - **Mitigation:** Escalation path to human support, AI admits limitations
 - **Backup Plan:** Position as "first line of defense" not replacement
@@ -922,7 +954,7 @@ Year 1:
   Q2: 70 paid users × 15% = 11 subscribers = $110/mo = $330
   Q3: 120 paid users × 18% = 22 subscribers = $220/mo = $660
   Q4: 200 paid users × 20% = 40 subscribers = $400/mo = $1,200
-  
+
   Year 1 Total: $2,340 revenue, $1,638 profit
 
 Year 2:
@@ -930,7 +962,7 @@ Year 2:
   Q2: 360 paid users × 25% = 90 subscribers = $900/mo = $2,700
   Q3: 440 paid users × 28% = 123 subscribers = $1,230/mo = $3,690
   Q4: 500 paid users × 30% = 150 subscribers = $1,500/mo = $4,500
-  
+
   Year 2 Total: $12,750 revenue, $8,925 profit
 
 Year 3:
@@ -955,7 +987,7 @@ Year 1:
   Q2: 70 × 28% = 20 subs = $240/mo = $720
   Q3: 120 × 30% = 36 subs = $431/mo = $1,293
   Q4: 200 × 30% = 60 subs = $719/mo = $2,157
-  
+
   Year 1 Total: $4,458 revenue, $3,386 profit
 
 Year 2:
@@ -985,21 +1017,21 @@ Year 1:
   50 Studio users @ $34.99 = $1,750/mo (+$250 from $29.99)
   10 Studio Pro users @ $49.99 = $500/mo
   Additional monthly revenue: $750
-  
+
   Year 1 Total: $9,000 additional revenue, $6,210 profit
 
 Year 2:
   175 Studio users @ $34.99 = $6,124/mo (+$875)
-  35 Studio Pro users @ $49.99 = $1,750/mo  
+  35 Studio Pro users @ $49.99 = $1,750/mo
   Additional monthly revenue: $2,625
-  
+
   Year 2 Total: $31,500 additional revenue, $21,735 profit
 
 Year 3:
   800 Studio users @ $34.99 = $27,992/mo (+$4,000)
   160 Studio Pro users @ $49.99 = $7,998/mo
   Additional monthly revenue: $11,998
-  
+
   Year 3 Total: $143,976 additional revenue, $99,344 profit
 ```
 
@@ -1012,24 +1044,28 @@ Year 3:
 ### **Recommended Strategy: Hybrid Phased Approach**
 
 **Phase 1 (Months 1-3):** Beta with Studio users (free)
+
 - **Goal:** Validate costs, gather feedback, build confidence
 - **Expected Cost:** $1,500 (50 Studio users × $30 heavy usage)
 - **Expected Revenue:** $0 (free beta)
 - **Net:** -$1,500 investment
 
 **Phase 2 (Months 4-6):** Bundle into Studio tier (+$5 increase)
+
 - **Goal:** Drive Studio adoption, establish value
 - **Expected Revenue:** +$2,000/mo from increased Studio price
 - **Expected Cost:** $3,000/mo (60 Studio users × $50 blended)
 - **Net:** -$1,000/mo (but higher Studio ARPU)
 
 **Phase 3 (Months 7-12):** Launch $9.99 add-on for Creator tier
+
 - **Goal:** Expand market, increase ARPU across all tiers
 - **Expected Revenue:** +$1,200/mo (120 Creator users × 10% = 12 subs)
 - **Expected Cost:** $360/mo (12 users × $30)
 - **Net:** +$840/mo profit
 
 **Phase 4 (Year 2+):** Launch tiered pricing
+
 - **Goal:** Capture power users, maximize revenue
 - **Expected Revenue:** +$5,000/mo
 - **Expected Cost:** $1,500/mo
@@ -1050,36 +1086,42 @@ Year 3:
 ## 🎯 IMMEDIATE NEXT STEPS
 
 ### Week 1: Decision & Planning
+
 - [ ] Review this analysis
 - [ ] Approve budget ($5K for development, $1.5K for beta costs)
 - [ ] Choose AI provider (recommend Claude Sonnet for quality)
 - [ ] Define success criteria
 
 ### Week 2-3: Foundation
+
 - [ ] Create AI Assistant component
 - [ ] Build context loading system
 - [ ] Implement API endpoint
 - [ ] Add usage tracking
 
 ### Week 4: Knowledge Base
+
 - [ ] Write comprehensive platform documentation
 - [ ] Create response templates
 - [ ] Build FAQ database
 - [ ] Test with common questions
 
 ### Week 5-6: Beta Launch
+
 - [ ] Invite 30 Studio users
 - [ ] Monitor costs daily
 - [ ] Collect feedback
 - [ ] Iterate on responses
 
 ### Week 7-8: Optimization
+
 - [ ] Implement caching
 - [ ] Refine context loading
 - [ ] Add proactive suggestions
 - [ ] Prepare marketing materials
 
 ### Week 9-12: General Availability
+
 - [ ] Launch to all Studio users (bundled)
 - [ ] Announce via email + social
 - [ ] Monitor metrics
@@ -1128,11 +1170,13 @@ Year 3:
 ### Expected ROI
 
 **Investment:**
+
 - Development: ~$5,000 (80 hours @ $62.50/hr equivalent)
 - Beta Testing: $1,500 (50 users × $30 for 1 month)
 - **Total Initial:** $6,500
 
 **Returns:**
+
 - **Year 1:** $2,000-$4,000 profit
 - **Year 2:** $14,000-$22,000 profit
 - **Year 3:** $43,000-$99,000 profit
@@ -1186,6 +1230,7 @@ Start with a beta program in Studio tier, validate costs and user satisfaction, 
 ### Development Tasks (80 hours total)
 
 **Backend (30 hours):**
+
 - [ ] Create `/api/assistant/chat` endpoint (4h)
 - [ ] Build context loading system (8h)
 - [ ] Implement conversation memory (4h)
@@ -1195,6 +1240,7 @@ Start with a beta program in Studio tier, validate costs and user satisfaction, 
 - [ ] Write tests (2h)
 
 **Frontend (25 hours):**
+
 - [ ] Design assistant widget UI (6h)
 - [ ] Build chat interface component (8h)
 - [ ] Add floating button (2h)
@@ -1204,12 +1250,14 @@ Start with a beta program in Studio tier, validate costs and user satisfaction, 
 - [ ] Mobile responsiveness (1h)
 
 **AI/ML (15 hours):**
+
 - [ ] Write platform documentation (8h)
 - [ ] Create response templates (3h)
 - [ ] Build intent detection (2h)
 - [ ] Implement smart routing (2h)
 
 **Testing & QA (10 hours):**
+
 - [ ] Unit tests (3h)
 - [ ] Integration tests (3h)
 - [ ] User acceptance testing (2h)
@@ -1241,3 +1289,4 @@ Start with a beta program in Studio tier, validate costs and user satisfaction, 
 
 ```
 AI: "Welcome to CronkWaters! 👋 I'm your AI assistant.
+```

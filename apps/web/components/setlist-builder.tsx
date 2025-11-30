@@ -123,23 +123,29 @@ function useSetlistSync({
         // Presence tracking
         channel.presence.enter();
         channel.presence.subscribe('enter', () => {
-          channel.presence.get().then((members) => {
-            if (mounted) {
-              setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
-            }
-          }).catch((err) => {
-            console.error('Presence error:', err);
-          });
+          channel.presence
+            .get()
+            .then((members) => {
+              if (mounted) {
+                setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
+              }
+            })
+            .catch((err) => {
+              console.error('Presence error:', err);
+            });
         });
 
         channel.presence.subscribe('leave', () => {
-          channel.presence.get().then((members) => {
-            if (mounted) {
-              setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
-            }
-          }).catch((err) => {
-            console.error('Presence error:', err);
-          });
+          channel.presence
+            .get()
+            .then((members) => {
+              if (mounted) {
+                setActiveUsers(members?.map((m) => m.clientId || 'anonymous') || []);
+              }
+            })
+            .catch((err) => {
+              console.error('Presence error:', err);
+            });
         });
 
         setIsConnected(true);
@@ -192,23 +198,23 @@ function SortableSong({
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className="rnrb-card border-border from-surface to-surface-muted hover:border-brand-primary/30 group mb-3 border-2 bg-gradient-to-r p-4 transition-all"
+      className="rnrb-card group mb-3 border-2 border-border bg-gradient-to-r from-surface to-surface-muted p-4 transition-all hover:border-brand-primary/30"
     >
       <div className="flex items-center gap-3">
         {/* Drag Handle */}
         <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
-          <GripVertical className="text-muted-foreground h-5 w-5" />
+          <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
 
         {/* Position */}
-        <div className="bg-brand-primary/20 text-brand-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-bold text-brand-primary">
           {song.position + 1}
         </div>
 
         {/* Song Info */}
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="text-foreground font-semibold">{song.title}</h4>
+            <h4 className="font-semibold text-foreground">{song.title}</h4>
             {keyChange && (
               <span className="flex items-center gap-1 rounded-full bg-yellow-500/20 px-2 py-0.5 text-xs font-medium text-yellow-400">
                 <AlertCircle className="h-3 w-3" />
@@ -216,7 +222,7 @@ function SortableSong({
               </span>
             )}
           </div>
-          <div className="text-muted-foreground mt-1 flex items-center gap-4 text-xs">
+          <div className="mt-1 flex items-center gap-4 text-xs text-muted-foreground">
             {song.artist && <span>{song.artist}</span>}
             {song.key && <span className="font-mono">{song.key}</span>}
             {song.tempo && <span>{song.tempo} BPM</span>}
@@ -230,7 +236,7 @@ function SortableSong({
               value={song.notes || ''}
               onChange={(e) => onUpdateNotes(e.target.value)}
               placeholder="Add notes (key changes, tempo shifts, etc.)"
-              className="border-border bg-surface focus:border-brand-primary focus:ring-brand-primary/20 mt-2 w-full resize-none rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
+              className="mt-2 w-full resize-none rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               rows={2}
             />
           )}
@@ -240,7 +246,7 @@ function SortableSong({
         <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
           <button
             onClick={() => setNotesExpanded(!notesExpanded)}
-            className="bg-surface-muted hover:bg-surface rounded-lg px-3 py-1 text-xs font-medium"
+            className="rounded-lg bg-surface-muted px-3 py-1 text-xs font-medium hover:bg-surface"
           >
             {notesExpanded ? 'Hide' : 'Notes'}
           </button>
@@ -424,27 +430,27 @@ export function CollaborativeSetlistBuilder({
   return (
     <div className="space-y-6">
       {/* Header Stats */}
-      <Card className="rnrb-card border-brand-primary/30 from-brand-primary/10 bg-gradient-to-r to-transparent p-6">
+      <Card className="rnrb-card border-brand-primary/30 bg-gradient-to-r from-brand-primary/10 to-transparent p-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
           <div>
-            <div className="text-muted-foreground mb-1 text-sm">Total Songs</div>
-            <div className="text-foreground text-3xl font-bold">{songs.length}</div>
+            <div className="mb-1 text-sm text-muted-foreground">Total Songs</div>
+            <div className="text-3xl font-bold text-foreground">{songs.length}</div>
           </div>
           <div>
-            <div className="text-muted-foreground mb-1 text-sm">Set Duration</div>
-            <div className="text-foreground text-3xl font-bold">
+            <div className="mb-1 text-sm text-muted-foreground">Set Duration</div>
+            <div className="text-3xl font-bold text-foreground">
               {formatTotalDuration(totalDuration)}
             </div>
           </div>
           <div>
-            <div className="text-muted-foreground mb-1 flex items-center gap-2 text-sm">
+            <div className="mb-1 flex items-center gap-2 text-sm text-muted-foreground">
               <Users className="h-4 w-4" />
               Collaborators
             </div>
-            <div className="text-foreground text-3xl font-bold">{activeUsers.length + 1}</div>
+            <div className="text-3xl font-bold text-foreground">{activeUsers.length + 1}</div>
           </div>
           <div>
-            <div className="text-muted-foreground mb-1 text-sm">Sync Status</div>
+            <div className="mb-1 text-sm text-muted-foreground">Sync Status</div>
             <div className="flex items-center gap-2">
               <div
                 className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-400' : 'bg-red-400'}`}
@@ -475,32 +481,32 @@ export function CollaborativeSetlistBuilder({
                     Export
                   </Button>
                   {showExportMenu && (
-                    <div className="border-border bg-surface absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border shadow-xl">
+                    <div className="absolute right-0 top-full z-10 mt-2 w-48 rounded-lg border border-border bg-surface shadow-xl">
                       <button
                         onClick={() => handleExportPDF('full')}
-                        className="hover:bg-surface-muted flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition"
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition hover:bg-surface-muted"
                       >
                         <FileText className="h-4 w-4" />
                         PDF (Full Detail)
                       </button>
                       <button
                         onClick={() => handleExportPDF('compact')}
-                        className="hover:bg-surface-muted flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition"
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition hover:bg-surface-muted"
                       >
                         <FileText className="h-4 w-4" />
                         PDF (Compact)
                       </button>
                       <button
                         onClick={() => handleExportPDF('stage')}
-                        className="hover:bg-surface-muted flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition"
+                        className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition hover:bg-surface-muted"
                       >
                         <FileText className="h-4 w-4" />
                         PDF (Stage View)
                       </button>
-                      <hr className="border-border my-1" />
+                      <hr className="my-1 border-border" />
                       <button
                         onClick={handlePrint}
-                        className="hover:bg-surface-muted flex w-full items-center gap-2 rounded-b-lg px-4 py-2 text-left text-sm transition"
+                        className="flex w-full items-center gap-2 rounded-b-lg px-4 py-2 text-left text-sm transition hover:bg-surface-muted"
                       >
                         <Printer className="h-4 w-4" />
                         Print
@@ -517,9 +523,9 @@ export function CollaborativeSetlistBuilder({
 
             {songs.length === 0 ? (
               <div className="py-16 text-center">
-                <Music className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
+                <Music className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
                 <h3 className="mb-2 text-xl font-semibold">Empty Setlist</h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="mb-4 text-muted-foreground">
                   Add songs to build your performance setlist
                 </p>
                 <Button onClick={() => setShowSongPicker(true)}>
@@ -550,7 +556,7 @@ export function CollaborativeSetlistBuilder({
                 </SortableContext>
                 <DragOverlay>
                   {activeId ? (
-                    <div className="rnrb-card border-brand-primary bg-surface border-2 p-4 shadow-xl">
+                    <div className="rnrb-card border-2 border-brand-primary bg-surface p-4 shadow-xl">
                       <div className="font-semibold">
                         {songs.find((s) => s.id === activeId)?.title}
                       </div>
@@ -576,16 +582,16 @@ export function CollaborativeSetlistBuilder({
                   <button
                     key={song.id}
                     onClick={() => addSong(song)}
-                    className="bg-surface-muted hover:border-brand-primary/30 hover:bg-surface w-full rounded-lg border border-transparent p-3 text-left transition-all"
+                    className="w-full rounded-lg border border-transparent bg-surface-muted p-3 text-left transition-all hover:border-brand-primary/30 hover:bg-surface"
                   >
                     <div className="text-sm font-medium">{song.title}</div>
-                    <div className="text-muted-foreground mt-1 text-xs">
+                    <div className="mt-1 text-xs text-muted-foreground">
                       {song.key} • {song.tempo} BPM
                     </div>
                   </button>
                 ))}
               {projectSongs.filter((ps) => !songs.find((s) => s.id === ps.id)).length === 0 && (
-                <div className="text-muted-foreground py-8 text-center text-sm">
+                <div className="py-8 text-center text-sm text-muted-foreground">
                   All songs added to setlist
                 </div>
               )}

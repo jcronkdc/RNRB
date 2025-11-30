@@ -7,12 +7,12 @@ import Link from 'next/link';
 
 export default function SongwritingFeaturePage() {
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
-      <div className="border-border/50 relative overflow-hidden border-b">
-        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
+      <div className="relative overflow-hidden border-b border-border/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
-          <div className="bg-brand-primary/10 absolute left-1/4 top-0 h-96 w-96 rounded-full blur-3xl" />
+          <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-6xl px-4 py-20">
@@ -28,7 +28,7 @@ export default function SongwritingFeaturePage() {
             </div>
 
             <h1 className="font-display mb-6 text-5xl font-bold md:text-6xl">Songwriting Studio</h1>
-            <p className="text-muted-foreground mx-auto mb-8 max-w-3xl text-xl leading-relaxed">
+            <p className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-muted-foreground">
               Break through creative blocks with AI that understands music theory, song structure,
               and your unique style.
             </p>
@@ -55,7 +55,7 @@ export default function SongwritingFeaturePage() {
         <h2 className="font-display mb-4 text-center text-4xl font-bold">
           Everything You Need to Write Great Songs
         </h2>
-        <p className="text-muted-foreground mx-auto mb-12 max-w-2xl text-center text-lg">
+        <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-muted-foreground">
           Professional-grade AI tools that understand music theory, lyrical structure, and your
           creative vision
         </p>
@@ -108,21 +108,21 @@ export default function SongwritingFeaturePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 * (index + 1) }}
             >
-              <Card className="rnrb-card hover:border-brand-primary/50 h-full p-6 transition-all">
+              <Card className="rnrb-card h-full p-6 transition-all hover:border-brand-primary/50">
                 <div
                   className={`bg- mb-4 flex h-12 w-12 items-center justify-center rounded-lg${feature.color.split('-')[0]}-500/10`}
                 >
                   <feature.icon className={`text- h-6 w-6${feature.color}`} />
                 </div>
                 <h3 className="mb-3 text-xl font-semibold">{feature.title}</h3>
-                <p className="text-muted-foreground mb-4">{feature.description}</p>
+                <p className="mb-4 text-muted-foreground">{feature.description}</p>
                 <div className="space-y-2">
                   {feature.features.map((item) => (
                     <div
                       key={item}
-                      className="text-muted-foreground flex items-center gap-2 text-sm"
+                      className="flex items-center gap-2 text-sm text-muted-foreground"
                     >
-                      <CheckCircle className="text-brand-primary h-4 w-4" />
+                      <CheckCircle className="h-4 w-4 text-brand-primary" />
                       <span>{item}</span>
                     </div>
                   ))}
@@ -133,9 +133,9 @@ export default function SongwritingFeaturePage() {
         </div>
 
         {/* How It Works */}
-        <div id="demo" className="border-border/50 border-t pt-20">
+        <div id="demo" className="border-t border-border/50 pt-20">
           <h2 className="font-display mb-4 text-center text-4xl font-bold">How It Works</h2>
-          <p className="text-muted-foreground mx-auto mb-12 max-w-2xl text-center text-lg">
+          <p className="mx-auto mb-12 max-w-2xl text-center text-lg text-muted-foreground">
             From blank page to finished song in minutes, with AI assistance at every step
           </p>
 
@@ -180,20 +180,20 @@ export default function SongwritingFeaturePage() {
                 transition={{ duration: 0.5, delay: 0.2 * (index + 1) }}
                 className="text-center"
               >
-                <div className="border-brand-primary/30 bg-brand-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2">
-                  <span className="font-display text-brand-primary text-3xl font-bold">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-primary/30 bg-brand-primary/10">
+                  <span className="font-display text-3xl font-bold text-brand-primary">
                     {step.step}
                   </span>
                 </div>
                 <h3 className="mb-3 text-xl font-semibold">{step.title}</h3>
-                <p className="text-muted-foreground mb-4">{step.description}</p>
+                <p className="mb-4 text-muted-foreground">{step.description}</p>
                 <div className="space-y-2">
                   {step.details.map((detail) => (
                     <div
                       key={detail}
-                      className="text-muted-foreground flex items-center justify-center gap-2 text-sm"
+                      className="flex items-center justify-center gap-2 text-sm text-muted-foreground"
                     >
-                      <span className="bg-brand-primary h-1.5 w-1.5 rounded-full"></span>
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand-primary"></span>
                       {detail}
                     </div>
                   ))}
@@ -206,33 +206,33 @@ export default function SongwritingFeaturePage() {
           <div className="mx-auto max-w-4xl">
             <Card className="rnrb-card border-brand-primary/20 bg-surface-elevated p-8">
               <h3 className="mb-4 flex items-center gap-2 text-2xl font-semibold">
-                <Sparkles className="text-brand-primary h-6 w-6" />
+                <Sparkles className="h-6 w-6 text-brand-primary" />
                 See It In Action
               </h3>
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
                   <h4 className="mb-2 font-semibold text-purple-400">Input:</h4>
-                  <div className="border-border bg-background rounded-lg border p-4">
-                    <p className="text-muted-foreground text-sm">Key: C Major</p>
-                    <p className="text-muted-foreground text-sm">Tempo: 120 BPM</p>
-                    <p className="text-muted-foreground text-sm">Genre: Folk Rock</p>
-                    <p className="text-muted-foreground text-sm">Mood: Hopeful</p>
+                  <div className="rounded-lg border border-border bg-background p-4">
+                    <p className="text-sm text-muted-foreground">Key: C Major</p>
+                    <p className="text-sm text-muted-foreground">Tempo: 120 BPM</p>
+                    <p className="text-sm text-muted-foreground">Genre: Folk Rock</p>
+                    <p className="text-sm text-muted-foreground">Mood: Hopeful</p>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-brand-primary mb-2 font-semibold">AI Output:</h4>
-                  <div className="border-border bg-background rounded-lg border p-4">
+                  <h4 className="mb-2 font-semibold text-brand-primary">AI Output:</h4>
+                  <div className="rounded-lg border border-border bg-background p-4">
                     <p className="mb-1 font-mono text-sm">Verse: C - Am - F - G</p>
                     <p className="mb-1 font-mono text-sm">Chorus: F - G - Am - C</p>
                     <p className="mb-1 font-mono text-sm">Bridge: Dm - G - C - Am</p>
-                    <p className="text-muted-foreground mt-2 text-xs">
+                    <p className="mt-2 text-xs text-muted-foreground">
                       + melody suggestions + lyric ideas
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="border-border mt-6 border-t pt-6">
-                <p className="text-muted-foreground text-center text-sm">
+              <div className="mt-6 border-t border-border pt-6">
+                <p className="text-center text-sm text-muted-foreground">
                   🎯 <strong>Real musicians love it:</strong> "Cut my songwriting time in half while
                   exploring ideas I'd never have tried" - Sarah K., Nashville
                 </p>
@@ -243,7 +243,7 @@ export default function SongwritingFeaturePage() {
       </div>
 
       {/* Philosophy Section */}
-      <div className="border-border/50 bg-surface/30 border-t">
+      <div className="border-t border-border/50 bg-surface/30">
         <div className="rnrb-container max-w-4xl px-4 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -251,9 +251,9 @@ export default function SongwritingFeaturePage() {
             transition={{ duration: 0.6 }}
             className="mb-16 text-center"
           >
-            <Sparkles className="text-brand-primary mx-auto mb-6 h-12 w-12" />
+            <Sparkles className="mx-auto mb-6 h-12 w-12 text-brand-primary" />
             <h2 className="font-display mb-4 text-3xl font-bold">AI That Serves Your Creativity</h2>
-            <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg">
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
               Our AI tools are designed to assist, not replace. You stay in creative control while
               getting suggestions that help you work faster and explore new directions.
             </p>
@@ -263,7 +263,7 @@ export default function SongwritingFeaturePage() {
           <div className="grid gap-8 md:grid-cols-2">
             <Card className="rnrb-card p-6">
               <h3 className="mb-3 text-xl font-semibold">🎵 Understands Music Theory</h3>
-              <ul className="text-muted-foreground space-y-2">
+              <ul className="space-y-2 text-muted-foreground">
                 <li>• Voice leading principles</li>
                 <li>• Harmonic function</li>
                 <li>• Common progressions (I-IV-V, ii-V-I)</li>
@@ -274,7 +274,7 @@ export default function SongwritingFeaturePage() {
 
             <Card className="rnrb-card p-6">
               <h3 className="mb-3 text-xl font-semibold">✍️ Lyrical Intelligence</h3>
-              <ul className="text-muted-foreground space-y-2">
+              <ul className="space-y-2 text-muted-foreground">
                 <li>• Natural language flow</li>
                 <li>• Rhyme scheme awareness (AABB, ABAB, etc.)</li>
                 <li>• Syllable counting for melodies</li>
@@ -285,7 +285,7 @@ export default function SongwritingFeaturePage() {
 
             <Card className="rnrb-card p-6">
               <h3 className="mb-3 text-xl font-semibold">🎼 Melody Generation</h3>
-              <ul className="text-muted-foreground space-y-2">
+              <ul className="space-y-2 text-muted-foreground">
                 <li>• Scale-locked note suggestions</li>
                 <li>• Vocal range consideration</li>
                 <li>• Rhythmic variations (eighth, sixteenth notes)</li>
@@ -296,7 +296,7 @@ export default function SongwritingFeaturePage() {
 
             <Card className="rnrb-card p-6">
               <h3 className="mb-3 text-xl font-semibold">🔄 Workflow Integration</h3>
-              <ul className="text-muted-foreground space-y-2">
+              <ul className="space-y-2 text-muted-foreground">
                 <li>• Export to PDF (chord charts + lyrics)</li>
                 <li>• MIDI file export for DAWs</li>
                 <li>• Share with band members instantly</li>
@@ -309,7 +309,7 @@ export default function SongwritingFeaturePage() {
       </div>
 
       {/* CTA */}
-      <div className="border-border/50 border-t">
+      <div className="border-t border-border/50">
         <div className="rnrb-container max-w-3xl px-4 py-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -317,7 +317,7 @@ export default function SongwritingFeaturePage() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-display mb-4 text-4xl font-bold">Start Writing Better Songs</h2>
-            <p className="text-muted-foreground mb-8 text-xl">
+            <p className="mb-8 text-xl text-muted-foreground">
               Free plan includes 50 AI assists per month - enough to write several songs.
             </p>
             <Link href="/songwriting">

@@ -12,12 +12,14 @@
 Your AI rate limiting logic exists in `lib/usage-tracking.ts` (227 lines) but is **NOT BEING CALLED** in your AI API routes.
 
 **Current State:**
+
 - ✅ Rate limiting logic: EXISTS
 - ✅ Database tracking fields: EXISTS
 - ❌ Enforcement in API routes: **MISSING**
 
 **Risk:**
 A single power user can make unlimited AI requests today:
+
 - 1,000 requests @ $0.002 avg = $2/month (tolerable)
 - 10,000 requests @ $0.002 = $20/month on $9.99 plan = **$10 LOSS**
 - 25,000 requests = $50/month on $9.99 plan = **$40 LOSS**
@@ -31,14 +33,15 @@ A single power user can make unlimited AI requests today:
 Add 3 lines to each AI API route:
 
 ### BEFORE (Current - Unprotected):
+
 ```typescript
 export async function POST(request: NextRequest) {
   try {
     const { message, context } = await request.json();
-    
+
     // ❌ NO QUOTA CHECK - ANYONE CAN SPAM
     const response = await getChatAssistance(message, context);
-    
+
     return NextResponse.json({ response });
   } catch (error) {
     return NextResponse.json({ error: 'AI request failed' }, { status: 500 });
@@ -47,6 +50,7 @@ export async function POST(request: NextRequest) {
 ```
 
 ### AFTER (Protected):
+
 ```typescript
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 import { getCurrentUser } from '@/lib/supabase';
@@ -54,18 +58,18 @@ import { getCurrentUser } from '@/lib/supabase';
 export async function POST(request: NextRequest) {
   try {
     const { message, context } = await request.json();
-    
+
     // ✅ STEP 1: Check quota BEFORE making expensive API call
     await requireUsageQuota('aiRequests', 1);
-    
+
     const response = await getChatAssistance(message, context);
-    
+
     // ✅ STEP 2: Track successful usage
     const user = await getCurrentUser();
     if (user) {
       await trackUsage(user.id, 'aiRequests', 1);
     }
-    
+
     return NextResponse.json({ response });
   } catch (error: any) {
     // ✅ STEP 3: Handle quota exceeded gracefully
@@ -82,7 +86,7 @@ export async function POST(request: NextRequest) {
         { status: 429 } // Too Many Requests
       );
     }
-    
+
     return NextResponse.json({ error: 'AI request failed' }, { status: 500 });
   }
 }
@@ -93,21 +97,25 @@ export async function POST(request: NextRequest) {
 ## FILES TO UPDATE (4 Total)
 
 ### 1. `/apps/web/app/api/ai/chat-assist/route.ts`
+
 - **Purpose:** Real-time songwriting assistance
 - **Current:** No quota check
 - **Add:** 3 lines (import + 2 calls)
 
 ### 2. `/apps/web/app/api/ai/transcribe/route.ts`
+
 - **Purpose:** Audio transcription (Whisper API)
 - **Current:** No quota check
 - **Add:** 3 lines + handle transcription cost
 
 ### 3. `/apps/web/app/api/ai/generate-content/route.ts`
+
 - **Purpose:** Social media, email, press release generation
 - **Current:** No quota check
 - **Add:** 3 lines
 
 ### 4. `/apps/web/app/api/ai/tour-router/route.ts`
+
 - **Purpose:** Tour route optimization
 - **Current:** No quota check
 - **Add:** 3 lines
@@ -121,17 +129,20 @@ export async function POST(request: NextRequest) {
 For each file, add:
 
 **At the top (imports):**
+
 ```typescript
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 import { getCurrentUser } from '@/lib/supabase';
 ```
 
 **Before AI API call:**
+
 ```typescript
 await requireUsageQuota('aiRequests', 1);
 ```
 
 **After successful AI response:**
+
 ```typescript
 const user = await getCurrentUser();
 if (user) {
@@ -140,6 +151,7 @@ if (user) {
 ```
 
 **In catch block:**
+
 ```typescript
 if (error.code === 'QUOTA_EXCEEDED') {
   return NextResponse.json(
@@ -190,7 +202,7 @@ curl -X POST http://localhost:3000/api/ai/chat-assist \
 
 ```sql
 -- Check that usage is being tracked
-SELECT 
+SELECT
   email,
   "subscriptionTier",
   "aiRequestsUsed",
@@ -231,12 +243,14 @@ git push origin main
 ## COST IMPACT
 
 ### Before Fix (Current):
+
 - **Risk:** Unlimited AI usage
 - **Worst Case:** $50/month cost per power user
 - **Break-even:** Need 6 normal users to cover 1 power user
 - **Margin Risk:** 15% power users = ZERO profit
 
 ### After Fix:
+
 - **Protected:** Max 100-500 requests/user/month
 - **Max Cost:** $0.15-$0.75/user/month
 - **Margin:** 91-97% on all users
@@ -249,11 +263,13 @@ git push origin main
 **Scenario: 100 Paying Users (50 Creator + 50 Studio)**
 
 **Without Fix:**
+
 - 90 normal users: $2,999 revenue - $270 costs = $2,729 profit
 - 10 power users: $0 revenue - $500 costs = **-$500 loss**
 - **Net:** $2,229 profit (25% margin loss)
 
 **With Fix:**
+
 - 100 users: $2,999 revenue - $300 costs = **$2,699 profit**
 - **Protected:** All users profitable
 - **Predictable:** Costs scale linearly
@@ -263,6 +279,7 @@ git push origin main
 ## ROLLBACK PLAN (If Something Breaks)
 
 **Option 1: Temporary Bypass**
+
 ```typescript
 // In lib/usage-tracking.ts
 export async function requireUsageQuota() {
@@ -274,6 +291,7 @@ export async function requireUsageQuota() {
 Just comment out the `requireUsageQuota()` and `trackUsage()` calls.
 
 **Option 3: Increase Limits**
+
 ```typescript
 // In lib/usage-tracking.ts
 const TIER_LIMITS = {
@@ -281,7 +299,7 @@ const TIER_LIMITS = {
     aiRequests: 1000, // Temporarily raise limit
     // ...
   },
-}
+};
 ```
 
 ---
@@ -289,18 +307,23 @@ const TIER_LIMITS = {
 ## FREQUENTLY ASKED QUESTIONS
 
 ### Q: Will this break existing users?
+
 **A:** No. They'll just hit their monthly limit and see an upgrade prompt. The free tier already has 0 AI access.
 
 ### Q: What if legitimate users need more?
+
 **A:** They can upgrade to Studio (500 requests) or we add "buy more credits" feature later.
 
 ### Q: Can we test without affecting production?
+
 **A:** Yes. Test locally first, or increase limits temporarily in production.
 
 ### Q: What about admin/testing accounts?
+
 **A:** Create a "testing" tier with unlimited access for internal use.
 
 ### Q: Will this affect user experience?
+
 **A:** Only for power users. Normal users won't hit limits. Add usage dashboard so they can track.
 
 ---
@@ -310,7 +333,7 @@ const TIER_LIMITS = {
 **Time Investment:** 30 minutes  
 **Financial Protection:** $40+ per power user  
 **Risk Reduction:** 100% (eliminates unlimited usage)  
-**ROI:** Immediate (profitable from user #1)  
+**ROI:** Immediate (profitable from user #1)
 
 **This is the most important 30-minute fix for your financial viability.**
 
@@ -321,4 +344,3 @@ const TIER_LIMITS = {
 ---
 
 **END OF URGENT FIX GUIDE** | Agent 133 | 2025-11-26
-

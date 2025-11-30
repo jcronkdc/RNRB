@@ -106,9 +106,7 @@ const SONG_TEMPLATES: SongTemplate[] = [
     name: 'Blank Canvas',
     description: 'Start from scratch with no structure',
     genre: 'Custom',
-    blocks: [
-      { type: 'verse', content: '[Section 1]\nStart writing...' },
-    ],
+    blocks: [{ type: 'verse', content: '[Section 1]\nStart writing...' }],
     icon: FileText,
     color: 'from-gray-600 to-gray-700',
   },
@@ -135,9 +133,7 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
       <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border-2 border-gray-800 bg-gradient-to-b from-gray-900 to-black p-8 shadow-2xl">
         <div className="mb-6">
           <h2 className="mb-2 text-3xl font-bold text-white">Choose Your Song Structure</h2>
-          <p className="text-gray-400">
-            Start with a proven template or build from scratch
-          </p>
+          <p className="text-gray-400">Start with a proven template or build from scratch</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -166,9 +162,7 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
                       </div>
                       <div>
                         <h3 className="text-lg font-bold text-white">{template.name}</h3>
-                        <span className="text-xs font-medium text-gray-400">
-                          {template.genre}
-                        </span>
+                        <span className="text-xs font-medium text-gray-400">{template.genre}</span>
                       </div>
                     </div>
                     {isSelected && (
@@ -221,5 +215,3 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
     </div>
   );
 }
-
-

@@ -29,14 +29,15 @@ const fetcher = async (url: string) => {
  * Provides shared project data and operations for cross-feature integration
  */
 export function useProjects() {
-  const { data, error, isLoading, mutate: mutateProjects } = useSWR<Project[]>(
-    '/api/projects',
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      dedupingInterval: 10000, // 10 second deduping
-    }
-  );
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: mutateProjects,
+  } = useSWR<Project[]>('/api/projects', fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 10000, // 10 second deduping
+  });
 
   const refresh = useCallback(() => {
     return mutateProjects();
@@ -54,13 +55,14 @@ export function useProjects() {
  * Hook for accessing a single project
  */
 export function useProject(slugOrId: string | null) {
-  const { data, error, isLoading, mutate: mutateProject } = useSWR<Project>(
-    slugOrId ? `/api/projects/${slugOrId}` : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    }
-  );
+  const {
+    data,
+    error,
+    isLoading,
+    mutate: mutateProject,
+  } = useSWR<Project>(slugOrId ? `/api/projects/${slugOrId}` : null, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   return {
     project: data,
@@ -78,67 +80,61 @@ export function useProjectSongActions() {
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const addSongToProject = useCallback(
-    async (projectSlug: string, songId: string) => {
-      setIsAdding(true);
-      setError(null);
+  const addSongToProject = useCallback(async (projectSlug: string, songId: string) => {
+    setIsAdding(true);
+    setError(null);
 
-      try {
-        const response = await fetch(`/api/projects/${projectSlug}/songs`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ songId }),
-        });
+    try {
+      const response = await fetch(`/api/projects/${projectSlug}/songs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ songId }),
+      });
 
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.error || 'Failed to add song to project');
-        }
-
-        const result = await response.json();
-
-        // Invalidate project cache to reflect new song
-        await mutate((key) => typeof key === 'string' && key.includes('/api/projects'));
-
-        return result;
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to add song';
-        setError(errorMessage);
-        throw err;
-      } finally {
-        setIsAdding(false);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to add song to project');
       }
-    },
-    []
-  );
 
-  const removeSongFromProject = useCallback(
-    async (projectSlug: string, songId: string) => {
-      setIsAdding(true);
-      setError(null);
+      const result = await response.json();
 
-      try {
-        const response = await fetch(`/api/projects/${projectSlug}/songs/${songId}`, {
-          method: 'DELETE',
-        });
+      // Invalidate project cache to reflect new song
+      await mutate((key) => typeof key === 'string' && key.includes('/api/projects'));
 
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.error || 'Failed to remove song');
-        }
+      return result;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to add song';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setIsAdding(false);
+    }
+  }, []);
 
-        // Invalidate project cache
-        await mutate((key) => typeof key === 'string' && key.includes('/api/projects'));
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to remove song';
-        setError(errorMessage);
-        throw err;
-      } finally {
-        setIsAdding(false);
+  const removeSongFromProject = useCallback(async (projectSlug: string, songId: string) => {
+    setIsAdding(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/projects/${projectSlug}/songs/${songId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to remove song');
       }
-    },
-    []
-  );
+
+      // Invalidate project cache
+      await mutate((key) => typeof key === 'string' && key.includes('/api/projects'));
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to remove song';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setIsAdding(false);
+    }
+  }, []);
 
   return {
     addSongToProject,
@@ -147,4 +143,3 @@ export function useProjectSongActions() {
     error,
   };
 }
-

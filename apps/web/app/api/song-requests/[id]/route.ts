@@ -7,10 +7,7 @@ import { getCurrentUser } from '@/lib/session';
  * PATCH /api/song-requests/[id]
  * Update song request status (approve/reject)
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const user = await getCurrentUser();
     if (!user) {
@@ -22,10 +19,7 @@ export async function PATCH(
     const { status, responseMessage } = body;
 
     if (!['approved', 'rejected'].includes(status)) {
-      return NextResponse.json(
-        { error: 'Status must be approved or rejected' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Status must be approved or rejected' }, { status: 400 });
     }
 
     // Find the request
@@ -132,4 +126,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete song request' }, { status: 500 });
   }
 }
-

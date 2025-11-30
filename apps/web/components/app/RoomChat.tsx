@@ -58,11 +58,11 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
   };
 
   return (
-    <div className="border-border bg-surface flex h-full flex-col rounded-2xl border">
+    <div className="flex h-full flex-col rounded-2xl border border-border bg-surface">
       {/* Chat Header */}
-      <div className="border-border border-b p-4">
-        <h3 className="text-foreground font-semibold">Room Chat</h3>
-        <p className="text-muted-foreground text-sm">{messages.length} messages</p>
+      <div className="border-b border-border p-4">
+        <h3 className="font-semibold text-foreground">Room Chat</h3>
+        <p className="text-sm text-muted-foreground">{messages.length} messages</p>
       </div>
 
       {/* Messages Area */}
@@ -98,11 +98,9 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
                 <div
                   className={`flex max-w-[70%] flex-col gap-1 ${isOwnMessage ? 'items-end' : 'items-start'}`}
                 >
-                  <div className="text-muted-foreground flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="font-medium">{isOwnMessage ? 'You' : message.userName}</span>
-                    <span>
-                      {formatTime(message.createdAt)}
-                    </span>
+                    <span>{formatTime(message.createdAt)}</span>
                   </div>
                   <div
                     className={`rounded-2xl px-4 py-2 ${
@@ -122,7 +120,7 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
       </div>
 
       {/* Message Input */}
-      <form onSubmit={handleSend} className="border-border border-t p-4">
+      <form onSubmit={handleSend} className="border-t border-border p-4">
         <div className="flex gap-2">
           <Input
             type="text"

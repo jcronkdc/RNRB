@@ -59,17 +59,17 @@ export function FeatureTooltip({
                   <p className="text-sm leading-relaxed text-zinc-400">{description}</p>
                 </div>
               </div>
-              
+
               {/* Arrow */}
               <div
                 className={`absolute h-3 w-3 rotate-45 border border-orange-500/30 bg-zinc-900/95 ${
                   placement === 'top'
                     ? 'bottom-[-6px] left-1/2 -translate-x-1/2 border-b border-r'
                     : placement === 'bottom'
-                    ? 'left-1/2 top-[-6px] -translate-x-1/2 border-l border-t'
-                    : placement === 'left'
-                    ? 'right-[-6px] top-1/2 -translate-y-1/2 border-r border-t'
-                    : 'left-[-6px] top-1/2 -translate-y-1/2 border-b border-l'
+                      ? 'left-1/2 top-[-6px] -translate-x-1/2 border-l border-t'
+                      : placement === 'left'
+                        ? 'right-[-6px] top-1/2 -translate-y-1/2 border-r border-t'
+                        : 'left-[-6px] top-1/2 -translate-y-1/2 border-b border-l'
                 }`}
               />
             </div>

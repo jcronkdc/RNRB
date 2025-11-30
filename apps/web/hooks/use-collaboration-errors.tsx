@@ -213,13 +213,13 @@ export function CollaborationErrorBanner({
             >
               {statusMessage}
             </span>
-            <span className="bg-surface-muted rounded-full px-2 py-0.5 text-xs font-medium">
+            <span className="rounded-full bg-surface-muted px-2 py-0.5 text-xs font-medium">
               Health: {healthScore}%
             </span>
           </div>
 
           {latestError && (
-            <p className="text-muted-foreground mt-2 text-xs">
+            <p className="mt-2 text-xs text-muted-foreground">
               {latestError.feature}: {latestError.error}
             </p>
           )}
@@ -235,7 +235,7 @@ export function CollaborationErrorBanner({
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="text-muted-foreground hover:text-foreground transition"
+            className="text-muted-foreground transition hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>

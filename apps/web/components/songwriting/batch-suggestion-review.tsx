@@ -1,7 +1,16 @@
 'use client';
 
 import { Card } from '@cronkwaters/ui';
-import { Check, X, ChevronRight, ChevronLeft, Sparkles, Loader2, Filter, AlertCircle } from 'lucide-react';
+import {
+  Check,
+  X,
+  ChevronRight,
+  ChevronLeft,
+  Sparkles,
+  Loader2,
+  Filter,
+  AlertCircle,
+} from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export type SuggestionType = 'rhyme' | 'synonym' | 'chord' | 'structure' | 'ai';
@@ -77,9 +86,8 @@ export function BatchSuggestionReview({
     setCurrentIndex(0);
   }, [suggestions]);
 
-  const filteredSuggestions = filterType === 'all' 
-    ? localSuggestions 
-    : localSuggestions.filter(s => s.type === filterType);
+  const filteredSuggestions =
+    filterType === 'all' ? localSuggestions : localSuggestions.filter((s) => s.type === filterType);
 
   const currentSuggestion = filteredSuggestions[currentIndex];
   const hasNext = currentIndex < filteredSuggestions.length - 1;
@@ -88,9 +96,9 @@ export function BatchSuggestionReview({
   const handleAccept = () => {
     if (currentSuggestion) {
       onAccept(currentSuggestion.id);
-      setLocalSuggestions(prev => prev.filter(s => s.id !== currentSuggestion.id));
-      setReviewedCount(prev => prev + 1);
-      
+      setLocalSuggestions((prev) => prev.filter((s) => s.id !== currentSuggestion.id));
+      setReviewedCount((prev) => prev + 1);
+
       // Move to next or stay at current if at end
       if (currentIndex >= filteredSuggestions.length - 1) {
         setCurrentIndex(Math.max(0, currentIndex - 1));
@@ -101,9 +109,9 @@ export function BatchSuggestionReview({
   const handleReject = () => {
     if (currentSuggestion) {
       onReject(currentSuggestion.id);
-      setLocalSuggestions(prev => prev.filter(s => s.id !== currentSuggestion.id));
-      setReviewedCount(prev => prev + 1);
-      
+      setLocalSuggestions((prev) => prev.filter((s) => s.id !== currentSuggestion.id));
+      setReviewedCount((prev) => prev + 1);
+
       // Move to next or stay at current if at end
       if (currentIndex >= filteredSuggestions.length - 1) {
         setCurrentIndex(Math.max(0, currentIndex - 1));
@@ -113,13 +121,13 @@ export function BatchSuggestionReview({
 
   const handleNext = () => {
     if (hasNext) {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev) => prev + 1);
     }
   };
 
   const handlePrev = () => {
     if (hasPrev) {
-      setCurrentIndex(prev => prev - 1);
+      setCurrentIndex((prev) => prev - 1);
     }
   };
 
@@ -127,7 +135,7 @@ export function BatchSuggestionReview({
     if (confirm(`Accept all ${filteredSuggestions.length} suggestions?`)) {
       onAcceptAll();
       setLocalSuggestions([]);
-      setReviewedCount(prev => prev + filteredSuggestions.length);
+      setReviewedCount((prev) => prev + filteredSuggestions.length);
     }
   };
 
@@ -135,7 +143,7 @@ export function BatchSuggestionReview({
     if (confirm(`Reject all ${filteredSuggestions.length} suggestions?`)) {
       onRejectAll();
       setLocalSuggestions([]);
-      setReviewedCount(prev => prev + filteredSuggestions.length);
+      setReviewedCount((prev) => prev + filteredSuggestions.length);
     }
   };
 
@@ -198,10 +206,9 @@ export function BatchSuggestionReview({
           </div>
           <h3 className="mb-2 text-xl font-bold text-white">All Done!</h3>
           <p className="text-gray-400">
-            {reviewedCount > 0 
+            {reviewedCount > 0
               ? `You reviewed ${reviewedCount} suggestion${reviewedCount === 1 ? '' : 's'}`
-              : 'No suggestions to review right now'
-            }
+              : 'No suggestions to review right now'}
           </p>
         </div>
       </Card>
@@ -235,9 +242,7 @@ export function BatchSuggestionReview({
           {reviewedCount > 0 && (
             <div className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 px-3 py-1.5">
               <Check className="h-4 w-4 text-green-400" />
-              <span className="text-sm font-medium text-green-400">
-                {reviewedCount} reviewed
-              </span>
+              <span className="text-sm font-medium text-green-400">{reviewedCount} reviewed</span>
             </div>
           )}
         </div>
@@ -255,7 +260,7 @@ export function BatchSuggestionReview({
           >
             <option value="all">All Types ({localSuggestions.length})</option>
             {Object.entries(SUGGESTION_TYPE_INFO).map(([type, info]) => {
-              const count = localSuggestions.filter(s => s.type === type).length;
+              const count = localSuggestions.filter((s) => s.type === type).length;
               return count > 0 ? (
                 <option key={type} value={type}>
                   {info.icon} {info.label} ({count})
@@ -270,17 +275,23 @@ export function BatchSuggestionReview({
       <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
         {/* Type Badge */}
         <div className="mb-4 flex items-center gap-2">
-          <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium ${
-            typeInfo.color === 'blue' ? 'border-blue-500/30 bg-blue-500/10 text-blue-400' :
-            typeInfo.color === 'green' ? 'border-green-500/30 bg-green-500/10 text-green-400' :
-            typeInfo.color === 'purple' ? 'border-purple-500/30 bg-purple-500/10 text-purple-400' :
-            typeInfo.color === 'orange' ? 'border-orange-500/30 bg-orange-500/10 text-orange-400' :
-            'border-pink-500/30 bg-pink-500/10 text-pink-400'
-          }`}>
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium ${
+              typeInfo.color === 'blue'
+                ? 'border-blue-500/30 bg-blue-500/10 text-blue-400'
+                : typeInfo.color === 'green'
+                  ? 'border-green-500/30 bg-green-500/10 text-green-400'
+                  : typeInfo.color === 'purple'
+                    ? 'border-purple-500/30 bg-purple-500/10 text-purple-400'
+                    : typeInfo.color === 'orange'
+                      ? 'border-orange-500/30 bg-orange-500/10 text-orange-400'
+                      : 'border-pink-500/30 bg-pink-500/10 text-pink-400'
+            }`}
+          >
             <span>{typeInfo.icon}</span>
             <span>{typeInfo.label}</span>
           </span>
-          
+
           {currentSuggestion.confidence && (
             <span className="text-xs text-gray-500">
               {Math.round(currentSuggestion.confidence * 100)}% confidence
@@ -300,13 +311,17 @@ export function BatchSuggestionReview({
         <div className="grid gap-4 md:grid-cols-2">
           {/* Original */}
           <div className="rounded-lg border-2 border-red-500/30 bg-red-500/5 p-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-red-400">Original</p>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-red-400">
+              Original
+            </p>
             <p className="text-lg font-medium text-white">{currentSuggestion.original}</p>
           </div>
 
           {/* Suggested */}
           <div className="rounded-lg border-2 border-green-500/30 bg-green-500/5 p-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-green-400">Suggested</p>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-green-400">
+              Suggested
+            </p>
             <p className="text-lg font-medium text-white">{currentSuggestion.suggested}</p>
           </div>
         </div>
@@ -393,13 +408,20 @@ export function BatchSuggestionReview({
           Keyboard Shortcuts
         </p>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-gray-400 sm:grid-cols-4">
-          <div><kbd className="font-mono">A</kbd> - Accept</div>
-          <div><kbd className="font-mono">R</kbd> - Reject</div>
-          <div><kbd className="font-mono">J / →</kbd> - Next</div>
-          <div><kbd className="font-mono">K / ←</kbd> - Previous</div>
+          <div>
+            <kbd className="font-mono">A</kbd> - Accept
+          </div>
+          <div>
+            <kbd className="font-mono">R</kbd> - Reject
+          </div>
+          <div>
+            <kbd className="font-mono">J / →</kbd> - Next
+          </div>
+          <div>
+            <kbd className="font-mono">K / ←</kbd> - Previous
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
