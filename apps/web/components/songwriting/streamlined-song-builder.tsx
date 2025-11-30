@@ -64,7 +64,7 @@ const BLOCK_TYPES = [
 const SONG_TEMPLATES = [
   {
     name: 'Pop',
-    icon: '🎤',
+    sections: 8,
     structure: [
       'intro',
       'verse',
@@ -78,7 +78,7 @@ const SONG_TEMPLATES = [
   },
   {
     name: 'Rock',
-    icon: '🎸',
+    sections: 8,
     structure: [
       'intro',
       'verse',
@@ -92,12 +92,12 @@ const SONG_TEMPLATES = [
   },
   {
     name: 'Ballad',
-    icon: '🎹',
+    sections: 7,
     structure: ['verse', 'verse', 'chorus', 'verse', 'chorus', 'bridge', 'chorus'] as const,
   },
   {
     name: 'Simple',
-    icon: '🎵',
+    sections: 4,
     structure: ['verse', 'chorus', 'verse', 'chorus'] as const,
   },
 ];
@@ -377,6 +377,20 @@ export function StreamlinedSongBuilder({
   const [historyIndex, setHistoryIndex] = useState(0);
   const [copied, setCopied] = useState(false);
 
+  // Sync blocks when initialBlocks changes (e.g., when template is selected)
+  const initialBlocksRef = useRef(initialBlocks);
+  useEffect(() => {
+    // Only update if initialBlocks actually changed (compare by length and IDs)
+    const currentIds = initialBlocksRef.current.map((b) => b.id).join(',');
+    const newIds = initialBlocks.map((b) => b.id).join(',');
+    if (currentIds !== newIds) {
+      setBlocks(initialBlocks);
+      setHistory([initialBlocks]);
+      setHistoryIndex(0);
+      initialBlocksRef.current = initialBlocks;
+    }
+  }, [initialBlocks]);
+
   // Sensors for drag-and-drop
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -644,28 +658,25 @@ export function StreamlinedSongBuilder({
               Pick a template or add sections
             </p>
 
-            {/* Quick Templates - Compact */}
-            <div className="mb-4 w-full max-w-sm">
-              <div className="grid grid-cols-4 gap-1.5">
-                {SONG_TEMPLATES.map((template) => (
-                  <motion.button
-                    key={template.name}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => applyTemplate(template.structure)}
-                    className="flex flex-col items-center gap-0.5 rounded-lg px-2 py-2 transition"
-                    style={{ background: 'var(--background)', border: '1px solid var(--border)' }}
-                  >
-                    <span className="text-base">{template.icon}</span>
-                    <span className="text-[10px] font-medium" style={{ color: 'var(--text)' }}>
-                      {template.name}
-                    </span>
-                    <span className="text-[9px]" style={{ color: 'var(--muted)' }}>
-                      {template.structure.length} sec
-                    </span>
-                  </motion.button>
-                ))}
-              </div>
+            {/* Quick Templates - Clean */}
+            <div className="mb-4 flex flex-wrap justify-center gap-2">
+              {SONG_TEMPLATES.map((template) => (
+                <motion.button
+                  key={template.name}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => applyTemplate(template.structure)}
+                  className="rounded-lg px-4 py-2 text-sm font-medium transition"
+                  style={{
+                    background: 'var(--background)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                  }}
+                >
+                  {template.name}
+                  <span className="ml-1.5 opacity-50">{template.sections}</span>
+                </motion.button>
+              ))}
             </div>
 
             {/* Or add manually - Compact */}

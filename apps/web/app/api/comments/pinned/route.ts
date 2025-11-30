@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { db } from '@cronkwaters/db';
+import { prisma } from '@cronkwaters/db';
 
 import { auth } from '@/auth';
 import { standardLimiter } from '@/lib/rate-limit';
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'entityId and entityType are required' }, { status: 400 });
     }
 
-    const comments = await db.pinnedComment.findMany({
+    const comments = await prisma.pinnedComment.findMany({
       where: {
         entityId,
         entityType,
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const comment = await db.pinnedComment.create({
+    const comment = await prisma.pinnedComment.create({
       data: {
         entityId,
         entityType,

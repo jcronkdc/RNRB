@@ -12,51 +12,46 @@ export type ParsedSection = {
   originalLabel?: string;
 };
 
-// Common section markers and their mappings
+// Common section markers and their mappings (more forgiving patterns)
 const SECTION_PATTERNS: Array<{
   pattern: RegExp;
   type: SectionType;
 }> = [
-  // Verse patterns
-  { pattern: /^\[?\s*verse\s*\d*\s*\]?:?$/i, type: 'verse' },
-  { pattern: /^\(?\s*verse\s*\d*\s*\)?:?$/i, type: 'verse' },
-  { pattern: /^verse\s*\d*\s*:/i, type: 'verse' },
-  { pattern: /^v\d+:?$/i, type: 'verse' },
+  // Verse patterns - match anywhere in line with brackets or parentheses
+  { pattern: /\[\s*verse\s*\d*\s*\]/i, type: 'verse' },
+  { pattern: /\(\s*verse\s*\d*\s*\)/i, type: 'verse' },
+  { pattern: /^verse\s*\d*\s*:?\s*$/i, type: 'verse' },
+  { pattern: /^v\s*\d+\s*:?\s*$/i, type: 'verse' },
 
   // Chorus patterns
-  { pattern: /^\[?\s*chorus\s*\d*\s*\]?:?$/i, type: 'chorus' },
-  { pattern: /^\(?\s*chorus\s*\d*\s*\)?:?$/i, type: 'chorus' },
-  { pattern: /^chorus\s*\d*\s*:/i, type: 'chorus' },
-  { pattern: /^\[?\s*hook\s*\d*\s*\]?:?$/i, type: 'chorus' },
-  { pattern: /^\[?\s*refrain\s*\d*\s*\]?:?$/i, type: 'chorus' },
-  { pattern: /^c\d*:?$/i, type: 'chorus' },
+  { pattern: /\[\s*chorus\s*\d*\s*\]/i, type: 'chorus' },
+  { pattern: /\(\s*chorus\s*\d*\s*\)/i, type: 'chorus' },
+  { pattern: /^chorus\s*\d*\s*:?\s*$/i, type: 'chorus' },
+  { pattern: /\[\s*hook\s*\d*\s*\]/i, type: 'chorus' },
+  { pattern: /\[\s*refrain\s*\d*\s*\]/i, type: 'chorus' },
 
   // Bridge patterns
-  { pattern: /^\[?\s*bridge\s*\d*\s*\]?:?$/i, type: 'bridge' },
-  { pattern: /^\(?\s*bridge\s*\d*\s*\)?:?$/i, type: 'bridge' },
-  { pattern: /^bridge\s*\d*\s*:/i, type: 'bridge' },
-  { pattern: /^\[?\s*middle\s*8?\s*\]?:?$/i, type: 'bridge' },
-  { pattern: /^b\d*:?$/i, type: 'bridge' },
+  { pattern: /\[\s*bridge\s*\d*\s*\]/i, type: 'bridge' },
+  { pattern: /\(\s*bridge\s*\d*\s*\)/i, type: 'bridge' },
+  { pattern: /^bridge\s*\d*\s*:?\s*$/i, type: 'bridge' },
+  { pattern: /\[\s*middle\s*8?\s*\]/i, type: 'bridge' },
 
   // Pre-chorus patterns
-  { pattern: /^\[?\s*pre[-\s]?chorus\s*\d*\s*\]?:?$/i, type: 'pre-chorus' },
-  { pattern: /^\(?\s*pre[-\s]?chorus\s*\d*\s*\)?:?$/i, type: 'pre-chorus' },
-  { pattern: /^pre[-\s]?chorus\s*\d*\s*:/i, type: 'pre-chorus' },
-  { pattern: /^\[?\s*lift\s*\d*\s*\]?:?$/i, type: 'pre-chorus' },
-  { pattern: /^\[?\s*build\s*\d*\s*\]?:?$/i, type: 'pre-chorus' },
+  { pattern: /\[\s*pre[-\s]?chorus\s*\d*\s*\]/i, type: 'pre-chorus' },
+  { pattern: /\(\s*pre[-\s]?chorus\s*\d*\s*\)/i, type: 'pre-chorus' },
+  { pattern: /^pre[-\s]?chorus\s*\d*\s*:?\s*$/i, type: 'pre-chorus' },
 
   // Intro patterns
-  { pattern: /^\[?\s*intro\s*\d*\s*\]?:?$/i, type: 'intro' },
-  { pattern: /^\(?\s*intro\s*\d*\s*\)?:?$/i, type: 'intro' },
-  { pattern: /^intro\s*\d*\s*:/i, type: 'intro' },
-  { pattern: /^\[?\s*opening\s*\]?:?$/i, type: 'intro' },
+  { pattern: /\[\s*intro\s*\d*\s*\]/i, type: 'intro' },
+  { pattern: /\(\s*intro\s*\d*\s*\)/i, type: 'intro' },
+  { pattern: /^intro\s*\d*\s*:?\s*$/i, type: 'intro' },
 
   // Outro patterns
-  { pattern: /^\[?\s*outro\s*\d*\s*\]?:?$/i, type: 'outro' },
-  { pattern: /^\(?\s*outro\s*\d*\s*\)?:?$/i, type: 'outro' },
-  { pattern: /^outro\s*\d*\s*:/i, type: 'outro' },
-  { pattern: /^\[?\s*ending\s*\]?:?$/i, type: 'outro' },
-  { pattern: /^\[?\s*coda\s*\]?:?$/i, type: 'outro' },
+  { pattern: /\[\s*outro\s*\d*\s*\]/i, type: 'outro' },
+  { pattern: /\(\s*outro\s*\d*\s*\)/i, type: 'outro' },
+  { pattern: /^outro\s*\d*\s*:?\s*$/i, type: 'outro' },
+  { pattern: /\[\s*ending\s*\]/i, type: 'outro' },
+  { pattern: /\[\s*coda\s*\]/i, type: 'outro' },
 ];
 
 /**

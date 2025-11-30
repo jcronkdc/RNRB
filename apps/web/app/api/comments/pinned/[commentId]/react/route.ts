@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { db } from '@cronkwaters/db';
+import { prisma } from '@cronkwaters/db';
 
 import { auth } from '@/auth';
 import { standardLimiter } from '@/lib/rate-limit';
@@ -29,7 +29,7 @@ export async function POST(
       return NextResponse.json({ error: 'emoji is required' }, { status: 400 });
     }
 
-    const existing = await db.pinnedComment.findUnique({
+    const existing = await prisma.pinnedComment.findUnique({
       where: { id: commentId },
     });
 
@@ -49,7 +49,7 @@ export async function POST(
       reactions[emoji].push(userIdToUse);
     }
 
-    const comment = await db.pinnedComment.update({
+    const comment = await prisma.pinnedComment.update({
       where: { id: commentId },
       data: { reactions },
     });
@@ -106,7 +106,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'emoji is required' }, { status: 400 });
     }
 
-    const existing = await db.pinnedComment.findUnique({
+    const existing = await prisma.pinnedComment.findUnique({
       where: { id: commentId },
     });
 
@@ -127,7 +127,7 @@ export async function DELETE(
       }
     }
 
-    const comment = await db.pinnedComment.update({
+    const comment = await prisma.pinnedComment.update({
       where: { id: commentId },
       data: { reactions },
     });

@@ -43,27 +43,27 @@ const SUGGESTION_TYPE_INFO = {
   rhyme: {
     label: 'Rhyme',
     color: 'blue',
-    icon: '🎵',
+    icon: 'R',
   },
   synonym: {
     label: 'Synonym',
     color: 'green',
-    icon: '📚',
+    icon: 'S',
   },
   chord: {
     label: 'Chord',
     color: 'purple',
-    icon: '🎹',
+    icon: '♯',
   },
   structure: {
     label: 'Structure',
     color: 'orange',
-    icon: '🏗️',
+    icon: '≡',
   },
   ai: {
     label: 'AI',
     color: 'pink',
-    icon: '✨',
+    icon: '*',
   },
 } as const;
 

@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { db } from '@cronkwaters/db';
+import { prisma } from '@cronkwaters/db';
 
 import { auth } from '@/auth';
 import { standardLimiter } from '@/lib/rate-limit';
@@ -26,7 +26,7 @@ export async function PATCH(
     const { content } = body;
 
     // Check ownership
-    const existing = await db.pinnedComment.findUnique({
+    const existing = await prisma.pinnedComment.findUnique({
       where: { id: commentId },
     });
 
@@ -38,7 +38,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Not authorized to edit this comment' }, { status: 403 });
     }
 
-    const comment = await db.pinnedComment.update({
+    const comment = await prisma.pinnedComment.update({
       where: { id: commentId },
       data: { content },
     });
@@ -90,7 +90,7 @@ export async function DELETE(
     const { commentId } = await params;
 
     // Check ownership
-    const existing = await db.pinnedComment.findUnique({
+    const existing = await prisma.pinnedComment.findUnique({
       where: { id: commentId },
     });
 
@@ -103,7 +103,7 @@ export async function DELETE(
     }
 
     // Delete the comment and all its replies
-    await db.pinnedComment.deleteMany({
+    await prisma.pinnedComment.deleteMany({
       where: {
         OR: [{ id: commentId }, { threadId: commentId }],
       },

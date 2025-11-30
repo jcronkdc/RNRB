@@ -37,10 +37,10 @@ type PaletteItem = {
 };
 
 const PALETTE_ITEMS: PaletteItem[] = [
-  { id: 'verse', type: 'verse', label: 'Verse', icon: '📝' },
-  { id: 'chorus', type: 'chorus', label: 'Chorus', icon: '🎵' },
-  { id: 'bridge', type: 'bridge', label: 'Bridge', icon: '🌉' },
-  { id: 'chord', type: 'chord', label: 'Chord', icon: '🎸' },
+  { id: 'verse', type: 'verse', label: 'Verse', icon: 'V' },
+  { id: 'chorus', type: 'chorus', label: 'Chorus', icon: 'C' },
+  { id: 'bridge', type: 'bridge', label: 'Bridge', icon: 'B' },
+  { id: 'chord', type: 'chord', label: 'Chord', icon: '♯' },
 ];
 
 const COMMON_CHORDS = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'Cm', 'Dm', 'Em', 'Fm', 'Gm', 'Am', 'Bm'];
