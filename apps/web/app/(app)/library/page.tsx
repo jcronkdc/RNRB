@@ -58,6 +58,7 @@ import {
   Users,
   FileArchive,
   Send,
+  Layers,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -69,6 +70,7 @@ import { AudioPlayer } from '@/components/audio-player';
 import { FileEditModal } from '@/components/file-edit-modal';
 import { FileViewer } from '@/components/file-viewer';
 import { LibraryShareModal } from '@/components/library-share-modal';
+import { SharedFilesView } from '@/components/shared-files-view';
 import {
   useLibrary,
   useLibraryUpload,
@@ -691,6 +693,21 @@ export default function LibraryPage() {
                   <ChevronRight className="h-4 w-4" />
                 </Link>
 
+                {/* Backing Track Creator Tool Link */}
+                <Link
+                  href="/tools?tool=backing-tracks"
+                  className="mb-4 flex items-center gap-3 rounded-xl border border-teal-500/30 bg-teal-500/10 px-3 py-3 text-sm font-medium text-teal-500 transition-all hover:bg-teal-500/20"
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600">
+                    <Layers className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="block font-semibold">Create Backing Track</span>
+                    <span className="text-xs text-teal-400/70">From stems & loops</span>
+                  </div>
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+
                 {/* Quick Filters */}
                 <div className="mb-4 space-y-1">
                   <button
@@ -805,27 +822,42 @@ export default function LibraryPage() {
 
                   <div className="space-y-1">
                     {collections.map((collection) => (
-                      <button
-                        key={collection.id}
-                        onClick={() => {
-                          setSelectedCollection(collection.id);
-                          setShowFavorites(false);
-                        }}
-                        className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
-                          selectedCollection === collection.id
-                            ? 'bg-orange-500/20 text-orange-500'
-                            : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-                        }`}
-                      >
-                        <div
-                          className="h-3 w-3 rounded-full"
-                          style={{ backgroundColor: collection.color || '#6b7280' }}
-                        />
-                        <span className="truncate">{collection.name}</span>
-                        <span className="ml-auto text-xs text-gray-500">
-                          {collection.fileCount || 0}
-                        </span>
-                      </button>
+                      <div key={collection.id} className="group relative">
+                        <button
+                          onClick={() => {
+                            setSelectedCollection(collection.id);
+                            setShowFavorites(false);
+                          }}
+                          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all ${
+                            selectedCollection === collection.id
+                              ? 'bg-orange-500/20 text-orange-500'
+                              : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                          }`}
+                        >
+                          <div
+                            className="h-3 w-3 rounded-full"
+                            style={{ backgroundColor: collection.color || '#6b7280' }}
+                          />
+                          <span className="truncate">{collection.name}</span>
+                          <span className="ml-auto text-xs text-gray-500 group-hover:hidden">
+                            {collection.fileCount || 0}
+                          </span>
+                        </button>
+                        {/* Export button on hover */}
+                        {(collection.fileCount ?? 0) > 0 && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleExportZip(undefined, collection.id);
+                            }}
+                            disabled={exporting}
+                            className="absolute right-2 top-1/2 hidden -translate-y-1/2 rounded bg-emerald-500/20 p-1 text-emerald-400 hover:bg-emerald-500/30 group-hover:block"
+                            title={`Export ${collection.name}`}
+                          >
+                            <FileArchive className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -1308,8 +1340,10 @@ export default function LibraryPage() {
               )}
             </motion.div>
 
-            {/* Files Grid/List */}
-            {isLoading && files.length === 0 ? (
+            {/* Files Grid/List OR Shared Files View */}
+            {activeTab === 'shared-with-me' ? (
+              <SharedFilesView />
+            ) : isLoading && files.length === 0 ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
               </div>

@@ -41,6 +41,15 @@ const protectedPaths = [
   '/feed', // Social feed requires auth
   '/auth-test',
   '/posthog-test',
+  '/sites', // Website builder
+  '/labs', // R&R Labs
+  '/studio', // Recording studio
+  '/explore', // Explore community
+  '/create', // Create track
+  '/songs', // Songs management
+  '/credits', // Credits page
+  '/onboarding', // Onboarding flow
+  '/community', // Community pages
 ];
 
 // Routes that should redirect to dashboard if already authenticated

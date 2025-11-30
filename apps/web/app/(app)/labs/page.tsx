@@ -691,6 +691,53 @@ export default function LabsPage() {
           </Card>
         </motion.div>
 
+        {/* Quick Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.85 }}
+          className="mb-16"
+        >
+          <div className="mb-6 text-center">
+            <h2 className="mb-2 text-2xl font-bold text-white">Explore R&R Labs</h2>
+            <p className="text-gray-400">Dive deeper into our research</p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Link href="/labs/experiment">
+              <Card className="group h-full rounded-xl border border-orange-500/30 bg-orange-500/10 p-6 transition-all hover:border-orange-500/50 hover:bg-orange-500/20">
+                <Sparkles className="mb-3 h-8 w-8 text-orange-400 transition-transform group-hover:scale-110" />
+                <h3 className="mb-1 font-bold text-white">AI Experiment</h3>
+                <p className="text-sm text-gray-400">Try the interactive stem generator demo</p>
+              </Card>
+            </Link>
+
+            <Link href="/labs/volunteer">
+              <Card className="group h-full rounded-xl border border-green-500/30 bg-green-500/10 p-6 transition-all hover:border-green-500/50 hover:bg-green-500/20">
+                <Users className="mb-3 h-8 w-8 text-green-400 transition-transform group-hover:scale-110" />
+                <h3 className="mb-1 font-bold text-white">Volunteer Portal</h3>
+                <p className="text-sm text-gray-400">Join the research program</p>
+              </Card>
+            </Link>
+
+            <Link href="/labs/contribute">
+              <Card className="group h-full rounded-xl border border-purple-500/30 bg-purple-500/10 p-6 transition-all hover:border-purple-500/50 hover:bg-purple-500/20">
+                <FileAudio className="mb-3 h-8 w-8 text-purple-400 transition-transform group-hover:scale-110" />
+                <h3 className="mb-1 font-bold text-white">Contribute Files</h3>
+                <p className="text-sm text-gray-400">Upload audio & MIDI to train our model</p>
+              </Card>
+            </Link>
+
+            <Link href="/labs/research">
+              <Card className="group h-full rounded-xl border border-blue-500/30 bg-blue-500/10 p-6 transition-all hover:border-blue-500/50 hover:bg-blue-500/20">
+                <Brain className="mb-3 h-8 w-8 text-blue-400 transition-transform group-hover:scale-110" />
+                <h3 className="mb-1 font-bold text-white">Research Dashboard</h3>
+                <p className="text-sm text-gray-400">Track our progress in real-time</p>
+              </Card>
+            </Link>
+          </div>
+        </motion.div>
+
         {/* Footer CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -22,6 +22,7 @@ import {
   Globe,
   X,
   FlaskConical,
+  Wrench,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -78,6 +79,7 @@ const navItems: NavItem[] = [
   { label: 'Explore', href: '/explore', icon: Compass },
   { label: 'Messages', href: '/messages', icon: MessageSquare },
   { label: 'Library', href: '/library', icon: Library },
+  { label: 'Toolbox', href: '/tools', icon: Wrench, badge: 'NEW' },
   { divider: true, label: '', href: '', icon: Home },
   { label: 'Credits', href: '/credits', icon: CreditCard },
   { label: 'Settings', href: '/settings', icon: Settings },

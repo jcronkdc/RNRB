@@ -17,12 +17,24 @@ type SongBlock = {
   chordPlacements?: ChordPlacement[];
 };
 
+type CopyrightInfo = {
+  copyrightYear?: number;
+  copyrightHolder?: string;
+  performingRightsOrg?: string;
+  splits?: Array<{
+    contributorName: string;
+    role: string;
+    percentage: number;
+  }>;
+};
+
 interface CleanPreviewProps {
   songTitle: string;
   blocks: SongBlock[];
   songKey?: string;
   tempo?: number;
   timeSignature?: string;
+  copyrightInfo?: CopyrightInfo;
 }
 
 // Section colors for visual distinction
@@ -41,6 +53,7 @@ export function CleanPreview({
   songKey,
   tempo,
   timeSignature,
+  copyrightInfo,
 }: CleanPreviewProps) {
   const [copied, setCopied] = useState(false);
   const [showChords, setShowChords] = useState(true);
@@ -116,8 +129,30 @@ export function CleanPreview({
       text += '\n';
     });
 
+    // Add copyright footer if available
+    if (copyrightInfo?.copyrightYear || copyrightInfo?.copyrightHolder) {
+      text += '\n---\n';
+      const year = copyrightInfo.copyrightYear || new Date().getFullYear();
+      const holder = copyrightInfo.copyrightHolder || '';
+      const pro = copyrightInfo.performingRightsOrg
+        ? ` (${copyrightInfo.performingRightsOrg})`
+        : '';
+      text += `© ${year} ${holder}${pro}\n`;
+
+      // Add writer credits if splits exist
+      if (copyrightInfo.splits && copyrightInfo.splits.length > 0) {
+        const writers = copyrightInfo.splits
+          .filter((s) => s.role === 'writer' || s.role === 'composer')
+          .map((s) => s.contributorName)
+          .join(', ');
+        if (writers) {
+          text += `Written by: ${writers}\n`;
+        }
+      }
+    }
+
     return text.trim();
-  }, [songTitle, blocks, songKey, tempo, timeSignature, showChords, sectionCounts]);
+  }, [songTitle, blocks, songKey, tempo, timeSignature, showChords, sectionCounts, copyrightInfo]);
 
   // Copy to clipboard
   const handleCopy = async () => {
@@ -329,6 +364,32 @@ export function CleanPreview({
             );
           })}
         </div>
+
+        {/* Copyright Footer */}
+        {(copyrightInfo?.copyrightYear || copyrightInfo?.copyrightHolder) && (
+          <div
+            className="mt-8 border-t pt-4 text-xs"
+            style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+          >
+            <div className="flex flex-wrap items-center gap-1">
+              <span>©</span>
+              <span>{copyrightInfo.copyrightYear || new Date().getFullYear()}</span>
+              {copyrightInfo.copyrightHolder && <span>{copyrightInfo.copyrightHolder}</span>}
+              {copyrightInfo.performingRightsOrg && (
+                <span className="opacity-75">({copyrightInfo.performingRightsOrg})</span>
+              )}
+            </div>
+            {copyrightInfo.splits && copyrightInfo.splits.length > 0 && (
+              <div className="mt-1">
+                Written by:{' '}
+                {copyrightInfo.splits
+                  .filter((s) => s.role === 'writer' || s.role === 'composer')
+                  .map((s) => s.contributorName)
+                  .join(', ')}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Print Styles */}

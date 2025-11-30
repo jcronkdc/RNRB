@@ -10,6 +10,7 @@ import {
   GitBranch,
   Save,
   Download,
+  Disc3,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -118,11 +119,18 @@ const CleanPreview = dynamic(
   { ssr: false }
 );
 
+type ChordPlacement = {
+  wordIndex: number;
+  lineIndex: number;
+  chord: string;
+};
+
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
   content: string;
-  chord?: string;
+  chord?: string; // Legacy field for backward compatibility
+  chordPlacements?: ChordPlacement[]; // New granular chord placement
 };
 
 type ChordBlock = {
@@ -684,6 +692,23 @@ export default function SongwritingPage() {
                         Redo
                       </motion.button>
                     </div>
+                    <Link href="/tools?tool=circle-of-fifths">
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition"
+                        style={{
+                          background:
+                            'linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2))',
+                          border: '1px solid rgba(168, 85, 247, 0.3)',
+                          color: '#a855f7',
+                        }}
+                        title="Circle of Fifths Tool"
+                      >
+                        <Disc3 className="h-3.5 w-3.5" />
+                        Circle of Fifths
+                      </motion.button>
+                    </Link>
                     <ProjectSelector
                       songId={songData.id}
                       onProjectAdded={(_slug) => success(`Added to project`, 2000)}
@@ -897,6 +922,10 @@ export default function SongwritingPage() {
                 songKey={songData.key}
                 tempo={songData.tempo}
                 timeSignature={songData.timeSignature}
+                copyrightInfo={safeParse(
+                  songData.copyrightInfo as string | null | undefined,
+                  undefined
+                )}
               />
             </div>
           )}

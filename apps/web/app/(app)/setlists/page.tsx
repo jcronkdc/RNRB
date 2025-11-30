@@ -17,6 +17,8 @@ import {
   Star,
   ChevronRight,
   Activity,
+  Presentation,
+  Wrench,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -196,6 +198,20 @@ export default function SetlistsPage() {
                   Songs
                 </span>
               </motion.div>
+
+              {/* Performer Mode Tool Link */}
+              <Link href="/tools?tool=performer-mode">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-pink-500/30 bg-gradient-to-r from-pink-500/10 to-rose-500/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-pink-500/50"
+                >
+                  <Presentation className="h-4 w-4 text-pink-500" />
+                  <span className="text-sm font-medium text-pink-400">Performer Mode</span>
+                </motion.div>
+              </Link>
             </div>
 
             {hasAccess ? (

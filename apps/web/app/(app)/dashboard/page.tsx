@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Compass,
   FileMusic,
+  FlaskConical,
   Folder,
   FolderPlus,
   HardDrive,
@@ -20,6 +21,8 @@ import {
   Zap,
   Globe,
   Activity,
+  Users,
+  ArrowRight,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -870,6 +873,67 @@ function DashboardContent() {
             />
           </div>
         </section>
+
+        {/* ==================== FEATURE PROMOS ROW ==================== */}
+        <div className="mb-12 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {/* R&R Labs Promo */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85 }}
+          >
+            <Link href="/labs">
+              <div className="group relative h-full overflow-hidden rounded-2xl border border-purple-500/30 bg-gradient-to-r from-purple-500/10 via-transparent to-orange-500/10 p-5 transition-all hover:border-purple-500/50 hover:from-purple-500/20 hover:to-orange-500/20">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50 transition-opacity group-hover:opacity-100" />
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-orange-500 shadow-lg transition-transform group-hover:scale-110">
+                    <FlaskConical className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-white">R&R Labs</h3>
+                      <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-xs font-bold text-purple-400">
+                        NEW
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-400">Help build the future of AI music</p>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-500 transition-transform group-hover:translate-x-1 group-hover:text-purple-400" />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+
+          {/* Musician's Toolbox Promo */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            <Link href="/tools">
+              <div className="group relative h-full overflow-hidden rounded-2xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-transparent to-teal-500/10 p-5 transition-all hover:border-emerald-500/50 hover:from-emerald-500/20 hover:to-teal-500/20">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50 transition-opacity group-hover:opacity-100" />
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg transition-transform group-hover:scale-110">
+                    <Zap className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-white">Musician's Toolbox</h3>
+                      <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-xs font-bold text-emerald-400">
+                        12 TOOLS
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-400">
+                      Tuner, click track, performer mode & more
+                    </p>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-gray-500 transition-transform group-hover:translate-x-1 group-hover:text-emerald-400" />
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        </div>
 
         {/* ==================== RECENT PROJECTS + SONGS ==================== */}
         <section className="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">

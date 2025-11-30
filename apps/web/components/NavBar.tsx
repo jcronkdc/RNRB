@@ -355,7 +355,12 @@ export function NavBar() {
     pathname?.startsWith('/credits') ||
     pathname?.startsWith('/settings') ||
     pathname?.startsWith('/onboarding') ||
-    pathname?.startsWith('/community');
+    pathname?.startsWith('/community') ||
+    pathname?.startsWith('/sites') ||
+    pathname?.startsWith('/labs') ||
+    pathname?.startsWith('/songs') ||
+    pathname?.startsWith('/feed') ||
+    pathname?.startsWith('/tools');
 
   // Track scroll position for styling
   // NOTE: All hooks must be called before any conditional returns (React rules of hooks)
