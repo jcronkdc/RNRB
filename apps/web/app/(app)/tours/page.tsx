@@ -12,7 +12,7 @@
  */
 
 import { Card, Button } from '@cronkwaters/ui';
-import Daily from '@daily-co/daily-js';
+import Daily, { DailyCall } from '@daily-co/daily-js';
 import { DailyProvider } from '@daily-co/daily-react';
 import { motion } from 'framer-motion';
 import {
@@ -33,16 +33,20 @@ import {
   ArrowUpRight,
   Sparkles,
   Crown,
+  LayoutGrid,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, memo, useCallback, useMemo } from 'react';
+import { useState, useEffect, memo, useCallback, useMemo, useRef } from 'react';
 
 import { LivePerformance } from '@/components/daily/live-performance';
 import { ToastNotification, useToast } from '@/components/toast-notification';
 import { ToursListSkeleton } from '@/components/tours/loading-skeletons';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useTours } from '@/hooks/use-tours';
+
+// Singleton to prevent duplicate Daily instances (Daily SDK only allows one)
+let toursPageDailyInstance: DailyCall | null = null;
 
 type Tour = {
   id: string;
@@ -85,13 +89,19 @@ export default function ToursPage() {
 
   useEffect(() => {
     if (showLiveStream) {
-      const daily = Daily.createCallObject({
-        subscribeToTracksAutomatically: true,
-      });
-      setCallObject(daily);
+      // Use singleton to prevent duplicate Daily instances
+      if (!toursPageDailyInstance) {
+        toursPageDailyInstance = Daily.createCallObject({
+          subscribeToTracksAutomatically: true,
+        });
+      }
+      setCallObject(toursPageDailyInstance);
 
       return () => {
-        daily.destroy();
+        // Leave call but don't destroy singleton
+        if (toursPageDailyInstance && toursPageDailyInstance.meetingState() !== 'left-meeting') {
+          toursPageDailyInstance.leave().catch(console.warn);
+        }
       };
     }
   }, [showLiveStream]);
@@ -933,6 +943,16 @@ const TourCard = memo(function TourCard({
             </span>
           </div>
           <div className="flex items-center gap-1">
+            <Link href="/tools?tool=stageplot" title="Create Stage Plot">
+              <motion.button
+                whileHover={{ scale: 1.1, color: '#f59e0b' }}
+                whileTap={{ scale: 0.95 }}
+                className="rounded-lg p-2 opacity-0 transition-all group-hover:opacity-100"
+                style={{ color: 'var(--muted)' }}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </motion.button>
+            </Link>
             <Link href={`/tours/${tour.slug}/edit`}>
               <motion.button
                 whileHover={{ scale: 1.1 }}

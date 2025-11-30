@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import Daily from '@daily-co/daily-js';
+import Daily, { DailyCall } from '@daily-co/daily-js';
 import { DailyProvider } from '@daily-co/daily-react';
 import { motion } from 'framer-motion';
 import {
@@ -14,6 +14,10 @@ import {
   CheckCircle,
   Video,
   MessageSquare,
+  Music2,
+  Drum,
+  ClipboardList,
+  Wrench,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -23,31 +27,38 @@ import { StudioSession } from '@/components/daily/studio-session';
 import { ProjectSelector } from '@/components/project-selector';
 import { useDailyRoom } from '@/hooks/use-daily-room';
 
+// Singleton to prevent duplicate Daily instances (Daily SDK only allows one)
+let globalDailyInstance: DailyCall | null = null;
+
+function getOrCreateDailyInstance(): DailyCall {
+  if (!globalDailyInstance) {
+    globalDailyInstance = Daily.createCallObject({
+      subscribeToTracksAutomatically: true,
+    });
+  }
+  return globalDailyInstance;
+}
+
 export default function StudioPage() {
   const [activeSession, setActiveSession] = useState(false);
-  const [callObject, setCallObject] = useState<any>(null);
+  const [callObject, setCallObject] = useState<DailyCall | null>(null);
   const [roomData, setRoomData] = useState<{ room: any; token: string } | null>(null);
   const [recordingId, setRecordingId] = useState<string | null>(null);
   const { createRoom, isLoading, error } = useDailyRoom();
-  const callObjectRef = useRef<any>(null);
+  const mountedRef = useRef(true);
 
-  // Initialize Daily call object once
+  // Initialize Daily call object using singleton pattern
   useEffect(() => {
-    // Only create if not already created
-    if (callObjectRef.current) return;
+    mountedRef.current = true;
 
-    const daily = Daily.createCallObject({
-      subscribeToTracksAutomatically: true,
-    });
-    callObjectRef.current = daily;
+    // Use singleton to prevent duplicate instances
+    const daily = getOrCreateDailyInstance();
     setCallObject(daily);
 
     return () => {
-      // Cleanup on unmount
-      if (callObjectRef.current) {
-        callObjectRef.current.destroy();
-        callObjectRef.current = null;
-      }
+      mountedRef.current = false;
+      // Don't destroy on unmount - let the singleton persist
+      // This prevents issues with React Strict Mode double-mounting
     };
   }, []);
 
@@ -73,10 +84,18 @@ export default function StudioPage() {
   }, [createRoom, isLoading]);
 
   // Handle session end with cleanup
-  const endSession = useCallback(() => {
+  const endSession = useCallback(async () => {
+    // Leave the call but don't destroy the singleton
+    if (callObject && callObject.meetingState() !== 'left-meeting') {
+      try {
+        await callObject.leave();
+      } catch (e) {
+        console.warn('Error leaving call:', e);
+      }
+    }
     setActiveSession(false);
     setRoomData(null);
-  }, []);
+  }, [callObject]);
 
   return (
     <DailyProvider callObject={callObject}>
@@ -260,6 +279,100 @@ export default function StudioPage() {
                 </div>
               </div>
             </motion.div>
+          </div>
+
+          {/* Studio Tools Section */}
+          <div className="mb-16">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="font-display mb-2 text-2xl font-bold">Studio Tools</h2>
+                <p className="text-muted-foreground">Essential tools for your recording session</p>
+              </div>
+              <Link href="/tools">
+                <Button variant="outline" className="gap-2">
+                  <Wrench className="h-4 w-4" />
+                  All Tools
+                </Button>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Link href="/tools?tool=tuner">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="rnrb-card group cursor-pointer p-5 transition-all hover:border-emerald-500/50"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                      <Music2 className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold group-hover:text-emerald-400">Tuner</h3>
+                      <p className="text-xs text-muted-foreground">Tune before recording</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+
+              <Link href="/tools?tool=click-track">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="rnrb-card group cursor-pointer p-5 transition-all hover:border-orange-500/50"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-600">
+                      <Drum className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold group-hover:text-orange-400">Click Track</h3>
+                      <p className="text-xs text-muted-foreground">Record to tempo</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+
+              <Link href="/tools?tool=session-notes">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="rnrb-card group cursor-pointer p-5 transition-all hover:border-teal-500/50"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600">
+                      <ClipboardList className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold group-hover:text-teal-400">Session Notes</h3>
+                      <p className="text-xs text-muted-foreground">Document your setup</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+
+              <Link href="/studio/recording-guide">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="rnrb-card group cursor-pointer p-5 transition-all hover:border-purple-500/50"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-600">
+                      <Mic className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold group-hover:text-purple-400">Recording Guide</h3>
+                      <p className="text-xs text-muted-foreground">Best practices</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </div>
           </div>
 
           {/* Active Session or Session List */}
