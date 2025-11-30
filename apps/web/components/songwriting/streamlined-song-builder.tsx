@@ -112,7 +112,7 @@ function countWords(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
-// Sortable Block Component
+// Sortable Block Component - COMPACT
 const SortableBlock = memo(function SortableBlock({
   block,
   sectionNumber,
@@ -143,9 +143,9 @@ const SortableBlock = memo(function SortableBlock({
     <motion.div
       ref={setNodeRef}
       layout
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: isDragging ? 0.5 : 1, y: 0 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
+      exit={{ opacity: 0, y: -10, scale: 0.98 }}
       style={{
         transform: CSS.Transform.toString(transform),
         transition,
@@ -153,47 +153,46 @@ const SortableBlock = memo(function SortableBlock({
       className="group relative"
     >
       <div
-        className="rounded-xl border transition-all"
+        className="rounded-lg border transition-all"
         style={{
-          background: `${color}08`,
-          borderColor: isDragging ? color : `${color}30`,
-          boxShadow: isDragging ? `0 8px 30px ${color}20` : 'none',
+          background: `${color}06`,
+          borderColor: isDragging ? color : `${color}25`,
+          boxShadow: isDragging ? `0 4px 20px ${color}15` : 'none',
         }}
       >
-        {/* Header */}
+        {/* Header - Compact */}
         <div
-          className="flex items-center gap-2 px-4 py-2"
-          style={{ borderBottom: isCollapsed ? 'none' : `1px solid ${color}20` }}
+          className="flex items-center gap-1.5 px-2 py-1.5"
+          style={{ borderBottom: isCollapsed ? 'none' : `1px solid ${color}15` }}
         >
           {/* Drag Handle */}
           <div
             {...attributes}
             {...listeners}
-            className="cursor-grab rounded p-1 opacity-40 transition hover:opacity-100 active:cursor-grabbing"
-            style={{ background: `${color}20` }}
+            className="cursor-grab rounded p-0.5 opacity-30 transition hover:opacity-100 active:cursor-grabbing"
           >
-            <GripVertical className="h-4 w-4" style={{ color }} />
+            <GripVertical className="h-3.5 w-3.5" style={{ color }} />
           </div>
 
           {/* Type Label with switcher */}
           <div className="relative">
             <button
               onClick={() => setShowTypeMenu(!showTypeMenu)}
-              className="flex items-center gap-1 rounded-lg px-2 py-0.5 text-xs font-bold uppercase tracking-wider transition hover:opacity-80"
+              className="flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider transition hover:opacity-80"
               style={{ background: `${color}20`, color }}
             >
               {block.type.replace('-', ' ')} {sectionNumber}
-              <ChevronDown className="h-3 w-3" />
+              <ChevronDown className="h-2.5 w-2.5" />
             </button>
 
             {/* Type switcher dropdown */}
             <AnimatePresence>
               {showTypeMenu && (
                 <motion.div
-                  initial={{ opacity: 0, y: -5 }}
+                  initial={{ opacity: 0, y: -3 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  className="absolute left-0 top-full z-20 mt-1 w-36 overflow-hidden rounded-lg shadow-lg"
+                  exit={{ opacity: 0, y: -3 }}
+                  className="absolute left-0 top-full z-20 mt-0.5 w-28 overflow-hidden rounded-md shadow-lg"
                   style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
                 >
                   {BLOCK_TYPES.map((type) => (
@@ -203,13 +202,16 @@ const SortableBlock = memo(function SortableBlock({
                         onTypeChange(type.type);
                         setShowTypeMenu(false);
                       }}
-                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition hover:opacity-80"
+                      className="flex w-full items-center gap-1.5 px-2 py-1.5 text-left text-[10px] transition hover:opacity-80"
                       style={{
                         background: block.type === type.type ? `${type.color}20` : 'transparent',
                         color: type.color,
                       }}
                     >
-                      <div className="h-2 w-2 rounded-full" style={{ background: type.color }} />
+                      <div
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ background: type.color }}
+                      />
                       {type.label}
                     </button>
                   ))}
@@ -218,50 +220,47 @@ const SortableBlock = memo(function SortableBlock({
             </AnimatePresence>
           </div>
 
-          {/* Word count */}
+          {/* Word count - inline */}
           {wordCount > 0 && (
-            <span className="text-xs" style={{ color: 'var(--muted)' }}>
-              {wordCount} word{wordCount !== 1 ? 's' : ''}
+            <span className="text-[10px]" style={{ color: 'var(--muted)' }}>
+              {wordCount}w
             </span>
           )}
 
           {/* Spacer */}
           <div className="flex-1" />
 
-          {/* Actions */}
-          <div className="flex items-center gap-1">
-            {/* Collapse toggle */}
+          {/* Actions - Compact */}
+          <div className="flex items-center gap-0.5">
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="rounded p-1.5 opacity-40 transition hover:opacity-100"
-              style={{ background: `${color}10` }}
+              className="rounded p-1 opacity-30 transition hover:opacity-100"
               title={isCollapsed ? 'Expand' : 'Collapse'}
             >
               {isCollapsed ? (
-                <ChevronDown className="h-3.5 w-3.5" style={{ color }} />
+                <ChevronDown className="h-3 w-3" style={{ color }} />
               ) : (
-                <ChevronUp className="h-3.5 w-3.5" style={{ color }} />
+                <ChevronUp className="h-3 w-3" style={{ color }} />
               )}
             </button>
             <button
               onClick={onDuplicate}
-              className="rounded p-1.5 opacity-0 transition hover:opacity-80 group-hover:opacity-100"
-              style={{ background: `${color}10` }}
+              className="rounded p-1 opacity-0 transition hover:opacity-80 group-hover:opacity-60"
               title="Duplicate section"
             >
-              <Copy className="h-3.5 w-3.5" style={{ color }} />
+              <Copy className="h-3 w-3" style={{ color }} />
             </button>
             <button
               onClick={onRemove}
-              className="rounded p-1.5 text-red-400 opacity-0 transition hover:bg-red-500/10 group-hover:opacity-100"
+              className="rounded p-1 text-red-400 opacity-0 transition hover:bg-red-500/10 group-hover:opacity-60"
               title="Remove section"
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-3 w-3" />
             </button>
           </div>
         </div>
 
-        {/* Content - collapsible */}
+        {/* Content - collapsible, reduced padding */}
         <AnimatePresence>
           {!isCollapsed && (
             <motion.div
@@ -270,7 +269,7 @@ const SortableBlock = memo(function SortableBlock({
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <div className="p-4">
+              <div className="px-2 pb-2 pt-1">
                 <GranularChordEditor
                   content={block.content}
                   chordPlacements={block.chordPlacements || []}
@@ -285,8 +284,8 @@ const SortableBlock = memo(function SortableBlock({
 
         {/* Collapsed preview */}
         {isCollapsed && block.content && (
-          <div className="px-4 pb-2">
-            <p className="truncate text-xs italic" style={{ color: 'var(--muted)' }}>
+          <div className="px-2 pb-1.5">
+            <p className="truncate text-[10px] italic" style={{ color: 'var(--muted)' }}>
               {block.content.split('\n')[0] || 'Empty section...'}
             </p>
           </div>
@@ -296,7 +295,7 @@ const SortableBlock = memo(function SortableBlock({
   );
 });
 
-// Add Section Button (between blocks)
+// Add Section Button (between blocks) - COMPACT
 function AddSectionButton({
   onAdd,
   position,
@@ -307,22 +306,14 @@ function AddSectionButton({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative flex items-center justify-center py-2">
-      {/* Line connector */}
-      {position !== 'top' && (
-        <div
-          className="absolute left-1/2 top-0 h-2 w-px -translate-x-1/2"
-          style={{ background: 'var(--border)' }}
-        />
-      )}
-
+    <div className="relative flex items-center justify-center py-0.5">
       <AnimatePresence>
         {isOpen ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="z-10 flex flex-wrap justify-center gap-2 rounded-xl p-3"
+            className="z-10 flex flex-wrap items-center justify-center gap-1 rounded-lg p-1.5"
             style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
           >
             {BLOCK_TYPES.map((block) => (
@@ -332,37 +323,37 @@ function AddSectionButton({
                   onAdd(block.type);
                   setIsOpen(false);
                 }}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition hover:scale-105"
+                className="flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition hover:scale-105"
                 style={{ background: `${block.color}15`, color: block.color }}
               >
-                <div className="h-2 w-2 rounded-full" style={{ background: block.color }} />
+                <div className="h-1.5 w-1.5 rounded-full" style={{ background: block.color }} />
                 {block.label}
               </button>
             ))}
             <button
               onClick={() => setIsOpen(false)}
-              className="rounded-lg px-3 py-2 text-sm"
+              className="rounded px-2 py-1 text-[10px]"
               style={{ color: 'var(--muted)' }}
             >
-              Cancel
+              ✕
             </button>
           </motion.div>
         ) : (
           <motion.button
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setIsOpen(true)}
-            className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium opacity-40 transition hover:opacity-100"
+            className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] opacity-20 transition hover:opacity-70"
             style={{
               background: 'var(--panel)',
-              border: '1px solid var(--border)',
+              border: '1px dashed var(--border)',
               color: 'var(--muted)',
             }}
           >
-            <Plus className="h-3 w-3" />
-            Add Section
+            <Plus className="h-2.5 w-2.5" />
+            Add
           </motion.button>
         )}
       </AnimatePresence>
@@ -583,124 +574,118 @@ export function StreamlinedSongBuilder({
   }, [undo, redo]);
 
   return (
-    <div className="space-y-4">
-      {/* Compact Toolbar */}
+    <div className="space-y-2">
+      {/* Compact Toolbar - Smaller */}
       <div
-        className="flex items-center justify-between rounded-xl px-4 py-3"
+        className="flex items-center justify-between rounded-lg px-3 py-2"
         style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
       >
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+          <span className="text-xs font-medium" style={{ color: 'var(--text)' }}>
             {blocks.length} section{blocks.length !== 1 ? 's' : ''}
           </span>
           {allChords.length > 0 && (
-            <span className="text-xs" style={{ color: 'var(--muted)' }}>
+            <span className="text-[10px]" style={{ color: 'var(--muted)' }}>
               • {allChords.length} chord{allChords.length !== 1 ? 's' : ''}
             </span>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <button
             onClick={undo}
             disabled={historyIndex <= 0}
-            className="rounded-lg p-2 transition disabled:opacity-30"
+            className="rounded p-1.5 transition disabled:opacity-30"
             style={{ background: 'var(--background)' }}
             title="Undo (⌘Z)"
           >
-            <Undo className="h-4 w-4" style={{ color: 'var(--muted)' }} />
+            <Undo className="h-3.5 w-3.5" style={{ color: 'var(--muted)' }} />
           </button>
           <button
             onClick={redo}
             disabled={historyIndex >= history.length - 1}
-            className="rounded-lg p-2 transition disabled:opacity-30"
+            className="rounded p-1.5 transition disabled:opacity-30"
             style={{ background: 'var(--background)' }}
             title="Redo (⌘⇧Z)"
           >
-            <Redo className="h-4 w-4" style={{ color: 'var(--muted)' }} />
+            <Redo className="h-3.5 w-3.5" style={{ color: 'var(--muted)' }} />
           </button>
           <button
             onClick={exportToClipboard}
-            className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition"
+            className="flex items-center gap-1 rounded px-2 py-1.5 text-xs font-medium transition"
             style={{ background: 'var(--background)', color: 'var(--text)' }}
           >
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
             {copied ? 'Copied!' : 'Copy'}
           </button>
         </div>
       </div>
 
-      {/* Main Canvas */}
+      {/* Main Canvas - Reduced padding, shorter min-height */}
       <div
-        className="min-h-[500px] rounded-xl p-6"
+        className="min-h-[350px] rounded-lg p-3"
         style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
       >
         {blocks.length === 0 ? (
-          // Empty state with templates
-          <div className="flex flex-col items-center justify-center py-12">
+          // Empty state with templates - COMPACT
+          <div className="flex flex-col items-center justify-center py-6">
             <div
-              className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl"
+              className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl"
               style={{
                 background:
                   'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
               }}
             >
-              <Music className="h-8 w-8" style={{ color: 'var(--accent)' }} />
+              <Music className="h-6 w-6" style={{ color: 'var(--accent)' }} />
             </div>
-            <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
+            <h3 className="mb-1 text-base font-semibold" style={{ color: 'var(--text)' }}>
               Start Your Song
             </h3>
-            <p className="mb-6 text-center text-sm" style={{ color: 'var(--muted)' }}>
-              Choose a template or add sections one by one
+            <p className="mb-4 text-center text-xs" style={{ color: 'var(--muted)' }}>
+              Pick a template or add sections
             </p>
 
-            {/* Quick Templates */}
-            <div className="mb-6 w-full max-w-md">
-              <p
-                className="mb-3 text-center text-xs font-medium uppercase tracking-wider"
-                style={{ color: 'var(--muted)' }}
-              >
-                Quick Start Templates
-              </p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {/* Quick Templates - Compact */}
+            <div className="mb-4 w-full max-w-sm">
+              <div className="grid grid-cols-4 gap-1.5">
                 {SONG_TEMPLATES.map((template) => (
                   <motion.button
                     key={template.name}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => applyTemplate(template.structure)}
-                    className="flex flex-col items-center gap-1 rounded-xl px-4 py-3 transition"
+                    className="flex flex-col items-center gap-0.5 rounded-lg px-2 py-2 transition"
                     style={{ background: 'var(--background)', border: '1px solid var(--border)' }}
                   >
-                    <span className="text-xl">{template.icon}</span>
-                    <span className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                    <span className="text-base">{template.icon}</span>
+                    <span className="text-[10px] font-medium" style={{ color: 'var(--text)' }}>
                       {template.name}
                     </span>
-                    <span className="text-xs" style={{ color: 'var(--muted)' }}>
-                      {template.structure.length} sections
+                    <span className="text-[9px]" style={{ color: 'var(--muted)' }}>
+                      {template.structure.length} sec
                     </span>
                   </motion.button>
                 ))}
               </div>
             </div>
 
-            {/* Or add manually */}
-            <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted)' }}>
-              <div className="h-px w-12" style={{ background: 'var(--border)' }} />
-              or start from scratch
-              <div className="h-px w-12" style={{ background: 'var(--border)' }} />
+            {/* Or add manually - Compact */}
+            <div className="flex items-center gap-2 text-[10px]" style={{ color: 'var(--muted)' }}>
+              <div className="h-px w-8" style={{ background: 'var(--border)' }} />
+              or start fresh
+              <div className="h-px w-8" style={{ background: 'var(--border)' }} />
             </div>
 
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <div className="mt-2 flex flex-wrap justify-center gap-1.5">
               {BLOCK_TYPES.slice(0, 3).map((block) => (
                 <motion.button
                   key={block.type}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => addBlockAt(block.type, 0)}
-                  className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition"
+                  className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs font-medium transition"
                   style={{ background: `${block.color}15`, color: block.color }}
                 >
-                  <Plus className="h-3.5 w-3.5" />
+                  <Plus className="h-3 w-3" />
                   {block.label}
                 </motion.button>
               ))}

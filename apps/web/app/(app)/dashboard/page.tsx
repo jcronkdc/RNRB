@@ -7,7 +7,6 @@ import {
   Compass,
   FileMusic,
   Folder,
-  FolderOpen,
   FolderPlus,
   HardDrive,
   Library,
@@ -368,53 +367,38 @@ const RecentProjectCard = memo(
 RecentProjectCard.displayName = 'RecentProjectCard';
 
 // Recent song card with "Add to Project" action
-const RecentSongCard = memo(
-  ({
-    song,
-    delay = 0,
-    onProjectAdded,
-  }: {
-    song: RecentSong;
-    delay?: number;
-    onProjectAdded?: () => void;
-  }) => {
-    const router = useRouter();
-    const [isAdding, setIsAdding] = useState(false);
-    const [showProjectMenu, setShowProjectMenu] = useState(false);
+const RecentSongCard = memo(({ song, delay = 0 }: { song: RecentSong; delay?: number }) => {
+  const statusColors = {
+    draft: 'text-gray-400',
+    in_progress: 'text-blue-400',
+    needs_review: 'text-yellow-400',
+    complete: 'text-green-400',
+  };
 
-    const handleOpenSong = () => {
-      if (song.project) {
-        router.push(`/projects/${song.project.slug}/songs/${song.id}`);
-      } else {
-        router.push(`/songwriting?song=${song.id}`);
-      }
-    };
-
-    const statusColors = {
-      draft: 'text-gray-400',
-      in_progress: 'text-blue-400',
-      needs_review: 'text-yellow-400',
-      complete: 'text-green-400',
-    };
-
-    return (
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.4, delay }}
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, delay }}
+    >
+      <Link
+        href={
+          song.project
+            ? `/projects/${song.project.slug}/songs/${song.id}`
+            : `/songwriting?song=${song.id}`
+        }
       >
         <motion.div
           whileHover={{ x: 8, scale: 1.01 }}
           className="card group flex cursor-pointer items-center gap-4 p-4 transition-all duration-200"
         >
           <div
-            onClick={handleOpenSong}
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl shadow-lg transition-transform group-hover:scale-110"
             style={{ background: 'var(--accent)' }}
           >
             <Music className="h-6 w-6 text-white" />
           </div>
-          <div className="flex-1 overflow-hidden" onClick={handleOpenSong}>
+          <div className="flex-1 overflow-hidden">
             <h4
               className="truncate font-medium text-white transition-colors"
               style={{ color: 'var(--text)' }}
@@ -434,7 +418,7 @@ const RecentSongCard = memo(
           {/* Add to Project button for standalone songs */}
           {!song.project && (
             <Link
-              href={`/songs`}
+              href="/songs"
               className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all"
               style={{
                 background: 'rgba(255, 99, 71, 0.1)',
@@ -447,15 +431,14 @@ const RecentSongCard = memo(
             </Link>
           )}
           <ChevronRight
-            onClick={handleOpenSong}
             className="h-5 w-5 shrink-0 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
             style={{ color: 'var(--accent)' }}
           />
         </motion.div>
-      </motion.div>
-    );
-  }
-);
+      </Link>
+    </motion.div>
+  );
+});
 RecentSongCard.displayName = 'RecentSongCard';
 
 // Loading skeleton for songs
@@ -976,12 +959,7 @@ function DashboardContent() {
                 <SongsSkeleton />
               ) : recentSongs.length > 0 ? (
                 recentSongs.map((song, i) => (
-                  <RecentSongCard
-                    key={song.id}
-                    song={song}
-                    delay={1 + i * 0.1}
-                    onProjectAdded={loadSongs}
-                  />
+                  <RecentSongCard key={song.id} song={song} delay={1 + i * 0.1} />
                 ))
               ) : (
                 <motion.div

@@ -1,3 +1,4 @@
+import type { Prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
     const offset = parseInt(searchParams.get('offset') || '0');
 
     // Build where clause
-    const where: any = {
+    const where: Prisma.SongWhereInput = {
       userId: user.id,
       archived: false,
     };

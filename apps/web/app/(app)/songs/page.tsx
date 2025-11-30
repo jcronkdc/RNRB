@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Music,
   Search,
-  Filter,
   Folder,
   FolderOpen,
   Plus,
@@ -19,17 +18,14 @@ import {
   SlidersHorizontal,
   Music2,
   Sparkles,
-  MoreVertical,
   ExternalLink,
-  Trash2,
-  Archive,
-  Copy,
-  Tag,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useMemo, useCallback } from 'react';
+
+// Note: useRouter is used in SongCard component
 
 import { ProjectSelector } from '@/components/project-selector';
 import { useRequireAuth } from '@/hooks/use-require-auth';
@@ -131,17 +127,14 @@ function SongCard({
   song,
   viewMode,
   onProjectAdded,
-  onEdit,
 }: {
   song: Song;
   viewMode: 'grid' | 'list';
   onProjectAdded?: () => void;
-  onEdit?: () => void;
 }) {
   const router = useRouter();
   const statusConfig = STATUS_CONFIG[song.status];
   const StatusIcon = statusConfig.icon;
-  const [showMenu, setShowMenu] = useState(false);
 
   const handleOpenSong = () => {
     if (song.project) {
@@ -166,9 +159,10 @@ function SongCard({
         className="group flex items-center gap-4 rounded-xl border border-gray-800 bg-gray-900/50 p-4 transition-all hover:border-orange-500/50"
       >
         {/* Icon/Cover */}
-        <div
+        <button
           onClick={handleOpenSong}
           className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gray-800"
+          aria-label={`Open ${song.title}`}
         >
           {song.project?.coverImage ? (
             <img
@@ -179,10 +173,14 @@ function SongCard({
           ) : (
             <Music className="h-6 w-6 text-orange-500" />
           )}
-        </div>
+        </button>
 
         {/* Info */}
-        <div className="min-w-0 flex-1 cursor-pointer" onClick={handleOpenSong}>
+        <button
+          className="min-w-0 flex-1 cursor-pointer text-left"
+          onClick={handleOpenSong}
+          aria-label={`Open ${song.title}`}
+        >
           <h3 className="truncate font-semibold text-white group-hover:text-orange-500">
             {song.title}
           </h3>
@@ -192,7 +190,7 @@ function SongCard({
             {song.timeSignature && <span>{song.timeSignature}</span>}
             {lyricsPreview && <span className="truncate text-gray-500">{lyricsPreview}...</span>}
           </div>
-        </div>
+        </button>
 
         {/* Project Badge */}
         {song.project ? (
@@ -244,7 +242,11 @@ function SongCard({
       </div>
 
       {/* Content */}
-      <div className="cursor-pointer" onClick={handleOpenSong}>
+      <button
+        className="w-full cursor-pointer text-left"
+        onClick={handleOpenSong}
+        aria-label={`Open ${song.title}`}
+      >
         <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gray-800">
           <Music className="h-6 w-6 text-orange-500" />
         </div>
@@ -263,7 +265,7 @@ function SongCard({
         {lyricsPreview && (
           <p className="mb-3 line-clamp-2 text-xs text-gray-500">{lyricsPreview}...</p>
         )}
-      </div>
+      </button>
 
       {/* Project Info */}
       <div className="mt-auto border-t border-gray-800 pt-3">
@@ -296,7 +298,6 @@ function SongCard({
 
 export default function SongsPage() {
   const { user, loading: authLoading } = useRequireAuth();
-  const router = useRouter();
 
   // State
   const [songs, setSongs] = useState<Song[]>([]);
@@ -345,10 +346,11 @@ export default function SongsPage() {
     fetchSongs();
   }, [fetchSongs]);
 
-  // Debounced search
+  // Debounced search - only trigger on searchQuery changes, not fetchSongs
   useEffect(() => {
     const timer = setTimeout(fetchSongs, 300);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   if (authLoading) {
@@ -532,8 +534,14 @@ export default function SongsPage() {
                 <div className="grid gap-4 p-4 sm:grid-cols-3">
                   {/* Status Filter */}
                   <div>
-                    <label className="mb-2 block text-xs font-medium text-gray-400">Status</label>
+                    <label
+                      htmlFor="status-filter"
+                      className="mb-2 block text-xs font-medium text-gray-400"
+                    >
+                      Status
+                    </label>
                     <select
+                      id="status-filter"
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
                       className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
@@ -548,8 +556,14 @@ export default function SongsPage() {
 
                   {/* Sort By */}
                   <div>
-                    <label className="mb-2 block text-xs font-medium text-gray-400">Sort By</label>
+                    <label
+                      htmlFor="sort-by"
+                      className="mb-2 block text-xs font-medium text-gray-400"
+                    >
+                      Sort By
+                    </label>
                     <select
+                      id="sort-by"
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
                       className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
@@ -562,8 +576,14 @@ export default function SongsPage() {
 
                   {/* Sort Order */}
                   <div>
-                    <label className="mb-2 block text-xs font-medium text-gray-400">Order</label>
+                    <label
+                      htmlFor="sort-order"
+                      className="mb-2 block text-xs font-medium text-gray-400"
+                    >
+                      Order
+                    </label>
                     <select
+                      id="sort-order"
                       value={sortOrder}
                       onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
                       className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
@@ -638,7 +658,7 @@ export default function SongsPage() {
                 : 'space-y-3'
             }
           >
-            {songs.map((song, index) => (
+            {songs.map((song) => (
               <SongCard key={song.id} song={song} viewMode={viewMode} onProjectAdded={fetchSongs} />
             ))}
           </motion.div>

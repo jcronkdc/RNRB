@@ -30,6 +30,11 @@ const VALID_MIME_TYPES = {
     'text/markdown',
     'text/rtf',
     'application/rtf',
+    // Additional text MIME types that browsers may send
+    'text/x-plain',
+    'text/x-markdown',
+    'text/x-rst',
+    'text/richtext',
   ],
   image: [
     'image/jpeg',
@@ -44,6 +49,11 @@ const VALID_MIME_TYPES = {
     'application/octet-stream', // Generic binary for DAW files
   ],
 };
+
+// File types that should be accepted with application/octet-stream or empty MIME type
+// (Some browsers don't properly detect these file types)
+const EXTENSION_ALLOWS_UNKNOWN_MIME =
+  /\.(txt|md|rtf|chordpro|cho|crd|als|flp|logic|logicx|ptx|ptf|rpp|cpr|band|sesx|aup|aup3)$/i;
 
 // All valid MIME types combined
 const ALL_VALID_MIME_TYPES = [
@@ -115,7 +125,21 @@ export async function POST(req: NextRequest) {
     const isValidMime = ALL_VALID_MIME_TYPES.includes(file.type);
     const isValidExtension = matchesAnyExtension(file.name);
 
-    if (!isValidMime && !isValidExtension) {
+    // Allow files with valid extensions even if MIME type is empty or generic
+    // (Some browsers don't properly detect text/plain for .txt files)
+    const hasUnknownMimeButValidExtension =
+      (!file.type || file.type === 'application/octet-stream' || file.type === '') &&
+      isValidExtension;
+
+    // Also allow specific extensions that commonly have MIME detection issues
+    const hasKnownProblematicExtension = EXTENSION_ALLOWS_UNKNOWN_MIME.test(file.name);
+
+    if (
+      !isValidMime &&
+      !isValidExtension &&
+      !hasUnknownMimeButValidExtension &&
+      !hasKnownProblematicExtension
+    ) {
       throw AppError.badRequest(
         'Invalid file type. Supported formats: audio (mp3, wav, flac, etc.), documents (pdf, txt, docx), images (jpg, png), MIDI, chord charts, sheet music, and DAW project files.'
       );
