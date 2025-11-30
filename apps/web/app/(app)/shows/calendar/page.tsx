@@ -35,6 +35,7 @@ import {
   CheckCircle,
   Car,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useMemo, Suspense } from 'react';
@@ -230,52 +231,40 @@ function CalendarPageContent() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
-      {/* Animated Background Orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-32 -top-32 h-96 w-96 animate-pulse rounded-full bg-blue-500/20 blur-[100px]" />
-        <div
-          className="absolute -right-32 top-1/4 h-80 w-80 animate-pulse rounded-full bg-purple-500/15 blur-[100px]"
-          style={{ animationDelay: '1s' }}
-        />
-        <div
-          className="absolute bottom-1/4 left-1/3 h-72 w-72 animate-pulse rounded-full bg-cyan-500/10 blur-[100px]"
-          style={{ animationDelay: '2s' }}
-        />
-      </div>
-
-      {/* Subtle grid overlay */}
-      <div
-        className="pointer-events-none fixed inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }}
-      />
-
+    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Hero Section */}
-      <div className="relative z-10 border-b border-white/10 bg-gradient-to-r from-blue-900/20 via-black to-purple-900/20">
-        <div className="rnrb-container mx-auto max-w-[1800px] px-4 py-8">
+      <div className="relative z-10 border-b" style={{ borderColor: 'var(--border)' }}>
+        <div className="mx-auto max-w-[1800px] px-4 py-8">
           {/* Toast Notifications */}
           <ToastNotification toasts={toasts} onRemove={removeToast} />
 
-          {/* Gradient accent bar */}
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: 96 }}
-            className="mb-6 h-1 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500"
-          />
+          {/* Logo */}
+          <div className="mb-6 flex justify-center">
+            <Link href="/" className="group inline-block">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={140}
+                height={56}
+                priority
+                className="transition-opacity duration-200 group-hover:opacity-80"
+              />
+            </Link>
+          </div>
 
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm">
-                <Calendar className="h-7 w-7 text-blue-400" />
+              <div
+                className="flex h-14 w-14 items-center justify-center rounded-xl"
+                style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+              >
+                <Calendar className="h-7 w-7" style={{ color: 'var(--accent)' }} />
               </div>
               <div>
-                <h1 className="font-display bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-3xl font-bold text-transparent lg:text-4xl">
+                <h1 className="text-3xl font-bold lg:text-4xl" style={{ color: 'var(--text)' }}>
                   Gig Calendar
                 </h1>
-                <p className="mt-1 text-base text-gray-400 lg:text-lg">
+                <p className="mt-1 text-base lg:text-lg" style={{ color: 'var(--muted)' }}>
                   Manage your tour schedule with world-class tools
                 </p>
               </div>

@@ -1000,27 +1000,22 @@ export default function SongsPage() {
       className="relative min-h-screen overflow-hidden"
       style={{ background: 'var(--bg)' }}
     >
-      {/* Background Effects */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="gradient-orb gradient-orb-1"></div>
-        <div className="gradient-orb gradient-orb-2"></div>
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Logo */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="mb-6 flex justify-center"
         >
-          <Link href="/" className="group relative inline-block">
+          <Link href="/" className="group inline-block">
             <Image
-              src="/logo-light.png"
+              src="/logo-dark.png"
               alt="Rock N' Roll Basement"
               width={140}
               height={56}
               priority
-              className="transition-all duration-300 group-hover:scale-105"
+              className="transition-opacity duration-200 group-hover:opacity-80"
             />
           </Link>
         </motion.div>

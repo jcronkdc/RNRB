@@ -649,12 +649,6 @@ export default function LibraryPage() {
         )}
       </AnimatePresence>
 
-      {/* Background Effects */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="gradient-orb gradient-orb-1"></div>
-        <div className="gradient-orb gradient-orb-2"></div>
-      </div>
-
       <div className="relative z-10 flex min-h-screen">
         {/* Collections Sidebar */}
         <AnimatePresence>
@@ -669,12 +663,12 @@ export default function LibraryPage() {
                 {/* Logo */}
                 <Link href="/" className="mb-6 flex justify-center">
                   <Image
-                    src="/logo-light.png"
+                    src="/logo-dark.png"
                     alt="Rock N' Roll Basement"
                     width={140}
                     height={56}
                     priority
-                    className="transition-all duration-300 hover:scale-105"
+                    className="transition-opacity duration-200 hover:opacity-80"
                   />
                 </Link>
 
@@ -892,18 +886,19 @@ export default function LibraryPage() {
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             {/* Mobile Logo */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
               className="mb-6 flex justify-center lg:hidden"
             >
-              <Link href="/" className="group relative inline-block">
+              <Link href="/" className="group inline-block">
                 <Image
-                  src="/logo-light.png"
+                  src="/logo-dark.png"
                   alt="Rock N' Roll Basement"
                   width={140}
                   height={56}
                   priority
-                  className="transition-all duration-300 group-hover:scale-105"
+                  className="transition-opacity duration-200 group-hover:opacity-80"
                 />
               </Link>
             </motion.div>

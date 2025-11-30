@@ -1,22 +1,32 @@
 'use client';
 
 /**
- * WORLD-CLASS TOUR DETAIL PAGE
+ * TOUR DETAIL PAGE
  *
  * Features:
- * - Comprehensive analytics dashboard
- * - Show management
- * - Financial tracking
- * - Routing optimization
- * - Real-time collaboration
- * - Export capabilities
+ * - Show schedule with ticket links
+ * - Route optimization
+ * - Practical tour management
  */
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Edit, Share2, Calendar, MapPin, Users, Plus, MoreVertical } from 'lucide-react';
+import {
+  ArrowLeft,
+  Edit,
+  Share2,
+  Calendar,
+  MapPin,
+  Users,
+  Plus,
+  MoreVertical,
+  Ticket,
+  ExternalLink,
+  Clock,
+} from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 import { TourAnalyticsDashboard } from '@/components/tours/tour-analytics-dashboard';
@@ -24,13 +34,10 @@ import { useRequireAuth } from '@/hooks/use-require-auth';
 
 export default function TourDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const { user, loading: authLoading } = useRequireAuth();
   const [tour, setTour] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState<'analytics' | 'shows' | 'setlists'>(
-    'analytics'
-  );
+  const [activeSection, setActiveSection] = useState<'overview' | 'shows'>('overview');
 
   const tourSlug = params.slug as string;
 
@@ -57,9 +64,9 @@ export default function TourDetailPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-800 border-t-brand-primary text-brand-primary" />
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-800 border-t-brand-primary" />
           <p className="text-muted-foreground">Loading tour...</p>
         </div>
       </div>
@@ -68,7 +75,7 @@ export default function TourDetailPage() {
 
   if (!tour) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="p-8 text-center">
           <p className="mb-4 text-muted-foreground">Tour not found</p>
           <Link href="/tours">
@@ -79,11 +86,22 @@ export default function TourDetailPage() {
     );
   }
 
+  const now = new Date();
+  const upcomingShows = tour.shows?.filter((show: any) => new Date(show.date) >= now) || [];
+  const pastShows = tour.shows?.filter((show: any) => new Date(show.date) < now) || [];
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border/50">
         <div className="mx-auto max-w-7xl px-4 py-6">
+          {/* Logo */}
+          <div className="mb-6 flex justify-center">
+            <Link href="/">
+              <Image src="/logo-dark.png" alt="Rock N' Roll Basement" width={120} height={48} />
+            </Link>
+          </div>
+
           <div className="mb-4">
             <Link href="/tours">
               <Button variant="ghost" size="sm" className="flex items-center gap-2">
@@ -107,7 +125,7 @@ export default function TourDetailPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
-                    <span>{tour._count?.shows || 0} shows</span>
+                    <span>{tour._count?.shows || tour.shows?.length || 0} shows</span>
                   </div>
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${
@@ -141,23 +159,20 @@ export default function TourDetailPage() {
                 <Share2 className="h-4 w-4" />
                 Share
               </Button>
-              <Button variant="ghost" size="sm">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
             </div>
           </div>
 
           {/* Navigation Tabs */}
           <div className="mt-6 flex gap-2 border-b border-border">
             <button
-              onClick={() => setActiveSection('analytics')}
+              onClick={() => setActiveSection('overview')}
               className={`px-4 py-2 text-sm font-medium transition ${
-                activeSection === 'analytics'
+                activeSection === 'overview'
                   ? 'border-b-2 border-brand-primary text-brand-primary'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              Analytics
+              Overview & Routing
             </button>
             <button
               onClick={() => setActiveSection('shows')}
@@ -167,17 +182,7 @@ export default function TourDetailPage() {
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              Shows ({tour._count?.shows || 0})
-            </button>
-            <button
-              onClick={() => setActiveSection('setlists')}
-              className={`px-4 py-2 text-sm font-medium transition ${
-                activeSection === 'setlists'
-                  ? 'border-b-2 border-brand-primary text-brand-primary'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              Setlists
+              All Shows ({tour._count?.shows || tour.shows?.length || 0})
             </button>
           </div>
         </div>
@@ -185,7 +190,7 @@ export default function TourDetailPage() {
 
       {/* Content */}
       <div className="mx-auto max-w-7xl px-4 py-8">
-        {activeSection === 'analytics' && (
+        {activeSection === 'overview' && (
           <TourAnalyticsDashboard tourId={tour.id} tourSlug={tourSlug} />
         )}
 
@@ -202,57 +207,43 @@ export default function TourDetailPage() {
             </div>
 
             {tour.shows && tour.shows.length > 0 ? (
-              <div className="space-y-3">
-                {tour.shows.map((show: any) => (
-                  <Card key={show.id} className="p-4 transition hover:border-brand-primary/30">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <Link
-                          href={`/shows/${show.slug}`}
-                          className="block font-semibold transition hover:text-brand-primary"
-                        >
-                          {show.name}
-                        </Link>
-                        <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3.5 w-3.5" />
-                            {new Date(show.date).toLocaleDateString()}
-                          </div>
-                          {show.venue && (
-                            <div className="flex items-center gap-1">
-                              <MapPin className="h-3.5 w-3.5" />
-                              {show.venue.name}, {show.venue.city}
-                            </div>
-                          )}
-                          {show.attendance && (
-                            <div className="flex items-center gap-1">
-                              <Users className="h-3.5 w-3.5" />
-                              {show.attendance.toLocaleString()} attendees
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <span
-                        className={`rounded px-2 py-0.5 text-xs font-medium capitalize ${
-                          show.status === 'completed'
-                            ? 'bg-green-500/10 text-green-500'
-                            : show.status === 'scheduled'
-                              ? 'bg-blue-500/10 text-blue-500'
-                              : 'bg-gray-500/10 text-gray-500'
-                        }`}
-                      >
-                        {show.status}
-                      </span>
+              <div className="space-y-6">
+                {/* Upcoming Shows */}
+                {upcomingShows.length > 0 && (
+                  <div>
+                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-green-500">
+                      <Calendar className="h-5 w-5" />
+                      Upcoming ({upcomingShows.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {upcomingShows.map((show: any) => (
+                        <ShowCard key={show.id} show={show} tourSlug={tourSlug} />
+                      ))}
                     </div>
-                  </Card>
-                ))}
+                  </div>
+                )}
+
+                {/* Past Shows */}
+                {pastShows.length > 0 && (
+                  <div>
+                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-muted-foreground">
+                      <Clock className="h-5 w-5" />
+                      Completed ({pastShows.length})
+                    </h3>
+                    <div className="space-y-3">
+                      {pastShows.map((show: any) => (
+                        <ShowCard key={show.id} show={show} tourSlug={tourSlug} isPast />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <Card className="p-12 text-center">
                 <Calendar className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
                 <h3 className="mb-2 text-lg font-semibold">No Shows Yet</h3>
                 <p className="mb-6 text-muted-foreground">
-                  Start adding shows to your tour to track performance and manage logistics.
+                  Start adding shows to your tour to manage your schedule.
                 </p>
                 <Link href={`/tours/${tourSlug}/shows/new`}>
                   <Button className="inline-flex items-center gap-2">
@@ -264,16 +255,122 @@ export default function TourDetailPage() {
             )}
           </div>
         )}
-
-        {activeSection === 'setlists' && (
-          <Card className="p-12 text-center">
-            <h3 className="mb-2 text-lg font-semibold">Setlist Management</h3>
-            <p className="text-muted-foreground">
-              Create and manage setlists for your tour shows. Coming soon!
-            </p>
-          </Card>
-        )}
       </div>
     </div>
+  );
+}
+
+// Show card with ticket link prominently displayed
+function ShowCard({
+  show,
+  tourSlug,
+  isPast = false,
+}: {
+  show: any;
+  tourSlug: string;
+  isPast?: boolean;
+}) {
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
+  const formatTime = (date: string | null) => {
+    if (!date) return null;
+    return new Date(date).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  };
+
+  return (
+    <Card
+      className={`p-4 transition ${isPast ? 'border-border/50 bg-muted/10' : 'hover:border-brand-primary/30'}`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <Link
+            href={`/shows/${show.slug}`}
+            className={`block font-semibold transition hover:text-brand-primary ${isPast ? 'text-muted-foreground' : ''}`}
+          >
+            {show.name}
+          </Link>
+          <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Calendar className="h-3.5 w-3.5" />
+              {formatDate(show.date)}
+            </div>
+            {show.venue && (
+              <div className="flex items-center gap-1">
+                <MapPin className="h-3.5 w-3.5" />
+                {show.venue.name}, {show.venue.city}
+              </div>
+            )}
+            {show.doorsTime && (
+              <div className="flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5" />
+                Doors: {formatTime(show.doorsTime)}
+              </div>
+            )}
+            {isPast && show.attendance && (
+              <div className="flex items-center gap-1">
+                <Users className="h-3.5 w-3.5" />
+                {show.attendance.toLocaleString()} attended
+              </div>
+            )}
+          </div>
+
+          {/* Show times */}
+          {(show.loadInTime || show.soundcheckTime || show.setTime) && (
+            <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+              {show.loadInTime && <span>Load-in: {formatTime(show.loadInTime)}</span>}
+              {show.soundcheckTime && <span>Soundcheck: {formatTime(show.soundcheckTime)}</span>}
+              {show.setTime && <span>Set: {formatTime(show.setTime)}</span>}
+              {show.setLength && <span>({show.setLength} min)</span>}
+            </div>
+          )}
+
+          {/* Notes */}
+          {show.notes && (
+            <p className="mt-2 line-clamp-2 text-sm italic text-muted-foreground">{show.notes}</p>
+          )}
+        </div>
+
+        <div className="flex flex-col items-end gap-2">
+          {/* Status badge */}
+          <span
+            className={`rounded px-2 py-0.5 text-xs font-medium capitalize ${
+              show.status === 'completed'
+                ? 'bg-green-500/10 text-green-500'
+                : show.status === 'scheduled'
+                  ? 'bg-blue-500/10 text-blue-500'
+                  : show.status === 'cancelled'
+                    ? 'bg-red-500/10 text-red-500'
+                    : 'bg-gray-500/10 text-gray-500'
+            }`}
+          >
+            {show.status}
+          </span>
+
+          {/* Ticket Link - prominently displayed */}
+          {show.ticketUrl && !isPast && (
+            <a
+              href={show.ticketUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 rounded-lg bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-brand-primary/90 hover:shadow-lg"
+            >
+              <Ticket className="h-4 w-4" />
+              Get Tickets
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          )}
+        </div>
+      </div>
+    </Card>
   );
 }

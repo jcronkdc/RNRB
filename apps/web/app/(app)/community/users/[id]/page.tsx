@@ -41,35 +41,74 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+      <div
+        style={{
+          minHeight: '100vh',
+          backgroundColor: 'var(--bg)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Loader2
+          style={{ height: '32px', width: '32px', color: 'var(--accent)' }}
+          className="animate-spin"
+        />
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div
+        style={{
+          minHeight: '100vh',
+          backgroundColor: 'var(--bg)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <div className="text-center">
-          <User className="mx-auto mb-4 h-12 w-12 text-gray-500" />
-          <h2 className="text-xl font-semibold text-white">User not found</h2>
+          <User
+            style={{ margin: '0 auto 16px', height: '48px', width: '48px', color: 'var(--muted)' }}
+          />
+          <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text)' }}>
+            User not found
+          </h2>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)' }}>
       <div className="mx-auto max-w-7xl px-4 py-12">
         {/* Profile Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 rounded-xl border border-gray-800 bg-gray-900 p-8"
+          style={{
+            marginBottom: '32px',
+            borderRadius: 'var(--radius)',
+            border: '1px solid var(--border)',
+            backgroundColor: 'var(--panel)',
+            padding: '32px',
+          }}
         >
           <div className="flex flex-col items-center gap-6 md:flex-row">
             {/* Avatar */}
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-orange-500/10">
+            <div
+              style={{
+                display: 'flex',
+                height: '96px',
+                width: '96px',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '50%',
+                backgroundColor: 'var(--accent-dim)',
+              }}
+            >
               {profile.image ? (
                 <img
                   src={profile.image}
@@ -77,41 +116,58 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                   className="h-full w-full rounded-full"
                 />
               ) : (
-                <User className="h-12 w-12 text-orange-500" />
+                <User style={{ height: '48px', width: '48px', color: 'var(--accent)' }} />
               )}
             </div>
 
             {/* Info */}
             <div className="flex-1 text-center md:text-left">
-              <h1 className="mb-2 text-3xl font-bold text-white">
+              <h1
+                style={{
+                  marginBottom: '8px',
+                  fontSize: '1.875rem',
+                  fontWeight: 'bold',
+                  color: 'var(--text)',
+                }}
+              >
                 {profile.name || 'Unknown Artist'}
               </h1>
-              <p className="text-gray-400">{profile.email}</p>
+              <p style={{ color: 'var(--muted)' }}>{profile.email}</p>
 
               {/* Stats */}
               <div className="mt-4 flex justify-center gap-6 md:justify-start">
                 <div>
-                  <div className="text-2xl font-bold text-white">{profile.tracks.length}</div>
-                  <div className="text-sm text-gray-400">Tracks</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text)' }}>
+                    {profile.tracks.length}
+                  </div>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--muted)' }}>Tracks</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-white">{profile.followerCount}</div>
-                  <div className="text-sm text-gray-400">Followers</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text)' }}>
+                    {profile.followerCount}
+                  </div>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--muted)' }}>Followers</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-white">{profile.followingCount}</div>
-                  <div className="text-sm text-gray-400">Following</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text)' }}>
+                    {profile.followingCount}
+                  </div>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--muted)' }}>Following</div>
                 </div>
               </div>
             </div>
 
             {/* Follow Button */}
             <button
-              className={`rounded-lg px-6 py-2 font-medium transition ${
-                profile.isFollowing
-                  ? 'border border-gray-700 bg-gray-800 text-white hover:bg-gray-700'
-                  : 'bg-orange-500 text-white hover:bg-orange-600'
-              }`}
+              style={{
+                borderRadius: 'var(--radius-sm)',
+                padding: '8px 24px',
+                fontWeight: '500',
+                transition: 'background-color 0.2s',
+                backgroundColor: profile.isFollowing ? 'var(--bg)' : 'var(--accent)',
+                color: 'var(--text)',
+                border: profile.isFollowing ? '1px solid var(--border)' : 'none',
+              }}
             >
               {profile.isFollowing ? 'Following' : 'Follow'}
             </button>
@@ -120,15 +176,40 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
 
         {/* Tracks Grid */}
         <div>
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-semibold text-white">
-            <Music className="h-6 w-6 text-orange-500" />
+          <h2
+            style={{
+              marginBottom: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontSize: '1.5rem',
+              fontWeight: '600',
+              color: 'var(--text)',
+            }}
+          >
+            <Music style={{ height: '24px', width: '24px', color: 'var(--accent)' }} />
             Published Tracks
           </h2>
 
           {profile.tracks.length === 0 ? (
-            <div className="rounded-xl border border-gray-800 bg-gray-900 p-12 text-center">
-              <Music className="mx-auto mb-4 h-12 w-12 text-gray-600" />
-              <p className="text-gray-400">No tracks published yet</p>
+            <div
+              style={{
+                borderRadius: 'var(--radius)',
+                border: '1px solid var(--border)',
+                backgroundColor: 'var(--panel)',
+                padding: '48px',
+                textAlign: 'center',
+              }}
+            >
+              <Music
+                style={{
+                  margin: '0 auto 16px',
+                  height: '48px',
+                  width: '48px',
+                  color: 'var(--muted)',
+                }}
+              />
+              <p style={{ color: 'var(--muted)' }}>No tracks published yet</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

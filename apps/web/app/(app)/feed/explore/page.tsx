@@ -53,12 +53,20 @@ async function TrendingHashtags() {
         <Link
           key={tag.name}
           href={`/feed?tag=${encodeURIComponent(tag.name)}`}
-          className="group relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-purple-500/10 via-black/40 to-pink-500/10 p-4 backdrop-blur-xl transition-all hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10"
+          className="group relative overflow-hidden rounded-xl p-4 transition-all"
+          style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
-          <div className="absolute right-2 top-2 text-3xl font-bold text-white/5">{index + 1}</div>
-          <Hash className="mb-2 h-5 w-5 text-purple-400" />
-          <p className="font-semibold text-white group-hover:text-purple-300">{tag.name}</p>
-          <p className="mt-1 text-sm text-white/50">
+          <div
+            className="absolute right-2 top-2 text-3xl font-bold"
+            style={{ color: 'var(--border)' }}
+          >
+            {index + 1}
+          </div>
+          <Hash className="mb-2 h-5 w-5" style={{ color: 'var(--accent)' }} />
+          <p className="font-semibold" style={{ color: 'var(--text)' }}>
+            {tag.name}
+          </p>
+          <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
             {tag.count} {tag.count === 1 ? 'post' : 'posts'}
           </p>
         </Link>
@@ -92,13 +100,17 @@ async function TrendingGenres() {
           <Link
             key={genre.genre}
             href={`/feed?genre=${encodeURIComponent(genre.genre!)}`}
-            className="group flex items-center gap-3 rounded-full border border-pink-500/30 bg-gradient-to-r from-pink-500/10 to-orange-500/10 px-5 py-3 transition-all hover:border-pink-500/50 hover:shadow-lg hover:shadow-pink-500/10"
+            className="group flex items-center gap-3 rounded-full px-5 py-3 transition-all"
+            style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
           >
-            <Music className="h-5 w-5 text-pink-400" />
-            <span className="font-semibold text-white group-hover:text-pink-300">
+            <Music className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+            <span className="font-semibold" style={{ color: 'var(--text)' }}>
               {genre.genre}
             </span>
-            <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/60">
+            <span
+              className="rounded-full px-2 py-0.5 text-xs"
+              style={{ background: 'var(--bg)', color: 'var(--muted)' }}
+            >
               {genre._count.genre}
             </span>
           </Link>
@@ -161,9 +173,13 @@ async function RisingArtists() {
             <Link
               key={artist.id}
               href={`/profile/${artist.id}`}
-              className="group flex items-center gap-4 rounded-xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl transition-all hover:border-purple-500/30 hover:bg-black/60"
+              className="group flex items-center gap-4 rounded-xl p-4 transition-all"
+              style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
             >
-              <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+              <div
+                className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full"
+                style={{ background: 'var(--accent)' }}
+              >
                 {artist.image ? (
                   <Image
                     src={artist.image}
@@ -178,11 +194,13 @@ async function RisingArtists() {
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-white group-hover:text-purple-300">
+                <p className="truncate font-semibold" style={{ color: 'var(--text)' }}>
                   {artist.name || 'Anonymous Artist'}
                 </p>
-                <p className="text-sm text-white/50">{artist._count.followers} followers</p>
-                <div className="mt-1 flex gap-3 text-xs text-white/40">
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  {artist._count.followers} followers
+                </p>
+                <div className="mt-1 flex gap-3 text-xs" style={{ color: 'var(--muted)' }}>
                   <span>{artist.recentPosts} posts this week</span>
                   {artist.recentPlays > 0 && <span>{artist.recentPlays} plays</span>}
                 </div>
@@ -226,26 +244,36 @@ async function RecentAudioPosts() {
         <Link
           key={post.id}
           href={`/feed/post/${post.id}`}
-          className="group overflow-hidden rounded-xl border border-white/10 bg-black/40 backdrop-blur-xl transition-all hover:border-purple-500/30"
+          className="group overflow-hidden rounded-xl transition-all"
+          style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
-          <div className="relative aspect-video bg-gradient-to-br from-purple-500/20 via-pink-500/10 to-orange-500/20">
+          <div className="relative aspect-video" style={{ background: 'rgba(255, 99, 71, 0.1)' }}>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm transition-transform group-hover:scale-110">
-                <Music className="h-8 w-8 text-white" />
+              <div
+                className="flex h-16 w-16 items-center justify-center rounded-full transition-transform group-hover:scale-110"
+                style={{ background: 'var(--bg)' }}
+              >
+                <Music className="h-8 w-8" style={{ color: 'var(--accent)' }} />
               </div>
             </div>
             {post.genre && (
-              <span className="absolute left-3 top-3 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+              <span
+                className="absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-medium"
+                style={{ background: 'var(--bg)', color: 'var(--text)' }}
+              >
                 {post.genre}
               </span>
             )}
           </div>
           <div className="p-4">
-            <p className="line-clamp-2 font-medium text-white group-hover:text-purple-300">
+            <p className="line-clamp-2 font-medium" style={{ color: 'var(--text)' }}>
               {post.content || 'Untitled Track'}
             </p>
             <div className="mt-2 flex items-center gap-2">
-              <div className="relative h-6 w-6 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+              <div
+                className="relative h-6 w-6 overflow-hidden rounded-full"
+                style={{ background: 'var(--accent)' }}
+              >
                 {post.author.image ? (
                   <Image
                     src={post.author.image}
@@ -259,9 +287,11 @@ async function RecentAudioPosts() {
                   </div>
                 )}
               </div>
-              <span className="text-sm text-white/60">{post.author.name}</span>
+              <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                {post.author.name}
+              </span>
             </div>
-            <div className="mt-2 flex gap-3 text-xs text-white/40">
+            <div className="mt-2 flex gap-3 text-xs" style={{ color: 'var(--muted)' }}>
               <span>{post.playCount} plays</span>
               <span>{post.likeCount} likes</span>
             </div>
@@ -274,34 +304,24 @@ async function RecentAudioPosts() {
 
 export default function ExplorePage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
-      {/* Animated Background */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-32 -top-32 h-96 w-96 animate-pulse rounded-full bg-purple-500/20 blur-[100px]" />
-        <div
-          className="absolute -right-32 top-1/4 h-80 w-80 animate-pulse rounded-full bg-pink-500/15 blur-[100px]"
-          style={{ animationDelay: '1s' }}
-        />
-        <div
-          className="absolute bottom-1/4 left-1/3 h-72 w-72 animate-pulse rounded-full bg-cyan-500/10 blur-[100px]"
-          style={{ animationDelay: '2s' }}
-        />
-      </div>
-
+    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       <div className="relative z-10">
         {/* Header */}
-        <div className="border-b border-white/10 bg-gradient-to-r from-purple-900/20 via-black to-pink-900/20">
-          <div className="mx-auto max-w-7xl px-4 py-12">
-            <div className="mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500" />
+        <div className="border-b" style={{ borderColor: 'var(--border)' }}>
+          <div className="mx-auto max-w-7xl px-4 py-8">
+            <div className="mb-4 h-1 w-16 rounded-full" style={{ background: 'var(--accent)' }} />
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm">
-                <Sparkles className="h-7 w-7 text-purple-400" />
+              <div
+                className="flex h-12 w-12 items-center justify-center rounded-xl"
+                style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+              >
+                <Sparkles className="h-6 w-6" style={{ color: 'var(--accent)' }} />
               </div>
               <div>
-                <h1 className="bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-4xl font-bold text-transparent">
+                <h1 className="text-3xl font-bold" style={{ color: 'var(--text)' }}>
                   Explore
                 </h1>
-                <p className="text-lg text-gray-400">
+                <p style={{ color: 'var(--muted)' }}>
                   Discover trending hashtags, genres, and rising artists
                 </p>
               </div>
@@ -315,12 +335,15 @@ export default function ExplorePage() {
           <section>
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Hash className="h-6 w-6 text-purple-400" />
-                <h2 className="text-2xl font-bold text-white">Trending Hashtags</h2>
+                <Hash className="h-6 w-6" style={{ color: 'var(--accent)' }} />
+                <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                  Trending Hashtags
+                </h2>
               </div>
               <Link
                 href="/feed"
-                className="flex items-center gap-1 text-sm text-purple-400 hover:text-purple-300"
+                className="flex items-center gap-1 text-sm"
+                style={{ color: 'var(--accent)' }}
               >
                 View feed <ArrowRight className="h-4 w-4" />
               </Link>
@@ -328,7 +351,7 @@ export default function ExplorePage() {
             <Suspense
               fallback={
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
                 </div>
               }
             >
@@ -339,13 +362,15 @@ export default function ExplorePage() {
           {/* Trending Genres */}
           <section>
             <div className="mb-6 flex items-center gap-3">
-              <Music className="h-6 w-6 text-pink-400" />
-              <h2 className="text-2xl font-bold text-white">Popular Genres</h2>
+              <Music className="h-6 w-6" style={{ color: 'var(--accent)' }} />
+              <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                Popular Genres
+              </h2>
             </div>
             <Suspense
               fallback={
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
+                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
                 </div>
               }
             >
@@ -357,12 +382,15 @@ export default function ExplorePage() {
           <section>
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <TrendingUp className="h-6 w-6 text-orange-400" />
-                <h2 className="text-2xl font-bold text-white">Top Audio This Week</h2>
+                <TrendingUp className="h-6 w-6" style={{ color: 'var(--accent)' }} />
+                <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                  Top Audio This Week
+                </h2>
               </div>
               <Link
                 href="/feed?type=audio"
-                className="flex items-center gap-1 text-sm text-orange-400 hover:text-orange-300"
+                className="flex items-center gap-1 text-sm"
+                style={{ color: 'var(--accent)' }}
               >
                 See all <ArrowRight className="h-4 w-4" />
               </Link>
@@ -370,7 +398,7 @@ export default function ExplorePage() {
             <Suspense
               fallback={
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
                 </div>
               }
             >
@@ -381,13 +409,15 @@ export default function ExplorePage() {
           {/* Rising Artists */}
           <section>
             <div className="mb-6 flex items-center gap-3">
-              <Users className="h-6 w-6 text-cyan-400" />
-              <h2 className="text-2xl font-bold text-white">Rising Artists</h2>
+              <Users className="h-6 w-6" style={{ color: 'var(--accent)' }} />
+              <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                Rising Artists
+              </h2>
             </div>
             <Suspense
               fallback={
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-cyan-500" />
+                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
                 </div>
               }
             >

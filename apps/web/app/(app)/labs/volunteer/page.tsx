@@ -281,12 +281,6 @@ export default function VolunteerPortalPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
-      {/* Background */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
-        <div className="absolute -right-32 bottom-1/4 h-96 w-96 rounded-full bg-green-500/10 blur-3xl" />
-      </div>
-
       <div className="relative z-10 mx-auto max-w-3xl px-4 py-8">
         {/* Header */}
         <motion.div
@@ -296,13 +290,12 @@ export default function VolunteerPortalPage() {
         >
           <Link href="/" className="group mb-6 inline-block">
             <Image
-              src="/logo-light.png"
+              src="/logo-dark.png"
               alt="Rock N' Roll Basement"
               width={140}
               height={57}
               priority
               className="transition-transform group-hover:scale-105"
-              style={{ filter: 'drop-shadow(0 0 20px rgba(147, 51, 234, 0.3))' }}
             />
           </Link>
 

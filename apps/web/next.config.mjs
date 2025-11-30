@@ -61,7 +61,7 @@ const __dirname = dirname(__filename);
 
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
+  // output: 'standalone', // Temporarily disabled - causing /_document error in Next.js 15.5.6
   // Fix for monorepo: explicitly set the workspace root for file tracing
   outputFileTracingRoot: join(__dirname, '../../'),
   eslint: {

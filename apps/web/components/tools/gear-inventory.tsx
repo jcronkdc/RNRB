@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
@@ -24,6 +24,7 @@ import {
   Filter,
   Download,
   Upload,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
 
@@ -53,6 +54,28 @@ interface GearItem {
   };
 }
 
+interface ApiGearItem {
+  id: string;
+  name: string;
+  brand?: string;
+  model?: string;
+  category: string;
+  serialNumber?: string;
+  purchaseDate?: string;
+  purchasePrice?: number;
+  currentValue?: number;
+  condition?: string;
+  location?: string;
+  notes?: string;
+  imageUrl?: string;
+  insured?: boolean;
+  insurancePolicy?: string;
+  insuranceValue?: number;
+  lastMaintenanceDate?: string;
+  nextMaintenanceDate?: string;
+  maintenanceNotes?: string;
+}
+
 const CATEGORIES = [
   { id: 'guitar', name: 'Guitars', icon: Guitar },
   { id: 'bass', name: 'Bass', icon: Guitar },
@@ -65,48 +88,34 @@ const CATEGORIES = [
   { id: 'other', name: 'Other', icon: Package },
 ];
 
-const DEMO_GEAR: GearItem[] = [
-  {
-    id: '1',
-    name: 'American Professional II Stratocaster',
-    brand: 'Fender',
-    model: 'Stratocaster',
-    category: 'guitar',
-    serialNumber: 'US21012345',
-    purchaseDate: '2021-03-15',
-    purchasePrice: 1699,
-    currentValue: 1500,
-    condition: 'excellent',
-    location: 'Home Studio',
-    notes: 'Main gigging guitar. 3-Color Sunburst finish.',
-    insurance: { covered: true, policyNumber: 'INS-12345', insuredValue: 1700 },
-    maintenance: {
-      lastService: '2024-06-01',
-      nextService: '2025-06-01',
-      serviceNotes: 'Full setup, new strings',
+// Transform API response to component format
+function transformApiGear(apiItem: ApiGearItem): GearItem {
+  return {
+    id: apiItem.id,
+    name: apiItem.name,
+    brand: apiItem.brand || '',
+    model: apiItem.model || '',
+    category: apiItem.category,
+    serialNumber: apiItem.serialNumber || '',
+    purchaseDate: apiItem.purchaseDate || '',
+    purchasePrice: apiItem.purchasePrice || 0,
+    currentValue: apiItem.currentValue || 0,
+    condition: (apiItem.condition as GearItem['condition']) || 'good',
+    location: apiItem.location || '',
+    notes: apiItem.notes || '',
+    imageUrl: apiItem.imageUrl,
+    insurance: {
+      covered: apiItem.insured || false,
+      policyNumber: apiItem.insurancePolicy,
+      insuredValue: apiItem.insuranceValue,
     },
-  },
-  {
-    id: '2',
-    name: 'Hot Rod Deluxe IV',
-    brand: 'Fender',
-    model: 'Hot Rod Deluxe',
-    category: 'amps',
-    serialNumber: 'B123456',
-    purchaseDate: '2020-08-20',
-    purchasePrice: 899,
-    currentValue: 750,
-    condition: 'good',
-    location: 'Rehearsal Space',
-    notes: '40W tube amp. New tubes installed 2023.',
-    insurance: { covered: true, policyNumber: 'INS-12345', insuredValue: 800 },
     maintenance: {
-      lastService: '2023-09-15',
-      nextService: '2025-09-15',
-      serviceNotes: 'New preamp tubes',
+      lastService: apiItem.lastMaintenanceDate,
+      nextService: apiItem.nextMaintenanceDate,
+      serviceNotes: apiItem.maintenanceNotes,
     },
-  },
-];
+  };
+}
 
 export function GearInventory() {
   const [gear, setGear] = useState<GearItem[]>([]);
@@ -115,27 +124,40 @@ export function GearInventory() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingItem, setEditingItem] = useState<GearItem | null>(null);
   const [selectedItem, setSelectedItem] = useState<GearItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Load gear from localStorage
-  useEffect(() => {
-    const savedGear = localStorage.getItem('gear-inventory');
-    if (savedGear) {
-      try {
-        setGear(JSON.parse(savedGear));
-      } catch (e) {
-        setGear(DEMO_GEAR);
+  // Fetch gear from database API
+  const fetchGear = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const url =
+        activeCategory !== 'all' ? `/api/tools/gear?category=${activeCategory}` : '/api/tools/gear';
+      const res = await fetch(url);
+      if (!res.ok) {
+        if (res.status === 401) {
+          // Not authenticated - silently use empty state
+          setGear([]);
+          return;
+        }
+        throw new Error('Failed to fetch gear');
       }
-    } else {
-      setGear(DEMO_GEAR);
+      const data = await res.json();
+      setGear((data.gear || []).map(transformApiGear));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load gear');
+      setGear([]);
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  }, [activeCategory]);
 
-  // Save gear to localStorage
+  // Load gear on mount and category change
   useEffect(() => {
-    if (gear.length > 0) {
-      localStorage.setItem('gear-inventory', JSON.stringify(gear));
-    }
-  }, [gear]);
+    fetchGear();
+  }, [fetchGear]);
 
   // Filter gear
   const filteredGear = gear.filter((item) => {
@@ -157,21 +179,72 @@ export function GearInventory() {
     return new Date(item.maintenance.nextService) <= new Date();
   });
 
-  // Add/Update item
-  const saveItem = (item: GearItem) => {
-    if (editingItem) {
-      setGear(gear.map((g) => (g.id === item.id ? item : g)));
-    } else {
-      setGear([...gear, { ...item, id: `gear-${Date.now()}` }]);
+  // Add/Update item via API
+  const saveItem = async (item: GearItem) => {
+    try {
+      setSaving(true);
+      const apiPayload = {
+        name: item.name,
+        brand: item.brand || null,
+        model: item.model || null,
+        category: item.category,
+        serialNumber: item.serialNumber || null,
+        purchaseDate: item.purchaseDate || null,
+        purchasePrice: item.purchasePrice || null,
+        currentValue: item.currentValue || null,
+        condition: item.condition,
+        location: item.location || null,
+        notes: item.notes || null,
+        imageUrl: item.imageUrl || null,
+        insured: item.insurance.covered,
+        insurancePolicy: item.insurance.policyNumber || null,
+        insuranceValue: item.insurance.insuredValue || null,
+        lastMaintenanceDate: item.maintenance.lastService || null,
+        nextMaintenanceDate: item.maintenance.nextService || null,
+        maintenanceNotes: item.maintenance.serviceNotes || null,
+      };
+
+      if (editingItem) {
+        const res = await fetch('/api/tools/gear', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: item.id, ...apiPayload }),
+        });
+        if (!res.ok) throw new Error('Failed to update gear');
+        const updated = await res.json();
+        setGear(gear.map((g) => (g.id === item.id ? transformApiGear(updated) : g)));
+      } else {
+        const res = await fetch('/api/tools/gear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(apiPayload),
+        });
+        if (!res.ok) throw new Error('Failed to add gear');
+        const newItem = await res.json();
+        setGear([...gear, transformApiGear(newItem)]);
+      }
+      setShowAddModal(false);
+      setEditingItem(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save');
+    } finally {
+      setSaving(false);
     }
-    setShowAddModal(false);
-    setEditingItem(null);
   };
 
-  // Delete item
-  const deleteItem = (id: string) => {
-    setGear(gear.filter((g) => g.id !== id));
-    setSelectedItem(null);
+  // Delete item via API
+  const deleteItem = async (id: string) => {
+    try {
+      setSaving(true);
+      const res = await fetch(`/api/tools/gear?id=${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete gear');
+      setGear(gear.filter((g) => g.id !== id));
+      setSelectedItem(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete');
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Export inventory
@@ -331,8 +404,24 @@ export function GearInventory() {
         </div>
       </div>
 
-      {/* Gear Grid */}
-      {filteredGear.length === 0 ? (
+      {/* Error State */}
+      {error && (
+        <div className="mb-4 rounded-xl border border-red-500/20 bg-red-500/10 p-4 text-center">
+          <AlertTriangle className="mx-auto mb-2 h-6 w-6 text-red-400" />
+          <p className="text-red-400">{error}</p>
+          <Button variant="outline" size="sm" className="mt-2" onClick={fetchGear}>
+            Retry
+          </Button>
+        </div>
+      )}
+
+      {/* Loading State */}
+      {loading ? (
+        <div className="rounded-xl bg-white/5 py-12 text-center">
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-muted-foreground" />
+          <p className="text-muted-foreground">Loading your gear inventory...</p>
+        </div>
+      ) : filteredGear.length === 0 ? (
         <div className="rounded-xl bg-white/5 py-12 text-center">
           <Package className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
           <p className="text-muted-foreground">No gear found. Add your first item!</p>

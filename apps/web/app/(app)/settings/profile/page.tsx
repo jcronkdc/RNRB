@@ -17,6 +17,18 @@ import {
   CheckCircle2,
   ArrowRight,
   Camera,
+  Plus,
+  Trash2,
+  MapPin,
+  Facebook,
+  Linkedin,
+  Music2,
+  Headphones,
+  Radio,
+  Disc3,
+  Video,
+  MessageCircle,
+  AtSign,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -25,21 +37,79 @@ import { useEffect, useState, useRef, Suspense } from 'react';
 
 import { createBrowserClient } from '@/lib/supabase';
 
+// All social media platforms a musician might use
+type SocialLinks = {
+  // Music Platforms
+  spotify: string;
+  appleMusic: string;
+  soundcloud: string;
+  bandcamp: string;
+  audiomack: string;
+  tidal: string;
+  deezer: string;
+  amazonMusic: string;
+  pandora: string;
+  // Video Platforms
+  youtube: string;
+  vimeo: string;
+  twitch: string;
+  // Social Networks
+  instagram: string;
+  twitter: string;
+  facebook: string;
+  tiktok: string;
+  threads: string;
+  bluesky: string;
+  mastodon: string;
+  // Professional
+  linkedin: string;
+  // Messaging/Community
+  discord: string;
+  telegram: string;
+  // Other Music Industry
+  songkick: string;
+  bandsintown: string;
+  genius: string;
+  allMusic: string;
+  // Crowdfunding/Support
+  patreon: string;
+  kofi: string;
+  buyMeACoffee: string;
+  // Link Aggregators (in case they want to link to their own)
+  linktree: string;
+  linkInBio: string;
+};
+
+type Website = {
+  id: string;
+  label: string;
+  url: string;
+};
+
 type ProfileData = {
   username: string;
   display_name: string;
   bio: string;
   profile_picture_url: string;
   is_public: boolean;
-  website: string;
-  instagram: string;
-  youtube: string;
-  twitter: string;
+  websites: Website[];
+  socialLinks: Partial<SocialLinks>;
   phone: string;
   phone_public: boolean;
   email_public: boolean;
+  // Musical Identity
   instruments: string[];
   genres: string[];
+  location: string;
+  yearsExperience: string;
+  availableForCollaboration: boolean;
+  availableForGigs: boolean;
+  // Professional Info
+  stageName: string;
+  recordLabel: string;
+  management: string;
+  bookingEmail: string;
+  pressEmail: string;
 };
 
 function ProfileSettingsContent() {
@@ -66,16 +136,233 @@ function ProfileSettingsContent() {
     bio: '',
     profile_picture_url: '',
     is_public: true,
-    website: '',
-    instagram: '',
-    youtube: '',
-    twitter: '',
+    websites: [{ id: '1', label: 'Main Website', url: '' }],
+    socialLinks: {},
     phone: '',
     phone_public: false,
     email_public: true,
     instruments: [],
     genres: [],
+    location: '',
+    yearsExperience: '',
+    availableForCollaboration: true,
+    availableForGigs: false,
+    stageName: '',
+    recordLabel: '',
+    management: '',
+    bookingEmail: '',
+    pressEmail: '',
   });
+
+  // Social platform configuration for the UI
+  const socialPlatforms = [
+    // Music Streaming
+    {
+      key: 'spotify',
+      label: 'Spotify',
+      icon: Music2,
+      color: '#1DB954',
+      placeholder: 'spotify.com/artist/...',
+    },
+    {
+      key: 'appleMusic',
+      label: 'Apple Music',
+      icon: Music,
+      color: '#FA243C',
+      placeholder: 'music.apple.com/...',
+    },
+    {
+      key: 'soundcloud',
+      label: 'SoundCloud',
+      icon: Headphones,
+      color: '#FF5500',
+      placeholder: 'soundcloud.com/...',
+    },
+    {
+      key: 'bandcamp',
+      label: 'Bandcamp',
+      icon: Disc3,
+      color: '#1DA0C3',
+      placeholder: 'yourband.bandcamp.com',
+    },
+    {
+      key: 'audiomack',
+      label: 'Audiomack',
+      icon: Headphones,
+      color: '#FFA200',
+      placeholder: 'audiomack.com/...',
+    },
+    { key: 'tidal', label: 'Tidal', icon: Music2, color: '#000000', placeholder: 'tidal.com/...' },
+    {
+      key: 'deezer',
+      label: 'Deezer',
+      icon: Music2,
+      color: '#FF0092',
+      placeholder: 'deezer.com/...',
+    },
+    {
+      key: 'amazonMusic',
+      label: 'Amazon Music',
+      icon: Music2,
+      color: '#FF9900',
+      placeholder: 'music.amazon.com/...',
+    },
+    // Video
+    {
+      key: 'youtube',
+      label: 'YouTube',
+      icon: Youtube,
+      color: '#FF0000',
+      placeholder: '@yourchannel',
+    },
+    { key: 'vimeo', label: 'Vimeo', icon: Video, color: '#1AB7EA', placeholder: 'vimeo.com/...' },
+    { key: 'twitch', label: 'Twitch', icon: Video, color: '#9146FF', placeholder: 'twitch.tv/...' },
+    // Social
+    {
+      key: 'instagram',
+      label: 'Instagram',
+      icon: Instagram,
+      color: '#E4405F',
+      placeholder: '@yourhandle',
+    },
+    {
+      key: 'twitter',
+      label: 'X (Twitter)',
+      icon: Twitter,
+      color: '#1DA1F2',
+      placeholder: '@yourhandle',
+    },
+    {
+      key: 'facebook',
+      label: 'Facebook',
+      icon: Facebook,
+      color: '#1877F2',
+      placeholder: 'facebook.com/...',
+    },
+    { key: 'tiktok', label: 'TikTok', icon: Music, color: '#000000', placeholder: '@yourhandle' },
+    {
+      key: 'threads',
+      label: 'Threads',
+      icon: AtSign,
+      color: '#000000',
+      placeholder: '@yourhandle',
+    },
+    {
+      key: 'bluesky',
+      label: 'Bluesky',
+      icon: MessageCircle,
+      color: '#0085FF',
+      placeholder: '@handle.bsky.social',
+    },
+    {
+      key: 'mastodon',
+      label: 'Mastodon',
+      icon: MessageCircle,
+      color: '#6364FF',
+      placeholder: '@handle@instance',
+    },
+    // Professional
+    {
+      key: 'linkedin',
+      label: 'LinkedIn',
+      icon: Linkedin,
+      color: '#0A66C2',
+      placeholder: 'linkedin.com/in/...',
+    },
+    // Community
+    {
+      key: 'discord',
+      label: 'Discord',
+      icon: MessageCircle,
+      color: '#5865F2',
+      placeholder: 'discord.gg/...',
+    },
+    {
+      key: 'telegram',
+      label: 'Telegram',
+      icon: MessageCircle,
+      color: '#26A5E4',
+      placeholder: 't.me/...',
+    },
+    // Music Industry
+    {
+      key: 'songkick',
+      label: 'Songkick',
+      icon: Radio,
+      color: '#F80046',
+      placeholder: 'songkick.com/...',
+    },
+    {
+      key: 'bandsintown',
+      label: 'Bandsintown',
+      icon: Radio,
+      color: '#00CEC8',
+      placeholder: 'bandsintown.com/...',
+    },
+    {
+      key: 'genius',
+      label: 'Genius',
+      icon: Music,
+      color: '#FFFF64',
+      placeholder: 'genius.com/artists/...',
+    },
+    // Support
+    {
+      key: 'patreon',
+      label: 'Patreon',
+      icon: Globe,
+      color: '#FF424D',
+      placeholder: 'patreon.com/...',
+    },
+    { key: 'kofi', label: 'Ko-fi', icon: Globe, color: '#FF5E5B', placeholder: 'ko-fi.com/...' },
+    {
+      key: 'buyMeACoffee',
+      label: 'Buy Me a Coffee',
+      icon: Globe,
+      color: '#FFDD00',
+      placeholder: 'buymeacoffee.com/...',
+    },
+    // Link Aggregators
+    {
+      key: 'linktree',
+      label: 'Linktree',
+      icon: LinkIcon,
+      color: '#43E660',
+      placeholder: 'linktr.ee/...',
+    },
+  ];
+
+  // Helper to add a new website
+  const addWebsite = () => {
+    setProfile((prev) => ({
+      ...prev,
+      websites: [...prev.websites, { id: Date.now().toString(), label: '', url: '' }],
+    }));
+  };
+
+  // Helper to remove a website
+  const removeWebsite = (id: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      websites: prev.websites.filter((w) => w.id !== id),
+    }));
+  };
+
+  // Helper to update a website
+  const updateWebsite = (id: string, field: 'label' | 'url', value: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      websites: prev.websites.map((w) => (w.id === id ? { ...w, [field]: value } : w)),
+    }));
+  };
+
+  // Helper to update social link
+  const updateSocialLink = (key: string, value: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      socialLinks: { ...prev.socialLinks, [key]: value },
+    }));
+  };
 
   const [uploadingPicture, setUploadingPicture] = useState(false);
 
@@ -94,27 +381,73 @@ function ProfileSettingsContent() {
     return Math.round((completed / sections.length) * 100);
   })();
 
-  // Redirect to auth if not logged in, and set initial profile
+  // Redirect to auth if not logged in, and fetch stored profile data
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth');
     } else if (user) {
-      // Set display name from session
-      setProfile((prev) => ({
-        ...prev,
-        display_name: user.name || user.email?.split('@')[0] || '',
-        profile_picture_url: user.image || '',
-      }));
+      // Fetch stored profile data from API
+      const fetchProfile = async () => {
+        try {
+          const response = await fetch('/api/profile');
+          if (response.ok) {
+            const data = await response.json();
+            setProfile((prev) => ({
+              ...prev,
+              display_name: data.display_name || user.name || user.email?.split('@')[0] || '',
+              profile_picture_url: data.profile_picture_url || user.image || '',
+              username: data.username || '',
+              bio: data.bio || '',
+              websites:
+                data.websites?.length > 0
+                  ? data.websites
+                  : [{ id: '1', label: 'Main Website', url: '' }],
+              socialLinks: data.socialLinks || {},
+              phone: data.phone || '',
+              location: data.location || '',
+              yearsExperience: data.yearsExperience || '',
+              availableForCollaboration: data.availableForCollaboration ?? true,
+              availableForGigs: data.availableForGigs ?? false,
+              stageName: data.stageName || '',
+              recordLabel: data.recordLabel || '',
+              management: data.management || '',
+              bookingEmail: data.bookingEmail || '',
+              pressEmail: data.pressEmail || '',
+              instruments: data.instruments || [],
+              genres: data.genres || [],
+            }));
+          } else {
+            // Fallback to session data if API fails
+            setProfile((prev) => ({
+              ...prev,
+              display_name: user.name || user.email?.split('@')[0] || '',
+              profile_picture_url: user.image || '',
+            }));
+          }
+        } catch (error) {
+          console.error('[PROFILE] Failed to fetch profile:', error);
+          // Fallback to session data
+          setProfile((prev) => ({
+            ...prev,
+            display_name: user.name || user.email?.split('@')[0] || '',
+            profile_picture_url: user.image || '',
+          }));
+        }
+      };
+
+      fetchProfile();
     }
   }, [status, router, user]);
 
   // Update section completion based on profile data
   useEffect(() => {
+    const hasWebsite = profile.websites.some((w) => w.url);
+    const hasSocialLink = Object.values(profile.socialLinks).some((v) => v);
     setSectionCompletion({
       picture: !!profile.profile_picture_url,
       basic: !!(profile.username && profile.display_name),
       privacy: true,
-      contact: !!(profile.website || profile.instagram || profile.youtube || profile.twitter),
+      contact: !!(hasWebsite || hasSocialLink),
     });
   }, [profile]);
 
@@ -244,34 +577,6 @@ function ProfileSettingsContent() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
-      {/* Animated Background - Matching Landing Page */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        {/* Floating music notes */}
-        <div className="music-notes-container">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="music-note"
-              style={{
-                left: `${10 + i * 12}%`,
-                animationDelay: `${i * 1.2}s`,
-                fontSize: `${16 + (i % 3) * 6}px`,
-              }}
-            >
-              {['♪', '♫', '♬', '♩'][i % 4]}
-            </div>
-          ))}
-        </div>
-
-        {/* Gradient orbs - same as landing page */}
-        <div className="gradient-orb gradient-orb-1" style={{ opacity: 0.4 }}></div>
-        <div className="gradient-orb gradient-orb-2" style={{ opacity: 0.3 }}></div>
-        <div className="gradient-orb gradient-orb-3" style={{ opacity: 0.2 }}></div>
-
-        {/* Subtle grid pattern */}
-        <div className="hero-grid-pattern" style={{ opacity: 0.5 }}></div>
-      </div>
-
       <div className="relative z-10 px-4 py-8 sm:py-12">
         <div className="mx-auto max-w-3xl">
           {/* Hero header for new users - Matching Landing Page Style */}
@@ -635,7 +940,396 @@ function ProfileSettingsContent() {
             </div>
           </div>
 
-          {/* Contact & Links */}
+          {/* Musical Identity */}
+          <div className="tile mb-6 p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+              >
+                <Music className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold" style={{ color: 'var(--text)' }}>
+                  Musical Identity
+                </h2>
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  Tell us about your music
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-5">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="profile-stage-name"
+                    className="mb-2 flex items-center gap-2 text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <Music className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    Stage Name / Artist Name
+                  </label>
+                  <input
+                    id="profile-stage-name"
+                    type="text"
+                    value={profile.stageName}
+                    onChange={(e) => setProfile({ ...profile, stageName: e.target.value })}
+                    placeholder="Your stage name"
+                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="profile-location"
+                    className="mb-2 flex items-center gap-2 text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <MapPin className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    Location
+                  </label>
+                  <input
+                    id="profile-location"
+                    type="text"
+                    value={profile.location}
+                    onChange={(e) => setProfile({ ...profile, location: e.target.value })}
+                    placeholder="City, State/Country"
+                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="profile-record-label"
+                    className="mb-2 flex items-center gap-2 text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <Disc3 className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    Record Label
+                  </label>
+                  <input
+                    id="profile-record-label"
+                    type="text"
+                    value={profile.recordLabel}
+                    onChange={(e) => setProfile({ ...profile, recordLabel: e.target.value })}
+                    placeholder="Independent or label name"
+                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="profile-years-experience"
+                    className="mb-2 flex items-center gap-2 text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    Years of Experience
+                  </label>
+                  <input
+                    id="profile-years-experience"
+                    type="text"
+                    value={profile.yearsExperience}
+                    onChange={(e) => setProfile({ ...profile, yearsExperience: e.target.value })}
+                    placeholder="e.g., 5+ years"
+                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Availability toggles */}
+              <div className="space-y-3">
+                <div
+                  className="flex items-center justify-between rounded-lg p-4 transition-colors"
+                  style={{ background: 'var(--panel)' }}
+                >
+                  <div>
+                    <p className="font-medium" style={{ color: 'var(--text)' }}>
+                      Available for Collaboration
+                    </p>
+                    <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                      Open to working with other musicians
+                    </p>
+                  </div>
+                  <button
+                    onClick={() =>
+                      setProfile({
+                        ...profile,
+                        availableForCollaboration: !profile.availableForCollaboration,
+                      })
+                    }
+                    className="relative h-8 w-14 rounded-full transition-all duration-300"
+                    style={{
+                      background: profile.availableForCollaboration
+                        ? 'linear-gradient(90deg, var(--accent), #ffd700)'
+                        : 'var(--border)',
+                      boxShadow: profile.availableForCollaboration
+                        ? '0 4px 12px rgba(255, 99, 71, 0.3)'
+                        : 'none',
+                    }}
+                  >
+                    <div
+                      className="absolute top-1 h-6 w-6 rounded-full bg-white shadow-md transition-all duration-300"
+                      style={{
+                        left: profile.availableForCollaboration ? 'calc(100% - 28px)' : '4px',
+                      }}
+                    />
+                  </button>
+                </div>
+
+                <div
+                  className="flex items-center justify-between rounded-lg p-4 transition-colors"
+                  style={{ background: 'var(--panel)' }}
+                >
+                  <div>
+                    <p className="font-medium" style={{ color: 'var(--text)' }}>
+                      Available for Gigs
+                    </p>
+                    <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                      Open to booking inquiries
+                    </p>
+                  </div>
+                  <button
+                    onClick={() =>
+                      setProfile({ ...profile, availableForGigs: !profile.availableForGigs })
+                    }
+                    className="relative h-8 w-14 rounded-full transition-all duration-300"
+                    style={{
+                      background: profile.availableForGigs
+                        ? 'linear-gradient(90deg, var(--accent), #ffd700)'
+                        : 'var(--border)',
+                      boxShadow: profile.availableForGigs
+                        ? '0 4px 12px rgba(255, 99, 71, 0.3)'
+                        : 'none',
+                    }}
+                  >
+                    <div
+                      className="absolute top-1 h-6 w-6 rounded-full bg-white shadow-md transition-all duration-300"
+                      style={{ left: profile.availableForGigs ? 'calc(100% - 28px)' : '4px' }}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="tile mb-6 p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+              >
+                <Phone className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold" style={{ color: 'var(--text)' }}>
+                  Contact Information
+                </h2>
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  How people can reach you
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-5">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="profile-phone"
+                    className="mb-2 flex items-center gap-2 text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <Phone className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    Phone Number
+                  </label>
+                  <input
+                    id="profile-phone"
+                    type="tel"
+                    value={profile.phone}
+                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                    placeholder="+1 (555) 123-4567"
+                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="profile-management"
+                    className="mb-2 flex items-center gap-2 text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    Management
+                  </label>
+                  <input
+                    id="profile-management"
+                    type="text"
+                    value={profile.management}
+                    onChange={(e) => setProfile({ ...profile, management: e.target.value })}
+                    placeholder="Manager name or company"
+                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    htmlFor="profile-booking-email"
+                    className="mb-2 flex items-center gap-2 text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    Booking Email
+                  </label>
+                  <input
+                    id="profile-booking-email"
+                    type="email"
+                    value={profile.bookingEmail}
+                    onChange={(e) => setProfile({ ...profile, bookingEmail: e.target.value })}
+                    placeholder="booking@yourband.com"
+                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="profile-press-email"
+                    className="mb-2 flex items-center gap-2 text-sm font-medium"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    Press / Media Email
+                  </label>
+                  <input
+                    id="profile-press-email"
+                    type="email"
+                    value={profile.pressEmail}
+                    onChange={(e) => setProfile({ ...profile, pressEmail: e.target.value })}
+                    placeholder="press@yourband.com"
+                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Websites - Multiple */}
+          <div className="tile mb-6 p-6">
+            <div className="mb-6 flex items-center gap-3">
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+              >
+                <Globe className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold" style={{ color: 'var(--text)' }}>
+                  Websites
+                </h2>
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  Add multiple websites (band site, merch store, etc.)
+                </p>
+              </div>
+              {sectionCompletion.contact && (
+                <CheckCircle2 className="ml-auto h-6 w-6" style={{ color: 'var(--success)' }} />
+              )}
+            </div>
+
+            <div className="space-y-4">
+              {profile.websites.map((website, index) => (
+                <div key={website.id} className="flex gap-3">
+                  <input
+                    type="text"
+                    value={website.label}
+                    onChange={(e) => updateWebsite(website.id, 'label', e.target.value)}
+                    placeholder="Label (e.g., Official Site)"
+                    className="w-1/3 rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                  <input
+                    type="url"
+                    value={website.url}
+                    onChange={(e) => updateWebsite(website.id, 'url', e.target.value)}
+                    placeholder="https://yourwebsite.com"
+                    className="flex-1 rounded-lg px-4 py-3 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                  {profile.websites.length > 1 && (
+                    <button
+                      onClick={() => removeWebsite(website.id)}
+                      className="flex h-12 w-12 items-center justify-center rounded-lg transition-colors hover:bg-red-500/20"
+                      style={{ border: '1px solid var(--border)' }}
+                    >
+                      <Trash2 className="h-5 w-5 text-red-400" />
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              <button
+                onClick={addWebsite}
+                className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-3 transition-colors"
+                style={{
+                  borderColor: 'var(--border)',
+                  color: 'var(--muted)',
+                }}
+              >
+                <Plus className="h-5 w-5" />
+                Add Another Website
+              </button>
+            </div>
+          </div>
+
+          {/* Social Media Links - Comprehensive */}
           <div className="tile mb-6 p-6">
             <div className="mb-6 flex items-center gap-3">
               <div
@@ -646,137 +1340,313 @@ function ProfileSettingsContent() {
               </div>
               <div>
                 <h2 className="text-xl font-semibold" style={{ color: 'var(--text)' }}>
-                  Connect & Links
+                  Social & Music Platforms
                 </h2>
                 <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  Share your social presence
+                  Connect all your platforms in one place
                 </p>
               </div>
-              {sectionCompletion.contact && (
-                <CheckCircle2 className="ml-auto h-6 w-6" style={{ color: 'var(--success)' }} />
-              )}
             </div>
 
-            <div className="space-y-5">
-              <div>
-                <label
-                  htmlFor="profile-phone"
-                  className="mb-2 flex items-center gap-2 text-sm font-medium"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  <Phone className="h-4 w-4" style={{ color: 'var(--accent)' }} />
-                  Phone Number
-                </label>
-                <input
-                  id="profile-phone"
-                  type="tel"
-                  value={profile.phone}
-                  onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                  placeholder="+1 (555) 123-4567"
-                  className="w-full rounded-lg px-4 py-3 transition-all duration-200"
-                  style={{
-                    background: 'var(--panel)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)',
-                  }}
-                />
+            {/* Music Streaming Platforms */}
+            <div className="mb-6">
+              <h3
+                className="mb-4 flex items-center gap-2 text-lg font-medium"
+                style={{ color: 'var(--text)' }}
+              >
+                <Music2 className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                Music Streaming
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {socialPlatforms
+                  .filter((p) =>
+                    [
+                      'spotify',
+                      'appleMusic',
+                      'soundcloud',
+                      'bandcamp',
+                      'audiomack',
+                      'tidal',
+                      'deezer',
+                      'amazonMusic',
+                    ].includes(p.key)
+                  )
+                  .map((platform) => (
+                    <div key={platform.key}>
+                      <label
+                        htmlFor={`social-${platform.key}`}
+                        className="mb-2 flex items-center gap-2 text-sm font-medium"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        <platform.icon className="h-4 w-4" style={{ color: platform.color }} />
+                        {platform.label}
+                      </label>
+                      <input
+                        id={`social-${platform.key}`}
+                        type="text"
+                        value={profile.socialLinks[platform.key as keyof SocialLinks] || ''}
+                        onChange={(e) => updateSocialLink(platform.key, e.target.value)}
+                        placeholder={platform.placeholder}
+                        className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                        style={{
+                          background: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                        }}
+                      />
+                    </div>
+                  ))}
               </div>
+            </div>
 
-              <div>
-                <label
-                  htmlFor="profile-website"
-                  className="mb-2 flex items-center gap-2 text-sm font-medium"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  <Globe className="h-4 w-4" style={{ color: 'var(--accent)' }} />
-                  Website
-                </label>
-                <input
-                  id="profile-website"
-                  type="url"
-                  value={profile.website}
-                  onChange={(e) => setProfile({ ...profile, website: e.target.value })}
-                  placeholder="https://yourwebsite.com"
-                  className="w-full rounded-lg px-4 py-3 transition-all duration-200"
-                  style={{
-                    background: 'var(--panel)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)',
-                  }}
-                />
+            {/* Video Platforms */}
+            <div className="mb-6">
+              <h3
+                className="mb-4 flex items-center gap-2 text-lg font-medium"
+                style={{ color: 'var(--text)' }}
+              >
+                <Video className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                Video Platforms
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {socialPlatforms
+                  .filter((p) => ['youtube', 'vimeo', 'twitch'].includes(p.key))
+                  .map((platform) => (
+                    <div key={platform.key}>
+                      <label
+                        htmlFor={`social-${platform.key}`}
+                        className="mb-2 flex items-center gap-2 text-sm font-medium"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        <platform.icon className="h-4 w-4" style={{ color: platform.color }} />
+                        {platform.label}
+                      </label>
+                      <input
+                        id={`social-${platform.key}`}
+                        type="text"
+                        value={profile.socialLinks[platform.key as keyof SocialLinks] || ''}
+                        onChange={(e) => updateSocialLink(platform.key, e.target.value)}
+                        placeholder={platform.placeholder}
+                        className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                        style={{
+                          background: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                        }}
+                      />
+                    </div>
+                  ))}
               </div>
+            </div>
 
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="profile-instagram"
-                    className="mb-2 flex items-center gap-2 text-sm font-medium"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    <Instagram className="h-4 w-4" style={{ color: '#E4405F' }} />
-                    Instagram
-                  </label>
-                  <input
-                    id="profile-instagram"
-                    type="text"
-                    value={profile.instagram}
-                    onChange={(e) => setProfile({ ...profile, instagram: e.target.value })}
-                    placeholder="@yourhandle"
-                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
-                    style={{
-                      background: 'var(--panel)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text)',
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="profile-youtube"
-                    className="mb-2 flex items-center gap-2 text-sm font-medium"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    <Youtube className="h-4 w-4" style={{ color: '#FF0000' }} />
-                    YouTube
-                  </label>
-                  <input
-                    id="profile-youtube"
-                    type="text"
-                    value={profile.youtube}
-                    onChange={(e) => setProfile({ ...profile, youtube: e.target.value })}
-                    placeholder="@yourchannel"
-                    className="w-full rounded-lg px-4 py-3 transition-all duration-200"
-                    style={{
-                      background: 'var(--panel)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text)',
-                    }}
-                  />
-                </div>
+            {/* Social Networks */}
+            <div className="mb-6">
+              <h3
+                className="mb-4 flex items-center gap-2 text-lg font-medium"
+                style={{ color: 'var(--text)' }}
+              >
+                <Instagram className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                Social Networks
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {socialPlatforms
+                  .filter((p) =>
+                    [
+                      'instagram',
+                      'twitter',
+                      'facebook',
+                      'tiktok',
+                      'threads',
+                      'bluesky',
+                      'mastodon',
+                      'linkedin',
+                    ].includes(p.key)
+                  )
+                  .map((platform) => (
+                    <div key={platform.key}>
+                      <label
+                        htmlFor={`social-${platform.key}`}
+                        className="mb-2 flex items-center gap-2 text-sm font-medium"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        <platform.icon className="h-4 w-4" style={{ color: platform.color }} />
+                        {platform.label}
+                      </label>
+                      <input
+                        id={`social-${platform.key}`}
+                        type="text"
+                        value={profile.socialLinks[platform.key as keyof SocialLinks] || ''}
+                        onChange={(e) => updateSocialLink(platform.key, e.target.value)}
+                        placeholder={platform.placeholder}
+                        className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                        style={{
+                          background: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                        }}
+                      />
+                    </div>
+                  ))}
               </div>
+            </div>
 
-              <div>
-                <label
-                  htmlFor="profile-twitter"
-                  className="mb-2 flex items-center gap-2 text-sm font-medium"
-                  style={{ color: 'var(--text-secondary)' }}
-                >
-                  <Twitter className="h-4 w-4" style={{ color: '#1DA1F2' }} />X (Twitter)
-                </label>
-                <input
-                  id="profile-twitter"
-                  type="text"
-                  value={profile.twitter}
-                  onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}
-                  placeholder="@yourhandle"
-                  className="w-full rounded-lg px-4 py-3 transition-all duration-200"
-                  style={{
-                    background: 'var(--panel)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)',
-                  }}
-                />
+            {/* Community & Messaging */}
+            <div className="mb-6">
+              <h3
+                className="mb-4 flex items-center gap-2 text-lg font-medium"
+                style={{ color: 'var(--text)' }}
+              >
+                <MessageCircle className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                Community & Messaging
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {socialPlatforms
+                  .filter((p) => ['discord', 'telegram'].includes(p.key))
+                  .map((platform) => (
+                    <div key={platform.key}>
+                      <label
+                        htmlFor={`social-${platform.key}`}
+                        className="mb-2 flex items-center gap-2 text-sm font-medium"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        <platform.icon className="h-4 w-4" style={{ color: platform.color }} />
+                        {platform.label}
+                      </label>
+                      <input
+                        id={`social-${platform.key}`}
+                        type="text"
+                        value={profile.socialLinks[platform.key as keyof SocialLinks] || ''}
+                        onChange={(e) => updateSocialLink(platform.key, e.target.value)}
+                        placeholder={platform.placeholder}
+                        className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                        style={{
+                          background: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                        }}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Live Music & Tours */}
+            <div className="mb-6">
+              <h3
+                className="mb-4 flex items-center gap-2 text-lg font-medium"
+                style={{ color: 'var(--text)' }}
+              >
+                <Radio className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                Live Music & Tours
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {socialPlatforms
+                  .filter((p) => ['songkick', 'bandsintown', 'genius'].includes(p.key))
+                  .map((platform) => (
+                    <div key={platform.key}>
+                      <label
+                        htmlFor={`social-${platform.key}`}
+                        className="mb-2 flex items-center gap-2 text-sm font-medium"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        <platform.icon className="h-4 w-4" style={{ color: platform.color }} />
+                        {platform.label}
+                      </label>
+                      <input
+                        id={`social-${platform.key}`}
+                        type="text"
+                        value={profile.socialLinks[platform.key as keyof SocialLinks] || ''}
+                        onChange={(e) => updateSocialLink(platform.key, e.target.value)}
+                        placeholder={platform.placeholder}
+                        className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                        style={{
+                          background: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                        }}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Support & Crowdfunding */}
+            <div className="mb-6">
+              <h3
+                className="mb-4 flex items-center gap-2 text-lg font-medium"
+                style={{ color: 'var(--text)' }}
+              >
+                <Globe className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                Support & Crowdfunding
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {socialPlatforms
+                  .filter((p) => ['patreon', 'kofi', 'buyMeACoffee'].includes(p.key))
+                  .map((platform) => (
+                    <div key={platform.key}>
+                      <label
+                        htmlFor={`social-${platform.key}`}
+                        className="mb-2 flex items-center gap-2 text-sm font-medium"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        <platform.icon className="h-4 w-4" style={{ color: platform.color }} />
+                        {platform.label}
+                      </label>
+                      <input
+                        id={`social-${platform.key}`}
+                        type="text"
+                        value={profile.socialLinks[platform.key as keyof SocialLinks] || ''}
+                        onChange={(e) => updateSocialLink(platform.key, e.target.value)}
+                        placeholder={platform.placeholder}
+                        className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                        style={{
+                          background: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                        }}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Link Aggregators */}
+            <div>
+              <h3
+                className="mb-4 flex items-center gap-2 text-lg font-medium"
+                style={{ color: 'var(--text)' }}
+              >
+                <LinkIcon className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+                Link Aggregators
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {socialPlatforms
+                  .filter((p) => ['linktree'].includes(p.key))
+                  .map((platform) => (
+                    <div key={platform.key}>
+                      <label
+                        htmlFor={`social-${platform.key}`}
+                        className="mb-2 flex items-center gap-2 text-sm font-medium"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        <platform.icon className="h-4 w-4" style={{ color: platform.color }} />
+                        {platform.label}
+                      </label>
+                      <input
+                        id={`social-${platform.key}`}
+                        type="text"
+                        value={profile.socialLinks[platform.key as keyof SocialLinks] || ''}
+                        onChange={(e) => updateSocialLink(platform.key, e.target.value)}
+                        placeholder={platform.placeholder}
+                        className="w-full rounded-lg px-4 py-3 transition-all duration-200"
+                        style={{
+                          background: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                        }}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           </div>

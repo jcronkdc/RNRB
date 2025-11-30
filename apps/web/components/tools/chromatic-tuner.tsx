@@ -28,6 +28,7 @@ export function ChromaticTuner() {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const rafIdRef = useRef<number | null>(null);
+  const pitchHistoryRef = useRef<number[]>([]);
 
   // Convert frequency to note
   const frequencyToNote = useCallback(
@@ -53,16 +54,15 @@ export function ChromaticTuner() {
     [referenceFreq]
   );
 
-  // Auto-correlation pitch detection algorithm
+  // YIN pitch detection algorithm (more accurate than basic auto-correlation)
   const detectPitch = useCallback(
     (buffer: Float32Array, sampleRate: number): number | null => {
       const SIZE = buffer.length;
-      const MAX_SAMPLES = Math.floor(SIZE / 2);
-      let bestOffset = -1;
-      let bestCorrelation = 0;
-      let rms = 0;
+      const yinBufferSize = Math.floor(SIZE / 2);
+      const yinBuffer = new Float32Array(yinBufferSize);
 
       // Calculate RMS (volume level)
+      let rms = 0;
       for (let i = 0; i < SIZE; i++) {
         rms += buffer[i] * buffer[i];
       }
@@ -71,38 +71,59 @@ export function ChromaticTuner() {
       // Not enough signal
       if (rms < sensitivity) return null;
 
-      let lastCorrelation = 1;
-      for (let offset = 0; offset < MAX_SAMPLES; offset++) {
-        let correlation = 0;
+      // Step 1: Calculate difference function
+      let runningSum = 0;
+      yinBuffer[0] = 1;
 
-        for (let i = 0; i < MAX_SAMPLES; i++) {
-          correlation += Math.abs(buffer[i] - buffer[i + offset]);
+      for (let tau = 1; tau < yinBufferSize; tau++) {
+        yinBuffer[tau] = 0;
+        for (let i = 0; i < yinBufferSize; i++) {
+          const delta = buffer[i] - buffer[i + tau];
+          yinBuffer[tau] += delta * delta;
         }
 
-        correlation = 1 - correlation / MAX_SAMPLES;
+        // Step 2: Cumulative mean normalized difference
+        runningSum += yinBuffer[tau];
+        yinBuffer[tau] *= tau / runningSum;
+      }
 
-        if (correlation > 0.9 && correlation > lastCorrelation) {
-          if (correlation > bestCorrelation) {
-            bestCorrelation = correlation;
-            bestOffset = offset;
+      // Step 3: Absolute threshold - find first dip below threshold
+      const threshold = 0.1;
+      let tauEstimate = -1;
+
+      for (let tau = 2; tau < yinBufferSize; tau++) {
+        if (yinBuffer[tau] < threshold) {
+          // Find local minimum
+          while (tau + 1 < yinBufferSize && yinBuffer[tau + 1] < yinBuffer[tau]) {
+            tau++;
           }
+          tauEstimate = tau;
+          break;
         }
-        lastCorrelation = correlation;
       }
 
-      if (bestCorrelation > 0.01 && bestOffset > 0) {
-        // Quadratic interpolation for better accuracy
-        const shift =
-          (buffer[bestOffset + 1] - buffer[bestOffset - 1]) /
-          (2 * (2 * buffer[bestOffset] - buffer[bestOffset - 1] - buffer[bestOffset + 1]));
-        return sampleRate / (bestOffset + (shift || 0));
+      // No pitch found
+      if (tauEstimate === -1) return null;
+
+      // Step 4: Parabolic interpolation for better precision
+      let betterTau: number;
+      if (tauEstimate < 1) {
+        betterTau = tauEstimate;
+      } else if (tauEstimate >= yinBufferSize - 1) {
+        betterTau = tauEstimate;
+      } else {
+        const s0 = yinBuffer[tauEstimate - 1];
+        const s1 = yinBuffer[tauEstimate];
+        const s2 = yinBuffer[tauEstimate + 1];
+        betterTau = tauEstimate + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
       }
-      return null;
+
+      return sampleRate / betterTau;
     },
     [sensitivity]
   );
 
-  // Main analysis loop
+  // Main analysis loop with smoothing
   const analyze = useCallback(() => {
     if (!analyserRef.current || !audioContextRef.current) return;
 
@@ -113,7 +134,19 @@ export function ChromaticTuner() {
     const pitch = detectPitch(buffer, audioContextRef.current.sampleRate);
 
     if (pitch && pitch > 20 && pitch < 5000) {
-      setTunerState(frequencyToNote(pitch));
+      // Add to history for smoothing
+      pitchHistoryRef.current.push(pitch);
+
+      // Keep last 5 readings for moving average
+      if (pitchHistoryRef.current.length > 5) {
+        pitchHistoryRef.current.shift();
+      }
+
+      // Calculate median (more stable than average)
+      const sorted = [...pitchHistoryRef.current].sort((a, b) => a - b);
+      const median = sorted[Math.floor(sorted.length / 2)];
+
+      setTunerState(frequencyToNote(median));
     }
 
     rafIdRef.current = requestAnimationFrame(analyze);
@@ -161,6 +194,7 @@ export function ChromaticTuner() {
       audioContextRef.current.close();
       audioContextRef.current = null;
     }
+    pitchHistoryRef.current = [];
     setIsListening(false);
     setTunerState(null);
   }, []);

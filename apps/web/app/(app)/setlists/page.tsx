@@ -20,6 +20,7 @@ import {
   Presentation,
   Wrench,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
@@ -126,44 +127,38 @@ export default function SetlistsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
-      <div className="mx-auto max-w-7xl px-4 py-12">
-        {/* Animated background elements */}
-        <div className="pointer-events-none fixed inset-0 overflow-hidden">
-          <motion.div
-            className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="absolute -right-40 bottom-20 h-96 w-96 rounded-full bg-red-500/5 blur-3xl"
-            animate={{
-              scale: [1.2, 1, 1.2],
-              opacity: [0.5, 0.3, 0.5],
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          />
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        {/* Logo */}
+        <div className="mb-6 flex justify-center">
+          <Link href="/" className="group inline-block">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={140}
+              height={56}
+              priority
+              className="transition-opacity duration-200 group-hover:opacity-80"
+            />
+          </Link>
         </div>
 
         {/* Header */}
-        <div className="relative mb-12">
+        <div className="relative mb-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 p-4 shadow-lg shadow-orange-500/20">
-                <ListMusic className="h-8 w-8 text-white" />
+              <div className="rounded-xl p-3" style={{ background: 'rgba(255, 99, 71, 0.15)' }}>
+                <ListMusic className="h-7 w-7" style={{ color: 'var(--accent)' }} />
               </div>
               <div>
-                <h1 className="bg-gradient-to-r from-orange-500 via-red-500 to-orange-500 bg-clip-text text-5xl font-black text-transparent">
+                <h1 className="text-3xl font-bold" style={{ color: 'var(--text)' }}>
                   Smart Setlists
                 </h1>
-                <p className="mt-2 text-lg text-gray-400">
+                <p className="mt-1" style={{ color: 'var(--muted)' }}>
                   AI-powered setlist generation • Performance mode • Real-time sync
                 </p>
               </div>

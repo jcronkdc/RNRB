@@ -198,13 +198,6 @@ export default function ExperimentPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
-      {/* Floating Elements */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
-        <div className="absolute -right-32 bottom-1/4 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
-        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-blue-500/5 blur-3xl" />
-      </div>
-
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-8">
         {/* Header */}
         <motion.div
@@ -214,13 +207,12 @@ export default function ExperimentPage() {
         >
           <Link href="/" className="group mb-6 inline-block">
             <Image
-              src="/logo-light.png"
+              src="/logo-dark.png"
               alt="Rock N' Roll Basement"
               width={140}
               height={57}
               priority
               className="transition-transform group-hover:scale-105"
-              style={{ filter: 'drop-shadow(0 0 20px rgba(147, 51, 234, 0.3))' }}
             />
           </Link>
 
@@ -234,13 +226,20 @@ export default function ExperimentPage() {
             </Link>
           </div>
 
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2">
-            <FlaskConical className="h-5 w-5 text-orange-400" />
-            <span className="font-bold text-orange-400">EXPERIMENT PLAYGROUND</span>
+          <div
+            className="mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2"
+            style={{ background: 'rgba(255, 99, 71, 0.15)', border: '1px solid var(--border)' }}
+          >
+            <FlaskConical className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+            <span className="font-bold" style={{ color: 'var(--accent)' }}>
+              EXPERIMENT PLAYGROUND
+            </span>
           </div>
 
-          <h1 className="mb-2 text-3xl font-bold text-white md:text-4xl">AI Stem Generator</h1>
-          <p className="mx-auto max-w-2xl text-gray-400">
+          <h1 className="mb-2 text-3xl font-bold md:text-4xl" style={{ color: 'var(--text)' }}>
+            AI Stem Generator
+          </h1>
+          <p className="mx-auto max-w-2xl" style={{ color: 'var(--muted)' }}>
             Experience the future of AI music. Enter a creative prompt and watch as individual stems
             are generated. Regenerate any stem or replace it with your own recording.
           </p>

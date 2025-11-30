@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ClipboardList,
@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Music,
   Save,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
 
@@ -38,6 +39,24 @@ interface SessionNote {
   settings: string;
   notes: string;
   tags: string[];
+}
+
+// API Response type
+interface ApiRecordingNote {
+  id: string;
+  title: string;
+  date?: string;
+  createdAt: string;
+  song?: { title: string };
+  instrument?: string;
+  microphone?: string;
+  preamp?: string;
+  settings?: Record<string, unknown>;
+  signalChain?: string;
+  notes?: string;
+  whatWorked?: string;
+  whatToImprove?: string;
+  tags?: string[];
 }
 
 const TRACK_TYPES = [
@@ -91,20 +110,62 @@ export function SessionNotes() {
   const [showEditor, setShowEditor] = useState(false);
   const [editingSession, setEditingSession] = useState<Partial<SessionNote>>(DEFAULT_SESSION);
   const [expandedSessions, setExpandedSessions] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  // Load from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('session-notes');
-    if (saved) {
-      try {
-        setSessions(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to load session notes:', e);
+  // Transform API response to component format
+  const transformApiNote = (apiNote: ApiRecordingNote): SessionNote => ({
+    id: apiNote.id,
+    title: apiNote.title,
+    date: apiNote.date || apiNote.createdAt.split('T')[0],
+    songName: apiNote.song?.title || '',
+    trackType: (apiNote.instrument as SessionNote['trackType']) || 'other',
+    microphone: apiNote.microphone || '',
+    preamp: apiNote.preamp || '',
+    eq: (apiNote.settings as Record<string, string>)?.eq || '',
+    compression: (apiNote.settings as Record<string, string>)?.compression || '',
+    effects: [],
+    signalChain: apiNote.signalChain ? apiNote.signalChain.split(' → ') : [],
+    position: '',
+    settings: JSON.stringify(apiNote.settings || {}),
+    notes: [apiNote.notes, apiNote.whatWorked, apiNote.whatToImprove].filter(Boolean).join('\n\n'),
+    tags: apiNote.tags || [],
+  });
+
+  // Fetch notes from API with localStorage fallback
+  const fetchNotes = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/tools/recording-notes?limit=50');
+      if (res.ok) {
+        const data = await res.json();
+        setSessions((data || []).map(transformApiNote));
+      } else if (res.status !== 401) {
+        // Fallback to localStorage on API error (not auth)
+        const saved = localStorage.getItem('session-notes');
+        if (saved) setSessions(JSON.parse(saved));
       }
+    } catch {
+      // Fallback to localStorage on network error
+      const saved = localStorage.getItem('session-notes');
+      if (saved) {
+        try {
+          setSessions(JSON.parse(saved));
+        } catch (e) {
+          console.error('Failed to load session notes:', e);
+        }
+      }
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  // Save to localStorage
+  // Load data on mount
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
+
+  // Also save to localStorage as backup
   useEffect(() => {
     if (sessions.length > 0) {
       localStorage.setItem('session-notes', JSON.stringify(sessions));
@@ -122,9 +183,9 @@ export function SessionNotes() {
     return matchesSearch && matchesType;
   });
 
-  // Save session
-  const saveSession = () => {
-    if (!editingSession.title || !editingSession.songName) return;
+  // Save session to API
+  const saveSession = async () => {
+    if (!editingSession.title) return;
 
     const session: SessionNote = {
       id: editingSession.id || `session-${Date.now()}`,
@@ -144,10 +205,58 @@ export function SessionNotes() {
       tags: editingSession.tags || [],
     };
 
-    if (editingSession.id) {
-      setSessions(sessions.map((s) => (s.id === session.id ? session : s)));
-    } else {
-      setSessions([session, ...sessions]);
+    setSaving(true);
+    try {
+      const apiPayload = {
+        title: session.title,
+        instrument: session.trackType,
+        microphone: session.microphone || null,
+        preamp: session.preamp || null,
+        settings: {
+          eq: session.eq,
+          compression: session.compression,
+          raw: session.settings,
+        },
+        signalChain: session.signalChain.join(' → ') || null,
+        notes: session.notes || null,
+        tags: session.tags,
+      };
+
+      if (editingSession.id) {
+        const res = await fetch('/api/tools/recording-notes', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: editingSession.id, ...apiPayload }),
+        });
+        if (res.ok) {
+          setSessions(sessions.map((s) => (s.id === session.id ? session : s)));
+        } else {
+          // Fallback to local state update
+          setSessions(sessions.map((s) => (s.id === session.id ? session : s)));
+        }
+      } else {
+        const res = await fetch('/api/tools/recording-notes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(apiPayload),
+        });
+        if (res.ok) {
+          const newNote = await res.json();
+          setSessions([transformApiNote(newNote), ...sessions]);
+        } else {
+          // Fallback to local state update
+          setSessions([session, ...sessions]);
+        }
+      }
+    } catch {
+      // Fallback to local state on error
+      if (editingSession.id) {
+        setSessions(sessions.map((s) => (s.id === session.id ? session : s)));
+      } else {
+        setSessions([session, ...sessions]);
+      }
+    } finally {
+      setSaving(false);
     }
 
     setShowEditor(false);

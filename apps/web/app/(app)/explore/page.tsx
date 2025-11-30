@@ -125,122 +125,74 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
-      {/* Floating Music Notes */}
-      <div className="music-notes-container pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="music-note"
-            style={{
-              left: `${5 + i * 8}%`,
-              animationDelay: `${i * 0.7}s`,
-              fontSize: `${18 + (i % 4) * 8}px`,
-            }}
-          >
-            {['♪', '♫', '♬', '♩'][i % 4]}
-          </div>
-        ))}
-      </div>
-
-      {/* Animated Background Gradient Orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="gradient-orb gradient-orb-1"></div>
-        <div className="gradient-orb gradient-orb-2"></div>
-        <div className="gradient-orb gradient-orb-3"></div>
-        <div className="gradient-orb-accent"></div>
-      </div>
-
-      {/* Hero Grid Pattern */}
-      <div className="hero-grid-pattern"></div>
-
+    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Hero Section */}
-      <div className="relative z-10 border-b border-border/50">
+      <div className="relative z-10 border-b" style={{ borderColor: 'var(--border)' }}>
         <div className="mx-auto max-w-7xl px-4 py-8">
-          {/* White RR Logo & Title */}
+          {/* Logo */}
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8 flex flex-col items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="mb-6 flex justify-center"
           >
-            <Link href="/" className="group relative inline-block">
+            <Link href="/" className="group inline-block">
               <Image
-                src="/logo-light.png"
+                src="/logo-dark.png"
                 alt="Rock N' Roll Basement"
-                width={160}
-                height={65}
+                width={140}
+                height={56}
                 priority
-                className="transition-all duration-300 group-hover:scale-105"
-                style={{
-                  filter:
-                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
-                }}
-              />
-              <div
-                className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+                className="transition-opacity duration-200 group-hover:opacity-80"
               />
             </Link>
-            <h1 className="hero-title mt-4 text-center">
-              <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
-                Rock N' Roll Basement
-              </span>
-            </h1>
-            <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
-              Explore
-            </p>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
-            {/* Accent bar */}
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: 60 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="mb-4 h-1 rounded-full"
-              style={{ background: 'linear-gradient(90deg, var(--accent), #ffd700)' }}
-            />
-
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <div className="mb-3 flex items-center gap-3">
-                  <div
-                    className="flex h-12 w-12 items-center justify-center rounded-xl"
-                    style={{ background: 'rgba(255, 99, 71, 0.2)' }}
-                  >
-                    <Compass className="h-6 w-6" style={{ color: 'var(--accent)' }} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
-                      Community Tracks
-                    </p>
-                    <h1 className="text-4xl font-bold" style={{ color: 'var(--text)' }}>
-                      Explore
-                    </h1>
-                  </div>
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-xl"
+                  style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+                >
+                  <Compass className="h-6 w-6" style={{ color: 'var(--accent)' }} />
                 </div>
-                <p className="max-w-2xl text-lg" style={{ color: 'var(--muted)' }}>
-                  Discover trending tracks and find inspiration from the community
-                </p>
+                <div>
+                  <h1 className="text-3xl font-bold" style={{ color: 'var(--text)' }}>
+                    Explore
+                  </h1>
+                  <p style={{ color: 'var(--muted)' }}>
+                    Discover trending tracks and find inspiration from the community
+                  </p>
+                </div>
               </div>
 
               {/* Quick Stats */}
               <div className="flex gap-3">
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm">
+                <div
+                  className="rounded-xl px-4 py-2"
+                  style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                >
                   <div className="flex items-center gap-2">
-                    <Music2 className="h-4 w-4 text-cyan-400" />
-                    <span className="text-sm text-gray-300">{tracks.length} Tracks</span>
+                    <Music2 className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    <span className="text-sm" style={{ color: 'var(--text)' }}>
+                      {tracks.length} Tracks
+                    </span>
                   </div>
                 </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm">
+                <div
+                  className="rounded-xl px-4 py-2"
+                  style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                >
                   <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-purple-400" />
-                    <span className="text-sm text-gray-300">AI Generated</span>
+                    <Sparkles className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    <span className="text-sm" style={{ color: 'var(--text)' }}>
+                      AI Generated
+                    </span>
                   </div>
                 </div>
               </div>

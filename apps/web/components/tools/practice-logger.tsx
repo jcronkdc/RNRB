@@ -16,6 +16,7 @@ import {
   BarChart3,
   CheckCircle,
   Star,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
 
@@ -35,6 +36,24 @@ interface PracticeGoal {
   currentMinutes: number;
 }
 
+// API Response types
+interface ApiPracticeSession {
+  id: string;
+  title?: string;
+  durationMinutes?: number;
+  startTime: string;
+  notes?: string;
+  rating?: number;
+  song?: { title: string };
+}
+
+interface ApiPracticeGoal {
+  id: string;
+  type: string;
+  targetMinutes: number;
+  currentMinutes: number;
+}
+
 export function PracticeLogger() {
   const [isRunning, setIsRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -49,81 +68,118 @@ export function PracticeLogger() {
   const [streak, setStreak] = useState(0);
   const [sessionNotes, setSessionNotes] = useState('');
   const [sessionRating, setSessionRating] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
 
-  // Load data from localStorage
-  useEffect(() => {
-    const savedSessions = localStorage.getItem('practice-sessions');
-    const savedGoals = localStorage.getItem('practice-goals');
+  // Transform API session to component format
+  const transformSession = (apiSession: ApiPracticeSession): PracticeSession => ({
+    id: apiSession.id,
+    songName: apiSession.song?.title || apiSession.title || 'Practice Session',
+    duration: (apiSession.durationMinutes || 0) * 60,
+    date: apiSession.startTime,
+    notes: apiSession.notes || '',
+    rating: apiSession.rating || 0,
+  });
 
-    if (savedSessions) {
-      try {
-        setSessions(JSON.parse(savedSessions));
-      } catch (e) {
-        console.error('Failed to parse practice sessions:', e);
-      }
-    }
-    if (savedGoals) {
-      try {
-        setGoals(JSON.parse(savedGoals));
-      } catch (e) {
-        console.error('Failed to parse practice goals:', e);
-      }
-    }
+  // Transform API goal to component format
+  const transformGoal = (apiGoal: ApiPracticeGoal): PracticeGoal => ({
+    id: apiGoal.id,
+    type: apiGoal.type as 'daily' | 'weekly' | 'monthly',
+    targetMinutes: apiGoal.targetMinutes,
+    currentMinutes: apiGoal.currentMinutes,
+  });
 
-    calculateStreak();
+  // Fetch data from API (with localStorage fallback)
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      // Try to fetch from API
+      const [sessionsRes, goalsRes] = await Promise.all([
+        fetch('/api/tools/practice?limit=50'),
+        fetch('/api/tools/practice/goals'),
+      ]);
+
+      if (sessionsRes.ok) {
+        const sessionsData = await sessionsRes.json();
+        setSessions((sessionsData.sessions || []).map(transformSession));
+      } else if (sessionsRes.status !== 401) {
+        // Fallback to localStorage if API fails (not auth error)
+        const savedSessions = localStorage.getItem('practice-sessions');
+        if (savedSessions) setSessions(JSON.parse(savedSessions));
+      }
+
+      if (goalsRes.ok) {
+        const goalsData = await goalsRes.json();
+        if (goalsData.length > 0) {
+          setGoals(goalsData.map(transformGoal));
+        }
+      }
+    } catch {
+      // Fallback to localStorage on network error
+      const savedSessions = localStorage.getItem('practice-sessions');
+      if (savedSessions) {
+        try {
+          setSessions(JSON.parse(savedSessions));
+        } catch (e) {
+          console.error('Failed to parse practice sessions:', e);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Save data to localStorage
+  // Load data on mount
   useEffect(() => {
-    localStorage.setItem('practice-sessions', JSON.stringify(sessions));
+    fetchData();
+  }, [fetchData]);
+
+  // Calculate goal progress and streak when sessions change
+  useEffect(() => {
     calculateGoalProgress();
-  }, [sessions]);
+    calculateStreak();
+    // Also save to localStorage as backup
+    localStorage.setItem('practice-sessions', JSON.stringify(sessions));
+  }, [sessions, calculateStreak]);
 
   useEffect(() => {
     localStorage.setItem('practice-goals', JSON.stringify(goals));
   }, [goals]);
 
-  // Calculate practice streak
+  // Calculate practice streak from sessions state
   const calculateStreak = useCallback(() => {
-    const savedSessions = localStorage.getItem('practice-sessions');
-    if (!savedSessions) {
+    if (sessions.length === 0) {
       setStreak(0);
       return;
     }
 
-    try {
-      const parsedSessions: PracticeSession[] = JSON.parse(savedSessions);
-      const dates = [...new Set(parsedSessions.map((s) => s.date.split('T')[0]))].sort().reverse();
+    const dates = [...new Set(sessions.map((s) => s.date.split('T')[0]))].sort().reverse();
 
-      let currentStreak = 0;
-      const today = new Date().toISOString().split('T')[0];
-      const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+    let currentStreak = 0;
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-      // Check if practiced today or yesterday
-      if (dates[0] === today || dates[0] === yesterday) {
-        currentStreak = 1;
+    // Check if practiced today or yesterday
+    if (dates[0] === today || dates[0] === yesterday) {
+      currentStreak = 1;
 
-        for (let i = 1; i < dates.length; i++) {
-          const prevDate = new Date(dates[i - 1]);
-          const currDate = new Date(dates[i]);
-          const diff = (prevDate.getTime() - currDate.getTime()) / 86400000;
+      for (let i = 1; i < dates.length; i++) {
+        const prevDate = new Date(dates[i - 1]);
+        const currDate = new Date(dates[i]);
+        const diff = (prevDate.getTime() - currDate.getTime()) / 86400000;
 
-          if (diff === 1) {
-            currentStreak++;
-          } else {
-            break;
-          }
+        if (diff === 1) {
+          currentStreak++;
+        } else {
+          break;
         }
       }
-
-      setStreak(currentStreak);
-    } catch (e) {
-      setStreak(0);
     }
-  }, []);
+
+    setStreak(currentStreak);
+  }, [sessions]);
 
   // Calculate goal progress
   const calculateGoalProgress = useCallback(() => {

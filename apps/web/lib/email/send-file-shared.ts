@@ -2,7 +2,9 @@ import { Resend } from 'resend';
 
 import { FileSharedEmail } from './templates/file-shared';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Only initialize Resend if API key is available (prevents build errors)
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 interface SendFileSharedEmailParams {
   to: string;
@@ -25,7 +27,7 @@ export async function sendFileSharedEmail({
   canDownload,
   expiresAt,
 }: SendFileSharedEmailParams) {
-  if (!process.env.RESEND_API_KEY) {
+  if (!resend) {
     console.warn('RESEND_API_KEY not set, skipping email notification');
     return null;
   }

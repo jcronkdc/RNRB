@@ -10,7 +10,7 @@ import {
   Progress,
 } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { AlertCircle, TrendingUp, Calendar, Zap, BarChart3, Sparkles } from 'lucide-react';
+import { AlertCircle, TrendingUp, Calendar, Zap, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -130,59 +130,57 @@ export default function UsagePage() {
     usage.ai.percentage > 80 || usage.video.percentage > 80 || usage.storage.percentage > 80;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
-      {/* Animated Background Orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-32 -top-32 h-96 w-96 animate-pulse rounded-full bg-yellow-500/20 blur-[100px]" />
-        <div
-          className="absolute -right-32 top-1/4 h-80 w-80 animate-pulse rounded-full bg-orange-500/15 blur-[100px]"
-          style={{ animationDelay: '1s' }}
-        />
-        <div
-          className="absolute bottom-1/4 left-1/3 h-72 w-72 animate-pulse rounded-full bg-red-500/10 blur-[100px]"
-          style={{ animationDelay: '2s' }}
-        />
-      </div>
-
-      {/* Subtle grid overlay */}
-      <div
-        className="pointer-events-none fixed inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }}
-      />
-
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)' }}>
       {/* Hero Section */}
-      <div className="relative z-10 border-b border-white/10 bg-gradient-to-r from-yellow-900/20 via-black to-orange-900/20">
+      <div style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'var(--panel)' }}>
         <div className="mx-auto max-w-4xl px-6 py-12">
-          {/* Gradient accent bar */}
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: 96 }}
-            className="mb-6 h-1 rounded-full bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500"
+          {/* Accent bar */}
+          <div
+            style={{
+              marginBottom: '24px',
+              height: '4px',
+              width: '48px',
+              borderRadius: '2px',
+              backgroundColor: 'var(--accent)',
+            }}
           />
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm">
-                <BarChart3 className="h-7 w-7 text-yellow-400" />
+              <div
+                style={{
+                  display: 'flex',
+                  height: '56px',
+                  width: '56px',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 'var(--radius)',
+                  backgroundColor: 'var(--bg)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                <BarChart3 style={{ height: '28px', width: '28px', color: 'var(--accent)' }} />
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-3xl font-bold text-transparent">
-                    Usage & Limits
-                  </h1>
-                  <Sparkles className="h-5 w-5 text-yellow-400" />
-                </div>
-                <p className="mt-1 text-gray-400">
+                <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: 'var(--text)' }}>
+                  Usage & Limits
+                </h1>
+                <p style={{ marginTop: '4px', color: 'var(--muted)' }}>
                   Current plan:{' '}
-                  <span className="font-semibold text-yellow-400">{tierDisplayName}</span>
+                  <span style={{ fontWeight: '600', color: 'var(--accent)' }}>
+                    {tierDisplayName}
+                  </span>
                 </p>
               </div>
             </div>
             <Link href="/settings/billing">
-              <Button className="bg-gradient-to-r from-yellow-500 to-orange-500 font-semibold text-black hover:from-yellow-600 hover:to-orange-600">
+              <Button
+                style={{
+                  backgroundColor: 'var(--accent)',
+                  color: 'var(--text)',
+                  fontWeight: '600',
+                }}
+              >
                 Manage Plan
               </Button>
             </Link>

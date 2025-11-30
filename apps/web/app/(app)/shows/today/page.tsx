@@ -105,20 +105,16 @@ export default function DayOfShowPage() {
 
   if (loading || loadingShow) {
     return (
-      <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black">
-        {/* Animated Background Orbs */}
-        <div className="pointer-events-none fixed inset-0 overflow-hidden">
-          <div className="absolute -left-32 -top-32 h-96 w-96 animate-pulse rounded-full bg-orange-500/20 blur-[100px]" />
-          <div className="absolute -right-32 top-1/4 h-80 w-80 animate-pulse rounded-full bg-pink-500/15 blur-[100px]" />
-        </div>
-        <div className="relative z-10 text-center">
-          <div className="relative mx-auto mb-4 h-14 w-14">
-            <div className="absolute inset-0 animate-ping rounded-full bg-orange-500/30" />
-            <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-orange-500/20">
-              <Loader2 className="h-7 w-7 animate-spin text-orange-400" />
-            </div>
-          </div>
-          <p className="text-lg text-gray-400">Loading show details...</p>
+      <div
+        className="relative flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
+        <div className="text-center">
+          <Loader2
+            className="mx-auto mb-4 h-10 w-10 animate-spin"
+            style={{ color: 'var(--accent)' }}
+          />
+          <p style={{ color: 'var(--muted)' }}>Loading show details...</p>
         </div>
       </div>
     );
@@ -126,15 +122,8 @@ export default function DayOfShowPage() {
 
   if (!show) {
     return (
-      <div className="relative min-h-screen overflow-hidden bg-black">
-        {/* Animated Background Orbs */}
-        <div className="pointer-events-none fixed inset-0 overflow-hidden">
-          <div className="absolute -left-32 -top-32 h-96 w-96 animate-pulse rounded-full bg-orange-500/20 blur-[100px]" />
-          <div className="absolute -right-32 top-1/4 h-80 w-80 animate-pulse rounded-full bg-pink-500/15 blur-[100px]" />
-          <div className="absolute bottom-1/4 left-1/3 h-72 w-72 animate-pulse rounded-full bg-purple-500/10 blur-[100px]" />
-        </div>
-
-        <div className="relative z-10 min-h-screen px-4 py-12">
+      <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
+        <div className="min-h-screen px-4 py-12">
           <div className="mx-auto max-w-2xl">
             {/* Toast Notifications */}
             <ToastNotification toasts={toasts} onRemove={removeToast} />
@@ -142,7 +131,8 @@ export default function DayOfShowPage() {
             <Link href="/shows">
               <Button
                 variant="ghost"
-                className="mb-6 flex items-center gap-2 text-gray-400 hover:text-white"
+                className="mb-6 flex items-center gap-2"
+                style={{ color: 'var(--muted)' }}
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to Shows
@@ -150,17 +140,21 @@ export default function DayOfShowPage() {
             </Link>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
               className="py-12 text-center"
             >
-              <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-500/20 to-pink-500/20">
-                <Calendar className="h-12 w-12 text-orange-400" />
+              <div
+                className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-xl"
+                style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+              >
+                <Calendar className="h-10 w-10" style={{ color: 'var(--accent)' }} />
               </div>
-              <h2 className="font-display mb-3 bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-2xl font-bold text-transparent">
+              <h2 className="mb-3 text-2xl font-bold" style={{ color: 'var(--text)' }}>
                 No Shows Today
               </h2>
-              <p className="mx-auto mb-6 max-w-md text-gray-400">
+              <p className="mx-auto mb-6 max-w-md" style={{ color: 'var(--muted)' }}>
                 You don&apos;t have any shows scheduled for today. Check your calendar to see
                 upcoming gigs.
               </p>
@@ -168,13 +162,14 @@ export default function DayOfShowPage() {
                 <Link href="/shows">
                   <Button
                     variant="outline"
-                    className="border-white/10 bg-white/5 text-gray-300 hover:bg-white/10"
+                    className="border"
+                    style={{ borderColor: 'var(--border)', color: 'var(--text)' }}
                   >
                     View All Shows
                   </Button>
                 </Link>
                 <Link href="/shows/new">
-                  <Button className="bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600">
+                  <Button className="text-white" style={{ background: 'var(--accent)' }}>
                     <Sparkles className="mr-2 h-4 w-4" />
                     Schedule a Show
                   </Button>
@@ -196,25 +191,15 @@ export default function DayOfShowPage() {
   })();
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black pb-12">
-      {/* Animated Background Orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-32 -top-32 h-96 w-96 animate-pulse rounded-full bg-orange-500/20 blur-[100px]" />
-        <div
-          className="absolute -right-32 top-1/4 h-80 w-80 animate-pulse rounded-full bg-pink-500/15 blur-[100px]"
-          style={{ animationDelay: '1s' }}
-        />
-        <div
-          className="absolute bottom-1/4 left-1/3 h-72 w-72 animate-pulse rounded-full bg-purple-500/10 blur-[100px]"
-          style={{ animationDelay: '2s' }}
-        />
-      </div>
-
+    <div className="relative min-h-screen pb-12" style={{ background: 'var(--bg)' }}>
       {/* Toast Notifications */}
       <ToastNotification toasts={toasts} onRemove={removeToast} />
 
       {/* Header */}
-      <div className="sticky top-0 z-20 border-b border-white/10 bg-black/90 px-4 py-4 backdrop-blur-xl">
+      <div
+        className="sticky top-0 z-20 border-b px-4 py-4"
+        style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
+      >
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/shows">
             <Button

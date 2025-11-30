@@ -20,20 +20,19 @@ import {
   Calendar,
   Radio,
   Plus,
-  TrendingUp,
-  DollarSign,
   ChevronDown,
   Loader2,
   Edit,
   Trash2,
   ExternalLink,
   Search,
-  BarChart3,
-  Lock,
+  Navigation,
   ArrowUpRight,
   Sparkles,
   Crown,
   LayoutGrid,
+  Ticket,
+  Clock,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -297,8 +296,8 @@ export default function ToursPage() {
               <span className="font-bold" style={{ color: 'var(--accent)' }}>
                 {toursError.requiredTier}
               </span>{' '}
-              to access professional tour management with analytics, routing optimization, and
-              financial tracking.
+              to access professional tour management with scheduling, routing optimization, and show
+              tracking.
             </p>
 
             {/* CTA Buttons */}
@@ -352,23 +351,23 @@ export default function ToursPage() {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {[
                   {
-                    icon: BarChart3,
-                    title: 'Analytics Dashboard',
-                    desc: 'Revenue tracking & attendance metrics',
+                    icon: Calendar,
+                    title: 'Show Scheduling',
+                    desc: 'Manage dates, venues & ticket links',
                     color: '#22c55e',
                     gradient: 'rgba(34, 197, 94, 0.15)',
                   },
                   {
-                    icon: MapPin,
+                    icon: Navigation,
                     title: 'Smart Routing',
-                    desc: 'Optimize travel & reduce costs',
+                    desc: 'Optimize travel between shows',
                     color: '#3b82f6',
                     gradient: 'rgba(59, 130, 246, 0.15)',
                   },
                   {
-                    icon: DollarSign,
-                    title: 'Financial Tracking',
-                    desc: 'Profit/loss & expense breakdowns',
+                    icon: Ticket,
+                    title: 'Ticket Links',
+                    desc: 'Direct links to purchase tickets',
                     color: '#a855f7',
                     gradient: 'rgba(168, 85, 247, 0.15)',
                   },
@@ -418,37 +417,9 @@ export default function ToursPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Toast Notifications */}
       <ToastNotification toasts={toasts} onRemove={removeToast} />
-
-      {/* Floating Music Notes */}
-      <div className="music-notes-container pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="music-note"
-            style={{
-              left: `${5 + i * 8}%`,
-              animationDelay: `${i * 0.7}s`,
-              fontSize: `${18 + (i % 4) * 8}px`,
-            }}
-          >
-            {['♪', '♫', '♬', '♩'][i % 4]}
-          </div>
-        ))}
-      </div>
-
-      {/* Animated Background Gradient Orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="gradient-orb gradient-orb-1"></div>
-        <div className="gradient-orb gradient-orb-2"></div>
-        <div className="gradient-orb gradient-orb-3"></div>
-        <div className="gradient-orb-accent"></div>
-      </div>
-
-      {/* Hero Grid Pattern */}
-      <div className="hero-grid-pattern"></div>
 
       {/* Hero Section */}
       <div
@@ -456,39 +427,23 @@ export default function ToursPage() {
         style={{ borderColor: 'var(--border)' }}
       >
         <div className="px-4 py-8">
-          {/* White RR Logo & Title */}
+          {/* Logo */}
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8 flex flex-col items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="mb-6 flex justify-center"
           >
-            <Link href="/" className="group relative inline-block">
+            <Link href="/" className="group inline-block">
               <Image
-                src="/logo-light.png"
+                src="/logo-dark.png"
                 alt="Rock N' Roll Basement"
-                width={160}
-                height={65}
+                width={140}
+                height={56}
                 priority
-                className="transition-all duration-300 group-hover:scale-105"
-                style={{
-                  filter:
-                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
-                }}
-              />
-              <div
-                className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+                className="transition-opacity duration-200 group-hover:opacity-80"
               />
             </Link>
-            <h1 className="hero-title mt-4 text-center">
-              <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
-                Rock N' Roll Basement
-              </span>
-            </h1>
-            <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
-              Tours & Shows
-            </p>
           </motion.div>
 
           <div className="mx-auto max-w-7xl">
@@ -516,8 +471,7 @@ export default function ToursPage() {
                 Tours & Shows
               </h1>
               <p className="mx-auto max-w-xl text-lg" style={{ color: 'var(--muted)' }}>
-                World-class tour management with analytics, routing optimization, and financial
-                tracking
+                Tour scheduling with ticket links, routing optimization, and show management
               </p>
             </motion.div>
           </div>
@@ -550,14 +504,14 @@ export default function ToursPage() {
                 {
                   label: 'Total Tours',
                   value: stats.total,
-                  icon: BarChart3,
+                  icon: Calendar,
                   color: 'var(--accent)',
                   gradient: 'rgba(255, 99, 71, 0.1)',
                 },
                 {
                   label: 'Active Tours',
                   value: stats.active,
-                  icon: TrendingUp,
+                  icon: Radio,
                   color: '#22c55e',
                   gradient: 'rgba(34, 197, 94, 0.1)',
                 },
@@ -707,8 +661,8 @@ export default function ToursPage() {
                   World-Class Tour Management
                 </h2>
                 <p className="mx-auto mb-8 max-w-xl text-lg" style={{ color: 'var(--muted)' }}>
-                  Professional analytics, routing optimization, financial tracking, and real-time
-                  collaboration. Create your first tour to get started.
+                  Schedule shows, add ticket links, optimize routing, and manage your tour. Create
+                  your first tour to get started.
                 </p>
                 <Link href="/tours/new">
                   <motion.button
@@ -824,21 +778,21 @@ export default function ToursPage() {
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                   {[
                     {
-                      icon: BarChart3,
-                      title: 'Analytics Dashboard',
-                      desc: 'Real-time revenue tracking, attendance metrics, geographic insights, and AI-powered recommendations.',
+                      icon: Calendar,
+                      title: 'Show Scheduling',
+                      desc: 'Manage dates, times, venues, and ticket links for every show on your tour.',
                       color: '#22c55e',
                     },
                     {
-                      icon: MapPin,
+                      icon: Navigation,
                       title: 'Smart Routing',
-                      desc: 'Optimize tour routing to minimize travel distance, save costs, and identify scheduling conflicts.',
+                      desc: 'Optimize tour routing to minimize travel distance and identify scheduling conflicts.',
                       color: '#3b82f6',
                     },
                     {
-                      icon: DollarSign,
-                      title: 'Financial Tracking',
-                      desc: 'Comprehensive profit/loss tracking, expense breakdowns, and professional export capabilities.',
+                      icon: Ticket,
+                      title: 'Ticket Links',
+                      desc: 'Add direct ticket purchase links that fans can access from your tour page.',
                       color: '#a855f7',
                     },
                   ].map((feature) => (

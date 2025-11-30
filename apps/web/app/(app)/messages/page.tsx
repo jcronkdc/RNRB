@@ -121,131 +121,44 @@ export default function MessagesPage() {
   }
 
   return (
-    <div
-      className="relative flex h-screen flex-col overflow-hidden"
-      style={{ background: 'var(--bg)' }}
-    >
-      {/* Floating Music Notes */}
-      <div className="music-notes-container pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="music-note"
-            style={{
-              left: `${5 + i * 8}%`,
-              animationDelay: `${i * 0.7}s`,
-              fontSize: `${18 + (i % 4) * 8}px`,
-            }}
-          >
-            {['♪', '♫', '♬', '♩'][i % 4]}
-          </div>
-        ))}
-      </div>
-
-      {/* Animated Background Gradient Orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="gradient-orb gradient-orb-1"></div>
-        <div className="gradient-orb gradient-orb-2"></div>
-        <div className="gradient-orb gradient-orb-3"></div>
-        <div className="gradient-orb-accent"></div>
-      </div>
-
-      {/* Hero Grid Pattern */}
-      <div className="hero-grid-pattern"></div>
-
-      {/* Header with White RR Logo */}
+    <div className="relative flex h-screen flex-col" style={{ background: 'var(--bg)' }}>
+      {/* Header with Logo */}
       <div
-        className="relative z-20 flex items-center gap-4 border-b px-6 py-4"
-        style={{
-          borderColor: 'var(--border)',
-          background:
-            'linear-gradient(180deg, rgba(30, 30, 30, 0.98) 0%, rgba(22, 22, 22, 0.95) 100%)',
-        }}
+        className="flex items-center gap-4 border-b px-6 py-4"
+        style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
       >
         <Link href="/" className="group flex items-center gap-3">
           <Image
-            src="/logo-light.png"
+            src="/logo-dark.png"
             alt="Rock N' Roll Basement"
-            width={56}
-            height={56}
-            className="transition-transform group-hover:scale-105"
-            style={{
-              filter:
-                'drop-shadow(0 0 15px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 25px rgba(255, 99, 71, 0.3))',
-            }}
+            width={48}
+            height={48}
+            className="transition-opacity group-hover:opacity-80"
           />
           <div>
-            <h1 className="hero-text-gradient text-lg font-bold">Rock N' Roll Basement</h1>
-            <p className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
+            <h1 className="text-lg font-bold" style={{ color: 'var(--text)' }}>
               Messages
+            </h1>
+            <p className="text-sm" style={{ color: 'var(--muted)' }}>
+              Direct messaging
             </p>
           </div>
         </Link>
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-1 overflow-hidden">
-        {/* Background removed - using CSS classes above */}
-        <div className="pointer-events-none fixed inset-0 overflow-hidden">
-          <motion.div
-            className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full blur-3xl"
-            style={{ background: 'radial-gradient(circle, rgba(255, 99, 71, 0.15), transparent)' }}
-            animate={{
-              x: [0, 50, 0],
-              y: [0, 30, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-          <motion.div
-            className="absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full blur-3xl"
-            style={{ background: 'radial-gradient(circle, rgba(255, 215, 0, 0.1), transparent)' }}
-            animate={{
-              x: [0, -30, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.15, 1],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-          <motion.div
-            className="absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-            style={{ background: 'radial-gradient(circle, rgba(255, 69, 0, 0.08), transparent)' }}
-            animate={{
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 30,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        </div>
-
+      <div className="flex flex-1 overflow-hidden">
         {/* Conversations List */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative z-10 flex w-80 flex-col border-r backdrop-blur-xl"
-          style={{ borderColor: 'var(--border)', background: 'rgba(42, 42, 42, 0.5)' }}
+        <div
+          className="flex w-80 flex-col border-r"
+          style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
         >
           {/* Header */}
           <div className="border-b p-4" style={{ borderColor: 'var(--border)' }}>
             <div className="mb-4 flex items-center gap-3">
               <div
                 className="flex h-10 w-10 items-center justify-center rounded-xl"
-                style={{
-                  background:
-                    'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.15))',
-                }}
+                style={{ background: 'rgba(255, 99, 71, 0.15)' }}
               >
                 <MessageSquare className="h-5 w-5" style={{ color: 'var(--accent)' }} />
               </div>
@@ -279,13 +192,10 @@ export default function MessagesPage() {
             {conversations.length === 0 ? (
               <div className="py-8 text-center">
                 <div
-                  className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.15))',
-                  }}
+                  className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl"
+                  style={{ background: 'rgba(255, 99, 71, 0.15)' }}
                 >
-                  <MessageSquare className="h-8 w-8" style={{ color: 'var(--accent)' }} />
+                  <MessageSquare className="h-7 w-7" style={{ color: 'var(--accent)' }} />
                 </div>
                 <p className="mb-2 font-semibold" style={{ color: 'var(--text)' }}>
                   No conversations yet
@@ -349,26 +259,22 @@ export default function MessagesPage() {
                   className="w-full rounded-xl border px-4 py-2.5 text-sm focus:outline-none"
                   style={{
                     borderColor: 'var(--border)',
-                    background: 'rgba(255, 255, 255, 0.05)',
+                    background: 'var(--bg)',
                     color: 'var(--text)',
                   }}
                   onKeyPress={(e) => e.key === 'Enter' && startNewConversation()}
                   autoFocus
                 />
                 <div className="flex gap-2">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <button
                     onClick={startNewConversation}
                     className="flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white"
-                    style={{ background: 'linear-gradient(135deg, var(--accent), #ff7f50)' }}
+                    style={{ background: 'var(--accent)' }}
                   >
                     <Check className="h-4 w-4" />
                     Start
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  </button>
+                  <button
                     onClick={() => {
                       setShowNewConversation(false);
                       setNewUserEmail('');
@@ -376,31 +282,26 @@ export default function MessagesPage() {
                     className="rounded-xl border px-4 py-2.5 text-sm"
                     style={{
                       borderColor: 'var(--border)',
-                      background: 'rgba(255, 255, 255, 0.05)',
+                      background: 'var(--bg)',
                       color: 'var(--text)',
                     }}
                   >
                     <X className="h-4 w-4" />
-                  </motion.button>
+                  </button>
                 </div>
               </div>
             ) : (
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
                 onClick={() => setShowNewConversation(true)}
-                className="flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 font-semibold text-white shadow-lg"
-                style={{
-                  background: 'linear-gradient(135deg, var(--accent), #ff7f50)',
-                  boxShadow: '0 4px 20px rgba(255, 99, 71, 0.25)',
-                }}
+                className="flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 font-semibold text-white"
+                style={{ background: 'var(--accent)' }}
               >
                 <Plus className="h-5 w-5" />
                 New Conversation
-              </motion.button>
+              </button>
             )}
           </div>
-        </motion.div>
+        </div>
 
         {/* Chat Area */}
         <motion.div

@@ -546,104 +546,56 @@ export default function SongwritingPage() {
   ] as const;
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
-      {/* Floating Music Notes - Matching Landing Page */}
-      <div className="music-notes-container pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="music-note"
-            style={{
-              left: `${5 + i * 8}%`,
-              animationDelay: `${i * 0.7}s`,
-              fontSize: `${18 + (i % 4) * 8}px`,
-            }}
-          >
-            {['♪', '♫', '♬', '♩'][i % 4]}
-          </div>
-        ))}
-      </div>
-
-      {/* Animated Background Gradient Orbs - Matching Landing Page Colors */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="gradient-orb gradient-orb-1"></div>
-        <div className="gradient-orb gradient-orb-2"></div>
-        <div className="gradient-orb gradient-orb-3"></div>
-        <div className="gradient-orb-accent"></div>
-      </div>
-
-      {/* Hero Grid Pattern - Matching Landing Page */}
-      <div className="hero-grid-pattern"></div>
-
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* RR Logo & Title - Required on all feature pages (white logo for dark bg) */}
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* RR Logo - white logo for dark bg */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8 flex flex-col items-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="mb-6 flex flex-col items-center"
         >
-          <Link href="/" className="group relative inline-block">
+          <Link href="/" className="group inline-block">
             <Image
-              src="/logo-light.png"
+              src="/logo-dark.png"
               alt="Rock N' Roll Basement"
-              width={160}
-              height={65}
+              width={140}
+              height={57}
               priority
-              className="transition-all duration-300 group-hover:scale-105"
-              style={{
-                filter:
-                  'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
-              }}
-            />
-            {/* Subtle glow on hover - matching landing page accent */}
-            <div
-              className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
-              style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+              className="transition-opacity duration-200 group-hover:opacity-80"
             />
           </Link>
-          <h1 className="hero-title mt-4 text-center">
-            <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
-              Rock N' Roll Basement
-            </span>
-          </h1>
-          <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
-            Songwriting Studio
-          </p>
         </motion.div>
-        {/* Premium Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mb-6"
+        >
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 flex-1">
-              {/* Accent bar - matching landing page tomato/gold gradient */}
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: 60 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="mb-4 h-1 rounded-full"
-                style={{ background: 'linear-gradient(90deg, var(--accent), #ffd700)' }}
-              />
+              {/* Accent bar */}
+              <div className="mb-3 h-1 w-12 rounded-full" style={{ background: 'var(--accent)' }} />
 
               {/* Title with icon */}
-              <div className="mb-4 flex items-center gap-4">
+              <div className="mb-3 flex items-center gap-3">
                 <div
-                  className="flex h-14 w-14 items-center justify-center rounded-2xl"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
-                  }}
+                  className="flex h-10 w-10 items-center justify-center rounded-lg"
+                  style={{ background: 'var(--panel)' }}
                 >
-                  <Music4 className="h-7 w-7" style={{ color: 'var(--accent)' }} />
+                  <Music4 className="h-5 w-5" style={{ color: 'var(--accent)' }} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                  <p className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
                     Songwriting Studio
                   </p>
                   <input
                     type="text"
                     value={songTitle}
                     onChange={(e) => setSongTitle(e.target.value)}
-                    className="w-full border-none bg-transparent text-3xl font-bold outline-none focus:ring-0 lg:text-4xl"
+                    className="w-full border-none bg-transparent text-2xl font-bold outline-none focus:ring-0"
                     style={{ color: 'var(--text)' }}
                     placeholder="Untitled Song"
                     disabled={!user}
@@ -814,40 +766,27 @@ export default function SongwritingPage() {
           </div>
         </motion.div>
 
-        {/* Premium Tab Navigation - Matching Landing Page Design System */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
+        {/* Tab Navigation */}
+        <div className="mb-6">
           <div
-            className="flex gap-2 rounded-2xl p-2"
+            className="flex gap-1 rounded-xl p-1"
             style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
           >
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveView(tab.id)}
-                className="relative rounded-xl px-6 py-3 text-sm font-medium transition-all"
-                style={{ color: activeView === tab.id ? 'var(--text)' : 'var(--muted)' }}
+                className="relative rounded-lg px-5 py-2.5 text-sm font-medium transition-all"
+                style={{
+                  background: activeView === tab.id ? 'var(--bg)' : 'transparent',
+                  color: activeView === tab.id ? 'var(--text)' : 'var(--muted)',
+                }}
               >
-                {activeView === tab.id && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 rounded-xl"
-                    style={{
-                      background:
-                        'linear-gradient(135deg, rgba(255, 99, 71, 0.3), rgba(255, 215, 0, 0.2))',
-                    }}
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-                <span className="relative z-10">{tab.label}</span>
+                {tab.label}
               </button>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Content Area */}
         <motion.div
@@ -857,18 +796,13 @@ export default function SongwritingPage() {
           className="min-h-[600px]"
         >
           {activeView === 'structure' && loading && (
-            <div className="card flex min-h-[600px] items-center justify-center rounded-2xl">
+            <div
+              className="flex min-h-[500px] items-center justify-center rounded-xl"
+              style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+            >
               <div className="text-center">
-                <div className="relative mx-auto mb-6 h-16 w-16">
-                  <div
-                    className="absolute inset-0 animate-spin rounded-full border-4"
-                    style={{
-                      borderColor: 'rgba(255, 99, 71, 0.3)',
-                      borderTopColor: 'var(--accent)',
-                    }}
-                  />
-                </div>
-                <p className="text-sm font-medium" style={{ color: 'var(--muted)' }}>
+                <div className="mx-auto mb-4 h-6 w-6 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
                   Loading Studio...
                 </p>
               </div>
@@ -885,31 +819,28 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'structure' && !loading && !user && (
-            <div className="card flex min-h-[600px] items-center justify-center rounded-2xl p-12">
+            <div
+              className="flex min-h-[500px] items-center justify-center rounded-xl p-8"
+              style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+            >
               <div className="max-w-md text-center">
                 <div
-                  className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
-                  }}
+                  className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl"
+                  style={{ background: 'var(--bg)' }}
                 >
-                  <Sparkles className="h-10 w-10" style={{ color: 'var(--accent)' }} />
+                  <Sparkles className="h-7 w-7" style={{ color: 'var(--accent)' }} />
                 </div>
-                <h3 className="mb-4 text-2xl font-bold" style={{ color: 'var(--text)' }}>
-                  Sign In Required
-                </h3>
-                <p className="mb-8" style={{ color: 'var(--muted)' }}>
-                  Authentication required to access collaborative songwriting features.
+                <h3 className="mb-3 text-xl font-semibold text-white">Sign In Required</h3>
+                <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
+                  Authentication required to access songwriting features.
                 </p>
-                <motion.a
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <a
                   href="/auth"
-                  className="button inline-block rounded-xl px-8 py-3 font-semibold"
+                  className="inline-block rounded-lg px-6 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+                  style={{ background: 'var(--accent)' }}
                 >
                   Sign In
-                </motion.a>
+                </a>
               </div>
             </div>
           )}

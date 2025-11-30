@@ -23,6 +23,7 @@ import {
   X,
   FlaskConical,
   Wrench,
+  Share2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -76,6 +77,7 @@ const navItems: NavItem[] = [
   { label: 'Studio', href: '/studio', icon: Mic2 },
   { label: 'Tours', href: '/tours', icon: Radio },
   { label: 'My Website', href: '/sites', icon: Globe, badge: 'NEW' },
+  { label: 'Social Share', href: '/share', icon: Share2, badge: 'NEW' },
   { label: 'Explore', href: '/explore', icon: Compass },
   { label: 'Messages', href: '/messages', icon: MessageSquare },
   { label: 'Library', href: '/library', icon: Library },

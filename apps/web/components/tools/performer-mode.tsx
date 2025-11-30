@@ -18,29 +18,39 @@ import {
   Music,
   Clock,
   Eye,
+  Loader2,
+  Library,
+  ListMusic,
+  FolderOpen,
 } from 'lucide-react';
 import { Button } from '@cronkwaters/ui';
 
 interface Song {
   id: string;
   title: string;
-  artist: string;
-  key: string;
-  bpm: number;
-  duration: string;
-  lyrics: string;
-  notes: string;
+  artist?: string;
+  key?: string | null;
+  tempo?: number | null;
+  lyrics?: string | null;
+  notes?: string | null;
 }
 
-// Demo songs for the component
+interface SourceOption {
+  id: string;
+  name: string;
+  songCount: number;
+  showName?: string;
+  date?: string;
+}
+
+// Demo songs as fallback
 const DEMO_SONGS: Song[] = [
   {
-    id: '1',
+    id: 'demo-1',
     title: 'Demo Song',
     artist: 'Your Band',
     key: 'G Major',
-    bpm: 120,
-    duration: '3:45',
+    tempo: 120,
     lyrics: `[Verse 1]
 This is the first verse
 Of your amazing song
@@ -78,13 +88,19 @@ Lift your voices high
 Let the music begin
 One more time now
 Let the music begin`,
-    notes: 'Watch for tempo change in bridge',
+    notes: 'Watch for tempo change in bridge. Add your songs to see them here!',
   },
 ];
 
 export function PerformerMode() {
-  const [songs, setSongs] = useState<Song[]>(DEMO_SONGS);
+  const [songs, setSongs] = useState<Song[]>([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [source, setSource] = useState<'library' | 'setlist' | 'project'>('library');
+  const [sourceId, setSourceId] = useState<string | null>(null);
+  const [setlists, setSetlists] = useState<SourceOption[]>([]);
+  const [projects, setProjects] = useState<SourceOption[]>([]);
+  const [showSourcePicker, setShowSourcePicker] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [autoScrollSpeed, setAutoScrollSpeed] = useState(30); // pixels per second
@@ -99,7 +115,47 @@ export function PerformerMode() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const currentSong = songs[currentSongIndex];
+  const currentSong = songs[currentSongIndex] || DEMO_SONGS[0];
+
+  // Fetch songs from API - Mycelial Integration
+  const fetchSongs = useCallback(async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({ source });
+      if (source === 'setlist' && sourceId) params.set('setlistId', sourceId);
+      if (source === 'project' && sourceId) params.set('projectId', sourceId);
+
+      const res = await fetch(`/api/tools/performer?${params}`);
+      if (!res.ok) throw new Error('Failed to fetch songs');
+
+      const data = await res.json();
+
+      // Update available sources
+      if (data.sources) {
+        setSetlists(data.sources.setlists || []);
+        setProjects(data.sources.projects || []);
+      }
+
+      // Update songs (use demo if none found)
+      if (data.songs && data.songs.length > 0) {
+        setSongs(data.songs);
+        setCurrentSongIndex(0);
+        setScrollPosition(0);
+      } else {
+        setSongs(DEMO_SONGS);
+      }
+    } catch (error) {
+      console.error('Error fetching songs:', error);
+      setSongs(DEMO_SONGS);
+    } finally {
+      setLoading(false);
+    }
+  }, [source, sourceId]);
+
+  // Load songs on mount and when source changes
+  useEffect(() => {
+    fetchSongs();
+  }, [fetchSongs]);
 
   // Auto-scroll functionality
   useEffect(() => {

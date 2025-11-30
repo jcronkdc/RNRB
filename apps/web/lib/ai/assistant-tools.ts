@@ -912,6 +912,396 @@ export async function suggestCollaborators(userId: string): Promise<{
 }
 
 // ============================================
+// MUSICIAN'S TOOLBOX INTEGRATION
+// Mycelial Network: AI has access to all tools
+// ============================================
+
+/**
+ * Get user's gear inventory
+ */
+export async function getGearInventory(
+  userId: string,
+  category?: string
+): Promise<{
+  success: boolean;
+  gear: {
+    id: string;
+    name: string;
+    category: string;
+    brand?: string;
+    model?: string;
+    condition: string;
+    currentValue?: number;
+    location?: string;
+    needsMaintenance: boolean;
+  }[];
+  stats: { totalItems: number; totalValue: number; needsMaintenance: number };
+}> {
+  const where: Record<string, unknown> = { userId };
+  if (category && category !== 'all') {
+    where.category = category;
+  }
+
+  const gear = await prisma.gearItem.findMany({
+    where,
+    select: {
+      id: true,
+      name: true,
+      category: true,
+      brand: true,
+      model: true,
+      condition: true,
+      currentValue: true,
+      location: true,
+      nextMaintenanceDate: true,
+    },
+    orderBy: [{ isFavorite: 'desc' }, { name: 'asc' }],
+  });
+
+  const today = new Date();
+  const formattedGear = gear.map((g) => ({
+    ...g,
+    currentValue: g.currentValue ? Number(g.currentValue) : undefined,
+    needsMaintenance: g.nextMaintenanceDate ? new Date(g.nextMaintenanceDate) <= today : false,
+  }));
+
+  const totals = await prisma.gearItem.aggregate({
+    where: { userId },
+    _sum: { currentValue: true },
+    _count: { id: true },
+  });
+
+  const needsMaintenanceCount = gear.filter(
+    (g) => g.nextMaintenanceDate && new Date(g.nextMaintenanceDate) <= today
+  ).length;
+
+  return {
+    success: true,
+    gear: formattedGear,
+    stats: {
+      totalItems: totals._count.id,
+      totalValue: Number(totals._sum.currentValue || 0),
+      needsMaintenance: needsMaintenanceCount,
+    },
+  };
+}
+
+/**
+ * Add equipment to gear inventory
+ */
+export async function addGearItem(
+  userId: string,
+  item: {
+    name: string;
+    category: string;
+    brand?: string;
+    model?: string;
+    serialNumber?: string;
+    purchasePrice?: number;
+    currentValue?: number;
+    condition?: string;
+    location?: string;
+    notes?: string;
+  }
+): Promise<{ success: boolean; gear?: { id: string; name: string }; error?: string }> {
+  try {
+    const gear = await prisma.gearItem.create({
+      data: {
+        userId,
+        name: item.name,
+        category: item.category,
+        brand: item.brand,
+        model: item.model,
+        serialNumber: item.serialNumber,
+        purchasePrice: item.purchasePrice,
+        currentValue: item.currentValue || item.purchasePrice,
+        condition: item.condition || 'good',
+        location: item.location,
+        notes: item.notes,
+      },
+      select: { id: true, name: true },
+    });
+    return { success: true, gear };
+  } catch (error) {
+    return { success: false, error: 'Failed to add gear' };
+  }
+}
+
+/**
+ * Get user's practice sessions and stats
+ */
+export async function getPracticeSessions(
+  userId: string,
+  options?: { songId?: string; limit?: number }
+): Promise<{
+  success: boolean;
+  sessions: {
+    id: string;
+    songTitle?: string;
+    durationMinutes?: number;
+    focusArea?: string;
+    rating?: number;
+    date: string;
+  }[];
+  stats: {
+    totalMinutesThisWeek: number;
+    totalMinutesThisMonth: number;
+    streak: number;
+    avgRating: number;
+  };
+}> {
+  const where: Record<string, unknown> = { userId };
+  if (options?.songId) where.songId = options.songId;
+
+  const sessions = await prisma.practiceSession.findMany({
+    where,
+    select: {
+      id: true,
+      durationMinutes: true,
+      focusArea: true,
+      rating: true,
+      startTime: true,
+      song: { select: { title: true } },
+    },
+    orderBy: { startTime: 'desc' },
+    take: options?.limit || 20,
+  });
+
+  // Calculate stats
+  const thisWeek = new Date();
+  thisWeek.setDate(thisWeek.getDate() - 7);
+  const thisMonth = new Date();
+  thisMonth.setDate(thisMonth.getDate() - 30);
+
+  const weekStats = await prisma.practiceSession.aggregate({
+    where: { userId, startTime: { gte: thisWeek } },
+    _sum: { durationMinutes: true },
+    _avg: { rating: true },
+  });
+
+  const monthStats = await prisma.practiceSession.aggregate({
+    where: { userId, startTime: { gte: thisMonth } },
+    _sum: { durationMinutes: true },
+  });
+
+  // Calculate streak (simplified)
+  const recentSessions = await prisma.practiceSession.findMany({
+    where: { userId },
+    select: { startTime: true },
+    orderBy: { startTime: 'desc' },
+    take: 30,
+  });
+
+  let streak = 0;
+  const today = new Date().toISOString().split('T')[0];
+  const dates = [...new Set(recentSessions.map((s) => s.startTime.toISOString().split('T')[0]))];
+
+  if (
+    dates[0] === today ||
+    dates[0] === new Date(Date.now() - 86400000).toISOString().split('T')[0]
+  ) {
+    streak = 1;
+    for (let i = 1; i < dates.length; i++) {
+      const d1 = new Date(dates[i - 1]);
+      const d2 = new Date(dates[i]);
+      if ((d1.getTime() - d2.getTime()) / 86400000 === 1) {
+        streak++;
+      } else break;
+    }
+  }
+
+  return {
+    success: true,
+    sessions: sessions.map((s) => ({
+      id: s.id,
+      songTitle: s.song?.title,
+      durationMinutes: s.durationMinutes || undefined,
+      focusArea: s.focusArea || undefined,
+      rating: s.rating || undefined,
+      date: s.startTime.toISOString(),
+    })),
+    stats: {
+      totalMinutesThisWeek: weekStats._sum.durationMinutes || 0,
+      totalMinutesThisMonth: monthStats._sum.durationMinutes || 0,
+      streak,
+      avgRating: weekStats._avg.rating ? Number(weekStats._avg.rating.toFixed(1)) : 0,
+    },
+  };
+}
+
+/**
+ * Log a practice session
+ */
+export async function logPracticeSession(
+  userId: string,
+  session: {
+    durationMinutes: number;
+    songId?: string;
+    focusArea?: string;
+    instruments?: string[];
+    rating?: number;
+    notes?: string;
+  }
+): Promise<{ success: boolean; session?: { id: string }; error?: string }> {
+  try {
+    const endTime = new Date();
+    const startTime = new Date(endTime.getTime() - session.durationMinutes * 60000);
+
+    const practiceSession = await prisma.practiceSession.create({
+      data: {
+        userId,
+        startTime,
+        endTime,
+        durationMinutes: session.durationMinutes,
+        songId: session.songId,
+        focusArea: session.focusArea,
+        instruments: session.instruments || [],
+        rating: session.rating,
+        notes: session.notes,
+      },
+      select: { id: true },
+    });
+
+    return { success: true, session: practiceSession };
+  } catch (error) {
+    return { success: false, error: 'Failed to log session' };
+  }
+}
+
+/**
+ * Get user's recording notes
+ */
+export async function getRecordingNotes(
+  userId: string,
+  options?: { projectId?: string; songId?: string; limit?: number }
+): Promise<{
+  success: boolean;
+  notes: {
+    id: string;
+    title: string;
+    date: string;
+    projectName?: string;
+    songTitle?: string;
+    signalChain?: unknown;
+    whatWorked?: string;
+  }[];
+}> {
+  const where: Record<string, unknown> = { userId };
+  if (options?.projectId) where.projectId = options.projectId;
+  if (options?.songId) where.songId = options.songId;
+
+  const notes = await prisma.recordingNote.findMany({
+    where,
+    select: {
+      id: true,
+      title: true,
+      date: true,
+      signalChain: true,
+      whatWorked: true,
+      project: { select: { name: true } },
+      song: { select: { title: true } },
+    },
+    orderBy: { date: 'desc' },
+    take: options?.limit || 20,
+  });
+
+  return {
+    success: true,
+    notes: notes.map((n) => ({
+      id: n.id,
+      title: n.title,
+      date: n.date.toISOString(),
+      projectName: n.project?.name,
+      songTitle: n.song?.title,
+      signalChain: n.signalChain,
+      whatWorked: n.whatWorked || undefined,
+    })),
+  };
+}
+
+/**
+ * Save a recording note
+ */
+export async function saveRecordingNote(
+  userId: string,
+  note: {
+    title: string;
+    projectId?: string;
+    songId?: string;
+    signalChain?: Record<string, unknown>;
+    micType?: string;
+    micPosition?: string;
+    preampSettings?: Record<string, unknown>;
+    notes?: string;
+    whatWorked?: string;
+    whatToImprove?: string;
+  }
+): Promise<{ success: boolean; note?: { id: string }; error?: string }> {
+  try {
+    const recordingNote = await prisma.recordingNote.create({
+      data: {
+        userId,
+        title: note.title,
+        projectId: note.projectId,
+        songId: note.songId,
+        signalChain: note.signalChain,
+        micType: note.micType,
+        micPosition: note.micPosition,
+        preampSettings: note.preampSettings,
+        notes: note.notes,
+        whatWorked: note.whatWorked,
+        whatToImprove: note.whatToImprove,
+        date: new Date(),
+      },
+      select: { id: true },
+    });
+
+    return { success: true, note: recordingNote };
+  } catch (error) {
+    return { success: false, error: 'Failed to save note' };
+  }
+}
+
+/**
+ * Get user's practice goals with progress
+ */
+export async function getPracticeGoals(userId: string): Promise<{
+  success: boolean;
+  goals: {
+    id: string;
+    title: string;
+    targetMinutes: number;
+    currentMinutes: number;
+    period: string;
+    progress: number;
+    isActive: boolean;
+    streak: number;
+  }[];
+}> {
+  const goals = await prisma.practiceGoal.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      title: true,
+      targetMinutes: true,
+      currentMinutes: true,
+      period: true,
+      isActive: true,
+      streak: true,
+    },
+    orderBy: [{ isActive: 'desc' }, { createdAt: 'desc' }],
+  });
+
+  return {
+    success: true,
+    goals: goals.map((g) => ({
+      ...g,
+      progress: Math.min(Math.round((g.currentMinutes / g.targetMinutes) * 100), 100),
+    })),
+  };
+}
+
+// ============================================
 // EXPORT ALL TOOLS FOR AI FUNCTIONS
 // ============================================
 
@@ -1012,6 +1402,134 @@ export const ADVANCED_AI_FUNCTIONS = [
     parameters: {
       type: 'object',
       properties: {},
+    },
+  },
+  // ============================================
+  // TOOLBOX FUNCTIONS - Mycelial Integration
+  // ============================================
+  {
+    name: 'getGearInventory',
+    description: "Get user's gear/equipment inventory with optional category filter",
+    parameters: {
+      type: 'object',
+      properties: {
+        category: {
+          type: 'string',
+          enum: [
+            'guitar',
+            'bass',
+            'keys',
+            'drums',
+            'mics',
+            'amps',
+            'fx',
+            'monitors',
+            'other',
+            'all',
+          ],
+          description: 'Category to filter by (optional)',
+        },
+      },
+    },
+  },
+  {
+    name: 'addGearItem',
+    description: "Add a new piece of equipment to user's gear inventory",
+    parameters: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Name of the gear (e.g., "Fender Stratocaster")' },
+        category: {
+          type: 'string',
+          enum: ['guitar', 'bass', 'keys', 'drums', 'mics', 'amps', 'fx', 'monitors', 'other'],
+        },
+        brand: { type: 'string', description: 'Brand/manufacturer' },
+        model: { type: 'string', description: 'Model name/number' },
+        serialNumber: { type: 'string', description: 'Serial number' },
+        purchasePrice: { type: 'number', description: 'Purchase price in dollars' },
+        currentValue: { type: 'number', description: 'Current estimated value' },
+        condition: { type: 'string', enum: ['excellent', 'good', 'fair', 'needs_repair'] },
+        location: { type: 'string', description: 'Where the gear is stored' },
+        notes: { type: 'string', description: 'Additional notes' },
+      },
+      required: ['name', 'category'],
+    },
+  },
+  {
+    name: 'getPracticeSessions',
+    description: "Get user's practice session history with stats (streak, weekly/monthly totals)",
+    parameters: {
+      type: 'object',
+      properties: {
+        songId: { type: 'string', description: 'Filter by specific song (optional)' },
+        limit: { type: 'number', description: 'Max sessions to return (default 20)' },
+      },
+    },
+  },
+  {
+    name: 'logPracticeSession',
+    description: 'Log a completed practice session',
+    parameters: {
+      type: 'object',
+      properties: {
+        durationMinutes: { type: 'number', description: 'Duration in minutes' },
+        songId: { type: 'string', description: 'Song being practiced (optional)' },
+        focusArea: {
+          type: 'string',
+          enum: ['scales', 'chords', 'technique', 'song', 'improvisation', 'theory', 'other'],
+        },
+        instruments: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Instruments practiced',
+        },
+        rating: { type: 'number', description: 'Session quality rating 1-5' },
+        notes: { type: 'string', description: 'Session notes' },
+      },
+      required: ['durationMinutes'],
+    },
+  },
+  {
+    name: 'getPracticeGoals',
+    description: "Get user's practice goals with progress tracking",
+    parameters: {
+      type: 'object',
+      properties: {},
+    },
+  },
+  {
+    name: 'getRecordingNotes',
+    description: "Get user's recording/session notes with signal chain info",
+    parameters: {
+      type: 'object',
+      properties: {
+        projectId: { type: 'string', description: 'Filter by project (optional)' },
+        songId: { type: 'string', description: 'Filter by song (optional)' },
+        limit: { type: 'number', description: 'Max notes to return (default 20)' },
+      },
+    },
+  },
+  {
+    name: 'saveRecordingNote',
+    description: 'Save a recording session note with gear settings and signal chain',
+    parameters: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'Title of the session (e.g., "Lead Vocal Takes")' },
+        projectId: { type: 'string', description: 'Link to project (optional)' },
+        songId: { type: 'string', description: 'Link to song (optional)' },
+        signalChain: {
+          type: 'object',
+          description: 'Signal chain details (mic, preamp, eq, compression)',
+        },
+        micType: { type: 'string', description: 'Microphone used' },
+        micPosition: { type: 'string', description: 'Mic position/placement' },
+        preampSettings: { type: 'object', description: 'Preamp settings' },
+        notes: { type: 'string', description: 'General session notes' },
+        whatWorked: { type: 'string', description: 'What worked well' },
+        whatToImprove: { type: 'string', description: 'What to improve next time' },
+      },
+      required: ['title'],
     },
   },
 ];

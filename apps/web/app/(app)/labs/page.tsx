@@ -160,15 +160,16 @@ export default function LabsPage() {
 
   if (loading) {
     return (
-      <div className="relative min-h-screen overflow-hidden bg-black">
-        <div className="absolute inset-0">
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-purple-500/10 blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-orange-500/10 blur-3xl" />
-        </div>
+      <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
         <div className="relative flex min-h-screen items-center justify-center">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-            <FlaskConical className="mx-auto mb-4 h-16 w-16 animate-pulse text-purple-400" />
-            <p className="text-lg text-gray-400">Entering the lab...</p>
+            <FlaskConical
+              className="mx-auto mb-4 h-16 w-16 animate-pulse"
+              style={{ color: 'var(--accent)' }}
+            />
+            <p className="text-lg" style={{ color: 'var(--muted)' }}>
+              Entering the lab...
+            </p>
           </motion.div>
         </div>
       </div>
@@ -177,21 +178,6 @@ export default function LabsPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
-      {/* Floating Lab Elements */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl" />
-        <div className="absolute -right-32 bottom-1/4 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
-        <div className="absolute left-1/2 top-0 h-64 w-64 -translate-x-1/2 rounded-full bg-blue-500/5 blur-3xl" />
-      </div>
-
-      {/* Circuit Pattern Background */}
-      <div
-        className="pointer-events-none fixed inset-0 opacity-5"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0v15m0 30v15M0 30h15m30 0h15' stroke='%23fff' stroke-width='1' fill='none'/%3E%3Ccircle cx='30' cy='30' r='3' fill='%23fff'/%3E%3C/svg%3E")`,
-        }}
-      />
-
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8">
         {/* Logo & Title */}
         <motion.div
@@ -201,32 +187,31 @@ export default function LabsPage() {
         >
           <Link href="/" className="group mb-6 inline-block">
             <Image
-              src="/logo-light.png"
+              src="/logo-dark.png"
               alt="Rock N' Roll Basement"
               width={160}
               height={65}
               priority
               className="transition-transform group-hover:scale-105"
-              style={{
-                filter: 'drop-shadow(0 0 20px rgba(147, 51, 234, 0.3))',
-              }}
             />
           </Link>
 
-          <div className="mb-4 inline-flex items-center gap-3 rounded-full border border-purple-500/30 bg-purple-500/10 px-6 py-3">
-            <FlaskConical className="h-6 w-6 text-purple-400" />
-            <span className="text-lg font-bold text-purple-400">R&R LABS</span>
+          <div
+            className="mb-4 inline-flex items-center gap-3 rounded-full px-6 py-3"
+            style={{ background: 'rgba(255, 99, 71, 0.15)', border: '1px solid var(--border)' }}
+          >
+            <FlaskConical className="h-6 w-6" style={{ color: 'var(--accent)' }} />
+            <span className="text-lg font-bold" style={{ color: 'var(--accent)' }}>
+              R&R LABS
+            </span>
           </div>
 
-          <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
-            Building the Future of{' '}
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent">
-              AI Music
-            </span>
+          <h1 className="mb-4 text-4xl font-bold md:text-5xl" style={{ color: 'var(--text)' }}>
+            Building the Future of <span style={{ color: 'var(--accent)' }}>AI Music</span>
           </h1>
 
-          <p className="mx-auto max-w-3xl text-lg text-gray-400 md:text-xl">
-            Our mission: Create an AI that <strong className="text-white">assists</strong>{' '}
+          <p className="mx-auto max-w-3xl text-lg md:text-xl" style={{ color: 'var(--muted)' }}>
+            Our mission: Create an AI that <strong style={{ color: 'var(--text)' }}>assists</strong>{' '}
             musicians, not replaces them. We're building the first truly collaborative AI music
             platform.
           </p>
@@ -245,21 +230,18 @@ export default function LabsPage() {
               title: 'Human-AI Collaboration',
               description:
                 'AI generates individual stems. Musicians replace what they want with their own recordings. The result: human creativity enhanced by AI.',
-              gradient: 'from-purple-500 to-pink-500',
             },
             {
               icon: Shield,
               title: 'Copyright Clarity',
               description:
                 'Every human contribution is tracked. When you replace an AI stem with your recording, you own that part completely.',
-              gradient: 'from-orange-500 to-red-500',
             },
             {
               icon: Zap,
               title: 'Real-Time Together',
               description:
                 'Your whole band sees AI generations instantly via Ably. Iterate together, not separately. True collaborative creation.',
-              gradient: 'from-blue-500 to-cyan-500',
             },
           ].map((principle, index) => (
             <motion.div
@@ -268,14 +250,20 @@ export default function LabsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + index * 0.1 }}
             >
-              <Card className="group h-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all hover:border-white/20 hover:bg-white/10">
+              <Card
+                className="group h-full overflow-hidden rounded-2xl p-6 transition-all"
+                style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+              >
                 <div
-                  className={`mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${principle.gradient} shadow-lg transition-transform group-hover:scale-110`}
+                  className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
+                  style={{ background: 'rgba(255, 99, 71, 0.15)' }}
                 >
-                  <principle.icon className="h-7 w-7 text-white" />
+                  <principle.icon className="h-7 w-7" style={{ color: 'var(--accent)' }} />
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-white">{principle.title}</h3>
-                <p className="text-gray-400">{principle.description}</p>
+                <h3 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
+                  {principle.title}
+                </h3>
+                <p style={{ color: 'var(--muted)' }}>{principle.description}</p>
               </Card>
             </motion.div>
           ))}

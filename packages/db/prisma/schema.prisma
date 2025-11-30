@@ -167,6 +167,12 @@ model User {
   // R&R Labs Research
   labsVolunteer          LabsVolunteer?
   
+  // Musician's Toolbox - Mycelial Integration
+  gearItems              GearItem[]
+  practiceSessions       PracticeSession[]
+  practiceGoals          PracticeGoal[]
+  recordingNotes         RecordingNote[]
+  
   // Social Feed
   authoredPosts          Post[]               @relation("AuthoredPosts")
   sharedPosts            Post[]               @relation("SharedPosts")
@@ -270,6 +276,9 @@ model Project {
   views          ProjectView[] // Smart folders & filters
   references     ProjectReference[] // Mood boards & inspiration
   insights       ProjectInsight? // AI analysis
+  
+  // Toolbox Integration
+  recordingNotes RecordingNote[] // Recording notes for this project
 
   @@index([orgId])
   @@index([slug])
@@ -320,6 +329,10 @@ model Song {
   communityTrack CommunityTrack? // Song published to community
   versions       SongVersion[] // Version history
   tracks         SongTrack[] // Multi-track stems
+  
+  // Toolbox Integration
+  practiceSessions PracticeSession[] // Practice sessions for this song
+  recordingNotes   RecordingNote[]   // Recording notes for this song
 
   @@index([userId])
   @@index([projectId])
@@ -700,8 +713,10 @@ model Show {
   slug           String          @unique
   description    String?
   date           DateTime
-  doorsTime      DateTime?
+  loadInTime     DateTime?
   soundcheckTime DateTime?
+  doorsTime      DateTime?
+  setTime        DateTime?
   setLength      Int?
   status         ShowStatus      @default(scheduled)
   ticketUrl      String?
@@ -709,11 +724,11 @@ model Show {
   ageRestriction String?
   supportingActs Json?
   notes          String?
+  backstageNotes String?
   posterImage    String?
   livestreamUrl  String?
   recordingUrl   String?
   attendance     Int?
-  grossRevenue   Decimal?
   public         Boolean         @default(true)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -1050,6 +1065,9 @@ model StudioSession {
   attendees   SessionAttendee[]
   createdBy   User              @relation(fields: [createdById], references: [id])
   project     Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  // Toolbox Integration
+  recordingNotes RecordingNote[]  // Recording notes from this session
 
   @@index([projectId])
   @@index([startTime])
@@ -3341,3 +3359,177 @@ model LabsFeedback {
 }
 
 // Force regeneration: 2025-11-30-RNRB-LABS
+
+// ============================================
+// MUSICIAN'S TOOLBOX - Mycelial Integration
+// Everything connected: gear, practice, sessions
+// ============================================
+
+model GearItem {
+  id          String   @id @default(cuid())
+  userId      String
+  
+  // Equipment Details
+  name        String
+  category    String   // guitar, bass, drums, keys, mics, amps, fx, monitors, other
+  brand       String?
+  model       String?
+  serialNumber String?
+  purchaseDate DateTime? @db.Date
+  purchasePrice Decimal? @db.Decimal(10, 2)
+  currentValue  Decimal? @db.Decimal(10, 2)
+  
+  // Condition & Maintenance
+  condition        String   @default("good") // excellent, good, fair, needs_repair
+  lastMaintenanceDate DateTime? @db.Date
+  nextMaintenanceDate DateTime? @db.Date
+  maintenanceNotes String?
+  
+  // Insurance
+  insured         Boolean  @default(false)
+  insurancePolicy String?
+  insuranceValue  Decimal? @db.Decimal(10, 2)
+  
+  // Media
+  imageUrl    String?
+  
+  // Organization
+  location    String?  // home, studio, storage, etc.
+  notes       String?
+  tags        String[]
+  isFavorite  Boolean  @default(false)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([category])
+  @@index([userId, category])
+}
+
+model PracticeSession {
+  id          String   @id @default(cuid())
+  userId      String
+  
+  // Session Details
+  startTime   DateTime
+  endTime     DateTime?
+  durationMinutes Int? // Calculated on save
+  
+  // What was practiced
+  songId      String?  // Optional link to specific song
+  focusArea   String?  // scales, chords, technique, song, improvisation, theory
+  instruments String[] // What instruments were practiced
+  
+  // Quality metrics
+  rating      Int?     // 1-5 self-rating of session quality
+  energyLevel Int?     // 1-5 how user felt
+  notes       String?
+  
+  // Goals tracking
+  goalId      String?
+  goalProgress Int?    // Progress toward goal (0-100)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  song Song?        @relation(fields: [songId], references: [id], onDelete: SetNull)
+  goal PracticeGoal? @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([userId, startTime(sort: Desc)])
+  @@index([songId])
+}
+
+model PracticeGoal {
+  id          String   @id @default(cuid())
+  userId      String
+  
+  // Goal Details
+  title       String
+  description String?
+  targetMinutes Int    // Target practice time
+  period      String   @default("weekly") // daily, weekly, monthly
+  
+  // Progress
+  currentMinutes Int   @default(0)
+  streak      Int      @default(0)  // Days in a row goal was met
+  longestStreak Int    @default(0)
+  
+  // Status
+  isActive    Boolean  @default(true)
+  completedAt DateTime?
+  
+  // Timestamps
+  startDate   DateTime @default(now()) @db.Date
+  endDate     DateTime? @db.Date
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions    PracticeSession[]
+  
+  @@index([userId])
+  @@index([userId, isActive])
+}
+
+model RecordingNote {
+  id          String   @id @default(cuid())
+  userId      String
+  
+  // Session Reference
+  studioSessionId String?  // Link to StudioSession if applicable
+  projectId   String?      // Link to Project
+  songId      String?      // Link to specific Song
+  
+  // Session Details
+  title       String
+  date        DateTime     @default(now()) @db.Date
+  engineer    String?
+  studio      String?
+  
+  // Signal Chain (JSON for flexibility)
+  signalChain Json?        // { instrument, mic, preamp, eq, compressor, other }
+  
+  // Mic Details
+  micPosition String?
+  micType     String?
+  micDistance String?
+  
+  // Settings
+  preampSettings      Json?
+  eqSettings          Json?
+  compressionSettings Json?
+  otherFx             Json?
+  
+  // Files/References
+  referenceFiles String[]  // URLs to reference recordings
+  screenshots    String[]  // URLs to settings screenshots
+  
+  // Notes
+  notes           String?
+  whatWorked      String?
+  whatToImprove   String?
+  tags            String[]
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  song        Song?     @relation(fields: [songId], references: [id], onDelete: SetNull)
+  studioSession StudioSession? @relation(fields: [studioSessionId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([projectId])
+  @@index([songId])
+  @@index([date(sort: Desc)])
+}
+
+// Force regeneration: 2025-11-30-TOOLBOX-MYCELIAL

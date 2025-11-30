@@ -219,15 +219,8 @@ function ToolsContent() {
 
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
-      {/* Animated Background */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="gradient-orb gradient-orb-1"></div>
-        <div className="gradient-orb gradient-orb-2"></div>
-        <div className="gradient-orb gradient-orb-3"></div>
-      </div>
-
       {/* Hero Section */}
-      <div className="relative z-10 border-b border-border/50">
+      <div className="relative z-10 border-b" style={{ borderColor: 'var(--border)' }}>
         <div className="mx-auto max-w-7xl px-4 py-8">
           {/* Logo */}
           <motion.div
@@ -237,24 +230,21 @@ function ToolsContent() {
           >
             <Link href="/" className="group relative inline-block">
               <Image
-                src="/logo-light.png"
+                src="/logo-dark.png"
                 alt="Rock N' Roll Basement"
                 width={160}
                 height={65}
                 priority
                 className="transition-all duration-300 group-hover:scale-105"
-                style={{
-                  filter:
-                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
-                }}
               />
             </Link>
-            <h1 className="hero-title mt-4 text-center">
-              <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
-                Musician's Toolbox
-              </span>
+            <h1
+              className="mt-4 text-center text-2xl font-bold md:text-3xl"
+              style={{ color: 'var(--text)' }}
+            >
+              Musician's Toolbox
             </h1>
-            <p className="mt-2 text-center text-muted-foreground">
+            <p className="mt-2 text-center" style={{ color: 'var(--muted)' }}>
               Professional tools for practice, performance & business
             </p>
           </motion.div>

@@ -457,29 +457,33 @@ export function StreamlinedSongBuilder({
     [blocks, updateBlocks]
   );
 
-  // Edit block content
-  const editBlock = useCallback(
-    (id: string, content: string) => {
-      setBlocks((prev) => {
-        const newBlocks = prev.map((b) => (b.id === id ? { ...b, content } : b));
-        onSongChange?.(newBlocks);
-        return newBlocks;
-      });
-    },
-    [onSongChange]
-  );
+  // Edit block content - called on every keystroke
+  // Note: We don't save to history on every keystroke (would be too many states)
+  // But we DO need to sync with parent for the Preview tab
+  const editBlock = useCallback((id: string, content: string) => {
+    setBlocks((prev) => {
+      const newBlocks = prev.map((b) => (b.id === id ? { ...b, content } : b));
+      return newBlocks;
+    });
+  }, []);
+
+  // Sync blocks to parent whenever they change (for Preview tab)
+  const blocksRef = useRef(blocks);
+  useEffect(() => {
+    // Only call onSongChange if blocks actually changed (not just on mount)
+    if (blocksRef.current !== blocks && onSongChange) {
+      onSongChange(blocks);
+    }
+    blocksRef.current = blocks;
+  }, [blocks, onSongChange]);
 
   // Update block chords
-  const updateBlockChords = useCallback(
-    (id: string, chordPlacements: ChordPlacement[]) => {
-      setBlocks((prev) => {
-        const newBlocks = prev.map((b) => (b.id === id ? { ...b, chordPlacements } : b));
-        onSongChange?.(newBlocks);
-        return newBlocks;
-      });
-    },
-    [onSongChange]
-  );
+  const updateBlockChords = useCallback((id: string, chordPlacements: ChordPlacement[]) => {
+    setBlocks((prev) => {
+      const newBlocks = prev.map((b) => (b.id === id ? { ...b, chordPlacements } : b));
+      return newBlocks;
+    });
+  }, []);
 
   // Remove block
   const removeBlock = useCallback(
