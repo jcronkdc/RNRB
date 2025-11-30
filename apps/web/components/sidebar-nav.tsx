@@ -219,8 +219,15 @@ export function SidebarNav() {
           )}
         </div>
 
-        {/* Navigation Items */}
-        <nav className="space-y-1 overflow-hidden px-3 py-6">
+        {/* Navigation Items - Scrollable with fixed height to prevent overlap */}
+        <nav
+          className="space-y-1 overflow-y-auto px-3 py-4"
+          style={{
+            height: 'calc(100vh - 64px - 140px)',
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(255,255,255,0.1) transparent',
+          }}
+        >
           {navItems.map((item, index) => {
             if (item.divider) {
               return (
@@ -300,100 +307,67 @@ export function SidebarNav() {
           })}
         </nav>
 
-        {/* Floating Music Icons (subtle animation) */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {floatingIcons.map((Icon, index) => {
-            // Use deterministic positions based on index to avoid hydration mismatch
-            const positions = [
-              { x: 50, y: 100 },
-              { x: 150, y: 300 },
-              { x: 80, y: 500 },
-              { x: 180, y: 200 },
-            ];
-            const pos = positions[index % positions.length];
-            return (
+        {/* Bottom Section - Fixed position, non-overlapping */}
+        <div
+          className="absolute bottom-0 left-0 right-0 z-10"
+          style={{
+            background: 'linear-gradient(to top, #0a0a0a 80%, transparent 100%)',
+            paddingTop: '24px',
+          }}
+        >
+          {/* Keyboard Shortcuts Hint - Hide on mobile */}
+          <AnimatePresence>
+            {!isCollapsed && !isMobile && (
               <motion.div
-                key={index}
-                className="absolute opacity-5"
-                initial={{
-                  x: pos.x,
-                  y: pos.y,
-                  scale: 0,
-                }}
-                animate={{
-                  y: [null, -20, 20, -20],
-                  scale: 1,
-                }}
-                transition={{
-                  y: {
-                    repeat: Infinity,
-                    duration: 6 + index * 2,
-                    ease: 'easeInOut',
-                  },
-                  scale: {
-                    duration: 0.5,
-                    delay: index * 0.2,
-                  },
-                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="mb-3 px-4"
               >
-                <Icon className="h-16 w-16 text-white" />
+                <div className="rounded-lg border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3">
+                  <p className="text-center text-xs text-muted-foreground">
+                    Press{' '}
+                    <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">?</kbd>{' '}
+                    for shortcuts
+                  </p>
+                </div>
               </motion.div>
-            );
-          })}
-        </div>
+            )}
+          </AnimatePresence>
 
-        {/* Keyboard Shortcuts Hint - Hide on mobile */}
-        <AnimatePresence>
-          {!isCollapsed && !isMobile && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="pointer-events-auto absolute bottom-20 left-0 right-0 px-4"
+          {/* Sign Out Button */}
+          <div className="px-3 pb-4">
+            <motion.button
+              onClick={handleSignOut}
+              disabled={signingOut}
+              whileHover={{ x: signingOut ? 0 : 4 }}
+              whileTap={{ scale: signingOut ? 1 : 0.98 }}
+              className="group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <div className="rounded-lg border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3">
-                <p className="text-center text-xs text-muted-foreground">
-                  Press{' '}
-                  <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">?</kbd>{' '}
-                  for shortcuts
-                </p>
+              {/* Icon */}
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/5 transition-all duration-200 group-hover:bg-red-500/20">
+                {signingOut ? (
+                  <Loader2 className="h-5 w-5 animate-spin text-red-400" />
+                ) : (
+                  <LogOut className="h-5 w-5 text-gray-400 transition-colors group-hover:text-red-400" />
+                )}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* Sign Out Button at Bottom */}
-        <div className="pointer-events-auto absolute bottom-4 left-0 right-0 px-3">
-          <motion.button
-            onClick={handleSignOut}
-            disabled={signingOut}
-            whileHover={{ x: signingOut ? 0 : 4 }}
-            whileTap={{ scale: signingOut ? 1 : 0.98 }}
-            className="group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {/* Icon */}
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/5 transition-all duration-200 group-hover:bg-red-500/20">
-              {signingOut ? (
-                <Loader2 className="h-5 w-5 animate-spin text-red-400" />
-              ) : (
-                <LogOut className="h-5 w-5 text-gray-400 transition-colors group-hover:text-red-400" />
-              )}
-            </div>
-
-            {/* Label - Always show on mobile */}
-            <AnimatePresence>
-              {(!isCollapsed || isMobile) && (
-                <motion.span
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  className="text-sm font-medium text-gray-300 transition-colors group-hover:text-red-400"
-                >
-                  {signingOut ? 'Signing Out...' : 'Sign Out'}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
+              {/* Label - Always show on mobile */}
+              <AnimatePresence>
+                {(!isCollapsed || isMobile) && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    className="text-sm font-medium text-gray-300 transition-colors group-hover:text-red-400"
+                  >
+                    {signingOut ? 'Signing Out...' : 'Sign Out'}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          </div>
         </div>
       </motion.aside>
     </>
