@@ -19,13 +19,19 @@ import {
   Music2,
   Sparkles,
   ExternalLink,
+  Star,
+  Eye,
+  Download,
+  CheckSquare,
+  Square,
+  X,
+  RefreshCw,
+  Keyboard,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useMemo, useCallback } from 'react';
-
-// Note: useRouter is used in SongCard component
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { ProjectSelector } from '@/components/project-selector';
 import { useRequireAuth } from '@/hooks/use-require-auth';
@@ -45,6 +51,7 @@ type Song = {
   lastSavedAt?: string;
   createdAt: string;
   updatedAt: string;
+  isFavorite?: boolean;
   project?: {
     id: string;
     name: string;
@@ -59,28 +66,59 @@ type SongStats = {
   inProject: number;
   drafts: number;
   complete: number;
+  favorites?: number;
 };
 
-type FilterType = 'all' | 'standalone' | 'in_project';
+type FilterType = 'all' | 'standalone' | 'in_project' | 'favorites';
 type StatusFilter = 'all' | 'draft' | 'in_progress' | 'needs_review' | 'complete';
 
-// Status configuration
+// Status configuration with progress values
 const STATUS_CONFIG = {
-  draft: { label: 'Draft', icon: FileEdit, color: 'text-gray-400', bg: 'bg-gray-500/20' },
-  in_progress: { label: 'In Progress', icon: Clock, color: 'text-blue-400', bg: 'bg-blue-500/20' },
+  draft: {
+    label: 'Draft',
+    icon: FileEdit,
+    color: 'text-gray-400',
+    bg: 'bg-gray-500/20',
+    progress: 25,
+  },
+  in_progress: {
+    label: 'In Progress',
+    icon: Clock,
+    color: 'text-blue-400',
+    bg: 'bg-blue-500/20',
+    progress: 50,
+  },
   needs_review: {
     label: 'Needs Review',
     icon: AlertCircle,
     color: 'text-yellow-400',
     bg: 'bg-yellow-500/20',
+    progress: 75,
   },
   complete: {
     label: 'Complete',
     icon: CheckCircle2,
     color: 'text-green-400',
     bg: 'bg-green-500/20',
+    progress: 100,
   },
 };
+
+// Format relative time
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString();
+}
 
 // Stat Card Component
 function StatCard({
@@ -122,14 +160,138 @@ function StatCard({
   );
 }
 
-// Song Card Component
+// Quick Preview Modal
+function QuickPreviewModal({
+  song,
+  onClose,
+  onEdit,
+}: {
+  song: Song;
+  onClose: () => void;
+  onEdit: () => void;
+}) {
+  const statusConfig = STATUS_CONFIG[song.status];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className="max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-2xl border border-gray-800 bg-gray-900"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-gray-800 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20">
+              <Music className="h-5 w-5 text-orange-500" />
+            </div>
+            <div>
+              <h2 className="font-semibold text-white">{song.title}</h2>
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                {song.key && <span>{song.key}</span>}
+                {song.tempo && <span>• {song.tempo} BPM</span>}
+                <span className={statusConfig.color}>• {statusConfig.label}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onEdit}
+              className="flex items-center gap-2 rounded-lg bg-orange-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-orange-600"
+            >
+              <ExternalLink className="h-4 w-4" />
+              Edit
+            </button>
+            <button
+              onClick={onClose}
+              className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="border-b border-gray-800 px-4 py-3">
+          <div className="mb-1 flex items-center justify-between text-xs">
+            <span className="text-gray-400">Progress</span>
+            <span className={statusConfig.color}>{statusConfig.progress}%</span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-gray-800">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${statusConfig.progress}%` }}
+              className="h-full rounded-full bg-gradient-to-r from-orange-500 to-orange-400"
+            />
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="max-h-[50vh] overflow-y-auto p-4">
+          {song.lyrics ? (
+            <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-gray-300">
+              {song.lyrics}
+            </pre>
+          ) : (
+            <div className="py-12 text-center text-gray-500">
+              <Music className="mx-auto mb-3 h-12 w-12 opacity-50" />
+              <p>No lyrics yet</p>
+              <button
+                onClick={onEdit}
+                className="mt-3 text-sm text-orange-500 hover:text-orange-400"
+              >
+                Add lyrics →
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-gray-800 px-4 py-3">
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            <span>Last edited {formatRelativeTime(song.updatedAt)}</span>
+            {song.project && (
+              <Link
+                href={`/projects/${song.project.slug}`}
+                className="flex items-center gap-1 text-orange-500 hover:text-orange-400"
+              >
+                <Folder className="h-3 w-3" />
+                {song.project.name}
+              </Link>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// Song Card Component with enhanced features
 function SongCard({
   song,
   viewMode,
+  isSelected,
+  isFocused,
+  onSelect,
+  onToggleFavorite,
+  onPreview,
   onProjectAdded,
 }: {
   song: Song;
   viewMode: 'grid' | 'list';
+  isSelected: boolean;
+  isFocused: boolean;
+  onSelect: () => void;
+  onToggleFavorite: () => void;
+  onPreview: () => void;
   onProjectAdded?: () => void;
 }) {
   const router = useRouter();
@@ -140,7 +302,6 @@ function SongCard({
     if (song.project) {
       router.push(`/projects/${song.project.slug}/songs/${song.id}`);
     } else {
-      // For standalone songs, open in songwriting tool with the song loaded
       router.push(`/songwriting?song=${song.id}`);
     }
   };
@@ -156,8 +317,46 @@ function SongCard({
       <motion.div
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        className="group flex items-center gap-4 rounded-xl border border-gray-800 bg-gray-900/50 p-4 transition-all hover:border-orange-500/50"
+        className={`group flex items-center gap-4 rounded-xl border p-4 transition-all ${
+          isFocused
+            ? 'border-orange-500 bg-orange-500/5'
+            : isSelected
+              ? 'border-orange-500/50 bg-orange-500/10'
+              : 'border-gray-800 bg-gray-900/50 hover:border-gray-700'
+        }`}
       >
+        {/* Selection Checkbox */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect();
+          }}
+          className="shrink-0 rounded p-1 hover:bg-gray-800"
+        >
+          {isSelected ? (
+            <CheckSquare className="h-5 w-5 text-orange-500" />
+          ) : (
+            <Square className="h-5 w-5 text-gray-600 group-hover:text-gray-400" />
+          )}
+        </button>
+
+        {/* Favorite Star */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite();
+          }}
+          className="shrink-0 rounded p-1 hover:bg-gray-800"
+        >
+          <Star
+            className={`h-5 w-5 ${
+              song.isFavorite
+                ? 'fill-yellow-500 text-yellow-500'
+                : 'text-gray-600 hover:text-yellow-500'
+            }`}
+          />
+        </button>
+
         {/* Icon/Cover */}
         <button
           onClick={handleOpenSong}
@@ -176,49 +375,75 @@ function SongCard({
         </button>
 
         {/* Info */}
-        <button
-          className="min-w-0 flex-1 cursor-pointer text-left"
-          onClick={handleOpenSong}
-          aria-label={`Open ${song.title}`}
-        >
+        <button className="min-w-0 flex-1 cursor-pointer text-left" onClick={handleOpenSong}>
           <h3 className="truncate font-semibold text-white group-hover:text-orange-500">
             {song.title}
           </h3>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-400">
             {song.key && <span>{song.key}</span>}
             {song.tempo && <span>{song.tempo} BPM</span>}
-            {song.timeSignature && <span>{song.timeSignature}</span>}
-            {lyricsPreview && <span className="truncate text-gray-500">{lyricsPreview}...</span>}
+            <span className="text-gray-600">•</span>
+            <span className="text-gray-500">{formatRelativeTime(song.updatedAt)}</span>
+            {lyricsPreview && (
+              <span className="hidden truncate text-gray-500 lg:inline">{lyricsPreview}...</span>
+            )}
           </div>
         </button>
+
+        {/* Progress Bar */}
+        <div className="hidden w-24 shrink-0 md:block">
+          <div className="mb-1 text-right text-xs text-gray-500">{statusConfig.progress}%</div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-gray-800">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-orange-500 to-orange-400"
+              style={{ width: `${statusConfig.progress}%` }}
+            />
+          </div>
+        </div>
 
         {/* Project Badge */}
         {song.project ? (
           <Link
             href={`/projects/${song.project.slug}`}
-            className="flex items-center gap-2 rounded-lg bg-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700"
+            className="hidden items-center gap-2 rounded-lg bg-gray-800 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-700 sm:flex"
           >
             <Folder className="h-3 w-3" />
             {song.project.name}
           </Link>
         ) : (
-          <ProjectSelector songId={song.id} onProjectAdded={onProjectAdded} className="shrink-0" />
+          <div className="hidden sm:block">
+            <ProjectSelector
+              songId={song.id}
+              onProjectAdded={onProjectAdded}
+              className="shrink-0"
+            />
+          </div>
         )}
 
         {/* Status */}
         <div
-          className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs ${statusConfig.bg}`}
+          className={`hidden items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs sm:flex ${statusConfig.bg}`}
         >
           <StatusIcon className={`h-3 w-3 ${statusConfig.color}`} />
           <span className={statusConfig.color}>{statusConfig.label}</span>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onPreview();
+            }}
+            className="rounded-lg p-2 text-gray-500 hover:bg-gray-800 hover:text-white"
+            title="Quick Preview (P)"
+          >
+            <Eye className="h-4 w-4" />
+          </button>
           <button
             onClick={handleOpenSong}
             className="rounded-lg bg-orange-500/10 p-2 text-orange-500 hover:bg-orange-500 hover:text-white"
-            title="Open Song"
+            title="Open Song (Enter)"
           >
             <ExternalLink className="h-4 w-4" />
           </button>
@@ -232,21 +457,53 @@ function SongCard({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group relative rounded-xl border border-gray-800 bg-gray-900/50 p-4 transition-all hover:border-orange-500/50"
+      className={`group relative rounded-xl border p-4 transition-all ${
+        isFocused
+          ? 'border-orange-500 bg-orange-500/5'
+          : isSelected
+            ? 'border-orange-500/50 bg-orange-500/10'
+            : 'border-gray-800 bg-gray-900/50 hover:border-gray-700'
+      }`}
     >
-      {/* Status Badge */}
-      <div
-        className={`absolute right-3 top-3 flex items-center gap-1 rounded-lg px-2 py-1 text-xs ${statusConfig.bg}`}
-      >
-        <StatusIcon className={`h-3 w-3 ${statusConfig.color}`} />
+      {/* Top Row: Checkbox, Favorite, Status */}
+      <div className="mb-3 flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect();
+            }}
+            className="rounded p-1 hover:bg-gray-800"
+          >
+            {isSelected ? (
+              <CheckSquare className="h-4 w-4 text-orange-500" />
+            ) : (
+              <Square className="h-4 w-4 text-gray-600 group-hover:text-gray-400" />
+            )}
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite();
+            }}
+            className="rounded p-1 hover:bg-gray-800"
+          >
+            <Star
+              className={`h-4 w-4 ${
+                song.isFavorite
+                  ? 'fill-yellow-500 text-yellow-500'
+                  : 'text-gray-600 hover:text-yellow-500'
+              }`}
+            />
+          </button>
+        </div>
+        <div className={`flex items-center gap-1 rounded-lg px-2 py-1 text-xs ${statusConfig.bg}`}>
+          <StatusIcon className={`h-3 w-3 ${statusConfig.color}`} />
+        </div>
       </div>
 
       {/* Content */}
-      <button
-        className="w-full cursor-pointer text-left"
-        onClick={handleOpenSong}
-        aria-label={`Open ${song.title}`}
-      >
+      <button className="w-full cursor-pointer text-left" onClick={handleOpenSong}>
         <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gray-800">
           <Music className="h-6 w-6 text-orange-500" />
         </div>
@@ -256,19 +513,27 @@ function SongCard({
         </h3>
 
         {/* Metadata */}
-        <div className="mb-3 flex flex-wrap gap-1.5 text-xs text-gray-500">
+        <div className="mb-2 flex flex-wrap gap-1.5 text-xs text-gray-500">
           {song.key && <span className="rounded bg-gray-800 px-2 py-0.5">{song.key}</span>}
           {song.tempo && <span className="rounded bg-gray-800 px-2 py-0.5">{song.tempo} BPM</span>}
         </div>
 
-        {/* Lyrics Preview */}
-        {lyricsPreview && (
-          <p className="mb-3 line-clamp-2 text-xs text-gray-500">{lyricsPreview}...</p>
-        )}
+        {/* Last edited */}
+        <p className="mb-2 text-xs text-gray-600">{formatRelativeTime(song.updatedAt)}</p>
       </button>
 
+      {/* Progress Bar */}
+      <div className="mb-3">
+        <div className="h-1 overflow-hidden rounded-full bg-gray-800">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-orange-500 to-orange-400"
+            style={{ width: `${statusConfig.progress}%` }}
+          />
+        </div>
+      </div>
+
       {/* Project Info */}
-      <div className="mt-auto border-t border-gray-800 pt-3">
+      <div className="border-t border-gray-800 pt-3">
         {song.project ? (
           <Link
             href={`/projects/${song.project.slug}`}
@@ -282,13 +547,18 @@ function SongCard({
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xs text-gray-500">
               <FolderOpen className="h-3 w-3" />
-              Not in a project
+              Not in project
             </span>
-            <ProjectSelector
-              songId={song.id}
-              onProjectAdded={onProjectAdded}
-              allowNavigation={false}
-            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onPreview();
+              }}
+              className="rounded p-1 text-gray-500 hover:bg-gray-800 hover:text-white"
+              title="Preview"
+            >
+              <Eye className="h-3.5 w-3.5" />
+            </button>
           </div>
         )}
       </div>
@@ -296,14 +566,185 @@ function SongCard({
   );
 }
 
+// Bulk Actions Bar
+function BulkActionsBar({
+  selectedCount,
+  onSelectAll,
+  onClearSelection,
+  onBulkStatusChange,
+  onBulkExport,
+  totalCount,
+}: {
+  selectedCount: number;
+  onSelectAll: () => void;
+  onClearSelection: () => void;
+  onBulkStatusChange: (status: string) => void;
+  onBulkExport: () => void;
+  totalCount: number;
+}) {
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
+
+  if (selectedCount === 0) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2"
+    >
+      <div className="flex items-center gap-3 rounded-2xl border border-gray-700 bg-gray-900/95 px-4 py-3 shadow-2xl backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+          <CheckSquare className="h-5 w-5 text-orange-500" />
+          <span className="font-medium text-white">{selectedCount} selected</span>
+        </div>
+
+        <div className="h-6 w-px bg-gray-700" />
+
+        <button
+          onClick={selectedCount === totalCount ? onClearSelection : onSelectAll}
+          className="text-sm text-gray-400 hover:text-white"
+        >
+          {selectedCount === totalCount ? 'Deselect All' : 'Select All'}
+        </button>
+
+        <div className="h-6 w-px bg-gray-700" />
+
+        {/* Bulk Status Change */}
+        <div className="relative">
+          <button
+            onClick={() => setShowStatusMenu(!showStatusMenu)}
+            className="flex items-center gap-2 rounded-lg bg-gray-800 px-3 py-1.5 text-sm text-white hover:bg-gray-700"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Change Status
+          </button>
+          {showStatusMenu && (
+            <div className="absolute bottom-full left-0 mb-2 w-40 rounded-lg border border-gray-700 bg-gray-800 py-1 shadow-xl">
+              {Object.entries(STATUS_CONFIG).map(([key, config]) => (
+                <button
+                  key={key}
+                  onClick={() => {
+                    onBulkStatusChange(key);
+                    setShowStatusMenu(false);
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:bg-gray-700"
+                >
+                  <config.icon className={`h-4 w-4 ${config.color}`} />
+                  {config.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Bulk Add to Project */}
+        <ProjectSelector
+          songId={undefined}
+          allowNavigation={false}
+          className="!bg-gray-800 hover:!bg-gray-700"
+        />
+
+        {/* Export */}
+        <button
+          onClick={onBulkExport}
+          className="flex items-center gap-2 rounded-lg bg-gray-800 px-3 py-1.5 text-sm text-white hover:bg-gray-700"
+        >
+          <Download className="h-4 w-4" />
+          Export
+        </button>
+
+        <div className="h-6 w-px bg-gray-700" />
+
+        <button
+          onClick={onClearSelection}
+          className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-800 hover:text-white"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+// Keyboard Shortcuts Help
+function KeyboardShortcutsHelp({ onClose }: { onClose: () => void }) {
+  const shortcuts = [
+    { key: 'j / ↓', desc: 'Move down' },
+    { key: 'k / ↑', desc: 'Move up' },
+    { key: 'Enter', desc: 'Open selected song' },
+    { key: 'Space', desc: 'Toggle selection' },
+    { key: 'p', desc: 'Quick preview' },
+    { key: 's', desc: 'Toggle favorite' },
+    { key: 'a', desc: 'Select all' },
+    { key: 'Esc', desc: 'Clear selection / Close' },
+    { key: 'g', desc: 'Grid view' },
+    { key: 'l', desc: 'List view' },
+    { key: '?', desc: 'Show shortcuts' },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
+        className="w-full max-w-md rounded-2xl border border-gray-800 bg-gray-900 p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
+            <Keyboard className="h-5 w-5 text-orange-500" />
+            Keyboard Shortcuts
+          </h2>
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1 text-gray-400 hover:bg-gray-800 hover:text-white"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {shortcuts.map(({ key, desc }) => (
+            <div
+              key={key}
+              className="flex items-center justify-between rounded-lg bg-gray-800/50 px-3 py-2"
+            >
+              <span className="text-sm text-gray-400">{desc}</span>
+              <kbd className="rounded bg-gray-700 px-2 py-0.5 text-xs text-white">{key}</kbd>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function SongsPage() {
   const { user, loading: authLoading } = useRequireAuth();
+  const router = useRouter();
 
   // State
   const [songs, setSongs] = useState<Song[]>([]);
   const [stats, setStats] = useState<SongStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Selection & Navigation
+  const [selectedSongs, setSelectedSongs] = useState<Set<string>>(new Set());
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+
+  // Preview
+  const [previewSong, setPreviewSong] = useState<Song | null>(null);
+
+  // Keyboard shortcuts help
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -314,6 +755,9 @@ export default function SongsPage() {
   const [sortBy, setSortBy] = useState<'updatedAt' | 'createdAt' | 'title'>('updatedAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
+  // Refs
+  const containerRef = useRef<HTMLDivElement>(null);
+
   // Fetch songs
   const fetchSongs = useCallback(async () => {
     if (!user) return;
@@ -323,7 +767,11 @@ export default function SongsPage() {
 
     try {
       const params = new URLSearchParams();
-      if (filterType !== 'all') params.set('filter', filterType);
+      if (filterType === 'favorites') {
+        params.set('favorites', 'true');
+      } else if (filterType !== 'all') {
+        params.set('filter', filterType);
+      }
       if (statusFilter !== 'all') params.set('status', statusFilter);
       if (searchQuery) params.set('search', searchQuery);
       params.set('sortBy', sortBy);
@@ -346,12 +794,194 @@ export default function SongsPage() {
     fetchSongs();
   }, [fetchSongs]);
 
-  // Debounced search - only trigger on searchQuery changes, not fetchSongs
+  // Debounced search
   useEffect(() => {
     const timer = setTimeout(fetchSongs, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
+
+  // Toggle favorite
+  const handleToggleFavorite = useCallback(
+    async (songId: string) => {
+      const song = songs.find((s) => s.id === songId);
+      if (!song) return;
+
+      // Optimistic update
+      setSongs((prev) =>
+        prev.map((s) => (s.id === songId ? { ...s, isFavorite: !s.isFavorite } : s))
+      );
+
+      try {
+        await fetch(`/api/songs/${songId}/favorite`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isFavorite: !song.isFavorite }),
+        });
+      } catch {
+        // Revert on error
+        setSongs((prev) =>
+          prev.map((s) => (s.id === songId ? { ...s, isFavorite: song.isFavorite } : s))
+        );
+      }
+    },
+    [songs]
+  );
+
+  // Bulk status change
+  const handleBulkStatusChange = useCallback(
+    async (status: string) => {
+      const songIds = Array.from(selectedSongs);
+      if (songIds.length === 0) return;
+
+      // Optimistic update
+      setSongs((prev) =>
+        prev.map((s) => (selectedSongs.has(s.id) ? { ...s, status: status as Song['status'] } : s))
+      );
+
+      try {
+        await fetch('/api/songs/bulk-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ songIds, status }),
+        });
+        setSelectedSongs(new Set());
+      } catch {
+        fetchSongs(); // Revert by refetching
+      }
+    },
+    [selectedSongs, fetchSongs]
+  );
+
+  // Bulk export
+  const handleBulkExport = useCallback(() => {
+    const selectedSongsList = songs.filter((s) => selectedSongs.has(s.id));
+
+    let exportText = '# My Songs Export\n\n';
+    selectedSongsList.forEach((song) => {
+      exportText += `## ${song.title}\n`;
+      exportText += `Status: ${STATUS_CONFIG[song.status].label}\n`;
+      if (song.key) exportText += `Key: ${song.key}\n`;
+      if (song.tempo) exportText += `Tempo: ${song.tempo} BPM\n`;
+      if (song.project) exportText += `Project: ${song.project.name}\n`;
+      exportText += '\n';
+      if (song.lyrics) {
+        exportText += `### Lyrics\n${song.lyrics}\n`;
+      }
+      exportText += '\n---\n\n';
+    });
+
+    const blob = new Blob([exportText], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `songs-export-${new Date().toISOString().split('T')[0]}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [songs, selectedSongs]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if typing in input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      // Ignore if modal is open
+      if (previewSong || showShortcuts) {
+        if (e.key === 'Escape') {
+          setPreviewSong(null);
+          setShowShortcuts(false);
+        }
+        return;
+      }
+
+      switch (e.key) {
+        case 'j':
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedIndex((prev) => Math.min(prev + 1, songs.length - 1));
+          break;
+        case 'k':
+        case 'ArrowUp':
+          e.preventDefault();
+          setFocusedIndex((prev) => Math.max(prev - 1, 0));
+          break;
+        case 'Enter':
+          e.preventDefault();
+          if (focusedIndex >= 0 && songs[focusedIndex]) {
+            const song = songs[focusedIndex];
+            if (song.project) {
+              router.push(`/projects/${song.project.slug}/songs/${song.id}`);
+            } else {
+              router.push(`/songwriting?song=${song.id}`);
+            }
+          }
+          break;
+        case ' ':
+          e.preventDefault();
+          if (focusedIndex >= 0 && songs[focusedIndex]) {
+            const songId = songs[focusedIndex].id;
+            setSelectedSongs((prev) => {
+              const next = new Set(prev);
+              if (next.has(songId)) {
+                next.delete(songId);
+              } else {
+                next.add(songId);
+              }
+              return next;
+            });
+          }
+          break;
+        case 'p':
+          e.preventDefault();
+          if (focusedIndex >= 0 && songs[focusedIndex]) {
+            setPreviewSong(songs[focusedIndex]);
+          }
+          break;
+        case 's':
+          e.preventDefault();
+          if (focusedIndex >= 0 && songs[focusedIndex]) {
+            handleToggleFavorite(songs[focusedIndex].id);
+          }
+          break;
+        case 'a':
+          e.preventDefault();
+          if (selectedSongs.size === songs.length) {
+            setSelectedSongs(new Set());
+          } else {
+            setSelectedSongs(new Set(songs.map((s) => s.id)));
+          }
+          break;
+        case 'Escape':
+          setSelectedSongs(new Set());
+          setFocusedIndex(-1);
+          break;
+        case 'g':
+          setViewMode('grid');
+          break;
+        case 'l':
+          setViewMode('list');
+          break;
+        case '?':
+          setShowShortcuts(true);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    songs,
+    focusedIndex,
+    selectedSongs,
+    previewSong,
+    showShortcuts,
+    router,
+    handleToggleFavorite,
+  ]);
+
+  // Favorites count (local calculation)
+  const favoritesCount = useMemo(() => songs.filter((s) => s.isFavorite).length, [songs]);
 
   if (authLoading) {
     return (
@@ -365,7 +995,11 @@ export default function SongsPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+    <div
+      ref={containerRef}
+      className="relative min-h-screen overflow-hidden"
+      style={{ background: 'var(--bg)' }}
+    >
       {/* Background Effects */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="gradient-orb gradient-orb-1"></div>
@@ -401,12 +1035,21 @@ export default function SongsPage() {
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-white sm:text-3xl">My Songs</h1>
-                  <p className="text-sm text-gray-400">All your songs in one place</p>
+                  <p className="text-sm text-gray-400">
+                    {stats?.total || 0} songs • Press{' '}
+                    <kbd className="rounded bg-gray-800 px-1.5 py-0.5 text-xs">?</kbd> for shortcuts
+                  </p>
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowShortcuts(true)}
+                className="flex items-center gap-2 rounded-xl border border-gray-800 bg-gray-900 px-3 py-2.5 text-gray-400 hover:bg-gray-800 hover:text-white"
+              >
+                <Keyboard className="h-4 w-4" />
+              </button>
               <Link
                 href="/songwriting"
                 className="flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-2.5 font-medium text-white transition-all hover:bg-orange-600"
@@ -424,7 +1067,7 @@ export default function SongsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5"
+            className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6"
           >
             <StatCard
               label="Total Songs"
@@ -432,6 +1075,13 @@ export default function SongsPage() {
               icon={Music2}
               active={filterType === 'all'}
               onClick={() => setFilterType('all')}
+            />
+            <StatCard
+              label="Favorites"
+              value={favoritesCount}
+              icon={Star}
+              active={filterType === 'favorites'}
+              onClick={() => setFilterType('favorites')}
             />
             <StatCard
               label="Standalone"
@@ -477,7 +1127,7 @@ export default function SongsPage() {
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
               <input
                 type="text"
-                placeholder="Search songs by title..."
+                placeholder="Search songs by title... (type to filter)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full rounded-xl border border-gray-800 bg-gray-900 py-3 pl-10 pr-4 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
@@ -493,6 +1143,7 @@ export default function SongsPage() {
                     ? 'bg-orange-500 text-white'
                     : 'text-gray-400 hover:text-white'
                 }`}
+                title="Grid view (G)"
               >
                 <Grid3x3 className="h-4 w-4" />
               </button>
@@ -503,6 +1154,7 @@ export default function SongsPage() {
                     ? 'bg-orange-500 text-white'
                     : 'text-gray-400 hover:text-white'
                 }`}
+                title="List view (L)"
               >
                 <List className="h-4 w-4" />
               </button>
@@ -532,7 +1184,6 @@ export default function SongsPage() {
                 className="overflow-hidden rounded-xl border border-gray-800 bg-gray-900/50"
               >
                 <div className="grid gap-4 p-4 sm:grid-cols-3">
-                  {/* Status Filter */}
                   <div>
                     <label
                       htmlFor="status-filter"
@@ -553,8 +1204,6 @@ export default function SongsPage() {
                       <option value="complete">Complete</option>
                     </select>
                   </div>
-
-                  {/* Sort By */}
                   <div>
                     <label
                       htmlFor="sort-by"
@@ -573,8 +1222,6 @@ export default function SongsPage() {
                       <option value="title">Title</option>
                     </select>
                   </div>
-
-                  {/* Sort Order */}
                   <div>
                     <label
                       htmlFor="sort-order"
@@ -658,46 +1305,81 @@ export default function SongsPage() {
                 : 'space-y-3'
             }
           >
-            {songs.map((song) => (
-              <SongCard key={song.id} song={song} viewMode={viewMode} onProjectAdded={fetchSongs} />
+            {songs.map((song, index) => (
+              <SongCard
+                key={song.id}
+                song={song}
+                viewMode={viewMode}
+                isSelected={selectedSongs.has(song.id)}
+                isFocused={index === focusedIndex}
+                onSelect={() => {
+                  setSelectedSongs((prev) => {
+                    const next = new Set(prev);
+                    if (next.has(song.id)) {
+                      next.delete(song.id);
+                    } else {
+                      next.add(song.id);
+                    }
+                    return next;
+                  });
+                }}
+                onToggleFavorite={() => handleToggleFavorite(song.id)}
+                onPreview={() => setPreviewSong(song)}
+                onProjectAdded={fetchSongs}
+              />
             ))}
           </motion.div>
         )}
 
-        {/* Helpful Info */}
+        {/* Keyboard Shortcuts Hint */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="mt-12 rounded-xl border border-gray-800 bg-gray-900/30 p-6"
+          className="mt-8 text-center text-xs text-gray-600"
         >
-          <h3 className="mb-3 flex items-center gap-2 font-semibold text-white">
-            <Sparkles className="h-4 w-4 text-orange-500" />
-            Pro Tips
-          </h3>
-          <ul className="space-y-2 text-sm text-gray-400">
-            <li className="flex items-start gap-2">
-              <span className="text-orange-500">•</span>
-              <span>
-                <strong>Standalone songs</strong> can be added to projects anytime using the "Add to
-                Project" button
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-orange-500">•</span>
-              <span>
-                Use <strong>status filters</strong> to track song progress from draft to complete
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-orange-500">•</span>
-              <span>
-                Click any song to open it in the <strong>Songwriting Studio</strong> or project view
-              </span>
-            </li>
-          </ul>
+          <kbd className="rounded bg-gray-800 px-1.5 py-0.5">j</kbd>/
+          <kbd className="rounded bg-gray-800 px-1.5 py-0.5">k</kbd> Navigate •{' '}
+          <kbd className="rounded bg-gray-800 px-1.5 py-0.5">Space</kbd> Select •{' '}
+          <kbd className="rounded bg-gray-800 px-1.5 py-0.5">Enter</kbd> Open •{' '}
+          <kbd className="rounded bg-gray-800 px-1.5 py-0.5">p</kbd> Preview •{' '}
+          <kbd className="rounded bg-gray-800 px-1.5 py-0.5">?</kbd> All shortcuts
         </motion.div>
       </div>
+
+      {/* Bulk Actions Bar */}
+      <AnimatePresence>
+        <BulkActionsBar
+          selectedCount={selectedSongs.size}
+          totalCount={songs.length}
+          onSelectAll={() => setSelectedSongs(new Set(songs.map((s) => s.id)))}
+          onClearSelection={() => setSelectedSongs(new Set())}
+          onBulkStatusChange={handleBulkStatusChange}
+          onBulkExport={handleBulkExport}
+        />
+      </AnimatePresence>
+
+      {/* Quick Preview Modal */}
+      <AnimatePresence>
+        {previewSong && (
+          <QuickPreviewModal
+            song={previewSong}
+            onClose={() => setPreviewSong(null)}
+            onEdit={() => {
+              if (previewSong.project) {
+                router.push(`/projects/${previewSong.project.slug}/songs/${previewSong.id}`);
+              } else {
+                router.push(`/songwriting?song=${previewSong.id}`);
+              }
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Keyboard Shortcuts Help */}
+      <AnimatePresence>
+        {showShortcuts && <KeyboardShortcutsHelp onClose={() => setShowShortcuts(false)} />}
+      </AnimatePresence>
     </div>
   );
 }

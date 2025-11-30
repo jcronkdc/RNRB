@@ -1,3 +1,50 @@
+/**
+ * AI ASSISTANT CHAT API
+ *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * SECURITY: USER DATA ISOLATION GUARANTEES
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * This AI assistant is designed with STRICT data isolation between users.
+ * Each user operates in their own "safe bubble" - the AI CANNOT access any data
+ * belonging to other users.
+ *
+ * ISOLATION ENFORCEMENT POINTS:
+ *
+ * 1. AUTHENTICATION (requireAuth)
+ *    - Every request requires valid authentication
+ *    - User ID is extracted from verified session token
+ *    - No anonymous AI access is possible
+ *
+ * 2. CONTEXT LOADING (buildGodlikeContext)
+ *    - ALL database queries include userId filter
+ *    - Songs: WHERE userId = $userId
+ *    - Projects: WHERE projectMember.userId = $userId
+ *    - Tours: WHERE org.members.userId = $userId
+ *    - Library: WHERE userId = $userId
+ *    - Messages: WHERE senderId = $userId OR receiverId = $userId
+ *    - Memory: WHERE userId = $userId
+ *    - Conversations: WHERE userId = $userId
+ *
+ * 3. ACTION EXECUTION (executeAction & all tool functions)
+ *    - Every action receives userId as FIRST parameter
+ *    - All database operations verify ownership before modification
+ *    - Cross-user data access is IMPOSSIBLE by design
+ *
+ * 4. CONVERSATION PERSISTENCE
+ *    - Conversations stored with userId
+ *    - Updates MUST verify conversation.userId === authenticated userId
+ *    - Summaries tied to specific user
+ *
+ * 5. AI MEMORY SYSTEM
+ *    - Memories stored per-user
+ *    - Memory queries always filter by userId
+ *    - Learned preferences/facts isolated per user
+ *
+ * NEVER REMOVE THESE CHECKS - they are the foundation of user privacy.
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
 import Anthropic from '@anthropic-ai/sdk';
 import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
@@ -416,7 +463,24 @@ When the user asks you to do something, explain what you would do and guide them
     // Save or update conversation
     let conversation;
     if (validated.conversationId) {
-      // Update existing conversation
+      // SECURITY: Verify user owns this conversation before updating
+      const existingConversation = await prisma.assistantConversation.findFirst({
+        where: {
+          id: validated.conversationId,
+          userId: user.id, // Critical: Must match authenticated user
+        },
+      });
+
+      if (!existingConversation) {
+        throw new AppError(
+          'Conversation not found or access denied',
+          'FORBIDDEN',
+          403,
+          'Attempted to update a conversation that does not belong to this user'
+        );
+      }
+
+      // Update existing conversation (verified ownership above)
       conversation = await prisma.assistantConversation.update({
         where: { id: validated.conversationId },
         data: {

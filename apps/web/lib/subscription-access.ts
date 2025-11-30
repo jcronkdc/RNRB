@@ -106,6 +106,7 @@ export async function hasFeatureAccess(
       select: {
         id: true,
         email: true,
+        isOwner: true,
         subscriptionTier: true,
         subscriptionStatus: true,
         subscriptionEndsAt: true,
@@ -117,6 +118,15 @@ export async function hasFeatureAccess(
         hasAccess: false,
         tier: 'free',
         reason: 'User not found in database',
+      };
+    }
+
+    // OWNER BYPASS: Platform owner has unlimited access to ALL features
+    if (dbUser.isOwner) {
+      return {
+        hasAccess: true,
+        tier: 'studio', // Report as studio for UI purposes
+        reason: undefined,
       };
     }
 
@@ -208,6 +218,7 @@ export async function getUserTier(): Promise<SubscriptionTier> {
     const dbUser = await prisma.user.findUnique({
       where: { id: user.id },
       select: {
+        isOwner: true,
         subscriptionTier: true,
         subscriptionStatus: true,
         subscriptionEndsAt: true,
@@ -216,6 +227,11 @@ export async function getUserTier(): Promise<SubscriptionTier> {
 
     if (!dbUser) {
       return 'free';
+    }
+
+    // OWNER BYPASS: Platform owner always has studio-level access
+    if (dbUser.isOwner) {
+      return 'studio';
     }
 
     return getEffectiveTier(dbUser);

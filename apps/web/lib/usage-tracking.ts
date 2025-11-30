@@ -85,6 +85,7 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
     const user = await db.user.findUnique({
       where: { id: userId },
       select: {
+        isOwner: true,
         subscriptionTier: true,
         subscriptionStatus: true,
         aiRequestsUsed: true,
@@ -101,6 +102,18 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
 
     if (!user) {
       throw new Error('User not found');
+    }
+
+    // OWNER BYPASS: Platform owner has unlimited access to everything
+    if (user.isOwner) {
+      return {
+        allowed: true,
+        used: 0,
+        limit: -1, // -1 = unlimited
+        remaining: Infinity,
+        resetDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // Far future
+        tier: 'studio' as TierName,
+      };
     }
 
     // Determine effective tier (expired subscriptions fall back to free)

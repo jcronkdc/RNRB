@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const filter = searchParams.get('filter') || 'all'; // all, standalone, in_project
+    const favorites = searchParams.get('favorites'); // true to filter favorites only
     const status = searchParams.get('status'); // draft, in_progress, needs_review, complete
     const search = searchParams.get('search');
     const sortBy = searchParams.get('sortBy') || 'updatedAt';
@@ -32,6 +33,11 @@ export async function GET(req: NextRequest) {
       userId: user.id,
       archived: false,
     };
+
+    // Filter by favorites
+    if (favorites === 'true') {
+      where.isFavorite = true;
+    }
 
     // Filter by project status
     if (filter === 'standalone') {
@@ -73,6 +79,7 @@ export async function GET(req: NextRequest) {
         chords: true,
         tags: true,
         projectId: true,
+        isFavorite: true,
         lastSavedAt: true,
         createdAt: true,
         updatedAt: true,
@@ -89,12 +96,14 @@ export async function GET(req: NextRequest) {
     });
 
     // Get stats
-    const [standaloneCount, inProjectCount, draftCount, completeCount] = await Promise.all([
-      db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
-      db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
-      db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
-      db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
-    ]);
+    const [standaloneCount, inProjectCount, draftCount, completeCount, favoritesCount] =
+      await Promise.all([
+        db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
+        db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
+        db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
+        db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
+        db.song.count({ where: { userId: user.id, archived: false, isFavorite: true } }),
+      ]);
 
     return NextResponse.json({
       songs,
@@ -110,6 +119,7 @@ export async function GET(req: NextRequest) {
         inProject: inProjectCount,
         drafts: draftCount,
         complete: completeCount,
+        favorites: favoritesCount,
       },
     });
   } catch (error) {

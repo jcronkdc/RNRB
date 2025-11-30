@@ -1,7 +1,9 @@
 'use client';
 
-import { Palette, Check, Sparkles, Loader2 } from 'lucide-react';
+import { Palette, Check, Sparkles, Loader2, Eye, Maximize2 } from 'lucide-react';
 import { useState } from 'react';
+
+import { TemplatePreviewModal } from './TemplatePreviewModal';
 
 interface Template {
   id: string;
@@ -13,6 +15,8 @@ interface Template {
     primary: string;
     accent: string;
     text: string;
+    muted?: string;
+    border?: string;
   };
 }
 
@@ -91,6 +95,7 @@ export function TemplateSwitcher({
   const [showConfirm, setShowConfirm] = useState(false);
   const [keepCustomTheme, setKeepCustomTheme] = useState(false);
   const [filterCategory, setFilterCategory] = useState<'all' | 'dark' | 'light'>('all');
+  const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
 
   const hasCustomTheme = currentTheme && Object.keys(currentTheme).length > 0;
 
@@ -116,6 +121,14 @@ export function TemplateSwitcher({
     setSelectedTemplate(currentTemplateId);
     setShowConfirm(false);
     setKeepCustomTheme(false);
+  };
+
+  const handlePreviewSelect = (templateId: string) => {
+    setPreviewTemplate(null);
+    if (templateId !== currentTemplateId) {
+      setSelectedTemplate(templateId);
+      setShowConfirm(true);
+    }
   };
 
   const filteredTemplates =
@@ -219,11 +232,9 @@ export function TemplateSwitcher({
             const isSelected = template.id === selectedTemplate;
 
             return (
-              <button
+              <div
                 key={template.id}
-                onClick={() => handleTemplateSelect(template.id)}
-                disabled={isActive}
-                className={`group relative overflow-hidden rounded-xl p-4 text-left transition-all hover:scale-[1.02] disabled:cursor-default disabled:hover:scale-100 ${
+                className={`group relative overflow-hidden rounded-xl p-4 transition-all hover:scale-[1.02] ${
                   isSelected && !isActive ? 'ring-2' : ''
                 }`}
                 style={
@@ -234,22 +245,61 @@ export function TemplateSwitcher({
                   } as React.CSSProperties
                 }
               >
-                {/* Template Preview */}
-                <div
-                  className="mb-3 flex h-24 items-center justify-center rounded-lg"
+                {/* Template Preview - Clickable for full preview */}
+                <button
+                  onClick={() => setPreviewTemplate(template)}
+                  className="relative mb-3 flex h-32 w-full items-center justify-center overflow-hidden rounded-lg transition-all hover:shadow-lg"
                   style={{ background: template.colors.primary }}
                 >
-                  <div className="space-y-2">
-                    <div
-                      className="h-3 w-24 rounded"
-                      style={{ background: template.colors.text }}
-                    />
-                    <div
-                      className="h-8 w-32 rounded"
-                      style={{ background: template.colors.accent }}
-                    />
+                  {/* Mini website preview */}
+                  <div className="w-full px-3">
+                    {/* Mini nav */}
+                    <div className="mb-2 flex items-center justify-between">
+                      <div
+                        className="h-2 w-12 rounded-sm"
+                        style={{ background: template.colors.text, opacity: 0.8 }}
+                      />
+                      <div className="flex gap-1">
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className="h-1.5 w-4 rounded-sm"
+                            style={{ background: template.colors.text, opacity: 0.4 }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    {/* Mini hero */}
+                    <div className="flex flex-col items-center justify-center py-2">
+                      <div
+                        className="mb-2 h-3 w-20 rounded-sm"
+                        style={{ background: template.colors.text }}
+                      />
+                      <div
+                        className="mb-3 h-1.5 w-16 rounded-sm"
+                        style={{ background: template.colors.accent }}
+                      />
+                      <div className="flex gap-2">
+                        <div
+                          className="h-4 w-12 rounded-full"
+                          style={{ background: template.colors.accent }}
+                        />
+                        <div
+                          className="h-4 w-10 rounded-full border"
+                          style={{ borderColor: template.colors.text }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
+
+                  {/* Preview overlay */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-all group-hover:opacity-100">
+                    <div className="flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 backdrop-blur-sm">
+                      <Maximize2 size={16} className="text-white" />
+                      <span className="text-sm font-medium text-white">Full Preview</span>
+                    </div>
+                  </div>
+                </button>
 
                 {/* Template Info */}
                 <h4 className="mb-1 font-bold uppercase" style={{ color: 'var(--text)' }}>
@@ -259,7 +309,7 @@ export function TemplateSwitcher({
                   {template.description}
                 </p>
 
-                {/* Color Palette */}
+                {/* Color Palette & Actions */}
                 <div className="flex items-center justify-between">
                   <div className="flex -space-x-1">
                     {Object.values(template.colors).map((color, i) => (
@@ -271,27 +321,39 @@ export function TemplateSwitcher({
                     ))}
                   </div>
 
-                  {isActive && (
-                    <div
-                      className="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium"
-                      style={{ background: 'var(--accent)', color: '#fff' }}
-                    >
-                      <Check size={12} />
-                      Active
-                    </div>
-                  )}
-                </div>
-
-                {/* Hover Overlay */}
-                {!isActive && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
-                    <div className="flex items-center gap-2 text-sm font-medium text-white">
-                      <Sparkles size={16} />
-                      Switch to {template.name}
-                    </div>
+                  <div className="flex items-center gap-2">
+                    {isActive ? (
+                      <div
+                        className="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium"
+                        style={{ background: 'var(--accent)', color: '#fff' }}
+                      >
+                        <Check size={12} />
+                        Active
+                      </div>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => setPreviewTemplate(template)}
+                          className="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium transition-colors hover:bg-white/10"
+                          style={{ color: 'var(--muted)' }}
+                          title="Preview template"
+                        >
+                          <Eye size={12} />
+                          Preview
+                        </button>
+                        <button
+                          onClick={() => handleTemplateSelect(template.id)}
+                          className="flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-all hover:scale-105"
+                          style={{ background: 'var(--accent)', color: '#fff' }}
+                        >
+                          <Sparkles size={12} />
+                          Use
+                        </button>
+                      </>
+                    )}
                   </div>
-                )}
-              </button>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -394,6 +456,15 @@ export function TemplateSwitcher({
           </div>
         </div>
       )}
+
+      {/* Template Preview Modal */}
+      <TemplatePreviewModal
+        isOpen={previewTemplate !== null}
+        template={previewTemplate}
+        currentTemplateId={currentTemplateId}
+        onClose={() => setPreviewTemplate(null)}
+        onSelect={handlePreviewSelect}
+      />
     </div>
   );
 }

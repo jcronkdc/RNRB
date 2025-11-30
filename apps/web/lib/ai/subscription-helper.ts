@@ -128,6 +128,7 @@ export async function getSubscriptionContext(userId: string): Promise<Subscripti
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
+      isOwner: true,
       subscriptionTier: true,
       subscriptionStatus: true,
       aiRequestsUsed: true,
@@ -149,6 +150,30 @@ export async function getSubscriptionContext(userId: string): Promise<Subscripti
   });
 
   if (!user) throw new Error('User not found');
+
+  // OWNER BYPASS: Platform owner has unlimited everything
+  if (user.isOwner) {
+    const projectCount = user.memberships.reduce((total, m) => total + m.org.projects.length, 0);
+    const accountAge = Math.floor((Date.now() - user.createdAt.getTime()) / (24 * 60 * 60 * 1000));
+
+    return {
+      currentTier: 'studio',
+      status: 'active',
+      usage: {
+        aiConversations: { used: 0, limit: Infinity, percentage: 0 },
+        storage: { used: 0, limit: Infinity, percentage: 0 },
+        projects: { used: projectCount, limit: Infinity, percentage: 0 },
+        videoMinutes: { used: 0, limit: Infinity, percentage: 0 },
+      },
+      daysUntilReset: 365,
+      accountAge,
+      isAtLimit: false,
+      isNearLimit: false,
+      recommendedTier: 'studio',
+      upgradeReasons: [],
+      downgradeReasons: [],
+    };
+  }
 
   const tier = (user.subscriptionStatus === 'active' ? user.subscriptionTier : 'free') as
     | 'free'

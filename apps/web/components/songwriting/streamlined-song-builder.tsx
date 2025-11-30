@@ -699,7 +699,7 @@ export function StreamlinedSongBuilder({
             onDragEnd={handleDragEnd}
           >
             <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-1">
+              <div className="space-y-0.5">
                 {/* Top add button */}
                 <AddSectionButton position="top" onAdd={(type) => addBlockAt(type, 0)} />
 
@@ -746,10 +746,10 @@ export function StreamlinedSongBuilder({
         )}
       </div>
 
-      {/* Key Analyzer (only shows when there are chords) */}
+      {/* Key Analyzer (only shows when there are chords) - Compact */}
       {allChords.length > 0 && (
         <div
-          className="rounded-xl p-4"
+          className="rounded-lg p-2"
           style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
           <KeyAnalyzer chords={allChords} />

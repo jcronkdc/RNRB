@@ -70,6 +70,7 @@ model User {
   name                    String?
   image                   String?
   pro                     String?
+  isOwner                 Boolean   @default(false) // Platform owner - bypasses ALL limits
   mlcMember               Boolean   @default(false)
   soundExchangeRegistered Boolean   @default(false)
   profileCompleted        Boolean   @default(false) // Track if user has completed profile setup

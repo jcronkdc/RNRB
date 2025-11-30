@@ -1,6 +1,21 @@
 /**
  * AI ASSISTANT PERSISTENT MEMORY SYSTEM
  *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * SECURITY: USER DATA ISOLATION
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * ALL memory operations are STRICTLY scoped to the authenticated user.
+ * The AI assistant's memory is a "safe bubble" - memories from one user
+ * are NEVER visible to or accessible by another user.
+ *
+ * Every function in this module:
+ * - Takes userId as a required parameter
+ * - Filters ALL database queries by userId
+ * - Verifies ownership before any update/delete
+ *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
  * Truly persistent memory that:
  * - Stores explicit facts learned from conversations
  * - Remembers user corrections and preferences
@@ -99,6 +114,7 @@ export interface AIMemory {
 
 /**
  * Store a new memory
+ * SECURITY: Memory is always stored for the authenticated userId - no cross-user access
  */
 export async function storeMemory(
   userId: string,
@@ -115,10 +131,11 @@ export async function storeMemory(
     expiresAt?: Date;
   }
 ): Promise<Memory> {
-  // Check if similar memory exists to avoid duplicates
+  // SECURITY: All memory operations are scoped to userId
+  // Check if similar memory exists to avoid duplicates (within user's scope only)
   const existing = await prisma.aIMemory.findFirst({
     where: {
-      userId,
+      userId, // Critical: Always filter by userId
       type: memory.type,
       content: { contains: memory.content.substring(0, 50), mode: 'insensitive' },
     },
@@ -160,6 +177,7 @@ export async function storeMemory(
 
 /**
  * Update an existing memory
+ * SECURITY: Must verify userId owns the memory before any modification
  */
 export async function updateMemory(
   memoryId: string,
@@ -171,12 +189,19 @@ export async function updateMemory(
     supersede?: boolean; // Mark old memory as superseded
   }
 ): Promise<Memory | null> {
-  // Verify ownership
+  // SECURITY: Verify user owns this memory before allowing any update
+  // This prevents users from accessing/modifying other users' AI memories
   const existing = await prisma.aIMemory.findFirst({
-    where: { id: memoryId, userId },
+    where: {
+      id: memoryId,
+      userId, // Critical: Must match authenticated user
+    },
   });
 
-  if (!existing) return null;
+  if (!existing) {
+    // Return null for security - don't reveal if memory exists for another user
+    return null;
+  }
 
   if (updates.supersede && updates.content) {
     // Create new memory and mark old as superseded
@@ -220,16 +245,24 @@ export async function updateMemory(
 
 /**
  * Delete a memory
+ * SECURITY: Only deletes if the memory belongs to the authenticated user
  */
 export async function deleteMemory(memoryId: string, userId: string): Promise<boolean> {
+  // SECURITY: The deleteMany with userId filter ensures we can ONLY delete
+  // memories that belong to the authenticated user. This prevents any
+  // cross-user memory manipulation.
   const result = await prisma.aIMemory.deleteMany({
-    where: { id: memoryId, userId },
+    where: {
+      id: memoryId,
+      userId, // Critical: Must match authenticated user
+    },
   });
   return result.count > 0;
 }
 
 /**
  * Store conversation summary for long-term memory
+ * SECURITY: Always validates that the conversation belongs to the user
  */
 export async function summarizeConversation(
   conversationId: string,
@@ -243,14 +276,32 @@ export async function summarizeConversation(
     learnings: string[];
   }
 ): Promise<void> {
-  // Check if summary already exists
-  const existing = await prisma.conversationSummary.findUnique({
-    where: { conversationId },
+  // SECURITY: Verify the conversation belongs to this user before summarizing
+  const conversation = await prisma.assistantConversation.findFirst({
+    where: {
+      id: conversationId,
+      userId: userId, // Critical: Must match authenticated user
+    },
+  });
+
+  if (!conversation) {
+    console.error(
+      `[Security] Attempted to summarize conversation ${conversationId} for user ${userId} - access denied`
+    );
+    return; // Silently fail for security - don't reveal existence
+  }
+
+  // Check if summary already exists (must also match userId for security)
+  const existing = await prisma.conversationSummary.findFirst({
+    where: {
+      conversationId,
+      userId, // Ensure we're updating user's own summary
+    },
   });
 
   if (existing) {
     await prisma.conversationSummary.update({
-      where: { conversationId },
+      where: { id: existing.id },
       data: {
         summary: data.summary,
         keyTopics: data.keyTopics,
@@ -293,12 +344,15 @@ export async function summarizeConversation(
 
 /**
  * Load all AI memory for a user
+ * SECURITY: This function ONLY loads memories belonging to the specified userId.
+ * Each user has their own isolated memory bubble - no cross-contamination possible.
  */
 export async function loadAIMemory(userId: string): Promise<AIMemory> {
-  // Load persistent memories
+  // SECURITY: Load ONLY memories for this specific user
+  // The userId filter ensures complete isolation between users
   const memoriesRaw = await prisma.aIMemory.findMany({
     where: {
-      userId,
+      userId, // Critical: Only this user's memories
       supersededBy: null, // Only active memories
       OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
     },
