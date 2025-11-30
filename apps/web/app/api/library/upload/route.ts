@@ -8,22 +8,84 @@ import { requireAuth } from '@/lib/session';
 import { createBrowserClient } from '@/lib/supabase';
 import { getUsageSummary } from '@/lib/usage-tracking';
 
-// Valid audio MIME types
-const VALID_AUDIO_TYPES = [
-  'audio/mpeg',
-  'audio/wav',
-  'audio/aiff',
-  'audio/flac',
-  'audio/ogg',
-  'audio/x-m4a',
-  'audio/mp4',
+// Valid MIME types by category
+const VALID_MIME_TYPES = {
+  audio: [
+    'audio/mpeg',
+    'audio/wav',
+    'audio/aiff',
+    'audio/flac',
+    'audio/ogg',
+    'audio/x-m4a',
+    'audio/mp4',
+    'audio/x-wav',
+    'audio/x-aiff',
+  ],
+  midi: ['audio/midi', 'audio/x-midi', 'application/x-midi'],
+  document: [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain',
+    'text/markdown',
+    'text/rtf',
+    'application/rtf',
+  ],
+  image: [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+    'image/svg+xml',
+    'image/bmp',
+    'image/tiff',
+  ],
+  project: [
+    'application/octet-stream', // Generic binary for DAW files
+  ],
+};
+
+// All valid MIME types combined
+const ALL_VALID_MIME_TYPES = [
+  ...VALID_MIME_TYPES.audio,
+  ...VALID_MIME_TYPES.midi,
+  ...VALID_MIME_TYPES.document,
+  ...VALID_MIME_TYPES.image,
+  ...VALID_MIME_TYPES.project,
 ];
 
-// Valid file extensions (fallback for when MIME type is unreliable)
-const VALID_EXTENSIONS = /\.(mp3|wav|aiff|flac|ogg|m4a)$/i;
+// Valid file extensions by category
+const VALID_EXTENSIONS = {
+  audio: /\.(mp3|wav|aiff|aif|flac|ogg|m4a|wma)$/i,
+  midi: /\.(mid|midi)$/i,
+  document: /\.(pdf|doc|docx|txt|md|rtf|pages)$/i,
+  image: /\.(jpg|jpeg|png|gif|webp|svg|bmp|tiff|tif)$/i,
+  lyrics: /\.(txt|md|rtf|doc|docx|pdf)$/i,
+  chords: /\.(txt|pdf|png|jpg|jpeg|chordpro|cho|crd)$/i,
+  sheet_music: /\.(pdf|png|jpg|jpeg|musicxml|mxl)$/i,
+  project: /\.(als|flp|logic|logicx|ptx|ptf|rpp|cpr|band|sesx|aup|aup3)$/i,
+};
+
+// Check if any extension matches
+const matchesAnyExtension = (filename: string): boolean => {
+  return Object.values(VALID_EXTENSIONS).some((regex) => regex.test(filename));
+};
 
 // Library file type enum - must match Prisma LibraryFileType
-const libraryFileTypeSchema = z.enum(['stem', 'demo', 'sample', 'loop', 'other']);
+const libraryFileTypeSchema = z.enum([
+  'stem',
+  'demo',
+  'sample',
+  'loop',
+  'lyrics',
+  'chords',
+  'sheet_music',
+  'midi',
+  'image',
+  'document',
+  'project',
+  'other',
+]);
 
 // Tags validation schema
 const tagsSchema = z.array(z.string().max(50)).max(20).default([]);
@@ -50,12 +112,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate file type
-    const isValidMime = VALID_AUDIO_TYPES.includes(file.type);
-    const isValidExtension = VALID_EXTENSIONS.test(file.name);
+    const isValidMime = ALL_VALID_MIME_TYPES.includes(file.type);
+    const isValidExtension = matchesAnyExtension(file.name);
 
     if (!isValidMime && !isValidExtension) {
       throw AppError.badRequest(
-        'Invalid file type. Please upload audio files only (mp3, wav, aiff, flac, ogg, m4a)'
+        'Invalid file type. Supported formats: audio (mp3, wav, flac, etc.), documents (pdf, txt, docx), images (jpg, png), MIDI, chord charts, sheet music, and DAW project files.'
       );
     }
 

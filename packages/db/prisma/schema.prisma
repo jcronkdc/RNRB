@@ -2324,10 +2324,22 @@ model LibraryFile {
 }
 
 enum LibraryFileType {
+  // Audio Types
   stem
   demo
   sample
   loop
+  // Document Types
+  lyrics       // Lyric sheets, song text
+  chords       // Chord charts, lead sheets
+  sheet_music  // Sheet music, notation (PDF/images)
+  midi         // MIDI files
+  // Visual Types  
+  image        // Album art, stage plots, promo photos
+  // General Document Types
+  document     // PDFs, contracts, riders, setlists
+  project      // DAW project files
+  // Catch-all
   other
 }
 

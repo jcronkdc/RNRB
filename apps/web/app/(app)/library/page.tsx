@@ -21,6 +21,8 @@ import {
   AlertCircle,
   Globe,
 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useCallback } from 'react';
 
 import { AudioPlayer } from '@/components/audio-player';
@@ -201,25 +203,95 @@ export default function LibraryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12">
+    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* Floating Music Notes */}
+      <div className="music-notes-container pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="music-note"
+            style={{
+              left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.7}s`,
+              fontSize: `${18 + (i % 4) * 8}px`,
+            }}
+          >
+            {['♪', '♫', '♬', '♩'][i % 4]}
+          </div>
+        ))}
+      </div>
+
+      {/* Animated Background Gradient Orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="gradient-orb-accent"></div>
+      </div>
+
+      {/* Hero Grid Pattern */}
+      <div className="hero-grid-pattern"></div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12">
+        {/* White RR Logo */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 flex justify-center"
+        >
+          <Link href="/" className="group relative inline-block">
+            <Image
+              src="/logo-light.png"
+              alt="Rock N' Roll Basement"
+              width={160}
+              height={65}
+              priority
+              className="transition-all duration-300 group-hover:scale-105"
+              style={{
+                filter:
+                  'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
+              }}
+            />
+            <div
+              className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+              style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+            />
+          </Link>
+        </motion.div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative mb-6 overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-600/10 via-orange-500/5 to-red-600/10 p-4 sm:mb-8 sm:p-6 lg:mb-12 lg:p-10"
+          className="relative mb-6 overflow-hidden rounded-2xl border p-4 sm:mb-8 sm:p-6 lg:mb-12 lg:p-10"
+          style={{ borderColor: 'var(--border)', background: 'rgba(255, 99, 71, 0.05)' }}
         >
+          {/* Accent bar */}
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: 60 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mb-4 h-1 rounded-full"
+            style={{ background: 'linear-gradient(90deg, var(--accent), #ffd700)' }}
+          />
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div className="min-w-0 flex-1">
               <div className="mb-2 flex items-center gap-2 sm:mb-3 sm:gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 sm:h-12 sm:w-12">
-                  <Folder className="h-5 w-5 text-orange-500 sm:h-6 sm:w-6" />
+                <div
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-12 sm:w-12"
+                  style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+                >
+                  <Folder className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: 'var(--accent)' }} />
                 </div>
-                <h1 className="truncate text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
+                <h1
+                  className="truncate text-2xl font-bold sm:text-3xl lg:text-4xl"
+                  style={{ color: 'var(--text)' }}
+                >
                   My Library
                 </h1>
               </div>
-              <p className="text-sm text-gray-300 sm:text-base lg:text-xl">
+              <p className="text-sm sm:text-base lg:text-xl" style={{ color: 'var(--muted)' }}>
                 {total} file{total !== 1 ? 's' : ''} • Your music assets, ready to collaborate
               </p>
             </div>

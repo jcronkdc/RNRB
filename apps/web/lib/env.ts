@@ -165,7 +165,7 @@ export const env = getValidatedEnv();
  * Helper to check if a feature is enabled based on env vars
  */
 export const features = {
-  ai: !!env.ANTHROPIC_API_KEY,
+  ai: !!(env.ANTHROPIC_API_KEY || process.env.OPENAI_API_KEY),
   aiMusic: !!env.REPLICATE_API_TOKEN,
   payments: !!env.STRIPE_SECRET_KEY,
   realtime: !!env.ABLY_API_KEY,

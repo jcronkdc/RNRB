@@ -16,6 +16,7 @@ import {
   AlertCircle,
   Palette,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function CreditsPage() {
@@ -75,30 +76,98 @@ export default function CreditsPage() {
   const nearVideoLimit = videoPercentage >= 80;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
-        <div className="absolute inset-0">
-          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
-        </div>
+    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* Floating Music Notes */}
+      <div className="music-notes-container pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="music-note"
+            style={{
+              left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.7}s`,
+              fontSize: `${18 + (i % 4) * 8}px`,
+            }}
+          >
+            {['♪', '♫', '♬', '♩'][i % 4]}
+          </div>
+        ))}
+      </div>
 
-        <div className="rnrb-container relative z-10 max-w-7xl px-4 py-16">
+      {/* Animated Background Gradient Orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="gradient-orb-accent"></div>
+      </div>
+
+      {/* Hero Grid Pattern */}
+      <div className="hero-grid-pattern"></div>
+
+      {/* Hero Section */}
+      <div className="relative z-10 overflow-hidden border-b border-border/50">
+        <div className="mx-auto max-w-7xl px-4 py-8">
+          {/* White RR Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 flex justify-center"
+          >
+            <Link href="/" className="group relative inline-block">
+              <Image
+                src="/logo-light.png"
+                alt="Rock N' Roll Basement"
+                width={160}
+                height={65}
+                priority
+                className="transition-all duration-300 group-hover:scale-105"
+                style={{
+                  filter:
+                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
+                }}
+              />
+              <div
+                className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+                style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+              />
+            </Link>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            {/* Accent bar */}
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: 60 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="mb-4 h-1 rounded-full"
+              style={{ background: 'linear-gradient(90deg, var(--accent), #ffd700)' }}
+            />
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
-                <CreditCard className="h-6 w-6 text-brand-primary" />
+              <div
+                className="flex h-12 w-12 items-center justify-center rounded-xl"
+                style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+              >
+                <CreditCard className="h-6 w-6" style={{ color: 'var(--accent)' }} />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">AI Features & Usage</p>
-                <h1 className="font-display text-3xl font-bold md:text-4xl">Credits & Billing</h1>
+                <p className="text-sm" style={{ color: 'var(--accent)' }}>
+                  AI Features & Usage
+                </p>
+                <h1
+                  className="font-display text-3xl font-bold md:text-4xl"
+                  style={{ color: 'var(--text)' }}
+                >
+                  Credits & Billing
+                </h1>
               </div>
             </div>
-            <p className="max-w-2xl text-lg text-muted-foreground">
+            <p className="max-w-2xl text-lg" style={{ color: 'var(--muted)' }}>
               Track your AI credits, video minutes, and storage usage in real-time
             </p>
           </motion.div>

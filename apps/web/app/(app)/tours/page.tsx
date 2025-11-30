@@ -408,41 +408,70 @@ export default function ToursPage() {
   }
 
   return (
-    <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
+    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Toast Notifications */}
       <ToastNotification toasts={toasts} onRemove={removeToast} />
 
-      {/* Animated Background */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <motion.div
-          className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full blur-3xl"
-          style={{ background: 'radial-gradient(circle, rgba(255, 99, 71, 0.08), transparent)' }}
-          animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full blur-3xl"
-          style={{ background: 'radial-gradient(circle, rgba(255, 215, 0, 0.06), transparent)' }}
-          animate={{ x: [0, -30, 0], y: [0, -50, 0] }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
-        />
+      {/* Floating Music Notes */}
+      <div className="music-notes-container pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="music-note"
+            style={{
+              left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.7}s`,
+              fontSize: `${18 + (i % 4) * 8}px`,
+            }}
+          >
+            {['♪', '♫', '♬', '♩'][i % 4]}
+          </div>
+        ))}
       </div>
 
+      {/* Animated Background Gradient Orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="gradient-orb-accent"></div>
+      </div>
+
+      {/* Hero Grid Pattern */}
+      <div className="hero-grid-pattern"></div>
+
       {/* Hero Section */}
-      <div className="relative overflow-hidden border-b" style={{ borderColor: 'var(--border)' }}>
-        <div className="relative z-10 px-4 py-8">
+      <div
+        className="relative z-10 overflow-hidden border-b"
+        style={{ borderColor: 'var(--border)' }}
+      >
+        <div className="px-4 py-8">
           {/* White RR Logo */}
-          <div className="mb-8 flex justify-center">
-            <Link href="/" className="transition-transform hover:scale-105">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 flex justify-center"
+          >
+            <Link href="/" className="group relative inline-block">
               <Image
                 src="/logo-light.png"
                 alt="Rock N' Roll Basement"
-                width={56}
-                height={56}
-                className="drop-shadow-[0_0_15px_rgba(255,99,71,0.3)]"
+                width={160}
+                height={65}
+                priority
+                className="transition-all duration-300 group-hover:scale-105"
+                style={{
+                  filter:
+                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
+                }}
+              />
+              <div
+                className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+                style={{ background: 'rgba(255, 99, 71, 0.2)' }}
               />
             </Link>
-          </div>
+          </motion.div>
 
           <div className="mx-auto max-w-7xl">
             <motion.div

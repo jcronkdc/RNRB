@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Compass, TrendingUp, Clock, Heart, Search, Loader2, Sparkles, Music2 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 import { AudioPlayer } from '@/components/audio-player';
@@ -123,54 +125,98 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
-      {/* Animated Background Orbs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-32 -top-32 h-96 w-96 animate-pulse rounded-full bg-cyan-500/20 blur-[100px]" />
-        <div
-          className="absolute -right-32 top-1/4 h-80 w-80 animate-pulse rounded-full bg-purple-500/15 blur-[100px]"
-          style={{ animationDelay: '1s' }}
-        />
-        <div
-          className="absolute bottom-1/4 left-1/3 h-72 w-72 animate-pulse rounded-full bg-pink-500/10 blur-[100px]"
-          style={{ animationDelay: '2s' }}
-        />
+    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* Floating Music Notes */}
+      <div className="music-notes-container pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="music-note"
+            style={{
+              left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.7}s`,
+              fontSize: `${18 + (i % 4) * 8}px`,
+            }}
+          >
+            {['♪', '♫', '♬', '♩'][i % 4]}
+          </div>
+        ))}
       </div>
 
-      {/* Subtle grid overlay */}
-      <div
-        className="pointer-events-none fixed inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }}
-      />
+      {/* Animated Background Gradient Orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="gradient-orb-accent"></div>
+      </div>
+
+      {/* Hero Grid Pattern */}
+      <div className="hero-grid-pattern"></div>
 
       {/* Hero Section */}
-      <div className="relative z-10 border-b border-white/10 bg-gradient-to-r from-cyan-900/20 via-black to-purple-900/20">
-        <div className="rnrb-container max-w-7xl px-4 py-16">
+      <div className="relative z-10 border-b border-border/50">
+        <div className="mx-auto max-w-7xl px-4 py-8">
+          {/* White RR Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 flex justify-center"
+          >
+            <Link href="/" className="group relative inline-block">
+              <Image
+                src="/logo-light.png"
+                alt="Rock N' Roll Basement"
+                width={160}
+                height={65}
+                priority
+                className="transition-all duration-300 group-hover:scale-105"
+                style={{
+                  filter:
+                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
+                }}
+              />
+              <div
+                className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+                style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+              />
+            </Link>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Gradient accent bar */}
-            <div className="mb-6 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500" />
+            {/* Accent bar */}
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: 60 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="mb-4 h-1 rounded-full"
+              style={{ background: 'linear-gradient(90deg, var(--accent), #ffd700)' }}
+            />
 
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <div className="mb-3 flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 backdrop-blur-sm">
-                    <Compass className="h-6 w-6 text-cyan-400" />
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-xl"
+                    style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+                  >
+                    <Compass className="h-6 w-6" style={{ color: 'var(--accent)' }} />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-cyan-400">Community Tracks</p>
-                    <h1 className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-4xl font-bold text-transparent">
+                    <p className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                      Community Tracks
+                    </p>
+                    <h1 className="text-4xl font-bold" style={{ color: 'var(--text)' }}>
                       Explore
                     </h1>
                   </div>
                 </div>
-                <p className="max-w-2xl text-lg text-gray-400">
+                <p className="max-w-2xl text-lg" style={{ color: 'var(--muted)' }}>
                   Discover trending tracks and find inspiration from the community
                 </p>
               </div>

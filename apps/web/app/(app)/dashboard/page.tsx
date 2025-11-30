@@ -540,12 +540,12 @@ function DashboardContent() {
       <div className="hero-grid-pattern"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-10">
-        {/* White RR Logo - Centered at top */}
+        {/* White RR Logo & Title - Centered at top */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8 flex justify-center"
+          className="mb-8 flex flex-col items-center"
         >
           <Link href="/" className="group relative inline-block">
             <Image
@@ -565,6 +565,14 @@ function DashboardContent() {
               style={{ background: 'rgba(255, 99, 71, 0.2)' }}
             />
           </Link>
+          <h1 className="hero-title mt-4 text-center">
+            <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
+              Rock N' Roll Basement
+            </span>
+          </h1>
+          <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+            Dashboard
+          </p>
         </motion.div>
         {/* Loading indicator */}
         {(loading || statsLoading) && user && (

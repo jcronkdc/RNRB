@@ -1,10 +1,10 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
 import { buildAssistantContext, formatContextForAI } from '@/lib/ai/assistant-context';
-import { AI_MODELS, AI_MAX_TOKENS } from '@/lib/ai/config';
-import { env, features } from '@/lib/env';
+import { AI_MAX_TOKENS } from '@/lib/ai/config';
 import { handleApiError, AppError } from '@/lib/errors';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
@@ -12,20 +12,28 @@ import { requireFeatureAccess } from '@/lib/subscription-access';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 import { assistantChatSchema, parseBody } from '@/lib/validations';
 
-// Initialize Claude client (only if API key is available)
-const getAnthropicClient = () => {
-  if (!features.ai) {
-    throw new AppError(
-      'AI features are not available',
-      'SERVICE_UNAVAILABLE',
-      503,
-      'ANTHROPIC_API_KEY not configured'
-    );
-  }
-  return new Anthropic({
-    apiKey: env.ANTHROPIC_API_KEY,
-  });
-};
+// AI Provider detection - prefer OpenAI (more common), fallback to Claude
+type AIProvider = 'openai' | 'anthropic' | null;
+
+function detectAIProvider(): AIProvider {
+  if (process.env.OPENAI_API_KEY) return 'openai';
+  if (process.env.ANTHROPIC_API_KEY) return 'anthropic';
+  return null;
+}
+
+// Get OpenAI client
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+  return new OpenAI({ apiKey });
+}
+
+// Get Anthropic client
+function getAnthropicClient() {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return null;
+  return new Anthropic({ apiKey });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -75,8 +83,16 @@ export async function POST(request: NextRequest) {
     // Validate input
     const validated = await parseBody(request, assistantChatSchema);
 
-    // Get Anthropic client
-    const anthropic = getAnthropicClient();
+    // Detect which AI provider to use
+    const provider = detectAIProvider();
+    if (!provider) {
+      throw new AppError(
+        'AI features are not available',
+        'SERVICE_UNAVAILABLE',
+        503,
+        'Neither OPENAI_API_KEY nor ANTHROPIC_API_KEY configured'
+      );
+    }
 
     // Get current page from referer
     const referer = request.headers.get('referer') || '';
@@ -85,49 +101,100 @@ export async function POST(request: NextRequest) {
     const context = await buildAssistantContext(user.id, referer);
     const systemPrompt = formatContextForAI(context);
 
-    // Build conversation messages
-    const messages: Anthropic.MessageParam[] = [];
+    let responseText: string;
+    let inputTokens: number;
+    let outputTokens: number;
+    let cost: number;
+    let modelUsed: string;
 
-    // Add conversation history if exists
-    if (validated.conversationHistory) {
-      validated.conversationHistory.forEach((msg) => {
-        messages.push({
-          role: msg.role,
-          content: msg.content,
+    if (provider === 'openai') {
+      // Use OpenAI GPT-4o
+      const openai = getOpenAIClient()!;
+
+      // Build messages array
+      const messages: OpenAI.ChatCompletionMessageParam[] = [
+        { role: 'system', content: systemPrompt },
+      ];
+
+      // Add conversation history if exists
+      if (validated.conversationHistory) {
+        validated.conversationHistory.forEach((msg) => {
+          messages.push({
+            role: msg.role as 'user' | 'assistant',
+            content: msg.content,
+          });
         });
+      }
+
+      // Add current message
+      messages.push({
+        role: 'user',
+        content: validated.message,
       });
+
+      // Call OpenAI API - using GPT-4o for best reasoning
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages,
+        max_tokens: AI_MAX_TOKENS.CONVERSATION,
+        temperature: 0.7,
+      });
+
+      responseText = response.choices[0]?.message?.content || '';
+      inputTokens = response.usage?.prompt_tokens || 0;
+      outputTokens = response.usage?.completion_tokens || 0;
+
+      // GPT-4o pricing: $5/1M input, $15/1M output
+      cost = (inputTokens / 1000000) * 5.0 + (outputTokens / 1000000) * 15.0;
+      modelUsed = 'gpt-4o';
+    } else {
+      // Use Claude
+      const anthropic = getAnthropicClient()!;
+
+      // Build conversation messages
+      const messages: Anthropic.MessageParam[] = [];
+
+      // Add conversation history if exists
+      if (validated.conversationHistory) {
+        validated.conversationHistory.forEach((msg) => {
+          messages.push({
+            role: msg.role,
+            content: msg.content,
+          });
+        });
+      }
+
+      // Add current message
+      messages.push({
+        role: 'user',
+        content: validated.message,
+      });
+
+      // Call Claude API
+      const response = await anthropic.messages.create({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: AI_MAX_TOKENS.CONVERSATION,
+        system: systemPrompt,
+        messages: messages,
+      });
+
+      // Extract response text
+      responseText = response.content
+        .filter((block) => block.type === 'text')
+        .map((block) => ('text' in block ? block.text : ''))
+        .join('\n');
+
+      inputTokens = response.usage.input_tokens;
+      outputTokens = response.usage.output_tokens;
+
+      // Claude Sonnet pricing: $3/1M input, $15/1M output
+      cost = (inputTokens / 1000000) * 3.0 + (outputTokens / 1000000) * 15.0;
+      modelUsed = 'claude-3-5-sonnet';
     }
-
-    // Add current message
-    messages.push({
-      role: 'user',
-      content: validated.message,
-    });
-
-    // Call Claude API - using best reasoning model for assistant
-    const response = await anthropic.messages.create({
-      model: AI_MODELS.REASONING,
-      max_tokens: AI_MAX_TOKENS.CONVERSATION,
-      system: systemPrompt,
-      messages: messages,
-    });
-
-    // Extract response text
-    const responseText = response.content
-      .filter((block) => block.type === 'text')
-      .map((block) => ('text' in block ? block.text : ''))
-      .join('\n');
 
     if (!responseText) {
       throw new AppError('AI service unavailable', 'SERVICE_UNAVAILABLE', 503);
     }
-
-    // Calculate cost (Claude Sonnet pricing)
-    const inputTokens = response.usage.input_tokens;
-    const outputTokens = response.usage.output_tokens;
-    const cost =
-      (inputTokens / 1000000) * 3.0 + // $3 per 1M input tokens
-      (outputTokens / 1000000) * 15.0; // $15 per 1M output tokens
 
     // Save or update conversation
     let conversation;
@@ -177,6 +244,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       response: responseText,
       conversationId: conversation.id,
+      model: modelUsed,
       usage: {
         inputTokens,
         outputTokens,
@@ -225,9 +293,16 @@ function detectTopic(message: string, currentPage: string): string {
  * GET endpoint - for testing/healthcheck
  */
 export async function GET() {
+  const provider = detectAIProvider();
+  const model =
+    provider === 'openai' ? 'gpt-4o' : provider === 'anthropic' ? 'claude-3-5-sonnet' : 'none';
+
   return NextResponse.json({
-    status: features.ai ? 'ok' : 'disabled',
-    message: features.ai ? 'AI Assistant endpoint is running' : 'AI features not configured',
-    model: AI_MODELS.REASONING,
+    status: provider ? 'ok' : 'disabled',
+    message: provider
+      ? `AI Assistant running with ${provider.toUpperCase()}`
+      : 'No AI provider configured',
+    provider,
+    model,
   });
 }

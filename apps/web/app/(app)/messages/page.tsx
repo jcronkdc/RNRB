@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { MessageSquare, Search, Users, Music2, Plus, Check, Zap, X } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 
@@ -124,6 +125,34 @@ export default function MessagesPage() {
       className="relative flex h-screen flex-col overflow-hidden"
       style={{ background: 'var(--bg)' }}
     >
+      {/* Floating Music Notes */}
+      <div className="music-notes-container pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="music-note"
+            style={{
+              left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.7}s`,
+              fontSize: `${18 + (i % 4) * 8}px`,
+            }}
+          >
+            {['♪', '♫', '♬', '♩'][i % 4]}
+          </div>
+        ))}
+      </div>
+
+      {/* Animated Background Gradient Orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="gradient-orb-accent"></div>
+      </div>
+
+      {/* Hero Grid Pattern */}
+      <div className="hero-grid-pattern"></div>
+
       {/* Header with White RR Logo */}
       <div
         className="relative z-20 flex items-center gap-4 border-b px-6 py-4"
@@ -133,13 +162,19 @@ export default function MessagesPage() {
             'linear-gradient(180deg, rgba(30, 30, 30, 0.98) 0%, rgba(22, 22, 22, 0.95) 100%)',
         }}
       >
-        <Image
-          src="/logo-dark.png"
-          alt="Rock N' Roll Basement"
-          width={48}
-          height={48}
-          className="drop-shadow-[0_0_10px_rgba(255,99,71,0.3)]"
-        />
+        <Link href="/" className="group">
+          <Image
+            src="/logo-light.png"
+            alt="Rock N' Roll Basement"
+            width={56}
+            height={56}
+            className="transition-transform group-hover:scale-105"
+            style={{
+              filter:
+                'drop-shadow(0 0 15px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 25px rgba(255, 99, 71, 0.3))',
+            }}
+          />
+        </Link>
         <div>
           <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
             Messages
@@ -151,8 +186,8 @@ export default function MessagesPage() {
       </div>
 
       {/* Main Content */}
-      <div className="relative flex flex-1 overflow-hidden">
-        {/* Animated Background Gradient Orbs - Landing page tomato/gold colors */}
+      <div className="relative z-10 flex flex-1 overflow-hidden">
+        {/* Background removed - using CSS classes above */}
         <div className="pointer-events-none fixed inset-0 overflow-hidden">
           <motion.div
             className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full blur-3xl"

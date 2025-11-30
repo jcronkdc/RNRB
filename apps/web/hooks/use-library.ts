@@ -1,7 +1,19 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import useSWR, { mutate } from 'swr';
 
-export type LibraryFileType = 'stem' | 'demo' | 'sample' | 'loop' | 'other';
+export type LibraryFileType =
+  | 'stem'
+  | 'demo'
+  | 'sample'
+  | 'loop'
+  | 'lyrics'
+  | 'chords'
+  | 'sheet_music'
+  | 'midi'
+  | 'image'
+  | 'document'
+  | 'project'
+  | 'other';
 
 export type LibraryFile = {
   id: string;
