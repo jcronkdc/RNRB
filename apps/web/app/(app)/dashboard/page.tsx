@@ -6,7 +6,6 @@ import {
   Calendar,
   ChevronRight,
   Compass,
-  FileMusic,
   FlaskConical,
   Folder,
   FolderPlus,
@@ -19,6 +18,7 @@ import {
   Music2,
   Plus,
   Sparkles,
+  Users,
   Zap,
   Globe,
   Activity,
@@ -452,7 +452,7 @@ function DashboardContent() {
   }, [user, loading]);
 
   useEffect(() => {
-    const criticalRoutes = ['/songwriting', '/create', '/projects'];
+    const criticalRoutes = ['/songwriting', '/projects'];
     criticalRoutes.forEach((route) => {
       router.prefetch(route);
     });
@@ -526,10 +526,10 @@ function DashboardContent() {
               </h1>
               <p style={{ color: 'var(--muted)', margin: 0 }}>Ready to create something amazing?</p>
             </div>
-            <Link href="/create">
+            <Link href="/songwriting">
               <button className="button flex items-center gap-2 px-5 py-2.5">
                 <Plus className="h-4 w-4" />
-                Quick Create
+                New Song
               </button>
             </Link>
           </div>
@@ -581,10 +581,11 @@ function DashboardContent() {
               delay={0.25}
             />
             <PrimaryActionCard
-              title="Create Track"
-              description="Generate full AI-powered tracks instantly. Describe your sound and get music in seconds"
-              icon={FileMusic}
-              href="/create"
+              title="Collaboration"
+              description="Real-time video sessions with your band. Screen sharing, live chat, and jam together"
+              icon={Users}
+              href="/collaboration"
+              badge="LIVE"
               delay={0.3}
             />
             <PrimaryActionCard

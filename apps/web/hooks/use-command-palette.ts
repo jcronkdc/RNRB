@@ -96,19 +96,20 @@ export function useCommandPalette() {
           setIsOpen(false);
         },
       },
-      {
-        id: 'nav-create',
-        title: 'Create Track',
-        description: 'Generate AI music',
-        icon: '✨',
-        action: 'navigate',
-        keywords: ['create', 'ai', 'generate', 'music', 'track'],
-        category: 'navigation',
-        handler: () => {
-          router.push('/create');
-          setIsOpen(false);
-        },
-      },
+      // Hidden - AI music gen not ready
+      // {
+      //   id: 'nav-create',
+      //   title: 'Create Track',
+      //   description: 'Generate AI music',
+      //   icon: '✨',
+      //   action: 'navigate',
+      //   keywords: ['create', 'ai', 'generate', 'music', 'track'],
+      //   category: 'navigation',
+      //   handler: () => {
+      //     router.push('/create');
+      //     setIsOpen(false);
+      //   },
+      // },
       {
         id: 'nav-library',
         title: 'Library',
