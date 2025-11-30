@@ -5,6 +5,11 @@ import {
   formatAlertsForAI,
   type ProactiveAlert,
 } from './assistant-alerts';
+import {
+  getSubscriptionContext,
+  formatSubscriptionForAI,
+  type SubscriptionContext,
+} from './subscription-helper';
 
 /**
  * GODLIKE AI ASSISTANT CONTEXT
@@ -39,6 +44,8 @@ export interface GodlikeContext {
   memory: AIMemory | null;
   // NEW: Proactive Alerts - deadlines, stale items, opportunities
   alerts: ProactiveAlert[];
+  // NEW: Subscription info - tier, usage, upgrade/downgrade recommendations
+  subscription: SubscriptionContext | null;
 }
 
 // Deep context about what the user is CURRENTLY working on
@@ -1141,6 +1148,14 @@ export async function buildGodlikeContext(
     console.error('Error generating alerts:', error);
   }
 
+  // NEW: Load subscription context
+  let subscription: SubscriptionContext | null = null;
+  try {
+    subscription = await getSubscriptionContext(userId);
+  } catch (error) {
+    console.error('Error loading subscription:', error);
+  }
+
   return {
     user: userContext,
     songs: songsContext,
@@ -1161,6 +1176,7 @@ export async function buildGodlikeContext(
     currentWork, // Deep context about what they're actively working on
     memory, // AI memory - past conversations and preferences
     alerts, // Proactive alerts - deadlines, opportunities
+    subscription, // Subscription tier, usage, recommendations
   };
 }
 
@@ -1517,6 +1533,8 @@ You can help the user with ANYTHING on this platform:
 ${ctx.platformKnowledge}
 
 ${ctx.memory ? formatMemoryForAI(ctx.memory) : ''}
+
+${ctx.subscription ? formatSubscriptionForAI(ctx.subscription) : ''}
 
 ${formatAlertsForAI(ctx.alerts)}
 

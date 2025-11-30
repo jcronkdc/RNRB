@@ -32,6 +32,13 @@ import {
   getPlaybackQueue,
   SONG_DISCOVERY_AI_FUNCTIONS,
 } from '@/lib/ai/song-discovery';
+import {
+  getSubscriptionContext,
+  getTierComparison,
+  calculateTierChange,
+  SUBSCRIPTION_AI_FUNCTIONS,
+  formatSubscriptionForAI,
+} from '@/lib/ai/subscription-helper';
 import { buildGodlikeContext, formatGodlikeContext } from '@/lib/ai/godlike-context';
 import { handleApiError, AppError } from '@/lib/errors';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
@@ -167,6 +174,7 @@ export async function POST(request: NextRequest) {
         ...ADVANCED_AI_FUNCTIONS,
         ...MEMORY_AI_FUNCTIONS,
         ...SONG_DISCOVERY_AI_FUNCTIONS,
+        ...SUBSCRIPTION_AI_FUNCTIONS,
       ];
       const tools: OpenAI.ChatCompletionTool[] = allFunctions.map((fn) => ({
         type: 'function' as const,
@@ -273,6 +281,32 @@ export async function POST(request: NextRequest) {
               break;
             case 'getPlaybackQueue':
               result = await getPlaybackQueue(user.id, functionArgs.songIds);
+              break;
+            // Subscription functions
+            case 'getSubscriptionContext':
+              result = await getSubscriptionContext(user.id);
+              break;
+            case 'explainTiers':
+              const tiers = getTierComparison();
+              result = {
+                success: true,
+                tiers:
+                  functionArgs.focusTier === 'all'
+                    ? tiers
+                    : tiers.filter((t) => t.tier === functionArgs.focusTier),
+              };
+              break;
+            case 'recommendSubscription':
+              const subCtx = await getSubscriptionContext(user.id);
+              if (functionArgs.consideringTier) {
+                const comparison = calculateTierChange(
+                  subCtx.currentTier,
+                  functionArgs.consideringTier
+                );
+                result = { ...subCtx, comparison };
+              } else {
+                result = subCtx;
+              }
               break;
             default:
               // Fall back to original action executor
