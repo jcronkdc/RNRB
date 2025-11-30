@@ -559,23 +559,36 @@ export default function ToursPage() {
             </div>
 
             {/* Filters & Actions */}
-            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               {/* Search & Filter */}
-              <div className="flex flex-1 gap-2">
+              <div className="flex flex-1 gap-3">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Search
+                    className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2"
+                    style={{ color: 'var(--muted)' }}
+                  />
                   <input
                     type="text"
                     placeholder="Search tours..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="border-input h-10 w-full rounded-md border bg-background px-3 py-2 pl-9 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="h-12 w-full rounded-xl border pl-11 pr-4 text-sm transition-all focus:outline-none focus:ring-2"
+                    style={{
+                      borderColor: 'var(--border)',
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      color: 'var(--text)',
+                    }}
                   />
                 </div>
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="border-input h-10 rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="h-12 rounded-xl border px-4 text-sm transition-all focus:outline-none focus:ring-2"
+                  style={{
+                    borderColor: 'var(--border)',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    color: 'var(--text)',
+                  }}
                 >
                   <option value="all">All Status</option>
                   <option value="planning">Planning</option>
@@ -588,15 +601,33 @@ export default function ToursPage() {
 
               {/* Action Buttons */}
               <div className="flex items-center gap-3">
-                <Button onClick={() => setShowLiveStream(true)} variant="outline">
-                  <Radio className="mr-2 h-4 w-4" />
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowLiveStream(true)}
+                  className="flex h-12 items-center gap-2 rounded-xl border px-5 text-sm font-medium transition-all"
+                  style={{
+                    borderColor: 'var(--border)',
+                    color: 'var(--text)',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                  }}
+                >
+                  <Radio className="h-4 w-4" style={{ color: 'var(--accent)' }} />
                   Start Virtual Show
-                </Button>
+                </motion.button>
                 <Link href="/tours/new">
-                  <Button className="rnrb-button-primary flex items-center gap-2">
+                  <motion.button
+                    whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(255, 99, 71, 0.3)' }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex h-12 items-center gap-2 rounded-xl px-6 text-sm font-bold text-white shadow-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--accent), #ff7f50)',
+                      boxShadow: '0 4px 20px rgba(255, 99, 71, 0.25)',
+                    }}
+                  >
                     <Plus className="h-5 w-5" />
                     New Tour
-                  </Button>
+                  </motion.button>
                 </Link>
               </div>
             </div>
@@ -606,22 +637,47 @@ export default function ToursPage() {
 
             {/* Empty State */}
             {!toursLoading && tours.length === 0 && (
-              <Card className="rnrb-card border-blue-500/20 bg-blue-500/5 p-12 text-center">
-                <Calendar className="mx-auto mb-6 h-24 w-24 text-muted-foreground/50" />
-                <h2 className="font-display mb-4 text-3xl font-bold">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-2xl border p-12 text-center backdrop-blur-sm"
+                style={{
+                  borderColor: 'var(--border)',
+                  background:
+                    'linear-gradient(135deg, rgba(255, 99, 71, 0.05), rgba(255, 215, 0, 0.03))',
+                }}
+              >
+                <div
+                  className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-2xl"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 215, 0, 0.1))',
+                  }}
+                >
+                  <Calendar className="h-12 w-12" style={{ color: 'var(--accent)' }} />
+                </div>
+                <h2 className="mb-4 text-3xl font-bold" style={{ color: 'var(--text)' }}>
                   World-Class Tour Management
                 </h2>
-                <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
+                <p className="mx-auto mb-8 max-w-xl text-lg" style={{ color: 'var(--muted)' }}>
                   Professional analytics, routing optimization, financial tracking, and real-time
                   collaboration. Create your first tour to get started.
                 </p>
                 <Link href="/tours/new">
-                  <Button className="rnrb-button-primary inline-flex items-center gap-3 px-8 py-4 text-lg font-semibold">
+                  <motion.button
+                    whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(255, 99, 71, 0.4)' }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-bold text-white shadow-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, var(--accent), #ff7f50)',
+                      boxShadow: '0 4px 30px rgba(255, 99, 71, 0.3)',
+                    }}
+                  >
                     <Plus className="h-6 w-6" />
                     Create Your First Tour
-                  </Button>
+                  </motion.button>
                 </Link>
-              </Card>
+              </motion.div>
             )}
 
             {/* Tours Grid */}
@@ -636,11 +692,17 @@ export default function ToursPage() {
                 {/* Load More */}
                 {hasMore && (
                   <div className="mt-8 text-center">
-                    <Button
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={loadMore}
                       disabled={toursLoading}
-                      variant="outline"
-                      className="inline-flex items-center gap-2"
+                      className="inline-flex items-center gap-2 rounded-xl border px-6 py-3 font-medium transition-all disabled:opacity-50"
+                      style={{
+                        borderColor: 'var(--border)',
+                        color: 'var(--text)',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                      }}
                     >
                       {toursLoading ? (
                         <>
@@ -653,7 +715,7 @@ export default function ToursPage() {
                           Load More Tours
                         </>
                       )}
-                    </Button>
+                    </motion.button>
                   </div>
                 )}
               </>
@@ -661,59 +723,98 @@ export default function ToursPage() {
 
             {/* No Results */}
             {!toursLoading && tours.length > 0 && filteredTours.length === 0 && (
-              <Card className="p-12 text-center">
-                <Search className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
-                <h3 className="mb-2 text-lg font-semibold">No tours found</h3>
-                <p className="mb-6 text-muted-foreground">Try adjusting your search or filters</p>
-                <Button
-                  variant="outline"
+              <div
+                className="rounded-2xl border p-12 text-center backdrop-blur-sm"
+                style={{
+                  borderColor: 'var(--border)',
+                  background: 'rgba(42, 42, 42, 0.3)',
+                }}
+              >
+                <Search
+                  className="mx-auto mb-4 h-16 w-16 opacity-30"
+                  style={{ color: 'var(--muted)' }}
+                />
+                <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
+                  No tours found
+                </h3>
+                <p className="mb-6" style={{ color: 'var(--muted)' }}>
+                  Try adjusting your search or filters
+                </p>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => {
                     setSearchQuery('');
                     setStatusFilter('all');
                   }}
+                  className="rounded-xl border px-6 py-3 font-medium transition-all"
+                  style={{
+                    borderColor: 'var(--border)',
+                    color: 'var(--text)',
+                    background: 'rgba(255, 255, 255, 0.03)',
+                  }}
                 >
                   Clear Filters
-                </Button>
-              </Card>
+                </motion.button>
+              </div>
             )}
 
             {/* Features Info */}
-            <div className="mt-12">
-              <Card className="rnrb-card border-green-500/20 bg-green-500/5 p-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mt-12"
+            >
+              <div
+                className="rounded-2xl border p-8 backdrop-blur-sm"
+                style={{
+                  borderColor: 'var(--border)',
+                  background:
+                    'linear-gradient(135deg, rgba(34, 197, 94, 0.05), rgba(255, 215, 0, 0.03))',
+                }}
+              >
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  <div>
-                    <div className="mb-3 flex items-center gap-2">
-                      <BarChart3 className="h-6 w-6 text-green-500" />
-                      <h3 className="text-lg font-semibold">Analytics Dashboard</h3>
+                  {[
+                    {
+                      icon: BarChart3,
+                      title: 'Analytics Dashboard',
+                      desc: 'Real-time revenue tracking, attendance metrics, geographic insights, and AI-powered recommendations.',
+                      color: '#22c55e',
+                    },
+                    {
+                      icon: MapPin,
+                      title: 'Smart Routing',
+                      desc: 'Optimize tour routing to minimize travel distance, save costs, and identify scheduling conflicts.',
+                      color: '#3b82f6',
+                    },
+                    {
+                      icon: DollarSign,
+                      title: 'Financial Tracking',
+                      desc: 'Comprehensive profit/loss tracking, expense breakdowns, and professional export capabilities.',
+                      color: '#a855f7',
+                    },
+                  ].map((feature) => (
+                    <div key={feature.title} className="flex items-start gap-4">
+                      <div
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+                        style={{ background: `${feature.color}15` }}
+                      >
+                        <feature.icon className="h-6 w-6" style={{ color: feature.color }} />
+                      </div>
+                      <div>
+                        <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
+                          {feature.title}
+                        </h3>
+                        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                          {feature.desc}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Real-time revenue tracking, attendance metrics, geographic insights, and
-                      AI-powered recommendations.
-                    </p>
-                  </div>
-                  <div>
-                    <div className="mb-3 flex items-center gap-2">
-                      <MapPin className="h-6 w-6 text-green-500" />
-                      <h3 className="text-lg font-semibold">Smart Routing</h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Optimize tour routing to minimize travel distance, save costs, and identify
-                      scheduling conflicts.
-                    </p>
-                  </div>
-                  <div>
-                    <div className="mb-3 flex items-center gap-2">
-                      <DollarSign className="h-6 w-6 text-green-500" />
-                      <h3 className="text-lg font-semibold">Financial Tracking</h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Comprehensive profit/loss tracking, expense breakdowns, and professional
-                      export capabilities.
-                    </p>
-                  </div>
+                  ))}
                 </div>
-              </Card>
-            </div>
+              </div>
+            </motion.div>
           </>
         )}
       </div>
@@ -729,12 +830,24 @@ const TourCard = memo(function TourCard({
   tour: Tour;
   onDelete: (id: string, name: string) => void;
 }) {
-  const statusColors: Record<string, string> = {
-    planning: 'bg-gray-500/10 text-gray-500 border-gray-500/20',
-    announced: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
-    ongoing: 'bg-green-500/10 text-green-500 border-green-500/20',
-    completed: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
-    cancelled: 'bg-red-500/10 text-red-500 border-red-500/20',
+  const statusStyles: Record<string, { bg: string; text: string; border: string }> = {
+    planning: {
+      bg: 'rgba(156, 163, 175, 0.1)',
+      text: '#9ca3af',
+      border: 'rgba(156, 163, 175, 0.2)',
+    },
+    announced: {
+      bg: 'rgba(59, 130, 246, 0.1)',
+      text: '#3b82f6',
+      border: 'rgba(59, 130, 246, 0.2)',
+    },
+    ongoing: { bg: 'rgba(34, 197, 94, 0.1)', text: '#22c55e', border: 'rgba(34, 197, 94, 0.2)' },
+    completed: {
+      bg: 'rgba(168, 85, 247, 0.1)',
+      text: '#a855f7',
+      border: 'rgba(168, 85, 247, 0.2)',
+    },
+    cancelled: { bg: 'rgba(239, 68, 68, 0.1)', text: '#ef4444', border: 'rgba(239, 68, 68, 0.2)' },
   };
 
   const formatDate = (date: string) => {
@@ -745,60 +858,77 @@ const TourCard = memo(function TourCard({
     });
   };
 
+  const status = statusStyles[tour.status] || statusStyles.planning;
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.02, y: -4 }}
     >
-      <Card className="rnrb-card group h-full p-6 transition hover:border-brand-primary/30">
+      <div
+        className="group h-full rounded-xl border p-6 backdrop-blur-sm transition-all"
+        style={{
+          borderColor: 'var(--border)',
+          background: 'rgba(42, 42, 42, 0.4)',
+        }}
+      >
         {/* Header */}
         <div className="mb-4 flex items-start justify-between">
           <div className="min-w-0 flex-1">
             <Link
               href={`/tours/${tour.slug}`}
-              className="mb-2 block truncate text-xl font-bold transition hover:text-brand-primary"
+              className="mb-2 block truncate text-xl font-bold transition-colors"
+              style={{ color: 'var(--text)' }}
             >
               {tour.name}
             </Link>
             <span
-              className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize ${
-                statusColors[tour.status] || statusColors.planning
-              }`}
+              className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize"
+              style={{
+                background: status.bg,
+                color: status.text,
+                borderColor: status.border,
+              }}
             >
               {tour.status}
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Link href={`/tours/${tour.slug}/edit`}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="opacity-0 transition group-hover:opacity-100"
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="rounded-lg p-2 opacity-0 transition-all group-hover:opacity-100"
+                style={{ color: 'var(--muted)' }}
               >
                 <Edit className="h-4 w-4" />
-              </Button>
+              </motion.button>
             </Link>
-            <Button
-              variant="ghost"
-              size="sm"
+            <motion.button
+              whileHover={{ scale: 1.1, color: '#ef4444' }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => onDelete(tour.id, tour.name)}
-              className="opacity-0 transition hover:text-red-500 group-hover:opacity-100"
+              className="rounded-lg p-2 opacity-0 transition-all group-hover:opacity-100"
+              style={{ color: 'var(--muted)' }}
             >
               <Trash2 className="h-4 w-4" />
-            </Button>
+            </motion.button>
           </div>
         </div>
 
         {/* Description */}
         {tour.description && (
-          <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">{tour.description}</p>
+          <p className="mb-4 line-clamp-2 text-sm" style={{ color: 'var(--muted)' }}>
+            {tour.description}
+          </p>
         )}
 
         {/* Dates */}
         <div className="mb-4 space-y-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="h-4 w-4 shrink-0" />
+          <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
+            <Calendar className="h-4 w-4 shrink-0" style={{ color: 'var(--accent)' }} />
             <span>
               {formatDate(tour.startDate)}
               {tour.endDate && ` - ${formatDate(tour.endDate)}`}
@@ -807,18 +937,32 @@ const TourCard = memo(function TourCard({
         </div>
 
         {/* Stats */}
-        <div className="flex items-center justify-between border-t border-border pt-4">
-          <div className="text-sm text-muted-foreground">
-            <span className="font-medium">{tour._count?.shows || 0}</span> shows
+        <div
+          className="flex items-center justify-between border-t pt-4"
+          style={{ borderColor: 'var(--border)' }}
+        >
+          <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
+            <MapPin className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+            <span>
+              <span className="font-semibold" style={{ color: 'var(--text)' }}>
+                {tour._count?.shows || 0}
+              </span>{' '}
+              shows
+            </span>
           </div>
           <Link href={`/tours/${tour.slug}`}>
-            <Button variant="ghost" size="sm" className="flex items-center gap-2">
+            <motion.button
+              whileHover={{ scale: 1.05, x: 2 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-all"
+              style={{ color: 'var(--accent)' }}
+            >
               View Details
               <ExternalLink className="h-3.5 w-3.5" />
-            </Button>
+            </motion.button>
           </Link>
         </div>
-      </Card>
+      </div>
     </motion.div>
   );
 });

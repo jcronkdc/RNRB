@@ -35,27 +35,45 @@ interface ConnectionMetrics {
 }
 
 // ============================================================================
-// ABLY AVAILABILITY CONTEXT
-// Components can check this before using ably/react hooks
+// ABLY CLIENT CONTEXT (SINGLE SOURCE OF TRUTH)
+// This is the ONLY Ably client in the entire app
+// All hooks should use this context instead of creating their own clients
 // ============================================================================
-interface AblyAvailabilityContextType {
+type AblyStatus = 'disconnected' | 'connecting' | 'connected' | 'unavailable' | 'error';
+
+interface AblyClientContextType {
+  client: Ably.Realtime | null;
+  status: AblyStatus;
+  error: string | null;
   isAvailable: boolean;
   isConnected: boolean;
   hasError: boolean;
 }
 
-const AblyAvailabilityContext = createContext<AblyAvailabilityContextType>({
+const AblyClientContext = createContext<AblyClientContextType>({
+  client: null,
+  status: 'disconnected',
+  error: null,
   isAvailable: false,
   isConnected: false,
   hasError: false,
 });
 
 /**
- * Hook to check if Ably is available for use
- * Components should check this before using ably/react hooks
+ * Hook to get the shared Ably client from the provider
+ *
+ * IMPORTANT: This is the ONLY way to get an Ably client in the app.
+ * Do NOT create new Ably.Realtime instances anywhere else!
+ *
+ * @returns The shared Ably client context
  */
-export function useAblyAvailable(): AblyAvailabilityContextType {
-  return useContext(AblyAvailabilityContext);
+export function useAblyClientContext(): AblyClientContextType {
+  return useContext(AblyClientContext);
+}
+
+// Legacy alias for backwards compatibility
+export function useAblyAvailable(): AblyClientContextType {
+  return useContext(AblyClientContext);
 }
 
 const MAX_INIT_RETRIES = 3; // Max initialization retries
@@ -352,26 +370,37 @@ export function AblyProvider({ children, lazy = true }: Props) {
     }
   }, [metrics]);
 
-  // Provide availability context for all children
-  const availabilityValue: AblyAvailabilityContextType = {
+  // Compute status for context
+  const status: AblyStatus = hasError
+    ? isAblyPermanentlyDisabled()
+      ? 'unavailable'
+      : 'error'
+    : !client
+      ? 'connecting'
+      : metrics.quality === 'offline'
+        ? 'disconnected'
+        : 'connected';
+
+  // Provide full client context for all children
+  // This is the SINGLE SOURCE OF TRUTH for Ably in the entire app
+  const contextValue: AblyClientContextType = {
+    client,
+    status,
+    error: hasError ? 'Ably connection failed' : null,
     isAvailable: !!client && !hasError,
     isConnected: !!client && metrics.quality !== 'offline',
     hasError,
   };
 
-  // Always render children wrapped in availability context
-  // If client is ready, also wrap in ReactAblyProvider
+  // Always render children wrapped in client context
+  // If client is ready, also wrap in ReactAblyProvider for ably/react hooks
   if (!client || hasError) {
-    return (
-      <AblyAvailabilityContext.Provider value={availabilityValue}>
-        {children}
-      </AblyAvailabilityContext.Provider>
-    );
+    return <AblyClientContext.Provider value={contextValue}>{children}</AblyClientContext.Provider>;
   }
 
   return (
-    <AblyAvailabilityContext.Provider value={availabilityValue}>
+    <AblyClientContext.Provider value={contextValue}>
       <ReactAblyProvider client={client}>{children}</ReactAblyProvider>
-    </AblyAvailabilityContext.Provider>
+    </AblyClientContext.Provider>
   );
 }
