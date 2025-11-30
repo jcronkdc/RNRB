@@ -176,7 +176,7 @@ export default function CreatePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: prompt.trim(),
+          prompt: prompt.trim() || undefined, // Only send if not empty (API requires min 1 char)
           genres: selectedGenres,
           moods: selectedMoods,
           instruments: selectedInstruments,
