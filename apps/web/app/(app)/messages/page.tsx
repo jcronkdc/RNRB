@@ -162,7 +162,7 @@ export default function MessagesPage() {
             'linear-gradient(180deg, rgba(30, 30, 30, 0.98) 0%, rgba(22, 22, 22, 0.95) 100%)',
         }}
       >
-        <Link href="/" className="group">
+        <Link href="/" className="group flex items-center gap-3">
           <Image
             src="/logo-light.png"
             alt="Rock N' Roll Basement"
@@ -174,15 +174,13 @@ export default function MessagesPage() {
                 'drop-shadow(0 0 15px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 25px rgba(255, 99, 71, 0.3))',
             }}
           />
+          <div>
+            <h1 className="hero-text-gradient text-lg font-bold">Rock N' Roll Basement</h1>
+            <p className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
+              Messages
+            </p>
+          </div>
         </Link>
-        <div>
-          <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
-            Messages
-          </h1>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
-            Real-time collaboration chat
-          </p>
-        </div>
       </div>
 
       {/* Main Content */}

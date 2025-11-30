@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, Loader2, AlertCircle, Music4, Sparkles } from 'lucide-react';
+import { Check, Loader2, AlertCircle, Music4, Sparkles, GitBranch, Save } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -59,6 +59,16 @@ const Metronome = dynamic(
   { ssr: false }
 );
 
+const VersionHistoryPanel = dynamic(
+  () => import('@/components/songwriting/version-history-panel').then((m) => m.VersionHistoryPanel),
+  { ssr: false }
+);
+
+const SaveVersionModal = dynamic(
+  () => import('@/components/songwriting/save-version-modal').then((m) => m.SaveVersionModal),
+  { ssr: false }
+);
+
 type SongBlock = {
   id: string;
   type: 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'chord';
@@ -98,6 +108,8 @@ export default function SongwritingPage() {
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showLibraryImport, setShowLibraryImport] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showSaveVersion, setShowSaveVersion] = useState(false);
 
   // Undo/Redo state management
   const [history, setHistory] = useState<Array<{ blocks: SongBlock[]; lyrics: string }>>([]);
@@ -314,6 +326,52 @@ export default function SongwritingPage() {
     success(`Imported ${file.name}`, 2000);
   };
 
+  // Handle version restore - refetch the song data from the server
+  const handleVersionRestore = async () => {
+    if (!songData.id) return;
+
+    try {
+      const response = await fetch(`/api/songs/${songData.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.song) {
+          // Update local state with restored version
+          setSongTitle(data.song.title || 'Untitled Song');
+          setLyrics(data.song.lyrics || '');
+
+          // Parse blocks from lyrics if they exist
+          if (data.song.lyrics) {
+            const blockRegex = /\[([A-Z\s]+)\]\n([\s\S]*?)(?=\n\[|$)/gi;
+            const blocks: SongBlock[] = [];
+            let match;
+            while ((match = blockRegex.exec(data.song.lyrics)) !== null) {
+              const type = match[1].toLowerCase().replace(/\s+/g, '-') as SongBlock['type'];
+              blocks.push({
+                id: crypto.randomUUID(),
+                type:
+                  type === 'pre-chorus' ? 'pre-chorus' : (type.split('-')[0] as SongBlock['type']),
+                content: match[2].trim(),
+              });
+            }
+            if (blocks.length > 0) {
+              setSongBlocks(blocks);
+            }
+          }
+
+          success('Version restored successfully!', 3000);
+        }
+      }
+    } catch (err) {
+      showError('Failed to restore version', 3000);
+      console.error('Version restore error:', err);
+    }
+  };
+
+  // Handle version saved
+  const handleVersionSaved = () => {
+    success('Version saved!', 2000);
+  };
+
   const tabs = [
     { id: 'structure', label: 'Structure' },
     { id: 'chords', label: 'Chords' },
@@ -352,12 +410,12 @@ export default function SongwritingPage() {
       <div className="hero-grid-pattern"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* RR Logo - Required on all feature pages (white logo for dark bg) */}
+        {/* RR Logo & Title - Required on all feature pages (white logo for dark bg) */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8 flex justify-center"
+          className="mb-8 flex flex-col items-center"
         >
           <Link href="/" className="group relative inline-block">
             <Image
@@ -378,6 +436,14 @@ export default function SongwritingPage() {
               style={{ background: 'rgba(255, 99, 71, 0.2)' }}
             />
           </Link>
+          <h1 className="hero-title mt-4 text-center">
+            <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
+              Rock N' Roll Basement
+            </span>
+          </h1>
+          <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+            Songwriting Studio
+          </p>
         </motion.div>
         {/* Premium Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
@@ -464,6 +530,40 @@ export default function SongwritingPage() {
                       songId={songData.id}
                       onProjectAdded={(_slug) => success(`Added to project`, 2000)}
                     />
+                    {songData.id && (
+                      <div className="flex items-center gap-2">
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setShowSaveVersion(true)}
+                          className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition"
+                          style={{
+                            background: 'var(--panel)',
+                            border: '1px solid var(--border)',
+                            color: 'var(--text)',
+                          }}
+                          title="Save Version"
+                        >
+                          <Save className="h-3.5 w-3.5" style={{ color: 'var(--accent)' }} />
+                          Save Version
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setShowVersionHistory(true)}
+                          className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition"
+                          style={{
+                            background: 'var(--panel)',
+                            border: '1px solid var(--border)',
+                            color: 'var(--text)',
+                          }}
+                          title="Version History"
+                        >
+                          <GitBranch className="h-3.5 w-3.5" style={{ color: 'var(--accent)' }} />
+                          History
+                        </motion.button>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -778,6 +878,22 @@ export default function SongwritingPage() {
           }}
         />
       )}
+
+      {/* Version History Panel */}
+      <VersionHistoryPanel
+        songId={songData.id}
+        isOpen={showVersionHistory}
+        onClose={() => setShowVersionHistory(false)}
+        onRestore={handleVersionRestore}
+      />
+
+      {/* Save Version Modal */}
+      <SaveVersionModal
+        songId={songData.id}
+        isOpen={showSaveVersion}
+        onClose={() => setShowSaveVersion(false)}
+        onVersionSaved={handleVersionSaved}
+      />
 
       {/* Toast Notifications */}
       <ToastNotification toasts={toasts} onRemove={removeToast} />

@@ -6,4 +6,7 @@ export { GranularChordEditor } from './granular-chord-editor';
 export { KeyAnalyzer } from './key-analyzer';
 export { ChordAlternativesPopover } from './chord-alternatives-popover';
 export { ArtworkGenerator } from './artwork-generator';
+export { VersionHistoryPanel } from './version-history-panel';
+export { SaveVersionModal } from './save-version-modal';
 export type { ChordPlacement } from './granular-chord-editor';
+export type { SongVersion } from './version-history-panel';

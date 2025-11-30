@@ -157,12 +157,12 @@ export default function ExplorePage() {
       {/* Hero Section */}
       <div className="relative z-10 border-b border-border/50">
         <div className="mx-auto max-w-7xl px-4 py-8">
-          {/* White RR Logo */}
+          {/* White RR Logo & Title */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8 flex justify-center"
+            className="mb-8 flex flex-col items-center"
           >
             <Link href="/" className="group relative inline-block">
               <Image
@@ -182,6 +182,14 @@ export default function ExplorePage() {
                 style={{ background: 'rgba(255, 99, 71, 0.2)' }}
               />
             </Link>
+            <h1 className="hero-title mt-4 text-center">
+              <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
+                Rock N' Roll Basement
+              </span>
+            </h1>
+            <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+              Explore
+            </p>
           </motion.div>
 
           <motion.div

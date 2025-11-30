@@ -2,13 +2,13 @@ import { motion } from 'framer-motion';
 import { Check, Search, Music, X, Loader2, FileAudio } from 'lucide-react';
 import { useState } from 'react';
 
-import { useLibrary, type LibraryFile } from '@/hooks/use-library';
+import { useLibrary, type LibraryFile, type LibraryFileType } from '@/hooks/use-library';
 
 interface LibraryImportModalProps {
   isOpen: boolean;
   onClose: () => void;
   onImport: (file: LibraryFile) => void;
-  acceptTypes?: ('stem' | 'demo' | 'sample' | 'loop' | 'other')[];
+  acceptTypes?: LibraryFileType[];
 }
 
 /**

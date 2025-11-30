@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 
 interface FeaturePageWrapperProps {
   children: ReactNode;
+  featureTitle?: string;
   showLogo?: boolean;
   showMusicNotes?: boolean;
   showGradientOrbs?: boolean;
@@ -23,6 +24,7 @@ interface FeaturePageWrapperProps {
  */
 export function FeaturePageWrapper({
   children,
+  featureTitle,
   showLogo = true,
   showMusicNotes = true,
   showGradientOrbs = true,
@@ -63,13 +65,13 @@ export function FeaturePageWrapper({
       {showGridPattern && <div className="hero-grid-pattern"></div>}
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* White RR Logo - Centered at top */}
+        {/* White RR Logo & Title - Centered at top */}
         {showLogo && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-8 flex justify-center"
+            className="mb-8 flex flex-col items-center"
           >
             <Link href="/" className="group relative inline-block">
               <Image
@@ -90,6 +92,16 @@ export function FeaturePageWrapper({
                 style={{ background: 'rgba(255, 99, 71, 0.2)' }}
               />
             </Link>
+            <h1 className="hero-title mt-4 text-center">
+              <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
+                Rock N' Roll Basement
+              </span>
+            </h1>
+            {featureTitle && (
+              <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+                {featureTitle}
+              </p>
+            )}
           </motion.div>
         )}
 

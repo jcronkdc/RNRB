@@ -3,7 +3,7 @@ import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-import { buildAssistantContext, formatContextForAI } from '@/lib/ai/assistant-context';
+import { buildGodlikeContext, formatGodlikeContext } from '@/lib/ai/godlike-context';
 import { AI_MAX_TOKENS } from '@/lib/ai/config';
 import { handleApiError, AppError } from '@/lib/errors';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
@@ -97,9 +97,9 @@ export async function POST(request: NextRequest) {
     // Get current page from referer
     const referer = request.headers.get('referer') || '';
 
-    // Build context
-    const context = await buildAssistantContext(user.id, referer);
-    const systemPrompt = formatContextForAI(context);
+    // Build GODLIKE context - loads ALL user data
+    const context = await buildGodlikeContext(user.id, referer);
+    const systemPrompt = formatGodlikeContext(context);
 
     let responseText: string;
     let inputTokens: number;
@@ -133,10 +133,11 @@ export async function POST(request: NextRequest) {
       });
 
       // Call OpenAI API - using GPT-4o for best reasoning
+      // Increased tokens for comprehensive responses with full context
       const response = await openai.chat.completions.create({
         model: 'gpt-4o',
         messages,
-        max_tokens: AI_MAX_TOKENS.CONVERSATION,
+        max_tokens: 2000, // More room for detailed responses
         temperature: 0.7,
       });
 
@@ -170,10 +171,10 @@ export async function POST(request: NextRequest) {
         content: validated.message,
       });
 
-      // Call Claude API
+      // Call Claude API - increased tokens for comprehensive responses
       const response = await anthropic.messages.create({
         model: 'claude-3-5-sonnet-20241022',
-        max_tokens: AI_MAX_TOKENS.CONVERSATION,
+        max_tokens: 2000, // More room for detailed responses
         system: systemPrompt,
         messages: messages,
       });
@@ -231,8 +232,11 @@ export async function POST(request: NextRequest) {
           tokensUsed: inputTokens + outputTokens,
           cost,
           context: {
-            usage: context.userContext.usage,
+            usage: context.user.usage,
             page: context.currentPage,
+            songsCount: context.songs.length,
+            projectsCount: context.projects.length,
+            toursCount: context.tours.length,
           },
         },
       });

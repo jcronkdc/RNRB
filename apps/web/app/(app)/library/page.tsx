@@ -20,14 +20,129 @@ import {
   Upload,
   AlertCircle,
   Globe,
+  FileText,
+  Image as ImageIcon,
+  FileMusic,
+  ScrollText,
+  Piano,
+  FileImage,
+  File,
+  FolderOpen,
+  Eye,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useCallback } from 'react';
 
 import { AudioPlayer } from '@/components/audio-player';
+import { FileViewer } from '@/components/file-viewer';
 import { useLibrary, useLibraryUpload, type LibraryFileType } from '@/hooks/use-library';
 import { useRequireAuth } from '@/hooks/use-require-auth';
+
+// Upload category configuration
+const UPLOAD_CATEGORIES = [
+  {
+    type: 'stem' as const,
+    label: 'Stem',
+    icon: Disc,
+    accept: 'audio/*',
+    description: 'Audio stems for mixing',
+  },
+  {
+    type: 'demo' as const,
+    label: 'Demo',
+    icon: Music,
+    accept: 'audio/*',
+    description: 'Demo recordings',
+  },
+  {
+    type: 'sample' as const,
+    label: 'Sample',
+    icon: Mic2,
+    accept: 'audio/*',
+    description: 'Audio samples',
+  },
+  {
+    type: 'loop' as const,
+    label: 'Loop',
+    icon: Radio,
+    accept: 'audio/*',
+    description: 'Audio loops',
+  },
+  {
+    type: 'lyrics' as const,
+    label: 'Lyrics',
+    icon: ScrollText,
+    accept: '.txt,.md,.rtf,.doc,.docx,.pdf',
+    description: 'Lyric sheets',
+  },
+  {
+    type: 'chords' as const,
+    label: 'Chords',
+    icon: FileMusic,
+    accept: '.txt,.pdf,.png,.jpg,.jpeg,.chordpro,.cho,.crd',
+    description: 'Chord charts',
+  },
+  {
+    type: 'sheet_music' as const,
+    label: 'Sheet Music',
+    icon: Piano,
+    accept: '.pdf,.png,.jpg,.jpeg,.musicxml,.mxl',
+    description: 'Notation & scores',
+  },
+  {
+    type: 'midi' as const,
+    label: 'MIDI',
+    icon: FileAudio,
+    accept: '.mid,.midi',
+    description: 'MIDI files',
+  },
+  {
+    type: 'image' as const,
+    label: 'Image',
+    icon: ImageIcon,
+    accept: 'image/*',
+    description: 'Album art, photos',
+  },
+  {
+    type: 'document' as const,
+    label: 'Document',
+    icon: FileText,
+    accept: '.pdf,.doc,.docx,.txt,.md,.rtf',
+    description: 'Contracts, riders',
+  },
+  {
+    type: 'project' as const,
+    label: 'Project',
+    icon: FolderOpen,
+    accept: '.als,.flp,.logic,.logicx,.ptx,.ptf,.rpp,.cpr,.band,.sesx,.aup,.aup3',
+    description: 'DAW project files',
+  },
+  {
+    type: 'other' as const,
+    label: 'Other',
+    icon: File,
+    accept: '*',
+    description: 'Any file type',
+  },
+];
+
+// Filter buttons for the library
+const FILTER_TYPES: { type: LibraryFileType | 'all'; label: string }[] = [
+  { type: 'all', label: 'All' },
+  { type: 'stem', label: 'Stems' },
+  { type: 'demo', label: 'Demos' },
+  { type: 'sample', label: 'Samples' },
+  { type: 'loop', label: 'Loops' },
+  { type: 'lyrics', label: 'Lyrics' },
+  { type: 'chords', label: 'Chords' },
+  { type: 'sheet_music', label: 'Sheet Music' },
+  { type: 'midi', label: 'MIDI' },
+  { type: 'image', label: 'Images' },
+  { type: 'document', label: 'Documents' },
+  { type: 'project', label: 'Projects' },
+  { type: 'other', label: 'Other' },
+];
 
 export default function LibraryPage() {
   const { user, loading: authLoading } = useRequireAuth();
@@ -40,6 +155,12 @@ export default function LibraryPage() {
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [publishingFile, setPublishingFile] = useState<string | null>(null);
+  const [viewingFile, setViewingFile] = useState<{
+    url: string;
+    name: string;
+    mimeType: string;
+  } | null>(null);
+  const [showAllCategories, setShowAllCategories] = useState(false);
 
   // Use optimized hook with caching
   const {
@@ -161,7 +282,6 @@ export default function LibraryPage() {
         throw new Error(errorData.error || 'Failed to publish file');
       }
 
-      const data = await response.json();
       alert('File published successfully! Check the Community page to see it.');
     } catch (err) {
       console.error('Publish failed:', err);
@@ -172,21 +292,55 @@ export default function LibraryPage() {
     }
   }, []);
 
-  // Get type icon
+  // Get type icon with color
   const getTypeIcon = useCallback((type: string) => {
+    const iconClass = 'h-5 w-5';
     switch (type) {
       case 'stem':
-        return <Disc className="h-5 w-5 text-orange-500" />;
+        return <Disc className={`${iconClass} text-orange-500`} />;
       case 'demo':
-        return <Music className="h-5 w-5 text-orange-500" />;
+        return <Music className={`${iconClass} text-orange-500`} />;
       case 'sample':
-        return <Mic2 className="h-5 w-5 text-orange-500" />;
+        return <Mic2 className={`${iconClass} text-orange-500`} />;
       case 'loop':
-        return <Radio className="h-5 w-5 text-orange-500" />;
+        return <Radio className={`${iconClass} text-orange-500`} />;
+      case 'lyrics':
+        return <ScrollText className={`${iconClass} text-purple-500`} />;
+      case 'chords':
+        return <FileMusic className={`${iconClass} text-blue-500`} />;
+      case 'sheet_music':
+        return <Piano className={`${iconClass} text-indigo-500`} />;
+      case 'midi':
+        return <FileAudio className={`${iconClass} text-cyan-500`} />;
+      case 'image':
+        return <ImageIcon className={`${iconClass} text-pink-500`} />;
+      case 'document':
+        return <FileText className={`${iconClass} text-emerald-500`} />;
+      case 'project':
+        return <FolderOpen className={`${iconClass} text-yellow-500`} />;
       default:
-        return <FileAudio className="h-5 w-5 text-orange-500" />;
+        return <File className={`${iconClass} text-gray-500`} />;
     }
   }, []);
+
+  // Check if file is viewable
+  const isViewable = useCallback((mimeType: string, fileName: string) => {
+    return (
+      mimeType.startsWith('image/') ||
+      mimeType === 'application/pdf' ||
+      mimeType.startsWith('text/') ||
+      mimeType === 'application/rtf' ||
+      fileName.match(/\.(txt|md|rtf|chordpro|cho|crd)$/i)
+    );
+  }, []);
+
+  // Check if file is playable audio
+  const isAudio = useCallback((mimeType: string) => {
+    return mimeType.startsWith('audio/') && !mimeType.includes('midi');
+  }, []);
+
+  // Get visible upload categories
+  const visibleCategories = showAllCategories ? UPLOAD_CATEGORIES : UPLOAD_CATEGORIES.slice(0, 6);
 
   if (authLoading) {
     return (
@@ -195,7 +349,7 @@ export default function LibraryPage() {
           <Loader2 className="h-12 w-12 animate-spin text-orange-500" />
           <div className="text-center">
             <div className="text-lg font-medium text-white">Loading your library...</div>
-            <div className="mt-2 text-sm text-gray-400">Preparing your music assets</div>
+            <div className="mt-2 text-sm text-gray-400">Preparing your files</div>
           </div>
         </div>
       </div>
@@ -204,6 +358,16 @@ export default function LibraryPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* File Viewer Modal */}
+      {viewingFile && (
+        <FileViewer
+          url={viewingFile.url}
+          name={viewingFile.name}
+          mimeType={viewingFile.mimeType}
+          onClose={() => setViewingFile(null)}
+        />
+      )}
+
       {/* Floating Music Notes */}
       <div className="music-notes-container pointer-events-none">
         {[...Array(12)].map((_, i) => (
@@ -233,12 +397,12 @@ export default function LibraryPage() {
       <div className="hero-grid-pattern"></div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12">
-        {/* White RR Logo */}
+        {/* White RR Logo & Title */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mb-8 flex justify-center"
+          className="mb-8 flex flex-col items-center"
         >
           <Link href="/" className="group relative inline-block">
             <Image
@@ -258,6 +422,14 @@ export default function LibraryPage() {
               style={{ background: 'rgba(255, 99, 71, 0.2)' }}
             />
           </Link>
+          <h1 className="hero-title mt-4 text-center">
+            <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
+              Rock N' Roll Basement
+            </span>
+          </h1>
+          <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+            Library
+          </p>
         </motion.div>
 
         {/* Header */}
@@ -292,7 +464,7 @@ export default function LibraryPage() {
                 </h1>
               </div>
               <p className="text-sm sm:text-base lg:text-xl" style={{ color: 'var(--muted)' }}>
-                {total} file{total !== 1 ? 's' : ''} • Your music assets, ready to collaborate
+                {total} file{total !== 1 ? 's' : ''} • Your complete songwriter toolkit
               </p>
             </div>
             <div className="flex gap-1.5 sm:gap-2">
@@ -343,19 +515,19 @@ export default function LibraryPage() {
 
           {/* Filters and Sort */}
           <div className="flex flex-wrap items-center gap-2">
-            {/* Type Filter */}
-            <div className="flex gap-1.5 overflow-x-auto sm:gap-2">
-              {['all', 'stem', 'demo', 'sample', 'loop', 'other'].map((type) => (
+            {/* Type Filter - Scrollable */}
+            <div className="flex gap-1.5 overflow-x-auto pb-2 sm:gap-2">
+              {FILTER_TYPES.map((filter) => (
                 <button
-                  key={type}
-                  onClick={() => setFilterType(type as any)}
+                  key={filter.type}
+                  onClick={() => setFilterType(filter.type)}
                   className={`shrink-0 rounded-xl px-3 py-2 text-xs font-medium transition-all sm:px-4 sm:py-2.5 sm:text-sm ${
-                    filterType === type
+                    filterType === filter.type
                       ? 'bg-orange-500 text-white'
                       : 'border border-gray-800 bg-gray-900 text-gray-400 hover:bg-gray-800'
                   }`}
                 >
-                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                  {filter.label}
                 </button>
               ))}
             </div>
@@ -364,7 +536,7 @@ export default function LibraryPage() {
             <div className="ml-auto flex gap-1.5">
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => setSortBy(e.target.value as 'createdAt' | 'name' | 'size')}
                 className="rounded-xl border border-gray-800 bg-gray-900 px-3 py-2 text-xs text-white sm:text-sm"
               >
                 <option value="createdAt">Date Added</option>
@@ -431,25 +603,32 @@ export default function LibraryPage() {
           transition={{ delay: 0.2 }}
           className="mb-4 sm:mb-6 lg:mb-8"
         >
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-5 lg:gap-4">
-            {[
-              { type: 'stem' as const, label: 'Upload Stem', icon: Disc },
-              { type: 'demo' as const, label: 'Upload Demo', icon: Music },
-              { type: 'sample' as const, label: 'Upload Sample', icon: Mic2 },
-              { type: 'loop' as const, label: 'Upload Loop', icon: Radio },
-              { type: 'other' as const, label: 'Upload File', icon: FileAudio },
-            ].map((uploadType) => (
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-sm font-medium text-gray-400">Upload Files</h2>
+            <button
+              onClick={() => setShowAllCategories(!showAllCategories)}
+              className="text-xs text-orange-500 hover:text-orange-400"
+            >
+              {showAllCategories ? 'Show Less' : `Show All (${UPLOAD_CATEGORIES.length})`}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4 lg:grid-cols-6 lg:gap-4">
+            {visibleCategories.map((uploadType) => (
               <label
                 key={uploadType.type}
-                className="group flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-gray-800 bg-gray-900 p-3 transition-all hover:border-orange-500 hover:bg-gray-800/50 sm:gap-3 sm:p-4 lg:p-6"
+                className="group flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-gray-800 bg-gray-900 p-3 transition-all hover:border-orange-500 hover:bg-gray-800/50 sm:gap-3 sm:p-4"
               >
-                <uploadType.icon className="h-6 w-6 text-gray-500 transition-colors group-hover:text-orange-500 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
-                <span className="text-center text-xs font-medium text-gray-400 transition-colors group-hover:text-white sm:text-sm">
+                <uploadType.icon className="h-6 w-6 text-gray-500 transition-colors group-hover:text-orange-500 sm:h-7 sm:w-7" />
+                <span className="text-center text-xs font-medium text-gray-400 transition-colors group-hover:text-white">
                   {uploadType.label}
+                </span>
+                <span className="text-center text-[10px] text-gray-600 group-hover:text-gray-400">
+                  {uploadType.description}
                 </span>
                 <input
                   type="file"
-                  accept="audio/*"
+                  accept={uploadType.accept}
                   onChange={(e) => handleFileUpload(e, uploadType.type)}
                   className="hidden"
                   disabled={uploading}
@@ -526,7 +705,7 @@ export default function LibraryPage() {
             <p className="mb-4 text-sm text-gray-400 sm:mb-6 sm:text-base">
               {searchQuery || filterType !== 'all'
                 ? 'Try adjusting your search or filter'
-                : 'Upload your first audio file to get started'}
+                : 'Upload your first file to get started - audio, lyrics, chord charts, and more!'}
             </p>
           </motion.div>
         ) : (
@@ -573,7 +752,7 @@ export default function LibraryPage() {
 
                     {/* Icon */}
                     <div
-                      className={`${viewMode === 'grid' ? 'mb-3 sm:mb-4' : 'shrink-0'} flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10 sm:h-12 sm:w-12`}
+                      className={`${viewMode === 'grid' ? 'mb-3 sm:mb-4' : 'shrink-0'} flex h-10 w-10 items-center justify-center rounded-xl bg-gray-800 sm:h-12 sm:w-12`}
                     >
                       {getTypeIcon(file.type)}
                     </div>
@@ -583,8 +762,8 @@ export default function LibraryPage() {
                       <h3 className="mb-1 truncate text-sm font-semibold text-white transition-colors group-hover:text-orange-500 sm:text-base">
                         {file.name}
                       </h3>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-400 sm:gap-2 sm:text-sm">
-                        <span className="capitalize">{file.type}</span>
+                      <div className="flex flex-wrap items-center gap-1.5 text-xs text-gray-400 sm:gap-2 sm:text-sm">
+                        <span className="capitalize">{file.type.replace('_', ' ')}</span>
                         <span>•</span>
                         <span>{formatFileSize(file.size)}</span>
                         {file.duration && (
@@ -599,7 +778,7 @@ export default function LibraryPage() {
                       </div>
 
                       {/* Audio Player (when playing) */}
-                      {playingId === file.id && (
+                      {playingId === file.id && isAudio(file.mimeType) && (
                         <div className="mt-3">
                           <AudioPlayer
                             src={file.url}
@@ -613,26 +792,52 @@ export default function LibraryPage() {
 
                     {/* Actions */}
                     {!isSelectionMode && (
-                      <div className="mt-3 flex items-center gap-1.5 sm:mt-4 sm:gap-2 md:mt-0">
-                        <button
-                          onClick={() => setPlayingId(playingId === file.id ? null : file.id)}
-                          className="rounded-lg bg-orange-500/10 p-1.5 text-orange-500 transition-all hover:bg-orange-500 hover:text-white sm:p-2"
-                          title="Play/Pause"
-                        >
-                          {playingId === file.id ? (
-                            <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                          ) : (
-                            <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                          )}
-                        </button>
-                        <button
-                          onClick={() => handlePublish(file.id)}
-                          disabled={publishingFile === file.id}
-                          className="rounded-lg bg-gray-800 p-1.5 text-gray-400 transition-all hover:bg-green-500/20 hover:text-green-500 disabled:opacity-50 sm:p-2"
-                          title="Publish to Community"
-                        >
-                          <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        </button>
+                      <div className="mt-3 flex flex-wrap items-center gap-1.5 sm:mt-4 sm:gap-2 md:mt-0">
+                        {/* Play button for audio files */}
+                        {isAudio(file.mimeType) && (
+                          <button
+                            onClick={() => setPlayingId(playingId === file.id ? null : file.id)}
+                            className="rounded-lg bg-orange-500/10 p-1.5 text-orange-500 transition-all hover:bg-orange-500 hover:text-white sm:p-2"
+                            title="Play/Pause"
+                          >
+                            {playingId === file.id ? (
+                              <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                            ) : (
+                              <Music className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                            )}
+                          </button>
+                        )}
+
+                        {/* View button for viewable files */}
+                        {isViewable(file.mimeType, file.name) && (
+                          <button
+                            onClick={() =>
+                              setViewingFile({
+                                url: file.url,
+                                name: file.name,
+                                mimeType: file.mimeType,
+                              })
+                            }
+                            className="rounded-lg bg-blue-500/10 p-1.5 text-blue-500 transition-all hover:bg-blue-500 hover:text-white sm:p-2"
+                            title="View"
+                          >
+                            <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                          </button>
+                        )}
+
+                        {/* Publish button (for audio files) */}
+                        {isAudio(file.mimeType) && (
+                          <button
+                            onClick={() => handlePublish(file.id)}
+                            disabled={publishingFile === file.id}
+                            className="rounded-lg bg-gray-800 p-1.5 text-gray-400 transition-all hover:bg-green-500/20 hover:text-green-500 disabled:opacity-50 sm:p-2"
+                            title="Publish to Community"
+                          >
+                            <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                          </button>
+                        )}
+
+                        {/* Download */}
                         <a
                           href={file.url}
                           download
@@ -641,6 +846,8 @@ export default function LibraryPage() {
                         >
                           <Download className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </a>
+
+                        {/* Delete */}
                         <button
                           onClick={() => handleDelete(file.id)}
                           className="rounded-lg bg-gray-800 p-1.5 text-gray-400 transition-all hover:bg-red-500/20 hover:text-red-500 sm:p-2"
