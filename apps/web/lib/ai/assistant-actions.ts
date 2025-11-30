@@ -1,10 +1,28 @@
 /**
  * GODLIKE AI ASSISTANT - ACTION SYSTEM
  *
- * This module provides secure actions that the AI can execute on behalf of users.
- * ALL actions are scoped to the authenticated user only.
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * SECURITY: USER DATA ISOLATION - ACTIONS ARE SCOPED TO AUTHENTICATED USER
+ * ═══════════════════════════════════════════════════════════════════════════════
  *
- * SECURITY: Every action verifies the user owns/has access to the resource.
+ * This module provides actions that the AI can execute on behalf of users.
+ * ALL actions are STRICTLY scoped to the authenticated user's data only.
+ *
+ * SECURITY GUARANTEES:
+ *
+ * 1. Every action function takes userId as FIRST parameter
+ * 2. All database queries filter by userId or membership
+ * 3. Ownership is verified BEFORE any modification
+ * 4. Cross-user data access is IMPOSSIBLE by design
+ *
+ * Action Categories:
+ * - Create: New resources always belong to authenticated user
+ * - Read: Only user's own data or data they have membership to
+ * - Update: Ownership verified before any modification
+ * - Delete: Only user's own resources
+ *
+ * NEVER modify these functions to bypass userId checks.
+ * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 import { prisma } from '@cronkwaters/db';

@@ -1,6 +1,17 @@
 /**
  * AI SONG DISCOVERY & SMART SETLISTS
  *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * SECURITY: USER DATA ISOLATION - SONGS ARE USER-SCOPED
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * All functions in this module receive userId as the FIRST parameter.
+ * Song queries ALWAYS include: WHERE userId = $authenticatedUserId
+ * Users can ONLY discover, search, and create setlists from their OWN songs.
+ *
+ * Cross-user song access is IMPOSSIBLE by design.
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
  * Powers the AI's ability to:
  * - Pull up any song for display/editing/playing
  * - Search and filter songs

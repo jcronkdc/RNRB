@@ -6,13 +6,13 @@ import { strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
 
 /**
- * POST /api/songs/[id]/favorite
+ * POST /api/songs/[songId]/favorite
  * Toggle favorite status for a song
  */
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ songId: string }> }) {
   try {
     const user = await requireAuth();
-    const { id } = await params;
+    const { songId } = await params;
 
     // Rate limit
     await checkRateLimit(strictLimiter, `song-favorite:${user.id}`);
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     // Verify ownership
     const song = await db.song.findFirst({
-      where: { id, userId: user.id },
+      where: { id: songId, userId: user.id },
     });
 
     if (!song) {
@@ -31,13 +31,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     // Update favorite status
     const updated = await db.song.update({
-      where: { id },
+      where: { id: songId },
       data: { isFavorite: Boolean(isFavorite) },
       select: { id: true, isFavorite: true },
     });
 
     return NextResponse.json({ song: updated });
   } catch (error) {
-    return handleApiError(error, { route: '/api/songs/[id]/favorite', method: 'POST' });
+    return handleApiError(error, { route: '/api/songs/[songId]/favorite', method: 'POST' });
   }
 }

@@ -427,10 +427,15 @@ export async function loadAIMemory(userId: string): Promise<AIMemory> {
 
 /**
  * Compute preferences by analyzing user's songs
+ * SECURITY: Only analyzes songs owned by the specified userId
  */
 async function computePreferencesFromSongs(userId: string) {
+  // SECURITY: Only fetch songs belonging to this user
   const songs = await prisma.song.findMany({
-    where: { userId, archived: false },
+    where: {
+      userId, // Critical: Only this user's songs
+      archived: false,
+    },
     select: {
       key: true,
       tempo: true,
@@ -439,8 +444,11 @@ async function computePreferencesFromSongs(userId: string) {
     },
   });
 
+  // SECURITY: Only fetch collaborators from this user's songs
   const collaborators = await prisma.songCollaborator.findMany({
-    where: { song: { userId } },
+    where: {
+      song: { userId }, // Critical: Only from this user's songs
+    },
     select: {
       user: { select: { name: true } },
       email: true,

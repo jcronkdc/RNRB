@@ -1,6 +1,16 @@
 /**
  * AI ASSISTANT ADVANCED TOOLS
  *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * SECURITY: USER DATA ISOLATION - ALL TOOLS SCOPED TO AUTHENTICATED USER
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * Every function in this module receives userId as the FIRST parameter.
+ * All database queries are filtered by userId or membership.
+ * Users can ONLY access their own data through these tools.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
  * Extended capabilities for the AI assistant:
  * - Content Generation (press releases, social posts, emails)
  * - Smart Analytics (patterns, productivity)

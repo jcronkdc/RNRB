@@ -14,6 +14,32 @@ import {
 /**
  * GODLIKE AI ASSISTANT CONTEXT
  *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * SECURITY: USER DATA ISOLATION - "SAFE BUBBLE" ARCHITECTURE
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * This module loads comprehensive user data for the AI assistant, but with
+ * STRICT ISOLATION between users. Each user's data exists in their own
+ * "safe bubble" - the AI assistant for User A CANNOT see User B's:
+ *
+ * - Songs, lyrics, or chords
+ * - Projects or milestones
+ * - Tours, shows, or setlists
+ * - Library files
+ * - Messages
+ * - AI memories or preferences
+ * - Subscription/usage data
+ *
+ * ISOLATION IS ENFORCED BY:
+ *
+ * 1. Every database query includes WHERE userId = $authenticatedUserId
+ * 2. Project/Tour access verified through membership relations
+ * 3. No global queries - all data access is user-scoped
+ * 4. Memory system isolated per-user
+ *
+ * This isolation is FUNDAMENTAL to user privacy and trust.
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
  * Loads ALL user data for a truly omniscient AI assistant.
  * This gives the AI complete knowledge of:
  * - All songs (lyrics, chords, collaborators, status)
