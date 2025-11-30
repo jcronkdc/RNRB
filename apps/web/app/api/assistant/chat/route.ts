@@ -24,6 +24,14 @@ import {
   type MemoryType,
   type MemoryPriority,
 } from '@/lib/ai/assistant-memory';
+import {
+  displaySong,
+  searchSongs,
+  generateSetlistOptions,
+  createQuickSetlist,
+  getPlaybackQueue,
+  SONG_DISCOVERY_AI_FUNCTIONS,
+} from '@/lib/ai/song-discovery';
 import { buildGodlikeContext, formatGodlikeContext } from '@/lib/ai/godlike-context';
 import { handleApiError, AppError } from '@/lib/errors';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
@@ -154,7 +162,12 @@ export async function POST(request: NextRequest) {
       });
 
       // Convert ALL AI functions to OpenAI format
-      const allFunctions = [...AI_FUNCTIONS, ...ADVANCED_AI_FUNCTIONS, ...MEMORY_AI_FUNCTIONS];
+      const allFunctions = [
+        ...AI_FUNCTIONS,
+        ...ADVANCED_AI_FUNCTIONS,
+        ...MEMORY_AI_FUNCTIONS,
+        ...SONG_DISCOVERY_AI_FUNCTIONS,
+      ];
       const tools: OpenAI.ChatCompletionTool[] = allFunctions.map((fn) => ({
         type: 'function' as const,
         function: {
@@ -239,6 +252,27 @@ export async function POST(request: NextRequest) {
               break;
             case 'deleteMemory':
               result = { success: await deleteMemory(functionArgs.memoryId, user.id) };
+              break;
+            // Song Discovery functions
+            case 'displaySong':
+              result = await displaySong(user.id, functionArgs.identifier);
+              break;
+            case 'searchSongs':
+              result = await searchSongs(user.id, functionArgs);
+              break;
+            case 'generateSetlistOptions':
+              result = await generateSetlistOptions(user.id, functionArgs);
+              break;
+            case 'createQuickSetlist':
+              result = await createQuickSetlist(
+                user.id,
+                functionArgs.occasion,
+                functionArgs.songCount,
+                functionArgs.specificRequests
+              );
+              break;
+            case 'getPlaybackQueue':
+              result = await getPlaybackQueue(user.id, functionArgs.songIds);
               break;
             default:
               // Fall back to original action executor

@@ -52,6 +52,7 @@ import {
   FileType,
   Calendar,
   Hash,
+  ArrowRight,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -591,6 +592,21 @@ export default function LibraryPage() {
                     priority
                     className="transition-all duration-300 hover:scale-105"
                   />
+                </Link>
+
+                {/* Quick Access - Songs */}
+                <Link
+                  href="/songs"
+                  className="mb-4 flex items-center gap-3 rounded-xl border border-orange-500/30 bg-orange-500/10 px-3 py-3 text-sm font-medium text-orange-500 transition-all hover:bg-orange-500/20"
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500">
+                    <Music className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="block font-semibold">My Songs</span>
+                    <span className="text-xs text-orange-400/70">View all songs & projects</span>
+                  </div>
+                  <ChevronRight className="h-4 w-4" />
                 </Link>
 
                 {/* Quick Filters */}

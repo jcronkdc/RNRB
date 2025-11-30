@@ -1024,7 +1024,14 @@ function DashboardContent() {
               Explore Features
             </h2>
           </motion.div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+            <FeatureTile
+              title="My Songs"
+              icon={Music}
+              href="/songs"
+              description="All your songs"
+              delay={1.15}
+            />
             <FeatureTile
               title="Shows"
               icon={Calendar}
