@@ -3,8 +3,8 @@ import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
+import { executeAction, AI_FUNCTIONS, type ActionName } from '@/lib/ai/assistant-actions';
 import { buildGodlikeContext, formatGodlikeContext } from '@/lib/ai/godlike-context';
-import { AI_MAX_TOKENS } from '@/lib/ai/config';
 import { handleApiError, AppError } from '@/lib/errors';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
@@ -106,9 +106,10 @@ export async function POST(request: NextRequest) {
     let outputTokens: number;
     let cost: number;
     let modelUsed: string;
+    let actionsExecuted: Array<{ action: string; result: any }> = [];
 
     if (provider === 'openai') {
-      // Use OpenAI GPT-4o
+      // Use OpenAI GPT-4o with function calling
       const openai = getOpenAIClient()!;
 
       // Build messages array
@@ -132,14 +133,66 @@ export async function POST(request: NextRequest) {
         content: validated.message,
       });
 
-      // Call OpenAI API - using GPT-4o for best reasoning
-      // Increased tokens for comprehensive responses with full context
-      const response = await openai.chat.completions.create({
+      // Convert AI_FUNCTIONS to OpenAI format
+      const tools: OpenAI.ChatCompletionTool[] = AI_FUNCTIONS.map((fn) => ({
+        type: 'function' as const,
+        function: {
+          name: fn.name,
+          description: fn.description,
+          parameters: fn.parameters,
+        },
+      }));
+
+      // Call OpenAI API with function calling
+      let response = await openai.chat.completions.create({
         model: 'gpt-4o',
         messages,
-        max_tokens: 2000, // More room for detailed responses
+        max_tokens: 2000,
         temperature: 0.7,
+        tools,
+        tool_choice: 'auto',
       });
+
+      // Handle function calls (may need multiple iterations)
+      let iterations = 0;
+      const maxIterations = 5; // Prevent infinite loops
+
+      while (response.choices[0]?.message?.tool_calls && iterations < maxIterations) {
+        iterations++;
+        const toolCalls = response.choices[0].message.tool_calls;
+
+        // Add assistant's response with tool calls to messages
+        messages.push(response.choices[0].message);
+
+        // Execute each function call
+        for (const toolCall of toolCalls) {
+          const functionName = toolCall.function.name as ActionName;
+          const functionArgs = JSON.parse(toolCall.function.arguments);
+
+          console.log(`[AI Assistant] Executing action: ${functionName}`, functionArgs);
+
+          // Execute the action (scoped to user.id for security)
+          const result = await executeAction(user.id, functionName, functionArgs);
+          actionsExecuted.push({ action: functionName, result });
+
+          // Add function result to messages
+          messages.push({
+            role: 'tool',
+            tool_call_id: toolCall.id,
+            content: JSON.stringify(result),
+          });
+        }
+
+        // Get next response from AI
+        response = await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages,
+          max_tokens: 2000,
+          temperature: 0.7,
+          tools,
+          tool_choice: 'auto',
+        });
+      }
 
       responseText = response.choices[0]?.message?.content || '';
       inputTokens = response.usage?.prompt_tokens || 0;
@@ -149,8 +202,23 @@ export async function POST(request: NextRequest) {
       cost = (inputTokens / 1000000) * 5.0 + (outputTokens / 1000000) * 15.0;
       modelUsed = 'gpt-4o';
     } else {
-      // Use Claude
+      // Use Claude (without function calling for now - Claude handles it differently)
       const anthropic = getAnthropicClient()!;
+
+      // Add action instructions to system prompt for Claude
+      const claudeSystemPrompt =
+        systemPrompt +
+        `\n\n## AVAILABLE ACTIONS
+You can help the user by suggesting actions. When you want to perform an action, clearly state what you're doing and what the result is.
+
+Available actions you can discuss:
+- Create projects, songs, tours, shows
+- Update song lyrics, chords, key, tempo
+- Build setlists for shows
+- Analyze their musical style
+- Suggest chord progressions and rhymes
+
+When the user asks you to do something, explain what you would do and guide them through the process.`;
 
       // Build conversation messages
       const messages: Anthropic.MessageParam[] = [];
@@ -171,11 +239,11 @@ export async function POST(request: NextRequest) {
         content: validated.message,
       });
 
-      // Call Claude API - increased tokens for comprehensive responses
+      // Call Claude API
       const response = await anthropic.messages.create({
         model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 2000, // More room for detailed responses
-        system: systemPrompt,
+        max_tokens: 2000,
+        system: claudeSystemPrompt,
         messages: messages,
       });
 
@@ -197,6 +265,14 @@ export async function POST(request: NextRequest) {
       throw new AppError('AI service unavailable', 'SERVICE_UNAVAILABLE', 503);
     }
 
+    // Append action results to response if any actions were executed
+    if (actionsExecuted.length > 0) {
+      const actionSummary = actionsExecuted
+        .map((a) => `✅ ${a.action}: ${a.result.message}`)
+        .join('\n');
+      responseText = responseText + '\n\n---\n**Actions Completed:**\n' + actionSummary;
+    }
+
     // Save or update conversation
     let conversation;
     if (validated.conversationId) {
@@ -207,7 +283,12 @@ export async function POST(request: NextRequest) {
           messages: [
             ...(validated.conversationHistory || []),
             { role: 'user', content: validated.message, timestamp: new Date().toISOString() },
-            { role: 'assistant', content: responseText, timestamp: new Date().toISOString() },
+            {
+              role: 'assistant',
+              content: responseText,
+              timestamp: new Date().toISOString(),
+              actions: actionsExecuted,
+            },
           ],
           messageCount: { increment: 2 },
           tokensUsed: { increment: inputTokens + outputTokens },
@@ -226,7 +307,12 @@ export async function POST(request: NextRequest) {
           page: context.currentPage,
           messages: [
             { role: 'user', content: validated.message, timestamp: new Date().toISOString() },
-            { role: 'assistant', content: responseText, timestamp: new Date().toISOString() },
+            {
+              role: 'assistant',
+              content: responseText,
+              timestamp: new Date().toISOString(),
+              actions: actionsExecuted,
+            },
           ],
           messageCount: 2,
           tokensUsed: inputTokens + outputTokens,
@@ -249,6 +335,7 @@ export async function POST(request: NextRequest) {
       response: responseText,
       conversationId: conversation.id,
       model: modelUsed,
+      actionsExecuted: actionsExecuted.length > 0 ? actionsExecuted : undefined,
       usage: {
         inputTokens,
         outputTokens,
@@ -266,6 +353,10 @@ export async function POST(request: NextRequest) {
 function detectTopic(message: string, currentPage: string): string {
   const lowerMessage = message.toLowerCase();
 
+  if (lowerMessage.match(/create|make|start|new/i)) {
+    return 'action-create';
+  }
+
   if (lowerMessage.match(/how do i (get to|find|access)|where is|navigate/i)) {
     return 'navigation';
   }
@@ -278,8 +369,12 @@ function detectTopic(message: string, currentPage: string): string {
     return 'troubleshooting';
   }
 
-  if (lowerMessage.match(/suggest|idea|help me write|recommend|chord|lyric/i)) {
+  if (lowerMessage.match(/suggest|idea|help me write|recommend|chord|lyric|rhyme/i)) {
     return 'creative';
+  }
+
+  if (lowerMessage.match(/setlist|tour|show|gig/i)) {
+    return 'tour-planning';
   }
 
   if (lowerMessage.match(/upgrade|subscription|quota|limit|storage/i)) {
@@ -304,9 +399,16 @@ export async function GET() {
   return NextResponse.json({
     status: provider ? 'ok' : 'disabled',
     message: provider
-      ? `AI Assistant running with ${provider.toUpperCase()}`
+      ? `GODLIKE AI Assistant running with ${provider.toUpperCase()}`
       : 'No AI provider configured',
     provider,
     model,
+    capabilities: [
+      'Full data access (songs, projects, tours, library)',
+      'Create projects, songs, tours, shows',
+      'Build optimized setlists',
+      'Creative assistance (chords, rhymes, lyrics)',
+      'Musical style analysis',
+    ],
   });
 }

@@ -216,11 +216,71 @@ export default function SitesPage() {
   // Show dashboard if site exists
   if (hasWebsite && site) {
     return (
-      <div className="relative min-h-screen overflow-hidden bg-[#1e1e1e]">
-        <WarmGradientOrbs />
-        <MusicNotes />
+      <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+        {/* Floating Music Notes */}
+        <div className="music-notes-container pointer-events-none">
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={i}
+              className="music-note"
+              style={{
+                left: `${5 + i * 8}%`,
+                animationDelay: `${i * 0.7}s`,
+                fontSize: `${18 + (i % 4) * 8}px`,
+              }}
+            >
+              {['♪', '♫', '♬', '♩'][i % 4]}
+            </div>
+          ))}
+        </div>
+
+        {/* Animated Background Gradient Orbs */}
+        <div className="pointer-events-none fixed inset-0 overflow-hidden">
+          <div className="gradient-orb gradient-orb-1"></div>
+          <div className="gradient-orb gradient-orb-2"></div>
+          <div className="gradient-orb gradient-orb-3"></div>
+          <div className="gradient-orb-accent"></div>
+        </div>
+
+        {/* Hero Grid Pattern */}
+        <div className="hero-grid-pattern"></div>
 
         <div className="relative z-10 mx-auto max-w-6xl px-6 py-8">
+          {/* White RR Logo & Title */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 flex flex-col items-center"
+          >
+            <Link href="/" className="group relative inline-block">
+              <Image
+                src="/logo-light.png"
+                alt="Rock N' Roll Basement"
+                width={160}
+                height={65}
+                priority
+                className="transition-all duration-300 group-hover:scale-105"
+                style={{
+                  filter:
+                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
+                }}
+              />
+              <div
+                className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+                style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+              />
+            </Link>
+            <h1 className="hero-title mt-4 text-center">
+              <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
+                Rock N' Roll Basement
+              </span>
+            </h1>
+            <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+              My Website
+            </p>
+          </motion.div>
+
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -235,23 +295,24 @@ export default function SitesPage() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="mb-4 h-1 rounded-full"
                 style={{
-                  background: 'linear-gradient(90deg, #ff6347, #ffd700)',
+                  background: 'linear-gradient(90deg, var(--accent), #ffd700)',
                 }}
               />
               <div className="flex items-center gap-4">
                 <div
                   className="flex h-14 w-14 items-center justify-center rounded-2xl backdrop-blur-sm"
                   style={{
-                    background:
-                      'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
+                    background: 'rgba(255, 99, 71, 0.2)',
                     border: '1px solid rgba(255, 99, 71, 0.3)',
                   }}
                 >
-                  <Image src="/logo-dark.png" alt="RR" width={32} height={32} />
+                  <Globe className="h-7 w-7" style={{ color: 'var(--accent)' }} />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-white">My Website</h1>
-                  <p className="text-white/70">Manage your musician website</p>
+                  <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                    My Website
+                  </h2>
+                  <p style={{ color: 'var(--muted)' }}>Manage your musician website</p>
                 </div>
               </div>
             </div>
@@ -383,54 +444,82 @@ export default function SitesPage() {
 
   // Show Quick Start if no site
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#1e1e1e]">
-      <WarmGradientOrbs />
-      <MusicNotes />
+    <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* Floating Music Notes */}
+      <div className="music-notes-container pointer-events-none">
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            className="music-note"
+            style={{
+              left: `${5 + i * 8}%`,
+              animationDelay: `${i * 0.7}s`,
+              fontSize: `${18 + (i % 4) * 8}px`,
+            }}
+          >
+            {['♪', '♫', '♬', '♩'][i % 4]}
+          </div>
+        ))}
+      </div>
+
+      {/* Animated Background Gradient Orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <div className="gradient-orb-accent"></div>
+      </div>
+
+      {/* Hero Grid Pattern */}
+      <div className="hero-grid-pattern"></div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-6 py-12">
+        {/* White RR Logo & Title */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 flex flex-col items-center"
+        >
+          <Link href="/" className="group relative inline-block">
+            <Image
+              src="/logo-light.png"
+              alt="Rock N' Roll Basement"
+              width={160}
+              height={65}
+              priority
+              className="transition-all duration-300 group-hover:scale-105"
+              style={{
+                filter:
+                  'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
+              }}
+            />
+            <div
+              className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
+              style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+            />
+          </Link>
+          <h1 className="hero-title mt-4 text-center">
+            <span className="hero-text-gradient text-2xl font-bold md:text-3xl">
+              Rock N' Roll Basement
+            </span>
+          </h1>
+          <p className="mt-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+            My Website
+          </p>
+        </motion.div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-12 text-center"
         >
-          {/* White RR Logo with glow effect */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', duration: 0.6 }}
-            className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl"
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 215, 0, 0.1))',
-              border: '1px solid rgba(255, 99, 71, 0.3)',
-              boxShadow: '0 0 60px rgba(255, 99, 71, 0.3)',
-            }}
-          >
-            <Image
-              src="/logo-dark.png"
-              alt="Rock N' Roll Basement"
-              width={56}
-              height={56}
-              priority
-            />
-          </motion.div>
-
-          {/* Title with warm gradient text */}
-          <h1
-            className="mb-4 text-4xl font-bold md:text-5xl"
-            style={{
-              background: 'linear-gradient(135deg, #ff6347 0%, #ffd700 50%, #ff6347 100%)',
-              backgroundSize: '200% 200%',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              animation: 'gradient-shift 4s ease infinite',
-            }}
-          >
+          {/* Title */}
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl" style={{ color: 'var(--text)' }}>
             Build Your Website
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-white/80">
+          </h2>
+          <p className="mx-auto max-w-2xl text-lg" style={{ color: 'var(--muted)' }}>
             Create a stunning website in seconds. We'll automatically import your songs, tour dates,
             and profile info.
           </p>

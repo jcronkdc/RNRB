@@ -148,8 +148,9 @@ model User {
   notifications        Notification[] @relation("UserNotifications")
   sentNotifications    Notification[] @relation("NotificationActor")
 
-  // Library Files
-  libraryFiles LibraryFile[]
+  // Library Files & Collections
+  libraryFiles       LibraryFile[]
+  libraryCollections LibraryCollection[]
   
   // AI Assistant
   assistantConversations AssistantConversation[]
@@ -2290,7 +2291,7 @@ enum ConflictStatus {
 
 // ====================================
 // LIBRARY FILES - Media Asset Management
-// Added: 2025-11-25
+// Added: 2025-11-25, Enhanced: 2025-11-30
 // ====================================
 
 model LibraryFile {
@@ -2304,13 +2305,35 @@ model LibraryFile {
   mimeType     String // audio/mpeg, audio/wav, etc.
   type         LibraryFileType @default(other)
   
-  // Audio metadata
+  // Audio metadata (auto-detected where possible)
   duration      Int? // Duration in seconds
   waveformData  Json? // Waveform visualization data
+  bpm           Int? // Beats per minute (auto-detected or manual)
+  musicalKey    String? // Musical key (e.g., "C Major", "A Minor")
+  mood          String? // Mood tag (e.g., "Energetic", "Melancholic")
   
   // Organization
-  tags     String[] // Custom tags for organization
-  metadata Json? // Additional metadata
+  tags        String[] // Custom tags for organization
+  color       String? // Color label for visual organization
+  isFavorite  Boolean @default(false) // Quick access favorites
+  playCount   Int @default(0) // Track usage
+  lastPlayed  DateTime? // Last time file was played/opened
+  notes       String? // Personal notes about the file
+  
+  // Lyrics/Chords specific
+  lyrics      String? @db.Text // Full lyrics text (for search)
+  chordData   Json? // Chord progression data
+  
+  // Version tracking
+  version     Int @default(1) // Version number
+  parentId    String? // Reference to original file (for versions)
+  
+  // Collection membership
+  collectionId String?
+  collection   LibraryCollection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  
+  // Additional metadata
+  metadata Json? // Additional flexible metadata
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -2321,6 +2344,32 @@ model LibraryFile {
   @@index([type])
   @@index([createdAt])
   @@index([tags])
+  @@index([collectionId])
+  @@index([isFavorite])
+  @@index([bpm])
+  @@index([musicalKey])
+}
+
+// Collections for organizing library files
+model LibraryCollection {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  color       String? // Color for visual identification
+  icon        String? // Icon name for the collection
+  isDefault   Boolean @default(false) // Default collections like "Favorites"
+  sortOrder   Int @default(0) // For custom ordering
+  
+  files       LibraryFile[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, name])
+  @@index([userId])
 }
 
 enum LibraryFileType {
