@@ -116,6 +116,13 @@ export function AblyProvider({ children, lazy = true }: Props) {
         return null;
       }
 
+      // Rate limited (429) - don't count as failure, Ably SDK will retry later
+      if (response.status === 429) {
+        console.warn('[Ably] Rate limited (429) - will retry later');
+        // Don't record as failure - the rate limit will naturally reset
+        return null;
+      }
+
       if (!response.ok) {
         throw new Error(`Token request failed: ${response.status}`);
       }

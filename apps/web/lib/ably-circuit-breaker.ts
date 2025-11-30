@@ -161,6 +161,12 @@ export async function fetchAblyTokenSafely(): Promise<Ably.TokenRequest | null> 
       return null;
     }
 
+    // 429 = Rate limited - don't count as failure, will retry later
+    if (response.status === 429) {
+      console.warn('[Ably Circuit Breaker] Rate limited (429) - will retry later');
+      return null;
+    }
+
     if (!response.ok) {
       throw new Error(`Token request failed: ${response.status}`);
     }
