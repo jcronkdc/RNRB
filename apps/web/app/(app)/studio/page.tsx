@@ -140,7 +140,7 @@ export default function StudioPage() {
             >
               <Link href="/" className="group relative inline-block">
                 <Image
-                  src="/logo-light.png"
+                  src="/logo-dark.png"
                   alt="Rock N' Roll Basement"
                   width={160}
                   height={65}
