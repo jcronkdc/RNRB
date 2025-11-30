@@ -36,6 +36,8 @@ export interface SongDisplay {
   hasAudio: boolean;
   hasLyrics: boolean;
   hasChords: boolean;
+  // Display mode hints for frontend
+  suggestedView?: 'default' | 'teleprompter' | 'chords' | 'edit';
 }
 
 export interface SetlistOption {
@@ -79,11 +81,19 @@ export interface SearchFilters {
 
 /**
  * Pull up a song for display - by ID or title search
+ * @param viewMode - 'default' | 'teleprompter' | 'chords' | 'edit'
  */
 export async function displaySong(
   userId: string,
-  identifier: string // Can be song ID or title
-): Promise<{ success: boolean; song?: SongDisplay; suggestions?: SongDisplay[]; message: string }> {
+  identifier: string, // Can be song ID or title
+  viewMode: 'default' | 'teleprompter' | 'chords' | 'edit' = 'default'
+): Promise<{
+  success: boolean;
+  song?: SongDisplay;
+  suggestions?: SongDisplay[];
+  message: string;
+  viewMode: string;
+}> {
   // First try exact ID match
   let song = await prisma.song.findFirst({
     where: {
@@ -150,19 +160,32 @@ export async function displaySong(
         success: false,
         suggestions: similar.map(formatSongDisplay),
         message: `Couldn't find "${identifier}" exactly. Did you mean one of these?`,
+        viewMode,
       };
     }
 
     return {
       success: false,
       message: `Couldn't find any song matching "${identifier}". Try a different search term.`,
+      viewMode,
     };
   }
 
+  const formattedSong = formatSongDisplay(song);
+  formattedSong.suggestedView = viewMode;
+
+  const viewMessages = {
+    default: `Here's "${song.title}"!`,
+    teleprompter: `Opening "${song.title}" in teleprompter mode with auto-scroll! Use spacebar to play/pause.`,
+    chords: `Here are the chords for "${song.title}"`,
+    edit: `Opening "${song.title}" for editing`,
+  };
+
   return {
     success: true,
-    song: formatSongDisplay(song),
-    message: `Here's "${song.title}"!`,
+    song: formattedSong,
+    message: viewMessages[viewMode],
+    viewMode,
   };
 }
 
@@ -732,6 +755,12 @@ export const SONG_DISCOVERY_AI_FUNCTIONS = [
         identifier: {
           type: 'string',
           description: 'Song ID or title to search for',
+        },
+        viewMode: {
+          type: 'string',
+          enum: ['default', 'teleprompter', 'chords', 'edit'],
+          description:
+            'How to display the song. Use teleprompter for playing/performing with auto-scroll.',
         },
       },
       required: ['identifier'],

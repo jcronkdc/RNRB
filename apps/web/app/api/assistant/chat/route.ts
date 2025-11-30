@@ -255,7 +255,7 @@ export async function POST(request: NextRequest) {
               break;
             // Song Discovery functions
             case 'displaySong':
-              result = await displaySong(user.id, functionArgs.identifier);
+              result = await displaySong(user.id, functionArgs.identifier, functionArgs.viewMode);
               break;
             case 'searchSongs':
               result = await searchSongs(user.id, functionArgs);
