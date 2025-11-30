@@ -4,6 +4,17 @@ import { type NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 import { executeAction, AI_FUNCTIONS, type ActionName } from '@/lib/ai/assistant-actions';
+import {
+  generatePressRelease,
+  generateSocialPosts,
+  generateVenueEmail,
+  analyzeMusicalPatterns,
+  estimateTourBudget,
+  calculateRoyaltySplits,
+  draftCollaboratorMessage,
+  suggestCollaborators,
+  ADVANCED_AI_FUNCTIONS,
+} from '@/lib/ai/assistant-tools';
 import { buildGodlikeContext, formatGodlikeContext } from '@/lib/ai/godlike-context';
 import { handleApiError, AppError } from '@/lib/errors';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
@@ -133,8 +144,9 @@ export async function POST(request: NextRequest) {
         content: validated.message,
       });
 
-      // Convert AI_FUNCTIONS to OpenAI format
-      const tools: OpenAI.ChatCompletionTool[] = AI_FUNCTIONS.map((fn) => ({
+      // Convert AI_FUNCTIONS + ADVANCED_AI_FUNCTIONS to OpenAI format
+      const allFunctions = [...AI_FUNCTIONS, ...ADVANCED_AI_FUNCTIONS];
+      const tools: OpenAI.ChatCompletionTool[] = allFunctions.map((fn) => ({
         type: 'function' as const,
         function: {
           name: fn.name,
@@ -166,13 +178,45 @@ export async function POST(request: NextRequest) {
 
         // Execute each function call
         for (const toolCall of toolCalls) {
-          const functionName = toolCall.function.name as ActionName;
+          const functionName = toolCall.function.name;
           const functionArgs = JSON.parse(toolCall.function.arguments);
 
           console.log(`[AI Assistant] Executing action: ${functionName}`, functionArgs);
 
           // Execute the action (scoped to user.id for security)
-          const result = await executeAction(user.id, functionName, functionArgs);
+          let result;
+
+          // Check if it's an advanced tool
+          switch (functionName) {
+            case 'generatePressRelease':
+              result = await generatePressRelease(user.id, functionArgs.projectId);
+              break;
+            case 'generateSocialPosts':
+              result = await generateSocialPosts(user.id, functionArgs);
+              break;
+            case 'generateVenueEmail':
+              result = await generateVenueEmail(user.id, functionArgs);
+              break;
+            case 'analyzeMusicalPatterns':
+              result = await analyzeMusicalPatterns(user.id);
+              break;
+            case 'estimateTourBudget':
+              result = await estimateTourBudget(user.id, functionArgs.tourId, functionArgs);
+              break;
+            case 'calculateRoyaltySplits':
+              result = await calculateRoyaltySplits(functionArgs.songId, user.id);
+              break;
+            case 'draftCollaboratorMessage':
+              result = await draftCollaboratorMessage(user.id, functionArgs);
+              break;
+            case 'suggestCollaborators':
+              result = await suggestCollaborators(user.id);
+              break;
+            default:
+              // Fall back to original action executor
+              result = await executeAction(user.id, functionName as ActionName, functionArgs);
+          }
+
           actionsExecuted.push({ action: functionName, result });
 
           // Add function result to messages

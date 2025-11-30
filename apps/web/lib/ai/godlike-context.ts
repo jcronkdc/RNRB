@@ -1,4 +1,10 @@
 import { prisma } from '@cronkwaters/db';
+import { loadAIMemory, formatMemoryForAI, type AIMemory } from './assistant-memory';
+import {
+  generateProactiveAlerts,
+  formatAlertsForAI,
+  type ProactiveAlert,
+} from './assistant-alerts';
 
 /**
  * GODLIKE AI ASSISTANT CONTEXT
@@ -11,6 +17,8 @@ import { prisma } from '@cronkwaters/db';
  * - Library files (audio, stems, demos)
  * - Messages and collaborations
  * - Usage stats and subscription info
+ * - AI Memory (past conversations, learned preferences)
+ * - Proactive Alerts (deadlines, stale items, opportunities)
  */
 
 export interface GodlikeContext {
@@ -27,6 +35,10 @@ export interface GodlikeContext {
   timestamp: string;
   // NEW: Hyper-focused context on what they're currently working on
   currentWork: CurrentWorkContext | null;
+  // NEW: AI Memory - remembers past conversations and preferences
+  memory: AIMemory | null;
+  // NEW: Proactive Alerts - deadlines, stale items, opportunities
+  alerts: ProactiveAlert[];
 }
 
 // Deep context about what the user is CURRENTLY working on
@@ -1113,6 +1125,22 @@ export async function buildGodlikeContext(
   // NEW: Load deep context for what they're currently working on
   const currentWork = await loadCurrentWorkContext(userId, currentPage || '');
 
+  // NEW: Load AI memory (past conversations, preferences)
+  let memory: AIMemory | null = null;
+  try {
+    memory = await loadAIMemory(userId);
+  } catch (error) {
+    console.error('Error loading AI memory:', error);
+  }
+
+  // NEW: Generate proactive alerts (deadlines, stale items, etc.)
+  let alerts: ProactiveAlert[] = [];
+  try {
+    alerts = await generateProactiveAlerts(userId);
+  } catch (error) {
+    console.error('Error generating alerts:', error);
+  }
+
   return {
     user: userContext,
     songs: songsContext,
@@ -1131,6 +1159,8 @@ export async function buildGodlikeContext(
     currentPage: pageContext,
     timestamp: new Date().toISOString(),
     currentWork, // Deep context about what they're actively working on
+    memory, // AI memory - past conversations and preferences
+    alerts, // Proactive alerts - deadlines, opportunities
   };
 }
 
@@ -1486,8 +1516,38 @@ You can help the user with ANYTHING on this platform:
 ## PLATFORM KNOWLEDGE
 ${ctx.platformKnowledge}
 
+${ctx.memory ? formatMemoryForAI(ctx.memory) : ''}
+
+${formatAlertsForAI(ctx.alerts)}
+
+## 🛠️ ADVANCED TOOLS
+You have access to these powerful tools - USE THEM when relevant:
+
+**Content Generation:**
+- generatePressRelease(projectId) - Create professional press releases
+- generateSocialPosts(type, projectId/showId) - Twitter, Instagram, Facebook posts
+- generateVenueEmail(venueName, city) - Booking inquiry emails
+
+**Analytics:**
+- analyzeMusicalPatterns() - Analyze their writing style, productivity, patterns
+
+**Business:**
+- estimateTourBudget(params) - Calculate tour costs
+- calculateRoyaltySplits(songId) - Figure out fair royalty splits
+
+**Collaboration:**
+- draftCollaboratorMessage(name, purpose) - Write messages to collaborators
+- suggestCollaborators() - Recommend people to work with
+
 ---
-Now assist ${ctx.user.name} with godlike knowledge of their entire creative world!`;
+Now assist ${ctx.user.name} with godlike knowledge of their entire creative world!
+
+Remember:
+- You have their FULL song lyrics and can reference specific lines
+- You know their version history and can compare changes
+- You see their deadlines and can proactively mention them
+- You remember past conversations and learned preferences
+- You can generate content, analyze patterns, and help with business!`;
 }
 
 function getQuotasForTier(tier: string) {

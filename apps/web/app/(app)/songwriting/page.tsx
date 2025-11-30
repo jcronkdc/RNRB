@@ -24,11 +24,11 @@ import type { LibraryFile } from '@/hooks/use-library';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSongAutoSave, type SongData } from '@/hooks/use-song-auto-save';
 
-// Import the drag-drop collaborative songwriting components
-const CollaborativeVisualBuilder = dynamic(
+// Import the streamlined song builder (cleaner single-flow UX)
+const StreamlinedSongBuilder = dynamic(
   () =>
-    import('@/components/songwriting/collaborative-visual-builder').then(
-      (m) => m.CollaborativeVisualBuilder
+    import('@/components/songwriting/streamlined-song-builder').then(
+      (m) => m.StreamlinedSongBuilder
     ),
   { ssr: false }
 );
@@ -822,16 +822,10 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'structure' && !loading && user && (
-            <div className="card overflow-hidden rounded-2xl">
-              <CollaborativeVisualBuilder
-                projectSlug="songwriting-studio"
+            <div className="card overflow-hidden rounded-2xl p-6">
+              <StreamlinedSongBuilder
                 onSongChange={(blocks) => setSongBlocks(blocks)}
-                currentUser={{
-                  userId: user.id,
-                  userName: user.name || user.email?.split('@')[0] || 'User',
-                  userEmail: user.email || '',
-                  avatar: user.image,
-                }}
+                initialBlocks={songBlocks}
               />
             </div>
           )}
