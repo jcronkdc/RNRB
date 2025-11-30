@@ -195,17 +195,53 @@ export async function POST(req: NextRequest) {
       throw new AppError('Storage service unavailable', 'SERVICE_UNAVAILABLE', 503);
     }
 
+    // Calculate file hash for duplicate detection
+    const fileBuffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest('SHA-256', fileBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const fileHash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+
+    // Check for duplicates
+    const existingFile = await prisma.libraryFile.findFirst({
+      where: {
+        userId: user.id,
+        hash: fileHash,
+      },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+      },
+    });
+
+    if (existingFile) {
+      // Return duplicate info instead of error (let frontend decide)
+      return NextResponse.json(
+        {
+          isDuplicate: true,
+          existingFile: {
+            id: existingFile.id,
+            name: existingFile.name,
+            createdAt: existingFile.createdAt,
+          },
+          message: `This file appears to be a duplicate of "${existingFile.name}" uploaded on ${existingFile.createdAt.toLocaleDateString()}`,
+        },
+        { status: 200 }
+      );
+    }
+
     // Create unique filename (sanitize to prevent path traversal)
     const timestamp = Date.now();
     const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.{2,}/g, '.'); // Prevent directory traversal
     const filePath = `library/${user.id}/${timestamp}-${sanitizedFileName}`;
 
-    // Upload to Supabase Storage
+    // Upload to Supabase Storage (use buffer we already have)
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('audio-files')
-      .upload(filePath, file, {
+      .upload(filePath, fileBuffer, {
         cacheControl: '3600',
         upsert: false,
+        contentType: file.type,
       });
 
     if (uploadError) {
@@ -232,6 +268,8 @@ export async function POST(req: NextRequest) {
         mimeType: file.type,
         type: fileType,
         tags: parsedTags,
+        hash: fileHash,
+        version: 1,
       },
     });
 

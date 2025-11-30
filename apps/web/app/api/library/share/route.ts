@@ -2,7 +2,9 @@ import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+import { sendFileSharedEmail } from '@/lib/email/send-file-shared';
 import { handleApiError, AppError } from '@/lib/errors';
+import { publishToUser } from '@/lib/realtime';
 import { requireAuth } from '@/lib/session';
 
 // Share request schema
@@ -102,17 +104,23 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create notifications for recipients
-    for (const recipientId of validRecipientIds) {
-      const fileNames = files.map((f) => f.name).slice(0, 3);
-      const moreFiles = files.length > 3 ? ` and ${files.length - 3} more` : '';
+    // Create notifications, send emails, and publish real-time updates for recipients
+    const fileNames = files.map((f) => f.name);
 
+    for (const recipientId of validRecipientIds) {
+      const recipient = recipients.find((r) => r.id === recipientId);
+      if (!recipient) continue;
+
+      const displayFileNames = fileNames.slice(0, 3);
+      const moreFiles = fileNames.length > 3 ? ` and ${fileNames.length - 3} more` : '';
+
+      // Create in-app notification
       await prisma.notification.create({
         data: {
           userId: recipientId,
           type: 'library_share',
           title: 'Files shared with you',
-          message: `${user.name || user.email} shared ${fileNames.join(', ')}${moreFiles} with you`,
+          message: `${user.name || user.email} shared ${displayFileNames.join(', ')}${moreFiles} with you`,
           actorId: user.id,
           metadata: {
             fileIds,
@@ -120,12 +128,36 @@ export async function POST(req: NextRequest) {
           },
         },
       });
+
+      // Send email notification (async, don't wait)
+      sendFileSharedEmail({
+        to: recipient.email,
+        recipientName: recipient.name || '',
+        senderName: user.name || 'Someone',
+        senderEmail: user.email!,
+        fileNames,
+        message,
+        canDownload,
+        expiresAt,
+      }).catch((err) => console.error('Email send error:', err));
+
+      // Publish real-time notification via Ably
+      publishToUser(recipientId, 'library:file-shared', {
+        type: 'file-shared',
+        senderId: user.id,
+        senderName: user.name || user.email,
+        fileCount: fileNames.length,
+        fileNames: displayFileNames,
+        message,
+        canDownload,
+        timestamp: new Date().toISOString(),
+      }).catch((err) => console.error('Ably publish error:', err));
     }
 
     return NextResponse.json({
       success: true,
       sharesCreated: shares.length,
-      files: files.map((f) => f.name),
+      files: fileNames,
       recipients: recipients.filter((r) => validRecipientIds.includes(r.id)),
     });
   } catch (error) {
