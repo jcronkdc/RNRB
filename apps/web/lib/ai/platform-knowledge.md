@@ -2,33 +2,47 @@
 
 **For AI Assistant:** This document contains comprehensive platform knowledge for providing expert guidance to users.
 
+**Last Updated:** December 2025
+
 ---
 
 ## 🎵 PLATFORM OVERVIEW
 
-CronkWaters is a comprehensive music collaboration and business management platform for musicians, bands, studios, and solo artists. It combines:
+CronkWaters (aka "Rock N' Roll Basement") is a comprehensive music collaboration and business management platform for musicians, bands, studios, and solo artists. It's designed as a complete "workshop" for musicians - everything in one place.
 
-- Songwriting tools with AI assistance
-- Real-time collaboration (video, chat, presence)
-- Project & tour management
-- Copyright & legal tools
-- Community publishing & discovery
-- Version control for music (Git-like)
-- DAW-grade audio mixing
+### Core Capabilities:
 
-**Live Site:** https://www.cronkwaters.com  
-**Tech Stack:** Next.js 15, tRPC, Prisma, Supabase Auth, Neon PostgreSQL
+- **Create:** Songwriting tools with AI assistance, Sketches for quick ideas, Labs for experimentation
+- **Connect:** Real-time collaboration (video, chat, presence), messaging, collaboration matching
+- **Perform:** Tour management, Smart Setlists, Shows Calendar, Live Streaming
+- **Grow:** Website Builder, Masterclasses, Social Feed, Community Discovery
+- **Earn:** Marketplace, Opportunities (gigs/jobs), Revenue tracking, Affiliate program
+
+### Tech Stack:
+
+- Next.js 15, tRPC, Prisma, Supabase Auth, Neon PostgreSQL
+- Ably for real-time features
+- Anthropic Claude / OpenAI for AI features
+- Stripe for payments
+
+**Live Site:** https://www.cronkwaters.com
 
 ---
 
 ## 🗺️ NAVIGATION & KEY PAGES
 
-### Primary Navigation (Sidebar)
+### Primary Navigation (Organized by Category)
+
+#### 🏠 HOME
 
 1. **Dashboard** (`/dashboard`)
-   - Overview of all user's projects and activity
-   - Quick access to recent songs and collaborations
+   - Overview of all activity with quick actions
+   - Today's Spark - daily creative challenge
+   - Quick access grid: Songs, Meet, Go Live, Classes, Studio, Shows, My Site, Connect, Library, Toolbox, Tours, Settings
    - Usage stats and subscription info
+
+#### ✨ CREATE
+
 2. **Songwriting** (`/songwriting`)
    - **Structure Tab:** Define song sections (verse, chorus, bridge)
    - **Chords Tab:** Add chord progressions with AI suggestions
@@ -37,51 +51,161 @@ CronkWaters is a comprehensive music collaboration and business management platf
    - **Save to Project:** Link songs to albums/projects
    - **Import from Library:** Use existing audio files
 
-3. **Library** (`/library`)
-   - Personal audio file storage
-   - Organize demos, stems, mixes, masters
-   - Publish tracks to community
-   - File type support: WAV, MP3, FLAC, M4A
-   - Preview and download capabilities
+3. **Sketches** (`/create`) - BETA
+   - Quick idea capture
+   - Voice memos
+   - Rough chord progressions
+   - Ideas that aren't full songs yet
 
-4. **Studio** (`/studio`)
-   - Real-time collaboration workspace
-   - Video calls (Studio tier only)
-   - Multi-cursor editing
-   - Presence indicators
-   - Project recordings management
-
-5. **Projects** (`/projects`)
+4. **Projects** (`/projects`)
    - Album/EP/Single organization
    - Milestones & deadlines
-   - Gantt chart view
    - Collaborator management
    - Version history
 
-6. **Tours** (`/tours`)
-   - Tour scheduling & planning
-   - Show management
-   - Setlist creation
-   - Venue information
-   - Travel logistics
+5. **Labs** (`/labs`) - NEW
+   - Experimental features playground
+   - **Contribute:** Help build new features
+   - **Experiment:** Try unreleased tools
+   - **Research:** Access research papers and findings
+   - **Volunteer:** Community beta testing
 
-7. **Explorer** (`/explorer`)
-   - Community track discovery
-   - Browse published music
-   - Like, comment, follow artists
-   - Search by genre, mood, etc.
+#### 📈 GROW
 
-8. **Messages** (`/messages`)
-   - Direct messaging system
-   - Thread conversations
-   - File sharing
+6. **My Site** (`/sites`) - Website Builder
+   - Create professional artist website in minutes
+   - Custom domain support
+   - Themes and templates
+   - Bio, music player, tour dates, merch links
+   - Edit mode with live preview
 
-9. **Settings** (`/settings`)
-   - Profile management
-   - Subscription & billing
-   - Usage dashboard (`/settings/usage`)
-   - Account preferences
-   - Connected services
+7. **Masterclasses** (`/masterclasses`)
+   - Full learning platform
+   - Watch video lessons from industry pros
+   - **Become an Instructor:** Create and sell courses
+   - **Live Classes:** Real-time instruction
+   - **Certificates:** Completion certificates
+   - **Analytics:** Track your learning progress
+
+8. **Social Feed** (`/feed`)
+   - Community posts and updates
+   - Tag-based discovery
+   - Like, comment, share
+   - **Explore:** Discover trending content
+   - Follow other musicians
+
+#### 🤝 CONNECT
+
+9. **Meet** (`/meet`) - Video Meetings
+   - HD video calls (up to 50 people)
+   - Screen sharing for DAW walkthroughs
+   - Meeting analytics
+   - Shareable meeting links
+   - Real-time cursor collaboration
+
+10. **Messages** (`/messages`)
+    - Direct messaging system
+    - Thread conversations
+    - File sharing
+
+11. **Collaboration Needs** (`/collaboration-needs`)
+    - Post what you're looking for (vocalist, producer, etc.)
+    - Browse musician profiles
+    - Find collaborators by skill/genre/location
+
+12. **Discover** (`/discover` & `/explore`)
+    - Community track discovery
+    - Browse published music
+    - Like, comment, follow artists
+    - Search by genre, mood, etc.
+
+#### 🎤 PERFORM
+
+13. **Tours** (`/tours`)
+    - Tour scheduling & planning
+    - Show management
+    - Setlist creation
+    - Venue information
+    - Travel logistics
+
+14. **Shows Calendar** (`/shows/calendar`)
+    - Calendar view of all shows
+    - **Today's Shows:** Quick view of what's happening today
+    - Drag-and-drop scheduling
+
+15. **Smart Setlists** (`/setlists`)
+    - AI-powered setlist builder
+    - Energy flow optimization
+    - Key/tempo transitions
+    - Templates for different venues
+    - Drag-and-drop song ordering
+    - Print setlists as PDF
+
+16. **Live Streaming** (`/live`)
+    - **Go Live:** Stream to fans
+    - Stream setup wizard
+    - **Analytics:** View stream performance
+    - Monetization options
+
+#### 💰 EARN
+
+17. **Opportunities** (`/opportunities`)
+    - Gig postings and job board
+    - Post opportunities: hiring musicians, session work, gigs
+    - Apply to opportunities
+    - Track applications
+
+18. **Marketplace** (`/marketplace`)
+    - Buy and sell: beats, samples, stems, services
+    - Create listings with pricing
+    - Secure transactions via Stripe
+    - Browse by category
+
+19. **Revenue** (`/revenue`)
+    - Track income from all sources
+    - Streaming royalties
+    - Gig payments
+    - Merchandise sales
+    - Licensing income
+
+20. **Affiliate Program** (`/affiliate`)
+    - Refer musicians, earn credits
+    - Custom referral links
+    - Track conversions
+    - **Stream Setup:** Affiliate streaming configuration
+
+#### 🛠️ TOOLS & RESOURCES
+
+21. **Library** (`/library`)
+    - Personal audio file storage
+    - Organize demos, stems, mixes, masters
+    - Publish tracks to community
+    - File type support: WAV, MP3, FLAC, M4A
+    - Preview and download capabilities
+
+22. **Studio** (`/studio`)
+    - Real-time collaboration workspace
+    - Recording guide for best practices
+    - Multi-track mixing
+    - Presence indicators
+
+23. **Toolbox** (`/tools`)
+    - Musicians toolkit
+    - Tuner, metronome, chord charts
+    - Quick reference tools
+
+24. **Credits** (`/credits`)
+    - Platform credit balance
+    - Purchase credits
+    - Credit history
+    - Use credits for premium features
+
+25. **Settings** (`/settings`)
+    - Profile management
+    - Subscription & billing
+    - Usage dashboard (`/settings/usage`)
+    - Account preferences
+    - Notifications
 
 ---
 
@@ -89,47 +213,62 @@ CronkWaters is a comprehensive music collaboration and business management platf
 
 ### Free Tier ($0/month)
 
-✅ 1 project
-✅ 1 GB storage
-✅ Basic songwriting tools
-✅ Community sharing (view only)
-❌ No AI features
+✅ 3 projects to experiment with
+✅ 1 GB cloud storage
+✅ Invite 1 collaborator per project
+✅ Real-time collaboration
+✅ Core songwriting tools
+✅ Community support
+✅ 10 AI Assistant conversations/month (teaser)
+❌ Limited AI features
 ❌ No video collaboration
-❌ No tour management
 
-**Use case:** Trying out the platform, learning features
+**Use case:** Trying out the platform, casual users, learning features
 
 ---
 
-### Creator Tier ($9.99/month)
+### Creator Tier ($15/month)
 
-✅ 10 projects
-✅ 10 GB storage
+✅ 10 projects — room to grow
+✅ 10 GB storage for your catalog
+✅ 5 collaborators per project
 ✅ 100 AI songwriting assists/month
+✅ AI chord & lyric suggestions
+✅ Smart tour routing
 ✅ Copyright split sheets (PDF generation)
-✅ Tour & gig management
-✅ Advanced analytics
 ✅ Community publishing
 ✅ Version control (Git for music)
+✅ 100 AI Assistant conversations/month
+✅ Priority support
 ❌ No video collaboration
 
 **Use case:** Solo musicians, independent songwriters
 
 ---
 
-### Studio Tier ($29.99/month)
+### Studio Tier ($35/month)
 
 ✅ UNLIMITED projects
 ✅ 100 GB storage
+✅ Unlimited collaborators
 ✅ 500 AI assists/month (5× Creator)
-✅ 20 hours HD video calls/month
+✅ All AI tools unlocked
+✅ 20 hours HD video calls/month (up to 50 people)
+✅ Screen sharing & recording
 ✅ Real-time collaboration (multi-cursor, presence)
-✅ Advanced DAW-grade stems mixer
-✅ Project management (Gantt charts, milestones)
-✅ Priority support
-✅ Custom branding
+✅ UNLIMITED AI Assistant conversations
+✅ Advanced analytics
+✅ Dedicated support
 
 **Use case:** Bands, studios, professional teams
+
+---
+
+### Trial Information
+
+- All paid plans include a **7-day free trial**
+- No credit card required to start
+- Cancel anytime — your music stays yours
 
 ---
 
@@ -342,6 +481,217 @@ CronkWaters is a comprehensive music collaboration and business management platf
 - Can unpublish anytime
 - Unpublished = removed from Explorer
 - Your files are always private by default
+
+---
+
+### Marketplace
+
+**Purpose:** Buy and sell music services, beats, samples, and more
+
+**How to Use:**
+
+1. Go to Marketplace (`/marketplace`)
+2. **Browse:** Search by category, price, genre
+3. **Buy:** Secure checkout via Stripe
+4. **Sell:** Create listings with:
+   - Title, description, price
+   - Category (beats, samples, mixing services, etc.)
+   - Preview audio
+   - License type
+
+**Categories:**
+
+- Beats & Instrumentals
+- Sample packs
+- Mixing & mastering services
+- Session musician services
+- Songwriting collaboration
+- Production templates
+
+---
+
+### Masterclasses
+
+**Purpose:** Learn from industry professionals and teach others
+
+**For Students:**
+
+1. Browse masterclasses by topic/instructor
+2. Watch video lessons
+3. Complete assignments
+4. Earn certificates
+5. Join live sessions
+
+**For Instructors:**
+
+1. Apply at `/masterclasses/become-instructor`
+2. Create course content
+3. Set pricing
+4. Track student progress via analytics
+5. Host live sessions
+
+**Topics include:** Songwriting, Production, Mixing, Business, Performance, Marketing
+
+---
+
+### Website Builder
+
+**Purpose:** Create a professional artist website in minutes
+
+**How to Use:**
+
+1. Go to Sites (`/sites`)
+2. Choose a template
+3. Add your content:
+   - Bio and story
+   - Music player (from Library)
+   - Tour dates
+   - Merch links
+   - Social links
+   - Contact form
+4. Preview your site
+5. Publish!
+
+**Features:**
+
+- Mobile-responsive designs
+- Custom domains (coming soon)
+- SEO optimized
+- Analytics integration
+- Connect to your Library
+
+---
+
+### Live Streaming
+
+**Purpose:** Stream live to fans for performances, Q&As, or studio sessions
+
+**How to Go Live:**
+
+1. Go to Live (`/live`)
+2. Click "Go Live"
+3. Configure your stream:
+   - Title and description
+   - Camera/audio settings
+   - Monetization (tips, tickets)
+4. Start streaming!
+
+**Features:**
+
+- HD video quality
+- Real-time chat with viewers
+- Stream analytics
+- Recording option
+- Monetization tools
+
+---
+
+### Opportunities
+
+**Purpose:** Find gigs, session work, and collaborations
+
+**Post an Opportunity:**
+
+1. Go to Opportunities (`/opportunities`)
+2. Click "Post Opportunity"
+3. Fill in details:
+   - Type (gig, session, collaboration)
+   - Description and requirements
+   - Pay/compensation
+   - Location/remote
+4. Review applications
+
+**Apply to Opportunities:**
+
+1. Browse available opportunities
+2. Filter by type, location, genre
+3. Click "Apply"
+4. Submit your portfolio/demo
+5. Track application status
+
+---
+
+### Smart Setlists
+
+**Purpose:** Build optimized setlists for your shows
+
+**How to Use:**
+
+1. Go to Setlists (`/setlists`)
+2. Create new setlist or use template
+3. Add songs from your catalog
+4. AI suggestions for:
+   - Energy flow (start high, build, peak, cool down)
+   - Key transitions (avoid jarring changes)
+   - Tempo flow
+   - Audience engagement moments
+5. Drag-and-drop to reorder
+6. Print as PDF for band members
+
+**Templates:**
+
+- 45-minute club set
+- 90-minute headline show
+- Acoustic intimate set
+- Festival set (high energy)
+
+---
+
+### Social Feed
+
+**Purpose:** Connect with the community through posts and updates
+
+**Features:**
+
+- Post updates, photos, videos
+- Tag content (#newmusic, #studio, etc.)
+- Like and comment on posts
+- Follow other musicians
+- Explore trending content
+- Discover new artists
+
+**How to Use:**
+
+1. Go to Feed (`/feed`)
+2. Create a post with text/media
+3. Add tags for discoverability
+4. Interact with others' posts
+5. Build your network
+
+---
+
+### AI Assistant (This!)
+
+**Purpose:** Your godlike helper that knows everything about your creative world
+
+**What I Know:**
+
+- All your songs (titles, lyrics, chords, keys, tempos)
+- All your projects and their status
+- All your tours and upcoming shows
+- Your library files
+- Your collaborators
+- Your subscription and usage
+- What page you're currently on
+- Your past conversations and preferences
+
+**What I Can Do:**
+
+- Answer questions about your music
+- Help with songwriting (lyrics, chords, rhymes)
+- Suggest what to work on next
+- Navigate you to any feature
+- Generate content (press releases, social posts)
+- Analyze your musical patterns
+- Help plan setlists and tours
+- Draft messages to collaborators
+
+**Quick Actions:**
+
+- Create a song
+- Build setlist
+- Find collaborators
+- Check usage/subscription
 
 ---
 
@@ -891,21 +1241,32 @@ Your usage quotas reset and expand:
 
 **CronkWaters is continuously improving!**
 
-**Recent Updates:**
+**Recent Updates (December 2025):**
 
-- Library → Community publishing (Nov 2025)
-- Usage dashboard with real-time tracking
-- Enhanced AI songwriting (GPT-4o-mini)
-- Video collaboration improvements
-- Mobile-responsive design
+- **Marketplace:** Buy/sell beats, samples, services
+- **Labs:** Experimental features playground (contribute, experiment, research)
+- **Social Feed:** Community posts, tags, exploration
+- **Masterclasses:** Full learning platform with certificates
+- **Live Streaming:** Go live and connect with fans
+- **Opportunities:** Gig and job board
+- **Website Builder:** Create artist sites in 60 seconds
+- **Smart Setlists:** AI-powered setlist building with energy flow
+- **Shows Calendar:** Calendar view with today's shows
+- **Meet:** HD video meetings with analytics
+- **Collaboration Needs:** Find the right collaborators
+- **Revenue Tracking:** Track income from all sources
+- **Credits System:** Platform currency for premium features
+- **Affiliate Program:** Refer and earn
+- **AI Assistant:** Godlike knowledge of your entire creative world
+- **Profile Setup:** Beautiful multi-step onboarding
 
 **Coming Soon:**
 
-- Annual subscription option
+- Annual subscription option (save 2 months)
+- Mobile apps (iOS & Android)
 - API access (Studio tier)
-- Custom integrations
-- Advanced analytics
-- Mobile apps
+- Advanced DAW integration
+- More AI tools
 
 **Stay updated:**
 
