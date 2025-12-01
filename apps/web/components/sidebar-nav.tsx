@@ -359,14 +359,7 @@ export function SidebarNav() {
                         const active = isActive(item.href);
 
                         return (
-                          <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              router.push(item.href);
-                            }}
-                          >
+                          <Link key={item.href} href={item.href}>
                             <motion.div
                               whileHover={{ x: 3 }}
                               whileTap={{ scale: 0.98 }}
@@ -449,14 +442,7 @@ export function SidebarNav() {
               const active = isActive(item.href);
 
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    router.push(item.href);
-                  }}
-                >
+                <Link key={item.href} href={item.href}>
                   <motion.div
                     whileHover={{ x: 3 }}
                     whileTap={{ scale: 0.98 }}

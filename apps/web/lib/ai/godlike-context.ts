@@ -963,14 +963,14 @@ export async function buildGodlikeContext(
     // Recent messages
     prisma.message.findMany({
       where: {
-        OR: [{ senderId: userId }, { receiverId: userId }],
+        OR: [{ senderId: userId }, { recipientId: userId }],
       },
       select: {
         content: true,
         createdAt: true,
-        read: true,
+        isRead: true,
         sender: { select: { name: true } },
-        receiver: { select: { name: true } },
+        recipient: { select: { name: true } },
         senderId: true,
       },
       orderBy: { createdAt: 'desc' },
@@ -1135,10 +1135,10 @@ export async function buildGodlikeContext(
 
   // Process messages
   const messagesContext: MessageContext[] = recentMessages.map((m) => ({
-    from: m.senderId === userId ? `You to ${m.receiver?.name}` : m.sender?.name || 'Unknown',
+    from: m.senderId === userId ? `You to ${m.recipient?.name}` : m.sender?.name || 'Unknown',
     preview: m.content.length > 100 ? m.content.substring(0, 100) + '...' : m.content,
     timestamp: m.createdAt.toISOString(),
-    unread: !m.read && m.senderId !== userId,
+    unread: !m.isRead && m.senderId !== userId,
   }));
 
   // Detect page context

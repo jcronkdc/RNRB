@@ -31,6 +31,7 @@ import {
   AtSign,
 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState, useRef, Suspense } from 'react';
@@ -596,8 +597,6 @@ function ProfileSettingsContent() {
           {/* Hero header for new users - Matching Landing Page Style */}
           {isSetup && (
             <div className="mb-10 text-center">
-              {/* Additional hero elements for setup mode only */}
-
               {/* Animated Title - Using hero-text-gradient from landing page */}
               <h1 className="hero-title relative mb-4">
                 <span className="hero-text-gradient text-3xl sm:text-4xl md:text-5xl">
