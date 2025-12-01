@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 
-import { authOptions } from '@/lib/auth-options';
-import { prisma } from '@repo/db';
+import { db } from '@/lib/db';
+import { requireAuth } from '@/lib/session';
 
 // GET /api/ecosystem/opportunities/[id] - Get single opportunity
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const opportunity = await prisma.opportunity.findUnique({
+    const opportunity = await db.opportunity.findUnique({
       where: { id: params.id },
       include: {
         postedBy: {
@@ -50,7 +49,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 
     // Increment view count
-    await prisma.opportunity.update({
+    await db.opportunity.update({
       where: { id: params.id },
       data: { views: { increment: 1 } },
     });
@@ -65,13 +64,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 // PATCH /api/ecosystem/opportunities/[id] - Update opportunity
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth();
 
-    if (!session?.user?.id) {
+    if (!session?.userId) {
       return NextResponse.json({ error: 'You must be logged in' }, { status: 401 });
     }
 
-    const opportunity = await prisma.opportunity.findUnique({
+    const opportunity = await db.opportunity.findUnique({
       where: { id: params.id },
       select: { postedById: true },
     });
@@ -80,7 +79,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
-    if (opportunity.postedById !== session.user.id) {
+    if (opportunity.postedById !== session.userId) {
       return NextResponse.json(
         { error: 'You can only edit your own opportunities' },
         { status: 403 }
@@ -89,7 +88,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     const body = await request.json();
 
-    const updated = await prisma.opportunity.update({
+    const updated = await db.opportunity.update({
       where: { id: params.id },
       data: {
         ...(body.title && { title: body.title }),
@@ -128,13 +127,13 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 // DELETE /api/ecosystem/opportunities/[id] - Delete opportunity
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth();
 
-    if (!session?.user?.id) {
+    if (!session?.userId) {
       return NextResponse.json({ error: 'You must be logged in' }, { status: 401 });
     }
 
-    const opportunity = await prisma.opportunity.findUnique({
+    const opportunity = await db.opportunity.findUnique({
       where: { id: params.id },
       select: { postedById: true },
     });
@@ -143,14 +142,14 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
-    if (opportunity.postedById !== session.user.id) {
+    if (opportunity.postedById !== session.userId) {
       return NextResponse.json(
         { error: 'You can only delete your own opportunities' },
         { status: 403 }
       );
     }
 
-    await prisma.opportunity.delete({
+    await db.opportunity.delete({
       where: { id: params.id },
     });
 

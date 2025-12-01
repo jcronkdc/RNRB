@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 
-import { authOptions } from '@/lib/auth-options';
-import { prisma } from '@repo/db';
+import { db } from '@/lib/db';
+import { requireAuth } from '@/lib/session';
 
 // GET /api/ecosystem/opportunities - List opportunities with filters
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
     const searchParams = request.nextUrl.searchParams;
 
     // Parse filters
@@ -44,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch opportunities
     const [opportunities, total] = await Promise.all([
-      prisma.opportunity.findMany({
+      db.opportunity.findMany({
         where,
         include: {
           postedBy: {
@@ -73,7 +71,7 @@ export async function GET(request: NextRequest) {
         take: limit,
         skip: offset,
       }),
-      prisma.opportunity.count({ where }),
+      db.opportunity.count({ where }),
     ]);
 
     return NextResponse.json({
@@ -90,9 +88,9 @@ export async function GET(request: NextRequest) {
 // POST /api/ecosystem/opportunities - Create a new opportunity
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await requireAuth();
 
-    if (!session?.user?.id) {
+    if (!session?.userId) {
       return NextResponse.json(
         { error: 'You must be logged in to post opportunities' },
         { status: 401 }
@@ -107,9 +105,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Create opportunity
-    const opportunity = await prisma.opportunity.create({
+    const opportunity = await db.opportunity.create({
       data: {
-        postedById: session.user.id,
+        postedById: session.userId,
         orgId: body.orgId || null,
         type: body.type,
         title: body.title,
@@ -166,9 +164,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Create activity event
-    await prisma.activityEvent.create({
+    await db.activityEvent.create({
       data: {
-        userId: session.user.id,
+        userId: session.userId,
         type: 'opportunity_posted',
         entityType: 'opportunity',
         entityId: opportunity.id,

@@ -3678,8 +3678,14 @@ model CollaborationApplication {
 // Opportunities - Gigs, Sync, Session Work
 model Opportunity {
   id         String  @id @default(cuid())
-  postedById String
+  postedById String?  // Nullable for guest posts
+  guestPosterId String? // For guest posters
   orgId      String?
+  
+  // Guest Poster Info (denormalized for speed)
+  guestEmail String?
+  guestName  String?
+  guestPhone String?
   
   // Type
   type        String // gig, session, sync_license, tour, teaching, other
@@ -3707,17 +3713,44 @@ model Opportunity {
   venueId  String?
   
   // Timing
+  date      DateTime?
+  startTime String?
+  endTime   String?
+  deadline  DateTime?
   startDate DateTime?
   endDate   DateTime?
   isOngoing Boolean   @default(false)
+  
+  // Additional Details
+  dressCode      String?
+  additionalInfo String?
+  contactEmail   String?
+  contactPhone   String?
+  applicationUrl String?
+  
+  // Application Settings
+  allowApplications Boolean @default(true)
   
   // Capacity
   positionsAvailable Int @default(1)
   positionsFilled    Int @default(0)
   
-  // Status
-  status     String @default("open") // open, filled, closed, expired
-  visibility String @default("public")
+  // Status & Moderation
+  status     String  @default("open") // open, filled, closed, expired, pending_approval, rejected
+  visibility String  @default("public")
+  isPinned   Boolean @default(false)
+  
+  // Spam Detection
+  isGuest      Boolean @default(false)
+  spamScore    Int     @default(0)
+  flaggedAt    DateTime?
+  reviewedAt   DateTime?
+  reviewedBy   String?
+  rejectedReason String?
+  
+  // Engagement
+  views            Int @default(0)
+  applicationCount Int @default(0)
   
   // Timestamps
   createdAt DateTime  @default(now())
@@ -3725,18 +3758,21 @@ model Opportunity {
   expiresAt DateTime?
   
   // Relations
-  postedBy     User                      @relation(fields: [postedById], references: [id], onDelete: Cascade)
-  org          Org?                      @relation(fields: [orgId], references: [id], onDelete: SetNull)
-  venue        Venue?                    @relation(fields: [venueId], references: [id], onDelete: SetNull)
+  postedBy     User?                      @relation(fields: [postedById], references: [id], onDelete: Cascade)
+  guestPoster  GuestPoster?               @relation(fields: [guestPosterId], references: [id], onDelete: SetNull)
+  org          Org?                       @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  venue        Venue?                     @relation(fields: [venueId], references: [id], onDelete: SetNull)
   applications OpportunityApplication[]
   activities   ActivityEvent[]
   revenues     Revenue[]
 
   @@index([postedById])
+  @@index([guestPosterId])
   @@index([type])
   @@index([status])
   @@index([city])
   @@index([startDate])
+  @@index([isGuest])
 }
 
 model OpportunityApplication {
@@ -3872,4 +3908,51 @@ model Revenue {
   @@index([earnedDate(sort: Desc)])
 }
 
-// Force regeneration: 2025-12-01-ECOSYSTEM-V1
+// Guest Poster Tracking - Anti-Spam System
+model GuestPoster {
+  id    String @id @default(cuid())
+  email String @unique
+  
+  // Contact Info
+  name         String
+  phone        String?
+  organization String?
+  
+  // Verification
+  emailVerified Boolean @default(false)
+  phoneVerified Boolean @default(false)
+  
+  // Trust Score System
+  totalPosts      Int @default(0)
+  approvedPosts   Int @default(0)
+  rejectedPosts   Int @default(0)
+  spamReports     Int @default(0)
+  completedGigs   Int @default(0)
+  trustScore      Int @default(0) // Calculated score
+  
+  // Status
+  status      String   @default("new") // new, trusted, flagged, banned
+  bannedAt    DateTime?
+  bannedUntil DateTime?
+  banReason   String?
+  
+  // Rate Limiting
+  lastPostAt      DateTime?
+  postsToday      Int       @default(0)
+  postsThisHour   Int       @default(0)
+  
+  // Tracking
+  ip             String?
+  userAgent      String?
+  firstSeenAt    DateTime  @default(now())
+  lastActivityAt DateTime  @default(now())
+  
+  // Relations
+  opportunities Opportunity[]
+  
+  @@index([email])
+  @@index([status])
+  @@index([trustScore])
+}
+
+// Force regeneration: 2025-12-01-GUEST-POSTING-V1
