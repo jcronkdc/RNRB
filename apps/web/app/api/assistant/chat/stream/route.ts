@@ -20,6 +20,10 @@ import {
   calculateRoyaltySplits,
   draftCollaboratorMessage,
   suggestCollaborators,
+  searchMarketplace,
+  getScheduledStreams,
+  getUpcomingMasterclasses,
+  searchOpportunities,
   ADVANCED_AI_FUNCTIONS,
 } from '@/lib/ai/assistant-tools';
 import {
@@ -248,6 +252,18 @@ export async function POST(request: NextRequest) {
                     break;
                   case 'suggestCollaborators':
                     result = await suggestCollaborators(user.id);
+                    break;
+                  case 'searchMarketplace':
+                    result = await searchMarketplace(user.id, functionArgs);
+                    break;
+                  case 'getScheduledStreams':
+                    result = await getScheduledStreams(user.id, functionArgs);
+                    break;
+                  case 'getUpcomingMasterclasses':
+                    result = await getUpcomingMasterclasses(user.id, functionArgs);
+                    break;
+                  case 'searchOpportunities':
+                    result = await searchOpportunities(user.id, functionArgs);
                     break;
                   case 'storeMemory':
                     result = await storeMemory(user.id, {

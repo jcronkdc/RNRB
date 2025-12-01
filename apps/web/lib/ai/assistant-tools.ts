@@ -1302,6 +1302,363 @@ export async function getPracticeGoals(userId: string): Promise<{
 }
 
 // ============================================
+// MARKETPLACE SEARCH
+// ============================================
+
+export interface MarketplaceItem {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  sellerName: string;
+  createdAt: string;
+}
+
+/**
+ * Search the marketplace for listings
+ */
+export async function searchMarketplace(
+  userId: string,
+  options?: {
+    query?: string;
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    limit?: number;
+  }
+): Promise<{
+  success: boolean;
+  listings: MarketplaceItem[];
+  totalCount: number;
+}> {
+  const where: Record<string, unknown> = {
+    status: 'active',
+  };
+
+  if (options?.category && options.category !== 'all') {
+    where.category = options.category;
+  }
+
+  if (options?.query) {
+    where.OR = [
+      { title: { contains: options.query, mode: 'insensitive' } },
+      { description: { contains: options.query, mode: 'insensitive' } },
+    ];
+  }
+
+  if (options?.minPrice !== undefined || options?.maxPrice !== undefined) {
+    where.price = {};
+    if (options.minPrice !== undefined)
+      (where.price as Record<string, unknown>).gte = options.minPrice;
+    if (options.maxPrice !== undefined)
+      (where.price as Record<string, unknown>).lte = options.maxPrice;
+  }
+
+  try {
+    const listings = await prisma.marketplaceListing.findMany({
+      where,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        price: true,
+        category: true,
+        createdAt: true,
+        seller: { select: { name: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: options?.limit || 20,
+    });
+
+    const count = await prisma.marketplaceListing.count({ where });
+
+    return {
+      success: true,
+      listings: listings.map((l) => ({
+        id: l.id,
+        title: l.title,
+        description: l.description || '',
+        price: Number(l.price),
+        category: l.category,
+        sellerName: l.seller?.name || 'Unknown Seller',
+        createdAt: l.createdAt.toISOString(),
+      })),
+      totalCount: count,
+    };
+  } catch (error) {
+    console.error('searchMarketplace error:', error);
+    return { success: false, listings: [], totalCount: 0 };
+  }
+}
+
+// ============================================
+// LIVE STREAMS / SCHEDULED STREAMS
+// ============================================
+
+export interface ScheduledStream {
+  id: string;
+  title: string;
+  description?: string;
+  scheduledFor: string;
+  hostName: string;
+  status: string;
+  viewerCount?: number;
+}
+
+/**
+ * Get scheduled/upcoming live streams
+ */
+export async function getScheduledStreams(
+  userId: string,
+  options?: {
+    upcoming?: boolean;
+    live?: boolean;
+    hostId?: string;
+    limit?: number;
+  }
+): Promise<{
+  success: boolean;
+  streams: ScheduledStream[];
+  liveNow: ScheduledStream[];
+}> {
+  const now = new Date();
+
+  try {
+    // Get upcoming streams
+    const upcomingWhere: Record<string, unknown> = {
+      scheduledFor: { gte: now },
+      status: { in: ['scheduled', 'live'] },
+    };
+    if (options?.hostId) upcomingWhere.hostId = options.hostId;
+
+    const upcomingStreams = await prisma.liveStream.findMany({
+      where: upcomingWhere,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        scheduledFor: true,
+        status: true,
+        viewerCount: true,
+        host: { select: { name: true } },
+      },
+      orderBy: { scheduledFor: 'asc' },
+      take: options?.limit || 10,
+    });
+
+    // Get live now
+    const liveStreams = await prisma.liveStream.findMany({
+      where: { status: 'live' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        scheduledFor: true,
+        status: true,
+        viewerCount: true,
+        host: { select: { name: true } },
+      },
+      take: 10,
+    });
+
+    const formatStream = (s: any): ScheduledStream => ({
+      id: s.id,
+      title: s.title,
+      description: s.description || undefined,
+      scheduledFor: s.scheduledFor?.toISOString() || now.toISOString(),
+      hostName: s.host?.name || 'Unknown',
+      status: s.status,
+      viewerCount: s.viewerCount || undefined,
+    });
+
+    return {
+      success: true,
+      streams: upcomingStreams.map(formatStream),
+      liveNow: liveStreams.map(formatStream),
+    };
+  } catch (error) {
+    console.error('getScheduledStreams error:', error);
+    return { success: false, streams: [], liveNow: [] };
+  }
+}
+
+// ============================================
+// MASTERCLASSES
+// ============================================
+
+export interface UpcomingMasterclass {
+  id: string;
+  title: string;
+  description?: string;
+  instructorName: string;
+  scheduledFor?: string;
+  duration?: number;
+  price?: number;
+  isLive: boolean;
+  enrolledCount: number;
+}
+
+/**
+ * Get upcoming masterclasses
+ */
+export async function getUpcomingMasterclasses(
+  userId: string,
+  options?: {
+    category?: string;
+    instructorId?: string;
+    limit?: number;
+    enrolledOnly?: boolean;
+  }
+): Promise<{
+  success: boolean;
+  masterclasses: UpcomingMasterclass[];
+  enrolled: UpcomingMasterclass[];
+}> {
+  try {
+    const where: Record<string, unknown> = {
+      status: 'published',
+    };
+    if (options?.category) where.category = options.category;
+    if (options?.instructorId) where.instructorId = options.instructorId;
+
+    const masterclasses = await prisma.masterclass.findMany({
+      where,
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        instructorId: true,
+        scheduledFor: true,
+        duration: true,
+        price: true,
+        isLive: true,
+        instructor: { select: { name: true } },
+        _count: { select: { enrollments: true } },
+      },
+      orderBy: [{ scheduledFor: 'asc' }, { createdAt: 'desc' }],
+      take: options?.limit || 10,
+    });
+
+    // Get user's enrolled masterclasses
+    const enrolledClasses = await prisma.masterclassEnrollment.findMany({
+      where: { userId },
+      select: {
+        masterclass: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            scheduledFor: true,
+            duration: true,
+            isLive: true,
+            instructor: { select: { name: true } },
+            _count: { select: { enrollments: true } },
+          },
+        },
+      },
+      take: 10,
+    });
+
+    const formatClass = (c: any): UpcomingMasterclass => ({
+      id: c.id,
+      title: c.title,
+      description: c.description || undefined,
+      instructorName: c.instructor?.name || 'Unknown Instructor',
+      scheduledFor: c.scheduledFor?.toISOString() || undefined,
+      duration: c.duration || undefined,
+      price: c.price ? Number(c.price) : undefined,
+      isLive: c.isLive || false,
+      enrolledCount: c._count?.enrollments || 0,
+    });
+
+    return {
+      success: true,
+      masterclasses: masterclasses.map(formatClass),
+      enrolled: enrolledClasses.map((e) => formatClass(e.masterclass)),
+    };
+  } catch (error) {
+    console.error('getUpcomingMasterclasses error:', error);
+    return { success: false, masterclasses: [], enrolled: [] };
+  }
+}
+
+/**
+ * Get opportunities (gigs, jobs, collaborations)
+ */
+export async function searchOpportunities(
+  userId: string,
+  options?: {
+    type?: string;
+    location?: string;
+    remote?: boolean;
+    limit?: number;
+  }
+): Promise<{
+  success: boolean;
+  opportunities: {
+    id: string;
+    title: string;
+    type: string;
+    description?: string;
+    location?: string;
+    isRemote: boolean;
+    compensation?: string;
+    deadline?: string;
+    postedBy: string;
+    createdAt: string;
+  }[];
+}> {
+  try {
+    const where: Record<string, unknown> = {
+      status: 'open',
+    };
+    if (options?.type) where.type = options.type;
+    if (options?.remote !== undefined) where.isRemote = options.remote;
+    if (options?.location) {
+      where.location = { contains: options.location, mode: 'insensitive' };
+    }
+
+    const opportunities = await prisma.opportunity.findMany({
+      where,
+      select: {
+        id: true,
+        title: true,
+        type: true,
+        description: true,
+        location: true,
+        isRemote: true,
+        compensation: true,
+        deadline: true,
+        createdAt: true,
+        postedBy: { select: { name: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: options?.limit || 20,
+    });
+
+    return {
+      success: true,
+      opportunities: opportunities.map((o) => ({
+        id: o.id,
+        title: o.title,
+        type: o.type,
+        description: o.description || undefined,
+        location: o.location || undefined,
+        isRemote: o.isRemote,
+        compensation: o.compensation || undefined,
+        deadline: o.deadline?.toISOString() || undefined,
+        postedBy: o.postedBy?.name || 'Unknown',
+        createdAt: o.createdAt.toISOString(),
+      })),
+    };
+  } catch (error) {
+    console.error('searchOpportunities error:', error);
+    return { success: false, opportunities: [] };
+  }
+}
+
+// ============================================
 // EXPORT ALL TOOLS FOR AI FUNCTIONS
 // ============================================
 
@@ -1530,6 +1887,82 @@ export const ADVANCED_AI_FUNCTIONS = [
         whatToImprove: { type: 'string', description: 'What to improve next time' },
       },
       required: ['title'],
+    },
+  },
+  // ============================================
+  // MARKETPLACE, STREAMS, MASTERCLASSES, OPPORTUNITIES
+  // ============================================
+  {
+    name: 'searchMarketplace',
+    description: 'Search the marketplace for beats, samples, services, and gear',
+    parameters: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Search query (keywords)' },
+        category: {
+          type: 'string',
+          enum: ['beats', 'samples', 'mixing', 'mastering', 'session', 'gear', 'other', 'all'],
+          description: 'Category to filter by',
+        },
+        minPrice: { type: 'number', description: 'Minimum price in dollars' },
+        maxPrice: { type: 'number', description: 'Maximum price in dollars' },
+        limit: { type: 'number', description: 'Max results to return (default 20)' },
+      },
+    },
+  },
+  {
+    name: 'getScheduledStreams',
+    description: 'Get upcoming live streams and currently live streams',
+    parameters: {
+      type: 'object',
+      properties: {
+        upcoming: { type: 'boolean', description: 'Include upcoming scheduled streams' },
+        live: { type: 'boolean', description: 'Include currently live streams' },
+        hostId: { type: 'string', description: 'Filter by specific host/streamer' },
+        limit: { type: 'number', description: 'Max results to return (default 10)' },
+      },
+    },
+  },
+  {
+    name: 'getUpcomingMasterclasses',
+    description: 'Get upcoming masterclasses and classes the user is enrolled in',
+    parameters: {
+      type: 'object',
+      properties: {
+        category: {
+          type: 'string',
+          enum: [
+            'songwriting',
+            'production',
+            'mixing',
+            'business',
+            'performance',
+            'marketing',
+            'all',
+          ],
+          description: 'Category to filter by',
+        },
+        instructorId: { type: 'string', description: 'Filter by specific instructor' },
+        enrolledOnly: { type: 'boolean', description: 'Only show classes user is enrolled in' },
+        limit: { type: 'number', description: 'Max results to return (default 10)' },
+      },
+    },
+  },
+  {
+    name: 'searchOpportunities',
+    description: 'Search for gigs, jobs, and collaboration opportunities',
+    parameters: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'string',
+          enum: ['gig', 'session', 'collaboration', 'job', 'all'],
+          description: 'Type of opportunity',
+        },
+        location: { type: 'string', description: 'Location to search in' },
+        remote: { type: 'boolean', description: 'Filter for remote opportunities only' },
+        limit: { type: 'number', description: 'Max results to return (default 20)' },
+      },
     },
   },
 ];

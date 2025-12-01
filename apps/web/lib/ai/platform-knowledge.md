@@ -681,10 +681,16 @@ CronkWaters (aka "Rock N' Roll Basement") is a comprehensive music collaboration
 - Help with songwriting (lyrics, chords, rhymes)
 - Suggest what to work on next
 - Navigate you to any feature
-- Generate content (press releases, social posts)
+- Generate content (press releases, social posts, venue emails)
 - Analyze your musical patterns
 - Help plan setlists and tours
 - Draft messages to collaborators
+- **Search the Marketplace** for beats, samples, mixing services
+- **Find scheduled live streams** and see who's live now
+- **Get upcoming Masterclasses** and your enrolled classes
+- **Search Opportunities** for gigs, jobs, collaborations
+- Track your gear inventory
+- Log practice sessions
 
 **Quick Actions:**
 
@@ -692,6 +698,10 @@ CronkWaters (aka "Rock N' Roll Basement") is a comprehensive music collaboration
 - Build setlist
 - Find collaborators
 - Check usage/subscription
+- Search marketplace
+- Find upcoming masterclasses
+- Browse live streams
+- Find gig opportunities
 
 ---
 
