@@ -23,7 +23,7 @@ export default function PublicProfilePage() {
             {/* Profile Info */}
             <div className="flex-1">
               <h1 className="mb-2 text-3xl font-bold text-white">@{username}</h1>
-              <p className="mb-4 text-muted-foreground">
+              <p className="mb-4 text-[color:var(--muted)]">
                 Public profiles are currently in development. Soon you'll see:
               </p>
               <div className="flex flex-wrap gap-3">
@@ -43,42 +43,44 @@ export default function PublicProfilePage() {
 
         {/* Coming Soon Notice */}
         <Card className="p-8 text-center">
-          <Music className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+          <Music className="mx-auto mb-4 h-16 w-16 text-[color:var(--muted)]" />
           <h2 className="mb-4 text-2xl font-semibold text-white">Public Profiles Coming Soon</h2>
-          <p className="mx-auto mb-6 max-w-2xl text-muted-foreground">
+          <p className="mx-auto mb-6 max-w-2xl text-[color:var(--muted)]">
             User profiles are being built right now. Soon you'll be able to view:
           </p>
 
           <div className="mx-auto grid max-w-3xl grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-lg bg-white/5 p-4">
               <p className="mb-2 font-medium text-white">🎵 Music Samples</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[color:var(--muted)]">
                 Listen to their tracks directly on profile
               </p>
             </div>
             <div className="rounded-lg bg-white/5 p-4">
               <p className="mb-2 font-medium text-white">📊 Stats & Analytics</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[color:var(--muted)]">
                 See their streaming numbers and achievements
               </p>
             </div>
             <div className="rounded-lg bg-white/5 p-4">
               <p className="mb-2 font-medium text-white">🔗 Social Links</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[color:var(--muted)]">
                 Connect on Instagram, YouTube, Twitter
               </p>
             </div>
             <div className="rounded-lg bg-white/5 p-4">
               <p className="mb-2 font-medium text-white">📅 Upcoming Shows</p>
-              <p className="text-sm text-muted-foreground">See their tour dates and buy tickets</p>
+              <p className="text-sm text-[color:var(--muted)]">
+                See their tour dates and buy tickets
+              </p>
             </div>
             <div className="rounded-lg bg-white/5 p-4">
               <p className="mb-2 font-medium text-white">🤝 Collaboration History</p>
-              <p className="text-sm text-muted-foreground">View who they've worked with</p>
+              <p className="text-sm text-[color:var(--muted)]">View who they've worked with</p>
             </div>
             <div className="rounded-lg bg-white/5 p-4">
               <p className="mb-2 font-medium text-white">💬 Send Message</p>
-              <p className="text-sm text-muted-foreground">Connect and collaborate</p>
+              <p className="text-sm text-[color:var(--muted)]">Connect and collaborate</p>
             </div>
           </div>
 

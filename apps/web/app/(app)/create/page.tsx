@@ -502,7 +502,7 @@ export default function CreatePage() {
             <div>
               <label className="mb-3 block text-sm font-medium">
                 Describe your track
-                <span className="ml-2 text-xs text-muted-foreground">
+                <span className="ml-2 text-xs text-[color:var(--muted)]">
                   ({prompt.length}/500 characters)
                 </span>
               </label>
@@ -511,7 +511,7 @@ export default function CreatePage() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="E.g., A driving rock anthem with powerful electric guitars and thunderous drums..."
-                  className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full resize-none rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--text)] outline-none transition placeholder:text-[color:var(--muted)] focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
                   rows={4}
                   maxLength={500}
                   disabled={isDisabled}
@@ -520,7 +520,7 @@ export default function CreatePage() {
                   onClick={() =>
                     setPrompt(examplePrompts[Math.floor(Math.random() * examplePrompts.length)])
                   }
-                  className="absolute bottom-3 right-3 rounded-lg p-2 text-muted-foreground transition hover:bg-surface/50 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                  className="hover:bg-[color:var(--surface)]/50 absolute bottom-3 right-3 rounded-lg p-2 text-[color:var(--muted)] transition hover:text-[color:var(--text)] disabled:cursor-not-allowed disabled:opacity-50"
                   title="Get random prompt"
                   disabled={isDisabled}
                 >
@@ -542,13 +542,13 @@ export default function CreatePage() {
 
               {/* Example prompts */}
               <div className="mt-3 flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">Try:</span>
+                <span className="text-xs text-[color:var(--muted)]">Try:</span>
                 <div className="flex flex-wrap gap-2">
                   {examplePrompts.slice(0, 3).map((example, i) => (
                     <button
                       key={i}
                       onClick={() => setPrompt(example)}
-                      className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs transition-all hover:border-brand-primary/50 hover:bg-surface/80 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="hover:bg-[color:var(--surface)]/80 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1.5 text-xs transition-all hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
                       disabled={isDisabled}
                     >
                       {example.substring(0, 30)}...
@@ -565,7 +565,7 @@ export default function CreatePage() {
                 <label className="mb-3 block text-sm font-medium">
                   Genre
                   {selectedGenres.length > 0 && (
-                    <span className="ml-2 text-xs text-muted-foreground">
+                    <span className="ml-2 text-xs text-[color:var(--muted)]">
                       ({selectedGenres.length} selected, max 3)
                     </span>
                   )}
@@ -577,8 +577,8 @@ export default function CreatePage() {
                       onClick={() => toggleChip(genre, selectedGenres, setSelectedGenres, 3)}
                       className={`rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedGenres.includes(genre)
-                          ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border border-border bg-surface hover:border-brand-primary/50'
+                          ? 'text-[color:var(--accent)]-foreground bg-[color:var(--accent)]'
+                          : 'border border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
                       }`}
                       disabled={isDisabled}
                     >
@@ -592,7 +592,7 @@ export default function CreatePage() {
                       <button
                         key={customG}
                         onClick={() => toggleChip(customG, selectedGenres, setSelectedGenres, 3)}
-                        className="rounded-xl bg-brand-primary px-4 py-2 font-medium text-brand-primary-foreground transition disabled:cursor-not-allowed disabled:opacity-50"
+                        className="text-[color:var(--accent)]-foreground rounded-xl bg-[color:var(--accent)] px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={isDisabled}
                       >
                         {customG} ×
@@ -606,7 +606,7 @@ export default function CreatePage() {
                     value={customGenre}
                     onChange={(e) => setCustomGenre(e.target.value)}
                     placeholder="Add custom genre..."
-                    className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isDisabled || selectedGenres.length >= 3}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && customGenre.trim() && selectedGenres.length < 3) {
@@ -630,7 +630,7 @@ export default function CreatePage() {
                         setCustomGenre('');
                       }
                     }}
-                    className="rounded-lg border border-border bg-surface px-3 py-2 text-sm transition hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm transition hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isDisabled || !customGenre.trim() || selectedGenres.length >= 3}
                   >
                     Add
@@ -643,7 +643,7 @@ export default function CreatePage() {
                 <label className="mb-3 block text-sm font-medium">
                   Mood
                   {selectedMoods.length > 0 && (
-                    <span className="ml-2 text-xs text-muted-foreground">
+                    <span className="ml-2 text-xs text-[color:var(--muted)]">
                       ({selectedMoods.length} selected, max 3)
                     </span>
                   )}
@@ -655,8 +655,8 @@ export default function CreatePage() {
                       onClick={() => toggleChip(mood, selectedMoods, setSelectedMoods, 3)}
                       className={`rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedMoods.includes(mood)
-                          ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border border-border bg-surface hover:border-brand-primary/50'
+                          ? 'text-[color:var(--accent)]-foreground bg-[color:var(--accent)]'
+                          : 'border border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
                       }`}
                       disabled={isDisabled}
                     >
@@ -670,7 +670,7 @@ export default function CreatePage() {
                       <button
                         key={customM}
                         onClick={() => toggleChip(customM, selectedMoods, setSelectedMoods, 3)}
-                        className="rounded-xl bg-brand-primary px-4 py-2 font-medium text-brand-primary-foreground transition disabled:cursor-not-allowed disabled:opacity-50"
+                        className="text-[color:var(--accent)]-foreground rounded-xl bg-[color:var(--accent)] px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={isDisabled}
                       >
                         {customM} ×
@@ -684,7 +684,7 @@ export default function CreatePage() {
                     value={customMood}
                     onChange={(e) => setCustomMood(e.target.value)}
                     placeholder="Add custom mood..."
-                    className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isDisabled || selectedMoods.length >= 3}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && customMood.trim() && selectedMoods.length < 3) {
@@ -708,7 +708,7 @@ export default function CreatePage() {
                         setCustomMood('');
                       }
                     }}
-                    className="rounded-lg border border-border bg-surface px-3 py-2 text-sm transition hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm transition hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isDisabled || !customMood.trim() || selectedMoods.length >= 3}
                   >
                     Add
@@ -721,7 +721,7 @@ export default function CreatePage() {
                 <label className="mb-3 block text-sm font-medium">
                   Instruments
                   {selectedInstruments.length > 0 && (
-                    <span className="ml-2 text-xs text-muted-foreground">
+                    <span className="ml-2 text-xs text-[color:var(--muted)]">
                       ({selectedInstruments.length} selected)
                     </span>
                   )}
@@ -735,8 +735,8 @@ export default function CreatePage() {
                       }
                       className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                         selectedInstruments.includes(instrument)
-                          ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border border-border bg-surface hover:border-brand-primary/50'
+                          ? 'text-[color:var(--accent)]-foreground bg-[color:var(--accent)]'
+                          : 'border border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
                       }`}
                       disabled={isDisabled}
                     >
@@ -756,7 +756,7 @@ export default function CreatePage() {
                     <Clock className="h-4 w-4" />
                     Duration: {duration} seconds
                   </span>
-                  <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                  <span className="mt-1 block text-xs font-normal text-[color:var(--muted)]">
                     AI generates 5-30 second clips
                   </span>
                 </label>
@@ -804,7 +804,7 @@ export default function CreatePage() {
             <div>
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-2 text-sm font-medium text-[color:var(--muted)] transition-colors hover:text-[color:var(--text)] disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isDisabled}
               >
                 <Sliders className="h-4 w-4" />
@@ -823,7 +823,7 @@ export default function CreatePage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="mt-4 rounded-xl border border-border bg-surface/50 p-6">
+                    <div className="bg-[color:var(--surface)]/50 mt-4 rounded-xl border border-[color:var(--border)] p-6">
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                           <label className="mb-2 block flex items-center gap-2 text-sm font-medium">
@@ -835,10 +835,10 @@ export default function CreatePage() {
                             value={seed}
                             onChange={(e) => setSeed(e.target.value)}
                             placeholder="Enter seed for consistent results"
-                            className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            className="w-full rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={isDisabled}
                           />
-                          <p className="mt-1 text-xs text-muted-foreground">
+                          <p className="mt-1 text-xs text-[color:var(--muted)]">
                             Same seed = same output
                           </p>
                         </div>
@@ -847,7 +847,7 @@ export default function CreatePage() {
                           <select
                             value={keySignature}
                             onChange={(e) => setKeySignature(e.target.value)}
-                            className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            className="w-full rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={isDisabled}
                           >
                             <option>Auto</option>
@@ -869,9 +869,9 @@ export default function CreatePage() {
             </div>
 
             {/* Generate Button */}
-            <div className="flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 border-t border-[color:var(--border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
                   <Info className="h-4 w-4" />
                   <span>Generation uses {estimatedCredits} credits</span>
                 </div>
@@ -926,10 +926,10 @@ export default function CreatePage() {
               className="mt-8"
             >
               <Card className="rnrb-card p-12 text-center">
-                <Music2 className="rnrb-pulse mx-auto mb-4 h-16 w-16 text-brand-primary" />
+                <Music2 className="rnrb-pulse mx-auto mb-4 h-16 w-16 text-[color:var(--accent)]" />
                 <h3 className="mb-2 text-xl font-semibold">Creating your track...</h3>
-                <p className="mb-4 text-muted-foreground">This usually takes 20-30 seconds</p>
-                <div className="mx-auto max-w-md space-y-2 text-sm text-muted-foreground">
+                <p className="mb-4 text-[color:var(--muted)]">This usually takes 20-30 seconds</p>
+                <div className="mx-auto max-w-md space-y-2 text-sm text-[color:var(--muted)]">
                   {progress >= 0 && progress < 30 && (
                     <p className="flex items-center justify-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -969,7 +969,7 @@ export default function CreatePage() {
               <Card className="rnrb-card border-green-500/20 bg-green-500/5 p-12 text-center">
                 <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500" />
                 <h3 className="mb-2 text-xl font-semibold text-green-400">Track Generated!</h3>
-                <p className="mb-4 text-muted-foreground">
+                <p className="mb-4 text-[color:var(--muted)]">
                   Your AI-generated track is ready. Add it to a project or view it now.
                 </p>
 
@@ -993,8 +993,8 @@ export default function CreatePage() {
                 {/* Audio Preview */}
                 <div className="mb-6 rounded-xl bg-white/5 p-4">
                   <div className="flex items-center justify-center gap-4">
-                    <Volume2 className="h-5 w-5 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
+                    <Volume2 className="h-5 w-5 text-[color:var(--muted)]" />
+                    <span className="text-sm text-[color:var(--muted)]">
                       Your track:{' '}
                       <span className="font-medium text-white">
                         {selectedMoods[0] || 'AI'} {selectedGenres[0] || ''} Track
@@ -1053,7 +1053,7 @@ export default function CreatePage() {
               <Card className="rnrb-card border-red-500/20 bg-red-500/5 p-12 text-center">
                 <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
                 <h3 className="mb-2 text-xl font-semibold text-red-400">Generation Failed</h3>
-                <p className="mb-4 text-muted-foreground">{error}</p>
+                <p className="mb-4 text-[color:var(--muted)]">{error}</p>
                 <button
                   onClick={() => {
                     setStatus('idle');

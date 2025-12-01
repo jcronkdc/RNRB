@@ -332,7 +332,7 @@ export default function PerformerModePage() {
                 ) : (
                   // Chords
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 lg:p-10">
-                    <pre className="whitespace-pre-wrap font-mono text-lg font-semibold leading-relaxed text-brand-primary sm:text-xl lg:text-2xl">
+                    <pre className="whitespace-pre-wrap font-mono text-lg font-semibold leading-relaxed text-[color:var(--accent)] sm:text-xl lg:text-2xl">
                       {currentSong.song.chords || 'No chords available'}
                     </pre>
                   </div>

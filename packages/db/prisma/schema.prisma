@@ -182,6 +182,15 @@ model User {
   postCommentReactions   PostCommentReaction[] @relation("PostCommentReactions")
   postPlays              PostPlay[]           @relation("PostPlays")
   postBookmarks          PostBookmark[]       @relation("PostBookmarks")
+  
+  // Ecosystem - Living Network
+  collaborationNeeds     CollaborationNeed[]
+  collaborationApps      CollaborationApplication[]
+  postedOpportunities    Opportunity[]
+  opportunityApps        OpportunityApplication[]
+  activities             ActivityEvent[]      @relation("UserActivity")
+  activityCelebrations   ActivityCelebration[]
+  revenues               Revenue[]
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -229,6 +238,9 @@ model Org {
   invitations      Invitation[]
   setlistTemplates SetlistTemplate[]
   musicianSites    MusicianSite[]
+  
+  // Ecosystem Integration
+  opportunities    Opportunity[]
 
   @@index([slug])
   @@index([type])
@@ -279,6 +291,12 @@ model Project {
   
   // Toolbox Integration
   recordingNotes RecordingNote[] // Recording notes for this project
+  
+  // Ecosystem Integration
+  collaborationNeeds CollaborationNeed[]
+  activities         ActivityEvent[]
+  revenues           Revenue[]
+  featuredOnProfiles MusicianProfile[] @relation("FeaturedProject")
 
   @@index([orgId])
   @@index([slug])
@@ -333,6 +351,12 @@ model Song {
   // Toolbox Integration
   practiceSessions PracticeSession[] // Practice sessions for this song
   recordingNotes   RecordingNote[]   // Recording notes for this song
+  
+  // Ecosystem Integration
+  collaborationNeeds CollaborationNeed[]
+  activities         ActivityEvent[]
+  revenues           Revenue[]
+  featuredOnProfiles MusicianProfile[] @relation("FeaturedSong")
 
   @@index([userId])
   @@index([projectId])
@@ -669,6 +693,9 @@ model Tour {
   fanEngagements FanEngagement[]
   shows          Show[]
   org            Org             @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  
+  // Ecosystem Integration
+  activities     ActivityEvent[]
 
   @@index([orgId])
   @@index([status])
@@ -698,6 +725,9 @@ model Venue {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   shows             Show[]
+  
+  // Ecosystem Integration
+  opportunities     Opportunity[]
 
   @@index([city])
   @@index([type])
@@ -738,6 +768,10 @@ model Show {
   project        Project?        @relation(fields: [projectId], references: [id])
   tour           Tour?           @relation(fields: [tourId], references: [id])
   venue          Venue?          @relation(fields: [venueId], references: [id])
+  
+  // Ecosystem Integration
+  activities     ActivityEvent[]
+  revenues       Revenue[]
 
   @@index([tourId])
   @@index([orgId])
@@ -943,13 +977,41 @@ model MusicianProfile {
   travelRadius              Int?
   portfolio                 Json?
   socialLinks               Json?
-  createdAt                 DateTime @default(now())
-  updatedAt                 DateTime @updatedAt
-  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Ecosystem Status - What's happening now
+  currentStatus      String?  // writing, recording, touring, available, taking_break
+  statusMessage      String?
+  lookingFor         String[] // ["vocalist", "drummer", "producer"]
+  openToOpportunities Boolean @default(true)
+  
+  // Featured Content
+  featuredSongId    String?
+  featuredProjectId String?
+  
+  // Stats - The Musician's Journey
+  totalPracticeMinutes Int @default(0)
+  currentStreak        Int @default(0)
+  longestStreak        Int @default(0)
+  completedSongs       Int @default(0)
+  completedProjects    Int @default(0)
+  collaborationsCount  Int @default(0)
+  showsPlayed          Int @default(0)
+  totalRevenue         Decimal @default(0) @db.Decimal(12, 2)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  featuredSong   Song?    @relation("FeaturedSong", fields: [featuredSongId], references: [id], onDelete: SetNull)
+  featuredProject Project? @relation("FeaturedProject", fields: [featuredProjectId], references: [id], onDelete: SetNull)
 
   @@index([genres])
   @@index([instruments])
   @@index([availableForCollaboration])
+  @@index([currentStatus])
+  @@index([openToOpportunities])
 }
 
 model Skill {
@@ -3534,3 +3596,280 @@ model RecordingNote {
 }
 
 // Force regeneration: 2025-11-30-TOOLBOX-MYCELIAL
+
+// ============================================
+// ECOSYSTEM ENHANCEMENT - The Living Network
+// ============================================
+
+// Collaboration Needs - "Looking for..."
+model CollaborationNeed {
+  id          String   @id @default(cuid())
+  userId      String
+  projectId   String?
+  songId      String?
+  
+  // What they're looking for
+  needType    String   // musician, producer, mixer, vocalist, writer, other
+  title       String
+  description String?
+  
+  // Specifics
+  instruments String[]
+  genres      String[]
+  skills      String[]
+  
+  // Compensation
+  isPaid       Boolean  @default(false)
+  budget       Decimal? @db.Decimal(10, 2)
+  compensation String?  // paid, royalty_share, credit_only, negotiable
+  
+  // Location
+  isRemote Boolean @default(true)
+  location String?
+  
+  // Status
+  status    String  @default("open") // open, filled, closed, paused
+  urgency   String  @default("normal") // low, normal, high, urgent
+  visibility String @default("public") // public, connections, private
+  
+  // Timestamps
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
+  
+  // Relations
+  user         User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project      Project?                   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  song         Song?                      @relation(fields: [songId], references: [id], onDelete: SetNull)
+  applications CollaborationApplication[]
+  activities   ActivityEvent[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([needType])
+  @@index([visibility])
+}
+
+model CollaborationApplication {
+  id          String  @id @default(cuid())
+  needId      String
+  applicantId String
+  
+  // Application
+  message       String
+  portfolioUrls String[]
+  audioSamples  String[]
+  
+  // Status
+  status String @default("pending") // pending, reviewing, accepted, rejected, withdrawn
+  
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  respondedAt DateTime?
+  
+  // Relations
+  need      CollaborationNeed @relation(fields: [needId], references: [id], onDelete: Cascade)
+  applicant User              @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@index([needId])
+  @@index([applicantId])
+}
+
+// Opportunities - Gigs, Sync, Session Work
+model Opportunity {
+  id         String  @id @default(cuid())
+  postedById String
+  orgId      String?
+  
+  // Type
+  type        String // gig, session, sync_license, tour, teaching, other
+  title       String
+  description String?
+  
+  // Requirements
+  instruments     String[]
+  genres          String[]
+  skills          String[]
+  experienceLevel String? // beginner, intermediate, advanced, professional
+  
+  // Compensation
+  compensation String          // paid, royalty_share, door_split, tips, unpaid
+  payAmount    Decimal?        @db.Decimal(10, 2)
+  payType      String?         // flat, hourly, per_show, per_song, negotiable
+  payDetails   String?
+  
+  // Location
+  isRemote Boolean @default(false)
+  location String?
+  city     String?
+  state    String?
+  country  String?
+  venueId  String?
+  
+  // Timing
+  startDate DateTime?
+  endDate   DateTime?
+  isOngoing Boolean   @default(false)
+  
+  // Capacity
+  positionsAvailable Int @default(1)
+  positionsFilled    Int @default(0)
+  
+  // Status
+  status     String @default("open") // open, filled, closed, expired
+  visibility String @default("public")
+  
+  // Timestamps
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expiresAt DateTime?
+  
+  // Relations
+  postedBy     User                      @relation(fields: [postedById], references: [id], onDelete: Cascade)
+  org          Org?                      @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  venue        Venue?                    @relation(fields: [venueId], references: [id], onDelete: SetNull)
+  applications OpportunityApplication[]
+  activities   ActivityEvent[]
+  revenues     Revenue[]
+
+  @@index([postedById])
+  @@index([type])
+  @@index([status])
+  @@index([city])
+  @@index([startDate])
+}
+
+model OpportunityApplication {
+  id            String @id @default(cuid())
+  opportunityId String
+  applicantId   String
+  
+  // Application
+  coverLetter   String?
+  portfolioUrls String[]
+  audioSamples  String[]
+  availability  String?
+  expectedPay   Decimal? @db.Decimal(10, 2)
+  
+  // Status
+  status String @default("pending") // pending, shortlisted, interviewed, accepted, rejected
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  applicant   User        @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@index([opportunityId])
+  @@index([applicantId])
+}
+
+// Activity Stream - The Heartbeat of the Ecosystem
+model ActivityEvent {
+  id     String @id @default(cuid())
+  userId String
+  
+  // Event Type
+  type        String // song_created, song_completed, collaboration_started, show_announced, milestone_reached, practice_streak, etc.
+  title       String
+  description String?
+  metadata    Json?  // Flexible data
+  
+  // Related Entities
+  songId              String?
+  projectId           String?
+  showId              String?
+  tourId              String?
+  collaborationNeedId String?
+  opportunityId       String?
+  targetUserId        String? // For follow events
+  
+  // Display
+  visibility    String  @default("public") // public, followers, connections, private
+  isHighlighted Boolean @default(false)    // Featured on profile
+  
+  // Engagement
+  celebrationCount Int @default(0)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user              User               @relation("UserActivity", fields: [userId], references: [id], onDelete: Cascade)
+  song              Song?              @relation(fields: [songId], references: [id], onDelete: SetNull)
+  project           Project?           @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  show              Show?              @relation(fields: [showId], references: [id], onDelete: SetNull)
+  tour              Tour?              @relation(fields: [tourId], references: [id], onDelete: SetNull)
+  collaborationNeed CollaborationNeed? @relation(fields: [collaborationNeedId], references: [id], onDelete: SetNull)
+  opportunity       Opportunity?       @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
+  celebrations      ActivityCelebration[]
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt(sort: Desc)])
+  @@index([visibility])
+}
+
+model ActivityCelebration {
+  id         String   @id @default(cuid())
+  activityId String
+  userId     String
+  emoji      String   @default("🎉")
+  createdAt  DateTime @default(now())
+  
+  activity ActivityEvent @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([activityId, userId])
+}
+
+// Revenue Tracking - All Income Streams
+model Revenue {
+  id     String @id @default(cuid())
+  userId String
+  
+  // Source
+  source   String  // gig, streaming, sync, merch, teaching, session, royalty, tip, other
+  platform String? // spotify, apple_music, youtube, bandcamp, venue, etc.
+  
+  // Amount
+  amount    Decimal  @db.Decimal(10, 2)
+  currency  String   @default("USD")
+  netAmount Decimal? @db.Decimal(10, 2)
+  
+  // Related
+  songId        String?
+  showId        String?
+  projectId     String?
+  opportunityId String?
+  
+  // Details
+  description String?
+  notes       String?
+  
+  // Dates
+  earnedDate   DateTime @db.Date
+  receivedDate DateTime? @db.Date
+  
+  // Status
+  status String @default("received") // pending, received, disputed
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  song        Song?        @relation(fields: [songId], references: [id], onDelete: SetNull)
+  show        Show?        @relation(fields: [showId], references: [id], onDelete: SetNull)
+  project     Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  opportunity Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([source])
+  @@index([earnedDate(sort: Desc)])
+}
+
+// Force regeneration: 2025-12-01-ECOSYSTEM-V1

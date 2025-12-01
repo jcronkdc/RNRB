@@ -164,10 +164,10 @@ export default function ToursPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
         <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
-          <p className="text-lg text-muted-foreground">Loading...</p>
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-[color:var(--accent)]" />
+          <p className="text-lg text-[color:var(--muted)]">Loading...</p>
         </div>
       </div>
     );

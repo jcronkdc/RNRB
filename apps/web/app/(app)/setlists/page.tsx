@@ -28,6 +28,7 @@ import { UpgradeModal, useUpgradeModal } from '@/components/upgrade-modal';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSetlistAccess } from '@/hooks/use-subscription';
 import { formatDateWithDay } from '@/lib/format-date';
+import { microCopy } from '@/lib/workshop-voice';
 
 interface Setlist {
   id: string;
@@ -159,7 +160,7 @@ export default function SetlistsPage() {
                   Smart Setlists
                 </h1>
                 <p className="mt-1" style={{ color: 'var(--muted)' }}>
-                  AI-powered setlist generation • Performance mode • Real-time sync
+                  Craft the perfect setlist—energy, flow, and crowd connection
                 </p>
               </div>
             </div>

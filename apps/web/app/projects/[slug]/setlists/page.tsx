@@ -129,8 +129,17 @@ export default function SetlistsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-lg">Loading setlists...</div>
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
+        <div className="text-center">
+          <div
+            className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
+            style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+          />
+          <div style={{ color: 'var(--muted)' }}>Loading setlists...</div>
+        </div>
       </div>
     );
   }
@@ -260,7 +269,7 @@ export default function SetlistsPage() {
   // If viewing/editing a setlist
   if (selectedSetlist) {
     return (
-      <div className="min-h-screen bg-background px-4 py-12">
+      <div className="min-h-screen px-4 py-12" style={{ background: 'var(--bg)' }}>
         <div className="rnrb-container max-w-7xl">
           {/* Header */}
           <div className="mb-8 flex items-center justify-between">
@@ -269,20 +278,20 @@ export default function SetlistsPage() {
                 ← Back to Setlists
               </Button>
               <h1 className="font-display mb-2 text-4xl font-bold">{selectedSetlist.name}</h1>
-              <p className="text-muted-foreground">Collaborative setlist builder</p>
+              <p className="text-[color:var(--muted)]">Collaborative setlist builder</p>
 
               {/* Linked Show Display */}
               {selectedSetlist.show ? (
                 <div className="mt-4 inline-flex items-center gap-2 rounded-xl border border-brand-primary/30 bg-brand-primary/10 px-4 py-2">
-                  <Calendar className="h-4 w-4 text-brand-primary" />
+                  <Calendar className="h-4 w-4 text-[color:var(--accent)]" />
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/shows`}
-                      className="text-sm font-medium transition hover:text-brand-primary"
+                      className="text-sm font-medium transition hover:text-[color:var(--accent)]"
                     >
                       {selectedSetlist.show.name}
                     </Link>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-[color:var(--muted)]">
                       • {formatDateLong(selectedSetlist.show.date)}
                       {selectedSetlist.show.venue && ` • ${selectedSetlist.show.venue.name}`}
                     </span>
@@ -391,12 +400,12 @@ export default function SetlistsPage() {
 
                 {loadingShows ? (
                   <div className="py-12 text-center">
-                    <p className="text-muted-foreground">Loading upcoming shows...</p>
+                    <p className="text-[color:var(--muted)]">Loading upcoming shows...</p>
                   </div>
                 ) : shows.length === 0 ? (
                   <div className="py-12 text-center">
-                    <Calendar className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
-                    <p className="mb-4 text-muted-foreground">No upcoming shows scheduled</p>
+                    <Calendar className="text-[color:var(--muted)]/50 mx-auto mb-4 h-16 w-16" />
+                    <p className="mb-4 text-[color:var(--muted)]">No upcoming shows scheduled</p>
                     <Link href="/shows/new">
                       <Button className="rnrb-button-primary">
                         <Plus className="mr-2 h-4 w-4" />
@@ -415,9 +424,9 @@ export default function SetlistsPage() {
                       >
                         <div className="mb-2 flex items-start justify-between">
                           <h3 className="font-semibold">{show.name}</h3>
-                          <LinkIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                          <LinkIcon className="h-4 w-4 shrink-0 text-[color:var(--muted)]" />
                         </div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
+                        <div className="space-y-1 text-sm text-[color:var(--muted)]">
                           <div className="flex items-center gap-2">
                             <Calendar className="h-3.5 w-3.5" />
                             <span>{formatDateWithDay(show.date)}</span>
@@ -446,26 +455,36 @@ export default function SetlistsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ background: 'var(--bg)' }}>
       <div className="rnrb-container max-w-7xl">
         {/* Breadcrumb */}
-        <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/projects" className="transition hover:text-brand-primary">
+        <div className="mb-6 flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
+          <Link
+            href="/projects"
+            className="transition hover:opacity-80"
+            style={{ color: 'var(--muted)' }}
+          >
             Projects
           </Link>
           <span>/</span>
-          <Link href={`/projects/${slug}`} className="transition hover:text-brand-primary">
+          <Link
+            href={`/projects/${slug}`}
+            className="transition hover:opacity-80"
+            style={{ color: 'var(--muted)' }}
+          >
             {project.name}
           </Link>
           <span>/</span>
-          <span className="text-foreground">Setlists</span>
+          <span style={{ color: 'var(--text)' }}>Setlists</span>
         </div>
 
         {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="font-display mb-2 text-4xl font-bold">Setlists</h1>
-            <p className="text-xl text-muted-foreground">
+            <h1 className="font-display mb-2 text-4xl font-bold" style={{ color: 'var(--text)' }}>
+              Setlists
+            </h1>
+            <p className="text-xl" style={{ color: 'var(--muted)' }}>
               Organize your songs for live performances
             </p>
           </div>
@@ -496,7 +515,8 @@ export default function SetlistsPage() {
             </Button>
             <Button
               onClick={createNewSetlist}
-              className="rnrb-button-primary flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
+              className="flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white"
+              style={{ background: 'var(--accent)', boxShadow: '0 4px 20px var(--accent-glow)' }}
             >
               <Plus className="h-5 w-5" />
               Create Setlist
@@ -506,23 +526,41 @@ export default function SetlistsPage() {
 
         {/* Empty State or Setlist Grid */}
         {setlists.length === 0 ? (
-          <Card className="rnrb-card p-16 text-center">
-            <Music className="mx-auto mb-6 h-20 w-20 text-muted-foreground/50" />
-            <h2 className="font-display mb-4 text-3xl font-bold">Ready for Your First Show?</h2>
-            <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
+          <Card
+            className="p-16 text-center"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
+            <Music
+              className="mx-auto mb-6 h-20 w-20"
+              style={{ color: 'var(--muted)', opacity: 0.5 }}
+            />
+            <h2 className="font-display mb-4 text-3xl font-bold" style={{ color: 'var(--text)' }}>
+              Ready for Your First Show?
+            </h2>
+            <p className="mx-auto mb-6 max-w-2xl text-lg" style={{ color: 'var(--muted)' }}>
               Whether you're playing an intimate coffee shop or a packed venue, a great setlist
               builds energy and tells your story. Create your first setlist to organize songs, plan
               transitions, and share with your band.
             </p>
 
             {projectSongs.length === 0 ? (
-              <div className="rnrb-card mx-auto mb-6 max-w-md border-yellow-500/20 bg-yellow-500/5 p-6">
-                <p className="text-sm text-muted-foreground">
+              <div
+                className="mx-auto mb-6 max-w-md p-6"
+                style={{
+                  background: 'rgba(234, 179, 8, 0.05)',
+                  border: '1px solid rgba(234, 179, 8, 0.2)',
+                  borderRadius: '12px',
+                }}
+              >
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
                   You need songs first! Add some songs to {project.name}, then come back to build
                   your setlist.
                 </p>
                 <Link href={`/projects/${slug}/songs/new`}>
-                  <Button className="rnrb-button-primary mt-4 rounded-xl px-6 py-3">
+                  <Button
+                    className="mt-4 rounded-xl px-6 py-3 text-white"
+                    style={{ background: 'var(--accent)' }}
+                  >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Your First Song
                   </Button>
@@ -531,7 +569,8 @@ export default function SetlistsPage() {
             ) : (
               <Button
                 onClick={createNewSetlist}
-                className="rnrb-button-primary inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold"
+                className="inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold text-white"
+                style={{ background: 'var(--accent)', boxShadow: '0 4px 20px var(--accent-glow)' }}
               >
                 <Plus className="h-6 w-6" />
                 Create Your First Setlist
@@ -539,30 +578,57 @@ export default function SetlistsPage() {
             )}
 
             <div className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-4 text-left md:grid-cols-3">
-              <div className="rnrb-card bg-surface-muted p-4">
-                <Music className="mb-3 h-8 w-8 text-brand-primary" />
-                <h3 className="mb-2 text-sm font-semibold">Smart Organization</h3>
-                <p className="text-xs text-muted-foreground">
+              <div
+                className="p-4"
+                style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px',
+                }}
+              >
+                <Music className="mb-3 h-8 w-8" style={{ color: 'var(--accent)' }} />
+                <h3 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text)' }}>
+                  Smart Organization
+                </h3>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>
                   Drag-drop reordering, key change indicators, set duration calculator
                 </p>
               </div>
-              <div className="rnrb-card bg-surface-muted p-4">
-                <Users className="mb-3 h-8 w-8 text-brand-primary" />
-                <h3 className="mb-2 text-sm font-semibold">Collaborative</h3>
-                <p className="text-xs text-muted-foreground">
+              <div
+                className="p-4"
+                style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px',
+                }}
+              >
+                <Users className="mb-3 h-8 w-8" style={{ color: 'var(--accent)' }} />
+                <h3 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text)' }}>
+                  Collaborative
+                </h3>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>
                   Your whole band sees the setlist. Make changes together in real-time.
                 </p>
               </div>
-              <div className="rnrb-card bg-surface-muted p-4">
-                <Share2 className="mb-3 h-8 w-8 text-brand-primary" />
-                <h3 className="mb-2 text-sm font-semibold">Export & Share</h3>
-                <p className="text-xs text-muted-foreground">
+              <div
+                className="p-4"
+                style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px',
+                }}
+              >
+                <Share2 className="mb-3 h-8 w-8" style={{ color: 'var(--accent)' }} />
+                <h3 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text)' }}>
+                  Export & Share
+                </h3>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>
                   Print for your bandmates or export for sound engineers
                 </p>
               </div>
             </div>
 
-            <p className="mt-8 text-sm italic text-muted-foreground">
+            <p className="mt-8 text-sm italic" style={{ color: 'var(--muted)' }}>
               "Every great show starts with a great setlist."
             </p>
           </Card>
@@ -574,21 +640,32 @@ export default function SetlistsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <Card className="rnrb-card cursor-pointer p-6 transition hover:border-brand-primary/30">
-                  <h3 className="mb-3 text-xl font-semibold">{setlist.name}</h3>
+                <Card
+                  className="cursor-pointer p-6 transition"
+                  style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                >
+                  <h3 className="mb-3 text-xl font-semibold" style={{ color: 'var(--text)' }}>
+                    {setlist.name}
+                  </h3>
                   {setlist.venue && (
-                    <p className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                    <p
+                      className="mb-2 flex items-center gap-2 text-sm"
+                      style={{ color: 'var(--muted)' }}
+                    >
                       <MapPin className="h-4 w-4" />
                       {setlist.venue}
                     </p>
                   )}
                   {setlist.date && (
-                    <p className="mb-2 flex items-center gap-2 text-sm text-muted-foreground">
+                    <p
+                      className="mb-2 flex items-center gap-2 text-sm"
+                      style={{ color: 'var(--muted)' }}
+                    >
                       <Calendar className="h-4 w-4" />
                       {formatDateLong(setlist.date)}
                     </p>
                   )}
-                  <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <p className="flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
                     <Music className="h-4 w-4" />
                     {setlist.songs.length} songs
                   </p>
@@ -627,12 +704,21 @@ export default function SetlistsPage() {
         )}
 
         {/* Helpful Note */}
-        <Card className="rnrb-card mt-8 border-purple-500/20 bg-purple-500/5 p-6">
-          <p className="mb-1 flex items-center gap-2 text-sm font-medium text-brand-primary">
+        <Card
+          className="mt-8 p-6"
+          style={{
+            background: 'rgba(139, 92, 246, 0.05)',
+            border: '1px solid rgba(139, 92, 246, 0.2)',
+          }}
+        >
+          <p
+            className="mb-1 flex items-center gap-2 text-sm font-medium"
+            style={{ color: 'var(--accent)' }}
+          >
             <Sparkles className="h-4 w-4 text-purple-400" />
             Pro Tip: Building Your Set
           </p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs" style={{ color: 'var(--muted)' }}>
             Start strong, dip in the middle for intimacy, build to your biggest song. Watch key
             changes (too many can tire your voice). Share your setlist in project chat for band
             feedback!

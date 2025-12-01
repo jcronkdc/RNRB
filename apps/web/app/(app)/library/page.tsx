@@ -84,6 +84,8 @@ import {
   LABEL_COLORS,
 } from '@/hooks/use-library';
 import { useRequireAuth } from '@/hooks/use-require-auth';
+import { EmptyState } from '@/components/workshop';
+import { microCopy } from '@/lib/workshop-voice';
 
 // File type configuration
 const FILE_TYPE_CONFIG: Record<
@@ -564,13 +566,15 @@ export default function LibraryPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-black via-gray-900/50 to-black">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-12 w-12 animate-spin text-orange-500" />
-          <div className="text-center">
-            <div className="text-lg font-medium text-white">Loading your library...</div>
-            <div className="mt-2 text-sm text-gray-400">Preparing your files</div>
-          </div>
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+            Opening your creative vault...
+          </p>
         </div>
       </div>
     );
@@ -1340,28 +1344,34 @@ export default function LibraryPage() {
               <SharedFilesView />
             ) : isLoading && files.length === 0 ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                    Loading your files...
+                  </p>
+                </div>
               </div>
             ) : files.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-2xl border border-gray-800 bg-gray-900/50 p-12 text-center"
-              >
-                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-orange-500/10">
-                  <Folder className="h-10 w-10 text-orange-500" />
-                </div>
-                <h2 className="mb-2 text-xl font-bold text-white">
-                  {searchQuery || filterType !== 'all' || showFavorites
-                    ? 'No files found'
-                    : 'Your Library is Empty'}
-                </h2>
-                <p className="mx-auto max-w-md text-gray-400">
-                  {searchQuery || filterType !== 'all' || showFavorites
-                    ? 'Try adjusting your search or filters'
-                    : 'Drag and drop files here, or click the upload buttons above to add your first files.'}
-                </p>
-              </motion.div>
+              searchQuery || filterType !== 'all' || showFavorites ? (
+                <EmptyState
+                  type="noSearchResults"
+                  customTitle="No files match your filters"
+                  customMessage="Try adjusting your search or filters to find what you're looking for."
+                  customSubtext="Sometimes the best discoveries come from starting fresh."
+                  customAction="Clear Filters"
+                  onAction={() => {
+                    setSearchQuery('');
+                    setFilterType('all');
+                    setShowFavorites(false);
+                    setBpmRange([null, null]);
+                    setSelectedKey(null);
+                    setSelectedMood(null);
+                  }}
+                  size="lg"
+                />
+              ) : (
+                <EmptyState type="noLibraryItems" size="lg" />
+              )
             ) : (
               <>
                 {/* Selection Toggle */}

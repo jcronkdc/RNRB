@@ -118,55 +118,82 @@ export default function NewSongPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ background: 'var(--bg)' }}>
       <div className="rnrb-container max-w-7xl">
         <Link
           href={`/projects/${slug}`}
-          className="mb-6 inline-flex items-center gap-2 text-brand-primary transition hover:text-brand-primary/80"
+          className="mb-6 inline-flex items-center gap-2 transition"
+          style={{ color: 'var(--accent)' }}
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Project
         </Link>
 
         {/* Song Title & Metadata (Always Visible) */}
-        <Card className="rnrb-card mb-6 p-6">
+        <Card
+          className="mb-6 p-6"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <div className="md:col-span-2">
-              <label className="mb-2 block text-sm font-medium">Song Title *</label>
+              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                Song Title *
+              </label>
               <input
                 type="text"
                 value={songData.title}
                 onChange={(e) => setSongData({ ...songData, title: e.target.value })}
                 placeholder="Untitled Song"
-                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-lg font-semibold text-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+                className="w-full rounded-xl border-2 px-4 py-3 text-lg font-semibold outline-none transition"
+                style={{
+                  background: 'var(--surface)',
+                  borderColor: 'var(--border)',
+                  color: 'var(--text)',
+                }}
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium">Key</label>
+              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                Key
+              </label>
               <input
                 type="text"
                 value={songData.key}
                 onChange={(e) => setSongData({ ...songData, key: e.target.value })}
                 placeholder="C Major"
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                className="w-full rounded-xl border px-4 py-3 outline-none transition"
+                style={{
+                  background: 'var(--surface)',
+                  borderColor: 'var(--border)',
+                  color: 'var(--text)',
+                }}
               />
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium">Tempo</label>
+              <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                Tempo
+              </label>
               <input
                 type="number"
                 value={songData.tempo}
                 onChange={(e) => setSongData({ ...songData, tempo: e.target.value })}
                 placeholder="120"
-                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                className="w-full rounded-xl border px-4 py-3 outline-none transition"
+                style={{
+                  background: 'var(--surface)',
+                  borderColor: 'var(--border)',
+                  color: 'var(--text)',
+                }}
               />
             </div>
           </div>
         </Card>
 
         <div className="mb-6">
-          <h1 className="font-display mb-2 text-3xl font-bold">Build Your Song Visually</h1>
-          <p className="text-muted-foreground">
+          <h1 className="font-display mb-2 text-3xl font-bold" style={{ color: 'var(--text)' }}>
+            Build Your Song Visually
+          </h1>
+          <p style={{ color: 'var(--muted)' }}>
             Drag blocks from the left palette to create your song structure. Add verses, choruses,
             bridges, and chords.
           </p>
@@ -197,8 +224,11 @@ export default function NewSongPage() {
         )}
 
         {/* Save Button (Always Visible) */}
-        <div className="sticky bottom-4 mt-8 flex items-center justify-between rounded-xl border border-border bg-background/80 p-4 shadow-lg backdrop-blur-sm">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div
+          className="sticky bottom-4 mt-8 flex items-center justify-between rounded-xl p-4 shadow-lg backdrop-blur-sm"
+          style={{ background: 'rgba(26, 24, 20, 0.9)', border: '1px solid var(--border)' }}
+        >
+          <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
             <HelpCircle className="h-4 w-4" />
             <span>
               Drag blocks from left palette to build song • Changes save when you click Create Song
@@ -213,7 +243,8 @@ export default function NewSongPage() {
             <Button
               onClick={handleSave}
               disabled={saving || !songData.title.trim()}
-              className="rnrb-button-primary flex items-center gap-2 rounded-xl px-8 py-3 font-semibold disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl px-8 py-3 font-semibold text-white disabled:opacity-50"
+              style={{ background: 'var(--accent)', boxShadow: '0 4px 20px var(--accent-glow)' }}
             >
               <Save className="h-5 w-5" />
               {saving ? 'Creating...' : 'Create Song'}

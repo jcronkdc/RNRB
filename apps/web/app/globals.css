@@ -7,27 +7,63 @@
    This CSS is LOCKED and cannot be overridden
    ======================================== */
 
-/* === RNR Basement Human-First Design === */
+/* === RNR Basement - The Workshop === */
+/* A warm, crafted space where music is made */
 :root {
-  /* Comfortable dark theme - like a cozy music studio */
-  --bg: #1e1e1e; /* Warm dark gray - easier on eyes than pure black */
-  --panel: #2a2a2a; /* Elevated surfaces - clear visual hierarchy */
-  --panel-hover: #323232; /* Subtle hover feedback */
-  --text: #ffffff; /* Pure white for maximum clarity */
-  --text-secondary: #e8e8e8; /* Slightly dimmed for less important text */
-  --muted: #a8a8a8; /* Muted text - still readable but de-emphasized */
-  --accent: #ff6347; /* Tomato red - warm, inviting, energetic */
-  --accent-hover: #ff7f50; /* Coral on hover */
-  --accent-dim: #cc5036; /* Dimmed accent for backgrounds */
-  --success: #4ade80; /* Green for positive actions */
-  --warning: #fbbf24; /* Amber for warnings */
-  --error: #ef4444; /* Red for errors */
-  --border: #404040; /* Clearly visible borders */
-  --border-strong: #606060; /* Stronger borders for emphasis */
-  --radius: 16px; /* Softer, more modern radius */
-  --radius-sm: 8px; /* Small radius for inner elements */
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  /* THE WORKSHOP PALETTE - Warm, inviting, like aged wood and amber light */
+
+  /* Foundation - warm blacks and browns, not cold grays */
+  --bg: #1c1915; /* Almost black with warm undertone - like a dim basement */
+  --bg-elevated: #221f1a; /* Slightly lifted surfaces */
+  --panel: #2a2620; /* Warm dark brown - like aged wood */
+  --panel-hover: #352f28; /* Hover state with warmth */
+  --panel-active: #3d362e; /* Active/selected state */
+
+  /* Text - cream and warm whites, not stark */
+  --text: #f5f0e8; /* Cream white - easier on eyes, feels warmer */
+  --text-secondary: #d4cfc4; /* Warm light gray */
+  --muted: #9b9488; /* Muted warm gray - like aged paper */
+  --muted-soft: #6b655c; /* Very muted for subtle elements */
+
+  /* Accent - earthier tomato, like clay and fire */
+  --accent: #e85d3b; /* Earthier, warmer tomato */
+  --accent-hover: #f47254; /* Brighter on hover */
+  --accent-dim: #b84a2f; /* Dimmed for backgrounds */
+  --accent-glow: rgba(232, 93, 59, 0.15); /* For glows and highlights */
+
+  /* Supporting colors - all warmed */
+  --gold: #d4a84b; /* Brass/gold - for achievements and highlights */
+  --gold-dim: rgba(212, 168, 75, 0.15);
+  --sage: #7b9178; /* Muted sage - for success/growth */
+  --sage-dim: rgba(123, 145, 120, 0.15);
+  --clay: #c17b5f; /* Terracotta - for warmth accents */
+  --sky: #6b9bc3; /* Muted blue - for info/links */
+
+  /* Status colors - warmed versions */
+  --success: #7b9178; /* Sage green */
+  --warning: #d4a84b; /* Gold/amber */
+  --error: #c75b4a; /* Warm red */
+
+  /* Borders - warm, like the edge of aged paper */
+  --border: #3a352e; /* Warm border */
+  --border-strong: #4d463d; /* Stronger warm border */
+  --border-subtle: #2d2924; /* Very subtle border */
+
+  /* Shadows - warm brown shadows, not cold black */
+  --shadow-color: 20, 18, 14; /* RGB for warm shadow */
+  --shadow:
+    0 4px 6px -1px rgba(var(--shadow-color), 0.6), 0 2px 4px -1px rgba(var(--shadow-color), 0.4);
+  --shadow-lg:
+    0 10px 15px -3px rgba(var(--shadow-color), 0.6), 0 4px 6px -2px rgba(var(--shadow-color), 0.4);
+  --shadow-glow: 0 0 20px var(--accent-glow);
+
+  /* Radius - slightly softer, more organic */
+  --radius: 14px; /* Softer corners */
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -36,7 +72,19 @@
   --space-6: 32px;
   --space-7: 40px;
   --space-8: 56px;
-  --maxw: 1280px; /* Slightly wider for modern screens */
+  --maxw: 1280px;
+
+  /* Transitions - slightly slower, more organic */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Typography Variables */
+:root {
+  --font-sans: var(--font-sans, system-ui, -apple-system, sans-serif);
+  --font-display: var(--font-display, Georgia, serif);
+  --font-mono: var(--font-mono, 'SFMono-Regular', Consolas, monospace);
 }
 
 html,
@@ -45,7 +93,35 @@ body {
   padding: 0;
   background: var(--bg);
   color: var(--text);
+  font-family: var(--font-sans);
+  font-feature-settings:
+    'ss01' on,
+    'ss02' on,
+    'cv01' on;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Display type - for headlines with character */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* Mono type - for code and numbers */
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings:
+    'liga' on,
+    'calt' on;
+}
+
+/* Tabular numbers for stats */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -800,28 +876,62 @@ nav {
 /* ========================================
    🛡️ PROTECTION LAYER
    Prevent any external CSS from overriding
+   THE WORKSHOP PALETTE
    ======================================== */
 
 /* Lock all CSS variables with !important */
 :root {
-  --bg: #1e1e1e !important;
-  --panel: #2a2a2a !important;
-  --panel-hover: #323232 !important;
-  --text: #ffffff !important;
-  --text-secondary: #e8e8e8 !important;
-  --muted: #a8a8a8 !important;
-  --accent: #ff6347 !important;
-  --accent-hover: #ff7f50 !important;
-  --accent-dim: #cc5036 !important;
-  --success: #4ade80 !important;
-  --warning: #fbbf24 !important;
-  --error: #ef4444 !important;
-  --border: #404040 !important;
-  --border-strong: #606060 !important;
-  --radius: 16px !important;
+  /* Foundation - warm blacks and browns */
+  --bg: #1c1915 !important;
+  --bg-elevated: #221f1a !important;
+  --panel: #2a2620 !important;
+  --panel-hover: #352f28 !important;
+  --panel-active: #3d362e !important;
+
+  /* Text - cream and warm whites */
+  --text: #f5f0e8 !important;
+  --text-secondary: #d4cfc4 !important;
+  --muted: #9b9488 !important;
+  --muted-soft: #6b655c !important;
+
+  /* Accent - earthier tomato */
+  --accent: #e85d3b !important;
+  --accent-hover: #f47254 !important;
+  --accent-dim: #b84a2f !important;
+  --accent-glow: rgba(232, 93, 59, 0.15) !important;
+
+  /* Supporting colors */
+  --gold: #d4a84b !important;
+  --gold-dim: rgba(212, 168, 75, 0.15) !important;
+  --sage: #7b9178 !important;
+  --sage-dim: rgba(123, 145, 120, 0.15) !important;
+  --clay: #c17b5f !important;
+  --sky: #6b9bc3 !important;
+
+  /* Status colors */
+  --success: #7b9178 !important;
+  --warning: #d4a84b !important;
+  --error: #c75b4a !important;
+
+  /* Borders */
+  --border: #3a352e !important;
+  --border-strong: #4d463d !important;
+  --border-subtle: #2d2924 !important;
+
+  /* Shadows */
+  --shadow-color: 20, 18, 14 !important;
+  --shadow: 0 4px 6px -1px rgba(20, 18, 14, 0.6), 0 2px 4px -1px rgba(20, 18, 14, 0.4) !important;
+  --shadow-lg:
+    0 10px 15px -3px rgba(20, 18, 14, 0.6), 0 4px 6px -2px rgba(20, 18, 14, 0.4) !important;
+  --shadow-glow: 0 0 20px rgba(232, 93, 59, 0.15) !important;
+
+  /* Radius */
+  --radius: 14px !important;
   --radius-sm: 8px !important;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3) !important;
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important;
+  --radius-lg: 20px !important;
+  --radius-full: 9999px !important;
+
+  /* Spacing */
   --space-1: 4px !important;
   --space-2: 8px !important;
   --space-3: 12px !important;
@@ -831,6 +941,11 @@ nav {
   --space-7: 40px !important;
   --space-8: 56px !important;
   --maxw: 1280px !important;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 /* Lock body/html styling */

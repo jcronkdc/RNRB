@@ -1,4 +1,6 @@
 import { CreditCard } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { BillingDashboard } from './BillingDashboard';
@@ -22,6 +24,20 @@ export default async function BillingPage() {
       {/* Hero Section */}
       <div style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'var(--panel)' }}>
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+          {/* White RR Logo [[memory:11700420]] */}
+          <div className="mb-8 flex justify-center">
+            <Link href="/" className="group inline-block">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={140}
+                height={57}
+                priority
+                className="transition-opacity duration-200 group-hover:opacity-80"
+              />
+            </Link>
+          </div>
+
           {/* Accent bar */}
           <div
             style={{

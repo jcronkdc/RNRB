@@ -144,14 +144,17 @@ export default function NewShowPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
+        <Loader2 className="h-12 w-12 animate-spin" style={{ color: 'var(--accent)' }} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ background: 'var(--bg)' }}>
       <div className="rnrb-container mx-auto max-w-3xl">
         {/* Toast Notifications */}
         <ToastNotification toasts={toasts} onRemove={removeToast} />
@@ -164,14 +167,22 @@ export default function NewShowPage() {
               Back to Shows
             </Button>
           </Link>
-          <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl">Schedule a Show</h1>
-          <p className="text-base text-muted-foreground sm:text-lg">
+          <h1
+            className="font-display mb-2 text-3xl font-bold sm:text-4xl"
+            style={{ color: 'var(--text)' }}
+          >
+            Schedule a Show
+          </h1>
+          <p className="text-base sm:text-lg" style={{ color: 'var(--muted)' }}>
             Add a new gig to your touring calendar
           </p>
         </div>
 
         {/* Form */}
-        <Card className="rnrb-card p-6 sm:p-8">
+        <Card
+          className="p-6 sm:p-8"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Show Name */}
             <div>
@@ -195,7 +206,7 @@ export default function NewShowPage() {
                   Date <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]" />
                   <input
                     type="date"
                     required
@@ -230,7 +241,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Venue</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]" />
                 <select
                   value={formData.venueId}
                   onChange={(e) => setFormData({ ...formData, venueId: e.target.value })}
@@ -247,9 +258,9 @@ export default function NewShowPage() {
                   ))}
                 </select>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-xs text-[color:var(--muted)]">
                 Don't see your venue?{' '}
-                <Link href="/venues" className="text-brand-primary hover:underline">
+                <Link href="/venues" className="text-[color:var(--accent)] hover:underline">
                   Add a new venue
                 </Link>
               </p>
@@ -271,7 +282,7 @@ export default function NewShowPage() {
                   </option>
                 ))}
               </select>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-xs text-[color:var(--muted)]">
                 Link this show to a multi-show tour for better organization
               </p>
             </div>
@@ -281,7 +292,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Doors Time</label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]" />
                   <input
                     type="time"
                     value={formData.doors_time}
@@ -294,7 +305,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Soundcheck</label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]" />
                   <input
                     type="time"
                     value={formData.soundcheck_time}
@@ -307,7 +318,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Show Time</label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]" />
                   <input
                     type="time"
                     value={formData.show_time}
@@ -349,7 +360,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Guarantee</label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)]" />
                 <input
                   type="number"
                   step="0.01"
@@ -365,7 +376,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Notes</label>
               <div className="relative">
-                <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <FileText className="absolute left-3 top-3 h-4 w-4 text-[color:var(--muted)]" />
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -386,7 +397,8 @@ export default function NewShowPage() {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="rnrb-button-primary rounded-xl px-8 py-3 font-semibold"
+                className="rounded-xl px-8 py-3 font-semibold text-white"
+                style={{ background: 'var(--accent)' }}
               >
                 {submitting ? (
                   <>

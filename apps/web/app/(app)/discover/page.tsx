@@ -3,6 +3,7 @@
 import { Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import { Search, Users, Mail, Phone, Music, Sparkles, Loader2, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
@@ -113,6 +114,24 @@ export default function DiscoverPage() {
       {/* Hero Section */}
       <div style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'var(--panel)' }}>
         <div className="mx-auto max-w-6xl px-4 py-12">
+          {/* White RR Logo [[memory:11700420]] */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-8 flex justify-center"
+          >
+            <Link href="/" className="group inline-block">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={140}
+                height={57}
+                priority
+                className="transition-opacity duration-200 group-hover:opacity-80"
+              />
+            </Link>
+          </motion.div>
+
           {/* Accent bar */}
           <div
             style={{

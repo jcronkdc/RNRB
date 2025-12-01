@@ -295,7 +295,7 @@ export default function ExplorePage() {
         {!loading && tracks.length > 0 && (
           <div>
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
-              <TrendingUp className="h-5 w-5 text-brand-primary" />
+              <TrendingUp className="h-5 w-5 text-[color:var(--accent)]" />
               {filter === 'trending'
                 ? 'Trending Now'
                 : filter === 'recent'

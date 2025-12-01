@@ -12,8 +12,13 @@ export default function SettingsPage() {
   }, [router]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-lg">Redirecting to settings...</div>
+    <div
+      className="flex min-h-screen items-center justify-center"
+      style={{ background: 'var(--bg)' }}
+    >
+      <div className="text-lg" style={{ color: 'var(--text)' }}>
+        Redirecting to settings...
+      </div>
     </div>
   );
 }

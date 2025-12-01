@@ -11,6 +11,7 @@ import {
 } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import { AlertCircle, TrendingUp, Calendar, Zap, BarChart3 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -141,6 +142,20 @@ export default function UsagePage() {
       {/* Hero Section */}
       <div style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'var(--panel)' }}>
         <div className="mx-auto max-w-4xl px-6 py-12">
+          {/* White RR Logo [[memory:11700420]] */}
+          <div className="mb-8 flex justify-center">
+            <Link href="/" className="group inline-block">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={140}
+                height={57}
+                priority
+                className="transition-opacity duration-200 group-hover:opacity-80"
+              />
+            </Link>
+          </div>
+
           {/* Accent bar */}
           <div
             style={{
@@ -261,7 +276,7 @@ export default function UsagePage() {
               <span className={getUsageColor(usage.ai.percentage)}>
                 {usage.ai.percentage.toFixed(1)}% used
               </span>
-              <span className="text-muted-foreground">{usage.ai.remaining} remaining</span>
+              <span className="text-[color:var(--muted)]">{usage.ai.remaining} remaining</span>
             </div>
             {usage.ai.percentage >= 95 && (
               <div className="bg-destructive/10 border-destructive/20 flex items-start gap-2 rounded-lg border p-3">
@@ -275,12 +290,12 @@ export default function UsagePage() {
               </div>
             )}
             {usage.ai.bonus > 0 && (
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[color:var(--muted)]">
                 Includes {usage.ai.bonus.toLocaleString()} purchased requests active this cycle.
               </p>
             )}
             <div className="space-y-2 border-t pt-3">
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-[color:var(--muted)]">
                 Need more this month? +100 requests for $5 (expires at period reset).
               </div>
               <BuyCreditsButton product="ai_100" className="w-full" />
@@ -317,7 +332,7 @@ export default function UsagePage() {
                 <span className={getUsageColor(usage.video.percentage)}>
                   {usage.video.percentage.toFixed(1)}% used
                 </span>
-                <span className="text-muted-foreground">
+                <span className="text-[color:var(--muted)]">
                   {usage.video.remaining} minutes ({(usage.video.remaining / 60).toFixed(1)} hours)
                   remaining
                 </span>
@@ -335,12 +350,12 @@ export default function UsagePage() {
                 </div>
               )}
               {usage.video.bonus > 0 && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[color:var(--muted)]">
                   Includes {(usage.video.bonus / 60).toFixed(1)} bonus hours purchased this cycle.
                 </p>
               )}
               <div className="space-y-2 border-t pt-3">
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-[color:var(--muted)]">
                   Add +10 hours for $8. Credits expire at period reset.
                 </div>
                 <BuyCreditsButton product="video_600" className="w-full" />
@@ -378,7 +393,7 @@ export default function UsagePage() {
                 <span className={getUsageColor(usage.image.percentage)}>
                   {usage.image.percentage.toFixed(1)}% used
                 </span>
-                <span className="text-muted-foreground">
+                <span className="text-[color:var(--muted)]">
                   {usage.image.remaining} artworks remaining
                 </span>
               </div>
@@ -394,12 +409,12 @@ export default function UsagePage() {
                 </div>
               )}
               {usage.image.bonus > 0 && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-[color:var(--muted)]">
                   Includes {usage.image.bonus} bonus image credits purchased this cycle.
                 </p>
               )}
               <div className="space-y-2 border-t pt-3">
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-[color:var(--muted)]">
                   Need more album artwork? Purchase additional image credits.
                 </div>
                 <div className="grid gap-2 sm:grid-cols-2">
@@ -438,7 +453,7 @@ export default function UsagePage() {
               <span className={getUsageColor(usage.storage.percentage)}>
                 {usage.storage.percentage.toFixed(1)}% used
               </span>
-              <span className="text-muted-foreground">
+              <span className="text-[color:var(--muted)]">
                 {usage.storage.remaining.toFixed(2)} GB remaining
               </span>
             </div>
@@ -454,12 +469,12 @@ export default function UsagePage() {
               </div>
             )}
             {usage.storage.bonus > 0 && (
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-[color:var(--muted)]">
                 You have an extra {usage.storage.bonus} GB of permanent storage capacity.
               </p>
             )}
             <div className="space-y-2 border-t pt-3">
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-[color:var(--muted)]">
                 Storage top-ups now start at $5 for +25 GB (permanent capacity boost).
               </div>
               <div className="grid gap-2 sm:grid-cols-2">
@@ -486,7 +501,7 @@ export default function UsagePage() {
                 {usage.tier === 'free' && (
                   <div className="space-y-2 rounded-lg border p-4">
                     <div className="font-semibold">Creator ($17.99/mo)</div>
-                    <ul className="space-y-1 text-sm text-muted-foreground">
+                    <ul className="space-y-1 text-sm text-[color:var(--muted)]">
                       <li>✅ 100 AI requests/month</li>
                       <li>✅ 10 GB storage</li>
                       <li>✅ Unlimited projects</li>
@@ -501,7 +516,7 @@ export default function UsagePage() {
                 )}
                 <div className="space-y-2 rounded-lg border p-4">
                   <div className="font-semibold">Studio ($34.99/mo)</div>
-                  <ul className="space-y-1 text-sm text-muted-foreground">
+                  <ul className="space-y-1 text-sm text-[color:var(--muted)]">
                     <li>✅ 500 AI requests/month</li>
                     <li>✅ 20 hours video calls/month</li>
                     <li>✅ 100 GB storage</li>

@@ -88,11 +88,15 @@ export default function NewProjectPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
         <motion.div
           animate={{ opacity: [0.2, 1, 0.2] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="font-mono text-sm text-muted-foreground"
+          className="font-mono text-sm"
+          style={{ color: 'var(--muted)' }}
         >
           Loading...
         </motion.div>
@@ -101,13 +105,13 @@ export default function NewProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Premium Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
+      <div className="relative overflow-hidden border-b" style={{ borderColor: 'var(--border)' }}>
         <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
-          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-brand-primary/5 blur-3xl" />
+          <div className="bg-[color:var(--accent)]/10 absolute right-1/4 top-0 h-96 w-96 rounded-full blur-3xl" />
+          <div className="bg-[color:var(--accent)]/5 absolute bottom-0 left-1/4 h-96 w-96 rounded-full blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-4xl px-4 py-16">
@@ -118,22 +122,22 @@ export default function NewProjectPage() {
           >
             <Link
               href="/projects"
-              className="mb-6 inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-brand-primary"
+              className="mb-6 inline-flex items-center gap-2 text-[color:var(--muted)] transition-colors hover:text-[color:var(--accent)]"
             >
               <ArrowLeft className="h-4 w-4" />
               <span className="font-mono text-xs uppercase tracking-wider">Back to Projects</span>
             </Link>
 
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
-                <Folder className="h-6 w-6 text-brand-primary" />
+              <div className="bg-[color:var(--accent)]/10 flex h-12 w-12 items-center justify-center rounded-xl">
+                <Folder className="h-6 w-6 text-[color:var(--accent)]" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Create New</p>
+                <p className="text-sm text-[color:var(--muted)]">Create New</p>
                 <h1 className="font-display text-3xl font-bold md:text-4xl">Project</h1>
               </div>
             </div>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-[color:var(--muted)]">
               Organize your songs, collaborate with your team, and build your music career
             </p>
           </motion.div>
@@ -162,7 +166,7 @@ export default function NewProjectPage() {
           <Card className="rnrb-card mb-6 p-8">
             <div className="space-y-6">
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text)]">
                   Project Name *
                 </label>
                 <input
@@ -170,26 +174,28 @@ export default function NewProjectPage() {
                   value={projectData.name}
                   onChange={(e) => setProjectData({ ...projectData, name: e.target.value })}
                   placeholder="My Debut Album"
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-lg text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  className="w-full rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-lg text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                 />
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-xs text-[color:var(--muted)]">
                   {projectData.name && `URL: /projects/${generateSlug(projectData.name)}`}
                 </p>
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">Tagline</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text)]">
+                  Tagline
+                </label>
                 <input
                   type="text"
                   value={projectData.tagline}
                   onChange={(e) => setProjectData({ ...projectData, tagline: e.target.value })}
                   placeholder="The album that changed everything"
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  className="w-full rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text)]">
                   Description
                 </label>
                 <textarea
@@ -197,24 +203,26 @@ export default function NewProjectPage() {
                   onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
                   placeholder="Describe your project, its vision, the story behind it..."
                   rows={4}
-                  className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  className="w-full resize-none rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                 />
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-foreground">Genre</label>
+                  <label className="mb-2 block text-sm font-medium text-[color:var(--text)]">
+                    Genre
+                  </label>
                   <input
                     type="text"
                     value={projectData.genre}
                     onChange={(e) => setProjectData({ ...projectData, genre: e.target.value })}
                     placeholder="Rock, Jazz, Hip-Hop..."
-                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                    className="w-full rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-foreground">
+                  <label className="mb-2 block text-sm font-medium text-[color:var(--text)]">
                     Target Release Date
                   </label>
                   <input
@@ -223,7 +231,7 @@ export default function NewProjectPage() {
                     onChange={(e) =>
                       setProjectData({ ...projectData, target_release_date: e.target.value })
                     }
-                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                    className="w-full rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                   />
                 </div>
               </div>
@@ -245,21 +253,21 @@ export default function NewProjectPage() {
                 onClick={() => setProjectData({ ...projectData, visibility: 'private' })}
                 className={`w-full rounded-xl border-2 p-4 text-left transition ${
                   projectData.visibility === 'private'
-                    ? 'border-brand-primary bg-brand-primary/10'
-                    : 'border-border bg-surface hover:border-brand-primary/50'
+                    ? 'bg-[color:var(--accent)]/10 border-brand-primary'
+                    : 'border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <Lock
                     className={`mt-1 h-5 w-5 ${
                       projectData.visibility === 'private'
-                        ? 'text-brand-primary'
-                        : 'text-muted-foreground'
+                        ? 'text-[color:var(--accent)]'
+                        : 'text-[color:var(--muted)]'
                     }`}
                   />
                   <div>
-                    <p className="mb-1 font-semibold text-foreground">Private</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="mb-1 font-semibold text-[color:var(--text)]">Private</p>
+                    <p className="text-sm text-[color:var(--muted)]">
                       Only you can see this project. Perfect for works in progress.
                     </p>
                   </div>
@@ -270,21 +278,21 @@ export default function NewProjectPage() {
                 onClick={() => setProjectData({ ...projectData, visibility: 'org' })}
                 className={`w-full rounded-xl border-2 p-4 text-left transition ${
                   projectData.visibility === 'org'
-                    ? 'border-brand-primary bg-brand-primary/10'
-                    : 'border-border bg-surface hover:border-brand-primary/50'
+                    ? 'bg-[color:var(--accent)]/10 border-brand-primary'
+                    : 'border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <Users
                     className={`mt-1 h-5 w-5 ${
                       projectData.visibility === 'org'
-                        ? 'text-brand-primary'
-                        : 'text-muted-foreground'
+                        ? 'text-[color:var(--accent)]'
+                        : 'text-[color:var(--muted)]'
                     }`}
                   />
                   <div>
-                    <p className="mb-1 font-semibold text-foreground">Band/Organization</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="mb-1 font-semibold text-[color:var(--text)]">Band/Organization</p>
+                    <p className="text-sm text-[color:var(--muted)]">
                       Shared with your band or organization members only.
                     </p>
                   </div>
@@ -295,21 +303,21 @@ export default function NewProjectPage() {
                 onClick={() => setProjectData({ ...projectData, visibility: 'public' })}
                 className={`w-full rounded-xl border-2 p-4 text-left transition ${
                   projectData.visibility === 'public'
-                    ? 'border-brand-primary bg-brand-primary/10'
-                    : 'border-border bg-surface hover:border-brand-primary/50'
+                    ? 'bg-[color:var(--accent)]/10 border-brand-primary'
+                    : 'border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <Globe
                     className={`mt-1 h-5 w-5 ${
                       projectData.visibility === 'public'
-                        ? 'text-brand-primary'
-                        : 'text-muted-foreground'
+                        ? 'text-[color:var(--accent)]'
+                        : 'text-[color:var(--muted)]'
                     }`}
                   />
                   <div>
-                    <p className="mb-1 font-semibold text-foreground">Public</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="mb-1 font-semibold text-[color:var(--text)]">Public</p>
+                    <p className="text-sm text-[color:var(--muted)]">
                       Anyone can discover and listen. Great for released albums.
                     </p>
                   </div>

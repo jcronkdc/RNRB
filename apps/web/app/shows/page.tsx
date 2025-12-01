@@ -138,17 +138,17 @@ export default function ShowsPage() {
 
   if (loading || loadingShows) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
         <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
-          <p className="text-lg text-muted-foreground">Loading shows...</p>
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-[color:var(--accent)]" />
+          <p className="text-lg text-[color:var(--muted)]">Loading shows...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="min-h-screen bg-[color:var(--bg)] px-4 py-12">
       <div className="rnrb-container mx-auto max-w-7xl">
         {/* Toast Notifications */}
         <ToastNotification toasts={toasts} onRemove={removeToast} />
@@ -157,7 +157,7 @@ export default function ShowsPage() {
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl lg:text-5xl">Shows</h1>
-            <p className="text-base text-muted-foreground sm:text-lg lg:text-xl">
+            <p className="text-base text-[color:var(--muted)] sm:text-lg lg:text-xl">
               Manage your gigs, tours, and performances
             </p>
           </div>
@@ -192,7 +192,7 @@ export default function ShowsPage() {
         {/* Search & Filter */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground sm:left-4 sm:h-5 sm:w-5" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)] sm:left-4 sm:h-5 sm:w-5" />
             <input
               type="text"
               placeholder="Search shows, venues, cities..."
@@ -202,7 +202,7 @@ export default function ShowsPage() {
             />
           </div>
           <div className="flex items-center gap-2 overflow-x-auto">
-            <Filter className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <Filter className="h-4 w-4 shrink-0 text-[color:var(--muted)]" />
             {['all', 'scheduled', 'confirmed', 'completed', 'cancelled'].map((status) => (
               <Button
                 key={status}
@@ -219,11 +219,11 @@ export default function ShowsPage() {
         {/* Empty State */}
         {shows.length === 0 ? (
           <Card className="rnrb-card p-12 text-center sm:p-16">
-            <Calendar className="mx-auto mb-6 h-20 w-20 text-muted-foreground/50 sm:h-24 sm:w-24" />
+            <Calendar className="text-[color:var(--muted)]/50 mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
             <h2 className="font-display mb-4 text-2xl font-bold sm:text-3xl">
               No Shows Scheduled Yet
             </h2>
-            <p className="mx-auto mb-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
+            <p className="mx-auto mb-6 max-w-2xl text-base text-[color:var(--muted)] sm:text-lg">
               Start building your touring schedule. Add shows, link them to venues and setlists, and
               keep your band organized for the road ahead.
             </p>
@@ -317,7 +317,7 @@ function ShowCard({
                 {show.status}
               </span>
               {show.tour && (
-                <span className="text-xs text-muted-foreground">• {show.tour.name}</span>
+                <span className="text-xs text-[color:var(--muted)]">• {show.tour.name}</span>
               )}
             </div>
           </div>
@@ -344,13 +344,13 @@ function ShowCard({
 
         {/* Details */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
             <Calendar className="h-4 w-4 shrink-0" />
             <span>{formatDateWithDay(show.date)}</span>
           </div>
 
           {show.venue && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
               <MapPin className="h-4 w-4 shrink-0" />
               <span className="truncate">
                 {show.venue.name}
@@ -361,7 +361,7 @@ function ShowCard({
           )}
 
           {show.show_time && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
               <Clock className="h-4 w-4 shrink-0" />
               <span>Show at {show.show_time}</span>
               {show.doors_time && <span>• Doors at {show.doors_time}</span>}
@@ -369,11 +369,11 @@ function ShowCard({
           )}
 
           {show.setlist && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
               <Music className="h-4 w-4 shrink-0" />
               <Link
                 href={`/projects/${show.setlist.id}`}
-                className="transition hover:text-brand-primary"
+                className="transition hover:text-[color:var(--accent)]"
               >
                 {show.setlist.name}
               </Link>
@@ -383,9 +383,9 @@ function ShowCard({
 
         {/* Stats */}
         {(show.capacity || show.expected_attendance || show.guarantee) && (
-          <div className="mt-4 flex flex-wrap gap-3 border-t border-border pt-4">
+          <div className="mt-4 flex flex-wrap gap-3 border-t border-[color:var(--border)] pt-4">
             {show.expected_attendance && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5 text-xs text-[color:var(--muted)]">
                 <Users className="h-3.5 w-3.5" />
                 <span>
                   {show.expected_attendance}
@@ -394,7 +394,7 @@ function ShowCard({
               </div>
             )}
             {show.guarantee && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5 text-xs text-[color:var(--muted)]">
                 <DollarSign className="h-3.5 w-3.5" />
                 <span>${formatNumber(show.guarantee)} guarantee</span>
               </div>

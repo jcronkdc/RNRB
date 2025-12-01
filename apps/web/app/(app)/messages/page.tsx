@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { createBrowserClient } from '@/lib/supabase';
+import { EmptyStateInline } from '@/components/workshop';
 
 // Dynamically import Ably ChatRoom
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {
@@ -99,22 +100,17 @@ export default function MessagesPage() {
   if (loading) {
     return (
       <div
-        className="relative flex h-screen items-center justify-center overflow-hidden"
+        className="flex h-screen items-center justify-center"
         style={{ background: 'var(--bg)' }}
       >
-        {/* Animated background while loading - Landing page colors */}
-        <div className="absolute inset-0">
-          <div className="gradient-orb gradient-orb-1" />
-          <div className="gradient-orb gradient-orb-2" />
-        </div>
-        <div className="relative text-center">
-          <div className="relative mx-auto mb-6 h-16 w-16">
-            <div
-              className="absolute inset-0 animate-spin rounded-full border-4"
-              style={{ borderColor: 'rgba(255, 99, 71, 0.3)', borderTopColor: 'var(--accent)' }}
-            />
-          </div>
-          <p style={{ color: 'var(--muted)' }}>Loading messages...</p>
+        <div className="flex flex-col items-center gap-3">
+          <div
+            className="border-3 h-8 w-8 animate-spin rounded-full"
+            style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }}
+          />
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+            Loading your conversations...
+          </p>
         </div>
       </div>
     );
@@ -190,20 +186,11 @@ export default function MessagesPage() {
           {/* Conversations */}
           <div className="flex-1 overflow-y-auto p-4">
             {conversations.length === 0 ? (
-              <div className="py-8 text-center">
-                <div
-                  className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl"
-                  style={{ background: 'rgba(255, 99, 71, 0.15)' }}
-                >
-                  <MessageSquare className="h-7 w-7" style={{ color: 'var(--accent)' }} />
-                </div>
-                <p className="mb-2 font-semibold" style={{ color: 'var(--text)' }}>
-                  No conversations yet
-                </p>
-                <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  Start messaging your collaborators
-                </p>
-              </div>
+              <EmptyStateInline
+                text="The best collaborations start with a simple hello."
+                action="Find Musicians"
+                actionHref="/discover"
+              />
             ) : (
               conversations.map((conv) => (
                 <motion.button

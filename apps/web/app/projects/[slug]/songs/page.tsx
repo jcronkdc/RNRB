@@ -2,6 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { Plus, Music, Edit, Play, Users, FileText } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -53,25 +54,52 @@ export default function ProjectSongsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background via-surface/20 to-background">
-        <div className="text-foreground">Loading songs...</div>
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
+        <div className="text-center">
+          <div
+            className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
+            style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+          />
+          <div style={{ color: 'var(--muted)' }}>Loading songs...</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-surface/20 to-background px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ background: 'var(--bg)' }}>
       <div className="container mx-auto max-w-6xl">
+        {/* Logo */}
+        <div className="mb-6">
+          <Link href="/dashboard" className="group inline-block">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={48}
+              height={48}
+              className="transition-opacity duration-200 group-hover:opacity-80"
+            />
+          </Link>
+        </div>
+
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="mb-2 text-4xl font-bold text-foreground">Songs</h1>
-            <p className="text-xl text-muted-foreground">
+            <h1 className="mb-2 text-4xl font-bold" style={{ color: 'var(--text)' }}>
+              Songs
+            </h1>
+            <p className="text-xl" style={{ color: 'var(--muted)' }}>
               Creative threads branching from{' '}
-              <span className="text-brand-primary">{project.name}</span>
+              <span style={{ color: 'var(--accent)' }}>{project.name}</span>
             </p>
           </div>
           <Link href={`/projects/${slug}/songs/new`}>
-            <Button className="flex items-center gap-2 rounded-lg bg-brand-primary px-6 py-3 font-semibold text-brand-primary-foreground hover:bg-brand-primary/90">
+            <Button
+              className="flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white"
+              style={{ background: 'var(--accent)', boxShadow: '0 4px 20px var(--accent-glow)' }}
+            >
               <Plus className="h-5 w-5" />
               New Song
             </Button>
@@ -79,15 +107,27 @@ export default function ProjectSongsPage() {
         </div>
 
         {songs.length === 0 ? (
-          <Card className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 p-12 text-center">
-            <Music className="mx-auto mb-4 h-16 w-16 text-brand-primary" />
-            <h2 className="mb-4 text-2xl font-semibold text-foreground">No songs yet</h2>
-            <p className="mx-auto mb-6 max-w-2xl text-muted-foreground">
+          <Card
+            className="p-12 text-center"
+            style={{
+              background:
+                'linear-gradient(to right, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1))',
+              border: '1px solid var(--border)',
+            }}
+          >
+            <Music className="mx-auto mb-4 h-16 w-16" style={{ color: 'var(--accent)' }} />
+            <h2 className="mb-4 text-2xl font-semibold" style={{ color: 'var(--text)' }}>
+              No songs yet
+            </h2>
+            <p className="mx-auto mb-6 max-w-2xl" style={{ color: 'var(--muted)' }}>
               Songs are the creative threads that make up your project. Each song carries lyrics,
               chords, collaborators, and revenue - all interconnected.
             </p>
             <Link href={`/projects/${slug}/songs/new`}>
-              <Button className="inline-flex items-center gap-3 rounded-lg bg-brand-primary px-8 py-4 text-lg font-semibold text-brand-primary-foreground hover:bg-brand-primary/90">
+              <Button
+                className="inline-flex items-center gap-3 rounded-lg px-8 py-4 text-lg font-semibold text-white"
+                style={{ background: 'var(--accent)', boxShadow: '0 4px 20px var(--accent-glow)' }}
+              >
                 <Plus className="h-6 w-6" />
                 Create Your First Song
               </Button>
@@ -96,16 +136,22 @@ export default function ProjectSongsPage() {
         ) : (
           <div className="space-y-4">
             {songs.map((song) => (
-              <Card key={song.id} className="p-6 transition hover:shadow-lg">
+              <Card
+                key={song.id}
+                className="p-6 transition hover:shadow-lg"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <h3 className="mb-2 text-xl font-semibold text-foreground">{song.title}</h3>
-                    <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                    <h3 className="mb-2 text-xl font-semibold" style={{ color: 'var(--text)' }}>
+                      {song.title}
+                    </h3>
+                    <div className="flex flex-wrap gap-3 text-sm" style={{ color: 'var(--muted)' }}>
                       {song.key && <span>Key: {song.key}</span>}
-                      {song.tempo && <span>⏱️ {song.tempo} BPM</span>}
+                      {song.tempo && <span>{song.tempo} BPM</span>}
                       {song.duration && (
                         <span>
-                          ⏱️ {Math.floor(song.duration / 60)}:
+                          {Math.floor(song.duration / 60)}:
                           {String(song.duration % 60).padStart(2, '0')}
                         </span>
                       )}

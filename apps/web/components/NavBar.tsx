@@ -26,7 +26,7 @@ const FEATURES: NavLink[] = [
   {
     label: 'Songwriting Studio',
     href: '/features/songwriting',
-    description: 'AI-powered chord progression & lyrics',
+    description: 'Chord progressions, lyrics, version control',
   },
   {
     label: 'Real-Time Collaboration',
@@ -34,9 +34,9 @@ const FEATURES: NavLink[] = [
     description: 'Video calls, screen sharing, live chat',
   },
   {
-    label: 'AI Music Generation',
+    label: 'Music Creation Tools',
     href: '/features/ai-music',
-    description: 'Create tracks with AI assistance',
+    description: 'Backing tracks, arrangements, demos',
   },
   {
     label: 'Project Management',
@@ -54,7 +54,7 @@ const SOLUTIONS: NavLink[] = [
   {
     label: 'For Songwriters',
     href: '/solutions/songwriters',
-    description: 'AI-powered tools, copyright protection, find collaborators',
+    description: 'Creative tools, copyright protection, find collaborators',
   },
   {
     label: 'For Studios',

@@ -107,23 +107,21 @@ export default function HomePage() {
               </h1>
 
               {/* Tagline */}
-              <h2 className="tagline mb-6">The All-In-One Platform for Modern Musicians</h2>
+              <h2 className="tagline mb-6">Your Workshop. Your Sound. Your Story.</h2>
 
               {/* Description */}
               <div className="hero-description-wrapper">
                 <p className="hero-description mb-10 text-xl" data-immutable="true">
-                  Whether you're a songwriter needing better tools, new to the business and finding
-                  gigs, discovering your roots in gospel or Appalachian folk, inventing country
-                  metal, or following Dylan's path to say what you need to say. This is where your
-                  music finds its voice. Collaborate with artists worldwide in ways rarely seen
-                  before.
+                  This isn't just software. It's a home for your music. Write, collaborate, perform,
+                  and get paid—all in one place. Whether you're a bedroom producer, touring artist,
+                  or just someone with a melody that won't leave your head— you belong here.
                 </p>
               </div>
 
               {/* CTA Buttons */}
               <div className="hero-buttons mb-12 flex flex-wrap items-center justify-center gap-4">
                 <Link href="/auth?signup=true" className="button hero-button-primary text-lg">
-                  <span>Start Free Today</span>
+                  <span>Enter Your Workshop →</span>
                   <svg
                     className="ml-2 h-5 w-5"
                     fill="none"
@@ -163,19 +161,19 @@ export default function HomePage() {
                 </Link>
               </div>
 
-              {/* Quick Stats */}
+              {/* Quick Stats - Story-Driven */}
               <div className="hero-stats grid grid-cols-1 gap-6 text-center sm:grid-cols-3">
                 <div className="stat-item">
+                  <div className="stat-number">Your</div>
+                  <div className="stat-label">Music, Your Rights</div>
+                </div>
+                <div className="stat-item">
                   <div className="stat-number">75+</div>
-                  <div className="stat-label">Features</div>
+                  <div className="stat-label">Tools in One Place</div>
                 </div>
                 <div className="stat-item">
-                  <div className="stat-number">∞</div>
-                  <div className="stat-label">Creativity</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-number">1</div>
-                  <div className="stat-label">Platform</div>
+                  <div className="stat-number">$0</div>
+                  <div className="stat-label">To Start Creating</div>
                 </div>
               </div>
             </div>
@@ -196,11 +194,11 @@ export default function HomePage() {
           <div className="container">
             <div className="section-header">
               <h2 id="problem-heading" className="section-title">
-                Musicians Deserve Better
+                You Deserve Better Than This
               </h2>
               <p className="section-subtitle">
-                Today's artists juggle 7+ apps just to create, collaborate, perform, and get paid.
-                It's chaos. We fixed it.
+                You shouldn't need 7 apps, 3 subscriptions, and a spreadsheet just to make music. We
+                built something different.
               </p>
             </div>
 
@@ -232,622 +230,777 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Feature Showcase - Interactive Cards */}
+        {/* Your Workshop - Story-Driven Feature Showcase */}
         <section
           id="features"
-          className="page-section feature-showcase"
+          className="workshop-features"
           style={{ borderTop: '1px solid var(--border)' }}
           aria-labelledby="features-heading"
         >
-          <div className="container">
-            <div className="section-header">
-              <h2 id="features-heading" className="section-title">
-                Everything You Need. Nothing You Don't.
+          <div className="container py-20 md:py-28">
+            {/* Section Header */}
+            <div className="mx-auto mb-16 max-w-3xl text-center">
+              <p
+                className="mb-3 text-sm font-medium uppercase tracking-widest"
+                style={{ color: 'var(--gold)' }}
+              >
+                Your Workshop, Fully Equipped
+              </p>
+              <h2
+                id="features-heading"
+                className="font-display mb-6 text-3xl font-normal md:text-4xl lg:text-5xl"
+                style={{ color: 'var(--text)' }}
+              >
+                Every tool you need.
+                <br />
+                <span style={{ color: 'var(--accent)' }}>Nothing you don't.</span>
               </h2>
-              <p className="section-subtitle">
-                From writing your first chord to managing your world tour—all in one place.
+              <p className="text-lg md:text-xl" style={{ color: 'var(--text-secondary)' }}>
+                From the spark of an idea at 3am to your first sold-out show— we're with you every
+                step of the way.
               </p>
             </div>
 
-            {/* Primary Features - Large Cards */}
-            <div className="primary-features mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* AI Songwriting */}
-              <Link href="/features/songwriting" className="feature-card-large group">
+            {/* Three Pillars - The Heart of the Workshop */}
+            <div className="mb-20 grid gap-8 md:grid-cols-3">
+              {/* Pillar 1: The Blank Page */}
+              <Link
+                href="/songwriting"
+                className="workshop-pillar group relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:scale-[1.02]"
+                style={{
+                  background: 'linear-gradient(180deg, var(--panel) 0%, var(--bg-elevated) 100%)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                {/* Warm glow effect */}
                 <div
-                  className="feature-card-bg"
-                  style={{ '--accent-color': '#ec4899' } as React.CSSProperties}
-                ></div>
-                <div className="feature-card-content">
-                  <div
-                    className="feature-icon-large"
-                    style={{ background: 'rgba(236, 72, 153, 0.15)' }}
+                  className="absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-20 blur-3xl transition-opacity group-hover:opacity-40"
+                  style={{ background: 'var(--accent)' }}
+                />
+
+                {/* Custom Icon - Pencil/Notes */}
+                <div
+                  className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl"
+                  style={{ background: 'var(--accent-glow)' }}
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    style={{ color: 'var(--accent)' }}
                   >
-                    <svg
-                      className="h-8 w-8"
-                      style={{ color: '#ec4899' }}
-                      fill="none"
+                    <path
+                      d="M12 19.5L19.5 12L21 13.5L13.5 21L12 19.5Z"
                       stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="feature-badge">AI-Powered</div>
-                    <h3 className="feature-title-large">Songwriting Studio</h3>
-                    <p className="feature-desc-large">
-                      Complete songwriting environment with version control, multi-track mixer,
-                      real-time key detection, AI chord/lyric suggestions, split sheets, copyright
-                      registration guidance, and ISWC/ISRC tracking.
-                    </p>
-                    <ul className="feature-list">
-                      <li>✓ Version control (v1, v2, Radio Edit)</li>
-                      <li>✓ Multi-track stems mixer</li>
-                      <li>✓ AI chord & lyric suggestions</li>
-                      <li>✓ Split sheets & copyright tools</li>
-                    </ul>
-                    <span className="feature-link">Explore Songwriting →</span>
-                  </div>
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M4 20H8L18 10L14 6L4 16V20Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M3 3L7 7"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                    <circle cx="5" cy="5" r="1.5" fill="currentColor" />
+                    <path
+                      d="M14 6L18 10"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </div>
+
+                <p
+                  className="mb-2 text-xs font-medium uppercase tracking-widest"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  Create
+                </p>
+
+                <h3 className="font-display mb-4 text-2xl" style={{ color: 'var(--text)' }}>
+                  The Blank Page
+                </h3>
+
+                <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  That 3am melody won't wait. Capture ideas instantly. Shape them into songs. Get
+                  unstuck with AI that suggests—never dictates. Your voice, amplified.
+                </p>
+
+                {/* Benefits - not checkmarks */}
+                <ul className="mb-6 space-y-2">
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    Chord progressions & lyric suggestions
+                  </li>
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    Version control—never lose an idea
+                  </li>
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    Voice memos to capture inspiration
+                  </li>
+                </ul>
+
+                <span
+                  className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  Start Writing
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14m-7-7 7 7-7 7" />
+                  </svg>
+                </span>
               </Link>
 
-              {/* Real-Time Collaboration */}
-              <Link href="/features/collaboration" className="feature-card-large group">
+              {/* Pillar 2: The Session */}
+              <Link
+                href="/collaboration"
+                className="workshop-pillar group relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:scale-[1.02]"
+                style={{
+                  background: 'linear-gradient(180deg, var(--panel) 0%, var(--bg-elevated) 100%)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                {/* Warm glow effect */}
                 <div
-                  className="feature-card-bg"
-                  style={{ '--accent-color': '#3b82f6' } as React.CSSProperties}
-                ></div>
-                <div className="feature-card-content">
-                  <div
-                    className="feature-icon-large"
-                    style={{ background: 'rgba(59, 130, 246, 0.15)' }}
+                  className="absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-20 blur-3xl transition-opacity group-hover:opacity-40"
+                  style={{ background: 'var(--gold)' }}
+                />
+
+                {/* Custom Icon - People/Connection */}
+                <div
+                  className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl"
+                  style={{ background: 'var(--gold-dim)' }}
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    style={{ color: 'var(--gold)' }}
                   >
-                    <svg
-                      className="h-8 w-8"
-                      style={{ color: '#3b82f6' }}
-                      fill="none"
+                    <circle cx="9" cy="7" r="3" stroke="currentColor" strokeWidth="1.5" />
+                    <circle cx="17" cy="7" r="2" stroke="currentColor" strokeWidth="1.5" />
+                    <path
+                      d="M3 21V18C3 15.7909 4.79086 14 7 14H11C13.2091 14 15 15.7909 15 18V21"
                       stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <div
-                      className="feature-badge"
-                      style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6' }}
-                    >
-                      Live Sessions
-                    </div>
-                    <h3 className="feature-title-large">Real-Time Collaboration</h3>
-                    <p className="feature-desc-large">
-                      HD video calls (up to 50 people), screen sharing, real-time CRDT editing
-                      (Yjs), instant messaging with voice messages, presence tracking, multi-cursor
-                      editing, and pinned comments on lyrics/audio.
-                    </p>
-                    <ul className="feature-list">
-                      <li>✓ HD Video (Daily.co) + Screen share</li>
-                      <li>✓ Real-time sync (Ably + Yjs CRDT)</li>
-                      <li>✓ Multi-cursor editing</li>
-                      <li>✓ Voice messages + reactions</li>
-                    </ul>
-                    <span className="feature-link" style={{ color: '#3b82f6' }}>
-                      Explore Collaboration →
-                    </span>
-                  </div>
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M17 14C19.2091 14 21 15.7909 21 18V21"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M12 10L14 12L12 14"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </div>
+
+                <p
+                  className="mb-2 text-xs font-medium uppercase tracking-widest"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  Connect
+                </p>
+
+                <h3 className="font-display mb-4 text-2xl" style={{ color: 'var(--text)' }}>
+                  The Session
+                </h3>
+
+                <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Your bandmate's in Berlin. Your producer's in LA. Jump on a call, share your
+                  screen, write together in real-time. Distance disappears.
+                </p>
+
+                {/* Benefits */}
+                <ul className="mb-6 space-y-2">
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    HD video calls with up to 50 people
+                  </li>
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    See each other's cursors as you write
+                  </li>
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    Share your DAW in real-time
+                  </li>
+                </ul>
+
+                <span
+                  className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
+                  style={{ color: 'var(--gold)' }}
+                >
+                  Start a Session
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14m-7-7 7 7-7 7" />
+                  </svg>
+                </span>
               </Link>
 
-              {/* Website Builder */}
-              <Link href="/features/website-builder" className="feature-card-large group">
+              {/* Pillar 3: The Stage */}
+              <Link
+                href="/features/website-builder"
+                className="workshop-pillar group relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:scale-[1.02]"
+                style={{
+                  background: 'linear-gradient(180deg, var(--panel) 0%, var(--bg-elevated) 100%)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                {/* Warm glow effect */}
                 <div
-                  className="feature-card-bg"
-                  style={{ '--accent-color': '#06b6d4' } as React.CSSProperties}
-                ></div>
-                <div className="feature-card-content">
-                  <div
-                    className="feature-icon-large"
-                    style={{ background: 'rgba(6, 182, 212, 0.15)' }}
+                  className="absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-20 blur-3xl transition-opacity group-hover:opacity-40"
+                  style={{ background: 'var(--sage)' }}
+                />
+
+                {/* Custom Icon - Stage/Globe */}
+                <div
+                  className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl"
+                  style={{ background: 'var(--sage-dim)' }}
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    style={{ color: 'var(--sage)' }}
                   >
-                    <svg
-                      className="h-8 w-8"
-                      style={{ color: '#06b6d4' }}
-                      fill="none"
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+                    <path
+                      d="M12 3C12 3 8 7.5 8 12C8 16.5 12 21 12 21"
                       stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <div
-                      className="feature-badge"
-                      style={{ background: 'rgba(6, 182, 212, 0.15)', color: '#06b6d4' }}
-                    >
-                      Digital Presence
-                    </div>
-                    <h3 className="feature-title-large">Website Builder</h3>
-                    <p className="feature-desc-large">
-                      Launch a stunning site in 60 seconds. Auto-import your music, shows, and
-                      profile, plug in a custom domain, and watch analytics roll in.
-                    </p>
-                    <ul className="feature-list">
-                      <li>✓ Quick Start pulls in songs, bio, tour dates</li>
-                      <li>✓ 8 pro templates + full theme customization</li>
-                      <li>✓ Guided custom domain setup & auto SSL</li>
-                      <li>✓ Built-in analytics, contact + mailing list</li>
-                    </ul>
-                    <span className="feature-link" style={{ color: '#06b6d4' }}>
-                      Explore Website Builder →
-                    </span>
-                  </div>
+                      strokeWidth="1.5"
+                    />
+                    <path
+                      d="M12 3C12 3 16 7.5 16 12C16 16.5 12 21 12 21"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                    <path d="M3 12H21" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M4.5 7.5H19.5" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M4.5 16.5H19.5" stroke="currentColor" strokeWidth="1.5" />
+                  </svg>
                 </div>
+
+                <p
+                  className="mb-2 text-xs font-medium uppercase tracking-widest"
+                  style={{ color: 'var(--muted)' }}
+                >
+                  Grow
+                </p>
+
+                <h3 className="font-display mb-4 text-2xl" style={{ color: 'var(--text)' }}>
+                  The Stage
+                </h3>
+
+                <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  Your music deserves to be heard. Launch a stunning website in minutes. Plan your
+                  tour. Build your audience. Get paid for your work.
+                </p>
+
+                {/* Benefits */}
+                <ul className="mb-6 space-y-2">
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    Professional website in 60 seconds
+                  </li>
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    Tour planning with smart routing
+                  </li>
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    Track revenue from all sources
+                  </li>
+                </ul>
+
+                <span
+                  className="inline-flex items-center gap-2 text-sm font-medium transition-colors"
+                  style={{ color: 'var(--sage)' }}
+                >
+                  Take the Stage
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14m-7-7 7 7-7 7" />
+                  </svg>
+                </span>
               </Link>
             </div>
 
-            {/* Secondary Features Grid - Expanded */}
-            <div className="secondary-features grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {/* Tour Management */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(251, 146, 60, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-orange-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Tour Management</h4>
-                <p className="feature-desc-small">
-                  Book venues, manage shows, track revenue with AI route optimization
-                </p>
-              </div>
+            {/* The Full Toolkit - Grouped by Purpose */}
+            <div className="mb-16">
+              <h3
+                className="mb-8 text-center text-lg font-medium"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                And that's just the beginning...
+              </h3>
 
-              {/* Gig Calendar */}
-              <div className="feature-card-small group">
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {/* Category: Protect Your Work */}
                 <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(168, 85, 247, 0.1)' }}
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
                 >
-                  <svg
-                    className="h-5 w-5 text-violet-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'var(--gold-dim)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: 'var(--gold)' }}
+                      >
+                        <path
+                          d="M12 2L4 6V12C4 16.5 7.5 20.5 12 22C16.5 20.5 20 16.5 20 12V6L12 2Z"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M9 12L11 14L15 10"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Protect Your Work
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--gold)' }}
+                      />
+                      Copyright registration guidance
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--gold)' }}
+                      />
+                      Split sheet generation & sharing
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--gold)' }}
+                      />
+                      ISWC & ISRC tracking
+                    </li>
+                  </ul>
                 </div>
-                <h4 className="feature-title-small">Gig Calendar</h4>
-                <p className="feature-desc-small">
-                  Visual calendar with conflict detection and revenue tracking
-                </p>
-              </div>
 
-              {/* Smart Setlists */}
-              <div className="feature-card-small group">
+                {/* Category: Stay Organized */}
                 <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(139, 92, 246, 0.1)' }}
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
                 >
-                  <svg
-                    className="h-5 w-5 text-purple-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                    />
-                  </svg>
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'var(--sage-dim)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: 'var(--sage)' }}
+                      >
+                        <path
+                          d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V9C21 7.89543 20.1046 7 19 7H13L11 5H5C3.89543 5 3 5.89543 3 7Z"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Stay Organized
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--sage)' }}
+                      />
+                      Project folders & milestones
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--sage)' }}
+                      />
+                      Cloud storage with drag & drop
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--sage)' }}
+                      />
+                      Version control for every song
+                    </li>
+                  </ul>
                 </div>
-                <h4 className="feature-title-small">Smart Setlists</h4>
-                <p className="feature-desc-small">
-                  AI-curated setlists analyzing tempo flow, key transitions & energy
-                </p>
-              </div>
 
-              {/* Screen Sharing */}
-              <div className="feature-card-small group">
+                {/* Category: Hit the Road */}
                 <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(59, 130, 246, 0.1)' }}
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
                 >
-                  <svg
-                    className="h-5 w-5 text-blue-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'rgba(232, 93, 59, 0.1)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: 'var(--accent)' }}
+                      >
+                        <path
+                          d="M9 20L5 16M5 16L9 12M5 16H15C17.2091 16 19 14.2091 19 12V4"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle cx="19" cy="4" r="2" stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Hit the Road
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--accent)' }}
+                      />
+                      Tour planner with smart routing
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--accent)' }}
+                      />
+                      Venue database & contacts
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span
+                        className="h-1 w-1 rounded-full"
+                        style={{ background: 'var(--accent)' }}
+                      />
+                      Smart setlist builder
+                    </li>
+                  </ul>
                 </div>
-                <h4 className="feature-title-small">Screen Sharing</h4>
-                <p className="feature-desc-small">
-                  Share your DAW in real-time during video sessions
-                </p>
-              </div>
 
-              {/* Studio Recording */}
-              <div className="feature-card-small group">
+                {/* Category: Get Paid */}
                 <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(244, 63, 94, 0.1)' }}
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
                 >
-                  <svg
-                    className="h-5 w-5 text-rose-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                    />
-                  </svg>
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'rgba(34, 197, 94, 0.1)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: '#22c55e' }}
+                      >
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+                        <path
+                          d="M12 7V17M15 9.5C15 8.12 13.66 7 12 7C10.34 7 9 8.12 9 9.5C9 10.88 10.34 12 12 12C13.66 12 15 13.12 15 14.5C15 15.88 13.66 17 12 17C10.34 17 9 15.88 9 14.5"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Get Paid
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#22c55e' }} />
+                      Revenue dashboard
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#22c55e' }} />
+                      Royalty tracking
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#22c55e' }} />
+                      Ticket & merch sales
+                    </li>
+                  </ul>
                 </div>
-                <h4 className="feature-title-small">Studio Recording</h4>
-                <p className="feature-desc-small">
-                  Record sessions with automatic cloud backup and project integration
-                </p>
-              </div>
 
-              {/* AI Assistant */}
-              <div className="feature-card-small group">
+                {/* Category: Find Your People */}
                 <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(236, 72, 153, 0.1)' }}
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
                 >
-                  <svg
-                    className="h-5 w-5 text-pink-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                    />
-                  </svg>
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'rgba(139, 92, 246, 0.1)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: '#8b5cf6' }}
+                      >
+                        <circle cx="9" cy="7" r="3" stroke="currentColor" strokeWidth="1.5" />
+                        <circle cx="17" cy="7" r="2" stroke="currentColor" strokeWidth="1.5" />
+                        <path
+                          d="M3 21V18C3 15.79 4.79 14 7 14H11C13.21 14 15 15.79 15 18V21"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                        <path
+                          d="M17 14C19.21 14 21 15.79 21 18V21"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Find Your People
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#8b5cf6' }} />
+                      Musician discovery
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#8b5cf6' }} />
+                      Direct messaging
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#8b5cf6' }} />
+                      Collaboration requests
+                    </li>
+                  </ul>
                 </div>
-                <h4 className="feature-title-small">AI Assistant</h4>
-                <p className="feature-desc-small">
-                  Claude-powered help for lyrics, chords, and creative blocks
-                </p>
-              </div>
 
-              {/* Copyright Assistant */}
-              <div className="feature-card-small group">
+                {/* Category: AI That Assists */}
                 <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(234, 179, 8, 0.1)' }}
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
                 >
-                  <svg
-                    className="h-5 w-5 text-yellow-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'rgba(236, 72, 153, 0.1)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: '#ec4899' }}
+                      >
+                        <path
+                          d="M12 2V4M12 20V22M4 12H2M6.31 6.31L4.9 4.9M17.69 6.31L19.1 4.9M6.31 17.69L4.9 19.1M17.69 17.69L19.1 19.1M22 12H20"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                        <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      AI That Assists
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#ec4899' }} />
+                      Chord suggestions
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#ec4899' }} />
+                      Lyric inspiration
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#ec4899' }} />
+                      Tour route optimization
+                    </li>
+                  </ul>
                 </div>
-                <h4 className="feature-title-small">Copyright Registration</h4>
-                <p className="feature-desc-small">
-                  Step-by-step guidance for protecting your work with copyright.gov links
-                </p>
-              </div>
-
-              {/* Split Sheets */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(34, 197, 94, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-green-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Split Sheets</h4>
-                <p className="feature-desc-small">
-                  Generate and share legal split agreements with email delivery
-                </p>
-              </div>
-
-              {/* Multi-Cursor Editing */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(99, 102, 241, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-indigo-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Multi-Cursor Editing</h4>
-                <p className="feature-desc-small">
-                  See collaborators' cursors and edits in real-time with Yjs CRDT
-                </p>
-              </div>
-
-              {/* Project Management */}
-              <Link href="/features/project-management" className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(20, 184, 166, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-teal-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Project Management</h4>
-                <p className="feature-desc-small">
-                  Organize songs, milestones, files with version control & permissions
-                </p>
-              </Link>
-
-              {/* Community Features */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(99, 102, 241, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-indigo-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Community & Discovery</h4>
-                <p className="feature-desc-small">
-                  Musician profiles, follow artists, discover talent, networking
-                </p>
-              </div>
-
-              {/* Voice Memos */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(6, 182, 212, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-cyan-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Voice Memos</h4>
-                <p className="feature-desc-small">
-                  Record ideas instantly, attach to songs, playback with controls
-                </p>
-              </div>
-
-              {/* Media Library */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(217, 70, 239, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-fuchsia-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Media Library</h4>
-                <p className="feature-desc-small">
-                  Cloud storage for all your music files with drag-drop upload
-                </p>
-              </div>
-
-              {/* Website Builder */}
-              <Link href="/features/website-builder" className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(56, 189, 248, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-sky-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Website Builder</h4>
-                <p className="feature-desc-small">
-                  One-click pro sites with custom domains, analytics, auto-sync music & tours
-                </p>
-              </Link>
-
-              {/* Venue Database */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(245, 158, 11, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-amber-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Venue Database</h4>
-                <p className="feature-desc-small">
-                  Track venue details, contacts, capacity, and booking history
-                </p>
-              </div>
-
-              {/* Revenue Tracking */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(34, 197, 94, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-emerald-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Revenue Tracking</h4>
-                <p className="feature-desc-small">
-                  Track royalties, ticket sales, merch—all in one dashboard
-                </p>
-              </div>
-
-              {/* Notifications & Activity */}
-              <div className="feature-card-small group">
-                <div
-                  className="feature-icon-small"
-                  style={{ background: 'rgba(168, 85, 247, 0.1)' }}
-                >
-                  <svg
-                    className="h-5 w-5 text-violet-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
-                </div>
-                <h4 className="feature-title-small">Real-Time Notifications</h4>
-                <p className="feature-desc-small">
-                  Activity feed with comments, mentions, invites & updates
-                </p>
               </div>
             </div>
 
-            <div className="mt-12 text-center">
-              <Link href="#demo" className="button secondary">
-                See All Features In Action →
+            {/* CTA */}
+            <div className="text-center">
+              <p className="mb-6 text-lg" style={{ color: 'var(--text-secondary)' }}>
+                75+ tools. One home. Zero friction.
+              </p>
+              <Link
+                href="/auth?signup=true"
+                className="inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-medium text-white transition-all hover:scale-105"
+                style={{
+                  background: 'var(--accent)',
+                  boxShadow: '0 8px 24px var(--accent-glow)',
+                }}
+              >
+                Enter Your Workshop
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 12h14m-7-7 7 7-7 7" />
+                </svg>
               </Link>
             </div>
           </div>
@@ -1041,140 +1194,393 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Pricing - Enhanced */}
+        {/* Pricing - Workshop Style */}
         <section
           id="pricing"
-          className="page-section"
+          className="py-20 md:py-28"
           style={{ borderTop: '1px solid var(--border)' }}
           aria-labelledby="pricing-heading"
         >
-          <div className="container">
-            <div className="section-header">
-              <h2 id="pricing-heading" className="section-title">
-                Simple, Honest Pricing
+          <div className="container mx-auto max-w-6xl px-4">
+            {/* Section Header */}
+            <div className="mx-auto mb-16 max-w-2xl text-center">
+              <p
+                className="mb-3 text-sm font-medium uppercase tracking-widest"
+                style={{ color: 'var(--gold)' }}
+              >
+                Invest in Your Craft
+              </p>
+              <h2
+                id="pricing-heading"
+                className="font-display mb-4 text-3xl font-normal md:text-4xl"
+                style={{ color: 'var(--text)' }}
+              >
+                Your music is worth it.
+                <br />
+                <span style={{ color: 'var(--text-secondary)' }}>Our pricing isn't a barrier.</span>
               </h2>
-              <p className="section-subtitle">Start free, upgrade when you're ready. No tricks.</p>
+              <p style={{ color: 'var(--muted)' }}>
+                Start free. Grow at your own pace. No tricks, no hidden fees.
+              </p>
             </div>
 
-            <div className="pricing-grid mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3">
-              {/* Free Plan */}
-              <div className="pricing-card">
-                <div className="pricing-header">
-                  <h3>Free</h3>
-                  <p className="pricing-subtitle">Perfect for getting started</p>
-                  <div className="pricing-amount">
-                    <span className="price">$0</span>
-                    <span className="period">forever</span>
+            {/* Pricing Cards */}
+            <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+              {/* Free Plan - The Spark */}
+              <div
+                className="relative rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02]"
+                style={{
+                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                <div className="mb-6">
+                  <p
+                    className="mb-1 text-xs font-medium uppercase tracking-wider"
+                    style={{ color: 'var(--muted)' }}
+                  >
+                    The Spark
+                  </p>
+                  <h3 className="mb-2 text-2xl font-semibold" style={{ color: 'var(--text)' }}>
+                    Free
+                  </h3>
+                  <p className="mb-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    For those just getting started. Plant the seed.
+                  </p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-bold" style={{ color: 'var(--text)' }}>
+                      $0
+                    </span>
+                    <span style={{ color: 'var(--muted)' }}>forever</span>
                   </div>
                 </div>
-                <ul className="pricing-features">
-                  <li>
-                    <span className="check">✓</span> 3 projects
+
+                <ul className="mb-6 space-y-3">
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    3 projects to experiment with
                   </li>
-                  <li>
-                    <span className="check">✓</span> 1 collaborator per project
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    Invite 1 collaborator per project
                   </li>
-                  <li>
-                    <span className="check">✓</span> 1 GB storage
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    1 GB cloud storage
                   </li>
-                  <li>
-                    <span className="check">✓</span> Real-time collaboration
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    Real-time collaboration
                   </li>
-                  <li>
-                    <span className="check">✓</span> Basic songwriting tools
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    Core songwriting tools
                   </li>
-                  <li>
-                    <span className="check">✓</span> Community support
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    Community support
                   </li>
                 </ul>
-                <Link href="/auth?signup=true" className="button secondary w-full">
-                  Get Started Free
+
+                <Link
+                  href="/auth?signup=true"
+                  className="block w-full rounded-xl py-3 text-center text-sm font-medium transition-colors"
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                  }}
+                >
+                  Start Free →
                 </Link>
               </div>
 
-              {/* Creator Plan */}
-              <div className="pricing-card">
-                <div className="pricing-header">
-                  <h3>Creator</h3>
-                  <p className="pricing-subtitle">For serious musicians</p>
-                  <div className="pricing-amount">
-                    <span className="price">$17.99</span>
-                    <span className="period">/month</span>
+              {/* Creator Plan - The Grind */}
+              <div
+                className="relative rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02]"
+                style={{
+                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                <div className="mb-6">
+                  <p
+                    className="mb-1 text-xs font-medium uppercase tracking-wider"
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    The Grind
+                  </p>
+                  <h3 className="mb-2 text-2xl font-semibold" style={{ color: 'var(--text)' }}>
+                    Creator
+                  </h3>
+                  <p className="mb-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    For musicians ready to level up. This is where it gets real.
+                  </p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-bold" style={{ color: 'var(--text)' }}>
+                      $17.99
+                    </span>
+                    <span style={{ color: 'var(--muted)' }}>/month</span>
                   </div>
                 </div>
-                <ul className="pricing-features">
-                  <li>
-                    <span className="check">✓</span> 10 projects
+
+                <ul className="mb-6 space-y-3">
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    10 projects—room to grow
                   </li>
-                  <li>
-                    <span className="check">✓</span> 5 collaborators per project
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    5 collaborators per project
                   </li>
-                  <li>
-                    <span className="check">✓</span> 10 GB storage
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    10 GB storage for your catalog
                   </li>
-                  <li>
-                    <span className="check">✓</span> AI-powered songwriting
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    AI chord & lyric suggestions
                   </li>
-                  <li>
-                    <span className="check">✓</span> AI lyrics assistant
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    Smart tour routing
                   </li>
-                  <li>
-                    <span className="check">✓</span> AI tour routing
-                  </li>
-                  <li>
-                    <span className="check">✓</span> Priority support
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    Priority support
                   </li>
                 </ul>
-                <Link href="/auth?signup=true&plan=creator" className="button secondary w-full">
-                  Start 7-Day Trial
+
+                <Link
+                  href="/auth?signup=true&plan=creator"
+                  className="block w-full rounded-xl py-3 text-center text-sm font-medium transition-colors"
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid var(--gold)',
+                    color: 'var(--gold)',
+                  }}
+                >
+                  Try Free for 7 Days →
                 </Link>
               </div>
 
-              {/* Studio Plan - Most Popular */}
-              <div className="pricing-card pricing-card-featured">
-                <div className="pricing-badge">MOST POPULAR</div>
-                <div className="pricing-header">
-                  <h3>Studio</h3>
-                  <p className="pricing-subtitle">For professionals & teams</p>
-                  <div className="pricing-amount">
-                    <span className="price">$29.99</span>
-                    <span className="period">/month</span>
+              {/* Studio Plan - The Machine */}
+              <div
+                className="relative rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02]"
+                style={{
+                  background:
+                    'linear-gradient(135deg, var(--bg-elevated) 0%, rgba(232, 93, 59, 0.05) 100%)',
+                  border: '1px solid var(--accent)',
+                  boxShadow: '0 0 40px var(--accent-glow)',
+                }}
+              >
+                {/* Popular Badge */}
+                <div
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-xs font-semibold"
+                  style={{
+                    background: 'var(--accent)',
+                    color: 'white',
+                  }}
+                >
+                  Most Popular
+                </div>
+
+                <div className="mb-6 pt-2">
+                  <p
+                    className="mb-1 text-xs font-medium uppercase tracking-wider"
+                    style={{ color: 'var(--accent)' }}
+                  >
+                    The Machine
+                  </p>
+                  <h3 className="mb-2 text-2xl font-semibold" style={{ color: 'var(--text)' }}>
+                    Studio
+                  </h3>
+                  <p className="mb-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    For professionals who mean business. No limits.
+                  </p>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-bold" style={{ color: 'var(--text)' }}>
+                      $29.99
+                    </span>
+                    <span style={{ color: 'var(--muted)' }}>/month</span>
                   </div>
                 </div>
-                <ul className="pricing-features">
-                  <li>
-                    <span className="check">✓</span> Unlimited projects
+
+                <ul className="mb-6 space-y-3">
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    Unlimited projects
                   </li>
-                  <li>
-                    <span className="check">✓</span> Unlimited collaborators
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    Unlimited collaborators
                   </li>
-                  <li>
-                    <span className="check">✓</span> 100 GB storage
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    100 GB storage
                   </li>
-                  <li>
-                    <span className="check">✓</span> All AI features
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    All AI tools unlocked
                   </li>
-                  <li>
-                    <span className="check">✓</span> HD video calls (50 people)
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    HD video calls (50 people)
                   </li>
-                  <li>
-                    <span className="check">✓</span> Screen sharing
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    Screen sharing & recording
                   </li>
-                  <li>
-                    <span className="check">✓</span> Advanced analytics
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    Advanced analytics
                   </li>
-                  <li>
-                    <span className="check">✓</span> Dedicated support
+                  <li
+                    className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ background: 'var(--accent)' }}
+                    />
+                    Dedicated support
                   </li>
                 </ul>
-                <Link href="/auth?signup=true&plan=studio" className="button w-full">
-                  Start 7-Day Trial
+
+                <Link
+                  href="/auth?signup=true&plan=studio"
+                  className="block w-full rounded-xl py-3 text-center text-sm font-medium text-white transition-all hover:scale-105"
+                  style={{
+                    background: 'var(--accent)',
+                    boxShadow: '0 4px 12px var(--accent-glow)',
+                  }}
+                >
+                  Try Free for 7 Days →
                 </Link>
               </div>
             </div>
 
-            <p className="mt-8 text-center" style={{ color: 'var(--muted)' }}>
-              All plans include a 7-day free trial. No credit card required. Cancel anytime.
+            {/* Trust Message */}
+            <p
+              className="mx-auto mt-10 max-w-md text-center text-sm"
+              style={{ color: 'var(--muted)' }}
+            >
+              All paid plans include a 7-day free trial. No credit card required to start. Cancel
+              anytime—your music stays yours.
             </p>
           </div>
         </section>

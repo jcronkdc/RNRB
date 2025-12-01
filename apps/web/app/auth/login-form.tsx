@@ -38,7 +38,7 @@ export default function LoginForm() {
       className="space-y-6"
     >
       <motion.div
-        className="flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground"
+        className="flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-[color:var(--muted)]"
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -91,7 +91,7 @@ export default function LoginForm() {
           )}
         </Button>
 
-        <div className="flex items-center justify-center gap-2 rounded-2xl border border-border/60 bg-surface/50 px-4 py-3 text-xs text-muted-foreground">
+        <div className="border-[color:var(--border)]/60 flex items-center justify-center gap-2 rounded-2xl border bg-[color:var(--surface)] px-4 py-3 text-xs text-[color:var(--muted)]">
           <ShieldCheck className="text-primary h-4 w-4" aria-hidden="true" />
           <span>Enterprise-grade security with encrypted sessions</span>
         </div>

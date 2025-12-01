@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
+import { microCopy } from '@/lib/workshop-voice';
+
 export const metadata = {
   title: "Explore | Rock N' Roll Basement",
   description: 'Discover trending hashtags, genres, and rising artists',
@@ -306,9 +308,22 @@ export default function ExplorePage() {
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       <div className="relative z-10">
-        {/* Header */}
+        {/* Header with Logo [[memory:11700420]] */}
         <div className="border-b" style={{ borderColor: 'var(--border)' }}>
           <div className="mx-auto max-w-7xl px-4 py-8">
+            {/* White RR Logo */}
+            <div className="mb-6 flex justify-center">
+              <Link href="/" className="group">
+                <Image
+                  src="/logo-dark.png"
+                  alt="Rock N' Roll Basement"
+                  width={120}
+                  height={48}
+                  className="transition-transform group-hover:scale-105"
+                  priority
+                />
+              </Link>
+            </div>
             <div className="mb-4 h-1 w-16 rounded-full" style={{ background: 'var(--accent)' }} />
             <div className="flex items-center gap-4">
               <div
@@ -321,9 +336,7 @@ export default function ExplorePage() {
                 <h1 className="text-3xl font-bold" style={{ color: 'var(--text)' }}>
                   Explore
                 </h1>
-                <p style={{ color: 'var(--muted)' }}>
-                  Discover trending hashtags, genres, and rising artists
-                </p>
+                <p style={{ color: 'var(--muted)' }}>Discover what's happening in the community</p>
               </div>
             </div>
           </div>
@@ -350,8 +363,11 @@ export default function ExplorePage() {
             </div>
             <Suspense
               fallback={
-                <div className="flex items-center justify-center py-12">
+                <div className="flex flex-col items-center justify-center gap-3 py-12">
                   <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                    {microCopy.loading.feed}
+                  </p>
                 </div>
               }
             >

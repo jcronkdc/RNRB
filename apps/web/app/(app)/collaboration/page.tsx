@@ -44,9 +44,11 @@ export default function CollaborationDashboard() {
     return (
       <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
         <div className="flex min-h-[80vh] items-center justify-center">
-          <div className="text-center">
-            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
-            <p className="text-[var(--muted)]">Connecting to the network...</p>
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--border)] border-t-[var(--accent)]" />
+            <p className="text-sm" style={{ color: 'var(--muted)' }}>
+              Finding your people...
+            </p>
           </div>
         </div>
       </div>

@@ -10,9 +10,12 @@
 import { Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
 import { Loader2, ArrowLeft, Calendar, Sparkles } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+import { microCopy } from '@/lib/workshop-voice';
 
 type Show = {
   id: string;
@@ -109,12 +112,20 @@ export default function DayOfShowPage() {
         className="relative flex min-h-screen items-center justify-center"
         style={{ background: 'var(--bg)' }}
       >
-        <div className="text-center">
-          <Loader2
-            className="mx-auto mb-4 h-10 w-10 animate-spin"
-            style={{ color: 'var(--accent)' }}
-          />
-          <p style={{ color: 'var(--muted)' }}>Loading show details...</p>
+        <div className="flex flex-col items-center gap-4">
+          {/* White RR Logo [[memory:11700420]] */}
+          <Link href="/" className="group mb-4">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={120}
+              height={48}
+              className="transition-transform group-hover:scale-105"
+              priority
+            />
+          </Link>
+          <Loader2 className="h-10 w-10 animate-spin" style={{ color: 'var(--accent)' }} />
+          <p style={{ color: 'var(--muted)' }}>{microCopy.loading.shows}</p>
         </div>
       </div>
     );
@@ -127,6 +138,20 @@ export default function DayOfShowPage() {
           <div className="mx-auto max-w-2xl">
             {/* Toast Notifications */}
             <ToastNotification toasts={toasts} onRemove={removeToast} />
+
+            {/* White RR Logo [[memory:11700420]] */}
+            <div className="mb-6 flex justify-center">
+              <Link href="/" className="group">
+                <Image
+                  src="/logo-dark.png"
+                  alt="Rock N' Roll Basement"
+                  width={120}
+                  height={48}
+                  className="transition-transform group-hover:scale-105"
+                  priority
+                />
+              </Link>
+            </div>
 
             <Link href="/shows">
               <Button
@@ -152,11 +177,11 @@ export default function DayOfShowPage() {
                 <Calendar className="h-10 w-10" style={{ color: 'var(--accent)' }} />
               </div>
               <h2 className="mb-3 text-2xl font-bold" style={{ color: 'var(--text)' }}>
-                No Shows Today
+                Your stage is waiting
               </h2>
               <p className="mx-auto mb-6 max-w-md" style={{ color: 'var(--muted)' }}>
-                You don&apos;t have any shows scheduled for today. Check your calendar to see
-                upcoming gigs.
+                No shows today, but that's okay—every day off is a chance to prepare for the next
+                big night.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
                 <Link href="/shows">

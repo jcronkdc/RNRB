@@ -20,6 +20,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
+import { microCopy } from '@/lib/workshop-voice';
+
 interface Site {
   id: string;
   subdomain: string;
@@ -100,12 +102,23 @@ export default function SitesPage() {
         className="flex min-h-screen items-center justify-center"
         style={{ background: 'var(--bg)' }}
       >
-        <div className="text-center">
+        <div className="flex flex-col items-center gap-4">
+          {/* White RR Logo [[memory:11700420]] */}
+          <Link href="/" className="group mb-2">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={120}
+              height={48}
+              className="transition-transform group-hover:scale-105"
+              priority
+            />
+          </Link>
           <div
-            className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4"
+            className="h-10 w-10 animate-spin rounded-full border-4"
             style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }}
           />
-          <p style={{ color: 'var(--muted)' }}>Loading your website...</p>
+          <p style={{ color: 'var(--muted)' }}>{microCopy.loading.sites}</p>
         </div>
       </div>
     );

@@ -171,14 +171,14 @@ function InviteAcceptContent() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+      <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
+        <Loader2 className="h-8 w-8 animate-spin text-[color:var(--accent)]" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-6">
+    <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)] p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -194,18 +194,18 @@ function InviteAcceptContent() {
               <Music className="h-10 w-10 text-white" />
             </div>
             <h1 className="font-display mb-2 text-3xl font-bold">Project Invitation</h1>
-            <p className="text-muted-foreground">
+            <p className="text-[color:var(--muted)]">
               You've been invited to collaborate on a music project
             </p>
           </div>
 
           {/* Project Info */}
-          <div className="mb-6 rounded-xl border border-border bg-surface-muted p-6">
+          <div className="bg-[color:var(--surface)]-muted mb-6 rounded-xl border border-[color:var(--border)] p-6">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
-              <Users className="h-5 w-5 text-brand-primary" />
+              <Users className="h-5 w-5 text-[color:var(--accent)]" />
               {projectSlug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
             </h2>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <p className="mb-4 text-sm text-[color:var(--muted)]">
               Join this project to collaborate with your team using:
             </p>
             <ul className="space-y-2 text-sm">
@@ -227,9 +227,10 @@ function InviteAcceptContent() {
               </li>
             </ul>
             {inviteEmail && (
-              <div className="mt-4 rounded-lg border border-border bg-surface p-3">
-                <p className="text-xs text-muted-foreground">
-                  Invited: <span className="font-medium text-foreground">{inviteEmail}</span>
+              <div className="mt-4 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] p-3">
+                <p className="text-xs text-[color:var(--muted)]">
+                  Invited:{' '}
+                  <span className="font-medium text-[color:var(--text)]">{inviteEmail}</span>
                 </p>
               </div>
             )}
@@ -306,7 +307,7 @@ function InviteAcceptContent() {
 
           {/* Footer */}
           <div className="mt-6 text-center">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-[color:var(--muted)]">
               Rock N' Roll Basement • Collaborative Music Creation
             </p>
           </div>
@@ -320,8 +321,8 @@ export default function InviteAcceptPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-background">
-          <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+        <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
+          <Loader2 className="h-8 w-8 animate-spin text-[color:var(--accent)]" />
         </div>
       }
     >

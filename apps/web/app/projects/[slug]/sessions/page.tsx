@@ -13,6 +13,7 @@ import {
   TrendingUp,
   FileText,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -67,8 +68,17 @@ export default function ProjectSessionsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-lg">Loading sessions...</div>
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
+        <div className="text-center">
+          <div
+            className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
+            style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+          />
+          <div style={{ color: 'var(--muted)' }}>Loading sessions...</div>
+        </div>
       </div>
     );
   }
@@ -86,32 +96,58 @@ export default function ProjectSessionsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ background: 'var(--bg)' }}>
       <div className="rnrb-container max-w-7xl">
-        {/* Breadcrumb */}
-        <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/projects" className="transition hover:text-brand-primary">
-            Projects
+        {/* Logo & Breadcrumb */}
+        <div className="mb-6 flex items-center justify-between">
+          <Link href="/dashboard" className="group">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={48}
+              height={48}
+              className="transition-opacity duration-200 group-hover:opacity-80"
+            />
           </Link>
-          <span>/</span>
-          <Link href={`/projects/${slug}`} className="transition hover:text-brand-primary">
-            {project.name}
-          </Link>
-          <span>/</span>
-          <span className="text-foreground">Sessions</span>
+          <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
+            <Link
+              href="/projects"
+              className="transition"
+              style={{ color: 'var(--muted)' }}
+              onMouseOver={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+              onMouseOut={(e) => (e.currentTarget.style.color = 'var(--muted)')}
+            >
+              Projects
+            </Link>
+            <span>/</span>
+            <Link
+              href={`/projects/${slug}`}
+              className="transition"
+              style={{ color: 'var(--muted)' }}
+              onMouseOver={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+              onMouseOut={(e) => (e.currentTarget.style.color = 'var(--muted)')}
+            >
+              {project.name}
+            </Link>
+            <span>/</span>
+            <span style={{ color: 'var(--text)' }}>Sessions</span>
+          </div>
         </div>
 
         {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="font-display mb-2 text-4xl font-bold">Recording Sessions</h1>
-            <p className="text-xl text-muted-foreground">
+            <h1 className="font-display mb-2 text-4xl font-bold" style={{ color: 'var(--text)' }}>
+              Recording Sessions
+            </h1>
+            <p className="text-xl" style={{ color: 'var(--muted)' }}>
               Track your creative work and collaborate with your team
             </p>
           </div>
           <Button
             onClick={() => setShowAddModal(true)}
-            className="rnrb-button-primary flex items-center gap-2 rounded-xl px-6 py-3 font-semibold"
+            className="flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white"
+            style={{ background: 'var(--accent)', boxShadow: '0 4px 20px var(--accent-glow)' }}
           >
             <Plus className="h-5 w-5" />
             Log Session
@@ -120,52 +156,90 @@ export default function ProjectSessionsPage() {
 
         {/* Stats Row */}
         <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-4">
-          <Card className="rnrb-card p-6">
+          <Card
+            className="p-6"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
             <div className="mb-2 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
-                <Clock className="h-5 w-5 text-brand-primary" />
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                style={{ background: 'rgba(232, 93, 59, 0.15)' }}
+              >
+                <Clock className="h-5 w-5" style={{ color: 'var(--accent)' }} />
               </div>
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
                   {totalHours}h {remainingMinutes}m
                 </p>
-                <p className="text-xs text-muted-foreground">Total Time</p>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                  Total Time
+                </p>
               </div>
             </div>
           </Card>
 
-          <Card className="rnrb-card p-6">
+          <Card
+            className="p-6"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
             <div className="mb-2 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
-                <Calendar className="h-5 w-5 text-brand-primary" />
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                style={{ background: 'rgba(232, 93, 59, 0.15)' }}
+              >
+                <Calendar className="h-5 w-5" style={{ color: 'var(--accent)' }} />
               </div>
               <div>
-                <p className="text-2xl font-bold">{sessions.length}</p>
-                <p className="text-xs text-muted-foreground">Total Sessions</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                  {sessions.length}
+                </p>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                  Total Sessions
+                </p>
               </div>
             </div>
           </Card>
 
-          <Card className="rnrb-card p-6">
+          <Card
+            className="p-6"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
             <div className="mb-2 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
-                <Mic2 className="h-5 w-5 text-brand-primary" />
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                style={{ background: 'rgba(232, 93, 59, 0.15)' }}
+              >
+                <Mic2 className="h-5 w-5" style={{ color: 'var(--accent)' }} />
               </div>
               <div>
-                <p className="text-2xl font-bold">{sessionsByType.recording || 0}</p>
-                <p className="text-xs text-muted-foreground">Recording Sessions</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                  {sessionsByType.recording || 0}
+                </p>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                  Recording Sessions
+                </p>
               </div>
             </div>
           </Card>
 
-          <Card className="rnrb-card p-6">
+          <Card
+            className="p-6"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
             <div className="mb-2 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
-                <Users className="h-5 w-5 text-brand-primary" />
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                style={{ background: 'rgba(232, 93, 59, 0.15)' }}
+              >
+                <Users className="h-5 w-5" style={{ color: 'var(--accent)' }} />
               </div>
               <div>
-                <p className="text-2xl font-bold">{sessionsByType.rehearsal || 0}</p>
-                <p className="text-xs text-muted-foreground">Rehearsals</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                  {sessionsByType.rehearsal || 0}
+                </p>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                  Rehearsals
+                </p>
               </div>
             </div>
           </Card>
@@ -173,16 +247,25 @@ export default function ProjectSessionsPage() {
 
         {/* Sessions List */}
         {sessions.length === 0 ? (
-          <Card className="rnrb-card p-16 text-center">
-            <Calendar className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
-            <h3 className="mb-2 text-2xl font-semibold">No sessions logged yet</h3>
-            <p className="mx-auto mb-6 max-w-md text-muted-foreground">
+          <Card
+            className="p-16 text-center"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
+            <Calendar
+              className="mx-auto mb-4 h-16 w-16"
+              style={{ color: 'var(--muted)', opacity: 0.5 }}
+            />
+            <h3 className="mb-2 text-2xl font-semibold" style={{ color: 'var(--text)' }}>
+              No sessions logged yet
+            </h3>
+            <p className="mx-auto mb-6 max-w-md" style={{ color: 'var(--muted)' }}>
               Start tracking your creative work. Log recording sessions, writing time, rehearsals,
               and more. Your team can see your progress.
             </p>
             <Button
               onClick={() => setShowAddModal(true)}
-              className="rnrb-button-primary inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold"
+              className="inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-semibold text-white"
+              style={{ background: 'var(--accent)', boxShadow: '0 4px 20px var(--accent-glow)' }}
             >
               <Plus className="h-6 w-6" />
               Log Your First Session
@@ -190,14 +273,19 @@ export default function ProjectSessionsPage() {
           </Card>
         ) : (
           <div className="space-y-4">
-            <h2 className="font-display text-2xl font-bold">Session History</h2>
+            <h2 className="font-display text-2xl font-bold" style={{ color: 'var(--text)' }}>
+              Session History
+            </h2>
             {sessions.map((session) => (
               <motion.div
                 key={session.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <Card className="rnrb-card p-6 transition hover:border-brand-primary/30">
+                <Card
+                  className="p-6 transition"
+                  style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="mb-2 flex items-center gap-3">
@@ -232,11 +320,11 @@ export default function ProjectSessionsPage() {
                           {session.type === 'other' && <Music className="h-5 w-5 text-gray-500" />}
                         </div>
                         <div>
-                          <h3 className="font-semibold capitalize text-foreground">
+                          <h3 className="font-semibold capitalize" style={{ color: 'var(--text)' }}>
                             {session.type} Session
                           </h3>
                           {session.song_title && (
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm" style={{ color: 'var(--muted)' }}>
                               Song: {session.song_title}
                             </p>
                           )}
@@ -244,10 +332,15 @@ export default function ProjectSessionsPage() {
                       </div>
 
                       {session.notes && (
-                        <p className="ml-13 mb-3 text-sm text-muted-foreground">{session.notes}</p>
+                        <p className="ml-13 mb-3 text-sm" style={{ color: 'var(--muted)' }}>
+                          {session.notes}
+                        </p>
                       )}
 
-                      <div className="ml-13 flex items-center gap-4 text-xs text-muted-foreground">
+                      <div
+                        className="ml-13 flex items-center gap-4 text-xs"
+                        style={{ color: 'var(--muted)' }}
+                      >
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {session.duration_minutes} minutes
@@ -271,9 +364,17 @@ export default function ProjectSessionsPage() {
         )}
 
         {/* Helpful Note */}
-        <Card className="rnrb-card mt-8 border-purple-500/20 bg-purple-500/5 p-6">
-          <p className="mb-1 text-sm font-medium text-brand-primary">💡 Why Track Sessions?</p>
-          <p className="text-xs text-muted-foreground">
+        <Card
+          className="mt-8 p-6"
+          style={{
+            background: 'rgba(139, 92, 246, 0.05)',
+            border: '1px solid rgba(139, 92, 246, 0.2)',
+          }}
+        >
+          <p className="mb-1 text-sm font-medium" style={{ color: 'var(--accent)' }}>
+            Why Track Sessions?
+          </p>
+          <p className="text-xs" style={{ color: 'var(--muted)' }}>
             Logging your creative work helps you and your team see progress, coordinate schedules,
             and prepare for royalty split conversations. Plus, you'll never forget when that magic
             take happened!

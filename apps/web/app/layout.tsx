@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { DM_Sans, JetBrains_Mono, Instrument_Serif } from 'next/font/google';
 
 import { auth } from '@/auth';
 import { AblyProvider } from '@/components/ably/ably-provider';
@@ -16,6 +17,26 @@ import {
   JsonLd,
 } from '@/lib/seo';
 import './globals.css';
+
+// Typography - Custom, distinctive, not generic
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-display',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+});
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -46,11 +67,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const session = await auth();
 
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         <JsonLd data={[generateOrganizationSchema(), generateWebApplicationSchema()]} />
       </head>
-      <body>
+      <body className="font-sans antialiased">
         <ErrorBoundary>
           <SessionProvider session={session}>
             <TRPCReactProvider>

@@ -286,7 +286,7 @@ function ToolsContent() {
                 className={`rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
                   activeCategory === cat.id
                     ? 'bg-gradient-to-r from-brand-primary to-orange-500 text-white shadow-lg shadow-brand-primary/25'
-                    : 'border border-white/10 bg-white/5 text-muted-foreground hover:border-white/20 hover:bg-white/10 hover:text-white'
+                    : 'border border-white/10 bg-white/5 text-[color:var(--muted)] hover:border-white/20 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 {cat.name}
@@ -299,7 +299,7 @@ function ToolsContent() {
               className={`rounded-lg p-2.5 transition-all duration-200 ${
                 viewMode === 'grid'
                   ? 'bg-white/15 text-white shadow-inner'
-                  : 'text-muted-foreground hover:bg-white/10 hover:text-white'
+                  : 'text-[color:var(--muted)] hover:bg-white/10 hover:text-white'
               }`}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -309,7 +309,7 @@ function ToolsContent() {
               className={`rounded-lg p-2.5 transition-all duration-200 ${
                 viewMode === 'list'
                   ? 'bg-white/15 text-white shadow-inner'
-                  : 'text-muted-foreground hover:bg-white/10 hover:text-white'
+                  : 'text-[color:var(--muted)] hover:bg-white/10 hover:text-white'
               }`}
             >
               <List className="h-4 w-4" />
@@ -326,7 +326,7 @@ function ToolsContent() {
           >
             <button
               onClick={() => setActiveTool(null)}
-              className="mb-4 text-sm text-muted-foreground hover:text-white"
+              className="mb-4 text-sm text-[color:var(--muted)] hover:text-white"
             >
               ← Back to all tools
             </button>
@@ -469,7 +469,7 @@ export default function ToolsPage() {
           className="flex min-h-screen items-center justify-center"
           style={{ background: 'var(--bg)' }}
         >
-          <div className="animate-pulse text-muted-foreground">Loading tools...</div>
+          <div className="animate-pulse text-[color:var(--muted)]">Loading tools...</div>
         </div>
       }
     >

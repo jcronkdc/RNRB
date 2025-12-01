@@ -16,7 +16,7 @@ export default function SharePage() {
           className="flex min-h-screen items-center justify-center"
           style={{ background: 'var(--bg)' }}
         >
-          <div className="animate-pulse text-muted-foreground">Loading share hub...</div>
+          <div className="animate-pulse text-[color:var(--muted)]">Loading share hub...</div>
         </div>
       }
     >

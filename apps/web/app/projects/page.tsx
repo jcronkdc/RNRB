@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useEffect, useState, useMemo, memo } from 'react';
 
 import { ErrorBoundary } from '@/components/error-boundary';
+import { EmptyState } from '@/components/workshop';
 import { usePerformanceMonitor } from '@/hooks/use-performance-monitor';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useToast } from '@/hooks/useToast';
@@ -39,9 +40,16 @@ type Project = {
 
 // Memoized stats card component
 const StatsCard = memo(({ label, value }: { label: string; value: number }) => (
-  <div className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-3 transition-all hover:border-orange-500/50 hover:shadow-lg sm:p-4 lg:p-5">
-    <p className="mb-1 text-xs text-gray-400 sm:mb-2 sm:text-sm">{label}</p>
-    <p className="text-xl font-bold text-white sm:text-2xl lg:text-3xl">{value}</p>
+  <div
+    className="rounded-xl border p-3 transition-all hover:shadow-lg sm:p-4 lg:p-5"
+    style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+  >
+    <p className="mb-1 text-xs sm:mb-2 sm:text-sm" style={{ color: 'var(--muted)' }}>
+      {label}
+    </p>
+    <p className="text-xl font-bold sm:text-2xl lg:text-3xl" style={{ color: 'var(--text)' }}>
+      {value}
+    </p>
   </div>
 ));
 StatsCard.displayName = 'StatsCard';
@@ -55,9 +63,15 @@ const ProjectCard = memo(({ project, index }: { project: Project; index: number 
     transition={{ duration: 0.5, delay: index * 0.1 }}
   >
     <Link href={`/projects/${project.slug}`} prefetch={index < 3}>
-      <div className="group h-full transform cursor-pointer rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10 sm:p-6">
+      <div
+        className="group h-full transform cursor-pointer rounded-xl border p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-6"
+        style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+      >
         {/* Cover Image */}
-        <div className="relative mb-3 flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-500/5 sm:mb-4">
+        <div
+          className="relative mb-3 flex aspect-square items-center justify-center overflow-hidden rounded-xl sm:mb-4"
+          style={{ background: 'var(--accent-glow)' }}
+        >
           {project.cover_image ? (
             <img
               src={project.cover_image}
@@ -66,17 +80,23 @@ const ProjectCard = memo(({ project, index }: { project: Project; index: number 
               loading={index < 6 ? 'eager' : 'lazy'}
             />
           ) : (
-            <Music className="h-12 w-12 text-orange-500/50 sm:h-16 sm:w-16" />
+            <Music className="h-12 w-12 sm:h-16 sm:w-16" style={{ color: 'var(--accent)' }} />
           )}
           <div className="absolute right-2 top-2">
             {project.visibility === 'private' && (
-              <div className="rounded-lg border border-gray-700 bg-black/90 p-1 backdrop-blur-sm sm:p-1.5">
-                <Lock className="h-3 w-3 text-gray-400 sm:h-4 sm:w-4" />
+              <div
+                className="rounded-lg border p-1 backdrop-blur-sm sm:p-1.5"
+                style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
+              >
+                <Lock className="h-3 w-3 sm:h-4 sm:w-4" style={{ color: 'var(--muted)' }} />
               </div>
             )}
             {project.visibility === 'public' && (
-              <div className="rounded-lg border border-gray-700 bg-black/90 p-1 backdrop-blur-sm sm:p-1.5">
-                <Globe className="h-3 w-3 text-green-500 sm:h-4 sm:w-4" />
+              <div
+                className="rounded-lg border p-1 backdrop-blur-sm sm:p-1.5"
+                style={{ background: 'var(--bg)', borderColor: 'var(--sage)' }}
+              >
+                <Globe className="h-3 w-3 sm:h-4 sm:w-4" style={{ color: 'var(--sage)' }} />
               </div>
             )}
           </div>
@@ -84,18 +104,30 @@ const ProjectCard = memo(({ project, index }: { project: Project; index: number 
 
         {/* Project Info */}
         <div className="mb-2 flex items-start justify-between gap-2 sm:mb-3">
-          <h3 className="line-clamp-1 flex-1 text-lg font-semibold text-white transition-colors group-hover:text-orange-500 sm:text-xl">
+          <h3
+            className="line-clamp-1 flex-1 text-lg font-semibold transition-colors sm:text-xl"
+            style={{ color: 'var(--text)' }}
+          >
             {project.name}
           </h3>
-          <ArrowRight className="h-4 w-4 flex-shrink-0 text-gray-400 transition-all group-hover:translate-x-1 group-hover:text-orange-500 sm:h-5 sm:w-5" />
+          <ArrowRight
+            className="h-4 w-4 flex-shrink-0 transition-all group-hover:translate-x-1 sm:h-5 sm:w-5"
+            style={{ color: 'var(--muted)' }}
+          />
         </div>
 
-        <p className="mb-3 line-clamp-2 text-xs text-gray-400 sm:mb-4 sm:text-sm">
+        <p
+          className="mb-3 line-clamp-2 text-xs sm:mb-4 sm:text-sm"
+          style={{ color: 'var(--muted)' }}
+        >
           {project.description || 'No description yet'}
         </p>
 
         {/* Stats */}
-        <div className="flex items-center gap-3 border-t border-gray-800 pt-3 text-xs text-gray-400 sm:gap-4 sm:pt-4 sm:text-sm">
+        <div
+          className="flex items-center gap-3 border-t pt-3 text-xs sm:gap-4 sm:pt-4 sm:text-sm"
+          style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+        >
           <div className="flex items-center gap-1">
             <Music className="h-3 w-3 sm:h-4 sm:w-4" />
             <span>{project.song_count || 0}</span>
@@ -119,7 +151,7 @@ ProjectCard.displayName = 'ProjectCard';
 
 // Loading skeleton
 const ProjectsLoadingSkeleton = () => (
-  <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
+  <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
     <div className="flex justify-center pt-6">
       <Link href="/" className="group inline-block">
         <Image
@@ -133,12 +165,11 @@ const ProjectsLoadingSkeleton = () => (
       </Link>
     </div>
     <div className="flex min-h-[calc(100vh-100px)] items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <Loader2 className="h-12 w-12 animate-spin text-orange-500" />
-        <div className="text-center">
-          <div className="text-lg font-medium text-white">Loading your projects...</div>
-          <div className="mt-2 text-sm text-gray-400">Preparing your creative workspace</div>
-        </div>
+      <div className="flex flex-col items-center gap-3">
+        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+          Opening your workshop...
+        </p>
       </div>
     </div>
   </div>
@@ -221,7 +252,7 @@ function ProjectsPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* RR Logo - white logo for dark bg */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -242,11 +273,23 @@ function ProjectsPageContent() {
       </motion.div>
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-gray-800">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-orange-500/5" />
+      <div className="relative overflow-hidden border-b" style={{ borderColor: 'var(--border)' }}>
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(135deg, var(--accent-glow) 0%, transparent 50%, var(--accent-glow) 100%)',
+          }}
+        />
         <div className="absolute inset-0">
-          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl" />
+          <div
+            className="absolute right-1/4 top-0 h-96 w-96 rounded-full blur-3xl"
+            style={{ background: 'var(--accent-glow)' }}
+          />
+          <div
+            className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full blur-3xl"
+            style={{ background: 'rgba(212, 168, 75, 0.1)' }}
+          />
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
@@ -258,24 +301,42 @@ function ProjectsPageContent() {
             <div className="flex flex-col items-start justify-between gap-4 sm:gap-6 md:flex-row md:items-center">
               <div className="min-w-0 flex-1">
                 <div className="mb-3 flex items-center gap-3 sm:mb-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 shadow-lg sm:h-12 sm:w-12 lg:h-14 lg:w-14">
-                    <Folder className="h-5 w-5 text-orange-500 sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
+                  <div
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-lg sm:h-12 sm:w-12 lg:h-14 lg:w-14"
+                    style={{ background: 'var(--accent-glow)' }}
+                  >
+                    <Folder
+                      className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7"
+                      style={{ color: 'var(--accent)' }}
+                    />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-xs text-gray-400 sm:text-sm">
+                    <p className="truncate text-xs sm:text-sm" style={{ color: 'var(--muted)' }}>
                       Your Creative Workspace
                     </p>
-                    <h1 className="truncate text-xl font-bold text-white sm:text-2xl md:text-3xl lg:text-4xl">
+                    <h1
+                      className="truncate text-xl font-bold sm:text-2xl md:text-3xl lg:text-4xl"
+                      style={{ color: 'var(--text)' }}
+                    >
                       Projects
                     </h1>
                   </div>
                 </div>
-                <p className="text-sm text-gray-300 sm:text-base lg:max-w-2xl lg:text-lg">
+                <p
+                  className="text-sm sm:text-base lg:max-w-2xl lg:text-lg"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
                   Organize songs, collaborate with your team, and build your music career
                 </p>
               </div>
               <Link href="/projects/new" className="w-full sm:w-auto">
-                <Button className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-5 py-2.5 font-semibold text-white shadow-lg transition-all hover:bg-orange-600 hover:shadow-orange-500/50 sm:w-auto sm:px-6 sm:py-3">
+                <Button
+                  className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-2.5 font-semibold text-white shadow-lg transition-all sm:w-auto sm:px-6 sm:py-3"
+                  style={{
+                    background: 'var(--accent)',
+                    boxShadow: '0 4px 12px var(--accent-glow)',
+                  }}
+                >
                   <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span className="text-sm sm:text-base">New Project</span>
                 </Button>
@@ -306,63 +367,7 @@ function ProjectsPageContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="rounded-2xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-8 text-center sm:p-12">
-              <div className="mx-auto max-w-2xl">
-                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-orange-500/10 sm:mb-8 sm:h-24 sm:w-24">
-                  <Music className="h-10 w-10 text-orange-500 sm:h-12 sm:w-12" />
-                </div>
-                <h2 className="mb-3 text-2xl font-bold text-white sm:mb-4 sm:text-3xl lg:text-4xl">
-                  Create Your First Project
-                </h2>
-                <p className="mb-6 text-base text-gray-300 sm:mb-8 sm:text-lg">
-                  Projects are your foundation for organizing songs, collaborating with others, and
-                  building your music career.
-                </p>
-
-                <div className="mb-6 grid grid-cols-1 gap-3 text-left sm:mb-8 sm:gap-4 md:grid-cols-3">
-                  <div className="rounded-xl border border-gray-800 bg-black/50 p-3 transition-colors hover:border-orange-500/50 sm:p-4">
-                    <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10 sm:mb-3 sm:h-10 sm:w-10">
-                      <Music className="h-4 w-4 text-orange-500 sm:h-5 sm:w-5" />
-                    </div>
-                    <p className="mb-1 text-sm font-semibold text-white sm:mb-2 sm:text-base">
-                      Organize Songs
-                    </p>
-                    <p className="text-xs text-gray-400 sm:text-sm">
-                      Group songs into albums, EPs, or singles
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-gray-800 bg-black/50 p-3 transition-colors hover:border-orange-500/50 sm:p-4">
-                    <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10 sm:mb-3 sm:h-10 sm:w-10">
-                      <Users className="h-4 w-4 text-orange-500 sm:h-5 sm:w-5" />
-                    </div>
-                    <p className="mb-1 text-sm font-semibold text-white sm:mb-2 sm:text-base">
-                      Collaborate
-                    </p>
-                    <p className="text-xs text-gray-400 sm:text-sm">
-                      Invite band members and track contributions
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-gray-800 bg-black/50 p-3 transition-colors hover:border-orange-500/50 sm:p-4">
-                    <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10 sm:mb-3 sm:h-10 sm:w-10">
-                      <TrendingUp className="h-4 w-4 text-orange-500 sm:h-5 sm:w-5" />
-                    </div>
-                    <p className="mb-1 text-sm font-semibold text-white sm:mb-2 sm:text-base">
-                      Track Progress
-                    </p>
-                    <p className="text-xs text-gray-400 sm:text-sm">
-                      Monitor sessions and creative work
-                    </p>
-                  </div>
-                </div>
-
-                <Link href="/projects/new">
-                  <Button className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-3 text-base font-semibold text-white transition-all hover:bg-orange-600 sm:gap-3 sm:px-8 sm:py-4 sm:text-lg">
-                    <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
-                    Create Your First Project
-                  </Button>
-                </Link>
-              </div>
-            </div>
+            <EmptyState type="noProjects" size="lg" />
           </motion.div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -375,9 +380,14 @@ function ProjectsPageContent() {
         {/* Loading indicator for refresh */}
         {loadingProjects && projects.length > 0 && (
           <div className="mt-8 flex justify-center">
-            <div className="flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900/50 px-4 py-2">
-              <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
-              <span className="text-sm text-gray-400">Updating...</span>
+            <div
+              className="flex items-center gap-2 rounded-lg border px-4 py-2"
+              style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+            >
+              <Loader2 className="h-4 w-4 animate-spin" style={{ color: 'var(--accent)' }} />
+              <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                Updating...
+              </span>
             </div>
           </div>
         )}

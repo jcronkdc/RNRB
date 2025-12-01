@@ -132,21 +132,25 @@ export default function ProjectSettingsPage() {
 
   if (loading || !project) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
-          <div className="text-foreground">Loading settings...</div>
+          <Loader2 className="h-12 w-12 animate-spin" style={{ color: 'var(--accent)' }} />
+          <div style={{ color: 'var(--muted)' }}>Loading settings...</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="min-h-screen px-4 py-12" style={{ background: 'var(--bg)' }}>
       <div className="container mx-auto max-w-4xl">
         <Link
           href={`/projects/${slug}`}
-          className="mb-6 inline-flex items-center gap-2 text-brand-primary transition hover:text-brand-primary/80"
+          className="mb-6 inline-flex items-center gap-2 transition"
+          style={{ color: 'var(--accent)' }}
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Project
@@ -155,19 +159,24 @@ export default function ProjectSettingsPage() {
         {/* Header with Collaboration Status */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="font-display mb-2 text-4xl font-bold text-foreground">
+            <h1 className="font-display mb-2 text-4xl font-bold" style={{ color: 'var(--text)' }}>
               Project Settings
             </h1>
-            <p className="text-muted-foreground">Manage your project details collaboratively</p>
+            <p style={{ color: 'var(--muted)' }}>Manage your project details collaboratively</p>
           </div>
 
           {/* Active Editors */}
-          <Card className="rnrb-card p-4">
+          <Card
+            className="p-4"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
             <div className="flex items-center gap-3">
-              <Users className="h-5 w-5 text-brand-primary" />
+              <Users className="h-5 w-5" style={{ color: 'var(--accent)' }} />
               <div>
-                <div className="text-sm font-medium">Active Editors</div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                  Active Editors
+                </div>
+                <div className="text-xs" style={{ color: 'var(--muted)' }}>
                   {activeEditors.length + 1} online
                 </div>
               </div>
@@ -176,11 +185,12 @@ export default function ProjectSettingsPage() {
               />
             </div>
             {activeEditors.length > 0 && (
-              <div className="mt-3 border-t border-border pt-3">
+              <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
                 {activeEditors.map((editor) => (
                   <div
                     key={editor.id}
-                    className="flex items-center gap-2 text-xs text-muted-foreground"
+                    className="flex items-center gap-2 text-xs"
+                    style={{ color: 'var(--muted)' }}
                   >
                     <div className="h-1.5 w-1.5 rounded-full bg-green-400" />
                     {editor.name}
@@ -208,14 +218,20 @@ export default function ProjectSettingsPage() {
           </div>
         )}
 
-        <Card className="rnrb-card mb-6 p-6">
-          <h2 className="mb-4 text-xl font-semibold text-foreground">Basic Information</h2>
+        <Card
+          className="mb-6 p-6"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          <h2 className="mb-4 text-xl font-semibold" style={{ color: 'var(--text)' }}>
+            Basic Information
+          </h2>
           <div className="space-y-4">
             {/* Project Name */}
             <div>
               <label
                 htmlFor="project-name"
-                className="mb-2 block text-sm font-medium text-muted-foreground"
+                className="mb-2 block text-sm font-medium"
+                style={{ color: 'var(--muted)' }}
               >
                 Project Name
                 {isFieldLocked('name') && (
@@ -239,7 +255,12 @@ export default function ProjectSettingsPage() {
                 onFocus={() => lockField('name')}
                 onBlur={() => unlockField('name')}
                 disabled={isFieldLocked('name')}
-                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 px-4 py-3 outline-none transition disabled:cursor-not-allowed disabled:opacity-50"
+                style={{
+                  background: 'var(--surface)',
+                  borderColor: 'var(--border)',
+                  color: 'var(--text)',
+                }}
               />
             </div>
 
@@ -247,7 +268,7 @@ export default function ProjectSettingsPage() {
             <div>
               <label
                 htmlFor="project-tagline"
-                className="mb-2 block text-sm font-medium text-muted-foreground"
+                className="mb-2 block text-sm font-medium text-[color:var(--muted)]"
               >
                 Tagline
                 {isFieldLocked('tagline') && (
@@ -269,7 +290,7 @@ export default function ProjectSettingsPage() {
                 onBlur={() => unlockField('tagline')}
                 disabled={isFieldLocked('tagline')}
                 placeholder="A short description of your project"
-                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--text)] outline-none transition placeholder:text-[color:var(--muted)] focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
@@ -277,7 +298,7 @@ export default function ProjectSettingsPage() {
             <div>
               <label
                 htmlFor="project-description"
-                className="mb-2 block text-sm font-medium text-muted-foreground"
+                className="mb-2 block text-sm font-medium text-[color:var(--muted)]"
               >
                 Description
                 {isFieldLocked('description') && (
@@ -299,7 +320,7 @@ export default function ProjectSettingsPage() {
                 disabled={isFieldLocked('description')}
                 rows={4}
                 placeholder="Tell the story of this project..."
-                className="w-full resize-none rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full resize-none rounded-xl border-2 border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--text)] outline-none transition placeholder:text-[color:var(--muted)] focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
@@ -307,7 +328,7 @@ export default function ProjectSettingsPage() {
             <div>
               <label
                 htmlFor="project-visibility"
-                className="mb-2 block text-sm font-medium text-muted-foreground"
+                className="mb-2 block text-sm font-medium text-[color:var(--muted)]"
               >
                 Visibility
                 {isFieldLocked('visibility') && (
@@ -326,7 +347,7 @@ export default function ProjectSettingsPage() {
                 onFocus={() => lockField('visibility')}
                 onBlur={() => unlockField('visibility')}
                 disabled={isFieldLocked('visibility')}
-                className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--text)] outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="private">Private (Only invited members)</option>
                 <option value="org">Organization (All org members)</option>
@@ -341,8 +362,10 @@ export default function ProjectSettingsPage() {
           <h2 className="mb-4 text-xl font-semibold text-red-400">Danger Zone</h2>
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-foreground">Delete this project</p>
-              <p className="text-sm text-muted-foreground">Once deleted, it cannot be recovered</p>
+              <p className="font-medium text-[color:var(--text)]">Delete this project</p>
+              <p className="text-sm text-[color:var(--muted)]">
+                Once deleted, it cannot be recovered
+              </p>
             </div>
             <Button
               onClick={handleDelete}
@@ -356,9 +379,9 @@ export default function ProjectSettingsPage() {
         </Card>
 
         {/* Info card */}
-        <Card className="mt-6 border-brand-primary/20 bg-brand-primary/5 p-4">
-          <p className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Check className="h-4 w-4 text-brand-primary" />
+        <Card className="bg-[color:var(--accent)]/5 mt-6 border-brand-primary/20 p-4">
+          <p className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
+            <Check className="h-4 w-4 text-[color:var(--accent)]" />
             Changes are automatically saved as you type. Field locks prevent conflicts with other
             editors.
           </p>

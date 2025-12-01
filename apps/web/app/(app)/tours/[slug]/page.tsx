@@ -64,10 +64,16 @@ export default function TourDetailPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
         <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-800 border-t-brand-primary" />
-          <p className="text-muted-foreground">Loading tour...</p>
+          <div
+            className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4"
+            style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }}
+          />
+          <p style={{ color: 'var(--muted)' }}>Loading tour...</p>
         </div>
       </div>
     );
@@ -75,9 +81,17 @@ export default function TourDetailPage() {
 
   if (!tour) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Card className="p-8 text-center">
-          <p className="mb-4 text-muted-foreground">Tour not found</p>
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
+        <Card
+          className="p-8 text-center"
+          style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+        >
+          <p className="mb-4" style={{ color: 'var(--muted)' }}>
+            Tour not found
+          </p>
           <Link href="/tours">
             <Button>Back to Tours</Button>
           </Link>
@@ -91,14 +105,20 @@ export default function TourDetailPage() {
   const pastShows = tour.shows?.filter((show: any) => new Date(show.date) < now) || [];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Header */}
-      <div className="border-b border-border/50">
+      <div className="border-b" style={{ borderColor: 'var(--border)' }}>
         <div className="mx-auto max-w-7xl px-4 py-6">
           {/* Logo */}
           <div className="mb-6 flex justify-center">
-            <Link href="/">
-              <Image src="/logo-dark.png" alt="Rock N' Roll Basement" width={120} height={48} />
+            <Link href="/" className="group inline-block">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={120}
+                height={48}
+                className="transition-opacity duration-200 group-hover:opacity-80"
+              />
             </Link>
           </div>
 
@@ -115,7 +135,7 @@ export default function TourDetailPage() {
             <div className="flex-1">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                 <h1 className="font-display mb-2 text-3xl font-bold md:text-4xl">{tour.name}</h1>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-4 text-sm text-[color:var(--muted)]">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     <span>
@@ -142,7 +162,7 @@ export default function TourDetailPage() {
                   </span>
                 </div>
                 {tour.description && (
-                  <p className="mt-3 max-w-2xl text-muted-foreground">{tour.description}</p>
+                  <p className="mt-3 max-w-2xl text-[color:var(--muted)]">{tour.description}</p>
                 )}
               </motion.div>
             </div>
@@ -163,13 +183,13 @@ export default function TourDetailPage() {
           </div>
 
           {/* Navigation Tabs */}
-          <div className="mt-6 flex gap-2 border-b border-border">
+          <div className="mt-6 flex gap-2 border-b border-[color:var(--border)]">
             <button
               onClick={() => setActiveSection('overview')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'overview'
-                  ? 'border-b-2 border-brand-primary text-brand-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'border-b-2 border-brand-primary text-[color:var(--accent)]'
+                  : 'text-[color:var(--muted)] hover:text-[color:var(--text)]'
               }`}
             >
               Overview & Routing
@@ -178,8 +198,8 @@ export default function TourDetailPage() {
               onClick={() => setActiveSection('shows')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'shows'
-                  ? 'border-b-2 border-brand-primary text-brand-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'border-b-2 border-brand-primary text-[color:var(--accent)]'
+                  : 'text-[color:var(--muted)] hover:text-[color:var(--text)]'
               }`}
             >
               All Shows ({tour._count?.shows || tour.shows?.length || 0})
@@ -226,7 +246,7 @@ export default function TourDetailPage() {
                 {/* Past Shows */}
                 {pastShows.length > 0 && (
                   <div>
-                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-muted-foreground">
+                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[color:var(--muted)]">
                       <Clock className="h-5 w-5" />
                       Completed ({pastShows.length})
                     </h3>
@@ -240,9 +260,9 @@ export default function TourDetailPage() {
               </div>
             ) : (
               <Card className="p-12 text-center">
-                <Calendar className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
+                <Calendar className="text-[color:var(--muted)]/50 mx-auto mb-4 h-16 w-16" />
                 <h3 className="mb-2 text-lg font-semibold">No Shows Yet</h3>
-                <p className="mb-6 text-muted-foreground">
+                <p className="mb-6 text-[color:var(--muted)]">
                   Start adding shows to your tour to manage your schedule.
                 </p>
                 <Link href={`/tours/${tourSlug}/shows/new`}>
@@ -289,17 +309,17 @@ function ShowCard({
 
   return (
     <Card
-      className={`p-4 transition ${isPast ? 'border-border/50 bg-muted/10' : 'hover:border-brand-primary/30'}`}
+      className={`p-4 transition ${isPast ? 'border-[color:var(--border)]/50 bg-muted/10' : 'hover:border-brand-primary/30'}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <Link
             href={`/shows/${show.slug}`}
-            className={`block font-semibold transition hover:text-brand-primary ${isPast ? 'text-muted-foreground' : ''}`}
+            className={`block font-semibold transition hover:text-[color:var(--accent)] ${isPast ? 'text-[color:var(--muted)]' : ''}`}
           >
             {show.name}
           </Link>
-          <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+          <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-[color:var(--muted)]">
             <div className="flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" />
               {formatDate(show.date)}
@@ -326,7 +346,7 @@ function ShowCard({
 
           {/* Show times */}
           {(show.loadInTime || show.soundcheckTime || show.setTime) && (
-            <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+            <div className="mt-2 flex flex-wrap gap-3 text-xs text-[color:var(--muted)]">
               {show.loadInTime && <span>Load-in: {formatTime(show.loadInTime)}</span>}
               {show.soundcheckTime && <span>Soundcheck: {formatTime(show.soundcheckTime)}</span>}
               {show.setTime && <span>Set: {formatTime(show.setTime)}</span>}
@@ -336,7 +356,9 @@ function ShowCard({
 
           {/* Notes */}
           {show.notes && (
-            <p className="mt-2 line-clamp-2 text-sm italic text-muted-foreground">{show.notes}</p>
+            <p className="mt-2 line-clamp-2 text-sm italic text-[color:var(--muted)]">
+              {show.notes}
+            </p>
           )}
         </div>
 
@@ -362,7 +384,7 @@ function ShowCard({
               href={show.ticketUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 rounded-lg bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-brand-primary/90 hover:shadow-lg"
+              className="hover:bg-[color:var(--accent)]/90 flex items-center gap-1.5 rounded-lg bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
             >
               <Ticket className="h-4 w-4" />
               Get Tickets

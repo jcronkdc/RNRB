@@ -35,6 +35,8 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { ProjectSelector } from '@/components/project-selector';
 import { useRequireAuth } from '@/hooks/use-require-auth';
+import { EmptyState } from '@/components/workshop';
+import { microCopy } from '@/lib/workshop-voice';
 
 // Types
 type Song = {
@@ -989,7 +991,12 @@ export default function SongsPage() {
         className="flex min-h-screen items-center justify-center"
         style={{ background: 'var(--bg)' }}
       >
-        <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+            {microCopy.loading.songs}
+          </p>
+        </div>
       </div>
     );
   }
@@ -1243,7 +1250,12 @@ export default function SongsPage() {
         {/* Content */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+            <div className="flex flex-col items-center gap-3">
+              <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+              <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                {microCopy.loading.songs}
+              </p>
+            </div>
           </div>
         ) : error ? (
           <motion.div
@@ -1262,34 +1274,23 @@ export default function SongsPage() {
             </button>
           </motion.div>
         ) : songs.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-gray-800 bg-gray-900/50 p-12 text-center"
-          >
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-orange-500/10">
-              <Music className="h-10 w-10 text-orange-500" />
-            </div>
-            <h2 className="mb-2 text-xl font-bold text-white">
-              {searchQuery || filterType !== 'all' || statusFilter !== 'all'
-                ? 'No songs found'
-                : 'Start Your Musical Journey'}
-            </h2>
-            <p className="mx-auto mb-6 max-w-md text-gray-400">
-              {searchQuery || filterType !== 'all' || statusFilter !== 'all'
-                ? 'Try adjusting your search or filters'
-                : 'Create your first song to begin building your musical catalog'}
-            </p>
-            {!searchQuery && filterType === 'all' && statusFilter === 'all' && (
-              <Link
-                href="/songwriting"
-                className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-6 py-3 font-medium text-white hover:bg-orange-600"
-              >
-                <Sparkles className="h-4 w-4" />
-                Create Your First Song
-              </Link>
-            )}
-          </motion.div>
+          searchQuery || filterType !== 'all' || statusFilter !== 'all' ? (
+            <EmptyState
+              type="noSearchResults"
+              customTitle="No songs match your filters"
+              customMessage="Try adjusting your search or filters to find what you're looking for."
+              customSubtext="Sometimes the best discoveries come from starting fresh."
+              customAction="Clear Filters"
+              onAction={() => {
+                setSearchQuery('');
+                setFilterType('all');
+                setStatusFilter('all');
+              }}
+              size="lg"
+            />
+          ) : (
+            <EmptyState type="noSongs" size="lg" />
+          )
         ) : (
           <motion.div
             initial={{ opacity: 0 }}

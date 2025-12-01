@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { Loader2, Music, User } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { TrackCard } from '@/components/track-card';
@@ -42,18 +44,19 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
   if (loading) {
     return (
       <div
-        style={{
-          minHeight: '100vh',
-          backgroundColor: 'var(--bg)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className="flex min-h-screen flex-col items-center justify-center gap-4"
+        style={{ background: 'var(--bg)' }}
       >
-        <Loader2
-          style={{ height: '32px', width: '32px', color: 'var(--accent)' }}
-          className="animate-spin"
-        />
+        <div className="relative">
+          <div
+            className="absolute inset-0 animate-ping rounded-full"
+            style={{ background: 'rgba(232, 93, 59, 0.2)' }}
+          />
+          <Loader2 className="h-12 w-12 animate-spin" style={{ color: 'var(--accent)' }} />
+        </div>
+        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+          Loading artist profile...
+        </p>
       </div>
     );
   }
@@ -83,7 +86,25 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)' }}>
-      <div className="mx-auto max-w-7xl px-4 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        {/* Logo Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 flex justify-center"
+        >
+          <Link href="/" className="group inline-block">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={140}
+              height={56}
+              priority
+              className="transition-opacity duration-200 group-hover:opacity-80"
+            />
+          </Link>
+        </motion.div>
+
         {/* Profile Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
