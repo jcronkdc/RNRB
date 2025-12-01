@@ -22,7 +22,7 @@
  *    - Projects: WHERE projectMember.userId = $userId
  *    - Tours: WHERE org.members.userId = $userId
  *    - Library: WHERE userId = $userId
- *    - Messages: WHERE senderId = $userId OR receiverId = $userId
+ *    - Messages: WHERE senderId = $userId OR recipientId = $userId
  *    - Memory: WHERE userId = $userId
  *    - Conversations: WHERE userId = $userId
  *
