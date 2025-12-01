@@ -106,8 +106,8 @@ export default function PostOpportunityPage() {
 
   if (status === 'loading') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-black via-gray-950 to-black">
-        <Loader2 className="h-8 w-8 animate-spin text-green-500" />
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-[var(--accent)]" />
       </div>
     );
   }
@@ -153,10 +153,10 @@ export default function PostOpportunityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
+    <div className="min-h-screen">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-64 top-0 h-[600px] w-[600px] rounded-full bg-green-500/5 blur-[120px]" />
+        <div className="bg-[var(--accent)]/5 absolute -left-64 top-0 h-[600px] w-[600px] rounded-full blur-[120px]" />
         <div className="absolute -right-64 bottom-0 h-[500px] w-[500px] rounded-full bg-emerald-500/5 blur-[120px]" />
       </div>
 
@@ -177,8 +177,10 @@ export default function PostOpportunityPage() {
               priority
             />
           </Link>
-          <h1 className="mb-3 text-3xl font-bold text-white md:text-4xl">Post an Opportunity</h1>
-          <p className="mx-auto max-w-2xl text-white/60">
+          <h1 className="mb-3 text-3xl font-bold text-[var(--text)] md:text-4xl">
+            Post an Opportunity
+          </h1>
+          <p className="mx-auto max-w-2xl text-[var(--text-secondary)]">
             Share a gig, session work, or other opportunity with the community
           </p>
         </motion.div>
@@ -186,7 +188,7 @@ export default function PostOpportunityPage() {
         {/* Back button */}
         <Link
           href="/opportunities"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--text)]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Opportunities
@@ -200,8 +202,8 @@ export default function PostOpportunityPage() {
           className="space-y-6"
         >
           {/* Basic Info */}
-          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8">
-            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-white">
+          <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-8">
+            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-[var(--text)]">
               <Briefcase className="h-5 w-5" />
               Basic Information
             </h2>
@@ -209,7 +211,7 @@ export default function PostOpportunityPage() {
             <div className="space-y-4">
               {/* Type */}
               <div>
-                <label className="mb-3 block text-sm font-medium text-white">
+                <label className="mb-3 block text-sm font-medium text-[var(--text)]">
                   Opportunity Type *
                 </label>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -220,12 +222,12 @@ export default function PostOpportunityPage() {
                       onClick={() => setFormData({ ...formData, type: type.id })}
                       className={`rounded-xl border p-4 text-left transition-all ${
                         formData.type === type.id
-                          ? 'border-green-500 bg-green-500/10'
-                          : 'border-white/10 bg-white/5 hover:bg-white/10'
+                          ? 'border-green-500 bg-[var(--accent-glow)]'
+                          : 'border-[var(--border)] bg-[var(--panel)] hover:bg-[var(--panel-hover)]'
                       }`}
                     >
-                      <p className="font-medium text-white">{type.label}</p>
-                      <p className="text-xs text-white/50">{type.description}</p>
+                      <p className="font-medium text-[var(--text)]">{type.label}</p>
+                      <p className="text-xs text-[var(--muted)]">{type.description}</p>
                     </button>
                   ))}
                 </div>
@@ -233,34 +235,36 @@ export default function PostOpportunityPage() {
 
               {/* Title */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-white">Title *</label>
+                <label className="mb-2 block text-sm font-medium text-[var(--text)]">Title *</label>
                 <input
                   type="text"
                   required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g., Guitarist Needed for Wedding Gig"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                 />
               </div>
 
               {/* Description */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-white">Description</label>
+                <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                  Description
+                </label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Provide details about the opportunity..."
                   rows={6}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                 />
               </div>
             </div>
           </div>
 
           {/* Compensation */}
-          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8">
-            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-white">
+          <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-8">
+            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-[var(--text)]">
               <DollarSign className="h-5 w-5" />
               Compensation
             </h2>
@@ -268,7 +272,7 @@ export default function PostOpportunityPage() {
             <div className="space-y-4">
               {/* Compensation Type */}
               <div>
-                <label className="mb-3 block text-sm font-medium text-white">Type *</label>
+                <label className="mb-3 block text-sm font-medium text-[var(--text)]">Type *</label>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {compensationTypes.map((comp) => (
                     <button
@@ -277,12 +281,12 @@ export default function PostOpportunityPage() {
                       onClick={() => setFormData({ ...formData, compensation: comp.id })}
                       className={`rounded-xl border p-4 text-left transition-all ${
                         formData.compensation === comp.id
-                          ? 'border-green-500 bg-green-500/10'
-                          : 'border-white/10 bg-white/5 hover:bg-white/10'
+                          ? 'border-green-500 bg-[var(--accent-glow)]'
+                          : 'border-[var(--border)] bg-[var(--panel)] hover:bg-[var(--panel-hover)]'
                       }`}
                     >
-                      <p className="font-medium text-white">{comp.label}</p>
-                      <p className="text-xs text-white/50">{comp.description}</p>
+                      <p className="font-medium text-[var(--text)]">{comp.label}</p>
+                      <p className="text-xs text-[var(--muted)]">{comp.description}</p>
                     </button>
                   ))}
                 </div>
@@ -291,7 +295,9 @@ export default function PostOpportunityPage() {
               {formData.compensation === 'paid' && (
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-white">Amount ($)</label>
+                    <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                      Amount ($)
+                    </label>
                     <input
                       type="number"
                       step="0.01"
@@ -299,15 +305,17 @@ export default function PostOpportunityPage() {
                       value={formData.payAmount}
                       onChange={(e) => setFormData({ ...formData, payAmount: e.target.value })}
                       placeholder="500.00"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-white">Pay Type</label>
+                    <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                      Pay Type
+                    </label>
                     <select
                       value={formData.payType}
                       onChange={(e) => setFormData({ ...formData, payType: e.target.value })}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                     >
                       <option value="flat">Flat Rate</option>
                       <option value="hourly">Hourly</option>
@@ -320,7 +328,7 @@ export default function PostOpportunityPage() {
               )}
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-white">
+                <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                   Additional Pay Details
                 </label>
                 <input
@@ -328,15 +336,15 @@ export default function PostOpportunityPage() {
                   value={formData.payDetails}
                   onChange={(e) => setFormData({ ...formData, payDetails: e.target.value })}
                   placeholder="e.g., Plus meals and travel expenses"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                 />
               </div>
             </div>
           </div>
 
           {/* Location & Timing */}
-          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8">
-            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-white">
+          <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-8">
+            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-[var(--text)]">
               <MapPin className="h-5 w-5" />
               Location & Timing
             </h2>
@@ -348,9 +356,12 @@ export default function PostOpportunityPage() {
                   id="isRemote"
                   checked={formData.isRemote}
                   onChange={(e) => setFormData({ ...formData, isRemote: e.target.checked })}
-                  className="h-5 w-5 rounded border-white/20 bg-white/5 text-green-500 focus:ring-2 focus:ring-green-500/20"
+                  className="h-5 w-5 rounded border-white/20 bg-[var(--panel)] text-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                 />
-                <label htmlFor="isRemote" className="flex items-center gap-2 text-sm text-white">
+                <label
+                  htmlFor="isRemote"
+                  className="flex items-center gap-2 text-sm text-[var(--text)]"
+                >
                   <Globe className="h-4 w-4" />
                   This is a remote opportunity
                 </label>
@@ -359,7 +370,7 @@ export default function PostOpportunityPage() {
               {!formData.isRemote && (
                 <>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-white">
+                    <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                       Location / Venue
                     </label>
                     <input
@@ -367,39 +378,45 @@ export default function PostOpportunityPage() {
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                       placeholder="e.g., The Blue Note Jazz Club"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                     />
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-3">
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-white">City</label>
+                      <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                        City
+                      </label>
                       <input
                         type="text"
                         value={formData.city}
                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                         placeholder="New York"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                       />
                     </div>
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-white">State</label>
+                      <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                        State
+                      </label>
                       <input
                         type="text"
                         value={formData.state}
                         onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                         placeholder="NY"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                       />
                     </div>
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-white">Country</label>
+                      <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                        Country
+                      </label>
                       <input
                         type="text"
                         value={formData.country}
                         onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                         placeholder="USA"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                       />
                     </div>
                   </div>
@@ -408,44 +425,48 @@ export default function PostOpportunityPage() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-white">Date</label>
+                  <label className="mb-2 block text-sm font-medium text-[var(--text)]">Date</label>
                   <input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-white">
+                  <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                     Application Deadline
                   </label>
                   <input
                     type="date"
                     value={formData.deadline}
                     onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                   />
                 </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-white">Start Time</label>
+                  <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                    Start Time
+                  </label>
                   <input
                     type="time"
                     value={formData.startTime}
                     onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-white">End Time</label>
+                  <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                    End Time
+                  </label>
                   <input
                     type="time"
                     value={formData.endTime}
                     onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                   />
                 </div>
               </div>
@@ -453,8 +474,8 @@ export default function PostOpportunityPage() {
           </div>
 
           {/* Requirements */}
-          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8">
-            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-white">
+          <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-8">
+            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-[var(--text)]">
               <Guitar className="h-5 w-5" />
               Requirements
             </h2>
@@ -462,7 +483,7 @@ export default function PostOpportunityPage() {
             <div className="space-y-4">
               {/* Instruments */}
               <div>
-                <label className="mb-3 block text-sm font-medium text-white">
+                <label className="mb-3 block text-sm font-medium text-[var(--text)]">
                   Instruments Needed
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -478,8 +499,8 @@ export default function PostOpportunityPage() {
                       }
                       className={`rounded-full px-4 py-2 text-sm transition-all ${
                         formData.instruments.includes(instrument)
-                          ? 'bg-green-500 text-white'
-                          : 'border border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                          ? 'bg-[var(--accent)] text-[var(--text)]'
+                          : 'border border-[var(--border)] bg-[var(--panel)] text-[var(--text-secondary)] hover:bg-[var(--panel-hover)]'
                       }`}
                     >
                       {instrument}
@@ -490,7 +511,7 @@ export default function PostOpportunityPage() {
 
               {/* Genres */}
               <div>
-                <label className="mb-3 block text-sm font-medium text-white">Genres</label>
+                <label className="mb-3 block text-sm font-medium text-[var(--text)]">Genres</label>
                 <div className="flex flex-wrap gap-2">
                   {commonGenres.map((genre) => (
                     <button
@@ -504,8 +525,8 @@ export default function PostOpportunityPage() {
                       }
                       className={`rounded-full px-4 py-2 text-sm transition-all ${
                         formData.genres.includes(genre)
-                          ? 'bg-green-500 text-white'
-                          : 'border border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                          ? 'bg-[var(--accent)] text-[var(--text)]'
+                          : 'border border-[var(--border)] bg-[var(--panel)] text-[var(--text-secondary)] hover:bg-[var(--panel-hover)]'
                       }`}
                     >
                       {genre}
@@ -516,7 +537,7 @@ export default function PostOpportunityPage() {
 
               {/* Experience Level */}
               <div>
-                <label className="mb-3 block text-sm font-medium text-white">
+                <label className="mb-3 block text-sm font-medium text-[var(--text)]">
                   Experience Level
                 </label>
                 <div className="grid gap-3 sm:grid-cols-4">
@@ -527,8 +548,8 @@ export default function PostOpportunityPage() {
                       onClick={() => setFormData({ ...formData, experienceLevel: level.id })}
                       className={`rounded-xl border p-3 text-center transition-all ${
                         formData.experienceLevel === level.id
-                          ? 'border-green-500 bg-green-500/10 text-white'
-                          : 'border-white/10 bg-white/5 text-white/70 hover:bg-white/10'
+                          ? 'border-green-500 bg-[var(--accent-glow)] text-[var(--text)]'
+                          : 'border-[var(--border)] bg-[var(--panel)] text-[var(--text-secondary)] hover:bg-[var(--panel-hover)]'
                       }`}
                     >
                       {level.label}
@@ -538,28 +559,30 @@ export default function PostOpportunityPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-white">Dress Code</label>
+                <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                  Dress Code
+                </label>
                 <input
                   type="text"
                   value={formData.dressCode}
                   onChange={(e) => setFormData({ ...formData, dressCode: e.target.value })}
                   placeholder="e.g., Business casual, All black, Costume"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                 />
               </div>
             </div>
           </div>
 
           {/* Additional Details */}
-          <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8">
-            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-white">
+          <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-8">
+            <h2 className="mb-6 flex items-center gap-2 text-xl font-bold text-[var(--text)]">
               <AlertCircle className="h-5 w-5" />
               Additional Details
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="mb-2 block text-sm font-medium text-white">
+                <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                   Additional Information
                 </label>
                 <textarea
@@ -567,29 +590,33 @@ export default function PostOpportunityPage() {
                   onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
                   placeholder="Any other details applicants should know..."
                   rows={4}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                 />
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-white">Contact Email</label>
+                  <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                    Contact Email
+                  </label>
                   <input
                     type="email"
                     value={formData.contactEmail}
                     onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
                     placeholder="your@email.com"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-white">Contact Phone</label>
+                  <label className="mb-2 block text-sm font-medium text-[var(--text)]">
+                    Contact Phone
+                  </label>
                   <input
                     type="tel"
                     value={formData.contactPhone}
                     onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                     placeholder="(555) 123-4567"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                    className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                   />
                 </div>
               </div>
@@ -602,9 +629,9 @@ export default function PostOpportunityPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, allowApplications: e.target.checked })
                   }
-                  className="h-5 w-5 rounded border-white/20 bg-white/5 text-green-500 focus:ring-2 focus:ring-green-500/20"
+                  className="h-5 w-5 rounded border-white/20 bg-[var(--panel)] text-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                 />
-                <label htmlFor="allowApplications" className="text-sm text-white">
+                <label htmlFor="allowApplications" className="text-sm text-[var(--text)]">
                   Allow musicians to apply through the platform
                 </label>
               </div>
@@ -616,7 +643,7 @@ export default function PostOpportunityPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-8 py-4 text-lg font-medium text-white shadow-lg shadow-green-500/20 transition-all hover:from-green-600 hover:to-emerald-700 disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--clay)] px-8 py-4 text-lg font-medium text-[var(--text)] shadow-lg shadow-[var(--accent-glow)] transition-all hover:from-green-600 hover:to-emerald-700 disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -632,7 +659,7 @@ export default function PostOpportunityPage() {
             </button>
             <Link
               href="/opportunities"
-              className="rounded-xl border border-white/10 px-8 py-4 text-center font-medium text-white transition-all hover:bg-white/5"
+              className="rounded-xl border border-[var(--border)] px-8 py-4 text-center font-medium text-[var(--text)] transition-all hover:bg-[var(--panel)]"
             >
               Cancel
             </Link>

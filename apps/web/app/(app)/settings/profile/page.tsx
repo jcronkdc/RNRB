@@ -579,21 +579,24 @@ function ProfileSettingsContent() {
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       <div className="relative z-10 px-4 py-8 sm:py-12">
         <div className="mx-auto max-w-3xl">
+          {/* Logo at the top - ALWAYS shown per HARD RULE */}
+          <div className="mb-8 text-center">
+            <Link href="/" className="inline-block transition-transform hover:scale-105">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                className="mx-auto"
+                width={isSetup ? 200 : 160}
+                height={isSetup ? 80 : 64}
+                priority
+              />
+            </Link>
+          </div>
+
           {/* Hero header for new users - Matching Landing Page Style */}
           {isSetup && (
             <div className="mb-10 text-center">
-              {/* Logo */}
-              <div className="logo-hero-wrapper mb-6">
-                <Image
-                  src="/logo-dark.png"
-                  alt="Rock N' Roll Basement"
-                  className="logo-hero mx-auto"
-                  width={200}
-                  height={80}
-                  priority
-                />
-                <div className="logo-hero-glow"></div>
-              </div>
+              {/* Additional hero elements for setup mode only */}
 
               {/* Animated Title - Using hero-text-gradient from landing page */}
               <h1 className="hero-title relative mb-4">

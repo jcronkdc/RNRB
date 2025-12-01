@@ -130,10 +130,10 @@ export default function OpportunityDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-black via-gray-950 to-black">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-green-500" />
-          <p className="text-sm text-white/50">Loading opportunity...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--accent)]" />
+          <p className="text-sm text-[var(--muted)]">Loading opportunity...</p>
         </div>
       </div>
     );
@@ -147,10 +147,10 @@ export default function OpportunityDetailPage() {
   const isOwnOpportunity = session?.user?.id === opportunity.postedById;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
+    <div className="min-h-screen">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-64 top-0 h-[600px] w-[600px] rounded-full bg-green-500/5 blur-[120px]" />
+        <div className="bg-[var(--accent)]/5 absolute -left-64 top-0 h-[600px] w-[600px] rounded-full blur-[120px]" />
         <div className="absolute -right-64 bottom-0 h-[500px] w-[500px] rounded-full bg-emerald-500/5 blur-[120px]" />
       </div>
 
@@ -176,7 +176,7 @@ export default function OpportunityDetailPage() {
         {/* Back button */}
         <Link
           href="/opportunities"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-[var(--text-secondary)] transition-colors hover:text-[var(--text)]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Opportunities
@@ -190,7 +190,7 @@ export default function OpportunityDetailPage() {
         >
           {/* Left column - Main details */}
           <div className="lg:col-span-2">
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8">
+            <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-8">
               {/* Header */}
               <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-2">
@@ -198,7 +198,7 @@ export default function OpportunityDetailPage() {
                     {compBadge.label}
                   </span>
                   {opportunity.payAmount && (
-                    <span className="flex items-center gap-1 rounded-full bg-emerald-500/10 px-3 py-1 text-sm font-semibold text-emerald-400">
+                    <span className="flex items-center gap-1 rounded-full bg-[var(--sage-dim)] px-3 py-1 text-sm font-semibold text-emerald-400">
                       <DollarSign className="h-4 w-4" />
                       {opportunity.payAmount.toLocaleString()}
                       {opportunity.payType && ` / ${opportunity.payType}`}
@@ -211,16 +211,16 @@ export default function OpportunityDetailPage() {
                     </span>
                   )}
                 </div>
-                <span className="rounded-full bg-white/10 px-3 py-1 text-sm capitalize text-white/60">
+                <span className="rounded-full bg-[var(--panel-hover)] px-3 py-1 text-sm capitalize text-[var(--text-secondary)]">
                   {opportunity.type.replace('_', ' ')}
                 </span>
               </div>
 
               {/* Title & Description */}
-              <h1 className="mb-4 text-3xl font-bold text-white">{opportunity.title}</h1>
+              <h1 className="mb-4 text-3xl font-bold text-[var(--text)]">{opportunity.title}</h1>
 
               {opportunity.description && (
-                <div className="mb-6 whitespace-pre-wrap text-white/70">
+                <div className="mb-6 whitespace-pre-wrap text-[var(--text-secondary)]">
                   {opportunity.description}
                 </div>
               )}
@@ -229,20 +229,20 @@ export default function OpportunityDetailPage() {
               <div className="mb-6 grid gap-4 sm:grid-cols-2">
                 {opportunity.location && (
                   <div className="flex items-start gap-3">
-                    <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
+                    <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[var(--accent)]" />
                     <div>
-                      <p className="text-sm font-medium text-white">Location</p>
-                      <p className="text-sm text-white/60">{opportunity.location}</p>
+                      <p className="text-sm font-medium text-[var(--text)]">Location</p>
+                      <p className="text-sm text-[var(--text-secondary)]">{opportunity.location}</p>
                     </div>
                   </div>
                 )}
 
                 {opportunity.date && (
                   <div className="flex items-start gap-3">
-                    <Calendar className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
+                    <Calendar className="mt-0.5 h-5 w-5 shrink-0 text-[var(--accent)]" />
                     <div>
-                      <p className="text-sm font-medium text-white">Date</p>
-                      <p className="text-sm text-white/60">
+                      <p className="text-sm font-medium text-[var(--text)]">Date</p>
+                      <p className="text-sm text-[var(--text-secondary)]">
                         {new Date(opportunity.date).toLocaleDateString('en-US', {
                           weekday: 'long',
                           year: 'numeric',
@@ -256,10 +256,10 @@ export default function OpportunityDetailPage() {
 
                 {opportunity.startTime && (
                   <div className="flex items-start gap-3">
-                    <Clock className="mt-0.5 h-5 w-5 shrink-0 text-green-400" />
+                    <Clock className="mt-0.5 h-5 w-5 shrink-0 text-[var(--accent)]" />
                     <div>
-                      <p className="text-sm font-medium text-white">Time</p>
-                      <p className="text-sm text-white/60">
+                      <p className="text-sm font-medium text-[var(--text)]">Time</p>
+                      <p className="text-sm text-[var(--text-secondary)]">
                         {opportunity.startTime}
                         {opportunity.endTime && ` - ${opportunity.endTime}`}
                       </p>
@@ -271,8 +271,8 @@ export default function OpportunityDetailPage() {
                   <div className="flex items-start gap-3">
                     <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
                     <div>
-                      <p className="text-sm font-medium text-white">Application Deadline</p>
-                      <p className="text-sm text-white/60">
+                      <p className="text-sm font-medium text-[var(--text)]">Application Deadline</p>
+                      <p className="text-sm text-[var(--text-secondary)]">
                         {new Date(opportunity.deadline).toLocaleDateString()}
                       </p>
                     </div>
@@ -284,12 +284,12 @@ export default function OpportunityDetailPage() {
               {(opportunity.instruments?.length > 0 ||
                 opportunity.genres?.length > 0 ||
                 opportunity.skills?.length > 0) && (
-                <div className="mb-6 space-y-4 border-t border-white/10 pt-6">
-                  <h2 className="text-lg font-semibold text-white">Requirements</h2>
+                <div className="mb-6 space-y-4 border-t border-[var(--border)] pt-6">
+                  <h2 className="text-lg font-semibold text-[var(--text)]">Requirements</h2>
 
                   {opportunity.instruments?.length > 0 && (
                     <div>
-                      <p className="mb-2 flex items-center gap-2 text-sm font-medium text-white/70">
+                      <p className="mb-2 flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)]">
                         <Guitar className="h-4 w-4" />
                         Instruments
                       </p>
@@ -297,7 +297,7 @@ export default function OpportunityDetailPage() {
                         {opportunity.instruments.map((inst: string) => (
                           <span
                             key={inst}
-                            className="rounded-full bg-white/10 px-3 py-1 text-sm text-white/80"
+                            className="text-[var(--text)]/80 rounded-full bg-[var(--panel-hover)] px-3 py-1 text-sm"
                           >
                             {inst}
                           </span>
@@ -308,12 +308,14 @@ export default function OpportunityDetailPage() {
 
                   {opportunity.genres?.length > 0 && (
                     <div>
-                      <p className="mb-2 text-sm font-medium text-white/70">Genres</p>
+                      <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">
+                        Genres
+                      </p>
                       <div className="flex flex-wrap gap-2">
                         {opportunity.genres.map((genre: string) => (
                           <span
                             key={genre}
-                            className="rounded-full bg-green-500/10 px-3 py-1 text-sm text-green-400"
+                            className="rounded-full bg-[var(--accent-glow)] px-3 py-1 text-sm text-[var(--accent)]"
                           >
                             {genre}
                           </span>
@@ -324,7 +326,9 @@ export default function OpportunityDetailPage() {
 
                   {opportunity.experienceLevel && (
                     <div>
-                      <p className="mb-2 text-sm font-medium text-white/70">Experience Level</p>
+                      <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">
+                        Experience Level
+                      </p>
                       <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm capitalize text-blue-400">
                         {opportunity.experienceLevel}
                       </span>
@@ -335,9 +339,11 @@ export default function OpportunityDetailPage() {
 
               {/* Additional info */}
               {opportunity.additionalInfo && (
-                <div className="border-t border-white/10 pt-6">
-                  <h2 className="mb-3 text-lg font-semibold text-white">Additional Information</h2>
-                  <p className="whitespace-pre-wrap text-sm text-white/70">
+                <div className="border-t border-[var(--border)] pt-6">
+                  <h2 className="mb-3 text-lg font-semibold text-[var(--text)]">
+                    Additional Information
+                  </h2>
+                  <p className="whitespace-pre-wrap text-sm text-[var(--text-secondary)]">
                     {opportunity.additionalInfo}
                   </p>
                 </div>
@@ -349,12 +355,14 @@ export default function OpportunityDetailPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-6 rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8"
+                className="mt-6 rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-8"
               >
-                <h2 className="mb-6 text-xl font-bold text-white">Submit Your Application</h2>
+                <h2 className="mb-6 text-xl font-bold text-[var(--text)]">
+                  Submit Your Application
+                </h2>
                 <form onSubmit={handleApply} className="space-y-4">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-white">
+                    <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                       Cover Letter
                     </label>
                     <textarea
@@ -364,12 +372,12 @@ export default function OpportunityDetailPage() {
                       }
                       placeholder="Tell them why you're the perfect fit..."
                       rows={6}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-white">
+                    <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                       Portfolio URLs (one per line)
                     </label>
                     <textarea
@@ -379,12 +387,12 @@ export default function OpportunityDetailPage() {
                       }
                       placeholder="https://example.com/portfolio&#10;https://example.com/work"
                       rows={3}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-white">
+                    <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                       Audio Samples (one per line)
                     </label>
                     <textarea
@@ -394,12 +402,12 @@ export default function OpportunityDetailPage() {
                       }
                       placeholder="https://soundcloud.com/track&#10;https://youtube.com/video"
                       rows={3}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                     />
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-white">
+                    <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                       Availability
                     </label>
                     <input
@@ -409,13 +417,13 @@ export default function OpportunityDetailPage() {
                         setApplication({ ...application, availability: e.target.value })
                       }
                       placeholder="e.g., Weekends, evenings..."
-                      className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                      className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                     />
                   </div>
 
                   {opportunity.compensation === 'negotiable' && (
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-white">
+                      <label className="mb-2 block text-sm font-medium text-[var(--text)]">
                         Expected Pay (optional)
                       </label>
                       <input
@@ -425,7 +433,7 @@ export default function OpportunityDetailPage() {
                           setApplication({ ...application, expectedPay: e.target.value })
                         }
                         placeholder="Your rate"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                        className="w-full rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]"
                       />
                     </div>
                   )}
@@ -434,7 +442,7 @@ export default function OpportunityDetailPage() {
                     <button
                       type="submit"
                       disabled={applying}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 font-medium text-white shadow-lg shadow-green-500/20 transition-all hover:from-green-600 hover:to-emerald-700 disabled:opacity-50"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--clay)] px-6 py-3 font-medium text-[var(--text)] shadow-lg shadow-[var(--accent-glow)] transition-all hover:from-green-600 hover:to-emerald-700 disabled:opacity-50"
                     >
                       {applying ? (
                         <>
@@ -451,7 +459,7 @@ export default function OpportunityDetailPage() {
                     <button
                       type="button"
                       onClick={() => setShowApplicationForm(false)}
-                      className="rounded-xl border border-white/10 px-6 py-3 font-medium text-white transition-all hover:bg-white/5"
+                      className="rounded-xl border border-[var(--border)] px-6 py-3 font-medium text-[var(--text)] transition-all hover:bg-[var(--panel)]"
                     >
                       Cancel
                     </button>
@@ -464,14 +472,14 @@ export default function OpportunityDetailPage() {
           {/* Right column - Sidebar */}
           <div className="space-y-6">
             {/* Posted by */}
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6">
-              <h3 className="mb-4 text-sm font-medium text-white/60">Posted By</h3>
+            <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-6">
+              <h3 className="mb-4 text-sm font-medium text-[var(--text-secondary)]">Posted By</h3>
               <Link
                 href={`/profile/${opportunity.postedBy.username || opportunity.postedBy.id}`}
                 className="group block"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 overflow-hidden rounded-full bg-gradient-to-br from-green-500 to-emerald-600">
+                  <div className="h-12 w-12 overflow-hidden rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--clay)]">
                     {opportunity.postedBy.image ? (
                       <Image
                         src={opportunity.postedBy.image}
@@ -481,17 +489,19 @@ export default function OpportunityDetailPage() {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-lg font-bold text-white">
+                      <div className="flex h-full w-full items-center justify-center text-lg font-bold text-[var(--text)]">
                         {(opportunity.postedBy.name || 'U')[0]}
                       </div>
                     )}
                   </div>
                   <div>
-                    <p className="font-medium text-white group-hover:text-green-300">
+                    <p className="font-medium text-[var(--text)] group-hover:text-[var(--text)]">
                       {opportunity.postedBy.name || 'Anonymous'}
                     </p>
                     {opportunity.postedBy.username && (
-                      <p className="text-sm text-white/50">@{opportunity.postedBy.username}</p>
+                      <p className="text-sm text-[var(--muted)]">
+                        @{opportunity.postedBy.username}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -499,22 +509,24 @@ export default function OpportunityDetailPage() {
             </div>
 
             {/* Stats */}
-            <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-6">
-              <h3 className="mb-4 text-sm font-medium text-white/60">Stats</h3>
+            <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-6">
+              <h3 className="mb-4 text-sm font-medium text-[var(--text-secondary)]">Stats</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2 text-sm text-white/70">
+                  <span className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
                     <Users className="h-4 w-4" />
                     Applications
                   </span>
-                  <span className="font-medium text-white">{opportunity._count.applications}</span>
+                  <span className="font-medium text-[var(--text)]">
+                    {opportunity._count.applications}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-2 text-sm text-white/70">
+                  <span className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
                     <Briefcase className="h-4 w-4" />
                     Views
                   </span>
-                  <span className="font-medium text-white">{opportunity.views || 0}</span>
+                  <span className="font-medium text-[var(--text)]">{opportunity.views || 0}</span>
                 </div>
               </div>
             </div>
@@ -524,7 +536,7 @@ export default function OpportunityDetailPage() {
               {!session?.user ? (
                 <Link
                   href="/login"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 font-medium text-white shadow-lg shadow-green-500/20 transition-all hover:from-green-600 hover:to-emerald-700"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--clay)] px-6 py-3 font-medium text-[var(--text)] shadow-lg shadow-[var(--accent-glow)] transition-all hover:from-green-600 hover:to-emerald-700"
                 >
                   <Send className="h-5 w-5" />
                   Login to Apply
@@ -534,12 +546,12 @@ export default function OpportunityDetailPage() {
                   This is your opportunity
                 </div>
               ) : hasApplied ? (
-                <div className="flex items-center justify-center gap-2 rounded-xl border border-green-500/30 bg-green-500/10 p-4 text-center text-sm font-medium text-green-300">
+                <div className="flex items-center justify-center gap-2 rounded-xl border border-[var(--border-strong)] bg-[var(--accent-glow)] p-4 text-center text-sm font-medium text-[var(--text)]">
                   <CheckCircle className="h-5 w-5" />
                   Application Submitted
                 </div>
               ) : opportunity.status !== 'open' ? (
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center text-sm text-white/50">
+                <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-center text-sm text-[var(--muted)]">
                   This opportunity is closed
                 </div>
               ) : !opportunity.allowApplications ? (
@@ -548,20 +560,20 @@ export default function OpportunityDetailPage() {
                     href={opportunity.applicationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 font-medium text-white shadow-lg shadow-green-500/20 transition-all hover:from-green-600 hover:to-emerald-700"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--clay)] px-6 py-3 font-medium text-[var(--text)] shadow-lg shadow-[var(--accent-glow)] transition-all hover:from-green-600 hover:to-emerald-700"
                   >
                     Apply Externally
                     <ExternalLink className="h-4 w-4" />
                   </a>
                 ) : (
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center text-sm text-white/50">
+                  <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-center text-sm text-[var(--muted)]">
                     Contact poster directly
                   </div>
                 )
               ) : (
                 <button
                   onClick={() => setShowApplicationForm(true)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 font-medium text-white shadow-lg shadow-green-500/20 transition-all hover:from-green-600 hover:to-emerald-700"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--clay)] px-6 py-3 font-medium text-[var(--text)] shadow-lg shadow-[var(--accent-glow)] transition-all hover:from-green-600 hover:to-emerald-700"
                 >
                   <Send className="h-5 w-5" />
                   Apply Now
@@ -570,12 +582,12 @@ export default function OpportunityDetailPage() {
 
               {/* Contact info */}
               {(opportunity.contactEmail || opportunity.contactPhone) && (
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm">
-                  <p className="mb-2 font-medium text-white/70">Contact</p>
+                <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 text-sm">
+                  <p className="mb-2 font-medium text-[var(--text-secondary)]">Contact</p>
                   {opportunity.contactEmail && (
                     <a
                       href={`mailto:${opportunity.contactEmail}`}
-                      className="block text-green-400 hover:underline"
+                      className="block text-[var(--accent)] hover:underline"
                     >
                       {opportunity.contactEmail}
                     </a>
@@ -583,7 +595,7 @@ export default function OpportunityDetailPage() {
                   {opportunity.contactPhone && (
                     <a
                       href={`tel:${opportunity.contactPhone}`}
-                      className="block text-green-400 hover:underline"
+                      className="block text-[var(--accent)] hover:underline"
                     >
                       {opportunity.contactPhone}
                     </a>
