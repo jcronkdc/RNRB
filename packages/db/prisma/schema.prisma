@@ -1,12 +1,15 @@
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "darwin-arm64", "rhel-openssl-3.0.x"]
-  // FORCE REGENERATION - password column added to us-west-2: 2025-11-25T03:42:00Z
+  binaryTargets = ["native", "darwin-arm64", "darwin", "rhel-openssl-3.0.x"]
+  // FORCE REGENERATION - added darwin target: 2025-12-01
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // For 1000+ concurrent users, use Neon's connection pooler
+  // directUrl is used for migrations, url uses PgBouncer pooler
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 // NextAuth.js Models
@@ -191,6 +194,15 @@ model User {
   activities             ActivityEvent[]      @relation("UserActivity")
   activityCelebrations   ActivityCelebration[]
   revenues               Revenue[]
+  
+  // Masterclass Feature
+  instructorProfile      MasterclassInstructor?
+  masterclassEnrollments MasterclassEnrollment[]
+  masterclassReviews     MasterclassReview[]
+  
+  // Affiliate/Streamer System
+  affiliate              Affiliate?
+  affiliateReferrals     AffiliateReferral[]
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -3955,4 +3967,760 @@ model GuestPoster {
   @@index([trustScore])
 }
 
-// Force regeneration: 2025-12-01-GUEST-POSTING-V1
+// ====================================
+// MASTERCLASS FEATURE - Professional Education
+// ====================================
+
+// Masterclass Categories
+enum MasterclassCategory {
+  guitar
+  bass
+  drums
+  vocals
+  piano_keys
+  production
+  mixing
+  mastering
+  songwriting
+  music_theory
+  composition
+  music_business
+  marketing
+  licensing
+  recording
+  home_studio
+  performance
+  stage_presence
+  sound_design
+  djing
+  orchestration
+  other
+}
+
+// Masterclass Format (Live vs Pre-recorded)
+enum MasterclassFormat {
+  live           // Real-time with Daily.co
+  prerecorded    // Uploaded videos
+  hybrid         // Mix of both
+}
+
+// Masterclass Status
+enum MasterclassStatus {
+  draft          // Not published yet
+  published      // Live and enrollable
+  in_progress    // Currently happening (for live series)
+  completed      // All sessions done
+  archived       // Hidden from browse but accessible to enrolled
+}
+
+// Enrollment Status
+enum EnrollmentStatus {
+  pending        // Awaiting payment
+  active         // Paid and enrolled
+  completed      // Finished all content
+  refunded       // Money returned
+  expired        // Access period ended
+}
+
+// Instructor - Professionals teaching masterclasses
+model MasterclassInstructor {
+  id     String @id @default(cuid())
+  userId String @unique // Link to User model
+  
+  // Profile Info
+  displayName       String        // Professional name
+  headline          String?       // "Grammy-winning Producer" etc.
+  bio               String?       @db.Text
+  profileImage      String?       // Avatar URL
+  coverImage        String?       // Banner image
+  credentials       String[]      // ["Grammy Winner", "20+ Years Experience"]
+  specialties       MasterclassCategory[]
+  
+  // Social Links
+  website           String?
+  instagram         String?
+  youtube           String?
+  tiktok            String?
+  spotify           String?
+  
+  // Stripe Connect for Payouts
+  stripeAccountId   String?       @unique // Stripe Connect account
+  stripeOnboarded   Boolean       @default(false)
+  payoutPercentage  Int           @default(70) // Default 70% to instructor
+  
+  // Stats
+  totalStudents     Int           @default(0)
+  totalEarnings     Decimal       @default(0) @db.Decimal(10, 2)
+  averageRating     Decimal       @default(0) @db.Decimal(3, 2)
+  reviewCount       Int           @default(0)
+  
+  // Status
+  verified          Boolean       @default(false) // Platform verified
+  featured          Boolean       @default(false) // Featured on homepage
+  status            String        @default("active") // active, suspended, inactive
+  
+  // Timestamps
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  // Relations
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  masterclasses     Masterclass[]
+  payouts           InstructorPayout[]
+
+  @@index([status])
+  @@index([verified, featured])
+  @@index([averageRating(sort: Desc)])
+}
+
+// Masterclass - A course/class taught by an instructor
+model Masterclass {
+  id            String @id @default(cuid())
+  instructorId  String
+  
+  // Basic Info
+  slug          String              @unique // URL-friendly identifier
+  title         String              // "Advanced Guitar Techniques"
+  subtitle      String?             // "From Beginner to Pro in 8 Weeks"
+  description   String              @db.Text
+  shortDesc     String?             // For cards, max 150 chars
+  
+  // Categorization
+  category      MasterclassCategory
+  tags          String[]            // ["guitar", "soloing", "scales"]
+  skillLevel    String              @default("all") // beginner, intermediate, advanced, all
+  
+  // Media
+  thumbnailUrl  String?             // Main image
+  promoVideoUrl String?             // Trailer video
+  
+  // Format & Schedule
+  format        MasterclassFormat
+  totalDuration Int?                // Total minutes of content
+  lessonCount   Int                 @default(0)
+  
+  // For Live Classes
+  startDate     DateTime?           // When live class begins
+  endDate       DateTime?           // When live class ends
+  timezone      String?             // For scheduling
+  dailyRoomId   String?             // Daily.co room for live sessions
+  
+  // Pricing
+  isFree        Boolean             @default(false)
+  price         Decimal?            @db.Decimal(10, 2) // USD
+  originalPrice Decimal?            @db.Decimal(10, 2) // For showing discounts
+  currency      String              @default("USD")
+  
+  // Stripe
+  stripeProductId String?           // Stripe product ID
+  stripePriceId   String?           // Stripe price ID
+  
+  // Access
+  accessDays    Int?                // Days of access after purchase (null = lifetime)
+  maxStudents   Int?                // Capacity limit (null = unlimited)
+  
+  // What's Included
+  features      String[]            // ["Certificate", "Q&A Access", "Downloads"]
+  requirements  String[]            // ["Basic guitar knowledge", "Acoustic guitar"]
+  whatYouLearn  String[]            // ["Master sweep picking", "Read music notation"]
+  
+  // Status
+  status        MasterclassStatus   @default(draft)
+  publishedAt   DateTime?
+  featuredOrder Int?                // For homepage featuring
+  
+  // Stats (denormalized for performance)
+  enrollmentCount Int               @default(0)
+  completionRate  Decimal           @default(0) @db.Decimal(5, 2)
+  averageRating   Decimal           @default(0) @db.Decimal(3, 2)
+  reviewCount     Int               @default(0)
+  revenue         Decimal           @default(0) @db.Decimal(12, 2)
+  
+  // Timestamps
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  
+  // Relations
+  instructor    MasterclassInstructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  lessons       MasterclassLesson[]
+  enrollments   MasterclassEnrollment[]
+  reviews       MasterclassReview[]
+  resources     MasterclassResource[]
+  liveSessions  MasterclassLiveSession[]
+  
+  @@index([instructorId])
+  @@index([category])
+  @@index([status])
+  @@index([isFree])
+  @@index([publishedAt(sort: Desc)])
+  @@index([averageRating(sort: Desc)])
+  @@index([enrollmentCount(sort: Desc)])
+}
+
+// Lesson - Individual lesson/video within a masterclass
+model MasterclassLesson {
+  id             String @id @default(cuid())
+  masterclassId  String
+  
+  // Content
+  title          String
+  description    String?     @db.Text
+  order          Int         // Lesson order (1, 2, 3...)
+  
+  // Video
+  videoUrl       String?     // URL to video (Cloudflare, S3, etc.)
+  duration       Int?        // Duration in seconds
+  thumbnailUrl   String?     // Video thumbnail
+  
+  // For Live Lessons
+  isLive         Boolean     @default(false)
+  scheduledAt    DateTime?   // When live lesson happens
+  dailyRoomId    String?     // Daily.co room for this lesson
+  recordingUrl   String?     // Recording of live session
+  
+  // Access
+  isFreePreview  Boolean     @default(false) // Allow non-enrolled to watch
+  
+  // Timestamps
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  
+  // Relations
+  masterclass    Masterclass @relation(fields: [masterclassId], references: [id], onDelete: Cascade)
+  progress       MasterclassProgress[]
+  resources      MasterclassResource[]
+
+  @@index([masterclassId])
+  @@index([order])
+}
+
+// Live Session - Scheduled live sessions for a masterclass
+model MasterclassLiveSession {
+  id            String   @id @default(cuid())
+  masterclassId String
+  
+  // Session Info
+  title         String
+  description   String?
+  scheduledAt   DateTime
+  duration      Int      // Expected duration in minutes
+  timezone      String   @default("UTC")
+  
+  // Daily.co Integration
+  dailyRoomName String?  // Daily room name
+  dailyRoomUrl  String?  // Join URL
+  
+  // Recording
+  recordingUrl  String?  // After session ends
+  isRecorded    Boolean  @default(false)
+  
+  // Status
+  status        String   @default("scheduled") // scheduled, live, ended, cancelled
+  startedAt     DateTime?
+  endedAt       DateTime?
+  
+  // Stats
+  attendeeCount Int      @default(0)
+  peakViewers   Int      @default(0)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  masterclass   Masterclass @relation(fields: [masterclassId], references: [id], onDelete: Cascade)
+
+  @@index([masterclassId])
+  @@index([scheduledAt])
+  @@index([status])
+}
+
+// Resource - Downloadable files/materials
+model MasterclassResource {
+  id            String  @id @default(cuid())
+  masterclassId String
+  lessonId      String? // Optional - can be lesson-specific or class-wide
+  
+  // File Info
+  title         String
+  description   String?
+  fileUrl       String
+  fileType      String  // pdf, mp3, zip, etc.
+  fileSize      Int?    // Bytes
+  
+  // Access
+  downloadCount Int     @default(0)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  
+  // Relations
+  masterclass   Masterclass        @relation(fields: [masterclassId], references: [id], onDelete: Cascade)
+  lesson        MasterclassLesson? @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([masterclassId])
+  @@index([lessonId])
+}
+
+// Enrollment - Student registration for a masterclass
+model MasterclassEnrollment {
+  id            String @id @default(cuid())
+  masterclassId String
+  userId        String
+  
+  // Payment
+  status        EnrollmentStatus @default(pending)
+  pricePaid     Decimal?         @db.Decimal(10, 2)
+  currency      String           @default("USD")
+  stripePaymentIntentId String?
+  stripeSessionId       String?  @unique
+  
+  // Revenue Split (snapshot at time of purchase)
+  instructorShare Decimal? @db.Decimal(10, 2) // Amount to instructor
+  platformShare   Decimal? @db.Decimal(10, 2) // Amount to platform
+  
+  // Access
+  accessStartsAt DateTime?
+  accessEndsAt   DateTime? // null = lifetime
+  
+  // Progress
+  lessonsCompleted Int       @default(0)
+  totalLessons     Int       @default(0)
+  progressPercent  Decimal   @default(0) @db.Decimal(5, 2)
+  lastAccessedAt   DateTime?
+  completedAt      DateTime?
+  
+  // Certificate
+  certificateIssuedAt DateTime?
+  certificateUrl      String?
+  
+  // Timestamps
+  enrolledAt    DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  masterclass   Masterclass @relation(fields: [masterclassId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  progress      MasterclassProgress[]
+  review        MasterclassReview?
+
+  @@unique([masterclassId, userId])
+  @@index([masterclassId])
+  @@index([userId])
+  @@index([status])
+}
+
+// Progress - Track student progress through lessons
+model MasterclassProgress {
+  id           String @id @default(cuid())
+  enrollmentId String
+  lessonId     String
+  
+  // Watch Progress
+  watchedSeconds Int      @default(0) // How much they've watched
+  totalSeconds   Int      @default(0) // Total lesson length
+  isCompleted    Boolean  @default(false)
+  completedAt    DateTime?
+  
+  // Notes
+  notes          String?  @db.Text // Student's personal notes
+  
+  // Timestamps
+  startedAt      DateTime @default(now())
+  lastWatchedAt  DateTime @updatedAt
+  
+  // Relations
+  enrollment     MasterclassEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lesson         MasterclassLesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+  @@index([enrollmentId])
+  @@index([lessonId])
+}
+
+// Review - Student reviews of masterclasses
+model MasterclassReview {
+  id            String @id @default(cuid())
+  masterclassId String
+  enrollmentId  String @unique
+  userId        String
+  
+  // Rating (1-5 stars)
+  rating        Int    // 1-5
+  
+  // Review Content
+  title         String?
+  content       String? @db.Text
+  
+  // Moderation
+  isVerified    Boolean @default(true) // Verified purchase
+  isApproved    Boolean @default(true) // Moderation status
+  isFeatured    Boolean @default(false) // Featured on class page
+  
+  // Helpful Votes
+  helpfulCount  Int     @default(0)
+  
+  // Instructor Response
+  instructorResponse   String?  @db.Text
+  instructorRespondedAt DateTime?
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  masterclass   Masterclass           @relation(fields: [masterclassId], references: [id], onDelete: Cascade)
+  enrollment    MasterclassEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  user          User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([masterclassId])
+  @@index([userId])
+  @@index([rating])
+  @@index([createdAt(sort: Desc)])
+}
+
+// Instructor Payouts - Track payments to instructors
+model InstructorPayout {
+  id           String @id @default(cuid())
+  instructorId String
+  
+  // Amount
+  amount       Decimal  @db.Decimal(10, 2)
+  currency     String   @default("USD")
+  
+  // Stripe Transfer
+  stripeTransferId String? @unique
+  
+  // Period
+  periodStart  DateTime
+  periodEnd    DateTime
+  
+  // Details
+  enrollmentIds String[] // Enrollments included in this payout
+  totalSales    Decimal  @db.Decimal(10, 2)
+  platformFee   Decimal  @db.Decimal(10, 2)
+  
+  // Status
+  status       String   @default("pending") // pending, processing, completed, failed
+  processedAt  DateTime?
+  failedReason String?
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  // Relations
+  instructor   MasterclassInstructor @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+
+  @@index([instructorId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+// ============================================================================
+// STREAMER & AFFILIATE SYSTEM
+// ============================================================================
+
+// Affiliate - Streamer/partner accounts
+model Affiliate {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  code         String   @unique // Unique affiliate code
+  
+  // Status & Tier
+  status       String   @default("pending") // pending, approved, active, suspended, rejected
+  tier         String   @default("starter") // starter, bronze, silver, gold, platinum, ambassador
+  
+  // Profile
+  displayName    String?
+  bio            String?  @db.Text
+  streamPlatform String?  // twitch, youtube, tiktok, etc.
+  streamUsername String?
+  streamUrl      String?
+  socialLinks    Json?    @default("{}")
+  profileImage   String?
+  bannerImage    String?
+  
+  // Commission & Earnings
+  commissionRate   Decimal  @default(10.00) @db.Decimal(5, 2) // Percentage
+  lifetimeEarnings Decimal  @default(0.00) @db.Decimal(10, 2)
+  pendingEarnings  Decimal  @default(0.00) @db.Decimal(10, 2)
+  paidEarnings     Decimal  @default(0.00) @db.Decimal(10, 2)
+  
+  // Stats
+  totalReferrals  Int @default(0)
+  activeReferrals Int @default(0)
+  totalClicks     Int @default(0)
+  conversionRate  Decimal? @default(0.00) @db.Decimal(5, 2)
+  
+  // Payout Settings
+  payoutMethod  String? // paypal, stripe, bank, check
+  payoutEmail   String?
+  payoutDetails Json?   @default("{}")
+  minimumPayout Decimal @default(50.00) @db.Decimal(10, 2)
+  
+  // Partner Badge Settings
+  showPartnerBadge  Boolean @default(true)
+  badgeStyle        String? @default("default")
+  customBrandColor  String?
+  
+  // Application/Approval
+  applicationNotes String?  @db.Text
+  approvedBy       String?
+  approvedAt       DateTime?
+  rejectionReason  String?
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  user        User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referrals   AffiliateReferral[]
+  payouts     AffiliatePayout[]
+  streamRooms AffiliateStreamRoom[]
+  assets      AffiliateAsset[]
+
+  @@index([status])
+  @@index([tier])
+  @@index([code])
+  @@index([createdAt(sort: Desc)])
+}
+
+// AffiliateReferral - Track clicks and conversions
+model AffiliateReferral {
+  id          String   @id @default(cuid())
+  affiliateId String
+  
+  // Referred User (null until signup)
+  referredUserId String?
+  
+  // Tracking
+  clickedAt    DateTime  @default(now())
+  signedUpAt   DateTime?
+  convertedAt  DateTime?
+  
+  // Attribution
+  landingPage String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  referrerUrl String?
+  ipCountry   String?
+  deviceType  String?
+  browser     String?
+  
+  // Status
+  status String @default("clicked") // clicked, signed_up, trial, converted, churned, refunded
+  
+  // Conversion Details
+  subscriptionTier    String?
+  firstPurchaseAmount Decimal? @db.Decimal(10, 2)
+  lifetimeValue       Decimal? @default(0.00) @db.Decimal(10, 2)
+  
+  // Commission
+  commissionEarned Decimal? @default(0.00) @db.Decimal(10, 2)
+  commissionPaid   Boolean? @default(false)
+  paidAt           DateTime?
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  affiliate    Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  referredUser User?     @relation(fields: [referredUserId], references: [id], onDelete: SetNull)
+
+  @@index([affiliateId])
+  @@index([referredUserId])
+  @@index([status])
+  @@index([clickedAt(sort: Desc)])
+}
+
+// AffiliatePayout - Track payouts to affiliates
+model AffiliatePayout {
+  id          String @id @default(cuid())
+  affiliateId String
+  
+  // Amount
+  amount   Decimal @db.Decimal(10, 2)
+  currency String  @default("USD")
+  
+  // Status
+  status String @default("pending") // pending, processing, completed, failed, cancelled
+  
+  // Payment Details
+  payoutMethod  String
+  transactionId String?
+  payoutDetails Json?   @default("{}")
+  notes         String? @db.Text
+  
+  // Timestamps
+  processedAt DateTime?
+  createdAt   DateTime  @default(now())
+  
+  // Relations
+  affiliate Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  @@index([affiliateId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+// AffiliateStreamRoom - One-click stream setup
+model AffiliateStreamRoom {
+  id          String @id @default(cuid())
+  affiliateId String
+  
+  // Room Details
+  roomCode    String  @unique
+  roomName    String?
+  description String? @db.Text
+  
+  // Daily.co Integration
+  dailyRoomUrl  String?
+  dailyRoomName String?
+  
+  // Settings
+  maxParticipants Int     @default(50)
+  isPublic        Boolean @default(true)
+  
+  // Overlay Settings
+  overlayEnabled  Boolean @default(true)
+  overlayPosition String? @default("bottom-right")
+  overlayStyle    Json?   @default("{}")
+  customOverlayUrl String?
+  
+  // Stats
+  totalSessions       Int @default(0)
+  totalViewers        Int @default(0)
+  totalMinutesWatched Int @default(0)
+  
+  // Status
+  status     String    @default("active") // active, inactive, archived
+  lastUsedAt DateTime?
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  affiliate Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  @@index([affiliateId])
+  @@index([roomCode])
+  @@index([status])
+}
+
+// AffiliateAsset - Marketing materials
+model AffiliateAsset {
+  id          String  @id @default(cuid())
+  affiliateId String?
+  
+  // Asset Details
+  name        String
+  type        String // banner, logo, overlay, video, audio, document, social_graphic
+  description String? @db.Text
+  
+  // File
+  fileUrl      String
+  thumbnailUrl String?
+  dimensions   String? // e.g., "1920x1080"
+  fileSize     Int?
+  
+  // Stats
+  downloadCount Int @default(0)
+  
+  // Access
+  isPublic Boolean @default(true)
+  tier     String? // Required tier to access (null = all tiers)
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  
+  // Relations
+  affiliate Affiliate? @relation(fields: [affiliateId], references: [id], onDelete: SetNull)
+
+  @@index([affiliateId])
+  @@index([type])
+  @@index([tier])
+}
+
+// AffiliateTierBenefit - Define benefits for each tier
+model AffiliateTierBenefit {
+  id   String @id @default(cuid())
+  tier String // starter, bronze, silver, gold, platinum, ambassador
+  
+  // Tier Info
+  name        String
+  description String? @db.Text
+  
+  // Commission
+  commissionRate Decimal @db.Decimal(5, 2)
+  
+  // Requirements
+  minReferrals     Int     @default(0)
+  minMonthlyRevenue Decimal @default(0.00) @db.Decimal(10, 2)
+  
+  // Benefits List
+  benefits Json? @default("[]")
+  
+  // Badge
+  badgeUrl String?
+  
+  // Display Order
+  sortOrder Int @default(0)
+
+  @@unique([tier])
+  @@index([sortOrder])
+}
+
+// AffiliateApplication - Track applications before approval
+model AffiliateApplication {
+  id             String   @id @default(cuid())
+  
+  // Applicant Info
+  name           String
+  email          String   @unique
+  streamPlatform String
+  streamUrl      String
+  followers      String?
+  motivation     String?  @db.Text
+  
+  // Generated Code (assigned on approval)
+  affiliateCode  String   @unique
+  
+  // Status
+  status         String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewedBy     String?
+  reviewedAt     DateTime?
+  rejectionReason String?
+  
+  // Timestamps
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@index([createdAt(sort: Desc)])
+}
+
+// AffiliateClick - Detailed click tracking
+model AffiliateClick {
+  id          String   @id @default(cuid())
+  affiliateId String
+  
+  // Tracking
+  ipHash     String // Hashed IP for privacy
+  userAgent  String?
+  referrer   String?
+  landingPage String?
+  
+  // Timestamps
+  createdAt  DateTime @default(now())
+
+  @@index([affiliateId])
+  @@index([createdAt(sort: Desc)])
+}
+
+// Force regeneration: 2025-12-01-AFFILIATE-SYSTEM-V1

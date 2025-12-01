@@ -1,8 +1,8 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { CheckCircle, XCircle, AlertCircle, Info, X } from '@/components/ui/custom-icons';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -55,14 +55,17 @@ const colors = {
 function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) {
   const Icon = icons[toast.type];
   const color = colors[toast.type];
+  // Use ref to avoid re-running effect when onRemove changes
+  const onRemoveRef = useRef(onRemove);
+  onRemoveRef.current = onRemove;
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      onRemove();
+      onRemoveRef.current();
     }, toast.duration || 3000);
 
     return () => clearTimeout(timer);
-  }, [toast.duration, onRemove]);
+  }, [toast.id, toast.duration]); // Only depend on toast.id and duration
 
   return (
     <motion.div
@@ -81,12 +84,20 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
 }
 
 export function ToastNotification({ toasts, onRemove }: ToastNotificationProps) {
+  // Memoize the remove handler to prevent unnecessary re-renders
+  const handleRemove = useCallback(
+    (id: string) => {
+      onRemove(id);
+    },
+    [onRemove]
+  );
+
   return (
     <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex flex-col gap-2 sm:bottom-6 sm:right-6">
       <AnimatePresence mode="popLayout">
         {toasts.map((toast) => (
           <div key={toast.id} className="pointer-events-auto">
-            <ToastItem toast={toast} onRemove={() => onRemove(toast.id)} />
+            <ToastItem toast={toast} onRemove={() => handleRemove(toast.id)} />
           </div>
         ))}
       </AnimatePresence>
@@ -97,24 +108,35 @@ export function ToastNotification({ toasts, onRemove }: ToastNotificationProps) 
 // Hook for managing toasts
 export function useToast() {
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [counter, setCounter] = useState(0);
+  const counterRef = useRef(0);
 
-  const addToast = (type: ToastType, message: string, duration?: number) => {
-    // Generate ID using current counter value
-    setCounter((prev) => prev + 1);
-    const id = `toast-${counter + 1}`;
+  const addToast = useCallback((type: ToastType, message: string, duration?: number) => {
+    counterRef.current += 1;
+    const id = `toast-${counterRef.current}-${Date.now()}`;
     const newToast: Toast = { id, type, message, duration };
     setToasts((prevToasts) => [...prevToasts, newToast]);
-  };
+  }, []);
 
-  const removeToast = (id: string) => {
+  const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
+  }, []);
 
-  const success = (message: string, duration?: number) => addToast('success', message, duration);
-  const error = (message: string, duration?: number) => addToast('error', message, duration);
-  const warning = (message: string, duration?: number) => addToast('warning', message, duration);
-  const info = (message: string, duration?: number) => addToast('info', message, duration);
+  const success = useCallback(
+    (message: string, duration?: number) => addToast('success', message, duration),
+    [addToast]
+  );
+  const error = useCallback(
+    (message: string, duration?: number) => addToast('error', message, duration),
+    [addToast]
+  );
+  const warning = useCallback(
+    (message: string, duration?: number) => addToast('warning', message, duration),
+    [addToast]
+  );
+  const info = useCallback(
+    (message: string, duration?: number) => addToast('info', message, duration),
+    [addToast]
+  );
 
   return {
     toasts,
