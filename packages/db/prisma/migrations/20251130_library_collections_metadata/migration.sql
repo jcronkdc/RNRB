@@ -49,3 +49,5 @@ ALTER TABLE "LibraryCollection" ADD CONSTRAINT "LibraryCollection_userId_fkey"
 ALTER TABLE "LibraryFile" ADD CONSTRAINT "LibraryFile_collectionId_fkey" 
     FOREIGN KEY ("collectionId") REFERENCES "LibraryCollection"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
+
+

@@ -72,3 +72,5 @@ CREATE INDEX IF NOT EXISTS "LabsFeedback_targetType_idx" ON "LabsFeedback"("targ
 -- Add labs_update to NotificationType enum (if not already present)
 -- This is handled by Prisma automatically when it sees the enum change
 
+
+

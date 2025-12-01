@@ -20,3 +20,5 @@ UPDATE "User" SET "profileCompleted" = true WHERE "createdAt" < NOW();
 
 
 
+
+

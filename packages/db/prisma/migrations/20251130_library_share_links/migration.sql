@@ -44,3 +44,5 @@ CREATE INDEX IF NOT EXISTS "LibraryFile_parentId_idx" ON "LibraryFile"("parentId
 CREATE INDEX IF NOT EXISTS "LibraryFile_hash_idx" ON "LibraryFile"("hash");
 CREATE INDEX IF NOT EXISTS "LibraryFile_userId_hash_idx" ON "LibraryFile"("userId", "hash");
 
+
+

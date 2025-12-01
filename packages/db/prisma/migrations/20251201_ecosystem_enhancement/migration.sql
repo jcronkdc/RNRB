@@ -352,3 +352,5 @@ ALTER TABLE "MusicianProfile"
     ADD CONSTRAINT "MusicianProfile_featuredProjectId_fkey" 
     FOREIGN KEY ("featuredProjectId") REFERENCES "Project"("id") ON DELETE SET NULL;
 
+
+
