@@ -243,7 +243,7 @@ export function AssistantChat() {
           'shadow-lg shadow-brand-primary/25 hover:shadow-xl hover:shadow-brand-primary/40',
           'transition-all duration-300',
           'hover:scale-105 active:scale-95',
-          'group animate-pulse hover:animate-none'
+          'group'
         )}
         aria-label="Open AI Assistant"
       >
@@ -270,7 +270,7 @@ export function AssistantChat() {
         <div className="flex items-center gap-3">
           <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
             <Sparkles className="h-5 w-5 text-white" />
-            <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 animate-pulse rounded-full border-2 border-zinc-900 bg-green-400" />
+            <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-900 bg-green-400" />
           </div>
           <div>
             <h3 className="font-semibold text-white">AI Assistant</h3>

@@ -979,7 +979,7 @@ export async function buildGodlikeContext(
 
     // Setlist templates
     prisma.setlistTemplate.findMany({
-      where: { userId },
+      where: { createdById: userId },
       select: {
         id: true,
         name: true,
