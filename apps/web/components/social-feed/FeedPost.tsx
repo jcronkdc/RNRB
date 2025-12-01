@@ -9,10 +9,16 @@ import {
   MoreHorizontal,
   Music,
   Repeat2,
+  Trash2,
+  Edit3,
+  Link,
+  Flag,
+  X,
+  AlertTriangle,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import { CommentSection } from './CommentSection';
 import { PostContent } from './PostContent';
@@ -32,9 +38,83 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
   const [showReactions, setShowReactions] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [localPost, setLocalPost] = useState(post);
+  const [showMenu, setShowMenu] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(localPost.content || '');
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const isOwnPost = session?.user?.id === localPost.userId;
   const isRepost = localPost.originalPostId !== null;
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    }
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showMenu]);
+
+  // Handle delete post
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/feed/posts/${localPost.id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setShowDeleteConfirm(false);
+        onDeleted(localPost.id);
+      } else {
+        console.error('Failed to delete post');
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Handle edit post
+  const handleEdit = async () => {
+    try {
+      const response = await fetch(`/api/feed/posts/${localPost.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: editContent }),
+      });
+
+      if (response.ok) {
+        const { post: updatedPost } = await response.json();
+        setLocalPost((prev: any) => ({ ...prev, content: editContent, editedAt: new Date() }));
+        setIsEditing(false);
+        onUpdated({ ...localPost, content: editContent, editedAt: new Date() });
+      } else {
+        console.error('Failed to update post');
+      }
+    } catch (error) {
+      console.error('Error updating post:', error);
+    }
+  };
+
+  // Copy link to clipboard
+  const handleCopyLink = async () => {
+    const url = `${window.location.origin}/feed/post/${localPost.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setShowMenu(false);
+      // You could add a toast notification here
+    } catch (error) {
+      console.error('Failed to copy link:', error);
+    }
+  };
 
   // Handle reaction with optimistic update
   const handleReaction = async (emoji: string) => {
@@ -187,12 +267,85 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
           </div>
         </div>
 
-        {/* More Options */}
-        {isOwnPost && (
-          <button className="rounded-lg p-2 text-white/60 transition-colors hover:bg-white/5 hover:text-white">
+        {/* More Options - Facebook-style dropdown */}
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className="rounded-full p-2 text-white/60 transition-all hover:bg-white/10 hover:text-white"
+            aria-label="More options"
+          >
             <MoreHorizontal className="h-5 w-5" />
           </button>
-        )}
+
+          {/* Dropdown Menu */}
+          {showMenu && (
+            <div className="absolute right-0 top-full z-50 mt-1 min-w-[200px] overflow-hidden rounded-xl border border-white/10 bg-zinc-900/95 py-1 shadow-xl backdrop-blur-xl">
+              {isOwnPost ? (
+                <>
+                  {/* Edit */}
+                  <button
+                    onClick={() => {
+                      setShowMenu(false);
+                      setIsEditing(true);
+                      setEditContent(localPost.content || '');
+                    }}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white/90 transition-colors hover:bg-white/10"
+                  >
+                    <Edit3 className="h-4 w-4" />
+                    <span>Edit post</span>
+                  </button>
+
+                  {/* Copy Link */}
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white/90 transition-colors hover:bg-white/10"
+                  >
+                    <Link className="h-4 w-4" />
+                    <span>Copy link</span>
+                  </button>
+
+                  {/* Divider */}
+                  <div className="my-1 border-t border-white/10" />
+
+                  {/* Delete */}
+                  <button
+                    onClick={() => {
+                      setShowMenu(false);
+                      setShowDeleteConfirm(true);
+                    }}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-red-400 transition-colors hover:bg-red-500/10"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span>Delete post</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  {/* Copy Link (for other users' posts) */}
+                  <button
+                    onClick={handleCopyLink}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white/90 transition-colors hover:bg-white/10"
+                  >
+                    <Link className="h-4 w-4" />
+                    <span>Copy link</span>
+                  </button>
+
+                  {/* Report */}
+                  <button
+                    onClick={() => {
+                      setShowMenu(false);
+                      // TODO: Implement report functionality
+                    }}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm text-white/90 transition-colors hover:bg-white/10"
+                  >
+                    <Flag className="h-4 w-4" />
+                    <span>Report post</span>
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Post Content - with clickable hashtags, mentions, and URLs */}
@@ -387,6 +540,122 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
       {showComments && (
         <div className="mt-6 border-t border-white/10 pt-6">
           <CommentSection postId={localPost.id} />
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal - Facebook style */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div
+            className="mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+              <h3 className="text-lg font-semibold text-white">Delete Post?</h3>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="rounded-full p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="px-6 py-6">
+              <div className="mb-4 flex items-center gap-3 rounded-xl bg-red-500/10 p-4">
+                <AlertTriangle className="h-6 w-6 flex-shrink-0 text-red-400" />
+                <p className="text-sm text-white/80">
+                  Are you sure you want to delete this post? This action cannot be undone.
+                </p>
+              </div>
+
+              {/* Preview of the post being deleted */}
+              <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+                <p className="line-clamp-3 text-sm text-white/70">
+                  {localPost.content || 'This post has no text content.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex justify-end gap-3 border-t border-white/10 px-6 py-4">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="rounded-lg px-5 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/10"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="flex items-center gap-2 rounded-lg bg-red-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-red-600 disabled:opacity-50"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4" />
+                    <span>Delete</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Modal - Facebook style */}
+      {isEditing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div
+            className="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+              <h3 className="text-lg font-semibold text-white">Edit Post</h3>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="rounded-full p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="px-6 py-4">
+              <textarea
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                className="min-h-[150px] w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
+                placeholder="What's on your mind?"
+                autoFocus
+              />
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex justify-end gap-3 border-t border-white/10 px-6 py-4">
+              <button
+                onClick={() => setIsEditing(false)}
+                className="rounded-lg px-5 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/10"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleEdit}
+                disabled={!editContent.trim() || editContent === localPost.content}
+                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
+              >
+                <Edit3 className="h-4 w-4" />
+                <span>Save Changes</span>
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

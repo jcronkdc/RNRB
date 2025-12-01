@@ -2153,7 +2153,7 @@ body {
   .rnrb-card:hover {
     border-color: var(--border-strong);
     background: var(--panel-hover);
-    box-shadow: 
+    box-shadow:
       0 4px 12px rgba(0, 0, 0, 0.3),
       0 0 0 1px rgba(255, 99, 71, 0.1);
     transform: translateY(-2px);
@@ -2170,7 +2170,7 @@ body {
 
   .rnrb-card-interactive:hover {
     border-color: var(--accent);
-    box-shadow: 
+    box-shadow:
       0 8px 24px rgba(0, 0, 0, 0.4),
       0 0 0 1px rgba(255, 99, 71, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -2178,7 +2178,9 @@ body {
 
   /* Lift animation utility */
   .rnrb-hover-lift {
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
   }
 
   .rnrb-hover-lift:hover {

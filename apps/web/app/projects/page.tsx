@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Loader2,
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState, useMemo, memo } from 'react';
 
@@ -119,7 +120,19 @@ ProjectCard.displayName = 'ProjectCard';
 // Loading skeleton
 const ProjectsLoadingSkeleton = () => (
   <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex justify-center pt-6">
+      <Link href="/" className="group inline-block">
+        <Image
+          src="/logo-dark.png"
+          alt="Rock N' Roll Basement"
+          width={140}
+          height={57}
+          priority
+          className="transition-opacity duration-200 group-hover:opacity-80"
+        />
+      </Link>
+    </div>
+    <div className="flex min-h-[calc(100vh-100px)] items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-orange-500" />
         <div className="text-center">
@@ -209,6 +222,25 @@ function ProjectsPageContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
+      {/* RR Logo - white logo for dark bg */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="flex justify-center pt-6"
+      >
+        <Link href="/" className="group inline-block">
+          <Image
+            src="/logo-dark.png"
+            alt="Rock N' Roll Basement"
+            width={140}
+            height={57}
+            priority
+            className="transition-opacity duration-200 group-hover:opacity-80"
+          />
+        </Link>
+      </motion.div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden border-b border-gray-800">
         <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-orange-500/5" />

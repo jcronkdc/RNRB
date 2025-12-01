@@ -360,7 +360,7 @@ function ToolsContent() {
                 <div
                   className={`pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br ${tool.gradient} opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-20`}
                 />
-                
+
                 {/* Top accent line */}
                 <div
                   className={`absolute left-4 right-4 top-0 h-[2px] rounded-full bg-gradient-to-r ${tool.gradient} opacity-0 transition-all duration-300 group-hover:opacity-100`}
