@@ -2115,4 +2115,91 @@ body {
   }
 }
 
+/* ========================================
+   🎸 RNRB CARD SYSTEM
+   Rock N' Roll Basement branded cards
+   ======================================== */
+@layer components {
+  /* Base RNRB card - the foundation for all cards */
+  .rnrb-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle top highlight line */
+  .rnrb-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--border-strong) 20%,
+      var(--border-strong) 80%,
+      transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  /* Hover state - lift and glow */
+  .rnrb-card:hover {
+    border-color: var(--border-strong);
+    background: var(--panel-hover);
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(255, 99, 71, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .rnrb-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Interactive card variant - for clickable cards */
+  .rnrb-card-interactive {
+    cursor: pointer;
+  }
+
+  .rnrb-card-interactive:hover {
+    border-color: var(--accent);
+    box-shadow: 
+      0 8px 24px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 99, 71, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  /* Lift animation utility */
+  .rnrb-hover-lift {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .rnrb-hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Container utility */
+  .rnrb-container {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
+
+  @media (max-width: 768px) {
+    .rnrb-container {
+      padding-left: var(--space-4);
+      padding-right: var(--space-4);
+    }
+  }
+}
+
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */

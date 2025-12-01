@@ -219,9 +219,16 @@ function ToolsContent() {
 
   return (
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
+      {/* Ambient Background Effects */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-emerald-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-gradient-to-br from-purple-500/5 to-transparent blur-3xl" />
+      </div>
+
       {/* Hero Section */}
-      <div className="relative z-10 border-b" style={{ borderColor: 'var(--border)' }}>
-        <div className="mx-auto max-w-7xl px-4 py-8">
+      <div className="relative z-10 border-b border-white/5">
+        <div className="mx-auto max-w-7xl px-4 py-12">
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -229,61 +236,86 @@ function ToolsContent() {
             className="mb-8 flex flex-col items-center"
           >
             <Link href="/" className="group relative inline-block">
+              <div className="absolute -inset-4 rounded-full bg-white/5 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
               <Image
                 src="/logo-dark.png"
                 alt="Rock N' Roll Basement"
                 width={160}
                 height={65}
                 priority
-                className="transition-all duration-300 group-hover:scale-105"
+                className="relative transition-all duration-300 group-hover:scale-105"
               />
             </Link>
-            <h1
-              className="mt-4 text-center text-2xl font-bold md:text-3xl"
-              style={{ color: 'var(--text)' }}
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="mt-6 bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-center text-3xl font-bold text-transparent md:text-4xl"
             >
               Musician's Toolbox
-            </h1>
-            <p className="mt-2 text-center" style={{ color: 'var(--muted)' }}>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="mt-3 text-center text-lg"
+              style={{ color: 'var(--muted)' }}
+            >
               Professional tools for practice, performance & business
-            </p>
+            </motion.p>
           </motion.div>
         </div>
       </div>
 
       <div className="rnrb-container relative z-10 max-w-7xl px-4 py-8">
         {/* Category Filter */}
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-8 flex flex-wrap items-center justify-between gap-4"
+        >
           <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((cat) => (
-              <button
+            {CATEGORIES.map((cat, index) => (
+              <motion.button
                 key={cat.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3 + index * 0.05 }}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                className={`rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
                   activeCategory === cat.id
-                    ? 'bg-brand-primary text-white'
-                    : 'bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-white'
+                    ? 'bg-gradient-to-r from-brand-primary to-orange-500 text-white shadow-lg shadow-brand-primary/25'
+                    : 'border border-white/10 bg-white/5 text-muted-foreground hover:border-white/20 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 {cat.name}
-              </button>
+              </motion.button>
             ))}
           </div>
-          <div className="flex gap-1 rounded-lg bg-white/5 p-1">
+          <div className="flex gap-1 rounded-xl border border-white/10 bg-white/5 p-1.5 backdrop-blur-sm">
             <button
               onClick={() => setViewMode('grid')}
-              className={`rounded-md p-2 ${viewMode === 'grid' ? 'bg-white/10' : ''}`}
+              className={`rounded-lg p-2.5 transition-all duration-200 ${
+                viewMode === 'grid'
+                  ? 'bg-white/15 text-white shadow-inner'
+                  : 'text-muted-foreground hover:bg-white/10 hover:text-white'
+              }`}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`rounded-md p-2 ${viewMode === 'list' ? 'bg-white/10' : ''}`}
+              className={`rounded-lg p-2.5 transition-all duration-200 ${
+                viewMode === 'list'
+                  ? 'bg-white/15 text-white shadow-inner'
+                  : 'text-muted-foreground hover:bg-white/10 hover:text-white'
+              }`}
             >
               <List className="h-4 w-4" />
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Active Tool Display */}
         {activeTool && (
@@ -307,8 +339,8 @@ function ToolsContent() {
           <div
             className={
               viewMode === 'grid'
-                ? 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                : 'space-y-3'
+                ? 'grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                : 'space-y-4'
             }
           >
             {filteredTools.map((tool, index) => (
@@ -316,51 +348,72 @@ function ToolsContent() {
                 key={tool.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: 0.4 + index * 0.05 }}
                 onClick={() => tool.status === 'ready' && setActiveTool(tool.id)}
-                className={`rnrb-card group relative overflow-hidden transition-all ${
+                className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${
                   tool.status === 'ready'
-                    ? 'cursor-pointer hover:border-brand-primary/50'
-                    : 'cursor-not-allowed opacity-60'
+                    ? 'cursor-pointer border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] hover:border-white/20 hover:from-white/[0.12] hover:to-white/[0.04] hover:shadow-xl hover:shadow-black/20'
+                    : 'cursor-not-allowed border-white/5 bg-white/[0.02] opacity-50'
                 } ${viewMode === 'list' ? 'flex items-center gap-4' : ''}`}
               >
-                {/* Gradient background on hover */}
+                {/* Gradient glow on hover */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-0 transition-opacity group-hover:opacity-10`}
+                  className={`pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br ${tool.gradient} opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-20`}
+                />
+                
+                {/* Top accent line */}
+                <div
+                  className={`absolute left-4 right-4 top-0 h-[2px] rounded-full bg-gradient-to-r ${tool.gradient} opacity-0 transition-all duration-300 group-hover:opacity-100`}
                 />
 
                 <div
-                  className={`relative z-10 ${viewMode === 'grid' ? 'p-6' : 'flex flex-1 items-center gap-4 p-4'}`}
+                  className={`relative z-10 ${viewMode === 'grid' ? 'p-6' : 'flex flex-1 items-center gap-4 p-5'}`}
                 >
                   {/* Icon */}
                   <div
-                    className={`flex items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} ${
-                      viewMode === 'grid' ? 'mb-4 h-12 w-12' : 'h-10 w-10 flex-shrink-0'
+                    className={`flex items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} shadow-lg transition-transform duration-300 group-hover:scale-110 ${
+                      viewMode === 'grid' ? 'mb-5 h-14 w-14' : 'h-12 w-12 flex-shrink-0'
                     }`}
                   >
                     <tool.icon
-                      className={viewMode === 'grid' ? 'h-6 w-6 text-white' : 'h-5 w-5 text-white'}
+                      className={viewMode === 'grid' ? 'h-7 w-7 text-white' : 'h-6 w-6 text-white'}
                     />
                   </div>
 
                   {/* Content */}
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{tool.name}</h3>
+                      <h3 className="text-lg font-semibold text-white transition-colors group-hover:text-white">
+                        {tool.name}
+                      </h3>
                       {tool.status === 'coming-soon' && (
-                        <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs">
+                        <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-white/60">
                           Coming Soon
                         </span>
                       )}
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">{tool.description}</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-white/60">
+                      {tool.description}
+                    </p>
                   </div>
 
-                  {/* Category Badge */}
+                  {/* Category Badge & Arrow */}
                   {viewMode === 'grid' && (
-                    <div className="mt-4 inline-block rounded-full bg-white/5 px-3 py-1 text-xs capitalize text-muted-foreground">
-                      {tool.category}
+                    <div className="mt-5 flex items-center justify-between">
+                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium capitalize text-white/50">
+                        {tool.category}
+                      </span>
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-white/40 transition-all duration-300 group-hover:bg-white/10 group-hover:text-white">
+                        →
+                      </span>
                     </div>
+                  )}
+
+                  {/* List view arrow */}
+                  {viewMode === 'list' && tool.status === 'ready' && (
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/40 transition-all duration-300 group-hover:bg-white/10 group-hover:text-white">
+                      →
+                    </span>
                   )}
                 </div>
               </motion.div>
@@ -369,30 +422,39 @@ function ToolsContent() {
         )}
 
         {/* Stats */}
-        <div className="mt-12 rounded-2xl bg-gradient-to-r from-brand-primary/10 to-purple-500/10 p-6">
-          <div className="grid grid-cols-2 gap-6 text-center md:grid-cols-4">
-            <div>
-              <div className="text-3xl font-bold">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mt-16 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-8 backdrop-blur-sm"
+        >
+          <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
+            <div className="group">
+              <div className="bg-gradient-to-br from-emerald-400 to-teal-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
                 {TOOLS.filter((t) => t.status === 'ready').length}
               </div>
-              <div className="text-sm text-muted-foreground">Tools Ready</div>
+              <div className="mt-1 text-sm font-medium text-white/50">Tools Ready</div>
             </div>
-            <div>
-              <div className="text-3xl font-bold">
+            <div className="group">
+              <div className="bg-gradient-to-br from-amber-400 to-orange-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
                 {TOOLS.filter((t) => t.status === 'coming-soon').length}
               </div>
-              <div className="text-sm text-muted-foreground">Coming Soon</div>
+              <div className="mt-1 text-sm font-medium text-white/50">Coming Soon</div>
             </div>
-            <div>
-              <div className="text-3xl font-bold">{CATEGORIES.length - 1}</div>
-              <div className="text-sm text-muted-foreground">Categories</div>
+            <div className="group">
+              <div className="bg-gradient-to-br from-purple-400 to-pink-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
+                {CATEGORIES.length - 1}
+              </div>
+              <div className="mt-1 text-sm font-medium text-white/50">Categories</div>
             </div>
-            <div>
-              <div className="text-3xl font-bold">100%</div>
-              <div className="text-sm text-muted-foreground">Free Forever</div>
+            <div className="group">
+              <div className="bg-gradient-to-br from-brand-primary to-rose-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
+                100%
+              </div>
+              <div className="mt-1 text-sm font-medium text-white/50">Free Forever</div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
