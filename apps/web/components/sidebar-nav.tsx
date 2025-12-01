@@ -160,14 +160,7 @@ export function SidebarNav() {
   const [signingOut, setSigningOut] = useState(false);
   const { isOpen: mobileMenuOpen, setIsOpen: setMobileMenuOpen } = useMobileMenu();
   const [isMobile, setIsMobile] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>([
-    'Home',
-    'Create',
-    'Grow',
-    'Connect',
-    'Perform',
-    'Earn',
-  ]); // All sections open by default for easier navigation
+  const [expandedSections, setExpandedSections] = useState<string[]>(['Home', 'Create']); // Default open
 
   // Check if we're on mobile
   useEffect(() => {
@@ -366,7 +359,14 @@ export function SidebarNav() {
                         const active = isActive(item.href);
 
                         return (
-                          <Link key={item.href} href={item.href}>
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              router.push(item.href);
+                            }}
+                          >
                             <motion.div
                               whileHover={{ x: 3 }}
                               whileTap={{ scale: 0.98 }}
@@ -449,7 +449,14 @@ export function SidebarNav() {
               const active = isActive(item.href);
 
               return (
-                <Link key={item.href} href={item.href}>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push(item.href);
+                  }}
+                >
                   <motion.div
                     whileHover={{ x: 3 }}
                     whileTap={{ scale: 0.98 }}
