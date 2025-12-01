@@ -160,7 +160,14 @@ export function SidebarNav() {
   const [signingOut, setSigningOut] = useState(false);
   const { isOpen: mobileMenuOpen, setIsOpen: setMobileMenuOpen } = useMobileMenu();
   const [isMobile, setIsMobile] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>(['Home', 'Create']); // Default open
+  const [expandedSections, setExpandedSections] = useState<string[]>([
+    'Home',
+    'Create',
+    'Grow',
+    'Connect',
+    'Perform',
+    'Earn',
+  ]); // All sections open by default for easier navigation
 
   // Check if we're on mobile
   useEffect(() => {
