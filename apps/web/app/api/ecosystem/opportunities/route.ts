@@ -1,87 +1,85 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
 
-import { getServerSession } from '@/lib/auth';
-import { prisma } from '@cronkwaters/db';
+import { authOptions } from '@/lib/auth-options';
+import { prisma } from '@repo/db';
 
+// GET /api/ecosystem/opportunities - List opportunities with filters
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession();
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
+    const session = await getServerSession(authOptions);
     const searchParams = request.nextUrl.searchParams;
-    const limit = parseInt(searchParams.get('limit') || '10', 10);
+
+    // Parse filters
     const type = searchParams.get('type');
     const city = searchParams.get('city');
+    const compensation = searchParams.get('compensation');
+    const isRemote = searchParams.get('isRemote');
+    const limit = parseInt(searchParams.get('limit') || '20', 10);
+    const offset = parseInt(searchParams.get('offset') || '0', 10);
 
-    // Get user's profile for matching
-    const profile = await prisma.musicianProfile.findUnique({
-      where: { userId: session.user.id },
-      select: {
-        instruments: true,
-        genres: true,
-        skills: true,
-        location: true,
-      },
-    });
-
-    // Build filter
+    // Build where clause
     const where: any = {
       status: 'open',
-      visibility: 'public',
     };
 
-    if (type) {
+    if (type && type !== 'all') {
       where.type = type;
     }
 
     if (city) {
-      where.city = { contains: city, mode: 'insensitive' };
+      where.city = {
+        contains: city,
+        mode: 'insensitive',
+      };
+    }
+
+    if (compensation) {
+      where.compensation = compensation;
+    }
+
+    if (isRemote === 'true') {
+      where.isRemote = true;
     }
 
     // Fetch opportunities
-    const opportunities = await prisma.opportunity.findMany({
-      where,
-      orderBy: [{ startDate: 'asc' }, { createdAt: 'desc' }],
-      take: limit,
-      include: {
-        postedBy: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
+    const [opportunities, total] = await Promise.all([
+      prisma.opportunity.findMany({
+        where,
+        include: {
+          postedBy: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              username: true,
+            },
+          },
+          venue: {
+            select: {
+              id: true,
+              name: true,
+              city: true,
+              state: true,
+            },
+          },
+          _count: {
+            select: {
+              applications: true,
+            },
           },
         },
-        venue: {
-          select: {
-            name: true,
-            city: true,
-          },
-        },
-      },
-    });
-
-    // Format for frontend
-    const formattedOpportunities = opportunities.map((opp) => ({
-      id: opp.id,
-      type: opp.type,
-      title: opp.title,
-      description: opp.description,
-      location: opp.venue?.city || opp.city || (opp.isRemote ? 'Remote' : null),
-      date: opp.startDate?.toISOString().split('T')[0],
-      isPaid: opp.compensation === 'paid',
-      payAmount: Number(opp.payAmount) || null,
-      compensation: opp.compensation,
-      instruments: opp.instruments,
-      genres: opp.genres,
-      postedBy: opp.postedBy,
-      venue: opp.venue,
-    }));
+        orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
+        take: limit,
+        skip: offset,
+      }),
+      prisma.opportunity.count({ where }),
+    ]);
 
     return NextResponse.json({
-      opportunities: formattedOpportunities,
+      opportunities,
+      total,
+      hasMore: offset + opportunities.length < total,
     });
   } catch (error) {
     console.error('Error fetching opportunities:', error);
@@ -89,71 +87,81 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Create a new opportunity
+// POST /api/ecosystem/opportunities - Create a new opportunity
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const body = await request.json();
-    const {
-      type,
-      title,
-      description,
-      instruments,
-      genres,
-      skills,
-      experienceLevel,
-      compensation,
-      payAmount,
-      payType,
-      payDetails,
-      isRemote,
-      location,
-      city,
-      state,
-      country,
-      venueId,
-      startDate,
-      endDate,
-      isOngoing,
-      positionsAvailable,
-    } = body;
-
-    if (!type || !title || !compensation) {
       return NextResponse.json(
-        { error: 'Type, title, and compensation are required' },
-        { status: 400 }
+        { error: 'You must be logged in to post opportunities' },
+        { status: 401 }
       );
     }
 
+    const body = await request.json();
+
+    // Validate required fields
+    if (!body.type || !body.title) {
+      return NextResponse.json({ error: 'Type and title are required' }, { status: 400 });
+    }
+
+    // Create opportunity
     const opportunity = await prisma.opportunity.create({
       data: {
         postedById: session.user.id,
-        type,
-        title,
-        description,
-        instruments: instruments || [],
-        genres: genres || [],
-        skills: skills || [],
-        experienceLevel,
-        compensation,
-        payAmount: payAmount ? parseFloat(payAmount) : null,
-        payType,
-        payDetails,
-        isRemote: isRemote ?? false,
-        location,
-        city,
-        state,
-        country,
-        venueId,
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
-        isOngoing: isOngoing ?? false,
-        positionsAvailable: positionsAvailable || 1,
+        orgId: body.orgId || null,
+        type: body.type,
+        title: body.title,
+        description: body.description || null,
+
+        // Requirements
+        instruments: body.instruments || [],
+        genres: body.genres || [],
+        skills: body.skills || [],
+        experienceLevel: body.experienceLevel || null,
+
+        // Compensation
+        compensation: body.compensation || 'unpaid',
+        payAmount: body.payAmount ? parseFloat(body.payAmount) : null,
+        payType: body.payType || null,
+        payDetails: body.payDetails || null,
+
+        // Location
+        isRemote: body.isRemote || false,
+        location: body.location || null,
+        city: body.city || null,
+        state: body.state || null,
+        country: body.country || null,
+        venueId: body.venueId || null,
+
+        // Timing
+        date: body.date ? new Date(body.date) : null,
+        startTime: body.startTime || null,
+        endTime: body.endTime || null,
+        deadline: body.deadline ? new Date(body.deadline) : null,
+
+        // Details
+        dressCode: body.dressCode || null,
+        additionalInfo: body.additionalInfo || null,
+        contactEmail: body.contactEmail || null,
+        contactPhone: body.contactPhone || null,
+        applicationUrl: body.applicationUrl || null,
+
+        // Settings
+        allowApplications: body.allowApplications ?? true,
+        status: 'open',
+        isPinned: false,
+      },
+      include: {
+        postedBy: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            username: true,
+          },
+        },
       },
     });
 
@@ -162,13 +170,16 @@ export async function POST(request: NextRequest) {
       data: {
         userId: session.user.id,
         type: 'opportunity_posted',
-        title: `Posted opportunity: "${title}"`,
-        opportunityId: opportunity.id,
-        visibility: 'public',
+        entityType: 'opportunity',
+        entityId: opportunity.id,
+        metadata: {
+          opportunityType: opportunity.type,
+          title: opportunity.title,
+        },
       },
     });
 
-    return NextResponse.json({ opportunity });
+    return NextResponse.json({ opportunity }, { status: 201 });
   } catch (error) {
     console.error('Error creating opportunity:', error);
     return NextResponse.json({ error: 'Failed to create opportunity' }, { status: 500 });

@@ -226,43 +226,39 @@ function ToolsContent() {
         <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-gradient-to-br from-purple-500/5 to-transparent blur-3xl" />
       </div>
 
-      {/* Hero Section */}
-      <div className="relative z-10 border-b border-white/5">
-        <div className="mx-auto max-w-7xl px-4 py-12">
-          {/* Logo */}
+      {/* Logo & Header Section */}
+      <div className="relative z-10">
+        <div className="mx-auto max-w-7xl px-4 py-8">
+          {/* RR Logo - white logo for dark bg */}
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 flex flex-col items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="mb-6 flex flex-col items-center"
           >
-            <Link href="/" className="group relative inline-block">
-              <div className="absolute -inset-4 rounded-full bg-white/5 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+            <Link href="/" className="group inline-block">
               <Image
                 src="/logo-dark.png"
                 alt="Rock N' Roll Basement"
-                width={160}
-                height={65}
+                width={140}
+                height={57}
                 priority
-                className="relative transition-all duration-300 group-hover:scale-105"
+                className="transition-opacity duration-200 group-hover:opacity-80"
               />
             </Link>
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="mt-6 bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-center text-3xl font-bold text-transparent md:text-4xl"
-            >
-              Musician's Toolbox
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mt-3 text-center text-lg"
-              style={{ color: 'var(--muted)' }}
-            >
+          </motion.div>
+
+          {/* Page Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8 text-center"
+          >
+            <h1 className="mb-3 text-3xl font-bold text-white md:text-4xl">Musician's Toolbox</h1>
+            <p className="text-lg" style={{ color: 'var(--muted)' }}>
               Professional tools for practice, performance & business
-            </motion.p>
+            </p>
           </motion.div>
         </div>
       </div>

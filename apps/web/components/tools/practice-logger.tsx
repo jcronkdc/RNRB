@@ -136,18 +136,6 @@ export function PracticeLogger() {
     fetchData();
   }, [fetchData]);
 
-  // Calculate goal progress and streak when sessions change
-  useEffect(() => {
-    calculateGoalProgress();
-    calculateStreak();
-    // Also save to localStorage as backup
-    localStorage.setItem('practice-sessions', JSON.stringify(sessions));
-  }, [sessions, calculateStreak]);
-
-  useEffect(() => {
-    localStorage.setItem('practice-goals', JSON.stringify(goals));
-  }, [goals]);
-
   // Calculate practice streak from sessions state
   const calculateStreak = useCallback(() => {
     if (sessions.length === 0) {
@@ -211,6 +199,18 @@ export function PracticeLogger() {
       })
     );
   }, [sessions]);
+
+  // Calculate goal progress and streak when sessions change
+  useEffect(() => {
+    calculateGoalProgress();
+    calculateStreak();
+    // Also save to localStorage as backup
+    localStorage.setItem('practice-sessions', JSON.stringify(sessions));
+  }, [sessions, calculateStreak, calculateGoalProgress]);
+
+  useEffect(() => {
+    localStorage.setItem('practice-goals', JSON.stringify(goals));
+  }, [goals]);
 
   // Timer functions
   const startTimer = useCallback(() => {

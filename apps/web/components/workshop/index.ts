@@ -9,15 +9,6 @@
 // Empty states that inspire, not discourage
 export { EmptyState, EmptyStateInline } from './empty-state';
 
-// Community presence - "you're not alone"
-export { CommunityPulse, PulseIndicator } from './community-pulse';
-
-// Continuity - "we remember where you left off"
-export { ContinueWhereYouLeftOff } from './continue-where-you-left-off';
-
-// Progress - "you're becoming the musician you want to be"
-export { YourJourney } from './your-journey';
-
 // Daily ritual - "a reason to return"
 export { DailySpark, SparkIndicator } from './daily-spark';
 
@@ -31,11 +22,7 @@ export { WorkshopPageHeader, WorkshopPageLoading } from './page-header';
 export {
   getWelcomeMessage,
   emptyStates,
-  milestoneMessages,
-  journeyMilestones,
   getDailySpark,
   microCopy,
-  getCommunityMessage,
   getEmptyState,
-  getMilestoneMessage,
 } from '@/lib/workshop-voice';
