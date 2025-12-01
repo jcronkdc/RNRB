@@ -511,10 +511,8 @@ async function loadCurrentWorkContext(
           id: true,
           name: true,
           description: true,
-          type: true,
           status: true,
-          genre: true,
-          targetReleaseDate: true,
+          visibility: true,
           songs: {
             where: { archived: false },
             select: {
@@ -532,7 +530,7 @@ async function loadCurrentWorkContext(
               title: true,
               description: true,
               dueDate: true,
-              completed: true,
+              status: true,
               completedAt: true,
             },
             orderBy: { dueDate: 'asc' },
@@ -567,10 +565,10 @@ async function loadCurrentWorkContext(
           id: project.id,
           name: project.name,
           description: project.description,
-          type: project.type,
+          type: project.visibility || 'private', // Use visibility as proxy for type
           status: project.status,
-          genre: project.genre,
-          targetRelease: project.targetReleaseDate?.toISOString() || null,
+          genre: null, // Genre not available on Project model
+          targetRelease: null, // Target release not available on Project model
           songs: project.songs.map((s) => ({
             id: s.id,
             title: s.title,
@@ -583,7 +581,7 @@ async function loadCurrentWorkContext(
             title: m.title,
             description: m.description,
             dueDate: m.dueDate?.toISOString() || null,
-            completed: m.completed,
+            completed: m.status === 'completed' || !!m.completedAt,
             completedAt: m.completedAt?.toISOString() || null,
           })),
           members: project.members.map((m) => ({
@@ -885,16 +883,15 @@ export async function buildGodlikeContext(
           select: {
             id: true,
             name: true,
-            type: true,
             status: true,
-            targetReleaseDate: true,
+            description: true,
             songs: {
               where: { archived: false },
               select: { id: true, title: true, status: true },
               take: 50,
             },
             milestones: {
-              select: { title: true, dueDate: true, completed: true },
+              select: { title: true, dueDate: true, status: true, completedAt: true },
               orderBy: { dueDate: 'asc' },
               take: 20,
             },
@@ -1058,16 +1055,16 @@ export async function buildGodlikeContext(
   const projectsContext: ProjectContext[] = projectMemberships.map((pm) => ({
     id: pm.project.id,
     name: pm.project.name,
-    type: pm.project.type,
+    type: pm.project.description || 'Project', // Use description as project type hint
     status: pm.project.status,
     songs: pm.project.songs.map((s) => ({ id: s.id, title: s.title, status: s.status })),
     milestones: pm.project.milestones.map((m) => ({
       title: m.title,
       dueDate: m.dueDate?.toISOString() || null,
-      completed: m.completed,
+      completed: m.status === 'completed' || !!m.completedAt,
     })),
     members: pm.project.members.map((m) => ({ name: m.user?.name || 'Unknown', role: m.role })),
-    targetRelease: pm.project.targetReleaseDate?.toISOString() || null,
+    targetRelease: null, // Not available on Project model
   }));
 
   // Process tours
