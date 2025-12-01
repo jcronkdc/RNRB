@@ -17,7 +17,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import React, { useState, createContext, useContext, useCallback } from 'react';
 
 // Types of milestones that can be shared
 export type MilestoneType =
@@ -353,33 +353,48 @@ export function ShareMilestoneModal({
   );
 }
 
-// Hook to easily trigger the share modal from anywhere
-import { create } from 'zustand';
+// Context-based hook to trigger the share modal from anywhere
 
-interface ShareMilestoneStore {
-  isOpen: boolean;
-  milestone: MilestoneData | null;
+interface ShareMilestoneContextType {
   openShareModal: (milestone: MilestoneData) => void;
   closeShareModal: () => void;
 }
 
-export const useShareMilestone = create<ShareMilestoneStore>((set) => ({
-  isOpen: false,
-  milestone: null,
-  openShareModal: (milestone) => set({ isOpen: true, milestone }),
-  closeShareModal: () => set({ isOpen: false, milestone: null }),
-}));
+const ShareMilestoneContext = createContext<ShareMilestoneContextType | null>(null);
+
+export function useShareMilestone() {
+  const context = useContext(ShareMilestoneContext);
+  if (!context) {
+    // Return no-op functions if not within provider (graceful degradation)
+    return {
+      openShareModal: () => console.warn('ShareMilestoneProvider not found'),
+      closeShareModal: () => {},
+    };
+  }
+  return context;
+}
 
 // Provider component to add to app layout
 export function ShareMilestoneProvider({ children }: { children: React.ReactNode }) {
-  const { isOpen, milestone, closeShareModal } = useShareMilestone();
+  const [isOpen, setIsOpen] = useState(false);
+  const [milestone, setMilestone] = useState<MilestoneData | null>(null);
+
+  const openShareModal = useCallback((m: MilestoneData) => {
+    setMilestone(m);
+    setIsOpen(true);
+  }, []);
+
+  const closeShareModal = useCallback(() => {
+    setIsOpen(false);
+    setMilestone(null);
+  }, []);
 
   return (
-    <>
+    <ShareMilestoneContext.Provider value={{ openShareModal, closeShareModal }}>
       {children}
       {milestone && (
         <ShareMilestoneModal isOpen={isOpen} onClose={closeShareModal} milestone={milestone} />
       )}
-    </>
+    </ShareMilestoneContext.Provider>
   );
 }

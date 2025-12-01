@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { db } from '@/lib/db';
 
 /**
  * GET /api/ecosystem/pulse
@@ -29,7 +29,7 @@ export async function GET() {
 
     try {
       // Users with recent activity
-      onlineNow = await prisma.user.count({
+      onlineNow = await db.user.count({
         where: {
           lastActive: {
             gte: fifteenMinutesAgo,
@@ -42,7 +42,7 @@ export async function GET() {
       creatingNow = Math.max(1, Math.floor(onlineNow * 0.3));
 
       // Songs created today
-      songsToday = await prisma.song.count({
+      songsToday = await db.song.count({
         where: {
           createdAt: {
             gte: todayStart,
@@ -63,7 +63,7 @@ export async function GET() {
     if (session?.user) {
       try {
         // Get recent public activities
-        const recentSongs = await prisma.song.findMany({
+        const recentSongs = await db.song.findMany({
           where: {
             createdAt: {
               gte: new Date(now.getTime() - 24 * 60 * 60 * 1000), // Last 24 hours
