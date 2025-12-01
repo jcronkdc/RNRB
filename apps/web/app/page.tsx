@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { LandingAuthControls } from '@/components/landing-auth-controls';
 import { generateFAQSchema, JsonLd } from '@/lib/seo';
 
 const faqs = [
@@ -32,9 +31,6 @@ export default function HomePage() {
     <>
       <JsonLd data={generateFAQSchema(faqs)} />
       <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
-        {/* Auth Controls - Shows Dashboard/Sign Out when logged in */}
-        <LandingAuthControls />
-
         {/* Hero Section - Enhanced */}
         <section
           className="hero-section relative min-h-screen overflow-hidden pt-20"
@@ -478,7 +474,7 @@ export default function HomePage() {
                       className="h-1.5 w-1.5 rounded-full"
                       style={{ background: 'var(--gold)' }}
                     />
-                    See each other's cursors as you write
+                    Screen sharing for DAW walkthroughs
                   </li>
                   <li
                     className="flex items-center gap-3 text-sm"
@@ -488,7 +484,17 @@ export default function HomePage() {
                       className="h-1.5 w-1.5 rounded-full"
                       style={{ background: 'var(--gold)' }}
                     />
-                    Share your DAW in real-time
+                    Real-time cursor collaboration
+                  </li>
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--gold)' }}
+                    />
+                    Schedule meetings with shareable links
                   </li>
                 </ul>
 
@@ -969,6 +975,160 @@ export default function HomePage() {
                     <li className="flex items-center gap-2">
                       <span className="h-1 w-1 rounded-full" style={{ background: '#ec4899' }} />
                       Tour route optimization
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Category: Go Live */}
+                <div
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'rgba(239, 68, 68, 0.1)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: '#ef4444' }}
+                      >
+                        <circle cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
+                        <path
+                          d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49M19.07 4.93a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Go Live
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#ef4444' }} />
+                      Stream to fans worldwide
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#ef4444' }} />
+                      Live chat & reactions
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#ef4444' }} />
+                      Schedule streams in advance
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Category: Masterclasses */}
+                <div
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'rgba(168, 85, 247, 0.1)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: '#a855f7' }}
+                      >
+                        <path
+                          d="M22 10v6M2 10l10-5 10 5-10 5z"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M6 12v5c0 2 4 3 6 3s6-1 6-3v-5"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Masterclasses
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#a855f7' }} />
+                      Learn from industry pros
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#a855f7' }} />
+                      Live & on-demand lessons
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#a855f7' }} />
+                      Teach and earn revenue
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Category: Video Meetings */}
+                <div
+                  className="rounded-xl p-6"
+                  style={{
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'rgba(59, 130, 246, 0.1)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: '#3b82f6' }}
+                      >
+                        <path
+                          d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4zM3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Video Meetings
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#3b82f6' }} />
+                      Zoom-style HD video calls
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#3b82f6' }} />
+                      Screen sharing built-in
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#3b82f6' }} />
+                      Meeting scheduling & links
                     </li>
                   </ul>
                 </div>
@@ -1678,6 +1838,12 @@ export default function HomePage() {
                 </Link>
                 <Link href="/features/collaboration" className="nav-link">
                   Collaboration
+                </Link>
+                <Link href="/live" className="nav-link">
+                  Live Streaming
+                </Link>
+                <Link href="/masterclasses" className="nav-link">
+                  Masterclasses
                 </Link>
                 <Link href="/features/website-builder" className="nav-link">
                   Website Builder
