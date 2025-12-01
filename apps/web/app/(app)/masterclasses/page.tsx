@@ -1,0 +1,531 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import {
+  GraduationCap,
+  Play,
+  Users,
+  Clock,
+  Star,
+  Filter,
+  Search,
+  BookOpen,
+  Mic,
+  Music,
+  Radio,
+  Headphones,
+  Video,
+  Sparkles,
+  TrendingUp,
+  BadgeCheck,
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState, useEffect, useCallback } from 'react';
+
+interface Instructor {
+  id: string;
+  displayName: string;
+  headline?: string;
+  profileImage?: string;
+  verified: boolean;
+  averageRating: number;
+}
+
+interface Masterclass {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle?: string;
+  shortDesc?: string;
+  category: string;
+  tags: string[];
+  skillLevel: string;
+  format: string;
+  isFree: boolean;
+  price?: number;
+  originalPrice?: number;
+  thumbnailUrl?: string;
+  totalDuration?: number;
+  lessonCount: number;
+  averageRating: number;
+  enrollmentCount: number;
+  instructor: Instructor;
+  _count: {
+    lessons: number;
+    enrollments: number;
+    reviews: number;
+  };
+}
+
+const CATEGORIES = [
+  { value: '', label: 'All Categories', icon: BookOpen },
+  { value: 'guitar', label: 'Guitar', icon: Music },
+  { value: 'vocals', label: 'Vocals', icon: Mic },
+  { value: 'production', label: 'Production', icon: Headphones },
+  { value: 'mixing', label: 'Mixing', icon: Radio },
+  { value: 'songwriting', label: 'Songwriting', icon: Music },
+  { value: 'music_business', label: 'Music Business', icon: TrendingUp },
+  { value: 'recording', label: 'Recording', icon: Video },
+];
+
+const SKILL_LEVELS = [
+  { value: 'all', label: 'All Levels' },
+  { value: 'beginner', label: 'Beginner' },
+  { value: 'intermediate', label: 'Intermediate' },
+  { value: 'advanced', label: 'Advanced' },
+];
+
+function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
+  const formatDuration = (seconds?: number) => {
+    if (!seconds) return null;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  };
+
+  return (
+    <Link href={`/masterclasses/${masterclass.slug}`}>
+      <motion.div
+        whileHover={{ y: -4 }}
+        className="group relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] transition-all hover:border-purple-500/50"
+      >
+        {/* Thumbnail */}
+        <div className="relative aspect-video">
+          {masterclass.thumbnailUrl ? (
+            <Image
+              src={masterclass.thumbnailUrl}
+              alt={masterclass.title}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-pink-900/50">
+              <GraduationCap className="h-12 w-12 text-white/30" />
+            </div>
+          )}
+
+          {/* Overlay on hover */}
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
+            <motion.div
+              initial={{ scale: 0.8 }}
+              whileHover={{ scale: 1.1 }}
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-purple-500"
+            >
+              <Play className="ml-1 h-6 w-6 text-white" />
+            </motion.div>
+          </div>
+
+          {/* Badges */}
+          <div className="absolute left-3 top-3 flex gap-2">
+            {masterclass.isFree && (
+              <span className="rounded bg-green-500 px-2 py-1 text-xs font-bold text-white">
+                FREE
+              </span>
+            )}
+            {masterclass.format === 'live' && (
+              <span className="flex items-center gap-1 rounded bg-red-500 px-2 py-1 text-xs font-bold text-white">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+                LIVE
+              </span>
+            )}
+          </div>
+
+          {/* Duration */}
+          {masterclass.totalDuration && (
+            <div className="absolute bottom-3 right-3 flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-xs text-white">
+              <Clock className="h-3 w-3" />
+              {formatDuration(masterclass.totalDuration)}
+            </div>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="p-4">
+          {/* Category */}
+          <div className="mb-2 text-xs font-medium uppercase tracking-wider text-purple-400">
+            {masterclass.category.replace('_', ' ')}
+          </div>
+
+          {/* Title */}
+          <h3 className="mb-2 line-clamp-2 text-lg font-bold text-white transition-colors group-hover:text-purple-300">
+            {masterclass.title}
+          </h3>
+
+          {/* Instructor */}
+          <div className="mb-3 flex items-center gap-2">
+            <div className="relative h-6 w-6 overflow-hidden rounded-full bg-[var(--border)]">
+              {masterclass.instructor.profileImage ? (
+                <Image
+                  src={masterclass.instructor.profileImage}
+                  alt={masterclass.instructor.displayName}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 text-xs font-bold text-white">
+                  {masterclass.instructor.displayName.charAt(0)}
+                </div>
+              )}
+            </div>
+            <span className="text-sm text-[var(--muted)]">
+              {masterclass.instructor.displayName}
+            </span>
+            {masterclass.instructor.verified && <BadgeCheck className="h-4 w-4 text-blue-400" />}
+          </div>
+
+          {/* Stats */}
+          <div className="mb-3 flex items-center gap-4 text-xs text-[var(--muted)]">
+            <span className="flex items-center gap-1">
+              <BookOpen className="h-3.5 w-3.5" />
+              {masterclass._count.lessons} lessons
+            </span>
+            <span className="flex items-center gap-1">
+              <Users className="h-3.5 w-3.5" />
+              {masterclass._count.enrollments.toLocaleString()}
+            </span>
+            {masterclass.averageRating > 0 && (
+              <span className="flex items-center gap-1">
+                <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+                {masterclass.averageRating.toFixed(1)}
+              </span>
+            )}
+          </div>
+
+          {/* Price */}
+          <div className="flex items-center justify-between">
+            {masterclass.isFree ? (
+              <span className="font-bold text-green-400">Free</span>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold text-white">
+                  ${masterclass.price?.toFixed(2)}
+                </span>
+                {masterclass.originalPrice &&
+                  masterclass.originalPrice > (masterclass.price || 0) && (
+                    <span className="text-sm text-[var(--muted)] line-through">
+                      ${masterclass.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+              </div>
+            )}
+            <span className="text-xs capitalize text-[var(--muted)]">{masterclass.skillLevel}</span>
+          </div>
+        </div>
+      </motion.div>
+    </Link>
+  );
+}
+
+function FeaturedInstructor({
+  instructor,
+}: {
+  instructor: Instructor & { _count: { masterclasses: number } };
+}) {
+  return (
+    <Link href={`/masterclasses/instructors/${instructor.id}`}>
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        className="flex items-center gap-4 rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-900/30 to-pink-900/30 p-4 transition-all hover:border-purple-500/50"
+      >
+        <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
+          {instructor.profileImage ? (
+            <Image
+              src={instructor.profileImage}
+              alt={instructor.displayName}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 text-xl font-bold text-white">
+              {instructor.displayName.charAt(0)}
+            </div>
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <h4 className="truncate font-bold text-white">{instructor.displayName}</h4>
+            {instructor.verified && <BadgeCheck className="h-4 w-4 flex-shrink-0 text-blue-400" />}
+          </div>
+          <p className="truncate text-sm text-[var(--muted)]">{instructor.headline}</p>
+          <div className="mt-1 flex items-center gap-3 text-xs text-[var(--muted)]">
+            <span>{instructor._count.masterclasses} classes</span>
+            {instructor.averageRating > 0 && (
+              <span className="flex items-center gap-1">
+                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                {instructor.averageRating.toFixed(1)}
+              </span>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </Link>
+  );
+}
+
+export default function MasterclassesPage() {
+  const [masterclasses, setMasterclasses] = useState<Masterclass[]>([]);
+  const [featuredInstructors, setFeaturedInstructors] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('');
+  const [skillLevel, setSkillLevel] = useState('all');
+  const [showFreeOnly, setShowFreeOnly] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const fetchMasterclasses = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (search) params.append('search', search);
+      if (category) params.append('category', category);
+      if (skillLevel !== 'all') params.append('level', skillLevel);
+      if (showFreeOnly) params.append('free', 'true');
+
+      const [classesRes, instructorsRes] = await Promise.all([
+        fetch(`/api/masterclasses?${params.toString()}`),
+        fetch('/api/instructors?featured=true&limit=4'),
+      ]);
+
+      if (classesRes.ok) {
+        const data = await classesRes.json();
+        setMasterclasses(data.masterclasses);
+      }
+
+      if (instructorsRes.ok) {
+        const data = await instructorsRes.json();
+        setFeaturedInstructors(data.instructors);
+      }
+    } catch (error) {
+      console.error('Failed to fetch masterclasses:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [search, category, skillLevel, showFreeOnly]);
+
+  useEffect(() => {
+    const debounce = setTimeout(fetchMasterclasses, 300);
+    return () => clearTimeout(debounce);
+  }, [fetchMasterclasses]);
+
+  return (
+    <div className="min-h-screen bg-[var(--bg)]">
+      {/* Header */}
+      <div className="border-b border-[var(--border)] bg-[var(--panel)]">
+        <div className="mx-auto max-w-7xl px-4 py-6">
+          {/* Logo */}
+          <div className="mb-6 flex justify-center">
+            <Link href="/" className="transition-opacity hover:opacity-80">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={150}
+                height={50}
+                className="h-10 w-auto"
+              />
+            </Link>
+          </div>
+
+          {/* Title */}
+          <div className="mb-8 text-center">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-purple-500/10 px-4 py-2 text-sm font-medium text-purple-400">
+              <GraduationCap className="h-4 w-4" />
+              Masterclasses
+            </div>
+            <h1 className="mb-2 text-3xl font-bold text-white md:text-4xl">
+              Learn From the{' '}
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Best in Music
+              </span>
+            </h1>
+            <p className="mx-auto max-w-2xl text-[var(--muted)]">
+              World-class instruction from Grammy winners, touring pros, and industry legends. Live
+              sessions, pre-recorded courses, and hands-on learning.
+            </p>
+          </div>
+
+          {/* Search */}
+          <div className="mx-auto max-w-2xl">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
+              <input
+                type="text"
+                placeholder="Search masterclasses, instructors, or topics..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] py-3 pl-12 pr-4 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 transition-colors ${
+                  showFilters
+                    ? 'bg-purple-500 text-white'
+                    : 'text-[var(--muted)] hover:bg-[var(--border)]'
+                }`}
+              >
+                <Filter className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Filters */}
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--bg)] p-4"
+              >
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                      Category
+                    </label>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-white"
+                    >
+                      {CATEGORIES.map((cat) => (
+                        <option key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                      Skill Level
+                    </label>
+                    <select
+                      value={skillLevel}
+                      onChange={(e) => setSkillLevel(e.target.value)}
+                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-white"
+                    >
+                      {SKILL_LEVELS.map((level) => (
+                        <option key={level.value} value={level.value}>
+                          {level.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-end">
+                    <label className="flex cursor-pointer items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={showFreeOnly}
+                        onChange={(e) => setShowFreeOnly(e.target.checked)}
+                        className="h-5 w-5 rounded border-[var(--border)] bg-[var(--panel)] text-purple-500 focus:ring-purple-500"
+                      />
+                      <span className="text-white">Free classes only</span>
+                    </label>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        {/* Category Pills */}
+        <div className="scrollbar-hide mb-8 flex gap-2 overflow-x-auto pb-4">
+          {CATEGORIES.map((cat) => {
+            const Icon = cat.icon;
+            return (
+              <button
+                key={cat.value}
+                onClick={() => setCategory(cat.value)}
+                className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 transition-all ${
+                  category === cat.value
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-[var(--panel)] text-[var(--muted)] hover:bg-[var(--border)]'
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {cat.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Featured Instructors */}
+        {featuredInstructors.length > 0 && !search && !category && (
+          <section className="mb-12">
+            <div className="mb-4 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-yellow-400" />
+              <h2 className="text-xl font-bold text-white">Featured Instructors</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {featuredInstructors.map((instructor) => (
+                <FeaturedInstructor key={instructor.id} instructor={instructor} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Masterclasses Grid */}
+        {isLoading ? (
+          <div className="flex h-64 items-center justify-center">
+            <div className="text-center">
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+              <p className="text-[var(--muted)]">Loading masterclasses...</p>
+            </div>
+          </div>
+        ) : masterclasses.length > 0 ? (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {masterclasses.map((masterclass) => (
+              <MasterclassCard key={masterclass.id} masterclass={masterclass} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-20 text-center">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--panel)]">
+              <GraduationCap className="h-10 w-10 text-[var(--muted)]" />
+            </div>
+            <h2 className="mb-2 text-2xl font-bold text-white">No Masterclasses Found</h2>
+            <p className="mb-6 text-[var(--muted)]">
+              {search || category
+                ? 'Try adjusting your filters or search terms'
+                : 'Be the first to create a masterclass!'}
+            </p>
+            <Link href="/masterclasses/instructor">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 font-semibold text-white"
+              >
+                <GraduationCap className="h-5 w-5" />
+                Become an Instructor
+              </motion.button>
+            </Link>
+          </div>
+        )}
+
+        {/* Become an Instructor CTA */}
+        {masterclasses.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-16 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-900/50 to-pink-900/50 p-8 text-center"
+          >
+            <h3 className="mb-2 text-2xl font-bold text-white">Share Your Expertise</h3>
+            <p className="mx-auto mb-6 max-w-xl text-[var(--muted)]">
+              Are you a professional musician, producer, or industry expert? Create your own
+              masterclass and earn money teaching what you love.
+            </p>
+            <Link href="/masterclasses/instructor">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-black"
+              >
+                <GraduationCap className="h-5 w-5" />
+                Become an Instructor
+              </motion.button>
+            </Link>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}

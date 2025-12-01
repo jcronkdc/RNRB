@@ -1002,4 +1002,340 @@ Subscribe now: ${APP_URL}/settings/billing
 Thank you for trying Rock N' Roll Basement!
     `,
   }),
+
+  /**
+   * Masterclass enrollment confirmation (to student)
+   */
+  masterclassEnrollment: (params: {
+    email: string;
+    studentName: string;
+    courseName: string;
+    instructorName: string;
+    courseUrl: string;
+    pricePaid: string;
+    isFree: boolean;
+  }) => ({
+    to: params.email,
+    subject: `🎓 You're enrolled in "${params.courseName}"!`,
+    html: emailWrapper(
+      `
+      <div class="email-header">
+        <div class="logo-container">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+        </div>
+        <p class="tagline">Masterclass Enrollment</p>
+      </div>
+      <div class="email-content">
+        <p class="greeting">Hi ${params.studentName},</p>
+        <h2 class="main-heading">Welcome to Your Masterclass! 🎉</h2>
+        
+        <div class="success-box">
+          <p class="success-text">Your enrollment is confirmed!</p>
+        </div>
+        
+        <div class="highlight-box">
+          <p class="highlight-text">"${params.courseName}"</p>
+        </div>
+        
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-label">Instructor</span>
+            <span class="info-value" style="color: #ff6347;">${params.instructorName}</span>
+          </div>
+          ${!params.isFree ? `<div class="info-row"><span class="info-label">Amount Paid</span><span class="info-value" style="color: #4ade80;">${params.pricePaid}</span></div>` : ''}
+        </div>
+        
+        <p class="body-text">
+          Get ready to level up your music skills! You now have full access to all course materials.
+        </p>
+        
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">📹</span>
+            Watch lessons at your own pace
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">📥</span>
+            Download course resources
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">📜</span>
+            Earn a certificate upon completion
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">♾️</span>
+            Lifetime access to course materials
+          </li>
+        </ul>
+        
+        <div class="button-container">
+          <a href="${params.courseUrl}" class="primary-button">Start Learning</a>
+        </div>
+      </div>
+    `,
+      `Questions about this course? Contact the instructor through the platform.`
+    ),
+    text: `
+Welcome to Your Masterclass!
+
+Hi ${params.studentName},
+
+Your enrollment is confirmed for "${params.courseName}" by ${params.instructorName}!
+
+${!params.isFree ? `Amount paid: ${params.pricePaid}` : 'This is a free course.'}
+
+You now have access to:
+- Watch lessons at your own pace
+- Download course resources
+- Earn a certificate upon completion
+- Lifetime access to course materials
+
+Start learning now: ${params.courseUrl}
+    `,
+  }),
+
+  /**
+   * New enrollment notification (to instructor)
+   */
+  masterclassNewStudent: (params: {
+    email: string;
+    instructorName: string;
+    studentName: string;
+    courseName: string;
+    amountEarned: string;
+    dashboardUrl: string;
+    totalStudents: number;
+  }) => ({
+    to: params.email,
+    subject: `🎉 New student enrolled in "${params.courseName}"!`,
+    html: emailWrapper(
+      `
+      <div class="email-header">
+        <div class="logo-container">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+        </div>
+        <p class="tagline">New Enrollment</p>
+      </div>
+      <div class="email-content">
+        <p class="greeting">Hi ${params.instructorName},</p>
+        <h2 class="main-heading">You Have a New Student! 🎉</h2>
+        
+        <div class="success-box">
+          <p class="success-text">
+            <strong style="color: #ffffff;">${params.studentName}</strong> just enrolled in your course!
+          </p>
+        </div>
+        
+        <div class="highlight-box">
+          <p class="highlight-text">"${params.courseName}"</p>
+        </div>
+        
+        ${
+          params.amountEarned !== '$0.00'
+            ? `
+        <div class="amount-display amount-success">+${params.amountEarned}</div>
+        <p style="text-align: center; color: #6b6b75; font-size: 13px; margin-top: -12px;">Your Earnings (after fees)</p>
+        `
+            : ''
+        }
+        
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-label">Total Students</span>
+            <span class="info-value" style="color: #ff6347;">${params.totalStudents}</span>
+          </div>
+        </div>
+        
+        <p class="body-text">
+          Keep up the great work! Your expertise is making a difference in someone's musical journey.
+        </p>
+        
+        <div class="button-container">
+          <a href="${params.dashboardUrl}" class="primary-button">View Dashboard</a>
+        </div>
+      </div>
+    `,
+      `Thank you for teaching on Rock N' Roll Basement!`
+    ),
+    text: `
+New Student Enrolled!
+
+Hi ${params.instructorName},
+
+${params.studentName} just enrolled in "${params.courseName}"!
+
+${params.amountEarned !== '$0.00' ? `You earned: ${params.amountEarned}` : ''}
+Total students: ${params.totalStudents}
+
+View your dashboard: ${params.dashboardUrl}
+    `,
+  }),
+
+  /**
+   * Masterclass live session reminder
+   */
+  masterclassLiveReminder: (params: {
+    email: string;
+    studentName: string;
+    courseName: string;
+    instructorName: string;
+    sessionDate: string;
+    sessionTime: string;
+    joinUrl: string;
+  }) => ({
+    to: params.email,
+    subject: `⏰ Live session starting soon: "${params.courseName}"`,
+    html: emailWrapper(
+      `
+      <div class="email-header">
+        <div class="logo-container">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+        </div>
+        <p class="tagline">Live Session Reminder</p>
+      </div>
+      <div class="email-content">
+        <p class="greeting">Hi ${params.studentName},</p>
+        <h2 class="main-heading">Your Live Session is Starting Soon!</h2>
+        
+        <div class="warning-box">
+          <p class="warning-text">
+            🔴 Live in: <strong>30 minutes</strong>
+          </p>
+        </div>
+        
+        <div class="highlight-box">
+          <p class="highlight-text">"${params.courseName}"</p>
+        </div>
+        
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-label">Instructor</span>
+            <span class="info-value" style="color: #ff6347;">${params.instructorName}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Date</span>
+            <span class="info-value">${params.sessionDate}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Time</span>
+            <span class="info-value">${params.sessionTime}</span>
+          </div>
+        </div>
+        
+        <p class="body-text">
+          Get ready for an interactive learning experience! Have your instrument nearby and prepare any questions you'd like to ask.
+        </p>
+        
+        <div class="button-container">
+          <a href="${params.joinUrl}" class="primary-button">Join Live Session</a>
+        </div>
+        
+        <p class="link-fallback">
+          Or copy this link: <a href="${params.joinUrl}">${params.joinUrl}</a>
+        </p>
+      </div>
+    `,
+      `Don't miss this live session!`
+    ),
+    text: `
+Live Session Starting Soon!
+
+Hi ${params.studentName},
+
+Your live masterclass is starting in 30 minutes!
+
+Course: "${params.courseName}"
+Instructor: ${params.instructorName}
+Date: ${params.sessionDate}
+Time: ${params.sessionTime}
+
+Join now: ${params.joinUrl}
+    `,
+  }),
+
+  /**
+   * Certificate issued notification
+   */
+  masterclassCertificate: (params: {
+    email: string;
+    studentName: string;
+    courseName: string;
+    instructorName: string;
+    certificateUrl: string;
+    certificateNumber: string;
+  }) => ({
+    to: params.email,
+    subject: `🎓 Congratulations! You've earned your certificate`,
+    html: emailWrapper(
+      `
+      <div class="email-header">
+        <div class="logo-container">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+        </div>
+        <p class="tagline">Certificate of Completion</p>
+      </div>
+      <div class="email-content">
+        <p class="greeting">Hi ${params.studentName},</p>
+        <h2 class="main-heading">You Did It! 🎉🎓</h2>
+        
+        <div class="success-box">
+          <p class="success-text">Congratulations on completing your masterclass!</p>
+        </div>
+        
+        <div class="highlight-box">
+          <p class="highlight-text">"${params.courseName}"</p>
+          <p style="color: #9c9ca5; font-size: 14px; margin: 8px 0 0;">by ${params.instructorName}</p>
+        </div>
+        
+        <p class="body-text">
+          Your dedication has paid off! You've successfully completed all lessons and earned your certificate of completion.
+        </p>
+        
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-label">Certificate ID</span>
+            <span class="info-value">${params.certificateNumber}</span>
+          </div>
+        </div>
+        
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">📜</span>
+            Download your certificate
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">🔗</span>
+            Share on LinkedIn
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✓</span>
+            Verifiable credential
+          </li>
+        </ul>
+        
+        <div class="button-container">
+          <a href="${params.certificateUrl}" class="primary-button">View Certificate</a>
+        </div>
+        
+        <p style="text-align: center; color: #6b6b75; font-size: 13px;">
+          Keep learning! Check out more masterclasses to continue your journey.
+        </p>
+      </div>
+    `,
+      `Share your achievement with the world!`
+    ),
+    text: `
+Congratulations on Completing Your Masterclass!
+
+Hi ${params.studentName},
+
+You've successfully completed "${params.courseName}" by ${params.instructorName}!
+
+Certificate ID: ${params.certificateNumber}
+
+View and download your certificate: ${params.certificateUrl}
+
+Keep up the great work on your musical journey!
+    `,
+  }),
 };
