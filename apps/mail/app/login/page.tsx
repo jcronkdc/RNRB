@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Mail, Lock, Loader2, AlertCircle, Zap } from 'lucide-react';
@@ -141,7 +142,13 @@ export default function LoginPage() {
           </div>
 
           {/* Help Text */}
-          <div className="mt-6 text-center">
+          <div className="mt-6 space-y-3 text-center">
+            <Link
+              href="/forgot-password"
+              className="block text-sm text-rnrb-muted hover:text-rnrb-orange"
+            >
+              Forgot your password?
+            </Link>
             <p className="text-sm text-rnrb-muted">
               Don&apos;t have an account?{' '}
               <a

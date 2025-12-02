@@ -314,7 +314,41 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { username, domain = DEFAULT_DOMAIN, displayName } = body;
+    const { username, domain = DEFAULT_DOMAIN, displayName, password } = body;
+
+    // Validate password
+    if (!password || typeof password !== 'string') {
+      return NextResponse.json({ error: 'Password is required' }, { status: 400 });
+    }
+
+    // Password requirements: at least 8 characters, 1 uppercase, 1 lowercase, 1 number
+    if (password.length < 8) {
+      return NextResponse.json(
+        { error: 'Password must be at least 8 characters long' },
+        { status: 400 }
+      );
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      return NextResponse.json(
+        { error: 'Password must contain at least one uppercase letter' },
+        { status: 400 }
+      );
+    }
+
+    if (!/[a-z]/.test(password)) {
+      return NextResponse.json(
+        { error: 'Password must contain at least one lowercase letter' },
+        { status: 400 }
+      );
+    }
+
+    if (!/[0-9]/.test(password)) {
+      return NextResponse.json(
+        { error: 'Password must contain at least one number' },
+        { status: 400 }
+      );
+    }
 
     // Validate username
     if (!username || typeof username !== 'string') {
@@ -442,8 +476,8 @@ export async function POST(request: Request) {
       })),
     });
 
-    // Generate a secure password for the mail server
-    const mailPassword = generateAppPassword().replace(/-/g, '');
+    // Use user-provided password for the mail server
+    const mailPassword = password;
 
     // Provision account on Stalwart mail server
     const stalwartResult = await provisionMailAccount(
@@ -481,8 +515,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       emailAddress,
-      password: mailPassword, // Only returned on creation
-      message: `Your email ${emailAddress} is ready!`,
+      message: `Your email ${emailAddress} is ready! Use the password you chose to sign in.`,
       connectionSettings: {
         imap: { server: 'mail.rnrb.me', port: 993, security: 'SSL/TLS' },
         smtp: { server: 'mail.rnrb.me', port: 587, security: 'STARTTLS' },

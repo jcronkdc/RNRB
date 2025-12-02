@@ -74,6 +74,10 @@ export default function EmailSettingsPage() {
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   // Settings form
   const [displayName, setDisplayName] = useState('');
@@ -243,10 +247,50 @@ export default function EmailSettingsPage() {
     return () => clearTimeout(timer);
   }, [username]);
 
+  // Validate password
+  function validatePassword(): boolean {
+    setPasswordError(null);
+
+    if (!newPassword) {
+      setPasswordError('Password is required');
+      return false;
+    }
+
+    if (newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+      return false;
+    }
+
+    if (!/[A-Z]/.test(newPassword)) {
+      setPasswordError('Password must contain at least one uppercase letter');
+      return false;
+    }
+
+    if (!/[a-z]/.test(newPassword)) {
+      setPasswordError('Password must contain at least one lowercase letter');
+      return false;
+    }
+
+    if (!/[0-9]/.test(newPassword)) {
+      setPasswordError('Password must contain at least one number');
+      return false;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return false;
+    }
+
+    return true;
+  }
+
   // Create account
   async function handleCreateAccount(e: React.FormEvent) {
     e.preventDefault();
     if (!usernameAvailable || creating) return;
+
+    // Validate password before submitting
+    if (!validatePassword()) return;
 
     setCreating(true);
     try {
@@ -257,22 +301,22 @@ export default function EmailSettingsPage() {
           username,
           domain: selectedDomain,
           displayName: displayName || userName || undefined,
+          password: newPassword,
         }),
       });
 
       const data = await response.json();
       if (data.success) {
-        // Show success screen with credentials
+        // Show success screen
         setCreatedEmail(data.emailAddress);
-        setCreatedPassword(data.password);
         setJustCreated(true);
         // Refresh account data in background
         await fetchAccount();
       } else {
-        setUsernameError(data.error || data.message);
+        setPasswordError(data.error || data.message);
       }
     } catch (error) {
-      setUsernameError('Failed to create email account');
+      setPasswordError('Failed to create email account');
     } finally {
       setCreating(false);
     }
@@ -385,7 +429,7 @@ export default function EmailSettingsPage() {
   }
 
   // Success screen - shown right after account creation
-  if (justCreated && createdEmail && createdPassword) {
+  if (justCreated && createdEmail) {
     const setupInstructions = {
       iphone: [
         { step: 1, text: 'Open Settings → Mail → Accounts → Add Account' },
@@ -499,47 +543,17 @@ export default function EmailSettingsPage() {
                 </div>
               </div>
 
-              {/* Password - CRITICAL */}
-              <div className="mb-6">
-                <label className="mb-2 flex items-center gap-2 text-sm font-medium text-white/60">
-                  <AlertCircle className="h-4 w-4 text-yellow-400" />
-                  Your Password (save this now!)
-                </label>
-                <div
-                  className="flex items-center justify-between rounded-xl p-4"
-                  style={{
-                    background: 'rgba(255, 193, 7, 0.1)',
-                    border: '1px solid rgba(255, 193, 7, 0.3)',
-                  }}
-                >
-                  <code className="font-mono text-lg text-yellow-400">
-                    {showPassword ? createdPassword : '••••••••••••••••'}
-                  </code>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="rounded-lg p-2 transition-colors hover:bg-white/10"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5 text-white/50" />
-                      ) : (
-                        <Eye className="h-5 w-5 text-white/50" />
-                      )}
-                    </button>
-                    <button
-                      onClick={copyPassword}
-                      className="rounded-lg p-2 transition-colors hover:bg-white/10"
-                    >
-                      {copiedPassword ? (
-                        <Check className="h-5 w-5 text-green-400" />
-                      ) : (
-                        <Copy className="h-5 w-5 text-white/50" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-                <p className="mt-2 text-sm text-yellow-400/80">
-                  ⚠️ This password won't be shown again. Copy it now!
+              {/* Password reminder */}
+              <div
+                className="mb-6 flex items-center gap-3 rounded-xl p-4"
+                style={{
+                  background: 'rgba(34, 197, 94, 0.1)',
+                  border: '1px solid rgba(34, 197, 94, 0.2)',
+                }}
+              >
+                <CheckCircle className="h-5 w-5 text-green-400" />
+                <p className="text-sm text-green-200">
+                  Use the password you just created to sign in to your email.
                 </p>
               </div>
 
@@ -810,6 +824,57 @@ export default function EmailSettingsPage() {
                 <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
                   This will appear as the sender name in emails
                 </p>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                  Choose a Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? 'text' : 'password'}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="At least 8 characters"
+                    className="w-full rounded-xl px-4 py-3 pr-12"
+                    style={{
+                      background: 'var(--bg)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--text)]"
+                  >
+                    {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+                <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
+                  Must include uppercase, lowercase, and a number
+                </p>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                  Confirm Password
+                </label>
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter your password"
+                  className="w-full rounded-xl px-4 py-3"
+                  style={{
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                  }}
+                />
+                {passwordError && <p className="mt-2 text-sm text-red-500">{passwordError}</p>}
               </div>
 
               {/* Features List - Premium */}
