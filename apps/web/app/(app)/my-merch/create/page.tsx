@@ -20,6 +20,7 @@ import {
   StickerIcon,
   TankTop,
   ToteBag,
+  Package,
 } from '@/components/ui/custom-icons';
 import { usePrintful, PRINTFUL_PRODUCTS } from '@/lib/merch/use-printful';
 
@@ -361,6 +362,25 @@ export default function CreateProductPage() {
                 })}
               </div>
 
+              {/* Printful Catalog Link */}
+              <Link
+                href="/my-merch/printful-catalog"
+                className="flex items-center justify-between rounded-2xl border border-purple-500/30 bg-gradient-to-r from-purple-500/10 to-orange-500/10 p-5 transition-all hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20">
+                    <Package className="h-6 w-6 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white">Browse Full Printful Catalog</h3>
+                    <p className="text-sm text-white/60">
+                      Access 300+ products with all colors, sizes & print options
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-purple-400" />
+              </Link>
+
               <div className="flex justify-end">
                 <button
                   onClick={() => setStep(2)}
@@ -472,29 +492,324 @@ export default function CreateProductPage() {
                   )}
                 </div>
 
-                {/* Preview */}
+                {/* Enhanced Product Preview */}
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                  <h3 className="mb-4 font-semibold text-white">Preview</h3>
-                  <div className="relative aspect-square overflow-hidden rounded-xl bg-gradient-to-br from-white/10 to-white/5">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      {(() => {
-                        const IconComponent = selectedProduct.icon;
-                        return (
-                          <IconComponent className="h-32 w-32 text-white/20" strokeWidth={1} />
-                        );
-                      })()}
+                  <h3 className="mb-4 font-semibold text-white">Product Preview</h3>
+
+                  {/* Main Preview Area */}
+                  <div className="relative aspect-square overflow-hidden rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900">
+                    {/* Product Base Image */}
+                    <div className="absolute inset-0">
+                      {selectedProduct.id === 'tshirt' && (
+                        <svg viewBox="0 0 400 480" className="h-full w-full" fill="none">
+                          {/* T-Shirt Shape */}
+                          <path
+                            d="M50 80 L100 60 L160 80 L160 40 C160 40 180 30 200 30 C220 30 240 40 240 40 L240 80 L300 60 L350 80 L350 140 L280 140 L280 440 L120 440 L120 140 L50 140 Z"
+                            fill={
+                              selectedColors[0] === 'White'
+                                ? '#f8f8f8'
+                                : selectedColors[0] === 'Navy'
+                                  ? '#1e3a5f'
+                                  : selectedColors[0] === 'Red'
+                                    ? '#dc2626'
+                                    : selectedColors[0] === 'Heather Grey'
+                                      ? '#9ca3af'
+                                      : '#1a1a1a'
+                            }
+                            stroke="rgba(255,255,255,0.1)"
+                            strokeWidth="2"
+                          />
+                          {/* Collar */}
+                          <ellipse cx="200" cy="45" rx="35" ry="15" fill="rgba(0,0,0,0.2)" />
+                        </svg>
+                      )}
+                      {selectedProduct.id === 'hoodie' && (
+                        <svg viewBox="0 0 400 480" className="h-full w-full" fill="none">
+                          {/* Hoodie Shape */}
+                          <path
+                            d="M40 120 L90 90 L140 80 L140 50 C140 50 170 30 200 30 C230 30 260 50 260 50 L260 80 L310 90 L360 120 L360 180 L300 170 L300 440 L100 440 L100 170 L40 180 Z"
+                            fill={
+                              selectedColors[0] === 'Navy'
+                                ? '#1e3a5f'
+                                : selectedColors[0] === 'Heather Grey'
+                                  ? '#9ca3af'
+                                  : selectedColors[0] === 'Red'
+                                    ? '#dc2626'
+                                    : '#1a1a1a'
+                            }
+                            stroke="rgba(255,255,255,0.1)"
+                            strokeWidth="2"
+                          />
+                          {/* Hood */}
+                          <path
+                            d="M140 80 C140 50 170 30 200 30 C230 30 260 50 260 80 L260 100 L140 100 Z"
+                            fill="rgba(0,0,0,0.15)"
+                          />
+                          {/* Front pocket */}
+                          <rect
+                            x="130"
+                            y="280"
+                            width="140"
+                            height="60"
+                            rx="8"
+                            fill="rgba(0,0,0,0.1)"
+                          />
+                        </svg>
+                      )}
+                      {selectedProduct.id === 'mug' && (
+                        <svg viewBox="0 0 400 400" className="h-full w-full" fill="none">
+                          {/* Mug body */}
+                          <ellipse
+                            cx="180"
+                            cy="320"
+                            rx="100"
+                            ry="30"
+                            fill="rgba(255,255,255,0.1)"
+                          />
+                          <rect
+                            x="80"
+                            y="100"
+                            width="200"
+                            height="220"
+                            rx="10"
+                            fill="#f8f8f8"
+                            stroke="rgba(0,0,0,0.1)"
+                            strokeWidth="2"
+                          />
+                          <ellipse
+                            cx="180"
+                            cy="100"
+                            rx="100"
+                            ry="20"
+                            fill="#ffffff"
+                            stroke="rgba(0,0,0,0.1)"
+                            strokeWidth="2"
+                          />
+                          {/* Handle */}
+                          <path
+                            d="M280 140 Q340 140 340 210 Q340 280 280 280"
+                            stroke="#f8f8f8"
+                            strokeWidth="25"
+                            fill="none"
+                          />
+                          <path
+                            d="M280 150 Q325 150 325 210 Q325 270 280 270"
+                            stroke="rgba(0,0,0,0.05)"
+                            strokeWidth="15"
+                            fill="none"
+                          />
+                        </svg>
+                      )}
+                      {selectedProduct.id === 'poster' && (
+                        <svg viewBox="0 0 400 480" className="h-full w-full" fill="none">
+                          {/* Poster frame */}
+                          <rect
+                            x="60"
+                            y="40"
+                            width="280"
+                            height="400"
+                            rx="4"
+                            fill="#f8f8f8"
+                            stroke="rgba(0,0,0,0.2)"
+                            strokeWidth="2"
+                          />
+                          {/* Shadow */}
+                          <rect
+                            x="65"
+                            y="45"
+                            width="280"
+                            height="400"
+                            rx="4"
+                            fill="rgba(0,0,0,0.1)"
+                          />
+                        </svg>
+                      )}
+                      {selectedProduct.id === 'cap' && (
+                        <svg viewBox="0 0 400 400" className="h-full w-full" fill="none">
+                          {/* Cap crown */}
+                          <ellipse
+                            cx="200"
+                            cy="220"
+                            rx="120"
+                            ry="60"
+                            fill={
+                              selectedColors[0] === 'White'
+                                ? '#f8f8f8'
+                                : selectedColors[0] === 'Navy'
+                                  ? '#1e3a5f'
+                                  : selectedColors[0] === 'Khaki'
+                                    ? '#c4b5a0'
+                                    : '#1a1a1a'
+                            }
+                          />
+                          <path
+                            d="M80 220 Q80 120 200 100 Q320 120 320 220"
+                            fill={
+                              selectedColors[0] === 'White'
+                                ? '#f8f8f8'
+                                : selectedColors[0] === 'Navy'
+                                  ? '#1e3a5f'
+                                  : selectedColors[0] === 'Khaki'
+                                    ? '#c4b5a0'
+                                    : '#1a1a1a'
+                            }
+                            stroke="rgba(255,255,255,0.1)"
+                            strokeWidth="2"
+                          />
+                          {/* Bill */}
+                          <ellipse
+                            cx="200"
+                            cy="270"
+                            rx="130"
+                            ry="30"
+                            fill={
+                              selectedColors[0] === 'White'
+                                ? '#e8e8e8'
+                                : selectedColors[0] === 'Navy'
+                                  ? '#152d4a'
+                                  : selectedColors[0] === 'Khaki'
+                                    ? '#a89880'
+                                    : '#0a0a0a'
+                            }
+                          />
+                        </svg>
+                      )}
+                      {selectedProduct.id === 'tote' && (
+                        <svg viewBox="0 0 400 480" className="h-full w-full" fill="none">
+                          {/* Tote bag */}
+                          <rect
+                            x="80"
+                            y="120"
+                            width="240"
+                            height="300"
+                            rx="4"
+                            fill={selectedColors[0] === 'Natural' ? '#f5f0e6' : '#1a1a1a'}
+                            stroke="rgba(255,255,255,0.1)"
+                            strokeWidth="2"
+                          />
+                          {/* Handles */}
+                          <path
+                            d="M120 120 L120 60 Q120 40 140 40 L160 40"
+                            stroke={selectedColors[0] === 'Natural' ? '#e0d8c8' : '#2a2a2a'}
+                            strokeWidth="12"
+                            fill="none"
+                          />
+                          <path
+                            d="M280 120 L280 60 Q280 40 260 40 L240 40"
+                            stroke={selectedColors[0] === 'Natural' ? '#e0d8c8' : '#2a2a2a'}
+                            strokeWidth="12"
+                            fill="none"
+                          />
+                        </svg>
+                      )}
+                      {!['tshirt', 'hoodie', 'mug', 'poster', 'cap', 'tote'].includes(
+                        selectedProduct.id
+                      ) && (
+                        <div className="flex h-full items-center justify-center">
+                          {(() => {
+                            const IconComponent = selectedProduct.icon;
+                            return (
+                              <IconComponent className="h-40 w-40 text-white/30" strokeWidth={1} />
+                            );
+                          })()}
+                        </div>
+                      )}
                     </div>
+
+                    {/* Design Overlay - positioned on the product */}
                     {designUrl && (
-                      <div className="absolute inset-0 flex items-center justify-center p-8">
+                      <div
+                        className="absolute flex items-center justify-center"
+                        style={{
+                          top:
+                            selectedProduct.id === 'tshirt'
+                              ? '22%'
+                              : selectedProduct.id === 'hoodie'
+                                ? '25%'
+                                : selectedProduct.id === 'mug'
+                                  ? '30%'
+                                  : selectedProduct.id === 'poster'
+                                    ? '10%'
+                                    : selectedProduct.id === 'cap'
+                                      ? '25%'
+                                      : selectedProduct.id === 'tote'
+                                        ? '30%'
+                                        : '25%',
+                          left: selectedProduct.id === 'mug' ? '25%' : '25%',
+                          width: selectedProduct.id === 'mug' ? '40%' : '50%',
+                          height: selectedProduct.id === 'poster' ? '75%' : '40%',
+                        }}
+                      >
                         <img
                           src={designUrl}
                           alt="Design preview"
-                          className="max-h-[50%] max-w-[50%] object-contain"
+                          className="h-full w-full object-contain drop-shadow-lg"
+                          style={{
+                            mixBlendMode:
+                              selectedColors[0] === 'White' || selectedColors[0] === 'Natural'
+                                ? 'multiply'
+                                : 'screen',
+                            opacity: 0.9,
+                          }}
                         />
                       </div>
                     )}
+
+                    {/* Loading overlay when generating mockup */}
+                    {isUploading && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                        <div className="text-center">
+                          <Loader2 className="mx-auto h-8 w-8 animate-spin text-orange-400" />
+                          <p className="mt-2 text-sm text-white">Processing...</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <p className="mt-3 text-center text-sm text-white/50">{selectedProduct.name}</p>
+
+                  {/* Product Info */}
+                  <div className="mt-4 text-center">
+                    <p className="font-medium text-white">{selectedProduct.name}</p>
+                    <p className="text-sm text-white/50">
+                      {selectedColors[0] || selectedProduct.colors?.[0] || 'Select color'} •{' '}
+                      {selectedProduct.description}
+                    </p>
+                  </div>
+
+                  {/* Color Preview Swatches */}
+                  {selectedColors.length > 1 && (
+                    <div className="mt-4">
+                      <p className="mb-2 text-xs text-white/40">
+                        Available in {selectedColors.length} colors
+                      </p>
+                      <div className="flex justify-center gap-2">
+                        {selectedColors.slice(0, 5).map((color) => (
+                          <div
+                            key={color}
+                            className="h-6 w-6 rounded-full border-2 border-white/20"
+                            style={{
+                              backgroundColor:
+                                color === 'Black'
+                                  ? '#1a1a1a'
+                                  : color === 'White'
+                                    ? '#f8f8f8'
+                                    : color === 'Navy'
+                                      ? '#1e3a5f'
+                                      : color === 'Red'
+                                        ? '#dc2626'
+                                        : color === 'Heather Grey'
+                                          ? '#9ca3af'
+                                          : color === 'Khaki'
+                                            ? '#c4b5a0'
+                                            : color === 'Natural'
+                                              ? '#f5f0e6'
+                                              : '#666',
+                            }}
+                            title={color}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

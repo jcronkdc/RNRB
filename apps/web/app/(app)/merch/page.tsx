@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   ShoppingBag,
@@ -10,6 +10,13 @@ import {
   Filter,
   LayoutGrid,
   List,
+  Loader2,
+  Search,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  AlertCircle,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,13 +25,13 @@ import { CartDrawer, CartButton } from '@/components/merch/cart-drawer';
 import { ProductGrid } from '@/components/merch/product-card';
 
 // ============================================
-// STORE CONFIG - Controlled by environment variable or manual toggle
+// STORE CONFIG - Controlled by environment variable
 // ============================================
-// Set NEXT_PUBLIC_MERCH_STORE_LIVE=true in environment to enable
-// Or manually set this to true when ready to sell
-const STORE_LIVE = process.env.NEXT_PUBLIC_MERCH_STORE_LIVE === 'true' || true;
+// Set NEXT_PUBLIC_MERCH_STORE_LIVE=true in environment to enable the live store
+// If not set or set to anything other than 'true', the "Coming Soon" view is shown
+const STORE_LIVE = process.env.NEXT_PUBLIC_MERCH_STORE_LIVE === 'true';
 
-// Products with real Stripe Price IDs
+// Products with real Stripe Price IDs and mockup images
 const SAMPLE_PRODUCTS: MerchProduct[] = [
   {
     id: 'rnrb-tee-black',
@@ -35,6 +42,7 @@ const SAMPLE_PRODUCTS: MerchProduct[] = [
     currency: 'USD',
     category: 'apparel',
     inStock: true,
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=600&fit=crop',
     stripeProductId: 'prod_TWlUWi951vK4Rg',
     stripePriceId: 'price_1SZhxv2H6bMdop9gJSsCr3lH',
     variants: [
@@ -53,6 +61,7 @@ const SAMPLE_PRODUCTS: MerchProduct[] = [
     currency: 'USD',
     category: 'apparel',
     inStock: true,
+    image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&h=600&fit=crop',
     stripeProductId: 'prod_TWlUJ9FcWeKrhn',
     stripePriceId: 'price_1SZhxv2H6bMdop9gJ37b71Xr',
     variants: [
@@ -70,6 +79,7 @@ const SAMPLE_PRODUCTS: MerchProduct[] = [
     currency: 'USD',
     category: 'accessories',
     inStock: true,
+    image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=600&h=600&fit=crop',
     stripeProductId: 'prod_TWlUCU3fpaU9Mg',
     stripePriceId: 'price_1SZhxw2H6bMdop9gq5fJq9g3',
   },
@@ -81,6 +91,7 @@ const SAMPLE_PRODUCTS: MerchProduct[] = [
     currency: 'USD',
     category: 'limited',
     inStock: true,
+    image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&h=600&fit=crop',
     stripeProductId: 'prod_TWlUT1CaQdyM6q',
     stripePriceId: 'price_1SZhxx2H6bMdop9gvwoLERDx',
   },
@@ -293,10 +304,87 @@ function ComingSoonView() {
 function LiveStoreView() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [publishedProducts, setPublishedProducts] = useState<MerchProduct[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [usingFallback, setUsingFallback] = useState(false);
 
-  const filteredProducts = SAMPLE_PRODUCTS.filter(
-    (product) => activeCategory === 'all' || product.category === activeCategory
-  );
+  // Fetch published products from all artists
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        setUsingFallback(false);
+
+        const url = new URL('/api/merch/products', window.location.origin);
+        if (activeCategory !== 'all') {
+          url.searchParams.set('category', activeCategory);
+        }
+
+        const response = await fetch(url.toString());
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+
+        const data = await response.json();
+
+        // Transform API products to MerchProduct format
+        const transformedProducts: MerchProduct[] = data.products.map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description || '',
+          price: p.retailPrice,
+          currency: 'USD',
+          category: p.category || 'apparel',
+          inStock: true,
+          image: p.mockupUrl || p.thumbnailUrl, // The actual product mockup image
+          stripeProductId: p.id, // Use our product ID
+          stripePriceId: p.id, // Use our product ID for now
+          artistId: p.artistId,
+          productId: p.id,
+          variants:
+            p.variants?.map((v: any) => ({
+              id: v.id,
+              name: v.size || v.color || 'Standard',
+              type: v.size ? 'size' : 'color',
+              inStock: true,
+            })) ||
+            p.sizes?.map((s: string) => ({
+              id: s.toLowerCase(),
+              name: s,
+              type: 'size',
+              inStock: true,
+            })) ||
+            [],
+        }));
+
+        setPublishedProducts(transformedProducts);
+      } catch (err) {
+        console.error('[MERCH] Error fetching products:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load products');
+        // Fall back to sample products on error - filter by active category
+        const fallbackProducts =
+          activeCategory === 'all'
+            ? SAMPLE_PRODUCTS
+            : SAMPLE_PRODUCTS.filter((p) => p.category === activeCategory);
+        setPublishedProducts(fallbackProducts);
+        setUsingFallback(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [activeCategory]);
+
+  // Use published products if available, otherwise fall back to samples
+  const filteredProducts =
+    publishedProducts.length > 0
+      ? publishedProducts
+      : SAMPLE_PRODUCTS.filter(
+          (product) => activeCategory === 'all' || product.category === activeCategory
+        );
 
   return (
     <>
@@ -360,8 +448,64 @@ function LiveStoreView() {
         </div>
       </motion.div>
 
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="mx-auto h-12 w-12 animate-spin text-orange-400" />
+            <p className="mt-4 text-white/60">Loading products...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Fallback Warning Banner - Shows when API failed but fallback products are displayed */}
+      {!isLoading && usingFallback && error && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 flex items-center justify-between gap-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4"
+        >
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 flex-shrink-0 text-amber-400" />
+            <p className="text-sm text-amber-200">
+              Showing sample products. Some items may not be available.
+            </p>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="flex-shrink-0 rounded-lg bg-amber-500/20 px-4 py-2 text-sm font-medium text-amber-300 transition-all hover:bg-amber-500/30"
+          >
+            Retry
+          </button>
+        </motion.div>
+      )}
+
+      {/* Critical Error State - Only shows if fallback also fails (rare edge case) */}
+      {!isLoading && error && publishedProducts.length === 0 && (
+        <div className="rounded-2xl border border-orange-500/20 bg-orange-500/10 p-8 text-center">
+          <AlertCircle className="mx-auto h-12 w-12 text-orange-400" />
+          <p className="mt-4 text-lg font-semibold text-white">Unable to load products</p>
+          <p className="mt-2 text-white/60">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white transition-all hover:bg-orange-600"
+          >
+            Try Again
+          </button>
+        </div>
+      )}
+
       {/* Products Grid */}
-      <ProductGrid products={filteredProducts} />
+      {!isLoading && filteredProducts.length > 0 && <ProductGrid products={filteredProducts} />}
+
+      {/* No Products State */}
+      {!isLoading && filteredProducts.length === 0 && !error && (
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-12 text-center">
+          <ShoppingBag className="mx-auto h-16 w-16 text-white/20" />
+          <p className="mt-4 text-lg font-semibold text-white">No products available yet</p>
+          <p className="mt-2 text-white/60">Check back soon for awesome merch from our artists!</p>
+        </div>
+      )}
 
       {/* Stats */}
       <motion.div

@@ -22,6 +22,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Validate Supabase configuration
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('[IMAGE-UPLOAD] Supabase configuration missing');
+      return NextResponse.json(
+        { error: 'Storage configuration error. Please contact support.' },
+        { status: 500 }
+      );
+    }
+
     const supabase = getSupabaseClient();
 
     const formData = await request.formData();
@@ -37,34 +46,60 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File must be an image' }, { status: 400 });
     }
 
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024;
+    // Validate file size (10MB limit for merch-designs, 5MB for others)
+    const maxSize = bucket === 'merch-designs' ? 10 * 1024 * 1024 : 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      return NextResponse.json({ error: 'File size must be under 5MB' }, { status: 400 });
+      return NextResponse.json(
+        { error: `File size must be under ${maxSize / (1024 * 1024)}MB` },
+        { status: 400 }
+      );
     }
 
-    // Generate unique filename
-    const fileExt = file.name.split('.').pop();
+    // Generate unique filename with sanitized extension
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || 'png';
     const fileName = `${session.user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
 
     // Convert file to buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Upload to Supabase Storage
+    // Upload to Supabase Storage with proper options
     const { data, error } = await supabase.storage.from(bucket).upload(fileName, buffer, {
       contentType: file.type,
       cacheControl: '3600',
       upsert: false,
+      duplex: 'half', // Required for some Node.js versions
     });
 
     if (error) {
-      console.error('[IMAGE-UPLOAD] Supabase error:', error);
-      return NextResponse.json({ error: 'Upload failed: ' + error.message }, { status: 500 });
+      console.error('[IMAGE-UPLOAD] Supabase storage error:', {
+        message: error.message,
+        bucket,
+        fileName,
+        fileSize: file.size,
+        contentType: file.type,
+      });
+
+      // Provide more helpful error messages
+      if (error.message.includes('row-level security')) {
+        return NextResponse.json(
+          { error: 'Storage permissions error. Please contact support.' },
+          { status: 403 }
+        );
+      }
+
+      return NextResponse.json({ error: `Upload failed: ${error.message}` }, { status: 500 });
     }
 
     // Get public URL
     const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(data.path);
+
+    console.log('[IMAGE-UPLOAD] Upload successful:', {
+      bucket,
+      path: data.path,
+      url: urlData.publicUrl,
+      userId: session.user.id,
+    });
 
     return NextResponse.json({
       success: true,
@@ -73,8 +108,13 @@ export async function POST(request: NextRequest) {
       bucket,
     });
   } catch (error) {
-    console.error('[IMAGE-UPLOAD] Error:', error);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    console.error('[IMAGE-UPLOAD] Unexpected error:', error);
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Upload failed',
+      },
+      { status: 500 }
+    );
   }
 }
 

@@ -202,13 +202,21 @@ export default function MyMerchPage() {
               </div>
               <p className="text-white/60">Create and manage your merchandise products</p>
             </div>
-            <Link
-              href="/my-merch/create"
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-5 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
-            >
-              <Plus className="h-5 w-5" />
-              Create Product
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/my-merch/printful-catalog"
+                className="flex items-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 px-4 py-3 font-medium text-purple-400 transition-all hover:border-purple-500/50 hover:bg-purple-500/20"
+              >
+                Browse Catalog
+              </Link>
+              <Link
+                href="/my-merch/create"
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-5 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
+              >
+                <Plus className="h-5 w-5" />
+                Create Product
+              </Link>
+            </div>
           </motion.div>
 
           {/* Stats Cards */}

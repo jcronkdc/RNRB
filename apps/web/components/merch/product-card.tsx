@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingBag, Plus, Check } from '@/components/ui/custom-icons';
+import { ShoppingBag, Plus, Check, ZoomIn } from '@/components/ui/custom-icons';
 import { useCart, formatPrice, MerchProduct } from '@/lib/merch/cart-context';
 import Image from 'next/image';
 
@@ -89,16 +89,17 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
           </div>
         )}
 
-        {/* Quick View Button */}
-        {onQuickView && product.inStock && (
-          <motion.button
-            initial={{ opacity: 0 }}
-            whileHover={{ scale: 1.05 }}
-            className="absolute bottom-3 left-3 right-3 flex items-center justify-center gap-2 rounded-xl bg-white/90 py-2 text-sm font-medium text-zinc-900 opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100"
-            onClick={() => onQuickView(product)}
+        {/* Hover Overlay with Quick View */}
+        {product.inStock && (
+          <div
+            className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/40 group-hover:opacity-100"
+            onClick={() => onQuickView?.(product)}
           >
-            Quick View
-          </motion.button>
+            <div className="flex scale-90 transform items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-lg transition-transform duration-200 group-hover:scale-100">
+              <ZoomIn className="h-4 w-4" />
+              Quick View
+            </div>
+          </div>
         )}
       </div>
 
