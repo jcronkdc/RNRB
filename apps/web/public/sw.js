@@ -3,16 +3,15 @@
  * Handles offline support, push notifications, and background sync
  */
 
-const CACHE_VERSION = 'v3-showstopper'; // Updated for landing page changes
+const CACHE_VERSION = 'v4-pwa-fix'; // Fixed PWA navigation issues
 const STATIC_CACHE = `rnrb-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `rnrb-dynamic-${CACHE_VERSION}`;
 const API_CACHE = `rnrb-api-${CACHE_VERSION}`;
 
 // Static assets to cache on install (app shell)
+// NOTE: Only cache truly static assets, NOT HTML pages
+// HTML pages should always go through network-first to ensure fresh content
 const STATIC_ASSETS = [
-  '/',
-  '/dashboard',
-  '/offline',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',
@@ -20,6 +19,9 @@ const STATIC_ASSETS = [
   '/logo-light.png',
   '/apple-touch-icon.png',
 ];
+
+// The offline page URL - fetched dynamically when needed
+const OFFLINE_PAGE = '/offline';
 
 // API routes to cache with network-first strategy
 const CACHEABLE_API_ROUTES = [
@@ -32,56 +34,80 @@ const CACHEABLE_API_ROUTES = [
 // Maximum age for cached API responses (5 minutes)
 const API_CACHE_MAX_AGE = 5 * 60 * 1000;
 
-// Install event - cache static assets
+// Install event - cache static assets and activate immediately
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing service worker...');
+  console.log('[SW] Installing service worker version:', CACHE_VERSION);
 
   event.waitUntil(
     caches
       .open(STATIC_CACHE)
       .then((cache) => {
-        console.log('[SW] Caching app shell...');
-        return cache.addAll(STATIC_ASSETS);
+        console.log('[SW] Caching static assets...');
+        // Add assets one by one to prevent single failure from blocking all
+        return Promise.allSettled(
+          STATIC_ASSETS.map((url) =>
+            cache.add(url).catch((err) => {
+              console.warn('[SW] Failed to cache:', url, err);
+            })
+          )
+        );
       })
       .then(() => {
-        console.log('[SW] App shell cached successfully');
+        console.log('[SW] Static assets cached successfully');
+        // CRITICAL: Skip waiting to activate immediately
+        // This ensures users get the latest service worker
         return self.skipWaiting();
       })
       .catch((err) => {
-        console.error('[SW] Failed to cache app shell:', err);
+        console.error('[SW] Install failed:', err);
+        // Still skip waiting even on error to prevent stale SW
+        return self.skipWaiting();
       })
   );
 });
 
-// Activate event - clean up old caches
+// Activate event - clean up old caches and claim clients immediately
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating service worker...');
+  console.log('[SW] Activating service worker version:', CACHE_VERSION);
 
   event.waitUntil(
-    caches
-      .keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames
-            .filter((name) => {
-              // Delete caches that don't match current version
-              return (
-                name.startsWith('rnrb-') &&
-                name !== STATIC_CACHE &&
-                name !== DYNAMIC_CACHE &&
-                name !== API_CACHE
-              );
-            })
-            .map((name) => {
-              console.log('[SW] Deleting old cache:', name);
-              return caches.delete(name);
-            })
-        );
-      })
-      .then(() => {
-        console.log('[SW] Service worker activated');
-        return self.clients.claim();
-      })
+    (async () => {
+      // Delete ALL old caches first
+      const cacheNames = await caches.keys();
+      const deletePromises = cacheNames
+        .filter((name) => {
+          // Delete any cache that doesn't match current version
+          return (
+            name.startsWith('rnrb-') &&
+            name !== STATIC_CACHE &&
+            name !== DYNAMIC_CACHE &&
+            name !== API_CACHE
+          );
+        })
+        .map((name) => {
+          console.log('[SW] Deleting old cache:', name);
+          return caches.delete(name);
+        });
+
+      await Promise.all(deletePromises);
+
+      console.log('[SW] Old caches cleaned up');
+
+      // CRITICAL: Claim all clients immediately
+      // This makes the new service worker take over all tabs/windows
+      await self.clients.claim();
+
+      console.log('[SW] Service worker activated and claimed all clients');
+
+      // Notify all clients that there's a new version
+      const clients = await self.clients.matchAll({ type: 'window' });
+      clients.forEach((client) => {
+        client.postMessage({
+          type: 'SW_UPDATED',
+          version: CACHE_VERSION,
+        });
+      });
+    })()
   );
 });
 
@@ -100,6 +126,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Skip Next.js HMR/hot reload requests in development
+  if (url.pathname.includes('/_next/webpack-hmr') || url.pathname.includes('/__nextjs')) {
+    return;
+  }
+
   // Handle API requests with network-first strategy
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(networkFirstStrategy(request));
@@ -112,14 +143,21 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Handle navigation requests (HTML pages) with network-first
+  // Handle navigation requests (HTML pages) with STRICT network-first
+  // This is critical for PWA mode - always try network first for pages
   if (request.mode === 'navigate') {
-    event.respondWith(networkFirstWithOfflineFallback(request));
+    event.respondWith(networkFirstForNavigation(request));
     return;
   }
 
-  // Default: stale-while-revalidate for everything else
-  event.respondWith(staleWhileRevalidate(request));
+  // Handle _next/static assets with cache-first (these are content-hashed)
+  if (url.pathname.startsWith('/_next/static/')) {
+    event.respondWith(cacheFirstStrategy(request));
+    return;
+  }
+
+  // Default: network-first for everything else to ensure fresh content
+  event.respondWith(networkFirstStrategy(request));
 });
 
 // Cache-first strategy (for static assets)
@@ -200,14 +238,28 @@ async function networkFirstStrategy(request) {
   }
 }
 
-// Network-first with offline fallback (for navigation)
-async function networkFirstWithOfflineFallback(request) {
+// Network-first for navigation - CRITICAL for PWA
+// Always fetch from network, only fall back to cache when truly offline
+async function networkFirstForNavigation(request) {
   try {
-    const networkResponse = await fetch(request);
+    // Always try network first with a reasonable timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-    // Cache the page for offline access
+    const networkResponse = await fetch(request, {
+      signal: controller.signal,
+      // Force fresh request, bypass browser cache
+      cache: 'no-store',
+    });
+
+    clearTimeout(timeoutId);
+
+    // Only cache if response is good
     if (networkResponse.ok) {
+      // Don't cache navigation responses aggressively in PWA mode
+      // Just let the browser handle it
       const cache = await caches.open(DYNAMIC_CACHE);
+      // Clone and cache for offline fallback only
       cache.put(request, networkResponse.clone());
     }
 
@@ -215,32 +267,41 @@ async function networkFirstWithOfflineFallback(request) {
   } catch (error) {
     console.log('[SW] Navigation failed, trying cache:', request.url);
 
-    // Try to serve cached version
+    // Only fall back to cache when we're truly offline
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
+      console.log('[SW] Serving cached version for:', request.url);
       return cachedResponse;
     }
 
-    // Serve offline page
-    const offlinePage = await caches.match('/offline');
+    // Try to serve offline page (if previously cached from a successful visit)
+    const offlinePage = await caches.match(OFFLINE_PAGE);
     if (offlinePage) {
       return offlinePage;
     }
 
-    // Last resort: serve root page
-    const rootPage = await caches.match('/');
-    if (rootPage) {
-      return rootPage;
-    }
-
-    return new Response('Offline - Please check your connection', {
-      status: 503,
-      headers: { 'Content-Type': 'text/html' },
-    });
+    return new Response(
+      `<!DOCTYPE html>
+      <html>
+        <head><title>Offline - Rock N' Roll Basement</title></head>
+        <body style="font-family: system-ui; text-align: center; padding: 50px; background: #000; color: #fff;">
+          <h1>You're Offline</h1>
+          <p>Please check your internet connection and try again.</p>
+          <button onclick="location.reload()" style="margin-top: 20px; padding: 12px 24px; background: #ff6347; color: white; border: none; border-radius: 8px; cursor: pointer;">
+            Retry
+          </button>
+        </body>
+      </html>`,
+      {
+        status: 503,
+        headers: { 'Content-Type': 'text/html' },
+      }
+    );
   }
 }
 
-// Stale-while-revalidate strategy
+// Stale-while-revalidate strategy (kept for reference but not used)
+// We switched to network-first for better PWA experience
 async function staleWhileRevalidate(request) {
   const cachedResponse = await caches.match(request);
 
@@ -248,7 +309,6 @@ async function staleWhileRevalidate(request) {
     .then(async (networkResponse) => {
       if (networkResponse.ok) {
         try {
-          // Clone the response BEFORE using it
           const responseToCache = networkResponse.clone();
           const cache = await caches.open(DYNAMIC_CACHE);
           await cache.put(request, responseToCache);

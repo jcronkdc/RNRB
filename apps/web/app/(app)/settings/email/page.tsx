@@ -621,8 +621,10 @@ export default function EmailSettingsPage() {
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                <Link
-                  href="/mail"
+                <a
+                  href="https://webmail.rnrb.me"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold text-white transition-all hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #22c55e, #10b981)',
@@ -631,7 +633,7 @@ export default function EmailSettingsPage() {
                 >
                   <Mail className="h-5 w-5" />
                   Open Webmail
-                </Link>
+                </a>
                 <button
                   onClick={() => setJustCreated(false)}
                   className="rounded-xl px-6 py-3 font-medium transition-all hover:bg-white/10"
@@ -929,14 +931,16 @@ export default function EmailSettingsPage() {
               </div>
             </div>
           </div>
-          <Link
-            href="/mail"
+          <a
+            href="https://webmail.rnrb.me"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition-all hover:opacity-80"
             style={{ background: 'var(--accent)', color: 'white' }}
           >
             Open Webmail
             <ChevronRight className="h-4 w-4" />
-          </Link>
+          </a>
         </div>
       </motion.div>
 

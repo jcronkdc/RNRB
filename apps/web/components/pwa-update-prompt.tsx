@@ -18,16 +18,19 @@ export function PWAUpdatePrompt() {
     // Register service worker and listen for updates
     const registerAndListen = async () => {
       try {
-        const reg = await navigator.serviceWorker.register('/sw.js');
+        const reg = await navigator.serviceWorker.register('/sw.js', {
+          // Check for updates more aggressively
+          updateViaCache: 'none',
+        });
         setRegistration(reg);
 
         // Check for updates immediately
         reg.update();
 
-        // Check for updates every 60 seconds
+        // Check for updates every 30 seconds (more frequent for better PWA experience)
         const intervalId = setInterval(() => {
           reg.update();
-        }, 60 * 1000);
+        }, 30 * 1000);
 
         // Listen for new service worker
         reg.addEventListener('updatefound', () => {
@@ -37,6 +40,7 @@ export function PWAUpdatePrompt() {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               // New version available!
+              console.log('[PWA] New service worker installed, prompting for update');
               setShowUpdatePrompt(true);
             }
           });
@@ -44,8 +48,17 @@ export function PWAUpdatePrompt() {
 
         // Listen for controller change (update applied)
         navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log('[PWA] Controller changed, reloading...');
           // Reload to get fresh content
           window.location.reload();
+        });
+
+        // Listen for messages from service worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data?.type === 'SW_UPDATED') {
+            console.log('[PWA] Service worker updated to version:', event.data.version);
+            // The new SW is already active, just log it
+          }
         });
 
         return () => clearInterval(intervalId);
