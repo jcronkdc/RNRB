@@ -1,0 +1,29 @@
+{
+  "name": "rnrb-mcp-server",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-12-01",
+  "compatibility_flags": ["nodejs_compat"],
+  
+  // Deploy to workers.dev subdomain
+  "workers_dev": true,
+  
+  // Environment variables (set via wrangler secret put)
+  // RNRB_API_URL - Your main RNRB API URL (e.g., https://cronkwaters.com)
+  // RNRB_API_KEY - Internal API key for MCP server auth
+  // COOKIE_ENCRYPTION_KEY - For session encryption
+
+  // Development overrides
+  "dev": {
+    "port": 8788
+  }
+
+  // Uncomment after creating KV namespace:
+  // npx wrangler kv namespace create "OAUTH_KV"
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "OAUTH_KV",
+  //     "id": "YOUR_KV_NAMESPACE_ID"
+  //   }
+  // ]
+}
+

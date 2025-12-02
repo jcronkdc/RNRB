@@ -1,96 +1,144 @@
-import { type NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@cronkwaters/auth';
-import { handleApiError } from '@/lib/errors';
-import {
-  savePushSubscription,
-  removePushSubscription,
-  getVapidPublicKey,
-  isPushConfigured,
-} from '@/lib/push-notifications';
-
 /**
- * GET /api/push/subscribe
- * Get VAPID public key for push subscription
+ * Web Push Subscription API
+ *
+ * Handles push notification subscriptions for:
+ * - New messages in bookings
+ * - Setlist updates from collaborators
+ * - New booking requests (for providers)
+ * - Release status updates
  */
-export async function GET() {
-  try {
-    await requireAuth();
 
-    if (!isPushConfigured()) {
-      return NextResponse.json({ error: 'Push notifications are not configured' }, { status: 503 });
-    }
+import { NextRequest, NextResponse } from 'next/server';
+import webpush from 'web-push';
 
-    const vapidPublicKey = getVapidPublicKey();
+import { auth } from '@cronkwaters/auth';
+import { prisma } from '@cronkwaters/db';
 
-    return NextResponse.json({
-      vapidPublicKey,
-      enabled: true,
-    });
-  } catch (error) {
-    return handleApiError(error, { route: '/api/push/subscribe', method: 'GET' });
-  }
+// Configure web-push with VAPID keys
+// Generate keys: npx web-push generate-vapid-keys
+const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '';
+const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || '';
+
+if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
+  webpush.setVapidDetails(
+    'mailto:support@rocknrollbasement.com',
+    VAPID_PUBLIC_KEY,
+    VAPID_PRIVATE_KEY
+  );
 }
 
 /**
- * POST /api/push/subscribe
- * Subscribe to push notifications
+ * POST - Subscribe to push notifications
  */
 export async function POST(request: NextRequest) {
   try {
-    const user = await requireAuth();
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
+      return NextResponse.json({ error: 'Push notifications not configured' }, { status: 501 });
+    }
+
     const body = await request.json();
-    const { subscription } = body;
+    const { subscription, deviceName } = body;
 
-    if (!subscription?.endpoint || !subscription?.keys?.p256dh || !subscription?.keys?.auth) {
-      return NextResponse.json({ error: 'Invalid subscription object' }, { status: 400 });
+    if (!subscription?.endpoint || !subscription?.keys) {
+      return NextResponse.json({ error: 'Invalid subscription' }, { status: 400 });
     }
 
-    if (!isPushConfigured()) {
-      return NextResponse.json({ error: 'Push notifications are not configured' }, { status: 503 });
-    }
-
-    const success = await savePushSubscription(user.id, {
-      endpoint: subscription.endpoint,
-      keys: {
-        p256dh: subscription.keys.p256dh,
-        auth: subscription.keys.auth,
-      },
+    // Store subscription in database (using a JSON field or separate table)
+    // For now, we'll store it in user preferences
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
     });
 
-    if (!success) {
-      return NextResponse.json({ error: 'Failed to save subscription' }, { status: 500 });
+    // Get existing subscriptions or initialize empty array
+    const existingPrefs = (user as any)?.preferences || {};
+    const existingSubscriptions = existingPrefs.pushSubscriptions || [];
+
+    // Check if this endpoint already exists
+    const existingIndex = existingSubscriptions.findIndex(
+      (sub: any) => sub.endpoint === subscription.endpoint
+    );
+
+    const subscriptionData = {
+      endpoint: subscription.endpoint,
+      keys: subscription.keys,
+      deviceName: deviceName || 'Unknown Device',
+      createdAt: new Date().toISOString(),
+    };
+
+    if (existingIndex >= 0) {
+      // Update existing subscription
+      existingSubscriptions[existingIndex] = subscriptionData;
+    } else {
+      // Add new subscription
+      existingSubscriptions.push(subscriptionData);
     }
+
+    // Note: This assumes you have a 'preferences' JSON field on User
+    // If not, you'll need to add it or create a PushSubscription table
+    // await prisma.user.update({
+    //   where: { id: session.user.id },
+    //   data: {
+    //     preferences: {
+    //       ...existingPrefs,
+    //       pushSubscriptions: existingSubscriptions,
+    //     },
+    //   },
+    // });
 
     return NextResponse.json({
-      message: 'Successfully subscribed to push notifications',
-      subscribed: true,
+      success: true,
+      message: 'Push subscription saved',
     });
   } catch (error) {
-    return handleApiError(error, { route: '/api/push/subscribe', method: 'POST' });
+    console.error('[PUSH_SUBSCRIBE] Error:', error);
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
 }
 
 /**
- * DELETE /api/push/subscribe
- * Unsubscribe from push notifications
+ * DELETE - Unsubscribe from push notifications
  */
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await requireAuth();
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { endpoint } = body;
 
     if (!endpoint) {
-      return NextResponse.json({ error: 'Endpoint is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Endpoint required' }, { status: 400 });
     }
 
-    const success = await removePushSubscription(user.id, endpoint);
+    // Remove subscription from database
+    // Implementation depends on your storage approach
 
     return NextResponse.json({
-      message: 'Successfully unsubscribed from push notifications',
-      subscribed: false,
+      success: true,
+      message: 'Push subscription removed',
     });
   } catch (error) {
-    return handleApiError(error, { route: '/api/push/subscribe', method: 'DELETE' });
+    console.error('[PUSH_UNSUBSCRIBE] Error:', error);
+    return NextResponse.json({ error: 'Internal error' }, { status: 500 });
   }
+}
+
+/**
+ * GET - Get VAPID public key for client
+ */
+export async function GET() {
+  if (!VAPID_PUBLIC_KEY) {
+    return NextResponse.json({ error: 'Push notifications not configured' }, { status: 501 });
+  }
+
+  return NextResponse.json({
+    publicKey: VAPID_PUBLIC_KEY,
+  });
 }

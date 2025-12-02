@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
+import bundleAnalyzer from '@next/bundle-analyzer';
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 // Security headers to protect against common attacks
 const securityHeaders = [
@@ -77,14 +82,27 @@ const nextConfig = {
       '@cronkwaters/ui',
       'ably',
       '@daily-co/daily-js',
-      '@daily-co/daily-react'
+      '@daily-co/daily-react',
+      'date-fns',
+      'lodash',
+      'posthog-js',
     ],
+    // CSS optimization
+    optimizeCss: true,
   },
   images: {
+    // Enable AVIF and WebP for modern formats (Lighthouse recommendation)
     formats: ['image/avif', 'image/webp'],
+    // Responsive image sizes for different viewports
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    // Aggressive caching for images (1 year)
+    minimumCacheTTL: 31536000,
+    // Disable blur placeholder to reduce initial bundle
+    disableStaticImages: false,
+    // Allow dangerous SVG (for custom icons)
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
@@ -228,6 +246,36 @@ const nextConfig = {
         headers: securityHeaders,
       },
       {
+        // Static assets - aggressive caching (1 year, immutable)
+        source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // JavaScript and CSS files with version hashes
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Fonts - long cache
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
         // Extra security for API routes
         source: '/api/:path*',
         headers: [
@@ -239,8 +287,18 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // HTML pages - moderate cache with revalidation
+        source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, s-maxage=86400, stale-while-revalidate=86400',
+          },
+        ],
+      },
     ];
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

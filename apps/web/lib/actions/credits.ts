@@ -7,7 +7,7 @@ import { getOrCreateStripeCustomer } from '@/lib/actions/subscriptions';
 import { getCurrentUser } from '@/lib/session';
 import { createOneTimeCheckoutSession } from '@/lib/stripe-subscriptions';
 
-type CreditKind = 'ai' | 'video' | 'storage' | 'image';
+type CreditKind = 'ai' | 'video' | 'storage' | 'image' | 'stems';
 
 const CREDIT_PRODUCTS = {
   // AI Credits
@@ -79,6 +79,29 @@ const CREDIT_PRODUCTS = {
     amount: 250,
     priceEnv: 'STRIPE_PRICE_ID_STORAGE_250',
     description: 'Best value add-on for large teams.',
+  },
+
+  // Stem Separation Credits
+  stems_10: {
+    label: '+10 Stem Credits',
+    type: 'stems' as CreditKind,
+    amount: 10,
+    priceEnv: 'STRIPE_PRICE_ID_STEM_10',
+    description: 'Isolate vocals, drums, bass & more from any song.',
+  },
+  stems_25: {
+    label: '+25 Stem Credits',
+    type: 'stems' as CreditKind,
+    amount: 25,
+    priceEnv: 'STRIPE_PRICE_ID_STEM_25',
+    description: 'Best value for regular stem separation users.',
+  },
+  stems_50: {
+    label: '+50 Stem Credits',
+    type: 'stems' as CreditKind,
+    amount: 50,
+    priceEnv: 'STRIPE_PRICE_ID_STEM_50',
+    description: 'Power pack for remixers, producers & transcribers.',
   },
 } as const;
 

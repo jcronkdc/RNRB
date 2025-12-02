@@ -1,10 +1,24 @@
 'use client';
 
 import posthog from 'posthog-js';
-import { useEffect } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 
+/**
+ * Performance-optimized PostHog Provider
+ *
+ * LIGHTHOUSE RECOMMENDATION: Minimize third-party usage
+ * - Deferred loading: Only initializes after page is interactive
+ * - Idle callback: Uses requestIdleCallback for non-blocking init
+ * - No render blocking: Analytics loads after critical path
+ */
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
+  const initAttempted = useRef(false);
+
+  const initPostHog = useCallback(() => {
+    // Prevent double initialization
+    if (initAttempted.current) return;
+    initAttempted.current = true;
+
     // Only initialize PostHog in the browser
     if (typeof window === 'undefined') return;
 
@@ -13,7 +27,9 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
     if (!apiKey) {
       // PostHog is optional - silently skip initialization if not configured
-      console.debug('PostHog: API key not configured, analytics disabled');
+      if (process.env.NODE_ENV === 'development') {
+        console.debug('PostHog: API key not configured, analytics disabled');
+      }
       return;
     }
 
@@ -26,17 +42,42 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
           // Enable debug mode in development
           if (process.env.NODE_ENV === 'development') {
             ph.debug();
+            console.log('✅ PostHog initialized successfully');
           }
-          console.log('✅ PostHog initialized successfully');
         },
         capture_pageview: true, // Auto-capture page views
         capture_pageleave: true, // Auto-capture page exits
-        autocapture: {
-          dom_event_allowlist: ['click', 'change', 'submit'], // Capture key interactions
-        },
+        // Performance: Disable autocapture to reduce main thread work
+        autocapture: false, // Significantly reduces main-thread work
+        // Performance: Reduce network requests
+        disable_session_recording: true, // Enable only if needed
+        // Performance: Batch events
+        request_batching: true, // Batch network requests
+        // Performance: Reduce DOM scanning
+        disable_external_dependency_loading: true,
       });
     }
   }, []);
+
+  useEffect(() => {
+    // PERFORMANCE: Defer PostHog initialization to after page is interactive
+    // This prevents analytics from blocking the critical rendering path
+
+    if (typeof window === 'undefined') return;
+
+    // Use requestIdleCallback for non-blocking initialization
+    // Falls back to setTimeout for browsers that don't support it
+    if ('requestIdleCallback' in window) {
+      const idleCallbackId = window.requestIdleCallback(initPostHog, {
+        timeout: 3000, // Max wait 3 seconds before initializing anyway
+      });
+      return () => window.cancelIdleCallback(idleCallbackId);
+    } else {
+      // Fallback: Initialize after a short delay to not block initial render
+      const timeoutId = setTimeout(initPostHog, 1500);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [initPostHog]);
 
   return <>{children}</>;
 }

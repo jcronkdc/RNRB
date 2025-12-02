@@ -2,6 +2,7 @@
  * Support Ticket Detail API
  *
  * Get, update, and reply to specific tickets.
+ * Supports both session auth and MCP server authentication.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -16,6 +17,52 @@ import {
 import { handleApiError, AppError } from '@/lib/errors';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
+import { validateMCPRequest, isMCPRequest } from '@/lib/mcp-auth';
+
+/**
+ * Get authenticated user - supports both session and MCP auth
+ *
+ * SECURITY: MCP auth is only used if header is present AND validation succeeds.
+ * Session auth is always attempted as a fallback to prevent auth bypass attacks.
+ */
+async function getAuthenticatedUser(request: NextRequest): Promise<{
+  userId: string;
+  email?: string;
+  name?: string;
+  isAdmin: boolean;
+} | null> {
+  // Check for MCP server authentication first
+  if (isMCPRequest(request)) {
+    const mcpAuth = await validateMCPRequest(request);
+    if (mcpAuth.valid && mcpAuth.userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: mcpAuth.userId },
+        select: { isOwner: true, name: true, email: true },
+      });
+      return {
+        userId: mcpAuth.userId,
+        email: user?.email || mcpAuth.email,
+        name: user?.name || undefined,
+        isAdmin: user?.isOwner === true,
+      };
+    }
+    // SECURITY FIX: Don't return null here - fall through to session auth
+    // Invalid MCP headers should not bypass normal authentication
+  }
+
+  // Fall back to session auth (always attempted if MCP auth fails or not present)
+  const session = await auth();
+  if (session?.user?.id) {
+    return {
+      userId: session.user.id,
+      email: session.user.email || undefined,
+      name: session.user.name || undefined,
+      isAdmin: (session.user as any).isOwner === true,
+    };
+  }
+
+  return null;
+}
 
 const replySchema = z.object({
   content: z.string().min(1, 'Message cannot be empty'),
@@ -47,12 +94,13 @@ interface Params {
 
 /**
  * GET - Get ticket details
+ * Supports both session auth and MCP server authentication.
  */
 export async function GET(request: NextRequest, { params }: Params) {
   try {
-    const session = await auth();
+    const authUser = await getAuthenticatedUser(request);
 
-    if (!session?.user?.id) {
+    if (!authUser) {
       throw new AppError('Authentication required', 'UNAUTHORIZED', 401);
     }
 
@@ -71,12 +119,11 @@ export async function GET(request: NextRequest, { params }: Params) {
     }
 
     // Check access - must be owner or admin
-    const isAdmin = (session.user as any).isOwner === true;
-    if (!isAdmin && ticket.userId !== session.user.id) {
+    if (!authUser.isAdmin && ticket.userId !== authUser.userId) {
       throw new AppError('Access denied', 'FORBIDDEN', 403);
     }
 
-    const result = await getTicket(ticket.id, isAdmin ? undefined : session.user.id);
+    const result = await getTicket(ticket.id, authUser.isAdmin ? undefined : authUser.userId);
 
     if (!result.success) {
       throw new AppError(result.message || 'Failed to fetch ticket', 'FETCH_FAILED', 400);
@@ -90,12 +137,13 @@ export async function GET(request: NextRequest, { params }: Params) {
 
 /**
  * POST - Reply to ticket
+ * Supports both session auth and MCP server authentication.
  */
 export async function POST(request: NextRequest, { params }: Params) {
   try {
-    const session = await auth();
+    const authUser = await getAuthenticatedUser(request);
 
-    if (!session?.user?.id) {
+    if (!authUser) {
       throw new AppError('Authentication required', 'UNAUTHORIZED', 401);
     }
 
@@ -116,25 +164,18 @@ export async function POST(request: NextRequest, { params }: Params) {
     }
 
     // Check access
-    const isAdmin = (session.user as any).isOwner === true;
-    if (!isAdmin && ticket.userId !== session.user.id) {
+    if (!authUser.isAdmin && ticket.userId !== authUser.userId) {
       throw new AppError('Access denied', 'FORBIDDEN', 403);
     }
 
-    // Get user info
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { name: true, email: true },
-    });
-
     const result = await replyToTicket({
       ticketId: ticket.id,
-      senderId: session.user.id,
-      senderName: user?.name || undefined,
-      senderEmail: user?.email,
-      senderType: isAdmin ? 'AGENT' : 'USER',
+      senderId: authUser.userId,
+      senderName: authUser.name,
+      senderEmail: authUser.email,
+      senderType: authUser.isAdmin ? 'AGENT' : 'USER',
       content: validated.content,
-      isInternal: isAdmin ? validated.isInternal : false, // Only admins can make internal notes
+      isInternal: authUser.isAdmin ? validated.isInternal : false, // Only admins can make internal notes
     });
 
     if (!result.success) {
@@ -149,12 +190,13 @@ export async function POST(request: NextRequest, { params }: Params) {
 
 /**
  * PATCH - Update ticket (status, assignment, etc.)
+ * Supports both session auth and MCP server authentication.
  */
 export async function PATCH(request: NextRequest, { params }: Params) {
   try {
-    const session = await auth();
+    const authUser = await getAuthenticatedUser(request);
 
-    if (!session?.user?.id) {
+    if (!authUser) {
       throw new AppError('Authentication required', 'UNAUTHORIZED', 401);
     }
 
@@ -175,11 +217,10 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     }
 
     // Check access
-    const isAdmin = (session.user as any).isOwner === true;
-    const isOwner = ticket.userId === session.user.id;
+    const isOwner = ticket.userId === authUser.userId;
 
     // Users can only submit satisfaction ratings on their own tickets
-    if (!isAdmin && !isOwner) {
+    if (!authUser.isAdmin && !isOwner) {
       throw new AppError('Access denied', 'FORBIDDEN', 403);
     }
 
@@ -194,7 +235,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
     }
 
     // Other updates require admin
-    if (!isAdmin) {
+    if (!authUser.isAdmin) {
       throw new AppError('Only support staff can update ticket status', 'FORBIDDEN', 403);
     }
 
@@ -204,7 +245,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
         ticket.id,
         validated.status,
         validated.resolution,
-        session.user.id
+        authUser.userId
       );
 
       if (!result.success) {

@@ -32,6 +32,14 @@ NEXTAUTH_SECRET="your-secret-here-minimum-32-chars"
 
 NEXTAUTH_URL="http://localhost:3000"
 
+# 2FA Encryption Key (for TOTP secrets)
+
+# Generate with: openssl rand -hex 32
+
+# Falls back to NEXTAUTH_SECRET if not set
+
+TWO_FACTOR_ENCRYPTION_KEY="your-2fa-encryption-key"
+
 # ============================================
 
 # GOOGLE OAUTH (OPTIONAL - for Google Sign In)
@@ -121,6 +129,14 @@ STALWART_ADMIN_USER="admin"
 STALWART_ADMIN_PASSWORD="your-admin-password"
 STALWART_API_KEY="your-api-key"
 
+# Email Sync Secret (for standalone webmail app sync)
+
+# Generate with: openssl rand -hex 32
+
+# Used to authenticate sync requests from the standalone email client
+
+EMAIL_SYNC_SECRET="your-email-sync-secret"
+
 # ============================================
 
 # PAYMENTS (OPTIONAL - for subscriptions)
@@ -162,11 +178,37 @@ STRIPE_PRICE_ID_VIDEO_1800="price_1SZzNSFiQRCfkKrvZKUs6vW0"
 STRIPE_PRICE_ID_IMAGE_25="price_1SZzNSFiQRCfkKrvj65e48OJ"
 STRIPE_PRICE_ID_IMAGE_100="price_1SZzNTFiQRCfkKrvtmQugqXh"
 
+# Stem Separation Credits (AI-powered vocal/instrument isolation)
+
+# 10 credits: $2.99 (~$0.30/credit) - Casual users
+
+# 25 credits: $5.99 (~$0.24/credit) - Regular users
+
+# 50 credits: $9.99 (~$0.20/credit) - Power users
+
+STRIPE_PRICE_ID_STEM_10="price_1Sa0NjFiQRCfkKrvzNdPaOB7"
+STRIPE_PRICE_ID_STEM_25="price_1Sa0NkFiQRCfkKrvQ5uaQbW0"
+STRIPE_PRICE_ID_STEM_50="price_1Sa0NkFiQRCfkKrvjomR05tp"
+
 # Storage Credits: $6/25GB, $15/100GB, $30/250GB (permanent)
 
 STRIPE_PRICE_ID_STORAGE_25="price_1SZzNUFiQRCfkKrvaW7JVZuw"
 STRIPE_PRICE_ID_STORAGE_100="price_1SZzNUFiQRCfkKrvCMfsoYj2"
 STRIPE_PRICE_ID_STORAGE_250="price_1SZzNVFiQRCfkKrvVLEqxyuq"
+
+# ============================================
+
+# MCP SERVER (Remote AI Tools)
+
+# ============================================
+
+# API key for MCP server to authenticate with main app
+
+# Generate with: openssl rand -hex 32
+
+# Must match RNRB_API_KEY in the MCP server's wrangler secrets
+
+MCP_SERVER_API_KEY="your-mcp-server-api-key"
 
 # ============================================
 

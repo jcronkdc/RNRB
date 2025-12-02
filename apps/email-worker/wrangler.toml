@@ -1,0 +1,20 @@
+# RNRB Email Worker
+# Automatically creates support tickets from incoming emails
+
+name = "rnrb-email-worker"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Email routing - receives emails sent to support@rnrb.me
+# Configure in Cloudflare Dashboard: Email > Email Routing > Email Workers
+
+[vars]
+RNRB_API_URL = "https://cronkwaters.com"
+ADMIN_EMAIL = "justincronk@pm.me"
+SUPPORT_EMAIL = "support@rnrb.me"
+
+# Secrets (set via wrangler secret put):
+# - RNRB_API_KEY: API key for creating tickets
+# - MAILCHANNELS_API_KEY: For sending auto-reply emails (optional, MailChannels is free on Workers)
+

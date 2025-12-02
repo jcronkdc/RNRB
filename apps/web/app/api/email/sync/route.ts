@@ -3,10 +3,17 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
 // Shared secret for standalone app authentication
-const SYNC_SECRET = process.env.EMAIL_SYNC_SECRET || 'rnrb-mail-sync-secret';
+// SECURITY: No fallback - require explicit configuration
+const SYNC_SECRET = process.env.EMAIL_SYNC_SECRET;
 
 // Verify the request is from our standalone mail app
 function verifyRequest(request: Request): boolean {
+  // SECURITY: Fail closed if secret is not configured
+  if (!SYNC_SECRET) {
+    console.error('[EMAIL-SYNC] EMAIL_SYNC_SECRET not configured - rejecting request');
+    return false;
+  }
+
   const authHeader = request.headers.get('X-Sync-Auth');
   if (!authHeader) return false;
 
@@ -17,15 +24,17 @@ function verifyRequest(request: Request): boolean {
   // Check timestamp is within 5 minutes
   const now = Date.now();
   const requestTime = parseInt(timestamp);
-  if (Math.abs(now - requestTime) > 5 * 60 * 1000) return false;
+  if (isNaN(requestTime) || Math.abs(now - requestTime) > 5 * 60 * 1000) return false;
 
-  // Verify signature
+  // Verify signature using timing-safe comparison
   const expectedSignature = crypto
     .createHmac('sha256', SYNC_SECRET)
     .update(timestamp)
     .digest('hex');
 
-  return signature === expectedSignature;
+  // Use timing-safe comparison to prevent timing attacks
+  if (signature.length !== expectedSignature.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
 }
 
 /**

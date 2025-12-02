@@ -248,25 +248,22 @@ export default function EmailSettingsPage() {
     return () => clearTimeout(timer);
   }, [username]);
 
-  // Validate password and recovery email
+  // Validate password and optional recovery email
   function validateForm(): boolean {
     setPasswordError(null);
 
-    // Validate recovery email
-    if (!recoveryEmail) {
-      setPasswordError('Recovery email is required for password resets');
-      return false;
-    }
+    // Validate recovery email format if provided (optional - falls back to platform email)
+    if (recoveryEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(recoveryEmail)) {
+        setPasswordError('Please enter a valid recovery email address');
+        return false;
+      }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(recoveryEmail)) {
-      setPasswordError('Please enter a valid recovery email address');
-      return false;
-    }
-
-    if (recoveryEmail.toLowerCase().endsWith('@rnrb.me')) {
-      setPasswordError('Recovery email cannot be an @rnrb.me address');
-      return false;
+      if (recoveryEmail.toLowerCase().endsWith('@rnrb.me')) {
+        setPasswordError('Recovery email cannot be an @rnrb.me address');
+        return false;
+      }
     }
 
     if (!newPassword) {
@@ -320,7 +317,7 @@ export default function EmailSettingsPage() {
           domain: selectedDomain,
           displayName: displayName || userName || undefined,
           password: newPassword,
-          recoveryEmail: recoveryEmail.toLowerCase(),
+          recoveryEmail: recoveryEmail ? recoveryEmail.toLowerCase() : undefined,
         }),
       });
 
@@ -848,7 +845,7 @@ export default function EmailSettingsPage() {
               {/* Recovery Email */}
               <div>
                 <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
-                  Recovery Email <span className="text-red-400">*</span>
+                  Recovery Email <span className="text-white/40">(optional)</span>
                 </label>
                 <input
                   type="email"
@@ -863,7 +860,7 @@ export default function EmailSettingsPage() {
                   }}
                 />
                 <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
-                  Used to reset your password if locked out. Cannot be an @rnrb.me address.
+                  For password resets. If not set, your platform account email will be used instead.
                 </p>
               </div>
 

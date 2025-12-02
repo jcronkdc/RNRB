@@ -35,6 +35,7 @@ interface SeparationJob {
 }
 
 type SeparationMode = '2-stem' | '4-stem' | '6-stem';
+type QualityPreset = 'fast' | 'balanced' | 'high';
 
 const MODES: {
   id: SeparationMode;
@@ -42,6 +43,7 @@ const MODES: {
   description: string;
   credits: number;
   stems: string[];
+  useCase: string;
 }[] = [
   {
     id: '2-stem',
@@ -49,13 +51,15 @@ const MODES: {
     description: 'Quick separation for karaoke or vocal practice',
     credits: 2,
     stems: ['Vocals', 'Instrumental'],
+    useCase: 'Karaoke, acapella, vocal removal',
   },
   {
     id: '4-stem',
-    name: 'Full Separation',
+    name: 'Full Band Separation',
     description: 'Vocals, drums, bass, and other instruments',
     credits: 5,
     stems: ['Vocals', 'Drums', 'Bass', 'Other'],
+    useCase: 'Learning parts, remixing, backing tracks',
   },
   {
     id: '6-stem',
@@ -63,6 +67,37 @@ const MODES: {
     description: 'Maximum detail with guitar and piano isolated',
     credits: 8,
     stems: ['Vocals', 'Drums', 'Bass', 'Guitar', 'Piano', 'Other'],
+    useCase: 'Transcription, sampling, advanced remixing',
+  },
+];
+
+const QUALITY_PRESETS: {
+  id: QualityPreset;
+  name: string;
+  description: string;
+  time: string;
+  icon: string;
+}[] = [
+  {
+    id: 'fast',
+    name: 'Fast',
+    description: 'Quick processing, good quality',
+    time: '~1-2 min',
+    icon: '⚡',
+  },
+  {
+    id: 'balanced',
+    name: 'Balanced',
+    description: 'Recommended for most uses',
+    time: '~3-5 min',
+    icon: '⚖️',
+  },
+  {
+    id: 'high',
+    name: 'High Quality',
+    description: 'Best separation, slower',
+    time: '~6-10 min',
+    icon: '✨',
   },
 ];
 
@@ -78,6 +113,7 @@ const STEM_COLORS: Record<string, { bg: string; text: string; icon: React.Elemen
 
 export function StemSeparator() {
   const [selectedMode, setSelectedMode] = useState<SeparationMode>('4-stem');
+  const [selectedQuality, setSelectedQuality] = useState<QualityPreset>('balanced');
   const [file, setFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [job, setJob] = useState<SeparationJob | null>(null);
@@ -152,6 +188,7 @@ export function StemSeparator() {
         body: JSON.stringify({
           audioUrl: url,
           mode: selectedMode,
+          quality: selectedQuality,
         }),
       });
 
@@ -338,6 +375,43 @@ export function StemSeparator() {
             </motion.button>
           ))}
         </div>
+      </div>
+
+      {/* Quality Selection */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium text-white/70">Processing Quality</label>
+        <div className="grid gap-2 sm:grid-cols-3">
+          {QUALITY_PRESETS.map((preset) => (
+            <motion.button
+              key={preset.id}
+              onClick={() => setSelectedQuality(preset.id)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={`relative overflow-hidden rounded-lg border p-3 text-left transition-all ${
+                selectedQuality === preset.id
+                  ? 'border-emerald-500/50 bg-emerald-500/10'
+                  : 'border-white/10 bg-white/5 hover:border-white/20'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{preset.icon}</span>
+                <div className="flex-1">
+                  <h4 className="text-sm font-semibold text-white">{preset.name}</h4>
+                  <p className="text-xs text-white/50">{preset.time}</p>
+                </div>
+              </div>
+              {selectedQuality === preset.id && (
+                <motion.div
+                  layoutId="quality-indicator"
+                  className="absolute inset-0 -z-10 bg-gradient-to-br from-emerald-500/20 to-transparent"
+                />
+              )}
+            </motion.button>
+          ))}
+        </div>
+        <p className="text-xs text-white/40">
+          {QUALITY_PRESETS.find((p) => p.id === selectedQuality)?.description}
+        </p>
       </div>
 
       {/* File Upload */}
@@ -565,10 +639,10 @@ export function StemSeparator() {
 
       {/* Use Cases */}
       <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-        <h4 className="mb-3 text-sm font-semibold text-white/70">What You Can Do</h4>
+        <h4 className="mb-3 text-sm font-semibold text-white/70">What You Can Do With Stems</h4>
         <div className="grid gap-2 text-sm text-white/50 sm:grid-cols-2">
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+            <div className="h-1.5 w-1.5 rounded-full bg-pink-400" />
             Create karaoke versions (remove vocals)
           </div>
           <div className="flex items-center gap-2">
@@ -576,21 +650,27 @@ export function StemSeparator() {
             Learn drum parts in isolation
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-orange-400" />
-            Remix with individual stems
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+            <div className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
             Practice bass lines alone
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-orange-400" />
-            Create backing tracks for shows
+            <div className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+            Transcribe guitar solos clearly
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-orange-400" />
-            Sample and repurpose elements
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            Create backing tracks for live shows
           </div>
+          <div className="flex items-center gap-2">
+            <div className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+            Sample and remix individual elements
+          </div>
+        </div>
+        <div className="mt-4 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+          <p className="text-xs text-emerald-400">
+            <span className="font-semibold">Pro Tip:</span> Use "High Quality" mode when you need
+            the cleanest stems for remixing or sampling. "Fast" is great for quick previews.
+          </p>
         </div>
       </div>
     </div>

@@ -1,0 +1,19 @@
+{
+  "name": "rnrb-email-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Email Worker for RNRB support ticket automation",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241127.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.91.0"
+  },
+  "dependencies": {
+    "postal-mime": "^2.4.1"
+  }
+}

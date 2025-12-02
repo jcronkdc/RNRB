@@ -3719,6 +3719,7 @@ export default function HomePage() {
                   alt="Rock N' Roll Basement Logo"
                   width={40}
                   height={40}
+                  loading="lazy"
                 />
                 <span className="text-sm" style={{ color: 'var(--muted)' }}>
                   © 2024 Rock N' Roll Basement. All rights reserved.

@@ -2,6 +2,13 @@ import type { Metadata } from 'next';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
 
+// Use Edge Runtime for faster TTFB on marketing pages
+// Edge runs closer to users (300+ locations vs ~20 regions)
+export const runtime = 'edge';
+
+// Enable dynamic rendering with short revalidation for fresh content
+export const revalidate = 3600; // Revalidate every hour
+
 export const metadata: Metadata = generateSEOMetadata({
   title: "Rock N' Roll Basement - Features, Pricing & Solutions for Musicians",
   description:

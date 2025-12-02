@@ -316,26 +316,24 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { username, domain = DEFAULT_DOMAIN, displayName, password, recoveryEmail } = body;
 
-    // Validate recovery email (REQUIRED for password resets)
-    if (!recoveryEmail || typeof recoveryEmail !== 'string') {
-      return NextResponse.json(
-        { error: 'Recovery email is required for password resets' },
-        { status: 400 }
-      );
-    }
-
-    // Validate recovery email format
+    // Validate recovery email (optional - falls back to platform email for password resets)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(recoveryEmail)) {
-      return NextResponse.json({ error: 'Invalid recovery email address' }, { status: 400 });
-    }
 
-    // Recovery email cannot be an @rnrb.me email (chicken/egg problem)
-    if (recoveryEmail.toLowerCase().endsWith('@rnrb.me')) {
-      return NextResponse.json(
-        { error: 'Recovery email cannot be an @rnrb.me address. Use a different email provider.' },
-        { status: 400 }
-      );
+    if (recoveryEmail && typeof recoveryEmail === 'string') {
+      // Validate recovery email format if provided
+      if (!emailRegex.test(recoveryEmail)) {
+        return NextResponse.json({ error: 'Invalid recovery email address' }, { status: 400 });
+      }
+
+      // Recovery email cannot be an @rnrb.me email (chicken/egg problem)
+      if (recoveryEmail.toLowerCase().endsWith('@rnrb.me')) {
+        return NextResponse.json(
+          {
+            error: 'Recovery email cannot be an @rnrb.me address. Use a different email provider.',
+          },
+          { status: 400 }
+        );
+      }
     }
 
     // Validate password
@@ -455,7 +453,8 @@ export async function POST(request: Request) {
 
     const emailAddress = `${username.toLowerCase()}@${domain}`;
 
-    // Create account in database with recovery email
+    // Create account in database with optional recovery email
+    // If not provided, password resets will fall back to the user's platform email
     const emailAccount = await prisma.emailAccount.create({
       data: {
         userId: session.user.id,
@@ -465,8 +464,8 @@ export async function POST(request: Request) {
         displayName: displayName || user.name || username,
         storageQuotaBytes: BigInt(storageQuota),
         status: 'PENDING',
-        recoveryEmail: recoveryEmail.toLowerCase(),
-        recoveryEmailVerified: false, // Will be verified via confirmation email
+        recoveryEmail: recoveryEmail ? recoveryEmail.toLowerCase() : null,
+        recoveryEmailVerified: false, // Will be verified via confirmation email if recovery email is set
       },
     });
 

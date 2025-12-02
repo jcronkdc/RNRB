@@ -66,22 +66,59 @@ import {
   Layers,
 } from '@/components/ui/custom-icons';
 
-// Animation variants
-const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 },
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1,
-    },
+// Rock N' Roll Color Palette - NO PURPLE ALLOWED
+const COLORS = {
+  fire: {
+    bg: 'rgba(232, 93, 59, 0.15)',
+    text: '#e85d3b',
+    glow: 'rgba(232, 93, 59, 0.4)',
+    border: 'rgba(232, 93, 59, 0.3)',
+  },
+  gold: {
+    bg: 'rgba(212, 168, 75, 0.15)',
+    text: '#d4a84b',
+    glow: 'rgba(212, 168, 75, 0.4)',
+    border: 'rgba(212, 168, 75, 0.3)',
+  },
+  ember: {
+    bg: 'rgba(239, 68, 68, 0.15)',
+    text: '#ef4444',
+    glow: 'rgba(239, 68, 68, 0.4)',
+    border: 'rgba(239, 68, 68, 0.3)',
+  },
+  steel: {
+    bg: 'rgba(148, 163, 184, 0.12)',
+    text: '#94a3b8',
+    glow: 'rgba(148, 163, 184, 0.3)',
+    border: 'rgba(148, 163, 184, 0.2)',
+  },
+  electric: {
+    bg: 'rgba(56, 189, 248, 0.12)',
+    text: '#38bdf8',
+    glow: 'rgba(56, 189, 248, 0.3)',
+    border: 'rgba(56, 189, 248, 0.2)',
+  },
+  sage: {
+    bg: 'rgba(123, 145, 120, 0.15)',
+    text: '#7b9178',
+    glow: 'rgba(123, 145, 120, 0.3)',
+    border: 'rgba(123, 145, 120, 0.2)',
+  },
+  copper: {
+    bg: 'rgba(180, 83, 9, 0.15)',
+    text: '#b45309',
+    glow: 'rgba(180, 83, 9, 0.4)',
+    border: 'rgba(180, 83, 9, 0.3)',
+  },
+  smoke: {
+    bg: 'rgba(75, 85, 99, 0.15)',
+    text: '#9ca3af',
+    glow: 'rgba(75, 85, 99, 0.3)',
+    border: 'rgba(75, 85, 99, 0.2)',
   },
 };
 
-// Feature Category Component
+// Feature Category Component - Badass Edition
 function FeatureCategory({
   title,
   subtitle,
@@ -93,7 +130,7 @@ function FeatureCategory({
   title: string;
   subtitle: string;
   icon: any;
-  color: string;
+  color: keyof typeof COLORS;
   features: {
     name: string;
     description: string;
@@ -102,99 +139,168 @@ function FeatureCategory({
   }[];
   index: number;
 }) {
-  const colorMap: Record<string, { bg: string; text: string; glow: string }> = {
-    accent: { bg: 'rgba(232, 93, 59, 0.1)', text: 'var(--accent)', glow: 'rgba(232, 93, 59, 0.2)' },
-    gold: { bg: 'rgba(212, 168, 75, 0.1)', text: 'var(--gold)', glow: 'rgba(212, 168, 75, 0.2)' },
-    sage: { bg: 'rgba(123, 145, 120, 0.1)', text: 'var(--sage)', glow: 'rgba(123, 145, 120, 0.2)' },
-    purple: { bg: 'rgba(139, 92, 246, 0.1)', text: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.2)' },
-    pink: { bg: 'rgba(236, 72, 153, 0.1)', text: '#ec4899', glow: 'rgba(236, 72, 153, 0.2)' },
-    blue: { bg: 'rgba(107, 155, 195, 0.1)', text: 'var(--sky)', glow: 'rgba(107, 155, 195, 0.2)' },
-    sky: { bg: 'rgba(56, 189, 248, 0.1)', text: '#38bdf8', glow: 'rgba(56, 189, 248, 0.2)' },
-    green: { bg: 'rgba(34, 197, 94, 0.1)', text: '#22c55e', glow: 'rgba(34, 197, 94, 0.2)' },
-    red: { bg: 'rgba(239, 68, 68, 0.1)', text: '#ef4444', glow: 'rgba(239, 68, 68, 0.2)' },
-    cyan: { bg: 'rgba(6, 182, 212, 0.1)', text: '#06b6d4', glow: 'rgba(6, 182, 212, 0.2)' },
-    amber: { bg: 'rgba(245, 158, 11, 0.1)', text: '#f59e0b', glow: 'rgba(245, 158, 11, 0.2)' },
-    indigo: { bg: 'rgba(99, 102, 241, 0.1)', text: '#6366f1', glow: 'rgba(99, 102, 241, 0.2)' },
-  };
-
-  const colors = colorMap[color] || colorMap.accent;
+  const colors = COLORS[color] || COLORS.fire;
+  const isEven = index % 2 === 0;
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="py-20"
-      style={{ borderTop: '1px solid var(--border)' }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.8 }}
+      className="relative overflow-hidden py-24"
     >
-      <div className="rnrb-container max-w-7xl">
-        {/* Category Header */}
-        <div className="mb-12 flex items-start gap-6">
-          <div
-            className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl"
-            style={{ background: colors.bg, boxShadow: `0 0 40px ${colors.glow}` }}
-          >
-            <Icon className="h-8 w-8" style={{ color: colors.text }} />
+      {/* Dramatic Background */}
+      <div className="pointer-events-none absolute inset-0">
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: isEven
+              ? `radial-gradient(ellipse 80% 50% at 20% 50%, ${colors.glow}, transparent 70%)`
+              : `radial-gradient(ellipse 80% 50% at 80% 50%, ${colors.glow}, transparent 70%)`,
+          }}
+        />
+        <div
+          className="absolute bottom-0 left-0 right-0 h-px"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${colors.border}, transparent)`,
+          }}
+        />
+      </div>
+
+      <div className="rnrb-container relative z-10 max-w-7xl">
+        {/* Category Header - Epic Style */}
+        <motion.div
+          initial={{ opacity: 0, x: isEven ? -40 : 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-16 flex flex-col items-start gap-6 md:flex-row md:items-center"
+        >
+          {/* Icon with Glow */}
+          <div className="relative">
+            <div
+              className="absolute inset-0 blur-xl"
+              style={{ background: colors.glow, opacity: 0.6 }}
+            />
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+              className="relative flex h-20 w-20 items-center justify-center rounded-2xl"
+              style={{
+                background: `linear-gradient(135deg, ${colors.bg}, transparent)`,
+                border: `2px solid ${colors.border}`,
+                boxShadow: `0 0 30px ${colors.glow}, inset 0 0 20px ${colors.bg}`,
+              }}
+            >
+              <Icon
+                className="h-10 w-10"
+                style={{ color: colors.text, filter: `drop-shadow(0 0 8px ${colors.glow})` }}
+              />
+            </motion.div>
           </div>
-          <div>
-            <h2 className="font-display mb-2 text-3xl font-bold" style={{ color: 'var(--text)' }}>
+
+          <div className="flex-1">
+            <motion.h2
+              className="font-display mb-3 text-4xl font-black tracking-tight md:text-5xl"
+              style={{
+                color: colors.text,
+                textShadow: `0 0 40px ${colors.glow}`,
+              }}
+            >
               {title}
-            </h2>
-            <p className="max-w-2xl text-lg" style={{ color: 'var(--text-secondary)' }}>
+            </motion.h2>
+            <p
+              className="max-w-3xl text-lg leading-relaxed"
+              style={{ color: 'var(--text-secondary)' }}
+            >
               {subtitle}
             </p>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Features Grid */}
+        {/* Features Grid - Premium Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
             <motion.div
               key={feature.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="group rounded-xl p-6 transition-all duration-300 hover:scale-[1.02]"
+              transition={{ duration: 0.5, delay: i * 0.08 }}
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="group relative overflow-hidden rounded-2xl"
               style={{
-                background: 'var(--panel)',
-                border: '1px solid var(--border)',
+                background:
+                  'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
+                border: `1px solid ${colors.border}`,
               }}
             >
-              <h3
-                className="mb-3 text-xl font-semibold transition-colors group-hover:text-white"
-                style={{ color: colors.text }}
-              >
-                {feature.name}
-              </h3>
-              <p className="mb-4 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-                {feature.description}
-              </p>
-              <ul className="space-y-2">
-                {feature.details.map((detail, j) => (
-                  <li
-                    key={j}
-                    className="flex items-start gap-2 text-sm"
-                    style={{ color: 'var(--muted)' }}
-                  >
-                    <span
-                      className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full"
-                      style={{ background: colors.text }}
-                    />
-                    {detail}
-                  </li>
-                ))}
-              </ul>
-              {feature.link && (
-                <Link
-                  href={feature.link}
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-medium transition-colors hover:gap-2"
-                  style={{ color: colors.text }}
+              {/* Hover Glow Effect */}
+              <div
+                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                style={{
+                  background: `radial-gradient(ellipse at 50% 0%, ${colors.glow}, transparent 70%)`,
+                }}
+              />
+
+              {/* Top Accent Line */}
+              <div
+                className="absolute left-0 right-0 top-0 h-1 opacity-60 transition-opacity group-hover:opacity-100"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${colors.text}, transparent)`,
+                }}
+              />
+
+              <div className="relative z-10 p-6">
+                <h3
+                  className="mb-3 text-xl font-bold transition-all duration-300"
+                  style={{
+                    color: 'var(--text)',
+                  }}
                 >
-                  Learn more <ChevronRight className="h-4 w-4" />
-                </Link>
-              )}
+                  <span
+                    className="group-hover:text-shadow-glow transition-all duration-300"
+                    style={
+                      {
+                        '--glow-color': colors.glow,
+                      } as React.CSSProperties
+                    }
+                  >
+                    {feature.name}
+                  </span>
+                </h3>
+                <p className="mb-5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                  {feature.description}
+                </p>
+                <ul className="space-y-2">
+                  {feature.details.map((detail, j) => (
+                    <li
+                      key={j}
+                      className="flex items-start gap-3 text-sm"
+                      style={{ color: 'var(--muted)' }}
+                    >
+                      <span
+                        className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full transition-all duration-300 group-hover:scale-150"
+                        style={{
+                          background: colors.text,
+                          boxShadow: `0 0 6px ${colors.glow}`,
+                        }}
+                      />
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+                {feature.link && (
+                  <Link
+                    href={feature.link}
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold transition-all duration-300 hover:gap-3"
+                    style={{ color: colors.text }}
+                  >
+                    Explore <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -206,14 +312,14 @@ function FeatureCategory({
 export default function FeaturesPage() {
   const featureCategories = [
     // ==========================================
-    // AI ASSISTANT - NEW CATEGORY
+    // AI ASSISTANT
     // ==========================================
     {
       title: 'AI Assistant',
       subtitle:
         'Claude-powered AI that understands music. Get intelligent suggestions, instant answers, and creative assistance without ever losing control of your art.',
       icon: Brain,
-      color: 'purple',
+      color: 'fire' as const,
       features: [
         {
           name: 'Claude-Powered Intelligence',
@@ -298,7 +404,7 @@ export default function FeaturesPage() {
       subtitle:
         'AI-powered tools that understand music theory, help you break through creative blocks, and capture ideas the moment they strike.',
       icon: Music2,
-      color: 'accent',
+      color: 'gold' as const,
       features: [
         {
           name: 'AI Chord Progression Generator',
@@ -378,46 +484,46 @@ export default function FeaturesPage() {
             'Project organization & tagging',
             'Timestamp markers for key moments',
             'Background recording support',
-            'Humming-to-melody analysis',
+            'Organize memos by project',
           ],
         },
       ],
     },
     // ==========================================
-    // RECORDING STUDIO - NEW CATEGORY
+    // RECORDING STUDIO
     // ==========================================
     {
-      title: 'Recording Studio',
+      title: 'Remote Collaboration Studio',
       subtitle:
-        'Professional recording sessions right in your browser. Capture high-quality audio, collaborate in real-time, and export industry-standard files.',
+        'HD video calls for remote collaboration. Direct musicians, share screens, and coordinate recording sessions—each person records locally with their own DAW.',
       icon: Mic,
-      color: 'red',
+      color: 'ember' as const,
       features: [
         {
-          name: 'Browser-Based Recording',
+          name: 'Video Collaboration',
           description:
-            'Record directly in your browser with professional-quality audio. No downloads or plugins required.',
+            'HD video calls with screen sharing. Watch collaborators work in their DAW and give real-time direction.',
           details: [
-            'Up to 48kHz/24-bit recording quality',
-            'Low-latency monitoring',
-            'Multi-track recording support',
-            'Real-time waveform visualization',
-            'Automatic level detection',
-            'Works with any USB audio interface',
+            '1080p HD video at 30fps',
+            'Screen share your DAW (Pro Tools, Logic, etc.)',
+            'Up to 32 participants per session',
+            'Real-time chat during sessions',
+            'Cloud video recording',
+            'Grid or speaker view layouts',
           ],
           link: '/studio',
         },
         {
-          name: 'Live Studio Sessions',
+          name: 'Remote Direction Workflow',
           description:
-            'Invite collaborators to record together in real-time. Everyone can hear and contribute from anywhere in the world.',
+            'The professional way to collaborate remotely: each musician records locally while connected via video for direction.',
           details: [
-            'Up to 8 simultaneous participants',
-            'Individual track recording per person',
-            'Real-time chat during sessions',
-            'Session recording & playback',
-            'Latency compensation',
-            'Screen sharing for sheet music/DAW',
+            'Producer watches drummer via video',
+            'Real-time feedback and direction',
+            'Musicians record with their own interfaces',
+            'Upload high-quality files after',
+            'Mix engineer combines all tracks',
+            'How real distributed albums are made',
           ],
         },
         {
@@ -461,16 +567,16 @@ export default function FeaturesPage() {
           ],
         },
         {
-          name: 'Export & Integration',
+          name: 'File Upload & Storage',
           description:
-            'Export your recordings in any format. Direct integration with your DAW and cloud storage.',
+            'Upload your locally-recorded files to share with collaborators. Supports all major audio formats.',
           details: [
-            'WAV, MP3, FLAC, OGG export',
+            'WAV, MP3, FLAC, OGG, AIFF support',
+            'Upload DAW project files',
             'Automatic cloud backup',
-            'Dropbox/Google Drive sync',
-            'Direct DAW project export',
-            'Metadata embedding',
-            'Batch export options',
+            'Download files anytime',
+            'Share links with collaborators',
+            'Version history tracking',
           ],
         },
       ],
@@ -483,7 +589,7 @@ export default function FeaturesPage() {
       subtitle:
         'Work together with bandmates, producers, and collaborators anywhere in the world with zero latency creative sessions.',
       icon: Users,
-      color: 'gold',
+      color: 'electric' as const,
       features: [
         {
           name: 'HD Video Meetings',
@@ -576,7 +682,7 @@ export default function FeaturesPage() {
       subtitle:
         'Git-like version control for songs, professional stems management, milestone tracking, and AI-powered project insights.',
       icon: Folder,
-      color: 'sage',
+      color: 'sage' as const,
       features: [
         {
           name: 'Version Control (Time Machine)',
@@ -623,7 +729,7 @@ export default function FeaturesPage() {
           description:
             'Drag-and-drop file uploads with generous storage. Organized by project with automatic tagging.',
           details: [
-            '5GB free, 50GB Creator, Unlimited Studio',
+            '1GB Free, 10GB Creator, 100GB Studio',
             'Drag-and-drop uploads',
             'Automatic organization',
             'File previews (audio, images, docs)',
@@ -660,14 +766,14 @@ export default function FeaturesPage() {
       ],
     },
     // ==========================================
-    // SETLIST BUILDER - NEW DETAILED CATEGORY
+    // SETLIST BUILDER
     // ==========================================
     {
       title: 'Smart Setlist Builder',
       subtitle:
         'Build perfect setlists with AI-powered energy flow analysis, timing calculations, and performer teleprompter mode.',
       icon: ListMusic,
-      color: 'pink',
+      color: 'copper' as const,
       features: [
         {
           name: 'Drag & Drop Builder',
@@ -758,7 +864,7 @@ export default function FeaturesPage() {
       subtitle:
         'Protect your work, manage splits, and track royalties. Everything you need to ensure you get paid for your music.',
       icon: ShieldCheck,
-      color: 'purple',
+      color: 'gold' as const,
       features: [
         {
           name: 'Copyright Registration Guidance',
@@ -848,7 +954,7 @@ export default function FeaturesPage() {
       subtitle:
         'Plan your tour from first show to final encore. Smart routing, venue database, and everything you need to hit the road.',
       icon: MapPin,
-      color: 'accent',
+      color: 'fire' as const,
       features: [
         {
           name: 'Smart Route Planning',
@@ -867,13 +973,13 @@ export default function FeaturesPage() {
         {
           name: 'Venue Database',
           description:
-            'Access thousands of venues with capacity, contacts, and booking info. Save your own venue notes and contacts.',
+            'Build your personal venue database as you tour. Save contacts, specs, and notes for every venue you play.',
           details: [
-            '10,000+ venues nationwide',
+            'Add venues as you book them',
             'Capacity & stage specifications',
-            'Booking contact info',
+            'Booking contact info storage',
             'Personal notes & history',
-            'Rating & reviews from artists',
+            'Rate your experiences',
             'Payment history tracking',
           ],
         },
@@ -940,7 +1046,7 @@ export default function FeaturesPage() {
       subtitle:
         'Launch a stunning artist website in 60 seconds. No code required. Custom domains, EPK, and everything you need to look pro.',
       icon: Globe,
-      color: 'blue',
+      color: 'electric' as const,
       features: [
         {
           name: 'Instant Site Generation',
@@ -1010,14 +1116,14 @@ export default function FeaturesPage() {
           ],
         },
         {
-          name: 'Mailing List Integration',
+          name: 'Mailing List Collection',
           description:
-            'Grow your email list with embedded signup forms. Export to Mailchimp, ConvertKit, or download CSV.',
+            'Grow your email list with embedded signup forms. Export your subscribers anytime as CSV.',
           details: [
             'Embedded signup forms',
-            'Pop-up forms',
-            'Mailchimp/ConvertKit sync',
-            'CSV export',
+            'Customizable styling',
+            'Subscriber collection',
+            'CSV export anytime',
             'GDPR compliance tools',
             'Double opt-in support',
           ],
@@ -1032,7 +1138,7 @@ export default function FeaturesPage() {
       subtitle:
         'Stream performances, studio sessions, and behind-the-scenes content to fans worldwide. Built-in tipping and chat.',
       icon: Radio,
-      color: 'red',
+      color: 'ember' as const,
       features: [
         {
           name: 'One-Click Go Live',
@@ -1088,16 +1194,16 @@ export default function FeaturesPage() {
           link: '/live/analytics',
         },
         {
-          name: 'Multi-Platform Simulcast',
+          name: 'Stream with OBS/Streamlabs',
           description:
-            'Stream to RNRB, YouTube, Twitch, and Facebook simultaneously. One stream, multiple platforms.',
+            'Use your favorite streaming software with our RTMP URL. Stream to RNRB with professional OBS setups.',
           details: [
-            'YouTube Live integration',
-            'Twitch streaming',
-            'Facebook Live',
-            'Custom RTMP destinations',
-            'Per-platform chat aggregation',
-            'Unified analytics',
+            'RTMP URL for OBS/Streamlabs',
+            'Stream key provided',
+            'Professional quality output',
+            'Custom scenes & overlays',
+            'Works with any RTMP software',
+            'Low-latency streaming',
           ],
         },
         {
@@ -1116,14 +1222,14 @@ export default function FeaturesPage() {
       ],
     },
     // ==========================================
-    // SOCIAL FEED & ACTIVITY - NEW DETAILED CATEGORY
+    // SOCIAL FEED & ACTIVITY
     // ==========================================
     {
       title: 'Social Feed & Activity',
       subtitle:
         'Stay connected with your musical community. Celebrate wins, share updates, and build your network of collaborators.',
       icon: Activity,
-      color: 'cyan',
+      color: 'gold' as const,
       features: [
         {
           name: 'Activity Feed',
@@ -1216,7 +1322,7 @@ export default function FeaturesPage() {
       subtitle:
         "Find collaborators, discover new music, and build your network. The musician community you've been looking for.",
       icon: Compass,
-      color: 'pink',
+      color: 'steel' as const,
       features: [
         {
           name: 'Musician Discovery',
@@ -1303,14 +1409,14 @@ export default function FeaturesPage() {
       ],
     },
     // ==========================================
-    // MUSICIAN'S TOOLBOX - ENHANCED
+    // MUSICIAN'S TOOLBOX
     // ==========================================
     {
       title: "Musician's Toolbox",
       subtitle:
         'Essential tools for every musician. 13 professional tools including tuner, metronome, stem separator, practice logger, and more — all in one place.',
       icon: Wrench,
-      color: 'gold',
+      color: 'smoke' as const,
       features: [
         {
           name: 'Chromatic Tuner',
@@ -1396,98 +1502,17 @@ export default function FeaturesPage() {
           ],
           link: '/tools?tool=loop-player',
         },
-        {
-          name: 'Stage Plot Generator',
-          description:
-            'Create professional stage layouts for venues. Drag-and-drop equipment placement.',
-          details: [
-            'Drag-and-drop interface',
-            'Equipment library (amps, drums, etc.)',
-            'Input list generation',
-            'PDF export',
-            'Save templates',
-            'Share with venues',
-          ],
-          link: '/tools?tool=stageplot',
-        },
-        {
-          name: 'EPK Generator',
-          description: 'One-click electronic press kit creation. Professional EPK in seconds.',
-          details: [
-            'Auto-pull from profile',
-            'Photo gallery',
-            'Embedded audio player',
-            'Bio formatting',
-            'Social stats',
-            'Shareable link',
-          ],
-          link: '/tools?tool=epk',
-        },
-        {
-          name: 'Gear Inventory',
-          description: 'Track all your equipment, maintenance schedules, and insurance values.',
-          details: [
-            'Equipment catalog',
-            'Serial number tracking',
-            'Maintenance reminders',
-            'Insurance valuation',
-            'Photo documentation',
-            'Export for insurance claims',
-          ],
-          link: '/tools?tool=gear-inventory',
-        },
-        {
-          name: 'Contract Templates',
-          description:
-            'Legal templates for venues, sessions, and sync licensing. Customizable and download-ready.',
-          details: [
-            'Performance contracts',
-            'Session musician agreements',
-            'Sync licensing templates',
-            'Collaboration agreements',
-            'NDA templates',
-            'PDF generation',
-          ],
-          link: '/tools?tool=contracts',
-        },
-        {
-          name: 'Backing Track Creator',
-          description:
-            'Generate backing tracks by muting stems. Perfect for practice and live performance.',
-          details: [
-            'Stem-based muting',
-            'Click track overlay',
-            'Count-in options',
-            'Section markers',
-            'Export options',
-            'BPM adjustment',
-          ],
-          link: '/tools?tool=backing-tracks',
-        },
-        {
-          name: 'Session Notes',
-          description: 'Digital notepad for recording sessions. Track takes, settings, and ideas.',
-          details: [
-            'Per-session notes',
-            'Take ratings',
-            'Equipment settings log',
-            'Timestamp markers',
-            'Photo attachments',
-            'Shareable with team',
-          ],
-          link: '/tools?tool=session-notes',
-        },
       ],
     },
     // ==========================================
-    // ARTIST MERCH STORE - NEW CATEGORY
+    // ARTIST MERCH STORE
     // ==========================================
     {
       title: 'Artist Merch Store',
       subtitle:
         'Design and sell your own merchandise with zero upfront costs. Print-on-demand integration means no inventory, no risk.',
       icon: ShoppingBag,
-      color: 'green',
+      color: 'sage' as const,
       features: [
         {
           name: 'Print-on-Demand Integration',
@@ -1575,14 +1600,14 @@ export default function FeaturesPage() {
       ],
     },
     // ==========================================
-    // MARKETPLACE
+    // GEAR MARKETPLACE
     // ==========================================
     {
       title: 'Gear Marketplace',
       subtitle:
         'Buy and sell instruments, studio gear, and services. Connect with trusted sellers in the music community.',
       icon: Package,
-      color: 'amber',
+      color: 'copper' as const,
       features: [
         {
           name: 'Buy & Sell Gear',
@@ -1676,7 +1701,7 @@ export default function FeaturesPage() {
       subtitle:
         'Get your own @rnrb.me professional email address. Works with any mail app. Included free with paid membership.',
       icon: Mail,
-      color: 'sky',
+      color: 'electric' as const,
       features: [
         {
           name: 'Your @rnrb.me Address',
@@ -1737,7 +1762,7 @@ export default function FeaturesPage() {
           description:
             'Generous storage quotas with all the features you need. Auto-reply, forwarding, signatures, and more.',
           details: [
-            '1GB storage (Creator), 10GB (Studio)',
+            '1GB storage with paid plan',
             'Custom email signature',
             'Auto-reply for tours',
             'Email forwarding',
@@ -1761,14 +1786,14 @@ export default function FeaturesPage() {
       ],
     },
     // ==========================================
-    // REVENUE & ANALYTICS - NEW CATEGORY
+    // REVENUE & ANALYTICS
     // ==========================================
     {
       title: 'Revenue & Analytics',
       subtitle:
         'Track every dollar you earn from music. Revenue dashboard, payment tracking, and insights to grow your income.',
       icon: BarChart3,
-      color: 'green',
+      color: 'sage' as const,
       features: [
         {
           name: 'Revenue Dashboard',
@@ -1853,14 +1878,14 @@ export default function FeaturesPage() {
       ],
     },
     // ==========================================
-    // AFFILIATE PROGRAM - NEW CATEGORY
+    // AFFILIATE PROGRAM
     // ==========================================
     {
       title: 'Affiliate Program',
       subtitle:
         "Earn money by sharing Rock N' Roll Basement with fellow musicians. Generous commissions and tiered rewards.",
       icon: Gift,
-      color: 'indigo',
+      color: 'gold' as const,
       features: [
         {
           name: 'Referral Dashboard',
@@ -1952,14 +1977,14 @@ export default function FeaturesPage() {
       subtitle:
         'Learn from industry pros with on-demand courses and live workshops. Level up your skills.',
       icon: GraduationCap,
-      color: 'purple',
+      color: 'fire' as const,
       features: [
         {
           name: 'On-Demand Courses',
           description:
-            'Pre-recorded masterclasses from Grammy winners, platinum producers, and touring pros.',
+            'Pre-recorded masterclasses from experienced musicians and industry professionals.',
           details: [
-            'Industry expert instructors',
+            'Verified instructor profiles',
             'HD video lessons',
             'Downloadable resources',
             'Progress tracking',
@@ -2042,7 +2067,7 @@ export default function FeaturesPage() {
       subtitle:
         'Help shape the future of music creation. Test new features, provide feedback, and contribute to open-source tools.',
       icon: FlaskConical,
-      color: 'accent',
+      color: 'ember' as const,
       features: [
         {
           name: 'Beta Features',
@@ -2131,172 +2156,272 @@ export default function FeaturesPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pb-12 pt-24">
-        {/* Background Effects */}
-        <div className="absolute inset-0">
-          <div className="gradient-orb gradient-orb-1 opacity-30" />
-          <div className="gradient-orb gradient-orb-2 opacity-30" />
-          <div className="hero-grid-pattern" />
+      {/* EPIC HERO SECTION */}
+      <section className="relative overflow-hidden pb-16 pt-24">
+        {/* Dramatic Animated Background */}
+        <div className="pointer-events-none absolute inset-0">
+          {/* Fire gradient from bottom */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 100% 80% at 50% 120%, rgba(232, 93, 59, 0.25), transparent 60%)',
+            }}
+          />
+          {/* Gold accent from top right */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 60% 40% at 90% 10%, rgba(212, 168, 75, 0.15), transparent 50%)',
+            }}
+          />
+          {/* Grid pattern */}
+          <div className="hero-grid-pattern opacity-40" />
+          {/* Noise texture overlay */}
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
+            }}
+          />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-7xl">
-          {/* Logo */}
+          {/* Logo - Badass Version */}
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 text-center"
+            initial={{ opacity: 0, y: -30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            className="mb-16 text-center"
           >
-            <Link href="/" className="inline-block transition-transform hover:scale-105">
-              <Image
-                src="/logo-dark.png"
-                alt="Rock N' Roll Basement"
-                width={180}
-                height={73}
-                priority
-                className="mx-auto"
-                style={{
-                  filter: 'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))',
-                }}
-              />
+            <Link href="/" className="group inline-block">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <Image
+                  src="/logo-dark.png"
+                  alt="Rock N' Roll Basement"
+                  width={200}
+                  height={81}
+                  priority
+                  className="mx-auto transition-all duration-300 group-hover:drop-shadow-[0_0_30px_rgba(232,93,59,0.5)]"
+                  style={{
+                    filter: 'drop-shadow(0 0 20px rgba(255, 255, 255, 0.2))',
+                  }}
+                />
+              </motion.div>
             </Link>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.2 }}
             className="text-center"
           >
-            {/* Badge */}
-            <div
-              className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2"
+            {/* Badass Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mb-8 inline-flex items-center gap-3 rounded-full px-6 py-3"
               style={{
-                background: 'rgba(232, 93, 59, 0.1)',
-                border: '1px solid rgba(232, 93, 59, 0.3)',
+                background:
+                  'linear-gradient(135deg, rgba(232, 93, 59, 0.2), rgba(212, 168, 75, 0.1))',
+                border: '1px solid rgba(232, 93, 59, 0.4)',
+                boxShadow: '0 0 30px rgba(232, 93, 59, 0.2), inset 0 0 20px rgba(232, 93, 59, 0.1)',
               }}
             >
-              <Sparkles className="h-4 w-4" style={{ color: 'var(--accent)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
-                100+ Features in One Platform
+              <Flame
+                className="h-5 w-5"
+                style={{
+                  color: 'var(--accent)',
+                  filter: 'drop-shadow(0 0 8px rgba(232, 93, 59, 0.8))',
+                }}
+              />
+              <span className="text-sm font-bold tracking-wide" style={{ color: 'var(--accent)' }}>
+                100+ FEATURES. ZERO BS.
               </span>
-            </div>
+              <Zap
+                className="h-5 w-5"
+                style={{
+                  color: 'var(--gold)',
+                  filter: 'drop-shadow(0 0 8px rgba(212, 168, 75, 0.8))',
+                }}
+              />
+            </motion.div>
 
-            <h1
-              className="font-display mb-6 text-4xl font-bold md:text-5xl lg:text-6xl"
-              style={{ color: 'var(--text)' }}
+            {/* Epic Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="font-display mb-8 text-5xl font-black tracking-tight md:text-6xl lg:text-7xl"
             >
-              Every Tool You Need.
+              <span style={{ color: 'var(--text)' }}>Every Tool You Need.</span>
               <br />
-              <span className="hero-text-gradient">Nothing You Don't.</span>
-            </h1>
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: 'linear-gradient(135deg, #e85d3b, #d4a84b, #e85d3b)',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradient-shift 3s ease infinite',
+                }}
+              >
+                Nothing You Don't.
+              </span>
+            </motion.h1>
 
-            <p
-              className="mx-auto mb-10 max-w-3xl text-lg leading-relaxed md:text-xl"
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed"
               style={{ color: 'var(--text-secondary)' }}
             >
-              From the first spark of an idea to your sold-out world tour, Rock N' Roll Basement has
-              you covered. AI-powered songwriting, real-time collaboration, copyright protection,
-              touring tools, live streaming, merch creation, and so much more — all in one place.
-            </p>
+              From the first spark of an idea to your sold-out world tour. AI-powered songwriting,
+              real-time collaboration, copyright protection, touring tools, live streaming, merch
+              creation — <strong style={{ color: 'var(--text)' }}>all in one place.</strong>
+            </motion.p>
 
-            {/* Stats */}
-            <div className="mb-10 flex flex-wrap justify-center gap-8">
+            {/* Stats - Rock N Roll Style */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="mb-12 flex flex-wrap justify-center gap-12"
+            >
               {[
-                { value: '100+', label: 'Features' },
-                { value: '18', label: 'Categories' },
-                { value: '100%', label: 'Your Rights' },
-                { value: '0', label: 'Lock-in' },
+                { value: '100+', label: 'Features', color: '#e85d3b' },
+                { value: '18', label: 'Categories', color: '#d4a84b' },
+                { value: '100%', label: 'Your Rights', color: '#7b9178' },
+                { value: '0', label: 'Lock-in', color: '#94a3b8' },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: 0.7 + i * 0.1 }}
                   className="text-center"
                 >
                   <div
-                    className="font-display text-3xl font-bold md:text-4xl"
-                    style={{ color: 'var(--accent)' }}
+                    className="font-display text-5xl font-black md:text-6xl"
+                    style={{
+                      color: stat.color,
+                      textShadow: `0 0 40px ${stat.color}60`,
+                    }}
                   >
                     {stat.value}
                   </div>
-                  <div className="text-sm" style={{ color: 'var(--muted)' }}>
+                  <div
+                    className="text-sm font-semibold uppercase tracking-widest"
+                    style={{ color: 'var(--muted)' }}
+                  >
                     {stat.label}
                   </div>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap justify-center gap-4">
+            {/* CTAs - On Fire */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="flex flex-wrap justify-center gap-4"
+            >
               <Link
                 href="/auth?signup=true"
-                className="button inline-flex items-center gap-2 text-lg"
+                className="group relative inline-flex items-center gap-3 overflow-hidden rounded-xl px-8 py-4 text-lg font-bold transition-all duration-300 hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #e85d3b, #d4a84b)',
+                  color: 'white',
+                  boxShadow: '0 0 30px rgba(232, 93, 59, 0.4)',
+                }}
               >
-                Start Creating Free
-                <ArrowRight className="h-5 w-5" />
+                <span className="relative z-10">Start Creating Free</span>
+                <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                <div
+                  className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  style={{
+                    background: 'linear-gradient(135deg, #d4a84b, #e85d3b)',
+                  }}
+                />
               </Link>
               <Link
                 href="/pricing"
-                className="button secondary inline-flex items-center gap-2 text-lg"
+                className="inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-bold transition-all duration-300 hover:scale-105"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '2px solid rgba(255, 255, 255, 0.2)',
+                  color: 'var(--text)',
+                }}
               >
                 View Pricing
               </Link>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Platform Badges */}
-      <section className="pb-8" style={{ borderTop: '1px solid var(--border)' }}>
-        <div className="rnrb-container max-w-4xl py-8">
-          <div className="flex flex-wrap items-center justify-center gap-6">
+      {/* Platform Badges - Rugged Style */}
+      <section className="relative py-8" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="rnrb-container max-w-4xl">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             {[
-              { icon: Monitor, label: 'Mac & PC', color: 'var(--gold)' },
-              { icon: Smartphone, label: 'iOS & Android', color: 'var(--accent)' },
-              { icon: Wifi, label: 'Works Offline', color: 'var(--sage)' },
-              { icon: Globe, label: 'Web Access', color: 'var(--sky)' },
-            ].map((platform, i) => (
-              <div
+              { icon: Monitor, label: 'Mac & PC', color: '#d4a84b' },
+              { icon: Smartphone, label: 'iOS & Android', color: '#e85d3b' },
+              { icon: Wifi, label: 'Works Offline', color: '#7b9178' },
+              { icon: Globe, label: 'Web Access', color: '#38bdf8' },
+            ].map((platform) => (
+              <motion.div
                 key={platform.label}
-                className="flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+                whileHover={{ scale: 1.05, y: -2 }}
+                className="flex items-center gap-3 rounded-xl px-5 py-3 text-sm font-semibold"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
+                  background: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid var(--border)',
                 }}
               >
-                <platform.icon className="h-4 w-4" style={{ color: platform.color }} />
+                <platform.icon className="h-5 w-5" style={{ color: platform.color }} />
                 <span style={{ color: 'var(--text-secondary)' }}>{platform.label}</span>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Quick Navigation */}
+      {/* Sticky Navigation - Rock Style */}
       <section
-        className="sticky top-0 z-40 py-4"
-        style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)' }}
+        className="sticky top-0 z-40 py-4 backdrop-blur-xl"
+        style={{
+          background: 'rgba(18, 18, 20, 0.9)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        }}
       >
         <div className="rnrb-container max-w-7xl">
           <div className="scrollbar-hide flex gap-2 overflow-x-auto pb-2">
-            {featureCategories.map((category, i) => (
-              <a
-                key={category.title}
-                href={`#${category.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                className="flex flex-shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all hover:bg-white/5"
-                style={{
-                  background: 'var(--panel)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--text-secondary)',
-                }}
-              >
-                <category.icon className="h-4 w-4" />
-                {category.title}
-              </a>
-            ))}
+            {featureCategories.map((category) => {
+              const colors = COLORS[category.color];
+              return (
+                <a
+                  key={category.title}
+                  href={`#${category.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                  className="flex flex-shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: colors.bg,
+                    border: `1px solid ${colors.border}`,
+                    color: colors.text,
+                  }}
+                >
+                  <category.icon className="h-4 w-4" />
+                  {category.title}
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -2315,37 +2440,88 @@ export default function FeaturesPage() {
         </div>
       ))}
 
-      {/* Final CTA */}
-      <section className="py-24" style={{ borderTop: '1px solid var(--border)' }}>
-        <div className="rnrb-container max-w-4xl text-center">
+      {/* EPIC Final CTA */}
+      <section className="relative overflow-hidden py-32">
+        {/* Fire background */}
+        <div className="pointer-events-none absolute inset-0">
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'radial-gradient(ellipse 100% 60% at 50% 100%, rgba(232, 93, 59, 0.3), transparent 60%)',
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '1px',
+              background:
+                'linear-gradient(90deg, transparent, rgba(232, 93, 59, 0.5), transparent)',
+            }}
+          />
+        </div>
+
+        <div className="rnrb-container relative z-10 max-w-4xl text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
           >
-            <Flame className="mx-auto mb-6 h-12 w-12" style={{ color: 'var(--accent)' }} />
+            <Flame
+              className="mx-auto mb-8 h-16 w-16"
+              style={{
+                color: 'var(--accent)',
+                filter: 'drop-shadow(0 0 30px rgba(232, 93, 59, 0.6))',
+              }}
+            />
             <h2
-              className="font-display mb-4 text-3xl font-bold md:text-4xl lg:text-5xl"
+              className="font-display mb-6 text-4xl font-black md:text-5xl lg:text-6xl"
               style={{ color: 'var(--text)' }}
             >
-              Ready to Build Your Workshop?
+              Ready to Build Your
+              <br />
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: 'linear-gradient(135deg, #e85d3b, #d4a84b)',
+                }}
+              >
+                Workshop?
+              </span>
             </h2>
-            <p className="mb-8 text-lg" style={{ color: 'var(--text-secondary)' }}>
+            <p className="mb-10 text-xl" style={{ color: 'var(--text-secondary)' }}>
               Join thousands of musicians who've made Rock N' Roll Basement their creative home.
-              Start free, upgrade when you're ready.
+              <br />
+              <strong style={{ color: 'var(--text)' }}>
+                Start free. Upgrade when you're ready.
+              </strong>
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href="/auth?signup=true"
-                className="button inline-flex items-center gap-2 px-8 py-4 text-lg"
+                className="group relative inline-flex items-center gap-3 overflow-hidden rounded-xl px-10 py-5 text-xl font-bold transition-all duration-300 hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #e85d3b, #d4a84b)',
+                  color: 'white',
+                  boxShadow: '0 0 40px rgba(232, 93, 59, 0.5)',
+                }}
               >
-                Enter Your Workshop
-                <ArrowRight className="h-5 w-5" />
+                <span className="relative z-10">Enter Your Workshop</span>
+                <ArrowRight className="relative z-10 h-6 w-6 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 href="/pricing"
-                className="button secondary inline-flex items-center gap-2 px-8 py-4 text-lg"
+                className="inline-flex items-center gap-3 rounded-xl px-10 py-5 text-xl font-bold transition-all duration-300 hover:scale-105"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '2px solid rgba(255, 255, 255, 0.2)',
+                  color: 'var(--text)',
+                }}
               >
                 Compare Plans
               </Link>
@@ -2354,23 +2530,48 @@ export default function FeaturesPage() {
         </div>
       </section>
 
-      {/* Footer Link */}
+      {/* Footer Links */}
       <section className="pb-16 text-center">
         <p className="text-sm" style={{ color: 'var(--muted)' }}>
-          Have questions?{' '}
-          <Link href="/pricing" className="underline" style={{ color: 'var(--accent)' }}>
-            View Pricing
+          Questions?{' '}
+          <Link
+            href="/pricing"
+            className="font-semibold transition-colors hover:text-white"
+            style={{ color: 'var(--accent)' }}
+          >
+            Pricing
           </Link>{' '}
           •{' '}
-          <Link href="/why-rnrb" className="underline" style={{ color: 'var(--accent)' }}>
+          <Link
+            href="/why-rnrb"
+            className="font-semibold transition-colors hover:text-white"
+            style={{ color: 'var(--gold)' }}
+          >
             Why RNRB
           </Link>{' '}
           •{' '}
-          <Link href="/terms" className="underline" style={{ color: 'var(--accent)' }}>
+          <Link
+            href="/terms"
+            className="font-semibold transition-colors hover:text-white"
+            style={{ color: 'var(--text-secondary)' }}
+          >
             Terms
           </Link>
         </p>
       </section>
+
+      {/* Add keyframe animation */}
+      <style jsx global>{`
+        @keyframes gradient-shift {
+          0%,
+          100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+      `}</style>
     </div>
   );
 }

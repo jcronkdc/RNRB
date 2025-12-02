@@ -56,7 +56,7 @@ export const SUBSCRIPTION_TIERS = {
       videoMinutesLimit: 60, // 1 hour included - enough for a taste, buy packs for more
       videoParticipantMinutesLimit: 180, // ~1hr with 3 people
       imageCreditsLimit: 10, // 10 album art generations/month (~$0.03 cost)
-      stemCreditsLimit: 10, // 10 stem separations/month (~$0.50 cost)
+      stemCreditsLimit: 5, // 5 stem separations/month - upgrade or buy packs for more
       maxVideoParticipants: 4, // Small calls only
     },
   },

@@ -491,6 +491,11 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         where: { id: userId },
         data: { imageCreditsBonus: { increment: creditAmount } },
       });
+    } else if (creditType === 'stems') {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { stemCreditsBonus: { increment: creditAmount } },
+      });
     } else if (creditType === 'storage') {
       await prisma.user.update({
         where: { id: userId },

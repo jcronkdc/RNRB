@@ -42,10 +42,13 @@ import {
   Download,
   Printer,
   FileText,
+  Share2,
+  QrCode,
 } from '@/components/ui/custom-icons';
 import { useState, useEffect, useMemo, useRef } from 'react';
 
 import { CursorOverlay } from '@/components/cursor-overlay';
+import { SetlistShareModal } from '@/components/setlist-share-modal';
 import { useAblyClient } from '@/hooks/use-ably-client';
 import { useCollaborativeCursors } from '@/hooks/use-collaborative-cursors';
 import { exportSetlistToPDF, printSetlist } from '@/lib/setlist-pdf-export';
@@ -286,6 +289,7 @@ export function CollaborativeSetlistBuilder({
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showSongPicker, setShowSongPicker] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
@@ -466,6 +470,16 @@ export function CollaborativeSetlistBuilder({
             <div className="mb-6 flex items-center justify-between">
               <h2 className="font-display text-2xl font-bold">Setlist Order</h2>
               <div className="flex items-center gap-2">
+                {/* Share Button - VIRAL LOOP */}
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowShareModal(true)}
+                  className="flex items-center gap-2 text-orange-400 hover:bg-orange-500/10 hover:text-orange-300"
+                  disabled={songs.length === 0}
+                >
+                  <QrCode className="h-4 w-4" />
+                  Share
+                </Button>
                 {/* Export Menu */}
                 <div className="relative">
                   <Button
@@ -599,6 +613,14 @@ export function CollaborativeSetlistBuilder({
 
       {/* Cursors Overlay */}
       <CursorOverlay cursors={remoteCursors} />
+
+      {/* Share Modal - VIRAL LOOP */}
+      <SetlistShareModal
+        setlistId={setlistId}
+        setlistName={showName}
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+      />
     </div>
   );
 }

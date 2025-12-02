@@ -35,6 +35,7 @@ export const TIER_LIMITS = {
     videoParticipantMinutes: 0, // No video
     assistantConversations: 10, // 10 GODLIKE AI conversations (teaser to get hooked)
     imageCredits: 0, // No album art AI for free tier
+    stemCredits: 0, // No stem separation for free tier
     collaborators: 1, // 1 collaborator max
     projects: 3, // 3 projects max
     storageGB: 1, // 1 GB storage
@@ -46,6 +47,7 @@ export const TIER_LIMITS = {
     videoParticipantMinutes: 180, // ~1hr with 3 people
     assistantConversations: 100, // 100 GODLIKE AI conversations (~$4 cost, $15 revenue = $11 profit)
     imageCredits: 10, // 10 album art generations/month (~$0.03 cost)
+    stemCredits: 5, // 5 stem credits/month - upgrade or buy packs for more
     collaborators: 5, // 5 collaborators per project
     projects: 10, // 10 projects max
     storageGB: 10, // 10 GB storage
@@ -57,6 +59,7 @@ export const TIER_LIMITS = {
     videoParticipantMinutes: 900, // ~5hr with 3 people, buy packs for serious usage
     assistantConversations: -1, // UNLIMITED GODLIKE AI (peace of mind, estimated ~$6-12 cost)
     imageCredits: 50, // 50 album art generations/month (~$0.15 cost)
+    stemCredits: 50, // 50 stem credits/month (~$2.50 cost)
     collaborators: -1, // Unlimited collaborators
     projects: -1, // Unlimited projects
     storageGB: 100, // 100 GB storage
@@ -65,7 +68,12 @@ export const TIER_LIMITS = {
 } as const;
 
 export type TierName = keyof typeof TIER_LIMITS;
-export type UsageType = 'aiRequests' | 'videoMinutes' | 'assistantConversations' | 'imageCredits';
+export type UsageType =
+  | 'aiRequests'
+  | 'videoMinutes'
+  | 'assistantConversations'
+  | 'imageCredits'
+  | 'stemCredits';
 
 interface UsageStatus {
   allowed: boolean;
@@ -92,9 +100,11 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
         videoMinutesUsed: true,
         assistantConversationsUsed: true,
         imageCreditsUsed: true,
+        stemCreditsUsed: true,
         aiRequestsBonus: true,
         videoMinutesBonus: true,
         imageCreditsBonus: true,
+        stemCreditsBonus: true,
         storageBonusGB: true,
         usagePeriodStart: true,
       },
@@ -137,9 +147,11 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
           videoMinutesUsed: 0,
           assistantConversationsUsed: 0,
           imageCreditsUsed: 0,
+          stemCreditsUsed: 0,
           aiRequestsBonus: 0,
           videoMinutesBonus: 0,
           imageCreditsBonus: 0,
+          stemCreditsBonus: 0,
           usagePeriodStart: now,
         },
       });
@@ -162,7 +174,9 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
           ? user.videoMinutesUsed || 0
           : type === 'imageCredits'
             ? user.imageCreditsUsed || 0
-            : user.assistantConversationsUsed || 0;
+            : type === 'stemCredits'
+              ? user.stemCreditsUsed || 0
+              : user.assistantConversationsUsed || 0;
 
     const bonus =
       type === 'aiRequests'
@@ -171,7 +185,9 @@ export async function getUserUsage(userId: string, type: UsageType): Promise<Usa
           ? user.videoMinutesBonus || 0
           : type === 'imageCredits'
             ? user.imageCreditsBonus || 0
-            : 0;
+            : type === 'stemCredits'
+              ? user.stemCreditsBonus || 0
+              : 0;
 
     const limit = TIER_LIMITS[tier][type] + bonus;
     const remaining = limit - used;
@@ -238,7 +254,9 @@ export async function trackUsage(
           ? { videoMinutesUsed: { increment: amount } }
           : type === 'imageCredits'
             ? { imageCreditsUsed: { increment: amount } }
-            : { assistantConversationsUsed: { increment: amount } };
+            : type === 'stemCredits'
+              ? { stemCreditsUsed: { increment: amount } }
+              : { assistantConversationsUsed: { increment: amount } };
 
     await db.user.update({
       where: { id: userId },
@@ -255,14 +273,17 @@ const TIER_FEATURES = {
   free: {
     videoCalls: false,
     aiAlbumArt: false,
+    stemSeparation: false,
   },
   creator: {
     videoCalls: true,
     aiAlbumArt: true,
+    stemSeparation: true,
   },
   studio: {
     videoCalls: true,
     aiAlbumArt: true,
+    stemSeparation: true,
   },
 } as const;
 
@@ -270,11 +291,12 @@ const TIER_FEATURES = {
  * Get usage summary for dashboard display
  */
 export async function getUsageSummary(userId: string) {
-  const [aiUsage, videoUsage, assistantUsage, imageUsage] = await Promise.all([
+  const [aiUsage, videoUsage, assistantUsage, imageUsage, stemUsage] = await Promise.all([
     getUserUsage(userId, 'aiRequests'),
     getUserUsage(userId, 'videoMinutes'),
     getUserUsage(userId, 'assistantConversations'),
     getUserUsage(userId, 'imageCredits'),
+    getUserUsage(userId, 'stemCredits'),
   ]);
 
   const user = await db.user.findUnique({
@@ -288,6 +310,7 @@ export async function getUsageSummary(userId: string) {
       aiRequestsBonus: true,
       videoMinutesBonus: true,
       imageCreditsBonus: true,
+      stemCreditsBonus: true,
     },
   });
 
@@ -296,10 +319,13 @@ export async function getUsageSummary(userId: string) {
   const aiBonus = user?.aiRequestsBonus || 0;
   const videoBonus = user?.videoMinutesBonus || 0;
   const imageBonus = user?.imageCreditsBonus || 0;
+  const stemBonus = user?.stemCreditsBonus || 0;
   const storageLimit = TIER_LIMITS[tier].storageGB + storageBonus;
 
   // Feature access - owners always have full access
-  const features = user?.isOwner ? { videoCalls: true, aiAlbumArt: true } : TIER_FEATURES[tier];
+  const features = user?.isOwner
+    ? { videoCalls: true, aiAlbumArt: true, stemSeparation: true }
+    : TIER_FEATURES[tier];
 
   return {
     tier,
@@ -307,6 +333,7 @@ export async function getUsageSummary(userId: string) {
     features: {
       videoCalls: features.videoCalls,
       aiAlbumArt: features.aiAlbumArt,
+      stemSeparation: features.stemSeparation,
     },
     ai: {
       used: aiUsage.used,
@@ -334,6 +361,13 @@ export async function getUsageSummary(userId: string) {
       remaining: imageUsage.remaining,
       percentage: imageUsage.limit > 0 ? (imageUsage.used / imageUsage.limit) * 100 : 0,
       bonus: imageBonus,
+    },
+    stems: {
+      used: stemUsage.used,
+      limit: stemUsage.limit,
+      remaining: stemUsage.remaining,
+      percentage: stemUsage.limit > 0 ? (stemUsage.used / stemUsage.limit) * 100 : 0,
+      bonus: stemBonus,
     },
     storage: {
       used: Number(user?.storageUsedGB) || 0,

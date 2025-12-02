@@ -2,11 +2,17 @@
   "name": "Rock N' Roll Basement",
   "short_name": "RNR Basement",
   "description": "Rock N' Roll Basement is a full-stack music workspace for bands, studios, and organizations to manage songs, tours, rights, and revenue in one place.",
-  "start_url": "/",
+  "start_url": "/dashboard",
+  "id": "rnrb-pwa",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#0a0a0a",
+  "theme_color": "#f97316",
   "orientation": "any",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icon-192.png",
@@ -33,31 +39,95 @@
       "purpose": "maskable"
     }
   ],
-  "categories": ["music", "productivity", "entertainment"],
+  "categories": ["music", "productivity", "entertainment", "social"],
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dashboard overview showing your music projects"
+    },
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile view of your music workspace"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Dashboard",
-      "short_name": "Dashboard",
+      "short_name": "Home",
       "description": "Open your dashboard",
       "url": "/dashboard",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "New Project",
-      "short_name": "New Project",
-      "description": "Create a new project",
+      "short_name": "New",
+      "description": "Create a new music project",
       "url": "/projects/new",
-      "icons": [
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Songwriting",
+      "short_name": "Write",
+      "description": "Open songwriting tools",
+      "url": "/songwriting",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Messages",
+      "short_name": "Chat",
+      "description": "View your messages",
+      "url": "/messages",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
         {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
+          "name": "audio",
+          "accept": ["audio/*", ".mp3", ".wav", ".flac", ".aiff", ".m4a"]
+        },
+        {
+          "name": "images",
+          "accept": ["image/*", ".jpg", ".jpeg", ".png", ".webp"]
         }
       ]
     }
-  ]
+  },
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+rnrb",
+      "url": "/protocol?url=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/import",
+      "accept": {
+        "audio/*": [".mp3", ".wav", ".flac", ".aiff", ".m4a", ".ogg"],
+        "application/json": [".json"]
+      }
+    }
+  ],
+  "related_applications": [],
+  "iarc_rating_id": ""
 }
