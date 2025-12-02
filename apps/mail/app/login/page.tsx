@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Mail, Lock, Loader2, AlertCircle, Zap } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
 
@@ -45,10 +46,28 @@ export default function LoginPage() {
       >
         {/* Logo & Title */}
         <div className="mb-8 text-center">
+          {/* RNRB Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-6"
+          >
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={180}
+              height={60}
+              className="mx-auto"
+              priority
+            />
+          </motion.div>
+
+          {/* Mail Icon Badge */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: 'spring', delay: 0.1 }}
+            transition={{ type: 'spring', delay: 0.2 }}
             className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-rnrb-orange to-rnrb-gold shadow-2xl"
             style={{ boxShadow: '0 0 60px rgba(255, 107, 53, 0.4)' }}
           >

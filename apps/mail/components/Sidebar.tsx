@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import {
   Inbox,
   Send,
@@ -42,14 +43,25 @@ export default function Sidebar() {
 
   return (
     <aside className="flex h-full w-64 flex-col border-r border-rnrb-border bg-rnrb-panel">
-      {/* Header */}
-      <div className="flex items-center gap-3 border-b border-rnrb-border p-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-rnrb-orange to-rnrb-gold">
-          <Mail className="h-5 w-5 text-white" />
-        </div>
-        <div className="flex-1 overflow-hidden">
-          <h1 className="font-display font-bold text-white">RNRB Mail</h1>
-          <p className="truncate text-xs text-rnrb-muted">{email}</p>
+      {/* Header with RNRB Logo */}
+      <div className="border-b border-rnrb-border p-4">
+        <a href="https://rnrb.pro" target="_blank" rel="noopener noreferrer" className="mb-3 block">
+          <Image
+            src="/logo-dark.png"
+            alt="Rock N' Roll Basement"
+            width={120}
+            height={40}
+            className="transition-opacity hover:opacity-80"
+          />
+        </a>
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-rnrb-orange to-rnrb-gold">
+            <Mail className="h-4 w-4 text-white" />
+          </div>
+          <div className="flex-1 overflow-hidden">
+            <p className="text-sm font-semibold text-white">RNRB Mail</p>
+            <p className="truncate text-xs text-rnrb-muted">{email}</p>
+          </div>
         </div>
       </div>
 
