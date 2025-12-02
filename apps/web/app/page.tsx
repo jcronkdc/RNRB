@@ -1382,16 +1382,29 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="mx-auto mt-12 max-w-6xl">
+            <div className="mx-auto mt-12 max-w-7xl">
+              {/* Tools You're Replacing Header */}
+              <div className="mb-8 text-center">
+                <p
+                  className="mb-2 text-sm font-bold uppercase tracking-widest"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  Cancel These Subscriptions
+                </p>
+                <p className="text-lg font-medium" style={{ color: 'var(--text-secondary)' }}>
+                  One platform replaces $500+/month in software
+                </p>
+              </div>
+
               <p
                 className="mb-4 text-center text-sm font-medium"
                 style={{ color: 'var(--text-secondary)' }}
               >
-                Scroll right to see the full comparison →
+                ← Scroll to see all 10 tools we replace →
               </p>
               <div className="overflow-x-auto">
                 <div
-                  className="rounded-3xl border-2 p-8 shadow-2xl"
+                  className="rounded-3xl border-2 p-6 shadow-2xl md:p-8"
                   style={{
                     background:
                       'linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)',
@@ -1399,117 +1412,853 @@ export default function HomePage() {
                     boxShadow: '0 0 80px rgba(255, 99, 71, 0.25)',
                   }}
                 >
-                  <table className="w-full" style={{ minWidth: '650px' }}>
+                  <table className="w-full" style={{ minWidth: '1400px' }}>
                     <thead>
                       <tr className="border-b-2" style={{ borderColor: 'var(--accent)' }}>
                         <th
-                          className="pb-6 text-left text-sm font-black uppercase tracking-widest"
-                          style={{ color: 'var(--text-secondary)' }}
+                          className="pb-6 text-left text-xs font-black uppercase tracking-widest"
+                          style={{ color: 'var(--text-secondary)', minWidth: '200px' }}
                         >
                           Feature
                         </th>
-                        <th className="pb-6 text-center">
+                        <th className="pb-6 text-center" style={{ minWidth: '100px' }}>
                           <div
-                            className="inline-flex items-center gap-3 rounded-2xl px-6 py-4 text-lg font-black shadow-2xl"
+                            className="inline-flex flex-col items-center gap-1 rounded-2xl px-4 py-3 text-sm font-black shadow-2xl"
                             style={{
                               background: 'linear-gradient(135deg, var(--accent) 0%, #ff8c5a 100%)',
                               color: 'white',
                               boxShadow: '0 8px 32px rgba(255, 99, 71, 0.5)',
                             }}
                           >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                             </svg>
                             RNRB
+                            <span className="text-[10px] font-normal opacity-80">FREE</span>
                           </div>
                         </th>
-                        <th
-                          className="pb-6 text-center text-sm font-medium opacity-60"
-                          style={{ color: 'var(--muted)' }}
-                        >
-                          Splice
+                        {/* Pro Tools */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              Pro Tools
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $35/mo
+                            </span>
+                          </div>
                         </th>
-                        <th
-                          className="pb-6 text-center text-sm font-medium opacity-60"
-                          style={{ color: 'var(--muted)' }}
-                        >
-                          BandLab
+                        {/* DistroKid */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              DistroKid
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $23/yr
+                            </span>
+                          </div>
                         </th>
-                        <th
-                          className="pb-6 text-center text-sm font-medium opacity-60"
-                          style={{ color: 'var(--muted)' }}
-                        >
-                          Soundtrap
+                        {/* Squarespace */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              Squarespace
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $23/mo
+                            </span>
+                          </div>
+                        </th>
+                        {/* Zoom */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              Zoom
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $16/mo
+                            </span>
+                          </div>
+                        </th>
+                        {/* Slack */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              Slack
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $9/mo
+                            </span>
+                          </div>
+                        </th>
+                        {/* Dropbox */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              Dropbox
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $12/mo
+                            </span>
+                          </div>
+                        </th>
+                        {/* Mailchimp */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              Mailchimp
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $13/mo
+                            </span>
+                          </div>
+                        </th>
+                        {/* Bandsintown */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              Bandsintown
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $10/mo
+                            </span>
+                          </div>
+                        </th>
+                        {/* Reverb */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              Reverb
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              5% fees
+                            </span>
+                          </div>
+                        </th>
+                        {/* MasterClass */}
+                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
+                          <div className="flex flex-col items-center gap-1">
+                            <span
+                              className="text-xs font-bold opacity-60"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              MasterClass
+                            </span>
+                            <span
+                              className="text-[10px] opacity-40"
+                              style={{ color: 'var(--muted)' }}
+                            >
+                              $10/mo
+                            </span>
+                          </div>
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      {/* Feature rows */}
+                      {/* Feature rows - comprehensive comparison */}
                       {[
-                        { name: 'Songwriting Workshop', r: 1, s: 0, b: 1, st: 1 },
-                        { name: 'Version Control (Git for Music)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Revenue Splits & Copyright', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'HD Video Calls (50 people)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Screen Sharing', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Social Feed (Facebook-style)', r: 1, s: 0, b: 1, st: 0 },
-                        { name: 'Direct Messaging', r: 1, s: 0, b: 1, st: 0 },
-                        { name: 'Marketplace (Buy/Sell Gear)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Masterclasses & Education', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Live Streaming to Fans', r: 1, s: 0, b: 1, st: 0 },
-                        { name: 'Website Builder', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Tour Management', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Show & Venue Tracking', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Public Artist Profiles', r: 1, s: 0, b: 1, st: 0 },
-                        { name: '12 Pro Tools (Tuner, etc.)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Offline Mode (PWA)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Merch Store', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Affiliate Program', r: 1, s: 0, b: 0, st: 0 },
-                        { name: 'Revenue Analytics', r: 1, s: 0, b: 0, st: 0 },
+                        // Recording & Production
+                        {
+                          name: 'Recording Studio',
+                          category: 'Production',
+                          r: 1,
+                          pt: 1,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Multi-track Mixing',
+                          category: 'Production',
+                          r: 1,
+                          pt: 1,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Mastering Tools',
+                          category: 'Production',
+                          r: 1,
+                          pt: 1,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Version Control (Git for Music)',
+                          category: 'Production',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 1,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Distribution & Revenue
+                        {
+                          name: 'Music Distribution',
+                          category: 'Distribution',
+                          r: 1,
+                          pt: 0,
+                          dk: 1,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Revenue Splits & Royalties',
+                          category: 'Distribution',
+                          r: 1,
+                          pt: 0,
+                          dk: 1,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Copyright Registration',
+                          category: 'Distribution',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Revenue Analytics Dashboard',
+                          category: 'Distribution',
+                          r: 1,
+                          pt: 0,
+                          dk: 1,
+                          sq: 1,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 1,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Website & Branding
+                        {
+                          name: 'Website Builder',
+                          category: 'Website',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 1,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Custom Domain Support',
+                          category: 'Website',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 1,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'EPK (Electronic Press Kit)',
+                          category: 'Website',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 1,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Public Artist Profiles',
+                          category: 'Website',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 1,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 1,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Communication
+                        {
+                          name: 'HD Video Calls (50 people)',
+                          category: 'Communication',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 1,
+                          sl: 1,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Screen Sharing',
+                          category: 'Communication',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 1,
+                          sl: 1,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Team Channels & Threads',
+                          category: 'Communication',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 1,
+                          sl: 1,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Direct Messaging',
+                          category: 'Communication',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 1,
+                          sl: 1,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // File Storage
+                        {
+                          name: 'Cloud File Storage',
+                          category: 'Storage',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 1,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'File Sharing & Collaboration',
+                          category: 'Storage',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 1,
+                          db: 1,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Project Organization',
+                          category: 'Storage',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 1,
+                          db: 1,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Marketing
+                        {
+                          name: 'Email Marketing & Lists',
+                          category: 'Marketing',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 1,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Fan Engagement Tools',
+                          category: 'Marketing',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 1,
+                          bt: 1,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Social Feed',
+                          category: 'Marketing',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Live Streaming',
+                          category: 'Marketing',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 1,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Touring
+                        {
+                          name: 'Tour Management',
+                          category: 'Touring',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 1,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Gig Calendar & Booking',
+                          category: 'Touring',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 1,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Venue Database',
+                          category: 'Touring',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 1,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Smart Setlist Builder',
+                          category: 'Touring',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Marketplace
+                        {
+                          name: 'Buy/Sell Gear Marketplace',
+                          category: 'Marketplace',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 1,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Merch Store',
+                          category: 'Marketplace',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 1,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Services Marketplace',
+                          category: 'Marketplace',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Education
+                        {
+                          name: 'Masterclasses & Courses',
+                          category: 'Education',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 1,
+                        },
+                        {
+                          name: 'Music Theory Tools',
+                          category: 'Education',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Chord & Scale Library',
+                          category: 'Education',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Tools
+                        {
+                          name: '12 Pro Tools (Tuner, Metronome, etc.)',
+                          category: 'Tools',
+                          r: 1,
+                          pt: 1,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'AI Songwriting Assistant',
+                          category: 'Tools',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        {
+                          name: 'Contract & Legal Tools',
+                          category: 'Tools',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
+                        // Platform
+                        {
+                          name: 'Offline Mode (PWA)',
+                          category: 'Platform',
+                          r: 1,
+                          pt: 1,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 1,
+                          db: 1,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 1,
+                        },
+                        {
+                          name: 'Mobile App',
+                          category: 'Platform',
+                          r: 1,
+                          pt: 1,
+                          dk: 1,
+                          sq: 1,
+                          zm: 1,
+                          sl: 1,
+                          db: 1,
+                          mc: 1,
+                          bt: 1,
+                          rv: 1,
+                          ma: 1,
+                        },
+                        {
+                          name: 'All-in-One Dashboard',
+                          category: 'Platform',
+                          r: 1,
+                          pt: 0,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                        },
                       ].map((row, i) => (
                         <tr
                           key={i}
                           className="border-b transition-all hover:bg-white/5"
                           style={{ borderColor: 'var(--border-subtle)' }}
                         >
-                          <td className="py-4 text-sm font-medium" style={{ color: 'var(--text)' }}>
-                            {row.name}
+                          <td className="py-3 text-sm font-medium" style={{ color: 'var(--text)' }}>
+                            <div className="flex flex-col">
+                              <span>{row.name}</span>
+                              <span
+                                className="text-[10px] uppercase tracking-wider"
+                                style={{ color: 'var(--accent)', opacity: 0.7 }}
+                              >
+                                {row.category}
+                              </span>
+                            </div>
                           </td>
-                          <td className="py-4 text-center">
-                            {row.r ? (
+                          {/* RNRB Column - Always has checkmark with glow */}
+                          <td className="py-3 text-center">
+                            <div
+                              className="inline-flex h-7 w-7 items-center justify-center rounded-full"
+                              style={{
+                                background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                                boxShadow: '0 0 16px rgba(34, 197, 94, 0.5)',
+                              }}
+                            >
+                              <svg
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="white"
+                                strokeWidth="3"
+                              >
+                                <path d="M5 12l5 5L20 7" />
+                              </svg>
+                            </div>
+                          </td>
+                          {/* Pro Tools */}
+                          <td className="py-3 text-center">
+                            {row.pt ? (
                               <div
-                                className="inline-flex h-8 w-8 items-center justify-center rounded-full"
-                                style={{
-                                  background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-                                  boxShadow: '0 0 20px rgba(34, 197, 94, 0.4)',
-                                }}
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
                               >
                                 <svg
-                                  width="18"
-                                  height="18"
+                                  width="12"
+                                  height="12"
                                   viewBox="0 0 24 24"
                                   fill="none"
-                                  stroke="white"
-                                  strokeWidth="3"
-                                >
-                                  <path d="M5 12l5 5L20 7" />
-                                </svg>
-                              </div>
-                            ) : (
-                              <span style={{ color: 'var(--muted)' }}>—</span>
-                            )}
-                          </td>
-                          <td className="py-4 text-center">
-                            {row.s ? (
-                              <div
-                                className="inline-flex h-8 w-8 items-center justify-center rounded-full"
-                                style={{ background: '#22c55e' }}
-                              >
-                                <svg
-                                  width="18"
-                                  height="18"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="white"
+                                  stroke="#22c55e"
                                   strokeWidth="3"
                                 >
                                   <path d="M5 12l5 5L20 7" />
@@ -1517,31 +2266,32 @@ export default function HomePage() {
                               </div>
                             ) : (
                               <svg
-                                width="20"
-                                height="20"
+                                width="16"
+                                height="16"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-30"
+                                className="inline-block opacity-20"
                                 style={{ color: 'var(--muted)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
                             )}
                           </td>
-                          <td className="py-4 text-center">
-                            {row.b ? (
+                          {/* DistroKid */}
+                          <td className="py-3 text-center">
+                            {row.dk ? (
                               <div
-                                className="inline-flex h-8 w-8 items-center justify-center rounded-full"
-                                style={{ background: '#22c55e' }}
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
                               >
                                 <svg
-                                  width="18"
-                                  height="18"
+                                  width="12"
+                                  height="12"
                                   viewBox="0 0 24 24"
                                   fill="none"
-                                  stroke="white"
+                                  stroke="#22c55e"
                                   strokeWidth="3"
                                 >
                                   <path d="M5 12l5 5L20 7" />
@@ -1549,31 +2299,32 @@ export default function HomePage() {
                               </div>
                             ) : (
                               <svg
-                                width="20"
-                                height="20"
+                                width="16"
+                                height="16"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-30"
+                                className="inline-block opacity-20"
                                 style={{ color: 'var(--muted)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
                             )}
                           </td>
-                          <td className="py-4 text-center">
-                            {row.st ? (
+                          {/* Squarespace */}
+                          <td className="py-3 text-center">
+                            {row.sq ? (
                               <div
-                                className="inline-flex h-8 w-8 items-center justify-center rounded-full"
-                                style={{ background: '#22c55e' }}
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
                               >
                                 <svg
-                                  width="18"
-                                  height="18"
+                                  width="12"
+                                  height="12"
                                   viewBox="0 0 24 24"
                                   fill="none"
-                                  stroke="white"
+                                  stroke="#22c55e"
                                   strokeWidth="3"
                                 >
                                   <path d="M5 12l5 5L20 7" />
@@ -1581,13 +2332,244 @@ export default function HomePage() {
                               </div>
                             ) : (
                               <svg
-                                width="20"
-                                height="20"
+                                width="16"
+                                height="16"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-30"
+                                className="inline-block opacity-20"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          {/* Zoom */}
+                          <td className="py-3 text-center">
+                            {row.zm ? (
+                              <div
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
+                              >
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="#22c55e"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-20"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          {/* Slack */}
+                          <td className="py-3 text-center">
+                            {row.sl ? (
+                              <div
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
+                              >
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="#22c55e"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-20"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          {/* Dropbox */}
+                          <td className="py-3 text-center">
+                            {row.db ? (
+                              <div
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
+                              >
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="#22c55e"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-20"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          {/* Mailchimp */}
+                          <td className="py-3 text-center">
+                            {row.mc ? (
+                              <div
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
+                              >
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="#22c55e"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-20"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          {/* Bandsintown */}
+                          <td className="py-3 text-center">
+                            {row.bt ? (
+                              <div
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
+                              >
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="#22c55e"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-20"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          {/* Reverb */}
+                          <td className="py-3 text-center">
+                            {row.rv ? (
+                              <div
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
+                              >
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="#22c55e"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-20"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          {/* MasterClass */}
+                          <td className="py-3 text-center">
+                            {row.ma ? (
+                              <div
+                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
+                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
+                              >
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="#22c55e"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-20"
                                 style={{ color: 'var(--muted)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
@@ -1596,12 +2578,92 @@ export default function HomePage() {
                           </td>
                         </tr>
                       ))}
+                      {/* Total Cost Row */}
+                      <tr className="border-t-2" style={{ borderColor: 'var(--accent)' }}>
+                        <td
+                          className="py-5 text-sm font-black uppercase tracking-wider"
+                          style={{ color: 'var(--accent)' }}
+                        >
+                          Total Monthly Cost
+                        </td>
+                        <td className="py-5 text-center">
+                          <span
+                            className="rounded-full px-4 py-2 text-lg font-black"
+                            style={{
+                              background: 'linear-gradient(135deg, var(--accent) 0%, #ff8c5a 100%)',
+                              color: 'white',
+                            }}
+                          >
+                            $0
+                          </span>
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $35
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $2
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $23
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $16
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $9
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $12
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $13
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $10
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          5%
+                        </td>
+                        <td
+                          className="py-5 text-center text-xs font-bold opacity-50"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          $10
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
 
                   {/* BRUTAL Summary */}
                   <div
-                    className="mt-10 rounded-3xl p-10 shadow-2xl"
+                    className="mt-10 rounded-3xl p-8 shadow-2xl md:p-10"
                     style={{
                       background:
                         'linear-gradient(135deg, rgba(255, 99, 71, 0.25) 0%, rgba(255, 140, 90, 0.15) 100%)',
@@ -1610,46 +2672,63 @@ export default function HomePage() {
                     }}
                   >
                     <div className="flex flex-col items-center gap-8 text-center md:flex-row md:text-left">
-                      <div
-                        className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl text-4xl font-black shadow-2xl"
-                        style={{
-                          background: 'var(--accent)',
-                          color: 'white',
-                          transform: 'rotate(-8deg)',
-                          boxShadow: '0 12px 48px rgba(255, 99, 71, 0.6)',
-                        }}
-                      >
-                        17
+                      <div className="flex shrink-0 flex-col items-center gap-3">
+                        <div
+                          className="flex h-20 w-20 items-center justify-center rounded-3xl text-3xl font-black shadow-2xl md:h-24 md:w-24 md:text-4xl"
+                          style={{
+                            background: 'var(--accent)',
+                            color: 'white',
+                            transform: 'rotate(-8deg)',
+                            boxShadow: '0 12px 48px rgba(255, 99, 71, 0.6)',
+                          }}
+                        >
+                          10
+                        </div>
+                        <span
+                          className="text-xs font-bold uppercase tracking-wider"
+                          style={{ color: 'var(--accent)' }}
+                        >
+                          Tools Replaced
+                        </span>
                       </div>
                       <div className="flex-1">
                         <h3
-                          className="mb-3 text-3xl font-black uppercase tracking-tight"
+                          className="mb-3 text-2xl font-black uppercase tracking-tight md:text-3xl"
                           style={{ color: 'var(--text)' }}
                         >
-                          17 Features They'll NEVER Have
+                          Save $130+/month — Get Everything
                         </h3>
                         <p
-                          className="mb-4 text-lg leading-relaxed"
+                          className="mb-4 text-base leading-relaxed md:text-lg"
                           style={{ color: 'var(--text-secondary)' }}
                         >
-                          They're building <strong>tools</strong>. We're building a{' '}
-                          <strong style={{ color: 'var(--accent)' }}>revolution</strong>. Stop
-                          juggling 5 subscriptions. Stop compromising. Stop settling.
+                          <strong style={{ color: 'var(--accent)' }}>Pro Tools</strong> for
+                          recording, <strong style={{ color: 'var(--accent)' }}>DistroKid</strong>{' '}
+                          for distribution,{' '}
+                          <strong style={{ color: 'var(--accent)' }}>Squarespace</strong> for
+                          websites, <strong style={{ color: 'var(--accent)' }}>Zoom</strong> for
+                          calls, <strong style={{ color: 'var(--accent)' }}>Slack</strong> for
+                          messaging, <strong style={{ color: 'var(--accent)' }}>Dropbox</strong> for
+                          storage, <strong style={{ color: 'var(--accent)' }}>Mailchimp</strong> for
+                          fans, <strong style={{ color: 'var(--accent)' }}>Bandsintown</strong> for
+                          tours, <strong style={{ color: 'var(--accent)' }}>Reverb</strong> for
+                          gear, <strong style={{ color: 'var(--accent)' }}>MasterClass</strong> for
+                          learning —{' '}
+                          <strong style={{ color: 'white' }}>ALL IN ONE PLATFORM.</strong>
                         </p>
                         <p className="mb-3 text-base font-bold" style={{ color: 'var(--accent)' }}>
-                          This is the platform musicians have been SCREAMING for.
+                          Stop juggling 10 subscriptions. Start making music.
                         </p>
                         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                          <strong style={{ color: 'var(--text)' }}>Plus:</strong> Our godlike AI
-                          Assistant is available throughout the entire platform—helping with lyrics,
-                          chords, marketing copy, contract reviews, and more. It's like having a pro
-                          musician, manager, and lawyer on call 24/7.
+                          <strong style={{ color: 'var(--text)' }}>Plus:</strong> Our AI Assistant
+                          helps with lyrics, chords, marketing, contracts, and more. It's like
+                          having a pro musician, manager, and lawyer on call 24/7.
                         </p>
                       </div>
                       <div className="flex shrink-0 flex-col gap-4">
                         <Link
                           href="/auth?signup=true"
-                          className="group rounded-2xl px-10 py-5 text-center font-black uppercase tracking-wide text-white shadow-2xl transition-all hover:scale-110"
+                          className="group rounded-2xl px-8 py-5 text-center font-black uppercase tracking-wide text-white shadow-2xl transition-all hover:scale-110 md:px-10"
                           style={{
                             background: 'linear-gradient(135deg, var(--accent) 0%, #ff8c5a 100%)',
                             boxShadow: '0 12px 48px rgba(255, 99, 71, 0.5)',
@@ -1666,10 +2745,10 @@ export default function HomePage() {
                           >
                             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                           </svg>
-                          Join The Revolution
+                          Join Free Forever
                         </Link>
                         <p className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-                          Free forever • No BS • 75+ features
+                          No credit card • 39 features • Unlimited
                         </p>
                       </div>
                     </div>
