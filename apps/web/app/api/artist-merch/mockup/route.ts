@@ -32,7 +32,42 @@ export async function POST(request: NextRequest) {
     await checkRateLimit(standardLimiter, session.user.id);
 
     if (!PRINTFUL_API_KEY) {
-      return NextResponse.json({ error: 'Printful not configured' }, { status: 503 });
+      return NextResponse.json(
+        {
+          error:
+            'Printful API not configured. Please add PRINTFUL_API_KEY to environment variables.',
+          code: 'PRINTFUL_NOT_CONFIGURED',
+        },
+        { status: 503 }
+      );
+    }
+
+    // Verify Printful store exists (required for mockup generation)
+    try {
+      const storeCheck = await fetchWithTimeout(
+        `${PRINTFUL_API_URL}/stores`,
+        {
+          headers: {
+            Authorization: `Bearer ${PRINTFUL_API_KEY}`,
+          },
+        },
+        TIMEOUTS.STANDARD
+      );
+      const storeData = await storeCheck.json();
+      if (!storeData.result || storeData.result.length === 0) {
+        return NextResponse.json(
+          {
+            error:
+              'No Printful store found. Please create a store at printful.com/dashboard first.',
+            code: 'NO_PRINTFUL_STORE',
+            setupUrl: 'https://www.printful.com/dashboard/store/add',
+          },
+          { status: 503 }
+        );
+      }
+    } catch (storeErr) {
+      console.error('[MOCKUP] Store check failed:', storeErr);
+      // Continue anyway - maybe the endpoint changed
     }
 
     const body = (await request.json()) as MockupRequest;
