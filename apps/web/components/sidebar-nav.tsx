@@ -107,7 +107,7 @@ const navSections: NavSection[] = [
       { label: 'Songwriting', href: '/songwriting', icon: Music4 },
       { label: 'Sketches', href: '/create', icon: Sparkles, badge: 'BETA' },
       { label: 'Projects', href: '/projects', icon: FolderOpen },
-      { label: 'Labs', href: '/labs', icon: FlaskConical },
+      { label: 'RNRB Labs', href: '/labs', icon: FlaskConical },
     ],
   },
   {

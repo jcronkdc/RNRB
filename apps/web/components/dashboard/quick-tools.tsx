@@ -25,7 +25,7 @@ const tools = [
   { icon: Mic2, label: 'Studio', href: '/studio', color: 'from-blue-500 to-cyan-500' },
   {
     icon: FlaskConical,
-    label: 'Labs',
+    label: 'RNRB Labs',
     href: '/labs',
     color: 'from-emerald-500 to-green-500',
     badge: 'NEW',
