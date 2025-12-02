@@ -5,9 +5,10 @@ import { syncClient } from './sync-client';
 
 interface AuthState {
   isAuthenticated: boolean;
+  loading: boolean;
   session: JMAPSession | null;
   email: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -16,41 +17,62 @@ interface MailState {
   selectedMailboxId: string | null;
   emails: Email[];
   selectedEmailId: string | null;
-  isLoading: boolean;
+  selectedEmail: string | null;
+  loading: boolean;
   error: string | null;
   totalEmails: number;
 
   fetchMailboxes: () => Promise<void>;
-  selectMailbox: (mailboxId: string) => Promise<void>;
+  fetchEmails: (mailboxId: string) => Promise<void>;
+  selectMailbox: (mailboxId: string) => void;
   selectEmail: (emailId: string) => void;
   refreshEmails: () => Promise<void>;
   markAsRead: (emailIds: string[]) => Promise<void>;
   markAsUnread: (emailIds: string[]) => Promise<void>;
   deleteEmails: (emailIds: string[]) => Promise<void>;
   searchEmails: (query: string) => Promise<void>;
+  clearState: () => void;
+}
+
+interface DraftData {
+  to?: { email: string; name?: string }[];
+  subject?: string;
+  body?: string;
+  inReplyTo?: string;
 }
 
 interface ComposeState {
   isOpen: boolean;
-  replyTo: Email | null;
-  openCompose: (replyTo?: Email) => void;
+  isMinimized: boolean;
+  draftData: DraftData | null;
+  openCompose: (draftData?: DraftData) => void;
   closeCompose: () => void;
+  toggleMinimize: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       isAuthenticated: false,
+      loading: false,
       session: null,
       email: null,
 
       login: async (email: string, password: string) => {
-        const session = await jmapClient.authenticate(email, password);
-        set({ isAuthenticated: true, session, email });
+        set({ loading: true });
+        try {
+          const session = await jmapClient.authenticate(email, password);
+          set({ isAuthenticated: true, session, email, loading: false });
 
-        // Sync with main platform
-        syncClient.setEmail(email);
-        syncClient.trackLogin();
+          // Sync with main platform
+          syncClient.setEmail(email);
+          syncClient.trackLogin();
+          return true;
+        } catch (error) {
+          console.error('Login failed:', error);
+          set({ loading: false });
+          return false;
+        }
       },
 
       logout: () => {
@@ -63,22 +85,23 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'rnrb-mail-auth',
-      partialize: (state) => ({ email: state.email }),
+      partialize: (state) => ({ email: state.email, isAuthenticated: state.isAuthenticated }),
     }
   )
 );
 
-export const useMailStore = create<MailState & { clearState: () => void }>((set, get) => ({
+export const useMailStore = create<MailState>((set, get) => ({
   mailboxes: [],
   selectedMailboxId: null,
   emails: [],
   selectedEmailId: null,
-  isLoading: false,
+  selectedEmail: null,
+  loading: false,
   error: null,
   totalEmails: 0,
 
   fetchMailboxes: async () => {
-    set({ isLoading: true, error: null });
+    set({ loading: true, error: null });
     try {
       const mailboxes = await jmapClient.getMailboxes();
       // Sort mailboxes: system folders first, then alphabetically
@@ -96,30 +119,36 @@ export const useMailStore = create<MailState & { clearState: () => void }>((set,
         if (aOrder !== bOrder) return aOrder - bOrder;
         return a.name.localeCompare(b.name);
       });
-      set({ mailboxes: sortedMailboxes, isLoading: false });
+      set({ mailboxes: sortedMailboxes, loading: false });
 
       // Auto-select inbox
       const inbox = sortedMailboxes.find((m) => m.role === 'inbox');
       if (inbox && !get().selectedMailboxId) {
-        get().selectMailbox(inbox.id);
+        set({ selectedMailboxId: inbox.id });
+        get().fetchEmails(inbox.id);
       }
     } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+      set({ error: (error as Error).message, loading: false });
     }
   },
 
-  selectMailbox: async (mailboxId: string) => {
-    set({ selectedMailboxId: mailboxId, selectedEmailId: null, isLoading: true, error: null });
+  fetchEmails: async (mailboxId: string) => {
+    set({ loading: true, error: null });
     try {
       const { emails, total } = await jmapClient.getEmails(mailboxId);
-      set({ emails, totalEmails: total, isLoading: false });
+      set({ emails, totalEmails: total, loading: false });
     } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+      set({ error: (error as Error).message, loading: false });
     }
+  },
+
+  selectMailbox: (mailboxId: string) => {
+    set({ selectedMailboxId: mailboxId, selectedEmailId: null, selectedEmail: null });
+    get().fetchEmails(mailboxId);
   },
 
   selectEmail: (emailId: string) => {
-    set({ selectedEmailId: emailId });
+    set({ selectedEmailId: emailId, selectedEmail: emailId });
     // Mark as read
     const email = get().emails.find((e) => e.id === emailId);
     if (email && !email.keywords?.['$seen']) {
@@ -130,7 +159,7 @@ export const useMailStore = create<MailState & { clearState: () => void }>((set,
   refreshEmails: async () => {
     const { selectedMailboxId } = get();
     if (selectedMailboxId) {
-      await get().selectMailbox(selectedMailboxId);
+      await get().fetchEmails(selectedMailboxId);
     }
   },
 
@@ -139,7 +168,9 @@ export const useMailStore = create<MailState & { clearState: () => void }>((set,
       await jmapClient.markAsRead(emailIds);
       set((state) => ({
         emails: state.emails.map((e) =>
-          emailIds.includes(e.id) ? { ...e, keywords: { ...e.keywords, $seen: true } } : e
+          emailIds.includes(e.id)
+            ? { ...e, isRead: true, keywords: { ...e.keywords, $seen: true } }
+            : e
         ),
       }));
     } catch (error) {
@@ -154,7 +185,7 @@ export const useMailStore = create<MailState & { clearState: () => void }>((set,
         emails: state.emails.map((e) => {
           if (emailIds.includes(e.id)) {
             const { $seen, ...rest } = e.keywords || {};
-            return { ...e, keywords: rest };
+            return { ...e, isRead: false, keywords: rest };
           }
           return e;
         }),
@@ -179,6 +210,7 @@ export const useMailStore = create<MailState & { clearState: () => void }>((set,
         selectedEmailId: emailIds.includes(state.selectedEmailId || '')
           ? null
           : state.selectedEmailId,
+        selectedEmail: emailIds.includes(state.selectedEmail || '') ? null : state.selectedEmail,
       }));
     } catch (error) {
       console.error('Failed to delete emails:', error);
@@ -191,12 +223,12 @@ export const useMailStore = create<MailState & { clearState: () => void }>((set,
       return;
     }
 
-    set({ isLoading: true, error: null });
+    set({ loading: true, error: null });
     try {
       const emails = await jmapClient.searchEmails(query);
-      set({ emails, totalEmails: emails.length, isLoading: false });
+      set({ emails, totalEmails: emails.length, loading: false });
     } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+      set({ error: (error as Error).message, loading: false });
     }
   },
 
@@ -206,7 +238,8 @@ export const useMailStore = create<MailState & { clearState: () => void }>((set,
       selectedMailboxId: null,
       emails: [],
       selectedEmailId: null,
-      isLoading: false,
+      selectedEmail: null,
+      loading: false,
       error: null,
       totalEmails: 0,
     });
@@ -215,13 +248,18 @@ export const useMailStore = create<MailState & { clearState: () => void }>((set,
 
 export const useComposeStore = create<ComposeState>((set) => ({
   isOpen: false,
-  replyTo: null,
+  isMinimized: false,
+  draftData: null,
 
-  openCompose: (replyTo?: Email) => {
-    set({ isOpen: true, replyTo: replyTo || null });
+  openCompose: (draftData?: DraftData) => {
+    set({ isOpen: true, isMinimized: false, draftData: draftData || null });
   },
 
   closeCompose: () => {
-    set({ isOpen: false, replyTo: null });
+    set({ isOpen: false, isMinimized: false, draftData: null });
+  },
+
+  toggleMinimize: () => {
+    set((state) => ({ isMinimized: !state.isMinimized }));
   },
 }));

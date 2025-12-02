@@ -34,6 +34,7 @@ export default function EmailList() {
   const currentMailbox = mailboxes.find((m) => m.id === selectedMailboxId);
 
   const handleRefresh = async () => {
+    if (!selectedMailboxId) return;
     setRefreshing(true);
     await fetchEmails(selectedMailboxId);
     setRefreshing(false);
@@ -42,17 +43,19 @@ export default function EmailList() {
   const filteredEmails = emails.filter((email) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
+    const fromEmail = email.from?.[0]?.email || '';
+    const fromName = email.from?.[0]?.name || '';
     return (
-      email.subject.toLowerCase().includes(query) ||
-      email.from.email.toLowerCase().includes(query) ||
-      email.from.name?.toLowerCase().includes(query) ||
-      email.preview.toLowerCase().includes(query)
+      email.subject?.toLowerCase().includes(query) ||
+      fromEmail.toLowerCase().includes(query) ||
+      fromName.toLowerCase().includes(query) ||
+      email.preview?.toLowerCase().includes(query)
     );
   });
 
-  const formatDate = (date: Date) => {
+  const formatDate = (dateStr: string) => {
     const now = new Date();
-    const emailDate = new Date(date);
+    const emailDate = new Date(dateStr);
     const diffDays = Math.floor((now.getTime() - emailDate.getTime()) / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) {
@@ -83,6 +86,10 @@ export default function EmailList() {
     }
     setSelectedEmails(newSelected);
   };
+
+  // Helper to check email status from keywords
+  const isRead = (email: (typeof emails)[0]) => email.keywords?.['$seen'] || false;
+  const isFlagged = (email: (typeof emails)[0]) => email.keywords?.['$flagged'] || false;
 
   return (
     <div
@@ -194,6 +201,11 @@ export default function EmailList() {
             {filteredEmails.map((email) => {
               const isSelected = selectedEmailId === email.id;
               const isChecked = selectedEmails.has(email.id);
+              const emailIsRead = isRead(email);
+              const emailIsFlagged = isFlagged(email);
+              const senderName =
+                email.from?.[0]?.name || email.from?.[0]?.email?.split('@')[0] || 'Unknown';
+              const senderEmail = email.from?.[0]?.email || '';
 
               return (
                 <div
@@ -209,7 +221,7 @@ export default function EmailList() {
                   }}
                 >
                   {/* Unread indicator */}
-                  {!email.isRead && (
+                  {!emailIsRead && (
                     <div
                       className="absolute left-1 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full"
                       style={{ background: 'var(--accent)' }}
@@ -237,10 +249,11 @@ export default function EmailList() {
                       {/* Sender & Date */}
                       <div className="mb-1 flex items-center justify-between gap-2">
                         <span
-                          className={clsx('truncate text-sm', !email.isRead && 'font-semibold')}
+                          className={clsx('truncate text-sm', !emailIsRead && 'font-semibold')}
                           style={{ color: 'var(--text)' }}
+                          title={senderEmail}
                         >
-                          {email.from.name || email.from.email.split('@')[0]}
+                          {senderName}
                         </span>
                         <span
                           className="flex-shrink-0 text-xs"
@@ -252,7 +265,7 @@ export default function EmailList() {
 
                       {/* Subject */}
                       <p
-                        className={clsx('mb-0.5 truncate text-sm', !email.isRead && 'font-medium')}
+                        className={clsx('mb-0.5 truncate text-sm', !emailIsRead && 'font-medium')}
                         style={{ color: 'var(--text-secondary)' }}
                       >
                         {email.subject || '(no subject)'}
@@ -268,7 +281,7 @@ export default function EmailList() {
                         {email.hasAttachment && (
                           <Paperclip className="h-3 w-3" style={{ color: 'var(--text-muted)' }} />
                         )}
-                        {email.isFlagged && (
+                        {emailIsFlagged && (
                           <Star className="h-3 w-3 fill-current" style={{ color: '#fbbf24' }} />
                         )}
                       </div>

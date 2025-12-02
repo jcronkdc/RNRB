@@ -12,19 +12,17 @@ import {
   Paperclip,
   Download,
   Printer,
-  Tag,
-  ExternalLink,
   ChevronDown,
   Mail,
 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function EmailView() {
-  const { selectedEmail, emails } = useMailStore();
+  const { selectedEmailId, emails } = useMailStore();
   const { openCompose } = useComposeStore();
   const [showDetails, setShowDetails] = useState(false);
 
-  const email = emails.find((e) => e.id === selectedEmail);
+  const email = emails.find((e) => e.id === selectedEmailId);
 
   if (!email) {
     return (
@@ -43,8 +41,13 @@ export default function EmailView() {
     );
   }
 
-  const formatFullDate = (date: Date) => {
-    return new Date(date).toLocaleDateString([], {
+  // Helper to get email properties
+  const sender = email.from?.[0] || { email: 'unknown@email.com', name: null };
+  const recipients = email.to || [];
+  const isFlagged = email.keywords?.['$flagged'] || false;
+
+  const formatFullDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString([], {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -56,7 +59,7 @@ export default function EmailView() {
 
   const handleReply = () => {
     openCompose({
-      to: [{ email: email.from.email, name: email.from.name }],
+      to: [{ email: sender.email, name: sender.name || undefined }],
       subject: `Re: ${email.subject}`,
       inReplyTo: email.id,
     });
@@ -64,8 +67,10 @@ export default function EmailView() {
 
   const handleReplyAll = () => {
     const allRecipients = [
-      { email: email.from.email, name: email.from.name },
-      ...email.to.filter((r) => r.email !== email.from.email),
+      { email: sender.email, name: sender.name || undefined },
+      ...recipients
+        .filter((r) => r.email !== sender.email)
+        .map((r) => ({ email: r.email, name: r.name || undefined })),
     ];
     openCompose({
       to: allRecipients,
@@ -77,9 +82,26 @@ export default function EmailView() {
   const handleForward = () => {
     openCompose({
       subject: `Fwd: ${email.subject}`,
-      body: `\n\n---------- Forwarded message ----------\nFrom: ${email.from.name || email.from.email}\nDate: ${formatFullDate(email.receivedAt)}\nSubject: ${email.subject}\n\n${email.body || email.preview}`,
+      body: `\n\n---------- Forwarded message ----------\nFrom: ${sender.name || sender.email}\nDate: ${formatFullDate(email.receivedAt)}\nSubject: ${email.subject}\n\n${email.preview}`,
     });
   };
+
+  // Get email body content
+  const getBodyContent = () => {
+    // Check for HTML body first
+    if (email.htmlBody?.[0]?.partId && email.bodyValues?.[email.htmlBody[0].partId]) {
+      return { html: email.bodyValues[email.htmlBody[0].partId].value };
+    }
+    // Fall back to text body
+    if (email.textBody?.[0]?.partId && email.bodyValues?.[email.textBody[0].partId]) {
+      const text = email.bodyValues[email.textBody[0].partId].value;
+      return { text: text.replace(/\n/g, '<br/>') };
+    }
+    // Last resort: preview
+    return { text: email.preview };
+  };
+
+  const bodyContent = getBodyContent();
 
   return (
     <div
@@ -135,11 +157,11 @@ export default function EmailView() {
             <Trash2 className="h-4 w-4" />
           </button>
           <button
-            className={`rounded-md p-1.5 transition-colors ${email.isFlagged ? 'text-yellow-500' : ''}`}
-            style={{ color: email.isFlagged ? '#fbbf24' : 'var(--text-muted)' }}
-            title={email.isFlagged ? 'Remove star' : 'Star'}
+            className={`rounded-md p-1.5 transition-colors ${isFlagged ? 'text-yellow-500' : ''}`}
+            style={{ color: isFlagged ? '#fbbf24' : 'var(--text-muted)' }}
+            title={isFlagged ? 'Remove star' : 'Star'}
           >
-            <Star className={`h-4 w-4 ${email.isFlagged ? 'fill-current' : ''}`} />
+            <Star className={`h-4 w-4 ${isFlagged ? 'fill-current' : ''}`} />
           </button>
         </div>
 
@@ -177,16 +199,16 @@ export default function EmailView() {
                 className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
                 style={{ background: 'var(--accent)' }}
               >
-                {(email.from.name || email.from.email)[0].toUpperCase()}
+                {(sender.name || sender.email)[0].toUpperCase()}
               </div>
 
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-medium" style={{ color: 'var(--text)' }}>
-                    {email.from.name || email.from.email.split('@')[0]}
+                    {sender.name || sender.email.split('@')[0]}
                   </span>
                   <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                    &lt;{email.from.email}&gt;
+                    &lt;{sender.email}&gt;
                   </span>
                 </div>
 
@@ -195,7 +217,7 @@ export default function EmailView() {
                   className="mt-0.5 flex items-center gap-1 text-sm transition-colors"
                   style={{ color: 'var(--text-muted)' }}
                 >
-                  to {email.to.map((r) => r.name || r.email.split('@')[0]).join(', ')}
+                  to {recipients.map((r) => r.name || r.email.split('@')[0]).join(', ') || 'me'}
                   <ChevronDown
                     className={`h-3 w-3 transition-transform ${showDetails ? 'rotate-180' : ''}`}
                   />
@@ -211,14 +233,14 @@ export default function EmailView() {
                         <span className="w-16" style={{ color: 'var(--text-muted)' }}>
                           From:
                         </span>
-                        <span style={{ color: 'var(--text)' }}>{email.from.email}</span>
+                        <span style={{ color: 'var(--text)' }}>{sender.email}</span>
                       </div>
                       <div className="flex">
                         <span className="w-16" style={{ color: 'var(--text-muted)' }}>
                           To:
                         </span>
                         <span style={{ color: 'var(--text)' }}>
-                          {email.to.map((r) => r.email).join(', ')}
+                          {recipients.map((r) => r.email).join(', ') || '-'}
                         </span>
                       </div>
                       <div className="flex">
@@ -281,7 +303,7 @@ export default function EmailView() {
             className="email-content prose prose-sm max-w-none"
             style={{ color: 'var(--text)' }}
             dangerouslySetInnerHTML={{
-              __html: email.bodyHtml || email.body?.replace(/\n/g, '<br/>') || email.preview,
+              __html: bodyContent.html || bodyContent.text || '',
             }}
           />
         </div>
