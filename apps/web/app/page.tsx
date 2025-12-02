@@ -650,7 +650,7 @@ export default function HomePage() {
 
                 <p className="mb-6 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                   Your music deserves to be heard. Launch a stunning website in minutes. Plan your
-                  tour. Build your audience. Get paid for your work.
+                  tour. Sell custom merch. Get paid for your work.
                 </p>
 
                 {/* Benefits */}
@@ -674,6 +674,16 @@ export default function HomePage() {
                       style={{ background: 'var(--sage)' }}
                     />
                     Tour planning with smart routing
+                  </li>
+                  <li
+                    className="flex items-center gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <span
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: 'var(--sage)' }}
+                    />
+                    Free merch store—design & sell instantly
                   </li>
                   <li
                     className="flex items-center gap-3 text-sm"
