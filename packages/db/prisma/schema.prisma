@@ -5862,4 +5862,413 @@ enum ContactCategory {
   OTHER
 }
 
-// Force regeneration: 2025-12-02-RNRB-MAIL
+// ============================================
+// RNRB BUSINESS EMAIL & SUPPORT SYSTEM
+// ============================================
+
+// Newsletter Subscriber - For RNRB platform newsletter
+model NewsletterSubscriber {
+  id                String   @id @default(cuid())
+  
+  // Contact Info
+  email             String   @unique
+  firstName         String?
+  lastName          String?
+  
+  // Subscription Status
+  status            SubscriberStatus @default(PENDING)
+  confirmedAt       DateTime?
+  unsubscribedAt    DateTime?
+  unsubscribeReason String?
+  
+  // Preferences
+  preferences       Json?    // {productUpdates: true, tips: true, events: false}
+  frequency         EmailFrequency @default(WEEKLY)
+  
+  // Source Tracking
+  source            String?  // signup-form, footer, landing-page, etc.
+  referrer          String?  // URL they came from
+  utmSource         String?
+  utmMedium         String?
+  utmCampaign       String?
+  
+  // Linked User (optional)
+  userId            String?  @unique
+  
+  // Engagement Tracking
+  emailsSent        Int      @default(0)
+  emailsOpened      Int      @default(0)
+  emailsClicked     Int      @default(0)
+  lastOpenedAt      DateTime?
+  lastClickedAt     DateTime?
+  bounceCount       Int      @default(0)
+  lastBounceAt      DateTime?
+  
+  // Anti-spam
+  ipAddress         String?
+  userAgent         String?
+  confirmToken      String?  @unique
+  confirmTokenExpires DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+}
+
+enum SubscriberStatus {
+  PENDING      // Awaiting email confirmation
+  ACTIVE       // Confirmed and receiving emails
+  UNSUBSCRIBED // User opted out
+  BOUNCED      // Email bounced too many times
+  COMPLAINED   // Marked as spam
+}
+
+enum EmailFrequency {
+  REALTIME     // Immediate notifications
+  DAILY        // Daily digest
+  WEEKLY       // Weekly roundup
+  MONTHLY      // Monthly newsletter only
+}
+
+// Support Tickets - Help desk system
+model SupportTicket {
+  id                String   @id @default(cuid())
+  ticketNumber      String   @unique // RNRB-XXXX format
+  
+  // Reporter Info
+  userId            String?  // If logged in user
+  email             String   // Email for replies
+  name              String?
+  
+  // Ticket Details
+  subject           String
+  description       String   @db.Text
+  category          TicketCategory @default(GENERAL)
+  priority          TicketPriority @default(NORMAL)
+  status            TicketStatus @default(OPEN)
+  
+  // Context
+  currentPage       String?  // Page where ticket was created
+  userAgent         String?  // Browser info
+  appVersion        String?  // App version
+  subscriptionTier  String?  // User's tier at time of ticket
+  
+  // Attachments
+  attachments       Json?    // [{url, filename, size, type}]
+  
+  // Assignment
+  assignedTo        String?  // Admin user ID
+  
+  // Resolution
+  resolvedAt        DateTime?
+  resolvedBy        String?  // Admin user ID
+  resolution        String?  @db.Text
+  satisfactionRating Int?    // 1-5 stars
+  satisfactionFeedback String?
+  
+  // AI Assistance
+  aiSuggested       Boolean  @default(false) // If AI helped create
+  aiHandled         Boolean  @default(false) // If AI responded
+  aiConfidence      Float?   // AI confidence in its response
+  
+  // Tracking
+  firstResponseAt   DateTime? // Time to first response
+  lastActivityAt    DateTime?
+  viewCount         Int      @default(0)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  messages          SupportTicketMessage[]
+  tags              SupportTicketTag[]
+  
+  @@index([userId])
+  @@index([email])
+  @@index([status])
+  @@index([category])
+  @@index([priority])
+  @@index([assignedTo])
+  @@index([createdAt])
+}
+
+enum TicketCategory {
+  GENERAL          // General inquiry
+  ACCOUNT          // Account & login issues
+  BILLING          // Payment & subscription
+  TECHNICAL        // Bugs & technical issues
+  FEATURE_REQUEST  // Feature suggestions
+  COLLABORATION    // Collaboration issues
+  VIDEO_CALLS      // Video/audio quality
+  AI_ASSISTANT     // AI assistant issues
+  SECURITY         // Security concerns
+  FEEDBACK         // General feedback
+}
+
+enum TicketPriority {
+  LOW       // Nice to resolve
+  NORMAL    // Standard
+  HIGH      // Should resolve soon
+  URGENT    // Needs immediate attention
+  CRITICAL  // System down / blocking issue
+}
+
+enum TicketStatus {
+  OPEN              // New ticket
+  IN_PROGRESS       // Being worked on
+  WAITING_ON_USER   // Needs info from user
+  WAITING_ON_THIRD_PARTY // External dependency
+  RESOLVED          // Issue fixed
+  CLOSED            // Confirmed resolved
+  WONT_FIX          // Won't be addressed
+}
+
+// Support Ticket Messages - Conversation thread
+model SupportTicketMessage {
+  id                String   @id @default(cuid())
+  ticketId          String
+  
+  // Sender
+  senderType        MessageSenderType
+  senderId          String?  // User ID if internal
+  senderName        String?
+  senderEmail       String?
+  
+  // Content
+  content           String   @db.Text
+  htmlContent       String?  @db.Text // Rich text version
+  
+  // Attachments
+  attachments       Json?    // [{url, filename, size, type}]
+  
+  // Type
+  messageType       MessageType @default(REPLY)
+  isInternal        Boolean  @default(false) // Internal note (not sent to customer)
+  
+  // AI
+  isAiGenerated     Boolean  @default(false)
+  aiEditedBy        String?  // If AI draft was edited by human
+  
+  // Email tracking
+  emailMessageId    String?  // For threading with email replies
+  sentViaEmail      Boolean  @default(false)
+  
+  createdAt         DateTime @default(now())
+  
+  // Relations
+  ticket            SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  
+  @@index([ticketId])
+  @@index([createdAt])
+}
+
+enum MessageSenderType {
+  USER      // End user
+  AGENT     // Support agent
+  AI        // AI assistant
+  SYSTEM    // Automated message
+}
+
+enum MessageType {
+  INITIAL   // First message (ticket creation)
+  REPLY     // Regular reply
+  NOTE      // Internal note
+  STATUS    // Status change notification
+  ASSIGNMENT // Assignment change
+  ESCALATION // Priority escalation
+}
+
+// Support Ticket Tags - For categorization
+model SupportTicketTag {
+  id                String   @id @default(cuid())
+  ticketId          String
+  name              String
+  color             String?  // Hex color
+  
+  createdAt         DateTime @default(now())
+  
+  ticket            SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  
+  @@unique([ticketId, name])
+  @@index([name])
+}
+
+// Contact Form Submissions - General inquiries
+model ContactSubmission {
+  id                String   @id @default(cuid())
+  
+  // Contact Info
+  name              String
+  email             String
+  phone             String?
+  company           String?
+  
+  // Message
+  subject           String?
+  message           String   @db.Text
+  type              ContactType @default(GENERAL)
+  
+  // Context
+  sourcePage        String?  // Page submitted from
+  ipAddress         String?
+  userAgent         String?
+  
+  // Processing
+  status            ContactSubmissionStatus @default(NEW)
+  convertedToTicket String?  // Support ticket ID if converted
+  respondedAt       DateTime?
+  respondedBy       String?  // Admin user ID
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([email])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum ContactType {
+  GENERAL     // General inquiry
+  SUPPORT     // Support request
+  PRESS       // Press inquiry
+  PARTNERSHIP // Business partnership
+  INVESTMENT  // Investment inquiry
+  FEEDBACK    // User feedback
+}
+
+enum ContactSubmissionStatus {
+  NEW         // Just submitted
+  READ        // Viewed by admin
+  RESPONDED   // Reply sent
+  CONVERTED   // Converted to ticket
+  ARCHIVED    // No action needed
+}
+
+// Business Email Configuration - Admin managed
+model BusinessEmailConfig {
+  id                String   @id @default(cuid())
+  
+  // Email Address
+  address           String   @unique // e.g., support@rnrb.me
+  displayName       String   // e.g., "RNRB Support"
+  
+  // Purpose
+  purpose           BusinessEmailPurpose
+  description       String?
+  
+  // Routing
+  forwardTo         String[] // Forward to these addresses
+  autoResponder     Boolean  @default(false)
+  autoResponseTemplate String? @db.Text
+  
+  // Aliases
+  aliases           String[] // Alternative addresses
+  
+  // AI Settings
+  aiEnabled         Boolean  @default(false)
+  aiCanRespond      Boolean  @default(false) // AI can send responses
+  aiRequiresApproval Boolean @default(true)  // Human must approve AI responses
+  aiPromptTemplate  String?  @db.Text        // Custom AI instructions
+  
+  // Status
+  isActive          Boolean  @default(true)
+  
+  // Stats
+  emailsReceived    Int      @default(0)
+  emailsSent        Int      @default(0)
+  lastActivityAt    DateTime?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([purpose])
+  @@index([isActive])
+}
+
+enum BusinessEmailPurpose {
+  NEWSLETTER    // newsletter@
+  SUPPORT       // support@
+  INFO          // info@
+  BILLING       // billing@
+  HELLO         // hello@ or contact@
+  PRESS         // press@
+  SECURITY      // security@
+  NOREPLY       // noreply@
+  TEAM          // team@
+  ADMIN         // admin@
+  BOOKING       // booking@ (for artist booking)
+  FEEDBACK      // feedback@
+  PARTNERSHIPS  // partnerships@
+  LEGAL         // legal@
+}
+
+// Newsletter Campaigns - For tracking sent newsletters
+model NewsletterCampaign {
+  id                String   @id @default(cuid())
+  
+  // Campaign Info
+  name              String
+  subject           String
+  previewText       String?
+  
+  // Content
+  htmlContent       String   @db.Text
+  textContent       String?  @db.Text
+  templateId        String?  // Reference to template
+  
+  // Sending
+  fromAddress       String   // Business email address
+  fromName          String
+  replyTo           String?
+  
+  // Targeting
+  audienceFilter    Json?    // {status: "active", frequency: ["weekly", "monthly"]}
+  excludeFilter     Json?    // Subscribers to exclude
+  
+  // Schedule
+  status            CampaignStatus @default(DRAFT)
+  scheduledFor      DateTime?
+  sentAt            DateTime?
+  completedAt       DateTime?
+  
+  // Stats
+  recipientCount    Int      @default(0)
+  sentCount         Int      @default(0)
+  deliveredCount    Int      @default(0)
+  openCount         Int      @default(0)
+  clickCount        Int      @default(0)
+  bounceCount       Int      @default(0)
+  unsubscribeCount  Int      @default(0)
+  complaintCount    Int      @default(0)
+  
+  // Unique stats
+  uniqueOpens       Int      @default(0)
+  uniqueClicks      Int      @default(0)
+  
+  // A/B Testing
+  isABTest          Boolean  @default(false)
+  abVariants        Json?    // [{name, subject, percentage}]
+  winningVariant    String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@index([status])
+  @@index([scheduledFor])
+  @@index([sentAt])
+}
+
+enum CampaignStatus {
+  DRAFT      // Being created
+  SCHEDULED  // Ready to send at scheduled time
+  SENDING    // Currently being sent
+  SENT       // Completed sending
+  PAUSED     // Paused mid-send
+  CANCELLED  // Cancelled before completion
+}
+
+// Force regeneration: 2025-12-02-RNRB-EMAIL-SUPPORT-SYSTEM
