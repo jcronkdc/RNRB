@@ -1951,6 +1951,96 @@ export const FolderOpen = createIcon(
   'FolderOpen'
 );
 
+// FolderPlus - add folder
+export const FolderPlus = createIcon(
+  <>
+    <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2v12z" />
+    <line x1="12" y1="11" x2="12" y2="17" />
+    <line x1="9" y1="14" x2="15" y2="14" />
+  </>,
+  'FolderPlus'
+);
+
+// Rocket - launch/deploy
+export const Rocket = createIcon(
+  <>
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
+    <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
+    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+  </>,
+  'Rocket'
+);
+
+// Cpu - processor
+export const Cpu = createIcon(
+  <>
+    <rect x="4" y="4" width="16" height="16" rx="2" />
+    <rect x="9" y="9" width="6" height="6" />
+    <path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" />
+  </>,
+  'Cpu'
+);
+
+// CircuitBoard - electronics
+export const CircuitBoard = createIcon(
+  <>
+    <rect x="2" y="2" width="20" height="20" rx="2" />
+    <path d="M6.5 6.5h.01M6.5 17.5h.01M17.5 6.5h.01M17.5 17.5h.01" />
+    <path d="M6.5 6.5v4h4v-4h-4zM13.5 6.5v4h4v-4h-4zM6.5 13.5v4h4v-4h-4z" />
+  </>,
+  'CircuitBoard'
+);
+
+// RefreshCcw - counter-clockwise refresh (alias)
+export const RefreshCcw = createIcon(
+  <>
+    <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" />
+    <path d="M3 3v5h5" />
+  </>,
+  'RefreshCcw'
+);
+
+// CheckSquare - checkbox checked
+export const CheckSquare = createIcon(
+  <>
+    <polyline points="9 11 12 14 22 4" />
+    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+  </>,
+  'CheckSquare'
+);
+
+// FileMusic - music file
+export const FileMusic = createIcon(
+  <>
+    <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z" />
+    <polyline points="14 2 14 8 20 8" />
+    <circle cx="10" cy="16" r="2" />
+    <path d="M12 14V8l4 2" />
+  </>,
+  'FileMusic'
+);
+
+// ScrollText - document with text
+export const ScrollText = createIcon(
+  <>
+    <path d="M8 21h12a2 2 0 002-2v-2H10v2a2 2 0 11-4 0V5a2 2 0 10-4 0v3h4" />
+    <path d="M19 17V5a2 2 0 00-2-2H4" />
+    <path d="M15 8h-5M15 12h-5" />
+  </>,
+  'ScrollText'
+);
+
+// FileType - file with type indicator
+export const FileType = createIcon(
+  <>
+    <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z" />
+    <polyline points="14 2 14 8 20 8" />
+    <path d="M9 13v-1h6v1M11 17h2M12 13v4" />
+  </>,
+  'FileType'
+);
+
 // Library - book collection
 export const Library = createIcon(
   <>
@@ -2366,6 +2456,15 @@ export const Icons = {
   FlaskConical,
   Folder,
   FolderOpen,
+  FolderPlus,
+  Rocket,
+  Cpu,
+  CircuitBoard,
+  RefreshCcw,
+  CheckSquare,
+  FileMusic,
+  ScrollText,
+  FileType,
   Gauge,
   Gift,
   GitBranch,
