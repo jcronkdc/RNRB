@@ -106,7 +106,7 @@ export default function ComposeModal() {
       }
 
       // Report to RNRB platform
-      syncClient.reportEmailSent();
+      syncClient.trackEmailSent(to, subject);
 
       closeCompose();
     } catch (err) {
