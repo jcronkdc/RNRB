@@ -120,26 +120,26 @@ STRIPE*WEBHOOK_SECRET="whsec*..."
 STRIPE_PRICE_ID_CREATOR="price_creator_monthly"
 STRIPE_PRICE_ID_STUDIO="price_studio_monthly"
 
-# Credit Add-Ons (one-time purchases)
+# Credit Add-Ons (one-time purchases) - Created Dec 2, 2025
 
 # AI Credits: $6 for 100 requests
 
-STRIPE_PRICE_ID_AI_100="price_1SZGEw2H6bMdop9gZadK70BA"
+STRIPE_PRICE_ID_AI_100="price_1SZyLp2H6bMdop9gD3ZcmPEc"
 
-# Video Credits: $10 for 10 hours
+# Video Credits: $10 for 10 hours (600 min)
 
-STRIPE_PRICE_ID_VIDEO_600="price_1SZGEw2H6bMdop9gOgb1lZ0G"
+STRIPE_PRICE_ID_VIDEO_600="price_1SZyLp2H6bMdop9gl9amD5y8"
 
 # Image Credits: $4 for 25, $12 for 100
 
-STRIPE_PRICE_ID_IMAGE_25="price_1SZGEx2H6bMdop9gcHo3QgEg"
-STRIPE_PRICE_ID_IMAGE_100="price_1SZGEy2H6bMdop9glMbDKKCv"
+STRIPE_PRICE_ID_IMAGE_25="price_1SZyLq2H6bMdop9grZsie55a"
+STRIPE_PRICE_ID_IMAGE_100="price_1SZyLr2H6bMdop9gZT8tx4BV"
 
 # Storage Credits: $6/25GB, $15/100GB, $30/250GB (permanent)
 
-STRIPE_PRICE_ID_STORAGE_25="price_1SZGEy2H6bMdop9gdH8RExgr"
-STRIPE_PRICE_ID_STORAGE_100="price_1SZGEz2H6bMdop9gPECUD89F"
-STRIPE_PRICE_ID_STORAGE_250="price_1SZGF02H6bMdop9g3pujT79e"
+STRIPE_PRICE_ID_STORAGE_25="price_1SZyLr2H6bMdop9gyZXnihnn"
+STRIPE_PRICE_ID_STORAGE_100="price_1SZyLs2H6bMdop9grFvcvQpN"
+STRIPE_PRICE_ID_STORAGE_250="price_1SZyLs2H6bMdop9gbKF8tCBT"
 
 # ============================================
 
