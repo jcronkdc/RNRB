@@ -1,6 +1,7 @@
 import { prisma } from '@cronkwaters/db';
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { sendEmail } from '@/lib/email';
 
 // Stalwart Mail Server API configuration
 const STALWART_API_URL = process.env.STALWART_API_URL || 'http://mail.rnrb.me:8080';
@@ -22,83 +23,95 @@ async function stalwartFetch(endpoint: string, options: RequestInit = {}) {
   return response;
 }
 
-// Send password reset email via Stalwart SMTP
+// Send password reset email using Resend
 async function sendPasswordResetEmail(toEmail: string, resetToken: string) {
   const resetLink = `${WEBMAIL_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(toEmail)}`;
 
-  // Send email via JMAP/Stalwart
-  try {
-    const response = await stalwartFetch('/api/jmap', {
-      method: 'POST',
-      body: JSON.stringify({
-        using: [
-          'urn:ietf:params:jmap:core',
-          'urn:ietf:params:jmap:mail',
-          'urn:ietf:params:jmap:submission',
-        ],
-        methodCalls: [
-          [
-            'Email/set',
-            {
-              accountId: 'noreply',
-              create: {
-                email1: {
-                  from: [{ email: 'noreply@rnrb.me', name: 'RNRB Mail' }],
-                  to: [{ email: toEmail }],
-                  subject: 'Reset your RNRB Mail password',
-                  bodyValues: {
-                    body: {
-                      value: `Hi,
+  const result = await sendEmail({
+    to: toEmail,
+    subject: '🔐 Reset your RNRB Mail password',
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="dark">
+      </head>
+      <body style="margin: 0; padding: 0; background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="max-width: 500px; margin: 0 auto; padding: 40px 20px;">
+          <div style="background: #161616; border-radius: 16px; border: 1px solid #2a2a2a; overflow: hidden;">
+            <!-- Header -->
+            <div style="padding: 32px; text-align: center; border-bottom: 1px solid #2a2a2a;">
+              <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: #f3f4f6;">RNRB Mail</h1>
+              <p style="margin: 8px 0 0; color: #6b7280; font-size: 14px;">Password Reset</p>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 32px;">
+              <p style="color: #d1d5db; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
+                You requested to reset your password for <strong style="color: #f3f4f6;">${toEmail}</strong>
+              </p>
+              
+              <p style="color: #d1d5db; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
+                Click the button below to create a new password:
+              </p>
+              
+              <!-- Button -->
+              <div style="text-align: center; margin: 32px 0;">
+                <a href="${resetLink}" 
+                   style="display: inline-block; padding: 14px 32px; background: #ff6b35; color: white; text-decoration: none; font-weight: 600; font-size: 15px; border-radius: 8px;">
+                  Reset Password
+                </a>
+              </div>
+              
+              <p style="color: #6b7280; font-size: 13px; line-height: 1.6; margin: 0 0 16px;">
+                This link will expire in <strong>1 hour</strong>.
+              </p>
+              
+              <p style="color: #6b7280; font-size: 13px; line-height: 1.6; margin: 0;">
+                If you didn't request this, you can safely ignore this email.
+              </p>
+              
+              <!-- Fallback link -->
+              <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+                <p style="color: #6b7280; font-size: 12px; margin: 0 0 8px;">
+                  Or copy this link:
+                </p>
+                <p style="color: #ff6b35; font-size: 12px; word-break: break-all; margin: 0;">
+                  ${resetLink}
+                </p>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="padding: 24px 32px; background: #111111; border-top: 1px solid #2a2a2a; text-align: center;">
+              <p style="color: #6b7280; font-size: 12px; margin: 0;">
+                Rock N' Roll Basement • Secure Email for Musicians
+              </p>
+            </div>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+    text: `
+Reset your RNRB Mail password
 
-You requested to reset your RNRB Mail password.
+You requested to reset your password for ${toEmail}.
 
-Click the link below to reset your password:
+Click the link below to create a new password:
 ${resetLink}
 
 This link will expire in 1 hour.
 
 If you didn't request this, you can safely ignore this email.
 
-- The RNRB Team`,
-                      charset: 'utf-8',
-                    },
-                  },
-                  textBody: [{ partId: 'body', type: 'text/plain' }],
-                },
-              },
-            },
-            'create',
-          ],
-          [
-            'EmailSubmission/set',
-            {
-              accountId: 'noreply',
-              create: {
-                sub1: {
-                  emailId: '#email1',
-                  envelope: {
-                    mailFrom: { email: 'noreply@rnrb.me' },
-                    rcptTo: [{ email: toEmail }],
-                  },
-                },
-              },
-            },
-            'submit',
-          ],
-        ],
-      }),
-    });
+- Rock N' Roll Basement
+    `,
+  });
 
-    if (!response.ok) {
-      console.error('[EMAIL-RESET] Failed to send reset email:', await response.text());
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error('[EMAIL-RESET] Error sending reset email:', error);
-    return false;
-  }
+  return result.success;
 }
 
 // Update password on Stalwart
@@ -177,13 +190,16 @@ export async function POST(request: Request) {
       });
 
       // Create new reset token
+      const requestedIp =
+        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+
       await prisma.passwordResetToken.create({
         data: {
           id: `prt_${crypto.randomUUID()}`,
           userId: emailAccount.userId,
           tokenHash,
           expiresAt,
-          requestedIp: request.headers.get('x-forwarded-for') || 'unknown',
+          requestedIp,
         },
       });
 
@@ -193,9 +209,10 @@ export async function POST(request: Request) {
       if (!emailSent) {
         console.error('[EMAIL-RESET] Failed to send email to:', normalizedEmail);
         // Still return success to prevent enumeration, but log the error
+      } else {
+        console.log('[EMAIL-RESET] Reset email sent to:', normalizedEmail);
       }
 
-      console.log('[EMAIL-RESET] Reset requested for:', normalizedEmail);
       return NextResponse.json(successResponse);
     }
 
