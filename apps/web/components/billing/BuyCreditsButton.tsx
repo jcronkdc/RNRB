@@ -1,29 +1,35 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
+import { motion } from 'framer-motion';
 import { useTransition } from 'react';
 
 import { useToast } from '@/hooks/useToast';
 import { createCreditCheckout, type CreditProductKey } from '@/lib/actions/credits';
 
-const LABELS: Record<CreditProductKey, string> = {
-  ai_100: 'Buy +100 AI Requests ($6)',
-  video_600: 'Buy +10 Hours Video ($10)',
-  image_25: 'Buy +25 Image Credits ($4)',
-  image_100: 'Buy +100 Image Credits ($12)',
-  storage_25: 'Add +25 GB Storage ($6)',
-  storage_100: 'Add +100 GB Storage ($15)',
-  storage_250: 'Add +250 GB Storage ($30)',
+const PRODUCT_CONFIG: Record<
+  CreditProductKey,
+  { label: string; shortLabel: string; icon: string; price: string }
+> = {
+  ai_100: { label: '+100 AI Credits', shortLabel: '+100', icon: '⚡', price: '$6' },
+  video_600: { label: '+10 Hours Video', shortLabel: '+10hr', icon: '🎬', price: '$10' },
+  image_25: { label: '+25 Images', shortLabel: '+25', icon: '🎨', price: '$4' },
+  image_100: { label: '+100 Images', shortLabel: '+100', icon: '🎨', price: '$12' },
+  storage_25: { label: '+25 GB Storage', shortLabel: '+25GB', icon: '💾', price: '$6' },
+  storage_100: { label: '+100 GB Storage', shortLabel: '+100GB', icon: '💾', price: '$15' },
+  storage_250: { label: '+250 GB Storage', shortLabel: '+250GB', icon: '💎', price: '$30' },
 };
 
 interface BuyCreditsButtonProps {
   product: CreditProductKey;
   className?: string;
+  compact?: boolean;
 }
 
-export function BuyCreditsButton({ product, className }: BuyCreditsButtonProps) {
+export function BuyCreditsButton({ product, className, compact }: BuyCreditsButtonProps) {
   const [isPending, startTransition] = useTransition();
   const { showToast } = useToast();
+  const config = PRODUCT_CONFIG[product];
 
   const handleClick = () => {
     startTransition(async () => {
@@ -33,16 +39,58 @@ export function BuyCreditsButton({ product, className }: BuyCreditsButtonProps) 
         if (url) {
           window.location.href = url;
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Unable to start checkout';
         console.error('Failed to start checkout', err);
-        showToast(err?.message || 'Unable to start checkout. Please try again.', 'error');
+        showToast(message || 'Unable to start checkout. Please try again.', 'error');
       }
     });
   };
 
+  if (compact) {
+    return (
+      <Button onClick={handleClick} disabled={isPending} size="sm" className={className}>
+        {isPending ? '...' : `${config.shortLabel} ${config.price}`}
+      </Button>
+    );
+  }
+
   return (
-    <Button onClick={handleClick} disabled={isPending} className={className}>
-      {isPending ? 'Starting Checkout…' : LABELS[product]}
-    </Button>
+    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+      <Button
+        onClick={handleClick}
+        disabled={isPending}
+        className={`relative overflow-hidden ${className}`}
+      >
+        {/* Shimmer effect on hover */}
+        <span
+          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+          style={{ transform: 'skewX(-20deg)' }}
+        />
+
+        <span className="relative flex items-center justify-center gap-2">
+          {isPending ? (
+            <>
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                className="inline-block"
+              >
+                ⏳
+              </motion.span>
+              <span>Processing...</span>
+            </>
+          ) : (
+            <>
+              <span>{config.icon}</span>
+              <span className="font-semibold">{config.label}</span>
+              <span className="rounded bg-white/20 px-2 py-0.5 text-sm font-bold">
+                {config.price}
+              </span>
+            </>
+          )}
+        </span>
+      </Button>
+    </motion.div>
   );
 }

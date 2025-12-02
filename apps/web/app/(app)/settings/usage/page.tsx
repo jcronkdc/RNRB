@@ -1,16 +1,7 @@
 'use client';
 
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Progress,
-} from '@cronkwaters/ui';
+import { Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { AlertCircle, TrendingUp, Calendar, Zap, BarChart3 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -50,6 +41,188 @@ interface UsageSummary {
   resetDate: string;
 }
 
+// Animated circular progress component
+function CircularProgress({
+  percentage,
+  size = 100,
+  strokeWidth = 8,
+  color,
+}: {
+  percentage: number;
+  size?: number;
+  strokeWidth?: number;
+  color: string;
+}) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const offset = circumference - (percentage / 100) * circumference;
+
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        {/* Background track */}
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth={strokeWidth}
+        />
+        {/* Progress arc */}
+        <motion.circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: offset }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+        />
+      </svg>
+
+      {/* Center content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-xl font-bold text-white">{Math.round(percentage)}%</span>
+        <span className="text-xs text-gray-400">used</span>
+      </div>
+    </div>
+  );
+}
+
+// Credit card component
+function CreditCard({
+  title,
+  icon,
+  used,
+  limit,
+  remaining,
+  percentage,
+  bonus,
+  color,
+  buyButtons,
+  description,
+  unavailable,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  used: number;
+  limit: number;
+  remaining: number;
+  percentage: number;
+  bonus: number;
+  color: string;
+  buyButtons?: React.ReactNode;
+  description?: string;
+  unavailable?: boolean;
+}) {
+  const isLow = percentage >= 80;
+  const isCritical = percentage >= 95;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/90 to-gray-950/95 p-6 transition-all hover:border-white/20 hover:shadow-lg"
+    >
+      {/* Header */}
+      <div className="mb-4 flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-xl"
+            style={{ backgroundColor: `${color}20` }}
+          >
+            {icon}
+          </div>
+          <div>
+            <h3 className="font-bold text-white">{title}</h3>
+            {description && <p className="text-sm text-gray-400">{description}</p>}
+          </div>
+        </div>
+
+        {!unavailable && (
+          <span
+            className={`rounded-full px-2 py-1 text-xs font-semibold ${
+              isCritical
+                ? 'bg-red-500/20 text-red-400'
+                : isLow
+                  ? 'bg-orange-500/20 text-orange-400'
+                  : 'bg-green-500/20 text-green-400'
+            }`}
+          >
+            {isCritical ? 'Critical' : isLow ? 'Low' : 'Healthy'}
+          </span>
+        )}
+      </div>
+
+      {unavailable ? (
+        <div className="flex flex-col items-center justify-center py-6 text-center">
+          <span className="mb-2 text-3xl opacity-30">🔒</span>
+          <p className="text-gray-500">Not available on your plan</p>
+          <Link href="/settings/billing">
+            <Button variant="outline" className="mt-3" size="sm">
+              Upgrade to Unlock
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        <>
+          {/* Progress & Stats */}
+          <div className="mb-4 flex items-center gap-4">
+            <CircularProgress
+              percentage={percentage}
+              color={isCritical ? '#ef4444' : isLow ? '#f97316' : color}
+            />
+
+            <div className="flex-1">
+              <p className="text-sm text-gray-400">Remaining</p>
+              <p className="text-2xl font-bold" style={{ color }}>
+                {remaining.toLocaleString()}
+              </p>
+              <div className="mt-1 flex gap-3 text-xs text-gray-500">
+                <span>Used: {used.toLocaleString()}</span>
+                <span>Limit: {limit.toLocaleString()}</span>
+              </div>
+              {bonus > 0 && (
+                <span className="mt-1 inline-block rounded bg-purple-500/20 px-2 py-0.5 text-xs text-purple-300">
+                  ✨ +{bonus} bonus
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Warning */}
+          {isCritical && (
+            <div className="mb-4 flex items-center gap-2 rounded-lg bg-red-500/10 p-2 text-xs text-red-400">
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              <span>Running low! Top up to avoid interruption.</span>
+            </div>
+          )}
+
+          {/* Buy buttons */}
+          {buyButtons && (
+            <div className="border-t border-white/5 pt-4">
+              <p className="mb-2 text-xs text-gray-500">⚡ Power Up</p>
+              {buyButtons}
+            </div>
+          )}
+        </>
+      )}
+    </motion.div>
+  );
+}
+
 export default function UsagePage() {
   const [usage, setUsage] = useState<UsageSummary | null>(null);
   const [loading, setLoading] = useState(true);
@@ -62,8 +235,9 @@ export default function UsagePage() {
         if (!response.ok) throw new Error('Failed to load usage data');
         const data = await response.json();
         setUsage(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -71,79 +245,63 @@ export default function UsagePage() {
     fetchUsage();
   }, []);
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const getDaysUntilReset = (dateString: string) => {
+    const reset = new Date(dateString);
+    const now = new Date();
+    const diff = Math.ceil((reset.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    return Math.max(0, diff);
+  };
+
   if (loading) {
     return (
-      <div className="mx-auto max-w-4xl p-6">
-        <h1 className="mb-6 text-3xl font-bold">Usage & Limits</h1>
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardHeader>
-                <div className="h-6 w-1/3 rounded bg-muted"></div>
-                <div className="mt-2 h-4 w-1/2 rounded bg-muted"></div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-2 w-full rounded bg-muted"></div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          className="h-10 w-10 rounded-full border-2 border-orange-500 border-t-transparent"
+        />
       </div>
     );
   }
 
   if (error || !usage) {
     return (
-      <div className="mx-auto max-w-4xl p-6">
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-destructive flex items-center gap-2">
-              <AlertCircle className="h-5 w-5" />
-              Error Loading Usage Data
-            </CardTitle>
-            <CardDescription>{error || 'Could not load your usage information.'}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={() => window.location.reload()}>Retry</Button>
-          </CardContent>
-        </Card>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-6">
+        <span className="text-5xl">⚠️</span>
+        <h2 className="text-xl font-bold text-white">Failed to Load Usage</h2>
+        <p className="text-gray-400">{error || 'Please try again'}</p>
+        <Button onClick={() => window.location.reload()}>Retry</Button>
       </div>
     );
   }
 
-  const tierDisplayName =
-    usage.tier === 'free' ? 'Free' : usage.tier === 'creator' ? 'Creator' : 'Studio';
-
-  const getUsageColor = (percentage: number) => {
-    if (percentage >= 95) return 'text-destructive';
-    if (percentage >= 80) return 'text-yellow-600 dark:text-yellow-500';
-    return 'text-primary';
+  const tierConfig = {
+    free: { name: 'Explorer', color: '#94a3b8', emoji: '🎸' },
+    creator: { name: 'Creator', color: '#f97316', emoji: '🎤' },
+    studio: { name: 'Studio', color: '#a855f7', emoji: '🎛️' },
   };
 
-  const getProgressColor = (percentage: number) => {
-    if (percentage >= 95) return '[&>div]:bg-destructive';
-    if (percentage >= 80) return '[&>div]:bg-yellow-500';
-    return '';
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
-  const showUpgradePrompt =
-    usage.ai.percentage > 80 || usage.video.percentage > 80 || usage.storage.percentage > 80;
+  const tier = tierConfig[usage.tier];
+  const daysUntilReset = getDaysUntilReset(usage.resetDate);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)' }}>
+    <div className="min-h-screen pb-12">
       {/* Hero Section */}
-      <div style={{ borderBottom: '1px solid var(--border)', backgroundColor: 'var(--panel)' }}>
-        <div className="mx-auto max-w-4xl px-6 py-12">
-          {/* White RR Logo [[memory:11700420]] */}
-          <div className="mb-8 flex justify-center">
+      <div className="relative border-b border-white/5 bg-gradient-to-b from-gray-900/50 to-transparent">
+        <div className="mx-auto max-w-5xl px-6 py-10">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 flex justify-center"
+          >
             <Link href="/" className="group inline-block">
               <Image
                 src="/logo-dark.png"
@@ -151,286 +309,145 @@ export default function UsagePage() {
                 width={140}
                 height={57}
                 priority
-                className="transition-opacity duration-200 group-hover:opacity-80"
+                className="transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
               />
             </Link>
-          </div>
+          </motion.div>
 
-          {/* Accent bar */}
-          <div
-            style={{
-              marginBottom: '24px',
-              height: '4px',
-              width: '48px',
-              borderRadius: '2px',
-              backgroundColor: 'var(--accent)',
-            }}
-          />
-
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              <div
-                style={{
-                  display: 'flex',
-                  height: '56px',
-                  width: '56px',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 'var(--radius)',
-                  backgroundColor: 'var(--bg)',
-                  border: '1px solid var(--border)',
-                }}
-              >
-                <BarChart3 style={{ height: '28px', width: '28px', color: 'var(--accent)' }} />
-              </div>
-              <div>
-                <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: 'var(--text)' }}>
-                  Usage & Limits
-                </h1>
-                <p style={{ marginTop: '4px', color: 'var(--muted)' }}>
-                  Current plan:{' '}
-                  <span style={{ fontWeight: '600', color: 'var(--accent)' }}>
-                    {tierDisplayName}
-                  </span>
-                </p>
-              </div>
+          {/* Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-center"
+          >
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-1.5 text-sm">
+              <span>{tier.emoji}</span>
+              <span style={{ color: tier.color }}>{tier.name} Plan</span>
             </div>
-            <Link href="/settings/billing">
-              <Button
-                style={{
-                  backgroundColor: 'var(--accent)',
-                  color: 'var(--text)',
-                  fontWeight: '600',
-                }}
-              >
-                Manage Plan
-              </Button>
-            </Link>
-          </div>
+
+            <h1 className="mb-2 text-3xl font-bold text-white md:text-4xl">
+              Usage & <span className="text-orange-500">Credits</span>
+            </h1>
+            <p className="text-gray-400">Track your power. Fuel your creativity.</p>
+
+            {/* Stats bar */}
+            <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-4 rounded-xl bg-white/5 px-4 py-3 md:gap-6 md:px-6">
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{daysUntilReset}</p>
+                <p className="text-xs text-gray-400">days left</p>
+              </div>
+              <div className="hidden h-8 w-px bg-white/10 md:block" />
+              <div className="text-center">
+                <p className="font-semibold text-white">{formatDate(usage.resetDate)}</p>
+                <p className="text-xs text-gray-400">resets on</p>
+              </div>
+              <div className="hidden h-8 w-px bg-white/10 md:block" />
+              <Link href="/settings/billing">
+                <Button
+                  size="sm"
+                  className="font-semibold"
+                  style={{
+                    background: `linear-gradient(135deg, ${tier.color} 0%, ${tier.color}99 100%)`,
+                  }}
+                >
+                  Manage Plan
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-4xl space-y-6 p-6">
-        {/* Upgrade Prompt */}
-        {showUpgradePrompt && usage.tier !== 'studio' && (
-          <Card className="border-yellow-500/50 bg-yellow-50 dark:bg-yellow-950/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-yellow-700 dark:text-yellow-500">
-                <TrendingUp className="h-5 w-5" />
-                Approaching Limits
-              </CardTitle>
-              <CardDescription>
-                You're using{' '}
-                {Math.max(
-                  usage.ai.percentage,
-                  usage.video.percentage,
-                  usage.storage.percentage
-                ).toFixed(0)}
-                % of your monthly allowance.{' '}
-                {usage.tier === 'free' &&
-                  'Upgrade to Creator for 100 AI requests and 10 GB storage.'}
-                {usage.tier === 'creator' &&
-                  'Upgrade to Studio for 500 AI requests, video calls, and 100 GB storage.'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Link href="/settings/billing">
-                <Button variant="default">
-                  {usage.tier === 'free' ? 'Upgrade to Creator' : 'Upgrade to Studio'}
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        )}
+      {/* Credits Grid */}
+      <div className="mx-auto max-w-5xl px-6 py-8">
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* AI Credits */}
+          <CreditCard
+            title="AI Credits"
+            description="Songwriting, lyrics & more"
+            icon={
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#f97316">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            }
+            used={usage.ai.used}
+            limit={usage.ai.limit}
+            remaining={usage.ai.remaining}
+            percentage={usage.ai.percentage}
+            bonus={usage.ai.bonus}
+            color="#f97316"
+            buyButtons={<BuyCreditsButton product="ai_100" className="w-full" />}
+          />
 
-        {/* Reset Date Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Calendar className="h-4 w-4" />
-              Usage Period
-            </CardTitle>
-            <CardDescription>Your limits reset on {formatDate(usage.resetDate)}</CardDescription>
-          </CardHeader>
-        </Card>
+          {/* Video Minutes */}
+          <CreditCard
+            title="Video Minutes"
+            description="Real-time collaboration"
+            icon={
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#a855f7">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+            }
+            used={usage.video.used}
+            limit={usage.video.limit}
+            remaining={usage.video.remaining}
+            percentage={usage.video.percentage}
+            bonus={usage.video.bonus}
+            color="#a855f7"
+            unavailable={usage.video.limit === 0}
+            buyButtons={
+              usage.video.limit > 0 && <BuyCreditsButton product="video_600" className="w-full" />
+            }
+          />
 
-        {/* AI Requests Usage */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5" />
-              AI Requests
-            </CardTitle>
-            <CardDescription>
-              {usage.ai.used.toLocaleString()} of {usage.ai.limit.toLocaleString()} requests used
-              this month
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Progress
-              value={usage.ai.percentage}
-              className={getProgressColor(usage.ai.percentage)}
-            />
-            <div className="flex items-center justify-between text-sm">
-              <span className={getUsageColor(usage.ai.percentage)}>
-                {usage.ai.percentage.toFixed(1)}% used
-              </span>
-              <span className="text-[color:var(--muted)]">{usage.ai.remaining} remaining</span>
-            </div>
-            {usage.ai.percentage >= 95 && (
-              <div className="bg-destructive/10 border-destructive/20 flex items-start gap-2 rounded-lg border p-3">
-                <AlertCircle className="text-destructive mt-0.5 h-4 w-4 shrink-0" />
-                <div className="text-destructive text-sm">
-                  <p className="font-medium">AI quota almost depleted</p>
-                  <p className="text-destructive/80">
-                    Upgrade your plan or wait until {formatDate(usage.resetDate)} for reset.
-                  </p>
-                </div>
-              </div>
-            )}
-            {usage.ai.bonus > 0 && (
-              <p className="text-xs text-[color:var(--muted)]">
-                Includes {usage.ai.bonus.toLocaleString()} purchased requests active this cycle.
-              </p>
-            )}
-            <div className="space-y-2 border-t pt-3">
-              <div className="text-sm text-[color:var(--muted)]">
-                Need more this month? +100 requests for $5 (expires at period reset).
-              </div>
-              <BuyCreditsButton product="ai_100" className="w-full" />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Video Minutes Usage (Studio only) */}
-        {usage.tier === 'studio' && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-                Video Call Minutes
-              </CardTitle>
-              <CardDescription>
-                {usage.video.used.toLocaleString()} of {usage.video.limit.toLocaleString()} minutes
-                used this month ({(usage.video.used / 60).toFixed(1)} hours)
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Progress
-                value={usage.video.percentage}
-                className={getProgressColor(usage.video.percentage)}
-              />
-              <div className="flex items-center justify-between text-sm">
-                <span className={getUsageColor(usage.video.percentage)}>
-                  {usage.video.percentage.toFixed(1)}% used
-                </span>
-                <span className="text-[color:var(--muted)]">
-                  {usage.video.remaining} minutes ({(usage.video.remaining / 60).toFixed(1)} hours)
-                  remaining
-                </span>
-              </div>
-              {usage.video.percentage >= 95 && (
-                <div className="bg-destructive/10 border-destructive/20 flex items-start gap-2 rounded-lg border p-3">
-                  <AlertCircle className="text-destructive mt-0.5 h-4 w-4 shrink-0" />
-                  <div className="text-destructive text-sm">
-                    <p className="font-medium">Video quota almost depleted</p>
-                    <p className="text-destructive/80">
-                      Calls will be disconnected when limit is reached. Resets{' '}
-                      {formatDate(usage.resetDate)}.
-                    </p>
-                  </div>
-                </div>
-              )}
-              {usage.video.bonus > 0 && (
-                <p className="text-xs text-[color:var(--muted)]">
-                  Includes {(usage.video.bonus / 60).toFixed(1)} bonus hours purchased this cycle.
-                </p>
-              )}
-              <div className="space-y-2 border-t pt-3">
-                <div className="text-sm text-[color:var(--muted)]">
-                  Add +10 hours for $8. Credits expire at period reset.
-                </div>
-                <BuyCreditsButton product="video_600" className="w-full" />
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Image Credits (Creator & Studio) */}
-        {usage.image && usage.image.limit > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                Album Art Credits
-              </CardTitle>
-              <CardDescription>
-                {usage.image.used.toLocaleString()} of {usage.image.limit.toLocaleString()}{' '}
-                AI-generated artworks used this month
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Progress
-                value={usage.image.percentage}
-                className={getProgressColor(usage.image.percentage)}
-              />
-              <div className="flex items-center justify-between text-sm">
-                <span className={getUsageColor(usage.image.percentage)}>
-                  {usage.image.percentage.toFixed(1)}% used
-                </span>
-                <span className="text-[color:var(--muted)]">
-                  {usage.image.remaining} artworks remaining
-                </span>
-              </div>
-              {usage.image.percentage >= 95 && (
-                <div className="bg-destructive/10 border-destructive/20 flex items-start gap-2 rounded-lg border p-3">
-                  <AlertCircle className="text-destructive mt-0.5 h-4 w-4 shrink-0" />
-                  <div className="text-destructive text-sm">
-                    <p className="font-medium">Image credits almost depleted</p>
-                    <p className="text-destructive/80">
-                      Purchase more to continue generating album artwork.
-                    </p>
-                  </div>
-                </div>
-              )}
-              {usage.image.bonus > 0 && (
-                <p className="text-xs text-[color:var(--muted)]">
-                  Includes {usage.image.bonus} bonus image credits purchased this cycle.
-                </p>
-              )}
-              <div className="space-y-2 border-t pt-3">
-                <div className="text-sm text-[color:var(--muted)]">
-                  Need more album artwork? Purchase additional image credits.
-                </div>
-                <div className="grid gap-2 sm:grid-cols-2">
+          {/* Image Credits */}
+          <CreditCard
+            title="Image Credits"
+            description="AI album art"
+            icon={
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#ec4899">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            }
+            used={usage.image.used}
+            limit={usage.image.limit}
+            remaining={usage.image.remaining}
+            percentage={usage.image.percentage}
+            bonus={usage.image.bonus}
+            color="#ec4899"
+            unavailable={usage.image.limit === 0}
+            buyButtons={
+              usage.image.limit > 0 && (
+                <div className="grid grid-cols-2 gap-2">
                   <BuyCreditsButton product="image_25" className="w-full" />
                   <BuyCreditsButton product="image_100" className="w-full" />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+              )
+            }
+          />
 
-        {/* Storage Usage */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {/* Storage */}
+          <CreditCard
+            title="Storage"
+            description="Projects & files"
+            icon={
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#3b82f6">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -438,98 +455,85 @@ export default function UsagePage() {
                   d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
                 />
               </svg>
-              Storage
-            </CardTitle>
-            <CardDescription>
-              {usage.storage.used.toFixed(2)} GB of {usage.storage.limit} GB used
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Progress
-              value={usage.storage.percentage}
-              className={getProgressColor(usage.storage.percentage)}
-            />
-            <div className="flex items-center justify-between text-sm">
-              <span className={getUsageColor(usage.storage.percentage)}>
-                {usage.storage.percentage.toFixed(1)}% used
-              </span>
-              <span className="text-[color:var(--muted)]">
-                {usage.storage.remaining.toFixed(2)} GB remaining
-              </span>
-            </div>
-            {usage.storage.percentage >= 95 && (
-              <div className="bg-destructive/10 border-destructive/20 flex items-start gap-2 rounded-lg border p-3">
-                <AlertCircle className="text-destructive mt-0.5 h-4 w-4 shrink-0" />
-                <div className="text-destructive text-sm">
-                  <p className="font-medium">Storage almost full</p>
-                  <p className="text-destructive/80">
-                    New uploads will be blocked. Upgrade your plan or delete old files.
-                  </p>
+            }
+            used={Number(usage.storage.used.toFixed(1))}
+            limit={usage.storage.limit}
+            remaining={Number(usage.storage.remaining.toFixed(1))}
+            percentage={usage.storage.percentage}
+            bonus={usage.storage.bonus}
+            color="#3b82f6"
+            buyButtons={
+              <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <BuyCreditsButton product="storage_25" className="w-full" />
+                  <BuyCreditsButton product="storage_100" className="w-full" />
                 </div>
+                <BuyCreditsButton product="storage_250" className="w-full" />
+                <p className="mt-1 text-center text-xs text-gray-500">
+                  💎 Storage is permanent - never expires!
+                </p>
               </div>
-            )}
-            {usage.storage.bonus > 0 && (
-              <p className="text-xs text-[color:var(--muted)]">
-                You have an extra {usage.storage.bonus} GB of permanent storage capacity.
-              </p>
-            )}
-            <div className="space-y-2 border-t pt-3">
-              <div className="text-sm text-[color:var(--muted)]">
-                Storage top-ups now start at $5 for +25 GB (permanent capacity boost).
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <BuyCreditsButton product="storage_25" className="w-full" />
-                <BuyCreditsButton product="storage_100" className="w-full" />
-                <BuyCreditsButton product="storage_250" className="w-full sm:col-span-2" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            }
+          />
+        </div>
 
-        {/* Tier Comparison */}
+        {/* Upgrade CTA */}
         {usage.tier !== 'studio' && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Need More?</CardTitle>
-              <CardDescription>
-                {usage.tier === 'free' && 'Upgrade to Creator or Studio for higher limits'}
-                {usage.tier === 'creator' && 'Upgrade to Studio for the highest limits'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 md:grid-cols-2">
-                {usage.tier === 'free' && (
-                  <div className="space-y-2 rounded-lg border p-4">
-                    <div className="font-semibold">Creator ($17.99/mo)</div>
-                    <ul className="space-y-1 text-sm text-[color:var(--muted)]">
-                      <li>✅ 100 AI requests/month</li>
-                      <li>✅ 10 GB storage</li>
-                      <li>✅ Unlimited projects</li>
-                      <li>✅ Advanced analytics</li>
-                    </ul>
-                    <Link href="/settings/billing">
-                      <Button className="mt-2 w-full" variant="outline">
-                        Upgrade to Creator
-                      </Button>
-                    </Link>
-                  </div>
-                )}
-                <div className="space-y-2 rounded-lg border p-4">
-                  <div className="font-semibold">Studio ($34.99/mo)</div>
-                  <ul className="space-y-1 text-sm text-[color:var(--muted)]">
-                    <li>✅ 500 AI requests/month</li>
-                    <li>✅ 20 hours video calls/month</li>
-                    <li>✅ 100 GB storage</li>
-                    <li>✅ Priority support</li>
-                  </ul>
-                  <Link href="/settings/billing">
-                    <Button className="mt-2 w-full">Upgrade to Studio</Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mt-8 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-orange-500/10 p-6 text-center"
+          >
+            <span className="text-4xl">🚀</span>
+            <h2 className="mt-2 text-xl font-bold text-white">
+              Unlock {usage.tier === 'free' ? 'More Power' : 'Maximum Power'}
+            </h2>
+            <p className="mt-1 text-sm text-gray-400">
+              {usage.tier === 'free'
+                ? 'Upgrade to Creator for 10x more AI credits and pro features.'
+                : 'Go Studio for unlimited video calls and 100GB storage.'}
+            </p>
+
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
+              {usage.tier === 'free' && (
+                <Link href="/settings/billing">
+                  <Button className="bg-gradient-to-r from-orange-500 to-orange-600 font-semibold">
+                    Creator - $17.99/mo
+                  </Button>
+                </Link>
+              )}
+              <Link href="/settings/billing">
+                <Button className="bg-gradient-to-r from-purple-500 to-purple-600 font-semibold">
+                  {usage.tier === 'free' ? 'Studio' : 'Upgrade'} - $34.99/mo
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         )}
+
+        {/* Tips */}
+        <div className="mt-8 grid gap-3 md:grid-cols-3">
+          <div className="rounded-xl bg-white/5 p-4">
+            <span className="text-xl">💡</span>
+            <h4 className="mt-1 font-semibold text-white">Pro Tip</h4>
+            <p className="mt-1 text-xs text-gray-400">
+              Storage purchases are permanent - they never reset!
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/5 p-4">
+            <span className="text-xl">🔄</span>
+            <h4 className="mt-1 font-semibold text-white">Monthly Reset</h4>
+            <p className="mt-1 text-xs text-gray-400">
+              AI, Video & Image credits reset every billing cycle.
+            </p>
+          </div>
+          <div className="rounded-xl bg-white/5 p-4">
+            <span className="text-xl">✨</span>
+            <h4 className="mt-1 font-semibold text-white">Bonus Credits</h4>
+            <p className="mt-1 text-xs text-gray-400">Purchased packs add to your monthly limit.</p>
+          </div>
+        </div>
       </div>
     </div>
   );

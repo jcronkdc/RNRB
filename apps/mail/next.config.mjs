@@ -15,6 +15,7 @@ const nextConfig = {
   // Environment variables
   env: {
     STALWART_JMAP_URL: process.env.STALWART_JMAP_URL || 'https://mail.rnrb.me/jmap',
+    NEXT_PUBLIC_RNRB_API_URL: process.env.NEXT_PUBLIC_RNRB_API_URL || 'https://rnrb.pro',
   },
 };
 

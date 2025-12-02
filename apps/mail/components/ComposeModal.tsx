@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useComposeStore, useAuthStore } from '@/lib/store';
 import { jmapClient } from '@/lib/jmap-client';
+import { syncClient } from '@/lib/sync-client';
 
 export default function ComposeModal() {
   const { isOpen, replyTo, closeCompose } = useComposeStore();
@@ -47,6 +48,10 @@ export default function ComposeModal() {
         textBody: body,
         replyToEmailId: replyTo?.id,
       });
+
+      // Sync with main platform - track email sent
+      syncClient.trackEmailSent(to, subject);
+
       closeCompose();
     } catch (err) {
       setError((err as Error).message || 'Failed to send email');

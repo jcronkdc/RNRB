@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { jmapClient, type JMAPSession, type Mailbox, type Email } from './jmap-client';
+import { syncClient } from './sync-client';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -46,10 +47,15 @@ export const useAuthStore = create<AuthState>()(
       login: async (email: string, password: string) => {
         const session = await jmapClient.authenticate(email, password);
         set({ isAuthenticated: true, session, email });
+
+        // Sync with main platform
+        syncClient.setEmail(email);
+        syncClient.trackLogin();
       },
 
       logout: () => {
         jmapClient.clearCredentials();
+        syncClient.clearEmail();
         set({ isAuthenticated: false, session: null, email: null });
         // Clear mail state too
         useMailStore.getState().clearState();
