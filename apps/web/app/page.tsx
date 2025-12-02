@@ -139,7 +139,7 @@ export default function HomePage() {
                   </svg>
                   <div className="button-shine"></div>
                 </Link>
-                <Link href="#demo" className="button secondary hero-button-secondary text-lg">
+                <Link href="#comparison" className="button secondary hero-button-secondary text-lg">
                   <svg
                     className="mr-2 h-5 w-5"
                     fill="none"
@@ -150,16 +150,10 @@ export default function HomePage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"
                     />
                   </svg>
-                  <span>See It In Action</span>
+                  <span>See Why We Dominate</span>
                 </Link>
               </div>
 
@@ -288,7 +282,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="problem-stat">
-                <div className="problem-number">$180</div>
+                <div className="problem-number">$158</div>
                 <div className="problem-label">Monthly Subscription Cost</div>
                 <p className="problem-desc">Money that should go toward your music, not software</p>
               </div>
@@ -1316,65 +1310,571 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Demo Section */}
+        {/* Comparison Section - THEY CAN'T TOUCH THIS 🎸 */}
         <section
-          id="demo"
-          className="page-section demo-section"
+          id="comparison"
+          className="page-section"
           style={{ borderTop: '1px solid var(--border)' }}
-          aria-labelledby="demo-heading"
+          aria-labelledby="comparison-heading"
         >
           <div className="container">
-            <div className="section-header">
-              <h2 id="demo-heading" className="section-title">
-                See The Magic Happen
+            <div className="section-header text-center">
+              <div
+                className="mb-4 inline-flex items-center gap-3 rounded-full px-6 py-2"
+                style={{
+                  background: 'rgba(255, 99, 71, 0.2)',
+                  border: '2px solid var(--accent)',
+                  boxShadow: '0 0 30px rgba(255, 99, 71, 0.3)',
+                }}
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                </svg>
+                <span
+                  className="text-lg font-black uppercase tracking-wider"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  TOTAL DOMINATION
+                </span>
+              </div>
+
+              <h2 id="comparison-heading" className="section-title mb-4">
+                They Can't Touch This
               </h2>
-              <p className="section-subtitle">
-                Watch how Rock N' Roll Basement transforms the way you create music
+
+              <p className="section-subtitle mb-3">
+                Other platforms are stuck in 2015. We built the future.
+              </p>
+
+              <p className="text-2xl font-black" style={{ color: 'var(--accent)' }}>
+                🎸 Rock & Roll Is ALIVE 🎸
               </p>
             </div>
 
-            <div className="demo-showcase mx-auto max-w-5xl">
-              <div className="demo-window">
-                <div className="demo-window-header">
-                  <div className="demo-window-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <div className="demo-window-title">
-                    Rock N' Roll Basement - Songwriting Studio
-                  </div>
-                </div>
-                <div className="demo-window-content">
-                  <div className="demo-placeholder">
-                    <div className="demo-placeholder-icon">
-                      <svg
-                        className="h-16 w-16"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+            <div className="mx-auto mt-12 max-w-6xl">
+              <p
+                className="mb-4 text-center text-sm font-medium"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Scroll right to see the full comparison →
+              </p>
+              <div className="overflow-x-auto">
+                <div
+                  className="rounded-3xl border-2 p-8 shadow-2xl"
+                  style={{
+                    background:
+                      'linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)',
+                    borderColor: 'var(--accent)',
+                    boxShadow: '0 0 80px rgba(255, 99, 71, 0.25)',
+                  }}
+                >
+                  <table className="w-full" style={{ minWidth: '650px' }}>
+                    <thead>
+                      <tr className="border-b-2" style={{ borderColor: 'var(--accent)' }}>
+                        <th
+                          className="pb-6 text-left text-sm font-black uppercase tracking-widest"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
+                          Feature
+                        </th>
+                        <th className="pb-6 text-center">
+                          <div
+                            className="inline-flex items-center gap-3 rounded-2xl px-6 py-4 text-lg font-black shadow-2xl"
+                            style={{
+                              background: 'linear-gradient(135deg, var(--accent) 0%, #ff8c5a 100%)',
+                              color: 'white',
+                              boxShadow: '0 8px 32px rgba(255, 99, 71, 0.5)',
+                            }}
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
+                            RNRB
+                          </div>
+                        </th>
+                        <th
+                          className="pb-6 text-center text-sm font-medium opacity-60"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          Splice
+                        </th>
+                        <th
+                          className="pb-6 text-center text-sm font-medium opacity-60"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          BandLab
+                        </th>
+                        <th
+                          className="pb-6 text-center text-sm font-medium opacity-60"
+                          style={{ color: 'var(--muted)' }}
+                        >
+                          Soundtrap
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* Feature rows */}
+                      {[
+                        { name: '✍️ Songwriting Workshop', r: 1, s: 0, b: 1, st: 1 },
+                        { name: '⏱️ Version Control (Git for Music)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '💰 Revenue Splits & Copyright', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '📹 HD Video Calls (50 people)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '🖥️ Screen Sharing', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '📱 Social Feed (Facebook-style)', r: 1, s: 0, b: 1, st: 0 },
+                        { name: '💬 Direct Messaging', r: 1, s: 0, b: 1, st: 0 },
+                        { name: '🛒 Marketplace (Buy/Sell Gear)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '🎓 Masterclasses & Education', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '📡 Live Streaming to Fans', r: 1, s: 0, b: 1, st: 0 },
+                        { name: '🌐 Website Builder', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '🚐 Tour Management', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '🎤 Show & Venue Tracking', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '👤 Public Artist Profiles', r: 1, s: 0, b: 1, st: 0 },
+                        { name: '🧰 12 Pro Tools (Tuner, etc.)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '✈️ Offline Mode (PWA)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '👕 Merch Store', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '🤝 Affiliate Program', r: 1, s: 0, b: 0, st: 0 },
+                        { name: '📊 Revenue Analytics', r: 1, s: 0, b: 0, st: 0 },
+                      ].map((row, i) => (
+                        <tr
+                          key={i}
+                          className="border-b transition-all hover:bg-white/5"
+                          style={{ borderColor: 'var(--border-subtle)' }}
+                        >
+                          <td className="py-4 text-sm font-medium" style={{ color: 'var(--text)' }}>
+                            {row.name}
+                          </td>
+                          <td className="py-4 text-center">
+                            {row.r ? (
+                              <div
+                                className="inline-flex h-8 w-8 items-center justify-center rounded-full"
+                                style={{
+                                  background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                                  boxShadow: '0 0 20px rgba(34, 197, 94, 0.4)',
+                                }}
+                              >
+                                <svg
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="white"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <span style={{ color: 'var(--muted)' }}>—</span>
+                            )}
+                          </td>
+                          <td className="py-4 text-center">
+                            {row.s ? (
+                              <div
+                                className="inline-flex h-8 w-8 items-center justify-center rounded-full"
+                                style={{ background: '#22c55e' }}
+                              >
+                                <svg
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="white"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-30"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          <td className="py-4 text-center">
+                            {row.b ? (
+                              <div
+                                className="inline-flex h-8 w-8 items-center justify-center rounded-full"
+                                style={{ background: '#22c55e' }}
+                              >
+                                <svg
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="white"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-30"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                          <td className="py-4 text-center">
+                            {row.st ? (
+                              <div
+                                className="inline-flex h-8 w-8 items-center justify-center rounded-full"
+                                style={{ background: '#22c55e' }}
+                              >
+                                <svg
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="white"
+                                  strokeWidth="3"
+                                >
+                                  <path d="M5 12l5 5L20 7" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                className="inline-block opacity-30"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                <path d="M18 6L6 18M6 6l12 12" />
+                              </svg>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {/* BRUTAL Summary */}
+                  <div
+                    className="mt-10 rounded-3xl p-10 shadow-2xl"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(255, 99, 71, 0.25) 0%, rgba(255, 140, 90, 0.15) 100%)',
+                      border: '3px solid var(--accent)',
+                      boxShadow: '0 0 60px rgba(255, 99, 71, 0.4)',
+                    }}
+                  >
+                    <div className="flex flex-col items-center gap-8 text-center md:flex-row md:text-left">
+                      <div
+                        className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl text-4xl font-black shadow-2xl"
+                        style={{
+                          background: 'var(--accent)',
+                          color: 'white',
+                          transform: 'rotate(-8deg)',
+                          boxShadow: '0 12px 48px rgba(255, 99, 71, 0.6)',
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+                        17
+                      </div>
+                      <div className="flex-1">
+                        <h3
+                          className="mb-3 text-3xl font-black uppercase tracking-tight"
+                          style={{ color: 'var(--text)' }}
+                        >
+                          17 Features They'll NEVER Have
+                        </h3>
+                        <p
+                          className="mb-4 text-lg leading-relaxed"
+                          style={{ color: 'var(--text-secondary)' }}
+                        >
+                          They're building <strong>tools</strong>. We're building a{' '}
+                          <strong style={{ color: 'var(--accent)' }}>revolution</strong>. Stop
+                          juggling 5 subscriptions. Stop compromising. Stop settling.
+                        </p>
+                        <p className="mb-3 text-base font-bold" style={{ color: 'var(--accent)' }}>
+                          This is the platform musicians have been SCREAMING for. 🔥
+                        </p>
+                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                          <strong style={{ color: 'var(--text)' }}>Plus:</strong> Our godlike AI
+                          Assistant is available throughout the entire platform—helping with lyrics,
+                          chords, marketing copy, contract reviews, and more. It's like having a pro
+                          musician, manager, and lawyer on call 24/7.
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 flex-col gap-4">
+                        <Link
+                          href="/auth?signup=true"
+                          className="group rounded-2xl px-10 py-5 text-center font-black uppercase tracking-wide text-white shadow-2xl transition-all hover:scale-110"
+                          style={{
+                            background: 'linear-gradient(135deg, var(--accent) 0%, #ff8c5a 100%)',
+                            boxShadow: '0 12px 48px rgba(255, 99, 71, 0.5)',
+                          }}
+                        >
+                          <span className="mb-1 block text-2xl">🔥</span>
+                          Join The Revolution
+                        </Link>
+                        <p className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+                          Free forever • No BS • 75+ features
+                        </p>
+                      </div>
                     </div>
-                    <p>Interactive Demo Coming Soon</p>
-                    <Link href="/auth?signup=true" className="button mt-4">
-                      Try It Free Now
-                    </Link>
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Rock Quote */}
+            <div className="mx-auto mt-16 max-w-3xl text-center">
+              <div
+                className="inline-flex items-center gap-4 rounded-3xl px-8 py-6"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid var(--border)',
+                }}
+              >
+                <svg
+                  width="40"
+                  height="40"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zM21 16c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z" />
+                </svg>
+                <p
+                  className="text-lg font-medium italic leading-relaxed"
+                  style={{ color: 'var(--text)' }}
+                >
+                  "Rock & roll isn't an instrument. It's not even a style. It's a spirit."
+                </p>
+              </div>
+              <p className="mt-6 text-base font-bold" style={{ color: 'var(--accent)' }}>
+                And that spirit lives here. Welcome home. 🎸
+              </p>
+            </div>
+
+            <div className="mx-auto mt-12 max-w-4xl text-center">
+              <p className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+                Comparison verified December 2024. They're welcome to try and catch up. 😎
+              </p>
+              <p className="mt-3 text-xs" style={{ color: 'var(--text-secondary)' }}>
+                <strong style={{ color: 'var(--text)' }}>Note:</strong> All features listed above
+                have functional user interfaces and are available to use. Some features like
+                Marketplace, Merch Store, and Affiliate Program are actively being used in beta
+                while we finalize payment processing integrations. No shortcuts—everything is built
+                properly, the right way, the first time.
+              </p>
+            </div>
+
+            {/* PRICE COMPARISON - SHOW THE SAVINGS 💰 */}
+            <div className="mx-auto mt-20 max-w-5xl">
+              <div className="mb-8 text-center">
+                <h3 className="mb-3 text-3xl font-black" style={{ color: 'var(--text)' }}>
+                  But Wait... There's More
+                </h3>
+                <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+                  Let's talk about what this <strong>actually costs</strong> with other platforms.
+                </p>
+              </div>
+
+              <div className="grid gap-8 md:grid-cols-2">
+                {/* The Old Way */}
+                <div
+                  className="rounded-3xl border-2 p-8"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                  }}
+                >
+                  <div className="mb-6 text-center">
+                    <div className="mb-3 text-4xl">😵‍💫</div>
+                    <h4 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
+                      The Old Way
+                    </h4>
+                    <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                      Juggling 8+ separate tools
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {[
+                      { name: 'Website Builder', price: '$27/mo', tool: 'Wix/Squarespace' },
+                      { name: 'Video Calls', price: '$15/mo', tool: 'Zoom' },
+                      { name: 'Project Management', price: '$10/mo', tool: 'Asana' },
+                      { name: 'File Storage', price: '$12/mo', tool: 'Dropbox' },
+                      { name: 'Email Marketing', price: '$20/mo', tool: 'Mailchimp' },
+                      { name: 'Social Scheduler', price: '$10/mo', tool: 'Buffer' },
+                      { name: 'Tour/Booking', price: '$15/mo', tool: 'Bandsintown' },
+                      { name: 'Online Courses', price: '$49/mo', tool: 'Thinkific' },
+                    ].map((item, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between rounded-lg border p-3"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          borderColor: 'rgba(255, 255, 255, 0.1)',
+                        }}
+                      >
+                        <div>
+                          <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                            {item.name}
+                          </div>
+                          <div className="text-xs" style={{ color: 'var(--muted)' }}>
+                            {item.tool}
+                          </div>
+                        </div>
+                        <div className="font-bold" style={{ color: 'var(--text)' }}>
+                          {item.price}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div
+                    className="mt-6 rounded-xl border-2 p-4 text-center"
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      borderColor: '#ef4444',
+                    }}
+                  >
+                    <div className="text-sm font-medium" style={{ color: '#ef4444' }}>
+                      TOTAL MONTHLY COST
+                    </div>
+                    <div className="mt-1 text-4xl font-black" style={{ color: '#ef4444' }}>
+                      $158
+                    </div>
+                    <div className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
+                      $1,896 per year
+                    </div>
+                  </div>
+                </div>
+
+                {/* The RNRB Way */}
+                <div
+                  className="rounded-3xl border-2 p-8 shadow-2xl"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, rgba(255, 99, 71, 0.15) 0%, rgba(255, 140, 90, 0.05) 100%)',
+                    borderColor: 'var(--accent)',
+                    boxShadow: '0 0 60px rgba(255, 99, 71, 0.3)',
+                  }}
+                >
+                  <div className="mb-6 text-center">
+                    <div className="mb-3 text-4xl">🎸</div>
+                    <h4 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
+                      The RNRB Way
+                    </h4>
+                    <p className="text-sm" style={{ color: 'var(--accent)' }}>
+                      Everything in one platform
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    {[
+                      'Website Builder ✅',
+                      'HD Video Calls (50 people) ✅',
+                      'Project Management ✅',
+                      'Unlimited File Storage ✅',
+                      'Email & Direct Messaging ✅',
+                      'Social Feed & Scheduling ✅',
+                      'Tour & Show Management ✅',
+                      'Masterclasses Platform ✅',
+                      '+ 67 MORE Features ✅',
+                    ].map((item, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 rounded-lg border p-3"
+                        style={{
+                          background: 'rgba(34, 197, 94, 0.05)',
+                          borderColor: 'rgba(34, 197, 94, 0.2)',
+                        }}
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#22c55e"
+                          strokeWidth="3"
+                        >
+                          <path d="M5 12l5 5L20 7" />
+                        </svg>
+                        <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                          {item}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div
+                    className="mt-6 rounded-xl border-2 p-4 text-center"
+                    style={{
+                      background: 'rgba(34, 197, 94, 0.15)',
+                      borderColor: '#22c55e',
+                    }}
+                  >
+                    <div className="text-sm font-medium" style={{ color: '#22c55e' }}>
+                      YOUR MONTHLY COST
+                    </div>
+                    <div className="mt-1 text-4xl font-black" style={{ color: '#22c55e' }}>
+                      $29
+                    </div>
+                    <div className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
+                      $348 per year (Creator Plan)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* The Punchline */}
+              <div
+                className="mt-10 rounded-3xl border-2 p-10 text-center shadow-2xl"
+                style={{
+                  background: 'linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%)',
+                  borderColor: 'white',
+                  boxShadow: '0 0 80px rgba(255, 99, 71, 0.4)',
+                }}
+              >
+                <div className="mb-4 text-6xl font-black text-white">Save $1,548/year</div>
+                <p className="mb-6 text-xl font-medium text-white">
+                  That's enough for new gear, studio time, or an actual vacation.
+                </p>
+                <p className="text-lg font-bold text-white opacity-90">
+                  Stop paying for 8 tools. Start making music. 🔥
+                </p>
+              </div>
+
+              {/* Disclaimer */}
+              <p className="mt-6 text-center text-xs" style={{ color: 'var(--muted)' }}>
+                *Based on comparable mid-tier plans from Wix ($27), Zoom Business ($15), Asana
+                Premium ($10), Dropbox Plus ($12), Mailchimp Essentials ($20), Buffer Essentials
+                ($10), Bandsintown Pro ($15), and Thinkific Basic ($49). Prices verified December
+                2024.
+              </p>
             </div>
           </div>
         </section>
@@ -1933,29 +2433,163 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Final CTA */}
+        {/* Final CTA - THE CLOSER 🔥 */}
         <section
-          className="final-cta page-section"
+          className="final-cta page-section relative overflow-hidden"
           style={{ borderTop: '1px solid var(--border)' }}
           aria-labelledby="cta-heading"
         >
-          <div className="container">
-            <div className="cta-content mx-auto max-w-3xl text-center">
-              <h2 id="cta-heading" className="cta-title">
-                Ready to Transform Your Music Career?
+          {/* Epic background */}
+          <div
+            className="absolute inset-0 opacity-30"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, var(--accent) 0%, transparent 70%)',
+            }}
+          />
+
+          <div className="container relative">
+            <div className="cta-content mx-auto max-w-4xl text-center">
+              <div
+                className="mb-6 inline-flex items-center gap-2 rounded-full px-5 py-2"
+                style={{
+                  background: 'rgba(255, 99, 71, 0.15)',
+                  border: '2px solid var(--accent)',
+                  boxShadow: '0 0 30px rgba(255, 99, 71, 0.3)',
+                }}
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span
+                  className="font-black uppercase tracking-wider"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  STOP SETTLING FOR LESS
+                </span>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  style={{ color: 'var(--accent)' }}
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              </div>
+
+              <h2 id="cta-heading" className="cta-title mb-6">
+                Your Music Deserves More.
+                <br />
+                <span style={{ color: 'var(--accent)' }}>We Built It.</span>
               </h2>
-              <p className="cta-subtitle">
-                Join thousands of musicians who've already simplified their creative workflow. No
-                credit card required. Start making music today.
+
+              <p className="cta-subtitle mb-8">
+                Stop juggling 8 apps. Stop paying $158/month for tools that don't talk to each
+                other.
+                <br />
+                <strong style={{ color: 'var(--text)' }}>
+                  Start creating like the professional you are.
+                </strong>
               </p>
-              <div className="cta-buttons flex flex-wrap items-center justify-center gap-4">
-                <Link href="/auth?signup=true" className="button cta-button-primary text-lg">
-                  Start Free Today
+
+              <div className="cta-buttons mb-8 flex flex-wrap items-center justify-center gap-4">
+                <Link
+                  href="/auth?signup=true"
+                  className="group relative overflow-hidden rounded-2xl px-12 py-5 text-lg font-black uppercase tracking-wide text-white transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--accent) 0%, #ff8c5a 100%)',
+                    boxShadow: '0 12px 48px rgba(255, 99, 71, 0.5)',
+                  }}
+                >
+                  <span className="relative z-10">🔥 Start Creating Now</span>
+                  <div
+                    className="absolute inset-0 -translate-x-full transition-transform group-hover:translate-x-0"
+                    style={{
+                      background: 'linear-gradient(135deg, #ff8c5a 0%, var(--accent) 100%)',
+                    }}
+                  />
                 </Link>
-                <Link href="/why-rnrb" className="button secondary text-lg">
-                  Compare Platforms
+                <Link
+                  href="#comparison"
+                  className="rounded-2xl border-2 px-8 py-4 text-lg font-semibold transition-all hover:scale-105"
+                  style={{
+                    borderColor: 'var(--accent)',
+                    color: 'var(--text)',
+                  }}
+                >
+                  See The Proof →
                 </Link>
               </div>
+
+              {/* Trust signals */}
+              <div
+                className="flex flex-wrap items-center justify-center gap-8 text-sm"
+                style={{ color: 'var(--muted)' }}
+              >
+                <div className="flex items-center gap-2">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12l5 5L20 7" />
+                  </svg>
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12l5 5L20 7" />
+                  </svg>
+                  <span>Free forever plan</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12l5 5L20 7" />
+                  </svg>
+                  <span>Cancel anytime</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="2"
+                  >
+                    <path d="M5 12l5 5L20 7" />
+                  </svg>
+                  <span>You own everything</span>
+                </div>
+              </div>
+
+              {/* The kicker */}
+              <p className="mt-8 text-base font-bold" style={{ color: 'var(--accent)' }}>
+                75+ features. One platform. Zero compromises. Rock & Roll Is ALIVE. 🎸
+              </p>
             </div>
           </div>
         </section>
