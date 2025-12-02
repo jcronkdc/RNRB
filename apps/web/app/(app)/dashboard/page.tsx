@@ -124,6 +124,70 @@ function DashboardContent() {
         {/* Welcome Header */}
         <WorkshopWelcome className="mb-8" />
 
+        {/* NEW: Merch Store Promotional Banner */}
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-8"
+        >
+          <Link href="/my-merch">
+            <div
+              className="group relative overflow-hidden rounded-2xl border p-6 transition-all duration-300 hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%)',
+                borderColor: 'rgba(245, 158, 11, 0.2)',
+              }}
+            >
+              {/* Decorative elements */}
+              <div
+                className="absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-20 blur-3xl transition-opacity group-hover:opacity-40"
+                style={{ background: 'var(--gold)' }}
+              />
+
+              <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-4">
+                  <div
+                    className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition-transform group-hover:scale-110"
+                    style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
+                  >
+                    <ShoppingBag className="h-7 w-7 text-white" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-bold" style={{ color: 'var(--text)' }}>
+                        Sell Your Own Merch
+                      </h3>
+                      <span
+                        className="rounded-full px-2 py-0.5 text-xs font-bold"
+                        style={{ background: 'var(--gold)', color: '#000' }}
+                      >
+                        FREE
+                      </span>
+                    </div>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Design custom T-shirts, hoodies, posters & more. Keep 85% of profits. Zero
+                      upfront costs.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="whitespace-nowrap rounded-xl px-4 py-2 font-semibold transition-all group-hover:scale-105"
+                    style={{
+                      background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                      color: '#000',
+                    }}
+                  >
+                    Start Selling →
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </motion.section>
+
         {/* Quick Actions - What do you want to do? */}
         <section className="mb-8">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

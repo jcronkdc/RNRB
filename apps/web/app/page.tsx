@@ -1664,7 +1664,7 @@ export default function HomePage() {
                         },
                         // Distribution & Revenue
                         {
-                          name: 'Music Distribution',
+                          name: 'Distribution Ready Tools',
                           category: 'Distribution',
                           r: 1,
                           dk: 1,
@@ -1676,6 +1676,8 @@ export default function HomePage() {
                           bt: 0,
                           rv: 0,
                           ma: 0,
+                          tooltip:
+                            'Metadata, ISRC guidance, copyright tools to prepare for distribution',
                         },
                         {
                           name: 'Revenue Splits & Royalties',

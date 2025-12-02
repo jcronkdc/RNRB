@@ -16,6 +16,7 @@ import {
   Video,
   ExternalLink,
   Globe,
+  ShoppingBag,
 } from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -175,6 +176,22 @@ export function TopBar() {
           >
             <Video className="h-4 w-4" />
             <span className="hidden text-sm sm:inline">Meet</span>
+          </motion.button>
+
+          {/* Sell Merch Button - NEW prominent feature */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/my-merch')}
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            style={{
+              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+              boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
+            }}
+            title="Design and sell your own merchandise"
+          >
+            <ShoppingBag className="h-4 w-4" />
+            <span className="hidden text-sm sm:inline">Merch</span>
           </motion.button>
         </div>
 
