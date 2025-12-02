@@ -56,23 +56,13 @@ export default function LoginPage() {
             <Image
               src="/logo-dark.png"
               alt="Rock N' Roll Basement"
-              width={180}
-              height={60}
+              width={200}
+              height={70}
               className="mx-auto"
               priority
             />
           </motion.div>
 
-          {/* Mail Icon Badge */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', delay: 0.2 }}
-            className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-rnrb-orange to-rnrb-gold shadow-2xl"
-            style={{ boxShadow: '0 0 60px rgba(255, 107, 53, 0.4)' }}
-          >
-            <Mail className="h-10 w-10 text-white" />
-          </motion.div>
           <h1 className="font-display text-3xl font-bold text-white">RNRB Mail</h1>
           <p className="mt-2 text-rnrb-muted">Email for musicians</p>
         </div>
