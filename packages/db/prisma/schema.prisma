@@ -225,6 +225,9 @@ model User {
   artistMerchOrdersAsCustomer ArtistMerchOrder[]        @relation("ArtistMerchOrdersAsCustomer")
   artistMerchOrderItems      ArtistMerchOrderItem[]     @relation("ArtistMerchOrderItems")
   artistMerchPayouts         ArtistMerchPayout[]        @relation("ArtistMerchPayouts")
+  
+  // RNRB Mail - Professional Email Service
+  emailAccount               EmailAccount?
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -5605,3 +5608,247 @@ enum PayoutStatus {
 }
 
 // Force regeneration: 2025-12-02-PLATFORM-MERCH
+
+// ============================================
+// RNRB MAIL - Professional Email Service
+// ============================================
+
+// Email account for each user
+model EmailAccount {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  
+  // Email address (username@rnrb.me)
+  emailAddress          String   @unique
+  username              String   @unique // The part before @
+  domain                String   @default("rnrb.me")
+  
+  // Account Status
+  status                EmailAccountStatus @default(PENDING)
+  verifiedAt            DateTime?
+  
+  // Stalwart Mail Server ID
+  mailServerId          String?  @unique
+  
+  // Storage
+  storageUsedBytes      BigInt   @default(0)
+  storageQuotaBytes     BigInt   @default(5368709120) // 5GB default
+  
+  // Settings
+  displayName           String?  // "John Doe" for From header
+  signature             String?  @db.Text
+  signatureHtml         String?  @db.Text
+  autoReplyEnabled      Boolean  @default(false)
+  autoReplyMessage      String?  @db.Text
+  autoReplySubject      String?
+  
+  // Forwarding
+  forwardingEnabled     Boolean  @default(false)
+  forwardingAddress     String?
+  keepCopy              Boolean  @default(true)
+  
+  // Spam Settings
+  spamFilterLevel       SpamFilterLevel @default(NORMAL)
+  
+  // Mobile/App Access
+  imapEnabled           Boolean  @default(true)
+  smtpEnabled           Boolean  @default(true)
+  jmapEnabled           Boolean  @default(true)
+  
+  // App Passwords (for third-party mail apps)
+  appPasswords          EmailAppPassword[]
+  
+  // Labels/Folders
+  labels                EmailLabel[]
+  
+  // Filters/Rules
+  filters               EmailFilter[]
+  
+  // Contacts
+  contacts              EmailContact[]
+  
+  // Statistics
+  emailsSent            Int      @default(0)
+  emailsReceived        Int      @default(0)
+  lastActivityAt        DateTime?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([status])
+  @@index([domain])
+}
+
+enum EmailAccountStatus {
+  PENDING      // Awaiting setup
+  ACTIVE       // Fully functional
+  SUSPENDED    // Temporarily disabled
+  DELETED      // Soft deleted
+}
+
+enum SpamFilterLevel {
+  OFF          // No filtering
+  LOW          // Only obvious spam
+  NORMAL       // Balanced
+  HIGH         // Aggressive filtering
+}
+
+// App-specific passwords for IMAP/SMTP access
+model EmailAppPassword {
+  id                    String   @id @default(cuid())
+  emailAccountId        String
+  
+  name                  String   // "iPhone Mail", "Thunderbird", etc.
+  passwordHash          String   // Hashed app password
+  
+  // Security
+  lastUsedAt            DateTime?
+  lastUsedIp            String?
+  lastUsedAgent         String?
+  
+  createdAt             DateTime @default(now())
+  expiresAt             DateTime?
+  
+  // Relations
+  emailAccount          EmailAccount @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  
+  @@index([emailAccountId])
+}
+
+// Custom labels/folders
+model EmailLabel {
+  id                    String   @id @default(cuid())
+  emailAccountId        String
+  
+  name                  String
+  color                 String?  // Hex color
+  icon                  String?  // Icon name
+  
+  // Special labels
+  isSystem              Boolean  @default(false) // Inbox, Sent, Drafts, etc.
+  systemType            SystemLabelType?
+  
+  // Hierarchy
+  parentId              String?
+  order                 Int      @default(0)
+  
+  // Stats (cached)
+  unreadCount           Int      @default(0)
+  totalCount            Int      @default(0)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  emailAccount          EmailAccount @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  parent                EmailLabel? @relation("LabelHierarchy", fields: [parentId], references: [id])
+  children              EmailLabel[] @relation("LabelHierarchy")
+  
+  @@unique([emailAccountId, name])
+  @@index([emailAccountId])
+}
+
+enum SystemLabelType {
+  INBOX
+  SENT
+  DRAFTS
+  TRASH
+  SPAM
+  STARRED
+  IMPORTANT
+  ALL_MAIL
+  // Musician-specific
+  BOOKING
+  FAN_MAIL
+  PRESS
+  COLLABORATIONS
+}
+
+// Email filters/rules
+model EmailFilter {
+  id                    String   @id @default(cuid())
+  emailAccountId        String
+  
+  name                  String
+  isEnabled             Boolean  @default(true)
+  order                 Int      @default(0)
+  
+  // Conditions (JSON: {field, operator, value}[])
+  conditions            Json     // [{field: "from", operator: "contains", value: "@booking.com"}]
+  matchAll              Boolean  @default(true) // AND vs OR
+  
+  // Actions
+  actions               Json     // [{action: "label", value: "Booking"}, {action: "star"}]
+  
+  // Stats
+  matchCount            Int      @default(0)
+  lastMatchAt           DateTime?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  emailAccount          EmailAccount @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  
+  @@index([emailAccountId])
+}
+
+// Email contacts (address book)
+model EmailContact {
+  id                    String   @id @default(cuid())
+  emailAccountId        String
+  
+  // Contact Info
+  email                 String
+  name                  String?
+  nickname              String?
+  company               String?
+  title                 String?
+  phone                 String?
+  notes                 String?  @db.Text
+  
+  // Categorization
+  category              ContactCategory @default(OTHER)
+  tags                  String[]
+  
+  // Avatar
+  avatarUrl             String?
+  
+  // Interaction Stats
+  emailsSent            Int      @default(0)
+  emailsReceived        Int      @default(0)
+  lastContactedAt       DateTime?
+  
+  // VIP/Priority
+  isVip                 Boolean  @default(false)
+  isBlocked             Boolean  @default(false)
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  emailAccount          EmailAccount @relation(fields: [emailAccountId], references: [id], onDelete: Cascade)
+  
+  @@unique([emailAccountId, email])
+  @@index([emailAccountId])
+  @@index([category])
+}
+
+enum ContactCategory {
+  BAND_MEMBER
+  COLLABORATOR
+  VENUE
+  BOOKING_AGENT
+  MANAGER
+  LABEL
+  PRESS
+  FAN
+  FAMILY
+  FRIEND
+  OTHER
+}
+
+// Force regeneration: 2025-12-02-RNRB-MAIL
