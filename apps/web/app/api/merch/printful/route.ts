@@ -20,26 +20,16 @@ import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
  *
  * Revenue Model:
  * - Printful takes production cost
- * - RNRB takes 10% platform fee
- * - Artist keeps remaining profit (typically 60-70% margins)
+ * - RNRB takes 15% platform fee
+ * - Artist keeps 85% of profit margin
  *
  * API Documentation: https://developers.printful.com/docs/
  */
 
 const PRINTFUL_API_URL = 'https://api.printful.com';
 
-// Popular Printful product IDs for quick reference
-export const PRINTFUL_PRODUCTS = {
-  BELLA_CANVAS_3001: 71, // Unisex Staple T-Shirt
-  BELLA_CANVAS_3719: 380, // Unisex Sponge Fleece Hoodie
-  GILDAN_5000: 5, // Unisex Heavy Cotton Tee
-  TANK_TOP: 195, // Unisex Tank Top
-  POSTER: 1, // Enhanced Matte Paper Poster
-  MUG_11OZ: 19, // White Glossy Mug
-  STICKER: 358, // Kiss-Cut Stickers
-  DAD_HAT: 206, // Yupoong Dad Hat
-  TOTE_BAG: 83, // Economy Tote
-};
+// Import product constants
+// PRINTFUL_PRODUCTS moved to @/lib/merch/printful-constants.ts
 
 interface PrintfulProduct {
   id: number;

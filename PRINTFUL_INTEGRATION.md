@@ -223,16 +223,16 @@ Printful receives order → Production → Shipping → Delivery
 | Party             | Share                               |
 | ----------------- | ----------------------------------- |
 | **Printful**      | Production cost (varies by product) |
-| **RNRB Platform** | 10% of profit margin                |
-| **Artist**        | 90% of profit margin                |
+| **RNRB Platform** | 15% of profit margin                |
+| **Artist**        | 85% of profit margin                |
 
 **Example:**
 
 - Retail price: $29.99
 - Production cost: $12.95
 - Gross profit: $17.04
-- RNRB fee (10%): $1.70
-- **Artist profit: $15.34 per sale**
+- RNRB fee (15%): $2.56
+- **Artist profit: $14.48 per sale**
 
 ---
 

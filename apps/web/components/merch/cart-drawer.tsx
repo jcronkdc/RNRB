@@ -7,8 +7,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export function CartDrawer() {
-  const { items, isOpen, closeCart, removeItem, updateQuantity, itemCount, subtotal, clearCart } =
-    useCart();
+  const {
+    items,
+    isOpen,
+    closeCart,
+    removeItem,
+    updateQuantity,
+    itemCount,
+    subtotal,
+    clearCart,
+    checkout,
+    isCheckingOut,
+    artistUsername,
+  } = useCart();
 
   return (
     <AnimatePresence>
@@ -186,16 +197,25 @@ export function CartDrawer() {
                 </p>
 
                 {/* Checkout Button */}
-                <Link href="/merch/checkout" onClick={closeCart}>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-orange-500/30"
-                  >
-                    Checkout
-                    <ArrowRight className="h-4 w-4" />
-                  </motion.button>
-                </Link>
+                <motion.button
+                  onClick={checkout}
+                  disabled={isCheckingOut}
+                  whileHover={{ scale: isCheckingOut ? 1 : 1.02 }}
+                  whileTap={{ scale: isCheckingOut ? 1 : 0.98 }}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-orange-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isCheckingOut ? (
+                    <>
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      {artistUsername ? `Checkout from @${artistUsername}` : 'Checkout'}
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </motion.button>
 
                 {/* Continue Shopping */}
                 <button

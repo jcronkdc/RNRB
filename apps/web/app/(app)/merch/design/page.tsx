@@ -674,16 +674,16 @@ export default function MerchDesignerPage() {
                   <span className="text-white">-${selectedProduct.basePrice.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-white/60">Platform Fee (10%)</span>
+                  <span className="text-white/60">Platform Fee (15%)</span>
                   <span className="text-white">
-                    -${((retailPrice - selectedProduct.basePrice) * 0.1).toFixed(2)}
+                    -${((retailPrice - selectedProduct.basePrice) * 0.15).toFixed(2)}
                   </span>
                 </div>
                 <div className="border-t border-white/10 pt-3">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-white">Your Profit</span>
                     <span className="text-xl font-bold text-green-400">
-                      ${((retailPrice - selectedProduct.basePrice) * 0.9).toFixed(2)}
+                      ${((retailPrice - selectedProduct.basePrice) * 0.85).toFixed(2)}
                     </span>
                   </div>
                   <p className="mt-1 text-right text-xs text-white/40">
@@ -705,7 +705,7 @@ export default function MerchDesignerPage() {
                   {selectedSizes.join(', ')}
                 </p>
                 <p>
-                  ✓ ${((retailPrice - selectedProduct.basePrice) * 0.9).toFixed(2)} profit per sale
+                  ✓ ${((retailPrice - selectedProduct.basePrice) * 0.85).toFixed(2)} profit per sale
                 </p>
               </div>
             </div>

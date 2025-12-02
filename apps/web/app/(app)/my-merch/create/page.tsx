@@ -134,7 +134,7 @@ export default function CreateProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -150,14 +150,30 @@ export default function CreateProductPage() {
 
     setIsUploading(true);
 
-    // In production, upload to cloud storage and get URL
-    // For now, use data URL
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setDesignUrl(event.target?.result as string);
+    try {
+      // Upload to Supabase Storage via our API
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('bucket', 'merch-designs');
+
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Upload failed');
+      }
+
+      setDesignUrl(data.url);
+    } catch (err) {
+      console.error('Upload error:', err);
+      alert(err instanceof Error ? err.message : 'Failed to upload image');
+    } finally {
       setIsUploading(false);
-    };
-    reader.readAsDataURL(file);
+    }
   }, []);
 
   const handleSelectProduct = (product: (typeof PRODUCT_TYPES)[0]) => {
@@ -195,6 +211,7 @@ export default function CreateProductPage() {
     setIsSubmitting(true);
 
     try {
+      // Step 1: Create the product
       const response = await fetch('/api/artist-merch/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -214,6 +231,25 @@ export default function CreateProductPage() {
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to create product');
+      }
+
+      const createdProduct = data.product;
+
+      // Step 2: Generate mockup in background (don't wait for it)
+      if (createdProduct?.id) {
+        fetch('/api/artist-merch/mockup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productId: createdProduct.id,
+            printfulProductId: selectedProduct.printfulId,
+            designUrl,
+            placement: 'front',
+          }),
+        }).catch((err) => {
+          console.error('Mockup generation failed:', err);
+          // Mockup generation failure shouldn't block the flow
+        });
       }
 
       router.push('/my-merch?created=true');

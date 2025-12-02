@@ -94,6 +94,11 @@ function ArtistStoreContent() {
         image: product.mockupUrl || product.thumbnailUrl || undefined,
         category: product.category as any,
         inStock: variant?.inStock ?? true,
+        // Artist product fields for checkout
+        artistId: artist?.id,
+        artistUsername: artist?.username || username,
+        productId: product.id,
+        variantId: variant?.id,
       },
       1,
       variant ? { size: variant.size || undefined, color: variant.color || undefined } : undefined

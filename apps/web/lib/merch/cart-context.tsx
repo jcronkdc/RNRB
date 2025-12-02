@@ -15,6 +15,11 @@ export interface MerchProduct {
   inStock: boolean;
   stripeProductId?: string;
   stripePriceId?: string;
+  // Artist product fields
+  artistId?: string;
+  artistUsername?: string;
+  productId?: string; // The actual product ID for checkout (different from display ID)
+  variantId?: string;
 }
 
 export interface ProductVariant {
@@ -54,6 +59,9 @@ interface CartContextType {
   openCart: () => void;
   closeCart: () => void;
   toggleCart: () => void;
+  checkout: () => Promise<void>;
+  isCheckingOut: boolean;
+  artistUsername: string | null; // If all items are from same artist
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -70,6 +78,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -84,6 +93,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
     setIsHydrated(true);
   }, []);
+
+  // Determine if cart is artist-specific
+  const artistUsername =
+    items.length > 0 && items[0].product.artistUsername
+      ? items.every((item) => item.product.artistUsername === items[0].product.artistUsername)
+        ? items[0].product.artistUsername
+        : null
+      : null;
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
@@ -161,6 +178,58 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
   const subtotal = items.reduce((total, item) => total + item.product.price * item.quantity, 0);
 
+  // Checkout function
+  const checkout = useCallback(async () => {
+    if (items.length === 0) return;
+
+    setIsCheckingOut(true);
+    try {
+      // Check if this is an artist checkout or platform checkout
+      const firstArtist = items[0].product.artistUsername;
+      const isArtistCheckout =
+        firstArtist && items.every((item) => item.product.artistUsername === firstArtist);
+
+      if (isArtistCheckout && firstArtist) {
+        // Artist merch checkout
+        const checkoutItems = items.map((item) => ({
+          productId: item.product.productId || item.product.id,
+          variantId: item.product.variantId || item.selectedVariants?.size,
+          quantity: item.quantity,
+        }));
+
+        const response = await fetch('/api/artist-merch/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: checkoutItems,
+            artistUsername: firstArtist,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Checkout failed');
+        }
+
+        if (data.url) {
+          // Clear cart and redirect to Stripe
+          clearCart();
+          window.location.href = data.url;
+        }
+      } else {
+        // Platform merch checkout - redirect to checkout page
+        closeCart();
+        window.location.href = '/merch/checkout';
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert(error instanceof Error ? error.message : 'Checkout failed. Please try again.');
+    } finally {
+      setIsCheckingOut(false);
+    }
+  }, [items, clearCart, closeCart]);
+
   return (
     <CartContext.Provider
       value={{
@@ -175,6 +244,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         openCart,
         closeCart,
         toggleCart,
+        checkout,
+        isCheckingOut,
+        artistUsername,
       }}
     >
       {children}
