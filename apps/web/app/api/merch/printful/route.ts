@@ -99,6 +99,9 @@ interface CreateOrderRequest {
   };
 }
 
+// Printful Store ID - required for most API calls
+const PRINTFUL_STORE_ID = process.env.PRINTFUL_STORE_ID || '17319056';
+
 // Helper to make Printful API calls
 async function printfulFetch(
   endpoint: string,
@@ -118,6 +121,7 @@ async function printfulFetch(
         headers: {
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
+          'X-PF-Store-Id': PRINTFUL_STORE_ID,
           ...options.headers,
         },
       },

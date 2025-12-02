@@ -12,6 +12,7 @@ import { fetchWithTimeout, TIMEOUTS } from '@/lib/fetch-utils';
 
 const PRINTFUL_API_URL = 'https://api.printful.com';
 const PRINTFUL_API_KEY = process.env.PRINTFUL_API_KEY;
+const PRINTFUL_STORE_ID = process.env.PRINTFUL_STORE_ID || '17319056';
 
 interface MockupRequest {
   productId: string; // Our database product ID
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
         {
           headers: {
             Authorization: `Bearer ${PRINTFUL_API_KEY}`,
+            'X-PF-Store-Id': PRINTFUL_STORE_ID,
           },
         },
         TIMEOUTS.STANDARD
@@ -97,6 +99,7 @@ export async function POST(request: NextRequest) {
         headers: {
           Authorization: `Bearer ${PRINTFUL_API_KEY}`,
           'Content-Type': 'application/json',
+          'X-PF-Store-Id': PRINTFUL_STORE_ID,
         },
       },
       TIMEOUTS.STANDARD
@@ -184,6 +187,7 @@ export async function POST(request: NextRequest) {
         {
           headers: {
             Authorization: `Bearer ${PRINTFUL_API_KEY}`,
+            'X-PF-Store-Id': PRINTFUL_STORE_ID,
           },
         },
         TIMEOUTS.STANDARD

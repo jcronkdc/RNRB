@@ -10,6 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
 const webhookSecret =
   process.env.STRIPE_MERCH_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET || '';
 const PRINTFUL_API_URL = 'https://api.printful.com';
+const PRINTFUL_STORE_ID = process.env.PRINTFUL_STORE_ID || '17319056';
 
 /**
  * Artist Merch Webhook Handler
@@ -279,6 +280,7 @@ async function createPrintfulOrder(
         headers: {
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
+          'X-PF-Store-Id': PRINTFUL_STORE_ID,
         },
         body: JSON.stringify(printfulOrder),
       },
