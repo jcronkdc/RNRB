@@ -3,66 +3,47 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Loader2, Eye, EyeOff, CheckCircle } from 'lucide-react';
-
-type Step = 'email' | 'password' | 'success';
+import { ArrowLeft, Loader2, Mail, CheckCircle } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
-  const [step, setStep] = useState<Step>('email');
   const [email, setEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleEmailSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     let fullEmail = email;
     if (!email.includes('@')) {
       fullEmail = `${email}@rnrb.me`;
     } else if (!email.endsWith('@rnrb.me')) {
       setError('Only @rnrb.me email addresses are supported');
+      setLoading(false);
       return;
     }
-
-    setEmail(fullEmail);
-    setStep('password');
-  };
-
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      setError('Password must be at least 8 characters');
-      return;
-    }
-
-    setLoading(true);
 
     try {
       const response = await fetch('https://rnrb.pro/api/email/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, newPassword }),
+        body: JSON.stringify({
+          email: fullEmail,
+          action: 'request',
+        }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to reset password');
+        throw new Error(data.error || 'Failed to send reset email');
       }
 
-      setStep('success');
+      setSubmitted(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to reset password');
+      setError(err instanceof Error ? err.message : 'Failed to send reset email');
     } finally {
       setLoading(false);
     }
@@ -93,7 +74,7 @@ export default function ForgotPasswordPage() {
           className="rounded-xl p-6"
           style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
-          {step === 'email' && (
+          {!submitted ? (
             <>
               <h1
                 className="mb-2 text-center text-lg font-semibold"
@@ -102,10 +83,10 @@ export default function ForgotPasswordPage() {
                 Reset your password
               </h1>
               <p className="mb-6 text-center text-sm" style={{ color: 'var(--text-muted)' }}>
-                Enter your email address to continue
+                Enter your email and we&apos;ll send you a reset link
               </p>
 
-              <form onSubmit={handleEmailSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label
                     htmlFor="reset-email"
@@ -135,138 +116,64 @@ export default function ForgotPasswordPage() {
                   </div>
                 )}
 
-                <button type="submit" className="btn btn-primary w-full py-2.5">
-                  Continue
-                </button>
-              </form>
-            </>
-          )}
-
-          {step === 'password' && (
-            <>
-              <h1
-                className="mb-2 text-center text-lg font-semibold"
-                style={{ color: 'var(--text)' }}
-              >
-                Create new password
-              </h1>
-              <p className="mb-6 text-center text-sm" style={{ color: 'var(--text-muted)' }}>
-                For {email}
-              </p>
-
-              <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="new-password"
-                    className="mb-2 block text-sm font-medium"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    New password
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="new-password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Enter new password"
-                      className="input"
-                      style={{ paddingRight: '2.75rem' }}
-                      required
-                      minLength={8}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 transition-colors hover:bg-white/10"
-                      style={{ color: 'var(--text-muted)' }}
-                      tabIndex={-1}
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="confirm-password"
-                    className="mb-2 block text-sm font-medium"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    Confirm password
-                  </label>
-                  <input
-                    id="confirm-password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm new password"
-                    className="input"
-                    required
-                  />
-                </div>
-
-                {error && (
-                  <div
-                    className="rounded-md px-3 py-2 text-sm"
-                    style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--error)' }}
-                  >
-                    {error}
-                  </div>
-                )}
-
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !email}
                   className="btn btn-primary w-full py-2.5 disabled:opacity-50"
                 >
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Resetting...
+                      Sending...
                     </>
                   ) : (
-                    'Reset password'
+                    'Send reset link'
                   )}
                 </button>
               </form>
             </>
-          )}
-
-          {step === 'success' && (
+          ) : (
             <div className="text-center">
               <div
                 className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full"
                 style={{ background: 'var(--accent-light)' }}
               >
-                <CheckCircle className="h-6 w-6" style={{ color: 'var(--accent)' }} />
+                <Mail className="h-6 w-6" style={{ color: 'var(--accent)' }} />
               </div>
               <h1 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
-                Password reset!
+                Check your email
               </h1>
-              <p className="mb-6 text-sm" style={{ color: 'var(--text-muted)' }}>
-                You can now sign in with your new password
+              <p className="mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
+                If an account exists for that email, we&apos;ve sent a password reset link.
               </p>
-              <Link href="/login" className="btn btn-primary w-full py-2.5">
-                Sign in
-              </Link>
+              <p className="mb-6 text-xs" style={{ color: 'var(--text-muted)' }}>
+                The link will expire in 1 hour. Check your spam folder if you don&apos;t see it.
+              </p>
+              <button
+                onClick={() => {
+                  setSubmitted(false);
+                  setEmail('');
+                }}
+                className="text-sm transition-colors hover:underline"
+                style={{ color: 'var(--accent)' }}
+              >
+                Try a different email
+              </button>
             </div>
           )}
         </div>
 
         {/* Back to login */}
-        {step !== 'success' && (
-          <div className="mt-6 text-center">
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to sign in
-            </Link>
-          </div>
-        )}
+        <div className="mt-6 text-center">
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-2 text-sm transition-colors"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to sign in
+          </Link>
+        </div>
       </div>
     </div>
   );
