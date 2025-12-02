@@ -35,6 +35,10 @@ import {
   Mic,
   Calendar,
   Edit3,
+  Headphones,
+  Ticket,
+  Radio,
+  Zap,
 } from '@/components/ui/custom-icons';
 
 // Types
@@ -103,12 +107,53 @@ const DEFAULT_MAILBOXES: Mailbox[] = [
   { id: 'trash', name: 'Trash', role: 'trash', totalMessages: 0, unreadMessages: 0, icon: Trash2 },
 ];
 
-// Musician-specific labels
+// Musician-specific labels with enhanced styling
 const MUSICIAN_LABELS = [
-  { id: 'booking', name: 'Booking', icon: Calendar, color: '#22c55e' },
-  { id: 'fan-mail', name: 'Fan Mail', icon: Users, color: '#ec4899' },
-  { id: 'press', name: 'Press', icon: Mic, color: '#3b82f6' },
-  { id: 'collaborations', name: 'Collaborations', icon: Music, color: '#f59e0b' },
+  { id: 'booking', name: 'Booking', icon: Ticket, color: '#22c55e', description: 'Gigs & shows' },
+  {
+    id: 'fan-mail',
+    name: 'Fan Mail',
+    icon: Headphones,
+    color: '#ec4899',
+    description: 'From your fans',
+  },
+  { id: 'press', name: 'Press', icon: Radio, color: '#3b82f6', description: 'Media inquiries' },
+  {
+    id: 'collaborations',
+    name: 'Collabs',
+    icon: Music,
+    color: '#f59e0b',
+    description: 'Work together',
+  },
+  { id: 'industry', name: 'Industry', icon: Zap, color: '#8b5cf6', description: 'Labels & mgmt' },
+];
+
+// Quick reply templates for musicians
+const QUICK_TEMPLATES = [
+  {
+    id: 'booking-interest',
+    name: 'Booking Interest',
+    subject: 'RE: Booking Inquiry',
+    body: "Thanks for reaching out about booking! I'd love to discuss this opportunity further. Could you share more details about the event?",
+  },
+  {
+    id: 'fan-thanks',
+    name: 'Thank a Fan',
+    subject: 'RE: Your message',
+    body: 'Thank you so much for your kind words and support! Messages like yours mean the world to me. 🎵',
+  },
+  {
+    id: 'collab-yes',
+    name: 'Accept Collab',
+    subject: 'RE: Collaboration',
+    body: "I'm definitely interested in collaborating! Let's set up a time to chat about ideas and next steps.",
+  },
+  {
+    id: 'press-response',
+    name: 'Press Response',
+    subject: 'RE: Interview Request',
+    body: "Thank you for your interest in featuring me. I'd be happy to participate. Please send over more details about the format and timeline.",
+  },
 ];
 
 export default function WebmailPage() {
@@ -336,73 +381,224 @@ export default function WebmailPage() {
     );
   }
 
-  // No email account - redirect to setup
+  // No email account - stunning welcome screen
   if (!hasAccount) {
     return (
       <div
-        className="flex min-h-screen flex-col items-center justify-center gap-6 px-4"
-        style={{ background: 'var(--bg)' }}
+        className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4"
+        style={{
+          background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #0a0a0a 100%)',
+        }}
       >
-        <div className="text-center">
+        {/* Animated background elements */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div
-            className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl"
+            className="absolute -left-40 -top-40 h-80 w-80 rounded-full opacity-20 blur-3xl"
             style={{ background: 'linear-gradient(135deg, #ff6347, #ffd700)' }}
+          />
+          <div
+            className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full opacity-20 blur-3xl"
+            style={{ background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)' }}
+          />
+          {/* Musical notes floating effect */}
+          <motion.div
+            animate={{ y: [-20, 20, -20], rotate: [0, 10, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute left-[20%] top-[30%] text-4xl opacity-10"
           >
-            <Mail className="h-10 w-10 text-white" />
-          </div>
-          <h1 className="mb-2 text-2xl font-bold" style={{ color: 'var(--text)' }}>
-            Get Your RNRB Email
-          </h1>
-          <p className="mb-6" style={{ color: 'var(--muted)' }}>
-            Professional email for musicians at @rnrb.me
-          </p>
-          <Link
-            href="/settings/email"
-            className="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold transition-all hover:scale-105"
-            style={{ background: 'var(--accent)', color: 'white' }}
+            ♪
+          </motion.div>
+          <motion.div
+            animate={{ y: [20, -20, 20], rotate: [0, -10, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute right-[25%] top-[20%] text-5xl opacity-10"
           >
-            <Mail className="h-5 w-5" />
-            Set Up Email
-          </Link>
+            ♫
+          </motion.div>
+          <motion.div
+            animate={{ y: [-15, 15, -15] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute bottom-[30%] left-[15%] text-3xl opacity-10"
+          >
+            ♬
+          </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative z-10 text-center"
+        >
+          {/* RNRB Logo */}
+          <Link href="/" className="mb-8 inline-block">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={180}
+              height={60}
+              className="mx-auto transition-all hover:scale-105"
+            />
+          </Link>
+
+          {/* Mail Badge */}
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl shadow-2xl"
+            style={{
+              background: 'linear-gradient(135deg, #ff6347 0%, #ff8c00 50%, #ffd700 100%)',
+              boxShadow: '0 0 60px rgba(255, 99, 71, 0.4), 0 0 100px rgba(255, 215, 0, 0.2)',
+            }}
+          >
+            <Mail className="h-12 w-12 text-white drop-shadow-lg" />
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-3 bg-gradient-to-r from-white via-orange-200 to-yellow-200 bg-clip-text text-4xl font-black tracking-tight text-transparent"
+          >
+            RNRB Mail
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mb-2 text-xl font-medium text-white/90"
+          >
+            Professional Email for Musicians
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mb-8 text-white/60"
+          >
+            yourname@rnrb.me • Works everywhere • Made for artists
+          </motion.p>
+
+          {/* Features Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="mb-8 grid grid-cols-2 gap-3 text-left sm:grid-cols-4"
+          >
+            {[
+              { icon: Ticket, label: 'Booking', desc: 'Organize gigs' },
+              { icon: Headphones, label: 'Fan Mail', desc: 'Stay connected' },
+              { icon: Radio, label: 'Press', desc: 'Media inquiries' },
+              { icon: Music, label: 'Collabs', desc: 'Work together' },
+            ].map((item, i) => (
+              <div
+                key={item.label}
+                className="rounded-xl p-3 backdrop-blur-sm"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              >
+                <item.icon className="mb-1 h-5 w-5 text-orange-400" />
+                <p className="text-sm font-semibold text-white">{item.label}</p>
+                <p className="text-xs text-white/50">{item.desc}</p>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <Link
+              href="/settings/email"
+              className="group inline-flex items-center gap-3 rounded-2xl px-8 py-4 text-lg font-bold shadow-2xl transition-all hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #ff6347, #ffd700)',
+                boxShadow: '0 10px 40px rgba(255, 99, 71, 0.4)',
+              }}
+            >
+              <Mail className="h-6 w-6 text-white" />
+              <span className="text-white">Get Your @rnrb.me Email</span>
+              <ChevronRight className="h-5 w-5 text-white transition-transform group-hover:translate-x-1" />
+            </Link>
+
+            <p className="mt-4 text-sm text-white/40">
+              Free with your paid membership • Works on iPhone, Android, Mac & PC
+            </p>
+          </motion.div>
+        </motion.div>
       </div>
     );
   }
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
-      {/* Sidebar */}
+      {/* Sidebar - Premium RNRB Mail Design */}
       <motion.div
         initial={false}
-        animate={{ width: sidebarCollapsed ? 60 : 240 }}
+        animate={{ width: sidebarCollapsed ? 70 : 260 }}
         className="flex flex-col border-r"
-        style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
+        style={{
+          borderColor: 'rgba(255, 99, 71, 0.1)',
+          background:
+            'linear-gradient(180deg, rgba(20, 10, 15, 0.98) 0%, rgba(10, 5, 10, 0.98) 100%)',
+        }}
       >
-        {/* Logo & Compose */}
+        {/* RNRB Mail Header */}
         <div className="p-4">
-          {!sidebarCollapsed && (
-            <div className="mb-4 flex items-center gap-2">
-              <Link href="/">
+          {!sidebarCollapsed ? (
+            <div className="mb-5">
+              <Link href="/" className="mb-3 flex items-center gap-2">
                 <Image
                   src="/logo-dark.png"
-                  alt="RNRB"
-                  width={80}
-                  height={30}
-                  className="hover:opacity-80"
+                  alt="Rock N' Roll Basement"
+                  width={100}
+                  height={35}
+                  className="transition-opacity hover:opacity-80"
                 />
               </Link>
-              <span className="bg-[var(--accent)]/20 rounded-full px-2 py-0.5 text-xs font-medium text-[var(--accent)]">
-                Mail
-              </span>
+              <div
+                className="flex items-center gap-2 rounded-lg px-3 py-1.5"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 215, 0, 0.1))',
+                  border: '1px solid rgba(255, 99, 71, 0.2)',
+                }}
+              >
+                <Mail className="h-4 w-4 text-orange-400" />
+                <span className="bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-sm font-bold text-transparent">
+                  RNRB Mail
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="mb-4 flex justify-center">
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-xl"
+                style={{ background: 'linear-gradient(135deg, #ff6347, #ffd700)' }}
+              >
+                <Mail className="h-5 w-5 text-white" />
+              </div>
             </div>
           )}
 
+          {/* Compose Button - Stunning gradient */}
           <button
             onClick={() => setShowCompose(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold transition-all hover:scale-[1.02]"
-            style={{ background: 'var(--accent)', color: 'white' }}
+            className="group flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold shadow-lg transition-all hover:scale-[1.02] hover:shadow-xl"
+            style={{
+              background: 'linear-gradient(135deg, #ff6347, #ff8c00, #ffd700)',
+              color: 'white',
+              boxShadow: '0 4px 20px rgba(255, 99, 71, 0.3)',
+            }}
           >
-            <Edit3 className="h-5 w-5" />
+            <Edit3 className="h-5 w-5 transition-transform group-hover:rotate-[-8deg]" />
             {!sidebarCollapsed && 'Compose'}
           </button>
         </div>
@@ -447,32 +643,41 @@ export default function WebmailPage() {
             );
           })}
 
-          {/* Musician Labels */}
+          {/* Musician-Specific Labels - Premium Design */}
           {!sidebarCollapsed && (
             <>
-              <div className="my-4 border-t" style={{ borderColor: 'var(--border)' }} />
+              <div className="my-4 border-t" style={{ borderColor: 'rgba(255, 99, 71, 0.1)' }} />
               <p
-                className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider"
-                style={{ color: 'var(--muted)' }}
+                className="mb-3 flex items-center gap-2 px-3 text-xs font-bold uppercase tracking-wider"
+                style={{ color: 'rgba(255, 165, 0, 0.7)' }}
               >
-                Labels
+                <Music className="h-3 w-3" />
+                Musician Labels
               </p>
               {MUSICIAN_LABELS.map((label) => {
                 const Icon = label.icon;
                 return (
                   <button
                     key={label.id}
-                    className="mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-all hover:bg-white/5"
+                    className="group mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all hover:bg-white/5"
                   >
                     <span
-                      className="flex h-5 w-5 items-center justify-center rounded"
-                      style={{ background: label.color + '20' }}
+                      className="flex h-7 w-7 items-center justify-center rounded-lg transition-transform group-hover:scale-110"
+                      style={{
+                        background: `linear-gradient(135deg, ${label.color}30, ${label.color}10)`,
+                        border: `1px solid ${label.color}40`,
+                      }}
                     >
-                      <Icon className="h-3.5 w-3.5" style={{ color: label.color }} />
+                      <Icon className="h-4 w-4" style={{ color: label.color }} />
                     </span>
-                    <span className="text-sm" style={{ color: 'var(--text)' }}>
-                      {label.name}
-                    </span>
+                    <div className="flex-1">
+                      <span className="block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                        {label.name}
+                      </span>
+                      <span className="block text-[10px]" style={{ color: 'var(--muted)' }}>
+                        {label.description}
+                      </span>
+                    </div>
                   </button>
                 );
               })}
@@ -496,64 +701,76 @@ export default function WebmailPage() {
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header */}
+        {/* Header - Premium Design */}
         <header
-          className="flex items-center gap-4 border-b px-4 py-3"
-          style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
+          className="flex items-center gap-4 border-b px-5 py-3"
+          style={{
+            borderColor: 'rgba(255, 99, 71, 0.1)',
+            background:
+              'linear-gradient(90deg, rgba(15, 10, 12, 0.98) 0%, rgba(20, 12, 18, 0.98) 100%)',
+          }}
         >
-          {/* Search */}
+          {/* Search - Enhanced */}
           <div className="relative max-w-xl flex-1">
-            <Search
-              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-              style={{ color: 'var(--muted)' }}
-            />
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-orange-400/50" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search emails..."
-              className="w-full rounded-xl py-2 pl-10 pr-4"
+              placeholder="Search your music inbox..."
+              className="w-full rounded-xl py-2.5 pl-11 pr-4 transition-all focus:ring-2 focus:ring-orange-400/30"
               style={{
-                background: 'var(--bg)',
-                border: '1px solid var(--border)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 99, 71, 0.15)',
                 color: 'var(--text)',
               }}
             />
           </div>
 
-          {/* Actions */}
+          {/* Actions with tooltips */}
           <button
             onClick={() => {
               /* Refresh */
             }}
-            className="rounded-lg p-2 transition-colors hover:bg-white/10"
-            title="Refresh"
+            className="rounded-xl p-2.5 transition-all hover:bg-orange-400/10"
+            title="Refresh inbox"
           >
-            <RefreshCw className="h-5 w-5" style={{ color: 'var(--muted)' }} />
+            <RefreshCw className="h-5 w-5 text-white/50 transition-colors hover:text-orange-400" />
           </button>
 
           <Link
             href="/settings/email"
-            className="rounded-lg p-2 transition-colors hover:bg-white/10"
-            title="Settings"
+            className="rounded-xl p-2.5 transition-all hover:bg-orange-400/10"
+            title="Email settings"
           >
-            <Settings className="h-5 w-5" style={{ color: 'var(--muted)' }} />
+            <Settings className="h-5 w-5 text-white/50 transition-colors hover:text-orange-400" />
           </Link>
 
-          {/* Account */}
+          {/* Account Badge - Premium look */}
           <div
-            className="flex items-center gap-2 rounded-xl px-3 py-1.5"
-            style={{ background: 'var(--bg)' }}
+            className="flex items-center gap-3 rounded-xl px-4 py-2"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(255, 99, 71, 0.1), rgba(255, 215, 0, 0.05))',
+              border: '1px solid rgba(255, 99, 71, 0.2)',
+            }}
           >
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold"
-              style={{ background: 'var(--accent)', color: 'white' }}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold shadow-lg"
+              style={{
+                background: 'linear-gradient(135deg, #ff6347, #ffd700)',
+                color: 'white',
+                boxShadow: '0 2px 10px rgba(255, 99, 71, 0.3)',
+              }}
             >
               {emailAddress[0]?.toUpperCase()}
             </div>
-            <span className="text-sm font-medium" style={{ color: 'var(--text)' }}>
-              {emailAddress}
-            </span>
+            <div className="hidden sm:block">
+              <span className="block text-sm font-semibold text-white">
+                {emailAddress.split('@')[0]}
+              </span>
+              <span className="block text-[10px] text-orange-400/80">@rnrb.me</span>
+            </div>
           </div>
         </header>
 
@@ -640,72 +857,120 @@ export default function WebmailPage() {
             )}
           </div>
 
-          {/* Message Detail */}
-          <div className="flex-1 overflow-y-auto" style={{ background: 'var(--bg)' }}>
+          {/* Message Detail - Premium View */}
+          <div
+            className="flex-1 overflow-y-auto"
+            style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #0f0a0d 100%)' }}
+          >
             {loadingMessage ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-6 w-6 animate-spin text-[var(--accent)]" />
+                <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
               </div>
             ) : selectedMessage ? (
               <div className="p-6">
-                {/* Message Header */}
+                {/* Message Header - Enhanced */}
                 <div className="mb-6">
                   <h1 className="mb-4 text-2xl font-bold" style={{ color: 'var(--text)' }}>
                     {selectedMessage.subject}
                   </h1>
 
                   <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       <div
-                        className="flex h-10 w-10 items-center justify-center rounded-full font-semibold"
-                        style={{ background: 'var(--accent)', color: 'white' }}
+                        className="flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold shadow-lg"
+                        style={{
+                          background: 'linear-gradient(135deg, #ff6347, #ffd700)',
+                          color: 'white',
+                          boxShadow: '0 4px 15px rgba(255, 99, 71, 0.3)',
+                        }}
                       >
                         {(selectedMessage.from[0]?.name ||
                           selectedMessage.from[0]?.email)[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-medium" style={{ color: 'var(--text)' }}>
+                        <p className="text-lg font-semibold" style={{ color: 'var(--text)' }}>
                           {selectedMessage.from[0]?.name || selectedMessage.from[0]?.email}
                         </p>
                         <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                          to {selectedMessage.to.map((t) => t.email).join(', ')}
+                          to{' '}
+                          <span className="text-orange-400/80">
+                            {selectedMessage.to.map((t) => t.email).join(', ')}
+                          </span>
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="rounded-lg bg-white/5 px-3 py-1 text-sm"
+                        style={{ color: 'var(--muted)' }}
+                      >
                         {new Date(selectedMessage.receivedAt).toLocaleString()}
                       </span>
-                      <button className="rounded-lg p-2 transition-colors hover:bg-white/10">
-                        <MoreVertical className="h-5 w-5" style={{ color: 'var(--muted)' }} />
+                      <button className="rounded-lg p-2 transition-colors hover:bg-orange-400/10">
+                        <MoreVertical className="h-5 w-5 text-white/50" />
                       </button>
                     </div>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="mb-6 flex gap-2">
+                {/* Action Buttons - Styled */}
+                <div className="mb-6 flex flex-wrap gap-2">
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors hover:bg-white/10"
-                    style={{ background: 'var(--panel)', color: 'var(--text)' }}
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 99, 71, 0.05))',
+                      border: '1px solid rgba(255, 99, 71, 0.2)',
+                      color: 'var(--text)',
+                    }}
                   >
-                    <Reply className="h-4 w-4" />
+                    <Reply className="h-4 w-4 text-orange-400" />
                     Reply
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors hover:bg-white/10"
-                    style={{ background: 'var(--panel)', color: 'var(--text)' }}
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'var(--text)',
+                    }}
                   >
                     <ReplyAll className="h-4 w-4" />
                     Reply All
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors hover:bg-white/10"
-                    style={{ background: 'var(--panel)', color: 'var(--text)' }}
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'var(--text)',
+                    }}
                   >
                     <Forward className="h-4 w-4" />
                     Forward
+                  </button>
+                  <button
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'var(--text)',
+                    }}
+                  >
+                    <Archive className="h-4 w-4" />
+                    Archive
+                  </button>
+                  <button
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: 'var(--text)',
+                    }}
+                  >
+                    <Tag className="h-4 w-4" />
+                    Label
                   </button>
                 </div>
 
@@ -754,120 +1019,190 @@ export default function WebmailPage() {
               </div>
             ) : (
               <div className="flex h-full flex-col items-center justify-center">
-                <Mail className="mb-4 h-16 w-16" style={{ color: 'var(--muted)' }} />
-                <p className="font-medium" style={{ color: 'var(--text)' }}>
-                  Select a message
-                </p>
-                <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  Choose a message from the list to read it
-                </p>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center"
+                >
+                  <div
+                    className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(255, 99, 71, 0.1), rgba(255, 215, 0, 0.05))',
+                      border: '1px solid rgba(255, 99, 71, 0.2)',
+                    }}
+                  >
+                    <Mail className="h-10 w-10 text-orange-400/50" />
+                  </div>
+                  <p className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
+                    Select a message
+                  </p>
+                  <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
+                    Choose a message from the list to read it
+                  </p>
+
+                  {/* Quick Templates */}
+                  <div className="mx-auto max-w-md">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-orange-400/50">
+                      Quick Templates
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {QUICK_TEMPLATES.slice(0, 4).map((template) => (
+                        <button
+                          key={template.id}
+                          onClick={() => {
+                            setShowCompose(true);
+                            setComposeSubject(template.subject);
+                            setComposeBody(template.body);
+                          }}
+                          className="rounded-xl p-3 text-left text-xs transition-all hover:scale-[1.02]"
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                          }}
+                        >
+                          <span className="font-medium text-white/80">{template.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Compose Modal */}
+      {/* Compose Modal - Premium Design */}
       <AnimatePresence>
         {showCompose && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-end justify-end bg-black/50 p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
             onClick={() => setShowCompose(false)}
           >
             <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 100, opacity: 0 }}
-              className="w-full max-w-2xl rounded-t-2xl shadow-2xl"
-              style={{ background: 'var(--panel)' }}
+              initial={{ y: 50, opacity: 0, scale: 0.95 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 50, opacity: 0, scale: 0.95 }}
+              className="w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl"
+              style={{
+                background: 'linear-gradient(180deg, #1a1015 0%, #0f0a0d 100%)',
+                border: '1px solid rgba(255, 99, 71, 0.2)',
+                boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 99, 71, 0.1)',
+              }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
+              {/* Header - Gradient */}
               <div
-                className="flex items-center justify-between rounded-t-2xl px-4 py-3"
-                style={{ background: 'var(--accent)' }}
+                className="flex items-center justify-between px-5 py-4"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
+                  borderBottom: '1px solid rgba(255, 99, 71, 0.15)',
+                }}
               >
-                <span className="font-semibold text-white">New Message</span>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-lg"
+                    style={{ background: 'linear-gradient(135deg, #ff6347, #ffd700)' }}
+                  >
+                    <Edit3 className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-lg font-bold text-white">New Message</span>
+                </div>
                 <button
                   onClick={() => setShowCompose(false)}
-                  className="text-white/80 hover:text-white"
+                  className="rounded-lg p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* Form */}
-              <div className="p-4">
+              <div className="p-5">
+                {/* From indicator */}
                 <div
-                  className="mb-3 flex items-center border-b pb-2"
-                  style={{ borderColor: 'var(--border)' }}
+                  className="mb-4 flex items-center gap-3 rounded-xl px-4 py-2"
+                  style={{
+                    background: 'rgba(255, 99, 71, 0.05)',
+                    border: '1px solid rgba(255, 99, 71, 0.1)',
+                  }}
                 >
-                  <span className="w-16 text-sm" style={{ color: 'var(--muted)' }}>
-                    To:
-                  </span>
+                  <span className="text-xs font-medium text-white/40">FROM</span>
+                  <span className="text-sm font-semibold text-orange-400">{emailAddress}</span>
+                </div>
+
+                <div
+                  className="mb-3 flex items-center border-b pb-3"
+                  style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
+                >
+                  <span className="w-20 text-sm font-medium text-white/40">To:</span>
                   <input
                     type="email"
                     value={composeTo}
                     onChange={(e) => setComposeTo(e.target.value)}
-                    className="flex-1 bg-transparent outline-none"
-                    style={{ color: 'var(--text)' }}
+                    className="flex-1 bg-transparent text-white outline-none placeholder:text-white/30"
                     placeholder="recipient@email.com"
                   />
                 </div>
 
                 <div
-                  className="mb-3 flex items-center border-b pb-2"
-                  style={{ borderColor: 'var(--border)' }}
+                  className="mb-4 flex items-center border-b pb-3"
+                  style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
                 >
-                  <span className="w-16 text-sm" style={{ color: 'var(--muted)' }}>
-                    Subject:
-                  </span>
+                  <span className="w-20 text-sm font-medium text-white/40">Subject:</span>
                   <input
                     type="text"
                     value={composeSubject}
                     onChange={(e) => setComposeSubject(e.target.value)}
-                    className="flex-1 bg-transparent outline-none"
-                    style={{ color: 'var(--text)' }}
-                    placeholder="Subject"
+                    className="flex-1 bg-transparent text-white outline-none placeholder:text-white/30"
+                    placeholder="What's this about?"
                   />
                 </div>
 
                 <textarea
                   value={composeBody}
                   onChange={(e) => setComposeBody(e.target.value)}
-                  className="h-64 w-full resize-none bg-transparent outline-none"
-                  style={{ color: 'var(--text)' }}
+                  className="h-64 w-full resize-none bg-transparent text-white outline-none placeholder:text-white/30"
                   placeholder="Write your message..."
                 />
 
                 {/* Actions */}
-                <div className="flex items-center justify-between pt-4">
+                <div
+                  className="flex items-center justify-between border-t pt-4"
+                  style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
+                >
                   <div className="flex gap-2">
                     <button
-                      className="rounded-lg p-2 transition-colors hover:bg-white/10"
+                      className="rounded-xl p-2.5 transition-colors hover:bg-white/5"
                       title="Attach file"
                     >
-                      <Paperclip className="h-5 w-5" style={{ color: 'var(--muted)' }} />
+                      <Paperclip className="h-5 w-5 text-white/40" />
                     </button>
+                    {/* Quick template dropdown could go here */}
                   </div>
 
                   <button
                     onClick={handleSend}
                     disabled={!composeTo || !composeSubject || sending}
-                    className="flex items-center gap-2 rounded-xl px-6 py-2.5 font-semibold transition-all hover:scale-[1.02] disabled:opacity-50"
-                    style={{ background: 'var(--accent)', color: 'white' }}
+                    className="flex items-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50"
+                    style={{
+                      background: 'linear-gradient(135deg, #ff6347, #ffd700)',
+                      color: 'white',
+                      boxShadow: '0 4px 20px rgba(255, 99, 71, 0.4)',
+                    }}
                   >
                     {sending ? (
                       <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="h-5 w-5 animate-spin" />
                         Sending...
                       </>
                     ) : (
                       <>
-                        <Send className="h-4 w-4" />
+                        <Send className="h-5 w-5" />
                         Send
                       </>
                     )}
