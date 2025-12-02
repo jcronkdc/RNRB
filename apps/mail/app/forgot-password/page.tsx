@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Mail, Lock, Loader2, Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Loader2, Eye, EyeOff, CheckCircle } from 'lucide-react';
 
 type Step = 'email' | 'password' | 'success';
 
@@ -108,26 +108,22 @@ export default function ForgotPasswordPage() {
               <form onSubmit={handleEmailSubmit} className="space-y-4">
                 <div>
                   <label
-                    className="mb-1.5 block text-sm font-medium"
+                    htmlFor="reset-email"
+                    className="mb-2 block text-sm font-medium"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     Email address
                   </label>
-                  <div className="relative">
-                    <Mail
-                      className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                      style={{ color: 'var(--text-muted)' }}
-                    />
-                    <input
-                      type="text"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@rnrb.me"
-                      className="input pl-10"
-                      required
-                      autoFocus
-                    />
-                  </div>
+                  <input
+                    id="reset-email"
+                    type="text"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@rnrb.me"
+                    className="input"
+                    required
+                    autoFocus
+                  />
                 </div>
 
                 {error && (
@@ -161,30 +157,30 @@ export default function ForgotPasswordPage() {
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div>
                   <label
-                    className="mb-1.5 block text-sm font-medium"
+                    htmlFor="new-password"
+                    className="mb-2 block text-sm font-medium"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     New password
                   </label>
                   <div className="relative">
-                    <Lock
-                      className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                      style={{ color: 'var(--text-muted)' }}
-                    />
                     <input
+                      id="new-password"
                       type={showPassword ? 'text' : 'password'}
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="input pl-10 pr-10"
+                      placeholder="Enter new password"
+                      className="input"
+                      style={{ paddingRight: '2.75rem' }}
                       required
                       minLength={8}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 transition-colors hover:bg-white/10"
                       style={{ color: 'var(--text-muted)' }}
+                      tabIndex={-1}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -193,25 +189,21 @@ export default function ForgotPasswordPage() {
 
                 <div>
                   <label
-                    className="mb-1.5 block text-sm font-medium"
+                    htmlFor="confirm-password"
+                    className="mb-2 block text-sm font-medium"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     Confirm password
                   </label>
-                  <div className="relative">
-                    <Lock
-                      className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                      style={{ color: 'var(--text-muted)' }}
-                    />
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="input pl-10"
-                      required
-                    />
-                  </div>
+                  <input
+                    id="confirm-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                    className="input"
+                    required
+                  />
                 </div>
 
                 {error && (

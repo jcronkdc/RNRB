@@ -196,12 +196,14 @@ body {
 /* Input base */
 .input {
   width: 100%;
-  padding: 0.625rem 0.875rem;
+  height: 44px;
+  padding: 0 0.875rem;
   border-radius: 0.5rem;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--bg-secondary);
   color: var(--text);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  line-height: 44px;
   transition:
     border-color 0.15s ease,
     box-shadow 0.15s ease;
@@ -211,10 +213,21 @@ body {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-light);
+  background: var(--bg);
 }
 
 .input::placeholder {
   color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* Override padding for inputs with icons - use !important to ensure specificity */
+input.input[class*='pl-'] {
+  padding-left: 2.75rem !important;
+}
+
+input.input[class*='pr-'] {
+  padding-right: 2.75rem !important;
 }
 
 /* Loading skeleton */

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuthStore } from '@/lib/store';
-import { Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -87,56 +87,52 @@ export default function LoginPage() {
             {/* Email field */}
             <div>
               <label
-                className="mb-1.5 block text-sm font-medium"
+                htmlFor="email"
+                className="mb-2 block text-sm font-medium"
                 style={{ color: 'var(--text-secondary)' }}
               >
                 Email address
               </label>
-              <div className="relative">
-                <Mail
-                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                  style={{ color: 'var(--text-muted)' }}
-                />
-                <input
-                  type="text"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@rnrb.me"
-                  className="input pl-10"
-                  required
-                  autoComplete="email"
-                  autoFocus
-                />
-              </div>
+              <input
+                id="email"
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@rnrb.me"
+                className="input"
+                required
+                autoComplete="email"
+                autoFocus
+              />
             </div>
 
             {/* Password field */}
             <div>
               <label
-                className="mb-1.5 block text-sm font-medium"
+                htmlFor="password"
+                className="mb-2 block text-sm font-medium"
                 style={{ color: 'var(--text-secondary)' }}
               >
                 Password
               </label>
               <div className="relative">
-                <Lock
-                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                  style={{ color: 'var(--text-muted)' }}
-                />
                 <input
+                  id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="input pl-10 pr-10"
+                  placeholder="Enter your password"
+                  className="input"
+                  style={{ paddingRight: '2.75rem' }}
                   required
                   autoComplete="current-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 transition-colors hover:bg-white/10"
                   style={{ color: 'var(--text-muted)' }}
+                  tabIndex={-1}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
