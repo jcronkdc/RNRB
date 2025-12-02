@@ -35,6 +35,7 @@ import {
   ShoppingBag,
   Tag,
   Palette,
+  Mail,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -124,6 +125,7 @@ const navSections: NavSection[] = [
     title: 'Connect',
     description: 'Find your people',
     items: [
+      { label: 'RNRB Mail', href: '/settings/email', icon: Mail, badge: 'NEW' },
       { label: 'Meet', href: '/meet', icon: Video, badge: 'NEW' },
       { label: 'Discover', href: '/discover', icon: UserSearch },
       { label: 'Collaborate', href: '/collaboration', icon: Users },
