@@ -31,6 +31,7 @@ import {
   ChevronRight,
   Copy,
   Check,
+  ShoppingBag,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -70,6 +71,16 @@ interface Website {
   id: string;
   label: string;
   url: string;
+}
+
+interface MerchProduct {
+  id: string;
+  name: string;
+  slug: string;
+  retailPrice: number;
+  category: string;
+  mockupUrl: string | null;
+  thumbnailUrl: string | null;
 }
 
 interface SocialLinks {
@@ -293,6 +304,7 @@ export default function PublicProfilePage() {
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [merchProducts, setMerchProducts] = useState<MerchProduct[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -316,6 +328,24 @@ export default function PublicProfilePage() {
       }
     }
     fetchProfile();
+  }, [username]);
+
+  // Fetch merch products for this artist
+  useEffect(() => {
+    async function fetchMerch() {
+      if (!username) return;
+      try {
+        const response = await fetch(`/api/artist-merch/store/${username}`);
+        if (response.ok) {
+          const data = await response.json();
+          setMerchProducts(data.products || []);
+        }
+      } catch (err) {
+        // Silently fail - merch is optional
+        console.error('Error fetching merch:', err);
+      }
+    }
+    fetchMerch();
   }, [username]);
 
   const handleFollow = async () => {
@@ -1173,6 +1203,100 @@ export default function PublicProfilePage() {
                       </motion.div>
                     ))}
                   </div>
+                </motion.div>
+              )}
+
+              {/* Merch Store Section */}
+              {merchProducts.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.45 }}
+                  className="rounded-2xl p-6"
+                  style={{
+                    background: 'var(--panel)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  <div className="mb-6 flex items-center justify-between">
+                    <h2
+                      className="flex items-center gap-2 text-lg font-semibold"
+                      style={{ color: 'var(--text)' }}
+                    >
+                      <ShoppingBag className="h-5 w-5" style={{ color: 'var(--gold)' }} />
+                      Official Merch
+                    </h2>
+                    <Link
+                      href={`/u/${username}/merch`}
+                      className="flex items-center gap-1 text-sm font-medium transition-colors hover:opacity-80"
+                      style={{ color: 'var(--accent)' }}
+                    >
+                      View All
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                    {merchProducts.slice(0, 4).map((product) => (
+                      <Link
+                        key={product.id}
+                        href={`/u/${username}/merch`}
+                        className="group overflow-hidden rounded-xl transition-all hover:scale-[1.02]"
+                        style={{
+                          background: 'var(--bg)',
+                          border: '1px solid var(--border)',
+                        }}
+                      >
+                        <div className="relative aspect-square overflow-hidden">
+                          {product.mockupUrl || product.thumbnailUrl ? (
+                            <Image
+                              src={product.mockupUrl || product.thumbnailUrl || ''}
+                              alt={product.name}
+                              fill
+                              className="object-cover transition-transform group-hover:scale-110"
+                            />
+                          ) : (
+                            <div
+                              className="flex h-full items-center justify-center"
+                              style={{ background: 'rgba(255,255,255,0.05)' }}
+                            >
+                              <ShoppingBag
+                                className="h-12 w-12 opacity-30"
+                                style={{ color: 'var(--muted)' }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-3">
+                          <h3
+                            className="mb-1 truncate text-sm font-medium"
+                            style={{ color: 'var(--text)' }}
+                          >
+                            {product.name}
+                          </h3>
+                          <span className="font-semibold" style={{ color: 'var(--gold)' }}>
+                            ${(product.retailPrice / 100).toFixed(2)}
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {merchProducts.length > 4 && (
+                    <div className="mt-4 text-center">
+                      <Link
+                        href={`/u/${username}/merch`}
+                        className="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-medium transition-all hover:scale-105"
+                        style={{
+                          background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                          color: '#000',
+                        }}
+                      >
+                        <ShoppingBag className="h-4 w-4" />
+                        Shop All {merchProducts.length} Products
+                      </Link>
+                    </div>
+                  )}
                 </motion.div>
               )}
 

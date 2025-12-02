@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PublicSitePage({ params }: Props) {
   const { subdomain } = await params;
 
-  // Fetch the site with all sections
+  // Fetch the site with all sections and user info
   const site = await prisma.musicianSite.findUnique({
     where: { subdomain },
     include: {
@@ -57,6 +57,11 @@ export default async function PublicSitePage({ params }: Props) {
       },
       pages: {
         orderBy: { order: 'asc' },
+      },
+      user: {
+        select: {
+          username: true,
+        },
       },
     },
   });
@@ -77,6 +82,7 @@ export default async function PublicSitePage({ params }: Props) {
     templateId: site.templateId,
     theme: site.theme as Record<string, unknown> | null,
     socialLinks: site.socialLinks as Record<string, string> | null,
+    artistUsername: site.user?.username || null,
     sections: site.sections.map((s) => ({
       id: s.id,
       type: s.type,

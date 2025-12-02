@@ -120,6 +120,7 @@ interface MerchStoreSectionProps {
     accentColor?: string;
   };
   subdomain?: string;
+  artistUsername?: string;
 }
 
 interface SiteSection {
@@ -139,6 +140,7 @@ interface Site {
   templateId: string;
   theme: Record<string, unknown> | null;
   socialLinks: Record<string, string> | null;
+  artistUsername?: string | null;
   sections: SiteSection[];
 }
 
@@ -244,6 +246,7 @@ export function SiteRenderer({ site, isPreview = false }: SiteRendererProps) {
               accentColor: theme.accentColor as string,
             }}
             subdomain={site.subdomain}
+            artistUsername={site.artistUsername || undefined}
           />
         );
 

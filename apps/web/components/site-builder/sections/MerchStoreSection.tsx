@@ -2,7 +2,7 @@
 
 import { ShoppingBag, Plus, Minus, X, CreditCard, Loader2 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Product {
   id: string;
@@ -41,14 +41,22 @@ interface MerchStoreSectionProps {
     accentColor?: string;
   };
   subdomain?: string;
+  artistUsername?: string;
 }
 
-export function MerchStoreSection({ content, styles, subdomain }: MerchStoreSectionProps) {
+export function MerchStoreSection({
+  content,
+  styles,
+  subdomain,
+  artistUsername,
+}: MerchStoreSectionProps) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [liveProducts, setLiveProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(false);
 
   const {
     title = 'Merch',
@@ -59,19 +67,64 @@ export function MerchStoreSection({ content, styles, subdomain }: MerchStoreSect
     showCategories = true,
   } = content;
 
+  // Fetch live products from artist's merch store
+  useEffect(() => {
+    async function fetchArtistMerch() {
+      if (!artistUsername) return;
+      setLoadingProducts(true);
+      try {
+        const response = await fetch(`/api/artist-merch/store/${artistUsername}`);
+        if (response.ok) {
+          const data = await response.json();
+          // Transform artist merch products to match the Product interface
+          const transformed: Product[] = (data.products || []).map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            description: p.description || '',
+            price: p.retailPrice / 100, // Convert from cents
+            comparePrice: undefined,
+            images: [p.mockupUrl || p.thumbnailUrl].filter(Boolean),
+            category: p.category || 'Apparel',
+            variants:
+              p.variants?.length > 0
+                ? [
+                    {
+                      name: 'Size',
+                      options: p.variants
+                        .map((v: any) => v.size)
+                        .filter((s: any, i: number, arr: any[]) => arr.indexOf(s) === i),
+                    },
+                  ]
+                : undefined,
+            inStock: true,
+          }));
+          setLiveProducts(transformed);
+        }
+      } catch (err) {
+        console.error('Error fetching artist merch:', err);
+      } finally {
+        setLoadingProducts(false);
+      }
+    }
+    fetchArtistMerch();
+  }, [artistUsername]);
+
+  // Use live products if available, otherwise fall back to static products
+  const displayProducts = liveProducts.length > 0 ? liveProducts : products;
+
   const bgColor = styles?.backgroundColor || 'transparent';
   const textColor = styles?.textColor || 'var(--text)';
   const accentColor = styles?.accentColor || 'var(--accent)';
 
   const categories = showCategories
-    ? [...new Set(products.map((p) => p.category).filter(Boolean))]
+    ? [...new Set(displayProducts.map((p) => p.category).filter(Boolean))]
     : [];
 
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const filteredProducts = activeCategory
-    ? products.filter((p) => p.category === activeCategory)
-    : products;
+    ? displayProducts.filter((p) => p.category === activeCategory)
+    : displayProducts;
 
   const addToCart = (product: Product, variant?: Record<string, string>) => {
     setCart((prev) => {
