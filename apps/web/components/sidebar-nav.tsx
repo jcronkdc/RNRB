@@ -180,7 +180,9 @@ export function SidebarNav() {
   const [signingOut, setSigningOut] = useState(false);
   const { isOpen: mobileMenuOpen, setIsOpen: setMobileMenuOpen } = useMobileMenu();
   const [isMobile, setIsMobile] = useState(false);
-  const [expandedSections, setExpandedSections] = useState<string[]>(['Home', 'Create']); // Default open
+  const [expandedSections, setExpandedSections] = useState<string[]>([
+    'Home', 'Create', 'Grow', 'Connect', 'Perform', 'Earn', 'Marketplace'
+  ]); // All sections expanded by default
 
   // Check if we're on mobile
   useEffect(() => {
@@ -197,7 +199,7 @@ export function SidebarNav() {
     setMobileMenuOpen(false);
   }, [pathname, setMobileMenuOpen]);
 
-  // Auto-expand section containing current route
+  // Auto-expand section containing current route (only on navigation, not on manual toggle)
   useEffect(() => {
     navSections.forEach((section) => {
       const hasActiveItem = section.items.some(
@@ -205,11 +207,14 @@ export function SidebarNav() {
           pathname === item.href ||
           (item.href !== '/dashboard' && pathname.startsWith(item.href.split('?')[0]))
       );
-      if (hasActiveItem && !expandedSections.includes(section.title)) {
-        setExpandedSections((prev) => [...prev, section.title]);
+      if (hasActiveItem) {
+        setExpandedSections((prev) => 
+          prev.includes(section.title) ? prev : [...prev, section.title]
+        );
       }
     });
-  }, [pathname, expandedSections]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]); // Only run on pathname change, not on expandedSections change
 
   // Don't show sidebar on marketing pages
   const isMarketingPage =
