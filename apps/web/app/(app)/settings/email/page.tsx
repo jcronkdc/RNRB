@@ -24,6 +24,9 @@ import {
   AlertCircle,
   Info,
   ChevronRight,
+  Crown,
+  Zap,
+  Star,
 } from '@/components/ui/custom-icons';
 
 interface EmailAccount {
@@ -90,6 +93,12 @@ export default function EmailSettingsPage() {
   const [newAppPassword, setNewAppPassword] = useState<string | null>(null);
   const [copiedPassword, setCopiedPassword] = useState(false);
 
+  // Email Pro upgrade
+  const [emailTier, setEmailTier] = useState<string>('NONE');
+  const [canCreate, setCanCreate] = useState(false);
+  const [upgradeCta, setUpgradeCta] = useState<string | null>(null);
+  const [upgrading, setUpgrading] = useState(false);
+
   // Fetch email account
   useEffect(() => {
     fetchAccount();
@@ -101,6 +110,10 @@ export default function EmailSettingsPage() {
       const data = await response.json();
 
       setHasAccount(data.hasAccount);
+      setEmailTier(data.emailTier || 'NONE');
+      setCanCreate(data.canCreate ?? false);
+      setUpgradeCta(data.upgradeCta || null);
+
       if (data.hasAccount) {
         setAccount(data.account);
         setConnectionSettings(data.connectionSettings);
@@ -120,6 +133,28 @@ export default function EmailSettingsPage() {
       console.error('Error fetching email account:', error);
     } finally {
       setLoading(false);
+    }
+  }
+
+  // Handle Email Pro upgrade
+  async function handleUpgradeToEmailPro() {
+    setUpgrading(true);
+    try {
+      const response = await fetch('/api/email/upgrade', {
+        method: 'POST',
+      });
+      const data = await response.json();
+
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else if (data.error) {
+        alert(data.message || data.error);
+      }
+    } catch (error) {
+      console.error('Error upgrading:', error);
+      alert('Failed to start upgrade process');
+    } finally {
+      setUpgrading(false);
     }
   }
 
@@ -518,6 +553,110 @@ export default function EmailSettingsPage() {
           </Link>
         </div>
       </motion.div>
+
+      {/* Email Pro Upgrade Card - Only show if not already PRO */}
+      {emailTier !== 'PRO' && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-6 overflow-hidden rounded-2xl"
+          style={{
+            background:
+              'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%)',
+            border: '2px solid rgba(139, 92, 246, 0.3)',
+          }}
+        >
+          <div className="p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-4">
+                <div
+                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl"
+                  style={{ background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)' }}
+                >
+                  <Crown className="h-7 w-7 text-white" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-bold" style={{ color: 'var(--text)' }}>
+                      Upgrade to Email Pro
+                    </h3>
+                    <span
+                      className="rounded-full px-2 py-0.5 text-xs font-bold"
+                      style={{ background: '#8b5cf6', color: 'white' }}
+                    >
+                      $3/mo
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    Get 10GB storage, multiple accounts, and priority support
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleUpgradeToEmailPro}
+                disabled={upgrading}
+                className="flex items-center gap-2 rounded-xl px-5 py-2.5 font-semibold transition-all hover:scale-105 disabled:opacity-50"
+                style={{
+                  background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)',
+                  color: 'white',
+                  boxShadow: '0 4px 15px rgba(139, 92, 246, 0.4)',
+                }}
+              >
+                {upgrading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="h-4 w-4" />
+                    Upgrade Now
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Features List */}
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {['10GB Storage', 'Multiple Accounts', 'Priority Delivery', 'Advanced Filters'].map(
+                (feature) => (
+                  <div
+                    key={feature}
+                    className="flex items-center gap-1.5 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    <Star className="h-3.5 w-3.5" style={{ color: '#8b5cf6' }} />
+                    {feature}
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* PRO Badge - Show if user has Email Pro */}
+      {emailTier === 'PRO' && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-6 flex items-center gap-3 rounded-xl p-4"
+          style={{
+            background: 'rgba(139, 92, 246, 0.1)',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+          }}
+        >
+          <Crown className="h-5 w-5" style={{ color: '#8b5cf6' }} />
+          <span className="font-medium" style={{ color: 'var(--text)' }}>
+            Email Pro Active
+          </span>
+          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+            — 10GB storage, priority support
+          </span>
+        </motion.div>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Connection Settings */}
