@@ -30,6 +30,7 @@ import {
   MessageCircle,
   AtSign,
 } from '@/components/ui/custom-icons';
+import { AppVersionDisplay } from '@/components/app-version-checker';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -1864,7 +1865,7 @@ function ProfileSettingsContent() {
               }}
             >
               <p className="text-sm" style={{ color: 'var(--accent)' }}>
-                🎸 Your public profile will be at:{' '}
+                Your public profile will be at:{' '}
                 <a
                   href={`/u/${profile.username}`}
                   className="font-mono font-semibold underline underline-offset-4 transition-colors"
@@ -1875,6 +1876,11 @@ function ProfileSettingsContent() {
               </p>
             </div>
           )}
+
+          {/* App Version Display */}
+          <div className="mt-8 flex justify-center">
+            <AppVersionDisplay />
+          </div>
         </div>
       </div>
     </div>

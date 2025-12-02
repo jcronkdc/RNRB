@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { Suspense } from 'react';
 
 import { AssistantChat } from './ai-assistant/assistant-chat';
+import { AppVersionChecker } from './app-version-checker';
 import { UsageAlerts } from './billing/UsageAlerts';
 import { Breadcrumbs } from './breadcrumbs';
 import { CommandPalette } from './command-palette';
@@ -118,6 +119,9 @@ function AppLayoutContent({
 
         {/* Usage Alerts (Low credit warnings) */}
         <UsageAlerts />
+
+        {/* App Version Checker (Update notifications) */}
+        <AppVersionChecker />
 
         {/* Mobile Overlay for Sidebar */}
         <style jsx global>{`
