@@ -228,6 +228,11 @@ model User {
   
   // RNRB Mail - Professional Email Service
   emailAccount               EmailAccount?
+  emailTier                  EmailTier      @default(NONE) // none, basic (paid members), pro ($3/mo add-on)
+  emailProSubscriptionId     String?        @unique // Stripe subscription for Email Pro add-on
+  emailProStatus             String?        // active, canceled, past_due
+  emailAccountsLimit         Int            @default(0) // 0 = no access, 1 = basic, -1 = unlimited (pro)
+  emailStorageQuotaBytes     BigInt         @default(0) // 0 = no access, 1GB = basic, 10GB = pro
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -5687,6 +5692,12 @@ enum EmailAccountStatus {
   ACTIVE       // Fully functional
   SUSPENDED    // Temporarily disabled
   DELETED      // Soft deleted
+}
+
+enum EmailTier {
+  NONE         // Free members - no email access
+  BASIC        // Paid members - 1 account, 1GB storage
+  PRO          // Email Pro add-on - unlimited accounts, 10GB storage
 }
 
 enum SpamFilterLevel {

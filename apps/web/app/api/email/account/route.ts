@@ -4,19 +4,98 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
 // Stalwart Mail Server API configuration
-const STALWART_API_URL = process.env.STALWART_API_URL || 'http://localhost:8080';
-const STALWART_API_KEY = process.env.STALWART_API_KEY;
+const STALWART_API_URL = process.env.STALWART_API_URL || 'http://mail.rnrb.me:8080';
+const STALWART_ADMIN_USER = process.env.STALWART_ADMIN_USER || 'admin';
+const STALWART_ADMIN_PASSWORD = process.env.STALWART_ADMIN_PASSWORD;
+
+// Helper to call Stalwart API
+async function stalwartFetch(endpoint: string, options: RequestInit = {}) {
+  const auth = Buffer.from(`${STALWART_ADMIN_USER}:${STALWART_ADMIN_PASSWORD}`).toString('base64');
+  const response = await fetch(`${STALWART_API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      Authorization: `Basic ${auth}`,
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+  return response;
+}
+
+// Provision account on Stalwart mail server
+async function provisionMailAccount(emailAddress: string, displayName: string, password: string) {
+  try {
+    const username = emailAddress.split('@')[0];
+    const domain = emailAddress.split('@')[1];
+
+    // First ensure domain exists
+    await stalwartFetch('/api/principal', {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'domain',
+        name: domain,
+      }),
+    });
+
+    // Create the user account
+    const response = await stalwartFetch('/api/principal', {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'individual',
+        name: username,
+        secrets: [password],
+        emails: [emailAddress],
+        description: displayName,
+        quota: 1073741824, // 1GB default
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('[STALWART] Failed to create account:', error);
+      return { success: false, error };
+    }
+
+    const data = await response.json();
+    return { success: true, mailServerId: data.data?.toString() };
+  } catch (error) {
+    console.error('[STALWART] Error provisioning account:', error);
+    return { success: false, error };
+  }
+}
 
 // Email domains we support
 const SUPPORTED_DOMAINS = ['rnrb.me', 'rnrb.band', 'rnrb.app'];
 const DEFAULT_DOMAIN = 'rnrb.me';
 
-// Storage quotas by tier (in bytes)
+// Storage quotas by email tier (in bytes)
+const EMAIL_TIER_CONFIG = {
+  NONE: {
+    accountLimit: 0,
+    storageQuota: 0,
+    canCreate: false,
+    upgradeCta: 'Upgrade to a paid membership to get your @rnrb.me email',
+  },
+  BASIC: {
+    accountLimit: 1,
+    storageQuota: 1 * 1024 * 1024 * 1024, // 1GB
+    canCreate: true,
+    upgradeCta: 'Upgrade to Email Pro for unlimited accounts and 10GB storage',
+  },
+  PRO: {
+    accountLimit: -1, // Unlimited
+    storageQuota: 10 * 1024 * 1024 * 1024, // 10GB
+    canCreate: true,
+    upgradeCta: null,
+  },
+};
+
+// Legacy storage quotas (for backwards compatibility)
 const STORAGE_QUOTAS = {
-  free: 1 * 1024 * 1024 * 1024, // 1GB
-  creator: 10 * 1024 * 1024 * 1024, // 10GB
-  studio: 50 * 1024 * 1024 * 1024, // 50GB
-  pro: 100 * 1024 * 1024 * 1024, // 100GB
+  free: 0, // No email for free tier
+  creator: 1 * 1024 * 1024 * 1024, // 1GB (Basic email included)
+  studio: 10 * 1024 * 1024 * 1024, // 10GB (Pro email included)
+  pro: 10 * 1024 * 1024 * 1024, // 10GB
 };
 
 /**
@@ -47,9 +126,40 @@ export async function GET() {
       },
     });
 
+    // Get user's email tier
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        subscriptionTier: true,
+        subscriptionStatus: true,
+        emailTier: true,
+        emailProStatus: true,
+        isOwner: true,
+      },
+    });
+
+    // Determine effective email tier
+    let effectiveEmailTier = user?.emailTier || 'NONE';
+    if (user?.isOwner) {
+      effectiveEmailTier = 'PRO';
+    } else if (
+      ['creator', 'studio'].includes(user?.subscriptionTier || '') &&
+      user?.subscriptionStatus === 'active' &&
+      effectiveEmailTier === 'NONE'
+    ) {
+      effectiveEmailTier = 'BASIC';
+    } else if (user?.emailProStatus === 'active') {
+      effectiveEmailTier = 'PRO';
+    }
+
+    const tierConfig = EMAIL_TIER_CONFIG[effectiveEmailTier as keyof typeof EMAIL_TIER_CONFIG];
+
     if (!emailAccount) {
       return NextResponse.json({
         hasAccount: false,
+        canCreate: tierConfig.canCreate,
+        emailTier: effectiveEmailTier,
+        upgradeCta: tierConfig.upgradeCta,
         availableDomains: SUPPORTED_DOMAINS,
       });
     }
@@ -118,11 +228,73 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Get user with email tier info
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: {
+        subscriptionTier: true,
+        subscriptionStatus: true,
+        emailTier: true,
+        emailProStatus: true,
+        name: true,
+        isOwner: true,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Determine email tier based on subscription
+    let effectiveEmailTier = user.emailTier || 'NONE';
+
+    // Platform owner gets PRO automatically
+    if (user.isOwner) {
+      effectiveEmailTier = 'PRO';
+    }
+    // Paid members (creator, studio) get BASIC if they don't have PRO
+    else if (
+      ['creator', 'studio'].includes(user.subscriptionTier) &&
+      user.subscriptionStatus === 'active' &&
+      effectiveEmailTier === 'NONE'
+    ) {
+      effectiveEmailTier = 'BASIC';
+    }
+    // Email Pro subscribers get PRO tier
+    else if (user.emailProStatus === 'active') {
+      effectiveEmailTier = 'PRO';
+    }
+
+    const tierConfig = EMAIL_TIER_CONFIG[effectiveEmailTier as keyof typeof EMAIL_TIER_CONFIG];
+
+    // Check if user can create email accounts
+    if (!tierConfig.canCreate) {
+      return NextResponse.json(
+        {
+          error: 'Email not available on your plan',
+          upgradeRequired: true,
+          message: tierConfig.upgradeCta,
+        },
+        { status: 403 }
+      );
+    }
+
     // Check if user already has an email account
     const existingAccount = await prisma.emailAccount.findUnique({
       where: { userId: session.user.id },
     });
 
+    // For BASIC tier, only 1 account allowed
+    if (existingAccount && tierConfig.accountLimit === 1) {
+      return NextResponse.json(
+        {
+          error: 'You already have an email account. Upgrade to Email Pro for unlimited accounts.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // For PRO tier, unlimited accounts allowed (but we still store only one per user in current model)
     if (existingAccount) {
       return NextResponse.json({ error: 'You already have an email account' }, { status: 400 });
     }
@@ -208,14 +380,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'This username is already taken' }, { status: 400 });
     }
 
-    // Get user's subscription tier for quota
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { subscriptionTier: true, name: true },
-    });
-
-    const tier = (user?.subscriptionTier || 'free') as keyof typeof STORAGE_QUOTAS;
-    const storageQuota = STORAGE_QUOTAS[tier] || STORAGE_QUOTAS.free;
+    // Get storage quota from tier config
+    const storageQuota = tierConfig.storageQuota;
 
     const emailAddress = `${username.toLowerCase()}@${domain}`;
 
@@ -226,7 +392,7 @@ export async function POST(request: Request) {
         emailAddress,
         username: username.toLowerCase(),
         domain,
-        displayName: displayName || user?.name || username,
+        displayName: displayName || user.name || username,
         storageQuotaBytes: BigInt(storageQuota),
         status: 'PENDING',
       },
@@ -262,20 +428,51 @@ export async function POST(request: Request) {
       })),
     });
 
-    // TODO: Provision account on Stalwart mail server
-    // This will be implemented when the mail server is set up
-    // await provisionMailAccount(emailAccount);
+    // Generate a secure password for the mail server
+    const mailPassword = generateAppPassword().replace(/-/g, '');
 
-    // For now, mark as active (in production, wait for mail server confirmation)
+    // Provision account on Stalwart mail server
+    const stalwartResult = await provisionMailAccount(
+      emailAddress,
+      displayName || user.name || username,
+      mailPassword
+    );
+
+    if (!stalwartResult.success) {
+      // If Stalwart fails, still create the account but mark as pending
+      console.error('[EMAIL-API] Stalwart provisioning failed, account created locally');
+    }
+
+    // Update account status based on Stalwart result
     await prisma.emailAccount.update({
       where: { id: emailAccount.id },
-      data: { status: 'ACTIVE', verifiedAt: new Date() },
+      data: {
+        status: stalwartResult.success ? 'ACTIVE' : 'PENDING',
+        verifiedAt: stalwartResult.success ? new Date() : null,
+        mailServerId: stalwartResult.mailServerId || null,
+      },
     });
+
+    // Store the password securely as an app password so user can log in
+    if (stalwartResult.success) {
+      await prisma.emailAppPassword.create({
+        data: {
+          emailAccountId: emailAccount.id,
+          name: 'Primary Password',
+          passwordHash: hashPassword(mailPassword),
+        },
+      });
+    }
 
     return NextResponse.json({
       success: true,
       emailAddress,
+      password: mailPassword, // Only returned on creation
       message: `Your email ${emailAddress} is ready!`,
+      connectionSettings: {
+        imap: { server: 'mail.rnrb.me', port: 993, security: 'SSL/TLS' },
+        smtp: { server: 'mail.rnrb.me', port: 587, security: 'STARTTLS' },
+      },
     });
   } catch (error) {
     console.error('[EMAIL-API] Error creating account:', error);
