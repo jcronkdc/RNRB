@@ -109,6 +109,8 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    console.log('[EMAIL-API] Fetching email account for user:', session.user.id);
+
     const emailAccount = await prisma.emailAccount.findUnique({
       where: { userId: session.user.id },
       include: {
@@ -138,6 +140,14 @@ export async function GET() {
       },
     });
 
+    console.log('[EMAIL-API] User tier info:', {
+      subscriptionTier: user?.subscriptionTier,
+      subscriptionStatus: user?.subscriptionStatus,
+      emailTier: user?.emailTier,
+      emailProStatus: user?.emailProStatus,
+      isOwner: user?.isOwner,
+    });
+
     // Determine effective email tier
     let effectiveEmailTier = user?.emailTier || 'NONE';
     if (user?.isOwner) {
@@ -154,7 +164,10 @@ export async function GET() {
 
     const tierConfig = EMAIL_TIER_CONFIG[effectiveEmailTier as keyof typeof EMAIL_TIER_CONFIG];
 
+    console.log('[EMAIL-API] Effective email tier:', effectiveEmailTier, 'Config:', tierConfig);
+
     if (!emailAccount) {
+      console.log('[EMAIL-API] No email account found, returning creation info');
       return NextResponse.json({
         hasAccount: false,
         canCreate: tierConfig.canCreate,
@@ -164,6 +177,7 @@ export async function GET() {
       });
     }
 
+    console.log('[EMAIL-API] Email account found:', emailAccount.emailAddress);
     return NextResponse.json({
       hasAccount: true,
       account: {

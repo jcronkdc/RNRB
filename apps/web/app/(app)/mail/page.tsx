@@ -614,25 +614,29 @@ export default function WebmailPage() {
                 key={mailbox.id}
                 onClick={() => setSelectedMailbox(mailbox.id)}
                 className={`mb-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all ${
-                  isActive ? 'bg-[var(--accent)]/10' : 'hover:bg-white/5'
+                  isActive
+                    ? 'bg-gradient-to-r from-orange-500/15 to-yellow-500/10'
+                    : 'hover:bg-white/5'
                 }`}
               >
                 <Icon
                   className="h-5 w-5 flex-shrink-0"
-                  style={{ color: mailbox.color || (isActive ? 'var(--accent)' : 'var(--muted)') }}
+                  style={{
+                    color: mailbox.color || (isActive ? '#ff6347' : 'rgba(255, 255, 255, 0.6)'),
+                  }}
                 />
                 {!sidebarCollapsed && (
                   <>
                     <span
                       className="flex-1 truncate text-sm font-medium"
-                      style={{ color: isActive ? 'var(--accent)' : 'var(--text)' }}
+                      style={{ color: isActive ? '#ff6347' : 'rgba(255, 255, 255, 0.85)' }}
                     >
                       {mailbox.name}
                     </span>
                     {mailbox.unreadMessages > 0 && (
                       <span
-                        className="rounded-full px-2 py-0.5 text-xs font-semibold"
-                        style={{ background: 'var(--accent)', color: 'white' }}
+                        className="rounded-full px-2 py-0.5 text-xs font-semibold text-white"
+                        style={{ background: '#ff6347' }}
                       >
                         {mailbox.unreadMessages}
                       </span>
@@ -671,12 +675,8 @@ export default function WebmailPage() {
                       <Icon className="h-4 w-4" style={{ color: label.color }} />
                     </span>
                     <div className="flex-1">
-                      <span className="block text-sm font-medium" style={{ color: 'var(--text)' }}>
-                        {label.name}
-                      </span>
-                      <span className="block text-[10px]" style={{ color: 'var(--muted)' }}>
-                        {label.description}
-                      </span>
+                      <span className="block text-sm font-medium text-white/90">{label.name}</span>
+                      <span className="block text-[10px] text-white/50">{label.description}</span>
                     </div>
                   </button>
                 );
@@ -712,17 +712,16 @@ export default function WebmailPage() {
         >
           {/* Search - Enhanced */}
           <div className="relative max-w-xl flex-1">
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-orange-400/50" />
+            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-orange-400/70" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search your music inbox..."
-              className="w-full rounded-xl py-2.5 pl-11 pr-4 transition-all focus:ring-2 focus:ring-orange-400/30"
+              className="w-full rounded-xl py-2.5 pl-11 pr-4 text-white transition-all placeholder:text-white/40 focus:ring-2 focus:ring-orange-400/30"
               style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid rgba(255, 99, 71, 0.15)',
-                color: 'var(--text)',
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 99, 71, 0.2)',
               }}
             />
           </div>
@@ -909,59 +908,54 @@ export default function WebmailPage() {
                 {/* Action Buttons - Styled */}
                 <div className="mb-6 flex flex-wrap gap-2">
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white transition-all hover:scale-[1.02]"
                     style={{
                       background:
-                        'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 99, 71, 0.05))',
-                      border: '1px solid rgba(255, 99, 71, 0.2)',
-                      color: 'var(--text)',
+                        'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 99, 71, 0.1))',
+                      border: '1px solid rgba(255, 99, 71, 0.3)',
                     }}
                   >
                     <Reply className="h-4 w-4 text-orange-400" />
                     Reply
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-all hover:scale-[1.02]"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      color: 'var(--text)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
                     }}
                   >
-                    <ReplyAll className="h-4 w-4" />
+                    <ReplyAll className="h-4 w-4 text-white/70" />
                     Reply All
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-all hover:scale-[1.02]"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      color: 'var(--text)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
                     }}
                   >
-                    <Forward className="h-4 w-4" />
+                    <Forward className="h-4 w-4 text-white/70" />
                     Forward
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-all hover:scale-[1.02]"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      color: 'var(--text)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
                     }}
                   >
-                    <Archive className="h-4 w-4" />
+                    <Archive className="h-4 w-4 text-white/70" />
                     Archive
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-all hover:scale-[1.02]"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      color: 'var(--text)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
                     }}
                   >
-                    <Tag className="h-4 w-4" />
+                    <Tag className="h-4 w-4 text-white/70" />
                     Label
                   </button>
                 </div>
@@ -969,15 +963,25 @@ export default function WebmailPage() {
                 {/* Message Body */}
                 <div
                   className="rounded-xl p-6"
-                  style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                  }}
                 >
                   {selectedMessage.htmlBody ? (
                     <div
-                      className="prose prose-invert max-w-none"
+                      className="prose prose-invert max-w-none text-white/90"
+                      style={{
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        lineHeight: '1.7',
+                      }}
                       dangerouslySetInnerHTML={{ __html: selectedMessage.htmlBody }}
                     />
                   ) : (
-                    <pre className="whitespace-pre-wrap font-sans" style={{ color: 'var(--text)' }}>
+                    <pre
+                      className="whitespace-pre-wrap font-sans text-white/90"
+                      style={{ lineHeight: '1.7' }}
+                    >
                       {selectedMessage.textBody}
                     </pre>
                   )}
@@ -986,7 +990,7 @@ export default function WebmailPage() {
                 {/* Attachments */}
                 {selectedMessage.attachments && selectedMessage.attachments.length > 0 && (
                   <div className="mt-6">
-                    <h3 className="mb-3 text-sm font-semibold" style={{ color: 'var(--text)' }}>
+                    <h3 className="mb-3 text-sm font-semibold text-white/90">
                       Attachments ({selectedMessage.attachments.length})
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -994,15 +998,14 @@ export default function WebmailPage() {
                         <div
                           key={att.id}
                           className="flex items-center gap-2 rounded-lg px-3 py-2"
-                          style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                          }}
                         >
-                          <Paperclip className="h-4 w-4" style={{ color: 'var(--muted)' }} />
-                          <span className="text-sm" style={{ color: 'var(--text)' }}>
-                            {att.name}
-                          </span>
-                          <span className="text-xs" style={{ color: 'var(--muted)' }}>
-                            ({formatBytes(att.size)})
-                          </span>
+                          <Paperclip className="h-4 w-4 text-orange-400/70" />
+                          <span className="text-sm text-white/90">{att.name}</span>
+                          <span className="text-xs text-white/50">({formatBytes(att.size)})</span>
                         </div>
                       ))}
                     </div>
@@ -1010,32 +1013,30 @@ export default function WebmailPage() {
                 )}
               </div>
             ) : (
-              <div className="flex h-full flex-col items-center justify-center">
+              <div className="flex h-full flex-col items-center justify-center px-6">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center"
+                  className="max-w-md text-center"
                 >
                   <div
                     className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl"
                     style={{
                       background:
-                        'linear-gradient(135deg, rgba(255, 99, 71, 0.1), rgba(255, 215, 0, 0.05))',
-                      border: '1px solid rgba(255, 99, 71, 0.2)',
+                        'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 215, 0, 0.1))',
+                      border: '1px solid rgba(255, 99, 71, 0.3)',
                     }}
                   >
-                    <Mail className="h-10 w-10 text-orange-400/50" />
+                    <Mail className="h-10 w-10 text-orange-400/70" />
                   </div>
-                  <p className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
-                    Select a message
-                  </p>
-                  <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
+                  <p className="mb-2 text-lg font-semibold text-white/95">Select a message</p>
+                  <p className="mb-6 text-sm text-white/60">
                     Choose a message from the list to read it
                   </p>
 
                   {/* Quick Templates */}
                   <div className="mx-auto max-w-md">
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-orange-400/50">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-orange-400/60">
                       Quick Templates
                     </p>
                     <div className="grid grid-cols-2 gap-2">
@@ -1049,11 +1050,11 @@ export default function WebmailPage() {
                           }}
                           className="rounded-xl p-3 text-left text-xs transition-all hover:scale-[1.02]"
                           style={{
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            border: '1px solid rgba(255, 255, 255, 0.12)',
                           }}
                         >
-                          <span className="font-medium text-white/80">{template.name}</span>
+                          <span className="font-medium text-white/90">{template.name}</span>
                         </button>
                       ))}
                     </div>

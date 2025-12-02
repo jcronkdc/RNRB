@@ -147,8 +147,23 @@ export default function EmailSettingsPage() {
 
   async function fetchAccount() {
     try {
+      console.log('[EMAIL-SETTINGS] Fetching account...');
       const response = await fetch('/api/email/account');
+      console.log('[EMAIL-SETTINGS] Response status:', response.status);
+
+      if (!response.ok) {
+        console.error(
+          '[EMAIL-SETTINGS] Failed to fetch account:',
+          response.status,
+          response.statusText
+        );
+        const errorText = await response.text();
+        console.error('[EMAIL-SETTINGS] Error response:', errorText);
+        throw new Error(`Failed to fetch account: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('[EMAIL-SETTINGS] Account data:', data);
 
       setHasAccount(data.hasAccount);
       setEmailTier(data.emailTier || 'NONE');
@@ -171,7 +186,9 @@ export default function EmailSettingsPage() {
         setAvailableDomains(data.availableDomains || ['rnrb.me']);
       }
     } catch (error) {
-      console.error('Error fetching email account:', error);
+      console.error('[EMAIL-SETTINGS] Error fetching email account:', error);
+      // Show a user-friendly error
+      alert('Failed to load email settings. Please try refreshing the page.');
     } finally {
       setLoading(false);
     }
