@@ -1,6 +1,6 @@
 'use client';
 
-import { Palette, Check, Sparkles, Loader2, Eye, Maximize2 } from 'lucide-react';
+import { Palette, Check, Sparkles, Loader2, Eye, Maximize2 } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 import { TemplatePreviewModal } from './TemplatePreviewModal';

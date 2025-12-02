@@ -18,7 +18,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { MousePointer2 } from 'lucide-react';
+import { MousePointer2 } from '@/components/ui/custom-icons';
 
 import { type CursorPosition } from '@/hooks/use-collaborative-cursors';
 

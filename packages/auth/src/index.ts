@@ -2,6 +2,9 @@ import { cookies } from 'next/headers';
 
 export { handlers, auth, signIn, signOut } from './auth';
 export { env } from './env';
+
+// Compatibility shim for legacy authOptions pattern
+export const authOptions = {};
 export type { OrgAwareSession } from './session';
 export { getOrgSession as getOrgSessionFromSession, requireOrgSession } from './session';
 
@@ -22,6 +25,18 @@ export interface OrgSession {
   orgId: string;
   memberships: never[];
   activeMembership: null;
+}
+
+/**
+ * Require authentication - throws if not authenticated
+ * Returns the authenticated session
+ */
+export async function requireAuth(): Promise<AppSession> {
+  const session = await getServerSession();
+  if (!session?.user) {
+    throw new Error('UNAUTHENTICATED');
+  }
+  return session;
 }
 
 /**

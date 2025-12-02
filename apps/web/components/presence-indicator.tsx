@@ -9,7 +9,7 @@
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Circle } from 'lucide-react';
+import { User, Circle } from '@/components/ui/custom-icons';
 import { Component, type ReactNode } from 'react';
 
 import { usePresence } from '@/hooks/use-presence';

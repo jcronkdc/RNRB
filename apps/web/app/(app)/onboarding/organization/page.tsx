@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import { Button } from '@cronkwaters/ui';
-import { Users, Building2, UserPlus } from 'lucide-react';
+import { Users, Building2, UserPlus } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 

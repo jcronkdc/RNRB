@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Plus, Trash2 } from 'lucide-react';
+import { X, Save, Plus, Trash2 } from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 import { ImageUpload } from './ImageUpload';

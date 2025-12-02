@@ -22,7 +22,7 @@ import {
   Filter,
   Search,
   Loader2,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

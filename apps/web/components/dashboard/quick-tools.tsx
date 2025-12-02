@@ -10,7 +10,7 @@ import {
   Calendar,
   ListMusic,
   Globe,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
 const tools = [

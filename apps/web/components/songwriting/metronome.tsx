@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@cronkwaters/ui';
-import { Play, Pause, Volume2, VolumeX, Activity, Timer } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Activity, Timer } from '@/components/ui/custom-icons';
 import { useState, useEffect, useRef } from 'react';
 
 type MetronomeProps = {

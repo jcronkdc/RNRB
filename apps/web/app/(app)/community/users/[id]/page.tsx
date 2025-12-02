@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Loader2, Music, User } from 'lucide-react';
+import { Loader2, Music, User } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

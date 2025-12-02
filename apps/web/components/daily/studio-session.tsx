@@ -25,7 +25,7 @@ import {
   Square,
   Users,
   PhoneOff,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 
 interface StudioSessionProps {

@@ -1,7 +1,15 @@
 'use client';
 
 import { Card } from '@cronkwaters/ui';
-import { Play, Pause, Loader2, Music, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import {
+  Play,
+  Pause,
+  Loader2,
+  Music,
+  SkipBack,
+  SkipForward,
+  Volume2,
+} from '@/components/ui/custom-icons';
 import { useState, useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 

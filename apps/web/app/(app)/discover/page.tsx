@@ -2,7 +2,16 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Search, Users, Mail, Phone, Music, Sparkles, Loader2, AlertCircle } from 'lucide-react';
+import {
+  Search,
+  Users,
+  Mail,
+  Phone,
+  Music,
+  Sparkles,
+  Loader2,
+  AlertCircle,
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';

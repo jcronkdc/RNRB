@@ -1,6 +1,6 @@
 'use client';
 
-import { Trophy, Star, Medal, Disc, Calendar } from 'lucide-react';
+import { Trophy, Star, Medal, Disc, Calendar } from '@/components/ui/custom-icons';
 
 interface AwardItem {
   id: string;

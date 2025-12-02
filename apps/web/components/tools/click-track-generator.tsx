@@ -2,7 +2,16 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Download, Volume2, VolumeX, Settings, Music, Drum } from 'lucide-react';
+import {
+  Play,
+  Pause,
+  Download,
+  Volume2,
+  VolumeX,
+  Settings,
+  Music,
+  Drum,
+} from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
 
 interface TimeSignature {

@@ -30,7 +30,11 @@ import {
   Calendar,
   Guitar,
   Heart,
-} from 'lucide-react';
+  GraduationCap,
+  Video,
+  ShoppingBag,
+  Tag,
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -108,6 +112,7 @@ const navSections: NavSection[] = [
     title: 'Grow',
     description: 'Develop your craft',
     items: [
+      { label: 'Masterclasses', href: '/masterclasses', icon: GraduationCap, badge: 'NEW' },
       { label: 'Practice Log', href: '/tools?tool=practice-logger', icon: Target },
       { label: 'Library', href: '/library', icon: Library },
       { label: 'Toolbox', href: '/tools', icon: Wrench },
@@ -118,9 +123,10 @@ const navSections: NavSection[] = [
     title: 'Connect',
     description: 'Find your people',
     items: [
+      { label: 'Meet', href: '/meet', icon: Video, badge: 'NEW' },
       { label: 'Discover', href: '/discover', icon: UserSearch },
       { label: 'Collaborate', href: '/collaboration', icon: Users },
-      { label: 'Collab Board', href: '/collaboration-needs', icon: Headphones, badge: 'NEW' },
+      { label: 'Collab Board', href: '/collaboration-needs', icon: Headphones },
       { label: 'Messages', href: '/messages', icon: MessageSquare },
     ],
   },
@@ -128,8 +134,9 @@ const navSections: NavSection[] = [
     title: 'Perform',
     description: 'Hit the stage',
     items: [
-      { label: 'Shows & Tours', href: '/tours', icon: Radio },
-      { label: 'Opportunities', href: '/opportunities', icon: Compass, badge: 'NEW' },
+      { label: 'Go Live', href: '/live', icon: Radio, badge: 'NEW' },
+      { label: 'Shows & Tours', href: '/tours', icon: Calendar },
+      { label: 'Opportunities', href: '/opportunities', icon: Compass },
       { label: 'My Website', href: '/sites', icon: Globe },
       { label: 'Share', href: '/share', icon: Share2 },
     ],
@@ -137,7 +144,20 @@ const navSections: NavSection[] = [
   {
     title: 'Earn',
     description: 'Get paid',
-    items: [{ label: 'Revenue', href: '/revenue', icon: CreditCard, badge: 'NEW' }],
+    items: [
+      { label: 'Revenue', href: '/revenue', icon: CreditCard, badge: 'NEW' },
+      { label: 'Merch Store', href: '/merch', icon: ShoppingBag, badge: 'SOON' },
+    ],
+  },
+  {
+    title: 'Marketplace',
+    description: 'Buy, sell & trade gear',
+    items: [
+      { label: 'Browse Gear', href: '/marketplace', icon: ShoppingBag },
+      { label: 'My Listings', href: '/marketplace/my-listings', icon: Tag },
+      { label: 'Messages', href: '/marketplace/messages', icon: MessageSquare },
+      { label: 'Saved Items', href: '/marketplace?tab=saved', icon: Heart },
+    ],
   },
 ];
 

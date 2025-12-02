@@ -19,7 +19,7 @@ import {
   Zap,
   Settings,
   Save,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
 
 interface StageItem {

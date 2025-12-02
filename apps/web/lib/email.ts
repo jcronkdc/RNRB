@@ -1253,6 +1253,254 @@ Join now: ${params.joinUrl}
     `,
   }),
 
+  // ==========================================
+  // MARKETPLACE EMAIL TEMPLATES
+  // ==========================================
+
+  /**
+   * New marketplace message notification
+   */
+  marketplaceNewMessage: (params: {
+    email: string;
+    recipientName: string;
+    senderName: string;
+    listingTitle: string;
+    messagePreview: string;
+    messageUrl: string;
+  }) => ({
+    to: params.email,
+    subject: `New message about "${params.listingTitle}"`,
+    html: emailWrapper(
+      `
+      <div class="email-header">
+        <div class="logo-container">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+        </div>
+        <p class="tagline">Gear Marketplace</p>
+      </div>
+      <div class="email-content">
+        <p class="greeting">Hi ${params.recipientName},</p>
+        <h2 class="main-heading">You Have a New Message</h2>
+        
+        <p class="body-text">
+          <strong style="color: #ffffff;">${params.senderName}</strong> sent you a message about:
+        </p>
+        
+        <div class="highlight-box">
+          <p class="highlight-text">"${params.listingTitle}"</p>
+        </div>
+        
+        <div class="info-card">
+          <p style="color: #9c9ca5; font-size: 13px; margin: 0 0 8px;">Message:</p>
+          <p style="color: #e9e9ec; font-size: 14px; margin: 0; font-style: italic;">"${params.messagePreview}"</p>
+        </div>
+        
+        <div class="button-container">
+          <a href="${params.messageUrl}" class="primary-button">Reply Now</a>
+        </div>
+      </div>
+    `,
+      `Respond quickly to keep the conversation going!`
+    ),
+    text: `
+New message about "${params.listingTitle}"
+
+Hi ${params.recipientName},
+
+${params.senderName} sent you a message:
+
+"${params.messagePreview}"
+
+Reply here: ${params.messageUrl}
+    `,
+  }),
+
+  /**
+   * New offer received notification
+   */
+  marketplaceNewOffer: (params: {
+    email: string;
+    sellerName: string;
+    buyerName: string;
+    listingTitle: string;
+    offerAmount?: string;
+    offerType: string;
+    tradeItems?: string;
+    listingUrl: string;
+  }) => ({
+    to: params.email,
+    subject: `New offer on "${params.listingTitle}"`,
+    html: emailWrapper(
+      `
+      <div class="email-header">
+        <div class="logo-container">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+        </div>
+        <p class="tagline">Gear Marketplace</p>
+      </div>
+      <div class="email-content">
+        <p class="greeting">Hi ${params.sellerName},</p>
+        <h2 class="main-heading">You've Got an Offer!</h2>
+        
+        <p class="body-text">
+          <strong style="color: #ffffff;">${params.buyerName}</strong> made an offer on:
+        </p>
+        
+        <div class="highlight-box">
+          <p class="highlight-text">"${params.listingTitle}"</p>
+        </div>
+        
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-label">Offer Type</span>
+            <span class="info-value">${params.offerType}</span>
+          </div>
+          ${params.offerAmount ? `<div class="info-row"><span class="info-label">Amount</span><span class="info-value" style="color: #4ade80;">${params.offerAmount}</span></div>` : ''}
+          ${params.tradeItems ? `<div class="info-row"><span class="info-label">Trade Items</span><span class="info-value">${params.tradeItems}</span></div>` : ''}
+        </div>
+        
+        <div class="button-container">
+          <a href="${params.listingUrl}" class="primary-button">View Offer</a>
+        </div>
+        
+        <p style="text-align: center; color: #6b6b75; font-size: 13px;">
+          Respond promptly to keep buyers interested!
+        </p>
+      </div>
+    `,
+      `Don't miss this opportunity!`
+    ),
+    text: `
+New offer on "${params.listingTitle}"
+
+Hi ${params.sellerName},
+
+${params.buyerName} made an offer:
+
+Type: ${params.offerType}
+${params.offerAmount ? `Amount: ${params.offerAmount}` : ''}
+${params.tradeItems ? `Trade Items: ${params.tradeItems}` : ''}
+
+View the offer: ${params.listingUrl}
+    `,
+  }),
+
+  /**
+   * Listing expiring soon notification
+   */
+  marketplaceListingExpiring: (params: {
+    email: string;
+    sellerName: string;
+    listingTitle: string;
+    expiresIn: string;
+    renewUrl: string;
+  }) => ({
+    to: params.email,
+    subject: `Your listing "${params.listingTitle}" expires ${params.expiresIn}`,
+    html: emailWrapper(
+      `
+      <div class="email-header">
+        <div class="logo-container">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+        </div>
+        <p class="tagline">Gear Marketplace</p>
+      </div>
+      <div class="email-content">
+        <p class="greeting">Hi ${params.sellerName},</p>
+        <h2 class="main-heading">Your Listing is Expiring Soon</h2>
+        
+        <div class="warning-box">
+          <p class="warning-text">
+            Expires in: <strong>${params.expiresIn}</strong>
+          </p>
+        </div>
+        
+        <div class="highlight-box">
+          <p class="highlight-text">"${params.listingTitle}"</p>
+        </div>
+        
+        <p class="body-text">
+          Renew your listing to keep it visible to buyers and maintain your spot in search results.
+        </p>
+        
+        <div class="button-container">
+          <a href="${params.renewUrl}" class="primary-button">Renew Listing</a>
+        </div>
+      </div>
+    `,
+      `Keep your gear visible to potential buyers!`
+    ),
+    text: `
+Your listing "${params.listingTitle}" expires ${params.expiresIn}
+
+Hi ${params.sellerName},
+
+Your listing is about to expire. Renew it to keep it visible to buyers.
+
+Renew here: ${params.renewUrl}
+    `,
+  }),
+
+  /**
+   * New review received notification
+   */
+  marketplaceNewReview: (params: {
+    email: string;
+    userName: string;
+    reviewerName: string;
+    rating: number;
+    reviewPreview: string;
+    profileUrl: string;
+  }) => ({
+    to: params.email,
+    subject: `${params.reviewerName} left you a ${params.rating}-star review`,
+    html: emailWrapper(
+      `
+      <div class="email-header">
+        <div class="logo-container">
+          <h1 class="logo-text">Rock N' Roll Basement</h1>
+        </div>
+        <p class="tagline">Gear Marketplace</p>
+      </div>
+      <div class="email-content">
+        <p class="greeting">Hi ${params.userName},</p>
+        <h2 class="main-heading">You Received a New Review!</h2>
+        
+        <div class="${params.rating >= 4 ? 'success-box' : 'info-card'}">
+          <p style="color: ${params.rating >= 4 ? '#4ade80' : '#e9e9ec'}; font-size: 14px; margin: 0;">
+            <strong>${params.reviewerName}</strong> gave you ${params.rating} out of 5 stars
+          </p>
+        </div>
+        
+        <div class="amount-display" style="color: #fbbf24;">
+          ${'★'.repeat(params.rating)}${'☆'.repeat(5 - params.rating)}
+        </div>
+        
+        <div class="info-card">
+          <p style="color: #9c9ca5; font-size: 13px; margin: 0 0 8px;">Review:</p>
+          <p style="color: #e9e9ec; font-size: 14px; margin: 0; font-style: italic;">"${params.reviewPreview}"</p>
+        </div>
+        
+        <div class="button-container">
+          <a href="${params.profileUrl}" class="primary-button">View Full Review</a>
+        </div>
+      </div>
+    `,
+      `Reviews help build trust in the marketplace!`
+    ),
+    text: `
+New Review from ${params.reviewerName}
+
+Hi ${params.userName},
+
+${params.reviewerName} left you a ${params.rating}-star review:
+
+"${params.reviewPreview}"
+
+View your profile: ${params.profileUrl}
+    `,
+  }),
+
   /**
    * Certificate issued notification
    */

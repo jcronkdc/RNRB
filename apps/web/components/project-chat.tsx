@@ -3,7 +3,7 @@
 import { Button } from '@cronkwaters/ui';
 import type { RealtimeChannel } from 'ably';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Smile, Paperclip, MoreVertical } from 'lucide-react';
+import { Send, Smile, Paperclip, MoreVertical } from '@/components/ui/custom-icons';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState, useRef } from 'react';
 

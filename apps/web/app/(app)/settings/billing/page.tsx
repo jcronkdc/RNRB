@@ -1,4 +1,4 @@
-import { CreditCard } from 'lucide-react';
+import { CreditCard } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';

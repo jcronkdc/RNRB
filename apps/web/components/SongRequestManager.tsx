@@ -21,7 +21,7 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 import { formatDateLong } from '@/lib/format-date';

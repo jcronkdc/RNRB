@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@cronkwaters/auth';
 import crypto from 'crypto';
-
-import { authOptions } from '@/lib/auth';
 
 // Twitter OAuth 2.0 with PKCE
 const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID || '';
@@ -26,7 +24,7 @@ function generatePKCE() {
 // GET /api/social/connect/twitter - Initiate Twitter OAuth
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.redirect(new URL('/auth/signin', req.url));
     }

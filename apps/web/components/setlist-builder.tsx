@@ -42,7 +42,7 @@ import {
   Download,
   Printer,
   FileText,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect, useMemo, useRef } from 'react';
 
 import { CursorOverlay } from '@/components/cursor-overlay';

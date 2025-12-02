@@ -1,7 +1,7 @@
 'use client';
 
 import { format } from 'date-fns';
-import { Send, Loader2, Heart } from 'lucide-react';
+import { Send, Loader2, Heart } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Hash, Info, Copy, Check } from 'lucide-react';
+import { Hash, Info, Copy, Check } from '@/components/ui/custom-icons';
 import { useState, useMemo } from 'react';
 
 type NashvilleNumbersProps = {

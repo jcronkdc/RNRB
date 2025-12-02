@@ -14,7 +14,7 @@
 import { Button } from '@cronkwaters/ui';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown } from '@/components/ui/custom-icons';
 import { useEffect, useRef, useState, useCallback, memo } from 'react';
 
 import { VoiceMessagePlayer } from './voice-message-player';

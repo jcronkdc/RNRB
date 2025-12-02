@@ -18,7 +18,7 @@ import {
   BarChart,
   Target,
   Zap,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 interface SEOToolsProps {

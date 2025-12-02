@@ -1,6 +1,6 @@
 'use client';
 
-import { ShoppingBag, Plus, Minus, X, CreditCard, Loader2 } from 'lucide-react';
+import { ShoppingBag, Plus, Minus, X, CreditCard, Loader2 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import { useState } from 'react';
 

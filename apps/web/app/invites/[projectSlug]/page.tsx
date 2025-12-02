@@ -2,7 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Music, Users, Check, X, Loader2, ArrowRight } from 'lucide-react';
+import { Music, Users, Check, X, Loader2, ArrowRight } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense, useRef } from 'react';

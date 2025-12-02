@@ -12,7 +12,7 @@ import {
   Rocket,
   CheckCircle,
   ArrowRight,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect, useCallback } from 'react';
 
 interface TourStep {

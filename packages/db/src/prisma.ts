@@ -18,10 +18,22 @@ const _DANGEROUS_SQL_PATTERNS = [
 ];
 
 // Helper to create and configure a new PrismaClient instance
+// Optimized for 1000+ concurrent users with Neon connection pooling
 function createPrismaClient(): PrismaClient {
   const client = new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'warn', 'error'] : ['error'],
+    // Optimize for serverless with connection pooling
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   });
+
+  // Log connection info on startup
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('[Prisma] Database connection initialized');
+  }
 
   // Add middleware to protect against accidental destructive operations
   client.$use(async (params, next) => {

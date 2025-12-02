@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, ChevronDown, Folder, Plus, ExternalLink } from 'lucide-react';
+import { Check, ChevronDown, Folder, Plus, ExternalLink } from '@/components/ui/custom-icons';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 

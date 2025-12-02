@@ -1,6 +1,15 @@
 'use client';
 
-import { Music, Award, Calendar, MapPin, Users, Disc, Quote, ExternalLink } from 'lucide-react';
+import {
+  Music,
+  Award,
+  Calendar,
+  MapPin,
+  Users,
+  Disc,
+  Quote,
+  ExternalLink,
+} from '@/components/ui/custom-icons';
 
 interface AboutPageSectionProps {
   content: {

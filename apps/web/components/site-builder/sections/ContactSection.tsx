@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Send, Loader2, CheckCircle } from 'lucide-react';
+import { Send, Loader2, CheckCircle } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface ContactSectionProps {

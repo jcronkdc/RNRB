@@ -16,7 +16,7 @@
  */
 
 import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';

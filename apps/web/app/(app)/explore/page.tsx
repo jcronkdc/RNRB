@@ -1,7 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Compass, TrendingUp, Clock, Heart, Search, Loader2, Sparkles, Music2 } from 'lucide-react';
+import {
+  Compass,
+  TrendingUp,
+  Clock,
+  Heart,
+  Search,
+  Loader2,
+  Sparkles,
+  Music2,
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';

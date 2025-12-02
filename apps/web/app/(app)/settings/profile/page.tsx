@@ -29,7 +29,7 @@ import {
   Video,
   MessageCircle,
   AtSign,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -121,6 +121,14 @@ function ProfileSettingsContent() {
   const loading = status === 'loading';
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Username validation state
+  const [usernameStatus, setUsernameStatus] = useState<{
+    checking: boolean;
+    available: boolean | null;
+    error: string | null;
+  }>({ checking: false, available: null, error: null });
+  const usernameCheckTimeout = useRef<NodeJS.Timeout>();
 
   // Check if this is first-time setup
   const isSetup = searchParams.get('setup') === 'true';
@@ -458,8 +466,49 @@ function ProfileSettingsContent() {
       if (redirectTimeoutRef.current) {
         clearTimeout(redirectTimeoutRef.current);
       }
+      if (usernameCheckTimeout.current) {
+        clearTimeout(usernameCheckTimeout.current);
+      }
     };
   }, []);
+
+  // Check username availability with debounce
+  useEffect(() => {
+    if (!profile.username) {
+      setUsernameStatus({ checking: false, available: null, error: null });
+      return;
+    }
+
+    // Clear previous timeout
+    if (usernameCheckTimeout.current) {
+      clearTimeout(usernameCheckTimeout.current);
+    }
+
+    // Set checking state immediately
+    setUsernameStatus((prev) => ({ ...prev, checking: true }));
+
+    // Debounce the API call
+    usernameCheckTimeout.current = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          `/api/profile/check-username?username=${encodeURIComponent(profile.username)}`
+        );
+        const data = await response.json();
+
+        if (data.available) {
+          setUsernameStatus({ checking: false, available: true, error: null });
+        } else {
+          setUsernameStatus({
+            checking: false,
+            available: false,
+            error: data.error || 'Username unavailable',
+          });
+        }
+      } catch {
+        setUsernameStatus({ checking: false, available: null, error: 'Failed to check username' });
+      }
+    }, 500);
+  }, [profile.username]);
 
   const handleSaveProfile = async () => {
     setSaving(true);
@@ -755,22 +804,91 @@ function ProfileSettingsContent() {
                     *Required
                   </span>
                 </label>
-                <input
-                  id="profile-username"
-                  type="text"
-                  value={profile.username}
-                  onChange={(e) => setProfile({ ...profile, username: e.target.value })}
-                  placeholder="rockstar123"
-                  className="w-full rounded-lg px-4 py-3 transition-all duration-200"
-                  style={{
-                    background: 'var(--panel)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)',
-                  }}
-                />
-                <p className="mt-2 text-xs" style={{ color: 'var(--muted)' }}>
-                  Your unique handle. Others can find you by this username.
-                </p>
+                <div className="relative">
+                  <input
+                    id="profile-username"
+                    type="text"
+                    value={profile.username}
+                    onChange={(e) => {
+                      // Only allow valid username characters
+                      const value = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+                      setProfile({ ...profile, username: value });
+                    }}
+                    placeholder="rockstar123"
+                    className="w-full rounded-lg px-4 py-3 pr-10 transition-all duration-200"
+                    style={{
+                      background: 'var(--panel)',
+                      border: `1px solid ${
+                        usernameStatus.available === true
+                          ? 'var(--success)'
+                          : usernameStatus.available === false
+                            ? 'var(--error)'
+                            : 'var(--border)'
+                      }`,
+                      color: 'var(--text)',
+                    }}
+                  />
+                  {/* Username status indicator */}
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {usernameStatus.checking && (
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--muted)] border-t-transparent" />
+                    )}
+                    {!usernameStatus.checking && usernameStatus.available === true && (
+                      <CheckCircle2 className="h-5 w-5" style={{ color: 'var(--success)' }} />
+                    )}
+                    {!usernameStatus.checking && usernameStatus.available === false && (
+                      <span className="text-sm" style={{ color: 'var(--error)' }}>
+                        ✕
+                      </span>
+                    )}
+                  </div>
+                </div>
+                {usernameStatus.error && (
+                  <p className="mt-2 text-xs" style={{ color: 'var(--error)' }}>
+                    {usernameStatus.error}
+                  </p>
+                )}
+                {!usernameStatus.error && (
+                  <p className="mt-2 text-xs" style={{ color: 'var(--muted)' }}>
+                    Your unique handle. Others can find you by this username.
+                  </p>
+                )}
+                {profile.username && (
+                  <div
+                    className="mt-3 flex items-center gap-2 rounded-lg p-3"
+                    style={{
+                      background: 'rgba(255, 99, 71, 0.1)',
+                      border: '1px solid rgba(255, 99, 71, 0.2)',
+                    }}
+                  >
+                    <Globe className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+                    <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                      Your public profile:
+                    </span>
+                    <Link
+                      href={`/u/${profile.username}`}
+                      target="_blank"
+                      className="text-sm font-medium underline underline-offset-2 transition-colors hover:opacity-80"
+                      style={{ color: 'var(--accent)' }}
+                    >
+                      cronkwaters.com/u/{profile.username}
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `https://cronkwaters.com/u/${profile.username}`
+                        );
+                        setMessage({ type: 'success', text: 'Profile link copied!' });
+                        setTimeout(() => setMessage(null), 2000);
+                      }}
+                      className="ml-auto rounded-md p-1.5 transition-colors hover:bg-white/10"
+                      title="Copy link"
+                    >
+                      <LinkIcon className="h-4 w-4" style={{ color: 'var(--muted)' }} />
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -1710,7 +1828,12 @@ function ProfileSettingsContent() {
                 </div>
                 <button
                   onClick={handleSaveProfile}
-                  disabled={saving || !profile.username}
+                  disabled={
+                    saving ||
+                    !profile.username ||
+                    usernameStatus.available === false ||
+                    usernameStatus.checking
+                  }
                   className="button hero-button-primary flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {saving ? (

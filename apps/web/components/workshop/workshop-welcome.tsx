@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { Bell, Plus, Search } from 'lucide-react';
+import { Bell, Plus, Search } from '@/components/ui/custom-icons';
 import { getWelcomeMessage } from '@/lib/workshop-voice';
 
 interface WorkshopWelcomeProps {

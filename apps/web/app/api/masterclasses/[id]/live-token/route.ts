@@ -1,20 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
 const DAILY_DOMAIN = process.env.DAILY_DOMAIN || 'cronkwaters.daily.co';
 
 // POST - Create/get a live session room
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const masterclassId = params.id;
+    const { id: masterclassId } = await params;
 
     // Get masterclass and verify instructor
     const masterclass = await prisma.masterclass.findUnique({

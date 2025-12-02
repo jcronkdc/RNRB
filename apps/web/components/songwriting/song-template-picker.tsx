@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@cronkwaters/ui';
-import { Music, Sparkles, FileText, Zap } from 'lucide-react';
+import { Music, Sparkles, FileText, Zap } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type SongBlock = {

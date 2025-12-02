@@ -1,6 +1,6 @@
 'use client';
 
-import { Ticket, MapPin, Clock, Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { Ticket, MapPin, Clock, Star, ChevronDown, ChevronUp } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface TicketTier {

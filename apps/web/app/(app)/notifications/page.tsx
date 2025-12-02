@@ -1,11 +1,20 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Bell, Check, CheckCheck, Trash2, Settings, Loader2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Bell,
+  Check,
+  CheckCheck,
+  Trash2,
+  Settings,
+  Loader2,
+  ChevronDown,
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 
 import {
   useNotifications,
@@ -14,11 +23,13 @@ import {
   type Notification,
 } from '@/hooks/use-notifications';
 import { formatRelativeTime } from '@/lib/format-date';
+import { NotificationSettings } from '@/components/notification-settings';
 
 export default function NotificationsPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const user = session?.user;
+  const [showSettings, setShowSettings] = useState(false);
 
   const {
     notifications,
@@ -109,11 +120,16 @@ export default function NotificationsPage() {
                 </button>
               )}
               <button
-                onClick={requestPermission}
-                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:bg-white/5"
-                title="Enable browser notifications"
+                onClick={() => setShowSettings(!showSettings)}
+                className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                  showSettings ? 'bg-white/10 text-white' : 'hover:bg-white/5'
+                }`}
+                title="Notification settings"
               >
                 <Settings className="h-4 w-4" />
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${showSettings ? 'rotate-180' : ''}`}
+                />
               </button>
             </div>
           </div>
@@ -126,6 +142,23 @@ export default function NotificationsPage() {
             {isConnected ? 'Connected to live updates' : 'Connecting...'}
           </div>
         </motion.div>
+
+        {/* Notification Settings Panel */}
+        <AnimatePresence>
+          {showSettings && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mb-8 overflow-hidden"
+            >
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <NotificationSettings />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Notifications List */}
         <div className="space-y-3">

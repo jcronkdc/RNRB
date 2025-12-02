@@ -18,7 +18,7 @@ import {
   Star,
   Zap,
   ArrowRight,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface AISectionWizardProps {

@@ -1,4 +1,4 @@
-import { Check, X, Zap, Crown, Music } from 'lucide-react';
+import { Check, X, Zap, Crown, Music } from '@/components/ui/custom-icons';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -587,6 +587,9 @@ export default function PricingPage() {
                 </Link>
                 <Link href="/contact" className="nav-link">
                   Contact
+                </Link>
+                <Link href="/donate" className="nav-link" style={{ color: '#a855f7' }}>
+                  Kids Instruments Fund
                 </Link>
               </nav>
             </div>

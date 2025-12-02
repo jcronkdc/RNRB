@@ -1,7 +1,15 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, TrendingUp, Info, Sparkles, Zap, Brain, Loader2 } from 'lucide-react';
+import {
+  Music,
+  TrendingUp,
+  Info,
+  Sparkles,
+  Zap,
+  Brain,
+  Loader2,
+} from '@/components/ui/custom-icons';
 import { useMemo, memo, useState, useEffect } from 'react';
 
 import { detectKeyWithAI, type AIKeyAnalysis } from '@/lib/music-theory/ai-key-detector';

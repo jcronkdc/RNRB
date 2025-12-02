@@ -29,7 +29,7 @@ import {
   X,
   Loader2,
   AlertCircle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect, useRef } from 'react';
 
 import { useAblyClient } from '@/hooks/use-ably-client';

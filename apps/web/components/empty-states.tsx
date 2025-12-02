@@ -15,7 +15,7 @@ import {
   BarChart3,
   AlertCircle,
   WifiOff,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
 type EmptyStateType =

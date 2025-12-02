@@ -1,7 +1,7 @@
 'use client';
 
 import { useChannel, usePresence } from 'ably/react';
-import { Send, Users, Sparkles, X, MessageSquare } from 'lucide-react';
+import { Send, Users, Sparkles, X, MessageSquare } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 import { formatTime } from '@/lib/format-date';

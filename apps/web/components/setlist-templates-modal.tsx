@@ -9,7 +9,17 @@
 
 import { Button, Card } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Sparkles, X, Clock, Zap, Music, Heart, Briefcase, Plus, Loader2 } from 'lucide-react';
+import {
+  Sparkles,
+  X,
+  Clock,
+  Zap,
+  Music,
+  Heart,
+  Briefcase,
+  Plus,
+  Loader2,
+} from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 type Template = {

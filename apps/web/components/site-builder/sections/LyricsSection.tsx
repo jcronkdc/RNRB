@@ -9,7 +9,7 @@ import {
   Play,
   Copy,
   Check,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface Song {

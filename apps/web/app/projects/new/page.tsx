@@ -2,7 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Lock, Users, Globe, Sparkles, ArrowLeft, Folder } from 'lucide-react';
+import { Lock, Users, Globe, Sparkles, ArrowLeft, Folder } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';

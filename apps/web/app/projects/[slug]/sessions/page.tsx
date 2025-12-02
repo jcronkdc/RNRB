@@ -12,7 +12,7 @@ import {
   Users,
   TrendingUp,
   FileText,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';

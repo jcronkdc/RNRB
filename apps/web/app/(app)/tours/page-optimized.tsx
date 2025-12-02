@@ -24,7 +24,7 @@ import {
   Edit,
   Trash2,
   ExternalLink,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState, useEffect, memo, useCallback } from 'react';
 

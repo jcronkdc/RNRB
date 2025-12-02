@@ -25,7 +25,7 @@ import {
   Home,
   Maximize2,
   Minimize2,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
 

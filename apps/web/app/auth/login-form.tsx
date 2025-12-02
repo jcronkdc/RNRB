@@ -2,7 +2,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Loader2, Sparkles, ShieldCheck } from 'lucide-react';
+import { Loader2, Sparkles, ShieldCheck } from '@/components/ui/custom-icons';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 

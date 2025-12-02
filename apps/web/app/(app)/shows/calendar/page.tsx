@@ -34,7 +34,7 @@ import {
   Loader2,
   CheckCircle,
   Car,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';

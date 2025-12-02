@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import { Video, Sparkles, ExternalLink, MousePointer2 } from 'lucide-react';
+import { Video, Sparkles, ExternalLink, MousePointer2 } from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 

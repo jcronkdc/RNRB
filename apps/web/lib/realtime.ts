@@ -4,22 +4,28 @@
  * For publishing events from API routes to specific users or channels.
  */
 
-import Ably from 'ably';
+// Singleton client for server-side publishing (lazy loaded)
+let serverClient: import('ably').Rest | null | undefined = undefined;
 
-// Singleton client for server-side publishing
-let serverClient: Ably.Rest | null = null;
-
-function getServerClient(): Ably.Rest | null {
-  if (serverClient) return serverClient;
+async function getServerClient(): Promise<import('ably').Rest | null> {
+  if (serverClient !== undefined) return serverClient;
 
   const apiKey = process.env.ABLY_API_KEY;
   if (!apiKey) {
     console.warn('[Realtime] ABLY_API_KEY not set - real-time notifications disabled');
+    serverClient = null;
     return null;
   }
 
-  serverClient = new Ably.Rest(apiKey);
-  return serverClient;
+  try {
+    const Ably = (await import('ably')).default;
+    serverClient = new Ably.Rest(apiKey);
+    return serverClient;
+  } catch (error) {
+    console.error('[Realtime] Failed to initialize Ably:', error);
+    serverClient = null;
+    return null;
+  }
 }
 
 /**
@@ -34,7 +40,7 @@ export async function publishToUser(
   event: string,
   data: Record<string, unknown>
 ): Promise<boolean> {
-  const client = getServerClient();
+  const client = await getServerClient();
   if (!client) return false;
 
   try {
@@ -62,7 +68,7 @@ export async function publishToProject(
   event: string,
   data: Record<string, unknown>
 ): Promise<boolean> {
-  const client = getServerClient();
+  const client = await getServerClient();
   if (!client) return false;
 
   try {
@@ -107,7 +113,7 @@ export async function publishToChannel(
   event: string,
   data: Record<string, unknown>
 ): Promise<boolean> {
-  const client = getServerClient();
+  const client = await getServerClient();
   if (!client) return false;
 
   try {

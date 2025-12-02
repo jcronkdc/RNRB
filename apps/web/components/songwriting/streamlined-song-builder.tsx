@@ -29,7 +29,7 @@ import {
   Undo,
   Redo,
   FileText,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useCallback, memo, useRef, useEffect } from 'react';
 
 import { GranularChordEditor } from './granular-chord-editor';

@@ -17,7 +17,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, Square, Play, Pause, X, Send, Trash2 } from 'lucide-react';
+import { Mic, Square, Play, Pause, X, Send, Trash2 } from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect } from 'react';
 
 import { useVoiceRecorder } from '@/hooks/use-voice-recorder';

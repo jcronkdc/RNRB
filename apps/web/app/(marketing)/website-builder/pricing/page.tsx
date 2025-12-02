@@ -12,7 +12,7 @@ import {
   HelpCircle,
   ChevronDown,
   ChevronUp,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState } from 'react';
 

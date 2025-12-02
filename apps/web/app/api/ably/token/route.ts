@@ -1,11 +1,27 @@
-import Ably from 'ably';
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 import { ablyTokenLimiter, checkRateLimit } from '@/lib/rate-limit';
 
-// Validate and initialize Ably Rest client
-function initializeAblyRest(): Ably.Rest | null {
+// Promise-based singleton to prevent race conditions during concurrent initialization
+let ablyRestPromise: Promise<import('ably').Rest | null> | null = null;
+
+// Validate and initialize Ably Rest client (lazy loading with race condition protection)
+async function getAblyRest(): Promise<import('ably').Rest | null> {
+  // Return existing promise if initialization is in progress or complete
+  // This ensures concurrent requests share the same initialization
+  if (ablyRestPromise !== null) {
+    return ablyRestPromise;
+  }
+
+  // Create and store the initialization promise BEFORE any async work
+  // This prevents race conditions where multiple requests start initialization
+  ablyRestPromise = initializeAblyRest();
+  return ablyRestPromise;
+}
+
+// Separated initialization logic to keep promise assignment synchronous
+async function initializeAblyRest(): Promise<import('ably').Rest | null> {
   const ablyApiKey = process.env.ABLY_API_KEY;
 
   if (!ablyApiKey) {
@@ -29,20 +45,22 @@ function initializeAblyRest(): Ably.Rest | null {
   }
 
   try {
-    const rest = new Ably.Rest({
+    // Dynamic import to avoid build-time initialization
+    const Ably = (await import('ably')).default;
+    const client = new Ably.Rest({
       key: ablyApiKey,
       // Use JSON for better error messages
       useBinaryProtocol: false,
     });
     console.log(`[Ably Init] ✅ Initialized with app ID: ${appKeyParts[0]}`);
-    return rest;
+    return client;
   } catch (error) {
     console.error('[Ably Init] Failed to create Rest client:', error);
+    // Reset promise on failure so retry is possible
+    ablyRestPromise = null;
     return null;
   }
 }
-
-const ablyRest = initializeAblyRest();
 
 export async function GET() {
   const startTime = Date.now();
@@ -65,7 +83,8 @@ export async function GET() {
 
   console.log(`[Ably Token] Request for user: ${user.id}`);
 
-  if (!ablyRest) {
+  const ablyRestClient = await getAblyRest();
+  if (!ablyRestClient) {
     console.error('[Ably Token] Ably Rest client not initialized - check ABLY_API_KEY');
     // Return 503 (Service Unavailable) to indicate optional service
     return NextResponse.json(
@@ -78,13 +97,13 @@ export async function GET() {
     console.log('[Ably Token] Creating token request...');
 
     // Create token request with explicit parameters
-    const tokenParams: Ably.TokenParams = {
+    const tokenParams: import('ably').TokenParams = {
       clientId: user.id,
       // Token valid for 1 hour
       ttl: 60 * 60 * 1000,
     };
 
-    const tokenRequest = await ablyRest.auth.createTokenRequest(tokenParams);
+    const tokenRequest = await ablyRestClient.auth.createTokenRequest(tokenParams);
 
     const duration = Date.now() - startTime;
     console.log(`[Ably Token] ✅ Token created successfully in ${duration}ms`, {
@@ -114,7 +133,7 @@ export async function GET() {
 
     // Check if it's an Ably-specific error
     if (error instanceof Error && 'code' in error) {
-      const ablyError = error as Ably.ErrorInfo;
+      const ablyError = error as { code?: number; statusCode?: number };
       console.error(
         '[Ably Token] Ably error code:',
         ablyError.code,

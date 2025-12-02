@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, Volume2, Settings, RefreshCw, Music2 } from 'lucide-react';
+import { Mic, MicOff, Volume2, Settings, RefreshCw, Music2 } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
 
 // Note frequencies for A4 = 440Hz

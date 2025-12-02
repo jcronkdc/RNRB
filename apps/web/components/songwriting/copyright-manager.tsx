@@ -14,7 +14,7 @@ import {
   HelpCircle,
   ExternalLink,
   Info,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 

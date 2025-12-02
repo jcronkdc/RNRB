@@ -21,7 +21,7 @@ import {
   Search,
   Loader2,
   Building2,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

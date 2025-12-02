@@ -2,7 +2,7 @@
 
 import { Button, Input } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send } from 'lucide-react';
+import { Send } from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect } from 'react';
 
 import { formatTime } from '@/lib/format-date';

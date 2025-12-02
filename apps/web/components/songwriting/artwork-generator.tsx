@@ -13,7 +13,7 @@ import {
   Loader2,
   Crown,
   Zap,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 interface ArtworkGeneratorProps {

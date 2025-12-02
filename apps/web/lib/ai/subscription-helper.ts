@@ -7,10 +7,17 @@
  * - Suggest upgrades when hitting limits
  * - Help with downgrade decisions
  * - Generate upgrade/downgrade recommendations
+ * - INITIATE UPGRADES - Generate checkout URLs for users
+ * - OPEN BILLING PORTAL - Let users manage their subscription
  */
 
 import { prisma } from '@cronkwaters/db';
 import { TIER_LIMITS } from '@/lib/usage-tracking';
+import {
+  createCheckoutSession,
+  createCustomerPortalSession,
+  createStripeCustomer,
+} from '@/lib/stripe-subscriptions';
 
 // ============================================
 // TYPES
@@ -426,6 +433,177 @@ export function calculateTierChange(
 }
 
 // ============================================
+// SUBSCRIPTION ACTION FUNCTIONS (AI CAN TRIGGER)
+// ============================================
+
+/**
+ * Generate a checkout URL for subscription upgrade
+ * Returns a URL the user can click to complete the upgrade
+ */
+export async function initiateUpgrade(
+  userId: string,
+  targetTier: 'creator' | 'studio'
+): Promise<{
+  success: boolean;
+  checkoutUrl?: string;
+  message: string;
+  tier?: string;
+  price?: string;
+}> {
+  try {
+    // Get user data
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        stripeCustomerId: true,
+        subscriptionTier: true,
+        subscriptionStatus: true,
+      },
+    });
+
+    if (!user) {
+      return { success: false, message: 'User not found' };
+    }
+
+    // Check if already on this tier or higher
+    const tierHierarchy = { free: 0, creator: 1, studio: 2 };
+    const currentLevel = tierHierarchy[user.subscriptionTier as keyof typeof tierHierarchy] || 0;
+    const targetLevel = tierHierarchy[targetTier];
+
+    if (user.subscriptionStatus === 'active' && currentLevel >= targetLevel) {
+      return {
+        success: false,
+        message: `You're already on ${user.subscriptionTier} tier${currentLevel > targetLevel ? ' (higher than ' + targetTier + ')' : ''}. No upgrade needed!`,
+        tier: user.subscriptionTier,
+      };
+    }
+
+    // Get or create Stripe customer
+    let customerId = user.stripeCustomerId;
+    if (!customerId) {
+      const customer = await createStripeCustomer(user.email, user.name);
+      customerId = customer.id;
+
+      // Save customer ID
+      await prisma.user.update({
+        where: { id: userId },
+        data: { stripeCustomerId: customerId },
+      });
+    }
+
+    // Get price ID from environment
+    const priceId =
+      targetTier === 'creator'
+        ? process.env.STRIPE_PRICE_ID_CREATOR
+        : process.env.STRIPE_PRICE_ID_STUDIO;
+
+    if (!priceId) {
+      return {
+        success: false,
+        message: `Stripe price not configured for ${targetTier} tier. Please contact support.`,
+      };
+    }
+
+    // Create checkout session
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.cronkwaters.com';
+    const session = await createCheckoutSession(
+      customerId,
+      priceId,
+      `${appUrl}/settings/billing?success=true&tier=${targetTier}`,
+      `${appUrl}/settings/billing?canceled=true`,
+      userId
+    );
+
+    if (!session.url) {
+      return { success: false, message: 'Failed to create checkout session' };
+    }
+
+    const tierInfo = TIER_INFO[targetTier];
+
+    return {
+      success: true,
+      checkoutUrl: session.url,
+      message: `Great choice! Click the link below to upgrade to ${targetTier.charAt(0).toUpperCase() + targetTier.slice(1)} (${tierInfo.price})`,
+      tier: targetTier,
+      price: tierInfo.price,
+    };
+  } catch (error) {
+    console.error('initiateUpgrade error:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to initiate upgrade',
+    };
+  }
+}
+
+/**
+ * Generate a billing portal URL for subscription management
+ * Allows users to update payment, view invoices, cancel, etc.
+ */
+export async function openBillingPortal(userId: string): Promise<{
+  success: boolean;
+  portalUrl?: string;
+  message: string;
+}> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        stripeCustomerId: true,
+        subscriptionTier: true,
+        subscriptionStatus: true,
+      },
+    });
+
+    if (!user) {
+      return { success: false, message: 'User not found' };
+    }
+
+    if (!user.stripeCustomerId) {
+      return {
+        success: false,
+        message:
+          "You don't have a billing account yet. Upgrade to a paid plan first to access billing management.",
+      };
+    }
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.cronkwaters.com';
+    const session = await createCustomerPortalSession(
+      user.stripeCustomerId,
+      `${appUrl}/settings/billing`
+    );
+
+    if (!session.url) {
+      return { success: false, message: 'Failed to create billing portal session' };
+    }
+
+    return {
+      success: true,
+      portalUrl: session.url,
+      message:
+        'Click the link below to manage your subscription, update payment methods, or view invoices.',
+    };
+  } catch (error) {
+    console.error('openBillingPortal error:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to open billing portal',
+    };
+  }
+}
+
+/**
+ * Get pricing page URL for users who want to compare plans
+ */
+export function getPricingPageUrl(): string {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.cronkwaters.com';
+  return `${appUrl}/pricing`;
+}
+
+// ============================================
 // AI FUNCTION DEFINITIONS
 // ============================================
 
@@ -465,6 +643,31 @@ export const SUBSCRIPTION_AI_FUNCTIONS = [
           description: 'Tier the user is considering switching to',
         },
       },
+    },
+  },
+  {
+    name: 'initiateUpgrade',
+    description:
+      'Generate a checkout URL to upgrade the user to a paid subscription tier. Use this when the user wants to upgrade, is hitting limits, or asks about upgrading. Returns a clickable link they can use to complete payment.',
+    parameters: {
+      type: 'object',
+      properties: {
+        targetTier: {
+          type: 'string',
+          enum: ['creator', 'studio'],
+          description: 'The tier to upgrade to (creator at $15/month or studio at $35/month)',
+        },
+      },
+      required: ['targetTier'],
+    },
+  },
+  {
+    name: 'openBillingPortal',
+    description:
+      'Generate a billing portal URL so the user can manage their subscription, update payment methods, view invoices, or cancel. Use when user asks about billing, payment, invoices, or wants to manage their subscription.',
+    parameters: {
+      type: 'object',
+      properties: {},
     },
   },
 ];
@@ -535,9 +738,16 @@ Usage is above 75%. Might want to mention upgrade options.\n`;
     });
   }
 
-  section += `\n### 🔗 ACTIONS
-- To upgrade: [Button: Upgrade Plan →] or go to Settings > Subscription
-- To manage: [Button: Manage Subscription →]
+  section += `\n### 🔗 ACTIONS YOU CAN TAKE
+**You can directly help the user with these actions:**
+- To upgrade: Call \`initiateUpgrade('creator')\` or \`initiateUpgrade('studio')\` to generate a checkout link
+- To manage billing: Call \`openBillingPortal()\` to generate a billing management link
+- Manual option: Direct user to Settings > Subscription
+
+**Proactively offer to help when:**
+- User is at 75%+ usage → Offer to initiate upgrade
+- User hits a limit → Immediately offer upgrade link
+- User asks about billing/invoices → Open billing portal
 `;
 
   return section;

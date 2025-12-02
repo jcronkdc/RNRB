@@ -1,6 +1,13 @@
 'use client';
 
-import { Search, Monitor, Smartphone, ExternalLink, Star, ChevronDown } from 'lucide-react';
+import {
+  Search,
+  Monitor,
+  Smartphone,
+  ExternalLink,
+  Star,
+  ChevronDown,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface SEOPreviewProps {

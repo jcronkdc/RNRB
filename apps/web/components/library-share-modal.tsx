@@ -17,7 +17,7 @@ import {
   Copy,
   Link2,
   Send,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import useSWR from 'swr';
 

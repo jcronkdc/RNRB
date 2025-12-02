@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Check, RefreshCw } from 'lucide-react';
+import { Sparkles, Check, RefreshCw } from '@/components/ui/custom-icons';
 import { getDailySpark } from '@/lib/workshop-voice';
 
 interface DailySparkProps {

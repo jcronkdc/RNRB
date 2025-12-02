@@ -6,6 +6,9 @@ import { getCurrentUserId } from '@/lib/session';
 import { requireFeatureAccess } from '@/lib/subscription-access';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 
+// Force dynamic to prevent build-time evaluation
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // ✅ SECURITY: Check subscription access

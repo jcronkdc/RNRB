@@ -12,7 +12,7 @@ import {
   ChevronRight,
   ArrowRight,
   CheckCircle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
 export default function CollaborationFeaturePage() {
@@ -41,7 +41,8 @@ export default function CollaborationFeaturePage() {
               Collaborate Like You're in the Same Room
             </h1>
             <p className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-muted-foreground">
-              HD video calls, screen sharing, and instant messaging powered by Daily.co and Ably.
+              Zoom-style HD video meetings with screen sharing, live streaming to fans,
+              masterclasses from industry pros, and instant messaging powered by Daily.co and Ably.
               Work together on music from anywhere in the world.
             </p>
 
@@ -149,7 +150,7 @@ export default function CollaborationFeaturePage() {
         {/* Use Cases */}
         <h2 className="font-display mb-12 text-center text-4xl font-bold">Perfect For</h2>
 
-        <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-3 lg:grid-cols-3">
           {[
             {
               icon: Users,
@@ -171,6 +172,27 @@ export default function CollaborationFeaturePage() {
               title: 'Songwriting Teams',
               description:
                 'Co-write in real-time. Share lyrics, chord progressions, and ideas as naturally as sitting in the same room.',
+            },
+            {
+              icon: Video,
+              gradient: 'from-red-500 to-pink-500',
+              title: 'Live Streamers',
+              description:
+                'Stream performances, studio sessions, and behind-the-scenes content directly to your fans.',
+            },
+            {
+              icon: Monitor,
+              gradient: 'from-emerald-500 to-teal-500',
+              title: 'Music Educators',
+              description:
+                'Teach masterclasses with screen sharing, run workshops, and monetize your expertise.',
+            },
+            {
+              icon: Shield,
+              gradient: 'from-indigo-500 to-violet-500',
+              title: 'Label Teams',
+              description:
+                'Coordinate with artists, A&R, and marketing teams securely with enterprise-grade video.',
             },
           ].map((useCase, index) => (
             <motion.div

@@ -15,7 +15,7 @@ import {
   DollarSign,
   Navigation,
   ExternalLink,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useMemo } from 'react';
 
 import {

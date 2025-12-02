@@ -203,6 +203,21 @@ model User {
   // Affiliate/Streamer System
   affiliate              Affiliate?
   affiliateReferrals     AffiliateReferral[]
+  
+  // Marketplace
+  marketplaceProfile     MarketplaceProfile?   // User verification & reputation
+  marketplaceListings    MarketplaceListing[]  @relation("MarketplaceListings")
+  marketplaceFavorites   MarketplaceFavorite[] @relation("MarketplaceFavorites")
+  marketplaceOffers      MarketplaceOffer[]    @relation("MarketplaceOffers")
+  marketplaceMessagesSent     MarketplaceMessage[] @relation("MarketplaceMessagesSent")
+  marketplaceMessagesReceived MarketplaceMessage[] @relation("MarketplaceMessagesReceived")
+  marketplaceAlerts      MarketplaceAlert[]    @relation("MarketplaceAlerts")
+  marketplaceWanted      MarketplaceWanted[]   @relation("MarketplaceWanted")
+  marketplaceWantedResponses MarketplaceWantedResponse[] @relation("MarketplaceWantedResponses")
+  marketplaceReports         MarketplaceReport[]        @relation("MarketplaceReports")
+  
+  // Platform Merch Store Orders
+  platformMerchOrders        PlatformMerchOrder[]       @relation("PlatformMerchOrders")
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -4723,4 +4738,611 @@ model AffiliateClick {
   @@index([createdAt(sort: Desc)])
 }
 
-// Force regeneration: 2025-12-01-AFFILIATE-SYSTEM-V1
+// ====================================
+// MARKETPLACE - Buy/Sell/Trade Music Gear
+// ====================================
+
+enum MarketplaceListingType {
+  sell
+  trade
+  both // Open to selling OR trading
+}
+
+enum MarketplaceListingStatus {
+  draft
+  active
+  pending // Awaiting moderation
+  sold
+  traded
+  expired
+  removed
+}
+
+enum MarketplaceCondition {
+  mint      // Like new, barely used
+  excellent // Minor cosmetic wear only
+  good      // Normal wear, fully functional
+  fair      // Shows wear, works fine
+  poor      // Needs work/repair
+  parts     // For parts only
+}
+
+model MarketplaceListing {
+  id          String   @id @default(cuid())
+  sellerId    String
+  
+  // Item Details
+  title       String
+  description String   @db.Text
+  category    String   // guitar, bass, drums, keys, mics, amps, fx, monitors, studio, other
+  subcategory String?  // electric, acoustic, pedal, etc.
+  
+  // Brand & Model
+  brand       String?
+  model       String?
+  year        Int?
+  serialNumber String? // Optional for verification
+  
+  // Condition
+  condition   MarketplaceCondition @default(good)
+  conditionNotes String? @db.Text
+  
+  // Pricing
+  listingType MarketplaceListingType @default(sell)
+  price       Decimal? @db.Decimal(10, 2) // Null if trade-only
+  currency    String   @default("USD")
+  acceptsOffers Boolean @default(true)
+  
+  // Trade preferences
+  tradeFor    String?  @db.Text // What they'd trade for
+  tradeValue  Decimal? @db.Decimal(10, 2) // Estimated trade value
+  
+  // Location & Shipping
+  location    String?  // City, State
+  shipsTo     String[] // ["US", "CA", "International"]
+  localPickup Boolean  @default(true)
+  shippingCost Decimal? @db.Decimal(8, 2)
+  
+  // Media
+  images      MarketplaceImage[]
+  
+  // Status & Moderation
+  status      MarketplaceListingStatus @default(draft)
+  featured    Boolean  @default(false)
+  viewCount   Int      @default(0)
+  favoriteCount Int    @default(0)
+  
+  // Timestamps
+  publishedAt DateTime?
+  expiresAt   DateTime?
+  soldAt      DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  seller      User     @relation("MarketplaceListings", fields: [sellerId], references: [id], onDelete: Cascade)
+  favorites   MarketplaceFavorite[]
+  offers      MarketplaceOffer[]
+  messages    MarketplaceMessage[]
+  reports     MarketplaceReport[]
+  
+  @@index([sellerId])
+  @@index([status])
+  @@index([category])
+  @@index([listingType])
+  @@index([condition])
+  @@index([price])
+  @@index([location])
+  @@index([createdAt(sort: Desc)])
+  @@index([publishedAt(sort: Desc)])
+  @@index([featured, status])
+}
+
+model MarketplaceImage {
+  id          String   @id @default(cuid())
+  listingId   String
+  url         String
+  path        String?  // Storage path
+  alt         String?
+  isPrimary   Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  
+  listing     MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  
+  @@index([listingId])
+  @@index([isPrimary])
+}
+
+model MarketplaceFavorite {
+  id          String   @id @default(cuid())
+  userId      String
+  listingId   String
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation("MarketplaceFavorites", fields: [userId], references: [id], onDelete: Cascade)
+  listing     MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, listingId])
+  @@index([userId])
+  @@index([listingId])
+}
+
+model MarketplaceOffer {
+  id          String   @id @default(cuid())
+  listingId   String
+  buyerId     String
+  
+  // Offer Details
+  offerType   String   // "cash", "trade", "cash_plus_trade"
+  amount      Decimal? @db.Decimal(10, 2)
+  tradeItems  String?  @db.Text // Description of trade items
+  message     String?  @db.Text
+  
+  // Status
+  status      String   @default("pending") // pending, accepted, declined, countered, withdrawn
+  
+  // Counter offer
+  counterAmount Decimal? @db.Decimal(10, 2)
+  counterMessage String? @db.Text
+  
+  // Timestamps
+  expiresAt   DateTime?
+  respondedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  listing     MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyer       User     @relation("MarketplaceOffers", fields: [buyerId], references: [id], onDelete: Cascade)
+  
+  @@index([listingId])
+  @@index([buyerId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+model MarketplaceMessage {
+  id          String   @id @default(cuid())
+  listingId   String
+  senderId    String
+  recipientId String
+  content     String   @db.Text
+  isRead      Boolean  @default(false)
+  readAt      DateTime?
+  createdAt   DateTime @default(now())
+  
+  listing     MarketplaceListing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  sender      User     @relation("MarketplaceMessagesSent", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient   User     @relation("MarketplaceMessagesReceived", fields: [recipientId], references: [id], onDelete: Cascade)
+  
+  @@index([listingId])
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([isRead])
+  @@index([createdAt(sort: Desc)])
+}
+
+// MarketplaceAlert - Get notified when matching items are listed
+model MarketplaceAlert {
+  id          String   @id @default(cuid())
+  userId      String
+  
+  // Search Criteria
+  name        String   // User-friendly name for this alert
+  category    String?  // Optional category filter
+  subcategory String?
+  brand       String?
+  keywords    String?  // Search keywords
+  
+  // Price Range
+  minPrice    Decimal? @db.Decimal(10, 2)
+  maxPrice    Decimal? @db.Decimal(10, 2)
+  
+  // Condition Preferences
+  conditions  String[] // Array of acceptable conditions
+  
+  // Listing Type
+  listingTypes String[] // sell, trade, both
+  
+  // Location
+  location    String?  // Preferred location/region
+  maxDistance Int?     // Miles from location
+  
+  // Notification Settings
+  emailNotify Boolean  @default(true)
+  pushNotify  Boolean  @default(true)
+  frequency   String   @default("instant") // instant, daily, weekly
+  
+  // Status
+  isActive    Boolean  @default(true)
+  lastNotified DateTime?
+  matchCount  Int      @default(0)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation("MarketplaceAlerts", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([isActive])
+  @@index([category])
+  @@index([brand])
+}
+
+// MarketplaceWanted - "ISO" / "Looking For" posts
+model MarketplaceWanted {
+  id          String   @id @default(cuid())
+  userId      String
+  
+  // What they're looking for
+  title       String
+  description String   @db.Text
+  category    String
+  subcategory String?
+  
+  // Specific preferences
+  brand       String?
+  model       String?
+  yearMin     Int?
+  yearMax     Int?
+  
+  // Condition requirements
+  minCondition String? // Minimum acceptable condition
+  
+  // Budget
+  budgetMin   Decimal? @db.Decimal(10, 2)
+  budgetMax   Decimal? @db.Decimal(10, 2)
+  currency    String   @default("USD")
+  
+  // Trade offer
+  hasTradeOffer Boolean @default(false)
+  tradeDescription String? @db.Text
+  tradeValue  Decimal? @db.Decimal(10, 2)
+  
+  // Location
+  location    String?
+  willingToTravel Int? // Miles willing to travel
+  acceptsShipping Boolean @default(true)
+  
+  // Status
+  status      String   @default("active") // active, found, expired, closed
+  urgency     String   @default("normal") // urgent, normal, flexible
+  
+  // Engagement
+  viewCount   Int      @default(0)
+  responseCount Int    @default(0)
+  
+  // Timestamps
+  expiresAt   DateTime?
+  foundAt     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user        User     @relation("MarketplaceWanted", fields: [userId], references: [id], onDelete: Cascade)
+  responses   MarketplaceWantedResponse[]
+  
+  @@index([userId])
+  @@index([status])
+  @@index([category])
+  @@index([brand])
+  @@index([urgency])
+  @@index([createdAt(sort: Desc)])
+}
+
+// MarketplaceWantedResponse - Responses to wanted posts
+model MarketplaceWantedResponse {
+  id          String   @id @default(cuid())
+  wantedId    String
+  responderId String
+  listingId   String?  // Optional link to an existing listing
+  
+  // Response content
+  message     String   @db.Text
+  price       Decimal? @db.Decimal(10, 2)
+  hasItem     Boolean  @default(true) // Do they have the item?
+  canGet      Boolean  @default(false) // Can they get it?
+  
+  // Status
+  status      String   @default("pending") // pending, interested, declined, completed
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  wanted      MarketplaceWanted @relation(fields: [wantedId], references: [id], onDelete: Cascade)
+  responder   User     @relation("MarketplaceWantedResponses", fields: [responderId], references: [id], onDelete: Cascade)
+  
+  @@unique([wantedId, responderId])
+  @@index([wantedId])
+  @@index([responderId])
+  @@index([status])
+}
+
+// ============================================
+// MARKETPLACE USER VERIFICATION
+// ============================================
+
+// Verification levels for marketplace trust
+enum MarketplaceVerificationLevel {
+  none        // No verification
+  email       // Email verified (automatic for all users)
+  phone       // Phone number verified
+  identity    // ID verification complete
+  seller      // Verified seller status (completed sales)
+  trusted     // Trusted seller (many positive reviews)
+}
+
+// Marketplace user profile - trust & reputation
+model MarketplaceProfile {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  
+  // Verification Status (Optional - users can sell without full verification)
+  verificationLevel MarketplaceVerificationLevel @default(email)
+  phoneVerified     Boolean  @default(false)
+  phoneNumber       String?  // Hashed/partial for privacy
+  phoneVerifiedAt   DateTime?
+  
+  identityVerified  Boolean  @default(false)
+  identityMethod    String?  // "manual", "stripe_identity", "government_id"
+  identityVerifiedAt DateTime?
+  identityDocType   String?  // "drivers_license", "passport", "national_id"
+  
+  // Address for local pickup verification (optional)
+  addressVerified   Boolean  @default(false)
+  city              String?
+  state             String?
+  country           String?  @default("US")
+  postalCode        String?  // First 3 digits only for privacy
+  
+  // Seller Stats (auto-calculated)
+  totalSales        Int      @default(0)
+  totalPurchases    Int      @default(0)
+  totalTradesCompleted Int   @default(0)
+  successfulTransactions Int @default(0)
+  disputedTransactions Int   @default(0)
+  
+  // Ratings (1-5 stars, stored as average * 10 for precision)
+  sellerRating      Int?     // Average rating as seller (e.g., 45 = 4.5 stars)
+  sellerRatingCount Int      @default(0)
+  buyerRating       Int?     // Average rating as buyer
+  buyerRatingCount  Int      @default(0)
+  
+  // Response metrics
+  avgResponseTime   Int?     // Minutes to first response
+  responseRate      Int?     // Percentage (0-100)
+  
+  // Trust signals
+  memberSince       DateTime @default(now())
+  lastActiveAt      DateTime @default(now())
+  profileComplete   Boolean  @default(false)
+  
+  // Moderation
+  isSuspended       Boolean  @default(false)
+  suspendedAt       DateTime?
+  suspendedReason   String?
+  warningCount      Int      @default(0)
+  
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviewsGiven      MarketplaceReview[] @relation("ReviewsGiven")
+  reviewsReceived   MarketplaceReview[] @relation("ReviewsReceived")
+  
+  @@index([userId])
+  @@index([verificationLevel])
+  @@index([sellerRating])
+  @@index([totalSales])
+  @@index([isSuspended])
+}
+
+// ============================================
+// MARKETPLACE REVIEWS & RATINGS
+// ============================================
+
+// Transaction types for reviews
+enum MarketplaceTransactionType {
+  sale      // Reviewer bought from reviewee
+  purchase  // Reviewer sold to reviewee
+  trade     // Trade transaction
+}
+
+// Reviews for marketplace transactions
+model MarketplaceReview {
+  id              String   @id @default(cuid())
+  reviewerId      String   // Who is writing the review
+  revieweeId      String   // Who is being reviewed
+  listingId       String?  // The listing involved (optional for completed/deleted listings)
+  
+  // Transaction context
+  transactionType MarketplaceTransactionType
+  transactionId   String?  // Reference to offer/transaction if available
+  transactionDate DateTime? // When the transaction happened
+  
+  // Ratings (1-5 stars)
+  overallRating   Int      // 1-5
+  communicationRating Int? // 1-5: How well did they communicate?
+  accuracyRating  Int?     // 1-5: Was item as described? (for buyers reviewing sellers)
+  shippingRating  Int?     // 1-5: Was shipping fast/well-packaged?
+  paymentRating   Int?     // 1-5: Was payment prompt? (for sellers reviewing buyers)
+  
+  // Review content
+  title           String?
+  content         String   @db.Text
+  
+  // Pros and cons (structured feedback)
+  pros            String[] // Array of positive points
+  cons            String[] // Array of negative points
+  
+  // Was item as described?
+  itemAsDescribed Boolean?
+  wouldRecommend  Boolean?
+  
+  // Photo proof (optional)
+  photos          String[] // URLs to review photos
+  
+  // Verification
+  isVerifiedPurchase Boolean @default(false) // Confirmed transaction on platform
+  
+  // Response from reviewee
+  responseContent String?  @db.Text
+  respondedAt     DateTime?
+  
+  // Moderation
+  isPublic        Boolean  @default(true)
+  isHidden        Boolean  @default(false) // Hidden by admin
+  hiddenReason    String?
+  reportCount     Int      @default(0)
+  
+  // Helpfulness voting
+  helpfulCount    Int      @default(0)
+  notHelpfulCount Int      @default(0)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  editedAt        DateTime? // If user edited their review
+  
+  // Relations
+  reviewer        MarketplaceProfile @relation("ReviewsGiven", fields: [reviewerId], references: [userId], onDelete: Cascade)
+  reviewee        MarketplaceProfile @relation("ReviewsReceived", fields: [revieweeId], references: [userId], onDelete: Cascade)
+  helpfulVotes    MarketplaceReviewVote[]
+  
+  @@unique([reviewerId, revieweeId, listingId]) // One review per transaction
+  @@index([reviewerId])
+  @@index([revieweeId])
+  @@index([listingId])
+  @@index([overallRating])
+  @@index([transactionType])
+  @@index([createdAt(sort: Desc)])
+  @@index([isPublic, isHidden])
+}
+
+// Votes on review helpfulness
+model MarketplaceReviewVote {
+  id        String   @id @default(cuid())
+  reviewId  String
+  voterId   String
+  isHelpful Boolean  // true = helpful, false = not helpful
+  createdAt DateTime @default(now())
+  
+  review    MarketplaceReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  
+  @@unique([reviewId, voterId])
+  @@index([reviewId])
+  @@index([voterId])
+}
+
+// Report system for suspicious activity
+model MarketplaceReport {
+  id            String   @id @default(cuid())
+  reporterId    String   // Who reported
+  reportedUserId String? // Reported user (if user report)
+  reportedListingId String? // Reported listing (if listing report)
+  reportedReviewId String? // Reported review (if review report)
+  
+  // Report details
+  reason        String   // "scam", "fake_item", "harassment", "spam", "inappropriate", "other"
+  description   String   @db.Text
+  evidence      String[] // URLs to screenshots/evidence
+  
+  // Status
+  status        String   @default("pending") // pending, investigating, resolved, dismissed
+  resolution    String?  // What action was taken
+  resolvedAt    DateTime?
+  resolvedBy    String?  // Admin who resolved
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  reporter      User     @relation("MarketplaceReports", fields: [reporterId], references: [id], onDelete: Cascade)
+  listing       MarketplaceListing? @relation(fields: [reportedListingId], references: [id], onDelete: SetNull)
+  
+  @@index([reporterId])
+  @@index([reportedUserId])
+  @@index([reportedListingId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+// ============================================
+// RNRB PLATFORM MERCH STORE
+// ============================================
+
+// Orders for the official RNRB merch store (platform-level, not musician sites)
+model PlatformMerchOrder {
+  id                    String   @id @default(cuid())
+  userId                String
+  orderNumber           String   @unique // e.g., "RNRB-123456"
+  
+  // Stripe
+  stripeSessionId       String?  @unique
+  stripePaymentIntentId String?  @unique
+  
+  // Customer Info (snapshot)
+  customerEmail         String
+  customerName          String?
+  
+  // Shipping
+  shippingName          String?
+  shippingAddress       Json?    // Full address object
+  shippingMethod        String?  // "standard", "express"
+  shippingCost          Int      @default(0) // in cents
+  trackingNumber        String?
+  trackingCarrier       String?
+  
+  // Totals (all in cents)
+  subtotal              Int
+  tax                   Int      @default(0)
+  discount              Int      @default(0)
+  total                 Int
+  currency              String   @default("usd")
+  
+  // Order Items (stored as JSON for simplicity)
+  items                 Json     // Array of { productId, name, quantity, unitPrice, totalPrice, variant }
+  
+  // Status
+  status                PlatformOrderStatus @default(PENDING)
+  paymentStatus         String?  // From Stripe: succeeded, pending, failed
+  
+  // Dates
+  paidAt                DateTime?
+  processedAt           DateTime?
+  shippedAt             DateTime?
+  deliveredAt           DateTime?
+  canceledAt            DateTime?
+  
+  // Notes
+  customerNote          String?  @db.Text
+  internalNote          String?  @db.Text
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  user                  User     @relation("PlatformMerchOrders", fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@index([stripeSessionId])
+  @@index([stripePaymentIntentId])
+}
+
+enum PlatformOrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELED
+  REFUNDED
+}
+
+// Force regeneration: 2025-12-02-PLATFORM-MERCH

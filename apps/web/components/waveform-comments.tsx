@@ -28,7 +28,7 @@ import {
   Clock,
   SkipBack,
   SkipForward,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect, useCallback } from 'react';
 
 import { usePinnedComments, type PinnedComment } from '@/hooks/use-pinned-comments';

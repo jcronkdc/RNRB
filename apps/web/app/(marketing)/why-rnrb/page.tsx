@@ -1,19 +1,20 @@
 'use client';
 
-import { Card, Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { InstallAppButton } from '@/components/install-app-button';
 import {
-  Music,
-  Users,
+  ArrowRight,
+  CheckCircle,
   DollarSign,
-  Shield,
-  Zap,
   Globe,
   Layers,
-  CheckCircle,
+  Music,
+  Shield,
+  Users,
   XCircle,
-  ArrowRight,
-} from 'lucide-react';
+  Zap,
+} from '@/components/ui/custom-icons';
+import { Button, Card } from '@cronkwaters/ui';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 const competitors = [
@@ -28,6 +29,7 @@ const competitors = [
       rights: false,
       revenue: false,
       messaging: false,
+      nativeApp: true,
       integrated: false,
     },
   },
@@ -42,6 +44,7 @@ const competitors = [
       rights: false,
       revenue: false,
       messaging: false,
+      nativeApp: true,
       integrated: false,
     },
   },
@@ -56,6 +59,7 @@ const competitors = [
       rights: false,
       revenue: false,
       messaging: true,
+      nativeApp: false,
       integrated: false,
     },
   },
@@ -70,6 +74,7 @@ const competitors = [
       rights: false,
       revenue: true,
       messaging: false,
+      nativeApp: false,
       integrated: false,
     },
   },
@@ -84,6 +89,7 @@ const competitors = [
       rights: true,
       revenue: true,
       messaging: false,
+      nativeApp: false,
       integrated: false,
     },
   },
@@ -97,6 +103,7 @@ const features = [
   { key: 'rights', label: 'Rights & Royalties' },
   { key: 'revenue', label: 'Revenue Tracking' },
   { key: 'messaging', label: 'Team Messaging' },
+  { key: 'nativeApp', label: 'Native App (All Devices)' },
   { key: 'integrated', label: 'All-in-One Platform' },
 ];
 
@@ -315,6 +322,56 @@ export default function WhyRNRBPage() {
               </div>
             </Card>
           </div>
+
+          {/* Use Anywhere - Full Width Card */}
+          <Card className="mt-8 border-green-500/30 bg-gradient-to-r from-green-500/5 to-emerald-500/5 p-8">
+            <div className="flex flex-col items-center gap-6 text-center md:flex-row md:text-left">
+              <div className="rounded-lg bg-green-500/15 p-4">
+                <svg
+                  className="h-8 w-8 text-green-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 2L12 8M12 8L9 5M12 8L15 5"
+                  />
+                  <rect x="4" y="10" width="16" height="12" rx="2" />
+                  <path d="M12 18h.01" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 className="mb-2 text-xl font-semibold">
+                  Install as a Native App on Any Device
+                </h3>
+                <p className="mb-4 text-muted-foreground">
+                  Rock N' Roll Basement works like a native app on Mac, PC, iPhone, iPad, and
+                  Android—no app store required. Install directly from your browser for instant
+                  access from your dock or home screen.
+                </p>
+                <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-sm text-green-500">
+                    <CheckCircle className="h-4 w-4" />
+                    Mac & Windows
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-sm text-green-500">
+                    <CheckCircle className="h-4 w-4" />
+                    iPhone & Android
+                  </span>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-sm text-green-500">
+                    <CheckCircle className="h-4 w-4" />
+                    Works Offline
+                  </span>
+                </div>
+                <div className="mt-4 flex justify-center md:justify-start">
+                  <InstallAppButton />
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
 
         {/* The Problem We Solve */}

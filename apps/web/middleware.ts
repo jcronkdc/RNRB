@@ -36,7 +36,7 @@ const protectedPaths = [
   '/invite',
   '/invites',
   '/request',
-  '/u',
+  // NOTE: '/u' (public profiles) is intentionally NOT protected - anyone can view profiles
   '/discover',
   '/feed', // Social feed requires auth
   '/auth-test',

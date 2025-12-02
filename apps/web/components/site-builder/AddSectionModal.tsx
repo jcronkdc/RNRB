@@ -36,7 +36,7 @@ import {
   VideoIcon,
   Phone,
   Info,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface AddSectionModalProps {

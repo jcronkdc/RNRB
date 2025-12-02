@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from '@/components/ui/custom-icons';
 
 interface AudioWaveformProps {
   url: string;

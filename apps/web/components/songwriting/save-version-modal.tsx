@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { GitBranch, Save, Sparkles, X } from 'lucide-react';
+import { GitBranch, Save, Sparkles, X } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type SaveVersionModalProps = {

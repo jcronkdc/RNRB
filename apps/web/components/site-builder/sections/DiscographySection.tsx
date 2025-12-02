@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, Calendar, Disc, ChevronDown, ChevronUp } from 'lucide-react';
+import { Play, Calendar, Disc, ChevronDown, ChevronUp } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface Track {

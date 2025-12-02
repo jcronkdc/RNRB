@@ -1,7 +1,15 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, TrendingUp, X, Sparkles, HardDrive, Video, ImageIcon } from 'lucide-react';
+import {
+  AlertTriangle,
+  TrendingUp,
+  X,
+  Sparkles,
+  HardDrive,
+  Video,
+  ImageIcon,
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 

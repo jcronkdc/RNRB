@@ -11,7 +11,7 @@ import {
   Video as VideoIcon,
   TrendingUp,
   CheckCircle2,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type SessionType = 'recording' | 'writing' | 'rehearsal' | 'video' | 'mixing' | 'other';

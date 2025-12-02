@@ -20,7 +20,7 @@
 import { Button } from '@cronkwaters/ui';
 import type { RealtimeChannel } from 'ably';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Smile, Paperclip, MoreVertical, Reply } from 'lucide-react';
+import { Send, Smile, Paperclip, MoreVertical, Reply } from '@/components/ui/custom-icons';
 import { useEffect, useState, useRef } from 'react';
 
 import { VoiceMessagePlayer } from './voice-message-player';

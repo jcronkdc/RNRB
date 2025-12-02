@@ -19,7 +19,7 @@ import {
   Grid,
   Headphones,
   Send,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useRef } from 'react';
 
 interface SiteSection {

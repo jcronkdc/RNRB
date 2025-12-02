@@ -16,7 +16,7 @@ import {
   ArrowRight,
   Play,
   Heart,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 
 interface ExclusiveContent {
   id: string;

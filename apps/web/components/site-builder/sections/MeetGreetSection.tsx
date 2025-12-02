@@ -11,7 +11,7 @@ import {
   ChevronRight,
   Loader2,
   MessageSquare,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface MeetGreetOption {

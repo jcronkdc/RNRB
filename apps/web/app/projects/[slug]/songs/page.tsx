@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { Plus, Music, Edit, Play, Users, FileText } from 'lucide-react';
+import { Plus, Music, Edit, Play, Users, FileText } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';

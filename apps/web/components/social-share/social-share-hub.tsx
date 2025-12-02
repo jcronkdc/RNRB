@@ -19,7 +19,7 @@ import {
   Unplug,
   AlertCircle,
   RefreshCw,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';

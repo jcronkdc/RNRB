@@ -1,5 +1,13 @@
 import { prisma } from '@cronkwaters/db';
-import { Loader2, Hash, TrendingUp, Music, Users, Sparkles, ArrowRight } from 'lucide-react';
+import {
+  Loader2,
+  Hash,
+  TrendingUp,
+  Music,
+  Users,
+  Sparkles,
+  ArrowRight,
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';

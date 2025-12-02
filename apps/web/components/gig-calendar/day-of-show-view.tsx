@@ -28,7 +28,7 @@ import {
   ExternalLink,
   Share2,
   Calendar,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 

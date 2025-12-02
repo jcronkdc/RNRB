@@ -10,7 +10,7 @@ import {
   Loader2,
   Filter,
   AlertCircle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 export type SuggestionType = 'rhyme' | 'synonym' | 'chord' | 'structure' | 'ai';

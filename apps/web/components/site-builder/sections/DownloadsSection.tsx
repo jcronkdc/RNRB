@@ -1,6 +1,6 @@
 'use client';
 
-import { Download, FileAudio, ShoppingCart, Play, Pause } from 'lucide-react';
+import { Download, FileAudio, ShoppingCart, Play, Pause } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface DownloadItem {

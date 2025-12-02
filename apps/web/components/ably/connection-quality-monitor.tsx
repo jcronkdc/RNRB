@@ -2,7 +2,7 @@
 
 import type * as Ably from 'ably';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wifi, WifiOff, AlertTriangle } from 'lucide-react';
+import { Wifi, WifiOff, AlertTriangle } from '@/components/ui/custom-icons';
 import { useEffect, useState, useCallback } from 'react';
 
 interface ConnectionQualityMonitorProps {

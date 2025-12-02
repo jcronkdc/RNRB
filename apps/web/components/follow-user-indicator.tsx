@@ -11,7 +11,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, X, UserCheck } from 'lucide-react';
+import { Eye, X, UserCheck } from '@/components/ui/custom-icons';
 
 import type { PresenceMember } from '@/hooks/use-enhanced-presence';
 

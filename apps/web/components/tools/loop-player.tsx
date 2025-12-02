@@ -16,7 +16,7 @@ import {
   ZoomOut,
   SkipBack,
   SkipForward,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
 
 interface LoopRegion {

@@ -20,7 +20,7 @@ import {
   CheckCircle,
   Loader2,
   ArrowLeft,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';

@@ -61,6 +61,14 @@ const envSchema = z.object({
   // Video (Daily.co)
   DAILY_API_KEY: z.string().optional(),
 
+  // Live Streaming (Mux)
+  MUX_TOKEN_ID: z.string().optional(),
+  MUX_TOKEN_SECRET: z.string().optional(),
+
+  // Push Notifications (Web Push)
+  VAPID_PUBLIC_KEY: z.string().optional(),
+  VAPID_PRIVATE_KEY: z.string().optional(),
+
   // Supabase (for storage)
   NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
@@ -106,6 +114,10 @@ function getValidatedEnv(): Env {
       ABLY_API_KEY: process.env.ABLY_API_KEY,
       NEXT_PUBLIC_ABLY_API_KEY: process.env.NEXT_PUBLIC_ABLY_API_KEY,
       DAILY_API_KEY: process.env.DAILY_API_KEY,
+      MUX_TOKEN_ID: process.env.MUX_TOKEN_ID,
+      MUX_TOKEN_SECRET: process.env.MUX_TOKEN_SECRET,
+      VAPID_PUBLIC_KEY: process.env.VAPID_PUBLIC_KEY,
+      VAPID_PRIVATE_KEY: process.env.VAPID_PRIVATE_KEY,
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
       NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
       SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
@@ -170,5 +182,7 @@ export const features = {
   payments: !!env.STRIPE_SECRET_KEY,
   realtime: !!env.ABLY_API_KEY,
   video: !!env.DAILY_API_KEY,
+  liveStreaming: !!(process.env.MUX_TOKEN_ID && process.env.MUX_TOKEN_SECRET),
+  pushNotifications: !!(process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY),
   storage: !!env.NEXT_PUBLIC_SUPABASE_URL && !!env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
 };

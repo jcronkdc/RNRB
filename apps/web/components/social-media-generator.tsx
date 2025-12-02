@@ -10,7 +10,7 @@ import {
   Check,
   Loader2,
   RefreshCw,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type SocialMediaGeneratorProps = {

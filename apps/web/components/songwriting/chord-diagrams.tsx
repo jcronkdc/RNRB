@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Guitar, Piano } from 'lucide-react';
+import { Guitar, Piano } from '@/components/ui/custom-icons';
 import { useState, memo } from 'react';
 
 type ChordDiagramsProps = {

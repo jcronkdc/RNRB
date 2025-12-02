@@ -16,7 +16,7 @@ import {
   Share2,
   Heart,
   MoreVertical,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import { useState, useRef } from 'react';
 

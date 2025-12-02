@@ -10,7 +10,7 @@ import {
   ChevronRight,
   ArrowRight,
   CheckCircle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
 export default function AIMusicFeaturePage() {

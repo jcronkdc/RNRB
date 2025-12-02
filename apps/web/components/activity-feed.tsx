@@ -8,7 +8,7 @@
 
 import { formatDistanceToNow } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, AlertCircle } from 'lucide-react';
+import { Activity, AlertCircle } from '@/components/ui/custom-icons';
 import { memo, useMemo } from 'react';
 
 import {

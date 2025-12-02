@@ -39,7 +39,7 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import {
   useState,

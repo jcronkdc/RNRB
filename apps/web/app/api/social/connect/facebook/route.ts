@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@cronkwaters/auth';
 import crypto from 'crypto';
-
-import { authOptions } from '@/lib/auth';
 
 // Meta (Facebook/Instagram) OAuth
 const META_APP_ID = process.env.FACEBOOK_APP_ID || '';
@@ -22,7 +20,7 @@ const META_SCOPES = [
 // GET /api/social/connect/facebook - Initiate Facebook OAuth
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.redirect(new URL('/auth/signin', req.url));
     }

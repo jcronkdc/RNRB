@@ -2,7 +2,7 @@
 
 import { Button, Input, Label } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Mail, Loader2, X } from 'lucide-react';
+import { Mail, Loader2, X } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface InviteModalProps {

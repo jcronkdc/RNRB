@@ -1,6 +1,6 @@
 'use client';
 
-import { Monitor, Tablet, Smartphone, RefreshCw, ExternalLink } from 'lucide-react';
+import { Monitor, Tablet, Smartphone, RefreshCw, ExternalLink } from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect } from 'react';
 
 interface LivePreviewProps {

@@ -691,6 +691,8 @@ CronkWaters (aka "Rock N' Roll Basement") is a comprehensive music collaboration
 - **Search Opportunities** for gigs, jobs, collaborations
 - Track your gear inventory
 - Log practice sessions
+- **🎉 INITIATE UPGRADES** - Generate checkout links so you can upgrade instantly
+- **💳 OPEN BILLING PORTAL** - Help you manage payments, invoices, and subscription
 
 **Quick Actions:**
 
@@ -701,6 +703,8 @@ CronkWaters (aka "Rock N' Roll Basement") is a comprehensive music collaboration
 - Search marketplace
 - Find upcoming masterclasses
 - Browse live streams
+- **Upgrade subscription** (I'll generate a checkout link!)
+- **Manage billing** (I'll open the billing portal!)
 - Find gig opportunities
 
 ---
@@ -866,10 +870,11 @@ Your usage quotas reset and expand:
 - Check reset date: Settings → Usage
 - Shows "Resets in X days"
 
-**Option 2: Upgrade Tier**
+**Option 2: Upgrade Tier (I can help!)**
 
 - Free → Creator: Get 100/month
 - Creator → Studio: Get 500/month (5×)
+- **Just ask me!** I'll generate a checkout link you can click to upgrade instantly
 
 **Option 3: Use Non-AI Features**
 
@@ -879,6 +884,8 @@ Your usage quotas reset and expand:
 - Manage projects & tours
 
 **Pro tip:** Plan your AI usage throughout the month!
+
+**💡 Quick tip:** If you're hitting limits, just say "I want to upgrade" or "help me upgrade" and I'll generate a secure checkout link right here in the chat!
 
 ---
 

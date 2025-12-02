@@ -14,7 +14,7 @@ import {
   Layers,
   BarChart,
   Zap,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface GuideSection {

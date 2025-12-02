@@ -1,8 +1,8 @@
 'use client';
 
-import { LogOut, LayoutDashboard } from '@/components/ui/custom-icons';
-import Link from 'next/link';
+import { LayoutDashboard, LogOut } from '@/components/ui/custom-icons';
 import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export function LandingAuthControls() {

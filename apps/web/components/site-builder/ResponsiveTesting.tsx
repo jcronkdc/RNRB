@@ -1,6 +1,14 @@
 'use client';
 
-import { Monitor, Smartphone, Tablet, RotateCw, Ruler, Zap, Grid3x3 } from 'lucide-react';
+import {
+  Monitor,
+  Smartphone,
+  Tablet,
+  RotateCw,
+  Ruler,
+  Zap,
+  Grid3x3,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface ResponsiveTestingProps {

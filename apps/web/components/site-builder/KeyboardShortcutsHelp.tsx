@@ -1,6 +1,6 @@
 'use client';
 
-import { X, Command, Keyboard } from 'lucide-react';
+import { X, Command, Keyboard } from '@/components/ui/custom-icons';
 
 import { getModifierKey } from '@/hooks/use-keyboard-shortcuts';
 

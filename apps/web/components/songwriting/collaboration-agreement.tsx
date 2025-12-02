@@ -1,7 +1,14 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { FileCheck, Download, Users, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import {
+  FileCheck,
+  Download,
+  Users,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 import type { CopyrightInfo } from './copyright-manager';

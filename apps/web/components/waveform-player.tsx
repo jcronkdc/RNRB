@@ -25,7 +25,7 @@ import {
   Download,
   Share2,
   Repeat,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useEffect, useRef, useState } from 'react';
 
 type WaveformPlayerProps = {

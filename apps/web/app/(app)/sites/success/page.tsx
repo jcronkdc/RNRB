@@ -42,7 +42,7 @@ import {
   TrendingUp,
   Users,
   MousePointer,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense, useCallback } from 'react';

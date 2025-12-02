@@ -1,6 +1,14 @@
 'use client';
 
-import { Heart, Coffee, Gift, CreditCard, Check, ExternalLink, Users } from 'lucide-react';
+import {
+  Heart,
+  Coffee,
+  Gift,
+  CreditCard,
+  Check,
+  ExternalLink,
+  Users,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface SupportTier {

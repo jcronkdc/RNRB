@@ -14,7 +14,7 @@ import {
   Sparkles,
   Upload,
   Users,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';

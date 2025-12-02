@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, XCircle, AlertCircle, Info, X } from 'lucide-react';
+import { CheckCircle2, XCircle, AlertCircle, Info, X } from '@/components/ui/custom-icons';
 import { useState, useCallback, createContext, useContext, type ReactNode } from 'react';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';

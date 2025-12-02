@@ -18,7 +18,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Music, Sparkles, GripVertical, X } from 'lucide-react';
+import { Music, Sparkles, GripVertical, X } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type SongBlock = {

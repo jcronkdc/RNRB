@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, X, Calendar, Eye, Grid, List, ExternalLink } from 'lucide-react';
+import { Play, X, Calendar, Eye, Grid, List, ExternalLink } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface MusicVideo {

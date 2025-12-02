@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Check, Sparkles, Zap, Crown, ArrowRight, Lock } from 'lucide-react';
+import { X, Check, Sparkles, Zap, Crown, ArrowRight, Lock } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState } from 'react';
 

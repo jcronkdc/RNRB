@@ -15,7 +15,7 @@ import {
   Zap,
   AlertCircle,
   Palette,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 

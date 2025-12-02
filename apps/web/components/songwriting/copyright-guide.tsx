@@ -11,7 +11,7 @@ import {
   Music,
   Globe,
   DollarSign,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type GuideSection = {

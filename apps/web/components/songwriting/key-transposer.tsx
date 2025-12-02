@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowUp, ArrowDown, RotateCcw, Music } from 'lucide-react';
+import { ArrowUp, ArrowDown, RotateCcw, Music } from '@/components/ui/custom-icons';
 import { useState, useMemo, useCallback } from 'react';
 
 // All chromatic notes

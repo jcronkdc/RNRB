@@ -149,6 +149,45 @@ export function useCommandPalette() {
         },
       },
       {
+        id: 'nav-meet',
+        title: 'Meet',
+        description: 'Start or join a video call',
+        icon: '📹',
+        action: 'navigate',
+        keywords: ['meet', 'video', 'call', 'zoom', 'conference', 'meeting', 'screen share'],
+        category: 'navigation',
+        handler: () => {
+          router.push('/meet');
+          setIsOpen(false);
+        },
+      },
+      {
+        id: 'nav-live',
+        title: 'Go Live',
+        description: 'Stream to your fans',
+        icon: '📺',
+        action: 'navigate',
+        keywords: ['live', 'stream', 'streaming', 'broadcast', 'twitch', 'fans'],
+        category: 'navigation',
+        handler: () => {
+          router.push('/live');
+          setIsOpen(false);
+        },
+      },
+      {
+        id: 'nav-masterclasses',
+        title: 'Masterclasses',
+        description: 'Learn from industry pros',
+        icon: '🎓',
+        action: 'navigate',
+        keywords: ['masterclass', 'learn', 'education', 'course', 'lesson', 'teach', 'instructor'],
+        category: 'navigation',
+        handler: () => {
+          router.push('/masterclasses');
+          setIsOpen(false);
+        },
+      },
+      {
         id: 'nav-tours',
         title: 'Tours',
         description: 'Manage your tour schedule',
@@ -200,6 +239,32 @@ export function useCommandPalette() {
         category: 'actions',
         handler: () => {
           router.push('/projects/new');
+          setIsOpen(false);
+        },
+      },
+      {
+        id: 'action-start-meeting',
+        title: 'Start Meeting',
+        description: 'Start an instant video call',
+        icon: '📹',
+        action: 'start',
+        keywords: ['meeting', 'call', 'video', 'zoom', 'instant'],
+        category: 'actions',
+        handler: () => {
+          router.push('/meet');
+          setIsOpen(false);
+        },
+      },
+      {
+        id: 'action-go-live',
+        title: 'Go Live Now',
+        description: 'Start streaming to your fans',
+        icon: '🔴',
+        action: 'start',
+        keywords: ['live', 'stream', 'broadcast', 'go live'],
+        category: 'actions',
+        handler: () => {
+          router.push('/live/go');
           setIsOpen(false);
         },
       },

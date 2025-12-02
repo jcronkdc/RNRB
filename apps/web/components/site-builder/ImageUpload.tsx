@@ -1,6 +1,6 @@
 'use client';
 
-import { Upload, Loader2, Check, AlertCircle } from 'lucide-react';
+import { Upload, Loader2, Check, AlertCircle } from '@/components/ui/custom-icons';
 import { useState, useRef, type ChangeEvent } from 'react';
 
 interface ImageUploadProps {

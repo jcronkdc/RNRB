@@ -303,7 +303,7 @@ async function handleTrialEnding(subscription: Stripe.Subscription) {
 }
 
 /**
- * Handle credit purchases and merch orders (one-time checkout sessions)
+ * Handle credit purchases, masterclass enrollments, and merch orders (one-time checkout sessions)
  */
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   try {
@@ -312,6 +312,12 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     }
 
     const metadata = session.metadata || {};
+
+    // Check if this is a masterclass enrollment
+    if (metadata.type === 'masterclass_enrollment') {
+      await handleMasterclassEnrollmentCompleted(session);
+      return;
+    }
 
     // Check if this is a merch order
     if (metadata.orderId) {
@@ -588,5 +594,99 @@ async function handleMerchPaymentSucceeded(paymentIntent: Stripe.PaymentIntent) 
   } catch (error) {
     console.error('Error handling merch payment succeeded:', error);
     // Don't throw - this is a backup handler and shouldn't fail the webhook
+  }
+}
+
+/**
+ * Handle masterclass enrollment payment completion
+ */
+async function handleMasterclassEnrollmentCompleted(session: Stripe.Checkout.Session) {
+  try {
+    const metadata = session.metadata || {};
+    const masterclassId = metadata.masterclassId;
+    const userId = metadata.userId;
+    const instructorId = metadata.instructorId;
+    const instructorShare = Number(metadata.instructorShare || 0);
+    const platformShare = Number(metadata.platformShare || 0);
+
+    if (!masterclassId || !userId) {
+      console.warn('Masterclass enrollment session missing metadata', session.id);
+      return;
+    }
+
+    // Find pending enrollment
+    const enrollment = await prisma.masterclassEnrollment.findUnique({
+      where: { stripeSessionId: session.id },
+    });
+
+    if (!enrollment) {
+      console.error('Enrollment not found for session:', session.id);
+      return;
+    }
+
+    // Get masterclass for access period
+    const masterclass = await prisma.masterclass.findUnique({
+      where: { id: masterclassId },
+      select: { accessDays: true, lessonCount: true, title: true },
+    });
+
+    if (!masterclass) {
+      console.error('Masterclass not found:', masterclassId);
+      return;
+    }
+
+    // Activate enrollment
+    await prisma.masterclassEnrollment.update({
+      where: { id: enrollment.id },
+      data: {
+        status: 'active',
+        stripePaymentIntentId: session.payment_intent as string,
+        accessStartsAt: new Date(),
+        accessEndsAt: masterclass.accessDays
+          ? new Date(Date.now() + masterclass.accessDays * 24 * 60 * 60 * 1000)
+          : null,
+        totalLessons: masterclass.lessonCount,
+        instructorShare: instructorShare / 100,
+        platformShare: platformShare / 100,
+      },
+    });
+
+    // Update masterclass stats
+    await prisma.masterclass.update({
+      where: { id: masterclassId },
+      data: {
+        enrollmentCount: { increment: 1 },
+        revenue: { increment: (session.amount_total || 0) / 100 },
+      },
+    });
+
+    // Update instructor stats
+    if (instructorId) {
+      await prisma.masterclassInstructor.update({
+        where: { id: instructorId },
+        data: {
+          totalStudents: { increment: 1 },
+          totalEarnings: { increment: instructorShare / 100 },
+        },
+      });
+    }
+
+    console.log(`✅ Masterclass enrollment activated for user ${userId} in "${masterclass.title}"`);
+
+    // Send enrollment confirmation email
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, name: true },
+    });
+
+    if (user) {
+      // TODO: Add email template for masterclass enrollment
+      console.log(
+        `📧 Would send enrollment confirmation to ${user.email} for "${masterclass.title}"`
+      );
+    }
+  } catch (error) {
+    console.error('Error handling masterclass enrollment:', error);
+    throw error;
   }
 }

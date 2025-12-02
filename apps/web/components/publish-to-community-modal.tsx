@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Music, Loader2 } from 'lucide-react';
+import { X, Upload, Music, Loader2 } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface PublishToCommunityModalProps {

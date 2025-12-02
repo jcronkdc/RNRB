@@ -2,7 +2,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, Music, Users, Sparkles } from 'lucide-react';
+import { X, ArrowRight, Music, Users, Sparkles } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 

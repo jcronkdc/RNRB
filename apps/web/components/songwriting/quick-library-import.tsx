@@ -12,7 +12,7 @@ import {
   Search,
   ArrowRight,
   Sparkles,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useMemo } from 'react';
 
 import { useLibrary, type LibraryFile } from '@/hooks/use-library';

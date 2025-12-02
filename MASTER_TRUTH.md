@@ -1,7 +1,7 @@
 # MASTER_TRUTH
 
-**Agent:** 156 | **Prev:** 155 | **Date:** 2025-11-30  
-**Status:** ✅ **PRODUCTION LIVE** • **NEW: Musician's Toolbox - 12 Professional Tools Added**
+**Agent:** 157 | **Prev:** 156 | **Date:** 2025-12-02  
+**Status:** ✅ **PRODUCTION LIVE** • **NEW: Public Profile Pages - Complete Feature**
 
 ---
 
@@ -10,13 +10,14 @@
 | Component           | Status                                                                   |
 | ------------------- | ------------------------------------------------------------------------ |
 | **Site**            | https://www.cronkwaters.com → ✅ HTTP 200 LIVE                           |
-| **Build**           | 🔄 Deploying (Agent 153 - Keyboard Shortcuts + Profile Upgrade)          |
+| **Build**           | 🔄 Ready to deploy (Public Profile enhancements)                         |
 | **Health Check**    | ✅ 100%                                                                  |
 | **Dashboard**       | ✅ FIXED - Added KeyboardShortcutsProvider (Agent 153)                   |
 | **Auth**            | 🟠 Credentials sign-in/reg fix committed (Agent 151) – redeploy required |
 | **Auth Redirect**   | ✅ Sign-in → Dashboard flow fixed (Agent 147)                            |
 | **URL Plus Signs**  | ✅ Email + signs preserved in redirects (148)                            |
-| **Profile Setup**   | ✅ **WORLD-CLASS** - Major aesthetic upgrade (Agent 153)                 |
+| **Profile Setup**   | ✅ **WORLD-CLASS** - Major aesthetic upgrade + public profile link       |
+| **Public Profiles** | ✅ **NEW** - `/u/[username]` with SEO, QR codes, share modal (Agent 157) |
 | **Suspense**        | ✅ All useSearchParams() wrapped (FIXED 148)                             |
 | **Database**        | ✅ Neon PostgreSQL (connected)                                           |
 | **Video**           | ✅ Daily.co configured                                                   |
@@ -26,13 +27,52 @@
 | **Onboarding**      | ✅ Premium first impression with progress tracking                       |
 | **Notifications**   | ✅ Notification Bell functional in TopBar                                |
 | **Landing Page**    | ✅ Updated with all 75+ features (Agent 147)                             |
-| **Navigation**      | ✅ Dashboard access from UserMenu                                        |
+| **Navigation**      | ✅ Dashboard access from UserMenu + View My Profile link                 |
 | **Website Builder** | ✅ LIVE - World-class musician website builder                           |
 | **Mobile**          | ✅ Landing + solutions + builder + usage widgets responsive (Agent 151)  |
 
 ---
 
-## 🔄 LATEST CHANGES (Agent 156 – Musician's Toolbox: 12 Professional Tools)
+## 🔄 LATEST CHANGES (Agent 157 – Public Profile Pages: Complete Feature)
+
+### NEW FEATURE: Public Profile Pages 🎸
+
+**Location:** `/u/[username]` (e.g., `cronkwaters.com/u/justincronk`)
+
+**What Was Built:**
+
+| Feature                   | Description                                                | Status |
+| ------------------------- | ---------------------------------------------------------- | ------ |
+| **Profile Page UI**       | Beautiful artist profile with stats, tracks, shows         | ✅     |
+| **SEO Meta Tags**         | Dynamic Open Graph for social sharing (title, description) | ✅     |
+| **Username Validation**   | Real-time availability check + format validation           | ✅     |
+| **QR Code Share Modal**   | Scannable QR code + copy link + social share buttons       | ✅     |
+| **View My Profile Link**  | One-click access from user dropdown menu                   | ✅     |
+| **Profile Settings Link** | Preview URL shown when username is set                     | ✅     |
+| **API Error Fixes**       | Fixed Show query using org membership, status enum         | ✅     |
+| **NavBar Hidden**         | Marketing nav hidden on `/u/` routes                       | ✅     |
+
+**Files Created/Modified:**
+
+- `apps/web/app/u/[username]/page.tsx` - Main public profile page (enhanced)
+- `apps/web/app/u/[username]/layout.tsx` - **NEW** - SEO metadata generation
+- `apps/web/app/api/u/[username]/route.ts` - Fixed API with proper org/show queries
+- `apps/web/app/api/profile/check-username/route.ts` - **NEW** - Username validation
+- `apps/web/app/(app)/settings/profile/page.tsx` - Added public profile link + validation UI
+- `apps/web/components/top-bar.tsx` - Added "View My Profile" link
+- `apps/web/components/NavBar.tsx` - Hide on `/u/` routes
+
+**User Flow:**
+
+1. User sets username in `/settings/profile`
+2. Real-time validation shows availability
+3. Profile URL preview appears: `cronkwaters.com/u/username`
+4. "View My Profile" link appears in user dropdown
+5. Share modal with QR code for easy sharing at gigs
+
+---
+
+## 🔄 PREVIOUS CHANGES (Agent 156 – Musician's Toolbox: 12 Professional Tools)
 
 ### NEW FEATURE: Musician's Toolbox 🧰
 

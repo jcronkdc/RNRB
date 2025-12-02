@@ -15,7 +15,7 @@ import {
   ArrowRight,
   CheckCircle,
   Sparkles,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
 export default function WebsiteBuilderFeaturePage() {

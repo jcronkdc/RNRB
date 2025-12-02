@@ -1,7 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MessageSquare, Search, Users, Music2, Plus, Check, Zap, X } from 'lucide-react';
+import {
+  MessageSquare,
+  Search,
+  Users,
+  Music2,
+  Plus,
+  Check,
+  Zap,
+  X,
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';

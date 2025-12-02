@@ -16,7 +16,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Play, Pause, Download, Gauge } from 'lucide-react';
+import { Play, Pause, Download, Gauge } from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect } from 'react';
 
 interface VoiceMessagePlayerProps {

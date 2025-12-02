@@ -13,7 +13,7 @@ import {
   Globe,
   ArrowRight,
   Loader2,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState, useMemo, memo } from 'react';

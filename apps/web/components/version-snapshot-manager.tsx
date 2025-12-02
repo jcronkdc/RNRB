@@ -26,7 +26,7 @@ import {
   Check,
   X,
   GitCompare,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 import { useVersionSnapshots } from '@/hooks/use-version-snapshots';

@@ -17,8 +17,14 @@ import {
   Library,
   ChevronRight,
   Loader2,
-} from 'lucide-react';
+  Video,
+  GraduationCap,
+  MapPin,
+  ShoppingBag,
+  Download,
+} from '@/components/ui/custom-icons';
 
+import { InstallAppButton } from '@/components/install-app-button';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { WorkshopWelcome, DailySpark } from '@/components/workshop';
 
@@ -33,20 +39,20 @@ const quickActions = [
     color: 'var(--accent)',
   },
   {
-    id: 'practice',
-    label: 'Practice',
-    description: 'Track your growth',
-    icon: Target,
-    href: '/tools?tool=practice-logger',
-    color: 'var(--sage)',
+    id: 'meet',
+    label: 'Meet',
+    description: 'Video call your team',
+    icon: Video,
+    href: '/meet',
+    color: 'var(--sky)',
   },
   {
-    id: 'connect',
-    label: 'Connect',
-    description: 'Find musicians',
-    icon: Users,
-    href: '/discover',
-    color: 'var(--sky)',
+    id: 'live',
+    label: 'Go Live',
+    description: 'Stream to fans',
+    icon: Radio,
+    href: '/live',
+    color: '#ef4444',
   },
   {
     id: 'opportunities',
@@ -61,12 +67,17 @@ const quickActions = [
 // Tool access - all the tools available
 const toolboxItems = [
   { icon: Music4, label: 'Songs', href: '/songs', color: 'var(--accent)' },
-  { icon: Guitar, label: 'Toolbox', href: '/tools', color: 'var(--gold)' },
-  { icon: Calendar, label: 'Shows', href: '/shows', color: 'var(--sky)' },
-  { icon: Radio, label: 'Tours', href: '/tours', color: 'var(--clay)' },
+  { icon: Video, label: 'Meet', href: '/meet', color: '#8b5cf6' },
+  { icon: Radio, label: 'Go Live', href: '/live', color: '#ef4444' },
+  { icon: GraduationCap, label: 'Classes', href: '/masterclasses', color: '#ec4899' },
+  { icon: ShoppingBag, label: 'Gear Market', href: '/marketplace', color: '#f59e0b' },
   { icon: Mic2, label: 'Studio', href: '/studio', color: 'var(--sage)' },
+  { icon: Calendar, label: 'Shows', href: '/shows', color: 'var(--sky)' },
   { icon: Globe, label: 'My Site', href: '/sites', color: 'var(--accent)' },
+  { icon: Users, label: 'Connect', href: '/discover', color: 'var(--gold)' },
   { icon: Library, label: 'Library', href: '/library', color: 'var(--gold)' },
+  { icon: Guitar, label: 'Toolbox', href: '/tools', color: 'var(--gold)' },
+  { icon: MapPin, label: 'Tours', href: '/tours', color: 'var(--clay)' },
   { icon: Wrench, label: 'Settings', href: '/settings', color: 'var(--muted)' },
 ];
 
@@ -194,7 +205,7 @@ function DashboardContent() {
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-4 gap-3 p-4">
+                <div className="grid grid-cols-4 gap-2 p-3 sm:grid-cols-6">
                   {toolboxItems.map((tool, index) => (
                     <motion.div
                       key={tool.label}
@@ -287,6 +298,42 @@ function DashboardContent() {
             </div>
           </motion.section>
         </div>
+
+        {/* Install App Card */}
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="mt-6"
+        >
+          <div
+            className="overflow-hidden rounded-2xl border"
+            style={{
+              borderColor: 'rgba(34, 197, 94, 0.3)',
+              background: 'linear-gradient(135deg, var(--panel) 0%, rgba(34, 197, 94, 0.05) 100%)',
+            }}
+          >
+            <div className="flex flex-col items-center gap-4 p-6 sm:flex-row sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex h-12 w-12 items-center justify-center rounded-xl"
+                  style={{ background: 'rgba(34, 197, 94, 0.15)' }}
+                >
+                  <Download className="h-6 w-6" style={{ color: '#22c55e' }} />
+                </div>
+                <div>
+                  <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+                    Install Rock N' Roll Basement
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                    Get the app on your device for quick access & offline use
+                  </p>
+                </div>
+              </div>
+              <InstallAppButton variant="prominent" />
+            </div>
+          </div>
+        </motion.section>
 
         {/* Footer tip - honest, helpful */}
         <motion.div

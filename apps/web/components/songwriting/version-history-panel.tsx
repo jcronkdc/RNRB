@@ -1,7 +1,16 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Clock, Download, GitBranch, MoreVertical, RotateCcw, Star, Trash2, X } from 'lucide-react';
+import {
+  Clock,
+  Download,
+  GitBranch,
+  MoreVertical,
+  RotateCcw,
+  Star,
+  Trash2,
+  X,
+} from '@/components/ui/custom-icons';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type SongVersion = {

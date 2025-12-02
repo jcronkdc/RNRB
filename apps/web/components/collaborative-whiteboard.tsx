@@ -2,7 +2,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import type { RealtimeChannel } from 'ably';
-import { Trash2, Download, Palette, Square, Circle, Minus } from 'lucide-react';
+import { Trash2, Download, Palette, Square, Circle, Minus } from '@/components/ui/custom-icons';
 import { useEffect, useRef, useState } from 'react';
 
 import { useAblyClient } from '@/hooks/use-ably-client';

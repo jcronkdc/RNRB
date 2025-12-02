@@ -26,7 +26,7 @@ import {
   Headphones,
   Moon,
   Minus,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 import type { PresenceMember } from '@/hooks/use-enhanced-presence';

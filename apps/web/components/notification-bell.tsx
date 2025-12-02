@@ -8,7 +8,7 @@
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Check, CheckCheck, Trash2, X, Settings } from 'lucide-react';
+import { Bell, Check, CheckCheck, Trash2, X, Settings } from '@/components/ui/custom-icons';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';

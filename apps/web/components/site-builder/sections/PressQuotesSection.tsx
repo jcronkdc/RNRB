@@ -1,6 +1,6 @@
 'use client';
 
-import { Quote, Star, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Quote, Star, ExternalLink, ChevronLeft, ChevronRight } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface PressQuote {

@@ -15,7 +15,7 @@ import {
   Calendar,
   Users,
   Trophy,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useCallback } from 'react';
 
 import { DataSyncPicker, type SyncableItem } from './DataSyncPicker';

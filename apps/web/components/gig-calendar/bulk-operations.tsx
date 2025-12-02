@@ -12,7 +12,14 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2, CheckCircle, XCircle, Download, X, AlertTriangle } from 'lucide-react';
+import {
+  Trash2,
+  CheckCircle,
+  XCircle,
+  Download,
+  X,
+  AlertTriangle,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface BulkOperationsProps {

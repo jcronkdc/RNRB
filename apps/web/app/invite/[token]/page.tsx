@@ -1,6 +1,6 @@
 import { prisma } from '@cronkwaters/db';
 import { Button } from '@cronkwaters/ui';
-import { Mail, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { Mail, CheckCircle2, XCircle, Clock } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 

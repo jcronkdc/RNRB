@@ -26,7 +26,9 @@ export type NotificationType =
   | 'comment'
   | 'upload'
   | 'video_start'
-  | 'collab_request';
+  | 'collab_request'
+  | 'live_start'
+  | 'live_scheduled';
 
 export type Notification = {
   id: string;
@@ -267,6 +269,10 @@ export function getNotificationIcon(type: NotificationType): string {
       return '📹';
     case 'collab_request':
       return '🤝';
+    case 'live_start':
+      return '🔴';
+    case 'live_scheduled':
+      return '📅';
     default:
       return '🔔';
   }
@@ -286,6 +292,10 @@ export function getNotificationColor(type: NotificationType): string {
       return 'text-pink-400';
     case 'collab_request':
       return 'text-green-400';
+    case 'live_start':
+      return 'text-red-500';
+    case 'live_scheduled':
+      return 'text-violet-400';
     default:
       return 'text-gray-400';
   }

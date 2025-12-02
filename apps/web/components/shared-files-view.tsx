@@ -23,7 +23,7 @@ import {
   Share2,
   RefreshCw,
   AlertCircle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import useSWR from 'swr';
 

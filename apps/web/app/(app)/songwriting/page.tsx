@@ -11,7 +11,7 @@ import {
   Save,
   Download,
   Disc3,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -602,118 +602,129 @@ export default function SongwritingPage() {
                 </div>
               </div>
 
-              {/* Status row */}
-              <div className="flex flex-wrap items-center gap-3">
-                <SaveStatusIndicator />
-                {user && (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={undo}
-                        disabled={historyIndex <= 0}
-                        className="rounded-lg px-4 py-2 text-xs font-medium transition"
-                        style={{
-                          background: historyIndex > 0 ? 'var(--panel)' : 'transparent',
-                          border: historyIndex > 0 ? '1px solid var(--border)' : 'none',
-                          color: historyIndex > 0 ? 'var(--text)' : 'var(--muted)',
-                          cursor: historyIndex > 0 ? 'pointer' : 'not-allowed',
-                        }}
-                        title="Undo (⌘Z)"
-                      >
-                        Undo
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={redo}
-                        disabled={historyIndex >= history.length - 1}
-                        className="rounded-lg px-4 py-2 text-xs font-medium transition"
-                        style={{
-                          background:
-                            historyIndex < history.length - 1 ? 'var(--panel)' : 'transparent',
-                          border:
-                            historyIndex < history.length - 1 ? '1px solid var(--border)' : 'none',
-                          color: historyIndex < history.length - 1 ? 'var(--text)' : 'var(--muted)',
-                          cursor: historyIndex < history.length - 1 ? 'pointer' : 'not-allowed',
-                        }}
-                        title="Redo (⌘⇧Z)"
-                      >
-                        Redo
-                      </motion.button>
-                    </div>
-                    <Link href="/tools?tool=circle-of-fifths">
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition"
-                        style={{
-                          background:
-                            'linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2))',
-                          border: '1px solid rgba(168, 85, 247, 0.3)',
-                          color: '#a855f7',
-                        }}
-                        title="Circle of Fifths Tool"
-                      >
-                        <Disc3 className="h-3.5 w-3.5" />
-                        Circle of Fifths
-                      </motion.button>
-                    </Link>
-                    <ProjectSelector
-                      songId={songData.id}
-                      onProjectAdded={(_slug) => success(`Added to project`, 2000)}
-                    />
-                    {songData.id && (
-                      <div className="flex items-center gap-2">
+              {/* Status row - horizontally scrollable on mobile */}
+              <div className="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
+                <div
+                  className="flex items-center gap-2 sm:flex-wrap sm:gap-3"
+                  style={{ minWidth: 'max-content' }}
+                >
+                  <SaveStatusIndicator />
+                  {user && (
+                    <>
+                      <div className="flex items-center gap-1 sm:gap-2">
                         <motion.button
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          onClick={() => setShowSaveVersion(true)}
-                          className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition"
+                          onClick={undo}
+                          disabled={historyIndex <= 0}
+                          className="rounded-lg px-3 py-2 text-xs font-medium transition sm:px-4"
                           style={{
-                            background: 'var(--panel)',
-                            border: '1px solid var(--border)',
-                            color: 'var(--text)',
+                            background: historyIndex > 0 ? 'var(--panel)' : 'transparent',
+                            border: historyIndex > 0 ? '1px solid var(--border)' : 'none',
+                            color: historyIndex > 0 ? 'var(--text)' : 'var(--muted)',
+                            cursor: historyIndex > 0 ? 'pointer' : 'not-allowed',
                           }}
-                          title="Save Version"
+                          title="Undo (⌘Z)"
                         >
-                          <Save className="h-3.5 w-3.5" style={{ color: 'var(--accent)' }} />
-                          Save Version
+                          Undo
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          onClick={() => setShowVersionHistory(true)}
-                          className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition"
+                          onClick={redo}
+                          disabled={historyIndex >= history.length - 1}
+                          className="rounded-lg px-3 py-2 text-xs font-medium transition sm:px-4"
                           style={{
-                            background: 'var(--panel)',
-                            border: '1px solid var(--border)',
-                            color: 'var(--text)',
+                            background:
+                              historyIndex < history.length - 1 ? 'var(--panel)' : 'transparent',
+                            border:
+                              historyIndex < history.length - 1
+                                ? '1px solid var(--border)'
+                                : 'none',
+                            color:
+                              historyIndex < history.length - 1 ? 'var(--text)' : 'var(--muted)',
+                            cursor: historyIndex < history.length - 1 ? 'pointer' : 'not-allowed',
                           }}
-                          title="Version History"
+                          title="Redo (⌘⇧Z)"
                         >
-                          <GitBranch className="h-3.5 w-3.5" style={{ color: 'var(--accent)' }} />
-                          History
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => setShowExport(true)}
-                          className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-medium transition"
-                          style={{
-                            background: 'var(--accent)',
-                            color: 'white',
-                          }}
-                          title="Export Song"
-                        >
-                          <Download className="h-3.5 w-3.5" />
-                          Export
+                          Redo
                         </motion.button>
                       </div>
-                    )}
-                  </>
-                )}
+                      <Link href="/tools?tool=circle-of-fifths" className="hidden sm:block">
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition sm:px-4"
+                          style={{
+                            background:
+                              'linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(236, 72, 153, 0.2))',
+                            border: '1px solid rgba(168, 85, 247, 0.3)',
+                            color: '#a855f7',
+                          }}
+                          title="Circle of Fifths Tool"
+                        >
+                          <Disc3 className="h-3.5 w-3.5" />
+                          <span className="hidden md:inline">Circle of Fifths</span>
+                          <span className="md:hidden">Chords</span>
+                        </motion.button>
+                      </Link>
+                      <div className="hidden sm:block">
+                        <ProjectSelector
+                          songId={songData.id}
+                          onProjectAdded={(_slug) => success(`Added to project`, 2000)}
+                        />
+                      </div>
+                      {songData.id && (
+                        <div className="flex items-center gap-1 sm:gap-2">
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setShowSaveVersion(true)}
+                            className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition sm:gap-1.5 sm:px-4"
+                            style={{
+                              background: 'var(--panel)',
+                              border: '1px solid var(--border)',
+                              color: 'var(--text)',
+                            }}
+                            title="Save Version"
+                          >
+                            <Save className="h-3.5 w-3.5" style={{ color: 'var(--accent)' }} />
+                            <span className="hidden sm:inline">Save</span>
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setShowVersionHistory(true)}
+                            className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition sm:gap-1.5 sm:px-4"
+                            style={{
+                              background: 'var(--panel)',
+                              border: '1px solid var(--border)',
+                              color: 'var(--text)',
+                            }}
+                            title="Version History"
+                          >
+                            <GitBranch className="h-3.5 w-3.5" style={{ color: 'var(--accent)' }} />
+                            <span className="hidden sm:inline">History</span>
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setShowExport(true)}
+                            className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium transition sm:gap-1.5 sm:px-4"
+                            style={{
+                              background: 'var(--accent)',
+                              color: 'white',
+                            }}
+                            title="Export Song"
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            <span className="hidden sm:inline">Export</span>
+                          </motion.button>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -757,17 +768,21 @@ export default function SongwritingPage() {
           </div>
         </motion.div>
 
-        {/* Tab Navigation */}
-        <div className="mb-6">
+        {/* Tab Navigation - scrollable on mobile */}
+        <div className="-mx-4 mb-6 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0">
           <div
             className="flex gap-1 rounded-xl p-1"
-            style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+            style={{
+              background: 'var(--panel)',
+              border: '1px solid var(--border)',
+              minWidth: 'max-content',
+            }}
           >
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveView(tab.id)}
-                className="relative rounded-lg px-5 py-2.5 text-sm font-medium transition-all"
+                className="relative whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-all sm:px-5 sm:py-2.5"
                 style={{
                   background: activeView === tab.id ? 'var(--bg)' : 'transparent',
                   color: activeView === tab.id ? 'var(--text)' : 'var(--muted)',
@@ -801,7 +816,7 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'structure' && !loading && user && (
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {/* Quick Import Panel */}
               <QuickLibraryImport
                 onImport={handleLibraryImport}
@@ -809,7 +824,7 @@ export default function SongwritingPage() {
               />
 
               {/* Song Builder */}
-              <div className="card overflow-hidden rounded-2xl p-6">
+              <div className="card overflow-hidden rounded-2xl p-3 sm:p-6">
                 <StreamlinedSongBuilder
                   onSongChange={(blocks) => setSongBlocks(blocks)}
                   initialBlocks={songBlocks}
@@ -846,7 +861,7 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'preview' && (
-            <div className="card overflow-hidden rounded-2xl p-6">
+            <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
               <CleanPreview
                 songTitle={songTitle}
                 blocks={songBlocks}
@@ -862,9 +877,9 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'chords' && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Main Chord Builder */}
-              <div className="card overflow-hidden rounded-2xl p-6">
+              <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
                 <ChordBuilder
                   onChange={(progression) => {
                     setChordProgression(progression);
@@ -877,13 +892,13 @@ export default function SongwritingPage() {
                 />
               </div>
 
-              {/* Two-column layout for tools */}
-              <div className="grid gap-6 lg:grid-cols-2">
+              {/* Two-column layout for tools - single column on mobile */}
+              <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
                 {/* Left column */}
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Key Transposer */}
                   {uniqueChords.length > 0 && (
-                    <div className="card overflow-hidden rounded-2xl p-6">
+                    <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
                       <KeyTransposer
                         chords={uniqueChords}
                         currentKey={songData.key || 'C'}
@@ -899,14 +914,14 @@ export default function SongwritingPage() {
 
                   {/* Nashville Numbers */}
                   {uniqueChords.length > 0 && songData.key && (
-                    <div className="card overflow-hidden rounded-2xl p-6">
+                    <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
                       <NashvilleNumbers chords={uniqueChords} songKey={songData.key} />
                     </div>
                   )}
                 </div>
 
                 {/* Right column */}
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {/* Metronome + BPM Tapper */}
                   <div className="card overflow-hidden rounded-2xl">
                     <Metronome
@@ -926,7 +941,7 @@ export default function SongwritingPage() {
                   </div>
 
                   {/* BPM Tapper */}
-                  <div className="card overflow-hidden rounded-2xl p-6">
+                  <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
                     <BpmTapper
                       currentBpm={songData.tempo}
                       onBpmDetected={(bpm) => {
@@ -942,7 +957,7 @@ export default function SongwritingPage() {
 
               {/* Chord Diagrams - Full Width */}
               {uniqueChords.length > 0 && (
-                <div className="card overflow-hidden rounded-2xl p-6">
+                <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
                   <ChordDiagramStrip chords={uniqueChords} />
                 </div>
               )}
@@ -951,9 +966,9 @@ export default function SongwritingPage() {
 
           {activeView === 'lyrics' && (
             <div className="space-y-6">
-              <div className="grid gap-6 lg:grid-cols-2">
+              <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
                 {/* Voice Memos */}
-                <div className="card overflow-hidden rounded-2xl p-6">
+                <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
                   <div
                     className="mb-6 flex items-center gap-3 pb-4"
                     style={{ borderBottom: '1px solid var(--border)' }}
@@ -975,7 +990,7 @@ export default function SongwritingPage() {
                 </div>
 
                 {/* Reference Tracks */}
-                <div className="card overflow-hidden rounded-2xl p-6">
+                <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
                   <ReferenceTracks
                     tracks={referenceTracks}
                     onAddTrack={addReferenceTrack}
@@ -986,7 +1001,7 @@ export default function SongwritingPage() {
               </div>
 
               {/* Lyrics Assistant - Full Width */}
-              <div className="card overflow-hidden rounded-2xl p-6">
+              <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
                 <LyricsAssistant
                   currentLyrics={lyrics}
                   onInsert={(text) => setLyrics(lyrics ? lyrics + '\n' + text : text)}
@@ -996,7 +1011,7 @@ export default function SongwritingPage() {
           )}
 
           {activeView === 'copyright' && (
-            <div className="card overflow-hidden rounded-2xl p-6">
+            <div className="card overflow-hidden rounded-2xl p-4 sm:p-6">
               <CopyrightManager
                 songId={songData.id}
                 songTitle={songTitle}

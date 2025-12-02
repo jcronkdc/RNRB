@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import { Sparkles, Loader2, X } from 'lucide-react';
+import { Sparkles, Loader2, X } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type AIChatAssistantProps = {

@@ -2,7 +2,14 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Music2, Sparkles, FileText, ChevronRight, ArrowRight, CheckCircle } from 'lucide-react';
+import {
+  Music2,
+  Sparkles,
+  FileText,
+  ChevronRight,
+  ArrowRight,
+  CheckCircle,
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
 export default function SongwritingFeaturePage() {

@@ -33,7 +33,7 @@ import {
   List,
   Calendar as CalendarIcon,
   Sun,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useMemo } from 'react';
 
 import { formatDateWithDay, formatTime } from '@/lib/format-date';

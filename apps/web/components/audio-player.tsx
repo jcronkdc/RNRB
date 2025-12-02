@@ -1,6 +1,14 @@
 'use client';
 
-import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, Loader2 } from 'lucide-react';
+import {
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  SkipBack,
+  SkipForward,
+  Loader2,
+} from '@/components/ui/custom-icons';
 import { useRef, useState, useEffect, useCallback, memo } from 'react';
 
 export type AudioPlayerProps = {

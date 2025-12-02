@@ -28,7 +28,7 @@ import {
   HardDrive,
   RefreshCcw,
   Loader2,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';

@@ -7,7 +7,15 @@
  */
 
 import { Button, Card } from '@cronkwaters/ui';
-import { Calendar, MapPin, Clock, DollarSign, FileText, ArrowLeft, Loader2 } from 'lucide-react';
+import {
+  Calendar,
+  MapPin,
+  Clock,
+  DollarSign,
+  FileText,
+  ArrowLeft,
+  Loader2,
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';

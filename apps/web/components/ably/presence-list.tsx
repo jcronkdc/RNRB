@@ -1,7 +1,7 @@
 'use client';
 
 import { usePresenceListener } from 'ably/react';
-import { Circle } from 'lucide-react';
+import { Circle } from '@/components/ui/custom-icons';
 
 interface PresenceListProps {
   channelName: string;

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@cronkwaters/auth';
 
-import { authOptions } from '@/lib/auth';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 interface PostRequest {
@@ -227,7 +226,7 @@ async function postToLinkedIn(
 // POST /api/social/post - Post to multiple platforms
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

@@ -10,7 +10,7 @@ import {
   Progress,
 } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { AlertCircle, TrendingUp, Calendar, Zap, BarChart3 } from 'lucide-react';
+import { AlertCircle, TrendingUp, Calendar, Zap, BarChart3 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

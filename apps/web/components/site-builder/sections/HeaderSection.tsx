@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 

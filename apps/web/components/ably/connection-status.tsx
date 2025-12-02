@@ -1,7 +1,7 @@
 'use client';
 
 import { useConnectionStateListener } from 'ably/react';
-import { Wifi, WifiOff, AlertCircle } from 'lucide-react';
+import { Wifi, WifiOff, AlertCircle } from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 export function ConnectionStatus() {

@@ -6,9 +6,15 @@ import { handleApiError } from '@/lib/errors';
 import { strictLimiter } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-});
+// Lazy initialization to avoid build-time errors
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not configured');
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
 
 // POST - Create Stripe Connect account and onboarding link
 export async function POST(request: NextRequest) {
@@ -34,6 +40,8 @@ export async function POST(request: NextRequest) {
       request.headers.get('origin') ||
       process.env.NEXT_PUBLIC_APP_URL ||
       'https://www.cronkwaters.com';
+
+    const stripe = getStripe();
 
     // If already has account, create account link for dashboard
     if (instructor.stripeAccountId) {
@@ -139,6 +147,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get account details from Stripe
+    const stripe = getStripe();
     const account = await stripe.accounts.retrieve(instructor.stripeAccountId);
 
     // Update onboarded status if changed

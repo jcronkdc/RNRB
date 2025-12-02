@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Info, X, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Info, X, ChevronRight, ChevronLeft } from '@/components/ui/custom-icons';
 import { useState, type ReactNode, useCallback } from 'react';
 
 interface FeatureTooltipProps {

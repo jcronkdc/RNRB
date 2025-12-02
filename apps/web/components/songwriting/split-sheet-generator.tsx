@@ -1,7 +1,7 @@
 'use client';
 
 import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
-import { Download, FileText, Send, Loader2 } from 'lucide-react';
+import { Download, FileText, Send, Loader2 } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 import type { CopyrightInfo } from './copyright-manager';

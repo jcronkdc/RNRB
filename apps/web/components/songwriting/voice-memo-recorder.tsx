@@ -1,6 +1,6 @@
 'use client';
 
-import { Mic, Square, Play, Pause, Trash2, Download, Upload } from 'lucide-react';
+import { Mic, Square, Play, Pause, Trash2, Download, Upload } from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect } from 'react';
 
 import { formatDate } from '@/lib/format-date';

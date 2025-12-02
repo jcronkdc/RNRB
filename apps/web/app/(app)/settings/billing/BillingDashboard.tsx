@@ -13,7 +13,7 @@ import {
   Music,
   X,
   Loader2,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

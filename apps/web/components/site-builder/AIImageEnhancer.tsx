@@ -15,7 +15,7 @@ import {
   Zap,
   Eye,
   SlidersHorizontal,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface AIImageEnhancerProps {

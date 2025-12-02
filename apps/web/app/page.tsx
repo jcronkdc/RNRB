@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { InstallAppButton } from '@/components/install-app-button';
 import { generateFAQSchema, JsonLd } from '@/lib/seo';
 
 const faqs = [
@@ -23,6 +24,11 @@ const faqs = [
     question: 'How does the AI work?',
     answer:
       'Powered by Claude from Anthropic, our AI assists—never replaces—your creativity. You stay in control. The AI can help with chord progressions, lyric suggestions, arrangement ideas, and more, but every final decision is yours.',
+  },
+  {
+    question: 'Can I install this as a native app?',
+    answer:
+      'Yes! Rock N\' Roll Basement is a Progressive Web App (PWA) that works like a native app on any device. On desktop (Mac or PC), look for the install icon in your browser\'s address bar. On iPhone, use Safari\'s "Add to Home Screen" option. On Android, tap "Install app" when prompted. Once installed, it launches instantly from your dock or home screen—no app store required. It even works offline! Your changes sync automatically when you reconnect.',
   },
 ];
 
@@ -155,6 +161,81 @@ export default function HomePage() {
                   </svg>
                   <span>See It In Action</span>
                 </Link>
+              </div>
+
+              {/* Install Badge - PWA Callout */}
+              <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
+                <div
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                  </svg>
+                  <span>Mac & PC</span>
+                </div>
+                <div
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    style={{ color: 'var(--accent)' }}
+                  >
+                    <rect x="5" y="2" width="14" height="20" rx="2" />
+                    <path d="M12 18h.01" />
+                  </svg>
+                  <span>iOS & Android</span>
+                </div>
+                <div
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    style={{ color: 'var(--sage)' }}
+                  >
+                    <path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M5.636 5.636l3.536 3.536m0 5.656l-3.536 3.536" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  <span>Works Offline</span>
+                </div>
+              </div>
+
+              {/* Install App Button */}
+              <div className="mb-8 flex justify-center">
+                <InstallAppButton variant="prominent" />
               </div>
 
               {/* Quick Stats - Story-Driven */}
@@ -1132,6 +1213,75 @@ export default function HomePage() {
                     </li>
                   </ul>
                 </div>
+
+                {/* Category: Use Anywhere - PWA */}
+                <div
+                  className="rounded-xl p-6"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, var(--bg-elevated) 0%, rgba(34, 197, 94, 0.05) 100%)',
+                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                  }}
+                >
+                  <div className="mb-4 flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-lg"
+                      style={{ background: 'rgba(34, 197, 94, 0.15)' }}
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style={{ color: '#22c55e' }}
+                      >
+                        <path
+                          d="M12 2L12 8M12 8L9 5M12 8L15 5"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <rect
+                          x="4"
+                          y="10"
+                          width="16"
+                          height="12"
+                          rx="2"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                        />
+                        <path
+                          d="M12 18h.01"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </div>
+                    <h4 className="font-medium" style={{ color: 'var(--text)' }}>
+                      Use Anywhere
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#22c55e' }} />
+                      Install as native app on Mac & PC
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#22c55e' }} />
+                      Works on iPhone & Android
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#22c55e' }} />
+                      No app store required
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="h-1 w-1 rounded-full" style={{ background: '#22c55e' }} />
+                      Works offline—syncs when connected
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
 
@@ -1862,6 +2012,9 @@ export default function HomePage() {
                 </Link>
                 <Link href="/contact" className="nav-link">
                   Contact
+                </Link>
+                <Link href="/donate" className="nav-link" style={{ color: '#a855f7' }}>
+                  Kids Instruments Fund
                 </Link>
               </nav>
             </div>

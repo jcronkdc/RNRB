@@ -1,7 +1,7 @@
 'use client';
 
 import { Card } from '@cronkwaters/ui';
-import { Users, Music, MapPin, CheckCircle } from 'lucide-react';
+import { Users, Music, MapPin, CheckCircle } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 

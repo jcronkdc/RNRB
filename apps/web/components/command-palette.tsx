@@ -15,7 +15,7 @@
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Command as CommandIcon, ArrowRight } from 'lucide-react';
+import { Search, Command as CommandIcon, ArrowRight } from '@/components/ui/custom-icons';
 import { useState, useEffect, useRef } from 'react';
 
 import { useCommandPalette } from '@/hooks/use-command-palette';

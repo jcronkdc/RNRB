@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, X, Music, User, Hash, Loader2, TrendingUp } from 'lucide-react';
+import { Search, X, Music, User, Hash, Loader2, TrendingUp } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

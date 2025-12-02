@@ -19,7 +19,7 @@ import {
   Play,
   MapPin,
   Clock,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect, useCallback } from 'react';
 
 // Types for different data sources

@@ -21,7 +21,7 @@ import {
   Check,
   Wand2,
   Zap,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect, useCallback } from 'react';
 
 interface Message {

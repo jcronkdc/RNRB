@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, Sparkles, TrendingUp, ArrowRight } from 'lucide-react';
+import { Music, Sparkles, TrendingUp, ArrowRight } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface ChordAlternative {

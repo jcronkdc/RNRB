@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { auth } from '@cronkwaters/auth';
 import crypto from 'crypto';
-
-import { authOptions } from '@/lib/auth';
 
 // LinkedIn OAuth 2.0
 const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID || '';
@@ -14,7 +12,7 @@ const LINKEDIN_SCOPES = ['openid', 'profile', 'email', 'w_member_social'].join('
 // GET /api/social/connect/linkedin - Initiate LinkedIn OAuth
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.redirect(new URL('/auth/signin', req.url));
     }

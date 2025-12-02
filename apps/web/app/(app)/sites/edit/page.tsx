@@ -30,7 +30,7 @@ import {
   Sparkles,
   Bot,
   PenTool,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense, useCallback, useRef } from 'react';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Loader2, CheckCircle, Sparkles } from 'lucide-react';
+import { Mail, Loader2, CheckCircle, Sparkles } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface MailingListSectionProps {

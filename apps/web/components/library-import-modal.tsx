@@ -14,7 +14,7 @@ import {
   Eye,
   ArrowRight,
   ChevronRight,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useMemo, useCallback } from 'react';
 
 import { useLibrary, type LibraryFile, type LibraryFileType } from '@/hooks/use-library';

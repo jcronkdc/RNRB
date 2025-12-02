@@ -1,6 +1,6 @@
 'use client';
 
-import { Lock, X, Zap, Crown, Check, ArrowRight, Shield } from 'lucide-react';
+import { Lock, X, Zap, Crown, Check, ArrowRight, Shield } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState } from 'react';
 

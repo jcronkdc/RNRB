@@ -3,7 +3,7 @@
 import { trpc } from '@cronkwaters/trpc/client/react';
 import { Card } from '@cronkwaters/ui';
 import { motion } from 'framer-motion';
-import { Zap, Clock, TrendingUp, TrendingDown } from 'lucide-react';
+import { Zap, Clock, TrendingUp, TrendingDown } from '@/components/ui/custom-icons';
 
 interface UsageHistoryProps {
   type?: 'aiRequests' | 'videoMinutes';

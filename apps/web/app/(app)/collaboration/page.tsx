@@ -18,7 +18,7 @@ import {
   Eye,
   Sparkles,
   Radio,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -264,27 +264,69 @@ export default function CollaborationDashboard() {
                 <h2 className="font-semibold text-white">Quick Actions</h2>
               </div>
               <div className="space-y-2">
+                {/* Primary Actions - Video & Live */}
                 <button
-                  onClick={() => router.push('/projects/new')}
-                  className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90"
-                  style={{ background: 'var(--accent)' }}
+                  onClick={() => router.push('/meet')}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white transition-all hover:scale-[1.02]"
+                  style={{
+                    background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+                    boxShadow: '0 4px 15px rgba(139, 92, 246, 0.3)',
+                  }}
                 >
-                  Create New Project
+                  <Video className="h-4 w-4" />
+                  Start Video Meeting
                 </button>
                 <button
-                  onClick={() => router.push('/songwriting')}
-                  className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--panel-hover)]"
-                  style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
+                  onClick={() => router.push('/live')}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white transition-all hover:scale-[1.02]"
+                  style={{
+                    background: 'linear-gradient(135deg, #ef4444 0%, #ec4899 100%)',
+                    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)',
+                  }}
                 >
-                  Songwriting Studio
+                  <Radio className="h-4 w-4" />
+                  Go Live Stream
                 </button>
-                <button
-                  onClick={() => router.push('/studio')}
-                  className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--panel-hover)]"
-                  style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
-                >
-                  Start Video Session
-                </button>
+
+                {/* Secondary Actions */}
+                <div className="pt-2">
+                  <p
+                    className="mb-2 text-xs font-medium uppercase tracking-wider"
+                    style={{ color: 'var(--muted)' }}
+                  >
+                    More
+                  </p>
+                  <button
+                    onClick={() => router.push('/masterclasses')}
+                    className="flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--panel-hover)]"
+                    style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
+                  >
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-pink-500/20">
+                      <span className="text-xs">🎓</span>
+                    </span>
+                    Masterclasses
+                  </button>
+                  <button
+                    onClick={() => router.push('/projects/new')}
+                    className="mt-2 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--panel-hover)]"
+                    style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
+                  >
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--accent-glow)]">
+                      <span className="text-xs">+</span>
+                    </span>
+                    New Project
+                  </button>
+                  <button
+                    onClick={() => router.push('/studio')}
+                    className="mt-2 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--panel-hover)]"
+                    style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
+                  >
+                    <span className="bg-[var(--sage)]/20 flex h-6 w-6 items-center justify-center rounded-md">
+                      <span className="text-xs">🎙️</span>
+                    </span>
+                    Recording Studio
+                  </button>
+                </div>
               </div>
             </div>
           </div>

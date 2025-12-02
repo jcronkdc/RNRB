@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
 import { generateBreadcrumbSchema, JsonLd } from '@/lib/seo';

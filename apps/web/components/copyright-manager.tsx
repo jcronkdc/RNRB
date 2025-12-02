@@ -12,7 +12,7 @@ import {
   Plus,
   Trash2,
   Download,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useEffect, useState } from 'react';
 
 type Split = {

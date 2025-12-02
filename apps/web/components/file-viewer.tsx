@@ -16,7 +16,7 @@ import {
   ExternalLink,
   Copy,
   Check,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface FileViewerProps {

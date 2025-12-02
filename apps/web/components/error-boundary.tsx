@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home } from '@/components/ui/custom-icons';
 import { Component, type ReactNode } from 'react';
 
 interface Props {

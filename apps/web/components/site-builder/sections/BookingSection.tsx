@@ -1,6 +1,14 @@
 'use client';
 
-import { Send, Calendar, MapPin, DollarSign, Music, Check, Loader2 } from 'lucide-react';
+import {
+  Send,
+  Calendar,
+  MapPin,
+  DollarSign,
+  Music,
+  Check,
+  Loader2,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface BookingSectionProps {

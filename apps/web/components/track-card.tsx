@@ -15,7 +15,7 @@ import {
   Copy,
   Trash2,
   Edit,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import { useState } from 'react';
 

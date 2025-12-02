@@ -1,6 +1,14 @@
 'use client';
 
-import { Users, Music, Mic, Disc, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Users,
+  Music,
+  Mic,
+  Disc,
+  ExternalLink,
+  ChevronDown,
+  ChevronUp,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface Collaborator {

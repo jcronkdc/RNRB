@@ -8,7 +8,7 @@
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Zap, Navigation, Mouse, Command } from 'lucide-react';
+import { X, Zap, Navigation, Mouse, Command } from '@/components/ui/custom-icons';
 
 import { useKeyboardShortcuts } from '@/components/providers/keyboard-shortcuts-provider';
 

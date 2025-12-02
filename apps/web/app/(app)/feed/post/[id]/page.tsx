@@ -1,5 +1,5 @@
 import { prisma } from '@cronkwaters/db';
-import { Loader2, ArrowLeft, Share2 } from 'lucide-react';
+import { Loader2, ArrowLeft, Share2 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';

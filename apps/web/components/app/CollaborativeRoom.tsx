@@ -10,7 +10,15 @@ import {
   DailyProvider,
 } from '@daily-co/daily-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Video, VideoOff, Mic, MicOff, Monitor, MonitorOff, Users } from 'lucide-react';
+import {
+  Video,
+  VideoOff,
+  Mic,
+  MicOff,
+  Monitor,
+  MonitorOff,
+  Users,
+} from '@/components/ui/custom-icons';
 import React, { useEffect, useState, useCallback, useMemo, useRef, memo } from 'react';
 
 interface CollaborativeRoomProps {

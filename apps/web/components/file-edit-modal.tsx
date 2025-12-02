@@ -19,7 +19,7 @@ import {
   Check,
   Trash2,
   ExternalLink,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import {
   type LibraryFile,
   type LibraryCollection,

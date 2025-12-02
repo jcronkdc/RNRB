@@ -12,7 +12,11 @@ import {
   ChevronDown,
   Sparkles,
   Zap,
-} from 'lucide-react';
+  Radio,
+  Video,
+  ExternalLink,
+  Globe,
+} from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
@@ -32,6 +36,24 @@ export function TopBar() {
   const { data: session } = useSession();
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<{ username?: string } | null>(null);
+
+  // Fetch user profile to get username for public profile link
+  useEffect(() => {
+    async function fetchProfile() {
+      if (!session?.user) return;
+      try {
+        const response = await fetch('/api/profile');
+        if (response.ok) {
+          const data = await response.json();
+          setUserProfile({ username: data.username });
+        }
+      } catch {
+        // Silently fail - username link just won't show
+      }
+    }
+    fetchProfile();
+  }, [session?.user]);
 
   // Fetch real credits data with caching
   const { data: creditsData } = trpc.usage.getCredits.useQuery(undefined, {
@@ -124,6 +146,36 @@ export function TopBar() {
             <span className="hidden text-sm sm:inline">New</span>
             <Sparkles className="hidden h-3 w-3 lg:block" />
           </motion.button>
+
+          {/* Go Live Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/live/go')}
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            style={{
+              background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+              boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
+            }}
+          >
+            <Radio className="h-4 w-4" />
+            <span className="hidden text-sm sm:inline">Live</span>
+          </motion.button>
+
+          {/* Meet Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/meet')}
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            style={{
+              background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+              boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)',
+            }}
+          >
+            <Video className="h-4 w-4" />
+            <span className="hidden text-sm sm:inline">Meet</span>
+          </motion.button>
         </div>
 
         {/* Right Section - Credits, Notifications, Profile */}
@@ -211,10 +263,25 @@ export function TopBar() {
                   </div>
 
                   <div className="p-2">
+                    {/* View Public Profile - Only show if username is set */}
+                    {userProfile?.username && (
+                      <button
+                        onClick={() => {
+                          setProfileOpen(false);
+                          window.open(`/u/${userProfile.username}`, '_blank');
+                        }}
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-white/5"
+                      >
+                        <Globe className="h-4 w-4 text-orange-400" />
+                        <span className="text-sm text-gray-300">View My Profile</span>
+                        <ExternalLink className="ml-auto h-3 w-3 text-gray-500" />
+                      </button>
+                    )}
+
                     <button
                       onClick={() => {
                         setProfileOpen(false);
-                        router.push('/settings');
+                        router.push('/settings/profile');
                       }}
                       className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-white/5"
                     >

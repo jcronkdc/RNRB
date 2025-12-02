@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronLeft, ChevronRight, X, Maximize2, Grid } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Maximize2, Grid } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import { useState } from 'react';
 

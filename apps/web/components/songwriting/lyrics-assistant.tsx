@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { Book, Sparkles, Loader2, Hash, TrendingUp } from 'lucide-react';
+import { Book, Sparkles, Loader2, Hash, TrendingUp } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type LyricsAssistantProps = {

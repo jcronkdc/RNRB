@@ -12,7 +12,7 @@ import {
   MessageSquare,
   Share2,
   Check,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 interface LiveStream {

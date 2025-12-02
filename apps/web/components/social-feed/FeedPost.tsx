@@ -15,7 +15,7 @@ import {
   Flag,
   X,
   AlertTriangle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useState, useRef, useEffect } from 'react';

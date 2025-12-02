@@ -27,7 +27,7 @@ import {
   Search,
   Loader2,
   ChevronDown,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { memo, useCallback, useMemo, useState } from 'react';
 

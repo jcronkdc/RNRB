@@ -18,7 +18,7 @@ import {
   MapPin,
   Ticket,
   Star,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 interface Template {

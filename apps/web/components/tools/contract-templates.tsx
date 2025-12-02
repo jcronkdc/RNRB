@@ -19,7 +19,7 @@ import {
   CheckCircle,
   Star,
   Mic,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
 
 interface ContractTemplate {

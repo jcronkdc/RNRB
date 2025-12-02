@@ -14,7 +14,7 @@ import {
   Zap,
   Square,
   Loader2,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 

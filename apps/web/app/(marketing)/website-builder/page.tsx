@@ -25,7 +25,7 @@ import {
   Type,
   Search,
   TrendingUp,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 

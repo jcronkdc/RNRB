@@ -11,7 +11,7 @@ import {
   Sparkles,
   ChevronRight,
   RefreshCw,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';

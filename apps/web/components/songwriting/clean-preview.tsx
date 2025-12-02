@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Copy, Check, Printer, Download, Music, FileText } from 'lucide-react';
+import { Copy, Check, Printer, Download, Music, FileText } from '@/components/ui/custom-icons';
 import { useState, useMemo } from 'react';
 
 type ChordPlacement = {

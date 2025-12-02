@@ -2,7 +2,7 @@
 
 import { Document, Page, Text, View, StyleSheet, pdf } from '@react-pdf/renderer';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Download, FileText, Printer, Copy, Check, X, Music } from 'lucide-react';
+import { Download, FileText, Printer, Copy, Check, X, Music } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type SongBlock = {

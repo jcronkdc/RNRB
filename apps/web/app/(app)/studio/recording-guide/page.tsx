@@ -13,7 +13,7 @@ import {
   DollarSign,
   CheckCircle,
   AlertCircle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 
 export default function RecordingGuidePage() {
   return (

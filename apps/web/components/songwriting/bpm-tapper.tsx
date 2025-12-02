@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { MousePointer2, RotateCcw, Check } from 'lucide-react';
+import { MousePointer2, RotateCcw, Check } from '@/components/ui/custom-icons';
 import { useState, useCallback, useRef, useEffect } from 'react';
 
 type BpmTapperProps = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Calendar, Bell, Music, Play, Share2, Check } from 'lucide-react';
+import { Calendar, Bell, Music, Play, Share2, Check } from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 interface CountdownSectionProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { FileText, Sparkles, X, Check, AlertCircle } from 'lucide-react';
+import { FileText, Sparkles, X, Check, AlertCircle } from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 import {

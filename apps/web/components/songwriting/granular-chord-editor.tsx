@@ -2,7 +2,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, X, Plus } from 'lucide-react';
+import { Music, X, Plus } from '@/components/ui/custom-icons';
 import { useState, useRef, useMemo, useCallback, useEffect, memo } from 'react';
 
 export type ChordPlacement = {

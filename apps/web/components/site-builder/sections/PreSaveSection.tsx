@@ -1,6 +1,14 @@
 'use client';
 
-import { Music, Bell, Check, ExternalLink, Share2, Calendar, Play } from 'lucide-react';
+import {
+  Music,
+  Bell,
+  Check,
+  ExternalLink,
+  Share2,
+  Calendar,
+  Play,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface PreSaveSectionProps {

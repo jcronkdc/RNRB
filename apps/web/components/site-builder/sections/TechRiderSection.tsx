@@ -16,7 +16,7 @@ import {
   Check,
   Plus,
   ZoomIn,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 interface TechRiderSectionProps {

@@ -11,7 +11,7 @@ import {
   Search,
   X,
   Hash,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect, useRef, useCallback } from 'react';

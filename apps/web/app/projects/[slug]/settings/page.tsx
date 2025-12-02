@@ -3,7 +3,15 @@
 import { supabase } from '@/lib/supabase';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { ArrowLeft, Trash2, Users, Loader2, Lock, Check, AlertCircle } from 'lucide-react';
+import {
+  ArrowLeft,
+  Trash2,
+  Users,
+  Loader2,
+  Lock,
+  Check,
+  AlertCircle,
+} from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';

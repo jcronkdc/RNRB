@@ -17,7 +17,16 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Check, X, MoreVertical, Reply, Trash2, Edit2, Smile } from 'lucide-react';
+import {
+  MessageCircle,
+  Check,
+  X,
+  MoreVertical,
+  Reply,
+  Trash2,
+  Edit2,
+  Smile,
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 import type { PinnedComment } from '@/hooks/use-pinned-comments';

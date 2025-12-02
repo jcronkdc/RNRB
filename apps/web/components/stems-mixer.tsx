@@ -11,7 +11,7 @@ import {
   Maximize2,
   Music,
   SlidersHorizontal,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useEffect, useState } from 'react';
 
 type Track = {

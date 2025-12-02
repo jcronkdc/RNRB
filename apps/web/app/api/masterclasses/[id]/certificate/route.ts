@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
 
 // GET - Generate certificate for completed course
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const masterclassId = params.id;
+    const { id: masterclassId } = await params;
 
     // Get enrollment with completion status
     const enrollment = await prisma.masterclassEnrollment.findFirst({

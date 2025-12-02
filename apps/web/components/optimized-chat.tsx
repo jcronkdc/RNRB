@@ -16,7 +16,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, MoreVertical, Loader2, WifiOff } from 'lucide-react';
+import { Send, MoreVertical, Loader2, WifiOff } from '@/components/ui/custom-icons';
 import { useEffect, useState, useRef } from 'react';
 
 import { VirtualizedMessageList } from './virtualized-message-list';

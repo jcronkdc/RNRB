@@ -21,7 +21,7 @@ import {
   AlertCircle,
   Wifi,
   WifiOff,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { formatDateTime, formatNumber } from '@/lib/format-date';

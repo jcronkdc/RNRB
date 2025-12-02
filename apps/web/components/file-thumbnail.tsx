@@ -15,7 +15,7 @@ import {
   Piano,
   Folder,
   Play,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 
 import type { LibraryFileType } from '@/hooks/use-library';
 

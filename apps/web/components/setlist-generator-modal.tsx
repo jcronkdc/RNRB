@@ -31,7 +31,7 @@ import {
   CheckCircle,
   Lightbulb,
   AlertTriangle,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
 type EnergyProfile = 'high' | 'balanced' | 'mellow';

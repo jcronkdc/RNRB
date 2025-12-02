@@ -1,7 +1,16 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Music2, Plus, X, Play, Pause, ExternalLink, Trash2, Link as LinkIcon } from 'lucide-react';
+import {
+  Music2,
+  Plus,
+  X,
+  Play,
+  Pause,
+  ExternalLink,
+  Trash2,
+  Link as LinkIcon,
+} from '@/components/ui/custom-icons';
 import { useState, useRef, useCallback } from 'react';
 
 type ReferenceTrack = {

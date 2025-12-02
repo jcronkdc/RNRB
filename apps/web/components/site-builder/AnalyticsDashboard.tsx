@@ -15,7 +15,7 @@ import {
   Loader2,
   BarChart3,
   PieChart,
-} from 'lucide-react';
+} from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 
 interface AnalyticsData {

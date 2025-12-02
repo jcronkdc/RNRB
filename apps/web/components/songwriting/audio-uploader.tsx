@@ -1,7 +1,16 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { Upload, X, Play, Pause, Loader2, Check, AlertCircle, FileAudio } from 'lucide-react';
+import {
+  Upload,
+  X,
+  Play,
+  Pause,
+  Loader2,
+  Check,
+  AlertCircle,
+  FileAudio,
+} from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect } from 'react';
 
 type AudioUploaderProps = {
