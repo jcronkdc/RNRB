@@ -2414,6 +2414,16 @@ body {
       padding-right: var(--space-4);
     }
   }
+
+  /* Scrollbar hide utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */

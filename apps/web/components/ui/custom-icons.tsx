@@ -2203,6 +2203,97 @@ export const Layout = createIcon(
   'Layout'
 );
 
+// =====================
+// MERCHANDISE PRODUCT ICONS
+// Custom icons for merch designer
+// =====================
+
+// TShirt - apparel t-shirt
+export const TShirt = createIcon(
+  <>
+    <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z" />
+  </>,
+  'TShirt'
+);
+
+// Hoodie - hooded sweatshirt
+export const Hoodie = createIcon(
+  <>
+    <path d="M20 3h-3.5L12 5 7.5 3H4l-2 6h3v13h14V9h3l-2-6z" />
+    <path d="M12 5c-2 0-3.5 1.5-3.5 3.5v1c0 1.5 1.5 2.5 3.5 2.5s3.5-1 3.5-2.5v-1C15.5 6.5 14 5 12 5z" />
+    <line x1="5" y1="9" x2="5" y2="22" />
+    <line x1="19" y1="9" x2="19" y2="22" />
+  </>,
+  'Hoodie'
+);
+
+// CoffeeMug - mug/cup
+export const CoffeeMug = createIcon(
+  <>
+    <path d="M17 8h1a4 4 0 110 8h-1" />
+    <path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" />
+    <line x1="6" y1="2" x2="6" y2="4" />
+    <line x1="10" y1="2" x2="10" y2="4" />
+    <line x1="14" y1="2" x2="14" y2="4" />
+  </>,
+  'CoffeeMug'
+);
+
+// Poster - wall art/poster frame
+export const Poster = createIcon(
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M3 15l5-5c.6-.6 1.4-.6 2 0l7 7" />
+    <path d="M14 14l1-1c.6-.6 1.4-.6 2 0l4 4" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+  </>,
+  'Poster'
+);
+
+// BaseballCap - hat/cap
+export const BaseballCap = createIcon(
+  <>
+    <path d="M12 3c-4.97 0-9 3.13-9 7h18c0-3.87-4.03-7-9-7z" />
+    <path d="M3 10v2c0 1.66 4.03 3 9 3s9-1.34 9-3v-2" />
+    <path d="M21 10c1.1 0 2 .9 2 2s-.9 2-2 2" />
+    <path d="M5 15v3c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2v-3" />
+  </>,
+  'BaseballCap'
+);
+
+// StickerIcon - die-cut sticker
+export const StickerIcon = createIcon(
+  <>
+    <path d="M15.5 3H5a2 2 0 00-2 2v14c0 1.1.9 2 2 2h14a2 2 0 002-2V8.5L15.5 3z" />
+    <path d="M15 3v6h6" />
+    <path d="M10 12a2 2 0 104 0 2 2 0 10-4 0" />
+    <path d="M8 17c.5-1.5 2-2.5 4-2.5s3.5 1 4 2.5" />
+  </>,
+  'StickerIcon'
+);
+
+// TankTop - sleeveless shirt
+export const TankTop = createIcon(
+  <>
+    <path d="M6 3l2 2v15a2 2 0 002 2h4a2 2 0 002-2V5l2-2" />
+    <path d="M4 3h16" />
+    <path d="M8 5c0 2 2 4 4 4s4-2 4-4" />
+    <line x1="8" y1="5" x2="8" y2="20" />
+    <line x1="16" y1="5" x2="16" y2="20" />
+  </>,
+  'TankTop'
+);
+
+// ToteBag - shopping/tote bag
+export const ToteBag = createIcon(
+  <>
+    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6z" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <path d="M16 10a4 4 0 01-8 0" />
+  </>,
+  'ToteBag'
+);
+
 // Type alias for LucideIcon compatibility
 export type LucideIcon = typeof Activity;
 
@@ -2420,6 +2511,15 @@ export const Icons = {
   Youtube,
   Zap,
   ZoomIn,
+  // Merchandise Product Icons
+  TShirt,
+  Hoodie,
+  CoffeeMug,
+  Poster,
+  BaseballCap,
+  StickerIcon,
+  TankTop,
+  ToteBag,
 } as const;
 
 export default Icons;

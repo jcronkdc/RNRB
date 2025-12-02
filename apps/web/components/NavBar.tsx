@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { UserMenu } from './UserMenu';
 
@@ -890,6 +890,7 @@ export function NavBar() {
     pathname?.startsWith('/affiliate') ||
     pathname?.startsWith('/share') ||
     pathname?.startsWith('/revenue') ||
+    pathname?.startsWith('/admin') || // Admin dashboard has its own layout
     pathname?.startsWith('/u/'); // Public profile pages have their own layout
 
   // Track scroll position for styling

@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // CRITICAL: Do NOT import auth() in middleware - it uses Node.js modules not available in Edge Runtime
 // Instead, we check for the session cookie directly
@@ -20,6 +20,7 @@ const CRONKWATERS_ORIGIN =
 
 // Routes that require authentication
 const protectedPaths = [
+  '/admin', // Admin dashboard - additional owner check in layout
   '/dashboard',
   '/projects',
   '/library',

@@ -34,6 +34,7 @@ import { EPKGenerator } from '@/components/tools/epk-generator';
 import { LoopPlayer } from '@/components/tools/loop-player';
 import { BackingTrackCreator } from '@/components/tools/backing-track-creator';
 import { SessionNotes } from '@/components/tools/session-notes';
+import { StemSeparator } from '@/components/tools/stem-separator';
 
 interface Tool {
   id: string;
@@ -154,6 +155,15 @@ const TOOLS: Tool[] = [
     status: 'ready',
     gradient: 'from-teal-500 to-emerald-600',
   },
+  {
+    id: 'stem-separator',
+    name: 'AI Stem Separator',
+    description: 'Split any song into vocals, drums, bass & more',
+    icon: Music2,
+    category: 'recording',
+    status: 'ready',
+    gradient: 'from-rose-500 to-pink-600',
+  },
 ];
 
 const CATEGORIES = [
@@ -212,6 +222,8 @@ function ToolsContent() {
         return <BackingTrackCreator />;
       case 'session-notes':
         return <SessionNotes />;
+      case 'stem-separator':
+        return <StemSeparator />;
       default:
         return null;
     }

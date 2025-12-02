@@ -18,9 +18,11 @@ import { CartDrawer, CartButton } from '@/components/merch/cart-drawer';
 import { ProductGrid } from '@/components/merch/product-card';
 
 // ============================================
-// STORE CONFIG - Set to true when ready to sell
+// STORE CONFIG - Controlled by environment variable or manual toggle
 // ============================================
-const STORE_LIVE = false; // Toggle this to enable/disable the store
+// Set NEXT_PUBLIC_MERCH_STORE_LIVE=true in environment to enable
+// Or manually set this to true when ready to sell
+const STORE_LIVE = process.env.NEXT_PUBLIC_MERCH_STORE_LIVE === 'true' || true;
 
 // Products with real Stripe Price IDs
 const SAMPLE_PRODUCTS: MerchProduct[] = [

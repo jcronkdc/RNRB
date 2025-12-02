@@ -24,6 +24,7 @@ export const SUBSCRIPTION_TIERS = {
       aiTourRouter: false,
       aiAssistant: false,
       aiAlbumArt: false, // AI artwork generation
+      stemSeparation: false, // AI stem separation (Moises replacement)
       videoCalls: false,
       collaborationLimit: 1, // Max 1 collaborator per project
       projectLimit: 3,
@@ -32,6 +33,7 @@ export const SUBSCRIPTION_TIERS = {
       videoMinutesLimit: 0,
       videoParticipantMinutesLimit: 0,
       imageCreditsLimit: 0, // No album art for free tier
+      stemCreditsLimit: 0, // No stem separation for free tier
       maxVideoParticipants: 0,
     },
   },
@@ -45,6 +47,7 @@ export const SUBSCRIPTION_TIERS = {
       aiTourRouter: true,
       aiAssistant: false, // Requires add-on or Studio tier
       aiAlbumArt: true, // AI artwork generation enabled
+      stemSeparation: true, // AI stem separation enabled
       videoCalls: false, // Video only in Studio tier
       collaborationLimit: 5,
       projectLimit: 10,
@@ -53,6 +56,7 @@ export const SUBSCRIPTION_TIERS = {
       videoMinutesLimit: 0,
       videoParticipantMinutesLimit: 0,
       imageCreditsLimit: 10, // 10 album art generations/month (~$0.03 cost)
+      stemCreditsLimit: 10, // 10 stem separations/month (~$0.50 cost)
       maxVideoParticipants: 0,
     },
   },
@@ -66,6 +70,7 @@ export const SUBSCRIPTION_TIERS = {
       aiTourRouter: true,
       aiAssistant: true, // Included in Studio
       aiAlbumArt: true, // AI artwork generation enabled
+      stemSeparation: true, // AI stem separation enabled
       videoCalls: true,
       collaborationLimit: -1, // Unlimited
       projectLimit: -1, // Unlimited
@@ -74,6 +79,7 @@ export const SUBSCRIPTION_TIERS = {
       videoMinutesLimit: 1200, // Legacy: simple hour tracking
       videoParticipantMinutesLimit: 3600, // REAL LIMIT: 3600 participant-minutes (~$14.40 cost cap)
       imageCreditsLimit: 50, // 50 album art generations/month (~$0.15 cost)
+      stemCreditsLimit: 50, // 50 stem separations/month (~$2.50 cost)
       maxVideoParticipants: 10, // Max per call to prevent runaway costs
     },
   },

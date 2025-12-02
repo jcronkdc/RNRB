@@ -34,6 +34,7 @@ import {
   Video,
   ShoppingBag,
   Tag,
+  Palette,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -105,7 +106,7 @@ const navSections: NavSection[] = [
       { label: 'Songwriting', href: '/songwriting', icon: Music4 },
       { label: 'Sketches', href: '/create', icon: Sparkles, badge: 'BETA' },
       { label: 'Projects', href: '/projects', icon: FolderOpen },
-      { label: 'Labs', href: '/labs', icon: FlaskConical, badge: 'NEW' },
+      { label: 'Labs', href: '/labs', icon: FlaskConical },
     ],
   },
   {
@@ -145,8 +146,9 @@ const navSections: NavSection[] = [
     title: 'Earn',
     description: 'Get paid',
     items: [
-      { label: 'Revenue', href: '/revenue', icon: CreditCard, badge: 'NEW' },
-      { label: 'Merch Store', href: '/merch', icon: ShoppingBag, badge: 'SOON' },
+      { label: 'Revenue', href: '/revenue', icon: CreditCard },
+      { label: 'My Merch', href: '/my-merch', icon: ShoppingBag, badge: 'EARN' },
+      { label: 'RNRB Store', href: '/merch', icon: Tag },
     ],
   },
   {
@@ -181,7 +183,13 @@ export function SidebarNav() {
   const { isOpen: mobileMenuOpen, setIsOpen: setMobileMenuOpen } = useMobileMenu();
   const [isMobile, setIsMobile] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>([
-    'Home', 'Create', 'Grow', 'Connect', 'Perform', 'Earn', 'Marketplace'
+    'Home',
+    'Create',
+    'Grow',
+    'Connect',
+    'Perform',
+    'Earn',
+    'Marketplace',
   ]); // All sections expanded by default
 
   // Check if we're on mobile
@@ -208,7 +216,7 @@ export function SidebarNav() {
           (item.href !== '/dashboard' && pathname.startsWith(item.href.split('?')[0]))
       );
       if (hasActiveItem) {
-        setExpandedSections((prev) => 
+        setExpandedSections((prev) =>
           prev.includes(section.title) ? prev : [...prev, section.title]
         );
       }

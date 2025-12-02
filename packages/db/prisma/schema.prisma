@@ -83,6 +83,7 @@ model User {
   // Stripe Subscription Fields
   stripeCustomerId       String?   @unique
   stripeSubscriptionId   String?   @unique
+  stripeConnectAccountId String?   @unique // For artist payouts via Stripe Connect
   subscriptionTier       String    @default("free") // free, creator, studio
   subscriptionStatus     String? // active, canceled, past_due, trialing, incomplete
   subscriptionStartedAt  DateTime?
@@ -218,6 +219,12 @@ model User {
   
   // Platform Merch Store Orders
   platformMerchOrders        PlatformMerchOrder[]       @relation("PlatformMerchOrders")
+  
+  // Artist Merch Store (Multi-tenant POD)
+  artistMerchProducts        ArtistMerchProduct[]       @relation("ArtistMerchProducts")
+  artistMerchOrdersAsCustomer ArtistMerchOrder[]        @relation("ArtistMerchOrdersAsCustomer")
+  artistMerchOrderItems      ArtistMerchOrderItem[]     @relation("ArtistMerchOrderItems")
+  artistMerchPayouts         ArtistMerchPayout[]        @relation("ArtistMerchPayouts")
 
   @@index([email])
   @@index([stripeCustomerId])
@@ -5285,6 +5292,10 @@ model PlatformMerchOrder {
   stripeSessionId       String?  @unique
   stripePaymentIntentId String?  @unique
   
+  // Printful Integration
+  printfulOrderId       String?  @unique // Printful order ID for fulfillment
+  printfulStatus        String?  // Printful order status
+  
   // Customer Info (snapshot)
   customerEmail         String
   customerName          String?
@@ -5343,6 +5354,254 @@ enum PlatformOrderStatus {
   DELIVERED
   CANCELED
   REFUNDED
+}
+
+// ============================================
+// ARTIST MERCH STORE (Multi-tenant POD)
+// ============================================
+
+// Artist's merch products (each artist can create their own products)
+model ArtistMerchProduct {
+  id                    String   @id @default(cuid())
+  artistId              String   // The artist who owns this product
+  
+  // Product Info
+  name                  String
+  description           String?  @db.Text
+  slug                  String   // URL-friendly name
+  
+  // Printful Integration
+  printfulProductId     Int      // Printful catalog product ID (e.g., 71 for Bella+Canvas 3001)
+  printfulSyncProductId String?  // If synced to Printful store
+  designUrl             String   // URL to the design image
+  placement             String   @default("front") // front, back, etc.
+  
+  // Pricing (in cents)
+  basePrice             Int      // Printful production cost
+  retailPrice           Int      // What customer pays
+  platformFeePercent    Int      @default(15) // RNRB platform fee %
+  
+  // Product Options
+  category              String   @default("apparel") // apparel, accessories, wall-art, etc.
+  colors                Json?    // Available colors
+  sizes                 Json?    // Available sizes (if applicable)
+  
+  // Images
+  mockupUrl             String?  // Generated mockup image
+  thumbnailUrl          String?
+  galleryImages         Json?    // Array of additional images
+  
+  // Status
+  status                ArtistProductStatus @default(DRAFT)
+  isPublished           Boolean  @default(false)
+  isFeatured            Boolean  @default(false)
+  
+  // Stats
+  viewCount             Int      @default(0)
+  salesCount            Int      @default(0)
+  totalRevenue          Int      @default(0) // Total in cents
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  publishedAt           DateTime?
+  
+  // Relations
+  artist                User     @relation("ArtistMerchProducts", fields: [artistId], references: [id], onDelete: Cascade)
+  variants              ArtistMerchVariant[]
+  orderItems            ArtistMerchOrderItem[]
+  
+  @@unique([artistId, slug])
+  @@index([artistId])
+  @@index([status])
+  @@index([isPublished])
+  @@index([category])
+  @@index([salesCount(sort: Desc)])
+}
+
+// Product variants (size/color combinations)
+model ArtistMerchVariant {
+  id                    String   @id @default(cuid())
+  productId             String
+  
+  // Printful Variant
+  printfulVariantId     Int      // Printful variant ID
+  printfulSyncVariantId String?  // If synced
+  
+  // Variant Details
+  size                  String?
+  color                 String?
+  colorCode             String?  // Hex color
+  
+  // Pricing (in cents)
+  basePrice             Int      // Printful cost for this variant
+  retailPrice           Int      // What customer pays
+  
+  // Stock
+  inStock               Boolean  @default(true)
+  
+  // SKU
+  sku                   String?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  product               ArtistMerchProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems            ArtistMerchOrderItem[]
+  
+  @@index([productId])
+  @@index([printfulVariantId])
+}
+
+enum ArtistProductStatus {
+  DRAFT
+  PENDING_REVIEW
+  ACTIVE
+  PAUSED
+  REJECTED
+  ARCHIVED
+}
+
+// Orders for artist products
+model ArtistMerchOrder {
+  id                    String   @id @default(cuid())
+  orderNumber           String   @unique // e.g., "ART-XXXXXX"
+  
+  // Customer (buyer)
+  customerId            String?  // If logged in user
+  customerEmail         String
+  customerName          String?
+  
+  // Stripe
+  stripeSessionId       String?  @unique
+  stripePaymentIntentId String?
+  
+  // Printful
+  printfulOrderId       String?  @unique
+  printfulStatus        String?
+  
+  // Shipping
+  shippingName          String?
+  shippingAddress       Json?
+  shippingMethod        String?
+  shippingCost          Int      @default(0)
+  trackingNumber        String?
+  trackingCarrier       String?
+  
+  // Totals (all in cents)
+  subtotal              Int
+  platformFees          Int      @default(0) // Total platform fees for this order
+  artistEarnings        Int      @default(0) // Total artist earnings
+  printfulCost          Int      @default(0) // Total Printful cost
+  tax                   Int      @default(0)
+  total                 Int
+  currency              String   @default("usd")
+  
+  // Status
+  status                PlatformOrderStatus @default(PENDING)
+  paymentStatus         String?
+  
+  // Dates
+  paidAt                DateTime?
+  processedAt           DateTime?
+  shippedAt             DateTime?
+  deliveredAt           DateTime?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  customer              User?    @relation("ArtistMerchOrdersAsCustomer", fields: [customerId], references: [id])
+  items                 ArtistMerchOrderItem[]
+  
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+// Order line items
+model ArtistMerchOrderItem {
+  id                    String   @id @default(cuid())
+  orderId               String
+  productId             String
+  variantId             String?
+  artistId              String   // Denormalized for easy queries
+  
+  // Item Details
+  quantity              Int
+  unitPrice             Int      // Retail price per item
+  totalPrice            Int      // quantity * unitPrice
+  
+  // Revenue Split (all in cents)
+  printfulCost          Int      // What Printful charges
+  platformFee           Int      // RNRB's cut
+  artistEarning         Int      // What artist earns
+  
+  // Snapshot (in case product changes)
+  productName           String
+  variantName           String?
+  designUrl             String?
+  
+  createdAt             DateTime @default(now())
+  
+  // Relations
+  order                 ArtistMerchOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product               ArtistMerchProduct @relation(fields: [productId], references: [id])
+  variant               ArtistMerchVariant? @relation(fields: [variantId], references: [id])
+  artist                User @relation("ArtistMerchOrderItems", fields: [artistId], references: [id])
+  
+  @@index([orderId])
+  @@index([productId])
+  @@index([artistId])
+}
+
+// Artist earnings/payouts tracking
+model ArtistMerchPayout {
+  id                    String   @id @default(cuid())
+  artistId              String
+  
+  // Payout Details
+  amount                Int      // Amount in cents
+  currency              String   @default("usd")
+  
+  // Stripe Connect
+  stripeTransferId      String?  @unique
+  stripePayoutId        String?
+  
+  // Status
+  status                PayoutStatus @default(PENDING)
+  
+  // Period this payout covers
+  periodStart           DateTime
+  periodEnd             DateTime
+  
+  // Stats
+  ordersCount           Int      @default(0)
+  itemsSold             Int      @default(0)
+  
+  // Notes
+  note                  String?  @db.Text
+  
+  processedAt           DateTime?
+  failedAt              DateTime?
+  failureReason         String?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  artist                User @relation("ArtistMerchPayouts", fields: [artistId], references: [id], onDelete: Cascade)
+  
+  @@index([artistId])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 // Force regeneration: 2025-12-02-PLATFORM-MERCH
