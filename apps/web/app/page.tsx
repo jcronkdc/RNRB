@@ -1392,7 +1392,7 @@ export default function HomePage() {
                   Cancel These Subscriptions
                 </p>
                 <p className="text-lg font-medium" style={{ color: 'var(--text-secondary)' }}>
-                  One platform replaces $500+/month in software
+                  One platform replaces $100+/month in software
                 </p>
               </div>
 
@@ -1400,7 +1400,7 @@ export default function HomePage() {
                 className="mb-4 text-center text-sm font-medium"
                 style={{ color: 'var(--text-secondary)' }}
               >
-                ← Scroll to see all 10 tools we replace →
+                ← Scroll to see all 9 tools we replace →
               </p>
               <div className="overflow-x-auto">
                 <div
@@ -1412,7 +1412,7 @@ export default function HomePage() {
                     boxShadow: '0 0 80px rgba(255, 99, 71, 0.25)',
                   }}
                 >
-                  <table className="w-full" style={{ minWidth: '1400px' }}>
+                  <table className="w-full" style={{ minWidth: '1300px' }}>
                     <thead>
                       <tr className="border-b-2" style={{ borderColor: 'var(--accent)' }}>
                         <th
@@ -1435,23 +1435,6 @@ export default function HomePage() {
                             </svg>
                             RNRB
                             <span className="text-[10px] font-normal opacity-80">FREE</span>
-                          </div>
-                        </th>
-                        {/* Pro Tools */}
-                        <th className="pb-6 text-center" style={{ minWidth: '90px' }}>
-                          <div className="flex flex-col items-center gap-1">
-                            <span
-                              className="text-xs font-bold opacity-60"
-                              style={{ color: 'var(--muted)' }}
-                            >
-                              Pro Tools
-                            </span>
-                            <span
-                              className="text-[10px] opacity-40"
-                              style={{ color: 'var(--muted)' }}
-                            >
-                              $35/mo
-                            </span>
                           </div>
                         </th>
                         {/* DistroKid */}
@@ -1612,12 +1595,11 @@ export default function HomePage() {
                     <tbody>
                       {/* Feature rows - comprehensive comparison */}
                       {[
-                        // Recording & Production
+                        // Songwriting & Creative (RNRB strengths)
                         {
-                          name: 'Recording Studio',
-                          category: 'Production',
+                          name: 'Songwriting Workshop',
+                          category: 'Songwriting',
                           r: 1,
-                          pt: 1,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1629,10 +1611,9 @@ export default function HomePage() {
                           ma: 0,
                         },
                         {
-                          name: 'Multi-track Mixing',
-                          category: 'Production',
+                          name: 'Chord Progressions & Suggestions',
+                          category: 'Songwriting',
                           r: 1,
-                          pt: 1,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1644,10 +1625,9 @@ export default function HomePage() {
                           ma: 0,
                         },
                         {
-                          name: 'Mastering Tools',
-                          category: 'Production',
+                          name: 'Lyrics Editor with Rhyme Helper',
+                          category: 'Songwriting',
                           r: 1,
-                          pt: 1,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1660,9 +1640,8 @@ export default function HomePage() {
                         },
                         {
                           name: 'Version Control (Git for Music)',
-                          category: 'Production',
+                          category: 'Songwriting',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1678,7 +1657,6 @@ export default function HomePage() {
                           name: 'Music Distribution',
                           category: 'Distribution',
                           r: 1,
-                          pt: 0,
                           dk: 1,
                           sq: 0,
                           zm: 0,
@@ -1693,7 +1671,6 @@ export default function HomePage() {
                           name: 'Revenue Splits & Royalties',
                           category: 'Distribution',
                           r: 1,
-                          pt: 0,
                           dk: 1,
                           sq: 0,
                           zm: 0,
@@ -1708,7 +1685,6 @@ export default function HomePage() {
                           name: 'Copyright Registration',
                           category: 'Distribution',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1723,7 +1699,6 @@ export default function HomePage() {
                           name: 'Revenue Analytics Dashboard',
                           category: 'Distribution',
                           r: 1,
-                          pt: 0,
                           dk: 1,
                           sq: 1,
                           zm: 0,
@@ -1739,7 +1714,6 @@ export default function HomePage() {
                           name: 'Website Builder',
                           category: 'Website',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 1,
                           zm: 0,
@@ -1754,7 +1728,6 @@ export default function HomePage() {
                           name: 'Custom Domain Support',
                           category: 'Website',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 1,
                           zm: 0,
@@ -1769,7 +1742,6 @@ export default function HomePage() {
                           name: 'EPK (Electronic Press Kit)',
                           category: 'Website',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1784,7 +1756,6 @@ export default function HomePage() {
                           name: 'Public Artist Profiles',
                           category: 'Website',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 1,
                           zm: 0,
@@ -1800,7 +1771,6 @@ export default function HomePage() {
                           name: 'HD Video Calls (50 people)',
                           category: 'Communication',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 1,
@@ -1815,7 +1785,6 @@ export default function HomePage() {
                           name: 'Screen Sharing',
                           category: 'Communication',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 1,
@@ -1830,7 +1799,6 @@ export default function HomePage() {
                           name: 'Team Channels & Threads',
                           category: 'Communication',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 1,
@@ -1845,7 +1813,6 @@ export default function HomePage() {
                           name: 'Direct Messaging',
                           category: 'Communication',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 1,
@@ -1861,7 +1828,6 @@ export default function HomePage() {
                           name: 'Cloud File Storage',
                           category: 'Storage',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1876,7 +1842,6 @@ export default function HomePage() {
                           name: 'File Sharing & Collaboration',
                           category: 'Storage',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1891,7 +1856,6 @@ export default function HomePage() {
                           name: 'Project Organization',
                           category: 'Storage',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1907,7 +1871,6 @@ export default function HomePage() {
                           name: 'Email Marketing & Lists',
                           category: 'Marketing',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1922,7 +1885,6 @@ export default function HomePage() {
                           name: 'Fan Engagement Tools',
                           category: 'Marketing',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1937,7 +1899,6 @@ export default function HomePage() {
                           name: 'Social Feed',
                           category: 'Marketing',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1952,7 +1913,6 @@ export default function HomePage() {
                           name: 'Live Streaming',
                           category: 'Marketing',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 1,
@@ -1968,7 +1928,6 @@ export default function HomePage() {
                           name: 'Tour Management',
                           category: 'Touring',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1983,7 +1942,6 @@ export default function HomePage() {
                           name: 'Gig Calendar & Booking',
                           category: 'Touring',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -1998,7 +1956,6 @@ export default function HomePage() {
                           name: 'Venue Database',
                           category: 'Touring',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2013,7 +1970,6 @@ export default function HomePage() {
                           name: 'Smart Setlist Builder',
                           category: 'Touring',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2029,7 +1985,6 @@ export default function HomePage() {
                           name: 'Buy/Sell Gear Marketplace',
                           category: 'Marketplace',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2044,7 +1999,6 @@ export default function HomePage() {
                           name: 'Merch Store',
                           category: 'Marketplace',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 1,
                           zm: 0,
@@ -2059,7 +2013,6 @@ export default function HomePage() {
                           name: 'Services Marketplace',
                           category: 'Marketplace',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2075,7 +2028,6 @@ export default function HomePage() {
                           name: 'Masterclasses & Courses',
                           category: 'Education',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2090,7 +2042,6 @@ export default function HomePage() {
                           name: 'Music Theory Tools',
                           category: 'Education',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2105,7 +2056,6 @@ export default function HomePage() {
                           name: 'Chord & Scale Library',
                           category: 'Education',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2118,10 +2068,9 @@ export default function HomePage() {
                         },
                         // Tools
                         {
-                          name: '12 Pro Tools (Tuner, Metronome, etc.)',
+                          name: "Musician's Toolbox (Tuner, Metronome)",
                           category: 'Tools',
                           r: 1,
-                          pt: 1,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2136,7 +2085,6 @@ export default function HomePage() {
                           name: 'AI Songwriting Assistant',
                           category: 'Tools',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2151,7 +2099,6 @@ export default function HomePage() {
                           name: 'Contract & Legal Tools',
                           category: 'Tools',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2167,7 +2114,6 @@ export default function HomePage() {
                           name: 'Offline Mode (PWA)',
                           category: 'Platform',
                           r: 1,
-                          pt: 1,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2182,7 +2128,6 @@ export default function HomePage() {
                           name: 'Mobile App',
                           category: 'Platform',
                           r: 1,
-                          pt: 1,
                           dk: 1,
                           sq: 1,
                           zm: 1,
@@ -2197,7 +2142,6 @@ export default function HomePage() {
                           name: 'All-in-One Dashboard',
                           category: 'Platform',
                           r: 1,
-                          pt: 0,
                           dk: 0,
                           sq: 0,
                           zm: 0,
@@ -2245,39 +2189,6 @@ export default function HomePage() {
                                 <path d="M5 12l5 5L20 7" />
                               </svg>
                             </div>
-                          </td>
-                          {/* Pro Tools */}
-                          <td className="py-3 text-center">
-                            {row.pt ? (
-                              <div
-                                className="inline-flex h-6 w-6 items-center justify-center rounded-full"
-                                style={{ background: 'rgba(34, 197, 94, 0.3)' }}
-                              >
-                                <svg
-                                  width="12"
-                                  height="12"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#22c55e"
-                                  strokeWidth="3"
-                                >
-                                  <path d="M5 12l5 5L20 7" />
-                                </svg>
-                              </div>
-                            ) : (
-                              <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
-                              >
-                                <path d="M18 6L6 18M6 6l12 12" />
-                              </svg>
-                            )}
                           </td>
                           {/* DistroKid */}
                           <td className="py-3 text-center">
@@ -2601,12 +2512,6 @@ export default function HomePage() {
                           className="py-5 text-center text-xs font-bold opacity-50"
                           style={{ color: 'var(--muted)' }}
                         >
-                          $35
-                        </td>
-                        <td
-                          className="py-5 text-center text-xs font-bold opacity-50"
-                          style={{ color: 'var(--muted)' }}
-                        >
                           $2
                         </td>
                         <td
@@ -2682,7 +2587,7 @@ export default function HomePage() {
                             boxShadow: '0 12px 48px rgba(255, 99, 71, 0.6)',
                           }}
                         >
-                          10
+                          9
                         </div>
                         <span
                           className="text-xs font-bold uppercase tracking-wider"
@@ -2696,15 +2601,14 @@ export default function HomePage() {
                           className="mb-3 text-2xl font-black uppercase tracking-tight md:text-3xl"
                           style={{ color: 'var(--text)' }}
                         >
-                          Save $130+/month — Get Everything
+                          Save $95+/month — Get Everything
                         </h3>
                         <p
                           className="mb-4 text-base leading-relaxed md:text-lg"
                           style={{ color: 'var(--text-secondary)' }}
                         >
-                          <strong style={{ color: 'var(--accent)' }}>Pro Tools</strong> for
-                          recording, <strong style={{ color: 'var(--accent)' }}>DistroKid</strong>{' '}
-                          for distribution,{' '}
+                          <strong style={{ color: 'var(--accent)' }}>DistroKid</strong> for
+                          distribution,{' '}
                           <strong style={{ color: 'var(--accent)' }}>Squarespace</strong> for
                           websites, <strong style={{ color: 'var(--accent)' }}>Zoom</strong> for
                           calls, <strong style={{ color: 'var(--accent)' }}>Slack</strong> for
@@ -2717,7 +2621,7 @@ export default function HomePage() {
                           <strong style={{ color: 'white' }}>ALL IN ONE PLATFORM.</strong>
                         </p>
                         <p className="mb-3 text-base font-bold" style={{ color: 'var(--accent)' }}>
-                          Stop juggling 10 subscriptions. Start making music.
+                          Stop juggling 9 subscriptions. Start making music.
                         </p>
                         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                           <strong style={{ color: 'var(--text)' }}>Plus:</strong> Our AI Assistant
