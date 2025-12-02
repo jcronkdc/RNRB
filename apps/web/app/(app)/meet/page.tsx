@@ -5,16 +5,10 @@ import {
   Video,
   Calendar,
   Link2 as LinkIcon,
-  Plus,
   Clock,
   Users,
   Copy,
-  Check,
-  ArrowRight,
   Play,
-  Settings,
-  Trash2,
-  ExternalLink,
   CalendarPlus,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
@@ -70,66 +64,65 @@ function MeetingCard({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-xl border p-4 transition-all ${
+      className={`border bg-zinc-900/50 p-4 transition-all ${
         isActive
-          ? 'border-green-500/50 bg-green-500/10'
+          ? 'border-green-500/30'
           : isPast
-            ? 'border-white/5 bg-zinc-900/50 opacity-60'
-            : 'border-white/10 bg-zinc-900/50 hover:border-purple-500/30'
+            ? 'border-zinc-800/30 opacity-60'
+            : 'border-zinc-800 hover:border-zinc-700'
       } `}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <div className="mb-1 flex items-center gap-2">
+          <div className="mb-2 flex items-center gap-3">
             {isActive && (
-              <span className="flex items-center gap-1.5 rounded-full bg-green-500/20 px-2 py-0.5 text-xs font-medium text-green-400">
+              <span className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-green-500">
                 <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
                 </span>
                 Active
               </span>
             )}
             {isScheduled && scheduledTime && (
-              <span className="flex items-center gap-1 text-xs text-purple-400">
+              <span className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-zinc-400">
                 <Clock className="h-3 w-3" />
                 {scheduledTime}
               </span>
             )}
           </div>
 
-          <h3 className="truncate font-semibold text-white">{meeting.title}</h3>
+          <h3 className="truncate text-lg font-semibold text-white">{meeting.title}</h3>
 
-          <div className="mt-2 flex items-center gap-3 text-sm text-white/50">
-            <span className="flex items-center gap-1">
+          <div className="mt-3 flex items-center gap-4 font-mono text-xs uppercase tracking-wider text-zinc-500">
+            <span className="flex items-center gap-1.5">
               <Users className="h-3.5 w-3.5" />
               {meeting.participantCount}
             </span>
-            <span className="font-mono text-xs">{meeting.meetingCode}</span>
+            <span className="text-zinc-600">{meeting.meetingCode}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={onCopy}
-            className="rounded-lg bg-white/5 p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+            className="border border-zinc-800 bg-zinc-900 p-2 text-zinc-400 transition-colors hover:border-zinc-700 hover:text-white"
             title="Copy link"
           >
             <Copy className="h-4 w-4" />
           </button>
 
           {!isPast && (
-            <motion.button
+            <button
               onClick={onJoin}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium ${
-                isActive ? 'bg-green-500 text-white' : 'bg-purple-500 text-white'
+              className={`border px-4 py-2 font-mono text-xs uppercase tracking-wider transition-colors ${
+                isActive
+                  ? 'border-green-500/30 bg-green-500/10 text-green-500 hover:bg-green-500/20'
+                  : 'border-blue-500/30 bg-blue-500/10 text-blue-500 hover:bg-blue-500/20'
               } `}
             >
-              <Play className="h-4 w-4" />
               {isActive ? 'Join' : 'Start'}
-            </motion.button>
+            </button>
           )}
         </div>
       </div>
@@ -257,80 +250,86 @@ export default function MeetPage() {
   const upcomingMeetings = meetings.filter((m) => m.status === 'scheduled');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
-      {/* RR Logo */}
-      <div className="flex justify-center pb-2 pt-6">
-        <Link href="/" className="transition-transform hover:scale-105">
+    <div className="min-h-screen bg-zinc-950">
+      {/* RR Logo - WHITE logo for dark background */}
+      <div className="flex justify-center border-b border-zinc-800 py-6">
+        <Link href="/" className="transition-opacity hover:opacity-80">
           <Image
             src="/logo-dark.png"
             alt="Rock N' Roll Basement"
-            width={80}
-            height={80}
+            width={60}
+            height={60}
             className="object-contain"
           />
         </Link>
       </div>
 
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b border-white/10 bg-black/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-5xl px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-purple-500/20 p-2">
-                <Video className="h-6 w-6 text-purple-400" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-white">Meetings</h1>
-                <p className="text-sm text-white/50">Video calls & collaboration</p>
-              </div>
+      <div className="border-b border-zinc-800 bg-black/50">
+        <div className="mx-auto max-w-5xl px-6 py-6">
+          <div className="flex items-center gap-4">
+            <div className="border border-zinc-800 bg-zinc-900 p-3">
+              <Video className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="font-mono text-2xl uppercase tracking-wider text-white">Meetings</h1>
+              <p className="mt-0.5 font-mono text-xs uppercase tracking-wider text-zinc-500">
+                Video calls & collaboration
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-5xl px-4 py-8">
+      <div className="mx-auto max-w-5xl px-6 py-8">
         {/* Quick Actions */}
-        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mb-12 grid grid-cols-1 gap-4 md:grid-cols-3">
           {/* Instant Meeting */}
-          <motion.button
+          <button
             onClick={createInstantMeeting}
             disabled={isCreating}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-6 text-left transition-all hover:border-purple-500/50"
+            className="group border border-blue-500/30 bg-blue-500/5 p-6 text-left transition-colors hover:border-blue-500/50 hover:bg-blue-500/10"
           >
-            <div className="mb-3 flex items-center gap-3">
-              <div className="rounded-lg bg-purple-500 p-2">
-                <Video className="h-5 w-5 text-white" />
+            <div className="mb-4 flex items-center gap-3">
+              <div className="border border-blue-500/30 bg-blue-500/10 p-2">
+                <Video className="h-5 w-5 text-blue-500" />
               </div>
-              <span className="font-semibold text-white">New Meeting</span>
+              <span className="font-mono text-sm uppercase tracking-wider text-white">
+                New Meeting
+              </span>
             </div>
-            <p className="text-sm text-white/60">Start an instant video call with your team</p>
-          </motion.button>
+            <p className="font-mono text-xs uppercase tracking-wider text-zinc-400">
+              Start instant video call
+            </p>
+          </button>
 
           {/* Schedule Meeting */}
-          <motion.button
+          <button
             onClick={() => setShowSchedule(true)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="rounded-2xl border border-white/10 bg-zinc-900/50 p-6 text-left transition-all hover:border-white/20"
+            className="group border border-zinc-800 bg-zinc-900/50 p-6 text-left transition-colors hover:border-zinc-700"
           >
-            <div className="mb-3 flex items-center gap-3">
-              <div className="rounded-lg bg-blue-500 p-2">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="border border-zinc-800 bg-zinc-900 p-2">
                 <CalendarPlus className="h-5 w-5 text-white" />
               </div>
-              <span className="font-semibold text-white">Schedule</span>
+              <span className="font-mono text-sm uppercase tracking-wider text-white">
+                Schedule
+              </span>
             </div>
-            <p className="text-sm text-white/60">Plan a meeting for later with a shareable link</p>
-          </motion.button>
+            <p className="font-mono text-xs uppercase tracking-wider text-zinc-400">
+              Plan meeting for later
+            </p>
+          </button>
 
           {/* Join by Code */}
-          <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-6">
-            <div className="mb-3 flex items-center gap-3">
-              <div className="rounded-lg bg-green-500 p-2">
+          <div className="border border-zinc-800 bg-zinc-900/50 p-6">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="border border-zinc-800 bg-zinc-900 p-2">
                 <LinkIcon className="h-5 w-5 text-white" />
               </div>
-              <span className="font-semibold text-white">Join Meeting</span>
+              <span className="font-mono text-sm uppercase tracking-wider text-white">
+                Join Meeting
+              </span>
             </div>
             <div className="flex gap-2">
               <input
@@ -339,11 +338,11 @@ export default function MeetPage() {
                 onChange={(e) => setJoinCode(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleJoinByCode()}
                 placeholder="abc-defg-hij"
-                className="flex-1 rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-green-500/50 focus:outline-none"
+                className="flex-1 border border-zinc-800 bg-black/50 px-3 py-2 font-mono text-xs uppercase tracking-wider text-white placeholder-zinc-600 focus:border-zinc-700 focus:outline-none"
               />
               <button
                 onClick={handleJoinByCode}
-                className="rounded-lg bg-green-500 px-4 py-2 font-medium text-white transition-colors hover:bg-green-600"
+                className="border border-green-500/30 bg-green-500/10 px-4 py-2 font-mono text-xs uppercase tracking-wider text-green-500 transition-colors hover:bg-green-500/20"
               >
                 Join
               </button>
@@ -356,57 +355,67 @@ export default function MeetPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
             onClick={() => setShowSchedule(false)}
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900 p-6"
+              className="w-full max-w-md border border-zinc-800 bg-zinc-900 p-6"
             >
-              <h2 className="mb-4 text-xl font-bold text-white">Schedule Meeting</h2>
+              <h2 className="mb-6 font-mono text-xl uppercase tracking-wider text-white">
+                Schedule Meeting
+              </h2>
 
               <div className="space-y-4">
                 <div>
-                  <label className="mb-1 block text-sm text-white/70">Title</label>
+                  <label className="mb-2 block font-mono text-xs uppercase tracking-wider text-zinc-400">
+                    Title
+                  </label>
                   <input
                     type="text"
                     value={scheduleTitle}
                     onChange={(e) => setScheduleTitle(e.target.value)}
                     placeholder="Team Sync"
-                    className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-white placeholder-white/30 focus:border-purple-500/50 focus:outline-none"
+                    className="w-full border border-zinc-800 bg-black/50 px-4 py-3 text-white placeholder-zinc-600 focus:border-zinc-700 focus:outline-none"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="mb-1 block text-sm text-white/70">Date</label>
+                    <label className="mb-2 block font-mono text-xs uppercase tracking-wider text-zinc-400">
+                      Date
+                    </label>
                     <input
                       type="date"
                       value={scheduleDate}
                       onChange={(e) => setScheduleDate(e.target.value)}
                       min={new Date().toISOString().split('T')[0]}
-                      className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-white focus:border-purple-500/50 focus:outline-none"
+                      className="w-full border border-zinc-800 bg-black/50 px-4 py-3 text-white focus:border-zinc-700 focus:outline-none"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm text-white/70">Time</label>
+                    <label className="mb-2 block font-mono text-xs uppercase tracking-wider text-zinc-400">
+                      Time
+                    </label>
                     <input
                       type="time"
                       value={scheduleTime}
                       onChange={(e) => setScheduleTime(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-white focus:border-purple-500/50 focus:outline-none"
+                      className="w-full border border-zinc-800 bg-black/50 px-4 py-3 text-white focus:border-zinc-700 focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm text-white/70">Duration</label>
+                  <label className="mb-2 block font-mono text-xs uppercase tracking-wider text-zinc-400">
+                    Duration
+                  </label>
                   <select
                     value={scheduleDuration}
                     onChange={(e) => setScheduleDuration(e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-white focus:border-purple-500/50 focus:outline-none"
+                    className="w-full border border-zinc-800 bg-black/50 px-4 py-3 text-white focus:border-zinc-700 focus:outline-none"
                   >
                     <option value="15">15 minutes</option>
                     <option value="30">30 minutes</option>
@@ -416,22 +425,20 @@ export default function MeetPage() {
                   </select>
                 </div>
 
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-3 pt-4">
                   <button
                     onClick={() => setShowSchedule(false)}
-                    className="flex-1 rounded-xl bg-white/10 px-4 py-3 font-medium text-white transition-colors hover:bg-white/20"
+                    className="flex-1 border border-zinc-800 bg-zinc-900 px-4 py-3 font-mono text-xs uppercase tracking-wider text-white transition-colors hover:border-zinc-700"
                   >
                     Cancel
                   </button>
-                  <motion.button
+                  <button
                     onClick={createScheduledMeeting}
                     disabled={isCreating}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex-1 rounded-xl bg-purple-500 px-4 py-3 font-medium text-white disabled:opacity-50"
+                    className="flex-1 border border-blue-500/30 bg-blue-500/10 px-4 py-3 font-mono text-xs uppercase tracking-wider text-blue-500 transition-colors hover:bg-blue-500/20 disabled:opacity-50"
                   >
                     {isCreating ? 'Creating...' : 'Schedule & Copy Link'}
-                  </motion.button>
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -440,11 +447,11 @@ export default function MeetPage() {
 
         {/* Active Meetings */}
         {activeMeetings.length > 0 && (
-          <section className="mb-8">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <span className="relative flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
+          <section className="mb-12">
+            <h2 className="mb-4 flex items-center gap-3 border-b border-zinc-800 pb-3 font-mono text-sm uppercase tracking-wider text-white">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
               </span>
               Active Now
             </h2>
@@ -464,9 +471,9 @@ export default function MeetPage() {
 
         {/* Upcoming Meetings */}
         {upcomingMeetings.length > 0 && (
-          <section className="mb-8">
-            <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <Calendar className="h-5 w-5 text-purple-400" />
+          <section className="mb-12">
+            <h2 className="mb-4 flex items-center gap-3 border-b border-zinc-800 pb-3 font-mono text-sm uppercase tracking-wider text-white">
+              <Calendar className="h-4 w-4" />
               Upcoming
             </h2>
             <div className="space-y-3">
@@ -485,19 +492,29 @@ export default function MeetPage() {
 
         {/* Empty State */}
         {!isLoading && meetings.length === 0 && (
-          <div className="py-16 text-center">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/5">
-              <Video className="h-10 w-10 text-white/30" />
+          <div className="border border-zinc-800 bg-zinc-900/30 py-16 text-center">
+            <div className="mx-auto mb-6 inline-flex border border-zinc-800 bg-zinc-900 p-4">
+              <Video className="h-8 w-8 text-zinc-600" />
             </div>
-            <h2 className="mb-2 text-xl font-bold text-white">No meetings yet</h2>
-            <p className="mb-6 text-white/60">Start an instant meeting or schedule one for later</p>
+            <p className="mb-1 font-mono text-sm uppercase tracking-wider text-zinc-400">
+              No meetings yet
+            </p>
+            <p className="font-mono text-xs uppercase tracking-wider text-zinc-600">
+              Start an instant meeting or schedule one for later
+            </p>
           </div>
         )}
 
         {/* Loading */}
         {isLoading && (
           <div className="flex items-center justify-center py-16">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <motion.div
+              animate={{ opacity: [0.2, 1, 0.2] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="font-mono text-xs uppercase tracking-wider text-zinc-400"
+            >
+              Loading meetings
+            </motion.div>
           </div>
         )}
       </div>

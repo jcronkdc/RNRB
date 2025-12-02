@@ -779,21 +779,20 @@ export default function WebmailPage() {
           {/* Message List */}
           <div
             className="w-96 flex-shrink-0 overflow-y-auto border-r"
-            style={{ borderColor: 'var(--border)' }}
+            style={{
+              borderColor: 'rgba(255, 99, 71, 0.15)',
+              background: 'rgba(10, 10, 10, 0.5)',
+            }}
           >
             {loadingMessages ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-6 w-6 animate-spin text-[var(--accent)]" />
+                <Loader2 className="h-6 w-6 animate-spin text-orange-400" />
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Inbox className="mb-4 h-12 w-12" style={{ color: 'var(--muted)' }} />
-                <p className="font-medium" style={{ color: 'var(--text)' }}>
-                  No messages
-                </p>
-                <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  Your inbox is empty
-                </p>
+                <Inbox className="mb-4 h-12 w-12 text-orange-400/30" />
+                <p className="font-medium text-white/90">No messages</p>
+                <p className="text-sm text-white/50">Your inbox is empty</p>
               </div>
             ) : (
               <div>
@@ -801,52 +800,50 @@ export default function WebmailPage() {
                   <button
                     key={message.id}
                     onClick={() => loadMessage(message.id)}
-                    className={`w-full border-b px-4 py-3 text-left transition-colors hover:bg-white/5 ${
-                      selectedMessage?.id === message.id ? 'bg-[var(--accent)]/5' : ''
+                    className={`w-full border-b px-4 py-3.5 text-left transition-all ${
+                      selectedMessage?.id === message.id
+                        ? 'border-l-4 border-l-orange-500 bg-gradient-to-r from-orange-500/20 to-yellow-500/10'
+                        : 'border-l-4 border-l-transparent hover:bg-white/5'
                     }`}
-                    style={{ borderColor: 'var(--border)' }}
+                    style={{ borderBottomColor: 'rgba(255, 255, 255, 0.05)' }}
                   >
                     <div className="flex items-start gap-3">
                       {/* Unread indicator */}
                       <div className="mt-1.5">
                         {message.isUnread ? (
-                          <Circle className="h-2.5 w-2.5 fill-[var(--accent)] text-[var(--accent)]" />
+                          <Circle className="h-2.5 w-2.5 fill-orange-500 text-orange-500" />
                         ) : (
-                          <Circle className="h-2.5 w-2.5" style={{ color: 'transparent' }} />
+                          <div className="h-2.5 w-2.5" />
                         )}
                       </div>
 
                       <div className="min-w-0 flex-1">
                         <div className="mb-1 flex items-center justify-between gap-2">
                           <span
-                            className={`truncate text-sm ${message.isUnread ? 'font-semibold' : 'font-medium'}`}
-                            style={{ color: 'var(--text)' }}
+                            className={`truncate text-sm ${message.isUnread ? 'font-bold text-white' : 'font-medium text-white/80'}`}
                           >
                             {message.from[0]?.name || message.from[0]?.email}
                           </span>
-                          <span className="flex-shrink-0 text-xs" style={{ color: 'var(--muted)' }}>
+                          <span className="flex-shrink-0 text-xs text-orange-400/70">
                             {formatDate(message.receivedAt)}
                           </span>
                         </div>
 
                         <p
-                          className={`mb-1 truncate text-sm ${message.isUnread ? 'font-medium' : ''}`}
-                          style={{ color: message.isUnread ? 'var(--text)' : 'var(--muted)' }}
+                          className={`mb-1.5 truncate text-sm ${message.isUnread ? 'font-semibold text-white/95' : 'text-white/70'}`}
                         >
                           {message.subject}
                         </p>
 
-                        <p className="truncate text-xs" style={{ color: 'var(--muted)' }}>
-                          {message.preview}
-                        </p>
+                        <p className="truncate text-xs text-white/50">{message.preview}</p>
 
                         {/* Indicators */}
                         <div className="mt-2 flex items-center gap-2">
                           {message.isFlagged && (
-                            <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
+                            <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
                           )}
                           {message.hasAttachment && (
-                            <Paperclip className="h-3.5 w-3.5" style={{ color: 'var(--muted)' }} />
+                            <Paperclip className="h-3.5 w-3.5 text-orange-400/60" />
                           )}
                         </div>
                       </div>
@@ -870,9 +867,7 @@ export default function WebmailPage() {
               <div className="p-6">
                 {/* Message Header - Enhanced */}
                 <div className="mb-6">
-                  <h1 className="mb-4 text-2xl font-bold" style={{ color: 'var(--text)' }}>
-                    {selectedMessage.subject}
-                  </h1>
+                  <h1 className="mb-4 text-2xl font-bold text-white">{selectedMessage.subject}</h1>
 
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
@@ -888,12 +883,12 @@ export default function WebmailPage() {
                           selectedMessage.from[0]?.email)[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-lg font-semibold" style={{ color: 'var(--text)' }}>
+                        <p className="text-lg font-semibold text-white/95">
                           {selectedMessage.from[0]?.name || selectedMessage.from[0]?.email}
                         </p>
-                        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                        <p className="text-sm text-white/60">
                           to{' '}
-                          <span className="text-orange-400/80">
+                          <span className="text-orange-400">
                             {selectedMessage.to.map((t) => t.email).join(', ')}
                           </span>
                         </p>
@@ -901,14 +896,11 @@ export default function WebmailPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span
-                        className="rounded-lg bg-white/5 px-3 py-1 text-sm"
-                        style={{ color: 'var(--muted)' }}
-                      >
+                      <span className="rounded-lg bg-white/5 px-3 py-1.5 text-sm text-white/70">
                         {new Date(selectedMessage.receivedAt).toLocaleString()}
                       </span>
                       <button className="rounded-lg p-2 transition-colors hover:bg-orange-400/10">
-                        <MoreVertical className="h-5 w-5 text-white/50" />
+                        <MoreVertical className="h-5 w-5 text-white/70 hover:text-orange-400" />
                       </button>
                     </div>
                   </div>
