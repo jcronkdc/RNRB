@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, JetBrains_Mono, Instrument_Serif } from 'next/font/google';
+import { DM_Sans, JetBrains_Mono } from 'next/font/google';
 
 import { auth } from '@/auth';
 import { AblyProvider } from '@/components/ably/ably-provider';
@@ -28,9 +28,10 @@ const dmSans = DM_Sans({
   display: 'swap',
 });
 
-const instrumentSerif = Instrument_Serif({
+// Display font uses the same clean sans-serif for consistency
+const dmSansDisplay = DM_Sans({
   subsets: ['latin'],
-  weight: '400',
+  weight: ['500', '600', '700'],
   variable: '--font-display',
   display: 'swap',
 });
@@ -72,7 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
+      className={`${dmSans.variable} ${dmSansDisplay.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         {/* Favicon & Icons */}
