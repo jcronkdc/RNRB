@@ -161,14 +161,32 @@ CronkWaters (aka "Rock N' Roll Basement") is a comprehensive music collaboration
     - Secure transactions via Stripe
     - Browse by category
 
-19. **Revenue** (`/revenue`)
+19. **Merch Store** (`/merch`) - NEW
+    - Browse official RNRB merchandise and artist products
+    - T-shirts, hoodies, hats, accessories, studio gear
+    - Shopping cart with Stripe checkout
+    - Filter by category (Apparel, Accessories, Studio Gear, Limited)
+    - Community-driven merch from fellow musicians
+
+20. **My Merch** (`/my-merch`) - CREATE & SELL YOUR OWN MERCH - NEW
+    - **Dashboard:** View all your products, sales stats, and earnings
+    - **Create Products** (`/my-merch/create`): Design and create merchandise
+    - **Printful Catalog** (`/my-merch/printful-catalog`): Browse 300+ product types
+    - **Customize** (`/my-merch/customize/[id]`): Upload designs, set colors, sizes
+    - **Earnings** (`/my-merch/earnings`): Track revenue, pending payouts, monthly stats
+    - **Help Guide** (`/help/merch`): Complete guide to selling merch
+    - **Zero upfront cost** - Print-on-demand (no inventory needed)
+    - **85% profit share** - You keep most of the earnings
+    - **We handle everything** - Printing, packing, shipping, customer service
+
+21. **Revenue** (`/revenue`)
     - Track income from all sources
     - Streaming royalties
     - Gig payments
     - Merchandise sales
     - Licensing income
 
-20. **Affiliate Program** (`/affiliate`)
+22. **Affiliate Program** (`/affiliate`)
     - Refer musicians, earn credits
     - Custom referral links
     - Track conversions
@@ -559,6 +577,104 @@ CronkWaters (aka "Rock N' Roll Basement") is a comprehensive music collaboration
 - SEO optimized
 - Analytics integration
 - Connect to your Library
+
+---
+
+### Merch Marketplace (NEW!)
+
+**Purpose:** Sell custom merchandise with zero upfront cost - we handle printing, shipping, everything!
+
+**Two Parts:**
+
+1. **RNRB Merch Store** (`/merch`)
+   - Browse official merchandise and artist products
+   - Categories: Apparel, Accessories, Studio Gear, Limited Editions
+   - Shopping cart with secure Stripe checkout
+   - Grid or list view
+   - Filter by category
+
+2. **My Merch Store** (`/my-merch`)
+   - Create and sell your OWN merchandise
+   - Dashboard with all your products and stats
+   - Earnings tracking and payout management
+
+**How to Create & Sell Merch:**
+
+1. Go to My Merch (`/my-merch`)
+2. Click "Create Product" or "Browse Catalog"
+3. Choose a product type:
+   - T-shirts, hoodies, sweatshirts
+   - Hats, beanies, caps
+   - Mugs, water bottles
+   - Posters, prints, stickers
+   - Phone cases, bags
+   - And 300+ more products!
+4. Upload your design:
+   - Use high-resolution artwork (300 DPI recommended)
+   - Position and scale your design
+   - Preview mockups instantly
+5. Set your price:
+   - See the base cost (printing + fulfillment)
+   - Set your retail price
+   - Keep 85% of the profit!
+6. Publish:
+   - Product goes live instantly
+   - Appears on your profile
+   - Share anywhere with direct links
+
+**Earnings Dashboard** (`/my-merch/earnings`):
+
+- Total earnings (all-time)
+- This month vs last month comparison
+- Pending payouts
+- Order history with details
+- Export to CSV for accounting
+- Filter by status (Pending, Paid, Processing)
+
+**Payout Information:**
+
+- Monthly payouts on the 15th
+- Via Stripe Connect
+- Minimum payout: $50
+- Manage in Settings → Billing
+
+**Profit Structure:**
+
+```
+Your Profit = Retail Price - Base Cost
+You Keep: 85% of profit
+Platform: 15% of profit
+
+Example:
+- T-shirt base cost: $12.00
+- Your retail price: $29.99
+- Profit: $17.99
+- Your earnings: $15.29 (85%)
+```
+
+**Product Statuses:**
+
+- **Draft:** Not yet published (edit freely)
+- **Active/Live:** Visible and for sale
+- **Paused:** Temporarily hidden from store
+- **Archived:** Permanently removed
+
+**Tips for Success:**
+
+- Use high-quality, original designs
+- Price competitively (check similar products)
+- Promote on social media and at shows
+- Create limited editions for urgency
+- Bundle products for higher value
+- Update designs seasonally
+
+**Help Center** (`/help/merch`):
+
+- Step-by-step guides
+- FAQ section
+- Quality standards
+- Shipping times
+- Design requirements
 
 ---
 
