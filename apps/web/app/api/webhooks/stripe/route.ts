@@ -72,12 +72,21 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Email Pro storage quota (10GB)
+const EMAIL_PRO_STORAGE_QUOTA = BigInt(10 * 1024 * 1024 * 1024);
+
 /**
  * Handle subscription created or updated
  */
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   try {
     const customerId = subscription.customer as string;
+
+    // Check if this is an Email Pro subscription
+    if (subscription.metadata?.type === 'email_pro') {
+      await handleEmailProSubscriptionUpdate(subscription);
+      return;
+    }
 
     // Find user by Stripe customer ID
     const user = await prisma.user.findUnique({
@@ -128,10 +137,58 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 }
 
 /**
+ * Handle Email Pro subscription updates
+ */
+async function handleEmailProSubscriptionUpdate(subscription: Stripe.Subscription) {
+  try {
+    const userId = subscription.metadata?.userId;
+
+    if (!userId) {
+      console.error('Email Pro subscription missing userId in metadata');
+      return;
+    }
+
+    const isActive = subscription.status === 'active' || subscription.status === 'trialing';
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        emailTier: isActive ? 'PRO' : 'BASIC',
+        emailProSubscriptionId: subscription.id,
+        emailProStatus: subscription.status,
+        emailAccountsLimit: isActive ? -1 : 1,
+        emailStorageQuotaBytes: isActive ? EMAIL_PRO_STORAGE_QUOTA : BigInt(1 * 1024 * 1024 * 1024),
+      },
+    });
+
+    // Update any existing email account storage quota
+    if (isActive) {
+      await prisma.emailAccount.updateMany({
+        where: { userId },
+        data: {
+          storageQuotaBytes: EMAIL_PRO_STORAGE_QUOTA,
+        },
+      });
+    }
+
+    console.log(`✅ Email Pro subscription ${subscription.status} for user ${userId}`);
+  } catch (error) {
+    console.error('Error handling Email Pro subscription update:', error);
+    throw error;
+  }
+}
+
+/**
  * Handle subscription deleted
  */
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   try {
+    // Check if this is an Email Pro subscription
+    if (subscription.metadata?.type === 'email_pro') {
+      await handleEmailProSubscriptionDeleted(subscription);
+      return;
+    }
+
     const customerId = subscription.customer as string;
 
     const user = await prisma.user.findUnique({
@@ -157,6 +214,73 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     console.log('✅ Subscription deleted for user:', user.email);
   } catch (error) {
     console.error('Error handling subscription deletion:', error);
+    throw error;
+  }
+}
+
+/**
+ * Handle Email Pro subscription deleted
+ */
+async function handleEmailProSubscriptionDeleted(subscription: Stripe.Subscription) {
+  try {
+    const userId = subscription.metadata?.userId;
+
+    if (!userId) {
+      // Try to find by subscription ID
+      const user = await prisma.user.findFirst({
+        where: { emailProSubscriptionId: subscription.id },
+      });
+
+      if (!user) {
+        console.error('User not found for Email Pro subscription:', subscription.id);
+        return;
+      }
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          emailTier: 'BASIC',
+          emailProSubscriptionId: null,
+          emailProStatus: 'canceled',
+          emailAccountsLimit: 1,
+          emailStorageQuotaBytes: BigInt(1 * 1024 * 1024 * 1024),
+        },
+      });
+
+      // Downgrade email account storage
+      await prisma.emailAccount.updateMany({
+        where: { userId: user.id },
+        data: {
+          storageQuotaBytes: BigInt(1 * 1024 * 1024 * 1024),
+        },
+      });
+
+      console.log(`✅ Email Pro subscription canceled for user ${user.id}`);
+      return;
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        emailTier: 'BASIC',
+        emailProSubscriptionId: null,
+        emailProStatus: 'canceled',
+        emailAccountsLimit: 1,
+        emailStorageQuotaBytes: BigInt(1 * 1024 * 1024 * 1024),
+      },
+    });
+
+    // Downgrade email account storage
+    await prisma.emailAccount.updateMany({
+      where: { userId },
+      data: {
+        storageQuotaBytes: BigInt(1 * 1024 * 1024 * 1024),
+      },
+    });
+
+    console.log(`✅ Email Pro subscription canceled for user ${userId}`);
+  } catch (error) {
+    console.error('Error handling Email Pro subscription deletion:', error);
     throw error;
   }
 }
@@ -303,15 +427,21 @@ async function handleTrialEnding(subscription: Stripe.Subscription) {
 }
 
 /**
- * Handle credit purchases, masterclass enrollments, and merch orders (one-time checkout sessions)
+ * Handle credit purchases, masterclass enrollments, merch orders, and Email Pro subscriptions
  */
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   try {
-    if (session.mode !== 'payment') {
+    const metadata = session.metadata || {};
+
+    // Check if this is an Email Pro subscription checkout
+    if (metadata.type === 'email_pro' && session.mode === 'subscription') {
+      await handleEmailProCheckoutCompleted(session);
       return;
     }
 
-    const metadata = session.metadata || {};
+    if (session.mode !== 'payment') {
+      return;
+    }
 
     // Check if this is a masterclass enrollment
     if (metadata.type === 'masterclass_enrollment') {
@@ -687,6 +817,73 @@ async function handleMasterclassEnrollmentCompleted(session: Stripe.Checkout.Ses
     }
   } catch (error) {
     console.error('Error handling masterclass enrollment:', error);
+    throw error;
+  }
+}
+
+/**
+ * Handle Email Pro checkout completion
+ */
+async function handleEmailProCheckoutCompleted(session: Stripe.Checkout.Session) {
+  try {
+    const userId = session.metadata?.userId;
+
+    if (!userId) {
+      console.error('Email Pro checkout missing userId in metadata');
+      return;
+    }
+
+    const subscriptionId = session.subscription as string;
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        emailTier: 'PRO',
+        emailProSubscriptionId: subscriptionId,
+        emailProStatus: 'active',
+      },
+    });
+
+    // Update any existing email accounts to PRO storage
+    await prisma.emailAccount.updateMany({
+      where: { userId },
+      data: {
+        storageQuotaBytes: EMAIL_PRO_STORAGE_QUOTA,
+      },
+    });
+
+    console.log(`✅ Email Pro activated for user ${userId}`);
+
+    // Send confirmation email
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { email: true, name: true },
+    });
+
+    if (user) {
+      await sendEmail({
+        to: user.email,
+        subject: '🎸 Welcome to Email Pro!',
+        text: `Hey ${user.name || 'there'}!\n\nYour Email Pro subscription is now active. You now have:\n\n• 10GB storage\n• Unlimited @rnrb.me accounts\n• Priority email delivery\n• Advanced filtering\n\nEnjoy your professional email!\n\n- The RNRB Team`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+            <h1 style="color: #8b5cf6;">🎸 Welcome to Email Pro!</h1>
+            <p>Hey ${user.name || 'there'}!</p>
+            <p>Your Email Pro subscription is now active. You now have:</p>
+            <ul>
+              <li>📦 <strong>10GB storage</strong></li>
+              <li>📧 <strong>Unlimited @rnrb.me accounts</strong></li>
+              <li>🚀 <strong>Priority email delivery</strong></li>
+              <li>🔧 <strong>Advanced filtering</strong></li>
+            </ul>
+            <p>Enjoy your professional email!</p>
+            <p>- The RNRB Team</p>
+          </div>
+        `,
+      });
+    }
+  } catch (error) {
+    console.error('Error handling Email Pro checkout:', error);
     throw error;
   }
 }
