@@ -517,37 +517,6 @@ export function SidebarNav() {
             paddingTop: '24px',
           }}
         >
-          {/* Keyboard Shortcuts Hint */}
-          <AnimatePresence>
-            {!isCollapsed && !isMobile && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                className="mb-3"
-              >
-                <div
-                  className="rounded-lg p-3 text-center"
-                  style={{
-                    background: 'var(--surface)',
-                    border: '1px solid var(--border)',
-                  }}
-                >
-                  <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                    Press{' '}
-                    <kbd
-                      className="rounded px-1.5 py-0.5 text-[10px] font-medium"
-                      style={{ background: 'var(--bg-elevated)', color: 'var(--text)' }}
-                    >
-                      ?
-                    </kbd>{' '}
-                    for shortcuts
-                  </p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           {/* Sign Out Button */}
           <motion.button
             onClick={handleSignOut}
