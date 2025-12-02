@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore, useMailStore, useComposeStore } from '@/lib/store';
+import { useThemeStore } from '@/lib/theme-store';
 import Sidebar from '@/components/Sidebar';
 import EmailList from '@/components/EmailList';
 import EmailView from '@/components/EmailView';
@@ -11,54 +12,71 @@ import { Loader2 } from 'lucide-react';
 
 export default function InboxPage() {
   const router = useRouter();
-  const { isAuthenticated, email } = useAuthStore();
-  const { fetchMailboxes, isLoading, selectedEmailId } = useMailStore();
-  const { isOpen: isComposeOpen } = useComposeStore();
+  const { isAuthenticated, loading: authLoading } = useAuthStore();
+  const { fetchMailboxes, fetchEmails, selectedMailboxId, loading: mailLoading } = useMailStore();
+  const { isOpen: composeOpen } = useComposeStore();
+  const { resolvedTheme } = useThemeStore();
 
+  // Apply theme on mount
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-      return;
-    }
-    fetchMailboxes();
-  }, [isAuthenticated, router, fetchMailboxes]);
+    document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
+  }, [resolvedTheme]);
 
-  if (!isAuthenticated) {
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [authLoading, isAuthenticated, router]);
+
+  // Fetch mailboxes on mount
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchMailboxes();
+    }
+  }, [isAuthenticated, fetchMailboxes]);
+
+  // Fetch emails when mailbox changes
+  useEffect(() => {
+    if (isAuthenticated && selectedMailboxId) {
+      fetchEmails(selectedMailboxId);
+    }
+  }, [isAuthenticated, selectedMailboxId, fetchEmails]);
+
+  // Show loading while checking auth
+  if (authLoading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-rnrb-black">
-        <Loader2 className="h-8 w-8 animate-spin text-rnrb-orange" />
+      <div
+        className="transition-theme flex h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            Loading...
+          </p>
+        </div>
       </div>
     );
   }
 
+  // Don't render inbox if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
-    <div className="flex h-screen overflow-hidden bg-rnrb-black">
-      {/* Sidebar */}
+    <div
+      className="transition-theme flex h-screen overflow-hidden"
+      style={{ background: 'var(--bg)' }}
+    >
+      {/* Three-column layout like ProtonMail */}
       <Sidebar />
+      <EmailList />
+      <EmailView />
 
-      {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Email List */}
-        <EmailList />
-
-        {/* Email View */}
-        {selectedEmailId ? (
-          <EmailView />
-        ) : (
-          <div className="hidden flex-1 items-center justify-center bg-rnrb-dark lg:flex">
-            <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-rnrb-panel">
-                <span className="text-3xl">📧</span>
-              </div>
-              <p className="text-rnrb-muted">Select an email to read</p>
-              <p className="mt-1 text-sm text-rnrb-muted/60">{email}</p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Compose Modal */}
-      {isComposeOpen && <ComposeModal />}
+      {/* Compose modal */}
+      {composeOpen && <ComposeModal />}
     </div>
   );
 }

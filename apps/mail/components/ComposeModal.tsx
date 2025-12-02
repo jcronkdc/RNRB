@@ -1,210 +1,388 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { useComposeStore, useAuthStore } from '@/lib/store';
+import { syncClient } from '@/lib/sync-client';
 import {
   X,
   Minimize2,
   Maximize2,
   Send,
   Paperclip,
-  Image,
-  Smile,
-  Loader2,
+  Trash2,
   Bold,
   Italic,
   Underline,
   List,
+  ListOrdered,
   Link,
+  Image,
+  Loader2,
 } from 'lucide-react';
-import { useComposeStore, useAuthStore } from '@/lib/store';
-import { jmapClient } from '@/lib/jmap-client';
-import { syncClient } from '@/lib/sync-client';
+import clsx from 'clsx';
 
 export default function ComposeModal() {
-  const { isOpen, replyTo, closeCompose } = useComposeStore();
   const { email: userEmail } = useAuthStore();
+  const { closeCompose, draftData, isMinimized, toggleMinimize } = useComposeStore();
 
-  const [to, setTo] = useState(replyTo?.from?.[0]?.email || '');
-  const [subject, setSubject] = useState(replyTo ? `Re: ${replyTo.subject}` : '');
-  const [body, setBody] = useState('');
-  const [isSending, setIsSending] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [to, setTo] = useState(draftData?.to?.map((r) => r.email).join(', ') || '');
+  const [cc, setCc] = useState('');
+  const [bcc, setBcc] = useState('');
+  const [subject, setSubject] = useState(draftData?.subject || '');
+  const [body, setBody] = useState(draftData?.body || '');
+  const [showCcBcc, setShowCcBcc] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSend = async () => {
     if (!to.trim()) {
-      setError('Please enter a recipient');
+      setError('Please enter at least one recipient');
       return;
     }
 
-    setIsSending(true);
-    setError(null);
+    setSending(true);
+    setError('');
 
     try {
-      await jmapClient.sendEmail({
-        to: [{ email: to, name: null }],
-        subject,
-        textBody: body,
-        replyToEmailId: replyTo?.id,
+      const response = await fetch('/api/jmap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          using: [
+            'urn:ietf:params:jmap:core',
+            'urn:ietf:params:jmap:mail',
+            'urn:ietf:params:jmap:submission',
+          ],
+          methodCalls: [
+            [
+              'Email/set',
+              {
+                accountId: userEmail,
+                create: {
+                  draft: {
+                    from: [{ email: userEmail }],
+                    to: to.split(',').map((e) => ({ email: e.trim() })),
+                    cc: cc ? cc.split(',').map((e) => ({ email: e.trim() })) : [],
+                    bcc: bcc ? bcc.split(',').map((e) => ({ email: e.trim() })) : [],
+                    subject: subject,
+                    bodyValues: {
+                      body: { value: body, isEncodingProblem: false, isTruncated: false },
+                    },
+                    textBody: [{ partId: 'body', type: 'text/plain' }],
+                    mailboxIds: {}, // Will be set by submission
+                  },
+                },
+              },
+              'createEmail',
+            ],
+            [
+              'EmailSubmission/set',
+              {
+                accountId: userEmail,
+                create: {
+                  submission: {
+                    emailId: '#draft',
+                    envelope: {
+                      mailFrom: { email: userEmail },
+                      rcptTo: [
+                        ...to.split(',').map((e) => ({ email: e.trim() })),
+                        ...(cc ? cc.split(',').map((e) => ({ email: e.trim() })) : []),
+                        ...(bcc ? bcc.split(',').map((e) => ({ email: e.trim() })) : []),
+                      ],
+                    },
+                  },
+                },
+              },
+              'submitEmail',
+            ],
+          ],
+        }),
       });
 
-      // Sync with main platform - track email sent
-      syncClient.trackEmailSent(to, subject);
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+
+      // Report to RNRB platform
+      syncClient.reportEmailSent();
 
       closeCompose();
     } catch (err) {
-      setError((err as Error).message || 'Failed to send email');
+      console.error('Send error:', err);
+      setError('Failed to send email. Please try again.');
     } finally {
-      setIsSending(false);
+      setSending(false);
     }
   };
 
-  if (!isOpen) return null;
+  const handleDiscard = () => {
+    if (to || subject || body) {
+      if (window.confirm('Discard this draft?')) {
+        closeCompose();
+      }
+    } else {
+      closeCompose();
+    }
+  };
+
+  if (isMinimized) {
+    return (
+      <div
+        className="fixed bottom-0 right-4 z-50 flex cursor-pointer items-center gap-2 rounded-t-lg px-4 py-2 shadow-lg"
+        style={{ background: 'var(--accent)', color: 'white' }}
+        onClick={toggleMinimize}
+      >
+        <span className="text-sm font-medium">{subject || 'New message'}</span>
+        <Maximize2 className="h-4 w-4" />
+      </div>
+    );
+  }
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-        animate={{
-          opacity: 1,
-          y: isMinimized ? 'calc(100vh - 60px)' : 0,
-          scale: 1,
-        }}
-        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-        className="fixed bottom-4 right-4 z-50 w-full max-w-2xl overflow-hidden rounded-2xl border border-rnrb-border bg-rnrb-panel shadow-2xl"
-        style={{ boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)' }}
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/50" onClick={handleDiscard} />
+
+      {/* Modal */}
+      <div
+        className="relative flex h-[600px] w-full max-w-2xl flex-col rounded-xl shadow-2xl"
+        style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-rnrb-border bg-rnrb-dark px-4 py-3">
-          <h3 className="font-medium text-white">
-            {replyTo
-              ? `Reply to ${replyTo.from?.[0]?.name || replyTo.from?.[0]?.email}`
-              : 'New Message'}
+        <div
+          className="flex items-center justify-between rounded-t-xl px-4 py-3"
+          style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)' }}
+        >
+          <h3 className="font-medium" style={{ color: 'var(--text)' }}>
+            New message
           </h3>
           <div className="flex items-center gap-1">
             <button
-              onClick={() => setIsMinimized(!isMinimized)}
-              className="rounded-lg p-1.5 text-rnrb-muted transition-colors hover:bg-rnrb-panel hover:text-white"
+              onClick={toggleMinimize}
+              className="rounded p-1 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Minimize"
             >
-              {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
+              <Minimize2 className="h-4 w-4" />
             </button>
             <button
-              onClick={closeCompose}
-              className="rounded-lg p-1.5 text-rnrb-muted transition-colors hover:bg-red-500/10 hover:text-red-400"
+              onClick={handleDiscard}
+              className="rounded p-1 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Close"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        {!isMinimized && (
-          <>
-            {/* Form */}
-            <div className="p-4">
-              {error && (
-                <div className="mb-4 rounded-lg bg-red-500/10 px-4 py-2 text-sm text-red-400">
-                  {error}
-                </div>
-              )}
-
-              {/* To */}
-              <div className="flex items-center border-b border-rnrb-border py-2">
-                <span className="w-16 text-sm text-rnrb-muted">To:</span>
-                <input
-                  type="email"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  placeholder="recipient@example.com"
-                  className="flex-1 bg-transparent text-white placeholder-rnrb-muted focus:outline-none"
-                />
-              </div>
-
-              {/* From */}
-              <div className="flex items-center border-b border-rnrb-border py-2">
-                <span className="w-16 text-sm text-rnrb-muted">From:</span>
-                <span className="text-white">{userEmail}</span>
-              </div>
-
-              {/* Subject */}
-              <div className="flex items-center border-b border-rnrb-border py-2">
-                <span className="w-16 text-sm text-rnrb-muted">Subject:</span>
-                <input
-                  type="text"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  placeholder="Email subject"
-                  className="flex-1 bg-transparent text-white placeholder-rnrb-muted focus:outline-none"
-                />
-              </div>
-
-              {/* Formatting Toolbar */}
-              <div className="flex items-center gap-1 border-b border-rnrb-border py-2">
-                <button className="rounded p-1.5 text-rnrb-muted transition-colors hover:bg-rnrb-border hover:text-white">
-                  <Bold className="h-4 w-4" />
-                </button>
-                <button className="rounded p-1.5 text-rnrb-muted transition-colors hover:bg-rnrb-border hover:text-white">
-                  <Italic className="h-4 w-4" />
-                </button>
-                <button className="rounded p-1.5 text-rnrb-muted transition-colors hover:bg-rnrb-border hover:text-white">
-                  <Underline className="h-4 w-4" />
-                </button>
-                <div className="mx-2 h-4 w-px bg-rnrb-border" />
-                <button className="rounded p-1.5 text-rnrb-muted transition-colors hover:bg-rnrb-border hover:text-white">
-                  <List className="h-4 w-4" />
-                </button>
-                <button className="rounded p-1.5 text-rnrb-muted transition-colors hover:bg-rnrb-border hover:text-white">
-                  <Link className="h-4 w-4" />
-                </button>
-              </div>
-
-              {/* Body */}
-              <textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="Write your message..."
-                rows={12}
-                className="mt-4 w-full resize-none bg-transparent text-white placeholder-rnrb-muted focus:outline-none"
+        {/* Form */}
+        <div className="flex flex-1 flex-col overflow-hidden">
+          {/* Recipients */}
+          <div className="space-y-0" style={{ borderBottom: '1px solid var(--border)' }}>
+            {/* To field */}
+            <div className="flex items-center px-4">
+              <label className="w-16 py-2.5 text-sm" style={{ color: 'var(--text-muted)' }}>
+                To
+              </label>
+              <input
+                type="text"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                className="flex-1 bg-transparent py-2.5 text-sm outline-none"
+                style={{ color: 'var(--text)' }}
+                placeholder="recipient@example.com"
+                autoFocus
               />
+              {!showCcBcc && (
+                <button
+                  onClick={() => setShowCcBcc(true)}
+                  className="text-sm transition-colors"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  Cc Bcc
+                </button>
+              )}
             </div>
 
-            {/* Footer */}
-            <div className="flex items-center justify-between border-t border-rnrb-border px-4 py-3">
-              <div className="flex items-center gap-2">
-                <button className="rounded-lg p-2 text-rnrb-muted transition-colors hover:bg-rnrb-border hover:text-white">
-                  <Paperclip className="h-5 w-5" />
-                </button>
-                <button className="rounded-lg p-2 text-rnrb-muted transition-colors hover:bg-rnrb-border hover:text-white">
-                  <Image className="h-5 w-5" />
-                </button>
-                <button className="rounded-lg p-2 text-rnrb-muted transition-colors hover:bg-rnrb-border hover:text-white">
-                  <Smile className="h-5 w-5" />
-                </button>
-              </div>
+            {/* Cc/Bcc fields */}
+            {showCcBcc && (
+              <>
+                <div
+                  className="flex items-center px-4"
+                  style={{ borderTop: '1px solid var(--border)' }}
+                >
+                  <label className="w-16 py-2.5 text-sm" style={{ color: 'var(--text-muted)' }}>
+                    Cc
+                  </label>
+                  <input
+                    type="text"
+                    value={cc}
+                    onChange={(e) => setCc(e.target.value)}
+                    className="flex-1 bg-transparent py-2.5 text-sm outline-none"
+                    style={{ color: 'var(--text)' }}
+                  />
+                </div>
+                <div
+                  className="flex items-center px-4"
+                  style={{ borderTop: '1px solid var(--border)' }}
+                >
+                  <label className="w-16 py-2.5 text-sm" style={{ color: 'var(--text-muted)' }}>
+                    Bcc
+                  </label>
+                  <input
+                    type="text"
+                    value={bcc}
+                    onChange={(e) => setBcc(e.target.value)}
+                    className="flex-1 bg-transparent py-2.5 text-sm outline-none"
+                    style={{ color: 'var(--text)' }}
+                  />
+                </div>
+              </>
+            )}
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+            {/* Subject */}
+            <div
+              className="flex items-center px-4"
+              style={{ borderTop: '1px solid var(--border)' }}
+            >
+              <label className="w-16 py-2.5 text-sm" style={{ color: 'var(--text-muted)' }}>
+                Subject
+              </label>
+              <input
+                type="text"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                className="flex-1 bg-transparent py-2.5 text-sm outline-none"
+                style={{ color: 'var(--text)' }}
+                placeholder="Subject"
+              />
+            </div>
+          </div>
+
+          {/* Formatting toolbar */}
+          <div
+            className="flex items-center gap-1 px-4 py-2"
+            style={{ borderBottom: '1px solid var(--border)' }}
+          >
+            <button
+              className="rounded p-1.5 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Bold"
+            >
+              <Bold className="h-4 w-4" />
+            </button>
+            <button
+              className="rounded p-1.5 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Italic"
+            >
+              <Italic className="h-4 w-4" />
+            </button>
+            <button
+              className="rounded p-1.5 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Underline"
+            >
+              <Underline className="h-4 w-4" />
+            </button>
+            <div className="mx-1 h-4 w-px" style={{ background: 'var(--border)' }} />
+            <button
+              className="rounded p-1.5 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Bullet list"
+            >
+              <List className="h-4 w-4" />
+            </button>
+            <button
+              className="rounded p-1.5 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Numbered list"
+            >
+              <ListOrdered className="h-4 w-4" />
+            </button>
+            <div className="mx-1 h-4 w-px" style={{ background: 'var(--border)' }} />
+            <button
+              className="rounded p-1.5 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Insert link"
+            >
+              <Link className="h-4 w-4" />
+            </button>
+            <button
+              className="rounded p-1.5 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Insert image"
+            >
+              <Image className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Body */}
+          <div className="flex-1 overflow-hidden">
+            <textarea
+              ref={bodyRef}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              className="h-full w-full resize-none bg-transparent p-4 text-sm outline-none"
+              style={{ color: 'var(--text)' }}
+              placeholder="Write your message..."
+            />
+          </div>
+
+          {/* Error message */}
+          {error && (
+            <div
+              className="mx-4 mb-2 rounded-md px-3 py-2 text-sm"
+              style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--error)' }}
+            >
+              {error}
+            </div>
+          )}
+
+          {/* Footer */}
+          <div
+            className="flex items-center justify-between rounded-b-xl px-4 py-3"
+            style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border)' }}
+          >
+            <div className="flex items-center gap-2">
+              <button
                 onClick={handleSend}
-                disabled={isSending}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-rnrb-orange to-amber-500 px-5 py-2.5 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:shadow-rnrb-orange/20 disabled:opacity-50"
+                disabled={sending || !to.trim()}
+                className={clsx(
+                  'btn btn-primary gap-2 disabled:opacity-50',
+                  sending && 'cursor-wait'
+                )}
               >
-                {isSending ? (
+                {sending ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     Sending...
                   </>
                 ) : (
                   <>
-                    <Send className="h-5 w-5" />
+                    <Send className="h-4 w-4" />
                     Send
                   </>
                 )}
-              </motion.button>
+              </button>
+              <button className="btn btn-secondary" title="Attach file">
+                <Paperclip className="h-4 w-4" />
+              </button>
             </div>
-          </>
-        )}
-      </motion.div>
-    </AnimatePresence>
+            <button
+              onClick={handleDiscard}
+              className="rounded p-2 transition-colors"
+              style={{ color: 'var(--text-muted)' }}
+              title="Discard"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

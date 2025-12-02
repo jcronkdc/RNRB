@@ -1,173 +1,215 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { Mail, Lock, Loader2, AlertCircle, Zap } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
+import { Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
-  const login = useAuthStore((s) => s.login);
-
+  const { login, isAuthenticated, loading } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/');
+    }
+  }, [isAuthenticated, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+    setError('');
+    setIsLoggingIn(true);
+
+    // Ensure email has @rnrb.me domain
+    let fullEmail = email;
+    if (!email.includes('@')) {
+      fullEmail = `${email}@rnrb.me`;
+    } else if (!email.endsWith('@rnrb.me')) {
+      setError('Only @rnrb.me email addresses are supported');
+      setIsLoggingIn(false);
+      return;
+    }
 
     try {
-      await login(email, password);
-      router.push('/');
-    } catch (err) {
-      setError((err as Error).message || 'Login failed. Please check your credentials.');
+      const success = await login(fullEmail, password);
+      if (success) {
+        router.push('/');
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch {
+      setError('Failed to sign in. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsLoggingIn(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-rnrb-black via-rnrb-dark to-rnrb-black p-4">
-      {/* Background effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -left-1/2 -top-1/2 h-full w-full rounded-full bg-gradient-to-br from-rnrb-orange/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-1/2 -right-1/2 h-full w-full rounded-full bg-gradient-to-tl from-rnrb-purple/10 to-transparent blur-3xl" />
-      </div>
+    <div
+      className="transition-theme flex min-h-screen flex-col items-center justify-center px-4"
+      style={{ background: 'var(--bg)' }}
+    >
+      {/* Background pattern - subtle */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-30"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0)`,
+          backgroundSize: '40px 40px',
+        }}
+      />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative w-full max-w-md"
-      >
-        {/* Logo & Title */}
-        <div className="mb-8 text-center">
-          {/* RNRB Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-6"
-          >
-            <Image
-              src="/logo-dark.png"
-              alt="Rock N' Roll Basement"
-              width={200}
-              height={70}
-              className="mx-auto"
-              priority
-            />
-          </motion.div>
-
-          <h1 className="font-display text-3xl font-bold text-white">RNRB Mail</h1>
-          <p className="mt-2 text-rnrb-muted">Email for musicians</p>
+      <div className="relative z-10 w-full max-w-sm">
+        {/* Logo */}
+        <div className="mb-10 flex flex-col items-center">
+          <Image src="/logo-dark.png" alt="RNRB Mail" width={120} height={42} className="mb-4" />
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            Secure email for musicians
+          </p>
         </div>
 
-        {/* Login Form */}
-        <motion.form
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          onSubmit={handleSubmit}
-          className="overflow-hidden rounded-2xl border border-rnrb-border bg-rnrb-panel/80 p-8 backdrop-blur-xl"
-          style={{ boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)' }}
+        {/* Login form */}
+        <div
+          className="rounded-xl p-6"
+          style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-6 flex items-center gap-3 rounded-xl bg-red-500/10 p-4 text-red-400"
-            >
-              <AlertCircle className="h-5 w-5 flex-shrink-0" />
-              <p className="text-sm">{error}</p>
-            </motion.div>
-          )}
+          <h1 className="mb-6 text-center text-lg font-semibold" style={{ color: 'var(--text)' }}>
+            Sign in to your account
+          </h1>
 
-          <div className="space-y-5">
-            {/* Email Input */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Email field */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-rnrb-text">Email Address</label>
+              <label
+                className="mb-1.5 block text-sm font-medium"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Email address
+              </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-rnrb-muted" />
+                <Mail
+                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                  style={{ color: 'var(--text-muted)' }}
+                />
                 <input
-                  type="email"
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@rnrb.me"
+                  className="input pl-10"
                   required
-                  className="w-full rounded-xl border border-rnrb-border bg-rnrb-black py-3 pl-12 pr-4 text-white placeholder-rnrb-muted transition-all focus:border-rnrb-orange focus:outline-none focus:ring-2 focus:ring-rnrb-orange/20"
+                  autoComplete="email"
+                  autoFocus
                 />
               </div>
             </div>
 
-            {/* Password Input */}
+            {/* Password field */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-rnrb-text">Password</label>
+              <label
+                className="mb-1.5 block text-sm font-medium"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-rnrb-muted" />
+                <Lock
+                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                  style={{ color: 'var(--text-muted)' }}
+                />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="••••••••"
+                  className="input pl-10 pr-10"
                   required
-                  className="w-full rounded-xl border border-rnrb-border bg-rnrb-black py-3 pl-12 pr-4 text-white placeholder-rnrb-muted transition-all focus:border-rnrb-orange focus:outline-none focus:ring-2 focus:ring-rnrb-orange/20"
+                  autoComplete="current-password"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             </div>
 
-            {/* Submit Button */}
+            {/* Error message */}
+            {error && (
+              <div
+                className="rounded-md px-3 py-2 text-sm"
+                style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--error)' }}
+              >
+                {error}
+              </div>
+            )}
+
+            {/* Submit button */}
             <button
               type="submit"
-              disabled={isLoading}
-              className="group flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-rnrb-orange to-amber-500 py-3.5 font-semibold text-white shadow-lg transition-all hover:shadow-xl hover:shadow-rnrb-orange/20 disabled:opacity-50"
+              disabled={isLoggingIn || !email || !password}
+              className="btn btn-primary w-full py-2.5 disabled:opacity-50"
             >
-              {isLoading ? (
+              {isLoggingIn ? (
                 <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   Signing in...
                 </>
               ) : (
-                <>
-                  <Zap className="h-5 w-5 transition-transform group-hover:scale-110" />
-                  Sign In
-                </>
+                'Sign in'
               )}
             </button>
-          </div>
+          </form>
 
-          {/* Help Text */}
-          <div className="mt-6 space-y-3 text-center">
+          {/* Forgot password */}
+          <div className="mt-4 text-center">
             <Link
               href="/forgot-password"
-              className="block text-sm text-rnrb-muted hover:text-rnrb-orange"
+              className="text-sm transition-colors hover:underline"
+              style={{ color: 'var(--accent)' }}
             >
               Forgot your password?
             </Link>
-            <p className="text-sm text-rnrb-muted">
-              Don&apos;t have an account?{' '}
-              <a
-                href="https://rnrb.pro/settings/email"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-rnrb-orange hover:underline"
-              >
-                Create one at RNRB
-              </a>
-            </p>
           </div>
-        </motion.form>
+        </div>
+
+        {/* Create account link */}
+        <div className="mt-6 text-center">
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            Don&apos;t have an account?{' '}
+            <a
+              href="https://rnrb.pro/settings/email"
+              className="font-medium transition-colors hover:underline"
+              style={{ color: 'var(--accent)' }}
+            >
+              Get your @rnrb.me email
+            </a>
+          </p>
+        </div>
 
         {/* Footer */}
-        <p className="mt-8 text-center text-sm text-rnrb-muted">
-          Works with any @rnrb.me, @rnrb.band, or @rnrb.app email
-        </p>
-      </motion.div>
+        <div className="mt-8 text-center">
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            Part of the{' '}
+            <a
+              href="https://rnrb.pro"
+              className="transition-colors hover:underline"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              Rock N&apos; Roll Basement
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

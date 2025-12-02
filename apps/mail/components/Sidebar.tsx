@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
 import {
   Inbox,
@@ -11,16 +10,17 @@ import {
   Trash2,
   AlertCircle,
   Tag,
-  Plus,
   Settings,
   LogOut,
-  Mail,
+  PenSquare,
+  Sun,
+  Moon,
   ChevronDown,
   Folder,
-  Search,
-  PenSquare,
+  Star,
 } from 'lucide-react';
 import { useAuthStore, useMailStore, useComposeStore } from '@/lib/store';
+import { useThemeStore } from '@/lib/theme-store';
 import clsx from 'clsx';
 
 const FOLDER_ICONS: Record<string, typeof Inbox> = {
@@ -30,70 +30,67 @@ const FOLDER_ICONS: Record<string, typeof Inbox> = {
   archive: Archive,
   trash: Trash2,
   junk: AlertCircle,
+  flagged: Star,
 };
 
 export default function Sidebar() {
   const { email, logout } = useAuthStore();
   const { mailboxes, selectedMailboxId, selectMailbox } = useMailStore();
   const { openCompose } = useComposeStore();
-  const [showFolders, setShowFolders] = useState(true);
+  const { resolvedTheme, setTheme } = useThemeStore();
+  const [showLabels, setShowLabels] = useState(true);
 
   const systemFolders = mailboxes.filter((m) => m.role);
   const customFolders = mailboxes.filter((m) => !m.role);
 
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+  };
+
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-rnrb-border bg-rnrb-panel">
-      {/* Header with RNRB Logo */}
-      <div className="border-b border-rnrb-border p-4">
-        <a href="https://rnrb.pro" target="_blank" rel="noopener noreferrer" className="mb-3 block">
+    <aside
+      className="transition-theme flex h-full w-56 flex-col border-r"
+      style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
+    >
+      {/* Logo */}
+      <div
+        className="flex items-center justify-between p-4"
+        style={{ borderBottom: '1px solid var(--border)' }}
+      >
+        <a href="https://rnrb.pro" target="_blank" rel="noopener noreferrer">
           <Image
-            src="/logo-dark.png"
-            alt="Rock N' Roll Basement"
-            width={120}
-            height={40}
-            className="transition-opacity hover:opacity-80"
+            src={resolvedTheme === 'dark' ? '/logo-dark.png' : '/logo-dark.png'}
+            alt="RNRB"
+            width={80}
+            height={28}
+            className="opacity-90 transition-opacity hover:opacity-100"
           />
         </a>
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-rnrb-orange to-rnrb-gold">
-            <Mail className="h-4 w-4 text-white" />
-          </div>
-          <div className="flex-1 overflow-hidden">
-            <p className="text-sm font-semibold text-white">RNRB Mail</p>
-            <p className="truncate text-xs text-rnrb-muted">{email}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Compose Button */}
-      <div className="p-3">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => openCompose()}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-rnrb-orange to-amber-500 py-3 font-semibold text-white shadow-lg transition-shadow hover:shadow-xl hover:shadow-rnrb-orange/20"
+        <button
+          onClick={toggleTheme}
+          className="rounded-md p-1.5 transition-colors"
+          style={{ color: 'var(--text-muted)' }}
+          title={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-          <PenSquare className="h-5 w-5" />
-          Compose
-        </motion.button>
+          {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        </button>
       </div>
 
-      {/* Search */}
-      <div className="px-3 pb-2">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-rnrb-muted" />
-          <input
-            type="text"
-            placeholder="Search emails..."
-            className="w-full rounded-lg border border-rnrb-border bg-rnrb-black py-2 pl-10 pr-4 text-sm text-white placeholder-rnrb-muted transition-colors focus:border-rnrb-orange focus:outline-none"
-          />
-        </div>
+      {/* Compose Button - ProtonMail style */}
+      <div className="p-3">
+        <button
+          onClick={() => openCompose()}
+          className="flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90"
+          style={{ background: 'var(--accent)' }}
+        >
+          <PenSquare className="h-4 w-4" />
+          New message
+        </button>
       </div>
 
       {/* Folders */}
-      <nav className="flex-1 overflow-y-auto p-2">
-        {/* System Folders */}
-        <div className="space-y-1">
+      <nav className="flex-1 overflow-y-auto px-2">
+        <div className="space-y-0.5">
           {systemFolders.map((folder) => {
             const Icon = FOLDER_ICONS[folder.role || ''] || Folder;
             const isSelected = selectedMailboxId === folder.id;
@@ -103,20 +100,23 @@ export default function Sidebar() {
                 key={folder.id}
                 onClick={() => selectMailbox(folder.id)}
                 className={clsx(
-                  'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors',
-                  isSelected
-                    ? 'bg-rnrb-orange/10 text-rnrb-orange'
-                    : 'text-rnrb-text hover:bg-rnrb-border/50'
+                  'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors',
+                  isSelected && 'font-medium'
                 )}
+                style={{
+                  background: isSelected ? 'var(--accent-light)' : 'transparent',
+                  color: isSelected ? 'var(--accent)' : 'var(--text-secondary)',
+                }}
               >
-                <Icon className="h-5 w-5" />
-                <span className="flex-1 truncate font-medium">{folder.name}</span>
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span className="flex-1 truncate">{folder.name}</span>
                 {folder.unreadEmails > 0 && (
                   <span
-                    className={clsx(
-                      'min-w-[1.5rem] rounded-full px-2 py-0.5 text-center text-xs font-bold',
-                      isSelected ? 'bg-rnrb-orange text-white' : 'bg-rnrb-border text-rnrb-text'
-                    )}
+                    className="min-w-[1.25rem] rounded-full px-1.5 py-0.5 text-center text-xs font-medium"
+                    style={{
+                      background: isSelected ? 'var(--accent)' : 'var(--border)',
+                      color: isSelected ? 'white' : 'var(--text-secondary)',
+                    }}
                   >
                     {folder.unreadEmails}
                   </span>
@@ -126,38 +126,35 @@ export default function Sidebar() {
           })}
         </div>
 
-        {/* Custom Folders */}
+        {/* Labels */}
         {customFolders.length > 0 && (
           <div className="mt-4">
             <button
-              onClick={() => setShowFolders(!showFolders)}
-              className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-rnrb-muted hover:text-rnrb-text"
+              onClick={() => setShowLabels(!showLabels)}
+              className="flex w-full items-center gap-2 px-3 py-1.5 text-xs font-medium uppercase tracking-wider transition-colors"
+              style={{ color: 'var(--text-muted)' }}
             >
               <ChevronDown
-                className={clsx('h-4 w-4 transition-transform', !showFolders && '-rotate-90')}
+                className={clsx('h-3 w-3 transition-transform', !showLabels && '-rotate-90')}
               />
               Labels
             </button>
-            {showFolders && (
-              <div className="mt-1 space-y-1">
+            {showLabels && (
+              <div className="mt-1 space-y-0.5">
                 {customFolders.map((folder) => {
                   const isSelected = selectedMailboxId === folder.id;
                   return (
                     <button
                       key={folder.id}
                       onClick={() => selectMailbox(folder.id)}
-                      className={clsx(
-                        'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors',
-                        isSelected
-                          ? 'bg-rnrb-orange/10 text-rnrb-orange'
-                          : 'text-rnrb-text hover:bg-rnrb-border/50'
-                      )}
+                      className="flex w-full items-center gap-3 rounded-md px-3 py-1.5 text-left text-sm transition-colors"
+                      style={{
+                        background: isSelected ? 'var(--accent-light)' : 'transparent',
+                        color: isSelected ? 'var(--accent)' : 'var(--text-secondary)',
+                      }}
                     >
-                      <Tag className="h-4 w-4" />
-                      <span className="flex-1 truncate text-sm">{folder.name}</span>
-                      {folder.unreadEmails > 0 && (
-                        <span className="text-xs text-rnrb-muted">{folder.unreadEmails}</span>
-                      )}
+                      <Tag className="h-3.5 w-3.5" />
+                      <span className="flex-1 truncate">{folder.name}</span>
                     </button>
                   );
                 })}
@@ -168,18 +165,38 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-rnrb-border p-2">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-rnrb-muted transition-colors hover:bg-rnrb-border/50 hover:text-rnrb-text">
-          <Settings className="h-5 w-5" />
-          <span className="text-sm">Settings</span>
-        </button>
-        <button
-          onClick={logout}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-rnrb-muted transition-colors hover:bg-red-500/10 hover:text-red-400"
-        >
-          <LogOut className="h-5 w-5" />
-          <span className="text-sm">Sign Out</span>
-        </button>
+      <div className="p-2" style={{ borderTop: '1px solid var(--border)' }}>
+        {/* User info */}
+        <div className="mb-2 rounded-md px-3 py-2" style={{ background: 'var(--bg-secondary)' }}>
+          <p className="truncate text-sm font-medium" style={{ color: 'var(--text)' }}>
+            {email?.split('@')[0]}
+          </p>
+          <p className="truncate text-xs" style={{ color: 'var(--text-muted)' }}>
+            @{email?.split('@')[1]}
+          </p>
+        </div>
+
+        <div className="flex gap-1">
+          <button
+            className="flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-xs transition-colors"
+            style={{ color: 'var(--text-muted)', background: 'transparent' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--panel-hover)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+          >
+            <Settings className="h-3.5 w-3.5" />
+            Settings
+          </button>
+          <button
+            onClick={logout}
+            className="flex flex-1 items-center justify-center gap-2 rounded-md px-2 py-1.5 text-xs transition-colors"
+            style={{ color: 'var(--text-muted)', background: 'transparent' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--panel-hover)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            Sign out
+          </button>
+        </div>
       </div>
     </aside>
   );

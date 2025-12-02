@@ -2,17 +2,12 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'RNRB Mail - Email for Musicians',
-  description: 'Professional email for musicians. Your @rnrb.me inbox, accessible anywhere.',
+  title: 'RNRB Mail',
+  description: "Secure email for musicians - Rock N' Roll Basement",
   manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'black-translucent',
-    title: 'RNRB Mail',
-  },
   icons: {
-    icon: '/icon-192.png',
-    apple: '/apple-touch-icon.png',
+    icon: '/logo-dark.png',
+    apple: '/logo-dark.png',
   },
 };
 
@@ -20,13 +15,19 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
-  themeColor: '#0a0a0a',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className="antialiased">{children}</body>
     </html>
   );
