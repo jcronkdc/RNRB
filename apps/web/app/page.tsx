@@ -1392,7 +1392,7 @@ export default function HomePage() {
                   Cancel These Subscriptions
                 </p>
                 <p className="text-lg font-medium" style={{ color: 'var(--text-secondary)' }}>
-                  One platform replaces $100+/month in software
+                  One platform replaces $150+/month in software
                 </p>
               </div>
 
@@ -2601,7 +2601,7 @@ export default function HomePage() {
                           className="mb-3 text-2xl font-black uppercase tracking-tight md:text-3xl"
                           style={{ color: 'var(--text)' }}
                         >
-                          Save $95+/month — Get Everything
+                          Save $150+/month — Get Everything
                         </h3>
                         <p
                           className="mb-4 text-base leading-relaxed md:text-lg"
