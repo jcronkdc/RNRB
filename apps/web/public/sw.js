@@ -3,7 +3,7 @@
  * Handles offline support, push notifications, and background sync
  */
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3-showstopper'; // Updated for landing page changes
 const STATIC_CACHE = `rnrb-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `rnrb-dynamic-${CACHE_VERSION}`;
 const API_CACHE = `rnrb-api-${CACHE_VERSION}`;
