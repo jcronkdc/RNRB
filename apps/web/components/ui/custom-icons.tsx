@@ -1168,6 +1168,29 @@ export const MonitorSpeaker = createIcon(
   'MonitorSpeaker'
 );
 
+// MonitorUp - screenshare/cast
+export const MonitorUp = createIcon(
+  <>
+    <rect x="2" y="5" width="20" height="12" rx="2" ry="2" />
+    <line x1="8" y1="21" x2="16" y2="21" />
+    <line x1="12" y1="17" x2="12" y2="21" />
+    <polyline points="12 8 15 11 12 14 9 11 12 8" />
+  </>,
+  'MonitorUp'
+);
+
+// MonitorX - stop screenshare
+export const MonitorX = createIcon(
+  <>
+    <rect x="2" y="5" width="20" height="12" rx="2" ry="2" />
+    <line x1="8" y1="21" x2="16" y2="21" />
+    <line x1="12" y1="17" x2="12" y2="21" />
+    <line x1="9" y1="8" x2="15" y2="14" />
+    <line x1="15" y1="8" x2="9" y2="14" />
+  </>,
+  'MonitorX'
+);
+
 // Moon - dark mode
 export const Moon = createIcon(
   <>
@@ -2531,6 +2554,8 @@ export const Icons = {
   Monitor,
   MonitorOff,
   MonitorSpeaker,
+  MonitorUp,
+  MonitorX,
   Moon,
   MoreHorizontal,
   MoreVertical,
