@@ -1751,6 +1751,22 @@ export default function HomePage() {
                           ma: 0,
                         },
                         {
+                          name: 'Professional @rnrb.me Email',
+                          category: 'Website',
+                          r: 1,
+                          dk: 0,
+                          sq: 0,
+                          zm: 0,
+                          sl: 0,
+                          db: 0,
+                          mc: 0,
+                          bt: 0,
+                          rv: 0,
+                          ma: 0,
+                          tooltip:
+                            'Get your own professional email address - included FREE with paid membership',
+                        },
+                        {
                           name: 'EPK (Electronic Press Kit)',
                           category: 'Website',
                           r: 1,

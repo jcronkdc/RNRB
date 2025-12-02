@@ -22,6 +22,7 @@ import {
   MapPin,
   ShoppingBag,
   Download,
+  Mail,
 } from '@/components/ui/custom-icons';
 
 import { InstallAppButton } from '@/components/install-app-button';
@@ -67,6 +68,7 @@ const quickActions = [
 // Tool access - all the tools available
 const toolboxItems = [
   { icon: Music4, label: 'Songs', href: '/songs', color: 'var(--accent)' },
+  { icon: Mail, label: 'Email', href: '/mail', color: '#38bdf8' },
   { icon: Video, label: 'Meet', href: '/meet', color: '#8b5cf6' },
   { icon: Radio, label: 'Go Live', href: '/live', color: '#ef4444' },
   { icon: GraduationCap, label: 'Classes', href: '/masterclasses', color: '#ec4899' },
@@ -181,6 +183,69 @@ function DashboardContent() {
                     }}
                   >
                     Start Selling →
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </motion.section>
+
+        {/* NEW: Professional Email Banner */}
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="mb-8"
+        >
+          <Link href="/settings/email">
+            <div
+              className="group relative overflow-hidden rounded-2xl border p-6 transition-all duration-300 hover:border-sky-500/50 hover:shadow-lg hover:shadow-sky-500/10"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%)',
+                borderColor: 'rgba(56, 189, 248, 0.2)',
+              }}
+            >
+              {/* Decorative elements */}
+              <div
+                className="absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-20 blur-3xl transition-opacity group-hover:opacity-40"
+                style={{ background: '#38bdf8' }}
+              />
+
+              <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-4">
+                  <div
+                    className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl transition-transform group-hover:scale-110"
+                    style={{ background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)' }}
+                  >
+                    <Mail className="h-7 w-7 text-white" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-bold" style={{ color: 'var(--text)' }}>
+                        Get Your @rnrb.me Email
+                      </h3>
+                      <span
+                        className="rounded-full px-2 py-0.5 text-xs font-bold"
+                        style={{ background: '#38bdf8', color: '#000' }}
+                      >
+                        INCLUDED
+                      </span>
+                    </div>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      Professional email for musicians. Works with any mail app. yourname@rnrb.me
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="whitespace-nowrap rounded-xl px-4 py-2 font-semibold transition-all group-hover:scale-105"
+                    style={{
+                      background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)',
+                      color: '#000',
+                    }}
+                  >
+                    Get Email →
                   </span>
                 </div>
               </div>

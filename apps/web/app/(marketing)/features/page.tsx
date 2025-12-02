@@ -55,6 +55,7 @@ import {
   Smartphone,
   Monitor,
   Wifi,
+  Mail,
 } from '@/components/ui/custom-icons';
 
 // Animation variants
@@ -100,6 +101,7 @@ function FeatureCategory({
     purple: { bg: 'rgba(139, 92, 246, 0.1)', text: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.2)' },
     pink: { bg: 'rgba(236, 72, 153, 0.1)', text: '#ec4899', glow: 'rgba(236, 72, 153, 0.2)' },
     blue: { bg: 'rgba(107, 155, 195, 0.1)', text: 'var(--sky)', glow: 'rgba(107, 155, 195, 0.2)' },
+    sky: { bg: 'rgba(56, 189, 248, 0.1)', text: '#38bdf8', glow: 'rgba(56, 189, 248, 0.2)' },
     green: { bg: 'rgba(34, 197, 94, 0.1)', text: '#22c55e', glow: 'rgba(34, 197, 94, 0.2)' },
     red: { bg: 'rgba(239, 68, 68, 0.1)', text: '#ef4444', glow: 'rgba(239, 68, 68, 0.2)' },
   };
@@ -1003,6 +1005,89 @@ export default function FeaturesPage() {
             'Dispute resolution',
             'Refund policy',
             'Transaction history',
+          ],
+        },
+      ],
+    },
+    {
+      title: 'Professional Email',
+      subtitle:
+        'Get your own @rnrb.me professional email address. Works with any mail app. Included free with paid membership.',
+      icon: Mail,
+      color: 'sky',
+      features: [
+        {
+          name: 'Your @rnrb.me Address',
+          description:
+            'Claim your professional email address. yourname@rnrb.me looks better than a personal Gmail on booking inquiries.',
+          details: [
+            'Professional musician email',
+            'Instant setup - no DNS required',
+            'Included FREE with paid membership',
+            'Works with iPhone, Android, desktop',
+            'Full webmail access',
+          ],
+          link: '/settings/email',
+        },
+        {
+          name: 'Full Webmail',
+          description:
+            'Access your email from anywhere with our beautiful web interface. Musician-specific folders for bookings, fan mail, and press.',
+          details: [
+            'Modern, fast interface',
+            'Booking inquiries folder',
+            'Fan mail organization',
+            'Press & media folder',
+            'Collaboration requests folder',
+          ],
+          link: '/mail',
+        },
+        {
+          name: 'Works Everywhere',
+          description:
+            'Connect to your favorite email app - iPhone Mail, Gmail app, Outlook, Thunderbird, or any standard email client.',
+          details: [
+            'IMAP & SMTP support',
+            'Secure SSL/TLS encryption',
+            'App-specific passwords',
+            'Push notifications',
+            'Sync across all devices',
+          ],
+        },
+        {
+          name: 'Spam & Security',
+          description:
+            'Enterprise-grade spam filtering and security. SPF, DKIM, and DMARC configured for reliable delivery.',
+          details: [
+            'Advanced spam filtering',
+            'Phishing protection',
+            'SPF/DKIM/DMARC configured',
+            'Encryption in transit',
+            'No tracking or ads',
+          ],
+        },
+        {
+          name: 'Storage & Features',
+          description:
+            'Generous storage quotas with all the features you need. Auto-reply, forwarding, signatures, and more.',
+          details: [
+            '1GB storage (Basic), 10GB (Pro)',
+            'Custom email signature',
+            'Auto-reply for tours',
+            'Email forwarding',
+            'Contact management',
+          ],
+        },
+        {
+          name: 'Email Pro Upgrade',
+          description:
+            'Need more? Upgrade to Email Pro for 10GB storage, unlimited accounts, and priority support.',
+          details: [
+            '10GB storage per account',
+            'Multiple email accounts',
+            'Priority delivery',
+            'Advanced filtering rules',
+            'Only $3/month add-on',
           ],
         },
       ],

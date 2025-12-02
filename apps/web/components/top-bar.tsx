@@ -17,6 +17,7 @@ import {
   ExternalLink,
   Globe,
   ShoppingBag,
+  Mail,
 } from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -192,6 +193,22 @@ export function TopBar() {
           >
             <ShoppingBag className="h-4 w-4" />
             <span className="hidden text-sm sm:inline">Merch</span>
+          </motion.button>
+
+          {/* Email Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/mail')}
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            style={{
+              background: 'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
+              boxShadow: '0 4px 12px rgba(56, 189, 248, 0.3)',
+            }}
+            title="Your professional @rnrb.me email"
+          >
+            <Mail className="h-4 w-4" />
+            <span className="hidden text-sm sm:inline">Mail</span>
           </motion.button>
         </div>
 
