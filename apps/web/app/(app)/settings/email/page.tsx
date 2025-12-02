@@ -99,10 +99,51 @@ export default function EmailSettingsPage() {
   const [upgradeCta, setUpgradeCta] = useState<string | null>(null);
   const [upgrading, setUpgrading] = useState(false);
 
+  // Success state - show after email created
+  const [justCreated, setJustCreated] = useState(false);
+  const [createdEmail, setCreatedEmail] = useState('');
+  const [createdPassword, setCreatedPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [activeSetupTab, setActiveSetupTab] = useState<'iphone' | 'android' | 'mac' | 'windows'>(
+    'iphone'
+  );
+
+  // User info for suggestions
+  const [userName, setUserName] = useState('');
+  const [suggestedUsernames, setSuggestedUsernames] = useState<string[]>([]);
+
   // Fetch email account
   useEffect(() => {
     fetchAccount();
+    fetchUserInfo();
   }, []);
+
+  async function fetchUserInfo() {
+    try {
+      const response = await fetch('/api/profile');
+      const data = await response.json();
+      if (data.name) {
+        setUserName(data.name);
+        // Generate username suggestions from name
+        const name = data.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const suggestions = [
+          name,
+          name.replace(/\s/g, '.'),
+          name.replace(/\s/g, '_'),
+          `${name}music`,
+          `${name}official`,
+        ].filter((s) => s.length >= 3 && s.length <= 30);
+        setSuggestedUsernames([...new Set(suggestions)].slice(0, 4));
+        // Auto-fill display name
+        if (!displayName) {
+          setDisplayName(data.name);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  }
 
   async function fetchAccount() {
     try {
@@ -198,22 +239,39 @@ export default function EmailSettingsPage() {
         body: JSON.stringify({
           username,
           domain: selectedDomain,
-          displayName: displayName || undefined,
+          displayName: displayName || userName || undefined,
         }),
       });
 
       const data = await response.json();
       if (data.success) {
-        // Refresh account data
+        // Show success screen with credentials
+        setCreatedEmail(data.emailAddress);
+        setCreatedPassword(data.password);
+        setJustCreated(true);
+        // Refresh account data in background
         await fetchAccount();
       } else {
-        setUsernameError(data.error);
+        setUsernameError(data.error || data.message);
       }
     } catch (error) {
       setUsernameError('Failed to create email account');
     } finally {
       setCreating(false);
     }
+  }
+
+  // Copy helpers
+  function copyEmail() {
+    navigator.clipboard.writeText(createdEmail);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2000);
+  }
+
+  function copyPassword() {
+    navigator.clipboard.writeText(createdPassword);
+    setCopiedPassword(true);
+    setTimeout(() => setCopiedPassword(false), 2000);
   }
 
   // Save settings
@@ -305,6 +363,291 @@ export default function EmailSettingsPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-[var(--accent)]" />
+      </div>
+    );
+  }
+
+  // Success screen - shown right after account creation
+  if (justCreated && createdEmail && createdPassword) {
+    const setupInstructions = {
+      iphone: [
+        { step: 1, text: 'Open Settings → Mail → Accounts → Add Account' },
+        { step: 2, text: 'Tap "Other" → "Add Mail Account"' },
+        { step: 3, text: `Enter your name and email: ${createdEmail}` },
+        { step: 4, text: 'Enter your password (copy from above)' },
+        { step: 5, text: 'Tap "IMAP" and enter mail.rnrb.me for both servers' },
+        { step: 6, text: "Save and you're done! 🎉" },
+      ],
+      android: [
+        { step: 1, text: 'Open Gmail → Settings → Add Account' },
+        { step: 2, text: 'Select "Other"' },
+        { step: 3, text: `Enter your email: ${createdEmail}` },
+        { step: 4, text: 'Select "IMAP" when prompted' },
+        { step: 5, text: 'Server: mail.rnrb.me, Port: 993, Security: SSL/TLS' },
+        { step: 6, text: "Enter your password and you're done! 🎉" },
+      ],
+      mac: [
+        { step: 1, text: 'Open Mail → Mail menu → Add Account' },
+        { step: 2, text: 'Select "Other Mail Account"' },
+        { step: 3, text: `Enter name, email (${createdEmail}), and password` },
+        { step: 4, text: 'Select "IMAP" → Server: mail.rnrb.me' },
+        { step: 5, text: 'For SMTP, use mail.rnrb.me port 465' },
+        { step: 6, text: 'Done! Check your inbox 🎉' },
+      ],
+      windows: [
+        { step: 1, text: 'Open Outlook → File → Add Account' },
+        { step: 2, text: 'Select "Manual setup"' },
+        { step: 3, text: 'Choose "IMAP" as account type' },
+        { step: 4, text: 'Incoming: mail.rnrb.me:993 (SSL/TLS)' },
+        { step: 5, text: 'Outgoing: mail.rnrb.me:465 (SSL/TLS)' },
+        { step: 6, text: "Enter your credentials and you're set! 🎉" },
+      ],
+    };
+
+    return (
+      <div
+        className="relative min-h-screen overflow-hidden px-4 py-8"
+        style={{
+          background: 'linear-gradient(180deg, #0a0a0a 0%, #0a1a0a 50%, #0a0a0a 100%)',
+        }}
+      >
+        {/* Success background effects */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div
+            className="absolute -left-40 top-20 h-80 w-80 rounded-full opacity-20 blur-3xl"
+            style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}
+          />
+          <div
+            className="absolute -right-40 bottom-20 h-80 w-80 rounded-full opacity-15 blur-3xl"
+            style={{ background: 'linear-gradient(135deg, #ff6347, #ffd700)' }}
+          />
+        </div>
+
+        <div className="relative mx-auto max-w-2xl">
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 flex justify-center"
+          >
+            <Link href="/">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={140}
+                height={50}
+                className="transition-all hover:scale-105"
+              />
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="overflow-hidden rounded-3xl shadow-2xl"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(15, 25, 15, 0.95) 0%, rgba(10, 15, 10, 0.98) 100%)',
+              border: '1px solid rgba(34, 197, 94, 0.3)',
+              boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(34, 197, 94, 0.15)',
+            }}
+          >
+            {/* Success Header */}
+            <div
+              className="px-8 py-6 text-center"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%)',
+                borderBottom: '1px solid rgba(34, 197, 94, 0.2)',
+              }}
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full shadow-2xl"
+                style={{
+                  background: 'linear-gradient(135deg, #22c55e, #10b981)',
+                  boxShadow: '0 0 40px rgba(34, 197, 94, 0.5)',
+                }}
+              >
+                <CheckCircle className="h-10 w-10 text-white" />
+              </motion.div>
+              <h1 className="mb-2 text-3xl font-black text-white">You're All Set! 🎸</h1>
+              <p className="text-lg text-green-200">Your professional musician email is ready</p>
+            </div>
+
+            <div className="p-8">
+              {/* Email Address */}
+              <div className="mb-6">
+                <label className="mb-2 block text-sm font-medium text-white/60">
+                  Your Email Address
+                </label>
+                <div
+                  className="flex items-center justify-between rounded-xl p-4"
+                  style={{
+                    background: 'rgba(34, 197, 94, 0.1)',
+                    border: '1px solid rgba(34, 197, 94, 0.2)',
+                  }}
+                >
+                  <span className="text-xl font-bold text-green-400">{createdEmail}</span>
+                  <button
+                    onClick={copyEmail}
+                    className="rounded-lg p-2 transition-colors hover:bg-white/10"
+                  >
+                    {copiedEmail ? (
+                      <Check className="h-5 w-5 text-green-400" />
+                    ) : (
+                      <Copy className="h-5 w-5 text-white/50" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Password - CRITICAL */}
+              <div className="mb-6">
+                <label className="mb-2 flex items-center gap-2 text-sm font-medium text-white/60">
+                  <AlertCircle className="h-4 w-4 text-yellow-400" />
+                  Your Password (save this now!)
+                </label>
+                <div
+                  className="flex items-center justify-between rounded-xl p-4"
+                  style={{
+                    background: 'rgba(255, 193, 7, 0.1)',
+                    border: '1px solid rgba(255, 193, 7, 0.3)',
+                  }}
+                >
+                  <code className="font-mono text-lg text-yellow-400">
+                    {showPassword ? createdPassword : '••••••••••••••••'}
+                  </code>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="rounded-lg p-2 transition-colors hover:bg-white/10"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-white/50" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-white/50" />
+                      )}
+                    </button>
+                    <button
+                      onClick={copyPassword}
+                      className="rounded-lg p-2 transition-colors hover:bg-white/10"
+                    >
+                      {copiedPassword ? (
+                        <Check className="h-5 w-5 text-green-400" />
+                      ) : (
+                        <Copy className="h-5 w-5 text-white/50" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <p className="mt-2 text-sm text-yellow-400/80">
+                  ⚠️ This password won't be shown again. Copy it now!
+                </p>
+              </div>
+
+              {/* Setup Instructions Tabs */}
+              <div className="mb-4">
+                <label className="mb-3 block text-sm font-medium text-white/60">
+                  Setup on Your Device
+                </label>
+                <div className="flex gap-2">
+                  {[
+                    { key: 'iphone', label: '📱 iPhone', icon: Smartphone },
+                    { key: 'android', label: '🤖 Android', icon: Smartphone },
+                    { key: 'mac', label: '💻 Mac', icon: Monitor },
+                    { key: 'windows', label: '🖥️ Windows', icon: Monitor },
+                  ].map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveSetupTab(tab.key as any)}
+                      className={`flex-1 rounded-xl px-3 py-2 text-xs font-medium transition-all ${
+                        activeSetupTab === tab.key
+                          ? 'bg-green-500/20 text-green-400'
+                          : 'bg-white/5 text-white/50 hover:bg-white/10'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Setup Steps */}
+              <div
+                className="mb-6 rounded-xl p-4"
+                style={{ background: 'rgba(255, 255, 255, 0.03)' }}
+              >
+                <ol className="space-y-3">
+                  {setupInstructions[activeSetupTab].map((item) => (
+                    <li key={item.step} className="flex items-start gap-3">
+                      <span
+                        className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                        style={{ background: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' }}
+                      >
+                        {item.step}
+                      </span>
+                      <span className="text-sm text-white/80">{item.text}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              {/* Server Settings Reference */}
+              <div
+                className="mb-6 rounded-xl p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                }}
+              >
+                <h4 className="mb-3 text-sm font-semibold text-white/80">Quick Reference</h4>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <p className="text-white/40">Incoming (IMAP)</p>
+                    <p className="font-mono text-green-400">mail.rnrb.me:993</p>
+                  </div>
+                  <div>
+                    <p className="text-white/40">Outgoing (SMTP)</p>
+                    <p className="font-mono text-green-400">mail.rnrb.me:465</p>
+                  </div>
+                  <div>
+                    <p className="text-white/40">Security</p>
+                    <p className="font-mono text-green-400">SSL/TLS</p>
+                  </div>
+                  <div>
+                    <p className="text-white/40">Username</p>
+                    <p className="font-mono text-green-400">{createdEmail}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <Link
+                  href="/mail"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold text-white transition-all hover:scale-[1.02]"
+                  style={{
+                    background: 'linear-gradient(135deg, #22c55e, #10b981)',
+                    boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)',
+                  }}
+                >
+                  <Mail className="h-5 w-5" />
+                  Open Webmail
+                </Link>
+                <button
+                  onClick={() => setJustCreated(false)}
+                  className="rounded-xl px-6 py-3 font-medium transition-all hover:bg-white/10"
+                  style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'white' }}
+                >
+                  Settings
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
     );
   }
@@ -449,6 +792,30 @@ export default function EmailSettingsPage() {
                     <p className="mt-2 text-sm text-green-500">
                       {username}@{selectedDomain} is available!
                     </p>
+                  )}
+
+                  {/* Username suggestions */}
+                  {suggestedUsernames.length > 0 && !username && (
+                    <div className="mt-3">
+                      <p className="mb-2 text-xs text-white/40">Suggestions:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {suggestedUsernames.map((suggestion) => (
+                          <button
+                            key={suggestion}
+                            type="button"
+                            onClick={() => setUsername(suggestion)}
+                            className="rounded-lg px-3 py-1.5 text-sm transition-all hover:scale-105"
+                            style={{
+                              background: 'rgba(255, 99, 71, 0.1)',
+                              border: '1px solid rgba(255, 99, 71, 0.2)',
+                              color: '#ff8c00',
+                            }}
+                          >
+                            {suggestion}@rnrb.me
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
 
