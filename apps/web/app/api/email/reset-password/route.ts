@@ -24,12 +24,14 @@ async function stalwartFetch(endpoint: string, options: RequestInit = {}) {
 }
 
 // Send password reset email using Resend
-async function sendPasswordResetEmail(toEmail: string, resetToken: string) {
-  const resetLink = `${WEBMAIL_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(toEmail)}`;
+// sendTo: the platform email (where the email is sent)
+// rnrbEmail: the @rnrb.me email being reset
+async function sendPasswordResetEmail(sendTo: string, rnrbEmail: string, resetToken: string) {
+  const resetLink = `${WEBMAIL_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(rnrbEmail)}`;
 
   const result = await sendEmail({
-    to: toEmail,
-    subject: '🔐 Reset your RNRB Mail password',
+    to: sendTo,
+    subject: `🔐 Reset your RNRB Mail password (${rnrbEmail})`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -50,8 +52,12 @@ async function sendPasswordResetEmail(toEmail: string, resetToken: string) {
             <!-- Content -->
             <div style="padding: 32px;">
               <p style="color: #d1d5db; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
-                You requested to reset your password for <strong style="color: #f3f4f6;">${toEmail}</strong>
+                You requested to reset the password for your RNRB Mail account:
               </p>
+              
+              <div style="background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px; margin: 0 0 24px; text-align: center;">
+                <p style="margin: 0; color: #ff6b35; font-size: 18px; font-weight: 600;">${rnrbEmail}</p>
+              </div>
               
               <p style="color: #d1d5db; font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
                 Click the button below to create a new password:
@@ -70,7 +76,7 @@ async function sendPasswordResetEmail(toEmail: string, resetToken: string) {
               </p>
               
               <p style="color: #6b7280; font-size: 13px; line-height: 1.6; margin: 0;">
-                If you didn't request this, you can safely ignore this email.
+                If you didn't request this, you can safely ignore this email. Your password won't be changed.
               </p>
               
               <!-- Fallback link -->
@@ -98,7 +104,7 @@ async function sendPasswordResetEmail(toEmail: string, resetToken: string) {
     text: `
 Reset your RNRB Mail password
 
-You requested to reset your password for ${toEmail}.
+You requested to reset the password for: ${rnrbEmail}
 
 Click the link below to create a new password:
 ${resetLink}
@@ -156,7 +162,7 @@ export async function POST(request: Request) {
 
       const normalizedEmail = email.toLowerCase();
 
-      // Find the email account
+      // Find the email account AND the user's platform email
       const emailAccount = await prisma.emailAccount.findUnique({
         where: { emailAddress: normalizedEmail },
         include: { user: true },
@@ -165,11 +171,21 @@ export async function POST(request: Request) {
       // Always return success to prevent email enumeration
       const successResponse = {
         success: true,
-        message: 'If this email exists, you will receive a password reset link.',
+        message:
+          'If this email exists, a reset link has been sent to your registered platform email.',
       };
 
       if (!emailAccount) {
         console.log('[EMAIL-RESET] Email not found:', normalizedEmail);
+        return NextResponse.json(successResponse);
+      }
+
+      // Get the user's platform email (the email they use to log into rnrb.pro)
+      // This is where we send the reset link - NOT the @rnrb.me email they're locked out of
+      const platformEmail = emailAccount.user.email;
+
+      if (!platformEmail) {
+        console.error('[EMAIL-RESET] No platform email found for user:', emailAccount.userId);
         return NextResponse.json(successResponse);
       }
 
@@ -203,14 +219,20 @@ export async function POST(request: Request) {
         },
       });
 
-      // Send the reset email
-      const emailSent = await sendPasswordResetEmail(normalizedEmail, resetToken);
+      // Send the reset email to their PLATFORM email (not the @rnrb.me email)
+      // This way they can reset even if locked out of their @rnrb.me inbox
+      const emailSent = await sendPasswordResetEmail(platformEmail, normalizedEmail, resetToken);
 
       if (!emailSent) {
-        console.error('[EMAIL-RESET] Failed to send email to:', normalizedEmail);
+        console.error('[EMAIL-RESET] Failed to send email to:', platformEmail);
         // Still return success to prevent enumeration, but log the error
       } else {
-        console.log('[EMAIL-RESET] Reset email sent to:', normalizedEmail);
+        console.log(
+          '[EMAIL-RESET] Reset email sent to platform email:',
+          platformEmail,
+          'for:',
+          normalizedEmail
+        );
       }
 
       return NextResponse.json(successResponse);
