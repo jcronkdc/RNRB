@@ -36,9 +36,8 @@ function getResendApiKey(): string | null {
 const resendApiKey = getResendApiKey();
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-const DEFAULT_FROM = process.env.EMAIL_FROM || "Rock N' Roll Basement <onboarding@resend.dev>";
-const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
+const DEFAULT_FROM = process.env.EMAIL_FROM || "Rock N' Roll Basement <noreply@rnrb.app>";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://rnrb.app';
 
 // Resend test mode: can only send to verified emails when using onboarding@resend.dev
 const RESEND_TEST_MODE =
@@ -456,7 +455,7 @@ function emailWrapper(content: string, footerNote?: string): string {
             <p class="footer-text" style="margin-top: 12px;">
               <a href="${APP_URL}" style="color: #ff6347; text-decoration: none;">Visit Website</a>
               &nbsp;•&nbsp;
-              <a href="mailto:support@cronkwaters.com" style="color: #6b6b75; text-decoration: none;">Contact Support</a>
+              <a href="mailto:support@rnrb.app" style="color: #6b6b75; text-decoration: none;">Contact Support</a>
             </p>
           </div>
         </div>
@@ -837,7 +836,7 @@ View booking details: ${params.siteUrl}
         </div>
       </div>
     `,
-      `Questions about your subscription? Contact support@cronkwaters.com`
+      `Questions about your subscription? Contact support@rnrb.app`
     ),
     text: `
 Payment Successful
@@ -907,7 +906,7 @@ Thank you for your subscription to Rock N' Roll Basement!
         </div>
       </div>
     `,
-      `Need help? Contact support@cronkwaters.com`
+      `Need help? Contact support@rnrb.app`
     ),
     text: `
 Payment Failed - Action Required
@@ -986,7 +985,7 @@ Update payment method: ${APP_URL}/settings/billing
         </p>
       </div>
     `,
-      `Questions? Contact support@cronkwaters.com`
+      `Questions? Contact support@rnrb.app`
     ),
     text: `
 Trial Ending Soon
