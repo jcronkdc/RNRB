@@ -74,3 +74,4 @@ for web.zip
 # Other system prompts are tracked
 
 .env.vercel.*
+.env*.local

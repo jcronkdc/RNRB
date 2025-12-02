@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
 });
 
 const webhookSecret =
-  process.env.STRIPE_ARTIST_MERCH_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET || '';
+  process.env.STRIPE_MERCH_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET || '';
 const PRINTFUL_API_URL = 'https://api.printful.com';
 
 /**
