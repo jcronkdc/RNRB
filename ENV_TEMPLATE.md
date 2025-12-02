@@ -94,7 +94,7 @@ NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
 
 # ============================================
 
-# EMAIL (OPTIONAL - for magic links)
+# EMAIL CONFIGURATION (for all email features)
 
 # ============================================
 
@@ -103,6 +103,23 @@ NEXT_PUBLIC_POSTHOG_HOST="https://app.posthog.com"
 # Get from: https://resend.com/api-keys
 
 RESEND*API_KEY="re*..."
+
+# Business Email Addresses (customize to your domain)
+
+NEWSLETTER_FROM_EMAIL="Rock N' Roll Basement <newsletter@rnrb.me>"
+SUPPORT_EMAIL="Rock N' Roll Basement Support <support@rnrb.me>"
+SUPPORT_REPLY_TO="support@rnrb.me"
+INFO_EMAIL="info@rnrb.me"
+NOREPLY_EMAIL="Rock N' Roll Basement <noreply@rnrb.me>"
+
+# Stalwart Mail Server (for user email accounts - Email Pro feature)
+
+# See EMAIL_SETUP_GUIDE.md for full configuration
+
+STALWART_API_URL="http://mail.rnrb.me:8080"
+STALWART_ADMIN_USER="admin"
+STALWART_ADMIN_PASSWORD="your-admin-password"
+STALWART_API_KEY="your-api-key"
 
 # ============================================
 
@@ -120,26 +137,36 @@ STRIPE*WEBHOOK_SECRET="whsec*..."
 STRIPE_PRICE_ID_CREATOR="price_creator_monthly"
 STRIPE_PRICE_ID_STUDIO="price_studio_monthly"
 
-# Credit Add-Ons (one-time purchases) - Created Dec 2, 2025
+# Credit Add-Ons (one-time purchases) - RNRB Account - Dec 2, 2025
 
 # AI Credits: $6 for 100 requests
 
-STRIPE_PRICE_ID_AI_100="price_1SZyLp2H6bMdop9gD3ZcmPEc"
+STRIPE_PRICE_ID_AI_100="price_1SZzNPFiQRCfkKrvIVzjFbT1"
 
-# Video Credits: $10 for 10 hours (600 min)
+# Video Packs (usage-based, not subscription)
 
-STRIPE_PRICE_ID_VIDEO_600="price_1SZyLp2H6bMdop9gl9amD5y8"
+# Starter: $5 for 2 hours (120 min)
+
+STRIPE_PRICE_ID_VIDEO_120="price_1SZzNQFiQRCfkKrvbpPjFrD6"
+
+# Band Practice: $20 for 10 hours (600 min)
+
+STRIPE_PRICE_ID_VIDEO_600="price_1SZzNRFiQRCfkKrvV8jVNvoZ"
+
+# Studio Sessions: $50 for 30 hours (1800 min)
+
+STRIPE_PRICE_ID_VIDEO_1800="price_1SZzNSFiQRCfkKrvZKUs6vW0"
 
 # Image Credits: $4 for 25, $12 for 100
 
-STRIPE_PRICE_ID_IMAGE_25="price_1SZyLq2H6bMdop9grZsie55a"
-STRIPE_PRICE_ID_IMAGE_100="price_1SZyLr2H6bMdop9gZT8tx4BV"
+STRIPE_PRICE_ID_IMAGE_25="price_1SZzNSFiQRCfkKrvj65e48OJ"
+STRIPE_PRICE_ID_IMAGE_100="price_1SZzNTFiQRCfkKrvtmQugqXh"
 
 # Storage Credits: $6/25GB, $15/100GB, $30/250GB (permanent)
 
-STRIPE_PRICE_ID_STORAGE_25="price_1SZyLr2H6bMdop9gyZXnihnn"
-STRIPE_PRICE_ID_STORAGE_100="price_1SZyLs2H6bMdop9grFvcvQpN"
-STRIPE_PRICE_ID_STORAGE_250="price_1SZyLs2H6bMdop9gbKF8tCBT"
+STRIPE_PRICE_ID_STORAGE_25="price_1SZzNUFiQRCfkKrvaW7JVZuw"
+STRIPE_PRICE_ID_STORAGE_100="price_1SZzNUFiQRCfkKrvCMfsoYj2"
+STRIPE_PRICE_ID_STORAGE_250="price_1SZzNVFiQRCfkKrvVLEqxyuq"
 
 # ============================================
 

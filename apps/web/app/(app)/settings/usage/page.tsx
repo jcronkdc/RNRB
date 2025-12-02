@@ -9,6 +9,10 @@ import { BuyCreditsButton } from '@/components/billing/BuyCreditsButton';
 
 interface UsageSummary {
   tier: 'free' | 'creator' | 'studio';
+  features: {
+    videoCalls: boolean;
+    aiAlbumArt: boolean;
+  };
   ai: {
     used: number;
     limit: number;
@@ -344,9 +348,19 @@ export default function UsagePage() {
             percentage={usage.video.percentage}
             bonus={usage.video.bonus}
             color="#a855f7"
-            unavailable={usage.video.limit === 0}
+            unavailable={!usage.features.videoCalls}
             buyButtons={
-              usage.video.limit > 0 && <BuyCreditsButton product="video_600" className="w-full" />
+              <div className="space-y-2">
+                <p className="text-xs text-gray-400">🎬 Video Packs - Buy what you need:</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <BuyCreditsButton product="video_120" compact className="w-full text-xs" />
+                  <BuyCreditsButton product="video_600" compact className="w-full text-xs" />
+                  <BuyCreditsButton product="video_1800" compact className="w-full text-xs" />
+                </div>
+                <p className="text-center text-xs text-gray-500">
+                  Usage-based • No monthly commitment
+                </p>
+              </div>
             }
           />
 
@@ -370,14 +384,18 @@ export default function UsagePage() {
             percentage={usage.image.percentage}
             bonus={usage.image.bonus}
             color="#ec4899"
-            unavailable={usage.image.limit === 0}
+            unavailable={!usage.features.aiAlbumArt}
             buyButtons={
-              usage.image.limit > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs text-gray-400">🎨 Image Packs - Buy what you need:</p>
                 <div className="grid grid-cols-2 gap-2">
-                  <BuyCreditsButton product="image_25" className="w-full" />
-                  <BuyCreditsButton product="image_100" className="w-full" />
+                  <BuyCreditsButton product="image_25" compact className="w-full text-xs" />
+                  <BuyCreditsButton product="image_100" compact className="w-full text-xs" />
                 </div>
-              )
+                <p className="text-center text-xs text-gray-500">
+                  Usage-based • No monthly commitment
+                </p>
+              </div>
             }
           />
 

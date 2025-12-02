@@ -48,16 +48,16 @@ export const SUBSCRIPTION_TIERS = {
       aiAssistant: false, // Requires add-on or Studio tier
       aiAlbumArt: true, // AI artwork generation enabled
       stemSeparation: true, // AI stem separation enabled
-      videoCalls: false, // Video only in Studio tier
+      videoCalls: true, // 1 hour baseline - buy packs for more
       collaborationLimit: 5,
       projectLimit: 10,
       storageGB: 10,
       aiRequestsLimit: 100, // 100 AI assists/month
-      videoMinutesLimit: 0,
-      videoParticipantMinutesLimit: 0,
+      videoMinutesLimit: 60, // 1 hour included - enough for a taste, buy packs for more
+      videoParticipantMinutesLimit: 180, // ~1hr with 3 people
       imageCreditsLimit: 10, // 10 album art generations/month (~$0.03 cost)
       stemCreditsLimit: 10, // 10 stem separations/month (~$0.50 cost)
-      maxVideoParticipants: 0,
+      maxVideoParticipants: 4, // Small calls only
     },
   },
   studio: {
@@ -76,8 +76,8 @@ export const SUBSCRIPTION_TIERS = {
       projectLimit: -1, // Unlimited
       storageGB: 100,
       aiRequestsLimit: 500, // 500 AI assists/month
-      videoMinutesLimit: 1200, // Legacy: simple hour tracking
-      videoParticipantMinutesLimit: 3600, // REAL LIMIT: 3600 participant-minutes (~$14.40 cost cap)
+      videoMinutesLimit: 300, // 5 hours included baseline - buy packs for more
+      videoParticipantMinutesLimit: 900, // ~5hr with 3 people, buy packs for serious usage
       imageCreditsLimit: 50, // 50 album art generations/month (~$0.15 cost)
       stemCreditsLimit: 50, // 50 stem separations/month (~$2.50 cost)
       maxVideoParticipants: 10, // Max per call to prevent runaway costs

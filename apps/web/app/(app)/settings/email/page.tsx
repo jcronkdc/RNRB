@@ -76,6 +76,7 @@ export default function EmailSettingsPage() {
   const [creating, setCreating] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [recoveryEmail, setRecoveryEmail] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
@@ -247,9 +248,26 @@ export default function EmailSettingsPage() {
     return () => clearTimeout(timer);
   }, [username]);
 
-  // Validate password
-  function validatePassword(): boolean {
+  // Validate password and recovery email
+  function validateForm(): boolean {
     setPasswordError(null);
+
+    // Validate recovery email
+    if (!recoveryEmail) {
+      setPasswordError('Recovery email is required for password resets');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(recoveryEmail)) {
+      setPasswordError('Please enter a valid recovery email address');
+      return false;
+    }
+
+    if (recoveryEmail.toLowerCase().endsWith('@rnrb.me')) {
+      setPasswordError('Recovery email cannot be an @rnrb.me address');
+      return false;
+    }
 
     if (!newPassword) {
       setPasswordError('Password is required');
@@ -289,8 +307,8 @@ export default function EmailSettingsPage() {
     e.preventDefault();
     if (!usernameAvailable || creating) return;
 
-    // Validate password before submitting
-    if (!validatePassword()) return;
+    // Validate form before submitting
+    if (!validateForm()) return;
 
     setCreating(true);
     try {
@@ -302,6 +320,7 @@ export default function EmailSettingsPage() {
           domain: selectedDomain,
           displayName: displayName || userName || undefined,
           password: newPassword,
+          recoveryEmail: recoveryEmail.toLowerCase(),
         }),
       });
 
@@ -823,6 +842,28 @@ export default function EmailSettingsPage() {
                 />
                 <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
                   This will appear as the sender name in emails
+                </p>
+              </div>
+
+              {/* Recovery Email */}
+              <div>
+                <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                  Recovery Email <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={recoveryEmail}
+                  onChange={(e) => setRecoveryEmail(e.target.value)}
+                  placeholder="your@gmail.com"
+                  className="w-full rounded-xl px-4 py-3"
+                  style={{
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                  }}
+                />
+                <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
+                  Used to reset your password if locked out. Cannot be an @rnrb.me address.
                 </p>
               </div>
 

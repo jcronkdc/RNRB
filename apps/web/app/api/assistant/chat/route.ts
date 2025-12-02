@@ -88,6 +88,19 @@ import {
   SUBSCRIPTION_AI_FUNCTIONS,
   formatSubscriptionForAI,
 } from '@/lib/ai/subscription-helper';
+import {
+  EMAIL_SUPPORT_AI_FUNCTIONS,
+  aiCreateSupportTicket,
+  aiViewUserTickets,
+  aiViewTicketDetails,
+  aiReplyToTicket,
+  aiSubscribeNewsletter,
+  aiUnsubscribeNewsletter,
+  aiUpdateNewsletterPreferences,
+  aiTroubleshootIssue,
+  aiCheckSystemStatus,
+  aiSendFeedback,
+} from '@/lib/ai/assistant-email-tools';
 import { buildGodlikeContext, formatGodlikeContext } from '@/lib/ai/godlike-context';
 import { handleApiError, AppError } from '@/lib/errors';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
@@ -224,6 +237,7 @@ export async function POST(request: NextRequest) {
         ...MEMORY_AI_FUNCTIONS,
         ...SONG_DISCOVERY_AI_FUNCTIONS,
         ...SUBSCRIPTION_AI_FUNCTIONS,
+        ...EMAIL_SUPPORT_AI_FUNCTIONS,
       ];
       const tools: OpenAI.ChatCompletionTool[] = allFunctions.map((fn) => ({
         type: 'function' as const,
@@ -371,6 +385,37 @@ export async function POST(request: NextRequest) {
               if (result.success && result.portalUrl) {
                 result.displayMessage = `💳 **Billing Portal Ready**\n\n${result.message}\n\n**[👉 Open Billing Portal →](${result.portalUrl})**\n\n_Manage your payment methods, view invoices, or update your subscription._`;
               }
+              break;
+            // Email & Support Tools - IT genius capabilities
+            case 'createSupportTicket':
+              result = await aiCreateSupportTicket(user.id, functionArgs);
+              break;
+            case 'viewMyTickets':
+              result = await aiViewUserTickets(user.id, functionArgs);
+              break;
+            case 'viewTicketDetails':
+              result = await aiViewTicketDetails(user.id, functionArgs);
+              break;
+            case 'replyToTicket':
+              result = await aiReplyToTicket(user.id, functionArgs);
+              break;
+            case 'subscribeToNewsletter':
+              result = await aiSubscribeNewsletter(user.id, functionArgs);
+              break;
+            case 'unsubscribeFromNewsletter':
+              result = await aiUnsubscribeNewsletter(user.id, functionArgs);
+              break;
+            case 'updateNewsletterPreferences':
+              result = await aiUpdateNewsletterPreferences(user.id, functionArgs);
+              break;
+            case 'troubleshootIssue':
+              result = await aiTroubleshootIssue(user.id, functionArgs);
+              break;
+            case 'checkSystemStatus':
+              result = await aiCheckSystemStatus(user.id, functionArgs);
+              break;
+            case 'sendFeedback':
+              result = await aiSendFeedback(user.id, functionArgs);
               break;
             default:
               // Fall back to original action executor

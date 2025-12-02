@@ -56,6 +56,14 @@ import {
   Monitor,
   Wifi,
   Mail,
+  BarChart3,
+  Activity,
+  Repeat,
+  Package,
+  Drum,
+  Gift,
+  MousePointer2,
+  Layers,
 } from '@/components/ui/custom-icons';
 
 // Animation variants
@@ -104,6 +112,9 @@ function FeatureCategory({
     sky: { bg: 'rgba(56, 189, 248, 0.1)', text: '#38bdf8', glow: 'rgba(56, 189, 248, 0.2)' },
     green: { bg: 'rgba(34, 197, 94, 0.1)', text: '#22c55e', glow: 'rgba(34, 197, 94, 0.2)' },
     red: { bg: 'rgba(239, 68, 68, 0.1)', text: '#ef4444', glow: 'rgba(239, 68, 68, 0.2)' },
+    cyan: { bg: 'rgba(6, 182, 212, 0.1)', text: '#06b6d4', glow: 'rgba(6, 182, 212, 0.2)' },
+    amber: { bg: 'rgba(245, 158, 11, 0.1)', text: '#f59e0b', glow: 'rgba(245, 158, 11, 0.2)' },
+    indigo: { bg: 'rgba(99, 102, 241, 0.1)', text: '#6366f1', glow: 'rgba(99, 102, 241, 0.2)' },
   };
 
   const colors = colorMap[color] || colorMap.accent;
@@ -194,6 +205,94 @@ function FeatureCategory({
 
 export default function FeaturesPage() {
   const featureCategories = [
+    // ==========================================
+    // AI ASSISTANT - NEW CATEGORY
+    // ==========================================
+    {
+      title: 'AI Assistant',
+      subtitle:
+        'Claude-powered AI that understands music. Get intelligent suggestions, instant answers, and creative assistance without ever losing control of your art.',
+      icon: Brain,
+      color: 'purple',
+      features: [
+        {
+          name: 'Claude-Powered Intelligence',
+          description:
+            'Our AI is powered by Claude from Anthropic — the most thoughtful, nuanced AI available. It understands music theory, songwriting craft, and the business of music.',
+          details: [
+            'Trained on music theory & industry knowledge',
+            'Natural conversation about your creative process',
+            'Remembers context throughout your session',
+            'Never generates generic or cookie-cutter responses',
+            'Respects your creative vision — assists, never replaces',
+          ],
+          link: '/features/ai-music',
+        },
+        {
+          name: 'Smart Song Analysis',
+          description:
+            'Get instant feedback on your songs. The AI analyzes structure, chord progressions, melody, and lyrics to provide actionable suggestions.',
+          details: [
+            'Chord progression analysis & alternatives',
+            'Lyric theme & emotional arc review',
+            'Melody contour suggestions',
+            'Genre comparison & positioning',
+            'Radio-readiness assessment',
+          ],
+        },
+        {
+          name: 'Music Theory Tutor',
+          description:
+            'Ask any music theory question and get clear, practical answers. Learn as you create with contextual explanations.',
+          details: [
+            'Explain any chord, scale, or mode',
+            'Why does this progression work?',
+            'What key am I in?',
+            'How to modulate between keys',
+            'Voice leading best practices',
+          ],
+        },
+        {
+          name: 'Business & Career Advice',
+          description:
+            'Get guidance on the music business. From contracts to marketing, royalties to touring — the AI knows the industry.',
+          details: [
+            'Understand contracts & licensing terms',
+            'Marketing & promotion strategies',
+            'Revenue optimization tips',
+            'Tour planning guidance',
+            'Sync licensing preparation',
+          ],
+        },
+        {
+          name: 'Platform Navigator',
+          description:
+            'Not sure where to find something? Ask the AI to guide you to any feature or explain how to accomplish your goal.',
+          details: [
+            'Find any feature instantly',
+            'Step-by-step tutorials on demand',
+            'Personalized workflow recommendations',
+            'Shortcut and efficiency tips',
+            'Integration help for external tools',
+          ],
+        },
+        {
+          name: 'Collaborative Ideation',
+          description:
+            "Brainstorm with AI when you're stuck. Get ideas for themes, concepts, arrangements, and more — all tailored to your style.",
+          details: [
+            'Song concept brainstorming',
+            'Arrangement ideas by genre',
+            'Album sequencing suggestions',
+            'Band name & branding ideas',
+            'Visual art direction concepts',
+          ],
+        },
+      ],
+    },
+    // ==========================================
+    // SONGWRITING & CREATION
+    // ==========================================
     {
       title: 'Songwriting & Creation',
       subtitle:
@@ -206,11 +305,12 @@ export default function FeaturesPage() {
           description:
             'Generate progressions that match your key, tempo, and genre. From I-IV-V basics to jazz extensions and modal interchange.',
           details: [
-            'All 12 keys with major/minor modes',
-            'Genre-specific patterns (pop, rock, jazz, folk, etc.)',
-            'Voice leading optimization',
-            'Secondary dominant suggestions',
+            'All 12 keys with major/minor/modal options',
+            'Genre-specific patterns (pop, rock, jazz, folk, country, R&B)',
+            'Voice leading optimization for smooth transitions',
+            'Secondary dominant & borrowed chord suggestions',
             'Roman numeral & chord symbol notation',
+            'MIDI export for your DAW',
           ],
           link: '/features/songwriting',
         },
@@ -219,11 +319,12 @@ export default function FeaturesPage() {
           description:
             'AI-powered lyric suggestions that match your melody, theme, and style while maintaining natural flow and consistent rhyme schemes.',
           details: [
-            'Multiple rhyme scheme patterns (AABB, ABAB, ABCB)',
+            'Multiple rhyme scheme patterns (AABB, ABAB, ABCB, free verse)',
             'Syllable counting for melody matching',
-            'Thematic consistency across verses',
-            'Narrative, abstract, and storytelling styles',
+            'Thematic consistency across verses & choruses',
+            'Narrative, abstract, and storytelling modes',
             'Emotion and mood targeting',
+            'Multi-language support',
           ],
           link: '/features/songwriting',
         },
@@ -234,8 +335,9 @@ export default function FeaturesPage() {
           details: [
             'Vocal range consideration (soprano to bass)',
             'Scale-locked note suggestions',
-            'Rhythmic variations (eighth, sixteenth, triplets)',
+            'Rhythmic variations (straight, syncopated, triplets)',
             'Stepwise vs leap motion options',
+            'Motif development tools',
             'Export to MIDI for your DAW',
           ],
           link: '/features/songwriting',
@@ -247,9 +349,10 @@ export default function FeaturesPage() {
           details: [
             'Perfect, near, and slant rhymes',
             'Multi-syllable rhyme patterns',
-            'Synonym suggestions',
-            'Word stress patterns',
+            'Synonym & antonym suggestions',
+            'Word stress pattern analysis',
             'Context-aware suggestions',
+            'Historical & literary word options',
           ],
         },
         {
@@ -257,11 +360,12 @@ export default function FeaturesPage() {
           description:
             'Pre-built templates for verse-chorus-bridge structures, or create your own custom arrangements.',
           details: [
-            'Genre-specific templates',
+            'Genre-specific templates (pop, rock, ballad, EDM)',
             'Custom section creation',
             'Drag-and-drop arrangement',
-            'Time signature support',
+            'Time signature & tempo per section',
             'Intro/outro suggestions',
+            'Key change planning',
           ],
         },
         {
@@ -269,15 +373,111 @@ export default function FeaturesPage() {
           description:
             'Record ideas instantly with high-quality voice memos. Auto-transcription and organization by project.',
           details: [
-            'One-tap recording',
-            'Automatic transcription',
-            'Project organization',
-            'Timestamp markers',
+            'One-tap recording from any screen',
+            'Automatic speech-to-text transcription',
+            'Project organization & tagging',
+            'Timestamp markers for key moments',
             'Background recording support',
+            'Humming-to-melody analysis',
           ],
         },
       ],
     },
+    // ==========================================
+    // RECORDING STUDIO - NEW CATEGORY
+    // ==========================================
+    {
+      title: 'Recording Studio',
+      subtitle:
+        'Professional recording sessions right in your browser. Capture high-quality audio, collaborate in real-time, and export industry-standard files.',
+      icon: Mic,
+      color: 'red',
+      features: [
+        {
+          name: 'Browser-Based Recording',
+          description:
+            'Record directly in your browser with professional-quality audio. No downloads or plugins required.',
+          details: [
+            'Up to 48kHz/24-bit recording quality',
+            'Low-latency monitoring',
+            'Multi-track recording support',
+            'Real-time waveform visualization',
+            'Automatic level detection',
+            'Works with any USB audio interface',
+          ],
+          link: '/studio',
+        },
+        {
+          name: 'Live Studio Sessions',
+          description:
+            'Invite collaborators to record together in real-time. Everyone can hear and contribute from anywhere in the world.',
+          details: [
+            'Up to 8 simultaneous participants',
+            'Individual track recording per person',
+            'Real-time chat during sessions',
+            'Session recording & playback',
+            'Latency compensation',
+            'Screen sharing for sheet music/DAW',
+          ],
+        },
+        {
+          name: 'AI Stem Separator',
+          description:
+            'Upload any song and separate it into individual stems: vocals, drums, bass, and other instruments.',
+          details: [
+            'Vocal isolation (lead & backing)',
+            'Drum extraction',
+            'Bass separation',
+            'Other instruments isolation',
+            'High-quality AI separation',
+            'Export each stem individually',
+          ],
+        },
+        {
+          name: 'Recording Guide',
+          description:
+            'Step-by-step guidance for getting professional-quality recordings at home. Microphone techniques, room treatment, and more.',
+          details: [
+            'Microphone placement guides',
+            'Room acoustics basics',
+            'Gain staging tutorials',
+            'Equipment recommendations by budget',
+            'Genre-specific recording tips',
+            'Common mistake avoidance',
+          ],
+          link: '/studio/recording-guide',
+        },
+        {
+          name: 'Session Notes',
+          description:
+            'Keep track of everything during your recording session. Capture take notes, settings, and ideas.',
+          details: [
+            'Per-take notes & ratings',
+            'Equipment settings log',
+            'Timestamped comments',
+            'Photo attachment for setup',
+            'Export session documentation',
+            'Shareable with collaborators',
+          ],
+        },
+        {
+          name: 'Export & Integration',
+          description:
+            'Export your recordings in any format. Direct integration with your DAW and cloud storage.',
+          details: [
+            'WAV, MP3, FLAC, OGG export',
+            'Automatic cloud backup',
+            'Dropbox/Google Drive sync',
+            'Direct DAW project export',
+            'Metadata embedding',
+            'Batch export options',
+          ],
+        },
+      ],
+    },
+    // ==========================================
+    // REAL-TIME COLLABORATION
+    // ==========================================
     {
       title: 'Real-Time Collaboration',
       subtitle:
@@ -297,19 +497,21 @@ export default function FeaturesPage() {
             'Screen sharing with audio',
             'Recording & transcription',
           ],
-          link: '/collaboration',
+          link: '/meet',
         },
         {
           name: 'Real-Time Document Editing',
           description:
             "See everyone's cursors, edits, and comments in real-time. Google Docs-style collaboration for lyrics, setlists, and notes.",
           details: [
-            'Live cursor tracking',
-            'Instant sync across devices',
+            'Live cursor tracking with names',
+            'Instant sync across all devices',
             'Comment threads on specific lines',
-            'Version comparison',
+            'Version comparison & history',
             'Conflict resolution',
+            'Works offline with auto-sync',
           ],
+          link: '/features/collaboration',
         },
         {
           name: 'Screen Sharing',
@@ -319,8 +521,9 @@ export default function FeaturesPage() {
             'Full screen or window sharing',
             'Share with system audio',
             'Remote control (with permission)',
-            'Annotation tools',
+            'Annotation tools for feedback',
             'Multi-monitor support',
+            'HD quality sharing',
           ],
         },
         {
@@ -333,6 +536,7 @@ export default function FeaturesPage() {
             'Last activity timestamps',
             'Custom status messages',
             'Do not disturb mode',
+            'Timezone display',
           ],
         },
         {
@@ -345,6 +549,7 @@ export default function FeaturesPage() {
             'Google/Apple/Outlook sync',
             'Recurring meetings',
             'RSVP tracking',
+            'Reminder notifications',
           ],
         },
         {
@@ -353,14 +558,19 @@ export default function FeaturesPage() {
             'Private and group messaging built right in. Share files, voice messages, and stay connected.',
           details: [
             'Private 1:1 conversations',
-            'Group chats',
+            'Group chats for bands/projects',
             'Voice message recording',
             'File sharing (any type)',
             'Read receipts & typing indicators',
+            'Message search & history',
           ],
+          link: '/messages',
         },
       ],
     },
+    // ==========================================
+    // PROJECT MANAGEMENT
+    // ==========================================
     {
       title: 'Project Management',
       subtitle:
@@ -374,22 +584,25 @@ export default function FeaturesPage() {
             'Save unlimited versions with labels. Compare any two versions, restore previous saves, and never lose an idea again.',
           details: [
             'Unlimited version history',
-            'Custom labels ("Demo", "Final Mix")',
+            'Custom labels ("Demo", "Final Mix", "Radio Edit")',
             'Side-by-side comparison',
-            'One-click restore',
+            'One-click restore to any version',
             'Full audit trail',
+            'Branch & merge for parallel ideas',
           ],
+          link: '/features/project-management',
         },
         {
           name: 'Professional Stems Mixer',
           description:
             'Upload individual tracks (vocals, guitar, drums) and mix them with real-time faders, pan, solo, and mute controls.',
           details: [
-            'Multi-track upload (any format)',
+            'Multi-track upload (WAV, MP3, AIFF, FLAC)',
             'Real-time volume faders',
-            'Pan controls (L/R stereo)',
+            'Pan controls (L/R stereo field)',
             'Solo & mute per track',
             'Export stems or master mix',
+            'Waveform visualization',
           ],
         },
         {
@@ -400,20 +613,22 @@ export default function FeaturesPage() {
             'Visual Gantt timeline',
             'Task dependencies',
             'Progress tracking (0-100%)',
-            'Blocker alerts',
+            'Blocker alerts & escalation',
             'Due date reminders',
+            'Team assignment',
           ],
         },
         {
           name: 'Cloud Storage',
           description:
-            'Drag-and-drop file uploads with unlimited storage for Pro users. Organized by project with automatic tagging.',
+            'Drag-and-drop file uploads with generous storage. Organized by project with automatic tagging.',
           details: [
-            'Unlimited storage (Pro)',
+            '5GB free, 50GB Creator, Unlimited Studio',
             'Drag-and-drop uploads',
             'Automatic organization',
             'File previews (audio, images, docs)',
             'Shareable download links',
+            'Version history for files',
           ],
         },
         {
@@ -423,9 +638,10 @@ export default function FeaturesPage() {
           details: [
             'Completion score (0-100%)',
             'Automatic blocker detection',
-            'Smart suggestions',
-            'Velocity trends',
+            'Smart suggestions for next steps',
+            'Velocity trends & predictions',
             'Estimated completion date',
+            'Weekly progress reports',
           ],
         },
         {
@@ -433,15 +649,110 @@ export default function FeaturesPage() {
           description:
             'Find any song, file, or project instantly. Save custom views and filters for quick access.',
           details: [
-            'Full-text search',
+            'Full-text search across everything',
             'Filter by status, date, collaborator',
             'Saved search views',
             'Tag-based organization',
             'Recent & favorites',
+            'Advanced query syntax',
           ],
         },
       ],
     },
+    // ==========================================
+    // SETLIST BUILDER - NEW DETAILED CATEGORY
+    // ==========================================
+    {
+      title: 'Smart Setlist Builder',
+      subtitle:
+        'Build perfect setlists with AI-powered energy flow analysis, timing calculations, and performer teleprompter mode.',
+      icon: ListMusic,
+      color: 'pink',
+      features: [
+        {
+          name: 'Drag & Drop Builder',
+          description:
+            'Create setlists by dragging songs from your library. Reorder on the fly with instant timing updates.',
+          details: [
+            'Drag-and-drop song ordering',
+            'Automatic total duration calculation',
+            'Copy setlists for variations',
+            'Import from previous shows',
+            'Song notes per setlist',
+            'Infinite setlists',
+          ],
+          link: '/setlists',
+        },
+        {
+          name: 'Energy Flow Analysis',
+          description:
+            'AI analyzes your setlist for energy dynamics. Get suggestions to optimize the emotional journey.',
+          details: [
+            'Energy level per song (1-10)',
+            'Flow visualization graph',
+            'Recommendations for peaks & valleys',
+            'Opener & closer suggestions',
+            'Encore planning',
+            'Crowd engagement predictions',
+          ],
+        },
+        {
+          name: 'Performer Mode (Teleprompter)',
+          description:
+            'Full-screen lyrics display for live performance. Auto-scroll, foot pedal control, and customizable display.',
+          details: [
+            'Full-screen lyric display',
+            'Adjustable auto-scroll speed',
+            'Foot pedal / keyboard control',
+            'Dark mode for stage visibility',
+            'Font size customization',
+            'Chord charts overlay option',
+          ],
+        },
+        {
+          name: 'Song Metadata Display',
+          description:
+            "See key, tempo, duration, and notes for every song at a glance. Know exactly what you're playing.",
+          details: [
+            'Key & tempo per song',
+            'Duration tracking',
+            'Custom notes (capo, tuning)',
+            'Lyrics preview',
+            'Last played date',
+            'Audience favorites marking',
+          ],
+        },
+        {
+          name: 'Setlist Templates',
+          description:
+            'Save templates for different show types: club gig, festival, acoustic, etc. Start from templates and customize.',
+          details: [
+            'Save templates by venue type',
+            'Genre-specific starter templates',
+            'Band-specific defaults',
+            'Duration presets (30, 45, 60, 90 min)',
+            'Quick duplicate & modify',
+            'Community shared templates',
+          ],
+        },
+        {
+          name: 'Share & Export',
+          description:
+            'Share setlists with your band or export for stage management. Print-friendly PDFs with all details.',
+          details: [
+            'Share link with band members',
+            'Export to PDF for stage',
+            'Send to venue/sound engineer',
+            'iCal integration',
+            'Spotify playlist generation',
+            'Archive past setlists',
+          ],
+        },
+      ],
+    },
+    // ==========================================
+    // COPYRIGHT & ROYALTIES
+    // ==========================================
     {
       title: 'Copyright & Royalties',
       subtitle:
@@ -456,9 +767,10 @@ export default function FeaturesPage() {
           details: [
             'U.S. Copyright Office guidance',
             'Pre-filled registration forms',
-            'Document preparation',
-            'Filing checklist',
+            'Document preparation checklist',
+            'Filing cost breakdown',
             'Status tracking',
+            'Deadline reminders',
           ],
         },
         {
@@ -467,10 +779,11 @@ export default function FeaturesPage() {
             'Create professional split sheets instantly. Track writer shares, publisher splits, and get digital signatures.',
           details: [
             'Automatic percentage calculation',
-            'PRO affiliation tracking',
-            'IPI number management',
+            'PRO affiliation tracking (ASCAP, BMI, SESAC)',
+            'IPI/CAE number management',
             'Digital signature collection',
             'PDF export',
+            'Amendment tracking',
           ],
         },
         {
@@ -480,9 +793,10 @@ export default function FeaturesPage() {
           details: [
             'ISWC management (compositions)',
             'ISRC tracking (recordings)',
-            'Automatic code assignment',
+            'Automatic code formatting',
             'Export for distributors',
             'Audit history',
+            'Duplicate detection',
           ],
         },
         {
@@ -495,6 +809,7 @@ export default function FeaturesPage() {
             'Sync licensing projections',
             'Split impact analysis',
             'Historical comparisons',
+            'What-if scenarios',
           ],
         },
         {
@@ -507,6 +822,7 @@ export default function FeaturesPage() {
             'Outstanding balance alerts',
             'Export for accounting',
             'Multi-currency support',
+            'Tax reporting preparation',
           ],
         },
         {
@@ -514,15 +830,19 @@ export default function FeaturesPage() {
           description:
             'Document and resolve split disputes with a clear workflow. Keep records for legal protection.',
           details: [
-            'Dispute documentation',
-            'Communication timeline',
+            'Dispute documentation templates',
+            'Communication timeline tracking',
             'Resolution workflow',
             'Legal-ready exports',
             'Mediation resources',
+            'Lawyer referral network',
           ],
         },
       ],
     },
+    // ==========================================
+    // TOUR MANAGEMENT
+    // ==========================================
     {
       title: 'Tour Management',
       subtitle:
@@ -539,8 +859,10 @@ export default function FeaturesPage() {
             'Mileage & time calculations',
             'Gas cost estimates',
             'Rest stop suggestions',
-            'Route optimization',
+            'Route optimization algorithm',
+            'Day-off planning',
           ],
+          link: '/tours',
         },
         {
           name: 'Venue Database',
@@ -548,22 +870,11 @@ export default function FeaturesPage() {
             'Access thousands of venues with capacity, contacts, and booking info. Save your own venue notes and contacts.',
           details: [
             '10,000+ venues nationwide',
-            'Capacity & stage specs',
+            'Capacity & stage specifications',
             'Booking contact info',
             'Personal notes & history',
-            'Rating & reviews',
-          ],
-        },
-        {
-          name: 'Smart Setlist Builder',
-          description:
-            'Create setlists with drag-and-drop, energy flow analysis, and automatic timing. Share with your band.',
-          details: [
-            'Drag-and-drop ordering',
-            'Song duration tracking',
-            'Energy flow visualization',
-            'Key & tempo display',
-            'Share with band members',
+            'Rating & reviews from artists',
+            'Payment history tracking',
           ],
         },
         {
@@ -574,9 +885,11 @@ export default function FeaturesPage() {
             'Visual calendar view',
             'Load-in & soundcheck times',
             'Day sheet generation',
-            'Public show widget',
-            'iCal export',
+            'Public show widget for your site',
+            'iCal/Google Calendar export',
+            'Timezone handling',
           ],
+          link: '/shows/calendar',
         },
         {
           name: 'Budget & Expenses',
@@ -587,6 +900,7 @@ export default function FeaturesPage() {
             'Receipt photo upload',
             'Per diem tracking',
             'Income vs expenses',
+            'Profit/loss per show',
             'Tax-ready exports',
           ],
         },
@@ -597,13 +911,30 @@ export default function FeaturesPage() {
           details: [
             'Role assignments',
             'Contact directory',
-            'Emergency info',
-            'Shared documents',
+            'Emergency contact info',
+            'Shared documents & itineraries',
             'Availability tracking',
+            'Communication channels',
+          ],
+        },
+        {
+          name: 'Tour Analytics',
+          description:
+            'Track performance across your tour. See which markets perform best and optimize future routing.',
+          details: [
+            'Attendance tracking',
+            'Revenue per market',
+            'Merch sales by location',
+            'Social media engagement',
+            'Year-over-year comparison',
+            'Market potential scoring',
           ],
         },
       ],
     },
+    // ==========================================
+    // WEBSITE BUILDER
+    // ==========================================
     {
       title: 'Website Builder',
       subtitle:
@@ -620,7 +951,8 @@ export default function FeaturesPage() {
             'Genre-specific templates',
             'Auto-import from Spotify/Bandcamp',
             'Mobile-responsive design',
-            'SEO optimization',
+            'SEO optimization built-in',
+            'Analytics integration',
           ],
           link: '/features/website-builder',
         },
@@ -634,6 +966,7 @@ export default function FeaturesPage() {
             'Custom colors & fonts',
             'Image optimization',
             'Undo/redo history',
+            'Component library',
           ],
         },
         {
@@ -644,8 +977,9 @@ export default function FeaturesPage() {
             'Custom domain connection',
             'Free .rnrb.io subdomain',
             'SSL certificates (HTTPS)',
-            'DNS management',
-            'Email forwarding',
+            'DNS management guidance',
+            'Email forwarding setup',
+            'Domain purchase links',
           ],
         },
         {
@@ -658,7 +992,9 @@ export default function FeaturesPage() {
             'Embedded music player',
             'Press quote highlights',
             'Download links for assets',
+            'View tracking analytics',
           ],
+          link: '/tools?tool=epk',
         },
         {
           name: 'Tour Date Widget',
@@ -670,6 +1006,7 @@ export default function FeaturesPage() {
             'RSVP tracking',
             'Map view option',
             'Past shows archive',
+            'Embedded widget code',
           ],
         },
         {
@@ -681,11 +1018,15 @@ export default function FeaturesPage() {
             'Pop-up forms',
             'Mailchimp/ConvertKit sync',
             'CSV export',
-            'GDPR compliance',
+            'GDPR compliance tools',
+            'Double opt-in support',
           ],
         },
       ],
     },
+    // ==========================================
+    // LIVE STREAMING
+    // ==========================================
     {
       title: 'Live Streaming',
       subtitle:
@@ -703,7 +1044,9 @@ export default function FeaturesPage() {
             'Webcam & screen sharing',
             'Multi-source mixing',
             'Instant replay clips',
+            'Scheduled streams',
           ],
+          link: '/live',
         },
         {
           name: 'Fan Interaction',
@@ -714,6 +1057,7 @@ export default function FeaturesPage() {
             'Polls & voting',
             'Shoutout alerts',
             'Moderation tools',
+            'Slow mode for busy chats',
           ],
         },
         {
@@ -726,6 +1070,7 @@ export default function FeaturesPage() {
             'Tip goal tracking',
             'Payment via card/Apple Pay',
             '85% goes to artist',
+            'Tip leaderboards',
           ],
         },
         {
@@ -738,7 +1083,9 @@ export default function FeaturesPage() {
             'Engagement metrics',
             'Revenue breakdown',
             'Audience demographics',
+            'Retention graphs',
           ],
+          link: '/live/analytics',
         },
         {
           name: 'Multi-Platform Simulcast',
@@ -749,7 +1096,8 @@ export default function FeaturesPage() {
             'Twitch streaming',
             'Facebook Live',
             'Custom RTMP destinations',
-            'Per-platform chat',
+            'Per-platform chat aggregation',
+            'Unified analytics',
           ],
         },
         {
@@ -762,10 +1110,107 @@ export default function FeaturesPage() {
             'Download option',
             'Privacy controls',
             'Embed code generation',
+            'Playlist organization',
           ],
         },
       ],
     },
+    // ==========================================
+    // SOCIAL FEED & ACTIVITY - NEW DETAILED CATEGORY
+    // ==========================================
+    {
+      title: 'Social Feed & Activity',
+      subtitle:
+        'Stay connected with your musical community. Celebrate wins, share updates, and build your network of collaborators.',
+      icon: Activity,
+      color: 'cyan',
+      features: [
+        {
+          name: 'Activity Feed',
+          description:
+            "See what's happening in your musical world. Song completions, milestones, collaboration announcements, and more.",
+          details: [
+            'Chronological activity stream',
+            'Filter by activity type',
+            'Personalized recommendations',
+            "Celebrate others' achievements",
+            'Comment & react',
+            'Share to your profile',
+          ],
+          link: '/feed',
+        },
+        {
+          name: 'Achievement Celebrations',
+          description:
+            'Get recognized when you hit milestones. Finished a song? Completed a project? The community celebrates with you.',
+          details: [
+            'Automatic milestone detection',
+            'Community celebration reactions',
+            'Shareable achievement cards',
+            'Progress streaks',
+            'Badges & recognition',
+            'Year-in-review summaries',
+          ],
+        },
+        {
+          name: 'Following & Followers',
+          description:
+            'Build your network by following musicians you admire. Stay updated on their activity.',
+          details: [
+            'Follow any musician',
+            'Follower notifications',
+            'Activity from people you follow',
+            'Mutual connection indicators',
+            'Recommended follows',
+            'Private profiles option',
+          ],
+        },
+        {
+          name: 'Post Updates',
+          description:
+            'Share text, images, audio, and video updates with your followers. Build your audience.',
+          details: [
+            'Rich media posts',
+            'Audio snippet sharing',
+            'Image galleries',
+            'Video uploads',
+            'Hashtag discovery',
+            'Cross-post to socials',
+          ],
+        },
+        {
+          name: 'Hashtag Discovery',
+          description:
+            'Explore content by hashtag. Find musicians, songs, and collaborations in your niche.',
+          details: [
+            'Trending hashtags',
+            'Genre-specific tags',
+            'Location-based discovery',
+            'Save favorite tags',
+            'Tag-based notifications',
+            'Create custom tags',
+          ],
+          link: '/feed/explore',
+        },
+        {
+          name: 'Notifications Hub',
+          description:
+            'Never miss important updates. Customizable notifications for activity, mentions, and milestones.',
+          details: [
+            'Real-time notifications',
+            'Email digest options',
+            'Push notifications',
+            'Notification preferences',
+            'Mention alerts',
+            'Collaboration invites',
+          ],
+          link: '/notifications',
+        },
+      ],
+    },
+    // ==========================================
+    // COMMUNITY & DISCOVERY
+    // ==========================================
     {
       title: 'Community & Discovery',
       subtitle:
@@ -779,26 +1224,16 @@ export default function FeaturesPage() {
             'Find collaborators by instrument, genre, location, and availability. Smart matching based on your profile.',
           details: [
             'Instrument & skill filters',
-            'Genre matching',
+            'Genre matching algorithm',
             'Location-based search',
             'Availability indicators',
             'Portfolio preview',
+            'Compatibility scoring',
           ],
+          link: '/discover',
         },
         {
-          name: 'Social Feed',
-          description:
-            'Share updates, new releases, and behind-the-scenes content. Follow artists you love.',
-          details: [
-            'Post text, images, audio, video',
-            'Like, comment, share',
-            'Following & followers',
-            'Hashtag discovery',
-            'Curated recommendations',
-          ],
-        },
-        {
-          name: 'Collaboration Requests',
+          name: 'Collaboration Board',
           description:
             "Post what you're looking for and receive pitches. Or browse requests and offer your skills.",
           details: [
@@ -807,7 +1242,9 @@ export default function FeaturesPage() {
             'Filter by genre/instrument',
             'Built-in messaging',
             'Reference track sharing',
+            'Deadline tracking',
           ],
+          link: '/collaboration-needs',
         },
         {
           name: 'Music Library',
@@ -819,7 +1256,9 @@ export default function FeaturesPage() {
             'Create playlists',
             'Share discoveries',
             'Similar artist suggestions',
+            'New release notifications',
           ],
+          link: '/library',
         },
         {
           name: 'Opportunities Board',
@@ -828,9 +1267,24 @@ export default function FeaturesPage() {
           details: [
             'Gig listings',
             'Session musician calls',
-            'Band member wanted',
+            'Band member wanted posts',
             'Sync licensing opportunities',
             'Application tracking',
+            'Deadline reminders',
+          ],
+          link: '/opportunities',
+        },
+        {
+          name: 'User Profiles',
+          description:
+            'Showcase your work, skills, and availability. Your public profile is your musical resume.',
+          details: [
+            'Customizable profile page',
+            'Portfolio showcase',
+            'Skill & instrument listing',
+            'Experience timeline',
+            'Social links',
+            'Contact preferences',
           ],
         },
         {
@@ -843,40 +1297,62 @@ export default function FeaturesPage() {
             'RSVP management',
             'Calendar integration',
             'Post-event networking',
+            'Event creation tools',
           ],
         },
       ],
     },
+    // ==========================================
+    // MUSICIAN'S TOOLBOX - ENHANCED
+    // ==========================================
     {
       title: "Musician's Toolbox",
       subtitle:
-        'Essential tools for every musician. Tuner, metronome, chord charts, scales, and more — all in one place.',
+        'Essential tools for every musician. 13 professional tools including tuner, metronome, stem separator, practice logger, and more — all in one place.',
       icon: Wrench,
       color: 'gold',
       features: [
         {
-          name: 'Precision Tuner',
+          name: 'Chromatic Tuner',
           description:
-            'Chromatic tuner with cent accuracy. Works with any instrument via your device microphone.',
+            'Precision chromatic tuner with cent accuracy. Works with any instrument via your device microphone.',
           details: [
-            'Chromatic tuning',
-            'Cent-accurate display',
+            'Cent-accurate pitch detection',
             'Standard & alternate tunings',
-            'Frequency readout',
+            'Frequency readout (Hz)',
+            'Visual tuning meter',
             'Works with any instrument',
+            'Reference pitch adjustment (432/440Hz)',
           ],
+          link: '/tools?tool=tuner',
         },
         {
-          name: 'Advanced Metronome',
+          name: 'Click Track Generator',
           description:
-            'Customizable click with time signatures, subdivisions, and accent patterns.',
+            'Professional metronome with time signatures, subdivisions, accent patterns, and exportable click tracks.',
           details: [
             'BPM range 20-300',
             'Any time signature',
             'Subdivisions (8ths, 16ths, triplets)',
             'Accent patterns',
             'Tap tempo',
+            'Export click track audio',
           ],
+          link: '/tools?tool=click-track',
+        },
+        {
+          name: 'Practice Logger',
+          description:
+            'Track your practice time, set goals, and build streaks. See your progress over time.',
+          details: [
+            'Session timing',
+            'Goal setting (daily/weekly)',
+            'Streak tracking',
+            'Practice categories',
+            'Progress charts',
+            'Achievement badges',
+          ],
+          link: '/tools?tool=practice-logger',
         },
         {
           name: 'Circle of Fifths',
@@ -888,100 +1364,280 @@ export default function FeaturesPage() {
             'Chord family display',
             'Enharmonic spellings',
             'Mode exploration',
+            'Interactive learning',
           ],
+          link: '/tools?tool=circle-of-fifths',
         },
         {
-          name: 'Chord & Scale Reference',
+          name: 'AI Stem Separator',
           description:
-            'Comprehensive library of chords and scales with fingerings for guitar, piano, and more.',
+            'Upload any song and separate it into individual stems using AI. Extract vocals, drums, bass, and more.',
           details: [
-            'All chord types',
-            'Scale library',
-            'Guitar fingerings',
-            'Piano diagrams',
-            'Audio playback',
+            'Vocal isolation',
+            'Drum extraction',
+            'Bass separation',
+            'Other instruments',
+            'High-quality AI separation',
+            'Individual stem download',
           ],
+          link: '/tools?tool=stem-separator',
         },
         {
-          name: 'BPM Analyzer',
+          name: 'Loop/Slow Player',
           description:
-            'Tap or upload audio to detect tempo. Perfect for matching songs or setting metronome.',
+            'Slow down audio without changing pitch to learn parts at any tempo. Loop sections for practice.',
           details: [
-            'Tap-to-detect BPM',
-            'Audio file analysis',
-            'Microphone tempo detection',
-            'Tempo history',
-            'Copy to metronome',
+            'Speed adjustment (25%-200%)',
+            'Pitch-preserved playback',
+            'Loop point markers',
+            'A-B repeat sections',
+            'Waveform visualization',
+            'Keyboard shortcuts',
           ],
+          link: '/tools?tool=loop-player',
         },
         {
-          name: 'Key Detector',
+          name: 'Stage Plot Generator',
           description:
-            'Upload a song or play live and detect the key. Helpful for jamming along or transcription.',
+            'Create professional stage layouts for venues. Drag-and-drop equipment placement.',
           details: [
-            'Audio file analysis',
-            'Live input detection',
-            'Major/minor identification',
-            'Confidence percentage',
-            'Modal suggestions',
+            'Drag-and-drop interface',
+            'Equipment library (amps, drums, etc.)',
+            'Input list generation',
+            'PDF export',
+            'Save templates',
+            'Share with venues',
           ],
+          link: '/tools?tool=stageplot',
+        },
+        {
+          name: 'EPK Generator',
+          description: 'One-click electronic press kit creation. Professional EPK in seconds.',
+          details: [
+            'Auto-pull from profile',
+            'Photo gallery',
+            'Embedded audio player',
+            'Bio formatting',
+            'Social stats',
+            'Shareable link',
+          ],
+          link: '/tools?tool=epk',
+        },
+        {
+          name: 'Gear Inventory',
+          description: 'Track all your equipment, maintenance schedules, and insurance values.',
+          details: [
+            'Equipment catalog',
+            'Serial number tracking',
+            'Maintenance reminders',
+            'Insurance valuation',
+            'Photo documentation',
+            'Export for insurance claims',
+          ],
+          link: '/tools?tool=gear-inventory',
+        },
+        {
+          name: 'Contract Templates',
+          description:
+            'Legal templates for venues, sessions, and sync licensing. Customizable and download-ready.',
+          details: [
+            'Performance contracts',
+            'Session musician agreements',
+            'Sync licensing templates',
+            'Collaboration agreements',
+            'NDA templates',
+            'PDF generation',
+          ],
+          link: '/tools?tool=contracts',
+        },
+        {
+          name: 'Backing Track Creator',
+          description:
+            'Generate backing tracks by muting stems. Perfect for practice and live performance.',
+          details: [
+            'Stem-based muting',
+            'Click track overlay',
+            'Count-in options',
+            'Section markers',
+            'Export options',
+            'BPM adjustment',
+          ],
+          link: '/tools?tool=backing-tracks',
+        },
+        {
+          name: 'Session Notes',
+          description: 'Digital notepad for recording sessions. Track takes, settings, and ideas.',
+          details: [
+            'Per-session notes',
+            'Take ratings',
+            'Equipment settings log',
+            'Timestamp markers',
+            'Photo attachments',
+            'Shareable with team',
+          ],
+          link: '/tools?tool=session-notes',
         },
       ],
     },
+    // ==========================================
+    // ARTIST MERCH STORE - NEW CATEGORY
+    // ==========================================
     {
-      title: 'Marketplace',
+      title: 'Artist Merch Store',
       subtitle:
-        'Buy and sell beats, samples, gear, and services. Connect with trusted sellers in the music community.',
+        'Design and sell your own merchandise with zero upfront costs. Print-on-demand integration means no inventory, no risk.',
       icon: ShoppingBag,
       color: 'green',
       features: [
         {
-          name: 'Beat Marketplace',
+          name: 'Print-on-Demand Integration',
           description:
-            'Buy and sell beats with instant delivery. License types from leasing to exclusive.',
+            'Connect with Printful for print-on-demand fulfillment. No inventory, no upfront costs, no risk.',
           details: [
-            'Preview before purchase',
-            'Multiple license tiers',
-            'Instant download',
-            'Stems included options',
-            'Seller ratings & reviews',
+            'Printful API integration',
+            'Automatic order fulfillment',
+            'Global shipping',
+            'Quality printing',
+            'No minimum orders',
+            'Automatic tracking updates',
+          ],
+          link: '/my-merch',
+        },
+        {
+          name: 'Product Designer',
+          description:
+            'Design your merch with our visual editor. Upload artwork, add text, position elements.',
+          details: [
+            'Visual design editor',
+            'Upload custom artwork',
+            'Text & font options',
+            'Multiple product views',
+            'Design templates',
+            'Mockup preview',
+          ],
+          link: '/my-merch/create',
+        },
+        {
+          name: 'Product Catalog',
+          description:
+            'Access 300+ products from Printful. T-shirts, hoodies, hats, posters, phone cases, and more.',
+          details: [
+            'T-shirts & apparel',
+            'Hoodies & outerwear',
+            'Hats & accessories',
+            'Posters & prints',
+            'Phone cases',
+            'Mugs & drinkware',
+          ],
+          link: '/my-merch/printful-catalog',
+        },
+        {
+          name: 'Pricing Control',
+          description:
+            'Set your own retail prices and profit margins. See cost breakdown and earnings per sale.',
+          details: [
+            'Custom retail pricing',
+            'Profit margin calculator',
+            'Cost transparency',
+            'Bulk pricing options',
+            'Currency support',
+            'Suggested pricing',
           ],
         },
         {
-          name: 'Sample Packs',
+          name: 'Storefront',
           description:
-            'High-quality sample packs from producers. Royalty-free for your productions.',
+            'Your merch automatically appears in the RNRB Store. Share direct links to your products.',
           details: [
-            'Royalty-free licensing',
-            'Genre-specific packs',
-            'One-shots & loops',
-            'Preview samples',
-            'Commercial use rights',
+            'Automatic store listing',
+            'Product collections',
+            'Direct product links',
+            'Embed code for your site',
+            'Social sharing',
+            'SEO optimization',
           ],
+          link: '/merch',
         },
         {
-          name: 'Services',
+          name: 'Earnings Dashboard',
           description:
-            'Hire mixing engineers, session musicians, vocalists, and more. Vetted professionals.',
+            'Track sales, revenue, and payouts. See your best-selling products and customer locations.',
           details: [
-            'Mixing & mastering',
-            'Session recording',
-            'Vocal production',
-            'Arrangement services',
-            'Video/photo services',
+            'Sales tracking',
+            'Revenue reports',
+            'Payout history',
+            'Best-seller analytics',
+            'Customer geography',
+            'Export reports',
           ],
+          link: '/my-merch/earnings',
         },
+      ],
+    },
+    // ==========================================
+    // MARKETPLACE
+    // ==========================================
+    {
+      title: 'Gear Marketplace',
+      subtitle:
+        'Buy and sell instruments, studio gear, and services. Connect with trusted sellers in the music community.',
+      icon: Package,
+      color: 'amber',
+      features: [
         {
-          name: 'Gear Exchange',
+          name: 'Buy & Sell Gear',
           description:
-            'Buy and sell used instruments, studio gear, and accessories. Local and shipped options.',
+            'List your instruments and gear for sale. Browse listings from other musicians.',
           details: [
-            'Instruments & gear listings',
+            'Easy listing creation',
+            'Multiple photos per listing',
             'Condition ratings',
             'Price negotiation',
-            'Shipping or local pickup',
-            'Seller verification',
+            'Local or shipped options',
+            'Save favorite listings',
           ],
+          link: '/marketplace',
+        },
+        {
+          name: 'Category Filters',
+          description:
+            'Browse by instrument type, brand, condition, and price range. Find exactly what you need.',
+          details: [
+            'Guitars, drums, keys, etc.',
+            'Studio equipment',
+            'Recording gear',
+            'Accessories',
+            'Pro audio',
+            'Vintage & rare',
+          ],
+        },
+        {
+          name: 'Seller Profiles',
+          description:
+            'See seller history, ratings, and reviews. Buy with confidence from verified musicians.',
+          details: [
+            'Seller verification',
+            'Transaction history',
+            'Rating & reviews',
+            'Response time indicator',
+            'Location display',
+            'Active listings count',
+          ],
+          link: '/marketplace/seller',
+        },
+        {
+          name: 'Messaging',
+          description:
+            'Contact sellers directly through built-in messaging. Negotiate and arrange purchases.',
+          details: [
+            'Direct seller messaging',
+            'Offer & counter-offer',
+            'Photo sharing in chat',
+            'Read receipts',
+            'Message history',
+            'Block & report options',
+          ],
+          link: '/marketplace/messages',
         },
         {
           name: 'Wanted Posts',
@@ -990,25 +1646,31 @@ export default function FeaturesPage() {
           details: [
             'Describe your needs',
             'Receive seller pitches',
-            'Compare quotes',
-            'Direct messaging',
-            'Hire with confidence',
+            'Compare offers',
+            'Set budget range',
+            'Expiration dates',
+            'Multiple responses',
           ],
+          link: '/marketplace/wanted/create',
         },
         {
-          name: 'Secure Payments',
-          description:
-            "All transactions protected with escrow. Funds released when you're satisfied.",
+          name: 'My Listings',
+          description: 'Manage your active listings. Edit, renew, or remove items easily.',
           details: [
-            'Escrow protection',
-            'Multiple payment methods',
-            'Dispute resolution',
-            'Refund policy',
-            'Transaction history',
+            'Active/sold/expired views',
+            'Edit listings anytime',
+            'Bump to top option',
+            'Analytics per listing',
+            'Quick relist',
+            'Bulk management',
           ],
+          link: '/marketplace/my-listings',
         },
       ],
     },
+    // ==========================================
+    // PROFESSIONAL EMAIL
+    // ==========================================
     {
       title: 'Professional Email',
       subtitle:
@@ -1026,6 +1688,7 @@ export default function FeaturesPage() {
             'Included FREE with paid membership',
             'Works with iPhone, Android, desktop',
             'Full webmail access',
+            'Custom alias options',
           ],
           link: '/settings/email',
         },
@@ -1039,6 +1702,7 @@ export default function FeaturesPage() {
             'Fan mail organization',
             'Press & media folder',
             'Collaboration requests folder',
+            'Keyboard shortcuts',
           ],
           link: '/mail',
         },
@@ -1052,6 +1716,7 @@ export default function FeaturesPage() {
             'App-specific passwords',
             'Push notifications',
             'Sync across all devices',
+            'Setup guides included',
           ],
         },
         {
@@ -1064,6 +1729,7 @@ export default function FeaturesPage() {
             'SPF/DKIM/DMARC configured',
             'Encryption in transit',
             'No tracking or ads',
+            'Two-factor authentication',
           ],
         },
         {
@@ -1071,11 +1737,12 @@ export default function FeaturesPage() {
           description:
             'Generous storage quotas with all the features you need. Auto-reply, forwarding, signatures, and more.',
           details: [
-            '1GB storage (Basic), 10GB (Pro)',
+            '1GB storage (Creator), 10GB (Studio)',
             'Custom email signature',
             'Auto-reply for tours',
             'Email forwarding',
             'Contact management',
+            'Attachment preview',
           ],
         },
         {
@@ -1088,10 +1755,198 @@ export default function FeaturesPage() {
             'Priority delivery',
             'Advanced filtering rules',
             'Only $3/month add-on',
+            'Priority support',
           ],
         },
       ],
     },
+    // ==========================================
+    // REVENUE & ANALYTICS - NEW CATEGORY
+    // ==========================================
+    {
+      title: 'Revenue & Analytics',
+      subtitle:
+        'Track every dollar you earn from music. Revenue dashboard, payment tracking, and insights to grow your income.',
+      icon: BarChart3,
+      color: 'green',
+      features: [
+        {
+          name: 'Revenue Dashboard',
+          description:
+            'See all your music income in one place. Gigs, streaming, merch, teaching, sync licensing, and more.',
+          details: [
+            'Unified income view',
+            'Income by source breakdown',
+            'Monthly/yearly trends',
+            'Goal tracking',
+            'Export for taxes',
+            'Multi-currency support',
+          ],
+          link: '/revenue',
+        },
+        {
+          name: 'Income Categories',
+          description:
+            'Track revenue from every source. Gig fees, streaming royalties, merch sales, session work, and more.',
+          details: [
+            'Gig & performance income',
+            'Streaming royalties',
+            'Merch sales',
+            'Session/teaching income',
+            'Sync licensing',
+            'Tips & donations',
+          ],
+        },
+        {
+          name: 'Analytics Insights',
+          description:
+            "Understand your music business with data. See what's working and what needs attention.",
+          details: [
+            'Revenue trends over time',
+            'Best performing income streams',
+            'Seasonal patterns',
+            'Growth rate tracking',
+            'Comparison periods',
+            'Forecasting',
+          ],
+        },
+        {
+          name: 'Project Analytics',
+          description:
+            'See stats for your projects and songs. Track completion rates, collaboration activity, and more.',
+          details: [
+            'Project completion rates',
+            'Songs created over time',
+            'Collaboration frequency',
+            'Version history stats',
+            'Time spent per project',
+            'Productivity trends',
+          ],
+        },
+        {
+          name: 'Usage Tracking',
+          description:
+            'Monitor your platform usage. AI credits, storage, meeting minutes, and more.',
+          details: [
+            'AI credits used/remaining',
+            'Storage consumption',
+            'Meeting minutes used',
+            'Image generation credits',
+            'Usage by feature',
+            'Reset date tracking',
+          ],
+          link: '/credits',
+        },
+        {
+          name: 'Export & Reports',
+          description:
+            'Export your data for accounting and tax preparation. Generate professional reports.',
+          details: [
+            'CSV/Excel export',
+            'Tax-ready reports',
+            'Quarterly summaries',
+            'Annual reports',
+            'Custom date ranges',
+            'Scheduled reports',
+          ],
+        },
+      ],
+    },
+    // ==========================================
+    // AFFILIATE PROGRAM - NEW CATEGORY
+    // ==========================================
+    {
+      title: 'Affiliate Program',
+      subtitle:
+        "Earn money by sharing Rock N' Roll Basement with fellow musicians. Generous commissions and tiered rewards.",
+      icon: Gift,
+      color: 'indigo',
+      features: [
+        {
+          name: 'Referral Dashboard',
+          description:
+            'Track your referrals, earnings, and performance. See your affiliate tier and progress.',
+          details: [
+            'Total earnings display',
+            'Pending payouts',
+            'Click tracking',
+            'Conversion rate',
+            'Referral history',
+            'Performance graphs',
+          ],
+          link: '/affiliate',
+        },
+        {
+          name: 'Tiered Commissions',
+          description:
+            'Earn more as you refer more. Start at 10% and climb to 25% as an Ambassador.',
+          details: [
+            'Starter: 10% commission',
+            'Bronze (10+ referrals): 12%',
+            'Silver (25+ referrals): 15%',
+            'Gold (50+ referrals): 18%',
+            'Platinum (100+ referrals): 22%',
+            'Ambassador (250+ referrals): 25%',
+          ],
+        },
+        {
+          name: 'Unique Referral Link',
+          description:
+            'Get your personalized referral link to share. Track which links convert best.',
+          details: [
+            'Unique tracking code',
+            'Custom vanity links',
+            'UTM parameter support',
+            'Link click analytics',
+            'Multiple links allowed',
+            'QR code generation',
+          ],
+        },
+        {
+          name: 'Marketing Assets',
+          description:
+            'Access banners, graphics, and copy to promote RNRB. Everything you need to share effectively.',
+          details: [
+            'Social media graphics',
+            'Email templates',
+            'Banner ads',
+            'Video assets',
+            'Copy suggestions',
+            'Brand guidelines',
+          ],
+        },
+        {
+          name: 'Streamer Setup',
+          description:
+            'Special tools for streamers. Overlay graphics, chat commands, and integration guides.',
+          details: [
+            'OBS overlay graphics',
+            'Twitch/YouTube integration',
+            'Chat bot commands',
+            'Promo code generation',
+            'Stream alerts',
+            'Affiliate badge display',
+          ],
+          link: '/affiliate/stream-setup',
+        },
+        {
+          name: 'Payout Options',
+          description:
+            'Get paid via PayPal, bank transfer, or platform credit. Monthly payouts with no minimum.',
+          details: [
+            'PayPal payouts',
+            'Bank transfer option',
+            'Platform credit bonus',
+            'Monthly payout cycle',
+            'No minimum threshold',
+            'Payout history',
+          ],
+        },
+      ],
+    },
+    // ==========================================
+    // MASTERCLASSES & LEARNING
+    // ==========================================
     {
       title: 'Masterclasses & Learning',
       subtitle:
@@ -1109,7 +1964,9 @@ export default function FeaturesPage() {
             'Downloadable resources',
             'Progress tracking',
             'Completion certificates',
+            'Lifetime access',
           ],
+          link: '/masterclasses',
         },
         {
           name: 'Live Workshops',
@@ -1121,6 +1978,7 @@ export default function FeaturesPage() {
             'Limited enrollment',
             'Replay access',
             'Homework assignments',
+            'Instructor feedback',
           ],
         },
         {
@@ -1128,11 +1986,13 @@ export default function FeaturesPage() {
           description: 'Share your expertise and earn. Apply to become a verified instructor.',
           details: [
             'Application process',
-            'Revenue share model',
+            'Revenue share model (70/30)',
             'Course creation tools',
             'Student analytics',
             'Instructor community',
+            'Marketing support',
           ],
+          link: '/masterclasses/become-instructor',
         },
         {
           name: 'Practice Challenges',
@@ -1143,6 +2003,7 @@ export default function FeaturesPage() {
             'Peer voting',
             'Achievement badges',
             'Leaderboards',
+            'Prizes for winners',
           ],
         },
         {
@@ -1155,6 +2016,7 @@ export default function FeaturesPage() {
             'Contract templates',
             'Genre guides',
             'Gear recommendations',
+            'Industry contacts',
           ],
         },
         {
@@ -1167,10 +2029,14 @@ export default function FeaturesPage() {
             'Session notes',
             'Progress goals',
             'Flexible scheduling',
+            'Messaging between sessions',
           ],
         },
       ],
     },
+    // ==========================================
+    // LABS & EXPERIMENTS
+    // ==========================================
     {
       title: 'Labs & Experiments',
       subtitle:
@@ -1188,7 +2054,9 @@ export default function FeaturesPage() {
             'Shape product direction',
             'Beta tester badge',
             'Community recognition',
+            'Exclusive previews',
           ],
+          link: '/labs',
         },
         {
           name: 'Feature Voting',
@@ -1199,6 +2067,7 @@ export default function FeaturesPage() {
             'See implementation status',
             'Comment & discuss',
             'Track your requests',
+            'Priority consideration',
           ],
         },
         {
@@ -1210,7 +2079,9 @@ export default function FeaturesPage() {
             'Usability testing',
             'Focus groups',
             'Compensation available',
+            'Flexible scheduling',
           ],
+          link: '/labs/research',
         },
         {
           name: 'Open Source Tools',
@@ -1222,7 +2093,9 @@ export default function FeaturesPage() {
             'API documentation',
             'Developer community',
             'Hackathon events',
+            'Recognition program',
           ],
+          link: '/labs/contribute',
         },
         {
           name: 'AI Training',
@@ -1234,7 +2107,9 @@ export default function FeaturesPage() {
             'Anonymized data contribution',
             'Opt-in only',
             'Transparency reports',
+            'Contributor recognition',
           ],
+          link: '/labs/experiment',
         },
         {
           name: 'Volunteer Program',
@@ -1246,7 +2121,9 @@ export default function FeaturesPage() {
             'Forum support',
             'Volunteer badge',
             'Special recognition',
+            'Leadership opportunities',
           ],
+          link: '/labs/volunteer',
         },
       ],
     },
@@ -1302,7 +2179,7 @@ export default function FeaturesPage() {
             >
               <Sparkles className="h-4 w-4" style={{ color: 'var(--accent)' }} />
               <span className="text-sm font-medium" style={{ color: 'var(--accent)' }}>
-                75+ Features in One Platform
+                100+ Features in One Platform
               </span>
             </div>
 
@@ -1320,17 +2197,17 @@ export default function FeaturesPage() {
               style={{ color: 'var(--text-secondary)' }}
             >
               From the first spark of an idea to your sold-out world tour, Rock N' Roll Basement has
-              you covered. Songwriting, collaboration, copyright, touring, streaming, and so much
-              more — all in one place.
+              you covered. AI-powered songwriting, real-time collaboration, copyright protection,
+              touring tools, live streaming, merch creation, and so much more — all in one place.
             </p>
 
             {/* Stats */}
             <div className="mb-10 flex flex-wrap justify-center gap-8">
               {[
-                { value: '75+', label: 'Features' },
-                { value: '0', label: 'Lock-in' },
+                { value: '100+', label: 'Features' },
+                { value: '18', label: 'Categories' },
                 { value: '100%', label: 'Your Rights' },
-                { value: '1', label: 'Platform' },
+                { value: '0', label: 'Lock-in' },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}

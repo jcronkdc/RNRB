@@ -10,10 +10,19 @@ const PRODUCT_CONFIG: Record<
   CreditProductKey,
   { label: string; shortLabel: string; icon: string; price: string }
 > = {
+  // AI
   ai_100: { label: '+100 AI Credits', shortLabel: '+100', icon: '⚡', price: '$6' },
-  video_600: { label: '+10 Hours Video', shortLabel: '+10hr', icon: '🎬', price: '$10' },
+
+  // Video Packs (tiered)
+  video_120: { label: 'Starter (2hr)', shortLabel: '2hr', icon: '🎬', price: '$5' },
+  video_600: { label: 'Band Practice (10hr)', shortLabel: '10hr', icon: '🎬', price: '$20' },
+  video_1800: { label: 'Studio Sessions (30hr)', shortLabel: '30hr', icon: '🎬', price: '$50' },
+
+  // Images
   image_25: { label: '+25 Images', shortLabel: '+25', icon: '🎨', price: '$4' },
   image_100: { label: '+100 Images', shortLabel: '+100', icon: '🎨', price: '$12' },
+
+  // Storage
   storage_25: { label: '+25 GB Storage', shortLabel: '+25GB', icon: '💾', price: '$6' },
   storage_100: { label: '+100 GB Storage', shortLabel: '+100GB', icon: '💾', price: '$15' },
   storage_250: { label: '+250 GB Storage', shortLabel: '+250GB', icon: '💎', price: '$30' },

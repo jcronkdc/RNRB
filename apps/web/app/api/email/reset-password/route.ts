@@ -162,7 +162,7 @@ export async function POST(request: Request) {
 
       const normalizedEmail = email.toLowerCase();
 
-      // Find the email account AND the user's platform email
+      // Find the email account with recovery email
       const emailAccount = await prisma.emailAccount.findUnique({
         where: { emailAddress: normalizedEmail },
         include: { user: true },
@@ -171,8 +171,7 @@ export async function POST(request: Request) {
       // Always return success to prevent email enumeration
       const successResponse = {
         success: true,
-        message:
-          'If this email exists, a reset link has been sent to your registered platform email.',
+        message: 'If this email exists, a reset link has been sent to your recovery email.',
       };
 
       if (!emailAccount) {
@@ -180,14 +179,18 @@ export async function POST(request: Request) {
         return NextResponse.json(successResponse);
       }
 
-      // Get the user's platform email (the email they use to log into rnrb.pro)
-      // This is where we send the reset link - NOT the @rnrb.me email they're locked out of
-      const platformEmail = emailAccount.user.email;
+      // Use recovery email if set, otherwise fall back to platform email (for legacy accounts)
+      const targetEmail = emailAccount.recoveryEmail || emailAccount.user.email;
 
-      if (!platformEmail) {
-        console.error('[EMAIL-RESET] No platform email found for user:', emailAccount.userId);
+      if (!targetEmail) {
+        console.error('[EMAIL-RESET] No recovery or platform email found for:', normalizedEmail);
         return NextResponse.json(successResponse);
       }
+
+      console.log(
+        '[EMAIL-RESET] Will send to:',
+        emailAccount.recoveryEmail ? 'recovery email' : 'platform email (fallback)'
+      );
 
       // Generate a secure reset token
       const resetToken = crypto.randomBytes(32).toString('hex');
@@ -219,20 +222,15 @@ export async function POST(request: Request) {
         },
       });
 
-      // Send the reset email to their PLATFORM email (not the @rnrb.me email)
+      // Send the reset email to their RECOVERY email (not the @rnrb.me email)
       // This way they can reset even if locked out of their @rnrb.me inbox
-      const emailSent = await sendPasswordResetEmail(platformEmail, normalizedEmail, resetToken);
+      const emailSent = await sendPasswordResetEmail(targetEmail, normalizedEmail, resetToken);
 
       if (!emailSent) {
-        console.error('[EMAIL-RESET] Failed to send email to:', platformEmail);
+        console.error('[EMAIL-RESET] Failed to send email to:', targetEmail);
         // Still return success to prevent enumeration, but log the error
       } else {
-        console.log(
-          '[EMAIL-RESET] Reset email sent to platform email:',
-          platformEmail,
-          'for:',
-          normalizedEmail
-        );
+        console.log('[EMAIL-RESET] Reset email sent to:', targetEmail, 'for:', normalizedEmail);
       }
 
       return NextResponse.json(successResponse);

@@ -27,10 +27,11 @@ async function getCurrentUser() {
 }
 
 // Usage limits per tier (monthly) - MUST MATCH subscription-access.ts
+// Video is now primarily an add-on purchase, with small baseline allocations for paid tiers
 export const TIER_LIMITS = {
   free: {
     aiRequests: 10, // 10 AI requests for free tier (teaser)
-    videoMinutes: 0, // No video for free tier
+    videoMinutes: 0, // No video for free tier - must purchase packs
     videoParticipantMinutes: 0, // No video
     assistantConversations: 10, // 10 GODLIKE AI conversations (teaser to get hooked)
     imageCredits: 0, // No album art AI for free tier
@@ -41,20 +42,19 @@ export const TIER_LIMITS = {
   },
   creator: {
     aiRequests: 100, // 100 AI assists/month (~$0.15 cost)
-    videoMinutes: 0, // No video for Creator tier
-    videoParticipantMinutes: 0, // No video
+    videoMinutes: 60, // 1 hour included - enough for a taste, buy packs for more
+    videoParticipantMinutes: 180, // ~1hr with 3 people
     assistantConversations: 100, // 100 GODLIKE AI conversations (~$4 cost, $15 revenue = $11 profit)
     imageCredits: 10, // 10 album art generations/month (~$0.03 cost)
     collaborators: 5, // 5 collaborators per project
     projects: 10, // 10 projects max
     storageGB: 10, // 10 GB storage
-    maxVideoParticipants: 0, // No video
+    maxVideoParticipants: 4, // Small calls only
   },
   studio: {
     aiRequests: 500, // 500 AI assists/month (~$0.75 cost)
-    videoMinutes: 1200, // 20 hours/month = 1200 min
-    videoParticipantMinutes: 3600, // ACTUAL LIMIT: 3600 participant-minutes (~$14.40 cost)
-    // Allows: 20hr with 3 people, or 10hr with 6 people
+    videoMinutes: 300, // 5 hours included baseline - buy packs for more
+    videoParticipantMinutes: 900, // ~5hr with 3 people, buy packs for serious usage
     assistantConversations: -1, // UNLIMITED GODLIKE AI (peace of mind, estimated ~$6-12 cost)
     imageCredits: 50, // 50 album art generations/month (~$0.15 cost)
     collaborators: -1, // Unlimited collaborators
@@ -250,6 +250,22 @@ export async function trackUsage(
   }
 }
 
+// Feature flags per tier - must match SUBSCRIPTION_TIERS in subscription-access.ts
+const TIER_FEATURES = {
+  free: {
+    videoCalls: false,
+    aiAlbumArt: false,
+  },
+  creator: {
+    videoCalls: true,
+    aiAlbumArt: true,
+  },
+  studio: {
+    videoCalls: true,
+    aiAlbumArt: true,
+  },
+} as const;
+
 /**
  * Get usage summary for dashboard display
  */
@@ -264,6 +280,7 @@ export async function getUsageSummary(userId: string) {
   const user = await db.user.findUnique({
     where: { id: userId },
     select: {
+      isOwner: true,
       subscriptionTier: true,
       subscriptionStatus: true,
       storageUsedGB: true,
@@ -281,8 +298,16 @@ export async function getUsageSummary(userId: string) {
   const imageBonus = user?.imageCreditsBonus || 0;
   const storageLimit = TIER_LIMITS[tier].storageGB + storageBonus;
 
+  // Feature access - owners always have full access
+  const features = user?.isOwner ? { videoCalls: true, aiAlbumArt: true } : TIER_FEATURES[tier];
+
   return {
     tier,
+    // Feature access flags - controls whether features are available at all
+    features: {
+      videoCalls: features.videoCalls,
+      aiAlbumArt: features.aiAlbumArt,
+    },
     ai: {
       used: aiUsage.used,
       limit: aiUsage.limit,

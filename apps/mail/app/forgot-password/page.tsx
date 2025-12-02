@@ -83,8 +83,7 @@ export default function ForgotPasswordPage() {
                 Reset your password
               </h1>
               <p className="mb-6 text-center text-sm" style={{ color: 'var(--text-muted)' }}>
-                Enter your @rnrb.me email. We&apos;ll send a reset link to your registered platform
-                email.
+                Enter your @rnrb.me email. We&apos;ll send a reset link to your recovery email.
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -142,11 +141,11 @@ export default function ForgotPasswordPage() {
                 <Mail className="h-6 w-6" style={{ color: 'var(--accent)' }} />
               </div>
               <h1 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
-                Check your platform email
+                Check your recovery email
               </h1>
               <p className="mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
-                We&apos;ve sent a password reset link to the email you use to sign into rnrb.pro
-                (not your @rnrb.me email).
+                We&apos;ve sent a password reset link to the recovery email you set up when creating
+                your @rnrb.me account.
               </p>
               <p className="mb-6 text-xs" style={{ color: 'var(--text-muted)' }}>
                 The link will expire in 1 hour. Check your spam folder if you don&apos;t see it.

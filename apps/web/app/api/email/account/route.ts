@@ -314,7 +314,29 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { username, domain = DEFAULT_DOMAIN, displayName, password } = body;
+    const { username, domain = DEFAULT_DOMAIN, displayName, password, recoveryEmail } = body;
+
+    // Validate recovery email (REQUIRED for password resets)
+    if (!recoveryEmail || typeof recoveryEmail !== 'string') {
+      return NextResponse.json(
+        { error: 'Recovery email is required for password resets' },
+        { status: 400 }
+      );
+    }
+
+    // Validate recovery email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(recoveryEmail)) {
+      return NextResponse.json({ error: 'Invalid recovery email address' }, { status: 400 });
+    }
+
+    // Recovery email cannot be an @rnrb.me email (chicken/egg problem)
+    if (recoveryEmail.toLowerCase().endsWith('@rnrb.me')) {
+      return NextResponse.json(
+        { error: 'Recovery email cannot be an @rnrb.me address. Use a different email provider.' },
+        { status: 400 }
+      );
+    }
 
     // Validate password
     if (!password || typeof password !== 'string') {
@@ -433,7 +455,7 @@ export async function POST(request: Request) {
 
     const emailAddress = `${username.toLowerCase()}@${domain}`;
 
-    // Create account in database
+    // Create account in database with recovery email
     const emailAccount = await prisma.emailAccount.create({
       data: {
         userId: session.user.id,
@@ -443,6 +465,8 @@ export async function POST(request: Request) {
         displayName: displayName || user.name || username,
         storageQuotaBytes: BigInt(storageQuota),
         status: 'PENDING',
+        recoveryEmail: recoveryEmail.toLowerCase(),
+        recoveryEmailVerified: false, // Will be verified via confirmation email
       },
     });
 

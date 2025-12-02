@@ -10,6 +10,7 @@ import { createOneTimeCheckoutSession } from '@/lib/stripe-subscriptions';
 type CreditKind = 'ai' | 'video' | 'storage' | 'image';
 
 const CREDIT_PRODUCTS = {
+  // AI Credits
   ai_100: {
     label: '+100 AI Requests',
     type: 'ai' as CreditKind,
@@ -17,13 +18,31 @@ const CREDIT_PRODUCTS = {
     priceEnv: 'STRIPE_PRICE_ID_AI_100',
     description: 'Extra AI requests that expire at the end of this cycle.',
   },
+
+  // Video Packs (tiered for different use cases)
+  video_120: {
+    label: 'Starter Pack (2hr)',
+    type: 'video' as CreditKind,
+    amount: 120, // minutes
+    priceEnv: 'STRIPE_PRICE_ID_VIDEO_120',
+    description: 'Perfect for a quick band check-in or remote writing session.',
+  },
   video_600: {
-    label: '+10 Hours Video',
+    label: 'Band Practice (10hr)',
     type: 'video' as CreditKind,
     amount: 600, // minutes
     priceEnv: 'STRIPE_PRICE_ID_VIDEO_600',
-    description: 'Adds 600 video minutes (10 hours) for this billing cycle.',
+    description: 'Great for regular band rehearsals and writing sessions.',
   },
+  video_1800: {
+    label: 'Studio Sessions (30hr)',
+    type: 'video' as CreditKind,
+    amount: 1800, // minutes
+    priceEnv: 'STRIPE_PRICE_ID_VIDEO_1800',
+    description: 'For serious remote production, mixing sessions, and client work.',
+  },
+
+  // Image Credits
   image_25: {
     label: '+25 Image Credits',
     type: 'image' as CreditKind,
@@ -38,6 +57,8 @@ const CREDIT_PRODUCTS = {
     priceEnv: 'STRIPE_PRICE_ID_IMAGE_100',
     description: 'Best value! 100 album art generations for creative freedom.',
   },
+
+  // Storage (permanent)
   storage_25: {
     label: '+25 GB Storage',
     type: 'storage' as CreditKind,
