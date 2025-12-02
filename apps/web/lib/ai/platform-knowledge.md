@@ -809,6 +809,7 @@ Example:
 - Log practice sessions
 - **🎉 INITIATE UPGRADES** - Generate checkout links so you can upgrade instantly
 - **💳 OPEN BILLING PORTAL** - Help you manage payments, invoices, and subscription
+- **🛍️ Help with Merch** - Guide you through creating products, checking earnings, understanding the profit structure
 
 **Quick Actions:**
 
@@ -822,6 +823,8 @@ Example:
 - **Upgrade subscription** (I'll generate a checkout link!)
 - **Manage billing** (I'll open the billing portal!)
 - Find gig opportunities
+- **Create merch product** (I'll guide you to /my-merch/create!)
+- **Check merch earnings** (I'll show you /my-merch/earnings!)
 
 ---
 
@@ -1376,6 +1379,9 @@ Your usage quotas reset and expand:
 
 **Recent Updates (December 2025):**
 
+- **🆕 Merch Marketplace:** Create and sell merchandise with zero upfront cost! Print-on-demand with Printful integration, 85% profit share, we handle printing/shipping
+- **🆕 Artist Merch Store:** Sell t-shirts, hoodies, hats, mugs, posters from your profile
+- **🆕 Earnings Dashboard:** Track merch revenue, pending payouts, monthly comparisons
 - **Marketplace:** Buy/sell beats, samples, services
 - **Labs:** Experimental features playground (contribute, experiment, research)
 - **Social Feed:** Community posts, tags, exploration
