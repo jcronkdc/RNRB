@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
 import { useTransition } from 'react';
 
 import { useToast } from '@/hooks/useToast';
@@ -56,41 +55,27 @@ export function BuyCreditsButton({ product, className, compact }: BuyCreditsButt
   }
 
   return (
-    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-      <Button
-        onClick={handleClick}
-        disabled={isPending}
-        className={`relative overflow-hidden ${className}`}
-      >
-        {/* Shimmer effect on hover */}
-        <span
-          className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
-          style={{ transform: 'skewX(-20deg)' }}
-        />
-
-        <span className="relative flex items-center justify-center gap-2">
-          {isPending ? (
-            <>
-              <motion.span
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                className="inline-block"
-              >
-                ⏳
-              </motion.span>
-              <span>Processing...</span>
-            </>
-          ) : (
-            <>
-              <span>{config.icon}</span>
-              <span className="font-semibold">{config.label}</span>
-              <span className="rounded bg-white/20 px-2 py-0.5 text-sm font-bold">
-                {config.price}
-              </span>
-            </>
-          )}
-        </span>
-      </Button>
-    </motion.div>
+    <Button
+      onClick={handleClick}
+      disabled={isPending}
+      className={`relative overflow-hidden transition-transform hover:scale-[1.02] active:scale-[0.98] ${className}`}
+    >
+      <span className="flex items-center justify-center gap-2">
+        {isPending ? (
+          <>
+            <span className="inline-block animate-spin">⏳</span>
+            <span>Processing...</span>
+          </>
+        ) : (
+          <>
+            <span>{config.icon}</span>
+            <span className="font-semibold">{config.label}</span>
+            <span className="rounded bg-white/20 px-2 py-0.5 text-sm font-bold">
+              {config.price}
+            </span>
+          </>
+        )}
+      </span>
+    </Button>
   );
 }

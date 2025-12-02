@@ -1,7 +1,6 @@
 'use client';
 
-import { Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { Button, Progress } from '@cronkwaters/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -41,59 +40,6 @@ interface UsageSummary {
   resetDate: string;
 }
 
-// Animated circular progress component
-function CircularProgress({
-  percentage,
-  size = 100,
-  strokeWidth = 8,
-  color,
-}: {
-  percentage: number;
-  size?: number;
-  strokeWidth?: number;
-  color: string;
-}) {
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const offset = circumference - (percentage / 100) * circumference;
-
-  return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
-        {/* Background track */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke="rgba(255,255,255,0.1)"
-          strokeWidth={strokeWidth}
-        />
-        {/* Progress arc */}
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke={color}
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-        />
-      </svg>
-
-      {/* Center content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-xl font-bold text-white">{Math.round(percentage)}%</span>
-        <span className="text-xs text-gray-400">used</span>
-      </div>
-    </div>
-  );
-}
-
 // Credit card component
 function CreditCard({
   title,
@@ -124,11 +70,7 @@ function CreditCard({
   const isCritical = percentage >= 95;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/90 to-gray-950/95 p-6 transition-all hover:border-white/20 hover:shadow-lg"
-    >
+    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/90 to-gray-950/95 p-6 transition-all hover:border-white/20 hover:shadow-lg">
       {/* Header */}
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
@@ -171,34 +113,44 @@ function CreditCard({
         </div>
       ) : (
         <>
-          {/* Progress & Stats */}
-          <div className="mb-4 flex items-center gap-4">
-            <CircularProgress
-              percentage={percentage}
-              color={isCritical ? '#ef4444' : isLow ? '#f97316' : color}
-            />
-
-            <div className="flex-1">
-              <p className="text-sm text-gray-400">Remaining</p>
-              <p className="text-2xl font-bold" style={{ color }}>
+          {/* Stats */}
+          <div className="mb-4">
+            <div className="mb-2 flex items-baseline justify-between">
+              <span className="text-2xl font-bold" style={{ color }}>
                 {remaining.toLocaleString()}
-              </p>
-              <div className="mt-1 flex gap-3 text-xs text-gray-500">
-                <span>Used: {used.toLocaleString()}</span>
-                <span>Limit: {limit.toLocaleString()}</span>
-              </div>
-              {bonus > 0 && (
-                <span className="mt-1 inline-block rounded bg-purple-500/20 px-2 py-0.5 text-xs text-purple-300">
-                  ✨ +{bonus} bonus
-                </span>
-              )}
+              </span>
+              <span className="text-sm text-gray-400">remaining</span>
             </div>
+            <Progress
+              value={percentage}
+              className={`h-2 ${
+                isCritical
+                  ? '[&>div]:bg-red-500'
+                  : isLow
+                    ? '[&>div]:bg-orange-500'
+                    : '[&>div]:bg-green-500'
+              }`}
+            />
+            <div className="mt-2 flex justify-between text-xs text-gray-500">
+              <span>Used: {used.toLocaleString()}</span>
+              <span>Limit: {limit.toLocaleString()}</span>
+            </div>
+            {bonus > 0 && (
+              <span className="mt-2 inline-block rounded bg-purple-500/20 px-2 py-0.5 text-xs text-purple-300">
+                ✨ +{bonus} bonus
+              </span>
+            )}
           </div>
 
           {/* Warning */}
           {isCritical && (
             <div className="mb-4 flex items-center gap-2 rounded-lg bg-red-500/10 p-2 text-xs text-red-400">
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="h-4 w-4 shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -219,7 +171,7 @@ function CreditCard({
           )}
         </>
       )}
-    </motion.div>
+    </div>
   );
 }
 
@@ -262,11 +214,7 @@ export default function UsagePage() {
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          className="h-10 w-10 rounded-full border-2 border-orange-500 border-t-transparent"
-        />
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
       </div>
     );
   }
@@ -297,11 +245,7 @@ export default function UsagePage() {
       <div className="relative border-b border-white/5 bg-gradient-to-b from-gray-900/50 to-transparent">
         <div className="mx-auto max-w-5xl px-6 py-10">
           {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 flex justify-center"
-          >
+          <div className="mb-6 flex justify-center">
             <Link href="/" className="group inline-block">
               <Image
                 src="/logo-dark.png"
@@ -312,15 +256,10 @@ export default function UsagePage() {
                 className="transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
               />
             </Link>
-          </motion.div>
+          </div>
 
           {/* Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-center"
-          >
+          <div className="text-center">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-1.5 text-sm">
               <span>{tier.emoji}</span>
               <span style={{ color: tier.color }}>{tier.name} Plan</span>
@@ -355,7 +294,7 @@ export default function UsagePage() {
                 </Button>
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -479,12 +418,7 @@ export default function UsagePage() {
 
         {/* Upgrade CTA */}
         {usage.tier !== 'studio' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="mt-8 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-orange-500/10 p-6 text-center"
-          >
+          <div className="mt-8 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-orange-500/10 p-6 text-center">
             <span className="text-4xl">🚀</span>
             <h2 className="mt-2 text-xl font-bold text-white">
               Unlock {usage.tier === 'free' ? 'More Power' : 'Maximum Power'}
@@ -509,7 +443,7 @@ export default function UsagePage() {
                 </Button>
               </Link>
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Tips */}

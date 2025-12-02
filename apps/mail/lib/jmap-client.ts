@@ -1,9 +1,11 @@
 /**
  * JMAP Client for Stalwart Mail Server
  * Handles all email operations via JMAP protocol
+ * Uses proxy API to avoid CORS issues
  */
 
-const JMAP_URL = process.env.STALWART_JMAP_URL || 'https://mail.rnrb.me/jmap';
+// Use local proxy API instead of direct Stalwart connection
+const JMAP_URL = '/api/jmap';
 
 export interface JMAPSession {
   accountId: string;
