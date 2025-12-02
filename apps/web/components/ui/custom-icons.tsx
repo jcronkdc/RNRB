@@ -88,6 +88,24 @@ export const ThumbsDown = createIcon(
   'ThumbsDown'
 );
 
+// ArrowUpRight - trending up arrow
+export const ArrowUpRight = createIcon(
+  <>
+    <line x1="7" y1="17" x2="17" y2="7" />
+    <polyline points="7 7 17 7 17 17" />
+  </>,
+  'ArrowUpRight'
+);
+
+// ArrowDownRight - trending down arrow
+export const ArrowDownRight = createIcon(
+  <>
+    <line x1="7" y1="7" x2="17" y2="17" />
+    <polyline points="17 7 17 17 7 17" />
+  </>,
+  'ArrowDownRight'
+);
+
 // ArrowDown
 export const ArrowDown = createIcon(
   <>
@@ -1560,6 +1578,15 @@ export const SkipForward = createIcon(
   'SkipForward'
 );
 
+// Forward - email forward arrow
+export const Forward = createIcon(
+  <>
+    <polyline points="15 17 20 12 15 7" />
+    <path d="M4 18v-2a4 4 0 0 1 4-4h12" />
+  </>,
+  'Forward'
+);
+
 // Smartphone - mobile device
 export const Smartphone = createIcon(
   <>
@@ -2428,9 +2455,11 @@ export const Icons = {
   AlertCircle,
   AlertTriangle,
   ArrowDown,
+  ArrowDownRight,
   ArrowLeft,
   ArrowRight,
   ArrowUp,
+  ArrowUpRight,
   AtSign,
   Award,
   BarChart,
