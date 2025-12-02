@@ -1310,7 +1310,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Comparison Section - THEY CAN'T TOUCH THIS 🎸 */}
+        {/* Comparison Section - THEY CAN'T TOUCH THIS */}
         <section
           id="comparison"
           className="page-section"
@@ -1342,7 +1342,7 @@ export default function HomePage() {
                   className="text-lg font-black uppercase tracking-wider"
                   style={{ color: 'var(--accent)' }}
                 >
-                  TOTAL DOMINATION
+                  FEATURE SHOWDOWN
                 </span>
               </div>
 
@@ -1354,8 +1354,31 @@ export default function HomePage() {
                 Other platforms are stuck in 2015. We built the future.
               </p>
 
-              <p className="text-2xl font-black" style={{ color: 'var(--accent)' }}>
-                🎸 Rock & Roll Is ALIVE 🎸
+              <p
+                className="flex items-center justify-center gap-3 text-2xl font-black"
+                style={{ color: 'var(--accent)' }}
+              >
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zM21 16c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z" />
+                </svg>
+                Rock & Roll Is ALIVE
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zM21 16c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z" />
+                </svg>
               </p>
             </div>
 
@@ -1423,25 +1446,25 @@ export default function HomePage() {
                     <tbody>
                       {/* Feature rows */}
                       {[
-                        { name: '✍️ Songwriting Workshop', r: 1, s: 0, b: 1, st: 1 },
-                        { name: '⏱️ Version Control (Git for Music)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '💰 Revenue Splits & Copyright', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '📹 HD Video Calls (50 people)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '🖥️ Screen Sharing', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '📱 Social Feed (Facebook-style)', r: 1, s: 0, b: 1, st: 0 },
-                        { name: '💬 Direct Messaging', r: 1, s: 0, b: 1, st: 0 },
-                        { name: '🛒 Marketplace (Buy/Sell Gear)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '🎓 Masterclasses & Education', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '📡 Live Streaming to Fans', r: 1, s: 0, b: 1, st: 0 },
-                        { name: '🌐 Website Builder', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '🚐 Tour Management', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '🎤 Show & Venue Tracking', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '👤 Public Artist Profiles', r: 1, s: 0, b: 1, st: 0 },
-                        { name: '🧰 12 Pro Tools (Tuner, etc.)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '✈️ Offline Mode (PWA)', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '👕 Merch Store', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '🤝 Affiliate Program', r: 1, s: 0, b: 0, st: 0 },
-                        { name: '📊 Revenue Analytics', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Songwriting Workshop', r: 1, s: 0, b: 1, st: 1 },
+                        { name: 'Version Control (Git for Music)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Revenue Splits & Copyright', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'HD Video Calls (50 people)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Screen Sharing', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Social Feed (Facebook-style)', r: 1, s: 0, b: 1, st: 0 },
+                        { name: 'Direct Messaging', r: 1, s: 0, b: 1, st: 0 },
+                        { name: 'Marketplace (Buy/Sell Gear)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Masterclasses & Education', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Live Streaming to Fans', r: 1, s: 0, b: 1, st: 0 },
+                        { name: 'Website Builder', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Tour Management', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Show & Venue Tracking', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Public Artist Profiles', r: 1, s: 0, b: 1, st: 0 },
+                        { name: '12 Pro Tools (Tuner, etc.)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Offline Mode (PWA)', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Merch Store', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Affiliate Program', r: 1, s: 0, b: 0, st: 0 },
+                        { name: 'Revenue Analytics', r: 1, s: 0, b: 0, st: 0 },
                       ].map((row, i) => (
                         <tr
                           key={i}
@@ -1614,7 +1637,7 @@ export default function HomePage() {
                           juggling 5 subscriptions. Stop compromising. Stop settling.
                         </p>
                         <p className="mb-3 text-base font-bold" style={{ color: 'var(--accent)' }}>
-                          This is the platform musicians have been SCREAMING for. 🔥
+                          This is the platform musicians have been SCREAMING for.
                         </p>
                         <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                           <strong style={{ color: 'var(--text)' }}>Plus:</strong> Our godlike AI
@@ -1632,7 +1655,17 @@ export default function HomePage() {
                             boxShadow: '0 12px 48px rgba(255, 99, 71, 0.5)',
                           }}
                         >
-                          <span className="mb-1 block text-2xl">🔥</span>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            className="mx-auto mb-1"
+                          >
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                          </svg>
                           Join The Revolution
                         </Link>
                         <p className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
@@ -1672,14 +1705,27 @@ export default function HomePage() {
                   "Rock & roll isn't an instrument. It's not even a style. It's a spirit."
                 </p>
               </div>
-              <p className="mt-6 text-base font-bold" style={{ color: 'var(--accent)' }}>
-                And that spirit lives here. Welcome home. 🎸
+              <p
+                className="mt-6 flex items-center justify-center gap-2 text-base font-bold"
+                style={{ color: 'var(--accent)' }}
+              >
+                And that spirit lives here. Welcome home.
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zM21 16c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z" />
+                </svg>
               </p>
             </div>
 
             <div className="mx-auto mt-12 max-w-4xl text-center">
               <p className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-                Comparison verified December 2024. They're welcome to try and catch up. 😎
+                Comparison verified December 2024. They're welcome to try and catch up.
               </p>
               <p className="mt-3 text-xs" style={{ color: 'var(--text-secondary)' }}>
                 <strong style={{ color: 'var(--text)' }}>Note:</strong> All features listed above
@@ -1690,7 +1736,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* PRICE COMPARISON - SHOW THE SAVINGS 💰 */}
+            {/* PRICE COMPARISON - SHOW THE SAVINGS */}
             <div className="mx-auto mt-20 max-w-5xl">
               <div className="mb-8 text-center">
                 <h3 className="mb-3 text-3xl font-black" style={{ color: 'var(--text)' }}>
@@ -1711,7 +1757,24 @@ export default function HomePage() {
                   }}
                 >
                   <div className="mb-6 text-center">
-                    <div className="mb-3 text-4xl">😵‍💫</div>
+                    <div className="mb-3 flex justify-center">
+                      <svg
+                        width="48"
+                        height="48"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        style={{ color: 'var(--muted)' }}
+                      >
+                        <path
+                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                          opacity="0.3"
+                        />
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M12 2v4M12 18v4M2 12h4M18 12h4" opacity="0.5" />
+                      </svg>
+                    </div>
                     <h4 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
                       The Old Way
                     </h4>
@@ -1784,7 +1847,19 @@ export default function HomePage() {
                   }}
                 >
                   <div className="mb-6 text-center">
-                    <div className="mb-3 text-4xl">🎸</div>
+                    <div className="mb-3 flex justify-center">
+                      <svg
+                        width="48"
+                        height="48"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        style={{ color: 'var(--accent)' }}
+                      >
+                        <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zM21 16c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z" />
+                      </svg>
+                    </div>
                     <h4 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
                       The RNRB Way
                     </h4>
@@ -1795,15 +1870,15 @@ export default function HomePage() {
 
                   <div className="space-y-3">
                     {[
-                      'Website Builder ✅',
-                      'HD Video Calls (50 people) ✅',
-                      'Project Management ✅',
-                      'Unlimited File Storage ✅',
-                      'Email & Direct Messaging ✅',
-                      'Social Feed & Scheduling ✅',
-                      'Tour & Show Management ✅',
-                      'Masterclasses Platform ✅',
-                      '+ 67 MORE Features ✅',
+                      'Website Builder',
+                      'HD Video Calls (50 people)',
+                      'Project Management',
+                      'Unlimited File Storage',
+                      'Email & Direct Messaging',
+                      'Social Feed & Scheduling',
+                      'Tour & Show Management',
+                      'Masterclasses Platform',
+                      '+ 67 MORE Features',
                     ].map((item, i) => (
                       <div
                         key={i}
@@ -1864,7 +1939,7 @@ export default function HomePage() {
                   That's enough for new gear, studio time, or an actual vacation.
                 </p>
                 <p className="text-lg font-bold text-white opacity-90">
-                  Stop paying for 8 tools. Start making music. 🔥
+                  Stop paying for 8 tools. Start making music.
                 </p>
               </div>
 
@@ -2433,7 +2508,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Final CTA - THE CLOSER 🔥 */}
+        {/* Final CTA - THE CLOSER */}
         <section
           className="final-cta page-section relative overflow-hidden"
           style={{ borderTop: '1px solid var(--border)' }}
@@ -2507,7 +2582,19 @@ export default function HomePage() {
                     boxShadow: '0 12px 48px rgba(255, 99, 71, 0.5)',
                   }}
                 >
-                  <span className="relative z-10">🔥 Start Creating Now</span>
+                  <span className="relative z-10 flex items-center gap-2">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    </svg>
+                    Start Creating Now
+                  </span>
                   <div
                     className="absolute inset-0 -translate-x-full transition-transform group-hover:translate-x-0"
                     style={{
@@ -2587,8 +2674,21 @@ export default function HomePage() {
               </div>
 
               {/* The kicker */}
-              <p className="mt-8 text-base font-bold" style={{ color: 'var(--accent)' }}>
-                75+ features. One platform. Zero compromises. Rock & Roll Is ALIVE. 🎸
+              <p
+                className="mt-8 flex items-center justify-center gap-2 text-base font-bold"
+                style={{ color: 'var(--accent)' }}
+              >
+                75+ features. One platform. Zero compromises. Rock & Roll Is ALIVE.
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zM21 16c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z" />
+                </svg>
               </p>
             </div>
           </div>
