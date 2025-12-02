@@ -4,13 +4,46 @@ import { NextResponse } from 'next/server';
 // CRITICAL: Do NOT import auth() in middleware - it uses Node.js modules not available in Edge Runtime
 // Instead, we check for the session cookie directly
 
-// Known CronkWaters domains (not custom domains)
+// Known CronkWaters/RNRB domains (not artist custom domains)
 const KNOWN_DOMAINS = [
+  // Original domain - KEEP WORKING
   'cronkwaters.com',
   'www.cronkwaters.com',
   'cronkwater.vercel.app',
+  // RNRB domains (new)
+  'rnrb.me',
+  'www.rnrb.me',
+  'rnrb.app',
+  'www.rnrb.app',
+  'rnrb.rocks',
+  'www.rnrb.rocks',
+  'rnrb.pro',
+  'www.rnrb.pro',
+  'rnrb.live',
+  'www.rnrb.live',
+  'rnrb.club',
+  'www.rnrb.club',
+  'rnrb.chat',
+  'www.rnrb.chat',
+  'rnrb.art',
+  'www.rnrb.art',
+  'rnrb.wtf',
+  'www.rnrb.wtf',
+  'rocknrollbasement.com',
+  'www.rocknrollbasement.com',
+  // Development
   'localhost:3001',
   'localhost:3000',
+];
+
+// Domains that support wildcard subdomains for artist sites
+const ARTIST_SITE_DOMAINS = [
+  'rnrb.band', // artistname.rnrb.band → artist website
+];
+
+// Domains that support wildcard subdomains for public profiles
+const PROFILE_DOMAINS = [
+  'rnrb.bio', // artistname.rnrb.bio → public profile
 ];
 
 // The canonical CronkWaters origin for internal API calls
@@ -61,14 +94,48 @@ export async function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
 
   // ============================================
+  // RNRB WILDCARD SUBDOMAIN ROUTING
+  // ============================================
+  // Check for *.rnrb.band (artist websites)
+  for (const domain of ARTIST_SITE_DOMAINS) {
+    if (hostname.endsWith(`.${domain}`)) {
+      const subdomain = hostname.replace(`.${domain}`, '');
+      if (subdomain && subdomain !== 'www') {
+        // Rewrite artistname.rnrb.band → /s/artistname
+        const url = request.nextUrl.clone();
+        url.pathname = `/s/${subdomain}${pathname === '/' ? '' : pathname}`;
+        return NextResponse.rewrite(url);
+      }
+    }
+  }
+
+  // Check for *.rnrb.bio (public profiles)
+  for (const domain of PROFILE_DOMAINS) {
+    if (hostname.endsWith(`.${domain}`)) {
+      const username = hostname.replace(`.${domain}`, '');
+      if (username && username !== 'www') {
+        // Rewrite artistname.rnrb.bio → /u/artistname
+        const url = request.nextUrl.clone();
+        url.pathname = `/u/${username}${pathname === '/' ? '' : pathname}`;
+        return NextResponse.rewrite(url);
+      }
+    }
+  }
+
+  // ============================================
   // CUSTOM DOMAIN ROUTING
   // ============================================
-  // Check if this is a custom domain (not a known CronkWaters domain)
+  // Check if this is a custom domain (not a known CronkWaters/RNRB domain)
   const isKnownDomain = KNOWN_DOMAINS.some(
     (domain) => hostname === domain || hostname.endsWith(`.${domain}`)
   );
 
-  if (!isKnownDomain && hostname && !hostname.includes('vercel')) {
+  // Also check if it's a wildcard RNRB subdomain (already handled above)
+  const isRnrbSubdomain =
+    ARTIST_SITE_DOMAINS.some((d) => hostname.endsWith(`.${d}`)) ||
+    PROFILE_DOMAINS.some((d) => hostname.endsWith(`.${d}`));
+
+  if (!isKnownDomain && !isRnrbSubdomain && hostname && !hostname.includes('vercel')) {
     // This is a custom domain - route to the site lookup API
     // CRITICAL: Use CronkWaters origin, not the custom domain origin
     // The API only exists on CronkWaters, not on custom domains
