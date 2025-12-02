@@ -422,42 +422,20 @@ export default function EmailSettingsPage() {
     };
 
     return (
-      <div
-        className="relative min-h-screen overflow-hidden px-4 py-8"
-        style={{
-          background: 'linear-gradient(180deg, #0a0a0a 0%, #0a1a0a 50%, #0a0a0a 100%)',
-        }}
-      >
-        {/* Success background effects */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div
-            className="absolute -left-40 top-20 h-80 w-80 rounded-full opacity-20 blur-3xl"
-            style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}
-          />
-          <div
-            className="absolute -right-40 bottom-20 h-80 w-80 rounded-full opacity-15 blur-3xl"
-            style={{ background: 'linear-gradient(135deg, #ff6347, #ffd700)' }}
-          />
+      <div className="mx-auto max-w-2xl px-4 py-8">
+        <div className="mb-8 flex justify-center">
+          <Link href="/">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={140}
+              height={50}
+              className="transition-all hover:scale-105"
+            />
+          </Link>
         </div>
 
         <div className="relative mx-auto max-w-2xl">
-          {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 flex justify-center"
-          >
-            <Link href="/">
-              <Image
-                src="/logo-dark.png"
-                alt="Rock N' Roll Basement"
-                width={140}
-                height={50}
-                className="transition-all hover:scale-105"
-              />
-            </Link>
-          </motion.div>
-
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -669,260 +647,230 @@ export default function EmailSettingsPage() {
     );
   }
 
-  // No account - stunning setup screen
+  // No account - setup screen (simplified for AppLayout)
   if (!hasAccount) {
     return (
-      <div
-        className="relative min-h-screen overflow-hidden px-4 py-8"
-        style={{
-          background: 'linear-gradient(180deg, #0a0a0a 0%, #1a0a1a 50%, #0a0a0a 100%)',
-        }}
-      >
-        {/* Background effects */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div
-            className="absolute -left-40 top-20 h-80 w-80 rounded-full opacity-20 blur-3xl"
-            style={{ background: 'linear-gradient(135deg, #ff6347, #ffd700)' }}
-          />
-          <div
-            className="absolute -right-40 bottom-20 h-80 w-80 rounded-full opacity-15 blur-3xl"
-            style={{ background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)' }}
-          />
+      <div className="mx-auto max-w-2xl px-4 py-8">
+        <div className="mb-8 flex justify-center">
+          <Link href="/">
+            <Image
+              src="/logo-dark.png"
+              alt="Rock N' Roll Basement"
+              width={140}
+              height={50}
+              className="hover:opacity-80"
+            />
+          </Link>
         </div>
 
-        <div className="relative mx-auto max-w-2xl">
-          {/* Logo */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 flex justify-center"
-          >
-            <Link href="/">
-              <Image
-                src="/logo-dark.png"
-                alt="Rock N' Roll Basement"
-                width={140}
-                height={50}
-                className="transition-all hover:scale-105"
-              />
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="overflow-hidden rounded-3xl shadow-2xl"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="overflow-hidden rounded-3xl shadow-2xl"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(20, 12, 18, 0.95) 0%, rgba(15, 10, 15, 0.98) 100%)',
+            border: '1px solid rgba(255, 99, 71, 0.2)',
+            boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 99, 71, 0.1)',
+          }}
+        >
+          {/* Header with gradient */}
+          <div
+            className="px-8 py-6 text-center"
             style={{
               background:
-                'linear-gradient(180deg, rgba(20, 12, 18, 0.95) 0%, rgba(15, 10, 15, 0.98) 100%)',
-              border: '1px solid rgba(255, 99, 71, 0.2)',
-              boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 99, 71, 0.1)',
+                'linear-gradient(135deg, rgba(255, 99, 71, 0.15) 0%, rgba(255, 215, 0, 0.08) 100%)',
+              borderBottom: '1px solid rgba(255, 99, 71, 0.1)',
             }}
           >
-            {/* Header with gradient */}
-            <div
-              className="px-8 py-6 text-center"
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+              className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl shadow-2xl"
               style={{
-                background:
-                  'linear-gradient(135deg, rgba(255, 99, 71, 0.15) 0%, rgba(255, 215, 0, 0.08) 100%)',
-                borderBottom: '1px solid rgba(255, 99, 71, 0.1)',
+                background: 'linear-gradient(135deg, #ff6347 0%, #ff8c00 50%, #ffd700 100%)',
+                boxShadow: '0 0 40px rgba(255, 99, 71, 0.4), 0 0 80px rgba(255, 215, 0, 0.2)',
               }}
             >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-2xl shadow-2xl"
-                style={{
-                  background: 'linear-gradient(135deg, #ff6347 0%, #ff8c00 50%, #ffd700 100%)',
-                  boxShadow: '0 0 40px rgba(255, 99, 71, 0.4), 0 0 80px rgba(255, 215, 0, 0.2)',
-                }}
-              >
-                <Mail className="h-10 w-10 text-white drop-shadow-lg" />
-              </motion.div>
-              <h1 className="mb-2 bg-gradient-to-r from-white via-orange-200 to-yellow-200 bg-clip-text text-3xl font-black text-transparent">
-                RNRB Mail
-              </h1>
-              <p className="text-lg text-white/70">Professional email for musicians</p>
-              <p className="mt-1 text-sm text-white/40">Works with iPhone, Android, Mac & PC</p>
-            </div>
+              <Mail className="h-10 w-10 text-white drop-shadow-lg" />
+            </motion.div>
+            <h1 className="mb-2 bg-gradient-to-r from-white via-orange-200 to-yellow-200 bg-clip-text text-3xl font-black text-transparent">
+              RNRB Mail
+            </h1>
+            <p className="text-lg text-white/70">Professional email for musicians</p>
+            <p className="mt-1 text-sm text-white/40">Works with iPhone, Android, Mac & PC</p>
+          </div>
 
-            <div className="p-8">
-              <form onSubmit={handleCreateAccount} className="space-y-6">
-                {/* Username Input */}
-                <div>
-                  <label
-                    className="mb-2 block text-sm font-medium"
-                    style={{ color: 'var(--text)' }}
-                  >
-                    Choose your email address
-                  </label>
-                  <div className="flex gap-2">
-                    <div className="relative flex-1">
-                      <input
-                        type="text"
-                        value={username}
-                        onChange={(e) =>
-                          setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ''))
-                        }
-                        placeholder="yourname"
-                        className="w-full rounded-xl px-4 py-3 text-lg"
-                        style={{
-                          background: 'var(--bg)',
-                          border: '1px solid var(--border)',
-                          color: 'var(--text)',
-                        }}
-                      />
-                      {checkingUsername && (
-                        <Loader2 className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-[var(--muted)]" />
-                      )}
-                      {!checkingUsername && usernameAvailable === true && (
-                        <Check className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
-                      )}
-                      {!checkingUsername && usernameAvailable === false && (
-                        <X className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-red-500" />
-                      )}
-                    </div>
-                    <span className="flex items-center text-lg" style={{ color: 'var(--muted)' }}>
-                      @
-                    </span>
-                    <select
-                      value={selectedDomain}
-                      onChange={(e) => setSelectedDomain(e.target.value)}
-                      className="rounded-xl px-4 py-3"
+          <div className="p-8">
+            <form onSubmit={handleCreateAccount} className="space-y-6">
+              {/* Username Input */}
+              <div>
+                <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                  Choose your email address
+                </label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      value={username}
+                      onChange={(e) =>
+                        setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ''))
+                      }
+                      placeholder="yourname"
+                      className="w-full rounded-xl px-4 py-3 text-lg"
                       style={{
                         background: 'var(--bg)',
                         border: '1px solid var(--border)',
                         color: 'var(--text)',
                       }}
-                    >
-                      {availableDomains.map((domain) => (
-                        <option key={domain} value={domain}>
-                          {domain}
-                        </option>
-                      ))}
-                    </select>
+                    />
+                    {checkingUsername && (
+                      <Loader2 className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-[var(--muted)]" />
+                    )}
+                    {!checkingUsername && usernameAvailable === true && (
+                      <Check className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
+                    )}
+                    {!checkingUsername && usernameAvailable === false && (
+                      <X className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-red-500" />
+                    )}
                   </div>
-                  {usernameError && <p className="mt-2 text-sm text-red-500">{usernameError}</p>}
-                  {usernameAvailable && (
-                    <p className="mt-2 text-sm text-green-500">
-                      {username}@{selectedDomain} is available!
-                    </p>
-                  )}
-
-                  {/* Username suggestions */}
-                  {suggestedUsernames.length > 0 && !username && (
-                    <div className="mt-3">
-                      <p className="mb-2 text-xs text-white/40">Suggestions:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {suggestedUsernames.map((suggestion) => (
-                          <button
-                            key={suggestion}
-                            type="button"
-                            onClick={() => setUsername(suggestion)}
-                            className="rounded-lg px-3 py-1.5 text-sm transition-all hover:scale-105"
-                            style={{
-                              background: 'rgba(255, 99, 71, 0.1)',
-                              border: '1px solid rgba(255, 99, 71, 0.2)',
-                              color: '#ff8c00',
-                            }}
-                          >
-                            {suggestion}@rnrb.me
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Display Name */}
-                <div>
-                  <label
-                    className="mb-2 block text-sm font-medium"
-                    style={{ color: 'var(--text)' }}
-                  >
-                    Display Name (optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="Your Name or Band Name"
-                    className="w-full rounded-xl px-4 py-3"
+                  <span className="flex items-center text-lg" style={{ color: 'var(--muted)' }}>
+                    @
+                  </span>
+                  <select
+                    value={selectedDomain}
+                    onChange={(e) => setSelectedDomain(e.target.value)}
+                    className="rounded-xl px-4 py-3"
                     style={{
                       background: 'var(--bg)',
                       border: '1px solid var(--border)',
                       color: 'var(--text)',
                     }}
-                  />
-                  <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
-                    This will appear as the sender name in emails
-                  </p>
-                </div>
-
-                {/* Features List - Premium */}
-                <div
-                  className="rounded-2xl p-5"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(255, 99, 71, 0.08) 0%, rgba(255, 215, 0, 0.04) 100%)',
-                    border: '1px solid rgba(255, 99, 71, 0.15)',
-                  }}
-                >
-                  <h3 className="mb-4 flex items-center gap-2 font-bold text-orange-400">
-                    <Zap className="h-5 w-5" />
-                    What you get:
-                  </h3>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {[
-                      { icon: Mail, text: 'Professional @rnrb.me address' },
-                      { icon: Smartphone, text: 'Works on all devices' },
-                      { icon: Shield, text: 'Spam filtering & security' },
-                      { icon: Star, text: 'Musician-specific labels' },
-                      { icon: Forward, text: 'Auto-reply for touring' },
-                      { icon: Settings, text: 'Custom signatures' },
-                    ].map((feature, i) => (
-                      <div key={i} className="flex items-center gap-3">
-                        <div
-                          className="flex h-8 w-8 items-center justify-center rounded-lg"
-                          style={{ background: 'rgba(255, 99, 71, 0.15)' }}
-                        >
-                          <feature.icon className="h-4 w-4 text-orange-400" />
-                        </div>
-                        <span className="text-sm text-white/80">{feature.text}</span>
-                      </div>
+                  >
+                    {availableDomains.map((domain) => (
+                      <option key={domain} value={domain}>
+                        {domain}
+                      </option>
                     ))}
-                  </div>
+                  </select>
                 </div>
+                {usernameError && <p className="mt-2 text-sm text-red-500">{usernameError}</p>}
+                {usernameAvailable && (
+                  <p className="mt-2 text-sm text-green-500">
+                    {username}@{selectedDomain} is available!
+                  </p>
+                )}
 
-                {/* Submit - Stunning gradient button */}
-                <button
-                  type="submit"
-                  disabled={!usernameAvailable || creating}
-                  className="group flex w-full items-center justify-center gap-3 rounded-2xl py-4 text-lg font-bold shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50"
+                {/* Username suggestions */}
+                {suggestedUsernames.length > 0 && !username && (
+                  <div className="mt-3">
+                    <p className="mb-2 text-xs text-white/40">Suggestions:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestedUsernames.map((suggestion) => (
+                        <button
+                          key={suggestion}
+                          type="button"
+                          onClick={() => setUsername(suggestion)}
+                          className="rounded-lg px-3 py-1.5 text-sm transition-all hover:scale-105"
+                          style={{
+                            background: 'rgba(255, 99, 71, 0.1)',
+                            border: '1px solid rgba(255, 99, 71, 0.2)',
+                            color: '#ff8c00',
+                          }}
+                        >
+                          {suggestion}@rnrb.me
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Display Name */}
+              <div>
+                <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+                  Display Name (optional)
+                </label>
+                <input
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="Your Name or Band Name"
+                  className="w-full rounded-xl px-4 py-3"
                   style={{
-                    background: 'linear-gradient(135deg, #ff6347 0%, #ff8c00 50%, #ffd700 100%)',
-                    color: 'white',
-                    boxShadow: '0 8px 30px rgba(255, 99, 71, 0.4)',
+                    background: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
                   }}
-                >
-                  {creating ? (
-                    <>
-                      <Loader2 className="h-6 w-6 animate-spin" />
-                      Creating your email...
-                    </>
-                  ) : (
-                    <>
-                      <Mail className="h-6 w-6 transition-transform group-hover:scale-110" />
-                      Create My @rnrb.me Email
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          </motion.div>
-        </div>
+                />
+                <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
+                  This will appear as the sender name in emails
+                </p>
+              </div>
+
+              {/* Features List - Premium */}
+              <div
+                className="rounded-2xl p-5"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(255, 99, 71, 0.08) 0%, rgba(255, 215, 0, 0.04) 100%)',
+                  border: '1px solid rgba(255, 99, 71, 0.15)',
+                }}
+              >
+                <h3 className="mb-4 flex items-center gap-2 font-bold text-orange-400">
+                  <Zap className="h-5 w-5" />
+                  What you get:
+                </h3>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    { icon: Mail, text: 'Professional @rnrb.me address' },
+                    { icon: Smartphone, text: 'Works on all devices' },
+                    { icon: Shield, text: 'Spam filtering & security' },
+                    { icon: Star, text: 'Musician-specific labels' },
+                    { icon: Forward, text: 'Auto-reply for touring' },
+                    { icon: Settings, text: 'Custom signatures' },
+                  ].map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div
+                        className="flex h-8 w-8 items-center justify-center rounded-lg"
+                        style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+                      >
+                        <feature.icon className="h-4 w-4 text-orange-400" />
+                      </div>
+                      <span className="text-sm text-white/80">{feature.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Submit - Stunning gradient button */}
+              <button
+                type="submit"
+                disabled={!usernameAvailable || creating}
+                className="group flex w-full items-center justify-center gap-3 rounded-2xl py-4 text-lg font-bold shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50"
+                style={{
+                  background: 'linear-gradient(135deg, #ff6347 0%, #ff8c00 50%, #ffd700 100%)',
+                  color: 'white',
+                  boxShadow: '0 8px 30px rgba(255, 99, 71, 0.4)',
+                }}
+              >
+                {creating ? (
+                  <>
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                    Creating your email...
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-6 w-6 transition-transform group-hover:scale-110" />
+                    Create My @rnrb.me Email
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        </motion.div>
       </div>
     );
   }
