@@ -184,7 +184,7 @@ export default function GoLivePage() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="What are you streaming today?"
-                    className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-white placeholder-white/40 focus:border-purple-500/50 focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-white placeholder-white/40 focus:border-orange-500/50 focus:outline-none"
                     maxLength={100}
                   />
                 </div>
@@ -199,7 +199,7 @@ export default function GoLivePage() {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Tell viewers what to expect..."
                     rows={3}
-                    className="w-full resize-none rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-white placeholder-white/40 focus:border-purple-500/50 focus:outline-none"
+                    className="w-full resize-none rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-white placeholder-white/40 focus:border-orange-500/50 focus:outline-none"
                     maxLength={500}
                   />
                 </div>
@@ -214,7 +214,7 @@ export default function GoLivePage() {
                         onClick={() => setCategory(cat)}
                         className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
                           category === cat
-                            ? 'bg-purple-500 text-white'
+                            ? 'bg-orange-500 text-white'
                             : 'bg-white/10 text-white/70 hover:bg-white/20'
                         } `}
                       >
@@ -238,7 +238,7 @@ export default function GoLivePage() {
                           onClick={() => setVisibility(opt.value as any)}
                           className={`rounded-xl border p-4 text-left transition-all ${
                             visibility === opt.value
-                              ? 'border-purple-500 bg-purple-500/20'
+                              ? 'border-orange-500 bg-orange-500/20'
                               : 'border-white/10 bg-white/5 hover:border-white/30'
                           } `}
                         >
@@ -263,7 +263,7 @@ export default function GoLivePage() {
                       className="sr-only"
                     />
                     <div
-                      className={`h-6 w-10 rounded-full transition-colors ${chatEnabled ? 'bg-purple-500' : 'bg-white/20'}`}
+                      className={`h-6 w-10 rounded-full transition-colors ${chatEnabled ? 'bg-orange-500' : 'bg-white/20'}`}
                     >
                       <div
                         className={`mt-0.5 h-5 w-5 transform rounded-full bg-white transition-transform ${chatEnabled ? 'ml-0.5 translate-x-4' : 'translate-x-0.5'}`}
@@ -282,7 +282,7 @@ export default function GoLivePage() {
                       className="sr-only"
                     />
                     <div
-                      className={`h-6 w-10 rounded-full transition-colors ${reactionsEnabled ? 'bg-purple-500' : 'bg-white/20'}`}
+                      className={`h-6 w-10 rounded-full transition-colors ${reactionsEnabled ? 'bg-orange-500' : 'bg-white/20'}`}
                     >
                       <div
                         className={`mt-0.5 h-5 w-5 transform rounded-full bg-white transition-transform ${reactionsEnabled ? 'ml-0.5 translate-x-4' : 'translate-x-0.5'}`}
@@ -307,7 +307,7 @@ export default function GoLivePage() {
                   disabled={!title.trim() || isCreating}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 py-4 text-lg font-bold text-white shadow-lg shadow-purple-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 py-4 text-lg font-bold text-white shadow-lg shadow-orange-500/30 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isCreating ? (
                     <>
@@ -403,7 +403,7 @@ export default function GoLivePage() {
                     onClick={handleGoLive}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 py-4 font-bold text-white shadow-lg shadow-red-500/30"
+                    className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 py-4 font-bold text-white shadow-lg shadow-red-500/30"
                   >
                     <Radio className="h-5 w-5" />
                     Go Live Now

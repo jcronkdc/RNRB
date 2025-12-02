@@ -153,7 +153,7 @@ export default function LiveAnalyticsPage() {
       label: 'Total Streams',
       value: displayAnalytics.totalStreams,
       icon: Radio,
-      color: 'from-red-500 to-pink-500',
+      color: 'from-red-500 to-orange-500',
       trend: 8,
     },
     {
@@ -174,7 +174,7 @@ export default function LiveAnalyticsPage() {
       label: 'Peak Viewers',
       value: formatNumber(displayAnalytics.peakViewers),
       icon: TrendingUp,
-      color: 'from-purple-500 to-violet-500',
+      color: 'from-amber-500 to-yellow-500',
       trend: 5,
     },
     {
@@ -188,7 +188,7 @@ export default function LiveAnalyticsPage() {
       label: 'Engagement Rate',
       value: `${displayAnalytics.engagementRate}%`,
       icon: Heart,
-      color: 'from-pink-500 to-rose-500',
+      color: 'from-orange-500 to-red-500',
       trend: 12,
     },
     {
@@ -373,7 +373,7 @@ export default function LiveAnalyticsPage() {
           >
             <div className="mb-6 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
-                <Heart className="h-5 w-5 text-pink-400" />
+                <Heart className="h-5 w-5 text-orange-400" />
                 Engagement Distribution
               </h3>
             </div>
@@ -383,7 +383,7 @@ export default function LiveAnalyticsPage() {
                 {
                   label: 'Reactions',
                   value: displayAnalytics.totalReactions,
-                  color: 'bg-pink-500',
+                  color: 'bg-orange-500',
                 },
                 {
                   label: 'Chat Messages',
@@ -391,7 +391,7 @@ export default function LiveAnalyticsPage() {
                   color: 'bg-blue-500',
                 },
                 { label: 'Shares', value: 3240, color: 'bg-green-500' },
-                { label: 'Follows', value: 892, color: 'bg-purple-500' },
+                { label: 'Follows', value: 892, color: 'bg-amber-500' },
               ].map((item) => {
                 const maxValue = Math.max(
                   displayAnalytics.totalReactions,
@@ -473,7 +473,7 @@ export default function LiveAnalyticsPage() {
                     </td>
                     <td className="px-6 py-4 text-white/70">{formatNumber(stream.avgViewers)}</td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1 text-pink-400">
+                      <div className="flex items-center gap-1 text-orange-400">
                         <Heart className="h-4 w-4" />
                         <span>{formatNumber(stream.totalReactions)}</span>
                       </div>

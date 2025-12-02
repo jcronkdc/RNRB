@@ -868,7 +868,9 @@ export function NavBar() {
     pathname?.startsWith('/setlists') ||
     pathname?.startsWith('/library') ||
     pathname?.startsWith('/explore') ||
+    pathname?.startsWith('/discover') ||
     pathname?.startsWith('/messages') ||
+    pathname?.startsWith('/notifications') ||
     pathname?.startsWith('/collaboration') ||
     pathname?.startsWith('/credits') ||
     pathname?.startsWith('/settings') ||
@@ -879,6 +881,15 @@ export function NavBar() {
     pathname?.startsWith('/songs') ||
     pathname?.startsWith('/feed') ||
     pathname?.startsWith('/tools') ||
+    pathname?.startsWith('/live') ||
+    pathname?.startsWith('/meet') ||
+    pathname?.startsWith('/marketplace') ||
+    pathname?.startsWith('/masterclasses') ||
+    pathname?.startsWith('/merch') ||
+    pathname?.startsWith('/opportunities') ||
+    pathname?.startsWith('/affiliate') ||
+    pathname?.startsWith('/share') ||
+    pathname?.startsWith('/revenue') ||
     pathname?.startsWith('/u/'); // Public profile pages have their own layout
 
   // Track scroll position for styling

@@ -55,7 +55,7 @@ function LiveStreamCard({ stream, featured = false }: { stream: LiveStream; feat
             className="object-cover transition-transform group-hover:scale-105"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 to-pink-900/50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-900/50 to-amber-900/50" />
         )}
 
         {/* Overlay gradient */}
@@ -81,7 +81,7 @@ function LiveStreamCard({ stream, featured = false }: { stream: LiveStream; feat
         {/* Scheduled badge */}
         {!isLive && stream.scheduledAt && (
           <div className="absolute left-3 top-3">
-            <div className="flex items-center gap-2 rounded-full bg-purple-500/80 px-3 py-1 backdrop-blur-sm">
+            <div className="flex items-center gap-2 rounded-full bg-amber-500/80 px-3 py-1 backdrop-blur-sm">
               <Calendar className="h-3 w-3 text-white" />
               <span className="text-xs font-medium text-white">
                 {new Date(stream.scheduledAt).toLocaleDateString(undefined, {
@@ -108,7 +108,7 @@ function LiveStreamCard({ stream, featured = false }: { stream: LiveStream; feat
                   className="object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 font-bold text-white">
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-500 to-amber-500 font-bold text-white">
                   {stream.streamer.name.charAt(0)}
                 </div>
               )}
@@ -132,7 +132,7 @@ function LiveStreamCard({ stream, featured = false }: { stream: LiveStream; feat
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               whileHover={{ scale: 1.1 }}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 opacity-0 transition-opacity group-hover:opacity-100"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500 opacity-0 transition-opacity group-hover:opacity-100"
             >
               <Play className="ml-0.5 h-5 w-5 text-white" />
             </motion.div>
@@ -220,7 +220,7 @@ export default function LivePage() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500 to-pink-500 px-4 py-2 font-semibold text-white shadow-lg shadow-red-500/30"
+                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500 to-orange-500 px-4 py-2 font-semibold text-white shadow-lg shadow-red-500/30"
               >
                 <Sparkles className="h-4 w-4" />
                 Go Live
@@ -234,7 +234,7 @@ export default function LivePage() {
         {isLoading ? (
           <div className="flex h-64 items-center justify-center">
             <div className="text-center">
-              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
               <p className="text-white/60">Loading streams...</p>
             </div>
           </div>
@@ -279,7 +279,7 @@ export default function LivePage() {
               <section className="mb-12">
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="flex items-center gap-2 text-xl font-bold text-white">
-                    <Calendar className="h-5 w-5 text-purple-500" />
+                    <Calendar className="h-5 w-5 text-amber-500" />
                     Upcoming Streams
                   </h2>
                 </div>
@@ -305,7 +305,7 @@ export default function LivePage() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 font-semibold text-white shadow-lg shadow-purple-500/30"
+                    className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/30"
                   >
                     <Sparkles className="h-5 w-5" />
                     Start Streaming

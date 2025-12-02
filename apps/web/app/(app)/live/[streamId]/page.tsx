@@ -126,7 +126,7 @@ export default function WatchLivePage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+          <div className="mx-auto mb-4 h-16 w-16 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
           <p className="text-white/60">Loading stream...</p>
         </div>
       </div>
@@ -146,7 +146,7 @@ export default function WatchLivePage() {
           </p>
           <Link
             href="/live"
-            className="inline-flex items-center gap-2 rounded-full bg-purple-500 px-6 py-3 font-medium text-white"
+            className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-6 py-3 font-medium text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Live
@@ -184,7 +184,7 @@ export default function WatchLivePage() {
             </div>
             <button onClick={() => setShowChat(!showChat)}>
               <MessageSquare
-                className={`h-6 w-6 ${showChat ? 'text-purple-500' : 'text-white/70'}`}
+                className={`h-6 w-6 ${showChat ? 'text-orange-500' : 'text-white/70'}`}
               />
             </button>
           </div>
@@ -250,7 +250,7 @@ export default function WatchLivePage() {
 
                     <button
                       onClick={() => setShowChat(!showChat)}
-                      className={`rounded-full p-2 transition-colors ${showChat ? 'bg-purple-500 text-white' : 'bg-white/10 text-white/80 hover:bg-white/20'} `}
+                      className={`rounded-full p-2 transition-colors ${showChat ? 'bg-orange-500 text-white' : 'bg-white/10 text-white/80 hover:bg-white/20'} `}
                     >
                       <MessageSquare className="h-5 w-5" />
                     </button>
@@ -274,7 +274,7 @@ export default function WatchLivePage() {
                           className="object-cover"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 text-xl font-bold text-white">
+                        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-500 to-amber-500 text-xl font-bold text-white">
                           {stream.streamer.name.charAt(0)}
                         </div>
                       )}
@@ -294,7 +294,7 @@ export default function WatchLivePage() {
                       className={`flex items-center gap-2 rounded-full px-4 py-2 font-medium transition-colors ${
                         isFollowing
                           ? 'bg-white/20 text-white'
-                          : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                          : 'bg-gradient-to-r from-orange-500 to-amber-500 text-white'
                       } `}
                     >
                       <Heart className={`h-4 w-4 ${isFollowing ? 'fill-white' : ''}`} />
@@ -342,7 +342,7 @@ export default function WatchLivePage() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 font-bold text-white">
+                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-500 to-amber-500 font-bold text-white">
                       {stream.streamer.name.charAt(0)}
                     </div>
                   )}
@@ -358,7 +358,7 @@ export default function WatchLivePage() {
                   className={`rounded-full px-4 py-2 text-sm font-medium ${
                     isFollowing
                       ? 'bg-white/20 text-white'
-                      : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                      : 'bg-gradient-to-r from-orange-500 to-amber-500 text-white'
                   } `}
                 >
                   {isFollowing ? 'Following' : 'Follow'}
