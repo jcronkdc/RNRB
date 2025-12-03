@@ -75,7 +75,7 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
       subject: options.subject,
       from: options.from || DEFAULT_FROM,
     });
-    console.log('💡 Tip: Set RESEND_API_KEY or configure EMAIL_SERVER_URL with Resend');
+    console.log('Tip: Set RESEND_API_KEY or configure EMAIL_SERVER_URL with Resend');
     return {
       success: false,
       error: 'Email service not configured. Set RESEND_API_KEY or EMAIL_SERVER_URL with Resend.',
@@ -486,7 +486,7 @@ export const emailTemplates = {
     inviteLink: string;
   }) => ({
     to: params.inviteEmail,
-    subject: `🎸 You've been invited to collaborate on "${params.projectName}"`,
+    subject: `You've been invited to collaborate on "${params.projectName}"`,
     html: emailWrapper(
       `
       <div class="email-header">
@@ -524,7 +524,7 @@ export const emailTemplates = {
             Instant messaging & voice notes
           </li>
           <li class="feature-item">
-            <span class="feature-icon">🎵</span>
+            <span class="feature-icon">♪</span>
             Audio file sharing & version control
           </li>
         </ul>
@@ -603,7 +603,7 @@ If you didn't expect this invitation, you can safely ignore this email.
         
         <div class="info-card">
           <p style="color: #9c9ca5; font-size: 13px; margin: 0;">
-            💡 <strong>Tip:</strong> Keep this document in a safe place. You'll need it for 
+            <strong>Tip:</strong> Keep this document in a safe place. You'll need it for 
             PRO registration and any future licensing deals.
           </p>
         </div>
@@ -648,10 +648,10 @@ Rock N' Roll Basement Team
   }) => ({
     to: params.email,
     subject: params.orgName
-      ? `🎸 Invitation to join ${params.orgName}`
+      ? `Invitation to join ${params.orgName}`
       : params.projectName
-        ? `🎸 Invitation to join ${params.projectName}`
-        : "🎸 You've been invited to Rock N' Roll Basement",
+        ? `Invitation to join ${params.projectName}`
+        : "You've been invited to Rock N' Roll Basement",
     html: emailWrapper(
       `
       <div class="email-header">
@@ -726,7 +726,7 @@ Accept the invitation here: ${params.inviteUrl}
       </div>
       <div class="email-content">
         <p class="greeting">Hi ${params.musicianName},</p>
-        <h2 class="main-heading">You've Got a Gig Request! 🎉</h2>
+        <h2 class="main-heading">You've Got a Gig Request!</h2>
         
         <p class="body-text">A venue has reached out to book you for an event:</p>
         
@@ -816,7 +816,7 @@ View booking details: ${params.siteUrl}
       </div>
       <div class="email-content">
         <p class="greeting">Hi ${params.userName},</p>
-        <h2 class="main-heading">Payment Successful! 🎉</h2>
+        <h2 class="main-heading">Payment Successful!</h2>
         
         <div class="success-box">
           <p class="success-text">Your payment has been processed successfully.</p>
@@ -965,7 +965,7 @@ Update payment method: ${APP_URL}/settings/billing
         
         <ul class="feature-list">
           <li class="feature-item">
-            <span class="feature-icon">✨</span>
+            <span class="feature-icon">•</span>
             Keep all your projects and songs
           </li>
           <li class="feature-item">
@@ -1032,7 +1032,7 @@ Thank you for trying Rock N' Roll Basement!
       </div>
       <div class="email-content">
         <p class="greeting">Hi ${params.studentName},</p>
-        <h2 class="main-heading">Welcome to Your Masterclass! 🎉</h2>
+        <h2 class="main-heading">Welcome to Your Masterclass!</h2>
         
         <div class="success-box">
           <p class="success-text">Your enrollment is confirmed!</p>
@@ -1112,7 +1112,7 @@ Start learning now: ${params.courseUrl}
     totalStudents: number;
   }) => ({
     to: params.email,
-    subject: `🎉 New student enrolled in "${params.courseName}"!`,
+    subject: `New student enrolled in "${params.courseName}"!`,
     html: emailWrapper(
       `
       <div class="email-header">
@@ -1123,7 +1123,7 @@ Start learning now: ${params.courseUrl}
       </div>
       <div class="email-content">
         <p class="greeting">Hi ${params.instructorName},</p>
-        <h2 class="main-heading">You Have a New Student! 🎉</h2>
+        <h2 class="main-heading">You Have a New Student!</h2>
         
         <div class="success-box">
           <p class="success-text">
@@ -1529,7 +1529,7 @@ View your profile: ${params.profileUrl}
       </div>
       <div class="email-content">
         <p class="greeting">Hi ${params.studentName},</p>
-        <h2 class="main-heading">You Did It! 🎉🎓</h2>
+        <h2 class="main-heading">You Did It!</h2>
         
         <div class="success-box">
           <p class="success-text">Congratulations on completing your masterclass!</p>

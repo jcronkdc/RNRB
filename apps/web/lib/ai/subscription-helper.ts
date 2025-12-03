@@ -718,7 +718,7 @@ export function formatSubscriptionForAI(ctx: SubscriptionContext): string {
     section += `\n### ⚠️ LIMIT REACHED
 You've hit a limit! Suggest upgrading to continue using all features.\n`;
   } else if (ctx.isNearLimit) {
-    section += `\n### ⚡ APPROACHING LIMIT
+    section += `\n### APPROACHING LIMIT
 Usage is above 75%. Might want to mention upgrade options.\n`;
   }
 
@@ -732,7 +732,7 @@ Usage is above 75%. Might want to mention upgrade options.\n`;
   }
 
   if (ctx.downgradeReasons.length > 0) {
-    section += `\n### 💡 POTENTIAL SAVINGS\n`;
+    section += `\n### POTENTIAL SAVINGS\n`;
     ctx.downgradeReasons.forEach((r) => {
       section += `- ${r}\n`;
     });

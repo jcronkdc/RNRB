@@ -2742,6 +2742,65 @@ export const MessageSquareOff = createIcon(
   'MessageSquareOff'
 );
 
+// MousePointer - cursor pointer
+export const MousePointer = createIcon(
+  <>
+    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
+    <path d="M13 13l6 6" />
+  </>,
+  'MousePointer'
+);
+
+// Scroll - scroll/document
+export const Scroll = createIcon(
+  <>
+    <path d="M8 21h12a2 2 0 002-2v-2H10v2a2 2 0 11-4 0V5a2 2 0 10-4 0v3h4" />
+    <path d="M19 17V5a2 2 0 00-2-2H4" />
+  </>,
+  'Scroll'
+);
+
+// Crop - crop/resize
+export const Crop = createIcon(
+  <>
+    <path d="M6.13 1L6 16a2 2 0 002 2h15" />
+    <path d="M1 6.13L16 6a2 2 0 012 2v15" />
+  </>,
+  'Crop'
+);
+
+// Contrast - contrast/adjustment
+export const Contrast = createIcon(
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 2a10 10 0 0 1 0 20" fill="currentColor" />
+  </>,
+  'Contrast'
+);
+
+// Scissors - cut/trim
+export const Scissors = createIcon(
+  <>
+    <circle cx="6" cy="6" r="3" />
+    <circle cx="6" cy="18" r="3" />
+    <line x1="20" y1="4" x2="8.12" y2="15.88" />
+    <line x1="14.47" y1="14.48" x2="20" y2="20" />
+    <line x1="8.12" y1="8.12" x2="12" y2="12" />
+  </>,
+  'Scissors'
+);
+
+// GitCompare - version comparison
+export const GitCompare = createIcon(
+  <>
+    <circle cx="18" cy="18" r="3" />
+    <circle cx="6" cy="6" r="3" />
+    <path d="M13 6h3a2 2 0 012 2v7" />
+    <line x1="6" y1="9" x2="6" y2="21" />
+  </>,
+  'GitCompare'
+);
+
 // Type alias for LucideIcon compatibility
 export type LucideIcon = typeof Activity;
 
@@ -2991,6 +3050,12 @@ export const Icons = {
   Ban,
   Ghost,
   MessageSquareOff,
+  MousePointer,
+  Scroll,
+  Crop,
+  Contrast,
+  Scissors,
+  GitCompare,
   Volume2,
   VolumeX,
   Wand2,

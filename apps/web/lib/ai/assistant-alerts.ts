@@ -388,7 +388,7 @@ async function checkAchievements(userId: string, alerts: ProactiveAlert[]): Prom
     alerts.push({
       type: 'achievement',
       priority: 'low',
-      title: `🎉 ${recentMilestone} Songs!`,
+      title: `${recentMilestone} Songs!`,
       message: `You've written ${songCount} songs! That's amazing dedication.`,
       actionSuggestion: `Keep the momentum going!`,
     });
@@ -423,10 +423,10 @@ async function checkDraftSongs(userId: string, alerts: ProactiveAlert[]): Promis
  */
 export function formatAlertsForAI(alerts: ProactiveAlert[]): string {
   if (alerts.length === 0) {
-    return `## ⚡ PROACTIVE ALERTS\nNo urgent alerts - everything looks good!`;
+    return `## PROACTIVE ALERTS\nNo urgent alerts - everything looks good!`;
   }
 
-  let section = `## ⚡ PROACTIVE ALERTS (${alerts.length})\n\n`;
+  let section = `## PROACTIVE ALERTS (${alerts.length})\n\n`;
   section += `**IMPORTANT: Mention these naturally in conversation when relevant!**\n\n`;
 
   alerts.forEach((alert, i) => {
@@ -440,10 +440,10 @@ export function formatAlertsForAI(alerts: ProactiveAlert[]): string {
             : alert.type === 'missing'
               ? '❓'
               : alert.type === 'achievement'
-                ? '🎉'
+                ? '[!]'
                 : alert.type === 'reminder'
-                  ? '📅'
-                  : '💡';
+                  ? '[R]'
+                  : '[i]';
 
     section += `${i + 1}. ${icon} **${alert.title}** [${alert.priority.toUpperCase()}]\n`;
     section += `   ${alert.message}\n`;
