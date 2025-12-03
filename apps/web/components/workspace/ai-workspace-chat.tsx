@@ -2,7 +2,7 @@
 
 /**
  * AI WORKSPACE CHAT
- * 
+ *
  * A beautiful conversational interface for creating workspaces with natural language.
  * Features:
  * - Floating button with sparkle effect
@@ -99,7 +99,7 @@ export function AIWorkspaceChat() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  
+
   const { createWorkspace, addToolToWorkspace, workspaces, setActiveWorkspace } = useWorkspace();
 
   // Scroll to bottom on new messages
@@ -117,115 +117,122 @@ export function AIWorkspaceChat() {
   }, [isOpen]);
 
   // Send message to AI
-  const sendMessage = useCallback(async (messageText: string) => {
-    if (!messageText.trim() || isLoading) return;
+  const sendMessage = useCallback(
+    async (messageText: string) => {
+      if (!messageText.trim() || isLoading) return;
 
-    const userMessage: Message = {
-      id: `msg-${Date.now()}`,
-      role: 'user',
-      content: messageText,
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
-    setIsLoading(true);
-    setSelectedPreview(null);
-
-    try {
-      // Get existing workspaces for context
-      const existingWorkspaces = workspaces.map(w => ({
-        id: w.id,
-        name: w.name,
-        tools: w.tools.map(t => t.toolKey),
-      }));
-
-      const response = await fetch('/api/assistant/workspace-builder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: messageText,
-          existingWorkspaces,
-        }),
-      });
-
-      const data = await response.json();
-
-      const assistantMessage: Message = {
-        id: `msg-${Date.now()}-assistant`,
-        role: 'assistant',
-        content: data.response || 'I had trouble understanding that. Try asking me to create a workspace!',
-        previews: data.previews || (data.preview ? [data.preview] : undefined),
-        suggestions: data.suggestions,
-        requiresConfirmation: data.requiresConfirmation,
+      const userMessage: Message = {
+        id: `msg-${Date.now()}`,
+        role: 'user',
+        content: messageText,
         timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, assistantMessage]);
-
-    } catch (error) {
-      console.error('AI Workspace Builder error:', error);
-      const errorMessage: Message = {
-        id: `msg-${Date.now()}-error`,
-        role: 'assistant',
-        content: "Oops! Something went wrong. Try again with something like 'Create a songwriting workspace'.",
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isLoading, workspaces]);
-
-  // Create workspace from preview
-  const handleCreateFromPreview = useCallback(async (preview: WorkspacePreview) => {
-    setIsLoading(true);
-    
-    try {
-      // Create the workspace
-      const workspace = await createWorkspace(preview.name, preview.icon);
-      
-      // Add all the tools
-      for (const toolKey of preview.tools) {
-        await addToolToWorkspace(workspace.id, toolKey);
-      }
-
-      // Switch to the new workspace
-      setActiveWorkspace(workspace.id);
-
-      // Success message with edit hint
-      const successMessage: Message = {
-        id: `msg-${Date.now()}-success`,
-        role: 'assistant',
-        content: `Done! Your "${preview.name}" workspace is ready with ${preview.tools.length} tools.\n\nYour new tab is now active! Click the "Edit" button in the workspace header to customize it - you can add more tools, remove ones you don't need, or rearrange them.`,
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, successMessage]);
+      setMessages((prev) => [...prev, userMessage]);
+      setInputValue('');
+      setIsLoading(true);
       setSelectedPreview(null);
 
-      // Minimize after a moment so user can see their new workspace
-      setTimeout(() => {
-        setIsMinimized(true);
-      }, 2500);
+      try {
+        // Get existing workspaces for context
+        const existingWorkspaces = workspaces.map((w) => ({
+          id: w.id,
+          name: w.name,
+          tools: w.tools.map((t) => t.toolKey),
+        }));
 
-    } catch (error) {
-      console.error('Failed to create workspace:', error);
-      const errorMessage: Message = {
-        id: `msg-${Date.now()}-error`,
-        role: 'assistant',
-        content: "Failed to create the workspace. Please try again.",
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [createWorkspace, addToolToWorkspace, setActiveWorkspace]);
+        const response = await fetch('/api/assistant/workspace-builder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: messageText,
+            existingWorkspaces,
+          }),
+        });
+
+        const data = await response.json();
+
+        const assistantMessage: Message = {
+          id: `msg-${Date.now()}-assistant`,
+          role: 'assistant',
+          content:
+            data.response ||
+            'I had trouble understanding that. Try asking me to create a workspace!',
+          previews: data.previews || (data.preview ? [data.preview] : undefined),
+          suggestions: data.suggestions,
+          requiresConfirmation: data.requiresConfirmation,
+          timestamp: new Date(),
+        };
+
+        setMessages((prev) => [...prev, assistantMessage]);
+      } catch (error) {
+        console.error('AI Workspace Builder error:', error);
+        const errorMessage: Message = {
+          id: `msg-${Date.now()}-error`,
+          role: 'assistant',
+          content:
+            "Oops! Something went wrong. Try again with something like 'Create a songwriting workspace'.",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading, workspaces]
+  );
+
+  // Create workspace from preview
+  const handleCreateFromPreview = useCallback(
+    async (preview: WorkspacePreview) => {
+      setIsLoading(true);
+
+      try {
+        // Create the workspace
+        const workspace = await createWorkspace(preview.name, preview.icon);
+
+        // Add all the tools
+        for (const toolKey of preview.tools) {
+          await addToolToWorkspace(workspace.id, toolKey);
+        }
+
+        // Switch to the new workspace
+        setActiveWorkspace(workspace.id);
+
+        // Success message with edit hint
+        const successMessage: Message = {
+          id: `msg-${Date.now()}-success`,
+          role: 'assistant',
+          content: `Done! Your "${preview.name}" workspace is ready with ${preview.tools.length} tools.\n\nYour new tab is now active! Click the "Edit" button in the workspace header to customize it - you can add more tools, remove ones you don't need, or rearrange them.`,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, successMessage]);
+        setSelectedPreview(null);
+
+        // Minimize after a moment so user can see their new workspace
+        setTimeout(() => {
+          setIsMinimized(true);
+        }, 2500);
+      } catch (error) {
+        console.error('Failed to create workspace:', error);
+        const errorMessage: Message = {
+          id: `msg-${Date.now()}-error`,
+          role: 'assistant',
+          content: 'Failed to create the workspace. Please try again.',
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [createWorkspace, addToolToWorkspace, setActiveWorkspace]
+  );
 
   // Create from template
   const handleCreateFromTemplate = useCallback(async (template: WorkspaceTemplate) => {
     setShowTemplates(false);
-    
+
     const preview: WorkspacePreview = {
       name: template.name,
       icon: template.icon,
@@ -244,7 +251,7 @@ export function AIWorkspaceChat() {
       requiresConfirmation: true,
       timestamp: new Date(),
     };
-    setMessages(prev => [...prev, previewMessage]);
+    setMessages((prev) => [...prev, previewMessage]);
     setSelectedPreview(preview);
   }, []);
 
@@ -287,17 +294,22 @@ export function AIWorkspaceChat() {
           'fixed bottom-24 right-6 z-40',
           'flex items-center gap-2 rounded-full',
           'font-semibold shadow-lg',
-          'gradient-btn bg-gradient-to-r from-violet-600 to-purple-600',
+          'ai-floating-btn bg-gradient-to-r from-violet-600 to-purple-600',
           'hover:shadow-xl hover:shadow-purple-500/30',
           'transition-shadow duration-300',
           // Show compact version when minimized (just icon), full when not open yet
           isMinimized ? 'p-3' : 'px-4 py-3'
         )}
+        style={{ color: '#ffffff' }}
         title="AI Workspace Builder"
       >
-        <Wand2 className="h-5 w-5" />
-        {!isMinimized && <span>AI Workspace Builder</span>}
-        <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-400 border-2 border-white animate-pulse" />
+        <Wand2 className="h-5 w-5" style={{ color: '#ffffff' }} />
+        {!isMinimized && (
+          <span className="ai-floating-btn-text" style={{ color: '#ffffff' }}>
+            AI Workspace Builder
+          </span>
+        )}
+        <div className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full border-2 border-white bg-green-400" />
       </motion.button>
     );
   }
@@ -311,7 +323,7 @@ export function AIWorkspaceChat() {
       className={cn(
         'fixed bottom-6 right-6 z-50',
         'w-[440px] max-w-[calc(100vw-2rem)]',
-        'rounded-2xl shadow-2xl overflow-hidden',
+        'overflow-hidden rounded-2xl shadow-2xl',
         'flex flex-col',
         'h-[600px] max-h-[calc(100vh-4rem)]'
       )}
@@ -321,17 +333,21 @@ export function AIWorkspaceChat() {
       }}
     >
       {/* Header */}
-      <div 
+      <div
         className="flex items-center justify-between px-4 py-3"
         style={{
-          background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%)',
+          background:
+            'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%)',
           borderBottom: '1px solid var(--border)',
         }}
       >
         <div className="flex items-center gap-3">
           <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-500/30">
             <Wand2 className="h-5 w-5 text-white" />
-            <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-green-400 border-2" style={{ borderColor: 'var(--panel)' }} />
+            <div
+              className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 bg-green-400"
+              style={{ borderColor: 'var(--panel)' }}
+            />
           </div>
           <div>
             <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
@@ -346,7 +362,7 @@ export function AIWorkspaceChat() {
           {messages.length > 0 && (
             <button
               onClick={handleReset}
-              className="px-2 py-1 rounded-lg text-xs font-medium hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+              className="rounded-lg px-2 py-1 text-xs font-medium transition-colors hover:bg-black/10 dark:hover:bg-white/10"
               style={{ color: 'var(--muted)' }}
             >
               New
@@ -354,7 +370,7 @@ export function AIWorkspaceChat() {
           )}
           <button
             onClick={handleMinimize}
-            className="p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+            className="rounded-lg p-2 transition-colors hover:bg-black/10 dark:hover:bg-white/10"
             style={{ color: 'var(--muted)' }}
             title="Minimize to icon"
           >
@@ -364,12 +380,12 @@ export function AIWorkspaceChat() {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto p-4">
         {/* Empty state */}
         {messages.length === 0 && !showTemplates && (
-          <div className="flex flex-col h-full">
+          <div className="flex h-full flex-col">
             {/* Welcome */}
-            <div className="text-center mb-6">
+            <div className="mb-6 text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-500/30">
                 <Wand2 className="h-8 w-8 text-white" />
               </div>
@@ -382,8 +398,11 @@ export function AIWorkspaceChat() {
             </div>
 
             {/* Suggested prompts */}
-            <div className="space-y-2 mb-4">
-              <p className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
+            <div className="mb-4 space-y-2">
+              <p
+                className="text-xs font-medium uppercase tracking-wider"
+                style={{ color: 'var(--muted)' }}
+              >
                 Try saying
               </p>
               {SUGGESTED_PROMPTS.map((prompt, i) => (
@@ -394,14 +413,20 @@ export function AIWorkspaceChat() {
                   transition={{ delay: i * 0.1 }}
                   onClick={() => sendMessage(prompt.text)}
                   className={cn(
-                    'w-full flex items-center gap-3 p-3 rounded-xl text-left text-sm',
-                    'hover:bg-black/5 dark:hover:bg-white/5 transition-all group'
+                    'flex w-full items-center gap-3 rounded-xl p-3 text-left text-sm',
+                    'group transition-all hover:bg-black/5 dark:hover:bg-white/5'
                   )}
                   style={{ border: '1px solid var(--border)' }}
                 >
-                  <prompt.icon className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                  <prompt.icon
+                    className="h-4 w-4 flex-shrink-0"
+                    style={{ color: 'var(--accent)' }}
+                  />
                   <span style={{ color: 'var(--text)' }}>{prompt.text}</span>
-                  <ChevronRight className="h-4 w-4 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'var(--muted)' }} />
+                  <ChevronRight
+                    className="ml-auto h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                    style={{ color: 'var(--muted)' }}
+                  />
                 </motion.button>
               ))}
             </div>
@@ -410,12 +435,13 @@ export function AIWorkspaceChat() {
             <button
               onClick={() => setShowTemplates(true)}
               className={cn(
-                'mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-xl',
+                'mt-auto flex w-full items-center justify-center gap-2 rounded-xl py-3',
                 'font-medium transition-all',
                 'hover:scale-[1.02]'
               )}
               style={{
-                background: 'linear-gradient(135deg, var(--accent-dim) 0%, rgba(139, 92, 246, 0.2) 100%)',
+                background:
+                  'linear-gradient(135deg, var(--accent-dim) 0%, rgba(139, 92, 246, 0.2) 100%)',
                 color: 'var(--accent)',
                 border: '1px solid var(--accent)',
               }}
@@ -450,27 +476,29 @@ export function AIWorkspaceChat() {
                   transition={{ delay: i * 0.05 }}
                   onClick={() => handleCreateFromTemplate(template)}
                   className={cn(
-                    'p-3 rounded-xl text-left transition-all',
-                    'hover:scale-[1.02] hover:shadow-lg group'
+                    'rounded-xl p-3 text-left transition-all',
+                    'group hover:scale-[1.02] hover:shadow-lg'
                   )}
                   style={{
                     background: `linear-gradient(135deg, var(--panel) 0%, rgba(139, 92, 246, 0.05) 100%)`,
                     border: '1px solid var(--border)',
                   }}
                 >
-                  <div className={cn(
-                    'w-8 h-8 rounded-lg flex items-center justify-center mb-2',
-                    `bg-gradient-to-br ${template.gradient}`
-                  )}>
+                  <div
+                    className={cn(
+                      'mb-2 flex h-8 w-8 items-center justify-center rounded-lg',
+                      `bg-gradient-to-br ${template.gradient}`
+                    )}
+                  >
                     {(() => {
                       const Icon = ICON_MAP[template.icon] || Sparkles;
                       return <Icon className="h-4 w-4 text-white" />;
                     })()}
                   </div>
-                  <p className="font-medium text-sm mb-0.5" style={{ color: 'var(--text)' }}>
+                  <p className="mb-0.5 text-sm font-medium" style={{ color: 'var(--text)' }}>
                     {template.name}
                   </p>
-                  <p className="text-xs line-clamp-2" style={{ color: 'var(--muted)' }}>
+                  <p className="line-clamp-2 text-xs" style={{ color: 'var(--muted)' }}>
                     {template.description}
                   </p>
                 </motion.button>
@@ -487,15 +515,14 @@ export function AIWorkspaceChat() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className={cn(
-                'flex',
-                message.role === 'user' ? 'justify-end' : 'justify-start'
-              )}
+              className={cn('flex', message.role === 'user' ? 'justify-end' : 'justify-start')}
             >
-              <div className={cn(
-                'max-w-[90%] space-y-3',
-                message.role === 'user' ? 'text-right' : 'text-left'
-              )}>
+              <div
+                className={cn(
+                  'max-w-[90%] space-y-3',
+                  message.role === 'user' ? 'text-right' : 'text-left'
+                )}
+              >
                 {/* Message bubble */}
                 <div
                   className={cn(
@@ -504,11 +531,15 @@ export function AIWorkspaceChat() {
                       ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-purple-500/20'
                       : ''
                   )}
-                  style={message.role === 'assistant' ? {
-                    background: 'var(--panel)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)',
-                  } : undefined}
+                  style={
+                    message.role === 'assistant'
+                      ? {
+                          background: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                        }
+                      : undefined
+                  }
                 >
                   {message.content}
                 </div>
@@ -536,7 +567,7 @@ export function AIWorkspaceChat() {
                       <button
                         key={i}
                         onClick={() => sendMessage(suggestion)}
-                        className="px-3 py-1.5 rounded-full text-xs font-medium hover:scale-105 transition-transform"
+                        className="rounded-full px-3 py-1.5 text-xs font-medium transition-transform hover:scale-105"
                         style={{
                           background: 'var(--accent-dim)',
                           color: 'var(--accent)',
@@ -559,8 +590,8 @@ export function AIWorkspaceChat() {
             animate={{ opacity: 1 }}
             className="flex justify-start"
           >
-            <div 
-              className="px-4 py-3 rounded-2xl"
+            <div
+              className="rounded-2xl px-4 py-3"
               style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
             >
               <div className="flex items-center gap-2">
@@ -577,9 +608,9 @@ export function AIWorkspaceChat() {
       </div>
 
       {/* Input area */}
-      <div 
+      <div
         className="p-3"
-        style={{ 
+        style={{
           borderTop: '1px solid var(--border)',
           background: 'var(--panel-hover)',
         }}
@@ -609,10 +640,10 @@ export function AIWorkspaceChat() {
             onClick={() => sendMessage(inputValue)}
             disabled={isLoading || !inputValue.trim()}
             className={cn(
-              'flex-shrink-0 p-3 rounded-xl transition-all',
+              'flex-shrink-0 rounded-xl p-3 transition-all',
               'bg-gradient-to-r from-violet-500 to-purple-600 text-white',
               'hover:shadow-lg hover:shadow-purple-500/30',
-              'disabled:opacity-50 disabled:cursor-not-allowed',
+              'disabled:cursor-not-allowed disabled:opacity-50',
               'hover:scale-105 active:scale-95'
             )}
           >
@@ -653,8 +684,8 @@ function WorkspacePreviewCard({
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className={cn(
-        'rounded-xl overflow-hidden transition-all cursor-pointer',
-        isSelected ? 'ring-2 ring-purple-500 shadow-lg shadow-purple-500/20' : ''
+        'cursor-pointer overflow-hidden rounded-xl transition-all',
+        isSelected ? 'shadow-lg shadow-purple-500/20 ring-2 ring-purple-500' : ''
       )}
       style={{
         background: 'var(--panel)',
@@ -663,33 +694,28 @@ function WorkspacePreviewCard({
       onClick={onSelect}
     >
       {/* Header with gradient */}
-      <div className={cn(
-        'px-4 py-3 flex items-center gap-3',
-        `bg-gradient-to-r ${gradient}`
-      )}>
-        <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+      <div className={cn('flex items-center gap-3 px-4 py-3', `bg-gradient-to-r ${gradient}`)}>
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
           <Icon className="h-5 w-5 text-white" />
         </div>
-        <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-white truncate">{preview.name}</h4>
-          <p className="text-xs text-white/80 truncate">
-            {preview.tools.length} tools included
-          </p>
+        <div className="min-w-0 flex-1">
+          <h4 className="truncate font-semibold text-white">{preview.name}</h4>
+          <p className="truncate text-xs text-white/80">{preview.tools.length} tools included</p>
         </div>
       </div>
 
       {/* Tools */}
       <div className="p-3">
-        <p className="text-xs font-medium mb-2" style={{ color: 'var(--muted)' }}>
+        <p className="mb-2 text-xs font-medium" style={{ color: 'var(--muted)' }}>
           Includes:
         </p>
-        <div className="flex flex-wrap gap-1.5 mb-3">
+        <div className="mb-3 flex flex-wrap gap-1.5">
           {preview.tools.slice(0, 6).map((toolKey) => {
             const tool = getToolByKey(toolKey);
             return (
               <span
                 key={toolKey}
-                className="px-2 py-1 rounded-md text-xs"
+                className="rounded-md px-2 py-1 text-xs"
                 style={{ background: 'var(--accent-dim)', color: 'var(--text-secondary)' }}
               >
                 {tool?.label || toolKey}
@@ -697,10 +723,7 @@ function WorkspacePreviewCard({
             );
           })}
           {preview.tools.length > 6 && (
-            <span 
-              className="px-2 py-1 rounded-md text-xs"
-              style={{ color: 'var(--muted)' }}
-            >
+            <span className="rounded-md px-2 py-1 text-xs" style={{ color: 'var(--muted)' }}>
               +{preview.tools.length - 6} more
             </span>
           )}
@@ -714,13 +737,13 @@ function WorkspacePreviewCard({
           }}
           disabled={isLoading}
           className={cn(
-            'w-full py-2.5 rounded-xl font-semibold text-sm',
+            'w-full rounded-xl py-2.5 text-sm font-semibold',
             'flex items-center justify-center gap-2',
             'transition-all',
             'bg-gradient-to-r from-violet-500 to-purple-600 text-white',
             'hover:shadow-lg hover:shadow-purple-500/30',
             'hover:scale-[1.02] active:scale-[0.98]',
-            'disabled:opacity-50 disabled:cursor-not-allowed'
+            'disabled:cursor-not-allowed disabled:opacity-50'
           )}
         >
           {isLoading ? (
@@ -739,4 +762,3 @@ function WorkspacePreviewCard({
     </motion.div>
   );
 }
-

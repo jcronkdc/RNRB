@@ -3367,37 +3367,57 @@ html.light button[class*='text-white'][class*='from-'] * {
 }
 
 /* === GRADIENT BUTTON CLASS === */
-/* This class is used for buttons with inline gradient styles */
-/* Reset background-color to let the inline style gradient show */
-html.light .gradient-btn,
-html.light button.gradient-btn,
-html.light header button.gradient-btn {
-  background-color: unset !important;
-  background: unset !important;
+/* This class is used for buttons with inline gradient styles OR Tailwind gradient classes */
+/* For buttons with variant classes (gradient-btn-orange, etc), set specific CSS gradients */
+/* For buttons with Tailwind gradient classes (bg-gradient-to-r from-*), let Tailwind work */
+
+html.light .gradient-btn.gradient-btn-orange,
+html.light button.gradient-btn.gradient-btn-orange {
+  background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%) !important;
+  background-color: transparent !important;
   color: #ffffff !important;
 }
 
-/* Specific gradient button backgrounds */
-html.light .gradient-btn-orange {
-  background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%) !important;
-}
-
-html.light .gradient-btn-red {
+html.light .gradient-btn.gradient-btn-red,
+html.light button.gradient-btn.gradient-btn-red {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
 }
 
-html.light .gradient-btn-purple {
+html.light .gradient-btn.gradient-btn-purple,
+html.light button.gradient-btn.gradient-btn-purple {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
 }
 
-html.light .gradient-btn-amber {
+html.light .gradient-btn.gradient-btn-amber,
+html.light button.gradient-btn.gradient-btn-amber {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
 }
 
-html.light .gradient-btn-sky {
+html.light .gradient-btn.gradient-btn-sky,
+html.light button.gradient-btn.gradient-btn-sky {
   background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
 }
 
+/* Generic gradient-btn that uses Tailwind bg-gradient classes */
+/* These have both .gradient-btn AND bg-gradient-to-* classes */
+html.light .gradient-btn[class*='bg-gradient-to-r'],
+html.light .gradient-btn[class*='bg-gradient-to-l'],
+html.light .gradient-btn[class*='from-brand'],
+html.light .gradient-btn[class*='from-violet'],
+html.light .gradient-btn[class*='from-purple'] {
+  color: #ffffff !important;
+  /* Let Tailwind gradient classes work - don't unset */
+}
+
+/* Force white text/icons on all gradient buttons */
 html.light .gradient-btn *,
 .gradient-btn * {
   color: #ffffff !important;
@@ -3405,6 +3425,86 @@ html.light .gradient-btn *,
 
 html.light .gradient-btn svg,
 .gradient-btn svg {
+  color: #ffffff !important;
+}
+
+/* === AI BUTTON SPECIFIC FIXES === */
+/* AI Assistant uses from-brand-primary to-purple-600 */
+html.light button.gradient-btn[class*='from-brand-primary'],
+html.light button[class*='from-brand-primary'][class*='to-purple'] {
+  color: #ffffff !important;
+}
+
+html.light button.gradient-btn[class*='from-brand-primary'] *,
+html.light button[class*='from-brand-primary'][class*='to-purple'] * {
+  color: #ffffff !important;
+}
+
+/* AI Workspace Builder uses from-violet-600 to-purple-600 */
+html.light button.gradient-btn[class*='from-violet'],
+html.light button[class*='from-violet'][class*='to-purple'] {
+  color: #ffffff !important;
+}
+
+html.light button.gradient-btn[class*='from-violet'] *,
+html.light button[class*='from-violet'][class*='to-purple'] * {
+  color: #ffffff !important;
+}
+
+/* === FINAL ABSOLUTE OVERRIDES FOR AI BUTTONS === */
+/* These MUST be at the very end to win all specificity battles */
+
+/* Target fixed position AI buttons specifically */
+html.light button.fixed[class*='from-brand-primary'],
+html.light button.fixed[class*='from-violet'],
+html.light button.fixed.gradient-btn {
+  color: #ffffff !important;
+}
+
+html.light button.fixed[class*='from-brand-primary'] span,
+html.light button.fixed[class*='from-violet'] span,
+html.light button.fixed.gradient-btn span {
+  color: #ffffff !important;
+}
+
+html.light button.fixed[class*='from-brand-primary'] svg,
+html.light button.fixed[class*='from-violet'] svg,
+html.light button.fixed.gradient-btn svg {
+  color: #ffffff !important;
+}
+
+/* Motion buttons (framer-motion uses motion.button) */
+html.light [class*='bottom-'][class*='right-'].gradient-btn,
+html.light [class*='bottom-'][class*='right-'][class*='from-'] {
+  color: #ffffff !important;
+}
+
+html.light [class*='bottom-'][class*='right-'].gradient-btn *,
+html.light [class*='bottom-'][class*='right-'][class*='from-'] * {
+  color: #ffffff !important;
+}
+
+/* === AI FLOATING BUTTON OVERRIDES - HIGHEST SPECIFICITY === */
+/* These use a unique class name to avoid conflicts with other rules */
+html.light .ai-floating-btn,
+html.light button.ai-floating-btn,
+.ai-floating-btn {
+  color: #ffffff !important;
+}
+
+html.light .ai-floating-btn-text,
+html.light span.ai-floating-btn-text,
+.ai-floating-btn-text {
+  color: #ffffff !important;
+}
+
+html.light .ai-floating-btn svg,
+.ai-floating-btn svg {
+  color: #ffffff !important;
+}
+
+html.light .ai-floating-btn *,
+.ai-floating-btn * {
   color: #ffffff !important;
 }
 

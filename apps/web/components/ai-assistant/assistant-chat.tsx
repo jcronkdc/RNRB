@@ -236,7 +236,7 @@ export function AssistantChat() {
           'fixed bottom-6 right-6 z-50',
           'flex items-center gap-2',
           'rounded-full',
-          'gradient-btn bg-gradient-to-r from-brand-primary to-purple-600',
+          'ai-floating-btn bg-gradient-to-r from-brand-primary to-purple-600',
           'shadow-lg shadow-brand-primary/25 hover:shadow-xl hover:shadow-brand-primary/40',
           'transition-all duration-300',
           'hover:scale-105 active:scale-95',
@@ -244,17 +244,25 @@ export function AssistantChat() {
           // Compact when minimized, full when not opened yet
           isMinimized ? 'p-3' : 'px-4 py-3'
         )}
+        style={{ color: '#ffffff' }}
         aria-label="Open AI Assistant"
         title="AI Assistant"
       >
         <div className="relative">
-          <Sparkles className="h-5 w-5 transition-transform group-hover:rotate-12" />
+          <Sparkles
+            className="h-5 w-5 transition-transform group-hover:rotate-12"
+            style={{ color: '#ffffff' }}
+          />
           {/* Green dot to show it's active when minimized */}
           {isMinimized && (
             <div className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-purple-600" />
           )}
         </div>
-        {!isMinimized && <span className="font-semibold">AI Assistant</span>}
+        {!isMinimized && (
+          <span className="ai-floating-btn-text font-semibold" style={{ color: '#ffffff' }}>
+            AI Assistant
+          </span>
+        )}
       </button>
     );
   }
@@ -317,253 +325,253 @@ export function AssistantChat() {
       <>
         {/* Messages */}
         <div className="flex-1 space-y-4 overflow-y-auto p-4">
-            {messages.length === 0 && (
-              <div className="flex h-full flex-col px-2">
-                {/* Welcome */}
-                <div className="mb-6 text-center">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
-                    <Sparkles className="h-8 w-8 text-white" />
-                  </div>
-                  <h4 className="mb-1 text-lg font-semibold" style={{ color: 'var(--text)' }}>
-                    Hey! I'm your AI Assistant
-                  </h4>
-                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                    I know your songs, projects, and preferences. Ask me anything!
+          {messages.length === 0 && (
+            <div className="flex h-full flex-col px-2">
+              {/* Welcome */}
+              <div className="mb-6 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
+                  <Sparkles className="h-8 w-8 text-white" />
+                </div>
+                <h4 className="mb-1 text-lg font-semibold" style={{ color: 'var(--text)' }}>
+                  Hey! I'm your AI Assistant
+                </h4>
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  I know your songs, projects, and preferences. Ask me anything!
+                </p>
+              </div>
+
+              {/* Proactive suggestion */}
+              {showProactiveSuggestion && proactiveSuggestion && (
+                <div className="mb-4 rounded-xl border border-brand-primary/30 bg-brand-primary/10 p-4">
+                  <p className="mb-1 text-xs font-medium text-brand-primary">
+                    {proactiveSuggestion.trigger}
+                  </p>
+                  <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    {proactiveSuggestion.suggestion}
                   </p>
                 </div>
+              )}
 
-                {/* Proactive suggestion */}
-                {showProactiveSuggestion && proactiveSuggestion && (
-                  <div className="mb-4 rounded-xl border border-brand-primary/30 bg-brand-primary/10 p-4">
-                    <p className="mb-1 text-xs font-medium text-brand-primary">
-                      {proactiveSuggestion.trigger}
-                    </p>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      {proactiveSuggestion.suggestion}
-                    </p>
-                  </div>
-                )}
-
-                {/* Quick actions */}
-                <div className="mt-auto">
-                  <p
-                    className="mb-3 text-xs font-medium uppercase tracking-wider"
-                    style={{ color: 'var(--muted-soft)' }}
-                  >
-                    Quick Actions
-                  </p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {quickActions.map((action, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleQuickAction(action.prompt)}
-                        className={cn(
-                          'flex items-center gap-2 rounded-xl p-3',
-                          'text-left text-sm',
-                          'hover:bg-black/5 dark:hover:bg-white/5',
-                          'transition-all duration-200',
-                          'group'
-                        )}
-                        style={{
-                          border: '1px solid var(--border)',
-                          background: 'var(--panel)',
-                          color: 'var(--text-secondary)',
-                        }}
-                      >
-                        <action.icon className="h-4 w-4 text-brand-primary transition-transform group-hover:scale-110" />
-                        <span>{action.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={cn('flex', message.role === 'user' ? 'justify-end' : 'justify-start')}
-              >
-                <div
-                  className={cn(
-                    'max-w-[85%] rounded-2xl px-4 py-3 text-sm',
-                    message.role === 'user'
-                      ? 'bg-gradient-to-r from-brand-primary to-purple-600 text-white shadow-lg shadow-brand-primary/20'
-                      : ''
-                  )}
-                  style={
-                    message.role === 'assistant'
-                      ? {
-                          border: '1px solid var(--border)',
-                          background: 'var(--panel)',
-                          color: 'var(--text)',
-                        }
-                      : undefined
-                  }
+              {/* Quick actions */}
+              <div className="mt-auto">
+                <p
+                  className="mb-3 text-xs font-medium uppercase tracking-wider"
+                  style={{ color: 'var(--muted-soft)' }}
                 >
-                  {message.role === 'assistant' && (
-                    <div className="mb-2 flex items-center gap-2">
-                      <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gradient-to-br from-brand-primary to-purple-600">
-                        <Sparkles className="h-3 w-3 text-white" />
-                      </div>
-                      <span className="text-xs font-medium text-brand-primary">AI Assistant</span>
-                      {message.isStreaming && (
-                        <span
-                          className="ml-auto flex items-center gap-1 text-xs"
-                          style={{ color: 'var(--muted-soft)' }}
-                        >
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                          typing
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  <div className="whitespace-pre-wrap leading-relaxed">
-                    {message.content}
-                    {message.isStreaming && (
-                      <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-brand-primary" />
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            {isLoading && !isStreaming && (
-              <div className="flex justify-start">
-                <div
-                  className="max-w-[85%] rounded-2xl px-4 py-3"
-                  style={{
-                    border: '1px solid var(--border)',
-                    background: 'var(--panel)',
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1">
-                      {[0, 1, 2].map((i) => (
-                        <div
-                          key={i}
-                          className="h-2 w-2 animate-bounce rounded-full bg-brand-primary"
-                          style={{ animationDelay: `${i * 150}ms` }}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs" style={{ color: 'var(--muted)' }}>
-                      {currentAction ? `Running ${currentAction}...` : 'Thinking...'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {error && (
-              <div className="flex justify-center">
-                <div className="max-w-[90%] rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm">
-                  <p className="mb-1 font-medium text-red-400">Error</p>
-                  <p className="text-xs text-red-300">{error}</p>
-                  {error.includes('Upgrade') && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2 w-full border-red-500/30 text-red-400 hover:bg-red-500/10"
-                      onClick={() => (window.location.href = '/settings/subscription')}
-                    >
-                      View Plans
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input */}
-          <div
-            className="p-3"
-            style={{
-              borderTop: '1px solid var(--border)',
-              background: 'var(--panel-hover)',
-            }}
-          >
-            {messages.length > 0 && (
-              <div className="mb-2 flex items-center justify-between">
-                <div className="flex gap-1">
-                  {quickActions.slice(0, 3).map((action, index) => (
+                  Quick Actions
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {quickActions.map((action, index) => (
                     <button
                       key={index}
                       onClick={() => handleQuickAction(action.prompt)}
-                      disabled={isLoading || isStreaming}
                       className={cn(
-                        'flex items-center gap-1 rounded-lg px-2 py-1',
-                        'text-xs',
+                        'flex items-center gap-2 rounded-xl p-3',
+                        'text-left text-sm',
                         'hover:bg-black/5 dark:hover:bg-white/5',
-                        'transition-colors',
-                        'disabled:cursor-not-allowed disabled:opacity-50'
+                        'transition-all duration-200',
+                        'group'
                       )}
-                      style={{ color: 'var(--muted)' }}
+                      style={{
+                        border: '1px solid var(--border)',
+                        background: 'var(--panel)',
+                        color: 'var(--text-secondary)',
+                      }}
                     >
-                      <action.icon className="h-3 w-3" />
-                      <span className="hidden sm:inline">{action.label}</span>
+                      <action.icon className="h-4 w-4 text-brand-primary transition-transform group-hover:scale-110" />
+                      <span>{action.label}</span>
                     </button>
                   ))}
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={reset}
-                  disabled={isLoading || isStreaming}
-                  className="h-auto py-1 text-xs hover:bg-black/5 dark:hover:bg-white/5"
-                  style={{ color: 'var(--muted)' }}
-                >
-                  <MessageSquare className="mr-1 h-3 w-3" />
-                  New
-                </Button>
               </div>
-            )}
-            <div className="flex gap-2">
-              <textarea
-                ref={inputRef}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Ask me anything..."
-                className={cn(
-                  'flex-1 resize-none rounded-xl px-4 py-3',
-                  'text-sm',
-                  'focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20',
-                  'max-h-32'
-                )}
-                style={{
-                  background: 'var(--bg)',
-                  color: 'var(--text)',
-                  border: '1px solid var(--border)',
-                }}
-                rows={1}
-                disabled={isLoading || isStreaming}
-              />
-              {isStreaming ? (
-                <Button
-                  onClick={stopStreaming}
-                  size="icon"
-                  className="shrink-0 bg-red-500 hover:bg-red-600"
-                >
-                  <Square className="h-4 w-4" />
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => handleSendMessage()}
-                  disabled={isLoading || !inputValue.trim()}
-                  size="icon"
-                  className="shrink-0 bg-gradient-to-r from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/20 hover:from-brand-primary/90 hover:to-purple-600/90"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              )}
             </div>
-            <p className="mt-2 text-center text-xs" style={{ color: 'var(--muted-soft)' }}>
-              Enter to send • Shift+Enter for new line
-            </p>
+          )}
+
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={cn('flex', message.role === 'user' ? 'justify-end' : 'justify-start')}
+            >
+              <div
+                className={cn(
+                  'max-w-[85%] rounded-2xl px-4 py-3 text-sm',
+                  message.role === 'user'
+                    ? 'bg-gradient-to-r from-brand-primary to-purple-600 text-white shadow-lg shadow-brand-primary/20'
+                    : ''
+                )}
+                style={
+                  message.role === 'assistant'
+                    ? {
+                        border: '1px solid var(--border)',
+                        background: 'var(--panel)',
+                        color: 'var(--text)',
+                      }
+                    : undefined
+                }
+              >
+                {message.role === 'assistant' && (
+                  <div className="mb-2 flex items-center gap-2">
+                    <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gradient-to-br from-brand-primary to-purple-600">
+                      <Sparkles className="h-3 w-3 text-white" />
+                    </div>
+                    <span className="text-xs font-medium text-brand-primary">AI Assistant</span>
+                    {message.isStreaming && (
+                      <span
+                        className="ml-auto flex items-center gap-1 text-xs"
+                        style={{ color: 'var(--muted-soft)' }}
+                      >
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        typing
+                      </span>
+                    )}
+                  </div>
+                )}
+                <div className="whitespace-pre-wrap leading-relaxed">
+                  {message.content}
+                  {message.isStreaming && (
+                    <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-brand-primary" />
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {isLoading && !isStreaming && (
+            <div className="flex justify-start">
+              <div
+                className="max-w-[85%] rounded-2xl px-4 py-3"
+                style={{
+                  border: '1px solid var(--border)',
+                  background: 'var(--panel)',
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1">
+                    {[0, 1, 2].map((i) => (
+                      <div
+                        key={i}
+                        className="h-2 w-2 animate-bounce rounded-full bg-brand-primary"
+                        style={{ animationDelay: `${i * 150}ms` }}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>
+                    {currentAction ? `Running ${currentAction}...` : 'Thinking...'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="flex justify-center">
+              <div className="max-w-[90%] rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm">
+                <p className="mb-1 font-medium text-red-400">Error</p>
+                <p className="text-xs text-red-300">{error}</p>
+                {error.includes('Upgrade') && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-2 w-full border-red-500/30 text-red-400 hover:bg-red-500/10"
+                    onClick={() => (window.location.href = '/settings/subscription')}
+                  >
+                    View Plans
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input */}
+        <div
+          className="p-3"
+          style={{
+            borderTop: '1px solid var(--border)',
+            background: 'var(--panel-hover)',
+          }}
+        >
+          {messages.length > 0 && (
+            <div className="mb-2 flex items-center justify-between">
+              <div className="flex gap-1">
+                {quickActions.slice(0, 3).map((action, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleQuickAction(action.prompt)}
+                    disabled={isLoading || isStreaming}
+                    className={cn(
+                      'flex items-center gap-1 rounded-lg px-2 py-1',
+                      'text-xs',
+                      'hover:bg-black/5 dark:hover:bg-white/5',
+                      'transition-colors',
+                      'disabled:cursor-not-allowed disabled:opacity-50'
+                    )}
+                    style={{ color: 'var(--muted)' }}
+                  >
+                    <action.icon className="h-3 w-3" />
+                    <span className="hidden sm:inline">{action.label}</span>
+                  </button>
+                ))}
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={reset}
+                disabled={isLoading || isStreaming}
+                className="h-auto py-1 text-xs hover:bg-black/5 dark:hover:bg-white/5"
+                style={{ color: 'var(--muted)' }}
+              >
+                <MessageSquare className="mr-1 h-3 w-3" />
+                New
+              </Button>
+            </div>
+          )}
+          <div className="flex gap-2">
+            <textarea
+              ref={inputRef}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask me anything..."
+              className={cn(
+                'flex-1 resize-none rounded-xl px-4 py-3',
+                'text-sm',
+                'focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20',
+                'max-h-32'
+              )}
+              style={{
+                background: 'var(--bg)',
+                color: 'var(--text)',
+                border: '1px solid var(--border)',
+              }}
+              rows={1}
+              disabled={isLoading || isStreaming}
+            />
+            {isStreaming ? (
+              <Button
+                onClick={stopStreaming}
+                size="icon"
+                className="shrink-0 bg-red-500 hover:bg-red-600"
+              >
+                <Square className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                onClick={() => handleSendMessage()}
+                disabled={isLoading || !inputValue.trim()}
+                size="icon"
+                className="shrink-0 bg-gradient-to-r from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/20 hover:from-brand-primary/90 hover:to-purple-600/90"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            )}
           </div>
+          <p className="mt-2 text-center text-xs" style={{ color: 'var(--muted-soft)' }}>
+            Enter to send • Shift+Enter for new line
+          </p>
+        </div>
       </>
     </div>
   );
