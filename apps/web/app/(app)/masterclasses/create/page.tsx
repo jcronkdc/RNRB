@@ -308,8 +308,8 @@ export default function CreateMasterclassPage() {
                       onClick={() => setCourseType('pre_recorded')}
                       className={`rounded-xl border-2 p-4 text-left transition-colors ${
                         courseType === 'pre_recorded'
-                          ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                          : 'border-[var(--border)] hover:border-[var(--accent)]/50'
+                          ? 'bg-[var(--accent)]/10 border-[var(--accent)]'
+                          : 'hover:border-[var(--accent)]/50 border-[var(--border)]'
                       }`}
                     >
                       <Video className="mb-2 h-8 w-8 text-[var(--accent)]" />
@@ -320,8 +320,8 @@ export default function CreateMasterclassPage() {
                       onClick={() => setCourseType('live')}
                       className={`rounded-xl border-2 p-4 text-left transition-colors ${
                         courseType === 'live'
-                          ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                          : 'border-[var(--border)] hover:border-[var(--accent)]/50'
+                          ? 'bg-[var(--accent)]/10 border-[var(--accent)]'
+                          : 'hover:border-[var(--accent)]/50 border-[var(--border)]'
                       }`}
                     >
                       <Play className="mb-2 h-8 w-8 text-[var(--accent)]" />
@@ -503,7 +503,9 @@ export default function CreateMasterclassPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-[var(--muted)]">Total Duration</span>
-                      <span className="text-[var(--text)]">{Math.round(totalDuration / 60)} min</span>
+                      <span className="text-[var(--text)]">
+                        {Math.round(totalDuration / 60)} min
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-[var(--muted)]">Price</span>
@@ -566,7 +568,7 @@ export default function CreateMasterclassPage() {
                           }
                         >
                           <GripVertical className="h-5 w-5 text-[var(--muted)]" />
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--accent)]/20">
+                          <div className="bg-[var(--accent)]/20 flex h-8 w-8 items-center justify-center rounded-full">
                             <span className="text-sm text-[var(--accent)]">{index + 1}</span>
                           </div>
                           <div className="min-w-0 flex-1">
@@ -740,8 +742,8 @@ export default function CreateMasterclassPage() {
                     onClick={() => setIsFree(false)}
                     className={`rounded-xl border-2 p-4 text-left transition-colors ${
                       !isFree
-                        ? 'border-[var(--accent)] bg-[var(--accent)]/10'
-                        : 'border-[var(--border)] hover:border-[var(--accent)]/50'
+                        ? 'bg-[var(--accent)]/10 border-[var(--accent)]'
+                        : 'hover:border-[var(--accent)]/50 border-[var(--border)]'
                     }`}
                   >
                     <div className="font-medium text-[var(--text)]">Paid</div>
@@ -842,7 +844,9 @@ export default function CreateMasterclassPage() {
                   <div className="mb-6 flex items-center gap-6">
                     <div className="flex items-center gap-2">
                       <Clock className="h-5 w-5 text-[var(--muted)]" />
-                      <span className="text-[var(--text)]">{Math.round(totalDuration / 60)} min</span>
+                      <span className="text-[var(--text)]">
+                        {Math.round(totalDuration / 60)} min
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <FileText className="h-5 w-5 text-[var(--muted)]" />

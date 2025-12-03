@@ -99,13 +99,15 @@ function StatCard({
       className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6"
     >
       <div className="mb-4 flex items-start justify-between">
-        <div className="rounded-xl bg-[var(--accent)]/10 p-3">
+        <div className="bg-[var(--accent)]/10 rounded-xl p-3">
           <Icon className="h-6 w-6 text-[var(--accent)]" />
         </div>
         {change !== undefined && (
           <div
             className={`flex items-center gap-1 rounded-full px-2 py-1 text-sm ${
-              change >= 0 ? 'bg-[var(--sage)]/10 text-[var(--sage)]' : 'bg-[var(--error)]/10 text-[var(--error)]'
+              change >= 0
+                ? 'bg-[var(--sage)]/10 text-[var(--sage)]'
+                : 'bg-[var(--error)]/10 text-[var(--error)]'
             }`}
           >
             {change >= 0 ? (
@@ -145,7 +147,7 @@ function RevenueChart({
         {data.map((item, index) => (
           <div key={item.month} className="flex flex-1 flex-col items-center">
             <div
-              className="w-full rounded-t-lg bg-gradient-to-t from-[var(--accent)]/50 to-[var(--accent)] transition-all hover:from-[var(--accent)]/70 hover:to-[var(--accent-hover)]"
+              className="from-[var(--accent)]/50 hover:from-[var(--accent)]/70 w-full rounded-t-lg bg-gradient-to-t to-[var(--accent)] transition-all hover:to-[var(--accent-hover)]"
               style={{ height: `${(item.revenue / maxRevenue) * 100}%`, minHeight: 4 }}
             />
             <div className="mt-2 text-xs text-[var(--muted)]">{item.month}</div>
@@ -168,7 +170,10 @@ function TopCoursesTable({ courses }: { courses: AnalyticsData['topCourses'] }) 
     <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
       <div className="mb-6 flex items-center justify-between">
         <h3 className="font-bold text-[var(--text)]">Top Performing Courses</h3>
-        <Link href="/masterclasses/instructor" className="text-sm text-[var(--accent)] hover:underline">
+        <Link
+          href="/masterclasses/instructor"
+          className="text-sm text-[var(--accent)] hover:underline"
+        >
           View All
         </Link>
       </div>
@@ -254,8 +259,8 @@ function RecentEnrollments({ enrollments }: { enrollments: AnalyticsData['recent
             className="flex items-center justify-between rounded-lg bg-[var(--bg)] p-3"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
-                <span className="font-medium text-white">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--gold)]">
+                <span className="font-medium text-[var(--text)]">
                   {enrollment.studentName.charAt(0).toUpperCase()}
                 </span>
               </div>
@@ -416,7 +421,7 @@ export default function InstructorAnalyticsPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--bg)]">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
       </div>
     );
   }
@@ -513,7 +518,7 @@ export default function InstructorAnalyticsPage() {
 
         {/* Back Link */}
         <div className="mt-8">
-          <Link href="/masterclasses/instructor" className="text-purple-400 hover:underline">
+          <Link href="/masterclasses/instructor" className="text-[var(--accent)] hover:underline">
             ← Back to Dashboard
           </Link>
         </div>

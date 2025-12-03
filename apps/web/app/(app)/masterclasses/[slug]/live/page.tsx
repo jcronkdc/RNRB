@@ -139,9 +139,9 @@ function LiveSessionContent({
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
           <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-400" />
-          <h2 className="mb-2 text-2xl font-bold text-white">{error}</h2>
+          <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">{error}</h2>
           <Link href={`/masterclasses/${masterclass.id}`}>
-            <button className="mt-4 rounded-full bg-purple-500 px-6 py-3 text-white">
+            <button className="mt-4 rounded-full bg-[var(--accent)] px-6 py-3 text-[var(--text)]">
               Return to Course
             </button>
           </Link>
@@ -159,7 +159,7 @@ function LiveSessionContent({
             <Image src="/logo-dark.png" alt="Logo" width={36} height={36} />
           </Link>
           <div>
-            <h1 className="font-bold text-white">{masterclass.title}</h1>
+            <h1 className="font-bold text-[var(--text)]">{masterclass.title}</h1>
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
               <span className="text-sm text-red-400">LIVE</span>
@@ -172,12 +172,12 @@ function LiveSessionContent({
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 rounded-full bg-[var(--panel)] px-3 py-1">
-            <Users className="h-4 w-4 text-purple-400" />
-            <span className="text-sm text-white">{participantCount}</span>
+            <Users className="h-4 w-4 text-[var(--accent)]" />
+            <span className="text-sm text-[var(--text)]">{participantCount}</span>
           </div>
           <button
             onClick={() => setShowChat(!showChat)}
-            className={`rounded-lg p-2 ${showChat ? 'bg-purple-500 text-white' : 'text-[var(--muted)] hover:text-white'}`}
+            className={`rounded-lg p-2 ${showChat ? 'bg-[var(--accent)] text-[var(--text)]' : 'text-[var(--muted)] hover:text-[var(--text)]'}`}
           >
             <MessageSquare className="h-5 w-5" />
           </button>
@@ -209,7 +209,7 @@ function LiveSessionContent({
               className="overflow-hidden border-l border-white/10 bg-[#1a1a1a]"
             >
               <div className="flex h-full flex-col p-4">
-                <h3 className="mb-4 font-bold text-white">Live Chat</h3>
+                <h3 className="mb-4 font-bold text-[var(--text)]">Live Chat</h3>
                 <div className="flex-1 overflow-y-auto rounded-lg bg-[#111] p-4">
                   <p className="text-center text-sm text-[var(--muted)]">
                     Chat messages will appear here
@@ -219,7 +219,7 @@ function LiveSessionContent({
                   <input
                     type="text"
                     placeholder="Send a message..."
-                    className="w-full rounded-lg border border-white/10 bg-[#111] px-4 py-2 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full rounded-lg border border-white/10 bg-[#111] px-4 py-2 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                   />
                 </div>
               </div>
@@ -233,14 +233,14 @@ function LiveSessionContent({
         <div className="flex items-center justify-center gap-4">
           <button
             onClick={toggleAudio}
-            className={`rounded-full p-4 ${isAudioOn ? 'bg-[var(--panel)] text-white' : 'bg-red-500 text-white'}`}
+            className={`rounded-full p-4 ${isAudioOn ? 'bg-[var(--panel)] text-[var(--text)]' : 'bg-red-500 text-[var(--text)]'}`}
           >
             {isAudioOn ? <Mic className="h-6 w-6" /> : <MicOff className="h-6 w-6" />}
           </button>
 
           <button
             onClick={toggleVideo}
-            className={`rounded-full p-4 ${isVideoOn ? 'bg-[var(--panel)] text-white' : 'bg-red-500 text-white'}`}
+            className={`rounded-full p-4 ${isVideoOn ? 'bg-[var(--panel)] text-[var(--text)]' : 'bg-red-500 text-[var(--text)]'}`}
           >
             {isVideoOn ? <Video className="h-6 w-6" /> : <VideoOff className="h-6 w-6" />}
           </button>
@@ -248,7 +248,7 @@ function LiveSessionContent({
           {isInstructor && (
             <button
               onClick={toggleScreenShare}
-              className={`rounded-full p-4 ${isScreenSharing ? 'bg-purple-500 text-white' : 'bg-[var(--panel)] text-white'}`}
+              className={`rounded-full p-4 ${isScreenSharing ? 'bg-[var(--accent)] text-[var(--text)]' : 'bg-[var(--panel)] text-[var(--text)]'}`}
             >
               <Share2 className="h-6 w-6" />
             </button>
@@ -257,7 +257,7 @@ function LiveSessionContent({
           {!isInstructor && (
             <button
               onClick={toggleHandRaise}
-              className={`rounded-full p-4 ${isHandRaised ? 'bg-yellow-500 text-white' : 'bg-[var(--panel)] text-white'}`}
+              className={`rounded-full p-4 ${isHandRaised ? 'bg-yellow-500 text-[var(--text)]' : 'bg-[var(--panel)] text-[var(--text)]'}`}
             >
               <Hand className="h-6 w-6" />
             </button>
@@ -265,14 +265,14 @@ function LiveSessionContent({
 
           <button
             onClick={toggleFullscreen}
-            className="rounded-full bg-[var(--panel)] p-4 text-white"
+            className="rounded-full bg-[var(--panel)] p-4 text-[var(--text)]"
           >
             {isFullscreen ? <Minimize2 className="h-6 w-6" /> : <Maximize2 className="h-6 w-6" />}
           </button>
 
           <button
             onClick={leaveCall}
-            className="rounded-full bg-red-500 p-4 text-white hover:bg-red-600"
+            className="rounded-full bg-red-500 p-4 text-[var(--text)] hover:bg-red-600"
           >
             <PhoneOff className="h-6 w-6" />
           </button>
@@ -378,7 +378,7 @@ export default function LiveSessionPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-purple-500" />
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-[var(--accent)]" />
           <p className="text-[var(--muted)]">Loading live session...</p>
         </div>
       </div>
@@ -390,9 +390,11 @@ export default function LiveSessionPage() {
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
           <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-400" />
-          <h2 className="mb-2 text-2xl font-bold text-white">{error || 'Session not found'}</h2>
+          <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">
+            {error || 'Session not found'}
+          </h2>
           <Link href="/masterclasses">
-            <button className="mt-4 rounded-full bg-purple-500 px-6 py-3 text-white">
+            <button className="mt-4 rounded-full bg-[var(--accent)] px-6 py-3 text-[var(--text)]">
               Browse Masterclasses
             </button>
           </Link>
@@ -415,14 +417,14 @@ export default function LiveSessionPage() {
           </Link>
 
           <div className="max-w-md rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-8">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-purple-500/20">
-              <Clock className="h-8 w-8 text-purple-400" />
+            <div className="bg-[var(--accent)]/20 mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full">
+              <Clock className="h-8 w-8 text-[var(--accent)]" />
             </div>
 
-            <h2 className="mb-2 text-2xl font-bold text-white">{masterclass.title}</h2>
+            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">{masterclass.title}</h2>
             <p className="mb-6 text-[var(--muted)]">with {masterclass.instructor.displayName}</p>
 
-            <div className="mb-2 text-4xl font-bold text-white">
+            <div className="mb-2 text-4xl font-bold text-[var(--text)]">
               <CountdownDisplay scheduledAt={masterclass.scheduledAt} />
             </div>
             <p className="mb-6 text-sm text-[var(--muted)]">until session starts</p>
@@ -440,7 +442,7 @@ export default function LiveSessionPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-purple-500" />
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-[var(--accent)]" />
           <p className="text-[var(--muted)]">Getting session access...</p>
         </div>
       </div>

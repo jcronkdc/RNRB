@@ -298,19 +298,31 @@ function VideoPlayer({
             <div className="flex items-center justify-between">
               {/* Left controls */}
               <div className="flex items-center gap-3">
-                <button onClick={togglePlay} className="text-[var(--text)] hover:text-[var(--accent)]">
+                <button
+                  onClick={togglePlay}
+                  className="text-[var(--text)] hover:text-[var(--accent)]"
+                >
                   {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                 </button>
-                <button onClick={() => skip(-10)} className="text-[var(--text)] hover:text-[var(--accent)]">
+                <button
+                  onClick={() => skip(-10)}
+                  className="text-[var(--text)] hover:text-[var(--accent)]"
+                >
                   <SkipBack className="h-5 w-5" />
                 </button>
-                <button onClick={() => skip(10)} className="text-[var(--text)] hover:text-[var(--accent)]">
+                <button
+                  onClick={() => skip(10)}
+                  className="text-[var(--text)] hover:text-[var(--accent)]"
+                >
                   <SkipForward className="h-5 w-5" />
                 </button>
 
                 {/* Volume */}
                 <div className="flex items-center gap-2">
-                  <button onClick={toggleMute} className="text-[var(--text)] hover:text-[var(--accent)]">
+                  <button
+                    onClick={toggleMute}
+                    className="text-[var(--text)] hover:text-[var(--accent)]"
+                  >
                     {isMuted || volume === 0 ? (
                       <VolumeX className="h-5 w-5" />
                     ) : (
@@ -350,7 +362,10 @@ function VideoPlayer({
                   <option value={2}>2x</option>
                 </select>
 
-                <button onClick={toggleFullscreen} className="text-[var(--text)] hover:text-[var(--accent)]">
+                <button
+                  onClick={toggleFullscreen}
+                  className="text-[var(--text)] hover:text-[var(--accent)]"
+                >
                   {isFullscreen ? (
                     <Minimize className="h-5 w-5" />
                   ) : (
@@ -534,7 +549,10 @@ export default function WatchPage() {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 p-4">
           <div className="flex items-center gap-4">
-            <Link href={`/masterclasses/${slug}`} className="text-[var(--muted)] hover:text-[var(--text)]">
+            <Link
+              href={`/masterclasses/${slug}`}
+              className="text-[var(--muted)] hover:text-[var(--text)]"
+            >
               <ChevronLeft className="h-6 w-6" />
             </Link>
             <div>
@@ -704,7 +722,7 @@ export default function WatchPage() {
                     onClick={() => goToLesson(index)}
                     className={`mb-1 w-full rounded-lg p-3 text-left transition-colors ${
                       isCurrent
-                        ? 'border border-[var(--accent)]/50 bg-[var(--accent)]/20'
+                        ? 'border-[var(--accent)]/50 bg-[var(--accent)]/20 border'
                         : 'hover:bg-[var(--bg)]'
                     }`}
                   >

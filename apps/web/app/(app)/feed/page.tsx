@@ -206,15 +206,11 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
             <span>{activity.celebrationCount + (hasCelebrated ? 1 : 0)}</span>
           </motion.button>
 
-          <button 
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-500 transition-all hover:bg-black/5 hover:text-gray-900 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
-          >
+          <button className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-500 transition-all hover:bg-black/5 hover:text-gray-900 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white">
             <MessageCircle className="h-4 w-4" />
           </button>
 
-          <button 
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-500 transition-all hover:bg-black/5 hover:text-gray-900 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
-          >
+          <button className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-500 transition-all hover:bg-black/5 hover:text-gray-900 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white">
             <Share2 className="h-4 w-4" />
           </button>
         </div>

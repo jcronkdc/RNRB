@@ -1,8 +1,8 @@
 /**
  * Direct Messages API
- * 
+ *
  * POST - Send a direct message to a user
- * 
+ *
  * Security Features:
  * - Rate limiting (10 messages/minute, 5 second cooldown per recipient)
  * - Spam content filtering
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     // 🔒 COMPREHENSIVE SPAM PROTECTION
     const validation = await validateMessage(senderId, recipientId, trimmedContent);
-    
+
     if (!validation.valid) {
       return NextResponse.json(
         { error: validation.error || 'Message could not be sent' },
@@ -136,4 +136,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
   }
 }
-

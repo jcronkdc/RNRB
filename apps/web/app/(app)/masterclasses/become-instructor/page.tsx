@@ -172,7 +172,9 @@ export default function BecomeInstructorPage() {
             <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)]">
               <GraduationCap className="h-12 w-12 text-[var(--text)]" />
             </div>
-            <h2 className="mb-4 text-3xl font-bold text-[var(--text)]">Share Your Music Expertise</h2>
+            <h2 className="mb-4 text-3xl font-bold text-[var(--text)]">
+              Share Your Music Expertise
+            </h2>
             <p className="mx-auto mb-8 max-w-lg text-lg text-[var(--muted)]">
               Create masterclasses, reach thousands of aspiring musicians, and earn money doing what
               you love.
@@ -200,7 +202,7 @@ export default function BecomeInstructorPage() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-[var(--accent)]/20 bg-gradient-to-r from-[var(--accent)]/10 to-[var(--gold)]/10 p-6">
+            <div className="border-[var(--accent)]/20 from-[var(--accent)]/10 to-[var(--gold)]/10 rounded-xl border bg-gradient-to-r p-6">
               <div className="flex items-center justify-center gap-8">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-[var(--text)]">10K+</div>
@@ -414,7 +416,7 @@ export default function BecomeInstructorPage() {
 
             {/* Stats Preview */}
             {selectedCategories.length > 0 && (
-              <div className="rounded-xl border border-[var(--accent)]/20 bg-gradient-to-r from-[var(--accent)]/10 to-[var(--gold)]/10 p-4">
+              <div className="border-[var(--accent)]/20 from-[var(--accent)]/10 to-[var(--gold)]/10 rounded-xl border bg-gradient-to-r p-4">
                 <div className="mb-2 flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-[var(--accent)]" />
                   <span className="font-medium text-[var(--text)]">Market Demand</span>
@@ -466,7 +468,7 @@ export default function BecomeInstructorPage() {
               <h3 className="mb-4 font-bold text-[var(--text)]">How Payouts Work</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/20">
+                  <div className="bg-[var(--accent)]/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
                     <span className="text-sm text-[var(--accent)]">1</span>
                   </div>
                   <div>
@@ -477,7 +479,7 @@ export default function BecomeInstructorPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/20">
+                  <div className="bg-[var(--accent)]/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
                     <span className="text-sm text-[var(--accent)]">2</span>
                   </div>
                   <div>
@@ -488,7 +490,7 @@ export default function BecomeInstructorPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/20">
+                  <div className="bg-[var(--accent)]/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
                     <span className="text-sm text-[var(--accent)]">3</span>
                   </div>
                   <div>
@@ -511,7 +513,10 @@ export default function BecomeInstructorPage() {
               />
               <span className="text-sm text-[var(--muted)]">
                 I agree to the{' '}
-                <Link href="/legal/instructor-terms" className="text-[var(--accent)] hover:underline">
+                <Link
+                  href="/legal/instructor-terms"
+                  className="text-[var(--accent)] hover:underline"
+                >
                   Instructor Terms of Service
                 </Link>{' '}
                 and understand the revenue split arrangement.
